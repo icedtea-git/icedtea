@@ -1,0 +1,4 @@
+2007-06-07  Andrew Haley  <aph@redhat.com>
+
+	* Makefile.am (ICEDTEA_ENV): Unset LD_LIBRARY_PATH.
+
