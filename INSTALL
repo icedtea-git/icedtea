@@ -1,0 +1,42 @@
+Building IcedTea
+================
+
+For convenience we've provided make targets that automatically
+download, extract and patch the source code from openjdk.java.net, in
+a default location.
+
+To build IcedTea, do:
+
+./configure
+make
+
+There is currently no install target.
+
+The build requirements are as follows:
+
+GNU libgcj 4.1.2
+Eclipse Java Compiler 3.2.1
+CUPS
+libX11
+lesstif
+patch
+sed
+unzip
+md5sum
+wget
+
+See ./configure --help if you need to override defaults.
+
+IcedTea ends up in openjdk/control/build/linux-i586 or
+openjdk/control/build/linux-amd64 when the build completes.
+
+Building IcedTea with IcedTea
+-----------------------------
+
+To perform a full bootstrap, do:
+
+./configure
+make bootstrap
+
+The bootstrap target builds IcedTea against ecj running on libgcj
+first then uses the result of that build to build IcedTea again.

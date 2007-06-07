@@ -1,0 +1,55 @@
+IcedTea
+=======
+
+The IcedTea project provides a harness to build the source code from
+openjdk.java.net using Free Software tools and dependencies.
+
+IcedTea addreses two problems: it eliminates the build requirement on
+proprietary build tools and it provides replacements for the
+"encumbered binary plugs".
+
+These plugs are described at http://openjdk.java.net: "Not all of the
+source code that makes up the JDK is available under an open-source
+license. In order to build an OpenJDK binary from source code, you
+must first download and install one or more of the following files
+from which the build process will copy over 'binary plugs' for these
+encumbered components."
+
+This project uses code from GNU Classpath, code generated during a
+build of the openjdk.java.net source code, and stub code written by
+Red Hat, to provide Free Software replacements for these encumbered
+binary plugs.
+
+IcedTea also provides build scripts and patches that allow the source
+code from openjdk.java.net to be built with ecj running on libgcj or
+with IcedTea itself.
+
+See INSTALL for build instructions.
+
+How the Stub Replacements were Produced
+---------------------------------------
+
+To produce the plug replacements, we began by satisfying as many
+undefined references as possible using code from a completed build of
+the source code from openjdk.java.net.  Then we supplemented the
+resultant tree with more replacement code from GNU Classpath.
+Following that, we fixed each remaining build error by creating the
+simplest possible stub code.
+
+A Note about the Generated Code
+-------------------------------
+
+Some of the code generated from sources from openjdk.java.net, and
+required to build these plug replacements, is of questionable
+licensing (that is, Sun likely forgot to change some headers).  These
+files are:
+
+ - generated/java/nio/*Exception.java
+ - generated/java/nio/channel/*Exception.java
+ - generated/java/nio/charset/*Exception.java
+ - generated/sun/nio/cs/*Exception.java
+ - generated/sun/util/resources/*
+
+To be on the safe side, these files are not distributed in IcedTea,
+but will be generated from the source code downloaded from
+openjdk.java.net, as needed during the build.

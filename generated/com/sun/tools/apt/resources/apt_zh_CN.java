@@ -1,0 +1,58 @@
+package com.sun.tools.apt.resources;
+
+import java.util.ListResourceBundle;
+
+public final class apt_zh_CN extends ListResourceBundle {
+    protected final Object[][] getContents() {
+        return new Object[][] {
+            { "apt.err.BadDeclaration", "\u4E3A\u6CE8\u91CA\u7C7B\u578B {0} \u521B\u5EFA\u7684\u58F0\u660E\u51FA\u73B0\u9519\u8BEF" },
+            { "apt.err.CantFindClass", "\u627E\u4E0D\u5230 {0} \u7684\u7C7B\u6587\u4EF6" },
+            { "apt.err.DeclarationCreation", "\u65E0\u6CD5\u4E3A\u6CE8\u91CA\u7C7B\u578B {0} \u521B\u5EFA\u58F0\u660E" },
+            { "apt.err.Messager", "{0}" },
+            { "apt.err.error", "\u9519\u8BEF\uFF1A" },
+            { "apt.err.unsupported.source.version", "\u4E0D\u652F\u6301\u6E90\u7248\u672C {0}\uFF1B\u8BF7\u4F7F\u7528\u7248\u672C 5 \u6216\u65E9\u671F\u7248\u672C" },
+            { "apt.err.unsupported.target.version", "\u4E0D\u652F\u6301\u76EE\u6807\u7248\u672C {0}\uFF1B\u8BF7\u4F7F\u7528\u7248\u672C 5 \u6216\u65E9\u671F\u7248\u672C" },
+            { "apt.misc.Problem", "\u6CE8\u91CA\u5904\u7406\u8FC7\u7A0B\u4E2D\u9047\u5230\u95EE\u9898\uFF1B\n\u6709\u5173\u66F4\u591A\u4FE1\u606F\uFF0C\u8BF7\u53C2\u89C1\u4E0B\u9762\u7684\u5806\u6808\u8FFD\u8E2A\u3002" },
+            { "apt.misc.SunMiscService", "\u67E5\u627E\u6CE8\u91CA\u5904\u7406\u5668\u5DE5\u5382\u65F6\u51FA\u9519\uFF1B\n\u8BF7\u67E5\u770B META-INF/\u670D\u52A1\u4FE1\u606F\u3002" },
+            { "apt.msg.bug", "apt ({0}) \u4E2D\u51FA\u73B0\u5F02\u5E38\u3002 \u5982\u679C\u5728 Bug Parade \u4E2D\u6CA1\u6709\u627E\u5230\u8BE5\u9519\u8BEF\uFF0C\u8BF7\u5728 Java Developer Connection (http://java.sun.com/webapps/bugreport)  \u5BF9\u8BE5\u9519\u8BEF\u8FDB\u884C\u5F52\u6863\u3002 \u8BF7\u5728\u62A5\u544A\u4E2D\u9644\u4E0A\u60A8\u7684\u7A0B\u5E8F\u548C\u4EE5\u4E0B\u8BCA\u65AD\u4FE1\u606F\u3002\u8C22\u8C22\u60A8\u7684\u5408\u4F5C\u3002" },
+            { "apt.msg.usage.footer", "\u6709\u5173 javac \u9009\u9879\u7684\u4FE1\u606F\uFF0C\u8BF7\u53C2\u89C1 javac -help\u3002" },
+            { "apt.msg.usage.header", "\u7528\u6CD5\uFF1A{0} <apt \u548C javac \u9009\u9879> <\u6E90\u6587\u4EF6>\n\u5176\u4E2D\uFF0Capt \u9009\u9879\u5305\u62EC\uFF1A" },
+            { "apt.msg.usage.nonstandard.footer", "\u8FD9\u4E9B\u9009\u9879\u53CA\u5176\u8F93\u51FA\u683C\u5F0F\u90FD\u4E0D\u662F\u6807\u51C6\u7684\uFF0C\n\u5982\u6709\u66F4\u6539\uFF0C\u6055\u4E0D\u53E6\u884C\u901A\u77E5\u3002" },
+            { "apt.note.Messager", "{0}" },
+            { "apt.opt.A", "\u4F20\u9012\u7ED9\u6CE8\u91CA\u5904\u7406\u5668\u7684\u9009\u9879" },
+            { "apt.opt.XClassesAsDecls", "\u5C06\u7C7B\u6587\u4EF6\u548C\u6E90\u6587\u4EF6\u90FD\u89C6\u4E3A\u8981\u5904\u7406\u7684\u58F0\u660E" },
+            { "apt.opt.XListAnnotationTypes", "\u5217\u51FA\u627E\u5230\u7684\u6CE8\u91CA\u7C7B\u578B" },
+            { "apt.opt.XListDeclarations", "\u5217\u51FA\u6307\u5B9A\u548C\u5305\u542B\u7684\u58F0\u660E" },
+            { "apt.opt.XPrintAptRounds", "\u8F93\u51FA\u6709\u5173\u521D\u59CB\u548C\u9012\u5F52 apt \u5FAA\u73AF\u7684\u4FE1\u606F" },
+            { "apt.opt.XPrintFactoryInfo", "\u8F93\u51FA\u6709\u5173\u8BF7\u6C42\u5DE5\u5382\u5904\u7406\u54EA\u4E9B\u6CE8\u91CA\u7684\u4FE1\u606F" },
+            { "apt.opt.arg.class", "<\u7C7B>" },
+            { "apt.opt.arg.directory", "\u6307\u5B9A\u5B58\u653E\u5904\u7406\u5668\u548C javac \u751F\u6210\u7684\u7C7B\u6587\u4EF6\u7684\u4F4D\u7F6E" },
+            { "apt.opt.classpath", "\u6307\u5B9A\u67E5\u627E\u7528\u6237\u7C7B\u6587\u4EF6\u548C\u6CE8\u91CA\u5904\u7406\u5668\u5DE5\u5382\u7684\u4F4D\u7F6E" },
+            { "apt.opt.d", "\u6307\u5B9A\u5B58\u653E\u5904\u7406\u5668\u548C javac \u751F\u6210\u7684\u7C7B\u6587\u4EF6\u7684\u4F4D\u7F6E" },
+            { "apt.opt.factory", "\u8981\u4F7F\u7528\u7684 AnnotationProcessorFactory \u7684\u540D\u79F0\uFF1B\u7ED5\u8FC7\u9ED8\u8BA4\u7684\u641C\u7D22\u8FDB\u7A0B" },
+            { "apt.opt.factorypath", "\u6307\u5B9A\u67E5\u627E\u6CE8\u91CA\u5904\u7406\u5668\u5DE5\u5382\u7684\u4F4D\u7F6E" },
+            { "apt.opt.help", "\u8F93\u51FA\u6807\u51C6\u9009\u9879\u7684\u63D0\u8981\uFF1B\u4F7F\u7528 javac -help \u53EF\u4EE5\u5F97\u5230\u66F4\u591A\u9009\u9879" },
+            { "apt.opt.nocompile", "\u8BF7\u52FF\u5C06\u6E90\u6587\u4EF6\u7F16\u8BD1\u4E3A\u7C7B\u6587\u4EF6" },
+            { "apt.opt.print", "\u8F93\u51FA\u6307\u5B9A\u7C7B\u578B\u7684\u6587\u672C\u8868\u793A" },
+            { "apt.opt.proc.flag", "[\u5173\u952E\u5B57[=\u503C]]" },
+            { "apt.opt.s", "\u6307\u5B9A\u5B58\u653E\u5904\u7406\u5668\u751F\u6210\u7684\u6E90\u6587\u4EF6\u7684\u4F4D\u7F6E" },
+            { "apt.opt.version", "\u7248\u672C\u4FE1\u606F" },
+            { "apt.warn.AnnotationsWithoutProcessors", "\u4E0D\u5E26\u5904\u7406\u5668\u7684\u6CE8\u91CA\u7C7B\u578B\uFF1A {0}" },
+            { "apt.warn.BadFactory", "\u6CE8\u91CA\u5904\u7406\u5668\u5DE5\u5382\u51FA\u73B0\u9519\u8BEF\uFF1A {0} " },
+            { "apt.warn.BadParentDirectory", "\u65E0\u6CD5\u521B\u5EFA {0} \u7684\u67D0\u4E9B\u7236\u76EE\u5F55 " },
+            { "apt.warn.CorrespondingClassFile", "\u5DF2\u521B\u5EFA\u4E0E\u6E90\u6587\u4EF6 \"{0}\" \u76F8\u5BF9\u5E94\u7684\u7C7B\u6587\u4EF6\u3002" },
+            { "apt.warn.CorrespondingSourceFile", "\u5DF2\u521B\u5EFA\u4E0E\u7C7B\u6587\u4EF6 \"{0}\" \u76F8\u5BF9\u5E94\u7684\u6E90\u6587\u4EF6\u3002" },
+            { "apt.warn.FactoryCantInstantiate", "\u65E0\u6CD5\u5B9E\u4F8B\u5316\u5DE5\u5382 \"{0}\" \u7684\u5B9E\u4F8B\u3002" },
+            { "apt.warn.FactoryNotFound", "\u5728\u641C\u7D22\u8DEF\u5F84\u4E2D\u627E\u4E0D\u5230\u6307\u5B9A\u7684 AnnotationProcessorFactory \"{0}\"\u3002" },
+            { "apt.warn.FactoryWrongType", "\u6307\u5B9A\u7684\u5DE5\u5382 \"{0}\" \u4E0D\u662F AnnotationProcessorFactory\u3002" },
+            { "apt.warn.FileReopening", "\u5C1D\u8BD5\u591A\u6B21\u521B\u5EFA \"{0}\"" },
+            { "apt.warn.IllegalFileName", "\u65E0\u6CD5\u521B\u5EFA\u5E26\u6709\u975E\u6CD5\u540D\u79F0 \"{0}\" \u7684\u6587\u4EF6\u3002" },
+            { "apt.warn.MalformedSupportedString", "\u5DE5\u5382\u8FD4\u56DE\u4E0D\u89C4\u5219\u7684\u6CE8\u91CA\u652F\u6301\u5B57\u7B26\u4E32 \"{0}\"\u3002" },
+            { "apt.warn.Messager", "{0}" },
+            { "apt.warn.NoAnnotationProcessors", "\u672A\u627E\u5230\u6CE8\u91CA\u5904\u7406\u5668\uFF0C\u4F46\u5B58\u5728\u6CE8\u91CA\u3002" },
+            { "apt.warn.NoNewFilesAfterRound", "\u5FAA\u73AF\u7ED3\u675F\u540E\u65E0\u6CD5\u521B\u5EFA\u6587\u4EF6 \"{0}\"\u3002" },
+            { "apt.warn.NullProcessor", "\u5BF9\u4E8E\u67D0\u4E2A\u6CE8\u91CA\u5904\u7406\u5668\uFF0C\u5DE5\u5382 {0} \u8FD4\u56DE\u7684\u503C\u4E3A null\u3002" },
+            { "apt.warn.warning", "\u8B66\u544A\uFF1A" },
+        };
+    }
+}
