@@ -1,3 +1,8 @@
+2007-06-07  Francis Kung  <fkung@redhat.com>
+
+	* acinclude.m4: Cleaned up header checks.
+	* configure: Regenerated.
+
 2007-06-07  Lillian Angel  <langel@redhat.com>
 
 	* .hgignore: New file.
