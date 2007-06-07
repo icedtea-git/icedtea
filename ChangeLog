@@ -1,3 +1,7 @@
+2007-06-07  Lillian Angel  <langel@redhat.com>
+
+	* .hgignore: New file.
+
 2007-06-07  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* README: Fix typo.
