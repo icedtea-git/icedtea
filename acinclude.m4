@@ -327,6 +327,102 @@ AC_DEFUN([FIND_ENDORSED_JARS],
   AC_SUBST(ENDORSED_JARS)
 ])
 
+AC_DEFUN([FIND_XALAN2_JAR],
+[
+  AC_ARG_WITH([xalan2-jar],
+              [AS_HELP_STRING(--with-xalan2-jar,specify location of the xalan2 jar)],
+  [
+    if test -f "${withval}"; then
+      AC_MSG_CHECKING(xalan2 jar)
+      XALAN2_JAR="${withval}"
+      AC_MSG_RESULT(${withval})
+    fi
+  ],
+  [
+    XALAN2_JAR=
+  ])
+  if test -z "${XALAN2_JAR}"; then
+    AC_MSG_CHECKING(for xalan2 jar)
+    if test -e "/usr/share/java/xalan-j2.jar"; then
+      XALAN2_JAR=/usr/share/java/xalan-j2.jar
+      AC_MSG_RESULT(${XALAN2_JAR})
+    elif test -e "/usr/share/java/xalan2.jar"; then
+      XALAN2_JAR=/usr/share/java/xalan2.jar
+      AC_MSG_RESULT(${XALAN2_JAR})
+    else
+      AC_MSG_RESULT(no)
+    fi
+  fi
+  if test -z "${XALAN2_JAR}"; then
+    AC_MSG_ERROR("A xalan2 jar was not found.")
+  fi
+  AC_SUBST(XALAN2_JAR)
+])
+
+AC_DEFUN([FIND_XALAN2_SERIALIZER_JAR],
+[
+  AC_ARG_WITH([xalan2-serializer-jar],
+              [AS_HELP_STRING(--with-xalan2-serializer-jar,specify location of the xalan2-serializer jar)],
+  [
+    if test -f "${withval}"; then
+      AC_MSG_CHECKING(xalan2 serializer jar)
+      XALAN2_SERIALIZER_JAR="${withval}"
+      AC_MSG_RESULT(${withval})
+    fi
+  ],
+  [
+    XALAN2_SERIALIZER_JAR=
+  ])
+  if test -z "${XALAN2_SERIALIZER_JAR}"; then
+    AC_MSG_CHECKING(for xalan2-serializer jar)
+    if test -e "/usr/share/java/xalan-j2-serializer.jar"; then
+      XALAN2_SERIALIZER_JAR=/usr/share/java/xalan-j2-serializer.jar
+      AC_MSG_RESULT(${XALAN2_SERIALIZER_JAR})
+    elif test -e "/usr/share/java/xalan2.jar"; then
+      XALAN2_SERIALIZER_JAR=/usr/share/java/xalan2.jar
+      AC_MSG_RESULT(${XALAN2_SERIALIZER_JAR})
+    else
+      AC_MSG_RESULT(no)
+    fi
+  fi
+  if test -z "${XALAN2_SERIALIZER_JAR}"; then
+    AC_MSG_ERROR("A xalan2-serializer jar was not found.")
+  fi
+  AC_SUBST(XALAN2_SERIALIZER_JAR)
+])
+
+AC_DEFUN([FIND_XERCES2_JAR],
+[
+  AC_ARG_WITH([xerces2-jar],
+              [AS_HELP_STRING(--with-xerces2-jar,specify location of the xerces2 jar)],
+  [
+    if test -f "${withval}"; then
+      AC_MSG_CHECKING(xerces2 jar)
+      XERCES2_JAR="${withval}"
+      AC_MSG_RESULT(${withval})
+    fi
+  ],
+  [
+    XERCES2_JAR=
+  ])
+  if test -z "${XERCES2_JAR}"; then
+    AC_MSG_CHECKING(for xerces2 jar)
+    if test -e "/usr/share/java/xerces-j2.jar"; then
+      XERCES2_JAR=/usr/share/java/xerces-j2.jar
+      AC_MSG_RESULT(${XERCES2_JAR})
+    elif test -e "/usr/share/java/xerces2.jar"; then
+      XERCES2_JAR=/usr/share/java/xerces2.jar
+      AC_MSG_RESULT(${XERCES2_JAR})
+    else
+      AC_MSG_RESULT(no)
+    fi
+  fi
+  if test -z "${XERCES2_JAR}"; then
+    AC_MSG_ERROR("A xerces2 jar was not found.")
+  fi
+  AC_SUBST(XERCES2_JAR)
+])
+
 AC_DEFUN([CHECK_HEADERS],
 [
   AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[],[AC_MSG_ERROR("CUPS headers were not found - try installing cups-devel.")])

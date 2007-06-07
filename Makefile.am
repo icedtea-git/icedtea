@@ -282,7 +282,9 @@ boot:
 	ln -sf $(JAR) bootstrap/jdk1.6.0/bin/jar
 	cp -f javac bootstrap/jdk1.6.0/bin/javac
 	cp -f javap bootstrap/jdk1.6.0/bin/javap
-	ln -sf $(ENDORSED_JARS) bootstrap/jdk1.6.0/lib/endorsed
+	ln -sf $(XALAN2_JAR) bootstrap/jdk1.6.0/lib/endorsed/xalan-j2.jar
+	ln -sf $(XALAN2_SERIALIZER_JAR) bootstrap/jdk1.6.0/lib/endorsed/xalan-j2-serializer.jar
+	ln -sf $(XERCES2_JAR) bootstrap/jdk1.6.0/lib/endorsed/xerces-j2.jar
 
 icedteaboot: all unboot
 	cp -a openjdk/control/build/linux-$(BUILD_ARCH_DIR)/j2sdk-image \
@@ -300,10 +302,12 @@ plugs: lib/rt/rt.jar lib/jce/jce.jar
 	    -Wl,-soname,libjawt.so -xc - ; \
 	done
 	mkdir -p bootstrap/jdk1.7.0/jre/lib/ext
-	$(JAR) cf bootstrap/jdk1.7.0/jre/lib/ext/sunjce_provider.jar
+	touch empty_file
+	$(JAR) cf bootstrap/jdk1.7.0/jre/lib/ext/sunjce_provider.jar empty_file
 	mkdir -p bootstrap/jdk1.7.0/jre/lib/security
-	$(JAR) cf bootstrap/jdk1.7.0/jre/lib/security/local_policy.jar
-	$(JAR) cf bootstrap/jdk1.7.0/jre/lib/security/US_export_policy.jar
+	$(JAR) cf bootstrap/jdk1.7.0/jre/lib/security/local_policy.jar empty_file
+	$(JAR) cf bootstrap/jdk1.7.0/jre/lib/security/US_export_policy.jar empty_file
+	rm empty_file
 	cp -f lib/rt/rt.jar bootstrap/jdk1.7.0/jre/lib
 	cp -f lib/jce/jce.jar bootstrap/jdk1.7.0/jre/lib
 

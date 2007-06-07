@@ -1,5 +1,14 @@
 2007-06-07  Francis Kung  <fkung@redhat.com>
 
+	* acinclude.m4: Add explicit xalan/xerces checks.
+	* configure.ac: Likewise.
+	* Makefile.am: Use explicit xalan/xerces locations;
+	use dummy file when creating empty jars.
+	* Makefile.in: Regenerated.
+	* configure: Likewise.
+
+2007-06-07  Francis Kung  <fkung@redhat.com>
+
 	* acinclude.m4: Cleaned up header checks.
 	* configure: Regenerated.
 

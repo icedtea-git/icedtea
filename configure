@@ -718,7 +718,9 @@ JAR
 RMIC
 ECJ_JAR
 LIBGCJ_JAR
-ENDORSED_JARS
+XALAN2_JAR
+XALAN2_SERIALIZER_JAR
+XERCES2_JAR
 OPENJDK_SRC_DIR
 GNU_CLASSLIB_FOUND_TRUE
 GNU_CLASSLIB_FOUND_FALSE
@@ -1330,8 +1332,10 @@ Optional Packages:
   --with-rmic             specify location of the rmic
   --with-ecj-jar          specify location of the ECJ jar
   --with-libgcj-jar       specify location of the libgcj jar
-  --with-endorsed-dir     specify directory of endorsed jars (xalan-j2.jar,
-                          xalan-j2-serializer.jar, xerces-j2.jar)
+  --with-xalan2-jar       specify location of the xalan2 jar
+  --with-xalan2-serializer-jar
+                          specify location of the xalan2-serializer jar
+  --with-xerces2-jar      specify location of the xerces2 jar
   --with-openjdk-src-dir  specify the location of the openjdk sources
 
 Some influential environment variables:
@@ -5155,47 +5159,126 @@ echo "$as_me: error: \"A LIBGCJ jar was not found.\"" >&2;}
 
 
 
-# Check whether --with-endorsed-dir was given.
-if test "${with_endorsed_dir+set}" = set; then
-  withval=$with_endorsed_dir;
-    if test -f "${withval}/xalan-j2.jar"; then
-      if test -f "${withval}/xalan-j2-serializer.jar"; then
-        if test -f "${withval}/xerces-j2.jar"; then
-          { echo "$as_me:$LINENO: checking endorsed jars dir" >&5
-echo $ECHO_N "checking endorsed jars dir... $ECHO_C" >&6; }
-          ENDORSED_JARS="${withval}"
-          { echo "$as_me:$LINENO: result: ${withval}" >&5
+# Check whether --with-xalan2-jar was given.
+if test "${with_xalan2_jar+set}" = set; then
+  withval=$with_xalan2_jar;
+    if test -f "${withval}"; then
+      { echo "$as_me:$LINENO: checking xalan2 jar" >&5
+echo $ECHO_N "checking xalan2 jar... $ECHO_C" >&6; }
+      XALAN2_JAR="${withval}"
+      { echo "$as_me:$LINENO: result: ${withval}" >&5
 echo "${ECHO_T}${withval}" >&6; }
-        fi
-      fi
     fi
 
 else
 
-    ENDORSED_JARS=
+    XALAN2_JAR=
 
 fi
 
-  if test -z "${ENDORSED_JARS}"; then
-    { echo "$as_me:$LINENO: checking for endorsed jars dir" >&5
-echo $ECHO_N "checking for endorsed jars dir... $ECHO_C" >&6; }
-    if test -f "/usr/share/java/xalan-j2.jar"; then
-      if test -f "/usr/share/java/xalan-j2-serializer.jar"; then
-        if test -f "/usr/share/java/xerces-j2.jar"; then
-          ENDORSED_JARS="/usr/share/java/xalan-j2.jar /usr/share/java/xalan-j2-serializer.jar /usr/share/java/xerces-j2.jar"
-          { echo "$as_me:$LINENO: result: /usr/share/java" >&5
-echo "${ECHO_T}/usr/share/java" >&6; }
-        fi
-      fi
-    fi
-    if test -z "${ENDORSED_JARS}"; then
-      { echo "$as_me:$LINENO: result: missing" >&5
-echo "${ECHO_T}missing" >&6; }
+  if test -z "${XALAN2_JAR}"; then
+    { echo "$as_me:$LINENO: checking for xalan2 jar" >&5
+echo $ECHO_N "checking for xalan2 jar... $ECHO_C" >&6; }
+    if test -e "/usr/share/java/xalan-j2.jar"; then
+      XALAN2_JAR=/usr/share/java/xalan-j2.jar
+      { echo "$as_me:$LINENO: result: ${XALAN2_JAR}" >&5
+echo "${ECHO_T}${XALAN2_JAR}" >&6; }
+    elif test -e "/usr/share/java/xalan2.jar"; then
+      XALAN2_JAR=/usr/share/java/xalan2.jar
+      { echo "$as_me:$LINENO: result: ${XALAN2_JAR}" >&5
+echo "${ECHO_T}${XALAN2_JAR}" >&6; }
+    else
+      { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
     fi
   fi
-  if test -z "${ENDORSED_JARS}"; then
-    { { echo "$as_me:$LINENO: error: \"A directory containing required jars (xalan-j2.jar, xalan-j2-serializer.jar, xerces-j2.jar) was not found.\"" >&5
-echo "$as_me: error: \"A directory containing required jars (xalan-j2.jar, xalan-j2-serializer.jar, xerces-j2.jar) was not found.\"" >&2;}
+  if test -z "${XALAN2_JAR}"; then
+    { { echo "$as_me:$LINENO: error: \"A xalan2 jar was not found.\"" >&5
+echo "$as_me: error: \"A xalan2 jar was not found.\"" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+
+
+
+
+# Check whether --with-xalan2-serializer-jar was given.
+if test "${with_xalan2_serializer_jar+set}" = set; then
+  withval=$with_xalan2_serializer_jar;
+    if test -f "${withval}"; then
+      { echo "$as_me:$LINENO: checking xalan2 serializer jar" >&5
+echo $ECHO_N "checking xalan2 serializer jar... $ECHO_C" >&6; }
+      XALAN2_SERIALIZER_JAR="${withval}"
+      { echo "$as_me:$LINENO: result: ${withval}" >&5
+echo "${ECHO_T}${withval}" >&6; }
+    fi
+
+else
+
+    XALAN2_SERIALIZER_JAR=
+
+fi
+
+  if test -z "${XALAN2_SERIALIZER_JAR}"; then
+    { echo "$as_me:$LINENO: checking for xalan2-serializer jar" >&5
+echo $ECHO_N "checking for xalan2-serializer jar... $ECHO_C" >&6; }
+    if test -e "/usr/share/java/xalan-j2-serializer.jar"; then
+      XALAN2_SERIALIZER_JAR=/usr/share/java/xalan-j2-serializer.jar
+      { echo "$as_me:$LINENO: result: ${XALAN2_SERIALIZER_JAR}" >&5
+echo "${ECHO_T}${XALAN2_SERIALIZER_JAR}" >&6; }
+    elif test -e "/usr/share/java/xalan2.jar"; then
+      XALAN2_SERIALIZER_JAR=/usr/share/java/xalan2.jar
+      { echo "$as_me:$LINENO: result: ${XALAN2_SERIALIZER_JAR}" >&5
+echo "${ECHO_T}${XALAN2_SERIALIZER_JAR}" >&6; }
+    else
+      { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+    fi
+  fi
+  if test -z "${XALAN2_SERIALIZER_JAR}"; then
+    { { echo "$as_me:$LINENO: error: \"A xalan2-serializer jar was not found.\"" >&5
+echo "$as_me: error: \"A xalan2-serializer jar was not found.\"" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+
+
+
+
+# Check whether --with-xerces2-jar was given.
+if test "${with_xerces2_jar+set}" = set; then
+  withval=$with_xerces2_jar;
+    if test -f "${withval}"; then
+      { echo "$as_me:$LINENO: checking xerces2 jar" >&5
+echo $ECHO_N "checking xerces2 jar... $ECHO_C" >&6; }
+      XERCES2_JAR="${withval}"
+      { echo "$as_me:$LINENO: result: ${withval}" >&5
+echo "${ECHO_T}${withval}" >&6; }
+    fi
+
+else
+
+    XERCES2_JAR=
+
+fi
+
+  if test -z "${XERCES2_JAR}"; then
+    { echo "$as_me:$LINENO: checking for xerces2 jar" >&5
+echo $ECHO_N "checking for xerces2 jar... $ECHO_C" >&6; }
+    if test -e "/usr/share/java/xerces-j2.jar"; then
+      XERCES2_JAR=/usr/share/java/xerces-j2.jar
+      { echo "$as_me:$LINENO: result: ${XERCES2_JAR}" >&5
+echo "${ECHO_T}${XERCES2_JAR}" >&6; }
+    elif test -e "/usr/share/java/xerces2.jar"; then
+      XERCES2_JAR=/usr/share/java/xerces2.jar
+      { echo "$as_me:$LINENO: result: ${XERCES2_JAR}" >&5
+echo "${ECHO_T}${XERCES2_JAR}" >&6; }
+    else
+      { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+    fi
+  fi
+  if test -z "${XERCES2_JAR}"; then
+    { { echo "$as_me:$LINENO: error: \"A xerces2 jar was not found.\"" >&5
+echo "$as_me: error: \"A xerces2 jar was not found.\"" >&2;}
    { (exit 1); exit 1; }; }
   fi
 
@@ -7609,7 +7692,9 @@ JAR!$JAR$ac_delim
 RMIC!$RMIC$ac_delim
 ECJ_JAR!$ECJ_JAR$ac_delim
 LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim
-ENDORSED_JARS!$ENDORSED_JARS$ac_delim
+XALAN2_JAR!$XALAN2_JAR$ac_delim
+XALAN2_SERIALIZER_JAR!$XALAN2_SERIALIZER_JAR$ac_delim
+XERCES2_JAR!$XERCES2_JAR$ac_delim
 OPENJDK_SRC_DIR!$OPENJDK_SRC_DIR$ac_delim
 GNU_CLASSLIB_FOUND_TRUE!$GNU_CLASSLIB_FOUND_TRUE$ac_delim
 GNU_CLASSLIB_FOUND_FALSE!$GNU_CLASSLIB_FOUND_FALSE$ac_delim
@@ -7620,7 +7705,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 15; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 17; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
