@@ -4,7 +4,7 @@ IcedTea
 The IcedTea project provides a harness to build the source code from
 openjdk.java.net using Free Software tools and dependencies.
 
-IcedTea addreses two problems: it eliminates the build requirement on
+IcedTea addresses two problems: it eliminates the build requirement on
 proprietary build tools and it provides replacements for the
 "encumbered binary plugs".
 
