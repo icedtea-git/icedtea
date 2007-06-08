@@ -297,14 +297,16 @@ diff -r 10dfd4e883b1 hotspot/make/Makefile
  generic_export: $(EXPORT_LIST)
 diff -r 10dfd4e883b1 control/make/hotspot-rules.gmk
 --- openjdk/control/make/hotspot-rules.gmk	Wed May 30 17:05:50 2007 -0400
-+++ openjdk/control/make/hotspot-rules.gmk	Mon Jun 04 13:19:59 2007 +0100
-@@ -75,6 +75,11 @@ ifeq ($(DEBUG_NAME), fastdebug)
++++ openjdk/control/make/hotspot-rules.gmk	Fri Jun 08 16:29:22 2007 +0100
+@@ -75,6 +75,13 @@ ifeq ($(DEBUG_NAME), fastdebug)
    HOTSPOT_TARGET = all_fastdebug
  endif
  
 +# Use the portable interpreter for platforms without a JIT
-+ifeq ($(wildcard $(HOTSPOT_TOPDIR)/src/cpu/$(ARCH)/vm/$(ARCH).ad),)
-+  HOTSPOT_TARGET := $(HOTSPOT_TARGET)core
++ifneq ($(ARCH), i586)
++  ifeq ($(wildcard $(HOTSPOT_TOPDIR)/src/cpu/$(ARCH)/vm/$(ARCH).ad),)
++    HOTSPOT_TARGET := $(HOTSPOT_TARGET)core
++  endif
 +endif
 +
  HOTSPOT_MAKE_ARGS += ALT_SLASH_JAVA=$(SLASH_JAVA)
