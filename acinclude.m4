@@ -5,9 +5,13 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=amd64
       INSTALL_ARCH_DIR=amd64
       ;;
-    *)
+    i?86-*-*)
       BUILD_ARCH_DIR=i586
       INSTALL_ARCH_DIR=i386
+      ;;
+    *)
+      BUILD_ARCH_DIR=`uname -m`
+      INSTALL_ARCH_DIR=$BUILD_ARCH_DIR
       ;;
   esac
   AC_SUBST(BUILD_ARCH_DIR)

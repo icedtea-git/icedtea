@@ -1,3 +1,13 @@
+2007-06-08  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4 (SET_ARCH_DIRS):
+	Deal with platforms other than ix86 and x86_64.
+	* configure: Regenerated.
+
+	* icedtea-ports.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Add the above.
+	* Makefile.in: Regenerated.
+
 2007-06-07  Francis Kung  <fkung@redhat.com>
 
 	* acinclude.m4: Add explicit xalan/xerces checks.

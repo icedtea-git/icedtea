@@ -176,7 +176,8 @@ OPENJDK_SRC_ZIP = openjdk-7-ea-src-b12-06_may_2007.zip
 OPENJDK_MD5SUM = c6b0ebe02022dda481285b63cd2af5ae
 ICEDTEA_PATCHES = \
 	icedtea-copy-plugs.patch \
-	icedtea-lesstif.patch
+	icedtea-lesstif.patch \
+	icedtea-ports.patch
 
 ICEDTEA_ECJ_PATCH = \
 	icedtea-ecj-bootstrap.patch
