@@ -375,4 +375,5 @@ rt/com/sun/jdi/request/ThreadDeathRequest.java
 rt/com/sun/jdi/request/ThreadStartRequest.java
 rt/com/sun/jdi/request/VMDeathRequest.java
 rt/com/sun/jdi/request/WatchpointRequest.java
+rt/com/sun/tools/jdi/LinkedHashMap.java
 rt/java/util/Observer.java

@@ -1,3 +1,14 @@
+2007-06-10  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am (OPENJDK_URL): Update for b13 bundle.
+	(OPENJDK_SRC_ZIP): Likewise.
+	(OPENJDK_MD5SUM): Likewise.
+	(ICEDTEA_COPY_DIRS): Add rt/com/sun/tools and
+	rt/com/sun/tools/jdi.
+	(ICEDTEA_COPY_SRC): Add com/sun/tools/jdi/LinkedHashMap.java.
+	* Makefile.in: Regenerate.
+	* .hgignore: Add rt/com/sun/tools/jdi/LinkedHashMap.java.
+
 2007-06-08  Gary Benson  <gbenson@redhat.com>
 
 	* icedtea-ports.patch (control/make/hotspot-rules.gmk):
