@@ -1,3 +1,10 @@
+2007-06-14  Lillian Angel  <langel@redhat.com>
+
+	* icedtea-version.patch: Changes LAUNCHER_NAME to "java" instead of
+	"openjdk". Also, removes -MILESTONE from RELEASE string. "java 
+	-version" now outputs the expected string.
+	* Makefile.am: Added new patch to list.
+
 2007-06-14  Kyle Galloway  <kgallowa@redhat.com>
 
 	* javac.in: Add -bootclasspath option to supply libgcj-x.x.x.jar to

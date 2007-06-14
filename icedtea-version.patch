@@ -1,0 +1,26 @@
+--- openjdk/j2se/make/common/shared/Defs.gmk	2007-05-24 03:33:20.000000000 -0400
++++ openjdk/j2se/make/common/shared/Defs.gmk	2007-06-14 16:07:25.000000000 -0400
+@@ -187,7 +187,7 @@
+ COMPANY_NAME = Sun Microsystems, Inc.
+ 
+ ifdef OPENJDK
+-  LAUNCHER_NAME = openjdk
++  LAUNCHER_NAME = java
+   PRODUCT_NAME = OpenJDK
+   PRODUCT_SUFFIX = Runtime Environment
+   COMPANY_NAME =
+@@ -246,12 +246,8 @@
+ JDK_UNDERSCORE_VERSION =  $(subst .,_,$(JDK_VERSION))
+ JDK_MKTG_UNDERSCORE_VERSION =  $(subst .,_,$(JDK_MKTG_VERSION))
+ 
+-# RELEASE is JDK_VERSION and -MILESTONE if MILESTONE is set
+-ifneq ($(MILESTONE),fcs)
+-  RELEASE      = $(JDK_VERSION)-$(MILESTONE)$(BUILD_VARIANT_RELEASE)
+-else
+-  RELEASE      = $(JDK_VERSION)$(BUILD_VARIANT_RELEASE)
+-endif
++# RELEASE is JDK_VERSION 
++RELEASE      = $(JDK_VERSION)$(BUILD_VARIANT_RELEASE)
+ 
+ # FULL_VERSION is RELEASE and -BUILD_NUMBER if BUILD_NUMBER is set
+ ifdef BUILD_NUMBER

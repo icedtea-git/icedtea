@@ -177,7 +177,8 @@ OPENJDK_MD5SUM = 9e6b27b7c1d7fee4bf149c7dea33517d
 ICEDTEA_PATCHES = \
 	icedtea-copy-plugs.patch \
 	icedtea-lesstif.patch \
-	icedtea-ports.patch
+	icedtea-ports.patch \
+	icedtea-version.patch
 
 ICEDTEA_ECJ_PATCH = \
 	icedtea-ecj-bootstrap.patch
