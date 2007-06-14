@@ -1,3 +1,8 @@
+2007-06-14  Kyle Galloway  <kgallowa@redhat.com>
+
+	* javac.in: Add -bootclasspath option to supply libgcj-x.x.x.jar to
+	ecj by default.
+
 2007-06-10  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am (OPENJDK_URL): Update for b13 bundle.

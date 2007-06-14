@@ -1,5 +1,10 @@
 #!/bin/sh
 
+case "$*" in
+  *-bootclasspath*) ;;
+  *) bcoption="-bootclasspath @LIBGCJ_JAR@"
+esac
+
 # Work around ecj's inability to handle duplicate command-line
 # options.
 
@@ -21,4 +26,4 @@ then
 fi
 
 CLASSPATH=@ECJ_JAR@${CLASSPATH:+:}$CLASSPATH \
-  @JAVA@ org.eclipse.jdt.internal.compiler.batch.Main -1.5 -nowarn $NEW_ARGS
+  @JAVA@ org.eclipse.jdt.internal.compiler.batch.Main -1.5 -nowarn $bcoption $NEW_ARGS
