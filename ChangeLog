@@ -1,3 +1,19 @@
+2007-06-15  Francis Kung  <fkung@redhat.com>
+
+	* Makefile.am: Update patch locations.
+	* Makefile.in: Regenerated.
+	* icedtea-copy-plugs.patch: Moved to...
+	* patches/icedtea-copy-plugs.patch: Here.
+        * icedtea-ecj-bootstrap.patch: Moved to...
+        * patches/icedtea-ecj-bootstrap.patch: Here, and updated icon generation.
+        * icedtea-lesstif: Moved to...
+        * patches/icedtea-lesstif.patch: Here.
+        * icedtea-ports.patch: Moved to...
+        * patches/icedtea-ports.patch: Here.
+        * icedtea-version.patch: Moved to...
+        * patches/icedtea-version.patch: Here.
+        * patches/icedtea-graphics.patch: New file.
+
 2007-06-14  Lillian Angel  <langel@redhat.com>
 
 	* icedtea-version.patch: Changes LAUNCHER_NAME to "java" instead of

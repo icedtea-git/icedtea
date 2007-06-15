@@ -175,13 +175,14 @@ OPENJDK_URL = http://www.java.net/download/openjdk/40ec4ed263a6dfce13b8cf18fa046
 OPENJDK_SRC_ZIP = openjdk-7-ea-src-b13-24_may_2007.zip
 OPENJDK_MD5SUM = 9e6b27b7c1d7fee4bf149c7dea33517d
 ICEDTEA_PATCHES = \
-	icedtea-copy-plugs.patch \
-	icedtea-lesstif.patch \
-	icedtea-ports.patch \
-	icedtea-version.patch
+	patches/icedtea-copy-plugs.patch \
+	patches/icedtea-lesstif.patch \
+	patches/icedtea-ports.patch \
+	patches/icedtea-version.patch \
+	patches/icedtea-graphics.patch
 
 ICEDTEA_ECJ_PATCH = \
-	icedtea-ecj-bootstrap.patch
+	patches/icedtea-ecj-bootstrap.patch
 
 ICEDTEA_BUILD_DIR = \
 	$(abs_top_srcdir)/openjdk/control/build/linux-$(BUILD_ARCH_DIR)/
