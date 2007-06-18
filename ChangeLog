@@ -1,5 +1,10 @@
 2007-06-18  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
+	* Makefile.am (ICEDTEA_PATCHES): Add
+	icedtea-text-relocations.patch.
+	* Makefile.in: Regenerate.
+	* patches/icedtea-text-relocations.patch: New file.
+
 	* Makefile.am (patch, unpatch, patchecj, unpatchecj): Show
 	--dry-run output.
 	* Makefile.in: Regenerate.

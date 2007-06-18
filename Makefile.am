@@ -11,6 +11,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-lesstif.patch \
 	patches/icedtea-ports.patch \
 	patches/icedtea-version.patch \
+	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch
 
 ICEDTEA_ECJ_PATCH = \
