@@ -1,5 +1,9 @@
 2007-06-18  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
+	* Makefile.am (patch, unpatch, patchecj, unpatchecj): Show
+	--dry-run output.
+	* Makefile.in: Regenerate.
+
 	* patches/icedtea-ports.patch: Update for b13.
 
 2007-06-18  Francis Kung  <fkung@redhat.com>

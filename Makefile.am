@@ -217,7 +217,7 @@ uncopy:
 patch: extract
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
-	  if $(PATCH) -p0 --dry-run -s -t -f < $$p > /dev/null; \
+	  if $(PATCH) -p0 --dry-run -s -t -f < $$p ; \
 	  then \
 	    $(PATCH) -p0 < $$p ; \
 	  else \
@@ -228,7 +228,7 @@ patch: extract
 unpatch: unpatchecj
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
-	  if $(PATCH) -p0 -R --dry-run -s -t -f < $$p > /dev/null ; \
+	  if $(PATCH) -p0 -R --dry-run -s -t -f < $$p ; \
 	  then \
 	    $(PATCH) -p0 -R < $$p ; \
 	  else \
@@ -237,13 +237,13 @@ unpatch: unpatchecj
 	done
 
 patchecj: patch
-	if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) > /dev/null ; \
+	if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
 	then \
 	  $(PATCH) -p0 < $(ICEDTEA_ECJ_PATCH) ; \
 	fi
 
 unpatchecj:
-	if $(PATCH) -p0 -R --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) > /dev/null ; \
+	if $(PATCH) -p0 -R --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
 	then \
 	  $(PATCH) -p0 -R < $(ICEDTEA_ECJ_PATCH) ; \
 	fi
