@@ -333,51 +333,20 @@ diff -urN openjdk.orig/j2se/make/sun/text/Makefile openjdk/j2se/make/sun/text/Ma
  		-sourcepath $(SHARE_SRC)/classes/sun/text/resources $(BIINFO)
  	@$(java-vm-cleanup)
 
-diff -urN openjdk.orig/j2se/make/sun/xawt/ToBin.java openjdk/j2se/make/sun/xawt/ToBin.java
---- openjdk.orig/j2se/make/sun/xawt/ToBin.java	2007-05-24 03:33:24.000000000 -0400
-+++ openjdk/j2se/make/sun/xawt/ToBin.java	2007-06-15 10:52:33.000000000 -0400
-@@ -32,10 +32,21 @@
- 
- public class ToBin {
-     public static void main(String[] args) throws Exception {
-+
-+	// Switch the stdout and stderr streams temporarily to work around
-+	// debug statements left in Classpath/gcj
-+	PrintStream tmpStream = System.out;
-+	System.setOut(System.err);
-+	System.setErr(tmpStream);
-+
-         BufferedImage im = ImageIO.read(System.in);
-         BufferedImage bi = null;
-         int iconWidth = im.getWidth(null);
-         int iconHeight = im.getHeight(null);
-+
-+	/*
-+	 * This code doesn't work with the Classpath/gcj AbstractGraphics2D...
-+	 * 
-         if (im != null && iconHeight != 0 &&  iconWidth != 0) {
-             bi = new BufferedImage(iconWidth, iconHeight, BufferedImage.TYPE_INT_ARGB);
-             Graphics g = bi.getGraphics(); 
-@@ -45,12 +56,20 @@
-                 g.dispose();
-             }
-         }
-+	*/
-+	bi = im;
-+
-         DataBuffer srcBuf = bi.getData().getDataBuffer();
--        int[] buf = ((DataBufferInt)srcBuf).getData();
-+        byte[] buf = ((DataBufferByte)srcBuf).getData();
-+
-+	// Un-switch the stdout and stderr streams
-+	System.setErr(System.out);
-+	System.setOut(tmpStream);
-+
-         System.out.print(iconWidth + ",");
-         System.out.println(iconHeight + ",");
-         for (int i = 0; i < buf.length; i++) {
--            System.out.print("0x" + Integer.toHexString(buf[i]) + ", ");
-+            System.out.print("0x" + Integer.toHexString((int)buf[i]) + ", ");
-             if (i % 10 == 0) {
-                 System.out.println();
-             }            
+diff -urN openjdk.orig/j2se/make/sun/xawt/Makefile openjdk/j2se/make/sun/xawt/Makefile
+--- openjdk.orig/j2se/make/sun/xawt/Makefile    2007-05-06 05:03:51.000000000 -0400
++++ openjdk/j2se/make/sun/xawt/Makefile 2007-06-07 03:09:35.000000000 -0400
+@@ -283,13 +283,11 @@
+ 	    $(RM) $$classname; \
+ 	    $(ECHO) "package sun.awt.X11; public class XAWTIcon32_$$name {" >> $$classname; \
+ 	    $(ECHO) "public static int[] $$name = { " >> $$classname;  \
+-	    $(CAT) $$i | $(JAVA_BOOT) -classpath ${CLASSBINDIR}  -Dawt.toolkit=sun.awt.motif.MToolkit -Djava.awt.headless=true sun.awt.X11.ToBin >> $$classn$
+ 	    $(ECHO) "}; }" >> $$classname;  \
+ 	     classname=$(GEN_DIR)/XAWTIcon64_$$name.java; \
+ 	    $(RM) $$classname; \
+ 	    $(ECHO) "package sun.awt.X11; public class XAWTIcon64_$$name {" >> $$classname; \
+ 	    $(ECHO) "public static long[] $$name = { " >> $$classname;  \
+-	    $(CAT) $$i | $(JAVA_BOOT) -classpath ${CLASSBINDIR}  -Dawt.toolkit=sun.awt.motif.MToolkit -Djava.awt.headless=true sun.awt.X11.ToBin >> $$classn$
+ 	    $(ECHO) "}; }" >> $$classname;  \
+ 	done
+ 	$(TOUCH) $@
