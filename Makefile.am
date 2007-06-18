@@ -2,8 +2,6 @@ EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
 
 OPENJDK_URL = http://www.java.net/download/openjdk/40ec4ed263a6dfce13b8cf18fa046058/jdk7/promoted/b13/
 
-OPENJDK_SRC_ZIP = openjdk-7-ea-src-b13-24_may_2007.zip
-
 OPENJDK_MD5SUM = 9e6b27b7c1d7fee4bf149c7dea33517d
 
 ICEDTEA_PATCHES = \

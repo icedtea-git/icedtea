@@ -331,6 +331,21 @@ AC_DEFUN([FIND_ENDORSED_JARS],
   AC_SUBST(ENDORSED_JARS)
 ])
 
+AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
+[
+  AC_MSG_CHECKING(openjdk source zip)
+  AC_ARG_WITH([openjdk-src-zip],
+              [AS_HELP_STRING(--with-openjdk-src-zip,specify the location of the openjdk source zip)],
+  [
+    OPENJDK_SRC_ZIP=${withval}
+  ],
+  [ 
+    OPENJDK_SRC_ZIP=openjdk-7-ea-src-b13-24_may_2007.zip
+  ])
+  AC_MSG_RESULT(${OPENJDK_SRC_ZIP})
+  AC_SUBST(OPENJDK_SRC_ZIP)
+])
+
 AC_DEFUN([FIND_XALAN2_JAR],
 [
   AC_ARG_WITH([xalan2-jar],

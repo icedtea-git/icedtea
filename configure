@@ -721,6 +721,7 @@ LIBGCJ_JAR
 XALAN2_JAR
 XALAN2_SERIALIZER_JAR
 XERCES2_JAR
+OPENJDK_SRC_ZIP
 OPENJDK_SRC_DIR
 GNU_CLASSLIB_FOUND_TRUE
 GNU_CLASSLIB_FOUND_FALSE
@@ -1336,6 +1337,7 @@ Optional Packages:
   --with-xalan2-serializer-jar
                           specify location of the xalan2-serializer jar
   --with-xerces2-jar      specify location of the xerces2 jar
+  --with-openjdk-src-zip  specify the location of the openjdk source zip
   --with-openjdk-src-dir  specify the location of the openjdk sources
 
 Some influential environment variables:
@@ -5288,6 +5290,25 @@ echo "$as_me: error: \"A xerces2 jar was not found.\"" >&2;}
 
 
 
+  { echo "$as_me:$LINENO: checking openjdk source zip" >&5
+echo $ECHO_N "checking openjdk source zip... $ECHO_C" >&6; }
+
+# Check whether --with-openjdk-src-zip was given.
+if test "${with_openjdk_src_zip+set}" = set; then
+  withval=$with_openjdk_src_zip;
+    OPENJDK_SRC_ZIP=${withval}
+
+else
+
+    OPENJDK_SRC_ZIP=openjdk-7-ea-src-b13-24_may_2007.zip
+
+fi
+
+  { echo "$as_me:$LINENO: result: ${OPENJDK_SRC_ZIP}" >&5
+echo "${ECHO_T}${OPENJDK_SRC_ZIP}" >&6; }
+
+
+
   { echo "$as_me:$LINENO: checking openjdk sources" >&5
 echo $ECHO_N "checking openjdk sources... $ECHO_C" >&6; }
 
@@ -7699,6 +7720,7 @@ LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim
 XALAN2_JAR!$XALAN2_JAR$ac_delim
 XALAN2_SERIALIZER_JAR!$XALAN2_SERIALIZER_JAR$ac_delim
 XERCES2_JAR!$XERCES2_JAR$ac_delim
+OPENJDK_SRC_ZIP!$OPENJDK_SRC_ZIP$ac_delim
 OPENJDK_SRC_DIR!$OPENJDK_SRC_DIR$ac_delim
 GNU_CLASSLIB_FOUND_TRUE!$GNU_CLASSLIB_FOUND_TRUE$ac_delim
 GNU_CLASSLIB_FOUND_FALSE!$GNU_CLASSLIB_FOUND_FALSE$ac_delim
@@ -7709,7 +7731,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 17; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 18; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
