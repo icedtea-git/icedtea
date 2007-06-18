@@ -1,7 +1,7 @@
-diff -r 10dfd4e883b1 j2se/make/common/shared/Platform.gmk
---- openjdk/j2se/make/common/shared/Platform.gmk	Wed May 30 17:05:50 2007 -0400
-+++ openjdk/j2se/make/common/shared/Platform.gmk	Fri Jun 01 11:47:18 2007 +0100
-@@ -194,9 +194,6 @@ ifeq ($(SYSTEM_UNAME), Linux)
+diff -urN openjdk.orig/j2se/make/common/shared/Platform.gmk openjdk/j2se/make/common/shared/Platform.gmk
+--- openjdk.orig/j2se/make/common/shared/Platform.gmk	2007-05-24 03:33:20.000000000 -0400
++++ openjdk/j2se/make/common/shared/Platform.gmk	2007-06-17 19:02:41.000000000 -0400
+@@ -194,9 +194,6 @@
                  i[3-9]86) \
                      echo i586 \
                      ;; \
@@ -11,53 +11,56 @@ diff -r 10dfd4e883b1 j2se/make/common/shared/Platform.gmk
                  x86_64) \
                      echo amd64 \
                      ;; \
-@@ -211,11 +208,15 @@ ifeq ($(SYSTEM_UNAME), Linux)
-   ARCH_FAMILY = $(ARCH)
-   # Linux builds may be 32-bit or 64-bit data model.
-   ifndef ARCH_DATA_MODEL
--    ifeq ($(ARCH), i586)
--      ARCH_DATA_MODEL=32
--    else
--      ARCH_DATA_MODEL=64
--    endif
-+    dataModelExpr = case "$(ARCH)" in \
-+                      i586|ppc|s390) \
-+                        echo 32 \
-+                        ;; \
-+                      *) \
-+                        echo 64 \
-+                        ;; \
-+                    esac
-+    ARCH_DATA_MODEL = $(shell $(dataModelExpr))
-   endif
-   # Need to maintain the jre/lib/i386 location for 32-bit Intel
-   ifeq ($(ARCH), i586)
-diff -r 10dfd4e883b1 j2se/make/common/shared/Compiler-gcc.gmk
---- openjdk/j2se/make/common/shared/Compiler-gcc.gmk	Wed May 30 17:05:50 2007 -0400
-+++ openjdk/j2se/make/common/shared/Compiler-gcc.gmk	Fri Jun 01 13:28:50 2007 +0100
-@@ -70,17 +70,15 @@ ifeq ($(PLATFORM), linux)
+@@ -225,11 +222,15 @@
    else
-     CXX            = $(COMPILER_PATH)g++
+     # i586 is 32-bit, amd64 is 64-bit
+     ifndef ARCH_DATA_MODEL
+-      ifeq ($(ARCH), i586)
+-        ARCH_DATA_MODEL=32
+-      else
+-        ARCH_DATA_MODEL=64
+-      endif
++      dataModelExpr = case "$(ARCH)" in \
++                        i586|ppc|s390) \
++                          echo 32 \
++                          ;; \
++                        *) \
++                          echo 64 \
++                          ;; \
++                      esac
++      ARCH_DATA_MODEL = $(shell $(dataModelExpr))
+     endif
    endif
+ 
+diff -urN openjdk.orig/j2se/make/common/shared/Compiler-gcc.gmk openjdk/j2se/make/common/shared/Compiler-gcc.gmk
+--- openjdk.orig/j2se/make/common/shared/Compiler-gcc.gmk	2007-05-24 03:33:20.000000000 -0400
++++ openjdk/j2se/make/common/shared/Compiler-gcc.gmk	2007-06-17 19:05:16.000000000 -0400
+@@ -75,20 +75,18 @@
+     REQUIRED_CC_VER = 4.0
+     REQUIRED_GCC_VER = 4.0.*
+   else
 +  REQUIRED_CC_VER = 3.2
    ifeq ($(ARCH_DATA_MODEL), 32)
+     # i586
 -    REQUIRED_CC_VER = 3.2
      REQUIRED_GCC_VER = 3.2.1*
      REQUIRED_GCC_VER_INT = 3.2.1-7a
    else
-     ifeq ($(ARCH), amd64)
--      REQUIRED_CC_VER = 3.2
-       REQUIRED_GCC_VER = 3.2.*
-     endif
-     ifeq ($(ARCH), ia64)
--      REQUIRED_CC_VER = 3.2
-       REQUIRED_GCC_VER = 2.9[56789].*
-     endif
+   ifeq ($(ARCH), amd64)
+     # amd64
+-    REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 3.2.*
    endif
-diff -r 10dfd4e883b1 hotspot/make/defs.make
---- openjdk/hotspot/make/defs.make	Wed May 30 17:05:50 2007 -0400
-+++ openjdk/hotspot/make/defs.make	Fri Jun 01 14:09:55 2007 +0100
-@@ -167,13 +167,17 @@ ifneq ($(OSNAME),windows)
+   ifeq ($(ARCH), ia64)
+     # ia64
+-    REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 2.9[56789].*
+   endif
+   endif
+diff -urN openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
+--- openjdk.orig/hotspot/make/defs.make	2007-05-24 03:30:12.000000000 -0400
++++ openjdk/hotspot/make/defs.make	2007-06-17 18:57:03.000000000 -0400
+@@ -167,13 +167,17 @@
    # Use uname output for SRCARCH, but deal with platform differences. If ARCH
    # is not explicitly listed below, it is treated as i486. Also note amd64 is
    # a separate src arch, so LP64 && i486 ==> amd64.
@@ -76,25 +79,24 @@ diff -r 10dfd4e883b1 hotspot/make/defs.make
    ifdef LP64
      ifeq ($(SRCARCH), i486)
        SRCARCH = amd64
-@@ -195,8 +199,12 @@ ifneq ($(OSNAME),windows)
+@@ -195,8 +199,12 @@
    LIBARCH/sparc   = sparc
    LIBARCH/sparcv9 = sparcv9
    LIBARCH/ia64    = ia64
--
--  LP64_ARCH = sparcv9 amd64 ia64
 +  LIBARCH/ppc     = ppc
 +  LIBARCH/ppc64   = ppc64
 +  LIBARCH/s390    = s390
 +  LIBARCH/s390x   = s390x
-+
+ 
+-  LP64_ARCH = sparcv9 amd64 ia64
 +  LP64_ARCH = sparcv9 amd64 ia64 ppc64 s390x
  endif
  
  # Required make macro settings for all platforms
-diff -r a208e9bbeafa hotspot/build/linux/makefiles/buildtree.make
---- openjdk/hotspot/build/linux/makefiles/buildtree.make	Wed Jun 06 11:33:35 2007 +0100
-+++ openjdk/hotspot/build/linux/makefiles/buildtree.make	Wed Jun 06 13:10:59 2007 +0100
-@@ -277,6 +277,10 @@ DATA_MODE/sparcv9 = 64
+diff -urN openjdk.orig/hotspot/build/linux/makefiles/buildtree.make openjdk/hotspot/build/linux/makefiles/buildtree.make
+--- openjdk.orig/hotspot/build/linux/makefiles/buildtree.make	2007-05-24 03:31:18.000000000 -0400
++++ openjdk/hotspot/build/linux/makefiles/buildtree.make	2007-06-17 18:57:03.000000000 -0400
+@@ -277,6 +277,10 @@
  DATA_MODE/sparcv9 = 64
  DATA_MODE/amd64   = 64
  DATA_MODE/ia64    = 64
@@ -105,10 +107,10 @@ diff -r a208e9bbeafa hotspot/build/linux/makefiles/buildtree.make
  
  JAVA_FLAG/32 = -d32
  JAVA_FLAG/64 = -d64
-diff -r a208e9bbeafa hotspot/build/linux/makefiles/defs.make
---- openjdk/hotspot/build/linux/makefiles/defs.make	Wed Jun 06 11:33:35 2007 +0100
-+++ openjdk/hotspot/build/linux/makefiles/defs.make	Wed Jun 06 13:40:18 2007 +0100
-@@ -87,6 +87,38 @@ ifeq ($(ARCH), i686)
+diff -urN openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
+--- openjdk.orig/hotspot/build/linux/makefiles/defs.make	2007-05-24 03:31:18.000000000 -0400
++++ openjdk/hotspot/build/linux/makefiles/defs.make	2007-06-17 18:57:03.000000000 -0400
+@@ -87,6 +87,38 @@
    HS_ARCH          = i486
  endif
  
@@ -147,10 +149,10 @@ diff -r a208e9bbeafa hotspot/build/linux/makefiles/defs.make
  JDK_INCLUDE_SUBDIR=linux
  MAKE_ARGS += HOTSPOT_BUILD_VERSION=$(FULL_VERSION)
  # FIXUP: The subdirectory for a debug build is NOT the same on all platforms
-diff -r a208e9bbeafa hotspot/build/linux/makefiles/gcc.make
---- openjdk/hotspot/build/linux/makefiles/gcc.make	Wed Jun 06 11:33:35 2007 +0100
-+++ openjdk/hotspot/build/linux/makefiles/gcc.make	Wed Jun 06 13:24:56 2007 +0100
-@@ -71,6 +71,10 @@ ARCHFLAG/ia64    =
+diff -urN openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/build/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/build/linux/makefiles/gcc.make	2007-05-24 03:31:18.000000000 -0400
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-06-17 18:57:03.000000000 -0400
+@@ -71,6 +71,10 @@
  ARCHFLAG/ia64    =
  ARCHFLAG/sparc   = -m32 -mcpu=v9
  ARCHFLAG/sparcv9 = -m64 -mcpu=v9
@@ -161,9 +163,9 @@ diff -r a208e9bbeafa hotspot/build/linux/makefiles/gcc.make
  
  CFLAGS     += $(ARCHFLAG)
  AOUT_FLAGS += $(ARCHFLAG)
-diff -r a208e9bbeafa hotspot/src/share/vm/utilities/macros.hpp
---- openjdk/hotspot/src/share/vm/utilities/macros.hpp	Wed Jun 06 11:33:35 2007 +0100
-+++ openjdk/hotspot/src/share/vm/utilities/macros.hpp	Wed Jun 06 13:36:06 2007 +0100
+diff -urN openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp openjdk/hotspot/src/share/vm/utilities/macros.hpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp	2007-05-24 03:31:13.000000000 -0400
++++ openjdk/hotspot/src/share/vm/utilities/macros.hpp	2007-06-17 18:57:03.000000000 -0400
 @@ -149,6 +149,38 @@
  #define NOT_SPARC(code) code
  #endif
@@ -203,10 +205,10 @@ diff -r a208e9bbeafa hotspot/src/share/vm/utilities/macros.hpp
  #define FIX_THIS(code) report_assertion_failure("FIX_THIS",__FILE__, __LINE__, "")
  
  #define define_pd_global(type, name, value) const type pd_##name = value;
-diff -r a208e9bbeafa hotspot/src/share/vm/runtime/vm_version.cpp
---- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	Wed Jun 06 11:33:35 2007 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	Wed Jun 06 13:29:06 2007 +0100
-@@ -195,7 +195,12 @@ const char* Abstract_VM_Version::vm_rele
+diff -urN openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2007-05-24 03:31:12.000000000 -0400
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2007-06-17 18:57:03.000000000 -0400
+@@ -195,7 +195,12 @@
  #define CPU      IA32_ONLY("x86")                \
                   IA64_ONLY("ia64")               \
                   AMD64_ONLY("amd64")             \
@@ -220,10 +222,10 @@ diff -r a208e9bbeafa hotspot/src/share/vm/runtime/vm_version.cpp
  
  const char *Abstract_VM_Version::vm_platform_string() {
    return OS "-" CPU;
-diff -r 10dfd4e883b1 hotspot/make/Makefile
---- openjdk/hotspot/make/Makefile	Wed May 30 17:05:50 2007 -0400
-+++ openjdk/hotspot/make/Makefile	Mon Jun 04 13:39:25 2007 +0100
-@@ -68,12 +68,21 @@ C1_VM_TARGETS=product1 fastdebug1 optimi
+diff -urN openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
+--- openjdk.orig/hotspot/make/Makefile	2007-05-24 03:30:12.000000000 -0400
++++ openjdk/hotspot/make/Makefile	2007-06-17 18:57:03.000000000 -0400
+@@ -68,12 +68,21 @@
  C1_VM_TARGETS=product1 fastdebug1 optimized1 jvmg1
  C2_VM_TARGETS=product  fastdebug  optimized  jvmg
  
@@ -245,21 +247,20 @@ diff -r 10dfd4e883b1 hotspot/make/Makefile
  # Do everything
  world:         all create_jdk
  
-@@ -93,6 +102,9 @@ endif
- 
+@@ -94,6 +103,9 @@
  $(C2_VM_TARGETS):
  	$(MAKE) VM_TARGET=$@ generic_build2
-+
+ 
 +$(PI_VM_TARGETS):
 +	$(MAKE) VM_TARGET=$@ generic_build_pi
- 
++
  # Build compiler1 (client) rule, different for platforms
  generic_build1:
-@@ -135,6 +147,17 @@ else
- 	    $(MAKE) -f $(ABS_OS_MAKEFILE) \
+ 	$(MKDIR) -p $(OUTPUTDIR)
+@@ -136,6 +148,17 @@
  		      $(MAKE_ARGS) $(VM_TARGET)
  endif
-+
+ 
 +# Build portable interpreter rule, different for platforms
 +generic_build_pi:
 +	$(MKDIR) -p $(OUTPUTDIR)
@@ -270,13 +271,14 @@ diff -r 10dfd4e883b1 hotspot/make/Makefile
 +	    $(MAKE) -f $(ABS_OS_MAKEFILE) \
 +		      $(MAKE_ARGS) CC_INTERP=true $(VM_TARGET)
 +endif
- 
++
  # Export file rule
  generic_export: $(EXPORT_LIST)
-diff -r 10dfd4e883b1 control/make/hotspot-rules.gmk
---- openjdk/control/make/hotspot-rules.gmk	Wed May 30 17:05:50 2007 -0400
-+++ openjdk/control/make/hotspot-rules.gmk	Fri Jun 08 16:29:22 2007 +0100
-@@ -75,6 +75,13 @@ ifeq ($(DEBUG_NAME), fastdebug)
+ export_product:
+diff -urN openjdk.orig/control/make/hotspot-rules.gmk openjdk/control/make/hotspot-rules.gmk
+--- openjdk.orig/control/make/hotspot-rules.gmk	2007-05-24 03:30:08.000000000 -0400
++++ openjdk/control/make/hotspot-rules.gmk	2007-06-17 18:57:03.000000000 -0400
+@@ -75,6 +75,13 @@
    HOTSPOT_TARGET = all_fastdebug
  endif
  
