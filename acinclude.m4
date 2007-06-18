@@ -451,3 +451,15 @@ AC_DEFUN([CHECK_HEADERS],
   AC_CHECK_HEADERS(X11/extensions/Print.h,[],[AC_MSG_ERROR("libXp headers were not found - try installing libXp-devel.")])
   AC_CHECK_HEADERS([Xm/Xm.h Xm/XmP.h Xm/Display.h],[],[AC_MSG_ERROR("motif headers were not found - try installing lesstif-devel.")])
 ])
+
+AC_DEFUN([ENABLE_FAST_BUILD],
+[
+  AC_ARG_ENABLE([fast-build],
+                [AS_HELP_STRING(--enable-fast-build,optimize for quick building: use -O0 and do not build documentation)],
+  [
+    AC_MSG_CHECKING(fast build)
+    FAST_BUILD="${enableval}"
+    AC_MSG_RESULT(${enableval})
+    AC_SUBST(FAST_BUILD)
+  ])
+])

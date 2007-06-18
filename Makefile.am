@@ -15,6 +15,9 @@ ICEDTEA_PATCHES = \
 ICEDTEA_ECJ_PATCH = \
 	patches/icedtea-ecj-bootstrap.patch
 
+ICEDTEA_SPEED_PATCH = \
+	patches/icedtea-speed.patch
+
 ICEDTEA_BUILD_DIR = \
 	$(abs_top_srcdir)/openjdk/control/build/linux-$(BUILD_ARCH_DIR)/
 
@@ -222,7 +225,18 @@ patch: extract
 	  else \
 	    : ; \
 	  fi ; \
-	done
+	done ; \
+	if [ -n "$(FAST_BUILD)" ] ; \
+	then \
+	  if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_SPEED_PATCH) ; \
+	  then \
+	    $(PATCH) -p0 < $(ICEDTEA_SPEED_PATCH) ; \
+	  else \
+	    : ; \
+	  fi ; \
+	else \
+	  : ; \
+	fi
 
 unpatch: unpatchecj
 	for p in $(ICEDTEA_PATCHES) ; \
@@ -233,7 +247,18 @@ unpatch: unpatchecj
 	  else \
 	    : ; \
 	  fi ; \
-	done
+	done ; \
+	if [ -n "$(FAST_BUILD)" ] ; \
+	  then \
+	  if $(PATCH) -p0 -R --dry-run -s -t -f < $(ICEDTEA_SPEED_PATCH) ; \
+	  then \
+	    $(PATCH) -p0 -R < $(ICEDTEA_SPEED_PATCH) ; \
+	  else \
+	    : ; \
+	  fi ; \
+	else \
+	  : ; \
+	fi   
 
 patchecj: patch
 	if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \

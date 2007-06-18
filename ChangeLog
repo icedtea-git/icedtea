@@ -1,3 +1,12 @@
+2007-06-18  Francis Kung  <fkung@redhat.com>
+
+	* Makefile.am: Apply icedtea-speed patch during fast build.
+	* acinclude.m4: Add fast build option.
+	* configure.ac: Likewise.
+	* patches/icedtea-speed.patch: New file.
+	* Makefile.in: Regenerated.
+	* configure: Likewise.
+
 2007-06-18  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Removed OPENJDK_SRC_ZIP.
