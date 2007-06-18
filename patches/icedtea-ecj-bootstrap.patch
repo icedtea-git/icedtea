@@ -334,19 +334,19 @@ diff -urN openjdk.orig/j2se/make/sun/text/Makefile openjdk/j2se/make/sun/text/Ma
  	@$(java-vm-cleanup)
 
 diff -urN openjdk.orig/j2se/make/sun/xawt/Makefile openjdk/j2se/make/sun/xawt/Makefile
---- openjdk.orig/j2se/make/sun/xawt/Makefile    2007-05-06 05:03:51.000000000 -0400
-+++ openjdk/j2se/make/sun/xawt/Makefile 2007-06-07 03:09:35.000000000 -0400
+--- openjdk.orig/j2se/make/sun/xawt/Makefile	2007-05-24 03:33:24.000000000 -0400
++++ openjdk/j2se/make/sun/xawt/Makefile	2007-06-18 12:02:40.000000000 -0400
 @@ -283,13 +283,11 @@
  	    $(RM) $$classname; \
  	    $(ECHO) "package sun.awt.X11; public class XAWTIcon32_$$name {" >> $$classname; \
  	    $(ECHO) "public static int[] $$name = { " >> $$classname;  \
--	    $(CAT) $$i | $(JAVA_BOOT) -classpath ${CLASSBINDIR}  -Dawt.toolkit=sun.awt.motif.MToolkit -Djava.awt.headless=true sun.awt.X11.ToBin >> $$classn$
+-	    $(CAT) $$i | $(JAVA_BOOT) -classpath ${CLASSBINDIR}  -Dawt.toolkit=sun.awt.motif.MToolkit -Djava.awt.headless=true sun.awt.X11.ToBin >> $$classname; \
  	    $(ECHO) "}; }" >> $$classname;  \
- 	     classname=$(GEN_DIR)/XAWTIcon64_$$name.java; \
+             classname=$(GEN_DIR)/XAWTIcon64_$$name.java; \
  	    $(RM) $$classname; \
  	    $(ECHO) "package sun.awt.X11; public class XAWTIcon64_$$name {" >> $$classname; \
  	    $(ECHO) "public static long[] $$name = { " >> $$classname;  \
--	    $(CAT) $$i | $(JAVA_BOOT) -classpath ${CLASSBINDIR}  -Dawt.toolkit=sun.awt.motif.MToolkit -Djava.awt.headless=true sun.awt.X11.ToBin >> $$classn$
+-	    $(CAT) $$i | $(JAVA_BOOT) -classpath ${CLASSBINDIR}  -Dawt.toolkit=sun.awt.motif.MToolkit -Djava.awt.headless=true sun.awt.X11.ToBin >> $$classname; \
  	    $(ECHO) "}; }" >> $$classname;  \
  	done
  	$(TOUCH) $@
