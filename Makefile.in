@@ -665,7 +665,6 @@ patch: extract
 	    : ; \
 	  fi ; \
 	done ; \
-	echo $(FAST_BUILD) ; \
 	if [ -n "$(FAST_BUILD)" ] ; \
 	then \
 	  if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_SPEED_PATCH) ; \

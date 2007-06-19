@@ -1,3 +1,8 @@
+2007-06-19  Francis Kung  <fkung@redhat.com>
+
+	* Makefile.in: Regenerated.
+	* patches/icedtea-speed.patch: Update for hotspot build.
+
 2007-06-18  Francis Kung  <fkung@redhat.com>
 
 	* Makefile.am: Apply icedtea-speed patch during fast build.
