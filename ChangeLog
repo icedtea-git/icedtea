@@ -1,3 +1,8 @@
+2007-06-20  Kyle Galloway  <kgallowa@redhat.com>
+
+	* Makefile.am: Only generate sources if necessary.
+	* Makefile.in: Regnerated.
+
 2007-06-19  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* configure.ac: Bump version to 1.1.

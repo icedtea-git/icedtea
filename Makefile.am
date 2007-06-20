@@ -367,6 +367,7 @@ clean-local:
 	rm -f generated/java/nio/charset/*Exception.java
 	rm -f generated/sun/nio/ch/*Exception.java
 	rm -f generated/sun/util/resources/*
+	rm -f generated/gen-srcs.lst
 
 distclean-local: uncopy unplugs unboot unextract
 
@@ -386,32 +387,48 @@ rt-compile-classes: rt-classes
 	    @../rt-classes
 
 rt-generate-sources: patch
-	mkdir -p generated/java/nio/channels
-	mkdir -p generated/java/nio/charset
-	mkdir -p generated/sun/nio/ch
-	$(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
-	  $(OPENJDK_SRC_DIR)/j2se/src/share/classes/java/nio/channels/exceptions \
-	  generated/java/nio/channels
-	$(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
-	  $(OPENJDK_SRC_DIR)/j2se/src/share/classes/java/nio/charset/exceptions \
-	  generated/java/nio/charset
-	$(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
-	  $(OPENJDK_SRC_DIR)/j2se/src/share/classes/java/nio/exceptions \
-	  generated/java/nio
-	$(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
-	  $(OPENJDK_SRC_DIR)/j2se/src/share/classes/sun/nio/ch/exceptions \
-	  generated/sun/nio/ch
-	mkdir -p lib
-	cd $(OPENJDK_SRC_DIR)/j2se/make/tools/CompileProperties; \
-	  $(JCOMPILER) -d ../../../../../lib -1.5 CompileProperties.java
-	mkdir -p generated/sun/util/resources
-	cd lib ; \
-	  for FILE in `ls $(OPENJDK_SRC_DIR)/j2se/src/share/classes/sun/util/resources/*.properties`; do \
-	    export TMPVAR=$${FILE/%.properties/.java} ; \
-	    $(JAVA) -classpath . CompileProperties $$FILE \
-	      ../generated/sun/util/resources/$${TMPVAR##*/} \
-	      LocaleNamesBundle ; \
-	  done
+	@if test -e $(abs_top_srcdir)/generated/gen-srcs.lst; then \
+	  while read line; do \
+	    if ! test -e $$line; then \
+        echo $$line not FOUND!; \
+	      generate=true; \
+	    fi; \
+	  done < $(abs_top_srcdir)/generated/gen-srcs.lst; \
+	else \
+	  generate=true; \
+	fi; \
+	if ! test -z $$generate; then	\
+		echo Regenerating sources...; \
+	  mkdir -p generated/java/nio/channels; \
+		mkdir -p generated/java/nio/charset; \
+	  mkdir -p generated/sun/nio/ch; \
+	  $(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
+	    $(OPENJDK_SRC_DIR)/j2se/src/share/classes/java/nio/channels/exceptions \
+	    generated/java/nio/channels; \
+	  $(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
+	    $(OPENJDK_SRC_DIR)/j2se/src/share/classes/java/nio/charset/exceptions \
+	    generated/java/nio/charset; \
+	  $(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
+	    $(OPENJDK_SRC_DIR)/j2se/src/share/classes/java/nio/exceptions \
+	    generated/java/nio; \
+	  $(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
+	    $(OPENJDK_SRC_DIR)/j2se/src/share/classes/sun/nio/ch/exceptions \
+	    generated/sun/nio/ch; \
+	  mkdir -p $(abs_top_srcdir)/lib; \
+	  cd $(OPENJDK_SRC_DIR)/j2se/make/tools/CompileProperties; \
+	    $(JCOMPILER) -d ../../../../../lib -1.5 CompileProperties.java; \
+	  mkdir -p $(abs_top_srcdir)/generated/sun/util/resources; \
+	  cd $(abs_top_srcdir)/lib ; \
+	    for FILE in `ls $(OPENJDK_SRC_DIR)/j2se/src/share/classes/sun/util/resources/*.properties`; do \
+	      export TMPVAR=$${FILE/%.properties/.java} ; \
+	      $(JAVA) -classpath . CompileProperties $$FILE \
+	        ../generated/sun/util/resources/$${TMPVAR##*/} \
+					LocaleNamesBundle ; \
+	    done; \
+	  find $(abs_top_srcdir)/generated -name *.java > \
+		$(abs_top_srcdir)/generated/gen-srcs.lst; \
+	else echo Generated sources found, continuing...; \
+	fi;
 
 jce-classes:
 	cd jce ; \
