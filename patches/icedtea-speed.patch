@@ -5,7 +5,7 @@ diff -urN openjdk.orig/j2se/make/common/Defs-linux.gmk openjdk/j2se/make/common/
      _OPT = $(CC_LOWER_OPT)
      CPPFLAGS_DBG    += -DLOGGING 
  endif
-+_OPT = -O0
++_OPT = -O0 -g
  
  # For all platforms, do not omit the frame pointer register usage. 
  #    We need this frame pointer to make it easy to walk the stacks.
@@ -33,7 +33,7 @@ diff -urN openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/bu
  
  # The flags to use for an Optimized g++ build
 -OPT_CFLAGS += -O3
-+OPT_CFLAGS += -O0
++OPT_CFLAGS += -O0 -g
  
  # Hotspot uses very unstrict aliasing turn this optimization off
  OPT_CFLAGS += -fno-strict-aliasing

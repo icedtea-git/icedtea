@@ -458,8 +458,10 @@ AC_DEFUN([ENABLE_FAST_BUILD],
                 [AS_HELP_STRING(--enable-fast-build,optimize for quick building: use -O0 and do not build documentation)],
   [
     AC_MSG_CHECKING(fast build)
-    FAST_BUILD="${enableval}"
-    AC_MSG_RESULT(${enableval})
-    AC_SUBST(FAST_BUILD)
+    AC_MSG_RESULT(will apply patches/icedtea-speed.patch)
+    AM_CONDITIONAL(FAST_BUILD, test x = x)
+  ],
+  [
+    AM_CONDITIONAL(FAST_BUILD, test x != x)
   ])
 ])

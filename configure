@@ -725,7 +725,8 @@ OPENJDK_SRC_ZIP
 OPENJDK_SRC_DIR
 GNU_CLASSLIB_FOUND_TRUE
 GNU_CLASSLIB_FOUND_FALSE
-FAST_BUILD
+FAST_BUILD_TRUE
+FAST_BUILD_FALSE
 CPP
 GREP
 EGREP
@@ -5348,9 +5349,26 @@ if test "${enable_fast_build+set}" = set; then
   enableval=$enable_fast_build;
     { echo "$as_me:$LINENO: checking fast build" >&5
 echo $ECHO_N "checking fast build... $ECHO_C" >&6; }
-    FAST_BUILD="${enableval}"
-    { echo "$as_me:$LINENO: result: ${enableval}" >&5
-echo "${ECHO_T}${enableval}" >&6; }
+    { echo "$as_me:$LINENO: result: will apply patches/icedtea-speed.patch" >&5
+echo "${ECHO_T}will apply patches/icedtea-speed.patch" >&6; }
+     if test x = x; then
+  FAST_BUILD_TRUE=
+  FAST_BUILD_FALSE='#'
+else
+  FAST_BUILD_TRUE='#'
+  FAST_BUILD_FALSE=
+fi
+
+
+else
+
+     if test x != x; then
+  FAST_BUILD_TRUE=
+  FAST_BUILD_FALSE='#'
+else
+  FAST_BUILD_TRUE='#'
+  FAST_BUILD_FALSE=
+fi
 
 
 fi
@@ -7073,6 +7091,20 @@ echo "$as_me: error: conditional \"GNU_CLASSLIB_FOUND\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${FAST_BUILD_TRUE}" && test -z "${FAST_BUILD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"FAST_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"FAST_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${FAST_BUILD_TRUE}" && test -z "${FAST_BUILD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"FAST_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"FAST_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
@@ -7741,7 +7773,8 @@ OPENJDK_SRC_ZIP!$OPENJDK_SRC_ZIP$ac_delim
 OPENJDK_SRC_DIR!$OPENJDK_SRC_DIR$ac_delim
 GNU_CLASSLIB_FOUND_TRUE!$GNU_CLASSLIB_FOUND_TRUE$ac_delim
 GNU_CLASSLIB_FOUND_FALSE!$GNU_CLASSLIB_FOUND_FALSE$ac_delim
-FAST_BUILD!$FAST_BUILD$ac_delim
+FAST_BUILD_TRUE!$FAST_BUILD_TRUE$ac_delim
+FAST_BUILD_FALSE!$FAST_BUILD_FALSE$ac_delim
 CPP!$CPP$ac_delim
 GREP!$GREP$ac_delim
 EGREP!$EGREP$ac_delim
@@ -7749,7 +7782,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 19; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 20; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

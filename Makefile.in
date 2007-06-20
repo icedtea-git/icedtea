@@ -80,7 +80,6 @@ ECJ = @ECJ@
 ECJ_JAR = @ECJ_JAR@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-FAST_BUILD = @FAST_BUILD@
 FIND = @FIND@
 GREP = @GREP@
 INSTALL = @INSTALL@
@@ -175,19 +174,19 @@ top_srcdir = @top_srcdir@
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
 OPENJDK_URL = http://www.java.net/download/openjdk/40ec4ed263a6dfce13b8cf18fa046058/jdk7/promoted/b13/
 OPENJDK_MD5SUM = 9e6b27b7c1d7fee4bf149c7dea33517d
+@FAST_BUILD_FALSE@FAST_BUILD_PATCH = 
+@FAST_BUILD_TRUE@FAST_BUILD_PATCH = patches/icedtea-speed.patch
 ICEDTEA_PATCHES = \
 	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-lesstif.patch \
 	patches/icedtea-ports.patch \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
-	patches/icedtea-graphics.patch
+	patches/icedtea-graphics.patch \
+	$(FAST_BUILD_PATCH)
 
 ICEDTEA_ECJ_PATCH = \
 	patches/icedtea-ecj-bootstrap.patch
-
-ICEDTEA_SPEED_PATCH = \
-	patches/icedtea-speed.patch
 
 ICEDTEA_BUILD_DIR = \
 	$(abs_top_srcdir)/openjdk/control/build/linux-$(BUILD_ARCH_DIR)/
@@ -666,18 +665,7 @@ patch: extract
 	  else \
 	    : ; \
 	  fi ; \
-	done ; \
-	if [ -n "$(FAST_BUILD)" ] ; \
-	then \
-	  if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_SPEED_PATCH) ; \
-	  then \
-	    $(PATCH) -p0 < $(ICEDTEA_SPEED_PATCH) ; \
-	  else \
-	    : ; \
-	  fi ; \
-	else \
-	  : ; \
-	fi
+	done
 
 unpatch: unpatchecj
 	for p in $(ICEDTEA_PATCHES) ; \
@@ -688,18 +676,7 @@ unpatch: unpatchecj
 	  else \
 	    : ; \
 	  fi ; \
-	done ; \
-	if [ -n "$(FAST_BUILD)" ] ; \
-	  then \
-	  if $(PATCH) -p0 -R --dry-run -s -t -f < $(ICEDTEA_SPEED_PATCH) ; \
-	  then \
-	    $(PATCH) -p0 -R < $(ICEDTEA_SPEED_PATCH) ; \
-	  else \
-	    : ; \
-	  fi ; \
-	else \
-	  : ; \
-	fi   
+	done
 
 patchecj: patch
 	if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
