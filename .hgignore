@@ -377,3 +377,5 @@ rt/com/sun/jdi/request/VMDeathRequest.java
 rt/com/sun/jdi/request/WatchpointRequest.java
 rt/com/sun/tools/jdi/LinkedHashMap.java
 rt/java/util/Observer.java
+generated/gen-srcs.lst
+rt/com/sun/jmx/snmp/agent/SnmpMib.java
