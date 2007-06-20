@@ -1,3 +1,11 @@
+2007-06-20  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added file to copy.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-copy-plugs.patch: Added MetaData.java patch for
+	ConstructorsProperties cast.
+	* rt/com/sun/jmx/snmp/agent/AcmChecker.java: removed file.
+
 2007-06-20  Kyle Galloway  <kgallowa@redhat.com>
 
 	* Makefile.am: Only generate sources if necessary.

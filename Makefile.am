@@ -61,9 +61,11 @@ ICEDTEA_COPY_DIRS = \
 	rt/com/sun/jdi/request \
 	rt/com/sun/tools \
 	rt/com/sun/tools/jdi \
-	rt/java/util
+	rt/java/util \
+	rt/com/sun/jmx/snmp/agent/
 
 ICEDTEA_COPY_SRC = \
+	com/sun/jmx/snmp/agent/SnmpMib.java \
 	com/sun/jdi/AbsentInformationException.java \
 	com/sun/jdi/Accessible.java \
 	com/sun/jdi/ArrayReference.java \
@@ -200,7 +202,7 @@ copy: extract
 	mkdir -p $(ICEDTEA_COPY_DIRS)
 	for f in $(ICEDTEA_COPY_SRC) ; \
 	do \
-	  cp -f openjdk/j2se/src/share/classes/$$f rt/$$f ; \
+	  cp -rf openjdk/j2se/src/share/classes/$$f rt/$$f ; \
 	done
 
 uncopy:
