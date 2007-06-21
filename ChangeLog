@@ -1,3 +1,13 @@
+2007-06-21  Kyle Galloway  <kgallowa@redhat.com>
+
+	* acinclude.m4: Added ENABLE_CCACHE option to enable ccache unless it is
+	disabled by --disable-ccache, or cannot be found.
+	* configure.ac: Use ENABLE_CCACHE macro.
+	* Makefile.am: Added conditional ccache patch to ICEDTEA_PATCHES.
+	* patches/icedtea-ccache.patch: New file.
+	* configure: Regenerated.
+	* Makefile.in: Ditto.
+
 2007-06-20  Lillian Angel  <langel@redhat.com>
 
 	* .hgignore: Updated.

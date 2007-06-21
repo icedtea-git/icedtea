@@ -4,11 +4,18 @@ OPENJDK_URL = http://www.java.net/download/openjdk/40ec4ed263a6dfce13b8cf18fa046
 
 OPENJDK_MD5SUM = 9e6b27b7c1d7fee4bf149c7dea33517d
 
+if USE_CCACHE
+  CCACHE_PATCH = patches/icedtea-ccache.patch
+else
+  CCACHE_PATCH = 
+endif
+
 if FAST_BUILD
   FAST_BUILD_PATCH = patches/icedtea-speed.patch
 else
   FAST_BUILD_PATCH =
 endif
+
 
 ICEDTEA_PATCHES = \
 	patches/icedtea-copy-plugs.patch \
@@ -17,7 +24,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch \
-	$(FAST_BUILD_PATCH)
+	$(FAST_BUILD_PATCH) \
+	$(CCACHE_PATCH)
 
 ICEDTEA_ECJ_PATCH = \
 	patches/icedtea-ecj-bootstrap.patch

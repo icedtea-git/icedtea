@@ -66,6 +66,7 @@ AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 BUILD_ARCH_DIR = @BUILD_ARCH_DIR@
 CC = @CC@
+CCACHE = @CCACHE@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPP = @CPP@
@@ -174,6 +175,8 @@ top_srcdir = @top_srcdir@
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
 OPENJDK_URL = http://www.java.net/download/openjdk/40ec4ed263a6dfce13b8cf18fa046058/jdk7/promoted/b13/
 OPENJDK_MD5SUM = 9e6b27b7c1d7fee4bf149c7dea33517d
+@USE_CCACHE_FALSE@CCACHE_PATCH = 
+@USE_CCACHE_TRUE@CCACHE_PATCH = patches/icedtea-ccache.patch
 @FAST_BUILD_FALSE@FAST_BUILD_PATCH = 
 @FAST_BUILD_TRUE@FAST_BUILD_PATCH = patches/icedtea-speed.patch
 ICEDTEA_PATCHES = \
@@ -183,7 +186,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch \
-	$(FAST_BUILD_PATCH)
+	$(FAST_BUILD_PATCH) \
+	$(CCACHE_PATCH)
 
 ICEDTEA_ECJ_PATCH = \
 	patches/icedtea-ecj-bootstrap.patch

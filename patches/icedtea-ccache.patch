@@ -1,0 +1,26 @@
+--- openjdk/hotspot/build/linux/makefiles/gcc.make	2007-06-20 11:24:49.000000000 -0400
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-06-20 14:22:48.000000000 -0400
+@@ -25,8 +25,8 @@
+ #------------------------------------------------------------------------
+ # CC, CPP & AS
+ 
+-CPP = g++
+-CC  = gcc
++CPP = ccache g++
++CC  = ccache gcc
+ AS  = $(CC) -c
+ 
+ # -dumpversion in gcc-2.91 shows "egcs-2.91.66". In later version, it only
+--- openjdk/j2se/make/common/shared/Compiler-gcc.gmk	2007-06-20 11:24:49.000000000 -0400
++++ openjdk/j2se/make/common/shared/Compiler-gcc.gmk	2007-06-20 14:39:19.000000000 -0400
+@@ -58,8 +58,8 @@
+ ifeq ($(PLATFORM), linux)
+ 
+   # Settings specific to Linux
+-  CC             = $(COMPILER_PATH)gcc
+-  CPP            = $(COMPILER_PATH)gcc -E
++  CC             = ccache $(COMPILER_PATH)gcc
++  CPP            = ccache $(COMPILER_PATH)gcc -E
+   # statically link libstdc++ before C++ ABI is stablized on Linux
+   STATIC_CXX     = true
+   ifeq ($(STATIC_CXX),true)
