@@ -1,0 +1,56 @@
+--- openjdk/j2se/make/common/Defs-linux.gmk~	2007-05-24 08:33:20.000000000 +0100
++++ openjdk/j2se/make/common/Defs-linux.gmk	2007-06-21 15:32:44.000000000 +0100
+@@ -161,13 +161,7 @@
+    CFLAGS_COMMON   += $(GLOBAL_KPIC) $(GCC_WARNINGS)
+ endif
+ 
+-# Linux 64bit machines use Dwarf2, which can be HUGE, have fastdebug use -g1
+ DEBUG_FLAG = -g
+-ifeq ($(FASTDEBUG), true)
+-  ifeq ($(ARCH_DATA_MODEL), 64)
+-    DEBUG_FLAG = -g1
+-  endif
+-endif
+ 
+ CFLAGS_OPT      = $(POPT)
+ CFLAGS_DBG      = $(DEBUG_FLAG)
+@@ -242,7 +236,7 @@
+ ifeq ($(VARIANT), OPT)
+   ifneq ($(NO_STRIP), true)
+     # Debug 'strip -g' leaves local function Elf symbols (better stack traces)
+-    POST_STRIP_PROCESS = $(STRIP) -g
++    # POST_STRIP_PROCESS = $(STRIP) -g
+   endif
+ endif
+ 
+--- openjdk/j2se/make/common/Defs.gmk~	2007-05-24 08:33:20.000000000 +0100
++++ openjdk/j2se/make/common/Defs.gmk	2007-06-21 15:26:02.000000000 +0100
+@@ -559,13 +559,10 @@
+ JAVAC_PATHFLAGS    = $(JAVAC_CLS_FLAG) $(JAVAC_SRC_FLAG) $(JAVAC_DST_FLAG)
+ JAVACFLAGS_COMMON  = $(JAVAC_PATHFLAGS) $(JAVAC_ENCODINGFLAGS)
+ 
+-# Any debug build should include all debug info inside the classfiles
+-ifeq ($(VARIANT), DBG)
+-  DEBUG_CLASSFILES = true
+-endif
+-ifeq ($(DEBUG_CLASSFILES),true)
+-  JAVACFLAGS_COMMON += -g
+-endif
++# Force everything to be compiled with -g, regardless of whether this
++# is an optimized build.
++DEBUG_CLASSFILES = true
++JAVACFLAGS_COMMON += -g
+ 
+ JAVACFLAGS	   = $(JAVACFLAGS_COMMON) $(OTHER_JAVACFLAGS)
+ JAVAC_CMD 	   = $(JAVAC) $(JIT_OPTION) $(JAVACFLAGS) $(LANGUAGE_VERSION) $(CLASS_VERSION)
+--- openjdk/j2se/make/sun/awt/mawt.gmk~	2007-05-24 08:33:23.000000000 +0100
++++ openjdk/j2se/make/sun/awt/mawt.gmk	2007-06-21 15:25:58.000000000 +0100
+@@ -132,7 +132,7 @@
+ #
+ 
+ 
+-#CFLAGS += -g
++CFLAGS += -g
+ ifeq ($(HEADLESS),true)
+ CFLAGS += -DHEADLESS=$(HEADLESS)
+ CPPFLAGS += -DHEADLESS=$(HEADLESS)
