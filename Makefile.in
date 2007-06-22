@@ -174,12 +174,12 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
 OPENJDK_URL = http://www.java.net/download/openjdk/40ec4ed263a6dfce13b8cf18fa046058/jdk7/promoted/b13/
-OPENJDK_MD5SUM = c126a32966e4bdb6a60a5724d9447966
+OPENJDK_MD5SUM = 9e6b27b7c1d7fee4bf149c7dea33517d
 @USE_CCACHE_FALSE@CCACHE_PATCH = 
 @USE_CCACHE_TRUE@CCACHE_PATCH = patches/icedtea-ccache.patch
 @FAST_BUILD_FALSE@FAST_BUILD_PATCH = 
 @FAST_BUILD_TRUE@FAST_BUILD_PATCH = patches/icedtea-speed.patch
-@USE_ALT_OPENJDK_SRC_ZIP_FALSE@OPENJDK_SRC_ZIP = openjdk-7-ea-src-b14-21_jun_2007.zip
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@OPENJDK_SRC_ZIP = openjdk-7-ea-src-b13-24_may_2007.zip
 @USE_ALT_OPENJDK_SRC_ZIP_TRUE@OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 ICEDTEA_PATCHES = \
 	patches/icedtea-copy-plugs.patch \
