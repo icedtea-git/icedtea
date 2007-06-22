@@ -721,7 +721,9 @@ LIBGCJ_JAR
 XALAN2_JAR
 XALAN2_SERIALIZER_JAR
 XERCES2_JAR
-OPENJDK_SRC_ZIP
+USE_ALT_OPENJDK_SRC_ZIP_TRUE
+USE_ALT_OPENJDK_SRC_ZIP_FALSE
+ALT_OPENJDK_SRC_ZIP
 OPENJDK_SRC_DIR
 GNU_CLASSLIB_FOUND_TRUE
 GNU_CLASSLIB_FOUND_FALSE
@@ -5304,16 +5306,32 @@ echo $ECHO_N "checking openjdk source zip... $ECHO_C" >&6; }
 # Check whether --with-openjdk-src-zip was given.
 if test "${with_openjdk_src_zip+set}" = set; then
   withval=$with_openjdk_src_zip;
-    OPENJDK_SRC_ZIP=${withval}
+    ALT_OPENJDK_SRC_ZIP=${withval}
+     if test x = x; then
+  USE_ALT_OPENJDK_SRC_ZIP_TRUE=
+  USE_ALT_OPENJDK_SRC_ZIP_FALSE='#'
+else
+  USE_ALT_OPENJDK_SRC_ZIP_TRUE='#'
+  USE_ALT_OPENJDK_SRC_ZIP_FALSE=
+fi
+
 
 else
 
-    OPENJDK_SRC_ZIP=openjdk-7-ea-src-b13-24_may_2007.zip
+    ALT_OPENJDK_SRC_ZIP="not specified"
+     if test x != x; then
+  USE_ALT_OPENJDK_SRC_ZIP_TRUE=
+  USE_ALT_OPENJDK_SRC_ZIP_FALSE='#'
+else
+  USE_ALT_OPENJDK_SRC_ZIP_TRUE='#'
+  USE_ALT_OPENJDK_SRC_ZIP_FALSE=
+fi
+
 
 fi
 
-  { echo "$as_me:$LINENO: result: ${OPENJDK_SRC_ZIP}" >&5
-echo "${ECHO_T}${OPENJDK_SRC_ZIP}" >&6; }
+  { echo "$as_me:$LINENO: result: ${ALT_OPENJDK_SRC_ZIP}" >&5
+echo "${ECHO_T}${ALT_OPENJDK_SRC_ZIP}" >&6; }
 
 
 
@@ -7184,6 +7202,20 @@ echo "$as_me: error: conditional \"FOUND_JAVAC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${USE_ALT_OPENJDK_SRC_ZIP_TRUE}" && test -z "${USE_ALT_OPENJDK_SRC_ZIP_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_ALT_OPENJDK_SRC_ZIP_TRUE}" && test -z "${USE_ALT_OPENJDK_SRC_ZIP_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${GNU_CLASSLIB_FOUND_TRUE}" && test -z "${GNU_CLASSLIB_FOUND_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"GNU_CLASSLIB_FOUND\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -7876,7 +7908,9 @@ LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim
 XALAN2_JAR!$XALAN2_JAR$ac_delim
 XALAN2_SERIALIZER_JAR!$XALAN2_SERIALIZER_JAR$ac_delim
 XERCES2_JAR!$XERCES2_JAR$ac_delim
-OPENJDK_SRC_ZIP!$OPENJDK_SRC_ZIP$ac_delim
+USE_ALT_OPENJDK_SRC_ZIP_TRUE!$USE_ALT_OPENJDK_SRC_ZIP_TRUE$ac_delim
+USE_ALT_OPENJDK_SRC_ZIP_FALSE!$USE_ALT_OPENJDK_SRC_ZIP_FALSE$ac_delim
+ALT_OPENJDK_SRC_ZIP!$ALT_OPENJDK_SRC_ZIP$ac_delim
 OPENJDK_SRC_DIR!$OPENJDK_SRC_DIR$ac_delim
 GNU_CLASSLIB_FOUND_TRUE!$GNU_CLASSLIB_FOUND_TRUE$ac_delim
 GNU_CLASSLIB_FOUND_FALSE!$GNU_CLASSLIB_FOUND_FALSE$ac_delim
@@ -7892,7 +7926,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 23; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 25; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

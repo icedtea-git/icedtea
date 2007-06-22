@@ -337,13 +337,15 @@ AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
   AC_ARG_WITH([openjdk-src-zip],
               [AS_HELP_STRING(--with-openjdk-src-zip,specify the location of the openjdk source zip)],
   [
-    OPENJDK_SRC_ZIP=${withval}
+    ALT_OPENJDK_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_OPENJDK_SRC_ZIP, test x = x)
   ],
   [ 
-    OPENJDK_SRC_ZIP=openjdk-7-ea-src-b13-24_may_2007.zip
+    ALT_OPENJDK_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_OPENJDK_SRC_ZIP, test x != x)
   ])
-  AC_MSG_RESULT(${OPENJDK_SRC_ZIP})
-  AC_SUBST(OPENJDK_SRC_ZIP)
+  AC_MSG_RESULT(${ALT_OPENJDK_SRC_ZIP})
+  AC_SUBST(ALT_OPENJDK_SRC_ZIP)
 ])
 
 AC_DEFUN([FIND_XALAN2_JAR],

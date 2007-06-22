@@ -16,6 +16,11 @@ else
   FAST_BUILD_PATCH =
 endif
 
+if USE_ALT_OPENJDK_SRC_ZIP
+  OPENJDK_SRC_ZIP=$(ALT_OPENJDK_SRC_ZIP)
+else
+  OPENJDK_SRC_ZIP=openjdk-7-ea-src-b13-24_may_2007.zip
+endif
 
 ICEDTEA_PATCHES = \
 	patches/icedtea-copy-plugs.patch \
