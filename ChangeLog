@@ -1,5 +1,10 @@
 2007-06-22  Francis Kung  <fkung@redhat.com>
 
+	* patches/icedtea-graphics.patch: Remove debug messages.
+	* rt/java/awt/color/ICC_Profile.java: Likewise.
+
+2007-06-22  Francis Kung  <fkung@redhat.com>
+
 	* patches/icedtea-ecj-bootstrap.patch: Patch ToBin.java file.
 	* patches/icedtea-graphics.patch: Stub out Tracker and Stealer
 	code in sun.awt.image.SunWritableRaster.

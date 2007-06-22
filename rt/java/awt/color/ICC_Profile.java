@@ -667,25 +667,6 @@ public class ICC_Profile implements Serializable
   private int getSize()
   {
     return pcmm.getProfileSize(profileID);
-
-    /*
-    int totalSize = ProfileHeader.HEADERSIZE; // size of header
-
-    int tagTableSize = 4 + tagTable.size() * TagEntry.entrySize; // size of tag table	
-    if ((tagTableSize & 0x0003) != 0)
-      tagTableSize += 4 - (tagTableSize & 0x0003); // pad
-    totalSize += tagTableSize;
-
-    Enumeration e = tagTable.elements();
-    while (e.hasMoreElements())
-      { // tag data
-	int tagSize = ((TagEntry) e.nextElement()).getSize();
-	if ((tagSize & 0x0003) != 0)
-	  tagSize += 4 - (tagSize & 0x0003); // pad
-	totalSize += tagSize;
-      }
-    return totalSize;
-    */
   }
 
   /**
