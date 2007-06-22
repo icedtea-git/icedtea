@@ -1,6 +1,6 @@
-diff -ru openjdk/j2se/make/common/Release.gmk openjdk/j2se/make/common/Release.gmk
---- openjdk/j2se/make/common/Release.gmk	2007-05-25 15:13:23.000000000 -0400
-+++ openjdk/j2se/make/common/Release.gmk	2007-05-30 12:06:47.000000000 -0400
+diff -urN openjdk.orig/j2se/make/common/Release.gmk openjdk/j2se/make/common/Release.gmk
+--- openjdk.orig/j2se/make/common/Release.gmk	2007-05-24 03:33:20.000000000 -0400
++++ openjdk/j2se/make/common/Release.gmk	2007-06-22 17:06:46.000000000 -0400
 @@ -273,6 +273,7 @@
  
  
@@ -9,7 +9,7 @@ diff -ru openjdk/j2se/make/common/Release.gmk openjdk/j2se/make/common/Release.g
  sun/dc \
  java/awt/color/CMMException.class \
  java/awt/color/ColorSpace.class \
-@@ -309,28 +310,18 @@
+@@ -309,8 +310,6 @@
  com/sun/jmx/snmp/SnmpDataTypeEnums.class \
  com/sun/jmx/snmp/SnmpDefinitions.class \
  com/sun/jmx/snmp/SnmpOid.class \
@@ -18,10 +18,7 @@ diff -ru openjdk/j2se/make/common/Release.gmk openjdk/j2se/make/common/Release.g
  com/sun/jmx/snmp/SnmpOidRecord.class \
  com/sun/jmx/snmp/SnmpOidTable.class \
  com/sun/jmx/snmp/SnmpOidTableSupport.class \
- com/sun/jmx/snmp/SnmpParameters.class \
- com/sun/jmx/snmp/SnmpPduPacket.class \
- com/sun/jmx/snmp/SnmpPeer.class \
-+com/sun/jmx/snmp/SnmpSession.class \
+@@ -320,17 +319,9 @@
  com/sun/jmx/snmp/SnmpTimeticks.class \
  com/sun/jmx/snmp/SnmpVarBind.class \
  com/sun/jmx/snmp/SnmpVarBindList.class \
@@ -32,16 +29,16 @@ diff -ru openjdk/j2se/make/common/Release.gmk openjdk/j2se/make/common/Release.g
 -com/sun/jmx/snmp/daemon/SnmpRequestCounter.class \
 -com/sun/jmx/snmp/daemon/SnmpResponseHandler.class \
 -com/sun/jmx/snmp/daemon/SnmpSendServer.class \
--com/sun/jmx/snmp/daemon/SnmpSession.class \
+ com/sun/jmx/snmp/daemon/SnmpSession.class \
 -com/sun/jmx/snmp/daemon/SnmpSocket.class \
 -com/sun/jmx/snmp/daemon/SnmpTimerServer.class \
 -com/sun/jmx/snmp/daemon/WaitQ.class \
  com/sun/media/sound
  
  ABSJAR = $(ABS_BINDIR)/jar
-diff -ru openjdk/j2se/make/java/awt/Makefile openjdk/j2se/make/java/awt/Makefile
---- openjdk/j2se/make/java/awt/Makefile	2007-05-25 15:13:24.000000000 -0400
-+++ openjdk/j2se/make/java/awt/Makefile	2007-05-25 15:23:16.000000000 -0400
+diff -urN openjdk.orig/j2se/make/java/awt/Makefile openjdk/j2se/make/java/awt/Makefile
+--- openjdk.orig/j2se/make/java/awt/Makefile	2007-05-24 03:33:20.000000000 -0400
++++ openjdk/j2se/make/java/awt/Makefile	2007-06-22 17:06:14.000000000 -0400
 @@ -35,6 +35,7 @@
  
  ifdef OPENJDK
@@ -50,9 +47,9 @@ diff -ru openjdk/j2se/make/java/awt/Makefile openjdk/j2se/make/java/awt/Makefile
  java/awt/color/CMMException.class \
  java/awt/color/ColorSpace.class \
  java/awt/color/ICC_ColorSpace.class \
-diff -ru openjdk/j2se/make/java/redist/Makefile openjdk/j2se/make/java/redist/Makefile
---- openjdk/j2se/make/java/redist/Makefile	2007-05-25 15:13:24.000000000 -0400
-+++ openjdk/j2se/make/java/redist/Makefile	2007-05-30 12:07:39.000000000 -0400
+diff -urN openjdk.orig/j2se/make/java/redist/Makefile openjdk/j2se/make/java/redist/Makefile
+--- openjdk.orig/j2se/make/java/redist/Makefile	2007-05-24 03:33:21.000000000 -0400
++++ openjdk/j2se/make/java/redist/Makefile	2007-06-22 17:07:08.000000000 -0400
 @@ -308,6 +308,7 @@
  # that a local clobber and remake works.
  CLOSED_CLASSES =  \
@@ -61,7 +58,7 @@ diff -ru openjdk/j2se/make/java/redist/Makefile openjdk/j2se/make/java/redist/Ma
  java/awt/color/CMMException.class \
  java/awt/color/ColorSpace.class \
  java/awt/color/ICC_ColorSpace.class \
-@@ -343,28 +344,18 @@
+@@ -343,8 +344,6 @@
  com/sun/jmx/snmp/SnmpDataTypeEnums.class \
  com/sun/jmx/snmp/SnmpDefinitions.class \
  com/sun/jmx/snmp/SnmpOid.class \
@@ -70,10 +67,7 @@ diff -ru openjdk/j2se/make/java/redist/Makefile openjdk/j2se/make/java/redist/Ma
  com/sun/jmx/snmp/SnmpOidRecord.class \
  com/sun/jmx/snmp/SnmpOidTable.class \
  com/sun/jmx/snmp/SnmpOidTableSupport.class \
- com/sun/jmx/snmp/SnmpParameters.class \
- com/sun/jmx/snmp/SnmpPduPacket.class \
- com/sun/jmx/snmp/SnmpPeer.class \
-+com/sun/jmx/snmp/SnmpSession.class \
+@@ -354,17 +353,9 @@
  com/sun/jmx/snmp/SnmpTimeticks.class \
  com/sun/jmx/snmp/SnmpVarBind.class \
  com/sun/jmx/snmp/SnmpVarBindList.class \
@@ -84,16 +78,16 @@ diff -ru openjdk/j2se/make/java/redist/Makefile openjdk/j2se/make/java/redist/Ma
 -com/sun/jmx/snmp/daemon/SnmpRequestCounter.class \
 -com/sun/jmx/snmp/daemon/SnmpResponseHandler.class \
 -com/sun/jmx/snmp/daemon/SnmpSendServer.class \
--com/sun/jmx/snmp/daemon/SnmpSession.class \
+ com/sun/jmx/snmp/daemon/SnmpSession.class \
 -com/sun/jmx/snmp/daemon/SnmpSocket.class \
 -com/sun/jmx/snmp/daemon/SnmpTimerServer.class \
 -com/sun/jmx/snmp/daemon/WaitQ.class \
  com/sun/media/sound
  build: openjdkredist
  openjdkredist:
-diff -ru openjdk/j2se/make/tools/sharing/classlist.linux openjdk/j2se/make/tools/sharing/classlist.linux
---- openjdk/j2se/make/tools/sharing/classlist.linux	2007-05-25 15:13:23.000000000 -0400
-+++ openjdk/j2se/make/tools/sharing/classlist.linux	2007-05-25 15:24:08.000000000 -0400
+diff -urN openjdk.orig/j2se/make/tools/sharing/classlist.linux openjdk/j2se/make/tools/sharing/classlist.linux
+--- openjdk.orig/j2se/make/tools/sharing/classlist.linux	2007-05-24 03:33:25.000000000 -0400
++++ openjdk/j2se/make/tools/sharing/classlist.linux	2007-06-22 17:06:14.000000000 -0400
 @@ -638,7 +638,6 @@
  sun/awt/color/ProfileDeferralInfo
  sun/awt/color/ProfileDeferralMgr
@@ -102,9 +96,9 @@ diff -ru openjdk/j2se/make/tools/sharing/classlist.linux openjdk/j2se/make/tools
  sun/awt/color/ProfileActivator
  java/awt/color/ICC_ColorSpace
  sun/java2d/pipe/NullPipe
-diff -ru openjdk/j2se/make/tools/sharing/classlist.solaris openjdk/j2se/make/tools/sharing/classlist.solaris
---- openjdk/j2se/make/tools/sharing/classlist.solaris	2007-05-25 15:13:23.000000000 -0400
-+++ openjdk/j2se/make/tools/sharing/classlist.solaris	2007-05-25 15:24:17.000000000 -0400
+diff -urN openjdk.orig/j2se/make/tools/sharing/classlist.solaris openjdk/j2se/make/tools/sharing/classlist.solaris
+--- openjdk.orig/j2se/make/tools/sharing/classlist.solaris	2007-05-24 03:33:25.000000000 -0400
++++ openjdk/j2se/make/tools/sharing/classlist.solaris	2007-06-22 17:06:14.000000000 -0400
 @@ -512,7 +512,6 @@
  sun/awt/color/ProfileDeferralInfo
  sun/awt/color/ProfileDeferralMgr
@@ -113,9 +107,9 @@ diff -ru openjdk/j2se/make/tools/sharing/classlist.solaris openjdk/j2se/make/too
  sun/awt/color/ProfileActivator
  java/awt/color/ICC_ColorSpace
  sun/java2d/pipe/NullPipe
-diff -ru openjdk/j2se/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java openjdk/j2se/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java
---- openjdk/j2se/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2007-05-25 15:13:00.000000000 -0400
-+++ openjdk/j2se/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2007-05-30 11:04:58.000000000 -0400
+diff -urN openjdk.orig/j2se/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java openjdk/j2se/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java
+--- openjdk.orig/j2se/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2007-05-24 03:41:34.000000000 -0400
++++ openjdk/j2se/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2007-06-22 17:06:14.000000000 -0400
 @@ -1152,7 +1152,7 @@
              Set<BitSet> getterIndexSets = newSet();
              for (Constructor constr : annotatedConstrList) {
@@ -125,20 +119,9 @@ diff -ru openjdk/j2se/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.ja
  
                  Type[] paramTypes = constr.getGenericParameterTypes();
                  if (paramTypes.length != propertyNames.length) {
-diff -ru openjdk/j2se/src/share/classes/com/sun/jmx/snmp/daemon/SnmpAdaptorServer.java openjdk/j2se/src/share/classes/com/sun/jmx/snmp/daemon/SnmpAdaptorServer.java
---- openjdk/j2se/src/share/classes/com/sun/jmx/snmp/daemon/SnmpAdaptorServer.java	2007-05-25 15:13:00.000000000 -0400
-+++ openjdk/j2se/src/share/classes/com/sun/jmx/snmp/daemon/SnmpAdaptorServer.java	2007-05-29 16:46:51.000000000 -0400
-@@ -65,6 +65,7 @@
- import com.sun.jmx.snmp.InetAddressAcl;
- import com.sun.jmx.snmp.SnmpPeer;
- import com.sun.jmx.snmp.SnmpParameters;
-+import com.sun.jmx.snmp.SnmpSession;
- // SNMP Runtime imports
- //
- import com.sun.jmx.snmp.SnmpPduFactoryBER;
-diff -ru openjdk/j2se/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java openjdk/j2se/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java
---- openjdk/j2se/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2007-05-25 15:13:00.000000000 -0400
-+++ openjdk/j2se/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2007-05-30 10:58:09.000000000 -0400
+diff -urN openjdk.orig/j2se/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java openjdk/j2se/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java
+--- openjdk.orig/j2se/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2007-05-24 03:41:34.000000000 -0400
++++ openjdk/j2se/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2007-06-22 17:06:14.000000000 -0400
 @@ -78,6 +78,9 @@
       */
      public long            timeStamp ;
@@ -149,9 +132,9 @@ diff -ru openjdk/j2se/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java openjd
  
  
      /**
-diff -ru openjdk/j2se/src/share/classes/com/sun/script/javascript/JavaAdapter.java openjdk/j2se/src/share/classes/com/sun/script/javascript/JavaAdapter.java
---- openjdk/j2se/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2007-05-25 15:13:00.000000000 -0400
-+++ openjdk/j2se/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2007-05-29 16:44:40.000000000 -0400
+diff -urN openjdk.orig/j2se/src/share/classes/com/sun/script/javascript/JavaAdapter.java openjdk/j2se/src/share/classes/com/sun/script/javascript/JavaAdapter.java
+--- openjdk.orig/j2se/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2007-05-24 03:42:09.000000000 -0400
++++ openjdk/j2se/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2007-06-22 17:06:14.000000000 -0400
 @@ -27,6 +27,7 @@
  
  import javax.script.Invocable;
@@ -160,8 +143,9 @@ diff -ru openjdk/j2se/src/share/classes/com/sun/script/javascript/JavaAdapter.ja
  
  /**
   * This class implements Rhino-like JavaAdapter to help implement a Java
---- openjdk/j2se/src/share/classes/java/beans/MetaData.java.orig	2007-06-20 15:04:19.000000000 -0400
-+++ openjdk/j2se/src/share/classes/java/beans/MetaData.java	2007-06-20 15:05:39.000000000 -0400
+diff -urN openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java openjdk/j2se/src/share/classes/java/beans/MetaData.java
+--- openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java	2007-05-24 03:42:31.000000000 -0400
++++ openjdk/j2se/src/share/classes/java/beans/MetaData.java	2007-06-22 17:06:14.000000000 -0400
 @@ -1471,7 +1471,7 @@
      }
  

@@ -1,3 +1,9 @@
+2007-06-22  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* patches/icedtea-copy-plugs.patch: Remove SnmpSession sections.
+	* rt/com/sun/jmx/snmp/SnmpSession.java: Move to...
+	* rt/com/sun/jmx/snmp/daemon/SnmpSession.java: New file.
+
 2007-06-22  Francis Kung  <fkung@redhat.com>
 
 	* patches/icedtea-graphics.patch: Remove debug messages.
@@ -8,8 +14,8 @@
 	* patches/icedtea-ecj-bootstrap.patch: Patch ToBin.java file.
 	* patches/icedtea-graphics.patch: Stub out Tracker and Stealer
 	code in sun.awt.image.SunWritableRaster.
-	* rt/java/awt/color/ICC_Profile.java: Modify for use with Sun's pluggable
-	colour management and LittleCMS.
+	* rt/java/awt/color/ICC_Profile.java: Modify for use with Sun's
+	pluggable colour management and LittleCMS.
 	* rt/java/awt/image/Raster.java: Create Sun-specific Rasters.
 	* rt/java/awt/image/WritableRaster.java: Likewise.
 
@@ -35,8 +41,8 @@
 
 2007-06-21  Kyle Galloway  <kgallowa@redhat.com>
 
-	* acinclude.m4: Added ENABLE_CCACHE option to enable ccache unless it is
-	disabled by --disable-ccache, or cannot be found.
+	* acinclude.m4: Added ENABLE_CCACHE option to enable ccache unless
+	it is disabled by --disable-ccache, or cannot be found.
 	* configure.ac: Use ENABLE_CCACHE macro.
 	* Makefile.am: Added conditional ccache patch to ICEDTEA_PATCHES.
 	* patches/icedtea-ccache.patch: New file.
