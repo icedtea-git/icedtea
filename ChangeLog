@@ -1,6 +1,6 @@
 2007-06-22  Francis Kung  <fkung@redhat.com>
 
-	* patches/icedtea-ecj-bootstrap.patch: Path ToBin.java file.
+	* patches/icedtea-ecj-bootstrap.patch: Patch ToBin.java file.
 	* patches/icedtea-graphics.patch: Stub out Tracker and Stealer
 	code in sun.awt.image.SunWritableRaster.
 	* rt/java/awt/color/ICC_Profile.java: Modify for use with Sun's pluggable
