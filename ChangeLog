@@ -1,5 +1,7 @@
 2007-06-22  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
+	* .hgignore: Update.
+
 	* patches/icedtea-copy-plugs.patch: Remove SnmpSession sections.
 	* rt/com/sun/jmx/snmp/SnmpSession.java: Move to...
 	* rt/com/sun/jmx/snmp/daemon/SnmpSession.java: New file.
