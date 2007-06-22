@@ -1,66 +1,124 @@
-diff -urN openjdk.orig/j2se/make/common/shared/Platform.gmk openjdk/j2se/make/common/shared/Platform.gmk
---- openjdk.orig/j2se/make/common/shared/Platform.gmk	2007-05-24 03:33:20.000000000 -0400
-+++ openjdk/j2se/make/common/shared/Platform.gmk	2007-06-17 19:02:41.000000000 -0400
-@@ -194,9 +194,6 @@
-                 i[3-9]86) \
-                     echo i586 \
+2007-06-20  Gary Benson  <gbenson@redhat.com>
+
+	* j2se/make/common/shared/Platform.gmk:
+	Add ppc, ppc64, s390 and s390x.
+	* j2se/make/common/shared/Compiler-gcc.gmk: Likewise.
+	* hotspot/make/defs.make: Likewise.
+	* hotspot/build/linux/makefiles/buildtree.make: Likewise.
+	* hotspot/build/linux/makefiles/defs.make: Likewise.
+	* hotspot/build/linux/makefiles/gcc.make: Likewise.
+	* hotspot/src/share/vm/utilities/macros.hpp: Likewise.
+	* hotspot/src/share/vm/runtime/vm_version.cpp: Likewise.
+	* hotspot/src/os/linux/vm/os_linux.cpp: Likewise.
+
+	* hotspot/make/Makefile:
+	Add rules to make interpreter-only builds.
+
+	* control/make/hotspot-rules.gmk:
+	Make interpreter-only builds on platforms without a JIT.
+
+	* hotspot/build/linux/makefiles/sa.make:
+	Don't build Servicability Agent on interpreter-only platforms.
+	* hotspot/build/linux/makefiles/saproc.make: Likewise.
+	* hotspot/build/linux/makefiles/defs.make: Likewise.
+
+	* hotspot/make/Makefile:
+	Correctly locate files to install on interpreter-only platforms.
+
+diff -r 10dfd4e883b1 j2se/make/common/shared/Platform.gmk
+--- openjdk/j2se/make/common/shared/Platform.gmk	Wed May 30 17:05:50 2007 -0400
++++ openjdk/j2se/make/common/shared/Platform.gmk	Fri Jun 01 11:47:18 2007 +0100
+@@ -203,6 +203,12 @@ ifeq ($(SYSTEM_UNAME), Linux)
+                 sparc*) \
+                     echo sparc \
                      ;; \
--                ia64) \
--                    echo ia64 \
--                    ;; \
-                 x86_64) \
-                     echo amd64 \
++                ppc*) \
++                    echo ppc \
++                    ;; \
++                s390*) \
++                    echo s390 \
++                    ;; \
+                 *) \
+                     echo $(mach) \
                      ;; \
-@@ -225,11 +222,15 @@
-   else
-     # i586 is 32-bit, amd64 is 64-bit
-     ifndef ARCH_DATA_MODEL
--      ifeq ($(ARCH), i586)
--        ARCH_DATA_MODEL=32
--      else
--        ARCH_DATA_MODEL=64
--      endif
-+      dataModelExpr = case "$(ARCH)" in \
-+                        i586|ppc|s390) \
-+                          echo 32 \
-+                          ;; \
-+                        *) \
-+                          echo 64 \
-+                          ;; \
-+                      esac
-+      ARCH_DATA_MODEL = $(shell $(dataModelExpr))
-     endif
-   endif
+@@ -211,19 +217,28 @@ ifeq ($(SYSTEM_UNAME), Linux)
+   ARCH_FAMILY := $(ARCH)
  
-diff -urN openjdk.orig/j2se/make/common/shared/Compiler-gcc.gmk openjdk/j2se/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/j2se/make/common/shared/Compiler-gcc.gmk	2007-05-24 03:33:20.000000000 -0400
-+++ openjdk/j2se/make/common/shared/Compiler-gcc.gmk	2007-06-17 19:05:16.000000000 -0400
-@@ -75,20 +75,18 @@
+   # Linux builds may be 32-bit or 64-bit data model.
+-  ifeq ($(ARCH), sparc)
+-    # Linux sparc build can be either 32-bit or 64-bit.
++  ifneq ($(filter sparc ppc s390,$(ARCH)),)
++    # Linux sparc, ppc and s390 builds can be either 32-bit or 64-bit.
+     #   Default to 32, but allow explicit setting to 32 or 64.
+     ifndef ARCH_DATA_MODEL
+       ARCH_DATA_MODEL=32
+     endif
+-    ifeq ($(ARCH_DATA_MODEL), 32)
+-      ARCH=sparc
+-    else
+-      ARCH=sparcv9
+-    endif
+-  else
+-    # i586 is 32-bit, amd64 is 64-bit
++    ifeq ($(ARCH_DATA_MODEL), 64)
++      archExpr = case "$(ARCH)" in \
++                   sparc) \
++                       echo sparcv9 \
++                       ;; \
++                   ppc) \
++                       echo ppc64 \
++                       ;; \
++                   s390) \
++                       echo s390x \
++                       ;; \
++                 esac
++      ARCH := $(shell $(archExpr))
++    endif
++  else
++    # i586 is 32-bit, amd64 and ia64 are 64-bit
+     ifndef ARCH_DATA_MODEL
+       ifeq ($(ARCH), i586)
+         ARCH_DATA_MODEL=32
+diff -r 10dfd4e883b1 j2se/make/common/shared/Compiler-gcc.gmk
+--- openjdk/j2se/make/common/shared/Compiler-gcc.gmk	Wed May 30 17:05:50 2007 -0400
++++ openjdk/j2se/make/common/shared/Compiler-gcc.gmk	Fri Jun 01 13:28:50 2007 +0100
+@@ -74,13 +74,13 @@ ifeq ($(PLATFORM), linux)
+     # sparc or sparcv9
      REQUIRED_CC_VER = 4.0
      REQUIRED_GCC_VER = 4.0.*
-   else
-+  REQUIRED_CC_VER = 3.2
-   ifeq ($(ARCH_DATA_MODEL), 32)
+-  else
+-  ifeq ($(ARCH_DATA_MODEL), 32)
++  endif
++  ifeq ($(ARCH), i586)
      # i586
--    REQUIRED_CC_VER = 3.2
+     REQUIRED_CC_VER = 3.2
      REQUIRED_GCC_VER = 3.2.1*
      REQUIRED_GCC_VER_INT = 3.2.1-7a
-   else
+-  else
++  endif
    ifeq ($(ARCH), amd64)
      # amd64
--    REQUIRED_CC_VER = 3.2
-     REQUIRED_GCC_VER = 3.2.*
-   endif
-   ifeq ($(ARCH), ia64)
-     # ia64
--    REQUIRED_CC_VER = 3.2
+     REQUIRED_CC_VER = 3.2
+@@ -91,7 +90,15 @@ ifeq ($(PLATFORM), linux)
+     REQUIRED_CC_VER = 3.2
      REQUIRED_GCC_VER = 2.9[56789].*
    endif
++  ifneq ("$(findstring ppc,$(ARCH))", "")
++    # ppc or ppc64
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
    endif
-diff -urN openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
---- openjdk.orig/hotspot/make/defs.make	2007-05-24 03:30:12.000000000 -0400
-+++ openjdk/hotspot/make/defs.make	2007-06-17 18:57:03.000000000 -0400
-@@ -167,13 +167,17 @@
++  ifneq ("$(findstring s390,$(ARCH))", "")
++    # s390 or s390x
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
+   endif
+   # Option used to create a shared library
+   SHARED_LIBRARY_FLAG = -shared -mimpure-text
+diff -r 10dfd4e883b1 hotspot/make/defs.make
+--- openjdk/hotspot/make/defs.make	Wed May 30 17:05:50 2007 -0400
++++ openjdk/hotspot/make/defs.make	Fri Jun 01 14:09:55 2007 +0100
+@@ -167,24 +167,34 @@ ifneq ($(OSNAME),windows)
    # Use uname output for SRCARCH, but deal with platform differences. If ARCH
    # is not explicitly listed below, it is treated as i486. Also note amd64 is
    # a separate src arch, so LP64 && i486 ==> amd64.
@@ -73,30 +131,49 @@ diff -urN openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
    ARCH/amd64  = amd64
    ARCH/x86_64 = amd64
 +  ARCH/ppc    = ppc
-+  ARCH/ppc64  = ppc64
++  ARCH/ppc64  = ppc
 +  ARCH/s390   = s390
-+  ARCH/s390x  = s390x
++  ARCH/s390x  = s390
    ifdef LP64
      ifeq ($(SRCARCH), i486)
        SRCARCH = amd64
-@@ -195,8 +199,12 @@
+     endif
+   endif
+ 
+-  # BUILDARCH is usually the same as SRCARCH, except for sparcv9
++  # BUILDARCH is usually the same as SRCARCH, except for sparcv9, ppc64 and s390x.
+   BUILDARCH = $(SRCARCH)
+   ifdef LP64
+     ifeq ($(BUILDARCH), sparc)
+       BUILDARCH = sparcv9
++    endif
++    ifeq ($(BUILDARCH), ppc)
++      BUILDARCH = ppc64
++    endif
++    ifeq ($(BUILDARCH), s390)
++      BUILDARCH = s390x
+     endif
+   endif
+ 
+@@ -195,8 +205,12 @@ ifneq ($(OSNAME),windows)
    LIBARCH/sparc   = sparc
    LIBARCH/sparcv9 = sparcv9
    LIBARCH/ia64    = ia64
+-
+-  LP64_ARCH = sparcv9 amd64 ia64
 +  LIBARCH/ppc     = ppc
 +  LIBARCH/ppc64   = ppc64
 +  LIBARCH/s390    = s390
 +  LIBARCH/s390x   = s390x
- 
--  LP64_ARCH = sparcv9 amd64 ia64
++
 +  LP64_ARCH = sparcv9 amd64 ia64 ppc64 s390x
  endif
  
  # Required make macro settings for all platforms
-diff -urN openjdk.orig/hotspot/build/linux/makefiles/buildtree.make openjdk/hotspot/build/linux/makefiles/buildtree.make
---- openjdk.orig/hotspot/build/linux/makefiles/buildtree.make	2007-05-24 03:31:18.000000000 -0400
-+++ openjdk/hotspot/build/linux/makefiles/buildtree.make	2007-06-17 18:57:03.000000000 -0400
-@@ -277,6 +277,10 @@
+diff -r a208e9bbeafa hotspot/build/linux/makefiles/buildtree.make
+--- openjdk/hotspot/build/linux/makefiles/buildtree.make	Wed Jun 06 11:33:35 2007 +0100
++++ openjdk/hotspot/build/linux/makefiles/buildtree.make	Wed Jun 06 13:10:59 2007 +0100
+@@ -277,6 +277,10 @@ DATA_MODE/sparcv9 = 64
  DATA_MODE/sparcv9 = 64
  DATA_MODE/amd64   = 64
  DATA_MODE/ia64    = 64
@@ -107,52 +184,50 @@ diff -urN openjdk.orig/hotspot/build/linux/makefiles/buildtree.make openjdk/hots
  
  JAVA_FLAG/32 = -d32
  JAVA_FLAG/64 = -d64
-diff -urN openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
---- openjdk.orig/hotspot/build/linux/makefiles/defs.make	2007-05-24 03:31:18.000000000 -0400
-+++ openjdk/hotspot/build/linux/makefiles/defs.make	2007-06-17 18:57:03.000000000 -0400
-@@ -87,6 +87,38 @@
+diff -r a208e9bbeafa hotspot/build/linux/makefiles/defs.make
+--- openjdk/hotspot/build/linux/makefiles/defs.make	Wed Jun 06 11:33:35 2007 +0100
++++ openjdk/hotspot/build/linux/makefiles/defs.make	Wed Jun 06 13:40:18 2007 +0100
+@@ -87,6 +87,36 @@ ifeq ($(ARCH), i686)
    HS_ARCH          = i486
  endif
  
-+# ppc
-+ifeq ($(ARCH), ppc)
-+  ARCH_DATA_MODEL  = 32
-+  PLATFORM         = linux-ppc
-+  VM_PLATFORM      = linux_ppc
-+  HS_ARCH          = ppc
++# ppc and ppc64
++ifneq ($(findstring ppc,$(ARCH)),)
++  ifeq ($(ARCH_DATA_MODEL), 64)
++    ARCH_DATA_MODEL  = 64
++    MAKE_ARGS        += LP64=1
++    PLATFORM         = linux-ppc64
++    VM_PLATFORM      = linux_ppc64
++  else
++    ARCH_DATA_MODEL  = 32
++    PLATFORM         = linux-ppc
++    VM_PLATFORM      = linux_ppc
++  endif
++  HS_ARCH            = ppc
 +endif
 +
-+# ppc64
-+ifeq ($(ARCH), ppc64)
-+  ARCH_DATA_MODEL  = 64
-+  PLATFORM         = linux-ppc64
-+  VM_PLATFORM      = linux_ppc64
-+  HS_ARCH          = ppc64
-+endif
-+
-+# s390
-+ifeq ($(ARCH), s390)
-+  ARCH_DATA_MODEL  = 32
-+  PLATFORM         = linux-s390
-+  VM_PLATFORM      = linux_s390
-+  HS_ARCH          = s390
-+endif
-+
-+# s390x
-+ifeq ($(ARCH), s390x)
-+  ARCH_DATA_MODEL  = 64
-+  PLATFORM         = linux-s390x
-+  VM_PLATFORM      = linux_s390x
-+  HS_ARCH          = s390x
++# s390 and s390x
++ifneq ($(findstring s390,$(ARCH)),)
++  ifeq ($(ARCH_DATA_MODEL), 64)
++    ARCH_DATA_MODEL  = 64
++    MAKE_ARGS        += LP64=1
++    PLATFORM         = linux-s390x
++    VM_PLATFORM      = linux_s390x
++  else
++    ARCH_DATA_MODEL  = 32
++    PLATFORM         = linux-s390
++    VM_PLATFORM      = linux_s390
++  endif
++  HS_ARCH            = s390
 +endif
 +
  JDK_INCLUDE_SUBDIR=linux
  MAKE_ARGS += HOTSPOT_BUILD_VERSION=$(FULL_VERSION)
  # FIXUP: The subdirectory for a debug build is NOT the same on all platforms
-diff -urN openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/build/linux/makefiles/gcc.make
---- openjdk.orig/hotspot/build/linux/makefiles/gcc.make	2007-05-24 03:31:18.000000000 -0400
-+++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-06-17 18:57:03.000000000 -0400
-@@ -71,6 +71,10 @@
+diff -r a208e9bbeafa hotspot/build/linux/makefiles/gcc.make
+--- openjdk/hotspot/build/linux/makefiles/gcc.make	Wed Jun 06 11:33:35 2007 +0100
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	Wed Jun 06 13:24:56 2007 +0100
+@@ -71,6 +71,10 @@ ARCHFLAG/ia64    =
  ARCHFLAG/ia64    =
  ARCHFLAG/sparc   = -m32 -mcpu=v9
  ARCHFLAG/sparcv9 = -m64 -mcpu=v9
@@ -163,9 +238,9 @@ diff -urN openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/bu
  
  CFLAGS     += $(ARCHFLAG)
  AOUT_FLAGS += $(ARCHFLAG)
-diff -urN openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp openjdk/hotspot/src/share/vm/utilities/macros.hpp
---- openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp	2007-05-24 03:31:13.000000000 -0400
-+++ openjdk/hotspot/src/share/vm/utilities/macros.hpp	2007-06-17 18:57:03.000000000 -0400
+diff -r a208e9bbeafa hotspot/src/share/vm/utilities/macros.hpp
+--- openjdk/hotspot/src/share/vm/utilities/macros.hpp	Wed Jun 06 11:33:35 2007 +0100
++++ openjdk/hotspot/src/share/vm/utilities/macros.hpp	Wed Jun 06 13:36:06 2007 +0100
 @@ -149,6 +149,38 @@
  #define NOT_SPARC(code) code
  #endif
@@ -205,32 +280,61 @@ diff -urN openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp openjdk/hotspot
  #define FIX_THIS(code) report_assertion_failure("FIX_THIS",__FILE__, __LINE__, "")
  
  #define define_pd_global(type, name, value) const type pd_##name = value;
-diff -urN openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2007-05-24 03:31:12.000000000 -0400
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2007-06-17 18:57:03.000000000 -0400
-@@ -195,7 +195,12 @@
+diff -r a208e9bbeafa hotspot/src/share/vm/runtime/vm_version.cpp
+--- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	Wed Jun 06 11:33:35 2007 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	Wed Jun 06 13:29:06 2007 +0100
+@@ -195,7 +195,12 @@ const char* Abstract_VM_Version::vm_rele
  #define CPU      IA32_ONLY("x86")                \
                   IA64_ONLY("ia64")               \
                   AMD64_ONLY("amd64")             \
 -                 SPARC_ONLY("sparc")
-+                 SPARC_ONLY("sparc")		 \
-+                 PPC_ONLY("ppc")		 \
-+                 PPC64_ONLY("ppc64")		 \
-+                 S390_ONLY("s390")		 \
++                 SPARC_ONLY("sparc")             \
++                 PPC_ONLY("ppc")                 \
++                 PPC64_ONLY("ppc64")             \
++                 S390_ONLY("s390")               \
 +                 S390X_ONLY("s390x")
 +    
  
  const char *Abstract_VM_Version::vm_platform_string() {
    return OS "-" CPU;
-diff -urN openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
---- openjdk.orig/hotspot/make/Makefile	2007-05-24 03:30:12.000000000 -0400
-+++ openjdk/hotspot/make/Makefile	2007-06-17 18:57:03.000000000 -0400
-@@ -68,12 +68,21 @@
+diff -r a774392390fa hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Tue Jun 19 10:17:10 2007 +0100
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Tue Jun 19 10:21:32 2007 +0100
+@@ -174,6 +174,14 @@ static char cpu_arch[] = "sparcv9";
+ #  else
+ static char cpu_arch[] = "sparc";
+ #  endif
++#elif defined(PPC)
++static char cpu_arch[] = "ppc";
++#elif defined(PPC64)
++static char cpu_arch[] = "ppc64";
++#elif defined(S390)
++static char cpu_arch[] = "s390";
++#elif defined(S390X)
++static char cpu_arch[] = "s390x";
+ #else
+ #error Add appropriate cpu_arch setting
+ #endif
+@@ -2356,7 +2364,9 @@ bool os::large_page_init() {
+     // format has been changed), we'll use the largest page size supported by
+     // the processor.
+ 
+-    _large_page_size = IA32_ONLY(4 * M) AMD64_ONLY(2 * M) IA64_ONLY(256 * M) SPARC_ONLY(4 * M);
++    _large_page_size = IA32_ONLY(4 * M) AMD64_ONLY(2 * M) IA64_ONLY(256 * M)
++      SPARC_ONLY(4 * M) PPC_ONLY(16 * M) PPC64_ONLY(16 * M)
++      S390_ONLY(/* XXX */) S390X_ONLY(/* XXX */);
+ 
+     FILE *fp = fopen("/proc/meminfo", "r");
+     if (fp) {
+diff -r 10dfd4e883b1 hotspot/make/Makefile
+--- openjdk/hotspot/make/Makefile	Wed May 30 17:05:50 2007 -0400
++++ openjdk/hotspot/make/Makefile	Mon Jun 04 13:39:25 2007 +0100
+@@ -68,12 +68,21 @@ C1_VM_TARGETS=product1 fastdebug1 optimi
  C1_VM_TARGETS=product1 fastdebug1 optimized1 jvmg1
  C2_VM_TARGETS=product  fastdebug  optimized  jvmg
  
-+# Portable interpreter targets made available with this Makefile
-+PI_VM_TARGETS=productcore fastdebugcore optimizedcore jvmgcore
++# C++ interpreter targets made available with this Makefile
++CI_VM_TARGETS=productcore fastdebugcore optimizedcore jvmgcore
 +
  all:           all_product all_fastdebug
  all_product:   product product1 docs export_product
@@ -247,21 +351,22 @@ diff -urN openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
  # Do everything
  world:         all create_jdk
  
-@@ -94,6 +103,9 @@
+@@ -93,6 +102,9 @@ endif
+ 
  $(C2_VM_TARGETS):
  	$(MAKE) VM_TARGET=$@ generic_build2
- 
-+$(PI_VM_TARGETS):
-+	$(MAKE) VM_TARGET=$@ generic_build_pi
 +
++$(CI_VM_TARGETS):
++	$(MAKE) VM_TARGET=$@ generic_build_pi
+ 
  # Build compiler1 (client) rule, different for platforms
  generic_build1:
- 	$(MKDIR) -p $(OUTPUTDIR)
-@@ -136,6 +148,17 @@
+@@ -135,6 +147,17 @@ else
+ 	    $(MAKE) -f $(ABS_OS_MAKEFILE) \
  		      $(MAKE_ARGS) $(VM_TARGET)
  endif
- 
-+# Build portable interpreter rule, different for platforms
++
++# Build C++ interpreter rule, different for platforms
 +generic_build_pi:
 +	$(MKDIR) -p $(OUTPUTDIR)
 +ifeq ($(OSNAME),windows)
@@ -271,18 +376,17 @@ diff -urN openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
 +	    $(MAKE) -f $(ABS_OS_MAKEFILE) \
 +		      $(MAKE_ARGS) CC_INTERP=true $(VM_TARGET)
 +endif
-+
+ 
  # Export file rule
  generic_export: $(EXPORT_LIST)
- export_product:
-diff -urN openjdk.orig/control/make/hotspot-rules.gmk openjdk/control/make/hotspot-rules.gmk
---- openjdk.orig/control/make/hotspot-rules.gmk	2007-05-24 03:30:08.000000000 -0400
-+++ openjdk/control/make/hotspot-rules.gmk	2007-06-17 18:57:03.000000000 -0400
-@@ -75,6 +75,13 @@
+diff -r 10dfd4e883b1 control/make/hotspot-rules.gmk
+--- openjdk/control/make/hotspot-rules.gmk	Wed May 30 17:05:50 2007 -0400
++++ openjdk/control/make/hotspot-rules.gmk	Fri Jun 08 16:29:22 2007 +0100
+@@ -75,6 +75,13 @@ ifeq ($(DEBUG_NAME), fastdebug)
    HOTSPOT_TARGET = all_fastdebug
  endif
  
-+# Use the portable interpreter for platforms without a JIT
++# Use the C++ interpreter for platforms without a JIT
 +ifneq ($(ARCH), i586)
 +  ifeq ($(wildcard $(HOTSPOT_TOPDIR)/src/cpu/$(ARCH)/vm/$(ARCH).ad),)
 +    HOTSPOT_TARGET := $(HOTSPOT_TARGET)core
@@ -292,3 +396,121 @@ diff -urN openjdk.orig/control/make/hotspot-rules.gmk openjdk/control/make/hotsp
  HOTSPOT_MAKE_ARGS += ALT_SLASH_JAVA=$(SLASH_JAVA)
  HOTSPOT_MAKE_ARGS += ARCH_DATA_MODEL=$(ARCH_DATA_MODEL)
  HOTSPOT_MAKE_ARGS += ALT_OUTPUTDIR=$(HOTSPOT_OUTPUTDIR)
+diff -r b34fce487ef8 hotspot/build/linux/makefiles/sa.make
+--- openjdk/hotspot/build/linux/makefiles/sa.make	Wed Jun 06 10:27:24 2007 +0100
++++ openjdk/hotspot/build/linux/makefiles/sa.make	Wed Jun 06 10:41:08 2007 +0100
+@@ -55,10 +55,10 @@ SA_PROPERTIES = $(SA_CLASSDIR)/sa.proper
+ SA_PROPERTIES = $(SA_CLASSDIR)/sa.properties
+ 
+ # if $(AGENT_DIR) does not exist, we don't build SA
+-# also, we don't build SA on Itanium.
++# also, we don't build SA on non-JIT platforms
+ 
+ all: 
+-	if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" ] ; then \
++	if [ -d $(AGENT_DIR) -a ! "$(CC_INTERP)" ] ; then \
+ 	   $(MAKE) -f sa.make $(GENERATED)/sa-jdi.jar; \
+ 	fi
+ 
+diff -r b34fce487ef8 hotspot/build/linux/makefiles/saproc.make
+--- openjdk/hotspot/build/linux/makefiles/saproc.make	Wed Jun 06 10:27:24 2007 +0100
++++ openjdk/hotspot/build/linux/makefiles/saproc.make	Wed Jun 06 10:41:37 2007 +0100
+@@ -44,10 +44,10 @@ DEST_SAPROC = $(JDK_LIBDIR)/$(LIBSAPROC)
+ DEST_SAPROC = $(JDK_LIBDIR)/$(LIBSAPROC)
+ 
+ # if $(AGENT_DIR) does not exist, we don't build SA
+-# also, we don't build SA on Itanium.
++# also, we don't build SA on non-JIT platforms
+ 
+ checkAndBuildSA:
+-	$(QUIETLY) if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" ] ; then \
++	$(QUIETLY) if [ -d $(AGENT_DIR) -a ! "$(CC_INTERP)" ] ; then \
+ 	   $(MAKE) -f vm.make $(LIBSAPROC); \
+ 	fi
+ 
+diff -r 1a5632baad6e hotspot/build/linux/makefiles/defs.make
+--- openjdk/hotspot/build/linux/makefiles/defs.make	Tue Jun 19 14:09:39 2007 +0100
++++ openjdk/hotspot/build/linux/makefiles/defs.make	Wed Jun 20 08:58:29 2007 +0100
+@@ -124,22 +124,22 @@ MAKE_ARGS += HOTSPOT_BUILD_VERSION=$(FUL
+ # FIXUP: The subdirectory for a debug build is NOT the same on all platforms
+ VM_DEBUG=jvmg
+ 
++ifeq ($(wildcard $(GAMMADIR)/src/cpu/$(HS_ARCH)/vm/$(HS_ARCH).ad),)
++  CC_INTERP=true
++endif
++
+ EXPORT_LIST += $(EXPORT_DOCS_DIR)/platform/jvmti/jvmti.html
+ EXPORT_SERVER_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/server
++EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjsig.so
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.so
+-ifeq ($(ARCH_DATA_MODEL), 32)
+-  EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
+-  EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
+-  EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjsig.so
+-  EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.so 
++ifndef CC_INTERP
++  ifeq ($(ARCH_DATA_MODEL), 32)
++    EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
++    EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjsig.so
++    EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.so 
++  endif
+   EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libsaproc.so
+   EXPORT_LIST += $(EXPORT_LIB_DIR)/sa-jdi.jar 
+-else
+-  ifeq ($(ARCH),ia64)
+-    else
+-      EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libsaproc.so
+-      EXPORT_LIST += $(EXPORT_LIB_DIR)/sa-jdi.jar
+-    endif
+ endif
+diff -r 1a5632baad6e hotspot/make/Makefile
+--- openjdk/hotspot/make/Makefile	Tue Jun 19 14:09:39 2007 +0100
++++ openjdk/hotspot/make/Makefile	Wed Jun 20 09:11:10 2007 +0100
+@@ -188,16 +188,23 @@ DOCS_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_doc
+ DOCS_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_docs
+ C1_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler1
+ C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler2
++CI_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_core
+ C1_DIR=$(C1_BASE_DIR)/$(VM_SUBDIR)
+ C2_DIR=$(C2_BASE_DIR)/$(VM_SUBDIR)
+-
+-# Misc files and generated files need to come from C1 or C2 area
+-ifeq ($(ARCH_DATA_MODEL), 32)
+-  MISC_DIR=$(C1_DIR)
+-  GEN_DIR=$(C1_BASE_DIR)/generated
+-else
+-  MISC_DIR=$(C2_DIR)
+-  GEN_DIR=$(C2_BASE_DIR)/generated
++CI_DIR=$(CI_BASE_DIR)/$(VM_SUBDIR)
++
++# Misc files and generated files need to come from the correct area
++ifdef CC_INTERP
++  MISC_DIR=$(CI_DIR)
++  GEN_DIR=$(CI_BASE_DIR)/generated
++else
++  ifeq ($(ARCH_DATA_MODEL), 32)
++    MISC_DIR=$(C1_DIR)
++    GEN_DIR=$(C1_BASE_DIR)/generated
++  else
++    MISC_DIR=$(C2_DIR)
++    GEN_DIR=$(C2_BASE_DIR)/generated
++  endif
+ endif
+ 
+ # Bin files (windows)
+@@ -240,8 +247,13 @@ ifneq ($(OSNAME),windows)
+ 	$(install-file)
+ $(EXPORT_CLIENT_DIR)/64/%.so:    $(C1_DIR)/%.so
+ 	$(install-file)
++ifdef CC_INTERP
++$(EXPORT_SERVER_DIR)/%.so:       $(CI_DIR)/%.so
++	$(install-file)
++else
+ $(EXPORT_SERVER_DIR)/%.so:       $(C2_DIR)/%.so
+ 	$(install-file)
++endif
+ $(EXPORT_SERVER_DIR)/64/%.so:    $(C2_DIR)/%.so
+ 	$(install-file)
+ endif
