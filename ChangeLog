@@ -1,5 +1,19 @@
 2007-06-22  Francis Kung  <fkung@redhat.com>
 
+	* patches/icedtea-ecj-bootstrap.patch: Path ToBin.java file.
+	* patches/icedtea-graphics.patch: Stub out Tracker and Stealer
+	code in sun.awt.image.SunWritableRaster.
+	* rt/java/awt/color/ICC_Profile.java: Modify for use with Sun's pluggable
+	colour management and LittleCMS.
+	* rt/java/awt/image/Raster.java: Create Sun-specific Rasters.
+	* rt/java/awt/image/WritableRaster.java: Likewise.
+
+2007-06-22  Francis Kung  <fkung@redhat.com>
+
+	* Makefile.in: Regnerated.
+
+2007-06-22  Francis Kung  <fkung@redhat.com>
+
 	* Makefile.am: Specify default openjdk zip file.
 	* acinclude.m4: Remove openjdk zip file name constant.
 	* Makefile.in: Regenerated.

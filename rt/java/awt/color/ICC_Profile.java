@@ -55,6 +55,9 @@ import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import sun.java2d.cmm.PCMM;
+import sun.java2d.cmm.CMSManager;
+
 /**
  * ICC Profile - represents an ICC Color profile.
  * The ICC profile format is a standard file format which maps the transform
@@ -262,12 +265,10 @@ public class ICC_Profile implements Serializable
   private static final float[] D50 = { 0.96422f, 1.00f, 0.82521f };
 
   /**
-   * Color space profile ID
-   * Set to the predefined profile class (e.g. CS_sRGB) if a predefined
-   * color space is used, set to -1 otherwise.
-   * (or if the profile has been modified)
+   * Color space profile ID - this is the address of the native littleCMS
+   * profile that backs this profile.
    */
-  private transient int profileID;
+  private transient long profileID;
 
   /**
    * The profile header data
@@ -275,28 +276,22 @@ public class ICC_Profile implements Serializable
   private transient ProfileHeader header;
 
   /**
-   * A hashtable containing the profile tags as TagEntry objects
+   * The ColorSpace used, or -1 if not one of the built-in types.
    */
-  private transient Hashtable tagTable;
+  private int colorSpace = -1;
+
+  /**
+   * Store the color manager for easy access.
+   */
+  private PCMM pcmm = CMSManager.getModule();
 
   /**
    * Contructor for predefined colorspaces
    */
-  ICC_Profile(int profileID)
+  ICC_Profile(int colorSpace)
   {
-    header = null;
-    tagTable = null;
-    createProfile(profileID);
-  }
-
-  /**
-   * Constructs an ICC_Profile from a header and a table of loaded tags.
-   */
-  ICC_Profile(ProfileHeader h, Hashtable tags) throws IllegalArgumentException
-  {
-    header = h;
-    tagTable = tags;
-    profileID = -1; // Not a predefined color space
+    this.colorSpace = colorSpace;
+    createProfile(colorSpace);
   }
 
   /**
@@ -307,8 +302,8 @@ public class ICC_Profile implements Serializable
     // get header and verify it
     header = new ProfileHeader(data);
     header.verifyHeader(data.length);
-    tagTable = createTagTable(data);
-    profileID = -1; // Not a predefined color space
+
+    profileID = pcmm.loadProfile(data);
   }
 
   /**
@@ -316,6 +311,7 @@ public class ICC_Profile implements Serializable
    */
   protected void finalize()
   {
+    pcmm.freeProfile(profileID);
   }
 
   /**
@@ -334,17 +330,16 @@ public class ICC_Profile implements Serializable
   {
     ProfileHeader header = new ProfileHeader(data);
 
-    // verify it as a correct ICC header, including size
+    // get header and verify it
+    header = new ProfileHeader(data);
     header.verifyHeader(data.length);
 
-    Hashtable tags = createTagTable(data);
-
-    if (isRGBProfile(header, tags))
+    if (isRGBProfile(header))
       return new ICC_ProfileRGB(data);
-    if (isGrayProfile(header, tags))
+    if (isGrayProfile(header))
       return new ICC_ProfileGray(data);
 
-    return new ICC_Profile(header, tags);
+    return new ICC_Profile(data);
   }
 
   /**
@@ -523,22 +518,8 @@ public class ICC_Profile implements Serializable
    */
   public byte[] getData()
   {
-    int size = getSize();
-    byte[] data = new byte[size];
-
-    // Header
-    System.arraycopy(header.getData(size), 0, data, 0, ProfileHeader.HEADERSIZE);
-    // # of tags
-    byte[] tt = getTagTable();
-    System.arraycopy(tt, 0, data, ProfileHeader.HEADERSIZE, tt.length);
-
-    Enumeration e = tagTable.elements();
-    while (e.hasMoreElements())
-      {
-	TagEntry tag = (TagEntry) e.nextElement();
-	System.arraycopy(tag.getData(), 0, 
-			 data, tag.getOffset(), tag.getSize());
-      }
+    byte[] data = new byte[pcmm.getProfileSize(profileID)];
+    pcmm.getProfileData(profileID, data);
     return data;
   }
 
@@ -554,10 +535,9 @@ public class ICC_Profile implements Serializable
     if (tagSignature == icSigHead)
       return header.getData(getSize());
 
-    TagEntry t = (TagEntry) tagTable.get(TagEntry.tagHashKey(tagSignature));
-    if (t == null)
-      return null;
-    return t.getData();
+    byte[] data = new byte[pcmm.getTagSize(profileID, tagSignature)];
+    pcmm.getTagData(profileID, tagSignature, data);
+    return data;
   }
 
   /**
@@ -571,15 +551,10 @@ public class ICC_Profile implements Serializable
    */
   public void setData(int tagSignature, byte[] data)
   {
-    profileID = -1; // Not a predefined color space if modified.
-
     if (tagSignature == icSigHead)
       header = new ProfileHeader(data);
-    else
-      {
-	TagEntry t = new TagEntry(tagSignature, data);
-	tagTable.put(t.hashKey(), t);
-      }
+
+    pcmm.setTagData(profileID, tagSignature, data);
   }
 
   /**
@@ -616,9 +591,9 @@ public class ICC_Profile implements Serializable
    */
   protected Object readResolve() throws ObjectStreamException
   {
-    if (isRGBProfile(header, tagTable))
+    if (isRGBProfile(header))
       return new ICC_ProfileRGB(getData());
-    if (isGrayProfile(header, tagTable))
+    if (isGrayProfile(header))
       return new ICC_ProfileGray(getData());
     return this;
   }
@@ -636,8 +611,7 @@ public class ICC_Profile implements Serializable
     if (data != null)
       {
 	header = new ProfileHeader(data);
-	tagTable = createTagTable(data);
-	profileID = -1; // Not a predefined color space
+        profileID = pcmm.loadProfile(data);
       }
 
     if (predef != null)
@@ -665,15 +639,17 @@ public class ICC_Profile implements Serializable
   private void writeObject(ObjectOutputStream s) throws IOException
   {
     s.defaultWriteObject();
-    if (profileID == ColorSpace.CS_sRGB)
+
+    int colorSpaceID = getColorSpaceType();
+    if (colorSpaceID == ColorSpace.CS_sRGB)
       s.writeObject("CS_sRGB");
-    else if (profileID == ColorSpace.CS_LINEAR_RGB)
+    else if (colorSpaceID == ColorSpace.CS_LINEAR_RGB)
       s.writeObject("CS_LINEAR_RGB");
-    else if (profileID == ColorSpace.CS_CIEXYZ)
+    else if (colorSpaceID == ColorSpace.CS_CIEXYZ)
       s.writeObject("CS_CIEXYZ");
-    else if (profileID == ColorSpace.CS_GRAY)
+    else if (colorSpaceID == ColorSpace.CS_GRAY)
       s.writeObject("CS_GRAY");
-    else if (profileID == ColorSpace.CS_PYCC)
+    else if (colorSpaceID == ColorSpace.CS_PYCC)
       s.writeObject("CS_PYCC");
     else
       {
@@ -685,38 +661,14 @@ public class ICC_Profile implements Serializable
   }
 
   /**
-   * Sorts a ICC profile byte array into TagEntry objects stored in
-   * a hash table.
-   */
-  private static Hashtable createTagTable(byte[] data)
-                                   throws IllegalArgumentException
-  {
-    ByteBuffer buf = ByteBuffer.wrap(data);
-    int nTags = buf.getInt(tagTableOffset);
-
-    Hashtable tagTable = new Hashtable();
-    for (int i = 0; i < nTags; i++)
-      {
-	TagEntry te = new TagEntry(buf.getInt(tagTableOffset
-	                                      + i * TagEntry.entrySize + 4),
-	                           buf.getInt(tagTableOffset
-	                                      + i * TagEntry.entrySize + 8),
-	                           buf.getInt(tagTableOffset
-	                                      + i * TagEntry.entrySize + 12),
-	                           data);
-
-	if (tagTable.put(te.hashKey(), te) != null)
-	  throw new IllegalArgumentException("Duplicate tag in profile:" + te);
-      }
-    return tagTable;
-  }
-
-  /**
    * Returns the total size of the padded, stored data
    * Note: Tags must be stored on 4-byte aligned offsets.
    */
   private int getSize()
   {
+    return pcmm.getProfileSize(profileID);
+
+    /*
     int totalSize = ProfileHeader.HEADERSIZE; // size of header
 
     int tagTableSize = 4 + tagTable.size() * TagEntry.entrySize; // size of tag table	
@@ -733,37 +685,7 @@ public class ICC_Profile implements Serializable
 	totalSize += tagSize;
       }
     return totalSize;
-  }
-
-  /**
-   * Generates the tag index table
-   */
-  private byte[] getTagTable()
-  {
-    int tagTableSize = 4 + tagTable.size() * TagEntry.entrySize;
-    if ((tagTableSize & 0x0003) != 0)
-      tagTableSize += 4 - (tagTableSize & 0x0003); // pad 
-
-    int offset = 4;
-    int tagOffset = ProfileHeader.HEADERSIZE + tagTableSize;
-    ByteBuffer buf = ByteBuffer.allocate(tagTableSize);
-    buf.putInt(tagTable.size()); // number of tags
-
-    Enumeration e = tagTable.elements();
-    while (e.hasMoreElements())
-      {
-	TagEntry tag = (TagEntry) e.nextElement();
-	buf.putInt(offset, tag.getSignature());
-	buf.putInt(offset + 4, tagOffset);
-	buf.putInt(offset + 8, tag.getSize());
-	tag.setOffset(tagOffset);
-	int tagSize = tag.getSize();
-	if ((tagSize & 0x0003) != 0)
-	  tagSize += 4 - (tagSize & 0x0003); // pad	    
-	tagOffset += tagSize;
-	offset += 12;
-      }
-    return buf.array();
+    */
   }
 
   /**
@@ -774,10 +696,15 @@ public class ICC_Profile implements Serializable
    * (r,g,b)TRCTags included
    * mediaWhitePointTag included
    */
-  private static boolean isRGBProfile(ProfileHeader header, Hashtable tags)
+  private static boolean isRGBProfile(ProfileHeader header)
   {
     if (header.getColorSpace() != ColorSpace.TYPE_RGB)
       return false;
+    return true;
+
+    /*
+    // TODO: implement pcmm.tagExists()
+
     if (tags.get(TagEntry.tagHashKey(icSigRedColorantTag)) == null)
       return false;
     if (tags.get(TagEntry.tagHashKey(icSigGreenColorantTag)) == null)
@@ -791,6 +718,7 @@ public class ICC_Profile implements Serializable
     if (tags.get(TagEntry.tagHashKey(icSigBlueTRCTag)) == null)
       return false;
     return (tags.get(TagEntry.tagHashKey(icSigMediaWhitePointTag)) != null);
+    */
   }
 
   /**
@@ -800,13 +728,19 @@ public class ICC_Profile implements Serializable
    * grayTRCTag included
    * mediaWhitePointTag included
    */
-  private static boolean isGrayProfile(ProfileHeader header, Hashtable tags)
+  private static boolean isGrayProfile(ProfileHeader header)
   {
     if (header.getColorSpace() != ColorSpace.TYPE_GRAY)
       return false;
+    return true;
+
+    /*
+    // TODO: implement pcmm.tagExists()
+
     if (tags.get(TagEntry.tagHashKey(icSigGrayTRCTag)) == null)
       return false;
     return (tags.get(TagEntry.tagHashKey(icSigMediaWhitePointTag)) != null);
+    */
   }
 
   /**
@@ -885,7 +819,7 @@ public class ICC_Profile implements Serializable
    */
   int isPredefined()
   {
-    return profileID;
+    return colorSpace;
   }
 
   /**
@@ -1079,9 +1013,7 @@ public class ICC_Profile implements Serializable
    */
   private void createProfile(int colorSpace) throws IllegalArgumentException
   {
-    this.profileID = colorSpace;
     header = new ProfileHeader();
-    tagTable = new Hashtable();
 
     switch (colorSpace)
       {
@@ -1140,17 +1072,30 @@ public class ICC_Profile implements Serializable
 	points[i] = in[0];
       }
 
-    setData(icSigRedColorantTag, makeXYZData(r));
-    setData(icSigGreenColorantTag, makeXYZData(g));
-    setData(icSigBlueColorantTag, makeXYZData(b));
-    setData(icSigMediaWhitePointTag, makeXYZData(white));
-    setData(icSigMediaBlackPointTag, makeXYZData(black));
-    setData(icSigRedTRCTag, makeTRC(points));
-    setData(icSigGreenTRCTag, makeTRC(points));
-    setData(icSigBlueTRCTag, makeTRC(points));
-    setData(icSigCopyrightTag, makeTextTag(copyrightNotice));
-    setData(icSigProfileDescriptionTag, makeDescTag("Generic sRGB"));
-    this.profileID = ColorSpace.CS_sRGB;
+    Hashtable<String, TagEntry> tags = new Hashtable<String, TagEntry>();
+
+    TagEntry t = new TagEntry(icSigRedColorantTag, makeXYZData(r));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigGreenColorantTag, makeXYZData(g));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigBlueColorantTag, makeXYZData(b));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigMediaWhitePointTag, makeXYZData(white));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigMediaBlackPointTag, makeXYZData(black));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigRedTRCTag, makeTRC(points));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigGreenTRCTag, makeTRC(points));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigBlueTRCTag, makeTRC(points));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigCopyrightTag, makeTextTag(copyrightNotice));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigProfileDescriptionTag, makeDescTag("Generic sRGB"));
+    tags.put(t.hashKey(), t);
+
+    profileID = pcmm.loadProfile(getDataFromTags(header, tags));
   }
 
   /**
@@ -1174,19 +1119,32 @@ public class ICC_Profile implements Serializable
     g = cs.toCIEXYZ(g);
     b = cs.toCIEXYZ(b);
 
-    setData(icSigRedColorantTag, makeXYZData(r));
-    setData(icSigGreenColorantTag, makeXYZData(g));
-    setData(icSigBlueColorantTag, makeXYZData(b));
+    Hashtable<String, TagEntry> tags = new Hashtable<String, TagEntry>();
 
-    setData(icSigMediaWhitePointTag, makeXYZData(white));
-    setData(icSigMediaBlackPointTag, makeXYZData(black));
+    TagEntry t = new TagEntry(icSigRedColorantTag, makeXYZData(r));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigGreenColorantTag, makeXYZData(g));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigBlueColorantTag, makeXYZData(b));
+    tags.put(t.hashKey(), t);
 
-    setData(icSigRedTRCTag, makeTRC());
-    setData(icSigGreenTRCTag, makeTRC());
-    setData(icSigBlueTRCTag, makeTRC());
-    setData(icSigCopyrightTag, makeTextTag(copyrightNotice));
-    setData(icSigProfileDescriptionTag, makeDescTag("Linear RGB"));
-    this.profileID = ColorSpace.CS_LINEAR_RGB;
+    t = new TagEntry(icSigMediaWhitePointTag, makeXYZData(white));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigMediaBlackPointTag, makeXYZData(black));
+    tags.put(t.hashKey(), t);
+
+    t = new TagEntry(icSigRedTRCTag, makeTRC());
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigGreenTRCTag, makeTRC());
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigBlueTRCTag, makeTRC());
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigCopyrightTag, makeTextTag(copyrightNotice));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigProfileDescriptionTag, makeDescTag("Linear RGB"));
+    tags.put(t.hashKey(), t);
+
+    profileID = pcmm.loadProfile(getDataFromTags(header, tags));
   }
 
   /**
@@ -1201,12 +1159,20 @@ public class ICC_Profile implements Serializable
 
     float[] white = D50;
 
-    setData(icSigMediaWhitePointTag, makeXYZData(white));
-    setData(icSigAToB0Tag, makeIdentityClut());
-    setData(icSigBToA0Tag, makeIdentityClut());
-    setData(icSigCopyrightTag, makeTextTag(copyrightNotice));
-    setData(icSigProfileDescriptionTag, makeDescTag("CIE XYZ identity profile"));
-    this.profileID = ColorSpace.CS_CIEXYZ;
+    Hashtable<String, TagEntry> tags = new Hashtable<String, TagEntry>();
+
+    TagEntry t = new TagEntry(icSigMediaWhitePointTag, makeXYZData(white));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigAToB0Tag, makeIdentityClut());
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigBToA0Tag, makeIdentityClut());
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigCopyrightTag, makeTextTag(copyrightNotice));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigProfileDescriptionTag, makeDescTag("CIE XYZ identity profile"));
+    tags.put(t.hashKey(), t);
+
+    profileID = pcmm.loadProfile(getDataFromTags(header, tags));
   }
 
   /**
@@ -1220,11 +1186,18 @@ public class ICC_Profile implements Serializable
     // CIE 1931 D50 white point (in Lab coordinates)
     float[] white = D50;
 
-    setData(icSigMediaWhitePointTag, makeXYZData(white));
-    setData(icSigGrayTRCTag, makeTRC(1.0f));
-    setData(icSigCopyrightTag, makeTextTag(copyrightNotice));
-    setData(icSigProfileDescriptionTag, makeDescTag("Linear grayscale"));
-    this.profileID = ColorSpace.CS_GRAY;
+    Hashtable<String, TagEntry> tags = new Hashtable<String, TagEntry>();
+
+    TagEntry t = new TagEntry(icSigMediaWhitePointTag, makeXYZData(white));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigGrayTRCTag, makeTRC(1.0f));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigCopyrightTag, makeTextTag(copyrightNotice));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigProfileDescriptionTag, makeDescTag("Linear grayscale"));
+    tags.put(t.hashKey(), t);
+
+    profileID = pcmm.loadProfile(getDataFromTags(header, tags));
   }
 
   /**
@@ -1237,8 +1210,75 @@ public class ICC_Profile implements Serializable
 
     // Create CLUTs here. :-)
 
-    setData(icSigCopyrightTag, makeTextTag(copyrightNotice));
-    setData(icSigProfileDescriptionTag, makeDescTag("Photo YCC"));
-    this.profileID = ColorSpace.CS_PYCC;
+    Hashtable<String, TagEntry> tags = new Hashtable<String, TagEntry>();
+
+    TagEntry t = new TagEntry(icSigCopyrightTag, makeTextTag(copyrightNotice));
+    tags.put(t.hashKey(), t);
+    t = new TagEntry(icSigProfileDescriptionTag, makeDescTag("Photo YCC"));
+    tags.put(t.hashKey(), t);
+
+    profileID = pcmm.loadProfile(getDataFromTags(header, tags));
   }
+
+  /**
+   * Creates a byte buffer of ICC data from a given header and tags.
+   */
+  private static byte[] getDataFromTags(ProfileHeader header, Hashtable<String, TagEntry> tags)
+  {
+    // First calculate size of buffer
+    int size = ProfileHeader.HEADERSIZE; // size of header
+
+    int tagTableSize = 4 + tags.size() * TagEntry.entrySize; // size of tag table
+    if ((tagTableSize & 0x0003) != 0)
+      tagTableSize += 4 - (tagTableSize & 0x0003); // pad
+    size += tagTableSize;
+
+    // Also convert tag hashtable to bytes while we're iterating through it
+    int offset = 4;
+    int tagOffset = ProfileHeader.HEADERSIZE + tagTableSize;
+    ByteBuffer tt = ByteBuffer.allocate(tagTableSize);
+    tt.putInt(tags.size()); // number of tags
+
+    Enumeration<TagEntry> e = tags.elements();
+    while (e.hasMoreElements())
+      {
+        TagEntry tag = e.nextElement();
+        int tagSize = tag.getSize();
+        if ((tagSize & 0x0003) != 0)
+          tagSize += 4 - (tagSize & 0x0003); // pad
+        size += tagSize;
+
+        tt.putInt(offset, tag.getSignature());
+        tt.putInt(offset + 4, tagOffset);
+        tt.putInt(offset + 8, tag.getSize());
+        tag.setOffset(tagOffset);
+        tagOffset += tagSize;
+        offset += 12;
+      }
+
+    byte[] data = new byte[size];
+
+    // Copy header & tags into buffer
+    System.arraycopy(header.getData(size), 0, data, 0, ProfileHeader.HEADERSIZE);
+
+    if (tt.hasArray())
+    {
+      System.arraycopy(tt.array(), 0, data, ProfileHeader.HEADERSIZE, tt.array().length);
+    }
+    else
+    {
+      tt.rewind();
+      tt.get(data, ProfileHeader.HEADERSIZE, tt.remaining());
+    }
+
+    e = tags.elements();
+    while (e.hasMoreElements())
+      {
+        TagEntry tag = e.nextElement();
+        System.arraycopy(tag.getData(), 0,
+                         data, tag.getOffset(), tag.getSize());
+      }
+    return data;
+  }
+
 } // class ICC_Profile

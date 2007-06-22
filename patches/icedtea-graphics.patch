@@ -1,6 +1,6 @@
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunFont.c openjdk/j2se/src/share/native/sun/font/sunFont.c
 --- openjdk.orig/j2se/src/share/native/sun/font/sunFont.c	2007-05-24 03:43:59.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/font/sunFont.c	2007-06-15 00:46:01.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/font/sunFont.c	2007-06-18 13:55:32.000000000 -0400
 @@ -164,7 +164,7 @@
       tmpClass = (*env)->FindClass(env, "sun/font/FileFont");
       sunFontIDs.pScaler = (*env)->GetFieldID(env, tmpClass, "pScaler", "J");
@@ -10,3 +10,134 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunFont.c openjdk/j2se/src
       initLCDGammaTables();
  }
  
+diff -urN openjdk.orig/j2se/src/share/native/sun/java2d/cmm/lcms/LCMS.c openjdk/j2se/src/share/native/sun/java2d/cmm/lcms/LCMS.c
+--- openjdk.orig/j2se/src/share/native/sun/java2d/cmm/lcms/LCMS.c	2007-05-24 03:44:01.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/java2d/cmm/lcms/LCMS.c	2007-06-18 15:45:29.000000000 -0400
+@@ -505,7 +505,7 @@
+     IL_offset_fID = (*env)->GetFieldID (env, IL, "offset", "I");
+     IL_nextRowOffset_fID = (*env)->GetFieldID (env, IL, "nextRowOffset", "I");
+ 
+-    PF_ID_fID = (*env)->GetFieldID (env, Pf, "ID", "J");
++    PF_ID_fID = (*env)->GetFieldID (env, Pf, "profileID", "J");
+ }
+ 
+
+diff -urN openjdk.orig/j2se/src/share/classes/sun/awt/image/SunWritableRaster.java openjdk/j2se/src/share/classes/sun/awt/image/SunWritableRaster.java
+--- openjdk.orig/j2se/src/share/classes/sun/awt/image/SunWritableRaster.java	2007-05-24 03:43:08.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/awt/image/SunWritableRaster.java	2007-06-22 10:19:53.000000000 -0400
+@@ -56,50 +56,56 @@
+         public StateTrackableDelegate getTrackable(DataBuffer db);
+     }
+ 
++/*
+     public static void setDataStealer(DataStealer ds) {
+         if (stealer != null) {
+ 	    throw new InternalError("Attempt to set DataStealer twice");
+         }
+         stealer = ds;
+     }
++*/
+ 
+     public static byte[] stealData(DataBufferByte dbb, int bank) {
+-        return stealer.getData(dbb, bank);
++//        return stealer.getData(dbb, bank);
++	return dbb.getData(bank);
+     }
+ 
+     public static short[] stealData(DataBufferUShort dbus, int bank) {
+-        return stealer.getData(dbus, bank);
++//        return stealer.getData(dbus, bank);
++	return dbus.getData(bank);
+     }
+ 
+     public static int[] stealData(DataBufferInt dbi, int bank) {
+-        return stealer.getData(dbi, bank);
++//        return stealer.getData(dbi, bank);
++	return dbi.getData(bank);
+     }
+ 
+     public static StateTrackableDelegate stealTrackable(DataBuffer db) {
+-        return stealer.getTrackable(db);
++//        return stealer.getTrackable(db);
++	return StateTrackableDelegate.UNTRACKABLE_DELEGATE;
+     }
+ 
+     public static void markDirty(DataBuffer db) {
+-        stealer.getTrackable(db).markDirty();
++//        stealer.getTrackable(db).markDirty();
+     }
+ 
+     public static void markDirty(WritableRaster wr) {
+-        if (wr instanceof SunWritableRaster) {
+-            ((SunWritableRaster) wr).markDirty();
+-        } else {
+-            markDirty(wr.getDataBuffer());
+-        }
++//        if (wr instanceof SunWritableRaster) {
++//            ((SunWritableRaster) wr).markDirty();
++//        } else {
++//            markDirty(wr.getDataBuffer());
++//        }
+     }
+ 
+     public static void markDirty(Image img) {
+-        SurfaceData.getPrimarySurfaceData(img).markDirty();
++//        SurfaceData.getPrimarySurfaceData(img).markDirty();
+     }
+ 
+     private StateTrackableDelegate theTrackable;
+ 
+     public SunWritableRaster(SampleModel sampleModel, Point origin) {
+         super(sampleModel, origin);
+-        theTrackable = stealTrackable(dataBuffer);
++//        theTrackable = stealTrackable(dataBuffer);
+     }
+ 
+     public SunWritableRaster(SampleModel sampleModel,
+@@ -107,7 +113,7 @@
+                              Point origin) 
+     {
+         super(sampleModel, dataBuffer, origin);
+-        theTrackable = stealTrackable(dataBuffer);
++//        theTrackable = stealTrackable(dataBuffer);
+     }
+ 
+     public SunWritableRaster(SampleModel sampleModel,
+@@ -117,13 +123,13 @@
+                              WritableRaster parent)
+     {
+         super(sampleModel, dataBuffer, aRegion, sampleModelTranslate, parent);
+-        theTrackable = stealTrackable(dataBuffer);
++//        theTrackable = stealTrackable(dataBuffer);
+     }
+ 
+     /**
+      * Mark the TrackableDelegate of the associated DataBuffer dirty.
+      */
+     public final void markDirty() {
+-        theTrackable.markDirty();
++//        theTrackable.markDirty();
+     }
+ }
+diff -urN openjdk.orig/j2se/src/share/classes/sun/awt/image/SurfaceManager.java openjdk/j2se/src/share/classes/sun/awt/image/SurfaceManager.java
+--- openjdk.orig/j2se/src/share/classes/sun/awt/image/SurfaceManager.java	2007-05-24 03:43:08.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/awt/image/SurfaceManager.java	2007-06-21 11:47:45.000000000 -0400
+@@ -73,13 +73,14 @@
+ 	    /*
+ 	     * In practice only a BufferedImage will get here.
+ 	     */
+-	    try {
++//	    try {
++System.err.println("the image is a " + img);
+ 		BufferedImage bi = (BufferedImage) img;
+ 		sMgr = new BufImgSurfaceManager(bi);
+ 		setManager(bi, sMgr);
+-            } catch (ClassCastException e) {
+-                throw new IllegalArgumentException("Invalid Image variant");
+-            }
++//            } catch (ClassCastException e) {
++//                throw new IllegalArgumentException("Invalid Image variant");
++//            }
+ 	}
+ 	return sMgr;
+     }

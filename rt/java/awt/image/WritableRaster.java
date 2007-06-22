@@ -39,6 +39,7 @@ package java.awt.image;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import sun.awt.image.SunWritableRaster;
 
 /**
  * A raster with methods to support updating pixel values.
@@ -115,7 +116,7 @@ public class WritableRaster extends Raster
     int tcx = sampleModelTranslateX - minX + childMinX;
     int tcy = sampleModelTranslateY - minY + childMinY;
     
-    return new WritableRaster(sampleModel, dataBuffer,
+    return new SunWritableRaster(sampleModel, dataBuffer,
         new Rectangle(childMinX, childMinY, width, height), 
         new Point(tcx, tcy), this);
   }
@@ -144,7 +145,7 @@ public class WritableRaster extends Raster
       sampleModel :
       sampleModel.createSubsetSampleModel(bandList);
     
-    return new WritableRaster(sm, dataBuffer,
+    return new SunWritableRaster(sm, dataBuffer,
         new Rectangle(childMinX, childMinY, w, h),
         new Point(sampleModelTranslateX + childMinX - parentX,
                   sampleModelTranslateY + childMinY - parentY),
@@ -163,7 +164,7 @@ public class WritableRaster extends Raster
       sampleModel :
       sampleModel.createSubsetSampleModel(bandList);
 
-    return new WritableRaster(sm, dataBuffer,
+    return new SunWritableRaster(sm, dataBuffer,
         new Rectangle(childMinX, childMinY, width, height),
         new Point(sampleModelTranslateX + childMinX - parentX,
                   sampleModelTranslateY + childMinY - parentY),
