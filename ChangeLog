@@ -1,3 +1,11 @@
+2007-06-25  Francis Kung  <fkung@redhat.com>
+
+	* patches/icedtea-graphics.patch: Enable compilation of
+	sun.dc.DuctusRenderingEngine.
+	* rt/sun/dc/pr/PathStroker.java: Add constructor.
+	* rt/sun/dc/pr/Rasterizer.java: Implement AATilGenerator interface
+	and stub necessary methods.
+
 2007-06-25  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am (OPENJDK_VERSION): New variable.

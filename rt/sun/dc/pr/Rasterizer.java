@@ -37,7 +37,9 @@ exception statement from your version.
 
 package sun.dc.pr;
 
-public class Rasterizer {
+import sun.java2d.pipe.AATileGenerator;
+
+public class Rasterizer implements AATileGenerator {
 
 	public static final int BUTT = 0;
 	public static final int ROUND = 0;
@@ -176,5 +178,35 @@ public class Rasterizer {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void getAlpha(byte[] tile, int offset, int rowstride) {
+                throw new RuntimeException("Not implemented.");
+                // TODO Auto-generated method stub
+
+        }
+
+	public int getTileHeight() {
+                throw new RuntimeException("Not implemented.");
+                // TODO Auto-generated method stub
+
+        }
+
+	public int getTypicalAlpha() {
+                throw new RuntimeException("Not implemented.");
+                // TODO Auto-generated method stub
+
+        }
+
+	public int getTileWidth() {
+                throw new RuntimeException("Not implemented.");
+                // TODO Auto-generated method stub
+
+        }
+
+	public void dispose() {
+                throw new RuntimeException("Not implemented.");
+                // TODO Auto-generated method stub
+
+        }
 
 }

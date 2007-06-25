@@ -37,6 +37,7 @@ exception statement from your version.
 
 package sun.dc.pr;
 
+import sun.awt.geom.PathConsumer2D;
 import sun.dc.path.PathConsumer;
 
 public class PathStroker implements PathConsumer {
@@ -45,6 +46,11 @@ public class PathStroker implements PathConsumer {
 		throw new RuntimeException("Not implemented.");
 		// TODO Auto-generated constructor stub
 	}
+
+        public PathStroker(PathConsumer2D consumer) {
+                throw new RuntimeException("Not implemented.");
+                // TODO Auto-generated constructor stub
+        }
 
 	public void setPenDiameter(float width) {
 		throw new RuntimeException("Not implemented.");
