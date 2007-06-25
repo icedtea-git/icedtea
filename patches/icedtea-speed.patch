@@ -1,7 +1,7 @@
 diff -urN openjdk.orig/j2se/make/common/Defs-linux.gmk openjdk/j2se/make/common/Defs-linux.gmk
 --- openjdk.orig/j2se/make/common/Defs-linux.gmk	2007-05-24 03:33:20.000000000 -0400
 +++ openjdk/j2se/make/common/Defs-linux.gmk	2007-06-18 16:02:48.000000000 -0400
-@@ -103,6 +103,7 @@
+@@ -106,6 +106,7 @@
      _OPT = $(CC_LOWER_OPT)
      CPPFLAGS_DBG    += -DLOGGING 
  endif
@@ -28,7 +28,7 @@ diff -urN openjdk.orig/j2se/make/Makefile openjdk/j2se/make/Makefile
 diff -urN openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/build/linux/makefiles/gcc.make
 --- openjdk.orig/hotspot/build/linux/makefiles/gcc.make	2007-05-24 03:31:18.000000000 -0400
 +++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-06-18 18:02:39.000000000 -0400
-@@ -98,7 +96,7 @@
+@@ -96,7 +94,7 @@
  CFLAGS_WARN/BYFILE = $(CFLAGS_WARN/$@)$(CFLAGS_WARN/DEFAULT$(CFLAGS_WARN/$@)) 
  
  # The flags to use for an Optimized g++ build

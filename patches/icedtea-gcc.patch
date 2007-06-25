@@ -1,0 +1,27 @@
+diff -urN openjdk.orig/hotspot/src/share/vm/includeDB_gc_parallel openjdk/hotspot/src/share/vm/includeDB_gc_parallel
+--- openjdk.orig/hotspot/src/share/vm/includeDB_gc_parallel	2007-06-21 03:30:57.000000000 -0400
++++ openjdk/hotspot/src/share/vm/includeDB_gc_parallel	2007-06-22 16:21:23.000000000 -0400
+@@ -40,12 +40,15 @@
+ instanceKlass.cpp                       oop.pcgc.inline.hpp
+ instanceKlass.cpp                       psPromotionManager.inline.hpp
+ instanceKlass.cpp                       psScavenge.inline.hpp
++instanceKlass.cpp                       parOopClosures.inline.hpp
+ 
+ instanceKlassKlass.cpp                  psPromotionManager.inline.hpp
+ instanceKlassKlass.cpp                  psScavenge.inline.hpp
+ 
+ instanceRefKlass.cpp                    psPromotionManager.inline.hpp
++instanceRefKlass.cpp                    oop.pcgc.inline.hpp
+ instanceRefKlass.cpp                    psScavenge.inline.hpp
++instanceRefKlass.cpp                    parOopClosures.inline.hpp
+ 
+ java.cpp                                concurrentMarkSweepThread.hpp
+ java.cpp                                psScavenge.hpp
+@@ -77,6 +80,7 @@
+ objArrayKlass.cpp                       oop.pcgc.inline.hpp
+ objArrayKlass.cpp                       psPromotionManager.inline.hpp
+ objArrayKlass.cpp                       psScavenge.inline.hpp
++objArrayKlass.cpp                       parOopClosures.inline.hpp
+ 
+ oop.pcgc.inline.hpp                     parNewGeneration.hpp
+ oop.pcgc.inline.hpp                     parallelScavengeHeap.hpp

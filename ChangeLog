@@ -1,3 +1,13 @@
+2007-06-25  Francis Kung  <fkung@redhat.com>
+
+	* Makefile.am: Upgrade to OpenJDK b14.
+	* generated/sun/util/CoreResourceBundleControl.java: Regenerated.
+	* patches/icedtea-copy-plugs.patch: Update line numbers for b14.
+	* patches/icedtea-ports.patch: Likewise.
+	* patches/icedtea-speed.patch: Likewise.
+	* patches/icedtea-gcc.patch: New file.
+	* Makefile.in: Regenerated.
+
 2007-06-22  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* .hgignore: Update.

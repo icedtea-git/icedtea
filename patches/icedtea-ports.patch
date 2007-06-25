@@ -241,7 +241,7 @@ diff -r a208e9bbeafa hotspot/build/linux/makefiles/gcc.make
 diff -r a208e9bbeafa hotspot/src/share/vm/utilities/macros.hpp
 --- openjdk/hotspot/src/share/vm/utilities/macros.hpp	Wed Jun 06 11:33:35 2007 +0100
 +++ openjdk/hotspot/src/share/vm/utilities/macros.hpp	Wed Jun 06 13:36:06 2007 +0100
-@@ -149,6 +149,38 @@
+@@ -156,6 +156,38 @@
  #define NOT_SPARC(code) code
  #endif
  
@@ -431,7 +431,7 @@ diff -r b34fce487ef8 hotspot/build/linux/makefiles/saproc.make
 diff -r 1a5632baad6e hotspot/build/linux/makefiles/defs.make
 --- openjdk/hotspot/build/linux/makefiles/defs.make	Tue Jun 19 14:09:39 2007 +0100
 +++ openjdk/hotspot/build/linux/makefiles/defs.make	Wed Jun 20 08:58:29 2007 +0100
-@@ -124,22 +124,22 @@ MAKE_ARGS += HOTSPOT_BUILD_VERSION=$(FUL
+@@ -122,22 +122,22 @@ MAKE_ARGS += HOTSPOT_BUILD_VERSION=$(FUL
  # FIXUP: The subdirectory for a debug build is NOT the same on all platforms
  VM_DEBUG=jvmg
  

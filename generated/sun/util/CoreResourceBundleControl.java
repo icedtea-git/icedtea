@@ -36,7 +36,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
 
-/*
+/**
  * This is a convenient class for loading some of internal resources faster
  * if they are built with Resources.gmk defined in J2SE workspace. Also,
  * they have to be in class file format.
@@ -62,7 +62,7 @@ public class CoreResourceBundleControl extends ResourceBundle.Control {
 	excludedJDKLocales = Arrays.asList(	Locale.GERMANY,	Locale.ENGLISH,	Locale.US, new Locale("es", "ES"),	Locale.FRANCE,	Locale.ITALY,	Locale.JAPAN,	Locale.KOREA, new Locale("sv", "SE"),	Locale.CHINESE);
     }
 
-    /*
+    /**
      * This method is to provide a customized ResourceBundle.Control to speed
      * up the search of resources in JDK.
      *
@@ -71,8 +71,27 @@ public class CoreResourceBundleControl extends ResourceBundle.Control {
     public static CoreResourceBundleControl getRBControlInstance() {
 	return resourceBundleControlInstance;
     }
+
+    /**
+     * This method is to provide a customized ResourceBundle.Control to speed
+     * up the search of resources in JDK, with the bundle's package name check.
+     *
+     * @param bundleName bundle name to check
+     * @return the instance of resource bundle control if the bundle is JDK's,
+     *    otherwise returns null.
+     */
+    public static CoreResourceBundleControl getRBControlInstance(String bundleName) {
+        if (bundleName.startsWith("com.sun.") ||
+            bundleName.startsWith("java.") ||
+            bundleName.startsWith("javax.") ||
+            bundleName.startsWith("sun.")) {
+	    return resourceBundleControlInstance;
+	} else {
+            return null;
+	}
+    }
  
-    /*
+    /**
      * @returns a list of candidate locales to search from.
      * @exception NullPointerException if baseName or locale is null.
      */
@@ -83,7 +102,7 @@ public class CoreResourceBundleControl extends ResourceBundle.Control {
 	return candidates;
     }
 
-    /*
+    /**
      * @ returns TTL_DONT_CACHE so that ResourceBundle instance won't be cached.
      * User of this CoreResourceBundleControl should probably maintain a hard reference
      * to the ResourceBundle object themselves.
