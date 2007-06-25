@@ -1,8 +1,11 @@
-EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
-
-OPENJDK_URL = http://download.java.net/openjdk/jdk7/promoted/b14/
-
+OPENJDK_VERSION = b14
+OPENJDK_DATE = 21_jun_2007
 OPENJDK_MD5SUM = c126a32966e4bdb6a60a5724d9447966
+
+OPENJDK_URL = \
+	http://download.java.net/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
+
+EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
 
 if USE_CCACHE
   CCACHE_PATCH = patches/icedtea-ccache.patch
@@ -17,9 +20,9 @@ else
 endif
 
 if USE_ALT_OPENJDK_SRC_ZIP
-  OPENJDK_SRC_ZIP=$(ALT_OPENJDK_SRC_ZIP)
+  OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 else
-  OPENJDK_SRC_ZIP=openjdk-7-ea-src-b14-21_jun_2007.zip
+  OPENJDK_SRC_ZIP = openjdk-7-ea-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).zip
 endif
 
 ICEDTEA_PATCHES = \
