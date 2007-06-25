@@ -334,9 +334,11 @@ public class ICC_Profile implements Serializable
     header = new ProfileHeader(data);
     header.verifyHeader(data.length);
 
-    if (isRGBProfile(header))
+    Hashtable tags = createTagTable(data);
+
+    if (isRGBProfile(header, tags))
       return new ICC_ProfileRGB(data);
-    if (isGrayProfile(header))
+    if (isGrayProfile(header, tags))
       return new ICC_ProfileGray(data);
 
     return new ICC_Profile(data);
@@ -591,9 +593,11 @@ public class ICC_Profile implements Serializable
    */
   protected Object readResolve() throws ObjectStreamException
   {
-    if (isRGBProfile(header))
+    Hashtable tags = createTagTable(getData());
+
+    if (isRGBProfile(header, tags))
       return new ICC_ProfileRGB(getData());
-    if (isGrayProfile(header))
+    if (isGrayProfile(header, tags))
       return new ICC_ProfileGray(getData());
     return this;
   }
@@ -628,6 +632,33 @@ public class ICC_Profile implements Serializable
 	if (predef.equals("CS_PYCC"))
 	  createProfile(ColorSpace.CS_PYCC);
       }
+  }
+
+  /**
+   * Sorts a ICC profile byte array into TagEntry objects stored in
+   * a hash table.
+   */
+  private static Hashtable createTagTable(byte[] data)
+                                   throws IllegalArgumentException
+  {
+    ByteBuffer buf = ByteBuffer.wrap(data);
+    int nTags = buf.getInt(tagTableOffset);
+
+    Hashtable tagTable = new Hashtable();
+    for (int i = 0; i < nTags; i++)
+      {
+	TagEntry te = new TagEntry(buf.getInt(tagTableOffset
+	                                      + i * TagEntry.entrySize + 4),
+	                           buf.getInt(tagTableOffset
+	                                      + i * TagEntry.entrySize + 8),
+	                           buf.getInt(tagTableOffset
+	                                      + i * TagEntry.entrySize + 12),
+	                           data);
+
+	if (tagTable.put(te.hashKey(), te) != null)
+	  throw new IllegalArgumentException("Duplicate tag in profile:" + te);
+      }
+    return tagTable;
   }
 
   /**
@@ -677,15 +708,10 @@ public class ICC_Profile implements Serializable
    * (r,g,b)TRCTags included
    * mediaWhitePointTag included
    */
-  private static boolean isRGBProfile(ProfileHeader header)
+  private static boolean isRGBProfile(ProfileHeader header, Hashtable tags)
   {
     if (header.getColorSpace() != ColorSpace.TYPE_RGB)
       return false;
-    return true;
-
-    /*
-    // TODO: implement pcmm.tagExists()
-
     if (tags.get(TagEntry.tagHashKey(icSigRedColorantTag)) == null)
       return false;
     if (tags.get(TagEntry.tagHashKey(icSigGreenColorantTag)) == null)
@@ -699,7 +725,6 @@ public class ICC_Profile implements Serializable
     if (tags.get(TagEntry.tagHashKey(icSigBlueTRCTag)) == null)
       return false;
     return (tags.get(TagEntry.tagHashKey(icSigMediaWhitePointTag)) != null);
-    */
   }
 
   /**
@@ -709,19 +734,13 @@ public class ICC_Profile implements Serializable
    * grayTRCTag included
    * mediaWhitePointTag included
    */
-  private static boolean isGrayProfile(ProfileHeader header)
+  private static boolean isGrayProfile(ProfileHeader header, Hashtable tags)
   {
     if (header.getColorSpace() != ColorSpace.TYPE_GRAY)
       return false;
-    return true;
-
-    /*
-    // TODO: implement pcmm.tagExists()
-
     if (tags.get(TagEntry.tagHashKey(icSigGrayTRCTag)) == null)
       return false;
     return (tags.get(TagEntry.tagHashKey(icSigMediaWhitePointTag)) != null);
-    */
   }
 
   /**
