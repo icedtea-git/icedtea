@@ -8,10 +8,16 @@
 	* patches/icedtea-gcc.patch: New file.
 	* Makefile.in: Regenerated.
 
+2007-06-25  Kyle Galloway <kgallowa@redhat.com>
+
+	* acinclude.m4: Autodetect jars and ecj on different distributions.
+	* Makefile.am: Fix for case where javac is used.
+	* Makefile.in: Regenerated.
+	* configure: Ditto.
+
 2007-06-22  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* .hgignore: Update.
-
 	* patches/icedtea-copy-plugs.patch: Remove SnmpSession sections.
 	* rt/com/sun/jmx/snmp/SnmpSession.java: Move to...
 	* rt/com/sun/jmx/snmp/daemon/SnmpSession.java: New file.

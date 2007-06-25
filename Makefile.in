@@ -367,7 +367,7 @@ ICEDTEA_COPY_SRC = \
 	com/sun/tools/jdi/LinkedHashMap.java \
 	java/util/Observer.java
 
-@FOUND_ECJ_FALSE@JCOMPILER = $(JAVAC)
+@FOUND_ECJ_FALSE@@FOUND_JAVAC_TRUE@JCOMPILER = $(JAVAC)
 @FOUND_ECJ_TRUE@JCOMPILER = $(ECJ) -nowarn
 all: all-am
 
@@ -640,8 +640,6 @@ uninstall-am:
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-generic pdf pdf-am ps ps-am uninstall uninstall-am
 
-@FOUND_ECJ_FALSE@  if FOUND_JAVAC
-@FOUND_ECJ_FALSE@  endif
 
 copy: extract
 	mkdir -p $(ICEDTEA_COPY_DIRS)

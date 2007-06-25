@@ -68,6 +68,15 @@ AC_DEFUN([CLASSPATH_CHECK_ECJ],
     fi
   else
     AC_PATH_PROG(ECJ, "ecj")
+    if test -z "${ECJ}"; then
+      AC_PATH_PROG(ECJ, "ecj-3.1")
+    fi
+    if test -z "${ECJ}"; then
+      AC_PATH_PROG(ECJ, "ecj-3.2")
+    fi
+    if test -z "${ECJ}"; then
+      AC_PATH_PROG(ECJ, "ecj-3.3")
+    fi
   fi
 ])
 
@@ -169,6 +178,18 @@ AC_DEFUN([FIND_ECJ_JAR],
     AC_MSG_CHECKING(for eclipse-ecj.jar)
     if test -e "/usr/share/java/eclipse-ecj.jar"; then
       ECJ_JAR=/usr/share/java/eclipse-ecj.jar
+      AC_MSG_RESULT(${ECJ_JAR})
+    elif test -e "/usr/share/java/ecj.jar"; then
+      ECJ_JAR=/usr/share/java/ecj.jar
+      AC_MSG_RESULT(${ECJ_JAR})
+    elif test -e "/usr/share/eclipse-ecj-3.3/lib/ecj.jar"; then
+      ECJ_JAR=/usr/share/eclipse-ecj-3.3/lib/ecj.jar
+      AC_MSG_RESULT(${ECJ_JAR})
+    elif test -e "/usr/share/eclipse-ecj-3.2/lib/ecj.jar"; then
+      ECJ_JAR=/usr/share/eclipse-ecj-3.2/lib/ecj.jar
+      AC_MSG_RESULT(${ECJ_JAR})
+    elif test -e "/usr/share/eclipse-ecj-3.1/lib/ecj.jar"; then
+      ECJ_JAR=/usr/share/eclipse-ecj-3.1/lib/ecj.jar
       AC_MSG_RESULT(${ECJ_JAR})
     else
       AC_MSG_RESULT(no)
@@ -370,6 +391,9 @@ AC_DEFUN([FIND_XALAN2_JAR],
     elif test -e "/usr/share/java/xalan2.jar"; then
       XALAN2_JAR=/usr/share/java/xalan2.jar
       AC_MSG_RESULT(${XALAN2_JAR})
+    elif test -e "/usr/share/xalan/lib/xalan.jar"; then
+      XALAN2_JAR=/usr/share/xalan/lib/xalan.jar
+      AC_MSG_RESULT(${XALAN2_JAR})
     else
       AC_MSG_RESULT(no)
     fi
@@ -399,8 +423,11 @@ AC_DEFUN([FIND_XALAN2_SERIALIZER_JAR],
     if test -e "/usr/share/java/xalan-j2-serializer.jar"; then
       XALAN2_SERIALIZER_JAR=/usr/share/java/xalan-j2-serializer.jar
       AC_MSG_RESULT(${XALAN2_SERIALIZER_JAR})
-    elif test -e "/usr/share/java/xalan2.jar"; then
-      XALAN2_SERIALIZER_JAR=/usr/share/java/xalan2.jar
+    elif test -e "/usr/share/xalan-serializer/lib/serializer.jar"; then
+      XALAN2_SERIALIZER_JAR=/usr/share/xalan-serializer/lib/serializer.jar
+      AC_MSG_RESULT(${XALAN2_SERIALIZER_JAR})
+    elif test -e "/usr/share/java/serializer.jar"; then
+      XALAN2_SERIALIZER_JAR=/usr/share/java/serializer.jar
       AC_MSG_RESULT(${XALAN2_SERIALIZER_JAR})
     else
       AC_MSG_RESULT(no)
@@ -433,6 +460,12 @@ AC_DEFUN([FIND_XERCES2_JAR],
       AC_MSG_RESULT(${XERCES2_JAR})
     elif test -e "/usr/share/java/xerces2.jar"; then
       XERCES2_JAR=/usr/share/java/xerces2.jar
+      AC_MSG_RESULT(${XERCES2_JAR})
+    elif test -e "/usr/share/xerces-2/lib/xercesImpl.jar"; then
+      XERCES2_JAR=/usr/share/xerces-2/lib/xercesImpl.jar
+      AC_MSG_RESULT(${XERCES2_JAR})
+    elif test -e "/usr/share/java/xercesImpl.jar"; then
+      XERCES2_JAR=/usr/share/java/xercesImpl.jar
       AC_MSG_RESULT(${XERCES2_JAR})
     else
       AC_MSG_RESULT(no)
