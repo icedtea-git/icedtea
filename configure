@@ -4122,6 +4122,132 @@ echo "${ECHO_T}no" >&6; }
 fi
 
 
+    if test -z "${ECJ}"; then
+      # Extract the first word of ""ecj-3.1"", so it can be a program name with args.
+set dummy "ecj-3.1"; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ECJ+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ECJ in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ECJ="$ECJ" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ECJ="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ECJ=$ac_cv_path_ECJ
+if test -n "$ECJ"; then
+  { echo "$as_me:$LINENO: result: $ECJ" >&5
+echo "${ECHO_T}$ECJ" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    fi
+    if test -z "${ECJ}"; then
+      # Extract the first word of ""ecj-3.2"", so it can be a program name with args.
+set dummy "ecj-3.2"; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ECJ+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ECJ in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ECJ="$ECJ" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ECJ="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ECJ=$ac_cv_path_ECJ
+if test -n "$ECJ"; then
+  { echo "$as_me:$LINENO: result: $ECJ" >&5
+echo "${ECHO_T}$ECJ" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    fi
+    if test -z "${ECJ}"; then
+      # Extract the first word of ""ecj-3.3"", so it can be a program name with args.
+set dummy "ecj-3.3"; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ECJ+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ECJ in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ECJ="$ECJ" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ECJ="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ECJ=$ac_cv_path_ECJ
+if test -n "$ECJ"; then
+  { echo "$as_me:$LINENO: result: $ECJ" >&5
+echo "${ECHO_T}$ECJ" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    fi
   fi
 
     else
@@ -4213,6 +4339,132 @@ echo "${ECHO_T}no" >&6; }
 fi
 
 
+    if test -z "${ECJ}"; then
+      # Extract the first word of ""ecj-3.1"", so it can be a program name with args.
+set dummy "ecj-3.1"; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ECJ+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ECJ in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ECJ="$ECJ" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ECJ="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ECJ=$ac_cv_path_ECJ
+if test -n "$ECJ"; then
+  { echo "$as_me:$LINENO: result: $ECJ" >&5
+echo "${ECHO_T}$ECJ" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    fi
+    if test -z "${ECJ}"; then
+      # Extract the first word of ""ecj-3.2"", so it can be a program name with args.
+set dummy "ecj-3.2"; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ECJ+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ECJ in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ECJ="$ECJ" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ECJ="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ECJ=$ac_cv_path_ECJ
+if test -n "$ECJ"; then
+  { echo "$as_me:$LINENO: result: $ECJ" >&5
+echo "${ECHO_T}$ECJ" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    fi
+    if test -z "${ECJ}"; then
+      # Extract the first word of ""ecj-3.3"", so it can be a program name with args.
+set dummy "ecj-3.3"; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ECJ+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ECJ in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ECJ="$ECJ" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ECJ="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ECJ=$ac_cv_path_ECJ
+if test -n "$ECJ"; then
+  { echo "$as_me:$LINENO: result: $ECJ" >&5
+echo "${ECHO_T}$ECJ" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    fi
   fi
 
       fi
@@ -4308,6 +4560,132 @@ echo "${ECHO_T}no" >&6; }
 fi
 
 
+    if test -z "${ECJ}"; then
+      # Extract the first word of ""ecj-3.1"", so it can be a program name with args.
+set dummy "ecj-3.1"; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ECJ+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ECJ in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ECJ="$ECJ" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ECJ="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ECJ=$ac_cv_path_ECJ
+if test -n "$ECJ"; then
+  { echo "$as_me:$LINENO: result: $ECJ" >&5
+echo "${ECHO_T}$ECJ" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    fi
+    if test -z "${ECJ}"; then
+      # Extract the first word of ""ecj-3.2"", so it can be a program name with args.
+set dummy "ecj-3.2"; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ECJ+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ECJ in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ECJ="$ECJ" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ECJ="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ECJ=$ac_cv_path_ECJ
+if test -n "$ECJ"; then
+  { echo "$as_me:$LINENO: result: $ECJ" >&5
+echo "${ECHO_T}$ECJ" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    fi
+    if test -z "${ECJ}"; then
+      # Extract the first word of ""ecj-3.3"", so it can be a program name with args.
+set dummy "ecj-3.3"; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ECJ+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ECJ in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ECJ="$ECJ" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ECJ="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ECJ=$ac_cv_path_ECJ
+if test -n "$ECJ"; then
+  { echo "$as_me:$LINENO: result: $ECJ" >&5
+echo "${ECHO_T}$ECJ" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+    fi
   fi
 
 
@@ -5123,6 +5501,22 @@ echo $ECHO_N "checking for eclipse-ecj.jar... $ECHO_C" >&6; }
       ECJ_JAR=/usr/share/java/eclipse-ecj.jar
       { echo "$as_me:$LINENO: result: ${ECJ_JAR}" >&5
 echo "${ECHO_T}${ECJ_JAR}" >&6; }
+    elif test -e "/usr/share/java/ecj.jar"; then
+      ECJ_JAR=/usr/share/java/ecj.jar
+      { echo "$as_me:$LINENO: result: ${ECJ_JAR}" >&5
+echo "${ECHO_T}${ECJ_JAR}" >&6; }
+    elif test -e "/usr/share/eclipse-ecj-3.3/lib/ecj.jar"; then
+      ECJ_JAR=/usr/share/eclipse-ecj-3.3/lib/ecj.jar
+      { echo "$as_me:$LINENO: result: ${ECJ_JAR}" >&5
+echo "${ECHO_T}${ECJ_JAR}" >&6; }
+    elif test -e "/usr/share/eclipse-ecj-3.2/lib/ecj.jar"; then
+      ECJ_JAR=/usr/share/eclipse-ecj-3.2/lib/ecj.jar
+      { echo "$as_me:$LINENO: result: ${ECJ_JAR}" >&5
+echo "${ECHO_T}${ECJ_JAR}" >&6; }
+    elif test -e "/usr/share/eclipse-ecj-3.1/lib/ecj.jar"; then
+      ECJ_JAR=/usr/share/eclipse-ecj-3.1/lib/ecj.jar
+      { echo "$as_me:$LINENO: result: ${ECJ_JAR}" >&5
+echo "${ECHO_T}${ECJ_JAR}" >&6; }
     else
       { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
@@ -5203,6 +5597,10 @@ echo "${ECHO_T}${XALAN2_JAR}" >&6; }
       XALAN2_JAR=/usr/share/java/xalan2.jar
       { echo "$as_me:$LINENO: result: ${XALAN2_JAR}" >&5
 echo "${ECHO_T}${XALAN2_JAR}" >&6; }
+    elif test -e "/usr/share/xalan/lib/xalan.jar"; then
+      XALAN2_JAR=/usr/share/xalan/lib/xalan.jar
+      { echo "$as_me:$LINENO: result: ${XALAN2_JAR}" >&5
+echo "${ECHO_T}${XALAN2_JAR}" >&6; }
     else
       { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
@@ -5241,8 +5639,12 @@ echo $ECHO_N "checking for xalan2-serializer jar... $ECHO_C" >&6; }
       XALAN2_SERIALIZER_JAR=/usr/share/java/xalan-j2-serializer.jar
       { echo "$as_me:$LINENO: result: ${XALAN2_SERIALIZER_JAR}" >&5
 echo "${ECHO_T}${XALAN2_SERIALIZER_JAR}" >&6; }
-    elif test -e "/usr/share/java/xalan2.jar"; then
-      XALAN2_SERIALIZER_JAR=/usr/share/java/xalan2.jar
+    elif test -e "/usr/share/xalan-serializer/lib/serializer.jar"; then
+      XALAN2_SERIALIZER_JAR=/usr/share/xalan-serializer/lib/serializer.jar
+      { echo "$as_me:$LINENO: result: ${XALAN2_SERIALIZER_JAR}" >&5
+echo "${ECHO_T}${XALAN2_SERIALIZER_JAR}" >&6; }
+    elif test -e "/usr/share/java/serializer.jar"; then
+      XALAN2_SERIALIZER_JAR=/usr/share/java/serializer.jar
       { echo "$as_me:$LINENO: result: ${XALAN2_SERIALIZER_JAR}" >&5
 echo "${ECHO_T}${XALAN2_SERIALIZER_JAR}" >&6; }
     else
@@ -5285,6 +5687,14 @@ echo $ECHO_N "checking for xerces2 jar... $ECHO_C" >&6; }
 echo "${ECHO_T}${XERCES2_JAR}" >&6; }
     elif test -e "/usr/share/java/xerces2.jar"; then
       XERCES2_JAR=/usr/share/java/xerces2.jar
+      { echo "$as_me:$LINENO: result: ${XERCES2_JAR}" >&5
+echo "${ECHO_T}${XERCES2_JAR}" >&6; }
+    elif test -e "/usr/share/xerces-2/lib/xercesImpl.jar"; then
+      XERCES2_JAR=/usr/share/xerces-2/lib/xercesImpl.jar
+      { echo "$as_me:$LINENO: result: ${XERCES2_JAR}" >&5
+echo "${ECHO_T}${XERCES2_JAR}" >&6; }
+    elif test -e "/usr/share/java/xercesImpl.jar"; then
+      XERCES2_JAR=/usr/share/java/xercesImpl.jar
       { echo "$as_me:$LINENO: result: ${XERCES2_JAR}" >&5
 echo "${ECHO_T}${XERCES2_JAR}" >&6; }
     else

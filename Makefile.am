@@ -210,9 +210,9 @@ ICEDTEA_COPY_SRC = \
 if FOUND_ECJ
   JCOMPILER = $(ECJ) -nowarn
 else
-  if FOUND_JAVAC
-    JCOMPILER = $(JAVAC)
-  endif
+if FOUND_JAVAC
+  JCOMPILER = $(JAVAC)
+endif
 endif
 
 copy: extract
