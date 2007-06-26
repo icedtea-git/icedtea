@@ -1,3 +1,7 @@
+2007-06-26  Andrew Haley  <aph@redhat.com>
+
+	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-java.security.patch.
+
 2007-06-22  Andrew Haley  <aph@redhat.com>
 
 	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-debuginfo.patch.

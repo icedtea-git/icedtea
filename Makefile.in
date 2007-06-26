@@ -194,6 +194,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-graphics.patch \
 	patches/icedtea-gcc.patch \
 	patches/icedtea-debuginfo.patch \
+	patches/icedtea-java.security.patch \
 	$(FAST_BUILD_PATCH) \
 	$(CCACHE_PATCH)
 
