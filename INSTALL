@@ -7,7 +7,7 @@ a default location.
 
 To build IcedTea, do:
 
-./configure
+./configure [OPTION]... [VAR=VALUE]...
 make
 
 There is currently no install target.

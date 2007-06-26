@@ -1,3 +1,8 @@
+2007-06-26  Lillian Angel  <langel@redhat.com>
+
+	* AUTHORS: Added aph.
+	* INSTALL: Added clarification.
+
 2007-06-26  Andrew Haley  <aph@redhat.com>
 
 	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-java.security.patch.
