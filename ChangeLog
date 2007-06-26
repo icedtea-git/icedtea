@@ -7,7 +7,7 @@
 
 	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-java.security.patch.
 
-2007-06-22  Andrew Haley  <aph@redhat.com>
+2007-06-26  Andrew Haley  <aph@redhat.com>
 
 	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-debuginfo.patch.
 	Add -g option to all Java compilations.
@@ -464,7 +464,7 @@
 	rt/javax/security/sasl/SaslServer.java,
 	rt/javax/security/sasl/SaslServerFactory.java: New files
 
-2007-06-21  Andrew Haley  <aph@redhat.com>
+2007-06-26  Andrew Haley  <aph@redhat.com>
 
 	* Makefile (ICEDTEA_PATCHES): Add icedtea-debuginfo.patch.
 	patches/icedtea-debuginfo.patch: New file.
