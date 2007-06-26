@@ -1,0 +1,15 @@
+--- openjdk/j2se/src/share/lib/security/java.security	2007-05-24 08:43:53.000000000 +0100
++++ openjdk.patched/j2se/src/share/lib/security/java.security	2007-06-21 17:20:44.000000000 +0100
+@@ -52,6 +52,12 @@
+ security.provider.7=org.jcp.xml.dsig.internal.dom.XMLDSigRI
+ security.provider.8=sun.security.smartcardio.SunPCSC
+ 
++security.provider.9=gnu.java.security.provider.Gnu
++security.provider.10=gnu.javax.crypto.jce.GnuCrypto
++security.provider.11=gnu.javax.crypto.jce.GnuSasl
++security.provider.12=gnu.javax.net.ssl.provider.Jessie
++security.provider.13=gnu.javax.security.auth.callback.GnuCallbacks
++
+ #
+ # Select the source of seed data for SecureRandom. By default an
+ # attempt is made to use the entropy gathering device specified by 
