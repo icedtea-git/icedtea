@@ -33,6 +33,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch \
 	patches/icedtea-gcc.patch \
+	patches/icedtea-debuginfo.patch \
 	$(FAST_BUILD_PATCH) \
 	$(CCACHE_PATCH)
 
@@ -209,7 +210,21 @@ ICEDTEA_COPY_SRC = \
 	com/sun/jdi/VoidType.java \
 	com/sun/jdi/VoidValue.java \
 	com/sun/tools/jdi/LinkedHashMap.java \
-	java/util/Observer.java
+	java/util/Observer.java \
+	java/util/Timer.java \
+	javax/security/sasl/SaslException.java \
+	javax/security/sasl/AuthenticationException.java \
+	javax/security/auth/callback/NameCallback.java \
+	javax/security/sasl/Sasl.java \
+	javax/security/sasl/SaslServer.java \
+	javax/security/sasl/SaslClient.java \
+	javax/security/sasl/SaslClientFactory.java \
+	javax/security/sasl/SaslServerFactory.java \
+	javax/security/auth/callback/ChoiceCallback.java \
+	javax/security/auth/callback/ConfirmationCallback.java \
+	javax/security/auth/callback/LanguageCallback.java \
+	javax/security/auth/callback/TextInputCallback.java \
+	javax/security/auth/callback/TextOutputCallback.java
 
 if FOUND_ECJ
   JCOMPILER = $(ECJ) -nowarn
@@ -383,7 +398,7 @@ rt-classes: copy rt-generate-sources
 rt-compile-classes: rt-classes
 	mkdir -p lib/rt
 	cd rt ; \
-	  $(JCOMPILER) -d ../lib/rt -bootclasspath '' -source 1.6 \
+	  $(JCOMPILER) -g -d ../lib/rt -bootclasspath '' -source 1.6 \
 	    -sourcepath $(OPENJDK_SRC_DIR)/j2se/src/share/classes:$(OPENJDK_SRC_DIR)/j2se/src/solaris/classes:../generated:../jce \
 	    @../rt-classes
 
@@ -417,7 +432,7 @@ rt-generate-sources: patch
 	    generated/sun/nio/ch; \
 	  mkdir -p $(abs_top_srcdir)/lib; \
 	  cd $(OPENJDK_SRC_DIR)/j2se/make/tools/CompileProperties; \
-	    $(JCOMPILER) -d ../../../../../lib -1.5 CompileProperties.java; \
+	    $(JCOMPILER) -g -d ../../../../../lib -1.5 CompileProperties.java; \
 	  mkdir -p $(abs_top_srcdir)/generated/sun/util/resources; \
 	  cd $(abs_top_srcdir)/lib ; \
 	    for FILE in `ls $(OPENJDK_SRC_DIR)/j2se/src/share/classes/sun/util/resources/*.properties`; do \
@@ -438,7 +453,7 @@ jce-classes:
 jce-compile-classes: jce-classes rt-classes
 	mkdir -p lib/jce
 	cd jce ; \
-	  $(JCOMPILER) -d ../lib/jce -source 1.6 -bootclasspath '' \
+	  $(JCOMPILER) -g -d ../lib/jce -source 1.6 -bootclasspath '' \
 	    -classpath ../lib/rt @../jce-classes
 
 lib/jce/jce.jar: jce-compile-classes
