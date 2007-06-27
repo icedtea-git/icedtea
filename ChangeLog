@@ -141,6 +141,10 @@
 	rt/javax/security/sasl/SaslServerFactory.java: Removed from repo. They
 	are being copied from the openjdk src anyways.
 
+2007-06-27  Francis Kung  <fkung@redhat.com>
+
+	* patches/icedtea-graphics.patch: Stub out libt2k.
+
 2007-06-26  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Added aph.
