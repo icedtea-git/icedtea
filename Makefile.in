@@ -245,7 +245,11 @@ ICEDTEA_COPY_DIRS = \
 	rt/com/sun/tools \
 	rt/com/sun/tools/jdi \
 	rt/java/util \
-	rt/com/sun/jmx/snmp/agent/
+	rt/com/sun/jmx/snmp/agent/ \
+	rt/java/security/cert/ \
+        rt/javax/security/sasl/ \
+        rt/javax/security/auth/ \
+        rt/javax/security/auth/callback/
 
 ICEDTEA_COPY_SRC = \
 	com/sun/jmx/snmp/agent/SnmpMib.java \

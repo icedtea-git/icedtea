@@ -1,3 +1,26 @@
+2007-06-27  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added new rt dirs.
+	* Makefile.in: Regenerated.
+
+2007-06-27  Lillian Angel  <langel@redhat.com>
+
+	* rt/java/util/Timer.java 
+	rt/javax/security/auth/callback/ChoiceCallback.java 
+	rt/javax/security/auth/callback/ConfirmationCallback.java 
+	rt/javax/security/auth/callback/LanguageCallback.java 
+	rt/javax/security/auth/callback/NameCallback.java 
+	rt/javax/security/auth/callback/TextInputCallback.java 
+	rt/javax/security/auth/callback/TextOutputCallback.java 
+	rt/javax/security/sasl/AuthenticationException.java 
+	rt/javax/security/sasl/Sasl.java 
+	rt/javax/security/sasl/SaslClient.java 
+	rt/javax/security/sasl/SaslClientFactory.java 
+	rt/javax/security/sasl/SaslException.java 
+	rt/javax/security/sasl/SaslServer.java 
+	rt/javax/security/sasl/SaslServerFactory.java: Removed from repo. They
+	are being copied from the openjdk src anyways.
+
 2007-06-26  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Added aph.
