@@ -345,13 +345,31 @@ env:
 
 boot:
 	mkdir -p bootstrap/jdk1.6.0/bin
-	mkdir -p bootstrap/jdk1.6.0/lib/endorsed
-	ln -sf $(JAVA) bootstrap/jdk1.6.0/bin/java
-	ln -sf $(JAVAH) bootstrap/jdk1.6.0/bin/javah
-	ln -sf $(RMIC) bootstrap/jdk1.6.0/bin/rmic
-	ln -sf $(JAR) bootstrap/jdk1.6.0/bin/jar
-	cp -f javac bootstrap/jdk1.6.0/bin/javac
-	cp -f javap bootstrap/jdk1.6.0/bin/javap
+	mkdir -p bootstrap/jdk1.6.0/lib/endorsed	
+	if ! test -f bootstrap/jdk1.6.0/bin/java; \
+	then \
+		ln -s $(JAVA) bootstrap/jdk1.6.0/bin/java; \
+	fi; \
+	if ! test -f bootstrap/jdk1.6.0/bin/javah; \
+	then \
+		ln -s $(JAVAH) bootstrap/jdk1.6.0/bin/javah; \
+	fi; \
+	if ! test -f bootstrap/jdk1.6.0/bin/rmic; \
+	then \
+		ln -s $(RMIC) bootstrap/jdk1.6.0/bin/rmic; \
+	fi; \
+	if ! test -f bootstrap/jdk1.6.0/bin/jar; \
+	then \
+		ln -s $(JAR) bootstrap/jdk1.6.0/bin/jar; \
+	fi; \
+	if ! test -f bootstrap/jdk1.6.0/bin/javac; \
+	then \
+		cp javac bootstrap/jdk1.6.0/bin/javac; \
+	fi; \
+	if ! test -f bootstrap/jdk1.6.0/bin/javap; \
+	then \
+		cp javac bootstrap/jdk1.6.0/bin/javap; \
+	fi;
 	ln -sf $(XALAN2_JAR) bootstrap/jdk1.6.0/lib/endorsed/xalan-j2.jar
 	ln -sf $(XALAN2_SERIALIZER_JAR) bootstrap/jdk1.6.0/lib/endorsed/xalan-j2-serializer.jar
 	ln -sf $(XERCES2_JAR) bootstrap/jdk1.6.0/lib/endorsed/xerces-j2.jar
