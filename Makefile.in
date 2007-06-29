@@ -794,7 +794,7 @@ boot:
 	fi; \
 	if ! test -f bootstrap/jdk1.6.0/bin/javap; \
 	then \
-		cp javac bootstrap/jdk1.6.0/bin/javap; \
+		cp javap bootstrap/jdk1.6.0/bin/javap; \
 	fi;
 	ln -sf $(XALAN2_JAR) bootstrap/jdk1.6.0/lib/endorsed/xalan-j2.jar
 	ln -sf $(XALAN2_SERIALIZER_JAR) bootstrap/jdk1.6.0/lib/endorsed/xalan-j2-serializer.jar
