@@ -1,5 +1,9 @@
 2007-06-29  Lillian Angel  <langel@redhat.com>
 
+	* patches/icedtea-java.security.patch: Fixed patch line numbers.
+
+2007-06-29  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Added checks to prevent make error after make
 	bootstrap.
 	* Makefile.in: Regenerated.
