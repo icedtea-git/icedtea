@@ -474,7 +474,7 @@ rt-generate-sources: patch
 	    generated/sun/nio/ch; \
 	  mkdir -p $(abs_top_srcdir)/lib; \
 	  cd $(OPENJDK_SRC_DIR)/j2se/make/tools/CompileProperties; \
-	    $(JCOMPILER) -g -d ../../../../../lib -1.5 CompileProperties.java; \
+	    $(JCOMPILER) -g -d ../../../../../lib -target 1.5 -source 1.5 CompileProperties.java; \
 	  mkdir -p $(abs_top_srcdir)/generated/sun/util/resources; \
 	  cd $(abs_top_srcdir)/lib ; \
 	    for FILE in `ls $(OPENJDK_SRC_DIR)/j2se/src/share/classes/sun/util/resources/*.properties`; do \

@@ -1,3 +1,9 @@
+2007-07-02  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Changed to use -source and -target flags instead of
+	-1.5. Not supported by Sun's JDK.
+	* Makefile.in: Regenerated.
+
 2007-06-29  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Fixed typo.
