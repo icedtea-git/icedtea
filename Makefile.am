@@ -28,7 +28,6 @@ endif
 ICEDTEA_PATCHES = \
 	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-lesstif.patch \
-	patches/icedtea-ports.patch \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch \

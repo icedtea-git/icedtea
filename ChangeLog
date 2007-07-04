@@ -1,5 +1,10 @@
 2007-07-04  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-ports.patch: Removed.
+	* Makefile.in: Regenerated.
+
+2007-07-04  Gary Benson  <gbenson@redhat.com>
+
 	* acinclude.m4 (SET_ARCH_DIRS): Fix library paths on ppc64 and s390x.
 	* configure: Regenerated.
 
