@@ -7,7 +7,7 @@
 	* jce/javax/crypto/KeyGenerator.java: Removed unnecessary functions.
 	* patches/icedtea-java.security.patch: Updated with new ssl provider.
 	* patches/icedtea-ssl.patch: New patch.
-	
+
 2007-07-05  Lillian Angel  <langel@redhat.com>
 
 	* jce/gnu/javax/net/ssl/AbstractSessionContext.java: Removed.
