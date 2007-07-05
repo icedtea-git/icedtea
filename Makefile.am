@@ -404,6 +404,9 @@ bootstrap: icedteaboot unpatchecj clobber
 	  -C openjdk/control/make
 	@echo "IcedTea re-served:" openjdk/control/build/linux-$(BUILD_ARCH_DIR)
 
+snapshot: dist
+	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
+
 all-local: boot plugs patch patchecj icedtea
 
 clean-local:
@@ -497,5 +500,5 @@ install:
 .PHONY: \
 	copy uncopy patch unpatch patchecj unpatchecj extract unextract \
 	download undownload clobber env boot icedteaboot unboot plugs unplugs \
-	icedtea bootstrap rt-compile-classes rt-generate-sources \
+	icedtea bootstrap snapshot rt-compile-classes rt-generate-sources \
 	jce-compile-classes

@@ -1,3 +1,8 @@
+2007-07-05  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am (snapshot): New target.
+	(.PHONY): Add snapshot.
+
 2007-07-05  Lillian Angel  <langel@redhat.com>
 
 	* .hgignore: Updated.
