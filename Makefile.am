@@ -280,8 +280,10 @@ uncopy:
 patch: extract
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
+	  echo Checking $$p ; \
 	  if $(PATCH) -p0 --dry-run -s -t -f < $$p ; \
 	  then \
+	    echo Applying $$p ; \
 	    $(PATCH) -p0 < $$p ; \
 	  else \
 	    : ; \
@@ -291,8 +293,10 @@ patch: extract
 unpatch: unpatchecj
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
+	  echo Checking $$p ; \
 	  if $(PATCH) -p0 -R --dry-run -s -t -f < $$p ; \
 	  then \
+	    echo Reverting $$p ; \
 	    $(PATCH) -p0 -R < $$p ; \
 	  else \
 	    : ; \
@@ -300,14 +304,18 @@ unpatch: unpatchecj
 	done
 
 patchecj: patch
+	echo Checking $$p ; \
 	if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
 	then \
+	  echo Applying $$p ; \
 	  $(PATCH) -p0 < $(ICEDTEA_ECJ_PATCH) ; \
 	fi
 
 unpatchecj:
+	echo Checking $$p ; \
 	if $(PATCH) -p0 -R --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
 	then \
+	  echo Reverting $$p ; \
 	  $(PATCH) -p0 -R < $(ICEDTEA_ECJ_PATCH) ; \
 	fi
 
