@@ -1,5 +1,6 @@
-/* TlsKeyMaterialSpec.java -- stub file.
+/* TlsKeyMaterialSpec.java -- TLS session keys.
    Copyright (C) 2007 Red Hat, Inc.
+   Copyright (C) 2007  Casey Marshall <csm@gnu.org>
 
 This file is part of IcedTea.
 
@@ -34,40 +35,84 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
+
 package sun.security.internal.spec;
+
+import java.security.spec.KeySpec;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
-public class TlsKeyMaterialSpec
+public class TlsKeyMaterialSpec implements KeySpec, SecretKey
 {
+  private static final long serialVersionUID = 0L;
+
+  private final SecretKey clientCipherKey;
+  private final SecretKey serverCipherKey;
+  private final IvParameterSpec clientIv;
+  private final IvParameterSpec serverIv;
+  private final SecretKey clientMacKey;
+  private final SecretKey serverMacKey;
+  
+  public TlsKeyMaterialSpec(SecretKey clientCipherKey,
+                            SecretKey serverCipherKey,
+                            IvParameterSpec clientIv,
+                            IvParameterSpec serverIv,
+                            SecretKey clientMacKey,
+                            SecretKey serverMacKey)
+  {
+    super();
+    this.clientCipherKey = clientCipherKey;
+    this.serverCipherKey = serverCipherKey;
+    this.clientIv = clientIv;
+    this.serverIv = serverIv;
+    this.clientMacKey = clientMacKey;
+    this.serverMacKey = serverMacKey;
+  }
+
   public SecretKey getClientCipherKey()
   {
-    throw new RuntimeException("Not implemented.");
+    return clientCipherKey;
   }
   
   public SecretKey getServerCipherKey()
   {
-    throw new RuntimeException("Not implemented.");
+    return serverCipherKey;
   }
   
   public IvParameterSpec getClientIv()
   {
-    throw new RuntimeException("Not implemented.");
+    return clientIv;
   }
   
   public IvParameterSpec getServerIv()
   {
-    throw new RuntimeException("Not implemented.");
+    return serverIv;
   }
   
   public SecretKey getClientMacKey()
   {
-    throw new RuntimeException("Not implemented.");
+    return clientMacKey;
   }
   
   public SecretKey getServerMacKey()
   {
-    throw new RuntimeException("Not implemented.");
+    return serverMacKey;
+  }
+
+  public String getAlgorithm()
+  {
+    return "TLS";
+  }
+
+  public byte[] getEncoded()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public String getFormat()
+  {
+    return "RAW";
   }
 }

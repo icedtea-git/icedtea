@@ -1,5 +1,6 @@
-/* TlsRsaParameterSecretParameterSpec.java -- stub file.
+/* TlsRsaParameterSecretParameterSpec.java -- version number for RSA key ex.
    Copyright (C) 2007 Red Hat, Inc.
+   Copyright (C) 2007  Casey Marshall <csm@gnu.org>
 
 This file is part of IcedTea.
 
@@ -36,15 +37,33 @@ exception statement from your version. */
 
 package sun.security.internal.spec;
 
+import java.security.spec.AlgorithmParameterSpec;
+
 public class TlsRsaPremasterSecretParameterSpec
+  implements AlgorithmParameterSpec
 {
+  private final int major;
+  private final int minor;
+  
   public TlsRsaPremasterSecretParameterSpec(int major, int minor)
   {
-    throw new RuntimeException("Not implemented.");
+    this.major = major;
+    this.minor = minor;
   }
   
   public TlsRsaPremasterSecretParameterSpec(byte arg1, byte arg2)
   {
-    throw new RuntimeException("Not implemented.");
+    this.major = arg1 & 0xFF;
+    this.minor = arg2 & 0xFF;
+  }
+  
+  public int getMajorVersion()
+  {
+    return major;
+  }
+  
+  public int getMinorVersion()
+  {
+    return minor;
   }
 }

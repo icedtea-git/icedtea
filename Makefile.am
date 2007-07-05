@@ -34,6 +34,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-gcc.patch \
 	patches/icedtea-debuginfo.patch \
 	patches/icedtea-java.security.patch \
+	patches/icedtea-ssl.patch \
 	$(FAST_BUILD_PATCH) \
 	$(CCACHE_PATCH)
 
@@ -83,13 +84,12 @@ ICEDTEA_COPY_DIRS = \
 	rt/com/sun/jdi/request \
 	rt/com/sun/tools \
 	rt/com/sun/tools/jdi \
-	rt/java/util \
 	rt/com/sun/jmx/snmp/agent/ \
-	rt/javax/net/ssl/ \
 	rt/java/security/cert/ \
 	rt/javax/security/sasl/ \
 	rt/javax/security/auth/ \
-	rt/javax/security/auth/callback/
+	rt/javax/security/auth/callback/ \
+	rt/java/util/
 
 ICEDTEA_COPY_SRC = \
 	com/sun/jmx/snmp/agent/SnmpMib.java \
@@ -230,24 +230,7 @@ ICEDTEA_COPY_SRC = \
 	javax/security/auth/callback/ConfirmationCallback.java \
 	javax/security/auth/callback/LanguageCallback.java \
 	javax/security/auth/callback/TextInputCallback.java \
-	javax/security/auth/callback/TextOutputCallback.java \
-	javax/net/ssl/ManagerFactoryParameters.java \
-	javax/net/ssl/SSLSocket.java \
-	javax/net/ssl/SSLServerSocketFactory.java \
-	javax/net/ssl/SSLContextSpi.java \
-	javax/net/ssl/TrustManagerFactorySpi.java \
-	javax/net/ssl/SSLSocketFactory.java \
-	javax/net/ssl/SSLSessionBindingEvent.java \
-	javax/net/ssl/SSLSessionBindingListener.java \
-	javax/net/ssl/X509TrustManager.java \
-	javax/net/ssl/SSLServerSocket.java \
-	javax/net/ssl/HostnameVerifier.java \
-	javax/net/ssl/X509ExtendedKeyManager.java \
-	javax/net/ssl/KeyManagerFactorySpi.java \
-	javax/net/ssl/SSLException.java \
-	javax/net/ssl/SSLProtocolException.java \
-	javax/net/ssl/KeyManagerFactory.java \
-	javax/net/ssl/TrustManagerFactory.java
+	javax/security/auth/callback/TextOutputCallback.java
 
 if FOUND_ECJ
   JCOMPILER = $(ECJ) -nowarn

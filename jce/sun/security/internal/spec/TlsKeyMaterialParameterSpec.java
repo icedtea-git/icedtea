@@ -1,5 +1,6 @@
-/* TlsKeyMaterialParameterSpec.java -- stub file.
+/* TlsKeyMaterialParameterSpec.java -- parameters for TLS session key gen.
    Copyright (C) 2007 Red Hat, Inc.
+   Copyright (C) 2007  Casey Marshall <csm@gnu.org>
 
 This file is part of IcedTea.
 
@@ -34,16 +35,44 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
+
 package sun.security.internal.spec;
 
+import java.security.spec.AlgorithmParameterSpec;
 import javax.crypto.SecretKey;
 
-public class TlsKeyMaterialParameterSpec 
+public class TlsKeyMaterialParameterSpec implements AlgorithmParameterSpec
 {
-  public TlsKeyMaterialParameterSpec(SecretKey key, byte arg1, byte arg2,
-		                             byte[] arg3, byte[] arg4, String arg5,
-		                             int arg6, int arg7 , int arg8 , int arg9)
+  public final SecretKey masterSecret;
+  public final byte major, minor;
+  public final byte[] client_random;
+  public final byte[] server_random;
+  public final String algorithm;
+  public final int keySize;
+  public final int expandedKeySize;
+  public final int ivSize;
+  public final int hashSize;
+  
+  public TlsKeyMaterialParameterSpec(final SecretKey masterSecret,
+                                     final byte major, final byte minor,
+                                     final byte[] client_random,
+                                     final byte[] server_random,
+                                     final String algorithm,
+                                     final int keySize,
+                                     final int expandedKeySize,
+                                     final int ivSize, final int hashSize)
   {
-    throw new RuntimeException("Not implemented.");
+    super();
+    this.masterSecret = masterSecret;
+    this.major = major;
+    this.minor = minor;
+    this.client_random = (byte[]) client_random.clone();
+    this.server_random = (byte[]) server_random.clone();
+    this.algorithm = algorithm;
+    this.keySize = keySize;
+    this.expandedKeySize = expandedKeySize;
+    this.ivSize = ivSize;
+    this.hashSize = hashSize;
   }
+  
 }

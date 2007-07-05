@@ -517,6 +517,7 @@ public final class GnuCrypto
         put("Cipher.RSAES-PKCS1-v1_5",
             gnu.javax.crypto.RSACipherImpl.class.getName());
         put("Alg.Alias.Cipher.RSA", "RSAES-PKCS1-v1_5");
+        put("Alg.Alias.Cipher.RSA/ECB/PKCS1Padding", "RSAES-PKCS1-v1_5");
 
         // SecureRandom
         put("SecureRandom.ARCFOUR",

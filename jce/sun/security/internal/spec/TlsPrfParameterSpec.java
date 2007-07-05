@@ -1,5 +1,6 @@
-/* TlsPrfParameterSpec.java -- stub file.
+/* TlsPrfParameterSpec.java -- TLS PRF parameters.
    Copyright (C) 2007 Red Hat, Inc.
+   Copyright (C) 2007  Casey Marshall <csm@gnu.org>
 
 This file is part of IcedTea.
 
@@ -36,12 +37,22 @@ exception statement from your version. */
 
 package sun.security.internal.spec;
 
+import java.security.spec.AlgorithmParameterSpec;
+
 import javax.crypto.SecretKey;
 
-public class TlsPrfParameterSpec
+public class TlsPrfParameterSpec implements AlgorithmParameterSpec
 {
-  public TlsPrfParameterSpec(SecretKey key, String arg1, byte[] arg2, int arg3)
+  public final SecretKey key;
+  public final String label;
+  public final byte[] seed;
+  public final int size;
+  
+  public TlsPrfParameterSpec(SecretKey key, String label, byte[] seed, int size)
   {
-    throw new RuntimeException("Not implemented.");
+    this.key = key;
+    this.label = label;
+    this.seed = (byte[]) seed.clone();
+    this.size = size;
   }
 }

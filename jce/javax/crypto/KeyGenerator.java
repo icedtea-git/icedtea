@@ -295,20 +295,4 @@ public class KeyGenerator
   {
     kgSpi.engineInit(random);
   }
-  
-  public final void init(TlsPrfParameterSpec spec)
-  {
-  }
-  
-  public final void init(TlsMasterSecretParameterSpec spec)
-  {
-  }
-  
-  public final void init(TlsKeyMaterialParameterSpec spec)
-  {
-  }
-  
-  public final void init(TlsRsaPremasterSecretParameterSpec spec)
-  {
-  }
 }

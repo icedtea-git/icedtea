@@ -61,6 +61,7 @@ import javax.crypto.CipherSpi;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.SecretKeySpec;
 
 public class RSACipherImpl
     extends CipherSpi
@@ -78,12 +79,14 @@ public class RSACipherImpl
 
   protected void engineSetMode(String mode) throws NoSuchAlgorithmException
   {
-    throw new NoSuchAlgorithmException("only one mode available");
+    if (!mode.equalsIgnoreCase("ECB"))
+      throw new NoSuchAlgorithmException("only one mode available");
   }
 
   protected void engineSetPadding(String pad) throws NoSuchPaddingException
   {
-    throw new NoSuchPaddingException("only one padding available");
+    if (!pad.equalsIgnoreCase("PKCS1") && !pad.equalsIgnoreCase("PKCS#1"))
+      throw new NoSuchPaddingException("only one padding available");
   }
 
   protected int engineGetBlockSize()
@@ -127,7 +130,7 @@ public class RSACipherImpl
       throws InvalidKeyException
   {
     int outputLen = 0;
-    if (opmode == Cipher.ENCRYPT_MODE)
+    if (opmode == Cipher.ENCRYPT_MODE || opmode == Cipher.WRAP_MODE)
       {
         if (! (key instanceof RSAPublicKey))
           throw new InvalidKeyException("expecting a RSAPublicKey");
@@ -136,7 +139,7 @@ public class RSACipherImpl
         blindingKey = null;
         outputLen = (encipherKey.getModulus().bitLength() + 7) / 8;
       }
-    else if (opmode == Cipher.DECRYPT_MODE)
+    else if (opmode == Cipher.DECRYPT_MODE || opmode == Cipher.UNWRAP_MODE)
       {
         if (key instanceof RSAPrivateKey)
           {
@@ -180,7 +183,8 @@ public class RSACipherImpl
 
   protected byte[] engineUpdate(byte[] in, int offset, int length)
   {
-    if (opmode != Cipher.ENCRYPT_MODE && opmode != Cipher.DECRYPT_MODE)
+    if (opmode != Cipher.ENCRYPT_MODE && opmode != Cipher.DECRYPT_MODE
+        && opmode != Cipher.WRAP_MODE && opmode != Cipher.UNWRAP_MODE)
       throw new IllegalStateException("not initialized");
     System.arraycopy(in, offset, dataBuffer, pos, length);
     pos += length;
@@ -198,7 +202,7 @@ public class RSACipherImpl
       throws IllegalBlockSizeException, BadPaddingException
   {
     engineUpdate(in, offset, length);
-    if (opmode == Cipher.DECRYPT_MODE)
+    if (opmode == Cipher.DECRYPT_MODE || opmode == Cipher.UNWRAP_MODE)
       {
         BigInteger enc = new BigInteger (1, dataBuffer);
         byte[] dec = rsaDecrypt (enc);
@@ -208,7 +212,7 @@ public class RSACipherImpl
         byte[] result = pkcs.decode(dec);
         return result;
       }
-    else
+    else if (opmode == Cipher.ENCRYPT_MODE || opmode == Cipher.WRAP_MODE)
       {
         offset = dataBuffer.length - pos;
         if (offset < 3)
@@ -234,6 +238,8 @@ public class RSACipherImpl
         pos = 0;
         return enc;
       }
+    else
+      throw new IllegalStateException("invalid cipher mode");
   }
 
   protected int engineDoFinal(byte[] out, int offset)
@@ -295,5 +301,47 @@ public class RSACipherImpl
         decb = b;
       }
     return decb;
+  }
+
+  @Override
+  protected Key engineUnwrap(byte[] wrappedKey, String wrappedKeyAlgorithm,
+                             int wrappedKeyType)
+    throws InvalidKeyException, NoSuchAlgorithmException
+  {
+    if (wrappedKeyType != Cipher.SECRET_KEY)
+      throw new IllegalArgumentException("can only unwrap secret keys");
+    if (decipherKey == null)
+      throw new IllegalStateException("not configured for key unwrapping");
+    try
+      {
+        byte[] dec = engineDoFinal(wrappedKey, 0, wrappedKey.length);
+        return new SecretKeySpec(dec, wrappedKeyAlgorithm);
+      }
+    catch (IllegalBlockSizeException ibse)
+      {
+        throw new InvalidKeyException(ibse);
+      }
+    catch (BadPaddingException bpe)
+      {
+        throw new InvalidKeyException(bpe);
+      }
+  }
+
+  @Override
+  protected byte[] engineWrap(Key key)
+    throws InvalidKeyException, IllegalBlockSizeException
+  {
+    if (encipherKey == null)
+      throw new IllegalStateException("not configured for key wrapping");
+    byte[] kb = key.getEncoded();
+    try
+      {
+        return engineDoFinal(kb, 0, kb.length);
+      }
+    catch (BadPaddingException bpe)
+      {
+        // We're encrypting, we should not see this.
+        throw new InvalidKeyException(bpe);
+      }
   }
 }

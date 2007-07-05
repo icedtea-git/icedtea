@@ -1,3 +1,151 @@
+2007-07-05  Lillian Angel  <langel@redhat.com>
+
+	* .hgignore: Updated.
+	* AUTHORS: Added Casey Marshall.
+	* Makefile.am: Added new patch.
+	* Makefile.in: Regenerated.
+	* jce/javax/crypto/KeyGenerator.java: Removed unnecessary functions.
+	* patches/icedtea-java.security.patch: Updated with new ssl provider.
+	* patches/icedtea-ssl.patch: New patch.
+	
+2007-07-05  Lillian Angel  <langel@redhat.com>
+
+	* jce/gnu/javax/net/ssl/AbstractSessionContext.java: Removed.
+	* jce/gnu/javax/net/ssl/EntropySource.java: Removed.
+	* jce/gnu/javax/net/ssl/NullManagerParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/PreSharedKeyManager.class
+	* jce/gnu/javax/net/ssl/PreSharedKeyManager.java: Removed.
+	* jce/gnu/javax/net/ssl/PreSharedKeyManagerParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/PrivateCredentials.java: Removed.
+	* jce/gnu/javax/net/ssl/SRPManagerParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/SRPTrustManager.java: Removed.
+	* jce/gnu/javax/net/ssl/SSLCipherSuite.java: Removed.
+	* jce/gnu/javax/net/ssl/SSLProtocolVersion.java: Removed.
+	* jce/gnu/javax/net/ssl/SSLRecordHandler.java: Removed.
+	* jce/gnu/javax/net/ssl/Session.java: Removed.
+	* jce/gnu/javax/net/ssl/SessionStoreException.java: Removed.
+	* jce/gnu/javax/net/ssl/StaticTrustAnchors.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/AbstractHandshake.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Alert.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/AlertException.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Builder.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Certificate.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CertificateBuilder.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CertificateRequest.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CertificateRequestBuilder.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CertificateStatusRequest.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CertificateStatusType.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CertificateType.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CertificateURL.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CertificateVerify.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CipherAlgorithm.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CipherSuite.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CipherSuiteList.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientCertificateTypeList.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientDHE_PSKParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientDiffieHellmanPublic.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientHandshake.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientHello.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientHelloBuilder.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientHelloV2.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientKeyExchange.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientKeyExchangeBuilder.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientPSKParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ClientRSA_PSKParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CompressionMethod.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/CompressionMethodList.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Constructed.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ContentType.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Debug.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/DelegatedTask.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/DiffieHellman.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/EmptyExchangeKeys.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/EncryptedPreMasterSecret.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ExchangeKeys.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Extension.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ExtensionList.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Finished.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Handshake.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/HelloRequest.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/InputSecurityParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Jessie.class
+	* jce/gnu/javax/net/ssl/provider/Jessie.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/KeyExchangeAlgorithm.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/MacAlgorithm.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/MacException.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/MaxFragmentLength.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/OutputSecurityParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/PreSharedKeyManagerFactoryImpl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ProtocolVersion.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Random.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Record.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SRPTrustManagerFactory.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLContextImpl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLEngineImpl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLHMac.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLRSASignatureImpl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLRandom.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLServerSocketFactoryImpl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLServerSocketImpl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLSocketFactoryImpl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLSocketImpl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLv3HMacMD5Impl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SSLv3HMacSHAImpl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerDHE_PSKParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerDHParams.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerHandshake.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerHello.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerHelloBuilder.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerHelloDone.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerKeyExchange.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerKeyExchangeBuilder.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerKeyExchangeParams.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerNameList.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerPSKParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerRSAParams.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/ServerRSA_PSKParameters.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SessionImpl.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Signature.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SignatureAlgorithm.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/SimpleSessionContext.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/TLSHMac.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/TLSRandom.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/TruncatedHMAC.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/TrustedAuthorities.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/UnresolvedExtensionValue.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/Util.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/X500PrincipalList.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/X509KeyManagerFactory.java: Removed.
+	* jce/gnu/javax/net/ssl/provider/X509TrustManagerFactory.java: Removed.
+	* jce/javax/net/VanillaServerSocketFactory.java: Removed.
+	* jce/javax/net/VanillaSocketFactory.java: Removed.
+	* jce/javax/net/ssl/TrivialHostnameVerifier.java: Removed.
+	* rt/gnu/java/util/Base64.java: Removed.
+
+2007-07-05  Casey Marshall  <csm@gnu.org>
+
+	* jce/gnu/java/security/icedtea/IcedTls.java: New Class.
+	* jce/gnu/java/security/icedtea/GNUTlsRsaPreMasterSecretGeneratorImpl.java: 
+	New Class.
+	* jce/gnu/java/security/icedtea/GNUTlsPrfGeneratorImpl.java: New Class.
+	* jce/gnu/java/security/icedtea/GNUTlsMasterSecretGenerator.java: New Class.
+	* jce/gnu/java/security/icedtea/GNUTlsKeyMaterialGeneratorImpl.java: New Class.
+	* jce/gnu/javax/crypto/RSACipherImpl.java
+	(engineSetMode): Implemented.
+	(engineSetPadding): Likewise.
+	(engineGetBlockSize): Added conditions.
+	(engineUpdate): Likewise.
+	(engineUnwrap): New function.
+	(engineWrap): Likewise.
+	* jce/gnu/javax/crypto/jce/GnuCrypto.java
+	(GnuCrypto): Updated cipher put into map.
+	* jce/sun/security/internal/spec/TlsKeyMaterialParameterSpec.java: Implemented.
+	* jce/sun/security/internal/spec/TlsKeyMaterialSpec.java: Implemented.
+	* jce/sun/security/internal/spec/TlsMasterSecretParameterSpec.java: Implemented.
+	* jce/sun/security/internal/spec/TlsPrfParameterSpec.java: Implemented.
+	* jce/sun/security/internal/spec/TlsRsaPremasterSecretParameterSpec.java:
+	Implemented.
+
 2007-07-05  Gary Benson  <gbenson@redhat.com>
 
 	* .hgignore: List bootstrap directory instead of individual files,
