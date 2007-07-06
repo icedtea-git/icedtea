@@ -1,3 +1,7 @@
+2007-07-06  Kyle Galloway <kgallowa@redhat.com>
+
+	* patches/icedtea-buildfix.patch: Add amd64 build fix as well.
+
 2007-07-06  Francis Kung  <fkung@redhat.com>
 
 	* Makefile.am: Update for b15.
