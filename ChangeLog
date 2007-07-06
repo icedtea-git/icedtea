@@ -1,3 +1,11 @@
+2007-07-06  Francis Kung  <fkung@redhat.com>
+
+	* Makefile.am: Update for b15.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-copy-plugs.patch: Update for b15.
+	* patches/icedtea-debuginfo.patch: Update for b15.
+	* patches/icedtea-buildfix.patch: New file.
+
 2007-07-05  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am (snapshot): New target.

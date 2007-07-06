@@ -1,6 +1,6 @@
-OPENJDK_VERSION = b14
-OPENJDK_DATE = 21_jun_2007
-OPENJDK_MD5SUM = c126a32966e4bdb6a60a5724d9447966
+OPENJDK_VERSION = b15
+OPENJDK_DATE = 05_jul_2007
+OPENJDK_MD5SUM = cd90295a8fa19036225ff14ca641dedc
 
 OPENJDK_URL = \
 	http://download.java.net/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
@@ -27,14 +27,13 @@ endif
 
 ICEDTEA_PATCHES = \
 	patches/icedtea-copy-plugs.patch \
-	patches/icedtea-lesstif.patch \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch \
-	patches/icedtea-gcc.patch \
 	patches/icedtea-debuginfo.patch \
 	patches/icedtea-java.security.patch \
 	patches/icedtea-ssl.patch \
+	patches/icedtea-buildfix.patch \
 	$(FAST_BUILD_PATCH) \
 	$(CCACHE_PATCH)
 
