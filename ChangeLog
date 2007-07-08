@@ -1,5 +1,12 @@
 2007-07-08  Mark Wielaard  <mark@klomp.org>
 
+	* acinclude.m4 (FIND_TOOL): New macro.
+	* configure.ac: Use FIND_TOOL for essential tools, add gawk check.
+	* configure: Regenerated.
+	* Makefile.in: Likewise.
+
+2007-07-08  Mark Wielaard  <mark@klomp.org>
+
 	* acinclude.m4 (CHECK_HEADERS): Add check for alsa/asoundlib.h.
 	* configure: Regenerated.
 

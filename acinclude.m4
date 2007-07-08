@@ -526,3 +526,10 @@ AC_DEFUN([ENABLE_CCACHE],
   AM_CONDITIONAL(USE_CCACHE, test -n "${CCACHE}")
 ])
 
+AC_DEFUN([FIND_TOOL],
+[AC_PATH_TOOL([$1],[$2])
+ if test x"$$1" = x ; then
+   AC_MSG_ERROR([$2 program not found in PATH])
+ fi
+ AC_SUBST([$1])
+])

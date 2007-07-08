@@ -10,16 +10,15 @@ AC_PREFIX_DEFAULT([bootstrap])
 
 AC_PROG_CC([gcc])
 
-AC_PATH_TOOL([FIND], [find])
-AC_SUBST([find])
-AC_PATH_TOOL([MD5SUM], [md5sum])
-AC_SUBST([MD5SUM])
-AC_PATH_TOOL([PATCH], [patch])
-AC_SUBST([PATCH])
-AC_PATH_TOOL([UNZIP], [unzip])
-AC_SUBST([UNZIP])
-AC_PATH_TOOL([WGET], [wget])
-AC_SUBST([WGET])
+# Essential tools that are used in the build (harness)
+FIND_TOOL([FIND], [find])
+FIND_TOOL([MD5SUM], [md5sum])
+FIND_TOOL([PATCH], [patch])
+FIND_TOOL([UNZIP], [unzip])
+FIND_TOOL([WGET], [wget])
+
+# See bug #36, we might just be able to use AC_PROG_AWK
+FIND_TOOL([GAWK], [gawk])
 
 SET_ARCH_DIRS
 FIND_JAVA

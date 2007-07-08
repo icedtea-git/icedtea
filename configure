@@ -699,11 +699,11 @@ CCDEPMODE
 am__fastdepCC_TRUE
 am__fastdepCC_FALSE
 FIND
-find
 MD5SUM
 PATCH
 UNZIP
 WGET
+GAWK
 BUILD_ARCH_DIR
 INSTALL_ARCH_DIR
 JAVA
@@ -3341,6 +3341,7 @@ fi
 
 
 
+# Essential tools that are used in the build (harness)
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}find", so it can be a program name with args.
 set dummy ${ac_tool_prefix}find; ac_word=$2
@@ -3442,6 +3443,12 @@ esac
 else
   FIND="$ac_cv_path_FIND"
 fi
+
+ if test x"$FIND" = x ; then
+   { { echo "$as_me:$LINENO: error: find program not found in PATH" >&5
+echo "$as_me: error: find program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
 
 
 if test -n "$ac_tool_prefix"; then
@@ -3546,6 +3553,12 @@ else
   MD5SUM="$ac_cv_path_MD5SUM"
 fi
 
+ if test x"$MD5SUM" = x ; then
+   { { echo "$as_me:$LINENO: error: md5sum program not found in PATH" >&5
+echo "$as_me: error: md5sum program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
+
 
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}patch", so it can be a program name with args.
@@ -3648,6 +3661,12 @@ esac
 else
   PATCH="$ac_cv_path_PATCH"
 fi
+
+ if test x"$PATCH" = x ; then
+   { { echo "$as_me:$LINENO: error: patch program not found in PATH" >&5
+echo "$as_me: error: patch program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
 
 
 if test -n "$ac_tool_prefix"; then
@@ -3752,6 +3771,12 @@ else
   UNZIP="$ac_cv_path_UNZIP"
 fi
 
+ if test x"$UNZIP" = x ; then
+   { { echo "$as_me:$LINENO: error: unzip program not found in PATH" >&5
+echo "$as_me: error: unzip program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
+
 
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}wget", so it can be a program name with args.
@@ -3854,6 +3879,123 @@ esac
 else
   WGET="$ac_cv_path_WGET"
 fi
+
+ if test x"$WGET" = x ; then
+   { { echo "$as_me:$LINENO: error: wget program not found in PATH" >&5
+echo "$as_me: error: wget program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
+
+
+
+# See bug #36, we might just be able to use AC_PROG_AWK
+if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}gawk", so it can be a program name with args.
+set dummy ${ac_tool_prefix}gawk; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_GAWK+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $GAWK in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_GAWK="$GAWK" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_GAWK="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+GAWK=$ac_cv_path_GAWK
+if test -n "$GAWK"; then
+  { echo "$as_me:$LINENO: result: $GAWK" >&5
+echo "${ECHO_T}$GAWK" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_GAWK"; then
+  ac_pt_GAWK=$GAWK
+  # Extract the first word of "gawk", so it can be a program name with args.
+set dummy gawk; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ac_pt_GAWK+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ac_pt_GAWK in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_GAWK="$ac_pt_GAWK" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ac_pt_GAWK="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_GAWK=$ac_cv_path_ac_pt_GAWK
+if test -n "$ac_pt_GAWK"; then
+  { echo "$as_me:$LINENO: result: $ac_pt_GAWK" >&5
+echo "${ECHO_T}$ac_pt_GAWK" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_pt_GAWK" = x; then
+    GAWK=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    GAWK=$ac_pt_GAWK
+  fi
+else
+  GAWK="$ac_cv_path_GAWK"
+fi
+
+ if test x"$GAWK" = x ; then
+   { { echo "$as_me:$LINENO: error: gawk program not found in PATH" >&5
+echo "$as_me: error: gawk program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
 
 
 
@@ -8412,11 +8554,11 @@ CCDEPMODE!$CCDEPMODE$ac_delim
 am__fastdepCC_TRUE!$am__fastdepCC_TRUE$ac_delim
 am__fastdepCC_FALSE!$am__fastdepCC_FALSE$ac_delim
 FIND!$FIND$ac_delim
-find!$find$ac_delim
 MD5SUM!$MD5SUM$ac_delim
 PATCH!$PATCH$ac_delim
 UNZIP!$UNZIP$ac_delim
 WGET!$WGET$ac_delim
+GAWK!$GAWK$ac_delim
 BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
 INSTALL_ARCH_DIR!$INSTALL_ARCH_DIR$ac_delim
 JAVA!$JAVA$ac_delim
