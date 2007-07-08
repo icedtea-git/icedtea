@@ -1,3 +1,8 @@
+2007-07-08  Mark Wielaard  <mark@klomp.org>
+
+	* acinclude.m4 (CHECK_HEADERS): Add check for alsa/asoundlib.h.
+	* configure: Regenerated.
+
 2007-07-06  Kyle Galloway <kgallowa@redhat.com>
 
 	* patches/icedtea-buildfix.patch: Add amd64 build fix as well.

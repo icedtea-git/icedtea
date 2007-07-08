@@ -493,6 +493,7 @@ AC_DEFUN([CHECK_HEADERS],
   AC_CHECK_HEADERS([X11/Intrinsic.h X11/Shell.h X11/StringDefs.h],[],[AC_MSG_ERROR("libXt headers were not found - try installing libXt-devel.")])
   AC_CHECK_HEADERS(X11/extensions/Print.h,[],[AC_MSG_ERROR("libXp headers were not found - try installing libXp-devel.")])
   AC_CHECK_HEADERS([Xm/Xm.h Xm/XmP.h Xm/Display.h],[],[AC_MSG_ERROR("motif headers were not found - try installing lesstif-devel.")])
+  AC_CHECK_HEADERS([alsa/asoundlib.h],[],[AC_MSG_ERROR("ALSA headers were not found - try installing alsa-lib-devel.")])
 ])
 
 AC_DEFUN([ENABLE_FAST_BUILD],
