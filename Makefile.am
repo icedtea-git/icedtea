@@ -264,7 +264,7 @@ patch: extract
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
-	  if $(PATCH) -p0 --dry-run -s -t -f < $$p ; \
+	  if $(PATCH) -p0 --dry-run -s -t -f -F 0 < $$p ; \
 	  then \
 	    echo Applying $$p ; \
 	    $(PATCH) -p0 < $$p ; \

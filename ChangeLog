@@ -1,8 +1,12 @@
 2007-07-11  Andrew Haley  <aph@redhat.com>
 
+	* Makefile.am (patch): Set fuzziness to zero.
+
+2007-07-11  Andrew Haley  <aph@redhat.com>
+
 	* patches/icedtea-assembler_amd64.patch: New file.
 	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-assembler_amd64.patch.
-	(cedtea-debug): New target 
+	(icedtea-debug): New target 
 
 2007-07-08  Mark Wielaard  <mark@klomp.org>
 

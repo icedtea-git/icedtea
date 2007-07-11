@@ -98,8 +98,8 @@ diff -urN openjdk.orig/j2se/make/common/Rules.gmk openjdk/j2se/make/common/Rules
  		-d $(CLASSHDRDIR)/ \
  		$(CLASSES.export) $(subst $$,\$$,$(EXPORTED_inner))
  	@$(java-vm-cleanup)
-+	-mv $(ICEDTEA_BUILD_DIR)/tmp/java/java.lang/java/CClassHeaders/java_lang_ClassLoader\$$NativeLibrary.h \
-+	  $(ICEDTEA_BUILD_DIR)/tmp/java/java.lang/java/CClassHeaders/java_lang_ClassLoader_NativeLibrary.h
++	-mv $(CLASSHDRDIR)/java_lang_ClassLoader\$$NativeLibrary.h \
++	  $(CLASSHDRDIR)/java_lang_ClassLoader_NativeLibrary.h
  	@$(TOUCH) $@
  
  classheaders.clean:
