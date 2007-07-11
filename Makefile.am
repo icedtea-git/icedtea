@@ -34,6 +34,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-java.security.patch \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-buildfix.patch \
+	patches/icedtea-assembler_amd64.patch \
 	$(FAST_BUILD_PATCH) \
 	$(CCACHE_PATCH)
 
@@ -402,6 +403,12 @@ bootstrap: icedteaboot unpatchecj clobber
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make
 	@echo "IcedTea re-served:" openjdk/control/build/linux-$(BUILD_ARCH_DIR)
+
+icedtea-debug:
+	$(MAKE) debug_build \
+	  $(ICEDTEA_ENV) \
+	  -C openjdk/control/make
+	@echo "IcedTea is served:" openjdk/control/build/linux-$(BUILD_ARCH_DIR)-debug
 
 snapshot: dist
 	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
