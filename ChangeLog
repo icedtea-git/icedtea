@@ -1,3 +1,7 @@
+2007-07-12  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* NEWS: Update for 1.1 release.
+
 2007-07-11  Andrew Haley  <aph@redhat.com>
 
 	* Makefile.am (patch): Set fuzziness to zero.

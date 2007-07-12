@@ -1,0 +1,8 @@
+New in release 1.1 (2007-07-12)
+
+* Color management and raster fixes for compatibility with LittleCMS.
+* Debuginfo is always generated.
+* Initial work to satisfy libt2k requirement with Freetype.
+* The GNU Crypto security providers have been imported from GNU
+  Classpath.
+* IcedTls security provider.
