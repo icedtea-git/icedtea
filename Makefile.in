@@ -67,7 +67,6 @@ AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 BUILD_ARCH_DIR = @BUILD_ARCH_DIR@
 CC = @CC@
-CCACHE = @CCACHE@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPP = @CPP@
@@ -179,8 +178,6 @@ OPENJDK_URL = \
 	http://download.java.net/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
 
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
-@USE_CCACHE_FALSE@CCACHE_PATCH = 
-@USE_CCACHE_TRUE@CCACHE_PATCH = patches/icedtea-ccache.patch
 @FAST_BUILD_FALSE@FAST_BUILD_PATCH = 
 @FAST_BUILD_TRUE@FAST_BUILD_PATCH = patches/icedtea-speed.patch
 @USE_ALT_OPENJDK_SRC_ZIP_FALSE@OPENJDK_SRC_ZIP = openjdk-7-ea-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).zip
@@ -195,8 +192,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-buildfix.patch \
 	patches/icedtea-assembler_amd64.patch \
-	$(FAST_BUILD_PATCH) \
-	$(CCACHE_PATCH)
+	$(FAST_BUILD_PATCH)
 
 ICEDTEA_ECJ_PATCH = \
 	patches/icedtea-ecj-bootstrap.patch

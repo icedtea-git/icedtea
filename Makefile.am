@@ -7,12 +7,6 @@ OPENJDK_URL = \
 
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
 
-if USE_CCACHE
-  CCACHE_PATCH = patches/icedtea-ccache.patch
-else
-  CCACHE_PATCH = 
-endif
-
 if FAST_BUILD
   FAST_BUILD_PATCH = patches/icedtea-speed.patch
 else
@@ -35,8 +29,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-buildfix.patch \
 	patches/icedtea-assembler_amd64.patch \
-	$(FAST_BUILD_PATCH) \
-	$(CCACHE_PATCH)
+	$(FAST_BUILD_PATCH)
 
 ICEDTEA_ECJ_PATCH = \
 	patches/icedtea-ecj-bootstrap.patch

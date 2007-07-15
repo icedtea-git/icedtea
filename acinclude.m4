@@ -510,22 +510,6 @@ AC_DEFUN([ENABLE_FAST_BUILD],
   ])
 ])
 
-AC_DEFUN([ENABLE_CCACHE],
-[
-  AC_ARG_ENABLE([ccache],
-                [AS_HELP_STRING(--enable-ccache, use ccache to speed up repeated builds)],
-  [
-    if test "${enableval}" = yes; then
-      AC_CHECK_PROG(CCACHE, ccache, yes)
-    fi;
-  ],
-  [
-      AC_CHECK_PROG(CCACHE, ccache, yes)
-  ])
-
-  AM_CONDITIONAL(USE_CCACHE, test -n "${CCACHE}")
-])
-
 AC_DEFUN([FIND_TOOL],
 [AC_PATH_TOOL([$1],[$2])
  if test x"$$1" = x ; then
