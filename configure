@@ -721,6 +721,7 @@ LIBGCJ_JAR
 XALAN2_JAR
 XALAN2_SERIALIZER_JAR
 XERCES2_JAR
+FREETYPE2_INC_DIR
 USE_ALT_OPENJDK_SRC_ZIP_TRUE
 USE_ALT_OPENJDK_SRC_ZIP_FALSE
 ALT_OPENJDK_SRC_ZIP
@@ -5947,6 +5948,7 @@ echo "$as_me: error: \"Freetype headers not found - try installing freetype-deve
     fi
 
 
+
   { echo "$as_me:$LINENO: checking openjdk source zip" >&5
 echo $ECHO_N "checking openjdk source zip... $ECHO_C" >&6; }
 
@@ -8600,6 +8602,7 @@ LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim
 XALAN2_JAR!$XALAN2_JAR$ac_delim
 XALAN2_SERIALIZER_JAR!$XALAN2_SERIALIZER_JAR$ac_delim
 XERCES2_JAR!$XERCES2_JAR$ac_delim
+FREETYPE2_INC_DIR!$FREETYPE2_INC_DIR$ac_delim
 USE_ALT_OPENJDK_SRC_ZIP_TRUE!$USE_ALT_OPENJDK_SRC_ZIP_TRUE$ac_delim
 USE_ALT_OPENJDK_SRC_ZIP_FALSE!$USE_ALT_OPENJDK_SRC_ZIP_FALSE$ac_delim
 ALT_OPENJDK_SRC_ZIP!$ALT_OPENJDK_SRC_ZIP$ac_delim
@@ -8615,7 +8618,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 22; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 23; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

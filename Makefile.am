@@ -67,7 +67,8 @@ ICEDTEA_ENV = \
 	"BOOTCLASSPATH_RT_LIBGCJ=-bootclasspath $(ICEDTEA_RT):$(LIBGCJ_JAR)" \
 	"CLASSPATH= " \
 	"JAVA_HOME= " \
-	"LD_LIBRARY_PATH= "
+	"LD_LIBRARY_PATH= " \
+	"CXXFLAGS+= -I$(FREETYPE2_INC_DIR) -lfreetype"
 
 ICEDTEA_COPY_DIRS = \
 	rt/com/sun/jdi \

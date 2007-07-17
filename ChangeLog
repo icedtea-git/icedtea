@@ -1,3 +1,11 @@
+2007-07-17  Francis Kung  <fkung@redhat.com>
+
+	* Makefile.am: Add compile flags for Freetype.
+	* acinclude.m4: Fix check for Freetype.
+	* Makefile.in: Regenerated.
+	* configure: Likewise.
+	* patches/icedtea-graphics.patch: Add Freetype support.
+
 2007-07-17  Kyle Galloway  <kgallowa@redhat.com>
 
 	* acinclude.m4: Added FIND_FREETYPE macro to check for Freetype libs

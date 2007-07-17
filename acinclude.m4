@@ -507,6 +507,7 @@ AC_DEFUN([FIND_FREETYPE],
       AC_MSG_RESULT(no)
       AC_MSG_ERROR("Freetype headers not found - try installing freetype-devel")
     fi
+    AC_SUBST(FREETYPE2_INC_DIR)
 ])
 
 AC_DEFUN([ENABLE_FAST_BUILD],
