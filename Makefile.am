@@ -68,7 +68,7 @@ ICEDTEA_ENV = \
 	"CLASSPATH= " \
 	"JAVA_HOME= " \
 	"LD_LIBRARY_PATH= " \
-	"CXXFLAGS+= -I$(FREETYPE2_INC_DIR) -lfreetype"
+	"FREETYPE2_INC_DIR= $(FREETYPE2_INC_DIR)"
 
 ICEDTEA_COPY_DIRS = \
 	rt/com/sun/jdi \

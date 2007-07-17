@@ -1,5 +1,12 @@
 2007-07-17  Francis Kung  <fkung@redhat.com>
 
+	* Makefile.am: Fix compile flags for Freetype.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-graphics.patch: Patch OpenJDK makefiles for
+	Freetype support.
+
+2007-07-17  Francis Kung  <fkung@redhat.com>
+
 	* Makefile.am: Add compile flags for Freetype.
 	* acinclude.m4: Fix check for Freetype.
 	* Makefile.in: Regenerated.

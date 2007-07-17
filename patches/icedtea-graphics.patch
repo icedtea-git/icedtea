@@ -228,7 +228,6 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h openjdk/j
 +//FreetypeScalerIncludesDefined
 +#endif
 +
-Binary files openjdk.orig/j2se/src/share/native/sun/font/.freetypescaler.h.swp and openjdk/j2se/src/share/native/sun/font/.freetypescaler.h.swp differ
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.cpp openjdk/j2se/src/share/native/sun/font/GeneralPath.cpp
 --- openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.cpp	2007-07-05 03:52:56.000000000 -0400
 +++ openjdk/j2se/src/share/native/sun/font/GeneralPath.cpp	2007-07-06 17:59:33.000000000 -0400
@@ -3194,3 +3193,52 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/t2kScalerMethods.cpp openj
 -}
 -
 -} /* End extern "C" */
+diff -urN openjdk.orig/j2se/make/sun/font/Makefile openjdk/j2se/make/sun/font/Makefile
+--- openjdk.orig/j2se/make/sun/font/Makefile	2007-07-05 03:19:55.000000000 -0400
++++ openjdk/j2se/make/sun/font/Makefile	2007-07-17 16:21:27.000000000 -0400
+@@ -129,7 +129,7 @@
+ # Fontmanager is headless (independent of X/Motif)
+ #
+ CFLAGS       += -DHEADLESS
+-CXXFLAGS     += -DHEADLESS
++CXXFLAGS     += -DHEADLESS -I$(FREETYPE2_INC_DIR)
+ 
+ ifeq ($(PLATFORM), windows)
+ vpath %.cpp   $(PLATFORM_SRC)/native/sun/windows
+@@ -147,7 +147,7 @@
+ 
+ # setup the list of libraries to link in...
+ 
+-OTHER_LDLIBS += -lt2k
++OTHER_LDLIBS += -lfreetype
+ 
+ ifeq ($(PLATFORM), linux)
+  OTHER_LDLIBS  += -lawt $(LIBM) $(LIBCXX)
+diff -urN openjdk.orig/j2se/make/sun/font/mapfile-vers openjdk/j2se/make/sun/font/mapfile-vers
+--- openjdk.orig/j2se/make/sun/font/mapfile-vers	2007-07-05 03:19:55.000000000 -0400
++++ openjdk/j2se/make/sun/font/mapfile-vers	2007-07-17 16:22:08.000000000 -0400
+@@ -57,6 +57,24 @@
+ 		Java_sun_java2d_loops_DrawGlyphListAA_DrawGlyphListAA;
+ 		Java_sun_java2d_loops_DrawGlyphListLCD_DrawGlyphListLCD;
+ 		Java_sun_java2d_loops_DrawGlyphList_DrawGlyphList;
++		Java_sun_font_Type1Font_createScaler;
++		Java_sun_font_FileFont_getNullScaler;
++		Java_sun_font_FileFontStrike_getNullScalerContext;
++		Java_sun_font_FileFontStrike_createScalerContext;
++		Java_sun_font_FileFont_freeScaler;
++		Java_sun_font_TrueTypeFont_createScaler;
++		Java_sun_font_FileFont_setNullScaler;
++		Java_sun_font_FileFont_getGlyphAdvance;
++		Java_sun_font_FileFont_getGlyphMetrics;
++		Java_sun_font_FileFont_getGlyphImage;
++		Java_sun_font_TrueTypeFont_getGlyphPoint;
++		Java_sun_font_FileFont_getFontMetrics;
++		Java_sun_font_Type1Font_getNumGlyphs;
++		Java_sun_font_Type1Font_getMissingGlyphCode;
++		Java_sun_font_Type1Font_getGlyphCode;
++		Java_sun_font_FileFont_getGlyphOutline;
++		Java_sun_font_FileFont_getGlyphOutlineBounds;
++		Java_sun_font_FileFont_getGlyphVectorOutline;
+ 
+ 	local:
+ 		*;
