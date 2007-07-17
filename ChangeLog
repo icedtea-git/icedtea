@@ -1,3 +1,10 @@
+2007-07-17  Kyle Galloway  <kgallowa@redhat.com>
+
+	* acinclude.m4: Added FIND_FREETYPE macro to check for Freetype libs
+	and headers and sets FREETYPE_INC_DIR.
+	* configure.ac: Call FIND_FREETYPE macro.
+	* configure: Regenerated.
+
 2007-07-14  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am, acinclude.m4, configure.ac: Remove ccache

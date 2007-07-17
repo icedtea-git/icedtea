@@ -496,6 +496,19 @@ AC_DEFUN([CHECK_HEADERS],
   AC_CHECK_HEADERS([alsa/asoundlib.h],[],[AC_MSG_ERROR("ALSA headers were not found - try installing alsa-lib-devel.")])
 ])
 
+AC_DEFUN([FIND_FREETYPE],
+[
+    AC_CHECK_LIB(freetype, FT_Init_FreeType, [], [AC_MSG_ERROR("Freetype not found - try installing freetype-devel")])
+    AC_MSG_CHECKING(for freetype header directory)
+    if test -d "/usr/include/freetype2"; then
+      FREETYPE2_INC_DIR=/usr/include/freetype2
+      AC_MSG_RESULT(${FREETYPE2_INC_DIR})
+    else
+      AC_MSG_RESULT(no)
+      AC_MSG_ERROR("Freetype headers not found - try installing freetype-devel")
+    fi
+])
+
 AC_DEFUN([ENABLE_FAST_BUILD],
 [
   AC_ARG_ENABLE([fast-build],
