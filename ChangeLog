@@ -1,3 +1,16 @@
+2007-07-18  Lillian Angel  <langel@redhat.com>
+
+	* jce/gnu/javax/crypto/jce/GnuCrypto.java: Added PBEWithMD5AndDES and
+	PBE providers.
+	* jce/gnu/javax/crypto/jce/cipher/CipherAdapter.java: 
+	(engineUpdate): Fixed blockCount and buffer size.
+	(engineUpdate): Fixed blockCount.
+	* jce/gnu/javax/crypto/key/GnuPBEKey.java
+	(getFormat): Implemented.
+	(getEncoded): Implemented.
+	* jce/gnu/javax/crypto/jce/PBESecretKeyFactory.java: New file.
+	* jce/gnu/javax/crypto/jce/cipher/PBE.java: New file.
+
 2007-07-17  Kyle Galloway  <kgallowa@redhat.com>
 
 	* acinclude.m4: Added FIND_FREETYPE macro to check for Freetype libs

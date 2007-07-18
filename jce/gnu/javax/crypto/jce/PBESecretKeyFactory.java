@@ -1,5 +1,5 @@
-/* GnuPBEKey.java -- A password-based encryption key.
-   Copyright (C) 2006  Free Software Foundation, Inc.
+/* PBESecretKeyFactory.java -- 
+   Copyright (C) 2007  Free Software Foundation, Inc.
 
 This file is a part of GNU Classpath.
 
@@ -33,64 +33,52 @@ module.  An independent module is a module which is not derived from
 or based on this library.  If you modify this library, you may extend
 this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
-exception statement from your version. */
+exception statement from your version.  */
 
 
-package gnu.javax.crypto.key;
+package gnu.javax.crypto.jce;
 
-import javax.crypto.interfaces.PBEKey;
+import gnu.javax.crypto.key.GnuPBEKey;
+
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactorySpi;
 import javax.crypto.spec.PBEKeySpec;
 
-/**
- * An implementation of a password-based encryption key.
- * 
- * @author Casey Marshall (csm@gnu.org)
- */
-public class GnuPBEKey
-  implements PBEKey
+
+public class PBESecretKeyFactory
+    extends SecretKeyFactorySpi
 {
-  private final PBEKeySpec spec;
+  protected String name;
 
-  public GnuPBEKey (final PBEKeySpec spec)
+  public PBESecretKeyFactory()
   {
-    if (spec == null)
-      throw new NullPointerException ();
-    this.spec = spec;
+    super();
+  }
+  
+  protected PBESecretKeyFactory(String name)
+  {
+    this.name = name;
   }
 
-  public GnuPBEKey (char[] password, byte[] salt, int iterationCount)
+  protected SecretKey engineGenerateSecret(KeySpec spec)
+      throws InvalidKeySpecException
   {
-    this (new PBEKeySpec (password, salt, iterationCount));
+    if (! (spec instanceof PBEKeySpec))
+      throw new InvalidKeySpecException("not a PBEKeySpec");
+    return new GnuPBEKey((PBEKeySpec) spec);
   }
 
-  public int getIterationCount ()
+  protected KeySpec engineGetKeySpec(SecretKey key, Class clazz)
+      throws InvalidKeySpecException
   {
-    return spec.getIterationCount ();
+    throw new InvalidKeySpecException("not supported");
   }
 
-  public char[] getPassword ()
+  protected SecretKey engineTranslateKey(SecretKey key)
   {
-    return spec.getPassword ();
-  }
-
-  public byte[] getSalt ()
-  {
-    return spec.getSalt ();
-  }
-
-  public String getAlgorithm ()
-  {
-    return "PBE";
-  }
-
-  public String getFormat ()
-  {
-    return "RAW";
-  }
-
-  public byte[] getEncoded ()
-  {
-	String pass = new String(getPassword());
-	return pass.getBytes();
+    return null;
   }
 }

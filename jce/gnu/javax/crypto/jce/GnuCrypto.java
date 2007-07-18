@@ -316,6 +316,8 @@ public final class GnuCrypto
             gnu.javax.crypto.jce.cipher.PBES2.HMacWhirlpool.TripleDES.class.getName());
         put("Cipher.PBEWithHMacWhirlpoolAndTwofish",
             gnu.javax.crypto.jce.cipher.PBES2.HMacWhirlpool.Twofish.class.getName());
+        put("Cipher.PBE",
+        		gnu.javax.crypto.jce.cipher.PBE.MD5.DES.class.getName());
 
         // Key Wrapping Algorithm cipher
         put("Cipher." + Registry.AES128_KWA,
@@ -349,6 +351,9 @@ public final class GnuCrypto
         put("SecretKeyFactory.PBKDF2WithHMacWhirlpool",
             gnu.javax.crypto.jce.PBKDF2SecretKeyFactory.HMacWhirlpool.class.getName());
 
+        put("SecretKeyFactory.PBEWithMD5AndDES",
+        		gnu.javax.crypto.jce.PBESecretKeyFactory.class.getName());
+        
         // Simple SecretKeyFactory implementations.
         put("SecretKeyFactory.Anubis",
             gnu.javax.crypto.jce.key.AnubisSecretKeyFactoryImpl.class.getName());
