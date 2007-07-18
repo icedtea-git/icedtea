@@ -90,7 +90,7 @@ public class GnuPBEKey
 
   public byte[] getEncoded ()
   {
-	String pass = new String(getPassword());
-	return pass.getBytes();
+    String pass = new String(getPassword());
+    return pass.getBytes();
   }
 }

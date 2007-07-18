@@ -1,5 +1,12 @@
 2007-07-18  Lillian Angel  <langel@redhat.com>
 
+	* jce/gnu/javax/crypto/jce/PBESecretKeyFactory.java: Reformatted (GNU
+	style).
+	* jce/gnu/javax/crypto/jce/cipher/PBE.java: Likewise.
+	* jce/gnu/javax/crypto/key/GnuPBEKey.java: Likewise.
+
+2007-07-18  Lillian Angel  <langel@redhat.com>
+
 	* jce/gnu/javax/crypto/jce/GnuCrypto.java: Added PBEWithMD5AndDES and
 	PBE providers.
 	* jce/gnu/javax/crypto/jce/cipher/CipherAdapter.java: 
