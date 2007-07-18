@@ -3193,9 +3193,23 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/t2kScalerMethods.cpp openj
 -}
 -
 -} /* End extern "C" */
+diff -urN openjdk.orig/j2se/make/sun/font/FILES_c.gmk openjdk/j2se/make/sun/font/FILES_c.gmk
+--- openjdk.orig/j2se/make/sun/font/FILES_c.gmk	2007-07-05 03:19:55.000000000 -0400
++++ openjdk/j2se/make/sun/font/FILES_c.gmk	2007-07-18 10:03:35.000000000 -0400
+@@ -105,7 +105,9 @@
+         $(TARGDIR)OpenTypeLayoutEngine.cpp \
+         $(TARGDIR)ThaiLayoutEngine.cpp \
+         $(TARGDIR)ScriptAndLanguageTags.cpp \
+-        $(TARGDIR)FontInstanceAdapter.cpp
++        $(TARGDIR)FontInstanceAdapter.cpp \
++	$(TARGDIR)GeneralPath.cpp \
++	$(TARGDIR)scalerMethods.cpp
+ 
+ 
+ ifeq ($(PLATFORM),windows)
 diff -urN openjdk.orig/j2se/make/sun/font/Makefile openjdk/j2se/make/sun/font/Makefile
 --- openjdk.orig/j2se/make/sun/font/Makefile	2007-07-05 03:19:55.000000000 -0400
-+++ openjdk/j2se/make/sun/font/Makefile	2007-07-17 16:21:27.000000000 -0400
++++ openjdk/j2se/make/sun/font/Makefile	2007-07-17 16:23:58.000000000 -0400
 @@ -129,7 +129,7 @@
  # Fontmanager is headless (independent of X/Motif)
  #
@@ -3216,7 +3230,7 @@ diff -urN openjdk.orig/j2se/make/sun/font/Makefile openjdk/j2se/make/sun/font/Ma
   OTHER_LDLIBS  += -lawt $(LIBM) $(LIBCXX)
 diff -urN openjdk.orig/j2se/make/sun/font/mapfile-vers openjdk/j2se/make/sun/font/mapfile-vers
 --- openjdk.orig/j2se/make/sun/font/mapfile-vers	2007-07-05 03:19:55.000000000 -0400
-+++ openjdk/j2se/make/sun/font/mapfile-vers	2007-07-17 16:22:08.000000000 -0400
++++ openjdk/j2se/make/sun/font/mapfile-vers	2007-07-17 16:23:58.000000000 -0400
 @@ -57,6 +57,24 @@
  		Java_sun_java2d_loops_DrawGlyphListAA_DrawGlyphListAA;
  		Java_sun_java2d_loops_DrawGlyphListLCD_DrawGlyphListLCD;
