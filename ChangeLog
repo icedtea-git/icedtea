@@ -1,3 +1,8 @@
+2007-07-18  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* configure.ac: Bump version to 1.2.
+	* configure: Regenerate.
+
 2007-07-18  Francis Kung  <fkung@redhat.com>
 
 	* INSTALL: Add instructions for enabling graphics.
