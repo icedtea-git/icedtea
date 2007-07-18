@@ -127,9 +127,73 @@ diff -urN openjdk.orig/j2se/make/sun/dcpr/Makefile openjdk/j2se/make/sun/dcpr/Ma
  .PHONY: copy-closed-src-classes
  
 
+diff -urN openjdk.orig/j2se/make/sun/font/FILES_c.gmk openjdk/j2se/make/sun/font/FILES_c.gmk
+--- openjdk.orig/j2se/make/sun/font/FILES_c.gmk	2007-07-05 03:19:55.000000000 -0400
++++ openjdk/j2se/make/sun/font/FILES_c.gmk	2007-07-18 10:08:54.000000000 -0400
+@@ -105,7 +105,9 @@
+         $(TARGDIR)OpenTypeLayoutEngine.cpp \
+         $(TARGDIR)ThaiLayoutEngine.cpp \
+         $(TARGDIR)ScriptAndLanguageTags.cpp \
+-        $(TARGDIR)FontInstanceAdapter.cpp
++        $(TARGDIR)FontInstanceAdapter.cpp \
++	$(TARGDIR)GeneralPath.cpp \
++	$(TARGDIR)scalerMethods.cpp
+ 
+ 
+ ifeq ($(PLATFORM),windows)
+diff -urN openjdk.orig/j2se/make/sun/font/Makefile openjdk/j2se/make/sun/font/Makefile
+--- openjdk.orig/j2se/make/sun/font/Makefile	2007-07-05 03:19:55.000000000 -0400
++++ openjdk/j2se/make/sun/font/Makefile	2007-07-18 10:08:54.000000000 -0400
+@@ -129,7 +129,7 @@
+ # Fontmanager is headless (independent of X/Motif)
+ #
+ CFLAGS       += -DHEADLESS
+-CXXFLAGS     += -DHEADLESS
++CXXFLAGS     += -DHEADLESS -I$(FREETYPE2_INC_DIR)
+ 
+ ifeq ($(PLATFORM), windows)
+ vpath %.cpp   $(PLATFORM_SRC)/native/sun/windows
+@@ -147,7 +147,7 @@
+ 
+ # setup the list of libraries to link in...
+ 
+-OTHER_LDLIBS += -lt2k
++OTHER_LDLIBS += -lfreetype
+ 
+ ifeq ($(PLATFORM), linux)
+  OTHER_LDLIBS  += -lawt $(LIBM) $(LIBCXX)
+diff -urN openjdk.orig/j2se/make/sun/font/mapfile-vers openjdk/j2se/make/sun/font/mapfile-vers
+--- openjdk.orig/j2se/make/sun/font/mapfile-vers	2007-07-05 03:19:55.000000000 -0400
++++ openjdk/j2se/make/sun/font/mapfile-vers	2007-07-18 10:08:54.000000000 -0400
+@@ -57,6 +57,24 @@
+ 		Java_sun_java2d_loops_DrawGlyphListAA_DrawGlyphListAA;
+ 		Java_sun_java2d_loops_DrawGlyphListLCD_DrawGlyphListLCD;
+ 		Java_sun_java2d_loops_DrawGlyphList_DrawGlyphList;
++		Java_sun_font_Type1Font_createScaler;
++		Java_sun_font_FileFont_getNullScaler;
++		Java_sun_font_FileFontStrike_getNullScalerContext;
++		Java_sun_font_FileFontStrike_createScalerContext;
++		Java_sun_font_FileFont_freeScaler;
++		Java_sun_font_TrueTypeFont_createScaler;
++		Java_sun_font_FileFont_setNullScaler;
++		Java_sun_font_FileFont_getGlyphAdvance;
++		Java_sun_font_FileFont_getGlyphMetrics;
++		Java_sun_font_FileFont_getGlyphImage;
++		Java_sun_font_TrueTypeFont_getGlyphPoint;
++		Java_sun_font_FileFont_getFontMetrics;
++		Java_sun_font_Type1Font_getNumGlyphs;
++		Java_sun_font_Type1Font_getMissingGlyphCode;
++		Java_sun_font_Type1Font_getGlyphCode;
++		Java_sun_font_FileFont_getGlyphOutline;
++		Java_sun_font_FileFont_getGlyphOutlineBounds;
++		Java_sun_font_FileFont_getGlyphVectorOutline;
+ 
+ 	local:
+ 		*;
+
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h openjdk/j2se/src/share/native/sun/font/freetypescaler.h
 --- openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/src/share/native/sun/font/freetypescaler.h	2007-07-16 15:55:23.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/font/freetypescaler.h	2007-07-18 10:08:54.000000000 -0400
 @@ -0,0 +1,97 @@
 +/* freetypescaler.h
 +   Copyright (C) 2007  Red Hat, Inc.
@@ -230,7 +294,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h openjdk/j
 +
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.cpp openjdk/j2se/src/share/native/sun/font/GeneralPath.cpp
 --- openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.cpp	2007-07-05 03:52:56.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/font/GeneralPath.cpp	2007-07-06 17:59:33.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/font/GeneralPath.cpp	2007-07-18 10:08:54.000000000 -0400
 @@ -45,6 +45,8 @@
    , lenTypes(DEFAULT_LEN_TYPES)
    , lenCoords(DEFAULT_LEN_COORDS)
@@ -432,7 +496,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.cpp openjdk/j2
 -}
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.h openjdk/j2se/src/share/native/sun/font/GeneralPath.h
 --- openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.h	2007-07-05 03:52:56.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/font/GeneralPath.h	2007-07-06 17:58:33.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/font/GeneralPath.h	2007-07-18 10:08:54.000000000 -0400
 @@ -28,7 +28,6 @@
  
  #include <jni.h>
@@ -2262,8 +2326,8 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.c openjdk/j2
 -}
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp
 --- openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp	2007-07-17 14:54:22.000000000 -0400
-@@ -0,0 +1,718 @@
++++ openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp	2007-07-18 14:06:08.000000000 -0400
+@@ -0,0 +1,749 @@
 +/* scalerMethods.c - wrap Freetype functions for the OpenJDK.
 +   Copyright (C) 2007  Red Hat, Inc.
 +   Copyright 2003-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -2359,7 +2423,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    return theNullScaler;
 +}
 +
-+int isNullScaler(FreetypeScalerInfo *scaler) {
++int isNullScaler(FreetypeScaler *scaler) {
 +    return
 +        scaler == NULL ||
 +        scaler == getNullScaler();
@@ -2432,6 +2496,10 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +Java_sun_font_FileFont_freeScaler
 +(JNIEnv *env, jclass fileFontClass, jlong pScaler) {
 +    FreetypeScaler *scaler = reinterpret_cast<FreetypeScaler *> (pScaler);
++
++    if (isNullScaler(scaler))
++        return;
++
 +    FT_Error error = FT_Done_Face (scaler->font);
 +    free (scaler);
 +    scaler = NULL;
@@ -2505,6 +2573,9 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +Java_sun_font_FileFont_getGlyphAdvance
 +(JNIEnv *env, jobject font2D, jlong pScalerContext, jint glyphCode) {
 +
++    if (isNullScalerContext((FreetypeScalerContext *)pScalerContext))
++        return (jfloat)0;
++
 +    FT_Face font = ((FreetypeScalerContext *)pScalerContext)->scaler->font;
 +
 +    if (FT_Load_Glyph(font, glyphCode, FT_LOAD_NO_BITMAP) == 0) {
@@ -2522,6 +2593,9 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +(JNIEnv *env, jobject font2D, jlong pScalerContext,
 + jint glyphCode, jobject metricsPt) {
 + 	
++    if (isNullScalerContext((FreetypeScalerContext *)pScalerContext))
++        return;
++
 +    jfloat advanceX = 0;
 +    jfloat advanceY = 0;
 +    FT_Face font = ((FreetypeScalerContext *)pScalerContext)->scaler->font;
@@ -2585,6 +2659,14 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +Java_sun_font_FileFont_getGlyphImage
 +(JNIEnv *env, jobject font2D, jlong pScalerContext, jint glyphCode) {
 +  
++    if (isNullScalerContext((FreetypeScalerContext *)pScalerContext)) {
++        GlyphInfo *glyphInfo = (GlyphInfo*)malloc(sizeof(GlyphInfo));
++        glyphInfo->cellInfo = NULL;
++        glyphInfo->rowBytes = 0;
++        glyphInfo->image = NULL;
++        return (jlong)(uintptr_t)glyphInfo;
++    }
++
 +    GlyphInfo *glyphInfo;
 +    FreetypeScalerContext *context = (FreetypeScalerContext *)pScalerContext;
 +
@@ -2718,20 +2800,24 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    jfloat lx = 0, ly = 0;
 +    jfloat mx = 0, my = 0;
 +
-+    FT_Face font = ((FreetypeScalerContext *)pScalerContext)->scaler->font;
++    if (! isNullScalerContext((FreetypeScalerContext *)pScalerContext)) {
++        if (! isNullScaler(((FreetypeScalerContext *)pScalerContext)->scaler)) {
++            FT_Face font = ((FreetypeScalerContext *)pScalerContext)->scaler->font;
 +
-+    // TODO: for vertical fonts/layouts, the x/y values should be reversed.
-+    ay = CONVERT_266_TO_FLOAT(font->size->metrics.ascender);
-+    dy = CONVERT_266_TO_FLOAT(font->size->metrics.descender);
-+    by = CONVERT_266_TO_FLOAT(font->size->metrics.height);
-+    ly = (by - ay + dy);
-+    mx = CONVERT_266_TO_FLOAT(font->max_advance_width);
++            // TODO: for vertical fonts/layouts, the x/y values should be reversed.
++            ay = CONVERT_266_TO_FLOAT(font->size->metrics.ascender);
++            dy = CONVERT_266_TO_FLOAT(font->size->metrics.descender);
++            by = CONVERT_266_TO_FLOAT(font->size->metrics.height);
++            ly = (by - ay + dy);
++            mx = CONVERT_266_TO_FLOAT(font->max_advance_width);
 +
-+    VectorConvert (ax + (lx/2), - ay - (ly/2),  0, -1, 1, 0, &ax, &ay);
-+    VectorConvert (dx + (lx/2), - dy - (ly/2), 0, 1, 1, 0, &dx, &dy);
-+    VectorConvert (lx,- ly, 0 , 1, 1, 0, &lx, &ly);
-+    lx = -lx;
-+    ly = -ly;
++            VectorConvert (ax + (lx/2), - ay - (ly/2),  0, -1, 1, 0, &ax, &ay);
++            VectorConvert (dx + (lx/2), - dy - (ly/2), 0, 1, 1, 0, &dx, &dy);
++            VectorConvert (lx,- ly, 0 , 1, 1, 0, &lx, &ly);
++            lx = -lx;
++            ly = -ly;
++        }
++    }
 +
 +    jobject metrics = env->NewObject(sunFontIDs.strikeMetricsClass,
 +				     sunFontIDs.strikeMetricsCtr,
@@ -2745,6 +2831,9 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +JNIEXPORT jint JNICALL
 +Java_sun_font_Type1Font_getNumGlyphs
 +(JNIEnv *env, jobject t1font, jlong pScaler) {
++
++    if (isNullScaler((FreetypeScaler *)pScaler))
++        return 0;
 +
 +    FreetypeScaler *scaler = reinterpret_cast<FreetypeScaler *> (pScaler);
 +    return (jint) scaler->font->num_glyphs;
@@ -2767,6 +2856,9 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +JNIEXPORT jint JNICALL
 +Java_sun_font_Type1Font_getGlyphCode
 +(JNIEnv *env, jobject t1font, jlong pScaler, jchar charCode) {
++
++    if (isNullScaler((FreetypeScaler *)pScaler))
++        return 0;
 +
 +    FT_Face face = ((FreetypeScaler*) pScaler)->font;
 +    return (jint) FT_Get_Char_Index (face, (FT_ULong) charCode);
@@ -2897,6 +2989,9 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +static void addGlyphToGeneralPath(jlong pScalerContext, jint glyphCode,
 +                                  jfloat xpos, jfloat ypos, GeneralPath* gp) {
 +
++   if (isNullScalerContext((FreetypeScalerContext *)pScalerContext))
++        return;
++
 +    // Define callbacks to generate the GeneralPath
 +    FT_Outline_Funcs ftCallbacks = {
 +        (FT_Outline_MoveToFunc) _moveTo,
@@ -2931,11 +3026,10 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    (JNIEnv *env, jobject font2D, jlong pScalerContext,
 +    jint glyphCode, jfloat xpos, jfloat ypos) {
 +
-+    FreetypeScaler *scaler =
-+        (reinterpret_cast<FreetypeScalerContext *> (pScalerContext))->scaler;
-+
 +    GeneralPath gp;
-+    addGlyphToGeneralPath((jlong)(uintptr_t) pScalerContext, glyphCode, xpos, ypos, &gp);
++
++    if (! isNullScalerContext((FreetypeScalerContext *)pScalerContext))
++        addGlyphToGeneralPath((jlong)(uintptr_t) pScalerContext, glyphCode, xpos, ypos, &gp);
 +
 +    return gp.getShape(env);
 +}
@@ -2947,10 +3041,11 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +Java_sun_font_FileFont_getGlyphOutlineBounds
 +    (JNIEnv *env, jobject font2D, jlong pScalerContext, int glyphCode) {
 +
-+    FreetypeScaler *scaler = (reinterpret_cast<FreetypeScalerContext *> (pScalerContext))->scaler;
-+
 +    GeneralPath gp;
-+    addGlyphToGeneralPath((jlong)(uintptr_t) pScalerContext, glyphCode, 0.0f, 0.0f, &gp);
++
++
++    if (! isNullScalerContext((FreetypeScalerContext *)pScalerContext))
++        addGlyphToGeneralPath((jlong)(uintptr_t) pScalerContext, glyphCode, 0.0f, 0.0f, &gp);
 +
 +    return gp.getBounds(env);
 +}
@@ -2963,18 +3058,18 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    (JNIEnv *env, jobject font2D, jintArray glyphArray, int numGlyphs,
 +    jlong pScalerContext, jfloat xpos, jfloat ypos) {
 +
-+    FreetypeScaler *scaler = (reinterpret_cast<FreetypeScalerContext *> (pScalerContext))->scaler;
-+
 +    GeneralPath gp;
 +
-+    jint *glyphs = env->GetIntArrayElements(glyphArray, NULL);
++    if (! isNullScalerContext((FreetypeScalerContext *)pScalerContext)) {
++        jint *glyphs = env->GetIntArrayElements(glyphArray, NULL);
 +
-+    for (int i = 0; i < numGlyphs; i++) {
-+        addGlyphToGeneralPath((jlong)(uintptr_t) pScalerContext, (int)glyphs[i],
-+                              xpos, ypos, &gp);
++        for (int i = 0; i < numGlyphs; i++) {
++            addGlyphToGeneralPath((jlong)(uintptr_t) pScalerContext, (int)glyphs[i],
++                                  xpos, ypos, &gp);
++        }
++
++        env->ReleaseIntArrayElements(glyphArray, glyphs, 0);
 +    }
-+
-+    env->ReleaseIntArrayElements(glyphArray, glyphs, 0);
 +
 +    return gp.getShape(env);
 +}
@@ -2984,7 +3079,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunFont.c openjdk/j2se/src/share/native/sun/font/sunFont.c
 --- openjdk.orig/j2se/src/share/native/sun/font/sunFont.c	2007-07-05 03:52:56.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/font/sunFont.c	2007-06-27 14:33:50.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/font/sunFont.c	2007-07-18 10:08:54.000000000 -0400
 @@ -164,7 +164,7 @@
       tmpClass = (*env)->FindClass(env, "sun/font/FileFont");
       sunFontIDs.pScaler = (*env)->GetFieldID(env, tmpClass, "pScaler", "J");
@@ -2996,47 +3091,210 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunFont.c openjdk/j2se/src
  
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunt2kscaler.h openjdk/j2se/src/share/native/sun/font/sunt2kscaler.h
 --- openjdk.orig/j2se/src/share/native/sun/font/sunt2kscaler.h	2007-07-05 03:52:56.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/font/sunt2kscaler.h	2007-06-27 14:33:50.000000000 -0400
-@@ -29,7 +29,7 @@
- 
- #include "jni.h"
- #include <math.h>
++++ openjdk/j2se/src/share/native/sun/font/sunt2kscaler.h	1969-12-31 19:00:00.000000000 -0500
+@@ -1,202 +0,0 @@
+-/*
+- * Copyright 2003-2007 Sun Microsystems, Inc.  All Rights Reserved.
+- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+- *
+- * This code is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 2 only, as
+- * published by the Free Software Foundation.  Sun designates this
+- * particular file as subject to the "Classpath" exception as provided
+- * by Sun in the LICENSE file that accompanied this code.
+- *
+- * This code is distributed in the hope that it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+- * version 2 for more details (a copy is included in the LICENSE file that
+- * accompanied this code).
+- *
+- * You should have received a copy of the GNU General Public License version
+- * 2 along with this work; if not, write to the Free Software Foundation,
+- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+- *
+- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+- * CA 95054 USA or visit www.sun.com if you need additional information or
+- * have any questions.
+- */
+-
+-#ifndef SunT2KScalerIncludesDefined
+-#define SunT2KScalerIncludesDefined
+-
+-
+-#include "jni.h"
+-#include <math.h>
 -#include "t2k.h"
-+//#include "t2k.h"
- #include "glyphblitting.h"
- #include "fontscalerdefs.h"
- 
-@@ -126,6 +126,8 @@
- TTLayoutTableCache* newLayoutTableCache();
- void freeLayoutTableCache(TTLayoutTableCache* ltc);
- 
-+typedef unsigned char tt_uint8;
-+
- typedef struct T2KScalerInfo {
-     /* Every call down must copy its "env" and "font2D" variable into the
-      * appropriate members of this struct.
-@@ -134,8 +136,8 @@
-      * T2K instance is not yet initialised.
-      */
-     JNIEnv*   env;
+-#include "glyphblitting.h"
+-#include "fontscalerdefs.h"
+-
+-#ifdef  __cplusplus
+-extern "C" {
+-#endif 
+-
+-
+-#define WIDE_SHIFTLEFT(outH, outL, inH, inL, shift) \
+-  { \
+-   (outH) = ((inH) << (shift)) | ((inL) >> (32 - (shift))); \
+-   (outL) = (inL) << (shift); \
+-  }
+-
+-#define WIDE_NEGATE(hi, lo) \
+-  {  \
+-    (hi) = ~(hi); \
+-    if (((lo) = -(Int32)lo) == 0) { \
+-       (hi) += 1; \
+-    } \
+-  }
+-
+-#define WIDE_ADDPOS(hi, lo, scaler) \
+-  { \
+-     UInt32 tmp = (lo) + (scaler); \
+-     if (tmp < (lo)) { \
+-        (hi) += 1; \
+-     } \
+-     (lo) = tmp; \
+-  }
+-
+-#define WIDE_LESSTHAN(hi, lo, hi2, lo2) \
+-    ((hi) < (hi2) || (hi) == (hi2) && (lo) < (lo2))
+-
+-#define WIDE_SUBWIDE(hi, lo, subhi, sublo) \
+- { \
+-    (hi) -= (subhi); \
+-    if ((lo) < (sublo)) { \
+-       (hi) -= 1; \
+-    } \
+-    (lo) -= (sublo); \
+- }
+-
+-#define WIDE_MUL(hi, lo, src1, src2) \
+- { \
+-    int neg = 0; \
+-    UInt32 a,b,c,d; \
+-    UInt32 high, middle, low; \
+- \
+-    if (src1 < 0) { \
+-	src1 = -src1; \
+-	neg = ~0; \
+-    } \
+-    if (src2 < 0) { \
+-	src2 = -src2; \
+-	neg = ~neg; \
+-    } \
+- \
+-    a = src1 >> 16; \
+-    b = (UInt16)src1; \
+-    c = src2 >> 16; \
+-    d = (UInt16)src2; \
+- \
+-    high = a * c; \
+-    middle = a * d + c * b; \
+-    low = b *d; \
+- \
+-    lo = low + (middle << 16); \
+-    hi = high + (middle >> 16) + (((low >> 16) + (UInt16)middle) >> 16); \
+- \
+-    if (neg) { \
+-	WIDE_NEGATE(hi, lo); \
+-    } \
+-}
+-
+-Int32 t2kMagnitude(Int32 x, Int32 y);
+-hsFract t2kFracMul(hsFract src1, hsFract src2);
+-Int32 t2kFracDiv(hsFract numerator, hsFract denom);
+-
+-#ifdef T2K_DEBUGGING
+-
+-#define t2kIfDebugMessage(clause, message, refcon)  \
+-                         if (clause) hsDebugMessage(message, refcon);
+-
+-#else
+-
+-#define t2kIfDebugMessage(clause, message, refcon)  ((void) 0)
+-
+-#endif
+-
+-#define QUADPATHTYPE  1
+-#define CUBICPATHTYPE 2
+-
+-TTLayoutTableCache* newLayoutTableCache();
+-void freeLayoutTableCache(TTLayoutTableCache* ltc);
+-
+-typedef struct T2KScalerInfo {
+-    /* Every call down must copy its "env" and "font2D" variable into the
+-     * appropriate members of this struct.
+-     * Although the T2K instance references its memHandler, we need a
+-     * reference to it directly for error recovery in the case that the
+-     * T2K instance is not yet initialised.
+-     */
+-    JNIEnv*   env;
 -    tsiMemObject* memHandler;
 -    T2K*      t2k;
-+/*    tsiMemObject* memHandler;
-+    T2K*      t2k; */
-     tt_uint8* fontData;
-     jobject   font2D;
-     jobject   directBuffer;
-@@ -169,8 +171,8 @@
-  */
- typedef struct T2KScalerContext {
-     T2KScalerInfo*    scalerInfo;
+-    tt_uint8* fontData;
+-    jobject   font2D;
+-    jobject   directBuffer;
+-    int       fontDataOffset;
+-    int       fontDataLength;
+-    int       fileSize;
+-    int       pathType;
+-    jboolean  supportsCJK;
+-    TTLayoutTableCache* layoutTables;
+-    int       bwGlyphCnt;
+-    int*      bwGlyphs;
+-} T2KScalerInfo;
+-
+-/* These are copied from sun.awt.SunHints.
+- * Consider initialising them as ints using JNI for more robustness.
+- */
+-#define TEXT_AA_OFF 1
+-#define TEXT_AA_ON  2
+-#define TEXT_AA_LCD_HRGB 4
+-#define TEXT_AA_LCD_HBGR 5
+-#define TEXT_AA_LCD_VRGB 6
+-#define TEXT_AA_LCD_VBGR 7
+-#define TEXT_FM_OFF 1
+-#define TEXT_FM_ON  2
+-
+-/*
+- * styling is set via making a T2K internal API public so that we
+- * can re-use a T2K instance.
+- * This looks perfectly OK as that internal API (SetStyling in truetype.c)
+- * just sets instance variables.
+- */
+-typedef struct T2KScalerContext {
+-    T2KScalerInfo*    scalerInfo;
 -    T2K_TRANS_MATRIX  t2kMatrix;     /* glyph TX - includes dev TX */
 -    T2K_AlgStyleDescriptor styling;
-+/*    T2K_TRANS_MATRIX  t2kMatrix;     /* glyph TX - includes dev TX *
-+    T2K_AlgStyleDescriptor styling; */
-     jboolean          sbits;
-     jboolean          doAA;
-     jint              aaType;
+-    jboolean          sbits;
+-    jboolean          doAA;
+-    jint              aaType;
+-    jboolean          doFM;
+-    jint              fmType;
+-    jboolean          doAlgoStyle;
+-    t2kFixed          boldness;
+-    t2kFixed          italic;
+-    int               greyLevel;
+-    int               t2kFlags;
+-    int               pathType;
+-} T2KScalerContext;
+-
+-extern void freeScalerInfoAfterError(JNIEnv *env, T2KScalerContext *context);
+-extern int isNullScaler(T2KScalerInfo *scaler);
+-
+-extern int setupT2KContext(JNIEnv *env, jobject font2D, 
+-			   T2KScalerInfo *scalerInfo,
+-			   T2KScalerContext *context,
+-			   jboolean sbits);
+-
+-extern T2KScalerInfo *theNullScaler;
+-extern T2KScalerContext *theNullScalerContext;
+-
+-#ifdef  __cplusplus
+-}
+-#endif 
+-
+-#endif
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/t2kScalerMethods.cpp openjdk/j2se/src/share/native/sun/font/t2kScalerMethods.cpp
 --- openjdk.orig/j2se/src/share/native/sun/font/t2kScalerMethods.cpp	2007-07-05 03:52:56.000000000 -0400
 +++ openjdk/j2se/src/share/native/sun/font/t2kScalerMethods.cpp	1969-12-31 19:00:00.000000000 -0500
@@ -3193,66 +3451,3 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/t2kScalerMethods.cpp openj
 -}
 -
 -} /* End extern "C" */
-diff -urN openjdk.orig/j2se/make/sun/font/FILES_c.gmk openjdk/j2se/make/sun/font/FILES_c.gmk
---- openjdk.orig/j2se/make/sun/font/FILES_c.gmk	2007-07-05 03:19:55.000000000 -0400
-+++ openjdk/j2se/make/sun/font/FILES_c.gmk	2007-07-18 10:03:35.000000000 -0400
-@@ -105,7 +105,9 @@
-         $(TARGDIR)OpenTypeLayoutEngine.cpp \
-         $(TARGDIR)ThaiLayoutEngine.cpp \
-         $(TARGDIR)ScriptAndLanguageTags.cpp \
--        $(TARGDIR)FontInstanceAdapter.cpp
-+        $(TARGDIR)FontInstanceAdapter.cpp \
-+	$(TARGDIR)GeneralPath.cpp \
-+	$(TARGDIR)scalerMethods.cpp
- 
- 
- ifeq ($(PLATFORM),windows)
-diff -urN openjdk.orig/j2se/make/sun/font/Makefile openjdk/j2se/make/sun/font/Makefile
---- openjdk.orig/j2se/make/sun/font/Makefile	2007-07-05 03:19:55.000000000 -0400
-+++ openjdk/j2se/make/sun/font/Makefile	2007-07-17 16:23:58.000000000 -0400
-@@ -129,7 +129,7 @@
- # Fontmanager is headless (independent of X/Motif)
- #
- CFLAGS       += -DHEADLESS
--CXXFLAGS     += -DHEADLESS
-+CXXFLAGS     += -DHEADLESS -I$(FREETYPE2_INC_DIR)
- 
- ifeq ($(PLATFORM), windows)
- vpath %.cpp   $(PLATFORM_SRC)/native/sun/windows
-@@ -147,7 +147,7 @@
- 
- # setup the list of libraries to link in...
- 
--OTHER_LDLIBS += -lt2k
-+OTHER_LDLIBS += -lfreetype
- 
- ifeq ($(PLATFORM), linux)
-  OTHER_LDLIBS  += -lawt $(LIBM) $(LIBCXX)
-diff -urN openjdk.orig/j2se/make/sun/font/mapfile-vers openjdk/j2se/make/sun/font/mapfile-vers
---- openjdk.orig/j2se/make/sun/font/mapfile-vers	2007-07-05 03:19:55.000000000 -0400
-+++ openjdk/j2se/make/sun/font/mapfile-vers	2007-07-17 16:23:58.000000000 -0400
-@@ -57,6 +57,24 @@
- 		Java_sun_java2d_loops_DrawGlyphListAA_DrawGlyphListAA;
- 		Java_sun_java2d_loops_DrawGlyphListLCD_DrawGlyphListLCD;
- 		Java_sun_java2d_loops_DrawGlyphList_DrawGlyphList;
-+		Java_sun_font_Type1Font_createScaler;
-+		Java_sun_font_FileFont_getNullScaler;
-+		Java_sun_font_FileFontStrike_getNullScalerContext;
-+		Java_sun_font_FileFontStrike_createScalerContext;
-+		Java_sun_font_FileFont_freeScaler;
-+		Java_sun_font_TrueTypeFont_createScaler;
-+		Java_sun_font_FileFont_setNullScaler;
-+		Java_sun_font_FileFont_getGlyphAdvance;
-+		Java_sun_font_FileFont_getGlyphMetrics;
-+		Java_sun_font_FileFont_getGlyphImage;
-+		Java_sun_font_TrueTypeFont_getGlyphPoint;
-+		Java_sun_font_FileFont_getFontMetrics;
-+		Java_sun_font_Type1Font_getNumGlyphs;
-+		Java_sun_font_Type1Font_getMissingGlyphCode;
-+		Java_sun_font_Type1Font_getGlyphCode;
-+		Java_sun_font_FileFont_getGlyphOutline;
-+		Java_sun_font_FileFont_getGlyphOutlineBounds;
-+		Java_sun_font_FileFont_getGlyphVectorOutline;
- 
- 	local:
- 		*;

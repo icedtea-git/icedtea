@@ -1,5 +1,9 @@
 2007-07-18  Francis Kung  <fkung@redhat.com>
 
+	* patches/icedtea-graphics.patch: Check for null scalers.
+
+2007-07-18  Francis Kung  <fkung@redhat.com>
+
 	* patches/icedtea-graphics.patch: Patch OpenJDK makefiles.
 
 2007-07-17  Francis Kung  <fkung@redhat.com>
