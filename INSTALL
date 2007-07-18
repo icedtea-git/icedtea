@@ -40,3 +40,11 @@ make bootstrap
 
 The bootstrap target builds IcedTea against ecj running on libgcj
 first then uses the result of that build to build IcedTea again.
+
+Graphics Support in IcedTea
+---------------------------
+IcedTea contains replacements for much of the encumbered graphics
+code; however to enable this, a full bootstrap build is required.
+
+Graphics will not work after a normal, non-bootstrap build.
+

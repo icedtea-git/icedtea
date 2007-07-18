@@ -1,5 +1,9 @@
 2007-07-18  Francis Kung  <fkung@redhat.com>
 
+	* INSTALL: Add instructions for enabling graphics.
+
+2007-07-18  Francis Kung  <fkung@redhat.com>
+
 	* patches/icedtea-graphics.patch: Check for null scalers.
 
 2007-07-18  Lillian Angel  <langel@redhat.com>
