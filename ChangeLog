@@ -1,3 +1,8 @@
+2007-07-19  Lillian Angel  <langel@redhat.com>
+
+	* jce/gnu/javax/crypto/jce/GnuCrypto.java: Fixed typo. DiffieHellman
+	is now recognized as a algorithm.
+
 2007-07-18  Casey Marshall  <csm@gnu.org>
 
 	Fixes PR 39.

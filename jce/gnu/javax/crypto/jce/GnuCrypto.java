@@ -558,7 +558,7 @@ public final class GnuCrypto
         put("KeyFactory.DH",
             gnu.javax.crypto.jce.sig.DHKeyFactory.class.getName());
 
-        put("Alg.Alias,KeyFactory.DiffieHellman", "DH");
+        put("Alg.Alias.KeyFactory.DiffieHellman", "DH");
 
         // Algorithm Parameters -----------------------------------------------
         put("AlgorithmParameters.DH",
