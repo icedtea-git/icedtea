@@ -1,3 +1,11 @@
+2007-07-18  Casey Marshall  <csm@gnu.org>
+
+	Fixes PR 39.
+	* jce/gnu/java/security/icedtea/CertBundleKeyStoreImpl.java:
+	new file.
+	* jce/gnu/java/security/icedtea/IcedTls.java: add
+	`CertBundleKeyStoreImpl' to provider.
+	
 2007-07-18  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* configure.ac: Bump version to 1.2.
