@@ -1,5 +1,10 @@
 2007-07-19  Lillian Angel  <langel@redhat.com>
 
+	* jce/gnu/javax/crypto/jce/cipher/CipherAdapter.java: Fixed incorrect
+	buffer sizes.
+
+2007-07-19  Lillian Angel  <langel@redhat.com>
+
 	* .hgignore: Ignore .* directories/files.
 
 2007-07-19  Lillian Angel  <langel@redhat.com>

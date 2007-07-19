@@ -378,7 +378,7 @@ class CipherAdapter
     if (inLen == 0) // nothing to process
       return new byte[0];
     final int blockSize = mode.currentBlockSize();
-    int blockCount = (int) (Math.ceil((double) (partLen + inLen) / (double) blockSize));
+    int blockCount = (partLen + inLen) / blockSize;
 
     // always keep data for unpadding in padded decryption mode;
     // might even be a complete block
@@ -405,7 +405,7 @@ class CipherAdapter
     if (inLen == 0) // nothing to process
       return 0;
     final int blockSize = mode.currentBlockSize();
-    int blockCount = (int) (Math.ceil((double) (partLen + inLen) / (double) blockSize));
+    int blockCount = (partLen + inLen) / blockSize;
     // always keep data for unpadding in padded decryption mode;
     // might even be a complete block
     if (pad != null
@@ -415,19 +415,18 @@ class CipherAdapter
     final int result = blockCount * blockSize;
     if (result > out.length - outOff)
       throw new ShortBufferException();
+    
     if (blockCount == 0) // not enough bytes for even 1 block
       {
         System.arraycopy(in, inOff, partBlock, partLen, inLen);
         partLen += inLen;
         return 0;
       }
+    
     final byte[] buf;
     // we have enough bytes for at least 1 block
     if (partLen == 0) // if no cached bytes use input
-    {
-      buf = new byte[result];
-      System.arraycopy(in, 0, buf, 0, in.length);
-    }
+      buf = in;
     else // prefix input with cached bytes
       {
         buf = new byte[partLen + inLen];
@@ -436,12 +435,14 @@ class CipherAdapter
           System.arraycopy(in, inOff, buf, partLen, inLen);
         inOff = 0;
       }
+    
     for (int i = 0; i < blockCount; i++) // update blockCount * blockSize
       {
         mode.update(buf, inOff, out, outOff);
         inOff += blockSize;
         outOff += blockSize;
       }
+    
     partLen += inLen - result;
     if (partLen > 0) // cache remaining bytes from buf
       System.arraycopy(buf, inOff, partBlock, 0, partLen);
