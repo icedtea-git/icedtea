@@ -391,3 +391,4 @@ rt/javax/security/sasl/SaslServer.java
 rt/javax/security/sasl/SaslServerFactory.java
 generated/gen-srcs.lst
 rt/com/sun/jmx/snmp/agent/SnmpMib.java
+.*
