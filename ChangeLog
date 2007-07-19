@@ -1,5 +1,12 @@
 2007-07-19  Francis Kung  <fkung@redhat.com>
 
+	* rt/gnu/java/awt/CubicSegment.java,
+	* rt/gnu/java/awt/LineSegment.java,
+	* rt/gnu/java/awt/QuadSegment.java,
+	* rt/gnu/java/awt/Segment.java: New files.
+
+2007-07-19  Francis Kung  <fkung@redhat.com>
+
 	* patches/icedtea-graphics.patch: Replace encumbered path widening
 	code.
 
