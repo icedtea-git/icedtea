@@ -1,3 +1,11 @@
+2007-07-24  Andrew Haley  <aph@redhat.com>
+
+	* Makefile.am (OPENJDK_VERSION): Change to b16.
+	* patches/icedtea-copy-plugs.patch: Rewrite
+	j2se/make/common/Release.gmk and BinaryPlugs.gmk for b16.
+	Remove diffs for j2se/make/tools/sharing/*.
+	Rewrite j2se/make/sun/dcpr/Makefile changes.
+
 2007-07-19  Francis Kung  <fkung@redhat.com>
 
 	* patches/icedtea-graphics.patch: Explicitly disable anti-aliasing in

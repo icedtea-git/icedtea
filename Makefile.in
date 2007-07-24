@@ -172,9 +172,9 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-OPENJDK_VERSION = b15
-OPENJDK_DATE = 05_jul_2007
-OPENJDK_MD5SUM = cd90295a8fa19036225ff14ca641dedc
+OPENJDK_VERSION = b16
+OPENJDK_DATE = 20_jul_2007
+OPENJDK_MD5SUM = e0ef953635bcdfd0437e1d24b6eccf58
 OPENJDK_URL = \
 	http://download.java.net/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
 
