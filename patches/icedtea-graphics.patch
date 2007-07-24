@@ -171,11 +171,817 @@ diff -urN openjdk.orig/j2se/make/sun/font/mapfile-vers openjdk/j2se/make/sun/fon
  
  	local:
  		*;
+diff -urN openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java openjdk/j2se/src/share/classes/java/awt/BasicStroke.java
+--- openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java	2007-07-05 03:48:32.000000000 -0400
++++ openjdk/j2se/src/share/classes/java/awt/BasicStroke.java	2007-07-19 13:44:58.000000000 -0400
+@@ -25,6 +25,17 @@
+ 
+ package java.awt;
+ 
++import gnu.java.awt.CubicSegment;
++import gnu.java.awt.LineSegment;
++import gnu.java.awt.QuadSegment;
++import gnu.java.awt.Segment;
++
++import java.awt.geom.FlatteningPathIterator;
++import java.awt.geom.GeneralPath;
++import java.awt.geom.PathIterator;
++import java.awt.geom.Point2D;
++import java.util.Arrays;
++
+ /**
+  * The <code>BasicStroke</code> class defines a basic set of rendering
+  * attributes for the outlines of graphics primitives, which are rendered
+@@ -157,6 +168,8 @@
+     float dash[];
+     float dash_phase;
+ 
++    private Segment start, end;
++
+     /**
+      * Constructs a new <code>BasicStroke</code> with the specified
+      * attributes.
+@@ -292,10 +305,12 @@
+      * @return the <code>Shape</code> of the stroked outline.
+      */
+     public Shape createStrokedShape(Shape s) {
+-        sun.java2d.pipe.RenderingEngine re =
+-            sun.java2d.pipe.RenderingEngine.getInstance();
+-        return re.createStrokedShape(s, width, cap, join, miterlimit,
+-                                     dash, dash_phase);
++        PathIterator pi = s.getPathIterator(null);
++
++        if( dash == null )
++            return solidStroke(pi);
++
++        return dashedStroke(pi);
+     }
+ 
+     /**
+@@ -440,4 +455,475 @@
+ 
+         return true;
+     }
++
++    private Shape solidStroke(PathIterator pi) {
++        double[] coords = new double[6];
++        double x, y, x0, y0;
++        boolean pathOpen = false;
++        GeneralPath output = new GeneralPath ();
++        Segment[] p;
++        x = x0 = y = y0 = 0;
++
++        while (!pi.isDone()) {
++            switch (pi.currentSegment(coords)) {
++                case PathIterator.SEG_MOVETO:
++                    x0 = x = coords[0];
++                    y0 = y = coords[1];
++                    if (pathOpen) {
++                        capEnds();
++                        convertPath(output, start);
++                        start = end = null;
++                        pathOpen = false;
++                    }
++                    break;
++
++                case PathIterator.SEG_LINETO:
++                    p = (new LineSegment(x, y, coords[0], coords[1])).
++                    getDisplacedSegments(width/2.0);
++                    if (!pathOpen) {
++                        start = p[0];
++                        end = p[1];
++                        pathOpen = true;
++                    } else {
++                      addSegments(p);
++                    }
++
++                    x = coords[0];
++                    y = coords[1];
++                    break;
++
++                case PathIterator.SEG_QUADTO:
++                    p = (new QuadSegment(x, y, coords[0], coords[1], coords[2],
++                                         coords[3])).getDisplacedSegments(width/2.0);
++                    if (!pathOpen) {
++                        start = p[0];
++                        end = p[1];
++                        pathOpen = true;
++                    } else {
++                        addSegments(p);
++                    }
++
++                    x = coords[2];
++                    y = coords[3];
++                    break;
++
++                case PathIterator.SEG_CUBICTO:
++                    p = new CubicSegment(x, y, coords[0], coords[1],
++                                         coords[2], coords[3],
++                                         coords[4], coords[5]).getDisplacedSegments(width/2.0);
++                    if (!pathOpen) {
++                        start = p[0];
++                        end = p[1];
++                        pathOpen = true;
++                    } else {
++                        addSegments(p);
++                    }
++
++                    x = coords[4];
++                    y = coords[5];
++                    break;
++
++                case PathIterator.SEG_CLOSE:
++                    if (x == x0 && y == y0) {
++                        joinSegments(new Segment[] { start.first, end.first });
++                    } else {
++                        p = (new LineSegment(x, y, x0, y0)).getDisplacedSegments(width / 2.0);
++                        addSegments(p);
++                    }
++                    convertPath(output, start);
++                    convertPath(output, end);
++                    start = end = null;
++                    pathOpen = false;
++                    output.setWindingRule(GeneralPath.WIND_EVEN_ODD);
++                    break;
++            }
++            pi.next();
++        }
++
++        if (pathOpen) {
++            capEnds();
++            convertPath(output, start);
++        }
++        return output;
++    }
++
++    private Shape dashedStroke(PathIterator pi)
++    {
++        // The choice of (flatnessSq == width / 3) is made to be consistent with
++        // the flattening in CubicSegment.getDisplacedSegments
++        FlatteningPathIterator flat = new FlatteningPathIterator(pi,
++                                                                 Math.sqrt(width / 3));
++
++        // Holds the endpoint of the current segment (or piece of a segment)
++        double[] coords = new double[2];
++
++        // Holds end of the last segment
++        double x, y, x0, y0;
++        x = x0 = y = y0 = 0;
++
++        // Various useful flags
++        boolean pathOpen = false;
++        boolean dashOn = true;
++        boolean offsetting = (dash_phase != 0);
++
++        // How far we are into the current dash
++        double distance = 0;
++        int dashIndex = 0;
++
++        // And variables to hold the final output
++        GeneralPath output = new GeneralPath();
++        Segment[] p;
++
++        // Iterate over the FlatteningPathIterator
++        while (! flat.isDone()) {
++            switch (flat.currentSegment(coords)) {
++                case PathIterator.SEG_MOVETO:
++                    x0 = x = coords[0];
++                    y0 = y = coords[1];
++
++                    if (pathOpen) {
++                        capEnds();
++                        convertPath(output, start);
++                        start = end = null;
++                        pathOpen = false;
++                    }
++
++                    break;
++
++                case PathIterator.SEG_LINETO:
++                    boolean segmentConsumed = false;
++
++                    while (! segmentConsumed) {
++                        // Find the total remaining length of this segment
++                        double segLength = Math.sqrt((x - coords[0]) * (x - coords[0])
++                                                     + (y - coords[1])
++                                                     * (y - coords[1]));
++                        boolean spanBoundary = true;
++                        double[] segmentEnd = null;
++
++                        // The current segment fits entirely inside the current dash
++                        if ((offsetting && distance + segLength <= dash_phase)
++                            || distance + segLength <= dash[dashIndex]) {
++                              spanBoundary = false;
++
++                        } else {
++                            // Otherwise, we need to split the segment in two, as this
++                            // segment spans a dash boundry
++                            segmentEnd = (double[]) coords.clone();
++
++                            // Calculate the remaining distance in this dash,
++                            // and coordinates of the dash boundary
++                            double reqLength;
++                            if (offsetting)
++                                reqLength = dash_phase - distance;
++                            else
++                                reqLength = dash[dashIndex] - distance;
++
++                                coords[0] = x + ((coords[0] - x) * reqLength / segLength);
++                                coords[1] = y + ((coords[1] - y) * reqLength / segLength);
++                        }
++
++                        if (offsetting || ! dashOn) {
++                            // Dash is off, or we are in offset - treat this as a
++                            // moveTo
++                            x0 = x = coords[0];
++                            y0 = y = coords[1];
++
++                            if (pathOpen) {
++                                capEnds();
++                                convertPath(output, start);
++                                start = end = null;
++                                pathOpen = false;
++                            }
++                        } else {
++                            // Dash is on - treat this as a lineTo
++                            p = (new LineSegment(x, y, coords[0], coords[1])).getDisplacedSegments(width / 2.0);
++
++                            if (! pathOpen) {
++                                start = p[0];
++                                end = p[1];
++                                pathOpen = true;
++                            } else {
++                                addSegments(p);
++                            }
++
++                            x = coords[0];
++                            y = coords[1];
++                        }
++
++                        // Update variables depending on whether we spanned a
++                        // dash boundary or not
++                        if (! spanBoundary) {
++                            distance += segLength;
++                            segmentConsumed = true;
++                        } else {
++                            if (offsetting)
++                                offsetting = false;
++                            dashOn = ! dashOn;
++                            distance = 0;
++                            coords = segmentEnd;
++
++                            if (dashIndex + 1 == dash.length)
++                                dashIndex = 0;
++                            else
++                                dashIndex++;
++
++                            // Since the value of segmentConsumed is still false,
++                            // the next run of the while loop will complete the segment
++                        }
++                    }
++                    break;
++
++            // This is a flattened path, so we don't need to deal with curves
++            }
++        flat.next();
++        }
++
++        if (pathOpen) {
++            capEnds();
++            convertPath(output, start);
++        }
++        return output;
++     }
++
++    /**
++     * Cap the ends of the path (joining the start and end list of segments)
++     */
++    private void capEnds() {
++        Segment returnPath = end.last;
++
++        end.reverseAll(); // reverse the path.
++        end = null;
++        capEnd(start, returnPath);
++        start.last = returnPath.last;
++        end = null;
++
++        capEnd(start, start);
++    }
++
++    /**
++     * Append the Segments in s to the GeneralPath p
++     */
++    private void convertPath(GeneralPath p, Segment s) {
++        Segment v = s;
++        p.moveTo((float)s.P1.getX(), (float)s.P1.getY());
++
++        do {
++            if(v instanceof LineSegment)
++                p.lineTo((float)v.P2.getX(), (float)v.P2.getY());
++            else if(v instanceof QuadSegment)
++                p.quadTo((float)((QuadSegment)v).cp.getX(),
++                         (float)((QuadSegment)v).cp.getY(),
++                         (float)v.P2.getX(), 
++                         (float)v.P2.getY());
++            else if(v instanceof CubicSegment)
++                p.curveTo((float)((CubicSegment)v).cp1.getX(),
++                          (float)((CubicSegment)v).cp1.getY(),
++                          (float)((CubicSegment)v).cp2.getX(),
++                          (float)((CubicSegment)v).cp2.getY(),
++                          (float)v.P2.getX(), 
++                          (float)v.P2.getY());
++            v = v.next;
++        } while(v != s && v != null);
++
++        p.closePath();
++    }
++  
++    /**
++     * Add the segments to start and end (the inner and outer edges of the stroke) 
++     */
++    private void addSegments(Segment[] segments) {
++        joinSegments(segments);
++        start.add(segments[0]);
++        end.add(segments[1]);
++    }
++
++    private void joinSegments(Segment[] segments) {
++        double[] p0 = start.last.cp2();
++        double[] p1 = new double[]{start.last.P2.getX(), start.last.P2.getY()};
++        double[] p2 = new double[]{segments[0].first.P1.getX(), segments[0].first.P1.getY()};
++        double[] p3 = segments[0].cp1();
++        Point2D p;
++
++        p = lineIntersection(p0[0],p0[1],p1[0],p1[1],
++                             p2[0],p2[1],p3[0],p3[1], false);
++
++        double det = (p1[0] - p0[0])*(p3[1] - p2[1]) - 
++                     (p3[0] - p2[0])*(p1[1] - p0[1]);
++
++        if (det > 0) {
++            // start and segment[0] form the 'inner' part of a join, 
++            // connect the overlapping segments
++            joinInnerSegments(start, segments[0], p);
++            joinOuterSegments(end, segments[1], p);
++        } else {
++            // end and segment[1] form the 'inner' part 
++            joinInnerSegments(end, segments[1], p);
++            joinOuterSegments(start, segments[0], p);
++        }
++    }
++
++    /**
++     * Make a cap between a and b segments, 
++     * where a-->b is the direction of iteration.
++     */
++    private void capEnd(Segment a, Segment b) {
++        double[] p0, p1;
++        double dx, dy, l;
++        Point2D c1,c2;
++
++        switch (cap) {
++            case CAP_BUTT:
++                a.add(new LineSegment(a.last.P2, b.P1));
++                break;
++
++            case CAP_SQUARE:
++                p0 = a.last.cp2();
++                p1 = new double[]{a.last.P2.getX(), a.last.P2.getY()};
++                dx = p1[0] - p0[0];
++                dy = p1[1] - p0[1];
++                l = Math.sqrt(dx * dx + dy * dy);
++                dx = 0.5*width*dx/l;
++                dy = 0.5*width*dy/l;
++                c1 = new Point2D.Double(p1[0] + dx, p1[1] + dy);
++                c2 = new Point2D.Double(b.P1.getX() + dx, b.P1.getY() + dy);
++                a.add(new LineSegment(a.last.P2, c1));
++                a.add(new LineSegment(c1, c2));
++                a.add(new LineSegment(c2, b.P1));
++                break;
++
++            case CAP_ROUND:
++                p0 = a.last.cp2();
++                p1 = new double[]{a.last.P2.getX(), a.last.P2.getY()};
++                dx = p1[0] - p0[0];
++                dy = p1[1] - p0[1];
++                if (dx != 0 && dy != 0) {
++                    l = Math.sqrt(dx * dx + dy * dy);
++                    dx = (2.0/3.0)*width*dx/l;
++                    dy = (2.0/3.0)*width*dy/l;
++                }
++        
++                c1 = new Point2D.Double(p1[0] + dx, p1[1] + dy);
++                c2 = new Point2D.Double(b.P1.getX() + dx, b.P1.getY() + dy);
++                a.add(new CubicSegment(a.last.P2, c1, c2, b.P1));
++                break;
++        }
++        a.add(b);
++    }
++
++    /**
++     * Returns the intersection of two lines, or null if there isn't one.
++     * @param infinite - true if the lines should be regarded as infinite, false
++     * if the intersection must be within the given segments.
++     * @return a Point2D or null.
++     */
++    private Point2D lineIntersection(double X1, double Y1, 
++                                     double X2, double Y2, 
++                                     double X3, double Y3, 
++                                     double X4, double Y4,
++                                     boolean infinite) {
++        double x1 = X1;
++        double y1 = Y1;
++        double rx = X2 - x1;
++        double ry = Y2 - y1;
++
++        double x2 = X3;
++        double y2 = Y3;
++        double sx = X4 - x2;
++        double sy = Y4 - y2;
++
++        double determinant = sx * ry - sy * rx;
++        double nom = (sx * (y2 - y1) + sy * (x1 - x2));
++
++        // lines can be considered parallel.
++        if (Math.abs(determinant) < 1E-6)
++            return null;
++
++        nom = nom / determinant;
++
++        // check if lines are within the bounds
++        if(!infinite && (nom > 1.0 || nom < 0.0))
++            return null;
++
++        return new Point2D.Double(x1 + nom * rx, y1 + nom * ry);
++    }
++
++    /**
++     * Join a and b segments, where a-->b is the direction of iteration.
++     *
++     * insideP is the inside intersection point of the join, needed for
++     * calculating miter lengths.
++     */
++    private void joinOuterSegments(Segment a, Segment b, Point2D insideP) {
++        double[] p0, p1;
++        double dx, dy, l;
++        Point2D c1,c2;
++
++        switch (join) {
++            case JOIN_MITER:
++                p0 = a.last.cp2();
++                p1 = new double[]{a.last.P2.getX(), a.last.P2.getY()};
++                double[] p2 = new double[]{b.P1.getX(), b.P1.getY()};
++                double[] p3 = b.cp1();
++                Point2D p = lineIntersection(p0[0],p0[1],p1[0],p1[1],p2[0],p2[1],p3[0],p3[1], true);
++                if( p == null || insideP == null )
++                    a.add(new LineSegment(a.last.P2, b.P1));
++                else if((p.distance(insideP)/width) < miterlimit) {
++                    a.add(new LineSegment(a.last.P2, p));
++                    a.add(new LineSegment(p, b.P1));
++                 } else {
++                     // outside miter limit, do a bevel join.
++                     a.add(new LineSegment(a.last.P2, b.P1));
++                 }
++                 break;
++
++            case JOIN_ROUND:
++                p0 = a.last.cp2();
++                p1 = new double[]{a.last.P2.getX(), a.last.P2.getY()};
++                dx = p1[0] - p0[0];
++                dy = p1[1] - p0[1];
++                l = Math.sqrt(dx * dx + dy * dy);
++                dx = 0.5*width*dx/l;
++                dy = 0.5*width*dy/l;
++                c1 = new Point2D.Double(p1[0] + dx, p1[1] + dy);
++
++                p0 = new double[]{b.P1.getX(), b.P1.getY()};
++                p1 = b.cp1();
++
++                dx = p0[0] - p1[0]; // backwards direction.
++                dy = p0[1] - p1[1];
++                l = Math.sqrt(dx * dx + dy * dy);
++                dx = 0.5*width*dx/l;
++                dy = 0.5*width*dy/l;
++                c2 = new Point2D.Double(p0[0] + dx, p0[1] + dy);
++                a.add(new CubicSegment(a.last.P2, c1, c2, b.P1));
++                break;
++
++            case JOIN_BEVEL:
++                a.add(new LineSegment(a.last.P2, b.P1));
++                break;
++        }
++    }
++
++    /**
++     * Join a and b segments, removing any overlap
++     */
++    private void joinInnerSegments(Segment a, Segment b, Point2D p) {
++        double[] p0 = a.last.cp2();
++        double[] p1 = new double[] { a.last.P2.getX(), a.last.P2.getY() };
++        double[] p2 = new double[] { b.P1.getX(), b.P1.getY() };
++        double[] p3 = b.cp1();
++
++        if (p == null) {
++            // Dodgy.
++            a.add(new LineSegment(a.last.P2, b.P1));
++            p = new Point2D.Double((b.P1.getX() + a.last.P2.getX()) / 2.0,
++                                   (b.P1.getY() + a.last.P2.getY()) / 2.0);
++        } else {
++            // This assumes segments a and b are single segments, which is
++            // incorrect - if they are a linked list of segments (ie, passed in
++            // from a flattening operation), this produces strange results!!
++            a.last.P2 = b.P1 = p;
++        }
++    }
+ }
+--- openjdk.clean/j2se/make/sun/dcpr/Makefile	2007-07-20 08:17:57.000000000 +0100
++++ openjdk/j2se/make/sun/dcpr/Makefile	2007-07-24 11:26:44.000000000 +0100
+@@ -62,10 +62,13 @@
+ # Specific to OpenJDK building
+ #
+ 
++FILES_java = \
++ sun/dc/DuctusRenderingEngine.java
++
+ # Plug lib will be copied instead of compiling.
+ USE_BINARY_PLUG_LIBRARY=true
+ 
+-build: import-binary-plug-dc-classes import-binary-plug-dcpr-library
++build: import-binary-plug-dc-classes import-binary-plug-dcpr-library classheaders
+ 
+ include $(BUILDDIR)/common/BinaryPlugs.gmk
+ 
+diff -urN openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java
+--- openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java	2007-07-20 03:34:01.000000000 -0400
++++ openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java	2007-07-19 14:42:54.000000000 -0400
+@@ -336,6 +336,10 @@
+             // Otherwise we will use drawPath() for
+             // high-quality thin paths.
+             doPath(sg2d, s, false);
++/*
++ * Comment this out since the DuctusRenderingEngine needed is encumbered.
++ * Instead, delegate all stroking options to the standard stroker.
++ *
+ 	} else if (sg2d.strokeState < sg2d.STROKE_CUSTOM) {
+ 	    // REMIND: X11 can handle uniform scaled wide lines
+ 	    // and dashed lines itself if we set the appropriate
+@@ -354,6 +358,7 @@
+ 	    } finally {
+ 		si.dispose();
+ 	    }
++*/
+ 	} else {
+ 	    fill(sg2d, sg2d.stroke.createStrokedShape(s));
+ 	}
+diff -urN openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java
+--- openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	2007-07-20 03:34:01.000000000 -0400
++++ openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	2007-07-24 10:54:35.000000000 -0400
+@@ -297,7 +297,7 @@
+ 	    } else {
+ 		switch (sg2d.textAntialiasHint) {
+ 
+-		case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
++//		case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
+ 		    /* equating to OFF which it is for us */
+ 		case SunHints.INTVAL_TEXT_ANTIALIAS_OFF:
+ 		    // Use X11 pipe even if DGA is available since DGA
+@@ -309,6 +309,7 @@
+ 		    }
+ 		    break;
+ 
++		case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
+ 		case SunHints.INTVAL_TEXT_ANTIALIAS_ON:
+ 		    // Remind: may use Xrender for these when composite is
+ 		    // copy as above, or if remote X11.
+@@ -318,10 +319,12 @@
+ 		default:
+ 		    switch (sg2d.getFontInfo().aaHint) {
+ 
++/*
+ 		    case SunHints.INTVAL_TEXT_ANTIALIAS_LCD_HRGB:
+ 		    case SunHints.INTVAL_TEXT_ANTIALIAS_LCD_VRGB:
+ 			sg2d.textpipe = lcdTextRenderer;
+ 			break;
++*/
+  
+ 		    case SunHints.INTVAL_TEXT_ANTIALIAS_OFF:
+ 		    // Use X11 pipe even if DGA is available since DGA
+@@ -334,11 +337,13 @@
+ 		    break;
+ 
+ 		    case SunHints.INTVAL_TEXT_ANTIALIAS_ON:
++		    default:
+ 			sg2d.textpipe = aaTextRenderer;
+ 			break;
+-
++/*
+ 		    default:
+ 			sg2d.textpipe = solidTextRenderer;
++*/
+ 		    }
+ 		}
+ 	    }
+diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java openjdk/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java
+--- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java	2007-07-20 03:33:17.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java	2007-07-19 17:14:36.000000000 -0400
+@@ -423,6 +423,7 @@
+                 transy = 0;
+             }
+             drawPath(sg2d, p2df, transx, transy);
++/*
+         } else if (sg2d.strokeState < sg2d.STROKE_CUSTOM) {
+             ShapeSpanIterator si = LoopPipe.getStrokeSpans(sg2d, s);
+             try {
+@@ -431,6 +432,7 @@
+                 si.dispose();
+             }
+         } else {
++*/
+             fill(sg2d, sg2d.stroke.createStrokedShape(s));
+         }
+     }
+diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java
+--- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-07-20 03:33:17.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-07-19 17:14:03.000000000 -0400
+@@ -189,6 +189,7 @@
+             return;
+         }
+ 
++/*
+         if (sg2d.strokeState == sg2d.STROKE_CUSTOM) {
+             fill(sg2d, sg2d.stroke.createStrokedShape(s));
+             return;
+@@ -201,6 +202,8 @@
+         } finally {
+             sr.dispose();
+         }
++*/
++	fill(sg2d, sg2d.stroke.createStrokedShape(s));
+     }
+ 
+     /*
+diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java
+--- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-07-20 03:33:17.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-07-19 17:45:56.000000000 -0400
+@@ -82,6 +82,7 @@
+     }
+ 
+     public void draw(SunGraphics2D sg, Shape s) {
++/*
+ 	if (sg.stroke instanceof BasicStroke) {
+ 	    ShapeSpanIterator sr = new ShapeSpanIterator(sg, true);
+ 	    try {
+@@ -90,8 +91,9 @@
+ 		sr.dispose();
+ 	    }
+ 	} else {
++*/
+ 	    renderPath(sg, sg.stroke.createStrokedShape(s));
+-	}
++//	}
+     }
+ 
+     public void drawBasicStroke(SunGraphics2D sg, Shape s,
+diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/SunGraphics2D.java openjdk/j2se/src/share/classes/sun/java2d/SunGraphics2D.java
+--- openjdk.orig/j2se/src/share/classes/sun/java2d/SunGraphics2D.java	2007-07-20 03:33:16.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/java2d/SunGraphics2D.java	2007-07-24 11:20:17.000000000 -0400
+@@ -640,11 +640,11 @@
+ 	    aahint = ((SunHints.Value)frc.getAntiAliasingHint()).getIndex();
+ 	}
+ 	if (aahint == SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT) {
+-	    if (antialiasHint == SunHints.INTVAL_ANTIALIAS_ON) {
++//	    if (antialiasHint == SunHints.INTVAL_ANTIALIAS_OFF) {
++//		aahint = SunHints.INTVAL_TEXT_ANTIALIAS_OFF;
++//	    } else {
+ 		aahint = SunHints.INTVAL_TEXT_ANTIALIAS_ON;
+-	    } else {
+-		aahint = SunHints.INTVAL_TEXT_ANTIALIAS_OFF;
+-	    }
++//	    }
+ 	} else {
+ 	    /* If we are in checkFontInfo because a rendering hint has been
+ 	     * set then all pipes are revalidated. But we can also
+diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/SurfaceData.java openjdk/j2se/src/share/classes/sun/java2d/SurfaceData.java
+--- openjdk.orig/j2se/src/share/classes/sun/java2d/SurfaceData.java	2007-07-20 03:33:16.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/java2d/SurfaceData.java	2007-07-19 17:38:39.000000000 -0400
+@@ -511,6 +511,7 @@
+ 		// assert(sg2d.surfaceData == this);
+ 	    }
+ 	} else if (sg2d.compositeState == sg2d.COMP_CUSTOM) {
++/*
+ 	    if (sg2d.antialiasHint == SunHints.INTVAL_ANTIALIAS_ON) {
+ 		if (sg2d.clipState == sg2d.CLIP_SHAPE) {
+ 		    sg2d.drawpipe = AAClipCompViaShape;
+@@ -524,6 +525,7 @@
+ 		    sg2d.textpipe = compText;
+ 		}
+ 	    } else {
++*/
+ 		sg2d.drawpipe = compViaShape;
+ 		sg2d.fillpipe = compViaShape;
+ 		sg2d.shapepipe = compShape;
+@@ -532,7 +534,7 @@
+ 		} else {
+ 		    sg2d.textpipe = compText;
+ 		}
+-	    }
++/*	    }
+ 	} else if (sg2d.antialiasHint == SunHints.INTVAL_ANTIALIAS_ON) {
+             sg2d.alphafill = getMaskFill(sg2d);
+             // assert(sg2d.surfaceData == this);
+@@ -561,6 +563,7 @@
+ 		    sg2d.textpipe = paintText;
+ 		}
+ 	    }
++*/
+ 	} else if (sg2d.paintState > sg2d.PAINT_ALPHACOLOR ||
+                    sg2d.compositeState > sg2d.COMP_ISCOPY ||
+                    sg2d.clipState == sg2d.CLIP_SHAPE)
+@@ -600,17 +603,19 @@
+ 	     * resolve one of the new AA types.
+ 	     */
+ 	    switch (sg2d.textAntialiasHint) {
+-	    case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
+-		/* equating to OFF which it is for us */
++//	    case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
++//		/* equating to OFF which it is for us */
+ 	    case SunHints.INTVAL_TEXT_ANTIALIAS_OFF:
+ 		sg2d.textpipe = solidTextRenderer;
+ 		break;
+ 
++	    case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
+ 	    case SunHints.INTVAL_TEXT_ANTIALIAS_ON:
++	    default:
+ 		sg2d.textpipe = aaTextRenderer;
+ 		break;
+ 
+-	    default:
++/*	    default:
+ 		switch (sg2d.getFontInfo().aaHint) {
+ 
+ 		case SunHints.INTVAL_TEXT_ANTIALIAS_LCD_HRGB:
+@@ -625,6 +630,7 @@
+ 		default:
+ 		sg2d.textpipe = solidTextRenderer;
+ 		}
++*/
+ 	    }
+ 	    sg2d.shapepipe = colorPrimitives;
+ 	    sg2d.loops = getRenderLoops(sg2d);
 
+diff -urN openjdk.orig/j2se/src/share/classes/sun/font/FontStrikeDesc.java openjdk/j2se/src/share/classes/sun/font/FontStrikeDesc.java
+--- openjdk.orig/j2se/src/share/classes/sun/font/FontStrikeDesc.java	2007-07-20 03:33:07.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/font/FontStrikeDesc.java	2007-07-24 11:22:57.000000000 -0400
+@@ -110,10 +110,10 @@
+      * must therefore include device and font transforms.
+      */
+     public static int getAAHintIntVal(Object aa, Font2D font2D, int ptSize) {
+-	if (aa == VALUE_TEXT_ANTIALIAS_OFF ||
+-	    aa == VALUE_TEXT_ANTIALIAS_DEFAULT) {
++	if (aa == VALUE_TEXT_ANTIALIAS_OFF) {
+ 	    return INTVAL_TEXT_ANTIALIAS_OFF;
+-	} else if (aa == VALUE_TEXT_ANTIALIAS_ON) {
++	} else if (aa == VALUE_TEXT_ANTIALIAS_ON ||
++		   aa == VALUE_TEXT_ANTIALIAS_DEFAULT) {
+ 	    return INTVAL_TEXT_ANTIALIAS_ON;
+ 	} else if (aa == VALUE_TEXT_ANTIALIAS_GASP) {
+ 	    if (font2D.useAAForPtSize(ptSize)) {
+@@ -128,7 +128,7 @@
+ 		   aa == VALUE_TEXT_ANTIALIAS_LCD_VBGR) {
+ 	    return INTVAL_TEXT_ANTIALIAS_LCD_VRGB;
+ 	} else {
+-	    return INTVAL_TEXT_ANTIALIAS_OFF;
++	    return INTVAL_TEXT_ANTIALIAS_ON;
+ 	}
+     }
+ 
+@@ -142,10 +142,10 @@
+     public static int getAAHintIntVal(Font2D font2D, Font font,
+ 				      FontRenderContext frc) {
+ 	Object aa = frc.getAntiAliasingHint();
+-	if (aa == VALUE_TEXT_ANTIALIAS_OFF ||
+-	    aa == VALUE_TEXT_ANTIALIAS_DEFAULT) {
++	if (aa == VALUE_TEXT_ANTIALIAS_OFF) {
+ 	    return INTVAL_TEXT_ANTIALIAS_OFF;
+-	} else if (aa == VALUE_TEXT_ANTIALIAS_ON) {
++	} else if (aa == VALUE_TEXT_ANTIALIAS_ON ||
++		   aa == VALUE_TEXT_ANTIALIAS_DEFAULT) {
+ 	    return INTVAL_TEXT_ANTIALIAS_ON;
+ 	} else if (aa == VALUE_TEXT_ANTIALIAS_GASP) {
+ 	    /* FRC.isIdentity() would have been useful */
+@@ -184,7 +184,7 @@
+ 		   aa == VALUE_TEXT_ANTIALIAS_LCD_VBGR) {
+ 	    return INTVAL_TEXT_ANTIALIAS_LCD_VRGB;
+ 	} else {
+-	    return INTVAL_TEXT_ANTIALIAS_OFF;
++	    return INTVAL_TEXT_ANTIALIAS_ON;
+ 	}
+     }
+ 
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h openjdk/j2se/src/share/native/sun/font/freetypescaler.h
 --- openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/src/share/native/sun/font/freetypescaler.h	2007-07-18 10:08:54.000000000 -0400
-@@ -0,0 +1,97 @@
++++ openjdk/j2se/src/share/native/sun/font/freetypescaler.h	2007-07-23 13:03:10.000000000 -0400
+@@ -0,0 +1,101 @@
 +/* freetypescaler.h
 +   Copyright (C) 2007  Red Hat, Inc.
 +
@@ -226,6 +1032,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h openjdk/j
 +#define CONVERT_266_TO_DOUBLE(ts) ((double) ((ts) / 64.0))
 +#define CONVERT_266_TO_FLOAT(ts) ((float) ((ts) / 64.0))
 +#define CONVERT_1616_TO_DOUBLE(ts)  ((double) ((ts) / 65536.0))
++#define CONVERT_1616_TO_FLOAT(ts)  ((float) ((ts) / 65536.0))
 +
 +#ifdef  __cplusplus
 +extern "C" {
@@ -240,13 +1047,16 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h openjdk/j
 +typedef struct FreetypeScalerContext {
 +	FreetypeScaler *scaler;
 +	FT_Matrix matrix;
-+    int antiAlias;
++	float xsize;
++	float ysize;
++	int antiAlias;
 +} FreetypeScalerContext;
 +
 +typedef FreetypeScaler FreetypeScalerInfo;
 +
 +extern FreetypeScalerInfo *theNullScaler;
 +extern FreetypeScalerContext *theNullScalerContext;
++
 +
 +#define FT_INIT() \
 +do \
@@ -274,8 +1084,8 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h openjdk/j
 +#endif
 +
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.cpp openjdk/j2se/src/share/native/sun/font/GeneralPath.cpp
---- openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.cpp	2007-07-05 03:52:56.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/font/GeneralPath.cpp	2007-07-18 10:08:54.000000000 -0400
+--- openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.cpp	2007-07-20 03:33:48.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/font/GeneralPath.cpp	2007-07-19 14:42:54.000000000 -0400
 @@ -45,6 +45,8 @@
    , lenTypes(DEFAULT_LEN_TYPES)
    , lenCoords(DEFAULT_LEN_COORDS)
@@ -476,8 +1286,8 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.cpp openjdk/j2
 -    }
 -}
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.h openjdk/j2se/src/share/native/sun/font/GeneralPath.h
---- openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.h	2007-07-05 03:52:56.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/font/GeneralPath.h	2007-07-18 10:08:54.000000000 -0400
+--- openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.h	2007-07-20 03:33:48.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/font/GeneralPath.h	2007-07-19 14:42:54.000000000 -0400
 @@ -28,7 +28,6 @@
  
  #include <jni.h>
@@ -507,7 +1317,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/GeneralPath.h openjdk/j2se
  // __GeneralPath_header
  #endif
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.c openjdk/j2se/src/share/native/sun/font/scalerMethods.c
---- openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.c	2007-07-05 03:52:56.000000000 -0400
+--- openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.c	2007-07-20 03:33:48.000000000 -0400
 +++ openjdk/j2se/src/share/native/sun/font/scalerMethods.c	1969-12-31 19:00:00.000000000 -0500
 @@ -1,1795 +0,0 @@
 -/*
@@ -2307,8 +3117,8 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.c openjdk/j2
 -}
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp
 --- openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp	2007-07-18 14:06:08.000000000 -0400
-@@ -0,0 +1,749 @@
++++ openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp	2007-07-23 16:05:27.000000000 -0400
+@@ -0,0 +1,744 @@
 +/* scalerMethods.c - wrap Freetype functions for the OpenJDK.
 +   Copyright (C) 2007  Red Hat, Inc.
 +   Copyright 2003-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -2453,10 +3263,11 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +
 +    // Get the transformation matrix
 +    jdouble* nativeMatrix = env->GetDoubleArrayElements(matrix, NULL);
-+    
++ 
 +    // The size of the font is determined by the transform factor in the matrix
-+    FT_Set_Char_Size (context->scaler->font, CONVERT_DOUBLE_TO_266(nativeMatrix[0]),
-+                      CONVERT_DOUBLE_TO_266(nativeMatrix[3]), 0, 0);
++    context->xsize = CONVERT_DOUBLE_TO_266(nativeMatrix[0]);
++    context->ysize = CONVERT_DOUBLE_TO_266(nativeMatrix[3]);
++    FT_Set_Char_Size (context->scaler->font, context->xsize, context->ysize, 0, 0);
 +    
 +    // Convert the rest of the matrix and pass to Freetype
 +    context->matrix.xx = CONVERT_DOUBLE_TO_1616(1.0);
@@ -2586,6 +3397,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +        advanceY = (jfloat)CONVERT_266_TO_FLOAT(font->glyph->advance.y);
 +    }
 +
++
 +    env->SetFloatField(metricsPt, sunFontIDs.xFID, advanceX);
 +    env->SetFloatField(metricsPt, sunFontIDs.yFID, advanceY);
 +}
@@ -2653,7 +3465,13 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +
 +    FT_Face font = context->scaler->font;
 +
-+    int loadFlags = FT_LOAD_NO_BITMAP;
++    // We need to explicitly set the size each time, otherwise glyphs aren't
++    // sized properly.  I suspect it's due to Java's multi-threaded model not
++    // interacting well with Freetype...
++    FT_Set_Char_Size (font, context->xsize, context->ysize, 0, 0);
++    FT_Set_Transform (font, &(context->matrix), NULL);
++
++    int loadFlags = FT_LOAD_DEFAULT;
 +    FT_Render_Mode renderFlags;
 +
 +    // Set load / render flags appropriate based on anti-aliasing option
@@ -2691,7 +3509,6 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +        glyphInfo->cellInfo = NULL;
 +        glyphInfo->rowBytes = 0;
 +        glyphInfo->image = NULL;
-+        fprintf(stderr, "Unable to get glyph image: %d \n", err);
 +    } else {
 +        int bitmapSize;
 +
@@ -2726,7 +3543,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +        glyphInfo->topLeftX = font->glyph->bitmap_left;
 +        glyphInfo->topLeftY = - font->glyph->bitmap_top;
 +        glyphInfo->advanceX = CONVERT_266_TO_DOUBLE(font->glyph->advance.x);
-+        glyphInfo->advanceY = CONVERT_266_TO_DOUBLE(font->glyph->advance.y);
++        glyphInfo->advanceY = - CONVERT_266_TO_DOUBLE(font->glyph->advance.y);
 +    }
 +
 +    return (jlong)(uintptr_t)glyphInfo;
@@ -2901,9 +3718,6 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +
 +  path->moveTo(x, y);
 +
-+  path->px = x;
-+  path->py = y;
-+
 +  return 0;
 +}
 +
@@ -2916,9 +3730,6 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +  jfloat y = (jfloat)(to->y * path->sy + path->py);
 +
 +  path->lineTo(x, y);
-+
-+  path->px = x;
-+  path->py = y;
 +
 +  return 0;
 +}
@@ -2935,9 +3746,6 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +  jfloat y = (jfloat)(to->y * path->sy + path->py);
 +
 +  path->quadTo(cx, cy, x, y);
-+
-+  path->px = x;
-+  path->py = y;
 +
 +  return 0;
 +}
@@ -2958,9 +3766,6 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +
 +  path->curveTo(cx1, cy1, cx2, cy2, x, y);
 +
-+  path->px = x;
-+  path->py = y;
-+
 +  return 0;
 +}
 +
@@ -2972,6 +3777,8 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +
 +   if (isNullScalerContext((FreetypeScalerContext *)pScalerContext))
 +        return;
++
++    FreetypeScalerContext *context = (FreetypeScalerContext *)pScalerContext;
 +
 +    // Define callbacks to generate the GeneralPath
 +    FT_Outline_Funcs ftCallbacks = {
@@ -2989,7 +3796,6 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    gp->py = ypos;
 +
 +    if (! FT_Load_Glyph(font, glyphCode, FT_LOAD_NO_BITMAP)) {
-+
 +        FT_Glyph glyph;
 +        FT_Get_Glyph (font->glyph, &glyph);
 +
@@ -3023,7 +3829,6 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    (JNIEnv *env, jobject font2D, jlong pScalerContext, int glyphCode) {
 +
 +    GeneralPath gp;
-+
 +
 +    if (! isNullScalerContext((FreetypeScalerContext *)pScalerContext))
 +        addGlyphToGeneralPath((jlong)(uintptr_t) pScalerContext, glyphCode, 0.0f, 0.0f, &gp);
@@ -3059,8 +3864,8 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +
 +
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunFont.c openjdk/j2se/src/share/native/sun/font/sunFont.c
---- openjdk.orig/j2se/src/share/native/sun/font/sunFont.c	2007-07-05 03:52:56.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/font/sunFont.c	2007-07-18 10:08:54.000000000 -0400
+--- openjdk.orig/j2se/src/share/native/sun/font/sunFont.c	2007-07-20 03:33:48.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/font/sunFont.c	2007-07-19 14:42:54.000000000 -0400
 @@ -164,7 +164,7 @@
       tmpClass = (*env)->FindClass(env, "sun/font/FileFont");
       sunFontIDs.pScaler = (*env)->GetFieldID(env, tmpClass, "pScaler", "J");
@@ -3071,7 +3876,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunFont.c openjdk/j2se/src
  }
  
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunt2kscaler.h openjdk/j2se/src/share/native/sun/font/sunt2kscaler.h
---- openjdk.orig/j2se/src/share/native/sun/font/sunt2kscaler.h	2007-07-05 03:52:56.000000000 -0400
+--- openjdk.orig/j2se/src/share/native/sun/font/sunt2kscaler.h	2007-07-20 03:33:48.000000000 -0400
 +++ openjdk/j2se/src/share/native/sun/font/sunt2kscaler.h	1969-12-31 19:00:00.000000000 -0500
 @@ -1,202 +0,0 @@
 -/*
@@ -3277,7 +4082,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunt2kscaler.h openjdk/j2s
 -
 -#endif
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/t2kScalerMethods.cpp openjdk/j2se/src/share/native/sun/font/t2kScalerMethods.cpp
---- openjdk.orig/j2se/src/share/native/sun/font/t2kScalerMethods.cpp	2007-07-05 03:52:56.000000000 -0400
+--- openjdk.orig/j2se/src/share/native/sun/font/t2kScalerMethods.cpp	2007-07-20 03:33:48.000000000 -0400
 +++ openjdk/j2se/src/share/native/sun/font/t2kScalerMethods.cpp	1969-12-31 19:00:00.000000000 -0500
 @@ -1,152 +0,0 @@
 -/*
@@ -3432,694 +4237,4 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/t2kScalerMethods.cpp openj
 -}
 -
 -} /* End extern "C" */
-diff -urN openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java openjdk/j2se/src/share/classes/java/awt/BasicStroke.java
---- openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java	2007-07-05 03:48:32.000000000 -0400
-+++ openjdk/j2se/src/share/classes/java/awt/BasicStroke.java	2007-07-19 13:44:58.000000000 -0400
-@@ -25,6 +25,17 @@
- 
- package java.awt;
- 
-+import gnu.java.awt.CubicSegment;
-+import gnu.java.awt.LineSegment;
-+import gnu.java.awt.QuadSegment;
-+import gnu.java.awt.Segment;
-+
-+import java.awt.geom.FlatteningPathIterator;
-+import java.awt.geom.GeneralPath;
-+import java.awt.geom.PathIterator;
-+import java.awt.geom.Point2D;
-+import java.util.Arrays;
-+
- /**
-  * The <code>BasicStroke</code> class defines a basic set of rendering
-  * attributes for the outlines of graphics primitives, which are rendered
-@@ -157,6 +168,8 @@
-     float dash[];
-     float dash_phase;
- 
-+    private Segment start, end;
-+
-     /**
-      * Constructs a new <code>BasicStroke</code> with the specified
-      * attributes.
-@@ -292,10 +305,12 @@
-      * @return the <code>Shape</code> of the stroked outline.
-      */
-     public Shape createStrokedShape(Shape s) {
--        sun.java2d.pipe.RenderingEngine re =
--            sun.java2d.pipe.RenderingEngine.getInstance();
--        return re.createStrokedShape(s, width, cap, join, miterlimit,
--                                     dash, dash_phase);
-+        PathIterator pi = s.getPathIterator(null);
-+
-+        if( dash == null )
-+            return solidStroke(pi);
-+
-+        return dashedStroke(pi);
-     }
- 
-     /**
-@@ -440,4 +455,475 @@
- 
-         return true;
-     }
-+
-+    private Shape solidStroke(PathIterator pi) {
-+        double[] coords = new double[6];
-+        double x, y, x0, y0;
-+        boolean pathOpen = false;
-+        GeneralPath output = new GeneralPath ();
-+        Segment[] p;
-+        x = x0 = y = y0 = 0;
-+
-+        while (!pi.isDone()) {
-+            switch (pi.currentSegment(coords)) {
-+                case PathIterator.SEG_MOVETO:
-+                    x0 = x = coords[0];
-+                    y0 = y = coords[1];
-+                    if (pathOpen) {
-+                        capEnds();
-+                        convertPath(output, start);
-+                        start = end = null;
-+                        pathOpen = false;
-+                    }
-+                    break;
-+
-+                case PathIterator.SEG_LINETO:
-+                    p = (new LineSegment(x, y, coords[0], coords[1])).
-+                    getDisplacedSegments(width/2.0);
-+                    if (!pathOpen) {
-+                        start = p[0];
-+                        end = p[1];
-+                        pathOpen = true;
-+                    } else {
-+                      addSegments(p);
-+                    }
-+
-+                    x = coords[0];
-+                    y = coords[1];
-+                    break;
-+
-+                case PathIterator.SEG_QUADTO:
-+                    p = (new QuadSegment(x, y, coords[0], coords[1], coords[2],
-+                                         coords[3])).getDisplacedSegments(width/2.0);
-+                    if (!pathOpen) {
-+                        start = p[0];
-+                        end = p[1];
-+                        pathOpen = true;
-+                    } else {
-+                        addSegments(p);
-+                    }
-+
-+                    x = coords[2];
-+                    y = coords[3];
-+                    break;
-+
-+                case PathIterator.SEG_CUBICTO:
-+                    p = new CubicSegment(x, y, coords[0], coords[1],
-+                                         coords[2], coords[3],
-+                                         coords[4], coords[5]).getDisplacedSegments(width/2.0);
-+                    if (!pathOpen) {
-+                        start = p[0];
-+                        end = p[1];
-+                        pathOpen = true;
-+                    } else {
-+                        addSegments(p);
-+                    }
-+
-+                    x = coords[4];
-+                    y = coords[5];
-+                    break;
-+
-+                case PathIterator.SEG_CLOSE:
-+                    if (x == x0 && y == y0) {
-+                        joinSegments(new Segment[] { start.first, end.first });
-+                    } else {
-+                        p = (new LineSegment(x, y, x0, y0)).getDisplacedSegments(width / 2.0);
-+                        addSegments(p);
-+                    }
-+                    convertPath(output, start);
-+                    convertPath(output, end);
-+                    start = end = null;
-+                    pathOpen = false;
-+                    output.setWindingRule(GeneralPath.WIND_EVEN_ODD);
-+                    break;
-+            }
-+            pi.next();
-+        }
-+
-+        if (pathOpen) {
-+            capEnds();
-+            convertPath(output, start);
-+        }
-+        return output;
-+    }
-+
-+    private Shape dashedStroke(PathIterator pi)
-+    {
-+        // The choice of (flatnessSq == width / 3) is made to be consistent with
-+        // the flattening in CubicSegment.getDisplacedSegments
-+        FlatteningPathIterator flat = new FlatteningPathIterator(pi,
-+                                                                 Math.sqrt(width / 3));
-+
-+        // Holds the endpoint of the current segment (or piece of a segment)
-+        double[] coords = new double[2];
-+
-+        // Holds end of the last segment
-+        double x, y, x0, y0;
-+        x = x0 = y = y0 = 0;
-+
-+        // Various useful flags
-+        boolean pathOpen = false;
-+        boolean dashOn = true;
-+        boolean offsetting = (dash_phase != 0);
-+
-+        // How far we are into the current dash
-+        double distance = 0;
-+        int dashIndex = 0;
-+
-+        // And variables to hold the final output
-+        GeneralPath output = new GeneralPath();
-+        Segment[] p;
-+
-+        // Iterate over the FlatteningPathIterator
-+        while (! flat.isDone()) {
-+            switch (flat.currentSegment(coords)) {
-+                case PathIterator.SEG_MOVETO:
-+                    x0 = x = coords[0];
-+                    y0 = y = coords[1];
-+
-+                    if (pathOpen) {
-+                        capEnds();
-+                        convertPath(output, start);
-+                        start = end = null;
-+                        pathOpen = false;
-+                    }
-+
-+                    break;
-+
-+                case PathIterator.SEG_LINETO:
-+                    boolean segmentConsumed = false;
-+
-+                    while (! segmentConsumed) {
-+                        // Find the total remaining length of this segment
-+                        double segLength = Math.sqrt((x - coords[0]) * (x - coords[0])
-+                                                     + (y - coords[1])
-+                                                     * (y - coords[1]));
-+                        boolean spanBoundary = true;
-+                        double[] segmentEnd = null;
-+
-+                        // The current segment fits entirely inside the current dash
-+                        if ((offsetting && distance + segLength <= dash_phase)
-+                            || distance + segLength <= dash[dashIndex]) {
-+                              spanBoundary = false;
-+
-+                        } else {
-+                            // Otherwise, we need to split the segment in two, as this
-+                            // segment spans a dash boundry
-+                            segmentEnd = (double[]) coords.clone();
-+
-+                            // Calculate the remaining distance in this dash,
-+                            // and coordinates of the dash boundary
-+                            double reqLength;
-+                            if (offsetting)
-+                                reqLength = dash_phase - distance;
-+                            else
-+                                reqLength = dash[dashIndex] - distance;
-+
-+                                coords[0] = x + ((coords[0] - x) * reqLength / segLength);
-+                                coords[1] = y + ((coords[1] - y) * reqLength / segLength);
-+                        }
-+
-+                        if (offsetting || ! dashOn) {
-+                            // Dash is off, or we are in offset - treat this as a
-+                            // moveTo
-+                            x0 = x = coords[0];
-+                            y0 = y = coords[1];
-+
-+                            if (pathOpen) {
-+                                capEnds();
-+                                convertPath(output, start);
-+                                start = end = null;
-+                                pathOpen = false;
-+                            }
-+                        } else {
-+                            // Dash is on - treat this as a lineTo
-+                            p = (new LineSegment(x, y, coords[0], coords[1])).getDisplacedSegments(width / 2.0);
-+
-+                            if (! pathOpen) {
-+                                start = p[0];
-+                                end = p[1];
-+                                pathOpen = true;
-+                            } else {
-+                                addSegments(p);
-+                            }
-+
-+                            x = coords[0];
-+                            y = coords[1];
-+                        }
-+
-+                        // Update variables depending on whether we spanned a
-+                        // dash boundary or not
-+                        if (! spanBoundary) {
-+                            distance += segLength;
-+                            segmentConsumed = true;
-+                        } else {
-+                            if (offsetting)
-+                                offsetting = false;
-+                            dashOn = ! dashOn;
-+                            distance = 0;
-+                            coords = segmentEnd;
-+
-+                            if (dashIndex + 1 == dash.length)
-+                                dashIndex = 0;
-+                            else
-+                                dashIndex++;
-+
-+                            // Since the value of segmentConsumed is still false,
-+                            // the next run of the while loop will complete the segment
-+                        }
-+                    }
-+                    break;
-+
-+            // This is a flattened path, so we don't need to deal with curves
-+            }
-+        flat.next();
-+        }
-+
-+        if (pathOpen) {
-+            capEnds();
-+            convertPath(output, start);
-+        }
-+        return output;
-+     }
-+
-+    /**
-+     * Cap the ends of the path (joining the start and end list of segments)
-+     */
-+    private void capEnds() {
-+        Segment returnPath = end.last;
-+
-+        end.reverseAll(); // reverse the path.
-+        end = null;
-+        capEnd(start, returnPath);
-+        start.last = returnPath.last;
-+        end = null;
-+
-+        capEnd(start, start);
-+    }
-+
-+    /**
-+     * Append the Segments in s to the GeneralPath p
-+     */
-+    private void convertPath(GeneralPath p, Segment s) {
-+        Segment v = s;
-+        p.moveTo((float)s.P1.getX(), (float)s.P1.getY());
-+
-+        do {
-+            if(v instanceof LineSegment)
-+                p.lineTo((float)v.P2.getX(), (float)v.P2.getY());
-+            else if(v instanceof QuadSegment)
-+                p.quadTo((float)((QuadSegment)v).cp.getX(),
-+                         (float)((QuadSegment)v).cp.getY(),
-+                         (float)v.P2.getX(), 
-+                         (float)v.P2.getY());
-+            else if(v instanceof CubicSegment)
-+                p.curveTo((float)((CubicSegment)v).cp1.getX(),
-+                          (float)((CubicSegment)v).cp1.getY(),
-+                          (float)((CubicSegment)v).cp2.getX(),
-+                          (float)((CubicSegment)v).cp2.getY(),
-+                          (float)v.P2.getX(), 
-+                          (float)v.P2.getY());
-+            v = v.next;
-+        } while(v != s && v != null);
-+
-+        p.closePath();
-+    }
-+  
-+    /**
-+     * Add the segments to start and end (the inner and outer edges of the stroke) 
-+     */
-+    private void addSegments(Segment[] segments) {
-+        joinSegments(segments);
-+        start.add(segments[0]);
-+        end.add(segments[1]);
-+    }
-+
-+    private void joinSegments(Segment[] segments) {
-+        double[] p0 = start.last.cp2();
-+        double[] p1 = new double[]{start.last.P2.getX(), start.last.P2.getY()};
-+        double[] p2 = new double[]{segments[0].first.P1.getX(), segments[0].first.P1.getY()};
-+        double[] p3 = segments[0].cp1();
-+        Point2D p;
-+
-+        p = lineIntersection(p0[0],p0[1],p1[0],p1[1],
-+                             p2[0],p2[1],p3[0],p3[1], false);
-+
-+        double det = (p1[0] - p0[0])*(p3[1] - p2[1]) - 
-+                     (p3[0] - p2[0])*(p1[1] - p0[1]);
-+
-+        if (det > 0) {
-+            // start and segment[0] form the 'inner' part of a join, 
-+            // connect the overlapping segments
-+            joinInnerSegments(start, segments[0], p);
-+            joinOuterSegments(end, segments[1], p);
-+        } else {
-+            // end and segment[1] form the 'inner' part 
-+            joinInnerSegments(end, segments[1], p);
-+            joinOuterSegments(start, segments[0], p);
-+        }
-+    }
-+
-+    /**
-+     * Make a cap between a and b segments, 
-+     * where a-->b is the direction of iteration.
-+     */
-+    private void capEnd(Segment a, Segment b) {
-+        double[] p0, p1;
-+        double dx, dy, l;
-+        Point2D c1,c2;
-+
-+        switch (cap) {
-+            case CAP_BUTT:
-+                a.add(new LineSegment(a.last.P2, b.P1));
-+                break;
-+
-+            case CAP_SQUARE:
-+                p0 = a.last.cp2();
-+                p1 = new double[]{a.last.P2.getX(), a.last.P2.getY()};
-+                dx = p1[0] - p0[0];
-+                dy = p1[1] - p0[1];
-+                l = Math.sqrt(dx * dx + dy * dy);
-+                dx = 0.5*width*dx/l;
-+                dy = 0.5*width*dy/l;
-+                c1 = new Point2D.Double(p1[0] + dx, p1[1] + dy);
-+                c2 = new Point2D.Double(b.P1.getX() + dx, b.P1.getY() + dy);
-+                a.add(new LineSegment(a.last.P2, c1));
-+                a.add(new LineSegment(c1, c2));
-+                a.add(new LineSegment(c2, b.P1));
-+                break;
-+
-+            case CAP_ROUND:
-+                p0 = a.last.cp2();
-+                p1 = new double[]{a.last.P2.getX(), a.last.P2.getY()};
-+                dx = p1[0] - p0[0];
-+                dy = p1[1] - p0[1];
-+                if (dx != 0 && dy != 0) {
-+                    l = Math.sqrt(dx * dx + dy * dy);
-+                    dx = (2.0/3.0)*width*dx/l;
-+                    dy = (2.0/3.0)*width*dy/l;
-+                }
-+        
-+                c1 = new Point2D.Double(p1[0] + dx, p1[1] + dy);
-+                c2 = new Point2D.Double(b.P1.getX() + dx, b.P1.getY() + dy);
-+                a.add(new CubicSegment(a.last.P2, c1, c2, b.P1));
-+                break;
-+        }
-+        a.add(b);
-+    }
-+
-+    /**
-+     * Returns the intersection of two lines, or null if there isn't one.
-+     * @param infinite - true if the lines should be regarded as infinite, false
-+     * if the intersection must be within the given segments.
-+     * @return a Point2D or null.
-+     */
-+    private Point2D lineIntersection(double X1, double Y1, 
-+                                     double X2, double Y2, 
-+                                     double X3, double Y3, 
-+                                     double X4, double Y4,
-+                                     boolean infinite) {
-+        double x1 = X1;
-+        double y1 = Y1;
-+        double rx = X2 - x1;
-+        double ry = Y2 - y1;
-+
-+        double x2 = X3;
-+        double y2 = Y3;
-+        double sx = X4 - x2;
-+        double sy = Y4 - y2;
-+
-+        double determinant = sx * ry - sy * rx;
-+        double nom = (sx * (y2 - y1) + sy * (x1 - x2));
-+
-+        // lines can be considered parallel.
-+        if (Math.abs(determinant) < 1E-6)
-+            return null;
-+
-+        nom = nom / determinant;
-+
-+        // check if lines are within the bounds
-+        if(!infinite && (nom > 1.0 || nom < 0.0))
-+            return null;
-+
-+        return new Point2D.Double(x1 + nom * rx, y1 + nom * ry);
-+    }
-+
-+    /**
-+     * Join a and b segments, where a-->b is the direction of iteration.
-+     *
-+     * insideP is the inside intersection point of the join, needed for
-+     * calculating miter lengths.
-+     */
-+    private void joinOuterSegments(Segment a, Segment b, Point2D insideP) {
-+        double[] p0, p1;
-+        double dx, dy, l;
-+        Point2D c1,c2;
-+
-+        switch (join) {
-+            case JOIN_MITER:
-+                p0 = a.last.cp2();
-+                p1 = new double[]{a.last.P2.getX(), a.last.P2.getY()};
-+                double[] p2 = new double[]{b.P1.getX(), b.P1.getY()};
-+                double[] p3 = b.cp1();
-+                Point2D p = lineIntersection(p0[0],p0[1],p1[0],p1[1],p2[0],p2[1],p3[0],p3[1], true);
-+                if( p == null || insideP == null )
-+                    a.add(new LineSegment(a.last.P2, b.P1));
-+                else if((p.distance(insideP)/width) < miterlimit) {
-+                    a.add(new LineSegment(a.last.P2, p));
-+                    a.add(new LineSegment(p, b.P1));
-+                 } else {
-+                     // outside miter limit, do a bevel join.
-+                     a.add(new LineSegment(a.last.P2, b.P1));
-+                 }
-+                 break;
-+
-+            case JOIN_ROUND:
-+                p0 = a.last.cp2();
-+                p1 = new double[]{a.last.P2.getX(), a.last.P2.getY()};
-+                dx = p1[0] - p0[0];
-+                dy = p1[1] - p0[1];
-+                l = Math.sqrt(dx * dx + dy * dy);
-+                dx = 0.5*width*dx/l;
-+                dy = 0.5*width*dy/l;
-+                c1 = new Point2D.Double(p1[0] + dx, p1[1] + dy);
-+
-+                p0 = new double[]{b.P1.getX(), b.P1.getY()};
-+                p1 = b.cp1();
-+
-+                dx = p0[0] - p1[0]; // backwards direction.
-+                dy = p0[1] - p1[1];
-+                l = Math.sqrt(dx * dx + dy * dy);
-+                dx = 0.5*width*dx/l;
-+                dy = 0.5*width*dy/l;
-+                c2 = new Point2D.Double(p0[0] + dx, p0[1] + dy);
-+                a.add(new CubicSegment(a.last.P2, c1, c2, b.P1));
-+                break;
-+
-+            case JOIN_BEVEL:
-+                a.add(new LineSegment(a.last.P2, b.P1));
-+                break;
-+        }
-+    }
-+
-+    /**
-+     * Join a and b segments, removing any overlap
-+     */
-+    private void joinInnerSegments(Segment a, Segment b, Point2D p) {
-+        double[] p0 = a.last.cp2();
-+        double[] p1 = new double[] { a.last.P2.getX(), a.last.P2.getY() };
-+        double[] p2 = new double[] { b.P1.getX(), b.P1.getY() };
-+        double[] p3 = b.cp1();
-+
-+        if (p == null) {
-+            // Dodgy.
-+            a.add(new LineSegment(a.last.P2, b.P1));
-+            p = new Point2D.Double((b.P1.getX() + a.last.P2.getX()) / 2.0,
-+                                   (b.P1.getY() + a.last.P2.getY()) / 2.0);
-+        } else {
-+            // This assumes segments a and b are single segments, which is
-+            // incorrect - if they are a linked list of segments (ie, passed in
-+            // from a flattening operation), this produces strange results!!
-+            a.last.P2 = b.P1 = p;
-+        }
-+    }
- }
-diff -urN openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java
---- openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java	2007-07-05 03:53:13.000000000 -0400
-+++ openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java	2007-07-19 14:31:38.000000000 -0400
-@@ -336,6 +336,10 @@
-             // Otherwise we will use drawPath() for
-             // high-quality thin paths.
-             doPath(sg2d, s, false);
-+/*
-+ * Comment this out since the DuctusRenderingEngine needed is encumbered.
-+ * Instead, delegate all stroking options to the standard stroker.
-+ *
- 	} else if (sg2d.strokeState < sg2d.STROKE_CUSTOM) {
- 	    // REMIND: X11 can handle uniform scaled wide lines
- 	    // and dashed lines itself if we set the appropriate
-@@ -354,6 +358,7 @@
- 	    } finally {
- 		si.dispose();
- 	    }
-+*/
- 	} else {
- 	    fill(sg2d, sg2d.stroke.createStrokedShape(s));
- 	}
 
-diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java openjdk/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java
---- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java	2007-07-05 03:51:44.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java	2007-07-19 17:14:36.000000000 -0400
-@@ -423,6 +423,7 @@
-                 transy = 0;
-             }
-             drawPath(sg2d, p2df, transx, transy);
-+/*
-         } else if (sg2d.strokeState < sg2d.STROKE_CUSTOM) {
-             ShapeSpanIterator si = LoopPipe.getStrokeSpans(sg2d, s);
-             try {
-@@ -431,6 +432,7 @@
-                 si.dispose();
-             }
-         } else {
-+*/
-             fill(sg2d, sg2d.stroke.createStrokedShape(s));
-         }
-     }
-diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java
---- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-07-05 03:51:45.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-07-19 17:14:03.000000000 -0400
-@@ -189,6 +189,7 @@
-             return;
-         }
- 
-+/*
-         if (sg2d.strokeState == sg2d.STROKE_CUSTOM) {
-             fill(sg2d, sg2d.stroke.createStrokedShape(s));
-             return;
-@@ -201,6 +202,8 @@
-         } finally {
-             sr.dispose();
-         }
-+*/
-+	fill(sg2d, sg2d.stroke.createStrokedShape(s));
-     }
- 
-     /*
-diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java
---- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-07-05 03:51:45.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-07-19 17:45:56.000000000 -0400
-@@ -82,6 +82,7 @@
-     }
- 
-     public void draw(SunGraphics2D sg, Shape s) {
-+/*
- 	if (sg.stroke instanceof BasicStroke) {
- 	    ShapeSpanIterator sr = new ShapeSpanIterator(sg, true);
- 	    try {
-@@ -90,8 +91,9 @@
- 		sr.dispose();
- 	    }
- 	} else {
-+*/
- 	    renderPath(sg, sg.stroke.createStrokedShape(s));
--	}
-+//	}
-     }
- 
-     public void drawBasicStroke(SunGraphics2D sg, Shape s,
-diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/SurfaceData.java openjdk/j2se/src/share/classes/sun/java2d/SurfaceData.java
---- openjdk.orig/j2se/src/share/classes/sun/java2d/SurfaceData.java	2007-07-05 03:51:42.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/java2d/SurfaceData.java	2007-07-19 17:38:39.000000000 -0400
-@@ -511,6 +511,7 @@
- 		// assert(sg2d.surfaceData == this);
- 	    }
- 	} else if (sg2d.compositeState == sg2d.COMP_CUSTOM) {
-+/*
- 	    if (sg2d.antialiasHint == SunHints.INTVAL_ANTIALIAS_ON) {
- 		if (sg2d.clipState == sg2d.CLIP_SHAPE) {
- 		    sg2d.drawpipe = AAClipCompViaShape;
-@@ -524,6 +525,7 @@
- 		    sg2d.textpipe = compText;
- 		}
- 	    } else {
-+*/
- 		sg2d.drawpipe = compViaShape;
- 		sg2d.fillpipe = compViaShape;
- 		sg2d.shapepipe = compShape;
-@@ -532,7 +534,7 @@
- 		} else {
- 		    sg2d.textpipe = compText;
- 		}
--	    }
-+/*	    }
- 	} else if (sg2d.antialiasHint == SunHints.INTVAL_ANTIALIAS_ON) {
-             sg2d.alphafill = getMaskFill(sg2d);
-             // assert(sg2d.surfaceData == this);
-@@ -561,6 +563,7 @@
- 		    sg2d.textpipe = paintText;
- 		}
- 	    }
-+*/
- 	} else if (sg2d.paintState > sg2d.PAINT_ALPHACOLOR ||
-                    sg2d.compositeState > sg2d.COMP_ISCOPY ||
-                    sg2d.clipState == sg2d.CLIP_SHAPE)
-@@ -600,17 +603,19 @@
- 	     * resolve one of the new AA types.
- 	     */
- 	    switch (sg2d.textAntialiasHint) {
--	    case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
--		/* equating to OFF which it is for us */
-+//	    case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
-+//		/* equating to OFF which it is for us */
- 	    case SunHints.INTVAL_TEXT_ANTIALIAS_OFF:
- 		sg2d.textpipe = solidTextRenderer;
- 		break;
- 
-+	    case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
- 	    case SunHints.INTVAL_TEXT_ANTIALIAS_ON:
-+	    default:
- 		sg2d.textpipe = aaTextRenderer;
- 		break;
- 
--	    default:
-+/*	    default:
- 		switch (sg2d.getFontInfo().aaHint) {
- 
- 		case SunHints.INTVAL_TEXT_ANTIALIAS_LCD_HRGB:
-@@ -625,6 +630,7 @@
- 		default:
- 		sg2d.textpipe = solidTextRenderer;
- 		}
-+*/
- 	    }
- 	    sg2d.shapepipe = colorPrimitives;
- 	    sg2d.loops = getRenderLoops(sg2d);
---- openjdk.clean/j2se/make/sun/dcpr/Makefile	2007-07-20 08:17:57.000000000 +0100
-+++ openjdk/j2se/make/sun/dcpr/Makefile	2007-07-24 11:26:44.000000000 +0100
-@@ -62,10 +62,13 @@
- # Specific to OpenJDK building
- #
- 
-+FILES_java = \
-+ sun/dc/DuctusRenderingEngine.java
-+
- # Plug lib will be copied instead of compiling.
- USE_BINARY_PLUG_LIBRARY=true
- 
--build: import-binary-plug-dc-classes import-binary-plug-dcpr-library
-+build: import-binary-plug-dc-classes import-binary-plug-dcpr-library classheaders
- 
- include $(BUILDDIR)/common/BinaryPlugs.gmk
- 

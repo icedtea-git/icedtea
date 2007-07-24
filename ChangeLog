@@ -1,3 +1,9 @@
+2007-07-24  Francis Kung  <fkung@redhat.com>
+
+	* Makefile.am: Fix typo in Freetype include dir.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-graphics.patch: Improved font support.
+
 2007-07-24  Andrew Haley  <aph@redhat.com>
 
 	* Makefile.am (OPENJDK_VERSION): Change to b16.
