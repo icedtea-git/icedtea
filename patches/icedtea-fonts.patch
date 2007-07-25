@@ -61,6 +61,7 @@ diff -urN openjdk.orig/j2se/make/sun/font/mapfile-vers openjdk/j2se/make/sun/fon
  
  	local:
  		*;
+
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h openjdk/j2se/src/share/native/sun/font/freetypescaler.h
 --- openjdk.orig/j2se/src/share/native/sun/font/freetypescaler.h	1969-12-31 19:00:00.000000000 -0500
 +++ openjdk/j2se/src/share/native/sun/font/freetypescaler.h	2007-07-23 13:03:10.000000000 -0400
@@ -2200,7 +2201,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.c openjdk/j2
 -}
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp
 --- openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp	2007-07-23 16:05:27.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp	2007-07-25 17:21:05.000000000 -0400
 @@ -0,0 +1,744 @@
 +/* scalerMethods.c - wrap Freetype functions for the OpenJDK.
 +   Copyright (C) 2007  Red Hat, Inc.
@@ -2597,14 +2598,14 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +
 +        if (font->glyph->bitmap.pixel_mode == FT_PIXEL_MODE_MONO) {
 +            // Set up GlyphInfo struct for expanded image
-+            bitmapSize = (font->glyph->bitmap.pitch * 8) * font->glyph->bitmap.rows;
++            bitmapSize = (font->glyph->bitmap.width * 8) * font->glyph->bitmap.rows;
 +            glyphInfo = (GlyphInfo*) malloc(sizeof(GlyphInfo) + bitmapSize);
 +            glyphInfo->image = (unsigned char*)glyphInfo+sizeof(GlyphInfo);
-+            glyphInfo->rowBytes = font->glyph->bitmap.pitch * 8;
++            glyphInfo->rowBytes = font->glyph->bitmap.width * 8;
 +
 +            // Expand packed bitmap to one-pixel-per-byte
 +            CopyBW2Grey8(font->glyph->bitmap.buffer, font->glyph->bitmap.pitch,
-+                         glyphInfo->image, font->glyph->bitmap.width,
++                         glyphInfo->image, font->glyph->bitmap.width * 8,
 +                         font->glyph->bitmap.width, font->glyph->bitmap.rows);
 +
 +        // TODO: re-add support for other pixel modes, ie, the HLCD/VLCD modes
@@ -3320,5 +3321,3 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/t2kScalerMethods.cpp openj
 -}
 -
 -} /* End extern "C" */
-
-

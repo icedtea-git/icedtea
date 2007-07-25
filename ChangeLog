@@ -1,5 +1,10 @@
 2007-07-25  Francis Kung  <fkung@redhat.com>
 
+	PR 42
+	* patches/icedtea-fonts.patch: Fix scanlines for mono fonts.
+
+2007-07-25  Francis Kung  <fkung@redhat.com>
+
 	* Makefile.am: Added new patch files.
 	* Makefile.in: Regenerated.
 	* patches/icedtea-graphics.patch: Split off into separate patch files.
