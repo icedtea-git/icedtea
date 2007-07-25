@@ -1,3 +1,19 @@
+2007-07-25  Lillian Angel  <langel@redhat.com>
+
+	* jce/gnu/javax/crypto/jce/GnuCrypto.java: Added
+	AlgorithmParameters.PBEWithMD5AndDES.
+	* AUTHORS: Added Raif Naffah.
+
+2007-07-25  Raif Naffah  <admin@naffah-raif.name>
+
+	* (PBE): Cleaned up.
+	* (PBE): Initialized new vars.
+	* (engineInit): Implemented.
+	* (initInternal): New function.
+	* (PBEPKCS5_V1Params): Likewise.
+	* (PBEPKCS5_V1Params): New internal class.
+	* (DES): Implemented with padding.
+
 2007-07-24  Francis Kung  <fkung@redhat.com>
 
 	* Makefile.am: Fix typo in Freetype include dir.

@@ -350,9 +350,10 @@ public final class GnuCrypto
             gnu.javax.crypto.jce.PBKDF2SecretKeyFactory.HMacTiger.class.getName());
         put("SecretKeyFactory.PBKDF2WithHMacWhirlpool",
             gnu.javax.crypto.jce.PBKDF2SecretKeyFactory.HMacWhirlpool.class.getName());
-
         put("SecretKeyFactory.PBEWithMD5AndDES",
         		gnu.javax.crypto.jce.PBESecretKeyFactory.class.getName());
+
+        put("Alg.Alias.AlgorithmParameters.PBEWithMD5AndDES", "PBEWithMD5AndDES");
         
         // Simple SecretKeyFactory implementations.
         put("SecretKeyFactory.Anubis",
