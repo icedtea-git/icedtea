@@ -39,6 +39,7 @@ exception statement from your version. */
 package java.awt.color;
 
 import java.io.Serializable;
+import sun.java2d.cmm.CMSManager;
 
 /**
  * NEEDS DOCUMENTATION
@@ -120,6 +121,12 @@ public abstract class ColorSpace implements Serializable
           {
             ICC_Profile profile = new ICC_Profile(colorspace);
             INSTANCES[instanceIndex] = new ICC_ColorSpace(profile);
+
+            if (colorspace == CS_LINEAR_RGB)
+              CMSManager.LINEAR_RGBspace = INSTANCES[instanceIndex];
+
+            if (colorspace == CS_GRAY)
+              CMSManager.GRAYspace = INSTANCES[instanceIndex];
           }
         return INSTANCES[instanceIndex];
       }

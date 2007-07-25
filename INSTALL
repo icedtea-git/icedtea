@@ -19,6 +19,7 @@ Eclipse Java Compiler 3.2.1
 CUPS
 libX11
 lesstif
+Freetype2
 patch
 sed
 unzip

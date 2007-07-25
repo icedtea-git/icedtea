@@ -1,3 +1,12 @@
+2007-07-25  Francis Kung  <fkung@redhat.com>
+
+	PR 47
+	* rt/java/awt/color/ColorSpace.java: Set static fields in CMSManager.
+
+2007-07-25  Francis Kung  <fkung@redhat.com>
+
+	* INSTALL: Document Freetype requirement.
+
 2007-07-25  Lillian Angel  <langel@redhat.com>
 
 	* jce/gnu/javax/crypto/jce/GnuCrypto.java: Added
