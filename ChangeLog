@@ -1,5 +1,14 @@
 2007-07-25  Francis Kung  <fkung@redhat.com>
 
+	* Makefile.am: Added new patch files.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-graphics.patch: Split off into separate patch files.
+	* patches/icedtea-antialias.patch: New file.
+	* patches/icedtea-fonts.patch: New file.
+	* patches/icedtea-paths.patch: New file.
+
+2007-07-25  Francis Kung  <fkung@redhat.com>
+
 	PR 52
 	* patches/icedtea-graphics.patch: Update field names in native image
 	JNI code.

@@ -24,6 +24,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch \
+	patches/icedtea-fonts.patch \
+	patches/icedtea-antialias.patch \
+	patches/icedtea-paths.patch \
 	patches/icedtea-debuginfo.patch \
 	patches/icedtea-java.security.patch \
 	patches/icedtea-ssl.patch \
