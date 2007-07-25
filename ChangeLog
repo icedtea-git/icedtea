@@ -10,7 +10,7 @@
 	* (PBE): Initialized new vars.
 	* (engineInit): Implemented.
 	* (initInternal): New function.
-	* (PBEPKCS5_V1Params): Likewise.
+	* (genParams): Likewise.
 	* (PBEPKCS5_V1Params): New internal class.
 	* (DES): Implemented with padding.
 
