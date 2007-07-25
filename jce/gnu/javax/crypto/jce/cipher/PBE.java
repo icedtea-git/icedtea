@@ -41,6 +41,7 @@ package gnu.javax.crypto.jce.cipher;
 import gnu.java.security.Registry;
 import gnu.javax.crypto.jce.spec.BlockCipherParameterSpec;
 import gnu.javax.crypto.key.GnuPBEKey;
+import gnu.javax.crypto.mode.BaseMode;
 
 import java.io.UnsupportedEncodingException;
 import java.security.AlgorithmParameters;
@@ -160,21 +161,27 @@ public abstract class PBE
 	} catch (UnsupportedEncodingException x) {
 		throw new InvalidKeyException(x);
 	}
-    // TODO: the following code assumes known cipher, block size, and hash
-    // output block size, as well as DES-CBC block and IV sizes.  these hard-
-    // wired values MUST be parameterized.
+    
+    String name = cipher.name();
+    int blockSize = cipher.defaultBlockSize();
+    int keySize = cipher.defaultKeySize();
+    int hashSize = this.hash.getDigestLength();
+    Integer att_ivSize = (Integer) attributes.get(mode.MODE_BLOCK_SIZE);
+    int ivSize = (att_ivSize == null ? blockSize : att_ivSize.intValue());
+    
     // digest once
     this.hash.update(p);
     byte[] buffer = s == null ? this.hash.digest() : this.hash.digest(s);
+
     // and now complete the remaining iterations
     for (int i = 1; i < c; i++)
     	buffer = this.hash.digest(buffer);
 
     PBEPKCS5_V1Params result = new PBEPKCS5_V1Params();
-    result.skSpec = new SecretKeySpec(buffer, 0, 8, "DES");
-    byte[] iv = new byte[8];
-    System.arraycopy(buffer, 8, iv, 0, 8);
-    result.ivSpec = new BlockCipherParameterSpec(iv, 8, 8);
+    result.skSpec = new SecretKeySpec(buffer, 0, blockSize, name.substring(0, name.indexOf('-')));
+    byte[] iv = new byte[ivSize];
+    System.arraycopy(buffer, blockSize, iv, 0, hashSize - blockSize);
+    result.ivSpec = new BlockCipherParameterSpec(iv, blockSize, keySize);
     return result;
   }
 
@@ -198,7 +205,8 @@ public abstract class PBE
       {
     	// we really need a DES/CBC/PKCS5 combined padded block cipher
         super(Registry.DES_CIPHER);
-	    // the superclass's field 'cipher' has a plain DES-ECB.
+        
+	    // the superclass's field 'cipher' has a plain DES-ECB so we need to        
 	    // change its mode and padding
         try {
 			this.engineSetMode(Registry.CBC_MODE);

@@ -1,3 +1,8 @@
+2007-07-25  Lillian Angel  <langel@redhat.com>
+
+	* jce/gnu/javax/crypto/jce/cipher/PBE.java
+	(genParams): Cleaned up hardcoded values.
+
 2007-07-25  Francis Kung  <fkung@redhat.com>
 
 	PR 47
@@ -15,6 +20,7 @@
 
 2007-07-25  Raif Naffah  <admin@naffah-raif.name>
 
+	* jce/gnu/javax/crypto/jce/cipher/PBE.java
 	* (PBE): Cleaned up.
 	* (PBE): Initialized new vars.
 	* (engineInit): Implemented.
