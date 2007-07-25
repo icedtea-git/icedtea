@@ -85,6 +85,13 @@ public class ComponentSampleModel extends SampleModel
    */
   protected int pixelStride;
 
+  static private native void initIDs();
+  static
+    {
+      ColorModel.loadLibraries();
+      initIDs();
+    }
+
   /**
    * Creates a new sample model that assumes that all bands are stored in a 
    * single bank of the {@link DataBuffer}.

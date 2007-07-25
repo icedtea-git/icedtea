@@ -1,3 +1,14 @@
+2007-07-25  Francis Kung  <fkung@redhat.com>
+
+	PR 52
+	* patches/icedtea-graphics.patch: Update field names in native image
+	JNI code.
+	* rt/java/awt/image/ComponentSampleModel.java: Initialize native IDs.
+	* rt/java/awt/image/Raster.java: Likewise.
+	* rt/java/awt/image/SampleModel.java: Likewise.
+	* rt/java/awt/image/SinglePixelPackedSampleModel.java: Likewise, and
+	add maxBitSize field..
+
 2007-07-25  Lillian Angel  <langel@redhat.com>
 
 	* jce/gnu/javax/crypto/jce/cipher/PBE.java

@@ -60,6 +60,13 @@ public abstract class SampleModel
    */
   protected int dataType;
 
+  static private native void initIDs();
+  static
+    {
+      ColorModel.loadLibraries();
+      initIDs();
+    }
+
   /**
    * Creates a new sample model with the specified attributes.
    * 

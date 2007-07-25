@@ -53,7 +53,15 @@ public class SinglePixelPackedSampleModel extends SampleModel
   private int[] bitMasks;
   private int[] bitOffsets;
   private int[] sampleSize;
+  private int maxBitSize;
   
+  static private native void initIDs();
+  static
+    {
+      ColorModel.loadLibraries();
+      initIDs();
+    }
+
   /**
    * Creates a new <code>SinglePixelPackedSampleModel</code>.
    * 
@@ -103,6 +111,7 @@ public class SinglePixelPackedSampleModel extends SampleModel
     sampleSize = new int[numBands];
     
     BitMaskExtent extent = new BitMaskExtent();
+    maxBitSize = 0;
     for (int b = 0; b < numBands; b++)
       {
         // the mask is an unsigned integer
@@ -110,6 +119,9 @@ public class SinglePixelPackedSampleModel extends SampleModel
         extent.setMask(mask);
         sampleSize[b] = extent.bitWidth;
         bitOffsets[b] = extent.leastSignificantBit;
+
+        if (sampleSize[b] > maxBitSize)
+          maxBitSize = sampleSize[b];
       }
   }
 

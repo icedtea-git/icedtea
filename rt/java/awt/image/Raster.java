@@ -91,6 +91,13 @@ public class Raster
   /** The raster's parent. */
   protected Raster parent;
   
+  static private native void initIDs();
+  static
+    {
+      ColorModel.loadLibraries();
+      initIDs();
+    }
+
   /**
    * Creates a new raster.
    * 
