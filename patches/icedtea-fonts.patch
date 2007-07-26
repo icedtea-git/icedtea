@@ -2201,8 +2201,8 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.c openjdk/j2
 -}
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp
 --- openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp	2007-07-25 17:21:05.000000000 -0400
-@@ -0,0 +1,744 @@
++++ openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp	2007-07-26 16:14:57.000000000 -0400
+@@ -0,0 +1,754 @@
 +/* scalerMethods.c - wrap Freetype functions for the OpenJDK.
 +   Copyright (C) 2007  Red Hat, Inc.
 +   Copyright 2003-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -2267,7 +2267,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    	
 +    scaler  = (FreetypeScaler *) malloc (sizeof (FreetypeScaler));
 +    memset (&(scaler->font), 0, sizeof (FT_Face));
-+    
++
 +    char *buff = (char *) malloc (fileSize);
 +    jobject b_buffer = env->NewDirectByteBuffer ((void *) buff, fileSize);
 +    
@@ -2339,10 +2339,9 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +(JNIEnv *env, jobject strike, jlong pScaler, jdoubleArray matrix,
 + jboolean ttFont, jint aa, jint fm,
 + jboolean algoStyle, jfloat boldness, jfloat italic) {
-+    
++   
 +    FreetypeScalerContext *context =
 +        reinterpret_cast<FreetypeScalerContext *> (malloc (sizeof (FreetypeScalerContext)));
-+      
 +    context->scaler = reinterpret_cast<FreetypeScaler *> (pScaler);
 +
 +    // Get the transformation matrix
@@ -2394,24 +2393,22 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    // Initialize FreeType if necessary
 +    FT_INIT();
 +
-+    // Read in font file from java    
-+    jclass this_clazz = env->GetObjectClass (font2D);
++    scaler  = (FreetypeScaler *) malloc (sizeof (FreetypeScaler));
++    memset (&(scaler->font), 0, sizeof (FT_Face));
 +
++    // Attempt to read in font file from java    
++    jclass this_clazz = env->GetObjectClass (font2D);
 +    jfieldID dr_fid = env->GetFieldID (this_clazz, "disposerRecord",
 +                                   "Lsun/font/TrueTypeFont$TTDisposerRecord;");
 +    jobject disposer_rec = env->GetObjectField (font2D, dr_fid);
 +
 +    jclass dr_clazz = env->GetObjectClass (disposer_rec);
-+
 +    jfieldID channel_fid = env->GetFieldID (dr_clazz, "channel",
 +                                            "Ljava/nio/channels/FileChannel;");
 +                                             
 +    jobject f_channel = env->GetObjectField (disposer_rec, channel_fid);
 +
 +    if (f_channel) {
-+        scaler  = (FreetypeScaler *) malloc (sizeof (FreetypeScaler));
-+        memset (&(scaler->font), 0, sizeof (FT_Face));
-+      	
 +      	jclass channel_clazz = env->GetObjectClass (f_channel);
 +        jmethodID c_size_mid = env->GetMethodID (channel_clazz, "size", "()J");
 +        jmethodID c_read_mid = env->GetMethodID (channel_clazz, "read",
@@ -2429,15 +2426,28 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +                                    (FT_Long) file_size, (FT_Long) fontNumber,
 +                                    &(scaler->font));
 +
-+        if (error)
-+            fprintf (stderr, "FT_New_Face error: %d\n", (int) error);
++    // If the file can't be read from Java, retrieve the filename and try
++    // opening the file directly
++    } else  {
++        jfieldID filename_fid = env->GetFieldID(this_clazz, "platName",
++                                                "Ljava/lang/String;");
++        jstring jFileName = (jstring)env->GetObjectField(font2D, filename_fid);
++        const char *fileName = env->GetStringUTFChars(jFileName, NULL);
++
++        error = FT_New_Face (ftLibrary, fileName, (FT_Long) fontNumber,
++                             &(scaler->font));
 +    }
++
++    if (error)
++        fprintf (stderr, "FT_New_Face error: %d\n", (int) error);
++
 +    return (jlong)(uintptr_t) scaler;
 +}
 +
 +JNIEXPORT void JNICALL
 +Java_sun_font_FileFont_setNullScaler
 +(JNIEnv *env, jobject font2D, jlong pScalerContext) {
++
 +    FreetypeScalerContext *context = (FreetypeScalerContext*)pScalerContext;
 +    context->scaler = getNullScaler();
 +}
@@ -2947,6 +2957,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +} /* End extern "C" */
 +
 +
+Binary files openjdk.orig/j2se/src/share/native/sun/font/.scalerMethods.cpp.swp and openjdk/j2se/src/share/native/sun/font/.scalerMethods.cpp.swp differ
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunFont.c openjdk/j2se/src/share/native/sun/font/sunFont.c
 --- openjdk.orig/j2se/src/share/native/sun/font/sunFont.c	2007-07-20 03:33:48.000000000 -0400
 +++ openjdk/j2se/src/share/native/sun/font/sunFont.c	2007-07-19 14:42:54.000000000 -0400
