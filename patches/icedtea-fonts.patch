@@ -2201,8 +2201,8 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.c openjdk/j2
 -}
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp
 --- openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp	2007-07-26 16:14:57.000000000 -0400
-@@ -0,0 +1,754 @@
++++ openjdk/j2se/src/share/native/sun/font/scalerMethods.cpp	2007-07-30 16:26:45.000000000 -0400
+@@ -0,0 +1,841 @@
 +/* scalerMethods.c - wrap Freetype functions for the OpenJDK.
 +   Copyright (C) 2007  Red Hat, Inc.
 +   Copyright 2003-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -2246,6 +2246,7 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +// TODO: Remove!
 +#include <stdio.h>
 +
++#include <math.h>
 +#include "fontscalerdefs.h"
 +#include <ft2build.h>
 +#include FT_FREETYPE_H
@@ -2347,18 +2348,78 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    // Get the transformation matrix
 +    jdouble* nativeMatrix = env->GetDoubleArrayElements(matrix, NULL);
 + 
-+    // The size of the font is determined by the transform factor in the matrix
-+    context->xsize = CONVERT_DOUBLE_TO_266(nativeMatrix[0]);
-+    context->ysize = CONVERT_DOUBLE_TO_266(nativeMatrix[3]);
++    // The size of the font is determined by the scaling factor in the matrix.
++    //
++    // Unfortunately, if a rotation or shear is also applied, we need to do
++    // some trickery to extract the scaling factor.
++    //
++    // Note: remember that Java reverses the y axis, so a reflection across the
++    // x-axis is implied in all the code below.
++
++    double angle;
++    double x, y;
++    if (nativeMatrix[1] == 0 && nativeMatrix[2] == 0) {
++        // theta == 0 || theta == 180
++        x = nativeMatrix[0];
++        y = nativeMatrix[3];
++
++    } else if (nativeMatrix[0] == 0 && nativeMatrix[3] == 0) {
++        // theta == 90 || theta == 270
++        x = nativeMatrix[1];
++        y = nativeMatrix[2];
++
++    } else {
++        // all others - this will break if a shear is applied!
++        angle = atan(- nativeMatrix[1] / nativeMatrix[0]);
++        double angle2 = atan (nativeMatrix[2] / nativeMatrix[3]);
++
++        if (angle == angle2) {
++            // Angles are consistent; no shear applied
++            if (nativeMatrix[0] < 0)
++                angle += M_PI;
++
++            x = nativeMatrix[0] / cos(angle);
++            y = nativeMatrix[3] / cos(angle);
++
++        } else {
++            // This is a pretty nasty hack, but I don't see any way around it.
++            // It is impossible to decompose a matrix with all scale, rotate,
++            // and shear components, and we can't pass this matrix directly to
++            // Freetype either because hinting won't be done correctly.
++            //
++            // So we set an arbitrary size to force hinting, and pass the
++            // complete matrix to Freetype.
++            
++            x = 12;
++            y = 12;
++
++            // This works around two problems:
++            // a) the nativeMatrix[1] and  nativeMatrix[2] values are *not*
++            // reversed for shears, while they *are* reversed for rotations.
++            // b) Java reverses the y-axis, causing Freetype-applied shears to
++            // appear backwards.
++            //
++            // This has the side effect of causing rotation+shear transforms
++            // to break, but fixes shear-only transforms.
++            double temp = nativeMatrix[1];
++            nativeMatrix[1] = -nativeMatrix[2];
++            nativeMatrix[2] = -temp;
++        }
++    }
++
++    x = fabs(x);
++    y = fabs(y);
++    context->xsize = CONVERT_DOUBLE_TO_266(x);
++    context->ysize = CONVERT_DOUBLE_TO_266(y);
 +    FT_Set_Char_Size (context->scaler->font, context->xsize, context->ysize, 0, 0);
-+    
-+    // Convert the rest of the matrix and pass to Freetype
-+    context->matrix.xx = CONVERT_DOUBLE_TO_1616(1.0);
-+    context->matrix.xy = CONVERT_DOUBLE_TO_1616(nativeMatrix[1]);
-+    context->matrix.yx = CONVERT_DOUBLE_TO_1616(nativeMatrix[2]);
-+    context->matrix.yy = CONVERT_DOUBLE_TO_1616(1.0);
++
++    context->matrix.xx = CONVERT_DOUBLE_TO_1616(nativeMatrix[0] / x);
++    context->matrix.xy = CONVERT_DOUBLE_TO_1616(nativeMatrix[1] / x);
++    context->matrix.yx = CONVERT_DOUBLE_TO_1616(nativeMatrix[2] / y);
++    context->matrix.yy = CONVERT_DOUBLE_TO_1616(nativeMatrix[3] / y);
++
 +    FT_Set_Transform (context->scaler->font, &(context->matrix), NULL);
-+    
++
 +    env->ReleaseDoubleArrayElements(matrix, nativeMatrix, 0);
 +
 +    // Set the anti-aliasing option
@@ -2436,6 +2497,8 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +
 +        error = FT_New_Face (ftLibrary, fileName, (FT_Long) fontNumber,
 +                             &(scaler->font));
++
++        env->ReleaseStringUTFChars(jFileName, fileName);
 +    }
 +
 +    if (error)
@@ -2464,6 +2527,10 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +
 +    FT_Face font = ((FreetypeScalerContext *)pScalerContext)->scaler->font;
 +
++    FT_Set_Char_Size (font, ((FreetypeScalerContext *)pScalerContext)->xsize,
++                      ((FreetypeScalerContext *)pScalerContext)->ysize, 0, 0);
++    FT_Set_Transform (font, &(((FreetypeScalerContext *)pScalerContext)->matrix), NULL);
++
 +    if (FT_Load_Glyph(font, glyphCode, FT_LOAD_NO_BITMAP) == 0) {
 +        return (jfloat)CONVERT_266_TO_DOUBLE(font->glyph->advance.x);
 +    }
@@ -2485,6 +2552,10 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    jfloat advanceX = 0;
 +    jfloat advanceY = 0;
 +    FT_Face font = ((FreetypeScalerContext *)pScalerContext)->scaler->font;
++
++    FT_Set_Char_Size (font, ((FreetypeScalerContext *)pScalerContext)->xsize,
++                      ((FreetypeScalerContext *)pScalerContext)->ysize, 0, 0);
++    FT_Set_Transform (font, &(((FreetypeScalerContext *)pScalerContext)->matrix), NULL);
 +
 +    if (FT_Load_Glyph(font, glyphCode, FT_LOAD_NO_BITMAP) == 0) {
 +        advanceX = (jfloat)CONVERT_266_TO_FLOAT(font->glyph->advance.x);
@@ -2640,6 +2711,9 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +        glyphInfo->advanceY = - CONVERT_266_TO_DOUBLE(font->glyph->advance.y);
 +    }
 +
++    // We return a pointer to the glyphInfo struct, but never free it anywhere.
++    // Is this a memory leak??  The OpenJDK does the same however
++    // (as far as we can tell...)
 +    return (jlong)(uintptr_t)glyphInfo;
 +}
 +
@@ -2695,6 +2769,10 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    if (! isNullScalerContext((FreetypeScalerContext *)pScalerContext)) {
 +        if (! isNullScaler(((FreetypeScalerContext *)pScalerContext)->scaler)) {
 +            FT_Face font = ((FreetypeScalerContext *)pScalerContext)->scaler->font;
++
++            FT_Set_Char_Size (font, ((FreetypeScalerContext *)pScalerContext)->xsize,
++                              ((FreetypeScalerContext *)pScalerContext)->ysize, 0, 0);
++            FT_Set_Transform (font, &(((FreetypeScalerContext *)pScalerContext)->matrix), NULL);
 +
 +            // TODO: for vertical fonts/layouts, the x/y values should be reversed.
 +            ay = CONVERT_266_TO_FLOAT(font->size->metrics.ascender);
@@ -2889,6 +2967,9 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +    gp->px = xpos;
 +    gp->py = ypos;
 +
++    FT_Set_Char_Size (font, context->xsize, context->ysize, 0, 0);
++    FT_Set_Transform (font, &(context->matrix), NULL);
++
 +    if (! FT_Load_Glyph(font, glyphCode, FT_LOAD_NO_BITMAP)) {
 +        FT_Glyph glyph;
 +        FT_Get_Glyph (font->glyph, &glyph);
@@ -2946,6 +3027,12 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +        for (int i = 0; i < numGlyphs; i++) {
 +            addGlyphToGeneralPath((jlong)(uintptr_t) pScalerContext, (int)glyphs[i],
 +                                  xpos, ypos, &gp);
++
++            FT_Face font = ((FreetypeScalerContext *)pScalerContext)->scaler->font;
++            if (FT_Load_Glyph(font, glyphs[i], FT_LOAD_NO_BITMAP) == 0) {
++                xpos += (jfloat)CONVERT_266_TO_FLOAT(font->glyph->advance.x);
++                ypos += (jfloat)CONVERT_266_TO_FLOAT(font->glyph->advance.y);
++            }
 +        }
 +
 +        env->ReleaseIntArrayElements(glyphArray, glyphs, 0);
@@ -2957,7 +3044,6 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/font/scalerMethods.cpp openjdk/
 +} /* End extern "C" */
 +
 +
-Binary files openjdk.orig/j2se/src/share/native/sun/font/.scalerMethods.cpp.swp and openjdk/j2se/src/share/native/sun/font/.scalerMethods.cpp.swp differ
 diff -urN openjdk.orig/j2se/src/share/native/sun/font/sunFont.c openjdk/j2se/src/share/native/sun/font/sunFont.c
 --- openjdk.orig/j2se/src/share/native/sun/font/sunFont.c	2007-07-20 03:33:48.000000000 -0400
 +++ openjdk/j2se/src/share/native/sun/font/sunFont.c	2007-07-19 14:42:54.000000000 -0400

@@ -1,3 +1,9 @@
+2007-07-30  Francis Kung  <fkung@redhat.com>
+
+	PR 41
+	* patches/icedtea-fonts.patch: Add support for rotation, shear in
+	font transforms.
+
 2007-07-26  Francis Kung  <fkung@redhat.com>
 
 	PR 48
