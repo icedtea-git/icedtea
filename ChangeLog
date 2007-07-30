@@ -1,5 +1,10 @@
 2007-07-30  Francis Kung  <fkung@redhat.com>
 
+	PR 54
+	* rt/gnu/java/awt/QuadSegment.java: Add null check.
+
+2007-07-30  Francis Kung  <fkung@redhat.com>
+
 	PR 41
 	* patches/icedtea-fonts.patch: Add support for rotation, shear in
 	font transforms.

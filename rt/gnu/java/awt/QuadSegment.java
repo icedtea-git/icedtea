@@ -200,6 +200,10 @@ public class QuadSegment extends Segment
                               curve.getCtrlY() + n2[1],
                               curve.getX2() + n2[0], 
                               curve.getY2() + n2[1], true);
+
+        if (cp == null)
+          cp = new Point2D.Double(curve.getCtrlX() + n1[0],
+                                  curve.getCtrlY() + n1[1]);
       }
     
     s = new QuadSegment(curve.getX1() + n1[0], curve.getY1() + n1[1],
