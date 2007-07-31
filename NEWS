@@ -1,5 +1,4 @@
 New in release 1.2 (2007-08-01)
-"Text-tacular"
 
 * Updated to OpenJDK b16 build.
 * Freetype font support fully replacing the encumbered libt2k.
