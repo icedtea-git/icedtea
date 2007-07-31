@@ -1,3 +1,13 @@
+New in release 1.2 (2007-08-01)
+"Text-tacular"
+
+* Updated to OpenJDK b16 build.
+* Freetype font support fully replacing the encumbered libt2k.
+* Path widening imported from GNU Classpath.
+* Window decorations on x86_64 fixed.
+* Bug fixes in various graphics classes.
+* Anti-aliasing support explicitly disabled (instead of crashing).
+
 New in release 1.1 (2007-07-12)
 
 * Color management and raster fixes for compatibility with LittleCMS.

@@ -1,5 +1,9 @@
 2007-07-31  Francis Kung  <fkung@redhat.com>
 
+	* NEWS: Updated.
+
+2007-07-31  Francis Kung  <fkung@redhat.com>
+
 	PR 37
 	* patches/icedtea-graphics.patch: Roll back XPanelPeer change to fix
 	x86_64 window decorations.
