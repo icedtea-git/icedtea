@@ -6,6 +6,8 @@ New in release 1.2 (2007-08-01)
 * Window decorations on x86_64 fixed.
 * Bug fixes in various graphics classes.
 * Anti-aliasing support explicitly disabled (instead of crashing).
+* OpenSSL certs read directly
+* Various crypto bug fixes.
 
 New in release 1.1 (2007-07-12)
 
