@@ -142,3 +142,86 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/awt/image/imageInitIDs.h openjd
 -IMGEXTERN jfieldID g_DataBufferIntPdataID;
 -
  #endif /* IMAGEINITIDS_H */
+--- openjdk.orig/j2se/src/solaris/classes/sun/awt/X11/XPanelPeer.java	2007-07-20 03:33:58.000000000 -0400
++++ openjdk/j2se/src/solaris/classes/sun/awt/X11/XPanelPeer.java	2007-07-31 09:57:27.000000000 -0400
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2002-2007 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2002-2004 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -26,7 +26,6 @@
+ 
+ import java.awt.*;
+ import java.awt.peer.*;
+-
+ import sun.awt.SunGraphicsCallback;
+ 
+ public class XPanelPeer extends XCanvasPeer implements PanelPeer {
+@@ -130,36 +129,41 @@
+ 	return getInsets();
+     }
+ 
+-    /*
+-     * This method is called from XWindowPeer.displayChanged, when
+-     * the window this Panel is on is moved to the new screen, or
+-     * display mode is changed.
+-     *
+-     * The notification is propagated to the child Canvas components.
+-     * Top-level windows and other Panels are notified too as their
+-     * peers are subclasses of XCanvasPeer. 
++    /**
++     * Recursive method that handles the propagation of the displayChanged
++     * event into the entire hierarchy of peers.
++     * Unlike on win32, on X we don't worry about handling on-the-fly
++     * display settings changes, only windows being dragged across Xinerama
++     * screens.  Thus, we only need to tell XCanvasPeers, not all
++     * XComponentPeers.
+      */
+-    public void displayChanged(int screenNum) {
+-        super.displayChanged(screenNum);
+-        displayChanged((Container)target, screenNum);
++    private void recursiveDisplayChanged(Component c, int screenNum) {
++        if (c instanceof Container) {
++            Component children[] = ((Container)c).getComponents();
++            for (int i = 0; i < children.length; ++i) {
++                recursiveDisplayChanged(children[i], screenNum);
++            }
++        }
++        ComponentPeer peer = c.getPeer();
++        if (peer != null && peer instanceof XCanvasPeer) {
++            XCanvasPeer mPeer = (XCanvasPeer)peer;
++            mPeer.displayChanged(screenNum);
++        }
+     }
+ 
+     /*
+-     * Recursively iterates through all the HW and LW children
+-     * of the container and calls displayChanged() for HW peers.
+-     * Iteration through children peers only is not enough as the
+-     * displayChanged notification may not be propagated to HW
+-     * components inside LW containers, see 4452373 for details.
++     * Often up-called from a XWindowPeer instance.
++     * Calls displayChanged() on all child canvas' peers.
++     * Recurses into Container children to ensure all canvases
++     * get the message.
+      */
+-    private static void displayChanged(Container target, int screenNum) {
++    public void displayChanged(int screenNum) {
++        // Don't do super call because XWindowPeer has already updated its GC
++
+         Component children[] = ((Container)target).getComponents();
+-        for (Component child : children) {
+-            ComponentPeer cpeer = child.getPeer();
+-            if (cpeer instanceof XCanvasPeer) {
+-                ((XCanvasPeer)cpeer).displayChanged(screenNum);
+-            } else if (child instanceof Container) {
+-                displayChanged((Container)child, screenNum);
+-            }
++        
++        for (int i = 0; i < children.length; i++) {
++            recursiveDisplayChanged(children[i], screenNum);
+         }
+     }
+ 
