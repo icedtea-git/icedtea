@@ -1,3 +1,7 @@
+2007-08-01  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-text-relocations.patch: Use -fPIC on ppc and ppc64.
+
 2007-07-31  Lillian Angel  <langel@redhat.com>
 
 	* NEWS: Updated.

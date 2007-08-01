@@ -1,11 +1,14 @@
 --- openjdk/hotspot/build/linux/makefiles/gcc.make.orig	2007-06-17 16:46:45.000000000 -0400
 +++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-06-17 16:47:12.000000000 -0400
-@@ -46,18 +46,12 @@
+@@ -46,18 +46,16 @@
  # Compiler flags
  
  # position-independent code
--PICFLAG = -fPIC
++ifeq ($(SRCARCH), ppc)
+ PICFLAG = -fPIC
++else
 +PICFLAG = -fpic
++endif
  
  VM_PICFLAG/LIBJVM = $(PICFLAG)
  VM_PICFLAG/AOUT   =
