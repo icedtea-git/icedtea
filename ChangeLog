@@ -1,3 +1,7 @@
+2007-08-01  Francis Kung  <fkung@redhat.com>
+
+	* patches/icedtea-graphics.patch: Revert changeset d014fd055293.
+
 2007-08-01  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-text-relocations.patch: Use -fPIC on ppc and ppc64.
