@@ -1,3 +1,16 @@
+2007-08-03  Francis Kung  <fkung@redhat.com>
+
+	* Makefile.am: Update to b17 release.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-antialias.patch: Update line numbers for b17 and
+	remove text-antialiasing modifications.
+	* patches/icedtea-assembler_amd64.patch: Update line numbers for b17.
+	* patches/icedtea-copy-plugs.patch: Likewise.
+	* patches/icedtea-debuginfo.patch: Likewise.
+	* patches/icedtea-ecj-bootstrap.patch: Likewise.
+	* patches/icedtea-fonts.patch: Removed.
+	* patches/icedtea-buildfix.pathc: Removed.
+
 2007-08-01  Francis Kung  <fkung@redhat.com>
 
 	* patches/icedtea-graphics.patch: Revert changeset d014fd055293.

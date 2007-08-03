@@ -57,7 +57,7 @@ diff -urN openjdk.orig/hotspot/build/linux/makefiles/rules.make openjdk/hotspot/
 diff -urN openjdk.orig/j2se/make/common/Release.gmk openjdk/j2se/make/common/Release.gmk
 --- openjdk.orig/j2se/make/common/Release.gmk	2007-06-07 02:58:55.000000000 -0400
 +++ openjdk/j2se/make/common/Release.gmk	2007-06-07 03:05:28.000000000 -0400
-@@ -1069,17 +1069,17 @@
+@@ -979,17 +979,17 @@
  	        $(JAR_JFLAGS)
  	@$(java-vm-cleanup)
  	$(CP) $(LIBDIR)/tools.jar $(JDK_IMAGE_DIR)/lib/tools.jar
@@ -89,7 +89,7 @@ diff -urN openjdk.orig/j2se/make/common/Release.gmk openjdk/j2se/make/common/Rel
 diff -urN openjdk.orig/j2se/make/common/Rules.gmk openjdk/j2se/make/common/Rules.gmk
 --- openjdk.orig/j2se/make/common/Rules.gmk	2007-05-06 05:03:47.000000000 -0400
 +++ openjdk/j2se/make/common/Rules.gmk	2007-06-07 03:05:28.000000000 -0400
-@@ -420,10 +420,12 @@
+@@ -286,10 +286,12 @@
  $(CLASSHDR_DOTFILE): $(CLASSES_export)
  	$(prep-target)
  	@$(ECHO) "# Running javah:"
@@ -117,8 +117,8 @@ diff -urN openjdk.orig/j2se/make/java/applet/Makefile openjdk/j2se/make/java/app
 diff -urN openjdk.orig/j2se/make/java/awt/Makefile openjdk/j2se/make/java/awt/Makefile
 --- openjdk.orig/j2se/make/java/awt/Makefile	2007-06-07 02:58:55.000000000 -0400
 +++ openjdk/j2se/make/java/awt/Makefile	2007-06-07 03:32:32.000000000 -0400
-@@ -77,6 +77,7 @@
- .PHONY: copy-closed-src-classes
+@@ -46,6 +46,7 @@
+
  endif
  
 +JAVAC_BCP = $(ICEDTEA_RT)
@@ -296,7 +296,7 @@ diff -urN openjdk.orig/j2se/make/mkdemo/management/Demo.gmk openjdk/j2se/make/mk
 diff -urN openjdk.orig/j2se/make/sun/awt/Makefile openjdk/j2se/make/sun/awt/Makefile
 --- openjdk.orig/j2se/make/sun/awt/Makefile	2007-05-06 05:03:48.000000000 -0400
 +++ openjdk/j2se/make/sun/awt/Makefile	2007-06-07 03:05:28.000000000 -0400
-@@ -475,7 +475,7 @@
+@@ -468,7 +468,7 @@
  	$(prep-target)
  	$(RM) -r $(TEMPDIR)/CompileFontConfig
  	$(MKDIR) -p $(TEMPDIR)/CompileFontConfig
@@ -336,14 +336,14 @@ diff -urN openjdk.orig/j2se/make/sun/text/Makefile openjdk/j2se/make/sun/text/Ma
 diff -urN openjdk.orig/j2se/make/sun/xawt/Makefile openjdk/j2se/make/sun/xawt/Makefile
 --- openjdk.orig/j2se/make/sun/xawt/Makefile	2007-06-21 15:06:27.000000000 -0400
 +++ openjdk/j2se/make/sun/xawt/Makefile	2007-06-21 15:07:34.000000000 -0400
-@@ -272,7 +272,7 @@
+@@ -268,7 +268,7 @@
  ICONS=$(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon16.png $(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon24.png $(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon32.png $(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon48.png 
  
- $(TARGDIR)sun/awt/X11/ToBin.class: ToBin.java
+ sun/awt/X11/ToBin.class: ToBin.java
 -	$(JAVAC_BOOT_CMD) $?
 +	$(JAVAC_BOOT) $?
  
- $(TEMPDIR)/.gen_icons: $(TARGDIR)sun/awt/X11/ToBin.class $(ICONS)
+ $(TEMPDIR)/.gen_icons: sun/awt/X11/ToBin.class $(ICONS)
  	$(prep-target)
 
 diff -urN openjdk.orig/j2se/make/sun/xawt/ToBin.java openjdk/j2se/make/sun/xawt/ToBin.java

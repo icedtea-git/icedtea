@@ -172,9 +172,9 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-OPENJDK_VERSION = b16
-OPENJDK_DATE = 20_jul_2007
-OPENJDK_MD5SUM = e0ef953635bcdfd0437e1d24b6eccf58
+OPENJDK_VERSION = b17
+OPENJDK_DATE = 02_aug_2007
+OPENJDK_MD5SUM = ca74f5b3b3ef47e156074ade78839007
 OPENJDK_URL = \
 	http://download.java.net/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
 
@@ -188,13 +188,11 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch \
-	patches/icedtea-fonts.patch \
 	patches/icedtea-antialias.patch \
 	patches/icedtea-paths.patch \
 	patches/icedtea-debuginfo.patch \
 	patches/icedtea-java.security.patch \
 	patches/icedtea-ssl.patch \
-	patches/icedtea-buildfix.patch \
 	patches/icedtea-assembler_amd64.patch \
 	$(FAST_BUILD_PATCH)
 

@@ -1,74 +1,7 @@
-diff -urN openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java
---- openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	2007-07-20 03:34:01.000000000 -0400
-+++ openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	2007-07-24 10:54:35.000000000 -0400
-@@ -297,7 +297,7 @@
- 	    } else {
- 		switch (sg2d.textAntialiasHint) {
- 
--		case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
-+//		case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
- 		    /* equating to OFF which it is for us */
- 		case SunHints.INTVAL_TEXT_ANTIALIAS_OFF:
- 		    // Use X11 pipe even if DGA is available since DGA
-@@ -309,6 +309,7 @@
- 		    }
- 		    break;
- 
-+		case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
- 		case SunHints.INTVAL_TEXT_ANTIALIAS_ON:
- 		    // Remind: may use Xrender for these when composite is
- 		    // copy as above, or if remote X11.
-@@ -318,10 +319,12 @@
- 		default:
- 		    switch (sg2d.getFontInfo().aaHint) {
- 
-+/*
- 		    case SunHints.INTVAL_TEXT_ANTIALIAS_LCD_HRGB:
- 		    case SunHints.INTVAL_TEXT_ANTIALIAS_LCD_VRGB:
- 			sg2d.textpipe = lcdTextRenderer;
- 			break;
-+*/
-  
- 		    case SunHints.INTVAL_TEXT_ANTIALIAS_OFF:
- 		    // Use X11 pipe even if DGA is available since DGA
-@@ -334,11 +337,13 @@
- 		    break;
- 
- 		    case SunHints.INTVAL_TEXT_ANTIALIAS_ON:
-+		    default:
- 			sg2d.textpipe = aaTextRenderer;
- 			break;
--
-+/*
- 		    default:
- 			sg2d.textpipe = solidTextRenderer;
-+*/
- 		    }
- 		}
- 	    }
-diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/SunGraphics2D.java openjdk/j2se/src/share/classes/sun/java2d/SunGraphics2D.java
---- openjdk.orig/j2se/src/share/classes/sun/java2d/SunGraphics2D.java	2007-07-20 03:33:16.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/java2d/SunGraphics2D.java	2007-07-24 11:20:17.000000000 -0400
-@@ -640,11 +640,11 @@
- 	    aahint = ((SunHints.Value)frc.getAntiAliasingHint()).getIndex();
- 	}
- 	if (aahint == SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT) {
--	    if (antialiasHint == SunHints.INTVAL_ANTIALIAS_ON) {
-+//	    if (antialiasHint == SunHints.INTVAL_ANTIALIAS_OFF) {
-+//		aahint = SunHints.INTVAL_TEXT_ANTIALIAS_OFF;
-+//	    } else {
- 		aahint = SunHints.INTVAL_TEXT_ANTIALIAS_ON;
--	    } else {
--		aahint = SunHints.INTVAL_TEXT_ANTIALIAS_OFF;
--	    }
-+//	    }
- 	} else {
- 	    /* If we are in checkFontInfo because a rendering hint has been
- 	     * set then all pipes are revalidated. But we can also
 diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/SurfaceData.java openjdk/j2se/src/share/classes/sun/java2d/SurfaceData.java
 --- openjdk.orig/j2se/src/share/classes/sun/java2d/SurfaceData.java	2007-07-20 03:33:16.000000000 -0400
 +++ openjdk/j2se/src/share/classes/sun/java2d/SurfaceData.java	2007-07-19 17:38:39.000000000 -0400
-@@ -511,6 +511,7 @@
+@@ -509,6 +509,7 @@
  		// assert(sg2d.surfaceData == this);
  	    }
  	} else if (sg2d.compositeState == sg2d.COMP_CUSTOM) {
@@ -76,7 +9,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/SurfaceData.java openjd
  	    if (sg2d.antialiasHint == SunHints.INTVAL_ANTIALIAS_ON) {
  		if (sg2d.clipState == sg2d.CLIP_SHAPE) {
  		    sg2d.drawpipe = AAClipCompViaShape;
-@@ -524,6 +525,7 @@
+@@ -522,6 +523,7 @@
  		    sg2d.textpipe = compText;
  		}
  	    } else {
@@ -84,7 +17,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/SurfaceData.java openjd
  		sg2d.drawpipe = compViaShape;
  		sg2d.fillpipe = compViaShape;
  		sg2d.shapepipe = compShape;
-@@ -532,7 +534,7 @@
+@@ -530,7 +532,7 @@
  		} else {
  		    sg2d.textpipe = compText;
  		}
@@ -93,7 +26,16 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/SurfaceData.java openjd
  	} else if (sg2d.antialiasHint == SunHints.INTVAL_ANTIALIAS_ON) {
              sg2d.alphafill = getMaskFill(sg2d);
              // assert(sg2d.surfaceData == this);
-@@ -561,6 +563,7 @@
+@@ -549,7 +551,7 @@
+                     {
+                         sg2d.textpipe = colorText;
+                     } else {
+-                        sg2d.textpipe = getTextPipe(sg2d, true /* AA==ON */);
++                        sg2d.textpipe = getTextPipe(sg2d, true /* AA==ON *);
+                     }
+                 }
+             } else {
+@@ -565,6 +567,7 @@
  		    sg2d.textpipe = paintText;
  		}
  	    }
@@ -101,38 +43,6 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/SurfaceData.java openjd
  	} else if (sg2d.paintState > sg2d.PAINT_ALPHACOLOR ||
                     sg2d.compositeState > sg2d.COMP_ISCOPY ||
                     sg2d.clipState == sg2d.CLIP_SHAPE)
-@@ -600,17 +603,19 @@
- 	     * resolve one of the new AA types.
- 	     */
- 	    switch (sg2d.textAntialiasHint) {
--	    case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
--		/* equating to OFF which it is for us */
-+//	    case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
-+//		/* equating to OFF which it is for us */
- 	    case SunHints.INTVAL_TEXT_ANTIALIAS_OFF:
- 		sg2d.textpipe = solidTextRenderer;
- 		break;
- 
-+	    case SunHints.INTVAL_TEXT_ANTIALIAS_DEFAULT:
- 	    case SunHints.INTVAL_TEXT_ANTIALIAS_ON:
-+	    default:
- 		sg2d.textpipe = aaTextRenderer;
- 		break;
- 
--	    default:
-+/*	    default:
- 		switch (sg2d.getFontInfo().aaHint) {
- 
- 		case SunHints.INTVAL_TEXT_ANTIALIAS_LCD_HRGB:
-@@ -625,6 +630,7 @@
- 		default:
- 		sg2d.textpipe = solidTextRenderer;
- 		}
-+*/
- 	    }
- 	    sg2d.shapepipe = colorPrimitives;
- 	    sg2d.loops = getRenderLoops(sg2d);
-
 diff -urN openjdk.orig/j2se/src/share/classes/sun/font/FontStrikeDesc.java openjdk/j2se/src/share/classes/sun/font/FontStrikeDesc.java
 --- openjdk.orig/j2se/src/share/classes/sun/font/FontStrikeDesc.java	2007-07-20 03:33:07.000000000 -0400
 +++ openjdk/j2se/src/share/classes/sun/font/FontStrikeDesc.java	2007-07-24 11:22:57.000000000 -0400

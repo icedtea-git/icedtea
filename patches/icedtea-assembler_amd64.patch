@@ -6,8 +6,8 @@
 *** openjdk/hotspot/src/cpu/amd64/vm/assembler_amd64.cpp~	2007-07-05 08:16:04.000000000 +0100
 --- openjdk/hotspot/src/cpu/amd64/vm/assembler_amd64.cpp	2007-07-11 17:33:58.000000000 +0100
 *************** void Assembler::check_relocation(Relocat
-*** 884,887 ****
---- 884,889 ----
+*** 895,898 ****
+--- 895,900 ----
     if (r->type() == relocInfo::none) {
       return;
 +   } else if (r->is_call() && format == imm64_operand) {
