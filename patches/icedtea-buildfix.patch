@@ -1,0 +1,13 @@
+--- openjdk/hotspot/src/cpu/amd64/vm/assembler_amd64.hpp	2007-07-05 03:16:04.000000000 -0400
++++ icedtea-commit/openjdk/hotspot/src/cpu/amd64/vm/assembler_amd64.hpp	2007-07-06 13:34:27.000000000 -0400
+@@ -153,8 +153,8 @@
+   RelocationHolder _rspec;
+ 
+   // Easily misused constructors make them private
+-  Address::Address(int disp, address loc, relocInfo::relocType rtype);
+-  Address::Address(int disp, address loc, RelocationHolder spec);
++  Address(int disp, address loc, relocInfo::relocType rtype);
++  Address(int disp, address loc, RelocationHolder spec);
+ 
+  public:
+   // creation

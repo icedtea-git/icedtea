@@ -1,5 +1,11 @@
 2007-08-03  Francis Kung  <fkung@redhat.com>
 
+	* Makefile.am: Re-add buildfix patch.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-buildfix.patch: Re-added for x86_64.
+
+2007-08-03  Francis Kung  <fkung@redhat.com>
+
 	* Makefile.am: Update to b17 release.
 	* Makefile.in: Regenerated.
 	* patches/icedtea-antialias.patch: Update line numbers for b17 and
@@ -9,7 +15,7 @@
 	* patches/icedtea-debuginfo.patch: Likewise.
 	* patches/icedtea-ecj-bootstrap.patch: Likewise.
 	* patches/icedtea-fonts.patch: Removed.
-	* patches/icedtea-buildfix.pathc: Removed.
+	* patches/icedtea-buildfix.patch: Removed.
 
 2007-08-01  Francis Kung  <fkung@redhat.com>
 

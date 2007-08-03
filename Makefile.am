@@ -30,6 +30,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-java.security.patch \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-assembler_amd64.patch \
+	patches/icedtea-buildfix.patch \
 	$(FAST_BUILD_PATCH)
 
 ICEDTEA_ECJ_PATCH = \
