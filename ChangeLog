@@ -1,5 +1,10 @@
 2007-08-08  Francis Kung  <fkung@redhat.com>
 
+	* rt/java/awt/image/Raster.java: Use given dataBuffers when creating
+	new rasters.
+
+2007-08-08  Francis Kung  <fkung@redhat.com>
+
 	* INSTALL: Updated build dependencies.
 
 2007-08-08  Francis Kung  <fkung@redhat.com>

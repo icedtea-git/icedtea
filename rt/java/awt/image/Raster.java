@@ -387,9 +387,9 @@ public class Raster
       location = new Point(0,0);
 
     if (dataBuffer.getDataType() == DataBuffer.TYPE_BYTE)
-      return new ByteInterleavedRaster(sm, location);
+      return new ByteInterleavedRaster(sm, dataBuffer, location);
     else if (dataBuffer.getDataType() == DataBuffer.TYPE_USHORT)
-      return new ShortInterleavedRaster(sm, location);
+      return new ShortInterleavedRaster(sm, dataBuffer, location);
     else
       throw new IllegalArgumentException("Data type is not supported.");
   }
@@ -419,11 +419,11 @@ public class Raster
       location = new Point(0,0);
 
     if (dataBuffer.getDataType() == DataBuffer.TYPE_BYTE)
-      return new ByteBandedRaster(sm, location);
+      return new ByteBandedRaster(sm, dataBuffer, location);
     else if (dataBuffer.getDataType() == DataBuffer.TYPE_USHORT)
-      return new ShortBandedRaster(sm, location);
+      return new ShortBandedRaster(sm, dataBuffer, location);
     else if (dataBuffer.getDataType() == DataBuffer.TYPE_INT)
-      return new SunWritableRaster(sm, location);
+      return new SunWritableRaster(sm, dataBuffer, location);
     else
       throw new IllegalArgumentException("Data type is not supported.");
   }
@@ -451,11 +451,11 @@ public class Raster
       location = new Point(0,0);
 
     if (dataBuffer.getDataType() == DataBuffer.TYPE_BYTE)
-      return new ByteComponentRaster(sm, location);
+      return new ByteComponentRaster(sm, dataBuffer, location);
     else if (dataBuffer.getDataType() == DataBuffer.TYPE_USHORT)
-      return new ShortComponentRaster(sm, location);
+      return new ShortComponentRaster(sm, dataBuffer, location);
     else if (dataBuffer.getDataType() == DataBuffer.TYPE_INT)
-      return new IntegerComponentRaster(sm, location);
+      return new IntegerComponentRaster(sm, dataBuffer, location);
     else
       throw new IllegalArgumentException("Data type is not supported.");
   }
@@ -481,10 +481,10 @@ public class Raster
       location = new Point(0,0);
 
     if (dataBuffer.getDataType() == DataBuffer.TYPE_BYTE)
-      return new BytePackedRaster(sm, location);
+      return new BytePackedRaster(sm, dataBuffer, location);
     else if (dataBuffer.getDataType() == DataBuffer.TYPE_USHORT 
       || dataBuffer.getDataType() == DataBuffer.TYPE_INT)
-      return new SunWritableRaster(sm, location);
+      return new SunWritableRaster(sm, dataBuffer, location);
     else
       throw new IllegalArgumentException("Data type is not supported.");
   }
