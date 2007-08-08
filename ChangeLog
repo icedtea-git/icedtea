@@ -1,5 +1,9 @@
 2007-08-08  Francis Kung  <fkung@redhat.com>
 
+	* INSTALL: Updated build dependencies.
+
+2007-08-08  Francis Kung  <fkung@redhat.com>
+
 	* patches/icedtea-antialias.patch: Fix text antialiasing artifacts.
 
 2007-08-03  Francis Kung  <fkung@redhat.com>

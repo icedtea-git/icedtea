@@ -17,7 +17,7 @@ The build requirements are as follows:
 GNU libgcj 4.1.2
 Eclipse Java Compiler 3.2.1
 CUPS
-libX11
+libX11 (libXp, libXtst, libXi, libXt)
 lesstif
 Freetype2
 patch
@@ -25,6 +25,9 @@ sed
 unzip
 md5sum
 wget
+alsa
+xalan
+xerces
 
 See ./configure --help if you need to override defaults.
 
