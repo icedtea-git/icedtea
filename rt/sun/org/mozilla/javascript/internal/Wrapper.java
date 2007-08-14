@@ -35,7 +35,7 @@ obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version.
 */
 
-package javax.script;
+package sun.org.mozilla.javascript.internal;
 
 public class Wrapper {
 

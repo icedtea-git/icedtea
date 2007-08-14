@@ -1,3 +1,12 @@
+2007-08-14  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-copy-plugs.patch: Removed patch to add Wrapper
+	import.
+	* rt/com/sun/script/javascript/NativeJavaClass.java: Fixed Wrapper
+	import.
+	* rt/sun/org/mozilla/javascript/internal/Wrapper.java: New file.
+	* rt/javax/script/Wrapper.java: Moved file to correct location.
+
 2007-08-13  Francis Kung  <fkung@redhat.com>
 
 	* patches/icedtea-ecj-bootstrap.patch: Remove bootstrap requirement

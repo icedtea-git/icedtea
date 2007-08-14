@@ -37,7 +37,7 @@ exception statement from your version.
 
 package com.sun.script.javascript;
 
-import javax.script.Wrapper;
+import sun.org.mozilla.javascript.internal.Wrapper;
 
 public class NativeJavaClass extends Wrapper {
 
