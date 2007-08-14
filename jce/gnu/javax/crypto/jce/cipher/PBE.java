@@ -107,12 +107,17 @@ public abstract class PBE
         PBEParameterSpec ps = (PBEParameterSpec) params;
         // it must share the same salt and iteration count as the secret key
         int c2 = ps.getIterationCount();
-        if (c1 != c2)
+	if (c1 == 0)
+          c1 = c2;
+        else if (c1 != c2)
           throw new InvalidAlgorithmParameterException(
               "The algorithm-parameter-spec and the key MUST share the same "
               + "iteration count");
         byte[] s2 = ps.getSalt();
-        if ((s1 != null && s1.length > 0 && s2 == null)
+	// salt may be unspecified
+	if (s1 == null)
+	  s1 = s2;
+        else if ((s1 != null && s1.length > 0 && s2 == null)
             || (s1 == null && s2 != null && s2.length > 0)
             || (s1 != null && s2 != null && !Arrays.equals(s1, s2)))
           throw new InvalidAlgorithmParameterException(

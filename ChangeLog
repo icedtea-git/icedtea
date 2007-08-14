@@ -1,5 +1,14 @@
 2007-08-14  Lillian Angel  <langel@redhat.com>
 
+	* jce/gnu/javax/crypto/jce/GnuCrypto.java: Added Cipher Alias for
+	PBEWithMD5AndDES.
+	* jce/gnu/javax/crypto/jce/cipher/PBE.java: Added checks for
+	unspecified values.
+	* jce/javax/crypto/spec/PBEKeySpec.java: Fixed constructors according
+	to API.
+
+2007-08-14  Lillian Angel  <langel@redhat.com>
+
 	* patches/icedtea-copy-plugs.patch: Removed patch to add Wrapper
 	import.
 	* rt/com/sun/script/javascript/NativeJavaClass.java: Fixed Wrapper

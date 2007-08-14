@@ -318,6 +318,7 @@ public final class GnuCrypto
             gnu.javax.crypto.jce.cipher.PBES2.HMacWhirlpool.Twofish.class.getName());
         put("Cipher.PBE",
         		gnu.javax.crypto.jce.cipher.PBE.MD5.DES.class.getName());
+	put("Alg.Alias.Cipher.PBEWithMD5AndDES", "PBE");
 
         // Key Wrapping Algorithm cipher
         put("Cipher." + Registry.AES128_KWA,
