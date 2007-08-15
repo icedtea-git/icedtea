@@ -1,0 +1,99 @@
+--- genExceptions.sh.orig	2007-08-15 14:47:22.000000000 -0400
++++ openjdk/j2se/make/java/nio/genExceptions.sh	2007-08-15 14:49:01.000000000 -0400
+@@ -42,10 +42,28 @@
+ 
+   cat >$out <<__END__
+ /*
+- * Copyright 2007 by Sun Microsystems, Inc.  All Rights Reserved.
+- * 
+- * This software is the proprietary information of Sun Microsystems, Inc.  
+- * Use is subject to license terms.
++ * Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.  Sun designates this
++ * particular file as subject to the "Classpath" exception as provided
++ * by Sun in the LICENSE file that accompanied this code.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
+  */
+ 
+ // -- This file was mechanically generated: Do not edit! -- //
+--- jvmtiLib.xsl.orig	2007-08-15 14:52:28.000000000 -0400
++++ openjdk/hotspot/src/share/vm/prims/jvmtiLib.xsl	2007-08-15 14:52:51.000000000 -0400
+@@ -58,8 +58,28 @@
+ #pragma ident "@(#)jvmtiLib.xsl	1.43 07/05/05 17:06:39 JVM"
+ #endif
+ /*
+- * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.
+- * SUN PROPRIETARY/CONFIDENTIAL.  Use is subject to license terms.
++ * Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.  Sun designates this
++ * particular file as subject to the "Classpath" exception as provided
++ * by Sun in the LICENSE file that accompanied this code.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
+  */
+ 
+     /* AUTOMATICALLY GENERATED FILE - DO NOT EDIT */
+@@ -72,8 +92,28 @@
+ #pragma ident "@(#)jvmtiLib.xsl	1.43 07/05/05 17:06:39 JVM"
+ #endif
+ /*
+- * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.
+- * SUN PROPRIETARY/CONFIDENTIAL.  Use is subject to license terms.
++ * Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.  Sun designates this
++ * particular file as subject to the "Classpath" exception as provided
++ * by Sun in the LICENSE file that accompanied this code.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
+  */
+ 
+   // AUTOMATICALLY GENERATED FILE - DO NOT EDIT

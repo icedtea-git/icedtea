@@ -36,20 +36,26 @@ resultant tree with more replacement code from GNU Classpath.
 Following that, we fixed each remaining build error by creating the
 simplest possible stub code.
 
-A Note about the Generated Code
--------------------------------
+A Note about License Headers
+----------------------------
 
-Some of the code generated from sources from openjdk.java.net, and
-required to build these plug replacements, is of questionable
-licensing (that is, Sun likely forgot to change some headers).  These
-files are:
+Many sources downloaded from openjdk.java.net do not display the GPL license
+header. Instances are:
 
- - generated/java/nio/*Exception.java
- - generated/java/nio/channel/*Exception.java
- - generated/java/nio/charset/*Exception.java
- - generated/sun/nio/cs/*Exception.java
- - generated/sun/util/resources/*
+ - The files in openjdk/j2se/src/share/classes/javax/xml/stream/ seem to 
+   comprise the BEA-StAX source code[1] with some Sun-specific modifications. 
+   We're operating under the assumptions that Sun is bundling BEA-StAX under 
+   the terms of the Apache License 2.0 and that the modifications are owned
+   by Sun. 
+       1. http://ftpna2.bea.com/pub/downloads/jsr173.jar
+ - We are assuming that these files are owned by Sun: 
+   openjdk/j2se/src/share/classes/**/resources/*.properties
 
-To be on the safe side, these files are not distributed in IcedTea,
-but will be generated from the source code downloaded from
-openjdk.java.net, as needed during the build.
+
+The downloaded sources include two scripts that insert proprietary license 
+headers into some generated source files. The scripts themselves are GPL'd,
+so we patched them to emit the GPL header. These files are:
+
+ - openjdk/j2se/make/java/nio/genExceptions.sh
+ - openjdk/hotspot/src/share/vm/prims/jvmtiLib.xsl
+
