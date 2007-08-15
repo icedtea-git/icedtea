@@ -2,55 +2,50 @@ OPENJDK_VERSION = b17
 OPENJDK_DATE = 02_aug_2007
 OPENJDK_MD5SUM = ca74f5b3b3ef47e156074ade78839007
 
-OPENJDK_URL = \
-	http://download.java.net/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
+# Top-Level Targets
+# =================
+
+all-local: icedtea-against-icedtea
+
+distclean-local: clean-copy clean-exceptions clean-properties
+	rm -f download.stamp extract.stamp patch.stamp extract-ecj.stamp \
+	  patch-ecj.stamp bootstrap-directory.stamp \
+	  bootstrap-directory-symlink.stamp bootstrap-directory-ecj.stamp \
+	  bootstrap-directory-symlink-ecj.stamp icedtea-ecj.stamp \
+	  icedtea-against-ecj.stamp plugs.stamp copy-source-files.stamp \
+	  properties-source-files.stamp rt-class-files.stamp \
+	  jce-class-files.stamp
+	rm -f properties-files.txt rt-source-files.txt jce-source-files.txt
+	rm -rf bootstrap
+	rm -rf lib
+	rm -rf openjdk-ecj
+	rm -rf openjdk
+
+install:
+
+.PHONY: \
+	env env-ecj snapshot clean-download clean-extract clean-patch \
+	clean-extract-ecj clean-patch-ecj clean-bootstrap-directory \
+	clean-bootstrap-directory-symlink clean-bootstrap-directory-ecj \
+	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
+	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
+	clean-shared-objects clean-security-jars clean-exceptions clean-copy \
+	clean-properties clean-rt clean-jce
 
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
 
-if FAST_BUILD
-  FAST_BUILD_PATCH = patches/icedtea-speed.patch
-else
-  FAST_BUILD_PATCH =
-endif
-
-if USE_ALT_OPENJDK_SRC_ZIP
-  OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
-else
-  OPENJDK_SRC_ZIP = openjdk-7-ea-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).zip
-endif
-
-ICEDTEA_PATCHES = \
-	patches/icedtea-copy-plugs.patch \
-	patches/icedtea-version.patch \
-	patches/icedtea-text-relocations.patch \
-	patches/icedtea-graphics.patch \
-	patches/icedtea-antialias.patch \
-	patches/icedtea-paths.patch \
-	patches/icedtea-debuginfo.patch \
-	patches/icedtea-java.security.patch \
-	patches/icedtea-ssl.patch \
-	patches/icedtea-assembler_amd64.patch \
-	patches/icedtea-buildfix.patch \
-	$(FAST_BUILD_PATCH)
-
-ICEDTEA_ECJ_PATCH = \
-	patches/icedtea-ecj-bootstrap.patch
-
+# OpenJDK build environment.
+LINUX_DIR = linux-$(BUILD_ARCH_DIR)
 ICEDTEA_BUILD_DIR = \
-	$(abs_top_srcdir)/openjdk/control/build/linux-$(BUILD_ARCH_DIR)/
-
+	$(abs_top_srcdir)/openjdk/control/build/$(LINUX_DIR)/
 ICEDTEA_JCE = \
-	$(abs_top_srcdir)/openjdk/control/build/linux-$(BUILD_ARCH_DIR)/lib/jce.jar
-
+	$(abs_top_srcdir)/openjdk/control/build/$(LINUX_DIR)/lib/jce.jar
 ICEDTEA_RT = \
 	$(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/rt.jar
-
 ICEDTEA_CLS_DIR = \
-	$(abs_top_srcdir)/openjdk/control/build/linux-$(BUILD_ARCH_DIR)/classes
-
+	$(abs_top_srcdir)/openjdk/control/build/$(LINUX_DIR)/classes
 ICEDTEA_ENDORSED_DIR = \
 	$(abs_top_srcdir)/bootstrap/jdk1.6.0/lib/endorsed
-
 ICEDTEA_ENV = \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
@@ -72,162 +67,422 @@ ICEDTEA_ENV = \
 	"LD_LIBRARY_PATH= " \
 	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)"
 
+env:
+	@echo 'export $(ICEDTEA_ENV)'
+
+# OpenJDK ecj build environment.
+ICEDTEA_BUILD_DIR_ECJ = \
+	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/
+ICEDTEA_JCE_ECJ = \
+	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/lib/jce.jar
+ICEDTEA_CLS_DIR_ECJ = \
+	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/classes
+ICEDTEA_ENV_ECJ = \
+	"LANG=C" \
+	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
+	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
+	"ALT_CLOSED_JDK_IMPORT_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
+	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
+	"LIBGCJ_JAR=$(LIBGCJ_JAR)" \
+	"ICEDTEA_JCE=$(ICEDTEA_JCE_ECJ)" \
+	"ICEDTEA_RT=$(ICEDTEA_RT)" \
+	"ICEDTEA_BUILD_DIR=$(ICEDTEA_BUILD_DIR_ECJ)" \
+	"ICEDTEA_CLS_DIR=$(ICEDTEA_CLS_DIR_ECJ)" \
+	"ICEDTEA_ENDORSED_DIR=$(ICEDTEA_ENDORSED_DIR)" \
+	"ENDORSED=-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
+	"BOOTCLASSPATH_CLS_RT=-bootclasspath \
+	  $(ICEDTEA_CLS_DIR_ECJ):$(ICEDTEA_RT)" \
+	"BOOTCLASSPATH_CLS=-bootclasspath $(ICEDTEA_CLS_DIR_ECJ)" \
+	"BOOTCLASSPATH_RT_LIBGCJ=-bootclasspath $(ICEDTEA_RT):$(LIBGCJ_JAR)" \
+	"CLASSPATH= " \
+	"JAVA_HOME= " \
+	"LD_LIBRARY_PATH= " \
+	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)"
+
+env-ecj:
+	@echo 'export $(ICEDTEA_ENV_ECJ)'
+
+# Mercurial snapshot.
+snapshot: dist
+	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
+
+# OpenJDK Source Preparation Targets
+# ==================================
+
+# Download OpenJDK sources.
+OPENJDK_URL = http://download.java.net/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
+
+if USE_ALT_OPENJDK_SRC_ZIP
+  OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
+else
+  OPENJDK_SRC_ZIP = openjdk-7-ea-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).zip
+endif
+
+download.stamp:
+	rm -f download.stamp
+	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) ; \
+	fi
+	touch download.stamp
+
+clean-download:
+	rm -f download.stamp
+	rm -f $(OPENJDK_SRC_ZIP)
+
+# Extract OpenJDK sources.
+extract.stamp: download.stamp
+	if ! test -d openjdk ; \
+	then \
+	  $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
+	fi
+	touch extract.stamp
+
+clean-extract:
+	rm -f extract.stamp
+	rm -rf openjdk
+
+# Patch OpenJDK sources for plug replacements.
+if FAST_BUILD
+  FAST_BUILD_PATCH = patches/icedtea-speed.patch
+else
+  FAST_BUILD_PATCH =
+endif
+
+ICEDTEA_PATCHES = \
+	patches/icedtea-copy-plugs.patch \
+	patches/icedtea-version.patch \
+	patches/icedtea-text-relocations.patch \
+	patches/icedtea-graphics.patch \
+	patches/icedtea-antialias.patch \
+	patches/icedtea-paths.patch \
+	patches/icedtea-debuginfo.patch \
+	patches/icedtea-java.security.patch \
+	patches/icedtea-ssl.patch \
+	patches/icedtea-assembler_amd64.patch \
+	patches/icedtea-buildfix.patch \
+	$(FAST_BUILD_PATCH)
+
+patch.stamp: extract.stamp
+	for p in $(ICEDTEA_PATCHES) ; \
+	do \
+	  echo Checking $$p ; \
+	  if $(PATCH) -p0 --dry-run -s -t -f -F 0 < $$p ; \
+	  then \
+	    echo Applying $$p ; \
+	    $(PATCH) -p0 < $$p ; \
+	  fi ; \
+	done
+	touch patch.stamp
+
+clean-patch:
+	rm -f patch.stamp
+	for p in $(ICEDTEA_PATCHES) ; \
+	do \
+	  echo Checking $$p ; \
+	  if $(PATCH) -p0 -R --dry-run -s -t -f < $$p ; \
+	  then \
+	    echo Reverting $$p ; \
+	    $(PATCH) -p0 -R < $$p ; \
+	  fi ; \
+	done
+
+# OpenJDK ecj Source Preparation Targets
+# ======================================
+
+# Extract OpenJDK sources for ecj.
+extract-ecj.stamp: download.stamp
+	if ! test -d openjdk-ecj ; \
+	then \
+	  mkdir tmp-ecj ; \
+	  $(UNZIP) -q -d tmp-ecj $(OPENJDK_SRC_ZIP) ; \
+	  mv tmp-ecj/openjdk openjdk-ecj ; \
+	  rmdir tmp-ecj ; \
+	fi
+	touch extract-ecj.stamp
+
+clean-extract-ecj:
+	rm -f extract-ecj.stamp
+	rm -rf openjdk-ecj
+
+# Patch OpenJDK for plug replacements and ecj.
+ICEDTEA_ECJ_PATCH = patches/icedtea-ecj-bootstrap.patch
+
+patch-ecj.stamp: extract-ecj.stamp
+	for p in $(ICEDTEA_PATCHES) ; \
+	do \
+	  echo Checking $$p ; \
+	  if $(PATCH) -p1 -d openjdk-ecj --dry-run -s -t -f -F 0 < $$p ; \
+	  then \
+	    echo Applying $$p ; \
+	    $(PATCH) -p1 -d openjdk-ecj < $$p ; \
+	  fi ; \
+	done
+	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
+	if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
+	then \
+	  echo Applying $(ICEDTEA_ECJ_PATCH) ; \
+	  $(PATCH) -p0 < $(ICEDTEA_ECJ_PATCH) ; \
+	fi
+	touch patch-ecj.stamp
+
+clean-patch-ecj:
+	rm -f patch-ecj.stamp
+	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
+	if $(PATCH) -p0 -R --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
+	then \
+	  echo Reverting $(ICEDTEA_ECJ_PATCH) ; \
+	  $(PATCH) -p0 -R < $(ICEDTEA_ECJ_PATCH) ; \
+	fi
+	for p in $(ICEDTEA_PATCHES) ; \
+	do \
+	  echo Checking $$p ; \
+	  if $(PATCH) -p1 -d openjdk-ecj -R --dry-run -s -t -f < $$p ; \
+	  then \
+	    echo Reverting $$p ; \
+	    $(PATCH) -p1 -d openjdk-ecj -R < $$p ; \
+	  fi ; \
+	done
+
+# Bootstrap Directory Targets
+# ===========================
+
+# bootstrap/icedtea.
+bootstrap-directory.stamp: icedtea-against-ecj.stamp
+	rm -rf bootstrap/icedtea
+	cp -a openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image \
+	  bootstrap/icedtea
+	touch bootstrap-directory.stamp
+
+clean-bootstrap-directory:
+	rm -f bootstrap-directory.stamp
+	rm -rf bootstrap/icedtea
+
+# bootstrap/jdk1.6.0 to bootstrap/icedtea symlink.
+bootstrap-directory-symlink.stamp: bootstrap-directory.stamp
+	rm -f bootstrap/jdk1.6.0
+	ln -sf icedtea bootstrap/jdk1.6.0
+	touch bootstrap-directory-symlink.stamp
+
+clean-bootstrap-directory-symlink:
+	rm -f bootstrap-directory-symlink.stamp
+	rm -f bootstrap/jdk1.6.0
+
+# Bootstrap ecj Directory Targets
+# ===============================
+
+# bootstrap/ecj.
+bootstrap-directory-ecj.stamp:
+	mkdir -p bootstrap/ecj/bin
+	ln -sf $(JAVA) bootstrap/ecj/bin/java
+	ln -sf $(JAVAH) bootstrap/ecj/bin/javah
+	ln -sf $(RMIC) bootstrap/ecj/bin/rmic
+	ln -sf $(JAR) bootstrap/ecj/bin/jar
+	ln -sf ../../../javac bootstrap/ecj/bin/javac
+	ln -sf ../../../javap bootstrap/ecj/bin/javap
+	mkdir -p bootstrap/ecj/lib/endorsed
+	ln -sf $(XALAN2_JAR) bootstrap/ecj/lib/endorsed/xalan-j2.jar
+	ln -sf $(XALAN2_SERIALIZER_JAR) \
+	  bootstrap/ecj/lib/endorsed/xalan-j2-serializer.jar
+	ln -sf $(XERCES2_JAR) bootstrap/ecj/lib/endorsed/xerces-j2.jar
+	touch bootstrap-directory-ecj.stamp
+
+clean-bootstrap-directory-ecj:
+	rm -f bootstrap-directory-ecj.stamp
+	rm -rf bootstrap/ecj
+
+# bootstrap/jdk1.6.0 to bootstrap/ecj symlink.
+bootstrap-directory-symlink-ecj.stamp: bootstrap-directory-ecj.stamp
+	rm -f bootstrap/jdk1.6.0
+	ln -sf ecj bootstrap/jdk1.6.0
+	touch bootstrap-directory-symlink-ecj.stamp
+
+clean-bootstrap-directory-symlink-ecj:
+	rm -f bootstrap-directory-symlink-ecj.stamp
+	rm -f bootstrap/jdk1.6.0
+
+
+# OpenJDK Targets
+# ===============
+
+icedtea: plugs.stamp extract.stamp patch.stamp
+	$(MAKE) \
+	  $(ICEDTEA_ENV) \
+	  -C openjdk/control/make
+	@echo "IcedTea is served:" openjdk/control/build/$(LINUX_DIR)
+
+icedtea-debug: plugs.stamp extract.stamp patch.stamp
+	$(MAKE) \
+	  $(ICEDTEA_ENV) \
+	  -C openjdk/control/make \
+	  debug_build
+	@echo "Debug-flavoured IcedTea is served:" \
+	  openjdk/control/build/$(LINUX_DIR)-debug
+
+clean-icedtea: extract.stamp
+	$(MAKE) \
+	  $(ICEDTEA_ENV) \
+	  -C openjdk/control/make clobber
+
+icedtea-against-icedtea: \
+	bootstrap-directory-symlink.stamp \
+	icedtea
+
+# OpenJDK ecj Targets
+# ===================
+
+icedtea-ecj.stamp: plugs.stamp extract-ecj.stamp patch-ecj.stamp
+	$(MAKE) \
+	  $(ICEDTEA_ENV_ECJ) \
+	  -C openjdk-ecj/control/make
+	@echo "ecj-poured IcedTea is served:" \
+	  openjdk-ecj/control/build/$(LINUX_DIR)
+	touch icedtea-ecj.stamp
+
+clean-icedtea-ecj: extract-ecj.stamp
+	rm -f icedtea-ecj.stamp
+	$(MAKE) \
+	  $(ICEDTEA_ENV_ECJ) \
+	  -C openjdk-ecj/control/make clobber
+
+icedtea-against-ecj.stamp: \
+	bootstrap-directory-symlink-ecj.stamp \
+	icedtea-ecj.stamp
+	touch icedtea-against-ecj.stamp
+
+# Binary Plugs Targets
+# ====================
+
+plugs.stamp: $(SHARED_OBJECT_FILES) $(SECURITY_JAR_FILES) \
+	bootstrap/jdk1.7.0/jre/lib/rt.jar \
+	bootstrap/jdk1.7.0/jre/lib/jce.jar
+	touch plugs.stamp
+
+clean-plugs: clean-plugs clean-shared-objects clean-security-jars \
+	clean-exceptions clean-copy clean-properties clean-rt clean-jce
+	rm -f plugs.stamp
+	rm -f bootstrap/jdk1.7.0/jre/lib/rt.jar
+	rm -f bootstrap/jdk1.7.0/jre/lib/jce.jar
+
+# Shared objects.
+SHARED_OBJECT_FILES = \
+	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libdcpr.so \
+	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libjsoundalsa.so \
+	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libjsound.so \
+	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libt2k.so
+
+$(SHARED_OBJECT_FILES):
+	mkdir -p bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)
+	for shared_object in $(SHARED_OBJECT_FILES) ; \
+	do \
+	  echo | $(CC) -shared -fPIC \
+	    -o $$shared_object \
+	    -Wl,-soname,$$shared_object -xc - ; \
+	done
+
+clean-shared-objects:
+	rm -f $(SHARED_OBJECT_FILES)
+
+# Security JAR files.
+SECURITY_JAR_FILES = \
+	bootstrap/jdk1.7.0/jre/lib/ext/sunjce_provider.jar \
+	bootstrap/jdk1.7.0/jre/lib/security/local_policy.jar \
+	bootstrap/jdk1.7.0/jre/lib/security/US_export_policy.jar
+
+$(SECURITY_JAR_FILES):
+	mkdir -p bootstrap/jdk1.7.0/jre/lib/ext
+	mkdir -p bootstrap/jdk1.7.0/jre/lib/security
+	for security_jar in $(SECURITY_JAR_FILES) ; \
+	do \
+	  $(JAR) cf $$security_jar ; \
+	done
+
+clean-security-jars:
+	rm -f $(SECURITY_JAR_FILES)
+
+# Sources generated by OpenJDK genExceptions.sh scripts.
+EXCEPTION_SOURCE_FILES = \
+	generated/java/nio/channels/ClosedChannelException.java \
+	generated/java/nio/channels/FileLockInterruptionException.java \
+	generated/java/nio/channels/AsynchronousCloseException.java \
+	generated/java/nio/channels/ClosedByInterruptException.java \
+	generated/java/nio/channels/IllegalSelectorException.java \
+	generated/java/nio/channels/UnresolvedAddressException.java \
+	generated/java/nio/channels/UnsupportedAddressTypeException.java \
+	generated/java/nio/channels/AlreadyConnectedException.java \
+	generated/java/nio/channels/ConnectionPendingException.java \
+	generated/java/nio/channels/ClosedSelectorException.java \
+	generated/java/nio/channels/CancelledKeyException.java \
+	generated/java/nio/channels/IllegalBlockingModeException.java \
+	generated/java/nio/channels/NoConnectionPendingException.java \
+	generated/java/nio/channels/NonReadableChannelException.java \
+	generated/java/nio/channels/NonWritableChannelException.java \
+	generated/java/nio/channels/NotYetBoundException.java \
+	generated/java/nio/channels/NotYetConnectedException.java \
+	generated/java/nio/channels/OverlappingFileLockException.java \
+	generated/java/nio/charset/CharacterCodingException.java \
+	generated/java/nio/charset/IllegalCharsetNameException.java \
+	generated/java/nio/charset/UnsupportedCharsetException.java \
+	generated/java/nio/BufferOverflowException.java \
+	generated/java/nio/BufferUnderflowException.java \
+	generated/java/nio/InvalidMarkException.java \
+	generated/java/nio/ReadOnlyBufferException.java \
+	generated/sun/nio/ch/AlreadyBoundException.java
+
+$(EXCEPTION_SOURCE_FILES): extract.stamp patch.stamp \
+	openjdk/j2se/src/share/classes/java/nio/channels/exceptions \
+	openjdk/j2se/src/share/classes/java/nio/charset/exceptions \
+	openjdk/j2se/src/share/classes/java/nio/exceptions \
+	openjdk/j2se/src/share/classes/sun/nio/ch/exceptions
+	$(SHELL) openjdk/j2se/make/java/nio/genExceptions.sh \
+	  openjdk/j2se/src/share/classes/java/nio/channels/exceptions \
+	  generated/java/nio/channels
+	$(SHELL) openjdk/j2se/make/java/nio/genExceptions.sh \
+	  openjdk/j2se/src/share/classes/java/nio/charset/exceptions \
+	  generated/java/nio/charset
+	$(SHELL) openjdk/j2se/make/java/nio/genExceptions.sh \
+	  openjdk/j2se/src/share/classes/java/nio/exceptions \
+	  generated/java/nio
+	$(SHELL) openjdk/j2se/make/java/nio/genExceptions.sh \
+	  openjdk/j2se/src/share/classes/sun/nio/ch/exceptions \
+	  generated/sun/nio/ch
+
+clean-exceptions:
+	rm -f $(EXCEPTION_SOURCE_FILES)
+
+# Sources copied from OpenJDK.
 ICEDTEA_COPY_DIRS = \
-	rt/com/sun/jdi \
-	rt/com/sun/jdi/connect \
-	rt/com/sun/jdi/connect/spi \
-	rt/com/sun/jdi/event \
-	rt/com/sun/jdi/request \
-	rt/com/sun/tools \
-	rt/com/sun/tools/jdi \
-	rt/com/sun/jmx/snmp/agent/ \
-	rt/java/security/cert/ \
-	rt/javax/security/sasl/ \
-	rt/javax/security/auth/ \
-	rt/javax/security/auth/callback/ \
-	rt/java/util/
+	com/sun/jdi \
+	com/sun/jdi/connect \
+	com/sun/jdi/connect/spi \
+	com/sun/jdi/event \
+	com/sun/jdi/request \
+	com/sun/jmx/snmp/agent \
+	com/sun/tools/jdi \
+	java/security/cert \
+	java/util \
+	javax/security/auth \
+	javax/security/auth/callback \
+	javax/security/sasl
 
-ICEDTEA_COPY_SRC = \
-	com/sun/jmx/snmp/agent/SnmpMib.java \
-	com/sun/jdi/AbsentInformationException.java \
-	com/sun/jdi/Accessible.java \
-	com/sun/jdi/ArrayReference.java \
-	com/sun/jdi/ArrayType.java \
-	com/sun/jdi/BooleanType.java \
-	com/sun/jdi/BooleanValue.java \
-	com/sun/jdi/Bootstrap.java \
-	com/sun/jdi/ByteType.java \
-	com/sun/jdi/ByteValue.java \
-	com/sun/jdi/CharType.java \
-	com/sun/jdi/CharValue.java \
-	com/sun/jdi/ClassLoaderReference.java \
-	com/sun/jdi/ClassNotLoadedException.java \
-	com/sun/jdi/ClassNotPreparedException.java \
-	com/sun/jdi/ClassObjectReference.java \
-	com/sun/jdi/ClassType.java \
-	com/sun/jdi/connect/AttachingConnector.java \
-	com/sun/jdi/connect/Connector.java \
-	com/sun/jdi/connect/IllegalConnectorArgumentsException.java \
-	com/sun/jdi/connect/LaunchingConnector.java \
-	com/sun/jdi/connect/ListeningConnector.java \
-	com/sun/jdi/connect/spi/ClosedConnectionException.java \
-	com/sun/jdi/connect/spi/Connection.java \
-	com/sun/jdi/connect/spi/TransportService.java \
-	com/sun/jdi/connect/Transport.java \
-	com/sun/jdi/connect/TransportTimeoutException.java \
-	com/sun/jdi/connect/VMStartException.java \
-	com/sun/jdi/DoubleType.java \
-	com/sun/jdi/DoubleValue.java \
-	com/sun/jdi/event/AccessWatchpointEvent.java \
-	com/sun/jdi/event/BreakpointEvent.java \
-	com/sun/jdi/event/ClassPrepareEvent.java \
-	com/sun/jdi/event/ClassUnloadEvent.java \
-	com/sun/jdi/event/EventIterator.java \
-	com/sun/jdi/event/Event.java \
-	com/sun/jdi/event/EventQueue.java \
-	com/sun/jdi/event/EventSet.java \
-	com/sun/jdi/event/ExceptionEvent.java \
-	com/sun/jdi/event/LocatableEvent.java \
-	com/sun/jdi/event/MethodEntryEvent.java \
-	com/sun/jdi/event/MethodExitEvent.java \
-	com/sun/jdi/event/ModificationWatchpointEvent.java \
-	com/sun/jdi/event/MonitorContendedEnteredEvent.java \
-	com/sun/jdi/event/MonitorContendedEnterEvent.java \
-	com/sun/jdi/event/MonitorWaitedEvent.java \
-	com/sun/jdi/event/MonitorWaitEvent.java \
-	com/sun/jdi/event/StepEvent.java \
-	com/sun/jdi/event/ThreadDeathEvent.java \
-	com/sun/jdi/event/ThreadStartEvent.java \
-	com/sun/jdi/event/VMDeathEvent.java \
-	com/sun/jdi/event/VMDisconnectEvent.java \
-	com/sun/jdi/event/VMStartEvent.java \
-	com/sun/jdi/event/WatchpointEvent.java \
-	com/sun/jdi/Field.java \
-	com/sun/jdi/FloatType.java \
-	com/sun/jdi/FloatValue.java \
-	com/sun/jdi/IncompatibleThreadStateException.java \
-	com/sun/jdi/InconsistentDebugInfoException.java \
-	com/sun/jdi/IntegerType.java \
-	com/sun/jdi/IntegerValue.java \
-	com/sun/jdi/InterfaceType.java \
-	com/sun/jdi/InternalException.java \
-	com/sun/jdi/InvalidCodeIndexException.java \
-	com/sun/jdi/InvalidLineNumberException.java \
-	com/sun/jdi/InvalidStackFrameException.java \
-	com/sun/jdi/InvalidTypeException.java \
-	com/sun/jdi/InvocationException.java \
-	com/sun/jdi/JDIPermission.java \
-	com/sun/jdi/LocalVariable.java \
-	com/sun/jdi/Locatable.java \
-	com/sun/jdi/Location.java \
-	com/sun/jdi/LongType.java \
-	com/sun/jdi/LongValue.java \
-	com/sun/jdi/Method.java \
-	com/sun/jdi/Mirror.java \
-	com/sun/jdi/MonitorInfo.java \
-	com/sun/jdi/NativeMethodException.java \
-	com/sun/jdi/ObjectCollectedException.java \
-	com/sun/jdi/ObjectReference.java \
-	com/sun/jdi/PathSearchingVirtualMachine.java \
-	com/sun/jdi/PrimitiveType.java \
-	com/sun/jdi/PrimitiveValue.java \
-	com/sun/jdi/ReferenceType.java \
-	com/sun/jdi/request/AccessWatchpointRequest.java \
-	com/sun/jdi/request/BreakpointRequest.java \
-	com/sun/jdi/request/ClassPrepareRequest.java \
-	com/sun/jdi/request/ClassUnloadRequest.java \
-	com/sun/jdi/request/DuplicateRequestException.java \
-	com/sun/jdi/request/EventRequest.java \
-	com/sun/jdi/request/EventRequestManager.java \
-	com/sun/jdi/request/ExceptionRequest.java \
-	com/sun/jdi/request/InvalidRequestStateException.java \
-	com/sun/jdi/request/MethodEntryRequest.java \
-	com/sun/jdi/request/MethodExitRequest.java \
-	com/sun/jdi/request/ModificationWatchpointRequest.java \
-	com/sun/jdi/request/MonitorContendedEnteredRequest.java \
-	com/sun/jdi/request/MonitorContendedEnterRequest.java \
-	com/sun/jdi/request/MonitorWaitedRequest.java \
-	com/sun/jdi/request/MonitorWaitRequest.java \
-	com/sun/jdi/request/StepRequest.java \
-	com/sun/jdi/request/ThreadDeathRequest.java \
-	com/sun/jdi/request/ThreadStartRequest.java \
-	com/sun/jdi/request/VMDeathRequest.java \
-	com/sun/jdi/request/WatchpointRequest.java \
-	com/sun/jdi/ShortType.java \
-	com/sun/jdi/ShortValue.java \
-	com/sun/jdi/StackFrame.java \
-	com/sun/jdi/StringReference.java \
-	com/sun/jdi/ThreadGroupReference.java \
-	com/sun/jdi/ThreadReference.java \
-	com/sun/jdi/TypeComponent.java \
-	com/sun/jdi/Type.java \
-	com/sun/jdi/Value.java \
-	com/sun/jdi/VirtualMachine.java \
-	com/sun/jdi/VirtualMachineManager.java \
-	com/sun/jdi/VMCannotBeModifiedException.java \
-	com/sun/jdi/VMDisconnectedException.java \
-	com/sun/jdi/VMMismatchException.java \
-	com/sun/jdi/VMOutOfMemoryException.java \
-	com/sun/jdi/VoidType.java \
-	com/sun/jdi/VoidValue.java \
-	com/sun/tools/jdi/LinkedHashMap.java \
-	java/util/Observer.java \
-	java/util/Timer.java \
-	java/security/cert/CertPathValidator.java \
-	javax/security/sasl/SaslException.java \
-	javax/security/sasl/AuthenticationException.java \
-	javax/security/auth/callback/NameCallback.java \
-	javax/security/sasl/Sasl.java \
-	javax/security/sasl/SaslServer.java \
-	javax/security/sasl/SaslClient.java \
-	javax/security/sasl/SaslClientFactory.java \
-	javax/security/sasl/SaslServerFactory.java \
-	javax/security/auth/callback/ChoiceCallback.java \
-	javax/security/auth/callback/ConfirmationCallback.java \
-	javax/security/auth/callback/LanguageCallback.java \
-	javax/security/auth/callback/TextInputCallback.java \
-	javax/security/auth/callback/TextOutputCallback.java
+copy-source-files.stamp: extract.stamp patch.stamp
+	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
+	do \
+	  mkdir -p rt/$$copy_dir ; \
+	  cp -af openjdk/j2se/src/share/classes/$$copy_dir/*.java \
+	    rt/$$copy_dir ; \
+	done
+	touch copy-source-files.stamp
 
+clean-copy:
+	rm -f copy-source-files.stamp
+	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
+	do \
+	  rm -rf rt/$$copy_dir ; \
+	done
+
+# Sources generated from OpenJDK properties files.
 if FOUND_ECJ
   JCOMPILER = $(ECJ) -nowarn
 else
@@ -236,271 +491,73 @@ if FOUND_JAVAC
 endif
 endif
 
-copy: extract
-	mkdir -p $(ICEDTEA_COPY_DIRS)
-	for f in $(ICEDTEA_COPY_SRC) ; \
+lib/CompileProperties.class: \
+	openjdk/j2se/make/tools/CompileProperties/CompileProperties.java
+	$(JCOMPILER) -g -d lib -target 1.5 -source 1.5 \
+	  -sourcepath openjdk/j2se/make/tools/CompileProperties $<
+
+properties-files.txt: extract.stamp
+	find openjdk/j2se/src/share/classes/sun/util/resources \
+	  -name '*.properties' > $@
+
+properties-source-files.stamp: patch.stamp properties-files.txt \
+	lib/CompileProperties.class
+	for properties_file in `cat properties-files.txt` ; \
 	do \
-	  cp -rf openjdk/j2se/src/share/classes/$$f rt/$$f ; \
+	  properties_basename=`basename $$properties_file .properties` ; \
+	  $(JAVA) -classpath lib CompileProperties \
+	    $$properties_file \
+	    generated/sun/util/resources/$$properties_basename.java \
+	    LocaleNamesBundle ; \
 	done
+	touch properties-source-files.stamp
 
-uncopy:
-	for f in $(ICEDTEA_COPY_SRC) ; \
-	do \
-	  rm -f rt/$$f ; \
-	done
-	for d in $(ICEDTEA_COPY_DIRS) ; \
-	do \
-	  if test -d $$d ; \
-	  then \
-	    rmdir --ignore-fail-on-non-empty -p $(ICEDTEA_COPY_DIRS) ; \
-	  fi ; \
-	done
-
-patch: extract
-	for p in $(ICEDTEA_PATCHES) ; \
-	do \
-	  echo Checking $$p ; \
-	  if $(PATCH) -p0 --dry-run -s -t -f -F 0 < $$p ; \
-	  then \
-	    echo Applying $$p ; \
-	    $(PATCH) -p0 < $$p ; \
-	  else \
-	    : ; \
-	  fi ; \
-	done
-
-unpatch: unpatchecj
-	for p in $(ICEDTEA_PATCHES) ; \
-	do \
-	  echo Checking $$p ; \
-	  if $(PATCH) -p0 -R --dry-run -s -t -f < $$p ; \
-	  then \
-	    echo Reverting $$p ; \
-	    $(PATCH) -p0 -R < $$p ; \
-	  else \
-	    : ; \
-	  fi ; \
-	done
-
-patchecj: patch
-	echo Checking $$p ; \
-	if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
-	then \
-	  echo Applying $$p ; \
-	  $(PATCH) -p0 < $(ICEDTEA_ECJ_PATCH) ; \
-	fi
-
-unpatchecj:
-	echo Checking $$p ; \
-	if $(PATCH) -p0 -R --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
-	then \
-	  echo Reverting $$p ; \
-	  $(PATCH) -p0 -R < $(ICEDTEA_ECJ_PATCH) ; \
-	fi
-
-extract: download
-	if test -d openjdk; \
-	then \
-	  : ; \
-	else \
-	  $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
-	fi
-
-unextract:
-	rm -rf openjdk
-
-download:
-	if echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" | $(MD5SUM) --check; \
-	then \
-	  : ; \
-	else \
-	  rm -f $(OPENJDK_SRC_ZIP) ; \
-	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) ; \
-	fi
-
-undownload:
-	rm -f $(OPENJDK_SRC_ZIP)
-
-clobber: extract
-	$(MAKE) \
-	  $(ICEDTEA_ENV) \
-	  -C openjdk/control/make clobber
-
-env:
-	@echo 'export $(ICEDTEA_ENV)'
-
-boot:
-	mkdir -p bootstrap/jdk1.6.0/bin
-	mkdir -p bootstrap/jdk1.6.0/lib/endorsed	
-	if ! test -f bootstrap/jdk1.6.0/bin/java; \
-	then \
-		ln -s $(JAVA) bootstrap/jdk1.6.0/bin/java; \
-	fi; \
-	if ! test -f bootstrap/jdk1.6.0/bin/javah; \
-	then \
-		ln -s $(JAVAH) bootstrap/jdk1.6.0/bin/javah; \
-	fi; \
-	if ! test -f bootstrap/jdk1.6.0/bin/rmic; \
-	then \
-		ln -s $(RMIC) bootstrap/jdk1.6.0/bin/rmic; \
-	fi; \
-	if ! test -f bootstrap/jdk1.6.0/bin/jar; \
-	then \
-		ln -s $(JAR) bootstrap/jdk1.6.0/bin/jar; \
-	fi; \
-	if ! test -f bootstrap/jdk1.6.0/bin/javac; \
-	then \
-		cp javac bootstrap/jdk1.6.0/bin/javac; \
-	fi; \
-	if ! test -f bootstrap/jdk1.6.0/bin/javap; \
-	then \
-		cp javap bootstrap/jdk1.6.0/bin/javap; \
-	fi;
-	ln -sf $(XALAN2_JAR) bootstrap/jdk1.6.0/lib/endorsed/xalan-j2.jar
-	ln -sf $(XALAN2_SERIALIZER_JAR) bootstrap/jdk1.6.0/lib/endorsed/xalan-j2-serializer.jar
-	ln -sf $(XERCES2_JAR) bootstrap/jdk1.6.0/lib/endorsed/xerces-j2.jar
-
-icedteaboot: all unboot
-	cp -a openjdk/control/build/linux-$(BUILD_ARCH_DIR)/j2sdk-image \
-	  bootstrap/jdk1.6.0
-
-unboot:
-	rm -rf bootstrap/jdk1.6.0
-
-plugs: lib/rt/rt.jar lib/jce/jce.jar
-	mkdir -p bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)
-	for l in libdcpr.so libjsoundalsa.so libjsound.so libt2k.so ; \
-	do \
-	  echo | $(CC) -shared -fPIC \
-	    -o bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/$$l \
-	    -Wl,-soname,libjawt.so -xc - ; \
-	done
-	mkdir -p bootstrap/jdk1.7.0/jre/lib/ext
-	touch empty_file
-	$(JAR) cf bootstrap/jdk1.7.0/jre/lib/ext/sunjce_provider.jar empty_file
-	mkdir -p bootstrap/jdk1.7.0/jre/lib/security
-	$(JAR) cf bootstrap/jdk1.7.0/jre/lib/security/local_policy.jar empty_file
-	$(JAR) cf bootstrap/jdk1.7.0/jre/lib/security/US_export_policy.jar empty_file
-	rm empty_file
-	cp -f lib/rt/rt.jar bootstrap/jdk1.7.0/jre/lib
-	cp -f lib/jce/jce.jar bootstrap/jdk1.7.0/jre/lib
-
-unplugs:
-	rm -rf bootstrap/jdk1.7.0
-
-icedtea:
-	$(MAKE) \
-	  $(ICEDTEA_ENV) \
-	  -C openjdk/control/make
-	@echo "IcedTea is served:" openjdk/control/build/linux-$(BUILD_ARCH_DIR)
-
-bootstrap: icedteaboot unpatchecj clobber
-	$(MAKE) \
-	  $(ICEDTEA_ENV) \
-	  -C openjdk/control/make
-	@echo "IcedTea re-served:" openjdk/control/build/linux-$(BUILD_ARCH_DIR)
-
-icedtea-debug:
-	$(MAKE) debug_build \
-	  $(ICEDTEA_ENV) \
-	  -C openjdk/control/make
-	@echo "IcedTea is served:" openjdk/control/build/linux-$(BUILD_ARCH_DIR)-debug
-
-snapshot: dist
-	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
-
-all-local: boot plugs patch patchecj icedtea
-
-clean-local:
-	rm -rf lib
-	rm -f rt-classes
-	rm -f jce-classes
-	rm -f generated/java/nio/*Exception.java
-	rm -f generated/java/nio/channels/*Exception.java
-	rm -f generated/java/nio/charset/*Exception.java
-	rm -f generated/sun/nio/ch/*Exception.java
+clean-properties:
 	rm -f generated/sun/util/resources/*
-	rm -f generated/gen-srcs.lst
+	rm -f properties-files.txt
+	rm -f properties-source-files.stamp
+	rm -f lib/CompileProperties.class
 
-distclean-local: uncopy unplugs unboot unextract
+# rt.jar class files.
+rt-source-files.txt: extract.stamp copy-source-files.stamp \
+	properties-source-files.stamp $(EXCEPTION_SOURCE_FILES)
+	find rt -name '*.java' | sort > $@
 
-lib/rt/rt.jar: rt-generate-sources rt-compile-classes copy
-	cd lib/rt ; \
-	  $(JAR) cf rt.jar com gnu java javax sun
+OPENJDK_SOURCEPATH_DIRS = \
+	openjdk/j2se/src/share/classes:openjdk/j2se/src/solaris/classes
 
-rt-classes: copy rt-generate-sources
-	cd rt ; \
-	  find . -name '*.java' -print > ../rt-classes
+rt-class-files.stamp: rt-source-files.txt
+	$(JCOMPILER) -g -d lib/rt -bootclasspath '' -source 1.6 \
+	  -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated:jce \
+	  @rt-source-files.txt
+	touch rt-class-files.stamp
 
-rt-compile-classes: rt-classes
-	mkdir -p lib/rt
-	cd rt ; \
-	  $(JCOMPILER) -g -d ../lib/rt -bootclasspath '' -source 1.6 \
-	    -sourcepath $(OPENJDK_SRC_DIR)/j2se/src/share/classes:$(OPENJDK_SRC_DIR)/j2se/src/solaris/classes:../generated:../jce \
-	    @../rt-classes
+clean-rt:
+	rm -rf lib/rt
+	rm -f rt-class-files.stamp
+	rm -f rt-source-files.txt
 
-rt-generate-sources: patch
-	@if test -e $(abs_top_srcdir)/generated/gen-srcs.lst; then \
-	  while read line; do \
-	    if ! test -e $$line; then \
-        echo $$line not FOUND!; \
-	      generate=true; \
-	    fi; \
-	  done < $(abs_top_srcdir)/generated/gen-srcs.lst; \
-	else \
-	  generate=true; \
-	fi; \
-	if ! test -z $$generate; then	\
-		echo Regenerating sources...; \
-	  mkdir -p generated/java/nio/channels; \
-		mkdir -p generated/java/nio/charset; \
-	  mkdir -p generated/sun/nio/ch; \
-	  $(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
-	    $(OPENJDK_SRC_DIR)/j2se/src/share/classes/java/nio/channels/exceptions \
-	    generated/java/nio/channels; \
-	  $(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
-	    $(OPENJDK_SRC_DIR)/j2se/src/share/classes/java/nio/charset/exceptions \
-	    generated/java/nio/charset; \
-	  $(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
-	    $(OPENJDK_SRC_DIR)/j2se/src/share/classes/java/nio/exceptions \
-	    generated/java/nio; \
-	  $(SHELL) $(OPENJDK_SRC_DIR)/j2se/make/java/nio/genExceptions.sh \
-	    $(OPENJDK_SRC_DIR)/j2se/src/share/classes/sun/nio/ch/exceptions \
-	    generated/sun/nio/ch; \
-	  mkdir -p $(abs_top_srcdir)/lib; \
-	  cd $(OPENJDK_SRC_DIR)/j2se/make/tools/CompileProperties; \
-	    $(JCOMPILER) -g -d ../../../../../lib -target 1.5 -source 1.5 CompileProperties.java; \
-	  mkdir -p $(abs_top_srcdir)/generated/sun/util/resources; \
-	  cd $(abs_top_srcdir)/lib ; \
-	    for FILE in `ls $(OPENJDK_SRC_DIR)/j2se/src/share/classes/sun/util/resources/*.properties`; do \
-	      export TMPVAR=$${FILE/%.properties/.java} ; \
-	      $(JAVA) -classpath . CompileProperties $$FILE \
-	        ../generated/sun/util/resources/$${TMPVAR##*/} \
-					LocaleNamesBundle ; \
-	    done; \
-	  find $(abs_top_srcdir)/generated -name *.java > \
-		$(abs_top_srcdir)/generated/gen-srcs.lst; \
-	else echo Generated sources found, continuing...; \
-	fi;
+# rt.jar.
+bootstrap/jdk1.7.0/jre/lib/rt.jar: rt-class-files.stamp
+	mkdir -p bootstrap/jdk1.7.0/jre/lib
+	$(JAR) cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
+	  -C lib/rt javax -C lib/rt sun
 
-jce-classes:
-	cd jce ; \
-	  find . -name '*.java' -print > ../jce-classes
+# jce.jar class files.
+jce-source-files.txt:
+	find jce -name '*.java' -print | sort > $@
 
-jce-compile-classes: jce-classes rt-classes
-	mkdir -p lib/jce
-	cd jce ; \
-	  $(JCOMPILER) -g -d ../lib/jce -source 1.6 -bootclasspath '' \
-	    -classpath ../lib/rt @../jce-classes
+jce-class-files.stamp: jce-source-files.txt rt-class-files.stamp
+	$(JCOMPILER) -g -d lib/jce -bootclasspath '' -source 1.6 \
+	  -classpath lib/rt @$<
+	touch jce-class-files.stamp
 
-lib/jce/jce.jar: jce-compile-classes
-	cd lib/jce ; \
-	  $(JAR) cf jce.jar gnu javax sun
+clean-jce:
+	rm -rf lib/jce
+	rm -f jce-class-files.stamp
+	rm -f jce-source-files.txt
 
-install:
-
-.PHONY: \
-	copy uncopy patch unpatch patchecj unpatchecj extract unextract \
-	download undownload clobber env boot icedteaboot unboot plugs unplugs \
-	icedtea bootstrap snapshot rt-compile-classes rt-generate-sources \
-	jce-compile-classes
+# jce.jar.
+bootstrap/jdk1.7.0/jre/lib/jce.jar: jce-class-files.stamp
+	mkdir -p bootstrap/jdk1.7.0/jre/lib
+	$(JAR) cf $@ -C lib/jce gnu -C lib/jce javax -C lib/jce sun

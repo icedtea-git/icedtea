@@ -1,6 +1,6 @@
-diff -urN openjdk.orig/hotspot/build/linux/Makefile openjdk/hotspot/build/linux/Makefile
---- openjdk.orig/hotspot/build/linux/Makefile	2007-05-06 05:01:26.000000000 -0400
-+++ openjdk/hotspot/build/linux/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/hotspot/build/linux/Makefile openjdk-ecj/hotspot/build/linux/Makefile
+--- openjdk-ecj.orig/hotspot/build/linux/Makefile	2007-08-02 03:16:18.000000000 -0400
++++ openjdk-ecj/hotspot/build/linux/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -241,28 +241,24 @@
  
  $(TARGETS_C2):  $(SUBDIRS_C2)
@@ -30,9 +30,9 @@ diff -urN openjdk.orig/hotspot/build/linux/Makefile openjdk/hotspot/build/linux/
  ifdef INSTALL
  	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS) install
  endif
-diff -urN openjdk.orig/hotspot/build/linux/makefiles/jvmti.make openjdk/hotspot/build/linux/makefiles/jvmti.make
---- openjdk.orig/hotspot/build/linux/makefiles/jvmti.make	2007-05-06 05:01:26.000000000 -0400
-+++ openjdk/hotspot/build/linux/makefiles/jvmti.make	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/hotspot/build/linux/makefiles/jvmti.make openjdk-ecj/hotspot/build/linux/makefiles/jvmti.make
+--- openjdk-ecj.orig/hotspot/build/linux/makefiles/jvmti.make	2007-08-02 03:16:18.000000000 -0400
++++ openjdk-ecj/hotspot/build/linux/makefiles/jvmti.make	2007-08-08 16:29:33.000000000 -0400
 @@ -57,7 +57,7 @@
  
  JvmtiGeneratedFiles = $(JvmtiGeneratedNames:%=$(JvmtiOutDir)/%)
@@ -42,9 +42,9 @@ diff -urN openjdk.orig/hotspot/build/linux/makefiles/jvmti.make openjdk/hotspot/
  
  .PHONY: all jvmtidocs clean cleanall
  
-diff -urN openjdk.orig/hotspot/build/linux/makefiles/rules.make openjdk/hotspot/build/linux/makefiles/rules.make
---- openjdk.orig/hotspot/build/linux/makefiles/rules.make	2007-05-06 05:01:27.000000000 -0400
-+++ openjdk/hotspot/build/linux/makefiles/rules.make	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/hotspot/build/linux/makefiles/rules.make openjdk-ecj/hotspot/build/linux/makefiles/rules.make
+--- openjdk-ecj.orig/hotspot/build/linux/makefiles/rules.make	2007-08-02 03:16:18.000000000 -0400
++++ openjdk-ecj/hotspot/build/linux/makefiles/rules.make	2007-08-08 16:29:33.000000000 -0400
 @@ -77,7 +77,7 @@
  RUN.JAVAP = $(ALT_BOOTDIR)/bin/javap
  RUN.JAVAH = $(ALT_BOOTDIR)/bin/javah
@@ -54,9 +54,9 @@ diff -urN openjdk.orig/hotspot/build/linux/makefiles/rules.make openjdk/hotspot/
  COMPILE.RMIC = $(ALT_BOOTDIR)/bin/rmic
  BOOT_JAVA_HOME = $(ALT_BOOTDIR)
  
-diff -urN openjdk.orig/j2se/make/common/Release.gmk openjdk/j2se/make/common/Release.gmk
---- openjdk.orig/j2se/make/common/Release.gmk	2007-06-07 02:58:55.000000000 -0400
-+++ openjdk/j2se/make/common/Release.gmk	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/common/Release.gmk openjdk-ecj/j2se/make/common/Release.gmk
+--- openjdk-ecj.orig/j2se/make/common/Release.gmk	2007-08-02 03:17:53.000000000 -0400
++++ openjdk-ecj/j2se/make/common/Release.gmk	2007-08-08 16:29:33.000000000 -0400
 @@ -979,17 +979,17 @@
  	        $(JAR_JFLAGS)
  	@$(java-vm-cleanup)
@@ -86,9 +86,9 @@ diff -urN openjdk.orig/j2se/make/common/Release.gmk openjdk/j2se/make/common/Rel
  	@#
  	@# CORBA supported orb.idl and ir.idl should be copied to lib
  	@#
-diff -urN openjdk.orig/j2se/make/common/Rules.gmk openjdk/j2se/make/common/Rules.gmk
---- openjdk.orig/j2se/make/common/Rules.gmk	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/common/Rules.gmk	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/common/Rules.gmk openjdk-ecj/j2se/make/common/Rules.gmk
+--- openjdk-ecj.orig/j2se/make/common/Rules.gmk	2007-08-02 03:17:53.000000000 -0400
++++ openjdk-ecj/j2se/make/common/Rules.gmk	2007-08-08 16:29:33.000000000 -0400
 @@ -286,10 +286,12 @@
  $(CLASSHDR_DOTFILE): $(CLASSES_export)
  	$(prep-target)
@@ -103,9 +103,9 @@ diff -urN openjdk.orig/j2se/make/common/Rules.gmk openjdk/j2se/make/common/Rules
  	@$(TOUCH) $@
  
  classheaders.clean:
-diff -urN openjdk.orig/j2se/make/java/applet/Makefile openjdk/j2se/make/java/applet/Makefile
---- openjdk.orig/j2se/make/java/applet/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/java/applet/Makefile	2007-06-07 03:32:57.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/java/applet/Makefile openjdk-ecj/j2se/make/java/applet/Makefile
+--- openjdk-ecj.orig/j2se/make/java/applet/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/java/applet/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -27,6 +27,7 @@
  PACKAGE = java.applet
  PRODUCT = sun
@@ -114,20 +114,20 @@ diff -urN openjdk.orig/j2se/make/java/applet/Makefile openjdk/j2se/make/java/app
  
  #
  # Files
-diff -urN openjdk.orig/j2se/make/java/awt/Makefile openjdk/j2se/make/java/awt/Makefile
---- openjdk.orig/j2se/make/java/awt/Makefile	2007-06-07 02:58:55.000000000 -0400
-+++ openjdk/j2se/make/java/awt/Makefile	2007-06-07 03:32:32.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/java/awt/Makefile openjdk-ecj/j2se/make/java/awt/Makefile
+--- openjdk-ecj.orig/j2se/make/java/awt/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/java/awt/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -46,6 +46,7 @@
-
+ 
  endif
  
 +JAVAC_BCP = $(ICEDTEA_RT)
  build: sources properties cursors
  
  #
-diff -urN openjdk.orig/j2se/make/java/beans/Makefile openjdk/j2se/make/java/beans/Makefile
---- openjdk.orig/j2se/make/java/beans/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/java/beans/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/java/beans/Makefile openjdk-ecj/j2se/make/java/beans/Makefile
+--- openjdk-ecj.orig/j2se/make/java/beans/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/java/beans/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -31,6 +31,7 @@
  PACKAGE = java.beans
  PRODUCT = java
@@ -136,9 +136,9 @@ diff -urN openjdk.orig/j2se/make/java/beans/Makefile openjdk/j2se/make/java/bean
  
  #
  # Files to compile.
-diff -urN openjdk.orig/j2se/make/java/management/Makefile openjdk/j2se/make/java/management/Makefile
---- openjdk.orig/j2se/make/java/management/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/java/management/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/java/management/Makefile openjdk-ecj/j2se/make/java/management/Makefile
+--- openjdk-ecj.orig/j2se/make/java/management/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/java/management/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -28,6 +28,7 @@
  LIBRARY = management
  PRODUCT = java
@@ -147,9 +147,9 @@ diff -urN openjdk.orig/j2se/make/java/management/Makefile openjdk/j2se/make/java
  
  MGMT_SRC  = $(SHARE_SRC)/classes/java/lang/management
  SMGMT_SRC = $(SHARE_SRC)/classes/sun/management
-diff -urN openjdk.orig/j2se/make/java/text/Makefile openjdk/j2se/make/java/text/Makefile
---- openjdk.orig/j2se/make/java/text/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/java/text/Makefile	2007-06-07 03:31:41.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/java/text/Makefile openjdk-ecj/j2se/make/java/text/Makefile
+--- openjdk-ecj.orig/j2se/make/java/text/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/java/text/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -80,19 +80,19 @@
  
  $(BUILDER_CLASS): $(BUILDER)
@@ -181,9 +181,9 @@ diff -urN openjdk.orig/j2se/make/java/text/Makefile openjdk/j2se/make/java/text/
  bifiles: $(BIFILES) $(CLASSBINDIR)/sun/text/resources/unorm.icu $(CLASSBINDIR)/sun/text/resources/uprops.icu
  
  build: bifiles
-diff -urN openjdk.orig/j2se/make/javax/accessibility/Makefile openjdk/j2se/make/javax/accessibility/Makefile
---- openjdk.orig/j2se/make/javax/accessibility/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/javax/accessibility/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/javax/accessibility/Makefile openjdk-ecj/j2se/make/javax/accessibility/Makefile
+--- openjdk-ecj.orig/j2se/make/javax/accessibility/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/javax/accessibility/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -27,6 +27,7 @@
  PACKAGE = java.accessibility
  PRODUCT = java
@@ -192,9 +192,9 @@ diff -urN openjdk.orig/j2se/make/javax/accessibility/Makefile openjdk/j2se/make/
  
  #
  # Files
-diff -urN openjdk.orig/j2se/make/javax/activation/Makefile openjdk/j2se/make/javax/activation/Makefile
---- openjdk.orig/j2se/make/javax/activation/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/javax/activation/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/javax/activation/Makefile openjdk-ecj/j2se/make/javax/activation/Makefile
+--- openjdk-ecj.orig/j2se/make/javax/activation/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/javax/activation/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -31,6 +31,7 @@
  PACKAGE = javax.activation
  PRODUCT = jaf
@@ -203,9 +203,9 @@ diff -urN openjdk.orig/j2se/make/javax/activation/Makefile openjdk/j2se/make/jav
  
  #
  # Files to compile
-diff -urN openjdk.orig/j2se/make/javax/imageio/Makefile openjdk/j2se/make/javax/imageio/Makefile
---- openjdk.orig/j2se/make/javax/imageio/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/javax/imageio/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/javax/imageio/Makefile openjdk-ecj/j2se/make/javax/imageio/Makefile
+--- openjdk-ecj.orig/j2se/make/javax/imageio/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/javax/imageio/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -31,6 +31,7 @@
  PACKAGE = javax.imageio
  PRODUCT = jiio
@@ -214,9 +214,9 @@ diff -urN openjdk.orig/j2se/make/javax/imageio/Makefile openjdk/j2se/make/javax/
  
  #
  # Files to compile
-diff -urN openjdk.orig/j2se/make/javax/naming/Makefile openjdk/j2se/make/javax/naming/Makefile
---- openjdk.orig/j2se/make/javax/naming/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/javax/naming/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/javax/naming/Makefile openjdk-ecj/j2se/make/javax/naming/Makefile
+--- openjdk-ecj.orig/j2se/make/javax/naming/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/javax/naming/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -31,6 +31,7 @@
  PACKAGE = javax.naming
  PRODUCT = sun
@@ -225,9 +225,9 @@ diff -urN openjdk.orig/j2se/make/javax/naming/Makefile openjdk/j2se/make/javax/n
  
  #
  # Files to compile
-diff -urN openjdk.orig/j2se/make/javax/print/Makefile openjdk/j2se/make/javax/print/Makefile
---- openjdk.orig/j2se/make/javax/print/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/javax/print/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/javax/print/Makefile openjdk-ecj/j2se/make/javax/print/Makefile
+--- openjdk-ecj.orig/j2se/make/javax/print/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/javax/print/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -31,6 +31,7 @@
  PACKAGE = javax.print
  PRODUCT = sun
@@ -236,9 +236,9 @@ diff -urN openjdk.orig/j2se/make/javax/print/Makefile openjdk/j2se/make/javax/pr
  
  #
  # Files to compile
-diff -urN openjdk.orig/j2se/make/javax/security/Makefile openjdk/j2se/make/javax/security/Makefile
---- openjdk.orig/j2se/make/javax/security/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/javax/security/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/javax/security/Makefile openjdk-ecj/j2se/make/javax/security/Makefile
+--- openjdk-ecj.orig/j2se/make/javax/security/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/javax/security/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -27,6 +27,7 @@
  PACKAGE = javax.security
  PRODUCT = sun
@@ -247,9 +247,9 @@ diff -urN openjdk.orig/j2se/make/javax/security/Makefile openjdk/j2se/make/javax
  
  #
  # Files to compile
-diff -urN openjdk.orig/j2se/make/javax/swing/Makefile openjdk/j2se/make/javax/swing/Makefile
---- openjdk.orig/j2se/make/javax/swing/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/javax/swing/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/javax/swing/Makefile openjdk-ecj/j2se/make/javax/swing/Makefile
+--- openjdk-ecj.orig/j2se/make/javax/swing/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/javax/swing/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -28,6 +28,7 @@
  PRODUCT   = com
  SWING_SRC = $(SHARE_SRC)/classes/javax/swing
@@ -258,9 +258,9 @@ diff -urN openjdk.orig/j2se/make/javax/swing/Makefile openjdk/j2se/make/javax/sw
  
  #
  # Files
-diff -urN openjdk.orig/j2se/make/javax/swing/plaf/Makefile openjdk/j2se/make/javax/swing/plaf/Makefile
---- openjdk.orig/j2se/make/javax/swing/plaf/Makefile	2007-05-06 05:03:47.000000000 -0400
-+++ openjdk/j2se/make/javax/swing/plaf/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/javax/swing/plaf/Makefile openjdk-ecj/j2se/make/javax/swing/plaf/Makefile
+--- openjdk-ecj.orig/j2se/make/javax/swing/plaf/Makefile	2007-08-02 03:17:54.000000000 -0400
++++ openjdk-ecj/j2se/make/javax/swing/plaf/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -28,6 +28,7 @@
  PRODUCT   = com
  SWING_SRC = $(SHARE_SRC)/classes/javax/swing
@@ -269,9 +269,9 @@ diff -urN openjdk.orig/j2se/make/javax/swing/plaf/Makefile openjdk/j2se/make/jav
  
  #
  # Files
-diff -urN openjdk.orig/j2se/make/mkdemo/jfc/DemoSwing.gmk openjdk/j2se/make/mkdemo/jfc/DemoSwing.gmk
---- openjdk.orig/j2se/make/mkdemo/jfc/DemoSwing.gmk	2007-05-06 05:03:48.000000000 -0400
-+++ openjdk/j2se/make/mkdemo/jfc/DemoSwing.gmk	2007-06-07 03:17:20.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/mkdemo/jfc/DemoSwing.gmk openjdk-ecj/j2se/make/mkdemo/jfc/DemoSwing.gmk
+--- openjdk-ecj.orig/j2se/make/mkdemo/jfc/DemoSwing.gmk	2007-08-02 03:17:55.000000000 -0400
++++ openjdk-ecj/j2se/make/mkdemo/jfc/DemoSwing.gmk	2007-08-08 16:29:33.000000000 -0400
 @@ -108,7 +108,7 @@
  .compile.classlist:
  	if [ -s $(TEMPDIR)/.classes.list ] ; \
@@ -281,9 +281,9 @@ diff -urN openjdk.orig/j2se/make/mkdemo/jfc/DemoSwing.gmk openjdk/j2se/make/mkde
  	    $(shell if [ -s $(TEMPDIR)/.classes.list ] ; then $(CAT) $(TEMPDIR)/.classes.list; fi ) ; \
  	fi
  	@$(java-vm-cleanup)
-diff -urN openjdk.orig/j2se/make/mkdemo/management/Demo.gmk openjdk/j2se/make/mkdemo/management/Demo.gmk
---- openjdk.orig/j2se/make/mkdemo/management/Demo.gmk	2007-05-06 05:03:48.000000000 -0400
-+++ openjdk/j2se/make/mkdemo/management/Demo.gmk	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/mkdemo/management/Demo.gmk openjdk-ecj/j2se/make/mkdemo/management/Demo.gmk
+--- openjdk-ecj.orig/j2se/make/mkdemo/management/Demo.gmk	2007-08-02 03:17:55.000000000 -0400
++++ openjdk-ecj/j2se/make/mkdemo/management/Demo.gmk	2007-08-08 16:29:33.000000000 -0400
 @@ -65,7 +65,7 @@
  	$(RM) $(JAR_FILE)
  	$(RM) -r $(CLASSES_DIR)
@@ -293,9 +293,9 @@ diff -urN openjdk.orig/j2se/make/mkdemo/management/Demo.gmk openjdk/j2se/make/mk
  	$(ECHO) "Main-Class: $(MAIN_CLASS_NAME)" > $(CLASSES_DIR)/manifest
  
  $(CLASSES_DIR)/META-INF/services/%: $(SRCDIR)/META-INF/services/%
-diff -urN openjdk.orig/j2se/make/sun/awt/Makefile openjdk/j2se/make/sun/awt/Makefile
---- openjdk.orig/j2se/make/sun/awt/Makefile	2007-05-06 05:03:48.000000000 -0400
-+++ openjdk/j2se/make/sun/awt/Makefile	2007-06-07 03:05:28.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/sun/awt/Makefile openjdk-ecj/j2se/make/sun/awt/Makefile
+--- openjdk-ecj.orig/j2se/make/sun/awt/Makefile	2007-08-02 03:17:56.000000000 -0400
++++ openjdk-ecj/j2se/make/sun/awt/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -468,7 +468,7 @@
  	$(prep-target)
  	$(RM) -r $(TEMPDIR)/CompileFontConfig
@@ -305,9 +305,9 @@ diff -urN openjdk.orig/j2se/make/sun/awt/Makefile openjdk/j2se/make/sun/awt/Make
  	$(JAVA) -classpath $(TEMPDIR)/CompileFontConfig CompileFontConfig $< $(@)
  	$(CHMOD) 444 $(@)
  	@$(java-vm-cleanup)
-diff -urN openjdk.orig/j2se/make/sun/text/Makefile openjdk/j2se/make/sun/text/Makefile
---- openjdk.orig/j2se/make/sun/text/Makefile	2007-05-06 05:03:51.000000000 -0400
-+++ openjdk/j2se/make/sun/text/Makefile	2007-06-07 03:11:41.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/sun/text/Makefile openjdk-ecj/j2se/make/sun/text/Makefile
+--- openjdk-ecj.orig/j2se/make/sun/text/Makefile	2007-08-02 03:17:58.000000000 -0400
++++ openjdk-ecj/j2se/make/sun/text/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -90,7 +90,7 @@
                  $(GENBIDOUT)/SupplementaryCharacterData.class
  
@@ -333,9 +333,9 @@ diff -urN openjdk.orig/j2se/make/sun/text/Makefile openjdk/j2se/make/sun/text/Ma
  		-sourcepath $(SHARE_SRC)/classes/sun/text/resources $(BIINFO)
  	@$(java-vm-cleanup)
 
-diff -urN openjdk.orig/j2se/make/sun/xawt/Makefile openjdk/j2se/make/sun/xawt/Makefile
---- openjdk.orig/j2se/make/sun/xawt/Makefile	2007-08-02 03:17:58.000000000 -0400
-+++ openjdk/j2se/make/sun/xawt/Makefile	2007-08-10 17:12:01.000000000 -0400
+diff -urN openjdk-ecj.orig/j2se/make/sun/xawt/Makefile openjdk-ecj/j2se/make/sun/xawt/Makefile
+--- openjdk-ecj.orig/j2se/make/sun/xawt/Makefile	2007-08-02 03:17:58.000000000 -0400
++++ openjdk-ecj/j2se/make/sun/xawt/Makefile	2007-08-08 16:29:33.000000000 -0400
 @@ -279,13 +279,13 @@
  	    $(RM) $$classname; \
  	    $(ECHO) "package sun.awt.X11; public class XAWTIcon32_$$name {" >> $$classname; \

@@ -1,3 +1,13 @@
+2007-08-15  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am: Refactor.
+	* Makefile.in: Regenerate.
+	* INSTALL: Update build documentation.
+	* patches/icedtea-ecj-bootstrap.patch: Rebase for openjdk-ecj.
+	* rt/sun/org/mozilla/internal/NativeJavaArray.java: Move to...
+	* rt/sun/org/mozilla/javascript/internal/NativeJavaArray.java: New
+	file.
+
 2007-08-14  Lillian Angel  <langel@redhat.com>
 
 	* jce/gnu/javax/crypto/jce/GnuCrypto.java: Added Cipher Alias for
