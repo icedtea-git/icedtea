@@ -7,15 +7,14 @@ OPENJDK_MD5SUM = ca74f5b3b3ef47e156074ade78839007
 
 all-local: icedtea-against-icedtea
 
-distclean-local: clean-copy clean-exceptions clean-properties
+distclean-local: clean-copy clean-exceptions
 	rm -f download.stamp extract.stamp patch.stamp extract-ecj.stamp \
 	  patch-ecj.stamp bootstrap-directory.stamp \
 	  bootstrap-directory-symlink.stamp bootstrap-directory-ecj.stamp \
 	  bootstrap-directory-symlink-ecj.stamp icedtea-ecj.stamp \
 	  icedtea-against-ecj.stamp plugs.stamp copy-source-files.stamp \
-	  properties-source-files.stamp rt-class-files.stamp \
-	  jce-class-files.stamp
-	rm -f properties-files.txt rt-source-files.txt jce-source-files.txt
+	  rt-class-files.stamp jce-class-files.stamp
+	rm -f rt-source-files.txt jce-source-files.txt
 	rm -rf bootstrap
 	rm -rf lib
 	rm -rf openjdk-ecj
@@ -30,7 +29,7 @@ install:
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
 	clean-shared-objects clean-security-jars clean-exceptions clean-copy \
-	clean-properties clean-rt clean-jce
+	clean-rt clean-jce
 
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
 
@@ -361,7 +360,7 @@ plugs.stamp: $(SHARED_OBJECT_FILES) $(SECURITY_JAR_FILES) \
 	touch plugs.stamp
 
 clean-plugs: clean-plugs clean-shared-objects clean-security-jars \
-	clean-exceptions clean-copy clean-properties clean-rt clean-jce
+	clean-exceptions clean-copy clean-rt clean-jce
 	rm -f plugs.stamp
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt.jar
 	rm -f bootstrap/jdk1.7.0/jre/lib/jce.jar
@@ -436,6 +435,8 @@ $(EXCEPTION_SOURCE_FILES): extract.stamp patch.stamp \
 	openjdk/j2se/src/share/classes/java/nio/charset/exceptions \
 	openjdk/j2se/src/share/classes/java/nio/exceptions \
 	openjdk/j2se/src/share/classes/sun/nio/ch/exceptions
+	mkdir -p generated/java/nio/channels generated/java/nio/charset \
+	generated/java/nio generated/sun/nio/ch 
 	$(SHELL) openjdk/j2se/make/java/nio/genExceptions.sh \
 	  openjdk/j2se/src/share/classes/java/nio/channels/exceptions \
 	  generated/java/nio/channels
@@ -483,7 +484,6 @@ clean-copy:
 	  rm -rf rt/$$copy_dir ; \
 	done
 
-# Sources generated from OpenJDK properties files.
 if FOUND_ECJ
   JCOMPILER = $(ECJ) -nowarn
 else
@@ -492,36 +492,9 @@ if FOUND_JAVAC
 endif
 endif
 
-lib/CompileProperties.class: \
-	openjdk/j2se/make/tools/CompileProperties/CompileProperties.java
-	$(JCOMPILER) -g -d lib -target 1.5 -source 1.5 \
-	  -sourcepath openjdk/j2se/make/tools/CompileProperties $<
-
-properties-files.txt: extract.stamp
-	find openjdk/j2se/src/share/classes/sun/util/resources \
-	  -name '*.properties' > $@
-
-properties-source-files.stamp: patch.stamp properties-files.txt \
-	lib/CompileProperties.class
-	for properties_file in `cat properties-files.txt` ; \
-	do \
-	  properties_basename=`basename $$properties_file .properties` ; \
-	  $(JAVA) -classpath lib CompileProperties \
-	    $$properties_file \
-	    generated/sun/util/resources/$$properties_basename.java \
-	    LocaleNamesBundle ; \
-	done
-	touch properties-source-files.stamp
-
-clean-properties:
-	rm -f generated/sun/util/resources/*
-	rm -f properties-files.txt
-	rm -f properties-source-files.stamp
-	rm -f lib/CompileProperties.class
-
 # rt.jar class files.
 rt-source-files.txt: extract.stamp copy-source-files.stamp \
-	properties-source-files.stamp $(EXCEPTION_SOURCE_FILES)
+	$(EXCEPTION_SOURCE_FILES)
 	find rt -name '*.java' | sort > $@
 
 OPENJDK_SOURCEPATH_DIRS = \
