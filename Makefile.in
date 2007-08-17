@@ -172,9 +172,9 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-OPENJDK_VERSION = b17
-OPENJDK_DATE = 02_aug_2007
-OPENJDK_MD5SUM = ca74f5b3b3ef47e156074ade78839007
+OPENJDK_VERSION = b18
+OPENJDK_DATE = 16_aug_2007
+OPENJDK_MD5SUM = 475985960afd082e2aebac4e878a18fb
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
 
 # OpenJDK build environment.
@@ -271,7 +271,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-java.security.patch \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-assembler_amd64.patch \
-	patches/icedtea-buildfix.patch \
 	patches/icedtea-license-headers.patch \
 	$(FAST_BUILD_PATCH)
 

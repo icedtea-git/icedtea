@@ -14,7 +14,7 @@
  
  CFLAGS_OPT      = $(POPT)
  CFLAGS_DBG      = $(DEBUG_FLAG)
-@@ -249,7 +243,7 @@
+@@ -245,7 +239,7 @@
  ifeq ($(VARIANT), OPT)
    ifneq ($(NO_STRIP), true)
      # Debug 'strip -g' leaves local function Elf symbols (better stack traces)
