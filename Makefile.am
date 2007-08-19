@@ -160,6 +160,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-assembler_amd64.patch \
 	patches/icedtea-license-headers.patch \
+	patches/icedtea-libpng.patch \
 	$(FAST_BUILD_PATCH)
 
 patch.stamp: extract.stamp
