@@ -1,5 +1,10 @@
 2007-08-20  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
+	* Makefile.am (EXTRA_DIST): Add patches/icedtea-speed.patch.
+	* Makefile.in: Regenerate.
+
+2007-08-20  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
 	* Makefile.am (EXTRA_DIST): Add gcjwebplugin.cc.
 	* Makefile.in: Regenerate.
 

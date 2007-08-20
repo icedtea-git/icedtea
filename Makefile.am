@@ -33,7 +33,7 @@ install:
 	clean-gcjwebplugin
 
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
-	gcjwebplugin.cc
+	gcjwebplugin.cc patches/icedtea-speed.patch
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
