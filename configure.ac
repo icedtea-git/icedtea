@@ -8,7 +8,8 @@ AC_CANONICAL_HOST
 
 AC_PREFIX_DEFAULT([bootstrap])
 
-AC_PROG_CC([gcc])
+AC_PROG_CC
+AC_PROG_CXX
 
 # Essential tools that are used in the build (harness)
 FIND_TOOL([FIND], [find])
@@ -37,5 +38,48 @@ WITH_OPENJDK_SRC_DIR
 ENABLE_FAST_BUILD
 
 CHECK_HEADERS
+
+dnl Check for plugin support headers and libraries.
+PKG_CHECK_MODULES(MOZILLA, mozilla-plugin, [MOZILLA_FOUND=yes], \
+  [MOZILLA_FOUND=no])
+if test "x${MOZILLA_FOUND}" = xno
+then
+  PKG_CHECK_MODULES(MOZILLA, firefox-plugin firefox-xpcom, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  PKG_CHECK_MODULES(MOZILLA, xulrunner-plugin xulrunner-xpcom, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  PKG_CHECK_MODULES(MOZILLA, mozilla-firefox-plugin mozilla-firefox-xpcom, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  PKG_CHECK_MODULES(MOZILLA, seamonkey-plugin seamonkey-xpcom, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  PKG_CHECK_MODULES(MOZILLA, iceape-plugin iceape-xpcom, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find plugin support headers and libraries.])
+fi
+
+PKG_CHECK_MODULES(GLIB, glib-2.0)
+PKG_CHECK_MODULES(GTK, gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0)
+
+AC_SUBST(MOZILLA_CFLAGS)
+AC_SUBST(MOZILLA_LIBS)
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
 
 AC_OUTPUT

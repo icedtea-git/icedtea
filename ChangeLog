@@ -1,5 +1,16 @@
 2007-08-19  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
+	* Makefile.am: Add logic to build gcjwebplugin.so.
+	(ICEDTEA_PATCHES): Add patches/icedtea-plugin.patch.
+	* Makefile.in: Regenerate.
+	* aclocal.m4: Regenerate.
+	* configure: Regenerate.
+	* configure.ac: Add AC_PROG_CXX.  Remove gcc AC_PROG_CC default.
+	* gcjwebplugin.cc: New file.
+	* patches/icedtea-plugin.patch: New file.
+
+2007-08-19  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
 	* Makefile.am (ICEDTEA_PATCHES): Add patches/icedtea-libpng.patch.
 	* patches/icedtea-libpng.patch: New file.
 

@@ -19,6 +19,7 @@ distclean-local: clean-copy
 	rm -rf lib
 	rm -rf openjdk-ecj
 	rm -rf openjdk
+	rm -f gcjwebplugin.so
 
 install:
 
@@ -28,7 +29,8 @@ install:
 	clean-bootstrap-directory-symlink clean-bootstrap-directory-ecj \
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
-	clean-shared-objects clean-security-jars clean-copy clean-rt clean-jce
+	clean-shared-objects clean-security-jars clean-copy clean-rt clean-jce \
+	clean-gcjwebplugin
 
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
 
@@ -161,6 +163,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-assembler_amd64.patch \
 	patches/icedtea-license-headers.patch \
 	patches/icedtea-libpng.patch \
+	patches/icedtea-plugin.patch \
 	$(FAST_BUILD_PATCH)
 
 patch.stamp: extract.stamp
@@ -305,17 +308,25 @@ clean-bootstrap-directory-symlink-ecj:
 # OpenJDK Targets
 # ===============
 
-icedtea: plugs.stamp extract.stamp patch.stamp
+icedtea: plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make
+	cp -af gcjwebplugin.so \
+	  openjdk/control/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -af gcjwebplugin.so \
+	  openjdk/control/build/$(LINUX_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	@echo "IcedTea is served:" openjdk/control/build/$(LINUX_DIR)
 
-icedtea-debug: plugs.stamp extract.stamp patch.stamp
+icedtea-debug: plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
 	  debug_build
+	cp -af gcjwebplugin.so \
+	  openjdk/control/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -af gcjwebplugin.so \
+	  openjdk/control/build/$(LINUX_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	@echo "Debug-flavoured IcedTea is served:" \
 	  openjdk/control/build/$(LINUX_DIR)-debug
 
@@ -481,3 +492,14 @@ clean-jce:
 bootstrap/jdk1.7.0/jre/lib/jce.jar: jce-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
 	$(JAR) cf $@ -C lib/jce gnu -C lib/jce javax -C lib/jce sun
+
+# gcjwebplugin.so.
+gcjwebplugin.so: gcjwebplugin.cc
+	$(CXX) $(CPPFLAGS) $(CFLAGS) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
+	  $(GTK_CFLAGS) $(GTK_LIBS) \
+	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	  -fpic -shared -o $@ $<
+
+clean-gcjwebplugin:
+	rm -f gcjwebplugin.so
