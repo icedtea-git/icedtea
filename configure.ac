@@ -1,5 +1,5 @@
 AC_PREREQ([2.61])
-AC_INIT([icedtea], [1.2], [fitzsim@redhat.com])
+AC_INIT([icedtea], [1.3], [fitzsim@redhat.com])
 AM_INIT_AUTOMAKE([tar-pax])
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([javac], [chmod +x javac])
