@@ -32,7 +32,8 @@ install:
 	clean-shared-objects clean-security-jars clean-copy clean-rt clean-jce \
 	clean-gcjwebplugin
 
-EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
+EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
+	gcjwebplugin.cc
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)

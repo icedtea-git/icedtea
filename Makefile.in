@@ -186,7 +186,9 @@ top_srcdir = @top_srcdir@
 OPENJDK_VERSION = b18
 OPENJDK_DATE = 16_aug_2007
 OPENJDK_MD5SUM = 475985960afd082e2aebac4e878a18fb
-EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH)
+EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
+	gcjwebplugin.cc
+
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
