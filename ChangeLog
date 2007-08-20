@@ -1,3 +1,11 @@
+2007-08-20  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* gcjwebplugin.cc (plugin_in_pipe_callback): Strip trailing
+	newline from message.
+	Fix debug message format.
+	(plugin_send_message_to_appletviewer): Fix debug message format.
+	* patches/icedtea-plugin.patch: Fix debug message formats.
+
 2007-08-19  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am: Add logic to build gcjwebplugin.so.

@@ -934,6 +934,8 @@ plugin_in_pipe_callback (GIOChannel* source,
             }
           else
             {
+              // Remove trailing newline from message.
+              message[strlen (message) - 1] = '\0';
               if (g_str_has_prefix (message, "url "))
                 {
                   gchar** parts = g_strsplit (message, " ", 3);
@@ -943,7 +945,8 @@ plugin_in_pipe_callback (GIOChannel* source,
                                     " URL target", parts[2]);
                   // Open the URL in a new browser window.
                   NPError np_error =
-                    (*browserFunctions.geturl) (data->owner, parts[1], parts[2]);
+                    (*browserFunctions.geturl) (data->owner, parts[1],
+                                                parts[2]);
                   if (np_error != NPERR_NO_ERROR)
                     PLUGIN_ERROR ("Failed to load URL.");
                   g_strfreev (parts);
@@ -956,11 +959,11 @@ plugin_in_pipe_callback (GIOChannel* source,
                   PLUGIN_DEBUG_TWO ("plugin_in_pipe_callback:"
                                     " setting status", parts[1]);
                   (*browserFunctions.status) (data->owner,
-                                              g_strstrip (parts[1]));
+                                              parts[1]);
                   g_strfreev (parts);
                   parts = NULL;
                 }
-              g_print ("  PIPE: plugin read %s\n", message);
+              g_print ("  PIPE: plugin read: %s\n", message);
             }
 
           g_free (message);
@@ -1222,7 +1225,7 @@ plugin_send_message_to_appletviewer (GCJPluginData* data, gchar const* message)
       g_free (newline_message);
       newline_message = NULL;
 
-      g_print ("  PIPE: plugin wrote %s\n", message);
+      g_print ("  PIPE: plugin wrote: %s\n", message);
     }
 
   PLUGIN_DEBUG ("plugin_send_message_to_appletviewer return");
