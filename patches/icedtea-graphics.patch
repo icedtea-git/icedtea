@@ -142,3 +142,72 @@ diff -urN openjdk.orig/j2se/src/share/native/sun/awt/image/imageInitIDs.h openjd
 -IMGEXTERN jfieldID g_DataBufferIntPdataID;
 -
  #endif /* IMAGEINITIDS_H */
+diff -urN openjdk.orig/j2se/src/share/classes/javax/swing/text/WrappedPlainView.java openjdk/j2se/src/share/classes/javax/swing/text/WrappedPlainView.java
+--- openjdk.orig/j2se/src/share/classes/javax/swing/text/WrappedPlainView.java	2007-07-05 03:50:30.000000000 -0400
++++ openjdk/j2se/src/share/classes/javax/swing/text/WrappedPlainView.java	2007-06-21 03:47:01.000000000 -0400
+@@ -50,7 +50,7 @@
+  * without concern for the layout aspects.
+  *
+  * @author  Timothy Prinzing
+- * @version 1.49 05/23/07
++ * @version 1.48 05/05/07
+  * @see     View
+  */
+ public class WrappedPlainView extends BoxView implements TabExpander {
+@@ -237,9 +237,6 @@
+         Segment segment = SegmentCache.getSharedSegment();
+ 	loadText(segment, p0, p1);
+         int currentWidth = getWidth();
+-        if (currentWidth == Integer.MAX_VALUE) {
+-            currentWidth = (int) getDefaultSpan(View.X_AXIS);
+-        }
+ 	if (wordWrap) {
+ 	    p = p0 + Utilities.getBreakLocation(segment, metrics,
+ 						tabBase, tabBase + currentWidth,
+@@ -324,21 +321,6 @@
+ 	metrics = host.getFontMetrics(f);
+ 	tabSize = getTabSize() * metrics.charWidth('m');
+     }
+-    
+-    /**
+-     * Return reasonable default values for the view dimensions.  The standard
+-     * text terminal size 80x24 is pretty suitable for the wrapped plain view.
+-     */
+-    private float getDefaultSpan(int axis) {
+-         switch (axis) {
+-            case View.X_AXIS:
+-                return 80 * metrics.getWidths()['M'];
+-            case View.Y_AXIS:
+-                return 24 * metrics.getHeight();
+-            default:
+-                throw new IllegalArgumentException("Invalid axis: " + axis);
+-        }
+-    }
+ 
+     // --- TabExpander methods ------------------------------------------
+ 
+@@ -574,18 +556,15 @@
+                 if (width == Integer.MAX_VALUE) {
+                     // We have been initially set to MAX_VALUE, but we don't
+                     // want this as our preferred.
+-                    width = getDefaultSpan(axis);
++                    return 100f;
+                 }
+                 return width;
+             case View.Y_AXIS:
+-                if (getDocument().getLength() > 0) {
+-                    if ((lineCount < 0) || widthChanging) {
+-                        breakLines(getStartOffset());
+-                    }
+-                    return lineCount * metrics.getHeight();
+-                } else {
+-                    return getDefaultSpan(axis);
+-                }
++		if (lineCount < 0 || widthChanging) {
++		    breakLines(getStartOffset());
++		}
++                int h = lineCount * metrics.getHeight();
++                return h;
+             default:
+                 throw new IllegalArgumentException("Invalid axis: " + axis);
+             }

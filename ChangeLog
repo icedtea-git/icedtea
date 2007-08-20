@@ -1,3 +1,8 @@
+2007-08-20  Francis Kung  <fkung@redhat.com>
+
+	* patches/icedtea-graphics.patch: Roll back word wrap fix (Sun bug
+	6491856) for backwards-compatibility.
+
 2007-08-20  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* gcjwebplugin.cc (plugin_in_pipe_callback): Strip trailing
