@@ -387,7 +387,7 @@ $(SHARED_OBJECT_FILES):
 	mkdir -p bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)
 	for shared_object in $(SHARED_OBJECT_FILES) ; \
 	do \
-	  echo | $(CC) -shared -fPIC \
+	  echo | $(CC) $(CFLAGS) -fpic -shared \
 	    -o $$shared_object \
 	    -Wl,-soname,$$shared_object -xc - ; \
 	done
@@ -496,7 +496,7 @@ bootstrap/jdk1.7.0/jre/lib/jce.jar: jce-class-files.stamp
 
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
-	$(CXX) $(CPPFLAGS) $(CFLAGS) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
 	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
 	  $(GTK_CFLAGS) $(GTK_LIBS) \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
