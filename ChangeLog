@@ -1,3 +1,7 @@
+2007-08-21  Francis Kung  <fkung@redhat.com>
+
+	* .hgignore: Updated.
+
 2007-08-20  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am (gcjwebplugin.so): Include CXXFLAGS.
