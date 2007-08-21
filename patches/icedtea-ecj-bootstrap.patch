@@ -334,9 +334,21 @@ diff -urN openjdk-ecj.orig/j2se/make/sun/text/Makefile openjdk-ecj/j2se/make/sun
  	@$(java-vm-cleanup)
 
 diff -urN openjdk-ecj.orig/j2se/make/sun/xawt/Makefile openjdk-ecj/j2se/make/sun/xawt/Makefile
---- openjdk-ecj.orig/j2se/make/sun/xawt/Makefile	2007-08-02 03:17:58.000000000 -0400
-+++ openjdk-ecj/j2se/make/sun/xawt/Makefile	2007-08-08 16:29:33.000000000 -0400
-@@ -279,13 +279,13 @@
+--- openjdk-ecj.orig/j2se/make/sun/xawt/Makefile	2007-08-16 03:17:52.000000000 -0400
++++ openjdk-ecj/j2se/make/sun/xawt/Makefile	2007-08-21 15:51:53.000000000 -0400
+@@ -267,10 +267,7 @@
+ endif
+ ICONS=$(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon16.png $(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon24.png $(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon32.png $(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon48.png 
+ 
+-sun/awt/X11/ToBin.class: ToBin.java
+-	$(JAVAC_BOOT_CMD) $?
+-
+-$(TEMPDIR)/.gen_icons: sun/awt/X11/ToBin.class $(ICONS)
++$(TEMPDIR)/.gen_icons: $(ICONS)
+ 	$(prep-target)
+ 	for i in $(ICONS); do \
+             filename=`basename $$i`; \
+@@ -279,13 +276,13 @@
  	    $(RM) $$classname; \
  	    $(ECHO) "package sun.awt.X11; public class XAWTIcon32_$$name {" >> $$classname; \
  	    $(ECHO) "public static int[] $$name = { " >> $$classname;  \

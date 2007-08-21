@@ -1,5 +1,10 @@
 2007-08-21  Francis Kung  <fkung@redhat.com>
 
+	* patches/icedtea-ecj-bootstrap.patch: Prevent compilation of ToBin
+	class during first stage (workaround for an ecj bug).
+
+2007-08-21  Francis Kung  <fkung@redhat.com>
+
 	* Makefile.am: Fixed case where invalid openjdk zip is provided in
 	--with-openjdk-zip.
 	* Makefile.in: Regenerated.
