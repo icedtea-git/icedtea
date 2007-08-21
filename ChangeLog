@@ -1,10 +1,12 @@
 2007-08-21  Francis Kung  <fkung@redhat.com>
 
+	PR 61
 	* patches/icedtea-ecj-bootstrap.patch: Prevent compilation of ToBin
 	class during first stage (workaround for an ecj bug).
 
 2007-08-21  Francis Kung  <fkung@redhat.com>
 
+	PR 62
 	* Makefile.am: Fixed case where invalid openjdk zip is provided in
 	--with-openjdk-zip.
 	* Makefile.in: Regenerated.
@@ -36,6 +38,7 @@
 
 2007-08-20  Francis Kung  <fkung@redhat.com>
 
+	PR 57
 	* patches/icedtea-graphics.patch: Roll back word wrap fix (Sun bug
 	6491856) for backwards-compatibility.
 
@@ -151,6 +154,7 @@
 
 2007-08-13  Francis Kung  <fkung@redhat.com>
 
+	PR 45
 	* patches/icedtea-ecj-bootstrap.patch: Remove bootstrap requirement
 	for graphics.
 	* INSTALL: Updated.
@@ -162,6 +166,7 @@
 
 2007-08-08  Francis Kung  <fkung@redhat.com>
 
+	PR 53
 	* rt/java/awt/image/Raster.java: Use given dataBuffers when creating
 	new rasters.
 
