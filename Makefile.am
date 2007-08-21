@@ -112,11 +112,12 @@ snapshot: dist
 
 # Download OpenJDK sources.
 OPENJDK_URL = http://download.java.net/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
+OPENJDK_SRC_ZIP_BASE = openjdk-7-ea-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).zip
 
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 else
-  OPENJDK_SRC_ZIP = openjdk-7-ea-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).zip
+  OPENJDK_SRC_ZIP = $(OPENJDK_SRC_ZIP_BASE)
 endif
 
 download.stamp:
@@ -124,7 +125,11 @@ download.stamp:
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
 	then \
-	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) ; \
+	  if [ $(OPENJDK_SRC_ZIP) ] ; \
+	  then \
+            mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
+          fi ; \
+	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP_BASE) -O $(OPENJDK_SRC_ZIP); \
 	fi
 	touch download.stamp
 
