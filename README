@@ -36,26 +36,28 @@ resultant tree with more replacement code from GNU Classpath.
 Following that, we fixed each remaining build error by creating the
 simplest possible stub code.
 
-A Note about License Headers
+A Note About License Headers
 ----------------------------
 
-Many sources downloaded from openjdk.java.net do not display the GPL license
-header. Instances are:
+Some sources downloaded from openjdk.java.net do not display the GPL
+license header.  Instances are:
 
  - The files in openjdk/j2se/src/share/classes/javax/xml/stream/ seem to 
-   comprise the BEA-StAX source code[1] with some Sun-specific modifications. 
-   We're operating under the assumptions that Sun is bundling BEA-StAX under 
-   the terms of the Apache License 2.0 and that the modifications are owned
-   by Sun. 
-       1. http://ftpna2.bea.com/pub/downloads/jsr173.jar
- - We are assuming that these files are owned by Sun: 
+   comprise the BEA-StAX source code
+
+   http://ftpna2.bea.com/pub/downloads/jsr173.jar
+
+   with some Sun-specific modifications.  We're assuming that Sun is
+   bundling BEA-StAX under the terms of the Apache License 2.0 and
+   that the modifications are owned by Sun.
+
+ - We are assuming that these files are owned by Sun:
    openjdk/j2se/src/share/classes/**/resources/*.properties
 
+The downloaded sources include two scripts that insert proprietary
+license headers into the source files they generate.  The scripts
+themselves are GPL'd so we patched them to emit the GPL header.  These
+files are:
 
-The downloaded sources include two scripts that insert proprietary license 
-headers into some generated source files. The scripts themselves are GPL'd,
-so we patched them to emit the GPL header. These files are:
-
- - openjdk/j2se/make/java/nio/genExceptions.sh
- - openjdk/hotspot/src/share/vm/prims/jvmtiLib.xsl
-
+  openjdk/j2se/make/java/nio/genExceptions.sh
+  openjdk/hotspot/src/share/vm/prims/jvmtiLib.xsl
