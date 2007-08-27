@@ -97,3 +97,122 @@
   */
  
    // AUTOMATICALLY GENERATED FILE - DO NOT EDIT
+--- /notnfs/langel/openjdk/hotspot/src/share/vm/adlc/archDesc.cpp	2007-08-16 03:15:47.000000000 -0400
++++ openjdk/hotspot/src/share/vm/adlc/archDesc.cpp	2007-08-27 12:33:49.000000000 -0400
+@@ -1030,16 +1030,29 @@
+ //---------------------------addSUNcopyright-------------------------------
+ // output SUN copyright info
+ void ArchDesc::addSunCopyright(FILE *fp) {
+-  fprintf(fp,"// Machine Generated File.  Do Not Edit!\n");
+-  fprintf(fp,"\n");
+-  fprintf(fp,"// Copyright 1997-2006 Sun Microsystems, Inc.  All rights reserved.\n");
+-  fprintf(fp,"// SUN PROPRIETARY/CONFIDENTIAL.  Use is subject to license terms.\n");
+-  fprintf(fp,"// This software is the confidential and proprietary information of Sun\n");
+-  fprintf(fp,"// Microsystems, Inc. (\"Confidential Information\").  You shall not\n");
+-  fprintf(fp,"// disclose such Confidential Information and shall use it only in\n");
+-  fprintf(fp,"// accordance with the terms of the license agreement you entered into\n");
+-  fprintf(fp,"// with Sun.\n");
+-  fprintf(fp,"//\n");
++  fprintf(fp,"/* Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.\n");
++  fprintf(fp," * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.\n");
++  fprintf(fp," *\n"); 
++  fprintf(fp," * This code is free software; you can redistribute it and/or modify it\n");
++  fprintf(fp," * under the terms of the GNU General Public License version 2 only, as\n");
++  fprintf(fp," * published by the Free Software Foundation.  Sun designates this\n");
++  fprintf(fp," * particular file as subject to the "Classpath" exception as provided\n");
++  fprintf(fp," * by Sun in the LICENSE file that accompanied this code.\n");
++  fprintf(fp," *\n");
++  fprintf(fp," * This code is distributed in the hope that it will be useful, but WITHOUT\n");
++  fprintf(fp," * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n");
++  fprintf(fp," * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n");
++  fprintf(fp," * version 2 for more details (a copy is included in the LICENSE file that\n");
++  fprintf(fp," * accompanied this code).\n");
++  fprintf(fp," *\n");
++  fprintf(fp," * You should have received a copy of the GNU General Public License version\n");
++  fprintf(fp," * 2 along with this work; if not, write to the Free Software Foundation,\n");
++  fprintf(fp," * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.\n");
++  fprintf(fp," *\n");
++  fprintf(fp," * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,\n");
++  fprintf(fp," * CA 95054 USA or visit www.sun.com if you need additional information or\n");
++  fprintf(fp," * have any questions.\n");
++  fprintf(fp," */\n");
+ }
+ 
+ //---------------------------machineDependentIncludes--------------------------
+--- /notnfs/langel/openjdk/j2se/make/tools/AutoMulti/AutoMulti.java	2007-08-16 03:17:52.000000000 -0400
++++ openjdk/j2se/make/tools/AutoMulti/AutoMulti.java	2007-08-27 12:38:38.000000000 -0400
+@@ -96,14 +96,29 @@
+      */
+     public static StringBuffer createPreamble(String prefixName) {
+ 	StringBuffer s = new StringBuffer();
+-	s.append("/*\n");
+-        s.append(" *\n");
+-        s.append(" * Copyright 1997-2007 Sun Microsystems, Inc. All Rights Reserved.\n");
+-        s.append(" * \n");
+-        s.append(" * This software is the proprietary information of Sun Microsystems, Inc.  \n");
+-        s.append(" * Use is subject to license terms.\n");
+-        s.append(" * \n");
+-        s.append(" */\n");
++	s.append("/* Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.\n");
++	s.append(" * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.\n");
++	s.append(" *\n");
++	s.append(" * This code is free software; you can redistribute it and/or modify it\n");
++	s.append(" * under the terms of the GNU General Public License version 2 only, as\n");
++	s.append(" * published by the Free Software Foundation.  Sun designates this\n");
++	s.append(" * particular file as subject to the "Classpath" exception as provided\n");
++	s.append(" * by Sun in the LICENSE file that accompanied this code.\n");
++	s.append(" *\n");
++	s.append(" * This code is distributed in the hope that it will be useful, but WITHOUT\n");
++	s.append(" * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n");
++	s.append(" * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n");
++	s.append(" * version 2 for more details (a copy is included in the LICENSE file that\n");
++	s.append(" * accompanied this code).\n");
++	s.append(" *\n");
++	s.append(" * You should have received a copy of the GNU General Public License version\n");
++	s.append(" * 2 along with this work; if not, write to the Free Software Foundation,\n");
++	s.append(" * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.\n");
++	s.append(" *\n");
++	s.append(" * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,\n");
++	s.append(" * CA 95054 USA or visit www.sun.com if you need additional information or\n");
++	s.append(" * have any questions.\n");
++	s.append(" */\n");
+         s.append("package " + prefixName + ".swing.plaf.multi;\n");
+         s.append("\n");
+ 	return s;
+--- /notnfs/langel/openjdk/j2se/make/tools/AutoMulti/TestALFGenerator.java	2007-08-16 03:17:52.000000000 -0400
++++ openjdk/j2se/make/tools/AutoMulti/TestALFGenerator.java	2007-08-27 12:40:00.000000000 -0400
+@@ -99,13 +99,28 @@
+      */
+     public static StringBuffer createPreamble(String prefixName) {
+ 	StringBuffer s = new StringBuffer();
+-	s.append("/*\n");
++	s.append("/* Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.\n");
++        s.append(" * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.\n");
+         s.append(" *\n");
+-        s.append(" * Copyright 1997-2007 Sun Microsystems, Inc. All Rights Reserved.\n");
+-        s.append(" * \n");
+-        s.append(" * This software is the proprietary information of Sun Microsystems, Inc.  \n");
+-        s.append(" * Use is subject to license terms.\n");
+-        s.append(" * \n");
++        s.append(" * This code is free software; you can redistribute it and/or modify it\n");
++        s.append(" * under the terms of the GNU General Public License version 2 only, as\n");
++        s.append(" * published by the Free Software Foundation.  Sun designates this\n");
++        s.append(" * particular file as subject to the "Classpath" exception as provided\n");
++        s.append(" * by Sun in the LICENSE file that accompanied this code.\n");
++        s.append(" *\n");
++        s.append(" * This code is distributed in the hope that it will be useful, but WITHOUT\n");
++        s.append(" * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n");
++        s.append(" * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n");
++        s.append(" * version 2 for more details (a copy is included in the LICENSE file that\n");
++        s.append(" * accompanied this code).\n");
++        s.append(" *\n");
++        s.append(" * You should have received a copy of the GNU General Public License version\n");
++        s.append(" * 2 along with this work; if not, write to the Free Software Foundation,\n");
++        s.append(" * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.\n");
++        s.append(" *\n");
++        s.append(" * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,\n");
++        s.append(" * CA 95054 USA or visit www.sun.com if you need additional information or\n");
++        s.append(" * have any questions.\n");
+         s.append(" */\n");
+ 	if (packageName != null) {
+             s.append("package " + packageName + ";\n");

@@ -1,3 +1,8 @@
+2007-08-27  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-license-headers.patch: Added patches for other
+	generated headers.
+
 2007-08-23  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* README: Minor changes to license headers section.
