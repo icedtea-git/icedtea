@@ -125,8 +125,8 @@
 +  fprintf(fp," * This code is distributed in the hope that it will be useful, but WITHOUT\n");
 +  fprintf(fp," * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n");
 +  fprintf(fp," * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n");
-+  fprintf(fp," * version 2 for more details \(a copy is included in the LICENSE file that\n");
-+  fprintf(fp," * accompanied this code\).\n");
++  fprintf(fp," * version 2 for more details (a copy is included in the LICENSE file that\n");
++  fprintf(fp," * accompanied this code).\n");
 +  fprintf(fp," *\n");
 +  fprintf(fp," * You should have received a copy of the GNU General Public License version\n");
 +  fprintf(fp," * 2 along with this work; if not, write to the Free Software Foundation,\n");
@@ -165,8 +165,8 @@
 +	s.append(" * This code is distributed in the hope that it will be useful, but WITHOUT\n");
 +	s.append(" * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n");
 +	s.append(" * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n");
-+	s.append(" * version 2 for more details \(a copy is included in the LICENSE file that\n");
-+	s.append(" * accompanied this code\).\n");
++	s.append(" * version 2 for more details (a copy is included in the LICENSE file that\n");
++	s.append(" * accompanied this code).\n");
 +	s.append(" *\n");
 +	s.append(" * You should have received a copy of the GNU General Public License version\n");
 +	s.append(" * 2 along with this work; if not, write to the Free Software Foundation,\n");
@@ -203,8 +203,8 @@
 +        s.append(" * This code is distributed in the hope that it will be useful, but WITHOUT\n");
 +        s.append(" * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n");
 +        s.append(" * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n");
-+        s.append(" * version 2 for more details \(a copy is included in the LICENSE file that\n");
-+        s.append(" * accompanied this code\).\n");
++        s.append(" * version 2 for more details (a copy is included in the LICENSE file that\n");
++        s.append(" * accompanied this code).\n");
 +        s.append(" *\n");
 +        s.append(" * You should have received a copy of the GNU General Public License version\n");
 +        s.append(" * 2 along with this work; if not, write to the Free Software Foundation,\n");
