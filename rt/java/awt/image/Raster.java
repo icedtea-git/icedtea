@@ -295,11 +295,11 @@ public class Raster
       location = new Point(0,0);
 
     if (dataType == DataBuffer.TYPE_BYTE)
-      return new ByteComponentRaster(sm, location);
+      return new ByteInterleavedRaster(sm, location);
     else if (dataType == DataBuffer.TYPE_USHORT)
-      return new ShortComponentRaster(sm, location);
+      return new ShortInterleavedRaster(sm, location);
     else if (dataType == DataBuffer.TYPE_INT)
-      return new IntegerComponentRaster(sm, location);
+      return new IntegerInterleavedRaster(sm, location);
     else
       throw new IllegalArgumentException("Data type is not supported.");
   }
@@ -330,7 +330,7 @@ public class Raster
         SampleModel sm = new MultiPixelPackedSampleModel(dataType, w, h, bitsPerBand);
 
         if (dataType == DataBuffer.TYPE_BYTE)
-          return new BytePackedRaster(sm, location);
+          return new ByteInterleavedRaster(sm, location);
         else if (dataType == DataBuffer.TYPE_USHORT || dataType == DataBuffer.TYPE_INT)
           return new SunWritableRaster(sm, location);
         else
@@ -351,11 +351,11 @@ public class Raster
         SampleModel sm = new SinglePixelPackedSampleModel(dataType, w, h, bandMasks);
 
         if (dataType == DataBuffer.TYPE_BYTE)
-          return new ByteComponentRaster(sm, location);
+          return new ByteInterleavedRaster(sm, location);
         else if (dataType == DataBuffer.TYPE_USHORT)
-          return new ShortComponentRaster(sm, location);
+          return new ShortInterleavedRaster(sm, location);
         else if (dataType == DataBuffer.TYPE_INT)
-          return new IntegerComponentRaster(sm, location);
+          return new IntegerInterleavedRaster(sm, location);
         else
           throw new IllegalArgumentException("Data type is not supported.");
       }
@@ -451,11 +451,11 @@ public class Raster
       location = new Point(0,0);
 
     if (dataBuffer.getDataType() == DataBuffer.TYPE_BYTE)
-      return new ByteComponentRaster(sm, dataBuffer, location);
+      return new ByteInterleavedRaster(sm, dataBuffer, location);
     else if (dataBuffer.getDataType() == DataBuffer.TYPE_USHORT)
-      return new ShortComponentRaster(sm, dataBuffer, location);
+      return new ShortInterleavedRaster(sm, dataBuffer, location);
     else if (dataBuffer.getDataType() == DataBuffer.TYPE_INT)
-      return new IntegerComponentRaster(sm, dataBuffer, location);
+      return new IntegerInterleavedRaster(sm, dataBuffer, location);
     else
       throw new IllegalArgumentException("Data type is not supported.");
   }
@@ -481,7 +481,7 @@ public class Raster
       location = new Point(0,0);
 
     if (dataBuffer.getDataType() == DataBuffer.TYPE_BYTE)
-      return new BytePackedRaster(sm, dataBuffer, location);
+      return new ByteInterleavedRaster(sm, dataBuffer, location);
     else if (dataBuffer.getDataType() == DataBuffer.TYPE_USHORT 
       || dataBuffer.getDataType() == DataBuffer.TYPE_INT)
       return new SunWritableRaster(sm, dataBuffer, location);
@@ -515,6 +515,39 @@ public class Raster
   public static WritableRaster createWritableRaster(SampleModel sm,
                                                     Point location)
   {
+    if (sm instanceof PixelInterleavedSampleModel)
+      {
+        if (sm.dataType == DataBuffer.TYPE_BYTE)
+          return new ByteInterleavedRaster(sm, location);
+        else if (sm.dataType == DataBuffer.TYPE_SHORT)
+          return new ShortInterleavedRaster(sm, location);
+      }
+    else if (sm instanceof BandedSampleModel)
+      {
+        if (sm.dataType == DataBuffer.TYPE_BYTE)
+          return new ByteBandedRaster(sm, location);
+        else if (sm.dataType == DataBuffer.TYPE_USHORT)
+          return new ShortBandedRaster(sm, location);
+      }
+    else if (sm instanceof SinglePixelPackedSampleModel
+             || sm instanceof MultiPixelPackedSampleModel)
+      {
+        if (sm.numBands == 1)
+          {
+            if (sm.dataType == DataBuffer.TYPE_BYTE)
+              return new BytePackedRaster(sm, location);
+          }
+        else
+          {
+            if (sm.dataType == DataBuffer.TYPE_BYTE)
+              return new ByteInterleavedRaster(sm, location);
+            else if (sm.dataType == DataBuffer.TYPE_USHORT)
+              return new ShortInterleavedRaster(sm, location);
+            else if (sm.dataType == DataBuffer.TYPE_INT)
+              return new IntegerInterleavedRaster(sm, location);
+          }
+      }
+
     return new SunWritableRaster(sm, location);
   }
 
@@ -530,6 +563,39 @@ public class Raster
   public static WritableRaster createWritableRaster(SampleModel sm,
       DataBuffer db, Point location)
   {
+    if (sm instanceof PixelInterleavedSampleModel)
+      {
+        if (sm.dataType == DataBuffer.TYPE_BYTE)
+          return new ByteInterleavedRaster(sm, db, location);
+        else if (sm.dataType == DataBuffer.TYPE_SHORT)
+          return new ShortInterleavedRaster(sm, db, location);
+      }
+    else if (sm instanceof BandedSampleModel)
+      {
+        if (sm.dataType == DataBuffer.TYPE_BYTE)
+          return new ByteBandedRaster(sm, db, location);
+        else if (sm.dataType == DataBuffer.TYPE_USHORT)
+          return new ShortBandedRaster(sm, db, location);
+      }
+    else if (sm instanceof SinglePixelPackedSampleModel
+             || sm instanceof MultiPixelPackedSampleModel)
+      {
+        if (sm.numBands == 1)
+          {
+            if (sm.dataType == DataBuffer.TYPE_BYTE)
+              return new BytePackedRaster(sm, db, location);
+          }
+        else
+          {
+            if (sm.dataType == DataBuffer.TYPE_BYTE)
+              return new ByteInterleavedRaster(sm, db, location);
+            else if (sm.dataType == DataBuffer.TYPE_USHORT)
+              return new ShortInterleavedRaster(sm, db, location);
+            else if (sm.dataType == DataBuffer.TYPE_INT)
+              return new IntegerInterleavedRaster(sm, db, location);
+          }
+      }
+
     return new SunWritableRaster(sm, db, location);
   }
 
@@ -619,12 +685,7 @@ public class Raster
   }
 
   public Raster createTranslatedChild(int childMinX, int childMinY) {
-    int tcx = sampleModelTranslateX - minX + childMinX;
-    int tcy = sampleModelTranslateY - minY + childMinY;
-    
-    return new Raster(sampleModel, dataBuffer,
-                      new Rectangle(childMinX, childMinY, width, height),
-                      new Point(tcx, tcy), this);
+    return createChild(minX, minY, width, height, childMinX, childMinY, null);
   }
 
   public Raster createChild(int parentX, int parentY, int width,

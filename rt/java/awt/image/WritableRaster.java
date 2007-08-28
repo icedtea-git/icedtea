@@ -112,13 +112,8 @@ public class WritableRaster extends Raster
   public WritableRaster createWritableTranslatedChild(int childMinX,
                                                       int childMinY)
   {
-    // This mirrors the code from the super class
-    int tcx = sampleModelTranslateX - minX + childMinX;
-    int tcy = sampleModelTranslateY - minY + childMinY;
-    
-    return new SunWritableRaster(sampleModel, dataBuffer,
-        new Rectangle(childMinX, childMinY, width, height), 
-        new Point(tcx, tcy), this);
+    return createWritableChild(minX, minY, width, height,
+                               childMinX, childMinY, null);
   }
 
   /**
@@ -156,19 +151,8 @@ public class WritableRaster extends Raster
                             int height, int childMinX, int childMinY,
                             int[] bandList)
   {
-    if (parentX < minX || parentX + width > minX + this.width
-        || parentY < minY || parentY + height > minY + this.height)
-      throw new RasterFormatException("Child raster extends beyond parent");
-    
-    SampleModel sm = (bandList == null) ?
-      sampleModel :
-      sampleModel.createSubsetSampleModel(bandList);
-
-    return new SunWritableRaster(sm, dataBuffer,
-        new Rectangle(childMinX, childMinY, width, height),
-        new Point(sampleModelTranslateX + childMinX - parentX,
-                  sampleModelTranslateY + childMinY - parentY),
-        this);
+    return createWritableChild(parentX, parentY, width, height,
+                               childMinX, childMinY, bandList);
   }
 
   public void setDataElements(int x, int y, Object inData)

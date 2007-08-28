@@ -1,3 +1,8 @@
+2007-08-28  Francis Kung  <fkung@redhat.com>
+
+	* rt/java/awt/image/Raster.java: Create proper raster types.
+	* rt/java/awt/image/WritableRaster.java: Likewise.
+
 2007-08-28  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* README: Add gcjwebplugin section.
