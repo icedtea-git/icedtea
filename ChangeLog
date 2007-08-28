@@ -1,3 +1,7 @@
+2007-08-28  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* README: Add gcjwebplugin section.
+
 2007-08-28  Lillian Angel  <langel@redhat.com>
 
 	* INSTALL: Added requirements for plugin.

@@ -61,3 +61,23 @@ files are:
 
   openjdk/j2se/make/java/nio/genExceptions.sh
   openjdk/hotspot/src/share/vm/prims/jvmtiLib.xsl
+
+gcjwebplugin
+============
+
+gcjwebplugin provides basic support for running applets in
+Mozilla-based web browsers.  It does not support applet/Javascript
+communication (LiveConnect) and support for signed applets needs
+further testing.  The current applet security manager may be too
+strict and may require tuning to allow otherwise-legitimate calls by
+untrusted applets.
+
+gcjwebplugin itself is a shared object, gcjwebplugin.so, built from a
+single source file, gcjwebplugin.cc.  The IcedTea adaptation of
+gcjwebplugin communicates through named pipes with a modified version
+of IcedTea's appletviewer.  Two source files,
+openjdk/j2se/src/share/classes/sun/applet/PluginAppletViewer.java,
+openjdk/j2se/src/share/classes/sun/applet/PluginMain.java are added to
+rt.jar and tools.jar to provide gcjwebplugin with an interface into
+the appletviewer code.  This support code is provided in
+patches/icedtea-plugin.patch.
