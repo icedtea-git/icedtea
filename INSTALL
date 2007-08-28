@@ -28,6 +28,9 @@ wget
 alsa
 xalan
 xerces
+firefox-devel
+glib2-devel 
+gtk2-devel
 
 See ./configure --help if you need to override defaults.
 
