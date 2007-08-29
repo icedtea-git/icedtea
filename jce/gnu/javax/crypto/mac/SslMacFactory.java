@@ -1,4 +1,4 @@
-/* MacFactory.java -- 
+/* SslMacFactory.java -- 
    Copyright (C) 2001, 2002, 2006 Free Software Foundation, Inc.
 
 This file is a part of GNU Classpath.
@@ -39,8 +39,7 @@ exception statement from your version.  */
 package gnu.javax.crypto.mac;
 
 import gnu.java.security.Registry;
-import gnu.javax.crypto.cipher.CipherFactory;
-import gnu.javax.crypto.cipher.IBlockCipher;
+import gnu.java.security.hash.HashFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -48,26 +47,28 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * A <i>Factory</i> that instantiates instances of every supported Message
- * Authentication Code algorithms, including all <i>HMAC</i> algorithms.
+ * A <i>Factory</i> to instantiate algorithm instances.
  */
-public class MacFactory
+public class SslMacFactory
     implements Registry
 {
-  private static Set names;
-
   /** Trivial constructor to enforce <i>Singleton</i> pattern. */
-  private MacFactory()
+  private SslMacFactory()
   {
     super();
   }
 
   /**
-   * Returns an instance of a <i>MAC</i> algorithm given its name.
+   * Return an instance of a <i>SslMac</i> algorithm given the name of its
+   * underlying hash function, prefixed with the literal defined in
+   * {@link Registry#SSL_MAC_NAME_PREFIX}.
    * 
-   * @param name the name of the MAC algorithm.
-   * @return an instance of the <i>MAC</i> algorithm, or <code>null</code> if
-   *         none can be constructed.
+   * @param name the fully qualified name of the underlying algorithm: composed
+   *          as the concatenation of a literal prefix (see
+   *          {@link Registry#SSL_MAC_NAME_PREFIX}) and the name of the underlying
+   *          hash algorithm.
+   * @return an instance of the <i>SslMac</i> algorithm, or <code>null</code>
+   *         if none can be constructed.
    * @exception InternalError if the implementation does not pass its self-test.
    */
   public static IMac getInstance(String name)
@@ -75,31 +76,12 @@ public class MacFactory
     if (name == null)
       return null;
 
-    if (name.startsWith(SSL_MAC_NAME_PREFIX))
-    	return SslMacFactory.getInstance(name);
-    
-    name = name.trim();
-    name = name.toLowerCase();
-    if (name.startsWith(HMAC_NAME_PREFIX))
-      return HMacFactory.getInstance(name);
+    if (! name.startsWith(SSL_MAC_NAME_PREFIX))
+      return null;
 
-    if (name.startsWith(OMAC_PREFIX))
-      {
-        name = name.substring(OMAC_PREFIX.length());
-        IBlockCipher cipher = CipherFactory.getInstance(name);
-        if (cipher == null)
-          return null;
-        return new OMAC(cipher);
-      }
-    
-    IMac result = null;
-    if (name.equalsIgnoreCase(UHASH32))
-      result = new UHash32();
-    else if (name.equalsIgnoreCase(UMAC32))
-      result = new UMac32();
-    else if (name.equalsIgnoreCase(TMMH16))
-      result = new TMMH16();
-
+    // strip the prefix
+    name = name.substring(SSL_MAC_NAME_PREFIX.length()).trim();
+    IMac result = new SslMac(name);
     if (result != null && ! result.selfTest())
       throw new InternalError(result.name());
 
@@ -107,28 +89,20 @@ public class MacFactory
   }
 
   /**
-   * Returns a {@link Set} of names of <i>MAC</i> algorithms supported by this
-   * <i>Factory</i>.
+   * <p>
+   * Returns a {@link java.util.Set} of names of <i>SslMac</i> algorithms
+   * supported by this <i>Factory</i>.
+   * </p>
    * 
-   * @return a {@link Set} of MAC names (Strings).
+   * @return a {@link java.util.Set} of SslMac algorithm names (Strings).
    */
   public static final Set getNames()
   {
-    synchronized (MacFactory.class)
-      {
-        if (names == null)
-          {
-            HashSet hs = new HashSet();
-            hs.addAll(HMacFactory.getNames());
-            hs.add(UHASH32);
-            hs.add(UMAC32);
-            hs.add(TMMH16);
-            for (Iterator it = CipherFactory.getNames().iterator(); it.hasNext();)
-              hs.add(OMAC_PREFIX + it.next());
+    Set hashNames = HashFactory.getNames();
+    HashSet hs = new HashSet();
+    for (Iterator it = hashNames.iterator(); it.hasNext();)
+      hs.add(SSL_MAC_NAME_PREFIX + ((String) it.next()));
 
-            names = Collections.unmodifiableSet(hs);
-          }
-      }
-    return names;
+    return Collections.unmodifiableSet(hs);
   }
 }

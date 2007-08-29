@@ -266,6 +266,9 @@ public interface Registry
 
   /** Name prefix of every HMAC implementation. */
   String HMAC_NAME_PREFIX = "hmac-";
+  
+  /** Name prefix of every SslMac implementation. */
+  String SSL_MAC_NAME_PREFIX = "SSLMac-";
 
   // Other MAC algorithms ....................................................
 

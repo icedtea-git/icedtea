@@ -445,6 +445,8 @@ public final class GnuCrypto
         put("Mac.TMMH16", gnu.javax.crypto.jce.mac.TMMH16Spi.class.getName());
         put("Mac.UHASH32", gnu.javax.crypto.jce.mac.UHash32Spi.class.getName());
         put("Mac.UMAC32", gnu.javax.crypto.jce.mac.UMac32Spi.class.getName());
+        put("Mac.SslMacMD5", gnu.javax.crypto.jce.mac.SslMacMD5Spi.class.getName());
+        put("Mac.SslMacSHA1", gnu.javax.crypto.jce.mac.SslMacSHA1Spi.class.getName());
 
         put("Mac.OMAC-ANUBIS",
             gnu.javax.crypto.jce.mac.OMacAnubisImpl.class.getName());

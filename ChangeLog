@@ -1,3 +1,9 @@
+2007-08-29  Lillian Angel  <langel@redhat.com>
+	
+	* Makefile.am: Should make lib/rt and lib/jce because javac
+	doesn't create the directories on the fly.
+	* Makefile.in: Regenerate
+
 2007-08-28  Francis Kung  <fkung@redhat.com>
 
 	* rt/java/awt/image/Raster.java: Create proper raster types.
