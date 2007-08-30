@@ -464,7 +464,7 @@ OPENJDK_SOURCEPATH_DIRS = \
 	openjdk/j2se/src/share/classes:openjdk/j2se/src/solaris/classes
 
 rt-class-files.stamp: rt-source-files.txt
-	mkdir -p lib/rt
+	mkdir lib/rt
 	$(JCOMPILER) -g -d lib/rt -bootclasspath '' -source 1.6 \
 	  -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated:jce \
 	  @rt-source-files.txt
@@ -486,7 +486,7 @@ jce-source-files.txt:
 	find jce -name '*.java' -print | sort > $@
 
 jce-class-files.stamp: jce-source-files.txt rt-class-files.stamp
-	mkdir -p lib/jce
+	mkdir lib/jce
 	$(JCOMPILER) -g -d lib/jce -bootclasspath '' -source 1.6 \
 	  -classpath lib/rt @$<
 	touch jce-class-files.stamp
