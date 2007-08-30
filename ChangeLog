@@ -1,5 +1,12 @@
 2007-08-30  Lillian Angel  <langel@redhat.com>
 
+	* patches/icedtea-rmi_amd64.patch: New patch. java-rmi.cgi script is
+	now installed on x86_64 properly.
+	* Makefile.am: Added new patch to list.
+	* Makefile.in: Regenerated.
+
+2007-08-30  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Some changes were lost after reverting- changes added
 	again.
 	* Makefile.in: Regenerated.

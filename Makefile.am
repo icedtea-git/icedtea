@@ -170,6 +170,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-license-headers.patch \
 	patches/icedtea-libpng.patch \
 	patches/icedtea-plugin.patch \
+	patches/icedtea-rmi_amd64.patch \
 	$(FAST_BUILD_PATCH)
 
 patch.stamp: extract.stamp
