@@ -1,3 +1,7 @@
+2007-08-31  Lillian Angel <langel@redhat.com>
+
+	* INSTALL: Added information about rebuilding plugs.
+
 2007-08-30  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-rmi_amd64.patch: New patch. java-rmi.cgi script is

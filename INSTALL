@@ -47,3 +47,18 @@ make
 
 This builds IcedTea against ecj running on libgcj first then uses the
 result of that build to build IcedTea again.
+
+Rebuilding The IcedTea Plugs
+----------------------------
+
+When IcedTea is initially built, it creates stamp files to determine what
+and when dependencies were compiled. For example, to rebuild the rt/jce plugs
+certain files need to be deleted before restarting the build.
+
+ - If the jce plugs have been modified, delete jce-class-files.stamp.
+ - If a new class has been added to the jce plugs, delete 
+ jce-source-files.txt so it can be recreated with the new class list.
+ - If the rt plugs have been modified, delete rt-class-files.stamp.
+ - If a new class has been added to the rt plugs, delete
+ rt-source-files.txt  so it can be recreated with the new class list.
+
