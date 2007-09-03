@@ -1,3 +1,10 @@
+2007-09-03  Lillian Angel  <langel@redhat.com>
+
+	*  patches/icedtea-lesstif_amd64.patch: New patch. Fixes window
+	decorations on x86_64.
+	* Makefile.am: Added new patch.
+	* Makefile.in: Regenerated.
+
 2007-08-31  Lillian Angel <langel@redhat.com>
 
 	* INSTALL: Added information about rebuilding plugs.
