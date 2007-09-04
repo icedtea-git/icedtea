@@ -419,3 +419,8 @@ patch.stamp
 plugs.stamp
 rt-class-files.stamp
 rt-source-files.txt
+tools-class-files.stamp
+tools-copy-source-files.stamp
+tools-source-files.txt
+tools.stamp
+tools/

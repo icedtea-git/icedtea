@@ -1,3 +1,18 @@
+2007-09-04  Lillian Angel  <langel@redhat.com>
+
+	* .hgignore: Updated to ignore tools/
+	* Makefile.am: Updated to b19. A version of tools.jar is now 
+	generated at the beginning of the build. It is now required to 
+	build other hotspot sources. rt.jar has been renamed to rt-closed.jar, 
+	and ALT_CLOSED_JDK_IMPORT_PATH has been replaced with
+	ALT_BINARY_PLUGS_PATH, as per b19 changes.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-tools.patch: New patch to fix the build. jvmti.h
+	fails generate properly without this patch.
+	* tools-copy-files.txt: List of files used to create tools.jar.
+	* generated/sun/awt/DebugHelper.java: Removed. This file has been
+	removed from the OpenJDK sources as well.
+
 2007-09-03  Lillian Angel  <langel@redhat.com>
 
 	*  patches/icedtea-lesstif_amd64.patch: New patch. Fixes window

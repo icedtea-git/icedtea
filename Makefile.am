@@ -1,6 +1,6 @@
-OPENJDK_VERSION = b18
-OPENJDK_DATE = 16_aug_2007
-OPENJDK_MD5SUM = 475985960afd082e2aebac4e878a18fb
+OPENJDK_VERSION = b19
+OPENJDK_DATE = 30_aug_2007
+OPENJDK_MD5SUM = 2763a34fe37695fafd09061cd2ca880b
 
 # Top-Level Targets
 # =================
@@ -12,13 +12,15 @@ distclean-local: clean-copy
 	  patch-ecj.stamp bootstrap-directory.stamp \
 	  bootstrap-directory-symlink.stamp bootstrap-directory-ecj.stamp \
 	  bootstrap-directory-symlink-ecj.stamp icedtea-ecj.stamp \
-	  icedtea-against-ecj.stamp plugs.stamp copy-source-files.stamp \
-	  rt-class-files.stamp jce-class-files.stamp
-	rm -f rt-source-files.txt jce-source-files.txt
+	  icedtea-against-ecj.stamp tools.stamp plugs.stamp \
+	  copy-source-files.stamp rt-class-files.stamp jce-class-files.stamp \
+	  tools-class-files.stamp tools-copy-source-files.stamp
+	rm -f rt-source-files.txt jce-source-files.txt tools-source-files.txt
 	rm -rf bootstrap
 	rm -rf lib
 	rm -rf openjdk-ecj
 	rm -rf openjdk
+	rm -rf tools
 	rm -f gcjwebplugin.so
 
 install:
@@ -29,8 +31,8 @@ install:
 	clean-bootstrap-directory-symlink clean-bootstrap-directory-ecj \
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
-	clean-shared-objects clean-security-jars clean-copy clean-rt clean-jce \
-	clean-gcjwebplugin
+	clean-tools-jar clean-tools clean-shared-objects clean-security-jars \
+	clean-copy clean-rt clean-jce clean-gcjwebplugin
 
 EXTRA_DIST = rt jce generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch
@@ -42,7 +44,7 @@ ICEDTEA_BUILD_DIR = \
 ICEDTEA_JCE = \
 	$(abs_top_srcdir)/openjdk/control/build/$(LINUX_DIR)/lib/jce.jar
 ICEDTEA_RT = \
-	$(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/rt.jar
+	$(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 ICEDTEA_CLS_DIR = \
 	$(abs_top_srcdir)/openjdk/control/build/$(LINUX_DIR)/classes
 ICEDTEA_ENDORSED_DIR = \
@@ -51,7 +53,7 @@ ICEDTEA_ENV = \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
-	"ALT_CLOSED_JDK_IMPORT_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
+	"ALT_BINARY_PLUGS_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
 	"LIBGCJ_JAR=$(LIBGCJ_JAR)" \
 	"ICEDTEA_JCE=$(ICEDTEA_JCE)" \
@@ -82,7 +84,7 @@ ICEDTEA_ENV_ECJ = \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
-	"ALT_CLOSED_JDK_IMPORT_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
+	"ALT_BINARY_PLUGS_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
 	"LIBGCJ_JAR=$(LIBGCJ_JAR)" \
 	"ICEDTEA_JCE=$(ICEDTEA_JCE_ECJ)" \
@@ -172,6 +174,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-plugin.patch \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-lesstif_amd64.patch \
+	patches/icedtea-tools.patch \
 	$(FAST_BUILD_PATCH)
 
 patch.stamp: extract.stamp
@@ -316,7 +319,7 @@ clean-bootstrap-directory-symlink-ecj:
 # OpenJDK Targets
 # ===============
 
-icedtea: plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
+icedtea: tools.stamp plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make
@@ -326,7 +329,7 @@ icedtea: plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
 	  openjdk/control/build/$(LINUX_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	@echo "IcedTea is served:" openjdk/control/build/$(LINUX_DIR)
 
-icedtea-debug: plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
+icedtea-debug: tools.stamp plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
@@ -350,7 +353,7 @@ icedtea-against-icedtea: \
 # OpenJDK ecj Targets
 # ===================
 
-icedtea-ecj.stamp: plugs.stamp extract-ecj.stamp patch-ecj.stamp
+icedtea-ecj.stamp: tools.stamp plugs.stamp extract-ecj.stamp patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj/control/make
@@ -369,19 +372,27 @@ icedtea-against-ecj.stamp: \
 	icedtea-ecj.stamp
 	touch icedtea-against-ecj.stamp
 
-# Binary Plugs Targets
-# ====================
+# Binary Plugs and Tools Targets
+# ==============================
 
 plugs.stamp: $(SHARED_OBJECT_FILES) $(SECURITY_JAR_FILES) \
-	bootstrap/jdk1.7.0/jre/lib/rt.jar \
+	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
 	bootstrap/jdk1.7.0/jre/lib/jce.jar
 	touch plugs.stamp
+
+tools.stamp: bootstrap/ecj/lib/tools.jar
+	touch tools.stamp
 
 clean-plugs: clean-plugs clean-shared-objects clean-security-jars \
 	clean-copy clean-rt clean-jce
 	rm -f plugs.stamp
-	rm -f bootstrap/jdk1.7.0/jre/lib/rt.jar
+	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 	rm -f bootstrap/jdk1.7.0/jre/lib/jce.jar
+
+clean-tools-jar: clean-tools-jar clean-tools
+	rm -f tools.stamp
+	rm -rf tools/
+	rm -f bootstrap/jdk1.6.0/lib/tools.jar
 
 # Shared objects.
 SHARED_OBJECT_FILES = \
@@ -458,12 +469,44 @@ if FOUND_JAVAC
 endif
 endif
 
-# rt.jar class files.
+OPENJDK_SOURCEPATH_DIRS = \
+        openjdk/j2se/src/share/classes:openjdk/j2se/src/solaris/classes
+
+# tools.jar class files.
+tools-copy-source-files.stamp: extract.stamp patch.stamp
+	for copy_dir in `cat tools-copy-files.txt` ; \
+        do \
+          mkdir -p tools/$$copy_dir ; \
+	  cp -arf openjdk/j2se/src/share/classes/$$copy_dir/* \
+            tools/$$copy_dir ; \
+        done
+	touch tools-copy-source-files.stamp
+
+tools-source-files.txt: extract.stamp tools-copy-source-files.stamp
+	find tools -name '*.java' | sort > $@
+	mkdir -p lib/tools
+
+tools-class-files.stamp: tools-source-files.txt
+	$(JCOMPILER) -g -d lib/tools -bootclasspath '' -source 1.6 \
+	-sourcepath jce:rt:tools:$(OPENJDK_SOURCEPATH_DIRS):generated \
+	@tools-source-files.txt
+	touch tools-class-files.stamp
+
+clean-tools:
+	rm -rf lib/tools
+	rm -f tools-class-files.stamp
+	rm -f tools-source-files.txt
+	rm -f tools-copy-source-files.stamp
+
+# tools.jar
+bootstrap/ecj/lib/tools.jar: tools-class-files.stamp
+	mkdir -p bootstrap/ecj/lib
+	$(JAR) cf $@ -C lib/tools com -C lib/tools sun \
+	  -C lib/tools org
+ 
+# rt-closed.jar class files.
 rt-source-files.txt: extract.stamp copy-source-files.stamp
 	find rt -name '*.java' | sort > $@
-
-OPENJDK_SOURCEPATH_DIRS = \
-	openjdk/j2se/src/share/classes:openjdk/j2se/src/solaris/classes
 
 rt-class-files.stamp: rt-source-files.txt
 	mkdir -p lib/rt
@@ -477,8 +520,8 @@ clean-rt:
 	rm -f rt-class-files.stamp
 	rm -f rt-source-files.txt
 
-# rt.jar.
-bootstrap/jdk1.7.0/jre/lib/rt.jar: rt-class-files.stamp
+# rt-closed.jar.
+bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: rt-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
 	$(JAR) cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
 	  -C lib/rt javax -C lib/rt sun
