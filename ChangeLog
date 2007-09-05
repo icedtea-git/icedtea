@@ -1,3 +1,10 @@
+2007-09-05  Joshua Sumali  <jsumali@redhat.com>
+
+	* patches/icedtea-copy-plugs.patch: Fixed hunks to apply cleanly
+	with b19.
+	* patches/icedtea-debuginfo.patch: Likewise.
+	* patches/icedtea-version.patch: Likewise.
+
 2007-09-05  Lillian Angel  <langel@redhat.com>
 
 	* INSTALL: Added note about stamped targets.

@@ -35,8 +35,8 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java openjdk/j
          return (annotation != null)
                  ? annotation.value()
                  : null;
---- openjdk.clean/j2se/make/common/BinaryPlugs.gmk	2007-07-20 08:17:54.000000000 +0100
-+++ openjdk/j2se/make/common/BinaryPlugs.gmk	2007-07-24 13:48:19.000000000 +0100
+--- openjdk.orig/j2se/make/common/BinaryPlugs.gmk	2007-08-30 03:19:36.000000000 -0400
++++ openjdk/j2se/make/common/BinaryPlugs.gmk	2007-09-04 10:31:46.000000000 -0400
 @@ -76,8 +76,6 @@
  com/sun/jmx/snmp/SnmpDataTypeEnums.class \
  com/sun/jmx/snmp/SnmpDefinitions.class \
@@ -111,7 +111,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java openjdk/j
  $(PLUG_TEMPDIR)/all.jargs: $(PLUG_TEMPDIR)/all.clist
  	$(plug-create-jargs)
  
-@@ -375,9 +373,9 @@
+@@ -376,9 +373,9 @@
  # Import classes command
  
  define import-binary-plug-classes

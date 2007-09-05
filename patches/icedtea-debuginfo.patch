@@ -23,9 +23,9 @@
    endif
  endif
  
---- openjdk/j2se/make/common/Defs.gmk~	2007-05-24 08:33:20.000000000 +0100
-+++ openjdk/j2se/make/common/Defs.gmk	2007-06-21 15:26:02.000000000 +0100
-@@ -578,13 +578,10 @@
+--- openjdk.orig/j2se/make/common/Defs.gmk	2007-08-30 03:19:36.000000000 -0400
++++ openjdk/j2se/make/common/Defs.gmk	2007-09-04 10:31:46.000000000 -0400
+@@ -580,13 +580,10 @@
  JAVAC_PATHFLAGS    = $(JAVAC_CLS_FLAG) $(JAVAC_SRC_FLAG) $(JAVAC_DST_FLAG)
  JAVACFLAGS_COMMON  = $(JAVAC_PATHFLAGS) $(JAVAC_ENCODINGFLAGS)
  
