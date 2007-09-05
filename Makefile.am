@@ -551,3 +551,42 @@ gcjwebplugin.so: gcjwebplugin.cc
 
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
+
+# All Stamped Targets
+# ===================
+
+bootstrap-directory-ecj: stamps/bootstrap-directory-ecj.stamp
+
+bootstrap-directory: stamps/bootstrap-directory.stamp
+
+bootstrap-directory-symlink-ecj: stamps/bootstrap-directory-symlink-ecj.stamp
+
+bootstrap-directory-symlink: stamps/bootstrap-directory-symlink.stamp
+
+copy-source-files: stamps/copy-source-files.stamp
+
+download: stamps/download.stamp
+
+extract-ecj: stamps/extract-ecj.stamp
+
+extract: stamps/extract.stamp
+
+icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
+
+icedtea-ecj: stamps/icedtea-ecj
+
+jce-class-files: stamps/jce-class-files.stamp
+
+patch-ecj: stamps/patch-ecj.stamp
+
+patch: stamps/patch.stamp
+
+plugs: stamps/plugs.stamp
+
+rt-class-files: stamps/rt-class-files.stamp
+
+tools-class-files: stamps/tools-class-files.stamp
+
+tools-copy-source-files: stamps/tools-copy-source-files.stamp
+
+tools: stamps/tools.stamp

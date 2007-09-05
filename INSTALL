@@ -62,3 +62,5 @@ the rt/jce plugs certain files need to be deleted before restarting the build.
  - If a new class has been added to the rt plugs, delete
  rt-source-files.txt  so it can be recreated with the new class list.
 
+To view all targets that create stamp files, see 
+Makefile.am (section 'All Stamped Targets').

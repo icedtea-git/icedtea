@@ -1,5 +1,12 @@
 2007-09-05  Lillian Angel  <langel@redhat.com>
 
+	* INSTALL: Added note about stamped targets.
+	* Makefile.am: Added new targets. (i.e. instead of calling
+	make stamps/plugs.stamps, 'make plugs' works.)
+	* Makefile.in: Regenerated.
+
+2007-09-05  Lillian Angel  <langel@redhat.com>
+
 	* .hgignore: Updated.
 	* INSTALL: Updated.
 	* Makefile.am: Fixed to create stamps in a stamps directory.
