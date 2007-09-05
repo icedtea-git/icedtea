@@ -85,36 +85,42 @@ exception statement from your version. */
 // Plugin information passed to about:plugins.
 #define PLUGIN_NAME "GCJ Web Browser Plugin"
 #define PLUGIN_DESC "The " PLUGIN_NAME " executes Java applets."
-#define PLUGIN_MIME_DESC                                           \
-  "application/x-java-vm:class,jar:GCJ;"                           \
-  "application/x-java-applet:class,jar:GCJ;"                       \
-  "application/x-java-applet;version=1.1:class,jar:GCJ;"           \
-  "application/x-java-applet;version=1.1.1:class,jar:GCJ;"         \
-  "application/x-java-applet;version=1.1.2:class,jar:GCJ;"         \
-  "application/x-java-applet;version=1.1.3:class,jar:GCJ;"         \
-  "application/x-java-applet;version=1.2:class,jar:GCJ;"           \
-  "application/x-java-applet;version=1.2.1:class,jar:GCJ;"         \
-  "application/x-java-applet;version=1.2.2:class,jar:GCJ;"         \
-  "application/x-java-applet;version=1.3:class,jar:GCJ;"           \
-  "application/x-java-applet;version=1.3.1:class,jar:GCJ;"         \
-  "application/x-java-applet;version=1.4:class,jar:GCJ;"           \
-  "application/x-java-applet;version=1.4.1:class,jar:GCJ;"         \
-  "application/x-java-applet;version=1.4.2:class,jar:GCJ;"         \
-  "application/x-java-applet;jpi-version=1.4.2_01:class,jar:GCJ;"  \
-  "application/x-java-bean:class,jar:GCJ;"                         \
-  "application/x-java-bean;version=1.1:class,jar:GCJ;"             \
-  "application/x-java-bean;version=1.1.1:class,jar:GCJ;"           \
-  "application/x-java-bean;version=1.1.2:class,jar:GCJ;"           \
-  "application/x-java-bean;version=1.1.3:class,jar:GCJ;"           \
-  "application/x-java-bean;version=1.2:class,jar:GCJ;"             \
-  "application/x-java-bean;version=1.2.1:class,jar:GCJ;"           \
-  "application/x-java-bean;version=1.2.2:class,jar:GCJ;"           \
-  "application/x-java-bean;version=1.3:class,jar:GCJ;"             \
-  "application/x-java-bean;version=1.3.1:class,jar:GCJ;"           \
-  "application/x-java-bean;version=1.4:class,jar:GCJ;"             \
-  "application/x-java-bean;version=1.4.1:class,jar:GCJ;"           \
-  "application/x-java-bean;version=1.4.2:class,jar:GCJ;"           \
-  "application/x-java-bean;jpi-version=1.4.2_01:class,jar:GCJ;"
+#define PLUGIN_MIME_DESC                                               \
+  "application/x-java-vm:class,jar:IcedTea;"                           \
+  "application/x-java-applet:class,jar:IcedTea;"                       \
+  "application/x-java-applet;version=1.1:class,jar:IcedTea;"           \
+  "application/x-java-applet;version=1.1.1:class,jar:IcedTea;"         \
+  "application/x-java-applet;version=1.1.2:class,jar:IcedTea;"         \
+  "application/x-java-applet;version=1.1.3:class,jar:IcedTea;"         \
+  "application/x-java-applet;version=1.2:class,jar:IcedTea;"           \
+  "application/x-java-applet;version=1.2.1:class,jar:IcedTea;"         \
+  "application/x-java-applet;version=1.2.2:class,jar:IcedTea;"         \
+  "application/x-java-applet;version=1.3:class,jar:IcedTea;"           \
+  "application/x-java-applet;version=1.3.1:class,jar:IcedTea;"         \
+  "application/x-java-applet;version=1.4:class,jar:IcedTea;"           \
+  "application/x-java-applet;version=1.4.1:class,jar:IcedTea;"         \
+  "application/x-java-applet;version=1.4.2:class,jar:IcedTea;"         \
+  "application/x-java-applet;version=1.5:class,jar:IcedTea;"           \
+  "application/x-java-applet;version=1.6:class,jar:IcedTea;"           \
+  "application/x-java-applet;version=1.7:class,jar:IcedTea;"           \
+  "application/x-java-applet;jpi-version=1.7.0_00:class,jar:IcedTea;"  \
+  "application/x-java-bean:class,jar:IcedTea;"                         \
+  "application/x-java-bean;version=1.1:class,jar:IcedTea;"             \
+  "application/x-java-bean;version=1.1.1:class,jar:IcedTea;"           \
+  "application/x-java-bean;version=1.1.2:class,jar:IcedTea;"           \
+  "application/x-java-bean;version=1.1.3:class,jar:IcedTea;"           \
+  "application/x-java-bean;version=1.2:class,jar:IcedTea;"             \
+  "application/x-java-bean;version=1.2.1:class,jar:IcedTea;"           \
+  "application/x-java-bean;version=1.2.2:class,jar:IcedTea;"           \
+  "application/x-java-bean;version=1.3:class,jar:IcedTea;"             \
+  "application/x-java-bean;version=1.3.1:class,jar:IcedTea;"           \
+  "application/x-java-bean;version=1.4:class,jar:IcedTea;"             \
+  "application/x-java-bean;version=1.4.1:class,jar:IcedTea;"           \
+  "application/x-java-bean;version=1.4.2:class,jar:IcedTea;"           \
+  "application/x-java-bean;version=1.5:class,jar:IcedTea;"             \
+  "application/x-java-bean;version=1.6:class,jar:IcedTea;"             \
+  "application/x-java-bean;version=1.7:class,jar:IcedTea;"             \
+  "application/x-java-bean;jpi-version=1.7.0_00:class,jar:IcedTea;"
 #define PLUGIN_URL NS_INLINE_PLUGIN_CONTRACTID_PREFIX NS_JVM_MIME_TYPE
 #define PLUGIN_MIME_TYPE "application/x-java-vm"
 #define PLUGIN_FILE_EXTS "class,jar,zip"
