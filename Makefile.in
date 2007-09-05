@@ -610,13 +610,7 @@ uninstall-am:
 all-local: icedtea-against-icedtea
 
 distclean-local: clean-copy
-	rm -f download.stamp extract.stamp patch.stamp extract-ecj.stamp \
-	  patch-ecj.stamp bootstrap-directory.stamp \
-	  bootstrap-directory-symlink.stamp bootstrap-directory-ecj.stamp \
-	  bootstrap-directory-symlink-ecj.stamp icedtea-ecj.stamp \
-	  icedtea-against-ecj.stamp tools.stamp plugs.stamp \
-	  copy-source-files.stamp rt-class-files.stamp jce-class-files.stamp \
-	  tools-class-files.stamp tools-copy-source-files.stamp
+	rm -rf stamps
 	rm -f rt-source-files.txt jce-source-files.txt tools-source-files.txt
 	rm -rf bootstrap
 	rm -rf lib
@@ -646,8 +640,9 @@ env-ecj:
 snapshot: dist
 	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
 
-download.stamp:
-	rm -f download.stamp
+stamps/download.stamp:
+	mkdir -p stamps/
+	rm -f stamps/download.stamp
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
 	then \
@@ -657,25 +652,25 @@ download.stamp:
           fi ; \
 	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP_BASE) -O $(OPENJDK_SRC_ZIP); \
 	fi
-	touch download.stamp
+	touch stamps/download.stamp
 
 clean-download:
-	rm -f download.stamp
+	rm -f stamps/download.stamp
 	rm -f $(OPENJDK_SRC_ZIP)
 
 # Extract OpenJDK sources.
-extract.stamp: download.stamp
+stamps/extract.stamp: stamps/download.stamp
 	if ! test -d openjdk ; \
 	then \
 	  $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
 	fi
-	touch extract.stamp
+	touch stamps/extract.stamp
 
 clean-extract:
-	rm -f extract.stamp
+	rm -f stamps/extract.stamp
 	rm -rf openjdk
 
-patch.stamp: extract.stamp
+stamps/patch.stamp: stamps/extract.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
@@ -685,10 +680,10 @@ patch.stamp: extract.stamp
 	    $(PATCH) -p0 < $$p ; \
 	  fi ; \
 	done
-	touch patch.stamp
+	touch stamps/patch.stamp
 
 clean-patch:
-	rm -f patch.stamp
+	rm -f stamps/patch.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
@@ -703,7 +698,7 @@ clean-patch:
 # ======================================
 
 # Extract OpenJDK sources for ecj.
-extract-ecj.stamp: download.stamp
+stamps/extract-ecj.stamp: stamps/download.stamp
 	if ! test -d openjdk-ecj ; \
 	then \
 	  mkdir tmp-ecj ; \
@@ -711,13 +706,13 @@ extract-ecj.stamp: download.stamp
 	  mv tmp-ecj/openjdk openjdk-ecj ; \
 	  rmdir tmp-ecj ; \
 	fi
-	touch extract-ecj.stamp
+	touch stamps/extract-ecj.stamp
 
 clean-extract-ecj:
-	rm -f extract-ecj.stamp
+	rm -f stamps/extract-ecj.stamp
 	rm -rf openjdk-ecj
 
-patch-ecj.stamp: extract-ecj.stamp
+stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
@@ -733,10 +728,10 @@ patch-ecj.stamp: extract-ecj.stamp
 	  echo Applying $(ICEDTEA_ECJ_PATCH) ; \
 	  $(PATCH) -p0 < $(ICEDTEA_ECJ_PATCH) ; \
 	fi
-	touch patch-ecj.stamp
+	touch stamps/patch-ecj.stamp
 
 clean-patch-ecj:
-	rm -f patch-ecj.stamp
+	rm -f stamps/patch-ecj.stamp
 	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
 	if $(PATCH) -p0 -R --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
 	then \
@@ -757,32 +752,32 @@ clean-patch-ecj:
 # ===========================
 
 # bootstrap/icedtea.
-bootstrap-directory.stamp: icedtea-against-ecj.stamp
+stamps/bootstrap-directory.stamp: stamps/icedtea-against-ecj.stamp
 	rm -rf bootstrap/icedtea
 	cp -a openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image \
 	  bootstrap/icedtea
-	touch bootstrap-directory.stamp
+	touch stamps/bootstrap-directory.stamp
 
 clean-bootstrap-directory:
-	rm -f bootstrap-directory.stamp
+	rm -f stamps/bootstrap-directory.stamp
 	rm -rf bootstrap/icedtea
 
 # bootstrap/jdk1.6.0 to bootstrap/icedtea symlink.
-bootstrap-directory-symlink.stamp: bootstrap-directory.stamp
+stamps/bootstrap-directory-symlink.stamp: stamps/bootstrap-directory.stamp
 	rm -f bootstrap/jdk1.6.0
 	ln -sf icedtea bootstrap/jdk1.6.0
-	touch bootstrap-directory-symlink.stamp
+	touch stamps/bootstrap-directory-symlink.stamp
 
 clean-bootstrap-directory-symlink:
-	rm -f bootstrap-directory-symlink.stamp
+	rm -f stamps/bootstrap-directory-symlink.stamp
 	rm -f bootstrap/jdk1.6.0
 
 # Bootstrap ecj Directory Targets
 # ===============================
 
 # bootstrap/ecj.
-bootstrap-directory-ecj.stamp:
-	mkdir -p bootstrap/ecj/bin
+stamps/bootstrap-directory-ecj.stamp:
+	mkdir -p bootstrap/ecj/bin stamps/
 	ln -sf $(JAVA) bootstrap/ecj/bin/java
 	ln -sf $(JAVAH) bootstrap/ecj/bin/javah
 	ln -sf $(RMIC) bootstrap/ecj/bin/rmic
@@ -794,26 +789,26 @@ bootstrap-directory-ecj.stamp:
 	ln -sf $(XALAN2_SERIALIZER_JAR) \
 	  bootstrap/ecj/lib/endorsed/xalan-j2-serializer.jar
 	ln -sf $(XERCES2_JAR) bootstrap/ecj/lib/endorsed/xerces-j2.jar
-	touch bootstrap-directory-ecj.stamp
+	touch stamps/bootstrap-directory-ecj.stamp
 
 clean-bootstrap-directory-ecj:
-	rm -f bootstrap-directory-ecj.stamp
+	rm -f stamps/ootstrap-directory-ecj.stamp
 	rm -rf bootstrap/ecj
 
 # bootstrap/jdk1.6.0 to bootstrap/ecj symlink.
-bootstrap-directory-symlink-ecj.stamp: bootstrap-directory-ecj.stamp
+stamps/bootstrap-directory-symlink-ecj.stamp: stamps/bootstrap-directory-ecj.stamp
 	rm -f bootstrap/jdk1.6.0
 	ln -sf ecj bootstrap/jdk1.6.0
-	touch bootstrap-directory-symlink-ecj.stamp
+	touch stamps/bootstrap-directory-symlink-ecj.stamp
 
 clean-bootstrap-directory-symlink-ecj:
-	rm -f bootstrap-directory-symlink-ecj.stamp
+	rm -f stamps/bootstrap-directory-symlink-ecj.stamp
 	rm -f bootstrap/jdk1.6.0
 
 # OpenJDK Targets
 # ===============
 
-icedtea: tools.stamp plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
+icedtea: stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make
@@ -823,7 +818,7 @@ icedtea: tools.stamp plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
 	  openjdk/control/build/$(LINUX_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	@echo "IcedTea is served:" openjdk/control/build/$(LINUX_DIR)
 
-icedtea-debug: tools.stamp plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
+icedtea-debug: stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
@@ -835,56 +830,56 @@ icedtea-debug: tools.stamp plugs.stamp extract.stamp patch.stamp gcjwebplugin.so
 	@echo "Debug-flavoured IcedTea is served:" \
 	  openjdk/control/build/$(LINUX_DIR)-debug
 
-clean-icedtea: extract.stamp
+clean-icedtea: stamps/extract.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make clobber
 
 icedtea-against-icedtea: \
-	bootstrap-directory-symlink.stamp \
+	stamps/bootstrap-directory-symlink.stamp \
 	icedtea
 
 # OpenJDK ecj Targets
 # ===================
 
-icedtea-ecj.stamp: tools.stamp plugs.stamp extract-ecj.stamp patch-ecj.stamp
+stamps/icedtea-ecj.stamp: stamps/tools.stamp stamps/plugs.stamp stamps/extract-ecj.stamp stamps/patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj/control/make
 	@echo "ecj-poured IcedTea is served:" \
 	  openjdk-ecj/control/build/$(LINUX_DIR)
-	touch icedtea-ecj.stamp
+	touch stamps/icedtea-ecj.stamp
 
-clean-icedtea-ecj: extract-ecj.stamp
-	rm -f icedtea-ecj.stamp
+clean-icedtea-ecj: stamps/extract-ecj.stamp
+	rm -f stamps/icedtea-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj/control/make clobber
 
-icedtea-against-ecj.stamp: \
-	bootstrap-directory-symlink-ecj.stamp \
-	icedtea-ecj.stamp
-	touch icedtea-against-ecj.stamp
+stamps/icedtea-against-ecj.stamp: \
+	stamps/bootstrap-directory-symlink-ecj.stamp \
+	stamps/icedtea-ecj.stamp
+	touch stamps/icedtea-against-ecj.stamp
 
 # Binary Plugs and Tools Targets
 # ==============================
 
-plugs.stamp: $(SHARED_OBJECT_FILES) $(SECURITY_JAR_FILES) \
+stamps/plugs.stamp: $(SHARED_OBJECT_FILES) $(SECURITY_JAR_FILES) \
 	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
 	bootstrap/jdk1.7.0/jre/lib/jce.jar
-	touch plugs.stamp
+	touch stamps/plugs.stamp
 
-tools.stamp: bootstrap/ecj/lib/tools.jar
-	touch tools.stamp
+stamps/tools.stamp: bootstrap/ecj/lib/tools.jar
+	touch stamps/tools.stamp
 
 clean-plugs: clean-plugs clean-shared-objects clean-security-jars \
 	clean-copy clean-rt clean-jce
-	rm -f plugs.stamp
+	rm -f stamps/plugs.stamp
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 	rm -f bootstrap/jdk1.7.0/jre/lib/jce.jar
 
 clean-tools-jar: clean-tools-jar clean-tools
-	rm -f tools.stamp
+	rm -f stamps/tools.stamp
 	rm -rf tools/
 	rm -f bootstrap/jdk1.6.0/lib/tools.jar
 
@@ -911,72 +906,72 @@ $(SECURITY_JAR_FILES):
 clean-security-jars:
 	rm -f $(SECURITY_JAR_FILES)
 
-copy-source-files.stamp: extract.stamp patch.stamp
+stamps/copy-source-files.stamp: stamps/extract.stamp stamps/patch.stamp
 	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
 	do \
 	  mkdir -p rt/$$copy_dir ; \
 	  cp -af openjdk/j2se/src/share/classes/$$copy_dir/*.java \
 	    rt/$$copy_dir ; \
 	done
-	touch copy-source-files.stamp
+	touch stamps/copy-source-files.stamp
 
 clean-copy:
-	rm -f copy-source-files.stamp
+	rm -f stamps/copy-source-files.stamp
 	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
 	do \
 	  rm -rf rt/$$copy_dir ; \
 	done
 
 # tools.jar class files.
-tools-copy-source-files.stamp: extract.stamp patch.stamp
+stamps/tools-copy-source-files.stamp: stamps/extract.stamp stamps/patch.stamp
 	for copy_dir in `cat tools-copy-files.txt` ; \
         do \
           mkdir -p tools/$$copy_dir ; \
 	  cp -arf openjdk/j2se/src/share/classes/$$copy_dir/* \
             tools/$$copy_dir ; \
         done
-	touch tools-copy-source-files.stamp
+	touch stamps/tools-copy-source-files.stamp
 
-tools-source-files.txt: extract.stamp tools-copy-source-files.stamp
+tools-source-files.txt: stamps/extract.stamp stamps/tools-copy-source-files.stamp
 	find tools -name '*.java' | sort > $@
 	mkdir -p lib/tools
 
-tools-class-files.stamp: tools-source-files.txt
+stamps/tools-class-files.stamp: tools-source-files.txt
 	$(JCOMPILER) -g -d lib/tools -bootclasspath '' -source 1.6 \
 	-sourcepath jce:rt:tools:$(OPENJDK_SOURCEPATH_DIRS):generated \
 	@tools-source-files.txt
-	touch tools-class-files.stamp
+	touch stamps/tools-class-files.stamp
 
 clean-tools:
 	rm -rf lib/tools
-	rm -f tools-class-files.stamp
+	rm -f stamps/tools-class-files.stamp
 	rm -f tools-source-files.txt
-	rm -f tools-copy-source-files.stamp
+	rm -f stamps/tools-copy-source-files.stamp
 
 # tools.jar
-bootstrap/ecj/lib/tools.jar: tools-class-files.stamp
+bootstrap/ecj/lib/tools.jar: stamps/tools-class-files.stamp
 	mkdir -p bootstrap/ecj/lib
 	$(JAR) cf $@ -C lib/tools com -C lib/tools sun \
 	  -C lib/tools org
 
 # rt-closed.jar class files.
-rt-source-files.txt: extract.stamp copy-source-files.stamp
+rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
 	find rt -name '*.java' | sort > $@
 
-rt-class-files.stamp: rt-source-files.txt
+stamps/rt-class-files.stamp: rt-source-files.txt
 	mkdir -p lib/rt
 	$(JCOMPILER) -g -d lib/rt -bootclasspath '' -source 1.6 \
 	  -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated:jce \
 	  @rt-source-files.txt
-	touch rt-class-files.stamp
+	touch stamps/rt-class-files.stamp
 
 clean-rt:
 	rm -rf lib/rt
-	rm -f rt-class-files.stamp
+	rm -f stamps/rt-class-files.stamp
 	rm -f rt-source-files.txt
 
 # rt-closed.jar.
-bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: rt-class-files.stamp
+bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
 	$(JAR) cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
 	  -C lib/rt javax -C lib/rt sun
@@ -985,19 +980,19 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: rt-class-files.stamp
 jce-source-files.txt:
 	find jce -name '*.java' -print | sort > $@
 
-jce-class-files.stamp: jce-source-files.txt rt-class-files.stamp
+stamps/jce-class-files.stamp: jce-source-files.txt stamps/rt-class-files.stamp
 	mkdir -p lib/jce
 	$(JCOMPILER) -g -d lib/jce -bootclasspath '' -source 1.6 \
 	  -classpath lib/rt @$<
-	touch jce-class-files.stamp
+	touch stamps/jce-class-files.stamp
 
 clean-jce:
 	rm -rf lib/jce
-	rm -f jce-class-files.stamp
+	rm -f stamps/jce-class-files.stamp
 	rm -f jce-source-files.txt
 
 # jce.jar.
-bootstrap/jdk1.7.0/jre/lib/jce.jar: jce-class-files.stamp
+bootstrap/jdk1.7.0/jre/lib/jce.jar: stamps/jce-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
 	$(JAR) cf $@ -C lib/jce gnu -C lib/jce javax -C lib/jce sun
 

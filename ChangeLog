@@ -1,3 +1,10 @@
+2007-09-05  Lillian Angel  <langel@redhat.com>
+
+	* .hgignore: Updated.
+	* INSTALL: Updated.
+	* Makefile.am: Fixed to create stamps in a stamps directory.
+	* Makefile.in: Regenerated.
+
 2007-09-04  Lillian Angel  <langel@redhat.com>
 
 	* .hgignore: Updated to ignore tools/
