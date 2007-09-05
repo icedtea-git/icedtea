@@ -1,3 +1,7 @@
+2007-09-05  Lillian Angel <langel@redhat.com>
+
+	* AUTHORS: Added Joshua Sumali.
+
 2007-09-05  Joshua Sumali  <jsumali@redhat.com>
 
 	* patches/icedtea-copy-plugs.patch: Fixed hunks to apply cleanly
