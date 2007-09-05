@@ -17,8 +17,8 @@ FIND_TOOL([MD5SUM], [md5sum])
 FIND_TOOL([PATCH], [patch])
 FIND_TOOL([UNZIP], [unzip])
 FIND_TOOL([WGET], [wget])
-
-# See bug #36, we might just be able to use AC_PROG_AWK
+# OpenJDK's README-build.html lists gawk as a build dependency so we
+# check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
 
 SET_ARCH_DIRS

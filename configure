@@ -4586,8 +4586,8 @@ echo "$as_me: error: wget program not found in PATH" >&2;}
  fi
 
 
-
-# See bug #36, we might just be able to use AC_PROG_AWK
+# OpenJDK's README-build.html lists gawk as a build dependency so we
+# check for it explicitly rather than using AC_PROG_AWK.
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}gawk", so it can be a program name with args.
 set dummy ${ac_tool_prefix}gawk; ac_word=$2

@@ -1,5 +1,10 @@
 2007-09-05  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
+	* configure.ac: Comment explicit gawk check.
+	* configure: Regenerate.
+
+2007-09-05  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
 	* gcjwebplugin.cc (PLUGIN_MIME_DESC): Update for 1.5, 1.6 and 1.7.
 
 2007-09-05  Thomas Fitzsimmons  <fitzsim@redhat.com>
