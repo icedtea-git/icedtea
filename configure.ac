@@ -11,14 +11,13 @@ AC_PREFIX_DEFAULT([bootstrap])
 AC_PROG_CC
 AC_PROG_CXX
 
-# Essential tools that are used in the build (harness)
 FIND_TOOL([FIND], [find])
 FIND_TOOL([MD5SUM], [md5sum])
 FIND_TOOL([PATCH], [patch])
 FIND_TOOL([UNZIP], [unzip])
 FIND_TOOL([WGET], [wget])
-# OpenJDK's README-build.html lists gawk as a build dependency so we
-# check for it explicitly rather than using AC_PROG_AWK.
+dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
+dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
 
 SET_ARCH_DIRS
