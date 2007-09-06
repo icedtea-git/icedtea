@@ -1,6 +1,8 @@
 2007-09-06  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-certbundle.patch.
+	* Makefile.in: Regenerate.
+	* patches/icedtea-certbundle.patch: New file.
 
 2007-09-05  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
