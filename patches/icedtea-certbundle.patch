@@ -1,0 +1,24 @@
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp.orig	2007-08-21 21:53:38.000000000 -0400
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2007-08-21 22:02:32.000000000 -0400
+@@ -376,6 +376,21 @@
+     }
+   }
+ 
++  // Use the system zoneinfo files, if present
++  SystemProperty* sp = Arguments::system_properties();
++  Arguments::PropertyList_add (&sp,
++			       "javax.net.ssl.trustStore",
++			       "/etc/pki/tls/certs/ca-bundle.crt");
++  Arguments::PropertyList_add (&sp,
++			       "javax.net.ssl.trustStoreType",
++			       "CertBundle");
++  Arguments::PropertyList_add (&sp,
++			       "javax.net.ssl.trustStoreProvider",
++			       "");
++  Arguments::PropertyList_add (&sp,
++			       "javax.net.ssl.trustStorePassword",
++			       "");
++
+ #undef malloc
+ #undef getenv
+ #undef EXTENSIONS_DIR

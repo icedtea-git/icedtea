@@ -170,6 +170,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-lesstif_amd64.patch \
 	patches/icedtea-tools.patch \
+	patches/icedtea-certbundle.patch \
 	$(FAST_BUILD_PATCH)
 
 stamps/patch.stamp: stamps/extract.stamp
