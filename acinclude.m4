@@ -377,21 +377,6 @@ AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
   AC_SUBST(ALT_OPENJDK_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_ICEDTEA],
-[
-  AC_MSG_CHECKING(for icedtea)
-  AC_ARG_WITH([icedtea],
-              [AS_HELP_STRING(--with-icedtea,specify the location of an already built IcedTea)],
-  [
-    ICEDTEA=${withval}
-  ],
-  [ 
-    ICEDTEA="not specified"
-  ])
-  AC_MSG_RESULT(${ICEDTEA})
-  AC_SUBST(ICEDTEA)
-])
-
 AC_DEFUN([FIND_XALAN2_JAR],
 [
   AC_ARG_WITH([xalan2-jar],
