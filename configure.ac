@@ -2,8 +2,6 @@ AC_PREREQ([2.61])
 AC_INIT([icedtea], [1.4], [fitzsim@redhat.com])
 AM_INIT_AUTOMAKE([tar-pax])
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([javac], [chmod +x javac])
-AC_CONFIG_FILES([javap], [chmod +x javap])
 AC_CANONICAL_HOST
 
 AC_PREFIX_DEFAULT([bootstrap])
@@ -20,17 +18,66 @@ dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
 
+AC_ARG_WITH([icedtea-home],
+            [AS_HELP_STRING([--with-icedtea-home],
+                            [IcedTea home directory \
+                             (default is /usr/lib/jvm/java-icedtea)])],
+            [
+              if test "x${withval}" == x
+              then
+                SYSTEM_ICEDTEA_DIR=/usr/lib/jvm/java-icedtea
+              else
+                SYSTEM_ICEDTEA_DIR=${withval}
+              fi
+            ],
+            [
+              SYSTEM_ICEDTEA_DIR=/usr/lib/jvm/java-icedtea
+            ])
+AC_SUBST(SYSTEM_ICEDTEA_DIR)
+
+AC_ARG_WITH([icedtea],
+        [AS_HELP_STRING([--with-icedtea],
+                        [build IcedTea with system-installed IcedTea])],
+        [
+          if test "x${withval}" != xno
+          then
+            with_icedtea=true
+          else
+            with_icedtea=false
+          fi
+        ],
+        [
+          with_icedtea=false
+        ])
+AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" == true)
+
 SET_ARCH_DIRS
-FIND_JAVA
-FIND_JAVAC
-FIND_JAVAH
-FIND_JAR
-FIND_RMIC
-FIND_ECJ_JAR
-FIND_LIBGCJ_JAR
-FIND_XALAN2_JAR
-FIND_XALAN2_SERIALIZER_JAR
-FIND_XERCES2_JAR
+if test "${with_icedtea}" == true
+then
+  JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
+  AC_SUBST(JAVA)
+  JAVAC=${SYSTEM_ICEDTEA_DIR}/bin/javac
+  AC_SUBST(JAVAC)
+  JAVAH=${SYSTEM_ICEDTEA_DIR}/bin/javah
+  AC_SUBST(JAVAH)
+  JAR=${SYSTEM_ICEDTEA_DIR}/bin/jar
+  AC_SUBST(JAR)
+  RMIC=${SYSTEM_ICEDTEA_DIR}/bin/rmic
+  AC_SUBST(RMIC)
+else
+  FIND_JAVA
+  FIND_JAVAC
+  FIND_JAVAH
+  FIND_JAR
+  FIND_RMIC
+  FIND_ECJ_JAR
+  FIND_LIBGCJ_JAR
+  FIND_XALAN2_JAR
+  FIND_XALAN2_SERIALIZER_JAR
+  FIND_XERCES2_JAR
+  AC_CONFIG_FILES([javac], [chmod +x javac])
+  AC_CONFIG_FILES([javap], [chmod +x javap])
+fi
 FIND_FREETYPE
 WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR

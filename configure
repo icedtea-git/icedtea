@@ -710,18 +710,17 @@ PATCH
 UNZIP
 WGET
 GAWK
+SYSTEM_ICEDTEA_DIR
+WITH_ICEDTEA_TRUE
+WITH_ICEDTEA_FALSE
 BUILD_ARCH_DIR
 INSTALL_ARCH_DIR
 JAVA
-ECJ
 JAVAC
-FOUND_ECJ_TRUE
-FOUND_ECJ_FALSE
-FOUND_JAVAC_TRUE
-FOUND_JAVAC_FALSE
 JAVAH
 JAR
 RMIC
+ECJ
 ECJ_JAR
 LIBGCJ_JAR
 XALAN2_JAR
@@ -1355,6 +1354,9 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-icedtea-home     IcedTea home directory (default is
+                          /usr/lib/jvm/java-icedtea)
+  --with-icedtea          build IcedTea with system-installed IcedTea
   --with-java             specify location of the 1.5 java vm
   --with-ecj              bytecode compilation with ecj
   --with-javac            bytecode compilation with javac
@@ -2387,10 +2389,6 @@ echo "${ECHO_T}$am_cv_prog_tar_pax" >&6; }
 
 
 ac_config_files="$ac_config_files Makefile"
-
-ac_config_files="$ac_config_files javac"
-
-ac_config_files="$ac_config_files javap"
 
 # Make sure we can run config.sub.
 $SHELL "$ac_aux_dir/config.sub" sun4 >/dev/null 2>&1 ||
@@ -4696,6 +4694,51 @@ echo "$as_me: error: gawk program not found in PATH" >&2;}
 
 
 
+# Check whether --with-icedtea-home was given.
+if test "${with_icedtea_home+set}" = set; then
+  withval=$with_icedtea_home;
+              if test "x${withval}" == x
+              then
+                SYSTEM_ICEDTEA_DIR=/usr/lib/jvm/java-icedtea
+              else
+                SYSTEM_ICEDTEA_DIR=${withval}
+              fi
+
+else
+
+              SYSTEM_ICEDTEA_DIR=/usr/lib/jvm/java-icedtea
+
+fi
+
+
+
+
+# Check whether --with-icedtea was given.
+if test "${with_icedtea+set}" = set; then
+  withval=$with_icedtea;
+          if test "x${withval}" != xno
+          then
+            with_icedtea=true
+          else
+            with_icedtea=false
+          fi
+
+else
+
+          with_icedtea=false
+
+fi
+
+ if test "${with_icedtea}" == true; then
+  WITH_ICEDTEA_TRUE=
+  WITH_ICEDTEA_FALSE='#'
+else
+  WITH_ICEDTEA_TRUE='#'
+  WITH_ICEDTEA_FALSE=
+fi
+
+
+
   case "${host}" in
     x86_64-*-*)
       BUILD_ARCH_DIR=amd64
@@ -4721,6 +4764,19 @@ echo "$as_me: error: gawk program not found in PATH" >&2;}
 
 
 
+if test "${with_icedtea}" == true
+then
+  JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
+
+  JAVAC=${SYSTEM_ICEDTEA_DIR}/bin/javac
+
+  JAVAH=${SYSTEM_ICEDTEA_DIR}/bin/javah
+
+  JAR=${SYSTEM_ICEDTEA_DIR}/bin/jar
+
+  RMIC=${SYSTEM_ICEDTEA_DIR}/bin/rmic
+
+else
 
 
 # Check whether --with-java was given.
@@ -5537,6 +5593,7 @@ fi
 
 fi
 
+  JAVAC="${ECJ} -nowarn"
 
 
 
@@ -5825,42 +5882,6 @@ fi
 
 
 
-
-  if test "x${user_specified_javac}" = x; then
-     if test "x${ECJ}" != x; then
-  FOUND_ECJ_TRUE=
-  FOUND_ECJ_FALSE='#'
-else
-  FOUND_ECJ_TRUE='#'
-  FOUND_ECJ_FALSE=
-fi
-
-     if test "x${JAVAC}" != x; then
-  FOUND_JAVAC_TRUE=
-  FOUND_JAVAC_FALSE='#'
-else
-  FOUND_JAVAC_TRUE='#'
-  FOUND_JAVAC_FALSE=
-fi
-
-  else
-     if test "x${user_specified_javac}" = xecj; then
-  FOUND_ECJ_TRUE=
-  FOUND_ECJ_FALSE='#'
-else
-  FOUND_ECJ_TRUE='#'
-  FOUND_ECJ_FALSE=
-fi
-
-     if test "x${user_specified_javac}" = xjavac; then
-  FOUND_JAVAC_TRUE=
-  FOUND_JAVAC_FALSE='#'
-else
-  FOUND_JAVAC_TRUE='#'
-  FOUND_JAVAC_FALSE=
-fi
-
-  fi
 
   if test "x${ECJ}" = x && test "x${JAVAC}" = x && test "x${user_specified_javac}" != xecj; then
       { { echo "$as_me:$LINENO: error: cannot find javac, try --with-ecj" >&5
@@ -6555,6 +6576,11 @@ echo "$as_me: error: \"A xerces2 jar was not found.\"" >&2;}
   fi
 
 
+  ac_config_files="$ac_config_files javac"
+
+  ac_config_files="$ac_config_files javap"
+
+fi
 
 
 
@@ -9386,31 +9412,10 @@ echo "$as_me: error: conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
-if test -z "${FOUND_ECJ_TRUE}" && test -z "${FOUND_ECJ_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"FOUND_ECJ\" was never defined.
+if test -z "${WITH_ICEDTEA_TRUE}" && test -z "${WITH_ICEDTEA_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"WITH_ICEDTEA\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"FOUND_ECJ\" was never defined.
-Usually this means the macro was only invoked conditionally." >&2;}
-   { (exit 1); exit 1; }; }
-fi
-if test -z "${FOUND_JAVAC_TRUE}" && test -z "${FOUND_JAVAC_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"FOUND_JAVAC\" was never defined.
-Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"FOUND_JAVAC\" was never defined.
-Usually this means the macro was only invoked conditionally." >&2;}
-   { (exit 1); exit 1; }; }
-fi
-if test -z "${FOUND_ECJ_TRUE}" && test -z "${FOUND_ECJ_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"FOUND_ECJ\" was never defined.
-Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"FOUND_ECJ\" was never defined.
-Usually this means the macro was only invoked conditionally." >&2;}
-   { (exit 1); exit 1; }; }
-fi
-if test -z "${FOUND_JAVAC_TRUE}" && test -z "${FOUND_JAVAC_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"FOUND_JAVAC\" was never defined.
-Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"FOUND_JAVAC\" was never defined.
+echo "$as_me: error: conditional \"WITH_ICEDTEA\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -9902,9 +9907,9 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "javac") CONFIG_FILES="$CONFIG_FILES javac" ;;
     "javap") CONFIG_FILES="$CONFIG_FILES javap" ;;
-    "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -10061,8 +10066,8 @@ PATCH!$PATCH$ac_delim
 UNZIP!$UNZIP$ac_delim
 WGET!$WGET$ac_delim
 GAWK!$GAWK$ac_delim
-BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
-INSTALL_ARCH_DIR!$INSTALL_ARCH_DIR$ac_delim
+SYSTEM_ICEDTEA_DIR!$SYSTEM_ICEDTEA_DIR$ac_delim
+WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -10104,16 +10109,15 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+WITH_ICEDTEA_FALSE!$WITH_ICEDTEA_FALSE$ac_delim
+BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
+INSTALL_ARCH_DIR!$INSTALL_ARCH_DIR$ac_delim
 JAVA!$JAVA$ac_delim
-ECJ!$ECJ$ac_delim
 JAVAC!$JAVAC$ac_delim
-FOUND_ECJ_TRUE!$FOUND_ECJ_TRUE$ac_delim
-FOUND_ECJ_FALSE!$FOUND_ECJ_FALSE$ac_delim
-FOUND_JAVAC_TRUE!$FOUND_JAVAC_TRUE$ac_delim
-FOUND_JAVAC_FALSE!$FOUND_JAVAC_FALSE$ac_delim
 JAVAH!$JAVAH$ac_delim
 JAR!$JAR$ac_delim
 RMIC!$RMIC$ac_delim
+ECJ!$ECJ$ac_delim
 ECJ_JAR!$ECJ_JAR$ac_delim
 LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim
 XALAN2_JAR!$XALAN2_JAR$ac_delim
@@ -10142,7 +10146,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 36; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 35; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
@@ -10454,8 +10458,6 @@ echo "$as_me: executing $ac_file commands" >&6;}
 
 
   case $ac_file$ac_mode in
-    "javac":F) chmod +x javac ;;
-    "javap":F) chmod +x javap ;;
     "depfiles":C) test x"$AMDEP_TRUE" != x"" || for mf in $CONFIG_FILES; do
   # Strip MF so we end up with the name of the file.
   mf=`echo "$mf" | sed -e 's/:.*$//'`
@@ -10580,6 +10582,8 @@ echo "$as_me: error: cannot create directory $as_dir" >&2;}
   done
 done
  ;;
+    "javac":F) chmod +x javac ;;
+    "javap":F) chmod +x javap ;;
 
   esac
 done # for ac_tag

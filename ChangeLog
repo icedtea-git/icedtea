@@ -1,3 +1,23 @@
+2007-09-07  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am (EXTRA_DIST): Add tools-copy-files.txt.
+	(ICEDTEA_ENV): Remove ecj-specific variables.
+	(env): Suggest unsetting JAVA_HOME.
+	(env-ecj): Likewise.
+	(stamps/bootstrap-directory-symlink.stamp): Depend on
+	conditionally-defined BOOTSTRAP_DIRECTORY_STAMP.
+	(MEMORY_LIMIT): Set limit when building with IcedTea's javac.
+	($(SECURITY_JAR_FILES)): Add a dummy file to each jar to satisfy
+	IcedTea's jar implementation.
+	(stamps/tools-class-files.stamp): Replace JCOMPILER reference with
+	JAVAC.
+	(stamps/rt-class-files.stamp): Likewise.
+	(stamps/jce-class-files.stamp): Likewise.
+	* Makefile.in: Regenerate.
+	* configure.ac: Add --with-icedtea and --with-icedtea-home
+	options.
+	* configure: Regenerate.
+
 2007-09-07  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.in: Regenerated.

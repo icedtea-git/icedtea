@@ -33,14 +33,6 @@ AC_DEFUN([FIND_JAVAC],
   CLASSPATH_WITH_ECJ
   CLASSPATH_WITH_JAVAC
 
-  if test "x${user_specified_javac}" = x; then
-    AM_CONDITIONAL(FOUND_ECJ, test "x${ECJ}" != x)
-    AM_CONDITIONAL(FOUND_JAVAC, test "x${JAVAC}" != x)
-  else
-    AM_CONDITIONAL(FOUND_ECJ, test "x${user_specified_javac}" = xecj)
-    AM_CONDITIONAL(FOUND_JAVAC, test "x${user_specified_javac}" = xjavac)
-  fi
-
   if test "x${ECJ}" = x && test "x${JAVAC}" = x && test "x${user_specified_javac}" != xecj; then
       AC_MSG_ERROR([cannot find javac, try --with-ecj])
   fi
@@ -63,7 +55,8 @@ AC_DEFUN([CLASSPATH_WITH_ECJ],
   [ 
     CLASSPATH_CHECK_ECJ
   ])
-  AC_SUBST(ECJ)
+  JAVAC="${ECJ} -nowarn"
+  AC_SUBST(JAVAC)
 ])
 
 AC_DEFUN([CLASSPATH_CHECK_ECJ],
