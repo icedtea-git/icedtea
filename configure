@@ -734,6 +734,7 @@ ALT_OPENJDK_SRC_ZIP
 OPENJDK_SRC_DIR
 GNU_CLASSLIB_FOUND_TRUE
 GNU_CLASSLIB_FOUND_FALSE
+ICEDTEA
 FAST_BUILD_TRUE
 FAST_BUILD_FALSE
 CPP
@@ -1369,6 +1370,7 @@ Optional Packages:
   --with-xerces2-jar      specify location of the xerces2 jar
   --with-openjdk-src-zip  specify the location of the openjdk source zip
   --with-openjdk-src-dir  specify the location of the openjdk sources
+  --with-icedtea          specify the location of an already built IcedTea
 
 Some influential environment variables:
   CC          C compiler command
@@ -6714,6 +6716,25 @@ fi
 
 
 
+  { echo "$as_me:$LINENO: checking for icedtea" >&5
+echo $ECHO_N "checking for icedtea... $ECHO_C" >&6; }
+
+# Check whether --with-icedtea was given.
+if test "${with_icedtea+set}" = set; then
+  withval=$with_icedtea;
+    ICEDTEA=${withval}
+
+else
+
+    ICEDTEA="not specified"
+
+fi
+
+  { echo "$as_me:$LINENO: result: ${ICEDTEA}" >&5
+echo "${ECHO_T}${ICEDTEA}" >&6; }
+
+
+
   # Check whether --enable-fast-build was given.
 if test "${enable_fast_build+set}" = set; then
   enableval=$enable_fast_build;
@@ -10126,6 +10147,7 @@ ALT_OPENJDK_SRC_ZIP!$ALT_OPENJDK_SRC_ZIP$ac_delim
 OPENJDK_SRC_DIR!$OPENJDK_SRC_DIR$ac_delim
 GNU_CLASSLIB_FOUND_TRUE!$GNU_CLASSLIB_FOUND_TRUE$ac_delim
 GNU_CLASSLIB_FOUND_FALSE!$GNU_CLASSLIB_FOUND_FALSE$ac_delim
+ICEDTEA!$ICEDTEA$ac_delim
 FAST_BUILD_TRUE!$FAST_BUILD_TRUE$ac_delim
 FAST_BUILD_FALSE!$FAST_BUILD_FALSE$ac_delim
 CPP!$CPP$ac_delim
@@ -10142,7 +10164,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 36; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 37; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
