@@ -26,6 +26,23 @@ with IcedTea itself.
 
 See INSTALL for build instructions.
 
+Homepage (wiki):
+  http://icedtea.classpath.org/
+
+Bugs (bugzilla):
+  http://icedtea.classpath.org/bugzilla
+
+Mailing List: 
+  distro-pkg-dev@openjdk.java.net
+  http://mail.openjdk.java.net/mailman/listinfo/distro-pkg-dev
+
+FAQ:
+  http://icedtea.classpath.org/wiki/FrequentlyAskedQuestions
+
+Anonymous Mercurial checkout:
+  hg clone http://icedtea.classpath.org/hg/icedtea
+
+
 How the Stub Replacements were Produced
 ---------------------------------------
 

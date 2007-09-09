@@ -1,3 +1,8 @@
+2007-09-09  Mark Wielaard  <mark@klomp.org>
+
+	* README: Add references to home page, bugzilla, faq, mailing list
+	and mercurial repo.
+
 2007-09-07  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am (EXTRA_DIST): Add tools-copy-files.txt.
