@@ -1,3 +1,13 @@
+2007-09-11  Joshua Sumali  <jsumali@redhat.com>
+
+	* patches/icedtea-demos.patch: New File. Patches the sample
+	jvmti makefiles.
+	* configure.ac: Added a check for chmod.
+	* configure: Regenerated.
+	* Makefile.am: Added line to add write
+	permissions to the sample makefiles to be patched.
+	* Makefile.in: Regenerated.
+
 2007-09-09  Mark Wielaard  <mark@klomp.org>
 
 	* README: Add references to home page, bugzilla, faq, mailing list

@@ -134,6 +134,8 @@ stamps/extract.stamp: stamps/download.stamp
 	if ! test -d openjdk ; \
 	then \
 	  $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
+	  chmod ug+w `find openjdk/j2se/src/share/demo/jvmti \
+	     -name sample.makefile.txt` ; \
 	fi
 	mkdir -p stamps
 	touch stamps/extract.stamp
@@ -167,6 +169,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-lesstif_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-certbundle.patch \
+	patches/icedtea-demos.patch \
 	$(FAST_BUILD_PATCH)
 
 stamps/patch.stamp: stamps/extract.stamp
@@ -205,6 +208,8 @@ stamps/extract-ecj.stamp: stamps/download.stamp
 	  $(UNZIP) -q -d tmp-ecj $(OPENJDK_SRC_ZIP) ; \
 	  mv tmp-ecj/openjdk openjdk-ecj ; \
 	  rmdir tmp-ecj ; \
+	  chmod ug+w `find openjdk-ecj/j2se/share/demo/jvmti \
+	     -name sample.makefile.txt` ; \
 	fi
 	mkdir -p stamps
 	touch stamps/extract-ecj.stamp
