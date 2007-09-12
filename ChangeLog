@@ -1,3 +1,7 @@
+2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* .hgignore: Added *~.
+
 2007-09-12  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Added Christian Thalinger.

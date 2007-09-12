@@ -1,3 +1,7 @@
+syntax: glob
+*~
+
+syntax: regexp
 autom4te.cache
 openjdk
 bootstrap
