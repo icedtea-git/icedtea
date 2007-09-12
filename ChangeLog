@@ -1,3 +1,8 @@
+2007-09-12  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Fixed error that broke the build.
+	* Makefile.in: Regenerated
+
 2007-09-11  Joshua Sumali  <jsumali@redhat.com>
 
 	* patches/icedtea-demos.patch: New File. Patches the sample

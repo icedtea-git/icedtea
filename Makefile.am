@@ -208,7 +208,7 @@ stamps/extract-ecj.stamp: stamps/download.stamp
 	  $(UNZIP) -q -d tmp-ecj $(OPENJDK_SRC_ZIP) ; \
 	  mv tmp-ecj/openjdk openjdk-ecj ; \
 	  rmdir tmp-ecj ; \
-	  chmod ug+w `find openjdk-ecj/j2se/share/demo/jvmti \
+	  chmod ug+w `find openjdk-ecj/j2se/src/share/demo/jvmti \
 	     -name sample.makefile.txt` ; \
 	fi
 	mkdir -p stamps
