@@ -93,6 +93,12 @@ ICEDTEA_ENV_ECJ = \
 	"LD_LIBRARY_PATH=" \
 	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)"
 
+if WITH_CACAO
+ICEDTEA_ENV_ECJ += \
+	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)" \
+	"ALT_JDK_IMPORT_PATH=$(CACAO)"
+endif
+
 env-ecj:
 	@echo 'unset JAVA_HOME'
 	@echo 'export $(ICEDTEA_ENV_ECJ)'
@@ -173,6 +179,17 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-certbundle.patch \
 	patches/icedtea-demos.patch \
 	$(FAST_BUILD_PATCH)
+
+if WITH_CACAO
+ICEDTEA_PATCHES += \
+	patches/icedtea-cacao-Compiler-gcc-gmk.patch \
+	patches/icedtea-cacao-Defs-linux-gmk.patch \
+	patches/icedtea-cacao-Platform-gmk.patch \
+	patches/icedtea-cacao-Program-gmk.patch \
+	patches/icedtea-cacao-instrument-Makefile.patch \
+	patches/icedtea-cacao-java-c.patch \
+	patches/icedtea-cacao-jvm-cfg.patch
+endif
 
 stamps/patch.stamp: stamps/extract.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
@@ -345,7 +362,7 @@ icedtea: stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
 	stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/control/make
+	  -C openjdk/control/make j2se_only
 	cp -af gcjwebplugin.so \
 	  openjdk/control/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -af gcjwebplugin.so \
@@ -358,7 +375,7 @@ icedtea-debug: stamps/bootstrap-directory-symlink-ecj.stamp stamps/tools.stamp \
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
-	  debug_build
+	  j2se_fastdebug_only
 	cp -af gcjwebplugin.so \
 	  openjdk/control/build/$(LINUX_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -af gcjwebplugin.so \
@@ -382,7 +399,7 @@ stamps/icedtea-ecj.stamp: stamps/tools.stamp stamps/plugs.stamp \
 	stamps/extract-ecj.stamp stamps/patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj/control/make
+	  -C openjdk-ecj/control/make j2se_only
 	@echo "ecj-poured IcedTea is served:" \
 	  openjdk-ecj/control/build/$(LINUX_DIR)
 	mkdir -p stamps
@@ -531,7 +548,7 @@ bootstrap/ecj/lib/tools.jar: stamps/tools-class-files.stamp
 	mkdir -p bootstrap/ecj/lib
 	$(JAR) cf $@ -C lib/tools com -C lib/tools sun \
 	  -C lib/tools org
- 
+
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
 	find rt -name '*.java' | sort > $@

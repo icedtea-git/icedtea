@@ -1,0 +1,46 @@
+Index: j2se/make/common/shared/Compiler-gcc.gmk
+===================================================================
+--- j2se/make/common/shared/Compiler-gcc.gmk	(revision 250)
++++ openjdk/j2se/make/common/shared/Compiler-gcc.gmk	(working copy)
+@@ -75,22 +75,36 @@ ifeq ($(PLATFORM), linux)
+     REQUIRED_CC_VER = 4.0
+     REQUIRED_GCC_VER = 4.0.*
+   else
+-  ifeq ($(ARCH_DATA_MODEL), 32)
+-    # i586
++  ifeq ($(ARCH), alpha)
++    # alpha
+     REQUIRED_CC_VER = 3.2
+-    REQUIRED_GCC_VER = 3.2.1*
+-    REQUIRED_GCC_VER_INT = 3.2.1-7a
+-  else
++    REQUIRED_GCC_VER = 3.2
++  endif
+   ifeq ($(ARCH), amd64)
+     # amd64
+     REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 3.2.*
+   endif
++  ifeq ($(ARCH), i586)
++    # i586
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.1*
++    REQUIRED_GCC_VER_INT = 3.2.1-7a
++  endif
+   ifeq ($(ARCH), ia64)
+     # ia64
+     REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 2.9[56789].*
+   endif
++  ifeq ($(ARCH), ppc)
++    # ppc
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2
++  endif
++  ifeq ($(ARCH), ppc64)
++    # ppc64
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2
+   endif
+   endif
+   # Option used to create a shared library

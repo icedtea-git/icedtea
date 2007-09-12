@@ -1,5 +1,19 @@
 2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
+	* Makefile.am: Added WITH_CACAO stuff.
+	* Makefile.in: Regenerated.
+	* acinclude.m4 (AC_CHECK_WITH_CACAO): New function.
+	* configure.ac (AC_CHECK_WITH_CACAO): Added.
+	* configure: Regenerated.
+	* patches/icedtea-cacao-Compiler-gcc-gmk.patch,
+	patches/icedtea-cacao-Defs-linux-gmk.patch,
+	patches/icedtea-cacao-Platform-gmk.patch,
+	patches/icedtea-cacao-Program-gmk.patch,
+	patches/icedtea-cacao-java-c.patch,
+	patches/icedtea-cacao-jvm-cfg.patch: New file.
+
+2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
 	* README.cacao: New file.
 
 2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>

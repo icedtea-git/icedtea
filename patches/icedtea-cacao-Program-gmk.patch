@@ -1,0 +1,13 @@
+Index: j2se/make/common/Program.gmk
+===================================================================
+--- j2se/make/common/Program.gmk	(revision 250)
++++ openjdk/j2se/make/common/Program.gmk	(working copy)
+@@ -85,7 +85,7 @@ ifneq (,$(findstring $(PLATFORM), linux 
+ 	endif
+     endif
+     ifeq ($(PLATFORM), linux)
+-	LDFLAGS += -z origin
++	LDFLAGS += -Xlinker -z -Xlinker origin
+ 	LDFLAGS += -Wl,--allow-shlib-undefined
+ 	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../lib/$(LIBARCH)/jli
+ 	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../jre/lib/$(LIBARCH)/jli

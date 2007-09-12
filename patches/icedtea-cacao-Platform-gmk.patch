@@ -1,0 +1,32 @@
+Index: j2se/make/common/shared/Platform.gmk
+===================================================================
+--- j2se/make/common/shared/Platform.gmk	(revision 250)
++++ openjdk/j2se/make/common/shared/Platform.gmk	(working copy)
+@@ -225,11 +225,25 @@ ifeq ($(SYSTEM_UNAME), Linux)
+       ARCH=sparcv9
+     endif
+   else
+-    # i586 is 32-bit, amd64 is 64-bit
+     ifndef ARCH_DATA_MODEL
++      ifeq ($(ARCH), alpha)
++        # alpha is 64-bit
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), amd64)
++        # amd64 is 64-bit
++        ARCH_DATA_MODEL=64
++      endif
+       ifeq ($(ARCH), i586)
++        # i586 is 32-bit
+         ARCH_DATA_MODEL=32
+-      else
++      endif
++      ifeq ($(ARCH), ppc)
++        # ppc is 32-bit
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), ppc64)
++        # ppc64 is 64-bit
+         ARCH_DATA_MODEL=64
+       endif
+     endif

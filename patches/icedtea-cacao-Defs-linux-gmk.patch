@@ -1,0 +1,13 @@
+Index: j2se/make/common/Defs-linux.gmk
+===================================================================
+--- j2se/make/common/Defs-linux.gmk	(revision 250)
++++ openjdk/j2se/make/common/Defs-linux.gmk	(working copy)
+@@ -215,7 +215,7 @@ endif
+ 
+ EXTRA_LIBS += -lc
+ 
+-LDFLAGS_DEFS_OPTION  = -z defs
++LDFLAGS_DEFS_OPTION  = -Xlinker -z -Xlinker defs
+ LDFLAGS_COMMON  += $(LDFLAGS_DEFS_OPTION)
+ 
+ #
