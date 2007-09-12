@@ -9,9 +9,13 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=i586
       INSTALL_ARCH_DIR=i386
       ;;
-    powerpc*-*-*)
+    powerpc-*-*)
       BUILD_ARCH_DIR=ppc
       INSTALL_ARCH_DIR=ppc
+      ;;
+    powerpc64-*-*)
+      BUILD_ARCH_DIR=ppc64
+      INSTALL_ARCH_DIR=ppc64
       ;;
     s390*-*-*)
       BUILD_ARCH_DIR=s390
