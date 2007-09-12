@@ -360,9 +360,9 @@ icedtea-debug: stamps/bootstrap-directory-symlink-ecj.stamp stamps/tools.stamp \
 	  -C openjdk/control/make \
 	  debug_build
 	cp -af gcjwebplugin.so \
-	  openjdk/control/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  openjdk/control/build/$(LINUX_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -af gcjwebplugin.so \
-	  openjdk/control/build/$(LINUX_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	  openjdk/control/build/$(LINUX_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	@echo "Debug-flavoured IcedTea is served:" \
 	  openjdk/control/build/$(LINUX_DIR)-debug
 

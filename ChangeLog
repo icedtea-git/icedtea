@@ -15,7 +15,7 @@
 	* Makefile.am: Added BUILD_NUMBER to environment. This should be
 	updated with each bXX release. Also, added dependency for
 	icedtea-debug target.
-	* Makefile.in: Regenerated.
+	* Makefile.in: Regenerate.
 
 2007-09-12  Joshua Sumali  <jsumali@redhat.com>
 
