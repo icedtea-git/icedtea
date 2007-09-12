@@ -41,6 +41,12 @@
 
 2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
+	* Makefile.am (icedtea-debug): Added -debug to target directory,
+	as found today by Andrew Haley.
+	* Makefile.in: Likewise.
+
+2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
 	* .hgignore: Added *~.
 
 2007-09-12  Lillian Angel  <langel@redhat.com>
