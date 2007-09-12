@@ -1,3 +1,10 @@
+2007-09-12  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added BUILD_NUMBER to environment. This should be
+	updated with each bXX release. Also, added dependency for
+	icedtea-debug target.
+	* Makefile.in: Regenerated.
+
 2007-09-12  Joshua Sumali  <jsumali@redhat.com>
 
 	* Makefile.am: Fixed error that broke the build.

@@ -44,6 +44,7 @@ ICEDTEA_CLS_DIR = \
 ICEDTEA_ENDORSED_DIR = \
 	$(abs_top_srcdir)/bootstrap/jdk1.6.0/lib/endorsed
 ICEDTEA_ENV = \
+	"BUILD_NUMBER=b19" \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
@@ -71,6 +72,7 @@ ICEDTEA_JCE_ECJ = \
 ICEDTEA_CLS_DIR_ECJ = \
 	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/classes
 ICEDTEA_ENV_ECJ = \
+	"BUILD_NUMBER=b19" \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
@@ -350,7 +352,8 @@ icedtea: stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
 	  openjdk/control/build/$(LINUX_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	@echo "IcedTea is served:" openjdk/control/build/$(LINUX_DIR)
 
-icedtea-debug: stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
+icedtea-debug: stamps/bootstrap-directory-symlink-ecj.stamp stamps/tools.stamp \
+	 stamps/plugs.stamp stamps/extract.stamp \
 	stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
