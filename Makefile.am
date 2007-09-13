@@ -608,7 +608,7 @@ extract: stamps/extract.stamp
 
 icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
 
-icedtea-ecj: stamps/icedtea-ecj
+icedtea-ecj: stamps/icedtea-ecj.stamp
 
 jce-class-files: stamps/jce-class-files.stamp
 
