@@ -365,6 +365,8 @@ else
   MEMORY_LIMIT =
 endif
 
+# If you change anything here in the icedtea target, please make sure
+# you change it in the icedtea-debug target as well.
 icedtea: stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
 	stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
@@ -376,8 +378,8 @@ icedtea: stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
 	  openjdk/control/build/$(LINUX_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	@echo "IcedTea is served:" openjdk/control/build/$(LINUX_DIR)
 
-icedtea-debug: stamps/bootstrap-directory-symlink-ecj.stamp stamps/tools.stamp \
-	 stamps/plugs.stamp stamps/extract.stamp \
+icedtea-debug: 	stamps/bootstrap-directory-symlink.stamp \
+	stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
 	stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
@@ -387,7 +389,7 @@ icedtea-debug: stamps/bootstrap-directory-symlink-ecj.stamp stamps/tools.stamp \
 	  openjdk/control/build/$(LINUX_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -af gcjwebplugin.so \
 	  openjdk/control/build/$(LINUX_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	@echo "Debug-flavoured IcedTea is served:" \
+	@echo "IcedTea (debug build) is served:" \
 	  openjdk/control/build/$(LINUX_DIR)-debug
 
 clean-icedtea: stamps/extract.stamp
