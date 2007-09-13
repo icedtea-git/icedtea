@@ -1,3 +1,7 @@
+2007-09-13  Andrew Haley  <aph@redhat.com>
+
+	* Makefile.am (icedtea-debug): Correct dependencies.
+
 2007-09-13  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Fixed target typo.
