@@ -21,6 +21,11 @@
 
 	* patches/icedtea-cacao-instrument-Makefile.patch: New file.
 
+2007-09-13  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Fixed target typo.
+	* Makefile.in: Regenerated.
+
 2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* Makefile.am: Added WITH_CACAO stuff.
