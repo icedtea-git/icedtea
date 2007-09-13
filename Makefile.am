@@ -44,7 +44,8 @@ ICEDTEA_CLS_DIR = \
 ICEDTEA_ENDORSED_DIR = \
 	$(abs_top_srcdir)/bootstrap/jdk1.6.0/lib/endorsed
 ICEDTEA_ENV = \
-	"BUILD_NUMBER=b19" \
+	"JRE_RELEASE_VERSION=1.7.0-b19" \
+	"HOTSPOT_RELEASE_VERSION=1.7.0-b19" \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
@@ -72,7 +73,8 @@ ICEDTEA_JCE_ECJ = \
 ICEDTEA_CLS_DIR_ECJ = \
 	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/classes
 ICEDTEA_ENV_ECJ = \
-	"BUILD_NUMBER=b19" \
+	"JRE_RELEASE_VERSION=1.7.0-b19" \
+	"HOTSPOT_RELEASE_VERSION=1.7.0-b19" \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
