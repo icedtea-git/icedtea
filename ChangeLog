@@ -17,6 +17,11 @@
 	* Makefile.in: Regenerated.
 	* patches/icedtea-cacao-docs-Makefile.patch: New file.
 
+2007-09-14  Keith Seitz  <keiths@redhat.com>
+
+	* configure.ac: Added check for libXtst.
+	* configure: Regenerated.
+
 2007-09-13  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* patches/icedtea-cacao-instrument-Makefile.patch: New file.
