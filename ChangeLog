@@ -1,5 +1,12 @@
 2007-09-16  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
+	* Makefile.am [WITH_CACAO] (ICEDTEA_ENV): Set
+	ALT_HOTSPOT_IMPORT_PATH and ALT_JDK_IMPORT_PATH to CACAO
+	directory.
+	* Makefile.in: Regenerated.
+
+2007-09-16  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
 	* Makefile.am (ICEDTEA_PATCHES): Added
 	patches/icedtea-cacao-docs-Makefile.patch.
 	* Makefile.in: Regenerated.

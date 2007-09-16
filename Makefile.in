@@ -36,6 +36,10 @@ host_triplet = @host@
 @WITH_CACAO_TRUE@	"ALT_JDK_IMPORT_PATH=$(CACAO)"
 
 @WITH_CACAO_TRUE@am__append_2 = \
+@WITH_CACAO_TRUE@	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)" \
+@WITH_CACAO_TRUE@	"ALT_JDK_IMPORT_PATH=$(CACAO)"
+
+@WITH_CACAO_TRUE@am__append_3 = \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-Compiler-gcc-gmk.patch \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-Defs-linux-gmk.patch \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-Platform-gmk.patch \
@@ -224,23 +228,18 @@ ICEDTEA_CLS_DIR = \
 ICEDTEA_ENDORSED_DIR = \
 	$(abs_top_srcdir)/bootstrap/jdk1.6.0/lib/endorsed
 
-ICEDTEA_ENV = \
-	"BUILD_NUMBER=b19" \
-	"LANG=C" \
+ICEDTEA_ENV = "BUILD_NUMBER=b19" "LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
 	"ALT_BINARY_PLUGS_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
-	"ICEDTEA_JCE=$(ICEDTEA_JCE)" \
-	"ICEDTEA_RT=$(ICEDTEA_RT)" \
+	"ICEDTEA_JCE=$(ICEDTEA_JCE)" "ICEDTEA_RT=$(ICEDTEA_RT)" \
 	"ICEDTEA_BUILD_DIR=$(ICEDTEA_BUILD_DIR)" \
 	"ICEDTEA_CLS_DIR=$(ICEDTEA_CLS_DIR)" \
 	"ICEDTEA_ENDORSED_DIR=$(ICEDTEA_ENDORSED_DIR)" \
 	"ENDORSED=-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
-	"CLASSPATH=" \
-	"LD_LIBRARY_PATH=" \
-	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)"
-
+	"CLASSPATH=" "LD_LIBRARY_PATH=" \
+	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)" $(am__append_1)
 
 # OpenJDK ecj build environment.
 ICEDTEA_BUILD_DIR_ECJ = \
@@ -267,7 +266,7 @@ ICEDTEA_ENV_ECJ = "BUILD_NUMBER=b19" "LANG=C" \
 	"BOOTCLASSPATH_CLS=-bootclasspath $(ICEDTEA_CLS_DIR_ECJ)" \
 	"BOOTCLASSPATH_RT_LIBGCJ=-bootclasspath \
 	$(ICEDTEA_RT):$(LIBGCJ_JAR)" "CLASSPATH=" "LD_LIBRARY_PATH=" \
-	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)" $(am__append_1)
+	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)" $(am__append_2)
 
 # OpenJDK Source Preparation Targets
 # ==================================
@@ -294,7 +293,7 @@ ICEDTEA_PATCHES = patches/icedtea-copy-plugs.patch \
 	patches/icedtea-lesstif_amd64.patch \
 	patches/icedtea-tools.patch patches/icedtea-certbundle.patch \
 	patches/icedtea-demos.patch $(FAST_BUILD_PATCH) \
-	$(am__append_2)
+	$(am__append_3)
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = patches/icedtea-ecj-bootstrap.patch
