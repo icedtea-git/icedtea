@@ -1,0 +1,30 @@
+Index: j2se/make/docs/Makefile
+===================================================================
+--- j2se/make/docs/Makefile	(revision 250)
++++ openjdk/j2se/make/docs/Makefile	(working copy)
+@@ -39,16 +39,16 @@ DOCSTMPDIR          = $(TEMPDIR)/doctmp
+ # Set heap memory max (Xmx) and initial value (Xms) depending on architecture.
+ # (Default initial value is 8 -- way too small for the platform APIs)
+ #
+-ifeq ($(ARCH_DATA_MODEL), 32)
+-  ifeq ($(ARCH), sparc)
+-    JAVADOC_VM_MEMORY_FLAGS = -J-Xms64M -J-Xmx512M
+-  else
+-    # Max of 256M is no longer enough.  Increase to 256 + 128
+-    JAVADOC_VM_MEMORY_FLAGS = -J-Xms32M -J-Xmx384M
+-  endif
+-else
++#ifeq ($(ARCH_DATA_MODEL), 32)
++#  ifeq ($(ARCH), sparc)
++#    JAVADOC_VM_MEMORY_FLAGS = -J-Xms64M -J-Xmx512M
++#  else
++#    # Max of 256M is no longer enough.  Increase to 256 + 128
++#    JAVADOC_VM_MEMORY_FLAGS = -J-Xms32M -J-Xmx384M
++#  endif
++#else
+   JAVADOC_VM_MEMORY_FLAGS = -J-Xms128M -J-Xmx1024M
+-endif
++#endif
+ 
+ COMMON_JAVADOCFLAGS =					\
+ 		-source 1.5				\

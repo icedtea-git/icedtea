@@ -186,6 +186,7 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-cacao-Defs-linux-gmk.patch \
 	patches/icedtea-cacao-Platform-gmk.patch \
 	patches/icedtea-cacao-Program-gmk.patch \
+	patches/icedtea-cacao-docs-Makefile.patch \
 	patches/icedtea-cacao-instrument-Makefile.patch \
 	patches/icedtea-cacao-java-c.patch \
 	patches/icedtea-cacao-jvm-cfg.patch

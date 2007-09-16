@@ -40,6 +40,7 @@ host_triplet = @host@
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-Defs-linux-gmk.patch \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-Platform-gmk.patch \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-Program-gmk.patch \
+@WITH_CACAO_TRUE@	patches/icedtea-cacao-docs-Makefile.patch \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-instrument-Makefile.patch \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-java-c.patch \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-jvm-cfg.patch
