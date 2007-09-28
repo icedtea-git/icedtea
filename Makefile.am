@@ -174,6 +174,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-tools.patch \
 	patches/icedtea-certbundle.patch \
 	patches/icedtea-demos.patch \
+	patches/icedtea-use-system-tzdata.patch \
 	$(FAST_BUILD_PATCH)
 
 stamps/patch.stamp: stamps/extract.stamp

@@ -1,3 +1,9 @@
+2007-09-27  Keith Seitz  <keiths@redhat.com>
+
+	* patches/icedtea-use-system-tzdata.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES):  Add above patch.
+	* Makefile.in: Regenerated.
+
 2007-09-14  Keith Seitz  <keiths@redhat.com>
 
 	* configure.ac: Added check for libXtst.

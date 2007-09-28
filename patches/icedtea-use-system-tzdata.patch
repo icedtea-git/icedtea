@@ -1,0 +1,45 @@
+diff -r 7afa92fca0fd hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Thu Sep 27 12:57:09 2007 -0700
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Thu Sep 27 14:00:27 2007 -0700
+@@ -391,6 +391,9 @@ void os::init_system_properties_values()
+ 			       "javax.net.ssl.trustStorePassword",
+ 			       "");
+ 
++  // Use the system zoneinfo files, if present
++  Arguments::PropertyList_add (&sp,
++			       "user.zoneinfo.dir", "/usr/share/javazi");
+ #undef malloc
+ #undef getenv
+ #undef EXTENSIONS_DIR
+diff -r 7afa92fca0fd j2se/src/share/classes/sun/util/calendar/ZoneInfoFile.java
+--- openjdk/j2se/src/share/classes/sun/util/calendar/ZoneInfoFile.java	Thu Sep 27 12:57:09 2007 -0700
++++ openjdk/j2se/src/share/classes/sun/util/calendar/ZoneInfoFile.java	Thu Sep 27 14:00:27 2007 -0700
+@@ -1021,10 +1021,24 @@ public class ZoneInfoFile {
+ 	byte[] buffer = null;
+ 
+ 	try {
+-	    String homeDir = (String) AccessController.doPrivileged(
+-				new sun.security.action.GetPropertyAction("java.home"));
+-	    final String fname = homeDir + File.separator + "lib" + File.separator
+-				 + "zi" + File.separator + fileName;
++	    String zi_dir = (String) System.getProperty("user.zoneinfo.dir");
++	    File dir = null;
++	    if (zi_dir != null)
++	      dir = new File(zi_dir);
++
++	    // Some minimal sanity checking
++	    if (dir != null) {
++	      File f = new File(dir, "ZoneInfoMappings");
++	      if (!f.exists())
++		dir = null;
++	    }
++
++	    if (dir == null) {
++	      String homeDir = (String) System.getProperty("java.home");
++	      zi_dir = homeDir + File.separator + "lib" + File.separator
++		+ "zi";
++	    }
++	    final String fname =  zi_dir + File.separator + fileName;
+ 	    buffer = (byte[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+ 		public Object run() throws IOException {
+ 		    File file = new File(fname);
