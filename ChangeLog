@@ -1,5 +1,9 @@
 2007-09-28  Lillian Angel  <langel@redhat.com>
 
+	* patches/icedtea-plugin.patch: Fixed so it patches correctly.
+
+2007-09-28  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Updated to b21. Removed all targets used to build
 	IcedTea with ecj. Removed building of jce.jar and copying over
 	security sources.
