@@ -37,8 +37,196 @@ exception statement from your version.
 
 package com.sun.media.sound;
 
+import javax.sound.midi.*;
+import java.io.*;
+
 public class MixerSequencer
 {
+
+  public synchronized void close()
+  {
+  }
+
+  public synchronized void open() throws MidiUnavailableException
+  {
+  }
+
+  public synchronized void setTempoFactor(float f)
+  {
+  }
+
+  public void addMetaEventListener(MetaEventListener mel)
+  {
+  }
+
+  public int[] addControllerEventListener(ControllerEventListener listener, int[] controllers)
+  {
+    return null;
+  }
+
+  public void recordDisable(Track track) {
+  }
+
+  public Sequence getSequence()
+  {
+    return null;
+  }
+
+  public synchronized void start()
+  {
+  }
+
+  public synchronized void stop()
+  {
+  }
+ 
+  public boolean isRunning()
+  {
+    return false;
+  }
+
+  public void startRecording()
+  {
+  }
+
+  public void stopRecording()
+  {
+  }
+
+  public void recordEnable(Track t, int i)
+  {
+  }
+
+  public float getTempoInBPM()
+  {
+    return 0;
+  }
+
+  public void setTempoInBPM(float f)
+  {
+  }
+
+  public void setTempoInMPQ(float f)
+  {
+  }
+  
+  public float getTempoInMPQ() {
+     return 0;
+  }
+
+
+  public float getTempoFactor()
+  {
+    return 0;
+  }
+
+  public long getTickLength()
+  {
+    return 0;
+  }
+
+  public long getTickPosition()
+  {
+    return 0;
+  }
+
+  public void setTickPosition(long l)
+  {
+  }
+
+  public long getMicrosecondLength()
+  {
+    return 0;
+  }
+
+  public void setMicrosecondLength(long l)
+  {
+  }
+
+  public void setMasterSyncMode(Sequencer.SyncMode s)
+  {
+  }
+
+  public Sequencer.SyncMode getMasterSyncMode()
+  {
+    return null;
+  }
+
+  public Sequencer.SyncMode[] getMasterSyncModes()
+  {
+    return null;
+  }
+
+  public void setSlaveSyncMode(Sequencer.SyncMode sync)
+  {
+  }
+
+  public Sequencer.SyncMode getSlaveSyncMode()
+  {
+    return null;
+  }
+ 
+  public Sequencer.SyncMode[] getSlaveSyncModes()
+  {
+     return null;
+  }
+
+  public synchronized void setTrackMute(int track, boolean mute) {
+  }
+
+  public synchronized boolean getTrackMute(int track) {
+    return false;
+  }
+
+  public synchronized boolean getTrackSolo(int track) {
+    return false;
+  }
+
+  public void removeMetaEventListener(MetaEventListener listener) {
+  }
+
+  public int[] removeControllerEventListener(ControllerEventListener listener, int[] controllers) {
+     return null;
+  }
+
+  public void setLoopStartPoint(long tick) {
+  }
+
+  public long getLoopStartPoint() {
+    return 0;
+  }
+
+  public void setLoopEndPoint(long tick) {
+  }
+
+  public long getLoopEndPoint() {
+    return 0;
+  }
+
+  public void setLoopCount(int count) {
+  }
+
+  public int getLoopCount() {
+    return 0;
+  }
+
+  public synchronized void setSequence(InputStream is)  throws IOException
+  {
+  }
+  
+  public long getMicrosecondPosition() {
+    return 0;
+  }
+
+  public void setMicrosecondPosition(long microseconds) {
+  }
+
+  public synchronized void setTrackSolo(int track, boolean solo) {
+  } 
+
+  public boolean isRecording() {
+    return false;
+  }
 
 }
 

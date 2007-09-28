@@ -37,9 +37,19 @@ exception statement from your version.
 
 package com.sun.media.sound;
 
+import javax.sound.midi.*;
+
 public class MixerSynth
 {
+  public class SynthReceiver
+  {
+     public void send(MidiMessage message, long timeStamp) {
+     }
+     
+     public void sendPackedMidiMessage(int packedMessage, long timeStamp) {
+     }
 
+  }
 }
 
 

@@ -36,49 +36,17 @@ AC_ARG_WITH([icedtea-home],
             ])
 AC_SUBST(SYSTEM_ICEDTEA_DIR)
 
-AC_ARG_WITH([icedtea],
-        [AS_HELP_STRING([--with-icedtea],
-                        [build IcedTea with system-installed IcedTea])],
-        [
-          if test "x${withval}" != xno
-          then
-            with_icedtea=true
-          else
-            with_icedtea=false
-          fi
-        ],
-        [
-          with_icedtea=false
-        ])
-AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" == true)
-
 SET_ARCH_DIRS
-if test "${with_icedtea}" == true
-then
-  JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
-  AC_SUBST(JAVA)
-  JAVAC=${SYSTEM_ICEDTEA_DIR}/bin/javac
-  AC_SUBST(JAVAC)
-  JAVAH=${SYSTEM_ICEDTEA_DIR}/bin/javah
-  AC_SUBST(JAVAH)
-  JAR=${SYSTEM_ICEDTEA_DIR}/bin/jar
-  AC_SUBST(JAR)
-  RMIC=${SYSTEM_ICEDTEA_DIR}/bin/rmic
-  AC_SUBST(RMIC)
-else
-  FIND_JAVA
-  FIND_JAVAC
-  FIND_JAVAH
-  FIND_JAR
-  FIND_RMIC
-  FIND_ECJ_JAR
-  FIND_LIBGCJ_JAR
-  FIND_XALAN2_JAR
-  FIND_XALAN2_SERIALIZER_JAR
-  FIND_XERCES2_JAR
-  AC_CONFIG_FILES([javac], [chmod +x javac])
-  AC_CONFIG_FILES([javap], [chmod +x javap])
-fi
+JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
+AC_SUBST(JAVA)
+JAVAC=${SYSTEM_ICEDTEA_DIR}/bin/javac
+AC_SUBST(JAVAC)
+JAVAH=${SYSTEM_ICEDTEA_DIR}/bin/javah
+AC_SUBST(JAVAH)
+JAR=${SYSTEM_ICEDTEA_DIR}/bin/jar
+AC_SUBST(JAR)
+RMIC=${SYSTEM_ICEDTEA_DIR}/bin/rmic
+AC_SUBST(RMIC)
 FIND_FREETYPE
 WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
