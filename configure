@@ -4800,8 +4800,6 @@ else
 fi
 
 
-{ echo "$as_me:$LINENO: result: icedtea home is set to SYSTEM_ICEDTEA_DIR" >&5
-echo "${ECHO_T}icedtea home is set to SYSTEM_ICEDTEA_DIR" >&6; }
 
 
   case "${host}" in

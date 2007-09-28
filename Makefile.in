@@ -202,9 +202,9 @@ ICEDTEA_ENDORSED_DIR = \
 
 ICEDTEA_ENV = \
 	"ANT_HOME=/usr" \
-	"BUILD_NUMBER=b19" \
-	"JRE_RELEASE_VERSION=1.7.0-b19" \
-	"HOTSPOT_RELEASE_VERSION=1.7.0-b19" \
+	"BUILD_NUMBER=b21" \
+	"JRE_RELEASE_VERSION=1.7.0-b21" \
+	"HOTSPOT_RELEASE_VERSION=1.7.0-b21" \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
@@ -249,7 +249,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-certbundle.patch \
 	patches/icedtea-demos.patch \
 	patches/icedtea-use-system-tzdata.patch \
-	patches/icedtea-build.patch \
+	patches/icedtea-java-home.patch \
+	patches/icedtea-headers.patch \
 	$(FAST_BUILD_PATCH)
 
 
