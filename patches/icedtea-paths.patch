@@ -521,23 +521,6 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java openjdk/
 +        }
 +    }
  }
---- openjdk.clean/j2se/make/sun/dcpr/Makefile	2007-07-20 08:17:57.000000000 +0100
-+++ openjdk/j2se/make/sun/dcpr/Makefile	2007-07-24 11:26:44.000000000 +0100
-@@ -62,10 +62,13 @@
- # Specific to OpenJDK building
- #
- 
-+FILES_java = \
-+ sun/dc/DuctusRenderingEngine.java
-+
- # Plug lib will be copied instead of compiling.
- USE_BINARY_PLUG_LIBRARY=true
- 
--build: import-binary-plug-dc-classes import-binary-plug-dcpr-library
-+build: import-binary-plug-dc-classes import-binary-plug-dcpr-library classheaders
- 
- include $(BUILDDIR)/common/BinaryPlugs.gmk
- 
 diff -urN openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java
 --- openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java	2007-07-20 03:34:01.000000000 -0400
 +++ openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java	2007-07-19 14:42:54.000000000 -0400
@@ -579,46 +562,61 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe
              fill(sg2d, sg2d.stroke.createStrokedShape(s));
          }
      }
-diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java
---- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-07-20 03:33:17.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-07-19 17:14:03.000000000 -0400
-@@ -189,6 +189,7 @@
+--- ../openjdk-b20/openjdk/j2se/make/sun/dcpr/Makefile	2007-09-13 03:52:45.000000000 -0400
++++ openjdk/j2se/make/sun/dcpr/Makefile	2007-09-14 10:33:07.000000000 -0400
+@@ -62,10 +62,13 @@
+ # Specific to OpenJDK building
+ #
+ 
++FILES_java = \
++  sun/dc/DuctusRenderingEngine.java
++
+ # Plug lib will be copied instead of compiling.
+ USE_BINARY_PLUG_LIBRARY=true
+ 
+-build: import-binary-plug-dc-classes import-binary-plug-dcpr-library
++build: import-binary-plug-dc-classes import-binary-plug-dcpr-library classheaders
+ 
+ include $(BUILDDIR)/common/internal/BinaryPlugs.gmk
+ 
+--- ../openjdk-b20/openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-09-13 04:11:54.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-09-14 10:34:49.000000000 -0400
+@@ -188,7 +188,7 @@
+                                              transX, transY, p2df); 
              return;
          }
- 
+-
 +/*
          if (sg2d.strokeState == sg2d.STROKE_CUSTOM) {
              fill(sg2d, sg2d.stroke.createStrokedShape(s));
              return;
-@@ -201,6 +202,8 @@
+@@ -201,6 +201,8 @@
          } finally {
              sr.dispose();
          }
 +*/
-+	fill(sg2d, sg2d.stroke.createStrokedShape(s));
++        fill(sg2d, sg2d.stroke.createStrokedShape(s));
      }
  
-     /*
-diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java
---- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-07-20 03:33:17.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-07-19 17:45:56.000000000 -0400
+     /**
+--- ../openjdk-b20/openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-09-13 04:11:54.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-09-14 10:36:50.000000000 -0400
 @@ -82,6 +82,7 @@
      }
  
      public void draw(SunGraphics2D sg, Shape s) {
 +/*
  	if (sg.stroke instanceof BasicStroke) {
- 	    ShapeSpanIterator sr = new ShapeSpanIterator(sg, true);
+ 	    ShapeSpanIterator sr = LoopPipe.getStrokeSpans(sg, s);
  	    try {
 @@ -90,8 +91,9 @@
  		sr.dispose();
  	    }
  	} else {
 +*/
- 	    renderPath(sg, sg.stroke.createStrokedShape(s));
+ 	    fill(sg, sg.stroke.createStrokedShape(s));
 -	}
 +//	}
      }
  
-     public void drawBasicStroke(SunGraphics2D sg, Shape s,
-
+     public static final int NON_RECTILINEAR_TRANSFORM_MASK =

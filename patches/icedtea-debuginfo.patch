@@ -1,6 +1,6 @@
 --- openjdk/j2se/make/common/Defs-linux.gmk~	2007-05-24 08:33:20.000000000 +0100
 +++ openjdk/j2se/make/common/Defs-linux.gmk	2007-06-21 15:32:44.000000000 +0100
-@@ -164,13 +164,7 @@
+@@ -155,13 +155,7 @@
     CFLAGS_COMMON   += $(GLOBAL_KPIC) $(GCC_WARNINGS)
  endif
  
@@ -14,7 +14,7 @@
  
  CFLAGS_OPT      = $(POPT)
  CFLAGS_DBG      = $(DEBUG_FLAG)
-@@ -245,7 +239,7 @@
+@@ -230,7 +230,7 @@
  ifeq ($(VARIANT), OPT)
    ifneq ($(NO_STRIP), true)
      # Debug 'strip -g' leaves local function Elf symbols (better stack traces)
@@ -23,26 +23,6 @@
    endif
  endif
  
---- openjdk.orig/j2se/make/common/Defs.gmk	2007-08-30 03:19:36.000000000 -0400
-+++ openjdk/j2se/make/common/Defs.gmk	2007-09-04 10:31:46.000000000 -0400
-@@ -580,13 +580,10 @@
- JAVAC_PATHFLAGS    = $(JAVAC_CLS_FLAG) $(JAVAC_SRC_FLAG) $(JAVAC_DST_FLAG)
- JAVACFLAGS_COMMON  = $(JAVAC_PATHFLAGS) $(JAVAC_ENCODINGFLAGS)
- 
--# Any debug build should include all debug info inside the classfiles
--ifeq ($(VARIANT), DBG)
--  DEBUG_CLASSFILES = true
--endif
--ifeq ($(DEBUG_CLASSFILES),true)
--  JAVACFLAGS_COMMON += -g
--endif
-+# Force everything to be compiled with -g, regardless of whether this
-+# is an optimized build.
-+DEBUG_CLASSFILES = true
-+JAVACFLAGS_COMMON += -g
- 
- JAVACFLAGS	   = $(JAVACFLAGS_COMMON) $(OTHER_JAVACFLAGS)
- JAVAC_CMD 	   = $(JAVAC) $(JIT_OPTION) $(JAVACFLAGS) $(LANGUAGE_VERSION) $(CLASS_VERSION)
 --- openjdk/j2se/make/sun/awt/mawt.gmk~	2007-05-24 08:33:23.000000000 +0100
 +++ openjdk/j2se/make/sun/awt/mawt.gmk	2007-06-21 15:25:58.000000000 +0100
 @@ -132,7 +132,7 @@
@@ -54,3 +34,24 @@
  ifeq ($(HEADLESS),true)
  CFLAGS += -DHEADLESS=$(HEADLESS)
  CPPFLAGS += -DHEADLESS=$(HEADLESS)
+--- ../openjdk-b20/openjdk/j2se/make/common/shared/Defs-java.gmk	2007-09-13 03:52:42.000000000 -0400
++++ openjdk/j2se/make/common/shared/Defs-java.gmk	2007-09-14 10:50:45.000000000 -0400
+@@ -98,15 +98,9 @@
+ #  -- Use JAVAC_CMD if you want to take the defaults given to you.
+ #
+ 
+-ifndef DEBUG_CLASSFILES
+-  ifeq ($(VARIANT), DBG)
+-    DEBUG_CLASSFILES = true
+-  endif
+-endif
+-JAVACFLAGS =
+-ifeq ($(DEBUG_CLASSFILES),true)
+-  JAVACFLAGS += -g
+-endif
++DEBUG_CLASSFILES = true
++JAVACFLAGS += -g
++
+ ifeq ($(COMPILER_WARNINGS_FATAL), true)
+   JAVACFLAGS  += -Werror
+ endif

@@ -1,3 +1,36 @@
+2007-09-28  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Updated to b21. Removed all targets used to build
+	IcedTea with ecj. Removed building of jce.jar and copying over
+	security sources.
+	* Makefile.in: Regenerated
+	* configure: Regenerated
+	* configure.ac: Removed --with-icedtea option, now default.
+	* patches/icedtea-antialias.patch: Fixed to patch b21 correctly.
+	* patches/icedtea-copy-plugs.patch: Likewise.
+	* patches/icedtea-debuginfo.patch: Likewise.
+	* patches/icedtea-license-headers.patch: Likewise.
+	* patches/icedtea-paths.patch: Likewise.
+	* patches/icedtea-plugin.patch: Likewise.
+	* patches/icedtea-use-system-tzdata.patch: Likewise.
+	* patches/icedtea-version.patch: Likewise.
+	* rt/com/sun/media/sound/MixerSequencer.java: Implemented.
+	* rt/com/sun/media/sound/MixerSynth.java: Implemented.
+	* tools-copy-files.txt: Modified.
+	* patches/icedtea-headers.patch: New patch.
+	* patches/icedtea-java-home.patch: New patch.
+	* jce/: Removed
+	* patches/icedtea-assembler_amd64.patch: Removed.
+	* patches/icedtea-ecj-bootstrap.patch:Removed.
+	* patches/icedtea-lesstif_amd64.patch: Removed.
+	* rt/com/sun/media/sound/AutoConnectSequencer.java: Removed.
+	* rt/com/sun/media/sound/DirectAudioDevice.java: Removed.
+	* rt/com/sun/media/sound/DirectAudioDeviceProvider.java: Removed.
+	* rt/com/sun/media/sound/MidiOutDevice.java: Removed.
+	* rt/com/sun/media/sound/Platform.java: Removed.
+	* rt/com/sun/media/sound/Toolkit.java: Removed.
+	* rt/gnu/java/security/provider/Gnu.java: Removed.
+
 2007-09-27  Keith Seitz  <keiths@redhat.com>
 
 	* patches/icedtea-use-system-tzdata.patch: New file.

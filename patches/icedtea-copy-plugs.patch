@@ -26,7 +26,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java 
 diff -urN openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java openjdk/j2se/src/share/classes/java/beans/MetaData.java
 --- openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java	2007-05-24 03:42:31.000000000 -0400
 +++ openjdk/j2se/src/share/classes/java/beans/MetaData.java	2007-06-22 17:06:14.000000000 -0400
-@@ -1478,7 +1478,7 @@
+@@ -1565,7 +1565,7 @@
      }
  
      private static String[] getAnnotationValue(Constructor constructor) {
@@ -35,9 +35,9 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java openjdk/j
          return (annotation != null)
                  ? annotation.value()
                  : null;
---- openjdk.orig/j2se/make/common/BinaryPlugs.gmk	2007-08-30 03:19:36.000000000 -0400
-+++ openjdk/j2se/make/common/BinaryPlugs.gmk	2007-09-04 10:31:46.000000000 -0400
-@@ -76,8 +76,6 @@
+--- ../openjdk-b21/openjdk/j2se/make/common/internal/BinaryPlugs.gmk	2007-09-27 22:30:28.000000000 -0400
++++ openjdk/j2se/make/common/internal/BinaryPlugs.gmk	2007-09-28 11:02:55.000000000 -0400
+@@ -53,8 +53,6 @@
  com/sun/jmx/snmp/SnmpDataTypeEnums.class \
  com/sun/jmx/snmp/SnmpDefinitions.class \
  com/sun/jmx/snmp/SnmpOid.class \
@@ -46,7 +46,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java openjdk/j
  com/sun/jmx/snmp/SnmpOidRecord.class \
  com/sun/jmx/snmp/SnmpOidTable.class \
  com/sun/jmx/snmp/SnmpOidTableSupport.class \
-@@ -87,17 +85,9 @@
+@@ -64,17 +62,9 @@
  com/sun/jmx/snmp/SnmpTimeticks.class \
  com/sun/jmx/snmp/SnmpVarBind.class \
  com/sun/jmx/snmp/SnmpVarBindList.class \
@@ -64,8 +64,8 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java openjdk/j
 +com/sun/jmx/snmp/daemon/SnmpSession.class
  
  PLUG_SOUND_CLASS_NAMES = \
- com/sun/media/sound/AbstractDataLine.class \
-@@ -260,9 +250,6 @@
+ com/sun/media/sound/AbstractPlayer.class \
+@@ -132,9 +122,6 @@
  java/awt/color/CMMException.class \
  java/awt/color/ColorSpace.class \
  java/awt/color/ICC_ColorSpace.class \
@@ -75,22 +75,19 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java openjdk/j
  java/awt/color/ICC_Profile.class \
  java/awt/color/ICC_ProfileGray.class \
  java/awt/color/ICC_ProfileRGB.class \
-@@ -305,10 +292,13 @@
- sun/dc/pr/Rasterizer\$$ConsumerDisposer.class \
- sun/dc/pr/Rasterizer.class
+@@ -179,8 +166,10 @@
  
-+PLUG_GNU_CLASS_NAMES = \
-+gnu
-+
  # Class list temp files (used by both import and export of plugs)
  
++PLUG_GNU_CLASS_NAMES = gnu
++
  PLUG_TEMPDIR=$(ABS_TEMPDIR)/plugs
 -PLUG_CLASS_AREAS = jmf sound awt dc
 +PLUG_CLASS_AREAS = jmf sound awt dc gnu
  PLUG_CLISTS = $(PLUG_CLASS_AREAS:%=$(PLUG_TEMPDIR)/%.clist)
  
  # Create jargs file command
-@@ -341,6 +331,11 @@
+@@ -213,6 +202,11 @@
  	@for i in $(PLUG_DC_CLASS_NAMES) ; do \
  	  $(ECHO) "$$i" >> $@ ; \
  	done
@@ -102,28 +99,28 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java openjdk/j
  $(PLUG_TEMPDIR)/all.clist: $(PLUG_CLISTS)
  	@$(prep-target)
  	$(CAT) $(PLUG_CLISTS) > $@
-@@ -352,6 +347,8 @@
+@@ -222,6 +216,8 @@
  	$(plug-create-jargs)
- $(PLUG_TEMPDIR)/dc.jargs: $(PLUG_TEMPDIR)/dc.clist
+ $(PLUG_TEMPDIR)/awt.jargs: $(PLUG_TEMPDIR)/awt.clist
  	$(plug-create-jargs)
 +$(PLUG_TEMPDIR)/gnu.jargs: $(PLUG_TEMPDIR)/gnu.clist
 +	$(plug-create-jargs)
- $(PLUG_TEMPDIR)/all.jargs: $(PLUG_TEMPDIR)/all.clist
+ $(PLUG_TEMPDIR)/dc.jargs: $(PLUG_TEMPDIR)/dc.clist
  	$(plug-create-jargs)
- 
-@@ -376,9 +373,9 @@
+ $(PLUG_TEMPDIR)/all.jargs: $(PLUG_TEMPDIR)/all.clist
+@@ -248,9 +244,9 @@
  # Import classes command
  
  define import-binary-plug-classes
 -@$(MKDIR) -p $(CLASSDESTDIR)
 +$(MKDIR) -p $(CLASSDESTDIR)
  @$(CAT) $1 | $(SED) -e 's/^/PLUG IMPORT: /'
--($(CD) $(CLASSDESTDIR) && $(JAR_BOOT) xf $(PLUG_IMPORT_JARFILE) @$1)
-+($(CD) $(CLASSDESTDIR) && $(JAR_BOOT) xf $(PLUG_IMPORT_JARFILE) `$(CAT) $1`)
+-($(CD) $(CLASSDESTDIR) && $(BOOT_JAR_CMD) xf $(PLUG_IMPORT_JARFILE) @$1)
++($(CD) $(CLASSDESTDIR) && $(BOOT_JAR_CMD) xf $(PLUG_IMPORT_JARFILE) `$(CAT) $1`)
  endef # import-binary-plug-classes
  
- # Import lib jar files (only if needed)
-@@ -407,6 +404,8 @@
+ # Import specific area classes (the classes are always created)
+@@ -263,6 +259,8 @@
  	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/awt.clist)
  import-binary-plug-dc-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/dc.clist
  	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/dc.clist)
@@ -132,23 +129,14 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java openjdk/j
  
  # Import all classes from the jar file
  
-@@ -414,7 +413,8 @@
+@@ -270,7 +268,9 @@
  	     import-binary-plug-jmf-classes \
  	     import-binary-plug-sound-classes \
  	     import-binary-plug-awt-classes \
 -	     import-binary-plug-dc-classes 
 +	     import-binary-plug-dc-classes \
-+	     import-binary-plug-gnu-classes
++	     import-binary-plug-dc-classes \
++	     import-binary-plug-gnu-classes		
  
  # Import native libraries
- 
-@@ -478,7 +478,8 @@
- 	import-binary-plug-dcpr-library \
-         import-binary-plug-jsound-library \
- 	import-binary-plug-jsoundalsa-library \
--        import-binary-plug-jsoundds-library
-+        import-binary-plug-jsoundds-library \
-+	import-binary-plug-gnu-classes \
- 
- else # !OPENJDK
  
