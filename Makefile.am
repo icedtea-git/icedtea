@@ -134,7 +134,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-certbundle.patch \
 	patches/icedtea-demos.patch \
 	patches/icedtea-use-system-tzdata.patch \
-	patches/icedtea-java-home.patch \
 	patches/icedtea-headers.patch \
 	$(FAST_BUILD_PATCH)
 
