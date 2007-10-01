@@ -1,3 +1,9 @@
+2007-10-01  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-java-home.patch: Removed
+	* Makefile.am: Removed patch.
+	* Makefile.in: Regenerated.
+
 2007-09-28  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-plugin.patch: Fixed so it patches correctly.
