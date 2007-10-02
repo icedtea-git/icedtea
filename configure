@@ -712,6 +712,7 @@ WGET
 CHMOD
 GAWK
 SYSTEM_ICEDTEA_DIR
+SYSTEM_ANT_DIR
 BUILD_ARCH_DIR
 INSTALL_ARCH_DIR
 JAVA
@@ -1352,6 +1353,7 @@ Optional Packages:
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-icedtea-home     IcedTea home directory (default is
                           /usr/lib/jvm/java-icedtea)
+  --with-ant-home         Ant home directory (default is /usr)
   --with-openjdk-src-zip  specify the location of the openjdk source zip
   --with-openjdk-src-dir  specify the location of the openjdk sources
   --with-cacao            use CACAO as VM
@@ -4800,6 +4802,25 @@ if test "${with_icedtea_home+set}" = set; then
 else
 
               SYSTEM_ICEDTEA_DIR=/usr/lib/jvm/java-icedtea
+
+fi
+
+
+
+
+# Check whether --with-ant-home was given.
+if test "${with_ant_home+set}" = set; then
+  withval=$with_ant_home;
+              if test "x${withval}" == x
+              then
+                SYSTEM_ANT_DIR=/usr
+              else
+                SYSTEM_ANT_DIR=${withval}
+              fi
+
+else
+
+              SYSTEM_ANT_DIR=/usr
 
 fi
 
@@ -8485,6 +8506,7 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+SYSTEM_ANT_DIR!$SYSTEM_ANT_DIR$ac_delim
 BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
 INSTALL_ARCH_DIR!$INSTALL_ARCH_DIR$ac_delim
 JAVA!$JAVA$ac_delim

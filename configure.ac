@@ -36,6 +36,22 @@ AC_ARG_WITH([icedtea-home],
             ])
 AC_SUBST(SYSTEM_ICEDTEA_DIR)
 
+AC_ARG_WITH([ant-home],
+            [AS_HELP_STRING([--with-ant-home],
+                            [Ant home directory (default is /usr)])],
+            [
+              if test "x${withval}" == x
+              then
+                SYSTEM_ANT_DIR=/usr
+              else
+                SYSTEM_ANT_DIR=${withval}
+              fi
+            ],
+            [
+              SYSTEM_ANT_DIR=/usr
+            ])
+AC_SUBST(SYSTEM_ANT_DIR)
+
 SET_ARCH_DIRS
 JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
 AC_SUBST(JAVA)
