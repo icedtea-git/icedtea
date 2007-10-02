@@ -39,7 +39,7 @@ ICEDTEA_CLS_DIR = \
 ICEDTEA_ENDORSED_DIR = \
 	$(abs_top_srcdir)/bootstrap/jdk1.6.0/lib/endorsed
 ICEDTEA_ENV = \
-	"ANT_HOME=/usr" \
+	"ANT_HOME=@SYSTEM_ANT_DIR@" \
 	"BUILD_NUMBER=b21" \
 	"JRE_RELEASE_VERSION=1.7.0-b21" \
 	"HOTSPOT_RELEASE_VERSION=1.7.0-b21" \
