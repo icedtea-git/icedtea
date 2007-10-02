@@ -53,11 +53,8 @@ Rebuilding The IcedTea Plugs
 
 When IcedTea is initially built, it creates stamp files in the stamps directory
 to determine what and when dependencies were compiled. For example, to rebuild 
-the rt/jce plugs certain files need to be deleted before restarting the build.
+the rt plugs certain files need to be deleted before restarting the build.
 
- - If the jce plugs have been modified, delete stamps/jce-class-files.stamp.
- - If a new class has been added to the jce plugs, delete 
- jce-source-files.txt so it can be recreated with the new class list.
  - If the rt plugs have been modified, delete stamps/rt-class-files.stamp.
  - If a new class has been added to the rt plugs, delete
  rt-source-files.txt  so it can be recreated with the new class list.
