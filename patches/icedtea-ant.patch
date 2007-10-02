@@ -1,6 +1,6 @@
---- lang.orig	2007-10-02 11:38:32.000000000 -0400
-+++ openjdk/langtools/make/Makefile	2007-10-02 11:38:52.000000000 -0400
-@@ -129,17 +129,7 @@
+--- lang.orig	2007-10-02 11:57:53.000000000 -0400
++++ openjdk/langtools/make/Makefile	2007-10-02 11:58:08.000000000 -0400
+@@ -129,16 +129,9 @@
    ANT_OPTIONS += -Dfindbugs.home=$(FINDBUGS_HOME)
  endif
  
@@ -14,8 +14,9 @@
 -  ifneq ($(shell test -x "`which $(ANT)`" && echo OK), OK)
 -    $(error 'ant' not found -- please set ANT_HOME or put 'ant' on your PATH)
 -  endif
--endif
 +ANT = ant
++ifneq ($(shell test -x "`which $(ANT)`" && echo OK), OK)
++  $(error 'ant' not found -- please put 'ant' on your PATH)
+ endif
  
  # Default target and expected 'do everything' target
- all: build
