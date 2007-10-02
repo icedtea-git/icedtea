@@ -1350,7 +1350,7 @@ Optional Packages:
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-icedtea-home     IcedTea home directory (default is
                           /usr/lib/jvm/java-icedtea)
-  --with-ant-home         Ant home directory (default is /usr)
+  --with-ant-home         Ant home directory (default is /usr/share/ant)
   --with-openjdk-src-zip  specify the location of the openjdk source zip
   --with-openjdk-src-dir  specify the location of the openjdk sources
 
@@ -4809,14 +4809,14 @@ if test "${with_ant_home+set}" = set; then
   withval=$with_ant_home;
               if test "x${withval}" == x
               then
-                SYSTEM_ANT_DIR=/usr
+                SYSTEM_ANT_DIR=/usr/share/ant
               else
                 SYSTEM_ANT_DIR=${withval}
               fi
 
 else
 
-              SYSTEM_ANT_DIR=/usr
+              SYSTEM_ANT_DIR=/usr/share/ant
 
 fi
 

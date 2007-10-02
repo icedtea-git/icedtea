@@ -135,6 +135,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-demos.patch \
 	patches/icedtea-use-system-tzdata.patch \
 	patches/icedtea-headers.patch \
+	patches/icedtea-ant.patch \
 	$(FAST_BUILD_PATCH)
 
 stamps/patch.stamp: stamps/extract.stamp

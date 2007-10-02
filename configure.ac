@@ -38,17 +38,17 @@ AC_SUBST(SYSTEM_ICEDTEA_DIR)
 
 AC_ARG_WITH([ant-home],
             [AS_HELP_STRING([--with-ant-home],
-                            [Ant home directory (default is /usr)])],
+                            [Ant home directory (default is /usr/share/ant)])],
             [
               if test "x${withval}" == x
               then
-                SYSTEM_ANT_DIR=/usr
+                SYSTEM_ANT_DIR=/usr/share/ant
               else
                 SYSTEM_ANT_DIR=${withval}
               fi
             ],
             [
-              SYSTEM_ANT_DIR=/usr
+              SYSTEM_ANT_DIR=/usr/share/ant
             ])
 AC_SUBST(SYSTEM_ANT_DIR)
 

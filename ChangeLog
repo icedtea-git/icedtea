@@ -1,5 +1,13 @@
 2007-10-02  Lillian Angel  <langel@redhat.com>
 
+	* Makefile.am: Removed ANT_HOME, added patch.
+	* Makefile.in: Regenerated.
+	* configure: Regenerated.
+	* configure.ac: Set --with-ant-home default to /usr/share/ant
+	* patches/icedtea-ant.patch: New patch
+
+2007-10-02  Lillian Angel  <langel@redhat.com>
+
 	* AUTHORS: Added Matthias Klose.
 
 2007-10-02  Matthias Klose  <doko@ubuntu.com>
