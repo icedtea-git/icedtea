@@ -1,3 +1,10 @@
+2007-10-03  Keith Seitz  <keiths@redhat.com>
+
+	* patches/icedtea-use-system-tzdata.patch: Use AccessController
+	instead of System.getProperty.
+	Catch AccessControlException while attempting to stat
+	ZoneInfoMappings.
+
 2007-10-03  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am: Use DISTRIBUTION_PATCHES and gcc-suffix.
