@@ -137,6 +137,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-headers.patch \
 	patches/icedtea-ant.patch \
 	patches/icedtea-gcc-suffix.patch \
+	patches/icedtea-bytebuffer-compact.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
