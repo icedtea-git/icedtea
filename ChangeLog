@@ -1,5 +1,12 @@
 2007-10-03  Keith Seitz  <keiths@redhat.com>
 
+	* patches/icedtea-float-double-trailing-zeros.patch:
+	New file.
+	* Makefile.am (ICEDTEA_PATCHES): Add above patch.
+	* Makefile.in: Regenerate.
+
+2007-10-03  Keith Seitz  <keiths@redhat.com>
+
 	* patches/icedtea-bytebuffer-compact.patch: New file.
 	* Makefile.am (ICEDTEA_PATCHES): Add above patch.
 	* Makefile.in: Regenerated.
