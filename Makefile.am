@@ -142,7 +142,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-use-system-tzdata.patch \
 	patches/icedtea-headers.patch \
 	patches/icedtea-ant.patch \
-	$(FAST_BUILD_PATCH)
+	patches/icedtea-gcc-suffix.patch \
+	$(FAST_BUILD_PATCH) \
+	$(DISTRIBUTION_PATCHES)
 
 if WITH_CACAO
 ICEDTEA_PATCHES += \
