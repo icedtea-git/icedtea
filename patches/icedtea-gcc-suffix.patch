@@ -1,0 +1,48 @@
+--- openjdk/hotspot/agent/src/os/linux/Makefile~	2007-08-02 09:16:50.000000000 +0200
++++ openjdk/hotspot/agent/src/os/linux/Makefile	2007-08-08 17:00:11.204338801 +0200
+@@ -23,7 +23,7 @@
+ #
+ 
+ ARCH := $(shell if ([ `uname -m` = "ia64" ])  ; then echo ia64 ; elif ([ `uname -m` = "x86_64" ]) ; then echo amd64; elif ([ `uname -m` = "sparc64" ]) ; then echo sparc; else echo i386 ; fi )
+-GCC      = gcc
++GCC      = gcc$(GCC_SUFFIX)
+ 
+ JAVAH    = ${JAVA_HOME}/bin/javah
+ 
+--- openjdk/hotspot/build/linux/makefiles/gcc.make~	2007-08-08 16:13:12.281815996 +0200
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-08-08 16:36:52.573240769 +0200
+@@ -25,8 +25,8 @@
+ #------------------------------------------------------------------------
+ # CC, CPP & AS
+ 
+-CPP = g++
+-CC  = gcc
++CPP = g++$(GCC_SUFFIX)
++CC  = gcc$(GCC_SUFFIX)
+ AS  = $(CC) -c
+ 
+ # -dumpversion in gcc-2.91 shows "egcs-2.91.66". In later version, it only
+--- openjdk/j2se/make/common/shared/Compiler-gcc.gmk~	2007-08-02 09:17:53.000000000 +0200
++++ openjdk/j2se/make/common/shared/Compiler-gcc.gmk	2007-08-08 16:30:52.857814544 +0200
+@@ -58,17 +58,17 @@
+ ifeq ($(PLATFORM), linux)
+ 
+   # Settings specific to Linux
+-  CC             = $(COMPILER_PATH)gcc
+-  CPP            = $(COMPILER_PATH)gcc -E
++  CC             = $(COMPILER_PATH)gcc$(GCC_SUFFIX)
++  CPP            = $(COMPILER_PATH)gcc$(GCC_SUFFIX) -E
+   # statically link libstdc++ before C++ ABI is stablized on Linux
+   STATIC_CXX     = true
+   ifeq ($(STATIC_CXX),true)
+     # g++ always dynamically links libstdc++, even we use "-Wl,-Bstatic -lstdc++"
+     # We need to use gcc to statically link the C++ runtime. gcc and g++ use
+     # the same subprocess to compile C++ files, so it is OK to build using gcc.
+-    CXX            = $(COMPILER_PATH)gcc
++    CXX            = $(COMPILER_PATH)gcc$(GCC_SUFFIX)
+   else
+-    CXX            = $(COMPILER_PATH)g++
++    CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
+   endif
+   ifneq ("$(findstring sparc,$(ARCH))", "")
+     # sparc or sparcv9

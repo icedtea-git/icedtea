@@ -136,7 +136,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-use-system-tzdata.patch \
 	patches/icedtea-headers.patch \
 	patches/icedtea-ant.patch \
-	$(FAST_BUILD_PATCH)
+	patches/icedtea-gcc-suffix.patch \
+	$(FAST_BUILD_PATCH) \
+	$(DISTRIBUTION_PATCHES)
 
 stamps/patch.stamp: stamps/extract.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
