@@ -1,5 +1,11 @@
 2007-10-03  Keith Seitz  <keiths@redhat.com>
 
+	* patches/icedtea-bytebuffer-compact.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Add above patch.
+	* Makefile.in: Regenerated.
+
+2007-10-03  Keith Seitz  <keiths@redhat.com>
+
 	* patches/icedtea-use-system-tzdata.patch: Use AccessController
 	instead of System.getProperty.
 	Catch AccessControlException while attempting to stat

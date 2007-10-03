@@ -1,0 +1,81 @@
+diff -r 317d604b4da9 j2se/src/share/classes/java/nio/Buffer.java
+--- openjdk/j2se/src/share/classes/java/nio/Buffer.java	Tue Sep 25 12:45:52 2007 -0700
++++ openjdk/j2se/src/share/classes/java/nio/Buffer.java	Tue Sep 25 12:47:10 2007 -0700
+@@ -235,7 +235,7 @@ public abstract class Buffer {
+ 	if ((newPosition > limit) || (newPosition < 0))
+ 	    throw new IllegalArgumentException();
+ 	position = newPosition;
+-	if (mark > position) mark = -1;
++	if (mark > position) clearMark();
+ 	return this;
+     }
+ 
+@@ -267,7 +267,7 @@ public abstract class Buffer {
+ 	    throw new IllegalArgumentException();
+ 	limit = newLimit;
+ 	if (position > limit) position = limit;
+-	if (mark > limit) mark = -1;
++	if (mark > limit) clearMark();
+ 	return this;
+     }
+ 
+@@ -320,7 +320,7 @@ public abstract class Buffer {
+     public final Buffer clear() {
+ 	position = 0;
+ 	limit = capacity;
+-	mark = -1;
++	clearMark();
+ 	return this;
+     }
+ 
+@@ -348,7 +348,7 @@ public abstract class Buffer {
+     public final Buffer flip() {
+ 	limit = position;
+ 	position = 0;
+-	mark = -1;
++	clearMark();
+ 	return this;
+     }
+ 
+@@ -369,7 +369,7 @@ public abstract class Buffer {
+      */
+     public final Buffer rewind() {
+ 	position = 0;
+-	mark = -1;
++	clearMark();
+ 	return this;
+     }
+ 
+@@ -543,6 +543,10 @@ public abstract class Buffer {
+ 	return mark;
+     }
+ 
++    final void clearMark() {                            // package-private
++        mark = -1;
++    }
++
+     static void checkBounds(int off, int len, int size) { // package-private
+         if ((off | len | (off + len) | (size - (off + len))) < 0)
+ 	    throw new IndexOutOfBoundsException();
+diff -r 317d604b4da9 j2se/src/share/classes/java/nio/Direct-X-Buffer.java
+--- openjdk/j2se/src/share/classes/java/nio/Direct-X-Buffer.java	Tue Sep 25 12:45:52 2007 -0700
++++ openjdk/j2se/src/share/classes/java/nio/Direct-X-Buffer.java	Tue Sep 25 12:47:10 2007 -0700
+@@ -354,6 +354,7 @@ class Direct$Type$Buffer$RW$$BO$
+  	unsafe.copyMemory(ix(pos), ix(0), rem << $LG_BYTES_PER_VALUE$);
+  	position(rem);
+ 	limit(capacity());
++	clearMark();
+ 	return this;
+ #else[rw]
+ 	throw new ReadOnlyBufferException();
+diff -r 317d604b4da9 j2se/src/share/classes/java/nio/Heap-X-Buffer.java
+--- openjdk/j2se/src/share/classes/java/nio/Heap-X-Buffer.java	Tue Sep 25 12:45:52 2007 -0700
++++ openjdk/j2se/src/share/classes/java/nio/Heap-X-Buffer.java	Tue Sep 25 12:47:10 2007 -0700
+@@ -222,6 +222,7 @@ class Heap$Type$Buffer$RW$
+ 	System.arraycopy(hb, ix(position()), hb, ix(0), remaining());
+ 	position(remaining());
+ 	limit(capacity());
++	clearMark();
+ 	return this;
+ #else[rw]
+ 	throw new ReadOnlyBufferException();
