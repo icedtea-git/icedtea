@@ -146,6 +146,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-bytebuffer-compact.patch \
 	patches/icedtea-float-double-trailing-zeros.patch \
 	patches/icedtea-xinerama.patch \
+	patches/icedtea-gtkplaf.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
