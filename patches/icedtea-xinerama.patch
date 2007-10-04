@@ -1,0 +1,12 @@
+diff -up openjdk/j2se/make/sun/xawt/Makefile.jx openjdk/j2se/make/sun/xawt/Makefile
+--- openjdk/j2se/make/sun/xawt/Makefile.jx	2007-08-30 03:19:44.000000000 -0400
++++ openjdk/j2se/make/sun/xawt/Makefile	2007-10-03 14:49:11.000000000 -0400
+@@ -49,8 +49,7 @@ AUTO_JAVA_PRUNE = WrapperGenerator.java
+ LDFLAGS += -L$(OPENWIN_LIB)
+ 
+ ifeq ($(PLATFORM), linux)
+-FILES_c += Xinerama.c
+-LDFLAGS += -lpthread
++LDFLAGS += -lXinerama -lpthread
+ dummy := $(shell $(MKDIR) -p $(LIB_LOCATION))
+ endif

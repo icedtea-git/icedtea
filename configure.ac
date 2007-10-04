@@ -73,6 +73,8 @@ CHECK_HEADERS
 
 AC_CHECK_LIB(Xtst, XTestQueryExtension,
 	, [AC_MSG_ERROR("libXtst not found - try installing libXtst-devel")])
+AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
+	, [AC_MSG_ERROR("libXinerama not found - try installing libXinerama-devel")])
 
 dnl Check for plugin support headers and libraries.
 PKG_CHECK_MODULES(MOZILLA, mozilla-plugin, [MOZILLA_FOUND=yes], \
