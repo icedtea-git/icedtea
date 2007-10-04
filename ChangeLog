@@ -1,3 +1,11 @@
+2007-10-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	PR 73
+	* Makefile.am (ICEDTEA_PATCHES): Add
+	patches/icedtea-gtkplaf.patch.
+	* Makefile.in: Regenerate.
+	* patches/icedtea-gtkplaf.patch: New file.
+
 2007-10-04  Lillian Angel  <langel@redhat.com>
 
 	* INSTALL: Updated docs on how-to-build, and build requirements.
