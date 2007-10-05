@@ -1,3 +1,10 @@
+2007-10-05  Andrew Haley  <aph@redhat.com>
+
+	* patches/icedtea-debuginfo.patch: Add
+	openjdk/hotspot/build/linux/makefiles/gcc.make.
+	Add -g to CFLAGS_REQUIRED in
+	openjdk/j2se/make/common/Defs-linux.gmk	
+
 2007-10-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	PR 73

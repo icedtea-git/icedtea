@@ -1,6 +1,6 @@
---- openjdk/j2se/make/common/Defs-linux.gmk~	2007-05-24 08:33:20.000000000 +0100
-+++ openjdk/j2se/make/common/Defs-linux.gmk	2007-06-21 15:32:44.000000000 +0100
-@@ -155,13 +155,7 @@
+--- openjdk/j2se/make/common/Defs-linux.gmk.orig	2007-09-27 08:52:06.000000000 +0100
++++ openjdk/j2se/make/common/Defs-linux.gmk	2007-10-04 15:04:02.000000000 +0100
+@@ -155,13 +155,11 @@
     CFLAGS_COMMON   += $(GLOBAL_KPIC) $(GCC_WARNINGS)
  endif
  
@@ -11,10 +11,14 @@
 -    DEBUG_FLAG = -g1
 -  endif
 -endif
++
++# Always generate full debuginfo on Linux.  It'll be in a separate
++# debuginfo package when building RPMs.
++CFLAGS_REQUIRED += -g
  
  CFLAGS_OPT      = $(POPT)
  CFLAGS_DBG      = $(DEBUG_FLAG)
-@@ -230,7 +230,7 @@
+@@ -236,7 +234,7 @@
  ifeq ($(VARIANT), OPT)
    ifneq ($(NO_STRIP), true)
      # Debug 'strip -g' leaves local function Elf symbols (better stack traces)
@@ -34,7 +38,7 @@
  ifeq ($(HEADLESS),true)
  CFLAGS += -DHEADLESS=$(HEADLESS)
  CPPFLAGS += -DHEADLESS=$(HEADLESS)
---- ../openjdk-b20/openjdk/j2se/make/common/shared/Defs-java.gmk	2007-09-13 03:52:42.000000000 -0400
+--- openjdk/j2se/make/common/shared/Defs-java.gmk	2007-09-13 03:52:42.000000000 -0400
 +++ openjdk/j2se/make/common/shared/Defs-java.gmk	2007-09-14 10:50:45.000000000 -0400
 @@ -98,15 +98,9 @@
  #  -- Use JAVAC_CMD if you want to take the defaults given to you.
@@ -55,3 +59,16 @@
  ifeq ($(COMPILER_WARNINGS_FATAL), true)
    JAVACFLAGS  += -Werror
  endif
+--- openjdk/hotspot/build/linux/makefiles/gcc.make~	2007-10-03 17:54:11.000000000 +0100
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-10-03 18:19:33.000000000 +0100
+@@ -63,6 +63,10 @@
+ CFLAGS += -D_REENTRANT
+ CFLAGS += -fcheck-new
+ 
++# Always generate full debuginfo on Linux.  It'll be in a separate
++# debuginfo package when building RPMs.
++CFLAGS += -g
++
+ ARCHFLAG = $(ARCHFLAG/$(BUILDARCH))
+ ARCHFLAG/i486    = -m32 -march=i586
+ ARCHFLAG/amd64   = -m64
