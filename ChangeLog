@@ -1,3 +1,9 @@
+2007-10-08  Andrew Haley  <aph@redhat.com>
+
+	* patches/icedtea-memory-limits.patch: New file.
+	Set maximum PermGen space to 128M, MaxHeap to 512M.
+	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-memory-limits.patch.
+
 2007-10-08  Mark Wielaard  <mark@klomp.org>
 
 	* AUTHORS: Added Keith Seitz.
