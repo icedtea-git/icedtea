@@ -1,3 +1,7 @@
+2007-10-08  Mark Wielaard  <mark@klomp.org>
+
+	* AUTHORS: Added Keith Seitz.
+
 2007-10-05  Andrew Haley  <aph@redhat.com>
 
 	* patches/icedtea-debuginfo.patch: Add
