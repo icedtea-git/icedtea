@@ -1,3 +1,10 @@
+2007-10-09  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-certbundle.patch: Added in
+	CertBundleKeyStoreImpl.java implementation which was previously in our
+	jce implementation. Also, added KeyStore.CertBundle to map in this
+	patch.
+
 2007-10-08  Andrew Haley  <aph@redhat.com>
 
 	* patches/icedtea-memory-limits.patch: New file.
