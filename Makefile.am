@@ -147,6 +147,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-float-double-trailing-zeros.patch \
 	patches/icedtea-xinerama.patch \
 	patches/icedtea-gtkplaf.patch \
+	patches/icedtea-memory-limits.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
