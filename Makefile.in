@@ -650,6 +650,12 @@ stamps/bootstrap-directory-symlink.stamp:
 	mkdir -p bootstrap
 	rm -f bootstrap/jdk1.6.0
 	ln -sf $(SYSTEM_ICEDTEA_DIR) bootstrap/jdk1.6.0
+	if ! bootstrap/jdk1.6.0/bin/java -version ; \
+	  then \
+	    echo "bootstrap/jdk1.6.0/bin/java" \
+		"cannot be found or is corrupted." ; \
+	    exit 1; \
+	fi 
 	mkdir -p stamps
 	touch stamps/bootstrap-directory-symlink.stamp
 
