@@ -1,5 +1,10 @@
 2007-10-09  Lillian Angel  <langel@redhat.com>
 
+	* Makefile.am: Added sanity check for bootstrap/jdk1.6.0/bin/java in
+	stamps/bootstrap-directory-symlink.stamp target.
+
+2007-10-09  Lillian Angel  <langel@redhat.com>
+
 	* patches/icedtea-java.security.patch: Removed
 
 2007-10-09  Lillian Angel  <langel@redhat.com>
