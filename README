@@ -71,15 +71,6 @@ license header.  Instances are:
  - We are assuming that these files are owned by Sun:
    openjdk/j2se/src/share/classes/**/resources/*.properties
 
-The downloaded sources include two scripts that insert proprietary
-license headers into the source files they generate.  The scripts
-themselves are GPL'd so we patched them to emit the GPL header.  These
-files are:
-
-  openjdk/j2se/make/java/nio/genExceptions.sh
-  openjdk/hotspot/src/share/vm/prims/jvmtiLib.xsl
-
-
 gcjwebplugin
 ============
 
