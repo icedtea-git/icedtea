@@ -1,3 +1,8 @@
+2007-10-11  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* README.cacao: Added b19. This commit is just to create a new
+	branch which is able to build IcedTea b19 with CACAO.
+
 2007-09-18  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* patches/icedtea-cacao-jvm-cfg.patch: Added
