@@ -72,8 +72,8 @@ license header.  Instances are:
    openjdk/j2se/src/share/classes/**/resources/*.properties
 
 The downloaded sources include a script that inserts proprietary
-license headers into the source files they generate.  The scripts
-themselves are GPL'd so we patched them to emit the GPL header.  These
+license headers into the source files it generates.  The script
+itself is GPL'd so we patched them to emit the GPL header. The
 file is:
   openjdk/j2se/make/java/nio/genExceptions.sh
 
