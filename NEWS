@@ -1,3 +1,17 @@
+New in release 1.4 (2007-10-12)
+
+* Updated to OpenJDK b21 build (README and INSTALL updated accordingly).
+* Now using SSL/Crypto support included in b21, OpenSSL certs
+still read directly.
+* TZdata fix: uses System's timezone data.
+* Memory issue fix: maximum PermGen space set to 128M and MaxHeap
+to 512M.
+* Xinerama fix: uses system installed library instead.
+* DebugInfo fix: generates full debuginfo, regardless of
+optimization.
+* Fixed JConsole crash.
+* Several other bug fixes.
+
 New in release 1.3 (2007-08-29)
 
 * Updated to OpenJDK b18 build.
