@@ -1,3 +1,7 @@
+2007-10-12  Andrew Haley  <aph@redhat.com>
+
+	* README (Java compatibility): New section.
+
 2007-10-11  Lillian Angel  <langel@redhat.com>
 
 	* README: Updated license section. jvmtiLib.xsl was fixed in b21.
