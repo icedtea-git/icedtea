@@ -1,5 +1,9 @@
 2007-10-11  Lillian Angel  <langel@redhat.com>
 
+	* README: Updated license section. jvmtiLib.xsl was fixed in b21.
+
+2007-10-11  Lillian Angel  <langel@redhat.com>
+
 	* patches/icedtea-license-headers.patch: Re-added genExceptions patch.
 
 2007-10-09  Lillian Angel  <langel@redhat.com>
