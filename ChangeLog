@@ -1,3 +1,7 @@
+2007-10-15  Matthias Klose <doko@ubuntu.com>
+
+	* gcjwebplugin.cc: Change PLUGIN_NAME.
+
 2007-10-14  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am (OPENJDK_VERSION): Update for b22.
