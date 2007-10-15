@@ -180,36 +180,38 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-OPENJDK_VERSION = b21
-OPENJDK_DATE = 27_sep_2007
-OPENJDK_MD5SUM = 64ac356cd24af5e52cf9fd1217e234da
+OPENJDK_VERSION = b22
+OPENJDK_DATE = 12_oct_2007
+OPENJDK_MD5SUM = 7cf9c2765fb16c36c07f961b2a009cb2
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy-files.txt
 
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
+BUILD_OUTPUT_DIR = openjdk/control/build/$(LINUX_DIR)
 ICEDTEA_BUILD_DIR = \
-	$(abs_top_srcdir)/openjdk/control/build/$(LINUX_DIR)/
+	$(abs_top_srcdir)/$(BUILD_OUTPUT_DIR)/
 
 ICEDTEA_RT = \
 	$(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
 ICEDTEA_CLS_DIR = \
-	$(abs_top_srcdir)/openjdk/control/build/$(LINUX_DIR)/classes
+	$(abs_top_srcdir)/$(BUILD_OUTPUT_DIR)/classes
 
 ICEDTEA_ENDORSED_DIR = \
 	$(abs_top_srcdir)/bootstrap/jdk1.6.0/lib/endorsed
 
 ICEDTEA_ENV = \
-	"ANT_HOME=@SYSTEM_ANT_DIR@" \
-	"BUILD_NUMBER=b21" \
-	"JRE_RELEASE_VERSION=1.7.0-b21" \
-	"HOTSPOT_RELEASE_VERSION=1.7.0-b21" \
+	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
+	"BUILD_NUMBER=$(OPENJDK_VERSION)" \
+	"JRE_RELEASE_VERSION=1.7.0-$(OPENJDK_VERSION)" \
+	"HOTSPOT_RELEASE_VERSION=1.7.0-$(OPENJDK_VERSION)" \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
 	"ALT_BINARY_PLUGS_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
+	"ALT_JDK_IMPORT_PATH=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
 	"ICEDTEA_RT=$(ICEDTEA_RT)" \
 	"ICEDTEA_BUILD_DIR=$(ICEDTEA_BUILD_DIR)" \
@@ -255,9 +257,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-gcc-suffix.patch \
 	patches/icedtea-bytebuffer-compact.patch \
 	patches/icedtea-float-double-trailing-zeros.patch \
-	patches/icedtea-xinerama.patch \
 	patches/icedtea-gtkplaf.patch \
 	patches/icedtea-memory-limits.patch \
+	patches/icedtea-xjc.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
@@ -286,8 +288,12 @@ ICEDTEA_COPY_DIRS = \
 	com/sun/tools/jdi \
 	java/util
 
+SHARE = openjdk/j2se/src/share/classes
+SOLARIS = openjdk/j2se/src/solaris/classes
+LANGTOOLS = openjdk/langtools/src/share/classes
+JAXP = openjdk/jaxp/src/share/classes
 OPENJDK_SOURCEPATH_DIRS = \
-        openjdk/j2se/src/share/classes:openjdk/j2se/src/solaris/classes:openjdk/langtools/src/share/classes
+        $(SHARE):$(SOLARIS):$(LANGTOOLS):$(JAXP)
 
 all: all-am
 
@@ -605,13 +611,14 @@ clean-download:
 	rm -f stamps/download.stamp
 	rm -f $(OPENJDK_SRC_ZIP)
 
-# Extract OpenJDK sources.
+# Extratc OpenJDK sources.
 stamps/extract.stamp: stamps/download.stamp
 	if ! test -d openjdk ; \
 	then \
 	  $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
 	  chmod ug+w `find openjdk/j2se/src/share/demo/jvmti \
 	     -name sample.makefile.txt` ; \
+	  rm -rf openjdk/jaxws ; \
 	fi
 	mkdir -p stamps
 	touch stamps/extract.stamp
@@ -665,16 +672,17 @@ clean-bootstrap-directory-symlink:
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-icedtea: stamps/bootstrap-directory-symlink.stamp stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
+icedtea: stamps/bootstrap-directory-symlink.stamp stamps/tools.stamp \
+	stamps/plugs.stamp stamps/extract.stamp \
 	stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make
 	cp -af gcjwebplugin.so \
-	  openjdk/control/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -af gcjwebplugin.so \
-	  openjdk/control/build/$(LINUX_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	@echo "IcedTea is served:" openjdk/control/build/$(LINUX_DIR)
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
 icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
@@ -684,11 +692,11 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	  -C openjdk/control/make \
 	  debug_build
 	cp -af gcjwebplugin.so \
-	  openjdk/control/build/$(LINUX_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -af gcjwebplugin.so \
-	  openjdk/control/build/$(LINUX_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	@echo "IcedTea (debug build) is served:" \
-	  openjdk/control/build/$(LINUX_DIR)-debug
+	  $(BUILD_OUTPUT_DIR)-debug
 
 clean-icedtea: stamps/extract.stamp
 	$(MAKE) \

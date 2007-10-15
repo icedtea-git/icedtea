@@ -1,10 +1,10 @@
---- openjdk/hotspot/src/os/linux/vm/os_linux.cpp.orig	2007-08-21 21:53:38.000000000 -0400
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2007-08-21 22:02:32.000000000 -0400
-@@ -376,6 +376,21 @@
+diff -urN openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2007-10-12 03:46:00.000000000 -0400
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2007-10-12 18:24:12.000000000 -0400
+@@ -376,6 +376,20 @@
      }
    }
  
-+  // Use the system zoneinfo files, if present
 +  SystemProperty* sp = Arguments::system_properties();
 +  Arguments::PropertyList_add (&sp,
 +			       "javax.net.ssl.trustStore",
@@ -22,19 +22,9 @@
  #undef malloc
  #undef getenv
  #undef EXTENSIONS_DIR
-diff -ruN openjdk.old/j2se/src/share/classes/sun/security/provider/SunEntries.java openjdk/j2se/src/share/classes/sun/security/provider/SunEntries.java
---- openjdk.old/j2se/src/share/classes/sun/security/provider/SunEntries.java	2007-09-27 04:07:14.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/security/provider/SunEntries.java	2007-10-09 10:34:59.000000000 -0400
-@@ -178,6 +178,7 @@
- 	map.put("KeyStore.JKS", "sun.security.provider.JavaKeyStore$JKS");
- 	map.put("KeyStore.CaseExactJKS", 
- 			"sun.security.provider.JavaKeyStore$CaseExactJKS");
-+	map.put("KeyStore.CertBundle", "sun.security.provider.CertBundleKeyStoreImpl");
- 
- 	/*
- 	 * Policy
---- openjdk.old/j2se/src/share/classes/sun/security/provider/CertBundleKeyStoreImpl.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/src/share/classes/sun/security/provider/CertBundleKeyStoreImpl.java	2007-10-09 11:06:30.000000000 -0400
+diff -urN openjdk.orig/j2se/src/share/classes/sun/security/provider/CertBundleKeyStoreImpl.java openjdk/j2se/src/share/classes/sun/security/provider/CertBundleKeyStoreImpl.java
+--- openjdk.orig/j2se/src/share/classes/sun/security/provider/CertBundleKeyStoreImpl.java	1969-12-31 19:00:00.000000000 -0500
++++ openjdk/j2se/src/share/classes/sun/security/provider/CertBundleKeyStoreImpl.java	2007-10-12 18:24:05.000000000 -0400
 @@ -0,0 +1,199 @@
 +/* CertBundleKeyStoreImpl.java
 +   Copyright (C) 2007  Casey Marshall <csm@gnu.org>
@@ -235,3 +225,14 @@ diff -ruN openjdk.old/j2se/src/share/classes/sun/security/provider/SunEntries.ja
 +    throw new UnsupportedOperationException("read-only key stores");
 +  }
 +}
+diff -urN openjdk.orig/j2se/src/share/classes/sun/security/provider/SunEntries.java openjdk/j2se/src/share/classes/sun/security/provider/SunEntries.java
+--- openjdk.orig/j2se/src/share/classes/sun/security/provider/SunEntries.java	2007-10-12 04:03:24.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/security/provider/SunEntries.java	2007-10-12 18:24:05.000000000 -0400
+@@ -178,6 +178,7 @@
+ 	map.put("KeyStore.JKS", "sun.security.provider.JavaKeyStore$JKS");
+ 	map.put("KeyStore.CaseExactJKS", 
+ 			"sun.security.provider.JavaKeyStore$CaseExactJKS");
++	map.put("KeyStore.CertBundle", "sun.security.provider.CertBundleKeyStoreImpl");
+ 
+ 	/*
+ 	 * Policy
