@@ -1,6 +1,17 @@
---- lang.orig	2007-10-02 11:57:53.000000000 -0400
-+++ openjdk/langtools/make/Makefile	2007-10-02 11:58:08.000000000 -0400
-@@ -129,16 +129,9 @@
+--- openjdk/corba/make/common/shared/Defs-utils.gmk.orig	2007-10-14 17:34:43.000000000 -0400
++++ openjdk/corba/make/common/shared/Defs-utils.gmk	2007-10-14 17:33:44.000000000 -0400
+@@ -71,7 +71,7 @@
+ ifndef ANT_HOME
+   ANT_HOME = $(JDK_DEVTOOLS_DIR)/share/ant/latest
+ endif
+-ANT = $(ANT_HOME)/bin/ant
++ANT = ant
+ ifndef FINDBUGS_HOME
+   FINDBUGS_HOME = $(JDK_DEVTOOLS_DIR)/share/findbugs/latest
+ endif
+--- openjdk.orig/langtools/make/Makefile	2007-10-12 03:47:30.000000000 -0400
++++ openjdk/langtools/make/Makefile	2007-10-12 17:11:46.000000000 -0400
+@@ -133,16 +133,9 @@
    ANT_OPTIONS += -Dfindbugs.home=$(FINDBUGS_HOME)
  endif
  
@@ -20,3 +31,36 @@
  endif
  
  # Default target and expected 'do everything' target
+--- openjdk/jaxp/make/Makefile.orig	2007-10-14 21:50:24.000000000 -0400
++++ openjdk/jaxp/make/Makefile	2007-10-14 21:50:56.000000000 -0400
+@@ -100,16 +100,9 @@
+   ANT_OPTIONS += -Dfindbugs.home=$(FINDBUGS_HOME)
+ endif
+ 
+-ifdef ANT_HOME
+-  ANT = $(ANT_HOME)/bin/ant
+-  ifneq ($(shell test -x $(ANT); echo $$?), 0)
+-    $(error "$(ANT) not found; please update ANT_HOME")
+-  endif
+-else
+-  ANT = ant
+-  ifneq ($(shell which $(ANT) > /dev/null; echo $$?), 0)
+-    $(error "\"ant\" not found; please set ANT_HOME or put \"ant\" on your PATH")
+-  endif
++ANT = ant
++ifneq ($(shell which $(ANT) > /dev/null; echo $$?), 0)
++  $(error "\"ant\" not found; please put \"ant\" on your PATH")
+ endif
+ 
+ # Default target and expected 'do everything' target
+--- openjdk/j2se/make/common/shared/Defs-utils.gmk.orig	2007-10-14 17:35:02.000000000 -0400
++++ openjdk/j2se/make/common/shared/Defs-utils.gmk	2007-10-14 17:34:07.000000000 -0400
+@@ -71,7 +71,7 @@
+ ifndef ANT_HOME
+   ANT_HOME = $(JDK_DEVTOOLS_DIR)/share/ant/latest
+ endif
+-ANT = $(ANT_HOME)/bin/ant
++ANT = ant
+ ifndef FINDBUGS_HOME
+   FINDBUGS_HOME = $(JDK_DEVTOOLS_DIR)/share/findbugs/latest
+ endif

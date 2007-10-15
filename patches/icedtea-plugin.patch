@@ -1,5 +1,17 @@
+diff -urN openjdk.orig/j2se/make/sun/Makefile openjdk/j2se/make/sun/Makefile
+--- openjdk.orig/j2se/make/sun/Makefile	2007-10-12 03:54:06.000000000 -0400
++++ openjdk/j2se/make/sun/Makefile	2007-10-12 17:39:04.000000000 -0400
+@@ -63,6 +63,7 @@
+           $(HEADLESS_SUBDIR) $(DGA_SUBDIR) \
+ 	  font jpeg cmm applet rmi beans $(JDBC_SUBDIR) \
+ 	  jawt text nio launcher management $(ORG_SUBDIR) \
++	  plugin \
+           native2ascii serialver tools jconsole
+ 
+ all build clean clobber::
+diff -urN openjdk.orig/j2se/make/sun/plugin/Makefile openjdk/j2se/make/sun/plugin/Makefile
 --- openjdk.orig/j2se/make/sun/plugin/Makefile	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/make/sun/plugin/Makefile	2007-08-19 23:55:02.000000000 -0400
++++ openjdk/j2se/make/sun/plugin/Makefile	2007-10-12 17:37:54.000000000 -0400
 @@ -0,0 +1,53 @@
 +#
 +# Copyright 1995-2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -54,8 +66,9 @@
 +JAVA_ARGS = "{ \"sun.applet.PluginMain\" }"
 +include $(BUILDDIR)/common/Program.gmk
 +
+diff -urN openjdk.orig/j2se/src/share/classes/sun/applet/PluginAppletViewer.java openjdk/j2se/src/share/classes/sun/applet/PluginAppletViewer.java
 --- openjdk.orig/j2se/src/share/classes/sun/applet/PluginAppletViewer.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/src/share/classes/sun/applet/PluginAppletViewer.java	2007-08-19 23:55:02.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/applet/PluginAppletViewer.java	2007-10-12 17:37:54.000000000 -0400
 @@ -0,0 +1,945 @@
 +/*
 + * Copyright 1995-2004 Sun Microsystems, Inc.  All Rights Reserved.
@@ -1002,8 +1015,9 @@
 +	}
 +    }
 +}
+diff -urN openjdk.orig/j2se/src/share/classes/sun/applet/PluginMain.java openjdk/j2se/src/share/classes/sun/applet/PluginMain.java
 --- openjdk.orig/j2se/src/share/classes/sun/applet/PluginMain.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/j2se/src/share/classes/sun/applet/PluginMain.java	2007-08-20 00:14:41.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/applet/PluginMain.java	2007-10-12 17:37:54.000000000 -0400
 @@ -0,0 +1,262 @@
 +/*
 + * Copyright 1999-2006 Sun Microsystems, Inc.  All Rights Reserved.
@@ -1267,14 +1281,3 @@
 +	return message;
 +    }
 +}
---- openjdk/j2se/make/sun/Makefile.orig	2007-09-28 15:47:08.000000000 -0400
-+++ openjdk/j2se/make/sun/Makefile	2007-09-28 15:47:23.000000000 -0400
-@@ -60,7 +60,7 @@
- 	  awt splashscreen $(XAWT_SUBDIR) \
- 	  xjc schemagen wsgen wsimport \
-           $(HEADLESS_SUBDIR) $(DGA_SUBDIR) \
--	  font jpeg cmm applet corba rmi beans $(JDBC_SUBDIR) \
-+	  font jpeg cmm applet plugin corba rmi beans $(JDBC_SUBDIR) \
- 	  jawt text nio launcher management $(ORG_SUBDIR) \
-           native2ascii serialver tools jconsole
- 

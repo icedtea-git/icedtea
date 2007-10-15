@@ -1,3 +1,17 @@
+2007-10-14  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am (OPENJDK_VERSION): Update for b22.
+	(OPENJDK_DATE): Likewise.
+	(OPENJDK_MD5SUM): Likewise.
+	(ICEDTEA_PATCHES): Remove patches/icedtea-xinerama.patch.  Add
+	patches/icedtea-xjc.patch.
+	(OPENJDK_SOURCEPATH_DIRS): Add openjdk/jaxp/src/share/classes.
+	(stamps/extract.stamp): Remove openjdk/jaxws.
+	(ICEDTEA_ENV): Fix ANT_HOME, BUILD_NUMBER, JRE_RELEASE_VERSION,
+	and HOTSPOT_RELEASE_VERSION.  Add ALT_JDK_IMPORT_PATH.
+	* Makefile.in: Regenerate.
+	* patches/icedtea-xinerama.patch: Remove file.
+
 2007-10-12  Lillian Angel  <langel@redhat.com>
 	
 	* NEWS: Updated for 1.4.

@@ -1,16 +1,6 @@
---- openjdk/hotspot/src/share/vm/runtime/globals.hpp~	2007-09-27 08:46:16.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2007-10-05 19:06:32.000000000 +0100
-@@ -2612,7 +2612,7 @@
-           "an OS lock")                                                     \
-                                                                             \
-   /* gc parameters */                                                       \
--  product(uintx, MaxHeapSize, ScaleForWordSize(64*M),                       \
-+  product(uintx, MaxHeapSize, ScaleForWordSize(512*M),                       \
-           "Default maximum size for object heap (in bytes)")                \
-                                                                             \
-   product_pd(uintx, NewSize, 						    \
---- openjdk/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp~	2007-09-27 08:45:59.000000000 +0100
-+++ openjdk/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp	2007-10-05 19:02:37.000000000 +0100
+diff -urN openjdk.orig/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp openjdk/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp
+--- openjdk.orig/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp	2007-10-12 03:45:58.000000000 -0400
++++ openjdk/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp	2007-10-12 17:32:54.000000000 -0400
 @@ -101,7 +101,7 @@
  
  // Heap related flags
@@ -20,3 +10,15 @@
  
  // Ergonomics related flags
  define_pd_global(bool, NeverActAsServerClassMachine, false);
+diff -urN openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp openjdk/hotspot/src/share/vm/runtime/globals.hpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp	2007-10-12 03:46:16.000000000 -0400
++++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2007-10-12 17:32:54.000000000 -0400
+@@ -2615,7 +2615,7 @@
+           "an OS lock")                                                     \
+                                                                             \
+   /* gc parameters */                                                       \
+-  product(uintx, MaxHeapSize, ScaleForWordSize(64*M),                       \
++  product(uintx, MaxHeapSize, ScaleForWordSize(512*M),                       \
+           "Default maximum size for object heap (in bytes)")                \
+                                                                             \
+   product_pd(uintx, NewSize, 						    \
