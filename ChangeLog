@@ -11,6 +11,18 @@
 	and HOTSPOT_RELEASE_VERSION.  Add ALT_JDK_IMPORT_PATH.
 	* Makefile.in: Regenerate.
 	* patches/icedtea-xinerama.patch: Remove file.
+	* patches/icedtea-xjc.patch: New file.
+	* patches/icedtea-ant.patch: Update for b22.
+	* patches/icedtea-certbundle.patch: Likewise.
+	* patches/icedtea-copy-plugs.patch: Likewise.
+	* patches/icedtea-debuginfo.patch: Likewise.
+	* patches/icedtea-license-headers.patch: Likewise.
+	* patches/icedtea-memory-limits.patch: Likewise.
+	* patches/icedtea-paths.patch: Likewise.
+	* patches/icedtea-plugin.patch: Likewise.
+	* patches/icedtea-speed.patch: Likewise.
+	* patches/icedtea-use-system-tzdata.patch: Likewise.
+	* patches/icedtea-xinerama.patch: Likewise.
 
 2007-10-12  Lillian Angel  <langel@redhat.com>
 	
