@@ -1,4 +1,8 @@
-2007-10-15  Matthias Klose <doko@ubuntu.com>
+2007-10-15  Lillian Angel  <langel@redhat.com>
+
+	* README: Updated license section.
+
+2007-10-15  Matthias Klose  <doko@ubuntu.com>
 
 	* gcjwebplugin.cc: Change PLUGIN_NAME.
 
