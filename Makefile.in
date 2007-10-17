@@ -36,10 +36,6 @@ host_triplet = @host@
 @WITH_CACAO_TRUE@	"ALT_JDK_IMPORT_PATH=$(CACAO)"
 
 @WITH_CACAO_TRUE@am__append_2 = \
-@WITH_CACAO_TRUE@	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)" \
-@WITH_CACAO_TRUE@	"ALT_JDK_IMPORT_PATH=$(CACAO)"
-
-@WITH_CACAO_TRUE@am__append_3 = \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-Compiler-gcc-gmk.patch \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-Defs-linux-gmk.patch \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao-Platform-gmk.patch \
@@ -199,66 +195,43 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-OPENJDK_VERSION = b21
-OPENJDK_DATE = 27_sep_2007
-OPENJDK_MD5SUM = 64ac356cd24af5e52cf9fd1217e234da
+OPENJDK_VERSION = b22
+OPENJDK_DATE = 12_oct_2007
+OPENJDK_MD5SUM = 7cf9c2765fb16c36c07f961b2a009cb2
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy-files.txt
 
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
+BUILD_OUTPUT_DIR = openjdk/control/build/$(LINUX_DIR)
 ICEDTEA_BUILD_DIR = \
-	$(abs_top_srcdir)/openjdk/control/build/$(LINUX_DIR)/
+	$(abs_top_srcdir)/$(BUILD_OUTPUT_DIR)/
 
 ICEDTEA_RT = \
 	$(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
 ICEDTEA_CLS_DIR = \
-	$(abs_top_srcdir)/openjdk/control/build/$(LINUX_DIR)/classes
+	$(abs_top_srcdir)/$(BUILD_OUTPUT_DIR)/classes
 
 ICEDTEA_ENDORSED_DIR = \
 	$(abs_top_srcdir)/bootstrap/jdk1.6.0/lib/endorsed
 
-ICEDTEA_ENV = "BUILD_NUMBER=b19" "LANG=C" \
+ICEDTEA_ENV = "ANT_HOME=$(SYSTEM_ANT_DIR)" \
+	"BUILD_NUMBER=$(OPENJDK_VERSION)" \
+	"JRE_RELEASE_VERSION=1.7.0-$(OPENJDK_VERSION)" \
+	"HOTSPOT_RELEASE_VERSION=1.7.0-$(OPENJDK_VERSION)" "LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
 	"ALT_BINARY_PLUGS_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
-	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
-	"ICEDTEA_JCE=$(ICEDTEA_JCE)" "ICEDTEA_RT=$(ICEDTEA_RT)" \
+	"ALT_JDK_IMPORT_PATH=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
+	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" "ICEDTEA_RT=$(ICEDTEA_RT)" \
 	"ICEDTEA_BUILD_DIR=$(ICEDTEA_BUILD_DIR)" \
 	"ICEDTEA_CLS_DIR=$(ICEDTEA_CLS_DIR)" \
 	"ICEDTEA_ENDORSED_DIR=$(ICEDTEA_ENDORSED_DIR)" \
 	"ENDORSED=-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
 	"CLASSPATH=" "LD_LIBRARY_PATH=" \
 	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)" $(am__append_1)
-
-# OpenJDK ecj build environment.
-ICEDTEA_BUILD_DIR_ECJ = \
-	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/
-
-ICEDTEA_JCE_ECJ = \
-	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/lib/jce.jar
-
-ICEDTEA_CLS_DIR_ECJ = \
-	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/classes
-
-ICEDTEA_ENV_ECJ = "BUILD_NUMBER=b19" "LANG=C" \
-	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
-	"ALT_BOOTDIR=$(abs_top_srcdir)/bootstrap/jdk1.6.0" \
-	"ALT_BINARY_PLUGS_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
-	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" "LIBGCJ_JAR=$(LIBGCJ_JAR)" \
-	"ICEDTEA_JCE=$(ICEDTEA_JCE_ECJ)" "ICEDTEA_RT=$(ICEDTEA_RT)" \
-	"ICEDTEA_BUILD_DIR=$(ICEDTEA_BUILD_DIR_ECJ)" \
-	"ICEDTEA_CLS_DIR=$(ICEDTEA_CLS_DIR_ECJ)" \
-	"ICEDTEA_ENDORSED_DIR=$(ICEDTEA_ENDORSED_DIR)" \
-	"ENDORSED=-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
-	"BOOTCLASSPATH_CLS_RT=-bootclasspath \
-	$(ICEDTEA_CLS_DIR_ECJ):$(ICEDTEA_RT)" \
-	"BOOTCLASSPATH_CLS=-bootclasspath $(ICEDTEA_CLS_DIR_ECJ)" \
-	"BOOTCLASSPATH_RT_LIBGCJ=-bootclasspath \
-	$(ICEDTEA_RT):$(LIBGCJ_JAR)" "CLASSPATH=" "LD_LIBRARY_PATH=" \
-	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)" $(am__append_2)
 
 # OpenJDK Source Preparation Targets
 # ==================================
@@ -277,41 +250,31 @@ ICEDTEA_PATCHES = patches/icedtea-copy-plugs.patch \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch patches/icedtea-antialias.patch \
 	patches/icedtea-paths.patch patches/icedtea-debuginfo.patch \
-	patches/icedtea-java.security.patch patches/icedtea-ssl.patch \
-	patches/icedtea-assembler_amd64.patch \
+	patches/icedtea-ssl.patch \
 	patches/icedtea-license-headers.patch \
 	patches/icedtea-libpng.patch patches/icedtea-plugin.patch \
-	patches/icedtea-rmi_amd64.patch \
-	patches/icedtea-lesstif_amd64.patch \
-	patches/icedtea-tools.patch patches/icedtea-certbundle.patch \
-	patches/icedtea-demos.patch $(FAST_BUILD_PATCH) \
-	$(am__append_3)
+	patches/icedtea-rmi_amd64.patch patches/icedtea-tools.patch \
+	patches/icedtea-certbundle.patch patches/icedtea-demos.patch \
+	patches/icedtea-use-system-tzdata.patch \
+	patches/icedtea-headers.patch patches/icedtea-ant.patch \
+	patches/icedtea-gcc-suffix.patch \
+	patches/icedtea-bytebuffer-compact.patch \
+	patches/icedtea-float-double-trailing-zeros.patch \
+	patches/icedtea-gtkplaf.patch \
+	patches/icedtea-memory-limits.patch patches/icedtea-xjc.patch \
+	$(FAST_BUILD_PATCH) $(DISTRIBUTION_PATCHES) $(am__append_2)
 
-# Patch OpenJDK for plug replacements and ecj.
-ICEDTEA_ECJ_PATCH = patches/icedtea-ecj-bootstrap.patch
-@WITH_ICEDTEA_FALSE@BOOTSTRAP_DIRECTORY_STAMP = stamps/bootstrap-directory.stamp
-@WITH_ICEDTEA_TRUE@BOOTSTRAP_DIRECTORY_STAMP = 
-@WITH_ICEDTEA_FALSE@ICEDTEA_HOME = icedtea
-@WITH_ICEDTEA_TRUE@ICEDTEA_HOME = $(SYSTEM_ICEDTEA_DIR)
-@WITH_ICEDTEA_FALSE@MEMORY_LIMIT = 
-
-# OpenJDK Targets
-# ===============
-@WITH_ICEDTEA_TRUE@MEMORY_LIMIT = -J-Xmx512m
+# Bootstrap Directory Targets
+# ===========================
+MEMORY_LIMIT = -J-Xmx512m
 
 # Shared objects.
 SHARED_OBJECT_FILES = \
 	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libdcpr.so \
 	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libjsoundalsa.so \
 	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libjsound.so \
+	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libjsoundhs.so \
 	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libt2k.so
-
-
-# Security JAR files.
-SECURITY_JAR_FILES = \
-	bootstrap/jdk1.7.0/jre/lib/ext/sunjce_provider.jar \
-	bootstrap/jdk1.7.0/jre/lib/security/local_policy.jar \
-	bootstrap/jdk1.7.0/jre/lib/security/US_export_policy.jar
 
 
 # Sources copied from OpenJDK.
@@ -709,16 +672,17 @@ clean-bootstrap-directory-symlink:
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-icedtea: stamps/bootstrap-directory-symlink.stamp stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
+icedtea: stamps/bootstrap-directory-symlink.stamp stamps/tools.stamp \
+	stamps/plugs.stamp stamps/extract.stamp \
 	stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make j2se_only
 	cp -af gcjwebplugin.so \
-	  openjdk/control/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -af gcjwebplugin.so \
-	  openjdk/control/build/$(LINUX_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	@echo "IcedTea is served:" openjdk/control/build/$(LINUX_DIR)
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
 icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
@@ -743,54 +707,26 @@ icedtea-against-icedtea: \
 	stamps/bootstrap-directory-symlink.stamp \
 	icedtea
 
-# OpenJDK ecj Targets
-# ===================
-
-stamps/icedtea-ecj.stamp: stamps/tools.stamp stamps/plugs.stamp \
-	stamps/extract-ecj.stamp stamps/patch-ecj.stamp
-	$(MAKE) \
-	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj/control/make j2se_only
-	@echo "ecj-poured IcedTea is served:" \
-	  openjdk-ecj/control/build/$(LINUX_DIR)
-	mkdir -p stamps
-	touch stamps/icedtea-ecj.stamp
-
-clean-icedtea-ecj: stamps/extract-ecj.stamp
-	rm -f stamps/icedtea-ecj.stamp
-	$(MAKE) \
-	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj/control/make clobber
-
-stamps/icedtea-against-ecj.stamp: \
-	stamps/bootstrap-directory-symlink-ecj.stamp \
-	stamps/icedtea-ecj.stamp
-	mkdir -p stamps
-	touch stamps/icedtea-against-ecj.stamp
-
 # Binary Plugs and Tools Targets
 # ==============================
 
-stamps/plugs.stamp: $(SHARED_OBJECT_FILES) $(SECURITY_JAR_FILES) \
-	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-	bootstrap/jdk1.7.0/jre/lib/jce.jar
+stamps/plugs.stamp: $(SHARED_OBJECT_FILES) \
+	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 	mkdir -p stamps
 	touch stamps/plugs.stamp
 
-stamps/tools.stamp: bootstrap/ecj/lib/tools.jar
+stamps/tools.stamp: bootstrap/jdk1.7.0/jre/lib/tools.jar
 	mkdir -p stamps
 	touch stamps/tools.stamp
 
-clean-plugs: clean-plugs clean-shared-objects clean-security-jars \
-	clean-copy clean-rt clean-jce
+clean-plugs: clean-plugs clean-shared-objects clean-copy clean-rt
 	rm -f stamps/plugs.stamp
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
-	rm -f bootstrap/jdk1.7.0/jre/lib/jce.jar
 
 clean-tools-jar: clean-tools-jar clean-tools
 	rm -f stamps/tools.stamp
 	rm -rf tools/
-	rm -f bootstrap/jdk1.6.0/lib/tools.jar
+	rm -f bootstrap/jdk1.7.0/jre/lib/tools.jar
 
 $(SHARED_OBJECT_FILES):
 	mkdir -p bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)
