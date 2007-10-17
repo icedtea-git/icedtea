@@ -1,7 +1,15 @@
 diff -urN openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java openjdk/j2se/src/share/classes/java/awt/BasicStroke.java
 --- openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java	2007-10-12 04:02:07.000000000 -0400
-+++ openjdk/j2se/src/share/classes/java/awt/BasicStroke.java	2007-10-12 17:34:35.000000000 -0400
-@@ -25,6 +25,17 @@
++++ openjdk/j2se/src/share/classes/java/awt/BasicStroke.java	2007-10-16 22:13:51.000000000 -0400
+@@ -1,5 +1,7 @@
+ /*
+  * Copyright 1997-2007 Sun Microsystems, Inc.  All Rights Reserved.
++ * Portions Copyright (C) 2002, 2003, 2004, 2005, 2006  Free Software Foundation, Inc.
++ *  see below for license notice.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,6 +27,17 @@
  
  package java.awt;
  
@@ -19,7 +27,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java openjdk/
  /**
   * The <code>BasicStroke</code> class defines a basic set of rendering
   * attributes for the outlines of graphics primitives, which are rendered
-@@ -157,6 +168,8 @@
+@@ -157,6 +170,8 @@
      float dash[];
      float dash_phase;
  
@@ -28,7 +36,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java openjdk/
      /**
       * Constructs a new <code>BasicStroke</code> with the specified
       * attributes.
-@@ -292,10 +305,12 @@
+@@ -292,10 +307,12 @@
       * @return the <code>Shape</code> of the stroked outline.
       */
      public Shape createStrokedShape(Shape s) {
@@ -45,11 +53,47 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java openjdk/
      }
  
      /**
-@@ -440,4 +455,475 @@
+@@ -440,4 +457,511 @@
  
          return true;
      }
 +
++/*
++ * This rest of this file is from GNU Classpath.
++   Copyright (C) 2002, 2003, 2004, 2005, 2006  Free Software Foundation, Inc.
++
++   GNU Classpath is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 2, or (at your option)
++   any later version.
++
++   GNU Classpath is distributed in the hope that it will be useful, but
++   WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with GNU Classpath; see the file COPYING.  If not, write to the
++   Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
++   02110-1301 USA.
++
++   Linking this library statically or dynamically with other modules is
++   making a combined work based on this library.  Thus, the terms and
++   conditions of the GNU General Public License cover the whole
++   combination.
++
++   As a special exception, the copyright holders of this library give you
++   permission to link this library with independent modules to produce an
++   executable, regardless of the license terms of these independent
++   modules, and to copy and distribute the resulting executable under
++   terms of your choice, provided that you also meet, for each linked
++   independent module, the terms and conditions of the license of that
++   module.  An independent module is a module which is not derived from
++   or based on this library.  If you modify this library, you may extend
++   this exception to your version of the library, but you are not
++   obligated to do so.  If you do not wish to do so, delete this
++   exception statement from your version.
++   */
 +    private Shape solidStroke(PathIterator pi) {
 +        double[] coords = new double[6];
 +        double x, y, x0, y0;
@@ -523,7 +567,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/java/awt/BasicStroke.java openjdk/
  }
 diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java openjdk/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java
 --- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java	2007-10-12 04:03:11.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java	2007-10-12 17:34:35.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe.java	2007-10-16 22:07:44.000000000 -0400
 @@ -423,6 +423,7 @@
                  transy = 0;
              }
@@ -542,7 +586,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/BufferedRenderPipe
      }
 diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java
 --- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-10-12 04:03:11.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-10-12 17:34:35.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java	2007-10-16 22:07:44.000000000 -0400
 @@ -188,7 +188,7 @@
                                               transX, transY, p2df); 
              return;
@@ -563,7 +607,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/LoopPipe.java open
      /**
 diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java
 --- openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-10-12 04:03:11.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-10-12 17:34:35.000000000 -0400
++++ openjdk/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.java	2007-10-16 22:07:44.000000000 -0400
 @@ -82,6 +82,7 @@
      }
  
@@ -585,7 +629,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/java2d/pipe/SpanShapeRenderer.
      public static final int NON_RECTILINEAR_TRANSFORM_MASK =
 diff -urN openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java
 --- openjdk.orig/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java	2007-10-12 04:04:01.000000000 -0400
-+++ openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java	2007-10-12 17:34:35.000000000 -0400
++++ openjdk/j2se/src/solaris/classes/sun/java2d/x11/X11Renderer.java	2007-10-16 22:07:44.000000000 -0400
 @@ -336,6 +336,10 @@
              // Otherwise we will use drawPath() for
              // high-quality thin paths.
