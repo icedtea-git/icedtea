@@ -1,3 +1,7 @@
+2007-10-18  Lillian Angel  <langel@redhat.com>
+
+	* README: Updated.
+
 2007-10-16  Francis Kung  <fkung@redhat.com>
 
 	* patches/icedtea-paths.patch: Add Classpath copyright notice.
