@@ -306,9 +306,10 @@ SHARE = openjdk/j2se/src/share/classes
 SOLARIS = openjdk/j2se/src/solaris/classes
 LANGTOOLS = openjdk/langtools/src/share/classes
 JAXP = openjdk/jaxp/src/share/classes
+CORBA = openjdk/corba/src/share/classes
 
 OPENJDK_SOURCEPATH_DIRS = \
-        $(SHARE):$(SOLARIS):$(LANGTOOLS):$(JAXP)
+        $(SHARE):$(SOLARIS):$(LANGTOOLS):$(JAXP):$(CORBA)
 
 # tools.jar class files.
 stamps/tools-copy-source-files.stamp: stamps/extract.stamp stamps/patch.stamp
