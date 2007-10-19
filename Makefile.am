@@ -145,6 +145,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-gtkplaf.patch \
 	patches/icedtea-memory-limits.patch \
 	patches/icedtea-xjc.patch \
+	patches/icedtea-sunsrc.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 

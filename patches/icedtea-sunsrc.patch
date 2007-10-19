@@ -1,0 +1,23 @@
+--- openjdk.orig/j2se/make/common/Release.gmk	2007-10-17 16:06:30.000000000 -0400
++++ openjdk/j2se/make/common/Release.gmk	2007-10-18 14:47:55.000000000 -0400
+@@ -625,6 +625,10 @@
+ 	    $(BOOT_JAVA_CMD) -jar $(JARREORDER_JARFILE) \
+ 		-o  $@.temp $(ABS_LIBDIR)/classlist $(NOT_RT_JAR_LIST) . )
+ 	$(MV) $@.temp $@
++	$(CAT) $@ | $(GREP) "^sun" | $(GREP) "class" | $(GREP) -v '\$$' \
++	    > $(ABS_TEMPDIR)/sun_classes_list
++	sed 's/\.class/\.java/' < $(ABS_TEMPDIR)/sun_classes_list \
++	    > $(ABS_TEMPDIR)/sun_sources_list
+ 	@($(CD) $(CLASSBINDIR) && $(java-vm-cleanup))
+ 
+ # Create the rt.jar file list & non-class files list
+@@ -1002,6 +1006,9 @@
+ 	       | ($(CD) $(JDK_IMAGE_DIR)/src && $(TAR) xf -); \
+ 	  fi; \
+ 	done
++	($(CD) $(SHARE_SRC)/classes && $(TAR) cf - -T \
++	    $(ABS_TEMPDIR)/sun_sources_list ) \
++	    | ($(CD) $(JDK_IMAGE_DIR)/src && $(TAR) xf -);
+   else
+ 	for d in $(SOURCE_DIRS); do \
+ 	  $(RM) $(ABS_TEMPDIR)/src-files.list; \
