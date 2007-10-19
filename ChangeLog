@@ -4,6 +4,12 @@
 	* j2se/make/common/shared/Platform.gmk: Likewise.
 	* j2se/src/share/bin/java.c: Likewise.
 
+2007-10-19  Joshua Sumali  <jsumali@redhat.com>
+
+	* patches/icedtea-sunsrc.patch: New file.
+	* Makefile.am: Added icedtea-sunsrc to patch list.
+	* Makefile.in: Regenerated.
+
 2007-10-18  Lillian Angel  <langel@redhat.com>
 
 	* javac.in, javap.in: Removed
