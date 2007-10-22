@@ -1,3 +1,14 @@
+2007-10-22  Lillian Angel  <langel@redhat.com>
+
+	* INSTALL: Updated requirements.
+	* Makefile.am: Updated patch list.
+	* Makefile.in: Regenerated.
+	* configure: Regenerated.
+	* configure.ac: Added checks for libpng, libjpeg, zlib and giflib.
+	* patches/icedtea-libraries.patch: New patch to remove built-in
+	libraries (libpng, libjpeg, zlib, giflib) and use system installed libs.
+	* patches/icedtea-libpng.patch: Removed (combined with previous patch).
+
 2007-10-19  Joshua Sumali  <jsumali@redhat.com>
 
 	* patches/icedtea-sunsrc.patch: New file.
