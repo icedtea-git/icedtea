@@ -79,7 +79,7 @@ AC_CHECK_LIB(png, main,
 AC_CHECK_LIB(jpeg, main,
         , [AC_MSG_ERROR("libjpeg not found - try installing libjpeg-devel")])
 AC_CHECK_LIB(gif, main,
-        , [AC_MSG_ERROR("libgif not found - try installing libgif-devel")])
+        , [AC_MSG_ERROR("giflib not found - try installing giflib-devel")])
 AC_CHECK_LIB(z, main,
 	, [AC_MSG_ERROR("zlib not found - try installing zlib-devel")])
 
