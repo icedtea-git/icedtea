@@ -7135,8 +7135,8 @@ _ACEOF
   LIBS="-lgif $LIBS"
 
 else
-  { { echo "$as_me:$LINENO: error: \"libgif not found - try installing libgif-devel\"" >&5
-echo "$as_me: error: \"libgif not found - try installing libgif-devel\"" >&2;}
+  { { echo "$as_me:$LINENO: error: \"giflib not found - try installing giflib-devel\"" >&5
+echo "$as_me: error: \"giflib not found - try installing giflib-devel\"" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
@@ -7876,7 +7876,7 @@ Alternatively, you may set the environment variables GLIB_CFLAGS
 and GLIB_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&5
 echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
 is in your PATH or set the PKG_CONFIG environment variable to the full
@@ -7886,7 +7886,7 @@ Alternatively, you may set the environment variables GLIB_CFLAGS
 and GLIB_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&2;}
    { (exit 1); exit 1; }; }
 else
@@ -7987,7 +7987,7 @@ Alternatively, you may set the environment variables GTK_CFLAGS
 and GTK_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&5
 echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
 is in your PATH or set the PKG_CONFIG environment variable to the full
@@ -7997,7 +7997,7 @@ Alternatively, you may set the environment variables GTK_CFLAGS
 and GTK_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&2;}
    { (exit 1); exit 1; }; }
 else
