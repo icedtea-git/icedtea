@@ -136,7 +136,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-debuginfo.patch \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-license-headers.patch \
-	patches/icedtea-libpng.patch \
 	patches/icedtea-plugin.patch \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
@@ -152,6 +151,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-memory-limits.patch \
 	patches/icedtea-xjc.patch \
 	patches/icedtea-sunsrc.patch \
+	patches/icedtea-libraries.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 

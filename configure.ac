@@ -75,6 +75,14 @@ AC_CHECK_LIB(Xtst, XTestQueryExtension,
 	, [AC_MSG_ERROR("libXtst not found - try installing libXtst-devel")])
 AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
 	, [AC_MSG_ERROR("libXinerama not found - try installing libXinerama-devel")])
+AC_CHECK_LIB(png, main,
+        , [AC_MSG_ERROR("libpng not found - try installing libpng-devel")])
+AC_CHECK_LIB(jpeg, main,
+        , [AC_MSG_ERROR("libjpeg not found - try installing libjpeg-devel")])
+AC_CHECK_LIB(gif, main,
+        , [AC_MSG_ERROR("libgif not found - try installing libgif-devel")])
+AC_CHECK_LIB(z, main,
+	, [AC_MSG_ERROR("zlib not found - try installing zlib-devel")])
 
 dnl Check for plugin support headers and libraries.
 PKG_CHECK_MODULES(MOZILLA, mozilla-plugin, [MOZILLA_FOUND=yes], \

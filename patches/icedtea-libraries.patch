@@ -1,0 +1,443 @@
+--- openjdk.old/j2se/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2007-10-12 04:03:51.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2007-10-22 12:50:36.000000000 -0400
+@@ -25,7 +25,7 @@
+ 
+ #include "splashscreen_impl.h"
+ 
+-#include "../libpng/png.h"
++#include <png.h>
+ 
+ #include <setjmp.h>
+ 
+--- openjdk.old/j2se/src/share/native/sun/awt/splashscreen/splashscreen_gif.c	2007-10-12 04:03:51.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/awt/splashscreen/splashscreen_gif.c	2007-10-22 12:50:36.000000000 -0400
+@@ -26,7 +26,7 @@
+ #include "splashscreen_impl.h"
+ #include "splashscreen_gfx.h"
+ 
+-#include "../giflib/gif_lib.h"
++#include <gif_lib.h>
+ 
+ #define GIF_TRANSPARENT     0x01
+ #define GIF_USER_INPUT      0x02
+--- openjdk.old/j2se/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c	2007-10-12 04:03:51.000000000 -0400
++++ openjdk/j2se/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c	2007-10-22 12:50:36.000000000 -0400
+@@ -25,11 +25,9 @@
+ 
+ #include "splashscreen_impl.h"
+ 
+-#include "jinclude.h"
+-#include "jpeglib.h"
+-#include "jerror.h"
+-
++#include <jerror.h>
+ #include <setjmp.h>
++#include <jpeglib.h>
+ 
+ /* stream input handling */
+ 
+@@ -105,13 +103,9 @@
+     stream_src_ptr src;
+ 
+     if (cinfo->src == NULL) {   /* first time for this JPEG object? */
+-        cinfo->src = (struct jpeg_source_mgr *)
+-            (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, 
+-            JPOOL_PERMANENT, SIZEOF(stream_source_mgr));
++        cinfo->src = (struct jpeg_source_mgr *) (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT, sizeof(stream_source_mgr));
+         src = (stream_src_ptr) cinfo->src;
+-        src->buffer = (JOCTET *)
+-            (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, 
+-            JPOOL_PERMANENT, INPUT_BUF_SIZE * SIZEOF(JOCTET));
++        src->buffer = (JOCTET *) (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT, INPUT_BUF_SIZE * sizeof(JOCTET));
+     }
+ 
+     src = (stream_src_ptr) cinfo->src;
+--- openjdk.old/j2se/make/sun/jpeg/FILES_c.gmk	2007-10-12 03:54:08.000000000 -0400
++++ openjdk/j2se/make/sun/jpeg/FILES_c.gmk	2007-10-22 12:50:36.000000000 -0400
+@@ -23,53 +23,7 @@
+ # have any questions.
+ #
+ 
+-FILES_c = \
+-	imageioJPEG.c \
+-	jpegdecoder.c \
+-	jcomapi.c \
+-	jdapimin.c \
+-	jdapistd.c \
+-	jdcoefct.c \
+-	jdcolor.c \
+-	jddctmgr.c \
+-	jdhuff.c \
+-	jdinput.c \
+-	jdmainct.c \
+-	jdmarker.c \
+-	jdmaster.c \
+-	jdmerge.c \
+-	jdphuff.c \
+-	jdpostct.c \
+-	jdsample.c \
+-	jerror.c \
+-	jidctflt.c \
+-	jidctfst.c \
+-	jidctint.c \
+-	jidctred.c \
+-	jmemmgr.c \
+-	jmemnobs.c \
+-	jquant1.c \
+-	jquant2.c \
+-	jutils.c \
+-	jcapimin.c \
+-	jcapistd.c \
+-	jccoefct.c \
+-	jccolor.c \
+-	jcdctmgr.c \
+-	jchuff.c \
+-	jcinit.c \
+-	jcmainct.c \
+-	jcmarker.c \
+-	jcmaster.c \
+-	jcparam.c \
+-	jcphuff.c \
+-	jcprepct.c \
+-	jcsample.c \
+-	jctrans.c \
+-	jdtrans.c \
+-	jfdctflt.c \
+-	jfdctfst.c \
+-	jfdctint.c
++
+ 
+ ifndef OPENJDK
+ FILES_c += \
+--- openjdk.old/j2se/make/sun/splashscreen/Makefile	2007-10-12 03:54:08.000000000 -0400
++++ openjdk/j2se/make/sun/splashscreen/Makefile	2007-10-22 13:17:21.000000000 -0400
+@@ -59,12 +59,12 @@
+ # C Flags
+ #
+ 
+-CFLAGS += -DSPLASHSCREEN
++CFLAGS += -DSPLASHSCREEN -DPNG_NO_MMX_CODE
+ 
+ ifneq ($(PLATFORM), windows)
+   CFLAGS += -DWITH_X11
+   CPPFLAGS += -I$(OPENWIN_HOME)/include -I$(OPENWIN_HOME)/include/X11/extensions
+-  OTHER_LDLIBS += -L$(OPENWIN_LIB) -lX11 -lXext $(LIBM) -lpthread
++  OTHER_LDLIBS += -L$(OPENWIN_LIB) -lX11 -lXext $(LIBM) -lpng -ljpeg -lgif -lz -lpthread
+ else # PLATFORM
+   CFLAGS += -DWITH_WIN32
+   OTHER_LDLIBS += kernel32.lib user32.lib gdi32.lib 
+@@ -76,12 +76,7 @@
+ #
+ vpath %.c   $(SHARE_SRC)/native/$(PKGDIR)/splashscreen
+ vpath %.c   $(SHARE_SRC)/native/$(PKGDIR)
+-vpath %.c   $(SHARE_SRC)/native/$(PKGDIR)/giflib
+-vpath %.c   $(SHARE_SRC)/native/java/util/zip/zlib-1.1.3
+-vpath %.c   $(SHARE_SRC)/native/$(PKGDIR)/libpng
+-vpath %.c   $(SHARE_SRC)/native/$(PKGDIR)/image/jpeg
+ vpath %.c   $(PLATFORM_SRC)/native/$(PKGDIR)/splashscreen
+ 
+ CPPFLAGS += -I$(PLATFORM_SRC)/native/$(PKGDIR)/splashscreen -I$(SHARE_SRC)/native/$(PKGDIR)/splashscreen
+-CPPFLAGS += -I$(SHARE_SRC)/native/$(PKGDIR)/image/jpeg -I$(SHARE_SRC)/native/java/util/zip/zlib-1.1.3
+ 
+--- openjdk.old/j2se/make/sun/splashscreen/FILES_c.gmk	2007-10-12 03:54:08.000000000 -0400
++++ openjdk/j2se/make/sun/splashscreen/FILES_c.gmk	2007-10-22 13:18:28.000000000 -0400
+@@ -30,81 +30,5 @@
+ 	splashscreen_impl.c \
+ 	splashscreen_jpeg.c \
+ 	splashscreen_png.c \
+-	splashscreen_sys.c \
+-	png.c \
+-	pngerror.c \
+-	pngget.c \
+-	pngmem.c  \
+-	pngpread.c \
+-	pngread.c \
+-	pngrio.c \
+-	pngrtran.c \
+-	pngrutil.c \
+-	pngset.c \
+-	pngtrans.c \
+-	pngwio.c \
+-	pngwrite.c \
+-	pngwtran.c \
+-	pngwutil.c \
+-	dgif_lib.c \
+-	gif_err.c \
+-	gifalloc.c \
+-	compress.c \
+-	deflate.c \
+-	gzio.c \
+-	infblock.c \
+-	infcodes.c \
+-	inffast.c \
+-	inflate.c \
+-	inftrees.c \
+-	infutil.c \
+-	trees.c \
+-	uncompr.c \
+-	zadler32.c \
+-	zcrc32.c \
+-	zutil.c \
+-	jcomapi.c \
+-	jdapimin.c \
+-	jdapistd.c \
+-	jdcoefct.c \
+-	jdcolor.c \
+-	jddctmgr.c \
+-	jdhuff.c \
+-	jdinput.c \
+-	jdmainct.c \
+-	jdmarker.c \
+-	jdmaster.c \
+-	jdmerge.c \
+-	jdphuff.c \
+-	jdpostct.c \
+-	jdsample.c \
+-	jerror.c \
+-	jidctflt.c \
+-	jidctfst.c \
+-	jidctint.c \
+-	jidctred.c \
+-	jmemmgr.c \
+-	jmemnobs.c \
+-	jquant1.c \
+-	jquant2.c \
+-	jutils.c \
+-	jcapimin.c \
+-	jcapistd.c \
+-	jccoefct.c \
+-	jccolor.c \
+-	jcdctmgr.c \
+-	jchuff.c \
+-	jcinit.c \
+-	jcmainct.c \
+-	jcmarker.c \
+-	jcmaster.c \
+-	jcparam.c \
+-	jcphuff.c \
+-	jcprepct.c \
+-	jcsample.c \
+-	jctrans.c \
+-	jdtrans.c \
+-	jfdctflt.c \
+-	jfdctfst.c \
+-	jfdctint.c
++	splashscreen_sys.c
+ 
+--- openjdk.old/j2se/src/share/native/java/util/zip/Adler32.c	2007-10-12 04:03:46.000000000 -0400
++++ openjdk/j2se/src/share/native/java/util/zip/Adler32.c	2007-10-22 13:21:09.000000000 -0400
+@@ -29,7 +29,7 @@
+ 
+ #include "jni.h"
+ #include "jni_util.h"
+-#include "zlib.h"
++#include <zlib.h>
+ 
+ #include "java_util_zip_Adler32.h"
+ 
+--- openjdk.old/j2se/src/share/native/java/util/zip/zip_util.c	2007-10-12 04:03:46.000000000 -0400
++++ openjdk/j2se/src/share/native/java/util/zip/zip_util.c	2007-10-22 13:22:05.000000000 -0400
+@@ -36,6 +36,7 @@
+ #include <time.h>
+ #include <ctype.h>
+ #include <assert.h>
++#include <zlib.h>
+ 
+ #include "jni.h"
+ #include "jni_util.h"
+@@ -44,7 +45,6 @@
+ #include "io_util.h"
+ #include "io_util_md.h"
+ #include "zip_util.h"
+-#include "zlib.h"
+ 
+ /* USE_MMAP means mmap the CEN & ENDHDR part of the zip file. */
+ #ifdef USE_MMAP
+--- openjdk.old/j2se/src/share/native/java/util/zip/Deflater.c	2007-10-12 04:03:46.000000000 -0400
++++ openjdk/j2se/src/share/native/java/util/zip/Deflater.c	2007-10-22 13:22:34.000000000 -0400
+@@ -32,7 +32,7 @@
+ #include "jlong.h"
+ #include "jni.h"
+ #include "jni_util.h"
+-#include "zlib.h"
++#include <zlib.h>
+ 
+ #include "java_util_zip_Deflater.h"
+ 
+--- openjdk.old/j2se/src/share/native/java/util/zip/CRC32.c	2007-10-12 04:03:46.000000000 -0400
++++ openjdk/j2se/src/share/native/java/util/zip/CRC32.c	2007-10-22 13:23:08.000000000 -0400
+@@ -29,7 +29,7 @@
+ 
+ #include "jni.h"
+ #include "jni_util.h"
+-#include "zlib.h"
++#include <zlib.h>
+ 
+ #include "java_util_zip_CRC32.h"
+ 
+--- openjdk.old/j2se/make/common/Program.gmk	2007-10-12 03:54:05.000000000 -0400
++++ openjdk/j2se/make/common/Program.gmk	2007-10-22 13:26:06.000000000 -0400
+@@ -85,7 +85,7 @@
+ 	endif
+     endif
+     ifeq ($(PLATFORM), linux)
+-	LDFLAGS += -z origin
++	LDFLAGS += -lz -z origin
+ 	LDFLAGS += -Wl,--allow-shlib-undefined
+ 	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../lib/$(LIBARCH)/jli
+ 	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../jre/lib/$(LIBARCH)/jli
+@@ -249,7 +249,6 @@
+ endif
+ 
+ OTHER_INCLUDES += -I$(LAUNCHER_SHARE_SRC)/bin -I$(LAUNCHER_PLATFORM_SRC)/bin
+-OTHER_INCLUDES += -I$(SHARE_SRC)/native/java/util/zip/zlib-1.1.3
+ 
+ # this may not be necessary...
+ ifeq ($(PLATFORM), windows)
+--- openjdk.old/j2se/make/java/zip/Makefile	2007-10-12 03:54:05.000000000 -0400
++++ openjdk/j2se/make/java/zip/Makefile	2007-10-22 13:27:01.000000000 -0400
+@@ -30,8 +30,6 @@
+ PRODUCT = sun
+ include $(BUILDDIR)/common/Defs.gmk
+ 
+-ZLIB_VERSION = 1.1.3
+-
+ #
+ # Files to compile.
+ #
+@@ -72,16 +70,10 @@
+ CPPFLAGS += -UDEBUG 
+ endif
+ 
+-CPPFLAGS += -I$(SHARE_SRC)/native/java/util/zip/zlib-$(ZLIB_VERSION)
+ CPPFLAGS += -I$(SHARE_SRC)/native/java/io
+ CPPFLAGS += -I$(PLATFORM_SRC)/native/java/io
+ 
+ #
+-# Add to ambient vpath so we pick up the library files
+-#
+-vpath %.c $(SHARE_SRC)/native/$(PKGDIR)/zlib-$(ZLIB_VERSION)
+-
+-#
+ # Link to JVM library for JVM_Zip* functions
+ #
+-OTHER_LDLIBS = $(JVMLIB)
++OTHER_LDLIBS = $(JVMLIB) -lz
+--- openjdk.old/j2se/make/java/zip/FILES_c.gmk	2007-10-12 03:54:05.000000000 -0400
++++ openjdk/j2se/make/java/zip/FILES_c.gmk	2007-10-22 13:52:53.000000000 -0400
+@@ -30,15 +30,4 @@
+ 	Inflater.c \
+ 	ZipFile.c \
+ 	ZipEntry.c \
+-	zadler32.c \
+-	zcrc32.c \
+-	deflate.c \
+-	trees.c \
+-	zutil.c \
+-	inflate.c \
+-	infblock.c \
+-	inftrees.c \
+-	infcodes.c \
+-	infutil.c \
+-	inffast.c \
+ 	zip_util.c
+--- openjdk.old/j2se/make/java/jli/Makefile	2007-10-12 03:54:05.000000000 -0400
++++ openjdk/j2se/make/java/jli/Makefile	2007-10-22 14:36:25.000000000 -0400
+@@ -44,8 +44,6 @@
+ 
+ include $(BUILDDIR)/common/Defs.gmk
+ 
+-ZLIB_VERSION = 1.1.3
+-ZIP_SRC = $(SHARE_SRC)/native/java/util/zip/zlib-$(ZLIB_VERSION)
+ LAUNCHER_SHARE_SRC = $(SHARE_SRC)/bin
+ LAUNCHER_PLATFORM_SRC = $(PLATFORM_SRC)/bin
+ 
+@@ -66,15 +64,7 @@
+ 	parse_manifest.c \
+ 	version_comp.c \
+ 	wildcard.c \
+-	jli_util.c \
+-	inflate.c \
+-	infblock.c \
+-	inftrees.c \
+-	infcodes.c \
+-	inffast.c \
+-	infutil.c \
+-	zadler32.c \
+-	zutil.c
++	jli_util.c
+ 
+ ifneq ($(PLATFORM), windows)
+ 
+@@ -99,7 +89,7 @@
+ 	# Note: its important to keep this order meaning -lc is the
+ 	# last library otherwise it could cause compatibility issues
+ 	# by pulling in SUNW_private symbols from libc
+-	LDLIBS = -ldl -lc
++	LDLIBS = -lz -ldl -lc
+ ifeq ($(USE_PTHREADS),true)
+ 	LDLIBS += -lpthread
+ endif # USE_PTHREADS 
+@@ -121,7 +111,6 @@
+ 
+ OTHER_INCLUDES += -I$(LAUNCHER_SHARE_SRC)
+ OTHER_INCLUDES += -I$(LAUNCHER_PLATFORM_SRC)
+-OTHER_INCLUDES += -I$(ZIP_SRC)
+ 
+ #
+ # Library to compile.
+--- openjdk.old/j2se/make/com/sun/java/pack/Makefile	2007-10-12 03:54:04.000000000 -0400
++++ openjdk/j2se/make/com/sun/java/pack/Makefile	2007-10-22 15:08:03.000000000 -0400
+@@ -64,20 +64,18 @@
+   ZIPOBJDIR = $(OUTPUTDIR)/tmp/sun/java.util.zip/zip/$(OBJDIRNAME)
+ 
+   ZIPOBJS =  $(ZIPOBJDIR)/zcrc32.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/deflate.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/trees.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/zadler32.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/zutil.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/inflate.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/infblock.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/infcodes.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
+-
+-  ZINCLUDE=-I$(SHARE_SRC)/native/java/util/zip/zlib-1.1.3
+-  OTHER_CXXFLAGS += $(ZINCLUDE)
+-  LDDFLAGS += $(ZIPOBJS)
++            $(ZIPOBJDIR)/deflate.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/trees.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/zadler32.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/zutil.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/inflate.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/infblock.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/infcodes.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
++
++  OTHER_LDLIBS += -lz
+ else
+   OTHER_CXXFLAGS += -DNO_ZLIB -DUNPACK_JNI
+   OTHER_LDLIBS += $(JVMLIB)
+@@ -101,7 +99,7 @@
+   COMPILER_WARNINGS_FATAL=false
+ else
+   LDOUTPUT = -o #Have a space 
+-  LDDFLAGS += -lc
++  LDDFLAGS += -lz -lc
+   OTHER_LDLIBS  += $(LIBCXX)
+ # setup the list of libraries to link in...
+ ifeq ($(PLATFORM), linux)
+--- openjdk.old/j2se/src/share/native/java/util/zip/Inflater.c	2007-10-12 04:03:46.000000000 -0400
++++ openjdk/j2se/src/share/native/java/util/zip/Inflater.c	2007-10-22 15:21:32.000000000 -0400
+@@ -35,7 +35,7 @@
+ #include "jni.h"
+ #include "jvm.h"
+ #include "jni_util.h"
+-#include "zlib.h"
++#include <zlib.h>
+ #include "java_util_zip_Inflater.h"
+ 
+ #define ThrowDataFormatException(env, msg) \

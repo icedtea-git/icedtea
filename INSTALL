@@ -26,6 +26,10 @@ glib2-devel
 gtk2-devel
 ant >= 1.6.5
 libXinerama-devel
+giflib-devel
+libpng-devel
+libjpeg-devel
+zlib-devel
 java-1.7.0-icedtea-devel (or IcedTea <= b19 built)
 
 See ./configure --help if you need to override defaults.
