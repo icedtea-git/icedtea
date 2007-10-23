@@ -1,14 +1,14 @@
 Index: j2se/src/share/bin/java.c
 ===================================================================
---- j2se/src/share/bin/java.c	(revision 250)
-+++ openjdk/j2se/src/share/bin/java.c	(working copy)
-@@ -367,7 +367,8 @@ main(int argc, char ** argv)
+--- openjdk/j2se/src/share/bin/java.c	(revision 256)
++++ j2se/src/share/bin/java.c	(working copy)
+@@ -1955,7 +1955,8 @@ ContinueInNewThread(InvocationFunctions*
        args.classname = classname;
-       args.ifn = ifn;
+       args.ifn = *ifn;
  
--      return ContinueInNewThread(JavaMain, threadStackSize, (void*)&args, ret);
-+/*       return ContinueInNewThread(JavaMain, threadStackSize, (void*)&args, ret); */
-+      return JavaMain((void*)&args);
-     }
- }
- 
+-      rslt = ContinueInNewThread0(JavaMain, threadStackSize, (void*)&args);
++/*       rslt = ContinueInNewThread0(JavaMain, threadStackSize, (void*)&args); */
++      rslt = JavaMain((void*)&args);
+       /* If the caller has deemed there is an error we
+        * simply return that, otherwise we return the value of
+        * the callee

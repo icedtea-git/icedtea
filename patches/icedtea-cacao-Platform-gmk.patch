@@ -1,8 +1,8 @@
 Index: j2se/make/common/shared/Platform.gmk
 ===================================================================
---- j2se/make/common/shared/Platform.gmk	(revision 250)
-+++ openjdk/j2se/make/common/shared/Platform.gmk	(working copy)
-@@ -225,11 +225,25 @@ ifeq ($(SYSTEM_UNAME), Linux)
+--- openjdk/j2se/make/common/shared/Platform.gmk	(revision 256)
++++ j2se/make/common/shared/Platform.gmk	(working copy)
+@@ -223,11 +223,25 @@ ifeq ($(SYSTEM_UNAME), Linux)
        ARCH=sparcv9
      endif
    else

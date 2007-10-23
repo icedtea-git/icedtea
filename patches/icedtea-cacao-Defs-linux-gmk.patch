@@ -1,8 +1,16 @@
 Index: j2se/make/common/Defs-linux.gmk
 ===================================================================
---- j2se/make/common/Defs-linux.gmk	(revision 250)
-+++ openjdk/j2se/make/common/Defs-linux.gmk	(working copy)
-@@ -215,7 +215,7 @@ endif
+--- openjdk/j2se/make/common/Defs-linux.gmk	(revision 256)
++++ j2se/make/common/Defs-linux.gmk	(working copy)
+@@ -102,6 +102,7 @@ endif
+ #    We need this frame pointer to make it easy to walk the stacks.
+ #    This should be the default on X86, but ia64 and amd64 may not have this
+ #    as the default.
++CFLAGS_REQUIRED_alpha   += -mieee
+ CFLAGS_REQUIRED_amd64   += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
+ CFLAGS_REQUIRED_i586    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
+ CFLAGS_REQUIRED_ia64    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
+@@ -206,7 +207,7 @@ endif
  
  EXTRA_LIBS += -lc
  

@@ -1,3 +1,9 @@
+2007-10-23  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* j2se/make/common/Defs-linux.gmk: Updated for b22.
+	* j2se/make/common/shared/Platform.gmk: Likewise.
+	* j2se/src/share/bin/java.c: Likewise.
+
 2007-10-17  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* Makefile.in: Regenerated (I was too lazy to merge all
