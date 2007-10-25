@@ -1,3 +1,9 @@
+2007-10-24  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-libraries.patch: Updated jpeg patches to properly
+	create OpenJDK's libjpeg.so without files common to the system
+	installed libjpeg.so.
+
 2007-10-22  Lillian Angel  <langel@redhat.com>
 
 	* configure.ac: Fixed typo. libgif should be giflib.
