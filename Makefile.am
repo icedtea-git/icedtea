@@ -146,6 +146,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-xjc.patch \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
+	patches/icedtea-bytecodeInterpreterWithChecks.patch \
+	patches/icedtea-javafiles.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
