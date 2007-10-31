@@ -1,3 +1,8 @@
+2007-10-31  Joshua Sumali  <jsumali@redhat.com>
+
+	* patches/icedtea-sunsrc.patch: Fixed patch to include some missing
+	sources.
+
 2007-10-30  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-bytecodeInterpreterWithChecks.patch: New patch to
