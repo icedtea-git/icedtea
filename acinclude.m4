@@ -17,10 +17,6 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=ppc64
       INSTALL_ARCH_DIR=ppc64
       ;;
-    s390*-*-*)
-      BUILD_ARCH_DIR=s390
-      INSTALL_ARCH_DIR=s390
-      ;;
     *)
       BUILD_ARCH_DIR=`uname -m`
       INSTALL_ARCH_DIR=$BUILD_ARCH_DIR
