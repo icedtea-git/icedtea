@@ -1,3 +1,8 @@
+2007-11-01  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4 (SET_ARCH_DIRS): Remove s390.
+	* configure: Regenerated.
+
 2007-10-31  Joshua Sumali  <jsumali@redhat.com>
 
 	* patches/icedtea-sunsrc.patch: Fixed patch to include some missing
