@@ -1,3 +1,8 @@
+2007-11-02  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-libraries.patch: Added patch to remove conflicting
+	definition of uLong. This fixes the build on 64-bit.
+
 2007-11-01  Gary Benson  <gbenson@redhat.com>
 
 	* acinclude.m4 (SET_ARCH_DIRS): Remove s390.

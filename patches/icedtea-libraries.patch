@@ -164,50 +164,6 @@
  
  #
  # Library to compile.
---- openjdk.old/j2se/make/com/sun/java/pack/Makefile	2007-10-12 03:54:04.000000000 -0400
-+++ openjdk/j2se/make/com/sun/java/pack/Makefile	2007-10-22 15:08:03.000000000 -0400
-@@ -64,20 +64,18 @@
-   ZIPOBJDIR = $(OUTPUTDIR)/tmp/sun/java.util.zip/zip/$(OBJDIRNAME)
- 
-   ZIPOBJS =  $(ZIPOBJDIR)/zcrc32.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/deflate.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/trees.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/zadler32.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/zutil.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/inflate.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/infblock.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/infcodes.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
--
--  ZINCLUDE=-I$(SHARE_SRC)/native/java/util/zip/zlib-1.1.3
--  OTHER_CXXFLAGS += $(ZINCLUDE)
--  LDDFLAGS += $(ZIPOBJS)
-+            $(ZIPOBJDIR)/deflate.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/trees.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/zadler32.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/zutil.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/inflate.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/infblock.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/infcodes.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
-+
-+  OTHER_LDLIBS += -lz
- else
-   OTHER_CXXFLAGS += -DNO_ZLIB -DUNPACK_JNI
-   OTHER_LDLIBS += $(JVMLIB)
-@@ -101,7 +99,7 @@
-   COMPILER_WARNINGS_FATAL=false
- else
-   LDOUTPUT = -o #Have a space 
--  LDDFLAGS += -lc
-+  LDDFLAGS += -lz -lc
-   OTHER_LDLIBS  += $(LIBCXX)
- # setup the list of libraries to link in...
- ifeq ($(PLATFORM), linux)
 --- openjdk.old/j2se/src/share/native/java/util/zip/Inflater.c	2007-10-12 04:03:46.000000000 -0400
 +++ openjdk/j2se/src/share/native/java/util/zip/Inflater.c	2007-10-22 15:21:32.000000000 -0400
 @@ -35,7 +35,7 @@
@@ -25514,3 +25470,71 @@ diff -ruN openjdk.old/j2se/src/share/native/sun/awt/image/jpeg/README openjdk/j2
      }
  
      if (scale != NULL) {
+--- oldopenjdk/j2se/make/com/sun/java/pack/Makefile	2007-10-12 03:54:04.000000000 -0400
++++ openjdk/j2se/make/com/sun/java/pack/Makefile	2007-11-02 14:59:13.000000000 -0400
+@@ -64,23 +64,21 @@
+   ZIPOBJDIR = $(OUTPUTDIR)/tmp/sun/java.util.zip/zip/$(OBJDIRNAME)
+ 
+   ZIPOBJS =  $(ZIPOBJDIR)/zcrc32.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/deflate.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/trees.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/zadler32.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/zutil.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/inflate.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/infblock.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/infcodes.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
+-
+-  ZINCLUDE=-I$(SHARE_SRC)/native/java/util/zip/zlib-1.1.3
+-  OTHER_CXXFLAGS += $(ZINCLUDE)
+-  LDDFLAGS += $(ZIPOBJS)
++            $(ZIPOBJDIR)/deflate.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/trees.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/zadler32.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/zutil.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/inflate.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/infblock.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/infcodes.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
++
++  OTHER_LDLIBS += -lz
+ else
+   OTHER_CXXFLAGS += -DNO_ZLIB -DUNPACK_JNI
+-  OTHER_LDLIBS += $(JVMLIB)
++  OTHER_LDLIBS += -lz $(JVMLIB)
+ endif
+ 
+ CXXFLAGS_DBG += -DFULL
+@@ -101,12 +99,12 @@
+   COMPILER_WARNINGS_FATAL=false
+ else
+   LDOUTPUT = -o #Have a space 
+-  LDDFLAGS += -lc
++  LDDFLAGS += -lz -lc
+   OTHER_LDLIBS  += $(LIBCXX)
+ # setup the list of libraries to link in...
+ ifeq ($(PLATFORM), linux)
+ ifeq ("$(CC_VER_MAJOR)", "3")
+-  OTHER_LDLIBS  += -Wl,-Bstatic -lgcc_eh -Wl,-Bdynamic
++  OTHER_LDLIBS  += -lz -Wl,-Bstatic -lgcc_eh -Wl,-Bdynamic
+ endif
+ endif #LINUX
+ endif #PLATFORM
+--- oldopenjdk/j2se/src/share/native/com/sun/java/util/jar/pack/defines.h	2007-10-12 04:03:44.000000000 -0400
++++ openjdk/j2se/src/share/native/com/sun/java/util/jar/pack/defines.h	2007-11-02 15:48:45.000000000 -0400
+@@ -87,11 +87,7 @@
+ // bytes and byte arrays
+ 
+ typedef unsigned int uint;
+-#ifdef _LP64
+-typedef unsigned int uLong; // Historical zlib, should be 32-bit.
+-#else
+ typedef unsigned long uLong;
+-#endif
+ #ifdef _MSC_VER 
+ typedef LONGLONG 	jlong;
+ typedef DWORDLONG 	julong;
