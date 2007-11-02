@@ -1,3 +1,17 @@
+2007-11-02  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/com/sun/media/sound/DataPusher.java: Removed stub since this is
+	now implemented.
+	* rt/com/sun/media/sound/JDK13Services.java: Likewise.
+	* rt/com/sun/media/sound/JavaSoundAudioClip.java: Likewise.
+	* rt/com/sun/media/sound/MidiInDevice.java: Likewise.
+	* rt/com/sun/media/sound/MidiInDeviceProvider.java: Likewise.
+	* rt/com/sun/media/sound/MidiOutDeviceProvider.java: Likewise.
+	* rt/com/sun/media/sound/MidiUtils.java: Likewise.
+	* rt/com/sun/media/sound/PortMixer.java: Likewise.
+	* rt/com/sun/media/sound/PortMixerProvider.java: Likewise.
+	* rt/com/sun/media/sound/ReferenceCountingDevice.java: Likewise.
+
 2007-11-02  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-libraries.patch: Added patch to remove conflicting
