@@ -1,3 +1,7 @@
+2007-11-07  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* Makefile.in: Regenerated after transplanting.
+
 2007-11-07  Gary Benson  <gbenson@redhat.com>
 
 	* acinclude.m4 (SET_ARCH_DIRS): Remove redundant special cases.
