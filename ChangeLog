@@ -1,3 +1,34 @@
+2007-11-07  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Re-added ecj targets, added new patches to the list and
+	updated tools.jar.
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Likewise.
+	* configure: Likewise.
+	* configure.ac: Re-added --with-icedtea and --with-icedtea-home
+	options. Also, added --with-gcj-home to specify where gcj is
+	installed- the default is /usr/lib/jvm/java-gcj/.
+	* generated/*.java: Regenerated and added several new sources.
+	* generated/fontconfig/*.bfc: Added generated font files.
+	* javac.in: Re-added. Added support to ignore Werror flags.
+	* javap.in: Re-added.
+	* patches/icedtea-javafiles: Updated to add missing sources to
+	Makefiles.
+	* patches/icedtea-sunrc.patch: Updated.
+	* patches/icedtea-corba.patch: New patch.
+	* patches/icedtea-ecj.patch: New patch to make building with ecj
+	possible.
+	* tools-copy/tools-corba-copy-files.txt: List of corba sources to
+	copy.
+	* tools-copy/tools-j2se-copy-files.txt: List of j2se soures to copy.
+	* tools-copy/tools-jaxws-copy-files.txt: List of jaxws sources to
+	copy.
+	* tools-copy/tools-langtools-copy-files.txt: List of langtools to
+	copy.
+	* patches/icedtea-xjc.patch: Removed. Has been combined with sunrc
+	patch.
+	* tools-copy-files.txt: Removed.
+
 2007-11-07  Gary Benson  <gbenson@redhat.com>
 
 	* acinclude.m4 (SET_ARCH_DIRS): Remove redundant special cases.

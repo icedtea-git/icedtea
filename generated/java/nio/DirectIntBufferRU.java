@@ -356,6 +356,7 @@ class DirectIntBufferRU
 
 
 
+
 	throw new ReadOnlyBufferException();
 
     }

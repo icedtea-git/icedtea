@@ -1,0 +1,34 @@
+#!/bin/sh
+
+case "$*" in
+  *-bootclasspath*) ;;
+  *) bcoption="-bootclasspath @LIBGCJ_JAR@"
+esac
+
+# Work around ecj's inability to handle duplicate command-line
+# options.
+
+NEW_ARGS="$@"
+
+if echo "$@" | grep -q '\-source\ .*\-source\ '
+then
+  NEW_ARGS=`echo $NEW_ARGS | sed -e 's/-source\ *1\.[3456]//1'`
+fi
+
+if echo "$@" | grep -q '\-d\ .*\-d\ '
+then
+  NEW_ARGS=`echo $NEW_ARGS | sed -e 's/-d\ *[^\ ]*//1'`
+fi
+
+if echo "$@" | grep -q '\-encoding\ .*\-encoding\ '
+then
+  NEW_ARGS=`echo $NEW_ARGS | sed -e 's/-encoding\ *[^\ ]*//1'`
+fi
+
+if echo "$@" | grep -q '\-Werror'
+then
+  NEW_ARGS=`echo $NEW_ARGS | sed -e 's/-Werror//1'`
+fi
+
+CLASSPATH=@ECJ_JAR@${CLASSPATH:+:}$CLASSPATH \
+  @JAVA@ org.eclipse.jdt.internal.compiler.batch.Main -1.5 -nowarn $bcoption $NEW_ARGS

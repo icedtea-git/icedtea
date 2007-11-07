@@ -1,4 +1,5 @@
-package sun.awt.X11; public class XAWTIcon32_java_icon16_png {
+package sun.awt.X11;
+public class XAWTIcon32_java_icon16_png {
 public static int[] java_icon16_png = { 
 16,16,
 0x689fb5c9, 

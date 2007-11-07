@@ -7535,7 +7535,7 @@ class JDWP {
                     final int requestID;
 
                     /**
-                     * thread which hit breakpoint
+                     * Thread which hit breakpoint
                      */
                     final ThreadReferenceImpl thread;
 
@@ -7582,7 +7582,7 @@ class JDWP {
                     final int requestID;
 
                     /**
-                     * thread which entered method
+                     * Thread which entered method
                      */
                     final ThreadReferenceImpl thread;
 
@@ -7627,7 +7627,7 @@ class JDWP {
                     final int requestID;
 
                     /**
-                     * thread which exited method
+                     * Thread which exited method
                      */
                     final ThreadReferenceImpl thread;
 
@@ -7733,7 +7733,7 @@ class JDWP {
                     final ObjectReferenceImpl object;
 
                     /**
-                     * location of contended monitor enter
+                     * Location of contended monitor enter
                      */
                     final Location location;
 
@@ -7784,7 +7784,7 @@ class JDWP {
                     final ObjectReferenceImpl object;
 
                     /**
-                     * location of contended monitor enter
+                     * Location of contended monitor enter
                      */
                     final Location location;
 
@@ -7824,7 +7824,7 @@ class JDWP {
                     final int requestID;
 
                     /**
-                     * Thread which entered monitor
+                     * Thread which is about to wait
                      */
                     final ThreadReferenceImpl thread;
 
@@ -7834,12 +7834,12 @@ class JDWP {
                     final ObjectReferenceImpl object;
 
                     /**
-                     * location contended monitor enter
+                     * Location at which the wait will occur
                      */
                     final Location location;
 
                     /**
-                     * thread wait time in milliseconds
+                     * Thread wait time in milliseconds
                      */
                     final long timeout;
 
@@ -7884,7 +7884,7 @@ class JDWP {
                     final int requestID;
 
                     /**
-                     * Thread which entered monitor
+                     * Thread which waited
                      */
                     final ThreadReferenceImpl thread;
 
@@ -7894,12 +7894,12 @@ class JDWP {
                     final ObjectReferenceImpl object;
 
                     /**
-                     * location contended monitor enter
+                     * Location at which the wait occured
                      */
                     final Location location;
 
                     /**
-                     * true if timed out
+                     * True if timed out
                      */
                     final boolean timed_out;
 

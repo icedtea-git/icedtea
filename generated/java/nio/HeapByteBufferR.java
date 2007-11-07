@@ -224,6 +224,7 @@ class HeapByteBufferR
 
 
 
+
 	throw new ReadOnlyBufferException();
 
     }

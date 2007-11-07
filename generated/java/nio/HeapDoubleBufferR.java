@@ -224,6 +224,7 @@ class HeapDoubleBufferR
 
 
 
+
 	throw new ReadOnlyBufferException();
 
     }

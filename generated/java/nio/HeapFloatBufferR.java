@@ -224,6 +224,7 @@ class HeapFloatBufferR
 
 
 
+
 	throw new ReadOnlyBufferException();
 
     }
