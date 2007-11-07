@@ -1,3 +1,8 @@
+2007-11-07  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4 (SET_ARCH_DIRS): Remove redundant special cases.
+	* configure: Regenerated.
+
 2007-11-02  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/com/sun/media/sound/DataPusher.java: Removed stub since this is
