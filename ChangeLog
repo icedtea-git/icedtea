@@ -3,7 +3,6 @@
 	* Makefile.am: Added new patch to list.
 	* Makefile.in: Regenerate.
 	* patches/icedtea-docs.patch: New patch to build docs.
-	* generated/*: Removed files that should be ignored.
 	* .hgignore: Updated.
 
 2007-11-07  Lillian Angel  <langel@redhat.com>
