@@ -354,6 +354,7 @@ class DirectLongBufferU
  	unsafe.copyMemory(ix(pos), ix(0), rem << 3);
  	position(rem);
 	limit(capacity());
+	clearMark();
 	return this;
 
 

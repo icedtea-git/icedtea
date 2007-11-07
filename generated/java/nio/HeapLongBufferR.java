@@ -224,6 +224,7 @@ class HeapLongBufferR
 
 
 
+
 	throw new ReadOnlyBufferException();
 
     }

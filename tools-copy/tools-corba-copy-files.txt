@@ -1,0 +1,6 @@
+sun/rmi/rmic/iiop/
+com/sun/tools/corba/se/idl/som/
+com/sun/tools/corba/se/idl/som/idlemit/
+com/sun/tools/corba/se/idl/som/cff/
+com/sun/tools/corba/se/idl/toJavaPortable/
+com/sun/tools/corba/se/idl/constExpr/

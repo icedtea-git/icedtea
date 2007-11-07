@@ -356,6 +356,7 @@ class DirectFloatBufferRU
 
 
 
+
 	throw new ReadOnlyBufferException();
 
     }

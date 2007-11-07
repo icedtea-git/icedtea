@@ -356,6 +356,7 @@ class DirectLongBufferRS
 
 
 
+
 	throw new ReadOnlyBufferException();
 
     }
