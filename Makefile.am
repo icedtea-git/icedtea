@@ -340,8 +340,8 @@ stamps/bootstrap-directory-ecj.stamp:
 	ln -sf $(XALAN2_SERIALIZER_JAR) \
 	  bootstrap/ecj/lib/endorsed/xalan-j2-serializer.jar
 	ln -sf $(XERCES2_JAR) bootstrap/ecj/lib/endorsed/xerces-j2.jar
-	mkdir -p bootstrap/ecj/jre
-	ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/ bootstrap/ecj/jre/
+	mkdir -p bootstrap/ecj/jre/lib
+	ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/i386 bootstrap/ecj/jre/lib/
 	mkdir -p stamps
 	touch stamps/bootstrap-directory-ecj.stamp
 
@@ -599,7 +599,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
 	$(JAR) cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
 	  -C lib/rt javax -C lib/rt sun
-	mkdir -p bootstrap/jdk1.6.0/jre/lib/
+	if test -d bootstrap/ecj/jre/lib ; \
+	then \
+	  cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar bootstrap/ecj/jre/lib/rt.jar; \
+	fi
 
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
