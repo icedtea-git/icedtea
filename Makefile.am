@@ -365,7 +365,7 @@ stamps/bootstrap-directory-ecj.stamp:
 	  bootstrap/ecj/lib/endorsed/xalan-j2-serializer.jar
 	ln -sf $(XERCES2_JAR) bootstrap/ecj/lib/endorsed/xerces-j2.jar
 	mkdir -p bootstrap/ecj/jre/lib
-	ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/i386 bootstrap/ecj/jre/lib/
+	ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(INSTALL_ARCH_DIR) bootstrap/ecj/jre/lib/
 	mkdir -p stamps
 	touch stamps/bootstrap-directory-ecj.stamp
 
