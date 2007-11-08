@@ -1,0 +1,151 @@
+diff -ru openjdk.orig/control/make/hotspot-rules.gmk openjdk/control/make/hotspot-rules.gmk
+--- openjdk.orig/control/make/hotspot-rules.gmk	2007-10-12 08:45:09.000000000 +0100
++++ openjdk/control/make/hotspot-rules.gmk	2007-11-08 09:40:57.000000000 +0000
+@@ -75,6 +75,11 @@
+   HOTSPOT_TARGET = all_fastdebug
+ endif
+ 
++# Use the special build targets on PPC for now
++ifneq ($(findstring ppc,$(ARCH)),)
++  HOTSPOT_TARGET := $(HOTSPOT_TARGET)core
++endif
++
+ HOTSPOT_BUILD_ARGUMENTS += $(COMMON_BUILD_ARGUMENTS)
+ HOTSPOT_BUILD_ARGUMENTS += ALT_OUTPUTDIR=$(HOTSPOT_OUTPUTDIR)
+ HOTSPOT_BUILD_ARGUMENTS += ALT_EXPORT_PATH=$(HOTSPOT_EXPORT_PATH)
+diff -ru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
+--- openjdk.orig/hotspot/make/Makefile	2007-10-12 08:45:12.000000000 +0100
++++ openjdk/hotspot/make/Makefile	2007-11-08 09:40:57.000000000 +0000
+@@ -91,6 +91,15 @@
+ all_debug:     jvmg jvmg1 jvmgkernel docs export_debug
+ all_optimized: optimized optimized1 optimizedkernel docs export_optimized
+ 
++# Core (non-compiler) targets made available with this Makefile
++CORE_VM_TARGETS=productcore fastdebugcore optimizedcore jvmgcore
++
++allcore:           all_productcore all_fastdebugcore
++all_productcore:   productcore docs export_product
++all_fastdebugcore: fastdebugcore docs export_fastdebug
++all_debugcore:     jvmgcore docs export_debug
++all_optimizedcore: optimizedcore docs export_optimized
++
+ # Do everything
+ world:         all create_jdk
+ 
+@@ -117,6 +126,10 @@
+ 	$(CD) $(GAMMADIR)/make; \
+ 	$(MAKE) VM_TARGET=$@ generic_buildkernel $(ALT_OUT)
+ 
++$(CORE_VM_TARGETS):
++	$(CD) $(GAMMADIR)/make; \
++	$(MAKE) VM_TARGET=$@ generic_build2 $(ALT_OUT)
++
+ # Build compiler1 (client) rule, different for platforms
+ generic_build1:
+ 	$(MKDIR) -p $(OUTPUTDIR)
+@@ -207,17 +220,24 @@
+ C1_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler1
+ C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler2
+ KERNEL_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_kernel
++CORE_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_core
+ C1_DIR=$(C1_BASE_DIR)/$(VM_SUBDIR)
+ C2_DIR=$(C2_BASE_DIR)/$(VM_SUBDIR)
+ KERNEL_DIR=$(KERNEL_BASE_DIR)/$(VM_SUBDIR)
++CORE_DIR=$(CORE_BASE_DIR)/$(VM_SUBDIR)
+ 
+-# Misc files and generated files need to come from C1 or C2 area
+-ifeq ($(ARCH_DATA_MODEL), 32)
+-  MISC_DIR=$(C1_DIR)
+-  GEN_DIR=$(C1_BASE_DIR)/generated
++# Misc files and generated files need to come from the correct area
++ifneq ($(findstring ppc,$(ARCH)),)
++  MISC_DIR=$(CORE_DIR)
++  GEN_DIR=$(CORE_BASE_DIR)/generated
+ else
+-  MISC_DIR=$(C2_DIR)
+-  GEN_DIR=$(C2_BASE_DIR)/generated
++  ifeq ($(ARCH_DATA_MODEL), 32)
++    MISC_DIR=$(C1_DIR)
++    GEN_DIR=$(C1_BASE_DIR)/generated
++  else
++    MISC_DIR=$(C2_DIR)
++    GEN_DIR=$(C2_BASE_DIR)/generated
++  endif
+ endif
+ 
+ # Bin files (windows)
+@@ -268,8 +288,13 @@
+ 	$(install-file)
+ $(EXPORT_CLIENT_DIR)/64/%.so:    $(C1_DIR)/%.so
+ 	$(install-file)
++ifneq ($(findstring ppc,$(ARCH)),)
++$(EXPORT_SERVER_DIR)/%.so:       $(CORE_DIR)/%.so
++	$(install-file)
++else
+ $(EXPORT_SERVER_DIR)/%.so:       $(C2_DIR)/%.so
+ 	$(install-file)
++endif
+ $(EXPORT_SERVER_DIR)/64/%.so:    $(C2_DIR)/%.so
+ 	$(install-file)
+ endif
+diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2007-10-12 08:46:18.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2007-11-08 09:40:57.000000000 +0000
+@@ -95,8 +95,12 @@
+ #ifdef TIERED
+   #define VMTYPE "Server"
+ #else
++#if defined(COMPILER1) || defined(COMPILER2)
+   #define VMTYPE COMPILER1_PRESENT("Client")   \
+                  COMPILER2_PRESENT("Server")   
++#else
++  #define VMTYPE "Core"
++#endif // COMPILER1 || COMPILER2
+ #endif // TIERED
+ #endif // KERNEL
+ 
+diff -ru openjdk.orig/j2se/make/java/redist/Makefile openjdk/j2se/make/java/redist/Makefile
+--- openjdk.orig/j2se/make/java/redist/Makefile	2007-10-12 08:54:05.000000000 +0100
++++ openjdk/j2se/make/java/redist/Makefile	2007-11-08 09:40:57.000000000 +0000
+@@ -94,8 +94,14 @@
+   endif
+ endif # INCLUDE_SA
+ 
+-# Hotspot client is only available on 32-bit builds
+-ifeq ($(ARCH_DATA_MODEL), 32)
++# Include the client VM on platforms where it is supported.
++INCLUDE_CLIENT := $(shell if [ -r $(HOTSPOT_CLIENT_PATH)/$(JVM_NAME) ]; then \
++                            $(ECHO) true; \
++                          else \
++                            $(ECHO) false; \
++                          fi)
++
++ifeq ($(INCLUDE_CLIENT), true)
+   IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(JVM_NAME) \
+                  $(LIB_LOCATION)/$(CLIENT_LOCATION)/Xusage.txt
+ endif
+@@ -119,8 +125,7 @@
+ 	$(LIB_LOCATION)/$(SERVER_LOCATION)/$(JVMMAP_NAME) \
+ 	$(LIB_LOCATION)/$(SERVER_LOCATION)/$(JVMPDB_NAME)
+ 
+-# Hotspot client is only available on 32-bit builds
+-ifeq ($(ARCH_DATA_MODEL), 32)
++ifeq ($(INCLUDE_CLIENT), true)
+   IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(JVMMAP_NAME) \
+                  $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(JVMPDB_NAME)
+ endif
+@@ -158,10 +163,11 @@
+   IMPORT_LIST += $(LIB_LOCATION)/$(SERVER_LOCATION)/$(JVMDB_NAME)
+ endif 
+ 
+-ifeq ($(ARCH_DATA_MODEL), 32)
+-
+-IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(LIBJSIG_NAME)
++ifeq ($(INCLUDE_CLIENT), true)
++  IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(LIBJSIG_NAME)
++endif
+ 
++ifeq ($(ARCH_DATA_MODEL), 32)
+ ifeq ($(PLATFORM), solaris)
+ #  solaris   vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  solaris
+ 

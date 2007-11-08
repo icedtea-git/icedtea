@@ -1,0 +1,359 @@
+diff -ru openjdk.orig/hotspot/build/linux/makefiles/buildtree.make openjdk/hotspot/build/linux/makefiles/buildtree.make
+--- openjdk.orig/hotspot/build/linux/makefiles/buildtree.make	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/buildtree.make	2007-11-08 11:36:15.000000000 +0000
+@@ -317,6 +317,8 @@
+ DATA_MODE/sparcv9 = 64
+ DATA_MODE/amd64   = 64
+ DATA_MODE/ia64    = 64
++DATA_MODE/ppc     = 32
++DATA_MODE/ppc64   = 64
+ 
+ JAVA_FLAG/32 = -d32
+ JAVA_FLAG/64 = -d64
+diff -ru openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
+--- openjdk.orig/hotspot/build/linux/makefiles/defs.make	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/defs.make	2007-11-08 11:36:15.000000000 +0000
+@@ -87,6 +87,21 @@
+   HS_ARCH          = x86
+ endif
+ 
++# ppc and ppc64
++ifneq ($(findstring ppc,$(ARCH)),)
++  ifeq ($(ARCH_DATA_MODEL), 64)
++    ARCH_DATA_MODEL  = 64
++    MAKE_ARGS        += LP64=1
++    PLATFORM         = linux-ppc64
++    VM_PLATFORM      = linux_ppc64
++  else
++    ARCH_DATA_MODEL  = 32
++    PLATFORM         = linux-ppc
++    VM_PLATFORM      = linux_ppc
++  endif
++  HS_ARCH            = ppc
++endif
++
+ JDK_INCLUDE_SUBDIR=linux
+ 
+ # FIXUP: The subdirectory for a debug build is NOT the same on all platforms
+@@ -94,20 +109,16 @@
+ 
+ EXPORT_LIST += $(EXPORT_DOCS_DIR)/platform/jvmti/jvmti.html
+ EXPORT_SERVER_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/server
++EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjsig.so
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.so
+-ifeq ($(ARCH_DATA_MODEL), 32)
+-  EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
+-  EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
+-  EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjsig.so
+-  EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.so 
++ifneq ($(HS_ARCH), ppc)
++  ifeq ($(ARCH_DATA_MODEL), 32)
++    EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
++    EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjsig.so
++    EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.so 
++  endif
+   EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libsaproc.so
+   EXPORT_LIST += $(EXPORT_LIB_DIR)/sa-jdi.jar 
+-else
+-  ifeq ($(ARCH),ia64)
+-    else
+-      EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libsaproc.so
+-      EXPORT_LIST += $(EXPORT_LIB_DIR)/sa-jdi.jar
+-    endif
+ endif
+diff -ru openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/build/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/build/linux/makefiles/gcc.make	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-11-08 11:36:15.000000000 +0000
+@@ -73,6 +73,8 @@
+ ARCHFLAG/ia64    =
+ ARCHFLAG/sparc   = -m32 -mcpu=v9
+ ARCHFLAG/sparcv9 = -m64 -mcpu=v9
++ARCHFLAG/ppc     = -m32
++ARCHFLAG/ppc64   = -m64
+ 
+ CFLAGS     += $(ARCHFLAG)
+ AOUT_FLAGS += $(ARCHFLAG)
+diff -ru openjdk.orig/hotspot/build/linux/makefiles/sa.make openjdk/hotspot/build/linux/makefiles/sa.make
+--- openjdk.orig/hotspot/build/linux/makefiles/sa.make	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/sa.make	2007-11-08 11:36:15.000000000 +0000
+@@ -51,10 +51,10 @@
+ SA_PROPERTIES = $(SA_CLASSDIR)/sa.properties
+ 
+ # if $(AGENT_DIR) does not exist, we don't build SA
+-# also, we don't build SA on Itanium.
++# also, we don't build SA on Itanium or PPC.
+ 
+ all: 
+-	if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" ] ; then \
++	if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" -a "$(SRCARCH)" != "ppc" ] ; then \
+ 	   $(MAKE) -f sa.make $(GENERATED)/sa-jdi.jar; \
+ 	fi
+ 
+diff -ru openjdk.orig/hotspot/build/linux/makefiles/saproc.make openjdk/hotspot/build/linux/makefiles/saproc.make
+--- openjdk.orig/hotspot/build/linux/makefiles/saproc.make	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/saproc.make	2007-11-08 11:36:15.000000000 +0000
+@@ -44,10 +44,10 @@
+ DEST_SAPROC = $(JDK_LIBDIR)/$(LIBSAPROC)
+ 
+ # if $(AGENT_DIR) does not exist, we don't build SA
+-# also, we don't build SA on Itanium.
++# also, we don't build SA on Itanium or PPC.
+ 
+ checkAndBuildSA:
+-	$(QUIETLY) if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" ] ; then \
++	$(QUIETLY) if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" -a "$(SRCARCH)" != "ppc" ] ; then \
+ 	   $(MAKE) -f vm.make $(LIBSAPROC); \
+ 	fi
+ 
+diff -ru openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
+--- openjdk.orig/hotspot/make/defs.make	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/make/defs.make	2007-11-08 11:36:15.000000000 +0000
+@@ -191,15 +191,17 @@
+ 
+   # Use uname output for SRCARCH, but deal with platform differences. If ARCH
+   # is not explicitly listed below, it is treated as x86. 
+-  SRCARCH     = $(ARCH/$(filter sparc sparc64 ia64 amd64 x86_64,$(ARCH)))
++  SRCARCH     = $(ARCH/$(filter sparc sparc64 ia64 amd64 x86_64 ppc ppc64,$(ARCH)))
+   ARCH/       = x86
+   ARCH/sparc  = sparc
+   ARCH/sparc64= sparc
+   ARCH/ia64   = ia64
+   ARCH/amd64  = x86
+   ARCH/x86_64 = x86
++  ARCH/ppc    = ppc
++  ARCH/ppc64  = ppc
+ 
+-  # BUILDARCH is usually the same as SRCARCH, except for sparcv9
++  # BUILDARCH is usually the same as SRCARCH, except for sparcv9 and ppc64
+   BUILDARCH = $(SRCARCH)
+   ifeq ($(BUILDARCH), x86)
+     ifdef LP64
+@@ -208,10 +210,13 @@
+       BUILDARCH = i486
+     endif
+   endif
+-  ifeq ($(BUILDARCH), sparc)
+-    ifdef LP64
++  ifdef LP64
++    ifeq ($(BUILDARCH), sparc)
+       BUILDARCH = sparcv9
+     endif
++    ifeq ($(BUILDARCH), ppc)
++      BUILDARCH = ppc64
++    endif
+   endif
+ 
+   # LIBARCH is 1:1 mapping from BUILDARCH
+@@ -221,8 +226,10 @@
+   LIBARCH/sparc   = sparc
+   LIBARCH/sparcv9 = sparcv9
+   LIBARCH/ia64    = ia64
++  LIBARCH/ppc     = ppc
++  LIBARCH/ppc64   = ppc64
+ 
+-  LP64_ARCH = sparcv9 amd64 ia64
++  LP64_ARCH = sparcv9 amd64 ia64 ppc64
+ endif
+ 
+ # Required make macro settings for all platforms
+diff -ru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2007-11-08 11:36:15.000000000 +0000
+@@ -174,6 +174,12 @@
+ #  else
+ static char cpu_arch[] = "sparc";
+ #  endif
++#elif defined(PPC)
++#  ifdef _LP64
++static char cpu_arch[] = "ppc64";
++#  else
++static char cpu_arch[] = "ppc";
++#  endif
+ #else
+ #error Add appropriate cpu_arch setting
+ #endif
+@@ -2375,7 +2381,8 @@
+     // format has been changed), we'll use the largest page size supported by
+     // the processor.
+ 
+-    _large_page_size = IA32_ONLY(4 * M) AMD64_ONLY(2 * M) IA64_ONLY(256 * M) SPARC_ONLY(4 * M);
++    _large_page_size = IA32_ONLY(4 * M) AMD64_ONLY(2 * M) IA64_ONLY(256 * M)
++      SPARC_ONLY(4 * M) PPC_ONLY(16 * M);
+ 
+     FILE *fp = fopen("/proc/meminfo", "r");
+     if (fp) {
+diff -ru openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp openjdk/hotspot/src/share/vm/runtime/mutex.hpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/mutex.hpp	2007-11-08 11:36:15.000000000 +0000
+@@ -64,19 +64,15 @@
+ } ; 
+ 
+ // Endian-ness ... index of least-significant byte in SplitWord.Bytes[]
+-#ifdef AMD64        // little
++#if defined(IA32) || defined(AMD64) || defined(IA64) // little
+  #define _LSBINDEX 0
+ #else
+-#if IA32            // little
+- #define _LSBINDEX 0
+-#else
+-#ifdef SPARC        // big
++#if defined(SPARC) || defined(PPC) // big
+  #define _LSBINDEX (sizeof(intptr_t)-1)
+ #else
+  #error "unknown architecture"
+ #endif
+ #endif
+-#endif
+ 
+ class ParkEvent ;  
+ 
+diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2007-11-08 11:36:15.000000000 +0000
+@@ -150,7 +150,8 @@
+ #define CPU      IA32_ONLY("x86")                \
+                  IA64_ONLY("ia64")               \
+                  AMD64_ONLY("amd64")             \
+-                 SPARC_ONLY("sparc")
++                 SPARC_ONLY("sparc")             \
++                 PPC_ONLY("ppc")
+ 
+ const char *Abstract_VM_Version::vm_platform_string() {
+   return OS "-" CPU;
+diff -ru openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp openjdk/hotspot/src/share/vm/utilities/macros.hpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/src/share/vm/utilities/macros.hpp	2007-11-08 11:36:15.000000000 +0000
+@@ -179,6 +179,14 @@
+ #define NOT_SPARC(code) code
+ #endif
+ 
++#ifdef PPC
++#define PPC_ONLY(code) code
++#define NOT_PPC(code)
++#else
++#define PPC_ONLY(code)
++#define NOT_PPC(code) code
++#endif
++
+ #define FIX_THIS(code) report_assertion_failure("FIX_THIS",__FILE__, __LINE__, "")
+ 
+ #define define_pd_global(type, name, value) const type pd_##name = value;
+diff -ru openjdk.orig/j2se/make/common/Defs-linux.gmk openjdk/j2se/make/common/Defs-linux.gmk
+--- openjdk.orig/j2se/make/common/Defs-linux.gmk	2007-11-08 11:35:35.000000000 +0000
++++ openjdk/j2se/make/common/Defs-linux.gmk	2007-11-08 11:36:15.000000000 +0000
+@@ -109,6 +109,10 @@
+ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+ CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
+ LDFLAGS_COMMON_sparc    += -m32 -mcpu=v9
++CFLAGS_REQUIRED_ppc     += -m32
++LDFLAGS_COMMON_ppc      += -m32
++CFLAGS_REQUIRED_ppc64   += -m64
++LDFLAGS_COMMON_ppc64    += -m64
+ CFLAGS_REQUIRED         =  $(CFLAGS_REQUIRED_$(ARCH))
+ LDFLAGS_COMMON          += $(LDFLAGS_COMMON_$(ARCH))
+ 
+diff -ru openjdk.orig/j2se/make/common/shared/Compiler-gcc.gmk openjdk/j2se/make/common/shared/Compiler-gcc.gmk
+--- openjdk.orig/j2se/make/common/shared/Compiler-gcc.gmk	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/j2se/make/common/shared/Compiler-gcc.gmk	2007-11-08 11:36:15.000000000 +0000
+@@ -74,13 +74,13 @@
+     # sparc or sparcv9
+     REQUIRED_CC_VER = 4.0
+     REQUIRED_GCC_VER = 4.0.*
+-  else
+-  ifeq ($(ARCH_DATA_MODEL), 32)
++  endif
++  ifeq ($(ARCH), i586)
+     # i586
+     REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 3.2.1*
+     REQUIRED_GCC_VER_INT = 3.2.1-7a
+-  else
++  endif
+   ifeq ($(ARCH), amd64)
+     # amd64
+     REQUIRED_CC_VER = 3.2
+@@ -91,7 +91,10 @@
+     REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 2.9[56789].*
+   endif
+-  endif
++  ifneq ("$(findstring ppc,$(ARCH))", "")
++    # ppc or ppc64
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
+   endif
+   # Option used to create a shared library
+   SHARED_LIBRARY_FLAG = -shared -mimpure-text
+diff -ru openjdk.orig/j2se/make/common/shared/Platform.gmk openjdk/j2se/make/common/shared/Platform.gmk
+--- openjdk.orig/j2se/make/common/shared/Platform.gmk	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/j2se/make/common/shared/Platform.gmk	2007-11-08 11:36:15.000000000 +0000
+@@ -203,6 +203,9 @@
+                 sparc*) \
+                     echo sparc \
+                     ;; \
++                ppc*) \
++                    echo ppc \
++                    ;; \
+                 *) \
+                     echo $(mach) \
+                     ;; \
+@@ -211,19 +214,25 @@
+   ARCH_FAMILY := $(ARCH)
+ 
+   # Linux builds may be 32-bit or 64-bit data model.
+-  ifeq ($(ARCH), sparc)
+-    # Linux sparc build can be either 32-bit or 64-bit.
++  ifneq ($(filter sparc ppc,$(ARCH)),)
++    # Linux sparc and ppc builds can be either 32-bit or 64-bit.
+     #   Default to 32, but allow explicit setting to 32 or 64.
+     ifndef ARCH_DATA_MODEL
+       ARCH_DATA_MODEL=32
+     endif
+-    ifeq ($(ARCH_DATA_MODEL), 32)
+-      ARCH=sparc
+-    else
+-      ARCH=sparcv9
++    ifeq ($(ARCH_DATA_MODEL), 64)
++      archExpr = case "$(ARCH)" in \
++                   sparc) \
++                       echo sparcv9 \
++                       ;; \
++                   ppc) \
++                       echo ppc64 \
++                       ;; \
++                 esac
++      ARCH := $(shell $(archExpr))
+     endif
+   else
+-    # i586 is 32-bit, amd64 is 64-bit
++    # i586 is 32-bit, amd64 and ia64 are 64-bit
+     ifndef ARCH_DATA_MODEL
+       ifeq ($(ARCH), i586)
+         ARCH_DATA_MODEL=32
+diff -ru openjdk.orig/j2se/make/javax/sound/SoundDefs.gmk openjdk/j2se/make/javax/sound/SoundDefs.gmk
+--- openjdk.orig/j2se/make/javax/sound/SoundDefs.gmk	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/j2se/make/javax/sound/SoundDefs.gmk	2007-11-08 11:36:15.000000000 +0000
+@@ -71,6 +71,10 @@
+   CPPFLAGS += -DX_ARCH=X_AMD64
+ endif # ARCH amd64
+ 
++ifeq ($(ARCH), ppc)
++  CPPFLAGS += -DX_ARCH=X_PPC
++endif # ARCH ppc
++
+ 
+ # files needed for MIDI i/o
+ MIDIFILES_c = \
+diff -ru openjdk.orig/j2se/src/share/native/com/sun/media/sound/SoundDefs.h openjdk/j2se/src/share/native/com/sun/media/sound/SoundDefs.h
+--- openjdk.orig/j2se/src/share/native/com/sun/media/sound/SoundDefs.h	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/j2se/src/share/native/com/sun/media/sound/SoundDefs.h	2007-11-08 11:36:15.000000000 +0000
+@@ -38,6 +38,7 @@
+ #define X_SPARCV9       3
+ #define X_IA64          4
+ #define X_AMD64         5
++#define X_PPC           6
+ 
+ // **********************************
+ // Make sure you set X_PLATFORM and X_ARCH defines correctly.
