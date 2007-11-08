@@ -1,5 +1,12 @@
 2007-11-07  Lillian Angel  <langel@redhat.com>
 
+	* Makefile.am: Removed docs patch.
+	* Makefile.in: Regenerate.
+	* patches/icedtea-docs.patch: Removed. Causing out of memory errors
+	because jaxws is not built.
+
+2007-11-07  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Added new patch to list.
 	* Makefile.in: Regenerate.
 	* patches/icedtea-docs.patch: New patch to build docs.
