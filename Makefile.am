@@ -198,7 +198,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-javafiles.patch \
 	patches/icedtea-bytecodeInterpreterWithChecks.patch \
 	patches/icedtea-corba.patch \
-	patches/icedtea-docs.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
