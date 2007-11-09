@@ -211,7 +211,7 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
-BUILD_OUTPUT_DIR = openjdk/control/build/$(LINUX_DIR)/
+BUILD_OUTPUT_DIR = openjdk/control/build/$(LINUX_DIR)
 ICEDTEA_BUILD_DIR = \
 	$(abs_top_srcdir)/$(BUILD_OUTPUT_DIR)
 
