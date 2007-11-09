@@ -1,3 +1,8 @@
+2007-11-09  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Fixed typo that caused debug target to fail.
+	* Makefile.in: Regenerated.
+
 2007-11-09  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-ecj.patch
