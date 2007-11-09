@@ -798,3 +798,71 @@ diff -ruN openjdk.old/corba/make/com/sun/corba/se/sources/Makefile openjdk-ecj/c
  
  # Langtools
  ifdef LANGTOOLS_DIST
+diff -ru openjdk-ecj.orig/langtools/make/build.xml openjdk-ecj/langtools/make/build.xml
+--- openjdk-ecj.orig/langtools/make/build.xml	2007-10-12 08:47:30.000000000 +0100
++++ openjdk-ecj/langtools/make/build.xml	2007-11-09 10:25:54.000000000 +0000
+@@ -497,7 +497,8 @@
+                        includes="@{includes}"
+                        sourcepath=""
+                        includeAntRuntime="no"
+-                       target="@{javac.target}">
++                       target="@{javac.target}"
++                       source="1.5">
+                     <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
+                     <compilerarg line="${javac.version.opt}"/>
+                     <compilerarg line="-Xlint"/>
+@@ -511,7 +512,8 @@
+                        includeAntRuntime="no"
+                        target="@{javac.target}"
+                        debug="${javac.debug}" 
+-                       debuglevel="${javac.debuglevel}">
++                       debuglevel="${javac.debuglevel}"
++                       source="1.5">
+                     <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
+                     <compilerarg value="-Xbootclasspath/p:@{classes.dir}"/>
+                     <compilerarg line="${javac.no.jdk.warnings}"/>
+@@ -563,7 +565,8 @@
+         <mkdir dir="${build.toolclasses.dir}"/>
+         <javac srcdir="${make.tools.dir}/CompileProperties"
+                destdir="${build.toolclasses.dir}/"
+-               classpath="${ant.home}/lib/ant.jar"/>
++               classpath="${ant.home}/lib/ant.jar"
++               source="1.5"/>
+         <taskdef name="pcompile"
+                  classname="CompilePropertiesTask" 
+                  classpath="${build.toolclasses.dir}/"/>
+diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/make/build.properties
+--- openjdk-ecj.orig/langtools/make/build.properties	2007-10-12 08:47:30.000000000 +0100
++++ openjdk-ecj/langtools/make/build.properties	2007-11-09 10:25:54.000000000 +0000
+@@ -66,7 +66,7 @@
+ # set the following to -version to verify the versions of javac being used
+ javac.version.opt = 
+ # in time, there should be no exceptions to -Xlint:all
+-javac.lint.opts = -Xlint:all,-unchecked,-deprecation,-fallthrough,-cast,-serial -Werror
++javac.lint.opts = -Xlint:all,-unchecked,-deprecation,-fallthrough,-cast,-serial
+ 
+ # options for the <javadoc> task for javac
+ javadoc.jls3.url=http://java.sun.com/docs/books/jls/
+diff -ru openjdk-ecj.orig/jaxp/make/build.xml openjdk-ecj/jaxp/make/build.xml
+--- openjdk-ecj.orig/jaxp/make/build.xml	2007-10-12 08:50:26.000000000 +0100
++++ openjdk-ecj/jaxp/make/build.xml	2007-11-09 10:25:54.000000000 +0000
+@@ -71,7 +71,8 @@
+       <mkdir dir="${build.toolclasses.dir}"/>
+       <javac srcdir="${make.tools.dir}/StripProperties"
+ 		destdir="${build.toolclasses.dir}/"
+-		classpath="${ant.home}/lib/ant.jar"/>
++		classpath="${ant.home}/lib/ant.jar"
++		source="1.5"/>
+       <taskdef name="pstrip"
+ 		 classname="StripPropertiesTask"
+ 		 classpath="${build.toolclasses.dir}/"/>
+@@ -85,7 +86,8 @@
+              destdir="${build.classes.dir}"
+              memoryInitialSize="${javac.memoryInitialSize}"
+              memoryMaximumSize="${javac.memoryMaximumSize}"
+-             target="${javac.target}">
++             target="${javac.target}"
++             source="1.5">
+          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
+          <compilerarg line="${javac.version.opt}"/>
+       </javac>

@@ -1,5 +1,12 @@
 2007-11-09  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-ecj.patch
+	(langtools/make/build.xml): Add source="1.5".
+	(langtools/make/build.properties): Remove -Werror.
+	(jaxp/make/build.xml): Add source="1.5".
+
+2007-11-09  Gary Benson  <gbenson@redhat.com>
+
 	* Makefile.am (stamps/extract.stamp, stamps/extract-ecj.stamp):
 	Fix permissions after unzipping.
 	* Makefile.in: Regenerated.
