@@ -3,7 +3,7 @@
 	* Makefile.am: Added check when copying over rt.jar to bootstrap/ecj
 	* Makefile.in: Regenerated.
 
-2007-11-07  Gary Benson  <gbenson@redhat.com>
+2007-11-08  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-bytecodeInterpreter.patch: New file.
 	* patches/icedtea-signature-iterator.patch: Likewise.
