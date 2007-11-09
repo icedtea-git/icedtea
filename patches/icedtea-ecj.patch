@@ -732,25 +732,37 @@ diff -ruN openjdk.old/corba/make/com/sun/corba/se/sources/Makefile openjdk-ecj/c
  classheaders.clean:
 --- openjdk.old/j2se/make/common/Release.gmk	2007-11-07 11:48:30.000000000 -0500
 +++ openjdk-ecj/j2se/make/common/Release.gmk	2007-11-07 11:49:02.000000000 -0500
-@@ -652,7 +652,7 @@
- $(RESOURCES_JAR): $(RES_JAR_ARGLIST) $(JAR_MANIFEST_FILE)
+@@ -649,10 +649,11 @@
+ $(RES_JAR_ARGLIST): $(RES_JAR_FILELIST)
  	$(prep-target)
- 	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
+ 	$(SED) -e "s@^@-C $(CLASSBINDIR) @" $< > $@
+-$(RESOURCES_JAR): $(RES_JAR_ARGLIST) $(JAR_MANIFEST_FILE)
++$(RESOURCES_JAR): $(RES_JAR_FILELIST) $(JAR_MANIFEST_FILE)
+ 	$(prep-target)
+-	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
 -	    @$(RES_JAR_ARGLIST) $(JAR_JFLAGS)
-+	    `cat $(RES_JAR_ARGLIST)` $(JAR_JFLAGS)
++	(cd $(CLASSBINDIR) && $(CAT) $(RES_JAR_FILELIST) | \
++	$(BOOT_JAR_CMD) c0mf@ $(JAR_MANIFEST_FILE) $@ \
++	    $(JAR_JFLAGS))
  	@$(java-vm-cleanup)
  
  # Create jsse.jar containing SunJSSE implementation classes
-@@ -711,7 +711,7 @@
- $(RT_JAR): $(RT_JAR_ARGLIST) $(JAR_MANIFEST_FILE)
+@@ -708,10 +709,11 @@
+ $(RT_JAR_ARGLIST): $(RT_JAR_FILELIST)
  	$(prep-target)
- 	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
+ 	$(SED) -e "s@^@-C $(CLASSBINDIR) @" $< > $@
+-$(RT_JAR): $(RT_JAR_ARGLIST) $(JAR_MANIFEST_FILE)
++$(RT_JAR): $(RT_JAR_FILELIST) $(JAR_MANIFEST_FILE)
+ 	$(prep-target)
+-	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
 -	    @$(RT_JAR_ARGLIST) $(JAR_JFLAGS)
-+	    `cat $(RT_JAR_ARGLIST)` $(JAR_JFLAGS)
++	(cd $(CLASSBINDIR) && $(CAT) $(RT_JAR_FILELIST) | \
++	$(BOOT_JAR_CMD) c0mf@ $(JAR_MANIFEST_FILE) $@ \
++	    $(JAR_JFLAGS))
  	@$(java-vm-cleanup)
  
  # Meta-index construction to make core class loaders lazier
-@@ -945,19 +945,6 @@
+@@ -945,19 +947,6 @@
  	@$(java-vm-cleanup)
  	$(CP) $(LIBDIR)/tools.jar $(JDK_IMAGE_DIR)/lib/tools.jar
  	@#
@@ -770,7 +782,7 @@ diff -ruN openjdk.old/corba/make/com/sun/corba/se/sources/Makefile openjdk-ecj/c
  	@# CORBA supported orb.idl and ir.idl should be copied to lib
  	@#
  	$(CP) $(LIBDIR)/orb.idl $(JDK_IMAGE_DIR)/lib/orb.idl
-@@ -1036,16 +1023,6 @@
+@@ -1036,16 +1025,6 @@
  	$(CP) $(PLATFORM_SRC)/bin/java_md.h $(JDK_IMAGE_DIR)/src/launcher
  	$(CD) $(JDK_IMAGE_DIR)/src && $(ZIPEXE) -qr ../src.zip *
  	$(RM) -r $(JDK_IMAGE_DIR)/src

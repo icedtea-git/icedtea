@@ -1,6 +1,11 @@
 2007-11-09  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-ecj.patch
+	(j2se/make/common/Release.gmk): Avoid long argument lists.
+
+2007-11-09  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-ecj.patch
 	(langtools/make/build.xml): Add source="1.5".
 	(langtools/make/build.properties): Remove -Werror.
 	(jaxp/make/build.xml): Add source="1.5".
