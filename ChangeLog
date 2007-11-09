@@ -1,3 +1,9 @@
+2007-11-09  Gary Benson  <gbenson@redhat.com>
+
+	* Makefile.am (stamps/extract.stamp, stamps/extract-ecj.stamp):
+	Fix permissions after unzipping.
+	* Makefile.in: Regenerated.
+
 2007-11-08  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Added check when copying over rt.jar to bootstrap/ecj
