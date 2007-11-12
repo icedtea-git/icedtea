@@ -614,7 +614,8 @@ clean-tools:
 bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/tools-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib/
 	$(JAR) cf $@ -C lib/tools com -C lib/tools sun \
-	  -C lib/tools org
+	  -C lib/tools org -C lib/tools gnu -C lib/tools java \
+	  -C lib/tools javax
 	if test -d bootstrap/ecj ; \
 	then \
 	  mkdir -p bootstrap/ecj/lib/; \
@@ -643,7 +644,7 @@ clean-rt:
 bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
 	$(JAR) cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
-	  -C lib/rt javax -C lib/rt sun
+	  -C lib/rt javax -C lib/rt sun -C lib/rt org
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
 	  cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar bootstrap/ecj/jre/lib/rt.jar; \
