@@ -226,7 +226,6 @@ class CharacterDataLatin1 extends CharacterData {
     private CharacterDataLatin1() {};
 
     // The following tables and code generated using:
-  // java GenerateCharacter -template ../../tools/GenerateCharacter/CharacterDataLatin1.java.template -spec ../../tools/UnicodeData/UnicodeData.txt -specialcasing ../../tools/UnicodeData/SpecialCasing.txt -o /notnfs/langel/icedtea-ecj/generated/java/lang/CharacterDataLatin1.java -string -usecharforbyte -latin1 8
   // The A table has 256 entries for a total of 1024 bytes.
 
   static final int A[] = new int[256];

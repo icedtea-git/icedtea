@@ -227,7 +227,6 @@ ICEDTEA_ENV = \
 	"ENDORSED=-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
 	"CLASSPATH=" \
 	"LD_LIBRARY_PATH=" \
-	"GENSRCDIR=$(abs_top_srcdir)/generated" \
 	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)"
 
 

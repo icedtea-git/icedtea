@@ -433,7 +433,6 @@ class CharacterData00 extends CharacterData {
     private CharacterData00() {};
 
     // The following tables and code generated using:
-  // java GenerateCharacter -plane 0 -template ../../tools/GenerateCharacter/CharacterData00.java.template -spec ../../tools/UnicodeData/UnicodeData.txt -specialcasing ../../tools/UnicodeData/SpecialCasing.txt -o /notnfs/langel/icedtea-ecj/generated/java/lang/CharacterData00.java -string -usecharforbyte 11 4 1
       static final char[][][] charMap;
 // The X table has 2048 entries for a total of 4096 bytes.
 
