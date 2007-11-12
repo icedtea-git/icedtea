@@ -7,7 +7,7 @@
 	* generated/*: Updated files with changes specified in patch.
 	* patches/icedtea-ecj.patch
 	(GenerateCharacter.java): Patched to always insert the same date and
-	non-specific information.
+	non-specific information, so file is not modified with every build.
 
 2007-11-12  Lillian Angel  <langel@redhat.com>
 
