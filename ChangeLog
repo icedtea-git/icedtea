@@ -1,3 +1,8 @@
+2007-11-12  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-ecj.patch: Updated. Added bootclasspath to
+	langtools/make/build.xml. Resolves EnumSet error.
+
 2007-11-12  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/build/linux/platform_ppc: New file.
