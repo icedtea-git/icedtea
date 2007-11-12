@@ -879,3 +879,22 @@ diff -ru openjdk-ecj.orig/jaxp/make/build.xml openjdk-ecj/jaxp/make/build.xml
          <taskdef name="pcompile"
                   classname="CompilePropertiesTask" 
                   classpath="${build.toolclasses.dir}/"/>
+--- openjdk.old/j2se/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2007-10-12 03:54:09.000000000 -0400
++++ openjdk-ecj/j2se/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2007-11-12 12:56:21.000000000 -0500
+@@ -649,7 +649,7 @@
+         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(theOutputFileName)));
+         out.println(commentStart +
+             " This file was generated AUTOMATICALLY from a template file " +
+-            new java.util.Date() + commentEnd);
++            "Wed Nov 07 13:33:45 EST 2007" + commentEnd);
+         int marklen = commandMarker.length();
+         LOOP: while(true) {
+             try {
+@@ -876,7 +876,6 @@
+         // liu : Add a comment showing the source of this table
+         result.append(commentStart + " The following tables and code generated using:" +
+                   commentEnd + "\n  ");
+-        result.append(commentStart + ' ' + commandLineDescription + commentEnd + "\n  ");
+ 
+ 		if (plane == 0 && bLatin1 == false) {
+     	    genCaseMapTableDeclaration(result);
