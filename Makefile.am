@@ -150,6 +150,18 @@ clean-extract:
 	rm -f stamps/extract.stamp
 	rm -rf openjdk
 
+# Link ports sources into tree
+stamps/ports.stamp: stamps/extract.stamp
+	for target in ports/hotspot/build/*/platform_* \
+		      ports/hotspot/build/*/makefiles/* \
+		      ports/hotspot/src/*/* \
+		      ports/j2se/src/*/bin/*; do \
+	  link=$$(dirname $$target | sed 's/^ports/openjdk/'); \
+	  ln -sf $$PWD/$$target $$link; \
+	done
+	mkdir -p stamps
+	touch stamps/ports.stamp
+
 # Patch OpenJDK sources for plug replacements.
 if FAST_BUILD
   FAST_BUILD_PATCH = patches/icedtea-speed.patch
@@ -240,6 +252,18 @@ stamps/extract-ecj.stamp: stamps/download.stamp
 clean-extract-ecj:
 	rm -f stamps/extract-ecj.stamp
 	rm -rf openjdk-ecj
+
+# Link ports sources into tree
+stamps/ports-ecj.stamp: stamps/extract.stamp
+	for target in ports/hotspot/build/*/platform_* \
+		      ports/hotspot/build/*/makefiles/* \
+		      ports/hotspot/src/*/* \
+		      ports/j2se/src/*/bin/*; do \
+	  link=$$(dirname $$target | sed 's/^ports/openjdk-ecj/'); \
+	  ln -sf $$PWD/$$target $$link; \
+	done
+	mkdir -p stamps
+	touch stamps/ports-ecj.stamp
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch
@@ -372,7 +396,7 @@ endif
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
 icedtea: stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
-	stamps/patch.stamp gcjwebplugin.so
+	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make
@@ -384,7 +408,7 @@ icedtea: stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
 
 icedtea-debug: 	stamps/bootstrap-directory-symlink.stamp \
 	stamps/tools.stamp stamps/plugs.stamp stamps/extract.stamp \
-	stamps/patch.stamp gcjwebplugin.so
+	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
@@ -409,7 +433,7 @@ icedtea-against-icedtea: \
 # ===================
 
 stamps/icedtea-ecj.stamp: stamps/tools.stamp stamps/plugs.stamp \
-	stamps/extract-ecj.stamp stamps/patch-ecj.stamp
+	stamps/extract-ecj.stamp stamps/ports-ecj.stamp stamps/patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj/control/make
