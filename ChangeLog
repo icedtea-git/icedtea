@@ -1,3 +1,7 @@
+2007-11-12  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-ports.patch: Remake for setarch and ppc64.
+
 2007-11-09  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Fixed typo that caused debug target to fail.
