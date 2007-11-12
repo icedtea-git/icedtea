@@ -1,5 +1,109 @@
 2007-11-12  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/build/linux/platform_ppc: New file.
+	* ports/hotspot/build/linux/platform_ppc64: Likewise.
+	* ports/hotspot/build/linux/makefiles/ppc.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/ppc64.make: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytecodeInterpreter_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytecodeInterpreter_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytecodeInterpreter_ppc.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytecodes_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytecodes_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytes_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/codeBuffer_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/copy_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreterGenerator_ppc.hpp:
+	Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/debug_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/depChecker_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/depChecker_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/disassembler_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/disassembler_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/dump_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/frame_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/frame_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/frame_ppc.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/globalDefinitions_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/globals_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/icBuffer_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/icache_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/icache_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interpreterGenerator_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interpreterRT_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interpreterRT_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interpreter_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interpreter_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/javaFrameAnchor_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/jniFastGetField_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/jniTypes_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/jni_ppc.h: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/nativeInst_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/nativeInst_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/registerMap_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/register_definitions_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/register_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/register_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/relocInfo_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/relocInfo_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/stubRoutines_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/stubRoutines_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/templateInterpreterGenerator_ppc.hpp:
+	Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/templateTable_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/templateTable_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmStructs_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vm_version_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmreg_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmreg_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmreg_ppc.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vtableStubs_ppc.cpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/linux_ppc.s: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/linux_ppc64.s: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/assembler_linux_ppc.cpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/atomic_linux_ppc.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/bytes_linux_ppc.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/globals_linux_ppc.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/orderAccess_linux_ppc.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.cpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.hpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/prefetch_linux_ppc.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/threadLS_linux_ppc.cpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/threadLS_linux_ppc.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/thread_linux_ppc.cpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/thread_linux_ppc.hpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/vmStructs_linux_ppc.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/vm_version_linux_ppc.cpp:
+	Likewise.
+	* ports/j2se/src/solaris/bin/ppc/jvm.cfg: Likewise.
+	* ports/j2se/src/solaris/bin/ppc64/jvm.cfg: Likewise.
+	* ports/j2se/src/solaris/bin/ergo_ppc.c: Likewise.
+	* Makefile.am: Link the above into the build trees before building.
+	* Makefile.in: Regenerated.
+
+2007-11-12  Gary Benson  <gbenson@redhat.com>
+
 	* patches/icedtea-ports.patch: Remake for setarch and ppc64.
 
 2007-11-09  Lillian Angel  <langel@redhat.com>
