@@ -1,6 +1,13 @@
 2007-11-13  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-ecj.patch
+	(stamps/bootstrap-directory-ecj.stamp): Added links to tools.jar and
+	rt.jar if built prior to creating bootstrap/ecj. Fixes problem where
+	make tools or make plugs is called before make.
+
+2007-11-13  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-ecj.patch
 	(GenerateCharacter.java): Removed date.
 	* generated/*: Updated files.
 
