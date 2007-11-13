@@ -635,6 +635,9 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
        JavaThread::check_special_condition_for_native_trans));
   __ bind (no_block);
 
+  // The method pointer may have changed if there was a safepoint
+  __ load (Rmethod, STATE(_method));
+
   // Change the thread state
   __ load (r0, _thread_in_Java);
   __ stw (r0, thread_state_addr);
@@ -802,6 +805,9 @@ address InterpreterGenerator::generate_normal_entry(bool synchronized)
 
   __ mr (r3, Rstate);
   __ call (interpreter);
+
+  // The method pointer may have changed if there was a safepoint
+  __ load (Rmethod, STATE(_method));
 
   // Clear the frame anchor
   __ reset_last_Java_frame ();
