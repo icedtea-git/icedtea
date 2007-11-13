@@ -539,16 +539,18 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   Label got_function;
 
   __ load (function, native_function_addr);
-  __ compare (function, 0);
-  __ bne (got_function);
-  __ mr (r3, Rthread);
-  __ mr (r4, Rmethod);
-  __ call (CAST_FROM_FN_PTR(address, InterpreterRuntime::prepare_native_call));
-  __ load (r0, Address(Rthread, Thread::pending_exception_offset()));
-  __ compare (r0, 0);
-  __ bne (return_to_caller);
-  __ load (function, native_function_addr);
-  __ bind (got_function);
+#ifdef ASSERT
+  {
+    // InterpreterRuntime::prepare_native_call() sets the mirror
+    // handle and native function address first and the signature
+    // handler last, so function should always be set here.
+    Label ok;
+    __ compare (function, 0);
+    __ bne (ok);
+    __ should_not_reach_here (__FILE__, __LINE__);
+    __ bind (ok);
+  }
+#endif
 
   // Call signature handler
   __ mtlr (handler);
