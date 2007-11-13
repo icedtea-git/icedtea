@@ -1,4 +1,10 @@
 2007-11-13  Gary Benson  <gbenson@redhat.com>
+            Arnaud Vandyck <avdyk@debian.org>
+
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.cpp
+	(JVM_handle_linux_signal): Don't fail with -Wwrite-strings.
+
+2007-11-13  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/ppc/vm/interpreterRT_ppc.cpp
 	(SlowSignatureHandler::pass_int): Implemented.

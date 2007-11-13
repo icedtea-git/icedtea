@@ -108,7 +108,7 @@ JVM_handle_linux_signal(int sig,
     }
   }
 
-  char *fmt = "caught unhandled signal %d";
+  const char *fmt = "caught unhandled signal %d";
   char buf[64];
 
   sprintf(buf, fmt, sig);
