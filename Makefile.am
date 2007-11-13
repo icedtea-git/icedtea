@@ -387,6 +387,17 @@ stamps/bootstrap-directory-ecj.stamp:
 	ln -sf $(XERCES2_JAR) bootstrap/ecj/lib/endorsed/xerces-j2.jar
 	mkdir -p bootstrap/ecj/jre/lib
 	ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(INSTALL_ARCH_DIR) bootstrap/ecj/jre/lib/
+	if bootstrap/jdk1.7.0/jre/lib/tools.jar ; \
+	then \
+		mkdir -p bootstrap/ecj/lib ; \
+		ln -sf $(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
+	            $(abs_top_srcdir)/bootstrap/ecj/lib/tools.jar; \
+	fi
+	if bootstrap/jdk1.7.0/jre/lib/rt-closed.jar ; \
+	then \
+		cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+			bootstrap/ecj/jre/lib/rt.jar; \
+	fi 
 	mkdir -p stamps
 	touch stamps/bootstrap-directory-ecj.stamp
 
