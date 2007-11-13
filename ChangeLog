@@ -1,5 +1,11 @@
 2007-11-13  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/ppc/vm/interpreterRT_ppc.cpp
+	(SlowSignatureHandler::pass_int): Implemented.
+	(SlowSignatureHandler::pass_object): Likewise.
+
+2007-11-13  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp
 	(generate_normal_entry, generate_native_entry):
 	Reload the method pointer after potential safepoints.
