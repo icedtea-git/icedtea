@@ -1,4 +1,3 @@
-// This file was generated AUTOMATICALLY from a template file Wed Nov 07 13:33:45 EST 2007
 /*
  * Copyright 2002-2006 Sun Microsystems, Inc.  All Rights Reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
