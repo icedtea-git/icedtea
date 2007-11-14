@@ -1,7 +1,7 @@
 diff -ru openjdk.orig/control/make/hotspot-rules.gmk openjdk/control/make/hotspot-rules.gmk
 --- openjdk.orig/control/make/hotspot-rules.gmk	2007-10-12 08:45:09.000000000 +0100
-+++ openjdk/control/make/hotspot-rules.gmk	2007-11-08 09:40:57.000000000 +0000
-@@ -75,6 +75,11 @@
++++ openjdk/control/make/make/hotspot-rules.gmk	2007-11-08 09:40:57.000000000 +0000
+@@ -72,6 +72,11 @@
    HOTSPOT_TARGET = all_fastdebug
  endif
  
@@ -91,7 +91,7 @@ diff -ru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
 diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
 --- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2007-10-12 08:46:18.000000000 +0100
 +++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2007-11-08 09:40:57.000000000 +0000
-@@ -95,8 +95,12 @@
+@@ -92,8 +92,12 @@
  #ifdef TIERED
    #define VMTYPE "Server"
  #else
@@ -103,10 +103,10 @@ diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspo
 +#endif // COMPILER1 || COMPILER2
  #endif // TIERED
  #endif // KERNEL
- 
-diff -ru openjdk.orig/j2se/make/java/redist/Makefile openjdk/j2se/make/java/redist/Makefile
---- openjdk.orig/j2se/make/java/redist/Makefile	2007-10-12 08:54:05.000000000 +0100
-+++ openjdk/j2se/make/java/redist/Makefile	2007-11-08 09:40:57.000000000 +0000
+
+diff -ru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist/Makefile
+--- openjdk.orig/jdk/make/java/redist/Makefile	2007-10-12 08:54:05.000000000 +0100
++++ openjdk/jdk/make/java/redist/Makefile	2007-11-08 09:40:57.000000000 +0000
 @@ -94,8 +94,14 @@
    endif
  endif # INCLUDE_SA

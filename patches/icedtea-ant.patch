@@ -53,8 +53,8 @@
  endif
  
  # Default target and expected 'do everything' target
---- openjdk/j2se/make/common/shared/Defs-utils.gmk.orig	2007-10-14 17:35:02.000000000 -0400
-+++ openjdk/j2se/make/common/shared/Defs-utils.gmk	2007-10-14 17:34:07.000000000 -0400
+--- openjdk/jdk/make/common/shared/Defs-utils.gmk.orig	2007-10-14 17:35:02.000000000 -0400
++++ openjdk/jdk/make/common/shared/Defs-utils.gmk	2007-10-14 17:34:07.000000000 -0400
 @@ -71,7 +71,7 @@
  ifndef ANT_HOME
    ANT_HOME = $(JDK_DEVTOOLS_DIR)/share/ant/latest
@@ -64,3 +64,43 @@
  ifndef FINDBUGS_HOME
    FINDBUGS_HOME = $(JDK_DEVTOOLS_DIR)/share/findbugs/latest
  endif
+--- iopenjdk/jaxws/make/Makefile	2007-10-12 03:52:21.000000000 -0400
++++ openjdk/jaxws/make/Makefile	2007-11-13 11:02:07.000000000 -0500
+@@ -80,6 +80,7 @@
+ endif
+ 
+ ifdef ALT_BOOTDIR
++  ANT_OPTIONS += -Dplugs=$(ALT_BINARY_PLUGS_PATH)
+   ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
+ endif
+ 
+@@ -100,16 +101,9 @@
+   ANT_OPTIONS += -Dfindbugs.home=$(FINDBUGS_HOME)
+ endif
+ 
+-ifdef ANT_HOME
+-  ANT = $(ANT_HOME)/bin/ant
+-  ifneq ($(shell test -x $(ANT); echo $$?), 0)
+-    $(error "$(ANT) not found; please update ANT_HOME")
+-  endif
+-else
+-  ANT = ant
+-  ifneq ($(shell which $(ANT) > /dev/null; echo $$?), 0)
+-    $(error "\"ant\" not found; please set ANT_HOME or put \"ant\" on your PATH")
+-  endif
++ANT = ant
++ifneq ($(shell which $(ANT) > /dev/null; echo $$?), 0)
++  $(error "\"ant\" not found; please set ANT_HOME or put \"ant\" on your PATH")
+ endif
+ 
+ # Default target and expected 'do everything' target
+--- iopenjdk/jaxws/make/build.xml	2007-10-12 03:52:21.000000000 -0400
++++ openjdk/jaxws/make/build.xml	2007-11-13 11:02:43.000000000 -0500
+@@ -100,6 +100,7 @@
+              memoryMaximumSize="${javac.memoryMaximumSize}"
+              target="${javac.target}"
+              excludes="com/sun/tools/internal/txw2/**">
++	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${plugs}/jre/lib/tools.jar:${plugs}/jre/lib/rt-closed.jar"/>
+          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
+          <compilerarg line="${javac.version.opt}"/>
+          <compilerarg line="${javac.no.jdk.warnings}"/>

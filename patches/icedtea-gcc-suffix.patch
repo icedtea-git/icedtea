@@ -22,8 +22,8 @@
  AS  = $(CC) -c
  
  # -dumpversion in gcc-2.91 shows "egcs-2.91.66". In later version, it only
---- openjdk/j2se/make/common/shared/Compiler-gcc.gmk~	2007-08-02 09:17:53.000000000 +0200
-+++ openjdk/j2se/make/common/shared/Compiler-gcc.gmk	2007-08-08 16:30:52.857814544 +0200
+--- openjdk/jdk/make/common/shared/Compiler-gcc.gmk~	2007-08-02 09:17:53.000000000 +0200
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2007-08-08 16:30:52.857814544 +0200
 @@ -58,17 +58,17 @@
  ifeq ($(PLATFORM), linux)
  

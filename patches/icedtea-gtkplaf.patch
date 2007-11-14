@@ -1,5 +1,5 @@
---- openjdk/j2se/src/solaris/native/sun/awt/gtk2_interface.c.orig	2007-09-27 04:08:04.000000000 -0400
-+++ openjdk/j2se/src/solaris/native/sun/awt/gtk2_interface.c	2007-10-04 16:31:04.000000000 -0400
+--- openjdk/jdk/src/solaris/native/sun/awt/gtk2_interface.c.orig	2007-09-27 04:08:04.000000000 -0400
++++ openjdk/jdk/src/solaris/native/sun/awt/gtk2_interface.c	2007-10-04 16:31:04.000000000 -0400
 @@ -1410,20 +1410,6 @@
              (*fp_gtk_menu_item_set_submenu)((GtkMenuItem*)root_menu, result);
              (*fp_gtk_menu_shell_append)((GtkMenuShell *)menu_bar, root_menu);

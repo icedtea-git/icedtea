@@ -52,7 +52,7 @@ class HeapByteBufferR
 
     */
 
-    HeapByteBufferR(int cap, int lim) {		// package-private
+    HeapByteBufferR(int cap, int lim) {            // package-private
 
 
 
@@ -60,8 +60,8 @@ class HeapByteBufferR
 
 
 
-	super(cap, lim);
-	this.isReadOnly = true;
+        super(cap, lim);
+        this.isReadOnly = true;
 
     }
 
@@ -73,14 +73,14 @@ class HeapByteBufferR
 
 
 
-	super(buf, off, len);
-	this.isReadOnly = true;
+        super(buf, off, len);
+        this.isReadOnly = true;
 
     }
 
     protected HeapByteBufferR(byte[] buf,
-				   int mark, int pos, int lim, int cap,
-				   int off)
+                                   int mark, int pos, int lim, int cap,
+                                   int off)
     {
 
 
@@ -89,27 +89,27 @@ class HeapByteBufferR
 
 
 
-	super(buf, mark, pos, lim, cap, off);
-	this.isReadOnly = true;
+        super(buf, mark, pos, lim, cap, off);
+        this.isReadOnly = true;
 
     }
 
     public ByteBuffer slice() {
-	return new HeapByteBufferR(hb,
-					-1,
-					0,
-					this.remaining(),
-					this.remaining(),
-					this.position() + offset);
+        return new HeapByteBufferR(hb,
+                                        -1,
+                                        0,
+                                        this.remaining(),
+                                        this.remaining(),
+                                        this.position() + offset);
     }
 
     public ByteBuffer duplicate() {
-	return new HeapByteBufferR(hb,
-					this.markValue(),
-					this.position(),
-					this.limit(),
-					this.capacity(),
-					offset);
+        return new HeapByteBufferR(hb,
+                                        this.markValue(),
+                                        this.position(),
+                                        this.limit(),
+                                        this.capacity(),
+                                        offset);
     }
 
     public ByteBuffer asReadOnlyBuffer() {
@@ -121,7 +121,7 @@ class HeapByteBufferR
 
 
 
-	return duplicate();
+        return duplicate();
 
     }
 
@@ -155,7 +155,7 @@ class HeapByteBufferR
 
 
     public boolean isReadOnly() {
-	return true;
+        return true;
     }
 
     public ByteBuffer put(byte x) {
@@ -163,7 +163,7 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -172,7 +172,7 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -185,7 +185,7 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -213,7 +213,7 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -225,23 +225,23 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
-
 
 
 
-    byte _get(int i) {				// package-private
-	return hb[i];
+
+    byte _get(int i) {                          // package-private
+        return hb[i];
     }
 
-    void _put(int i, byte b) {			// package-private
+    void _put(int i, byte b) {                  // package-private
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -264,7 +264,7 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -273,26 +273,26 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
     public CharBuffer asCharBuffer() {
-	int size = this.remaining() >> 1;
-	int off = offset + position();
-	return (bigEndian
-		? (CharBuffer)(new ByteBufferAsCharBufferRB(this,
-							       -1,
-							       0,
-							       size,
-							       size,
-							       off))
-		: (CharBuffer)(new ByteBufferAsCharBufferRL(this,
-							       -1,
-							       0,
-							       size,
-							       size,
-							       off)));
+        int size = this.remaining() >> 1;
+        int off = offset + position();
+        return (bigEndian
+                ? (CharBuffer)(new ByteBufferAsCharBufferRB(this,
+                                                               -1,
+                                                               0,
+                                                               size,
+                                                               size,
+                                                               off))
+                : (CharBuffer)(new ByteBufferAsCharBufferRL(this,
+                                                               -1,
+                                                               0,
+                                                               size,
+                                                               size,
+                                                               off)));
     }
 
 
@@ -315,7 +315,7 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -324,26 +324,26 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
     public ShortBuffer asShortBuffer() {
-	int size = this.remaining() >> 1;
-	int off = offset + position();
-	return (bigEndian
-		? (ShortBuffer)(new ByteBufferAsShortBufferRB(this,
-								 -1,
-								 0,
-								 size,
-								 size,
-								 off))
-		: (ShortBuffer)(new ByteBufferAsShortBufferRL(this,
-								 -1,
-								 0,
-								 size,
-								 size,
-								 off)));
+        int size = this.remaining() >> 1;
+        int off = offset + position();
+        return (bigEndian
+                ? (ShortBuffer)(new ByteBufferAsShortBufferRB(this,
+                                                                 -1,
+                                                                 0,
+                                                                 size,
+                                                                 size,
+                                                                 off))
+                : (ShortBuffer)(new ByteBufferAsShortBufferRL(this,
+                                                                 -1,
+                                                                 0,
+                                                                 size,
+                                                                 size,
+                                                                 off)));
     }
 
 
@@ -366,7 +366,7 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -375,26 +375,26 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
     public IntBuffer asIntBuffer() {
-	int size = this.remaining() >> 2;
-	int off = offset + position();
-	return (bigEndian
-		? (IntBuffer)(new ByteBufferAsIntBufferRB(this,
-							     -1,
-							     0,
-							     size,
-							     size,
-							     off))
-		: (IntBuffer)(new ByteBufferAsIntBufferRL(this,
-							     -1,
-							     0,
-							     size,
-							     size,
-							     off)));
+        int size = this.remaining() >> 2;
+        int off = offset + position();
+        return (bigEndian
+                ? (IntBuffer)(new ByteBufferAsIntBufferRB(this,
+                                                             -1,
+                                                             0,
+                                                             size,
+                                                             size,
+                                                             off))
+                : (IntBuffer)(new ByteBufferAsIntBufferRL(this,
+                                                             -1,
+                                                             0,
+                                                             size,
+                                                             size,
+                                                             off)));
     }
 
 
@@ -417,7 +417,7 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -426,26 +426,26 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
     public LongBuffer asLongBuffer() {
-	int size = this.remaining() >> 3;
-	int off = offset + position();
-	return (bigEndian
-		? (LongBuffer)(new ByteBufferAsLongBufferRB(this,
-							       -1,
-							       0,
-							       size,
-							       size,
-							       off))
-		: (LongBuffer)(new ByteBufferAsLongBufferRL(this,
-							       -1,
-							       0,
-							       size,
-							       size,
-							       off)));
+        int size = this.remaining() >> 3;
+        int off = offset + position();
+        return (bigEndian
+                ? (LongBuffer)(new ByteBufferAsLongBufferRB(this,
+                                                               -1,
+                                                               0,
+                                                               size,
+                                                               size,
+                                                               off))
+                : (LongBuffer)(new ByteBufferAsLongBufferRL(this,
+                                                               -1,
+                                                               0,
+                                                               size,
+                                                               size,
+                                                               off)));
     }
 
 
@@ -468,7 +468,7 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -477,26 +477,26 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
     public FloatBuffer asFloatBuffer() {
-	int size = this.remaining() >> 2;
-	int off = offset + position();
-	return (bigEndian
-		? (FloatBuffer)(new ByteBufferAsFloatBufferRB(this,
-								 -1,
-								 0,
-								 size,
-								 size,
-								 off))
-		: (FloatBuffer)(new ByteBufferAsFloatBufferRL(this,
-								 -1,
-								 0,
-								 size,
-								 size,
-								 off)));
+        int size = this.remaining() >> 2;
+        int off = offset + position();
+        return (bigEndian
+                ? (FloatBuffer)(new ByteBufferAsFloatBufferRB(this,
+                                                                 -1,
+                                                                 0,
+                                                                 size,
+                                                                 size,
+                                                                 off))
+                : (FloatBuffer)(new ByteBufferAsFloatBufferRL(this,
+                                                                 -1,
+                                                                 0,
+                                                                 size,
+                                                                 size,
+                                                                 off)));
     }
 
 
@@ -519,7 +519,7 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -528,32 +528,32 @@ class HeapByteBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
     public DoubleBuffer asDoubleBuffer() {
-	int size = this.remaining() >> 3;
-	int off = offset + position();
-	return (bigEndian
-		? (DoubleBuffer)(new ByteBufferAsDoubleBufferRB(this,
-								   -1,
-								   0,
-								   size,
-								   size,
-								   off))
-		: (DoubleBuffer)(new ByteBufferAsDoubleBufferRL(this,
-								   -1,
-								   0,
-								   size,
-								   size,
-								   off)));
+        int size = this.remaining() >> 3;
+        int off = offset + position();
+        return (bigEndian
+                ? (DoubleBuffer)(new ByteBufferAsDoubleBufferRB(this,
+                                                                   -1,
+                                                                   0,
+                                                                   size,
+                                                                   size,
+                                                                   off))
+                : (DoubleBuffer)(new ByteBufferAsDoubleBufferRL(this,
+                                                                   -1,
+                                                                   0,
+                                                                   size,
+                                                                   size,
+                                                                   off)));
     }
 
 
 
 
-
+
 
 
 

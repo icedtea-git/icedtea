@@ -1,5 +1,5 @@
---- ../openjdk/j2se/make/sun/rmi/rmi/Makefile	2007-08-16 03:17:52.000000000 -0400
-+++ openjdk/j2se/make/sun/rmi/rmi/Makefile	2007-08-30 12:36:07.000000000 -0400
+--- ../openjdk/jdk/make/sun/rmi/rmi/Makefile	2007-08-16 03:17:52.000000000 -0400
++++ openjdk/jdk/make/sun/rmi/rmi/Makefile	2007-08-30 12:36:07.000000000 -0400
 @@ -88,12 +88,8 @@
  ifeq ($(PLATFORM), windows)
  build: stubs

@@ -1,3 +1,61 @@
+2007-11-15  Lillian Angel  <langel@redhat.com>
+	    Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Changed j2se to jdk. 
+	(OPENJDK_VERSION): Updated to b23.
+	(OPENJDK_DATE): Likewise.
+	(OPENJDK_MD5SUM): Likewise.
+	(stamps/patch.stamp): Added -l option to PATCH to ignore whitespace.
+	(stamps/patch-ecj.stamp): Likewise.
+	(stamps/clean-patch.stamp): Likewise.
+	(stamps/clean-patch-ecj.stamp): Likewise.
+	(ICEDTEA_COPY_DIRS): Added javax/net/ssl to list.
+	* Makefile.in: Regenerated.
+	* README: Changed instances of j2se to jdk.
+	* patches/icedtea-ant.patch: Changed instances of j2se to jdk and
+	updated to b23.
+	* patches/icedtea-antialias.patch: Likewise.
+	* patches/icedtea-bytebuffer-compact.patch: Likewise.
+	* patches/icedtea-bytecodeInterpreter.patch: Likewise.
+	* patches/icedtea-bytecodeInterpreterWithChecks.patch: Likewise.
+	* patches/icedtea-certbundle.patch: Likewise.
+	* patches/icedtea-copy-plugs.patch: Likewise.
+	* patches/icedtea-core-build.patch: Likewise.
+	* patches/icedtea-debuginfo.patch: Likewise.
+	* patches/icedtea-demos.patch: Likewise.
+	* patches/icedtea-ecj.patch: Likewise.
+	* patches/icedtea-float-double-trailing-zeros.patch: Likewise.
+	* patches/icedtea-gcc-suffix.patch: Likewise.
+	* patches/icedtea-graphics.patch: Likewise.
+	* patches/icedtea-gtkplaf.patch: Likewise.
+	* patches/icedtea-javafiles.patch: Likewise.
+	* patches/icedtea-libraries.patch: Likewise.
+	* patches/icedtea-license-headers.patch: Likewise.
+	* patches/icedtea-linker-options.patch: Likewise.
+	* patches/icedtea-memory-limits.patch: Likewise.
+	* patches/icedtea-paths.patch: Likewise.
+	* patches/icedtea-plugin.patch: Likewise.
+	* patches/icedtea-ports.patch: Likewise.
+	* patches/icedtea-rmi_amd64.patch: Likewise.
+	* patches/icedtea-signature-iterator.patch: Likewise.
+	* patches/icedtea-signed-types.patch: Likewise.
+	* patches/icedtea-speed.patch: Likewise.
+	* patches/icedtea-ssl.patch: Likewise.
+	* patches/icedtea-sunsrc.patch: Likewise.
+	* patches/icedtea-test-atomic-operations.patch: Likewise.
+	* patches/icedtea-tools.patch: Likewise.
+	* patches/icedtea-use-system-tzdata.patch: Likewise.
+	* patches/icedtea-version.patch: Likewise.
+	* generated/java/nio/*: Regenerated.
+	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
+	* rt/com/sun/image/codec/jpeg/JPEGCodec.java: New stubbed class.
+	* rt/com/sun/image/codec/jpeg/JPEGEncodeParam.java: Likewise.
+	* rt/com/sun/image/codec/jpeg/JPEGImageDecoder.java: Likewise.
+	* rt/com/sun/image/codec/jpeg/JPEGImageEncoder.java: Likewise.
+	* rt/java/io/PushbackReader.java: Likewise.
+	* ports/jdk/: Moved ports/j2se here.
+	* ports/j2se/: Removed.
+
 2007-11-13  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-ecj.patch

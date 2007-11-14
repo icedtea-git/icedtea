@@ -1,5 +1,5 @@
---- openjdk-b20/openjdk/j2se/make/common/shared/Defs.gmk	2007-09-13 03:52:42.000000000 -0400
-+++ openjdk/j2se/make/common/shared/Defs.gmk	2007-09-18 16:24:59.000000000 -0400
+--- openjdk-b20/openjdk/jdk/make/common/shared/Defs.gmk	2007-09-13 03:52:42.000000000 -0400
++++ openjdk/jdk/make/common/shared/Defs.gmk	2007-09-18 16:24:59.000000000 -0400
 @@ -186,13 +186,13 @@
  
  # Default names

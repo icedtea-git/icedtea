@@ -175,7 +175,7 @@ diff -r e95eb2395f60 openjdk-ecj/hotspot/build/linux/makefiles/vm.make
 diff -ru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
 --- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2007-11-08 11:36:15.000000000 +0000
-@@ -174,6 +174,12 @@
+@@ -171,6 +171,12 @@
  #  else
  static char cpu_arch[] = "sparc";
  #  endif
@@ -188,7 +188,7 @@ diff -ru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/o
  #else
  #error Add appropriate cpu_arch setting
  #endif
-@@ -2375,7 +2381,8 @@
+@@ -2372,7 +2378,8 @@
      // format has been changed), we'll use the largest page size supported by
      // the processor.
  
@@ -201,7 +201,7 @@ diff -ru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/o
 diff -ru openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp openjdk/hotspot/src/share/vm/runtime/mutex.hpp
 --- openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/runtime/mutex.hpp	2007-11-08 11:36:15.000000000 +0000
-@@ -64,19 +64,15 @@
+@@ -61,19 +61,15 @@
  } ; 
  
  // Endian-ness ... index of least-significant byte in SplitWord.Bytes[]
@@ -226,7 +226,7 @@ diff -ru openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp openjdk/hotspot/src
 diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
 --- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2007-11-08 11:36:15.000000000 +0000
-@@ -150,7 +150,8 @@
+@@ -147,7 +147,8 @@
  #define CPU      IA32_ONLY("x86")                \
                   IA64_ONLY("ia64")               \
                   AMD64_ONLY("amd64")             \
@@ -239,7 +239,7 @@ diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspo
 diff -ru openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp openjdk/hotspot/src/share/vm/utilities/macros.hpp
 --- openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/utilities/macros.hpp	2007-11-08 11:36:15.000000000 +0000
-@@ -179,6 +179,14 @@
+@@ -176,6 +176,14 @@
  #define NOT_SPARC(code) code
  #endif
  
@@ -254,9 +254,9 @@ diff -ru openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp openjdk/hotspot/
  #define FIX_THIS(code) report_assertion_failure("FIX_THIS",__FILE__, __LINE__, "")
  
  #define define_pd_global(type, name, value) const type pd_##name = value;
-diff -ru openjdk.orig/j2se/make/common/Defs-linux.gmk openjdk/j2se/make/common/Defs-linux.gmk
---- openjdk.orig/j2se/make/common/Defs-linux.gmk	2007-11-08 11:35:35.000000000 +0000
-+++ openjdk/j2se/make/common/Defs-linux.gmk	2007-11-08 11:36:15.000000000 +0000
+diff -ru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2007-11-08 11:35:35.000000000 +0000
++++ openjdk/jdk/make/common/Defs-linux.gmk	2007-11-08 11:36:15.000000000 +0000
 @@ -109,6 +109,10 @@
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
@@ -268,9 +268,9 @@ diff -ru openjdk.orig/j2se/make/common/Defs-linux.gmk openjdk/j2se/make/common/D
  CFLAGS_REQUIRED         =  $(CFLAGS_REQUIRED_$(ARCH))
  LDFLAGS_COMMON          += $(LDFLAGS_COMMON_$(ARCH))
  
-diff -ru openjdk.orig/j2se/make/common/shared/Compiler-gcc.gmk openjdk/j2se/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/j2se/make/common/shared/Compiler-gcc.gmk	2007-11-08 11:34:54.000000000 +0000
-+++ openjdk/j2se/make/common/shared/Compiler-gcc.gmk	2007-11-08 11:36:15.000000000 +0000
+diff -ru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
+--- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2007-11-08 11:36:15.000000000 +0000
 @@ -74,13 +74,13 @@
      # sparc or sparcv9
      REQUIRED_CC_VER = 4.0
@@ -300,9 +300,9 @@ diff -ru openjdk.orig/j2se/make/common/shared/Compiler-gcc.gmk openjdk/j2se/make
    endif
    # Option used to create a shared library
    SHARED_LIBRARY_FLAG = -shared -mimpure-text
-diff -ru openjdk.orig/j2se/make/common/shared/Platform.gmk openjdk/j2se/make/common/shared/Platform.gmk
---- openjdk.orig/j2se/make/common/shared/Platform.gmk	2007-11-08 11:34:54.000000000 +0000
-+++ openjdk/j2se/make/common/shared/Platform.gmk	2007-11-08 11:36:15.000000000 +0000
+diff -ru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/common/shared/Platform.gmk
+--- openjdk.orig/jdk/make/common/shared/Platform.gmk	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/jdk/make/common/shared/Platform.gmk	2007-11-08 11:36:15.000000000 +0000
 @@ -223,9 +223,9 @@
        ARCH=sparcv9
      endif
@@ -315,9 +315,9 @@ diff -ru openjdk.orig/j2se/make/common/shared/Platform.gmk openjdk/j2se/make/com
          ARCH_DATA_MODEL=32
        else
          ARCH_DATA_MODEL=64
-diff -r 29c822b7c8b2 openjdk-ecj/j2se/make/java/jli/Makefile
---- openjdk/j2se/make/java/jli/Makefile	Mon Nov 12 09:19:31 2007 +0000
-+++ openjdk/j2se/make/java/jli/Makefile	Mon Nov 12 09:24:13 2007 +0000
+diff -r 29c822b7c8b2 openjdk-ecj/jdk/make/java/jli/Makefile
+--- openjdk/jdk/make/java/jli/Makefile	Mon Nov 12 09:19:31 2007 +0000
++++ openjdk/jdk/make/java/jli/Makefile	Mon Nov 12 09:24:13 2007 +0000
 @@ -50,7 +50,11 @@ ifeq ($(ARCH_FAMILY), amd64)
  ifeq ($(ARCH_FAMILY), amd64)
  ERGO_FAMILY=i586
@@ -330,9 +330,9 @@ diff -r 29c822b7c8b2 openjdk-ecj/j2se/make/java/jli/Makefile
  endif
  
  
-diff -ru openjdk.orig/j2se/make/javax/sound/SoundDefs.gmk openjdk/j2se/make/javax/sound/SoundDefs.gmk
---- openjdk.orig/j2se/make/javax/sound/SoundDefs.gmk	2007-11-08 11:34:54.000000000 +0000
-+++ openjdk/j2se/make/javax/sound/SoundDefs.gmk	2007-11-08 11:36:15.000000000 +0000
+diff -ru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax/sound/SoundDefs.gmk
+--- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2007-11-08 11:36:15.000000000 +0000
 @@ -71,6 +71,14 @@
    CPPFLAGS += -DX_ARCH=X_AMD64
  endif # ARCH amd64
@@ -348,9 +348,9 @@ diff -ru openjdk.orig/j2se/make/javax/sound/SoundDefs.gmk openjdk/j2se/make/java
  
  # files needed for MIDI i/o
  MIDIFILES_c = \
-diff -ru openjdk.orig/j2se/src/share/native/com/sun/media/sound/SoundDefs.h openjdk/j2se/src/share/native/com/sun/media/sound/SoundDefs.h
---- openjdk.orig/j2se/src/share/native/com/sun/media/sound/SoundDefs.h	2007-11-08 11:34:54.000000000 +0000
-+++ openjdk/j2se/src/share/native/com/sun/media/sound/SoundDefs.h	2007-11-08 11:36:15.000000000 +0000
+diff -ru openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
+--- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2007-11-08 11:36:15.000000000 +0000
 @@ -38,6 +38,8 @@
  #define X_SPARCV9       3
  #define X_IA64          4

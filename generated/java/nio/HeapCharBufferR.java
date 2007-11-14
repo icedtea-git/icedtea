@@ -52,7 +52,7 @@ class HeapCharBufferR
 
     */
 
-    HeapCharBufferR(int cap, int lim) {		// package-private
+    HeapCharBufferR(int cap, int lim) {            // package-private
 
 
 
@@ -60,8 +60,8 @@ class HeapCharBufferR
 
 
 
-	super(cap, lim);
-	this.isReadOnly = true;
+        super(cap, lim);
+        this.isReadOnly = true;
 
     }
 
@@ -73,14 +73,14 @@ class HeapCharBufferR
 
 
 
-	super(buf, off, len);
-	this.isReadOnly = true;
+        super(buf, off, len);
+        this.isReadOnly = true;
 
     }
 
     protected HeapCharBufferR(char[] buf,
-				   int mark, int pos, int lim, int cap,
-				   int off)
+                                   int mark, int pos, int lim, int cap,
+                                   int off)
     {
 
 
@@ -89,27 +89,27 @@ class HeapCharBufferR
 
 
 
-	super(buf, mark, pos, lim, cap, off);
-	this.isReadOnly = true;
+        super(buf, mark, pos, lim, cap, off);
+        this.isReadOnly = true;
 
     }
 
     public CharBuffer slice() {
-	return new HeapCharBufferR(hb,
-					-1,
-					0,
-					this.remaining(),
-					this.remaining(),
-					this.position() + offset);
+        return new HeapCharBufferR(hb,
+                                        -1,
+                                        0,
+                                        this.remaining(),
+                                        this.remaining(),
+                                        this.position() + offset);
     }
 
     public CharBuffer duplicate() {
-	return new HeapCharBufferR(hb,
-					this.markValue(),
-					this.position(),
-					this.limit(),
-					this.capacity(),
-					offset);
+        return new HeapCharBufferR(hb,
+                                        this.markValue(),
+                                        this.position(),
+                                        this.limit(),
+                                        this.capacity(),
+                                        offset);
     }
 
     public CharBuffer asReadOnlyBuffer() {
@@ -121,7 +121,7 @@ class HeapCharBufferR
 
 
 
-	return duplicate();
+        return duplicate();
 
     }
 
@@ -155,7 +155,7 @@ class HeapCharBufferR
 
 
     public boolean isReadOnly() {
-	return true;
+        return true;
     }
 
     public CharBuffer put(char x) {
@@ -163,7 +163,7 @@ class HeapCharBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -172,7 +172,7 @@ class HeapCharBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -185,7 +185,7 @@ class HeapCharBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -213,7 +213,7 @@ class HeapCharBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -225,11 +225,10 @@ class HeapCharBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
-
 
 
 
@@ -553,15 +552,16 @@ class HeapCharBufferR
 
 
 
-
 
 
-    String toString(int start, int end) {		// package-private
-	try {
-	    return new String(hb, start + offset, end - start);
-	} catch (StringIndexOutOfBoundsException x) {
-	    throw new IndexOutOfBoundsException();
-	}
+
+
+    String toString(int start, int end) {               // package-private
+        try {
+            return new String(hb, start + offset, end - start);
+        } catch (StringIndexOutOfBoundsException x) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
 
@@ -569,13 +569,13 @@ class HeapCharBufferR
 
     public CharSequence subSequence(int start, int end) {
         if ((start < 0)
-	    || (end > length())
-	    || (start > end))
-	    throw new IndexOutOfBoundsException();
+            || (end > length())
+            || (start > end))
+            throw new IndexOutOfBoundsException();
         int len = end - start;
         return new HeapCharBufferR(hb,
-				      -1, 0, len, len,
-				      offset + position() + start);
+                                      -1, 0, len, len,
+                                      offset + position() + start);
     }
 
 
@@ -584,7 +584,7 @@ class HeapCharBufferR
 
 
     public ByteOrder order() {
-	return ByteOrder.nativeOrder();
+        return ByteOrder.nativeOrder();
     }
 
 

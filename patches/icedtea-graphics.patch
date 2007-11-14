@@ -1,53 +1,61 @@
-diff -urN openjdk.orig/j2se/src/share/native/sun/java2d/cmm/lcms/LCMS.c openjdk/j2se/src/share/native/sun/java2d/cmm/lcms/LCMS.c
---- openjdk.orig/j2se/src/share/native/sun/java2d/cmm/lcms/LCMS.c	2007-05-24 03:44:01.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/java2d/cmm/lcms/LCMS.c	2007-06-18 15:45:29.000000000 -0400
-@@ -505,7 +505,7 @@
+diff -urN openjdk.orig/jdk/src/share/native/sun/awt/image/imageInitIDs.h openjdk/jdk/src/share/native/sun/awt/image/imageInitIDs.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/imageInitIDs.h	2007-07-20 03:33:46.000000000 -0400
++++ openjdk/jdk/src/share/native/sun/awt/image/imageInitIDs.h	2007-07-25 15:55:05.000000000 -0400
+@@ -120,7 +120,4 @@
+ IMGEXTERN jfieldID g_KernelYOriginD;
+ IMGEXTERN jfieldID g_KernelDataID;
+ 
+-/* DataBufferInt ids */
+-IMGEXTERN jfieldID g_DataBufferIntPdataID;
+-
+ #endif /* IMAGEINITIDS_H */
+--- iopenjdkb23/openjdk/jdk/src/share/native/sun/java2d/cmm/lcms/LCMS.c	2007-10-30 04:38:58.000000000 -0400
++++ openjdk/jdk/src/share/native/sun/java2d/cmm/lcms/LCMS.c	2007-11-13 12:43:26.000000000 -0500
+@@ -505,5 +505,5 @@
      IL_offset_fID = (*env)->GetFieldID (env, IL, "offset", "I");
      IL_nextRowOffset_fID = (*env)->GetFieldID (env, IL, "nextRowOffset", "I");
  
 -    PF_ID_fID = (*env)->GetFieldID (env, Pf, "ID", "J");
 +    PF_ID_fID = (*env)->GetFieldID (env, Pf, "profileID", "J");
  }
- 
-
-diff -urN openjdk.orig/j2se/src/share/classes/sun/awt/image/SunWritableRaster.java openjdk/j2se/src/share/classes/sun/awt/image/SunWritableRaster.java
---- openjdk.orig/j2se/src/share/classes/sun/awt/image/SunWritableRaster.java	2007-05-24 03:43:08.000000000 -0400
-+++ openjdk/j2se/src/share/classes/sun/awt/image/SunWritableRaster.java	2007-06-22 10:19:53.000000000 -0400
-@@ -56,50 +56,56 @@
+--- iopenjdkb23/openjdk/jdk/src/share/classes/sun/awt/image/SunWritableRaster.java	2007-10-30 04:37:17.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/awt/image/SunWritableRaster.java	2007-11-13 12:47:25.000000000 -0500
+@@ -55,51 +55,48 @@
+         public int[] getData(DataBufferInt dbi, int bank);
          public StateTrackableDelegate getTrackable(DataBuffer db);
      }
- 
+-
 +/*
      public static void setDataStealer(DataStealer ds) {
          if (stealer != null) {
- 	    throw new InternalError("Attempt to set DataStealer twice");
+             throw new InternalError("Attempt to set DataStealer twice");
          }
          stealer = ds;
      }
+-
 +*/
- 
      public static byte[] stealData(DataBufferByte dbb, int bank) {
 -        return stealer.getData(dbb, bank);
 +//        return stealer.getData(dbb, bank);
-+	return dbb.getData(bank);
++    	  return dbb.getData(bank);  
      }
  
      public static short[] stealData(DataBufferUShort dbus, int bank) {
 -        return stealer.getData(dbus, bank);
 +//        return stealer.getData(dbus, bank);
-+	return dbus.getData(bank);
++	  return dbus.getData(bank);        
      }
  
      public static int[] stealData(DataBufferInt dbi, int bank) {
 -        return stealer.getData(dbi, bank);
 +//        return stealer.getData(dbi, bank);
-+	return dbi.getData(bank);
++	  return dbi.getData(bank);
      }
  
      public static StateTrackableDelegate stealTrackable(DataBuffer db) {
 -        return stealer.getTrackable(db);
 +//        return stealer.getTrackable(db);
-+	return StateTrackableDelegate.UNTRACKABLE_DELEGATE;
++	  return StateTrackableDelegate.UNTRACKABLE_DELEGATE;	          
      }
  
      public static void markDirty(DataBuffer db) {
@@ -61,16 +69,10 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/awt/image/SunWritableRaster.ja
 -        } else {
 -            markDirty(wr.getDataBuffer());
 -        }
-+//        if (wr instanceof SunWritableRaster) {
-+//            ((SunWritableRaster) wr).markDirty();
-+//        } else {
-+//            markDirty(wr.getDataBuffer());
-+//        }
      }
  
      public static void markDirty(Image img) {
 -        SurfaceData.getPrimarySurfaceData(img).markDirty();
-+//        SurfaceData.getPrimarySurfaceData(img).markDirty();
      }
  
      private StateTrackableDelegate theTrackable;
@@ -78,25 +80,22 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/awt/image/SunWritableRaster.ja
      public SunWritableRaster(SampleModel sampleModel, Point origin) {
          super(sampleModel, origin);
 -        theTrackable = stealTrackable(dataBuffer);
-+//        theTrackable = stealTrackable(dataBuffer);
      }
  
      public SunWritableRaster(SampleModel sampleModel,
-@@ -107,7 +113,7 @@
-                              Point origin) 
+@@ -107,7 +104,6 @@
+                              Point origin)
      {
          super(sampleModel, dataBuffer, origin);
 -        theTrackable = stealTrackable(dataBuffer);
-+//        theTrackable = stealTrackable(dataBuffer);
      }
  
      public SunWritableRaster(SampleModel sampleModel,
-@@ -117,13 +123,13 @@
+@@ -117,13 +113,11 @@
                               WritableRaster parent)
      {
          super(sampleModel, dataBuffer, aRegion, sampleModelTranslate, parent);
 -        theTrackable = stealTrackable(dataBuffer);
-+//        theTrackable = stealTrackable(dataBuffer);
      }
  
      /**
@@ -104,71 +103,24 @@ diff -urN openjdk.orig/j2se/src/share/classes/sun/awt/image/SunWritableRaster.ja
       */
      public final void markDirty() {
 -        theTrackable.markDirty();
-+//        theTrackable.markDirty();
      }
  }
-diff -urN openjdk.orig/j2se/src/share/native/sun/awt/image/imageInitIDs.c openjdk/j2se/src/share/native/sun/awt/image/imageInitIDs.c
---- openjdk.orig/j2se/src/share/native/sun/awt/image/imageInitIDs.c	2007-07-20 03:33:46.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/awt/image/imageInitIDs.c	2007-07-25 15:54:54.000000000 -0400
-@@ -143,7 +143,7 @@
-                                                          jclass cls) {
-     g_SPPSMmaskArrID = (*env)->GetFieldID(env, cls, "bitMasks", "[I");
-     g_SPPSMmaskOffID = (*env)->GetFieldID(env, cls, "bitOffsets", "[I");
--    g_SPPSMnBitsID   = (*env)->GetFieldID(env, cls, "bitSizes", "[I");
-+    g_SPPSMnBitsID   = (*env)->GetFieldID(env, cls, "sampleSize", "[I");
-     g_SPPSMmaxBitID  = (*env)->GetFieldID(env, cls, "maxBitSize", "I");
- 
-     if (g_SPPSMmaskArrID == NULL || g_SPPSMmaskOffID == NULL ||
-@@ -229,11 +229,3 @@
-     }
- }
- 
--JNIEXPORT void JNICALL
--Java_java_awt_image_DataBufferInt_initIDs(JNIEnv *env, jclass cls) {
--    g_DataBufferIntPdataID = (*env)->GetFieldID(env, cls, "pData", "J");
--    if (g_DataBufferIntPdataID == NULL) {
--        JNU_ThrowNullPointerException(env, "Unable to grab DataBufferInt.pData");
--        return;
--    }
--}
-diff -urN openjdk.orig/j2se/src/share/native/sun/awt/image/imageInitIDs.h openjdk/j2se/src/share/native/sun/awt/image/imageInitIDs.h
---- openjdk.orig/j2se/src/share/native/sun/awt/image/imageInitIDs.h	2007-07-20 03:33:46.000000000 -0400
-+++ openjdk/j2se/src/share/native/sun/awt/image/imageInitIDs.h	2007-07-25 15:55:05.000000000 -0400
-@@ -120,7 +120,4 @@
- IMGEXTERN jfieldID g_KernelYOriginD;
- IMGEXTERN jfieldID g_KernelDataID;
- 
--/* DataBufferInt ids */
--IMGEXTERN jfieldID g_DataBufferIntPdataID;
--
- #endif /* IMAGEINITIDS_H */
-diff -urN openjdk.orig/j2se/src/share/classes/javax/swing/text/WrappedPlainView.java openjdk/j2se/src/share/classes/javax/swing/text/WrappedPlainView.java
---- openjdk.orig/j2se/src/share/classes/javax/swing/text/WrappedPlainView.java	2007-07-05 03:50:30.000000000 -0400
-+++ openjdk/j2se/src/share/classes/javax/swing/text/WrappedPlainView.java	2007-06-21 03:47:01.000000000 -0400
-@@ -50,7 +50,7 @@
-  * without concern for the layout aspects.
-  *
-  * @author  Timothy Prinzing
-- * @version 1.49 05/23/07
-+ * @version 1.48 05/05/07
-  * @see     View
-  */
- public class WrappedPlainView extends BoxView implements TabExpander {
-@@ -237,9 +237,6 @@
+--- ../opienjdkb23/openjdk/jdk/src/share/classes/javax/swing/text/WrappedPlainView.java	2007-10-30 04:37:06.000000000 -0400
++++ openjdk/jdk/src/share/classes/javax/swing/text/WrappedPlainView.java	2007-11-13 12:50:52.000000000 -0500
+@@ -236,9 +236,6 @@
          Segment segment = SegmentCache.getSharedSegment();
- 	loadText(segment, p0, p1);
+         loadText(segment, p0, p1);
          int currentWidth = getWidth();
 -        if (currentWidth == Integer.MAX_VALUE) {
 -            currentWidth = (int) getDefaultSpan(View.X_AXIS);
 -        }
- 	if (wordWrap) {
- 	    p = p0 + Utilities.getBreakLocation(segment, metrics,
- 						tabBase, tabBase + currentWidth,
-@@ -324,21 +321,6 @@
- 	metrics = host.getFontMetrics(f);
- 	tabSize = getTabSize() * metrics.charWidth('m');
+         if (wordWrap) {
+             p = p0 + Utilities.getBreakLocation(segment, metrics,
+                                                 tabBase, tabBase + currentWidth,
+@@ -324,20 +321,6 @@
+         tabSize = getTabSize() * metrics.charWidth('m');
      }
--    
+ 
 -    /**
 -     * Return reasonable default values for the view dimensions.  The standard
 -     * text terminal size 80x24 is pretty suitable for the wrapped plain view.
@@ -186,7 +138,7 @@ diff -urN openjdk.orig/j2se/src/share/classes/javax/swing/text/WrappedPlainView.
  
      // --- TabExpander methods ------------------------------------------
  
-@@ -574,18 +556,15 @@
+@@ -573,19 +556,16 @@
                  if (width == Integer.MAX_VALUE) {
                      // We have been initially set to MAX_VALUE, but we don't
                      // want this as our preferred.
@@ -203,11 +155,37 @@ diff -urN openjdk.orig/j2se/src/share/classes/javax/swing/text/WrappedPlainView.
 -                } else {
 -                    return getDefaultSpan(axis);
 -                }
-+		if (lineCount < 0 || widthChanging) {
-+		    breakLines(getStartOffset());
-+		}
+-            default:
++            	if (lineCount < 0 || widthChanging) {
++                   breakLines(getStartOffset());
++               }
 +                int h = lineCount * metrics.getHeight();
 +                return h;
-             default:
++	    default:
                  throw new IllegalArgumentException("Invalid axis: " + axis);
              }
+         }
+--- ../iopenjdkb23/openjdk/jdk/src/share/native/sun/awt/image/imageInitIDs.c	2007-10-30 04:38:50.000000000 -0400
++++ openjdk/jdk/src/share/native/sun/awt/image/imageInitIDs.c	2007-11-13 12:52:43.000000000 -0500
+@@ -143,7 +143,7 @@
+                                                          jclass cls) {
+     g_SPPSMmaskArrID = (*env)->GetFieldID(env, cls, "bitMasks", "[I");
+     g_SPPSMmaskOffID = (*env)->GetFieldID(env, cls, "bitOffsets", "[I");
+-    g_SPPSMnBitsID   = (*env)->GetFieldID(env, cls, "bitSizes", "[I");
++    g_SPPSMnBitsID   = (*env)->GetFieldID(env, cls, "sampleSize", "[I");
+     g_SPPSMmaxBitID  = (*env)->GetFieldID(env, cls, "maxBitSize", "I");
+ 
+     if (g_SPPSMmaskArrID == NULL || g_SPPSMmaskOffID == NULL ||
+@@ -228,12 +228,3 @@
+         JNU_ThrowNullPointerException(env, "Unable to grab field ids");
+     }
+ }
+-
+-JNIEXPORT void JNICALL
+-Java_java_awt_image_DataBufferInt_initIDs(JNIEnv *env, jclass cls) {
+-    g_DataBufferIntPdataID = (*env)->GetFieldID(env, cls, "pData", "J");
+-    if (g_DataBufferIntPdataID == NULL) {
+-        JNU_ThrowNullPointerException(env, "Unable to grab DataBufferInt.pData");
+-        return;
+-    }
+-}

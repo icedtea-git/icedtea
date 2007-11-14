@@ -161,9 +161,9 @@ class DirectShortBufferRS
 
     // For duplicates and slices
     //
-    DirectShortBufferRS(DirectBuffer db,	        // package-private
-			       int mark, int pos, int lim, int cap,
-			       int off)
+    DirectShortBufferRS(DirectBuffer db,         // package-private
+                               int mark, int pos, int lim, int cap,
+                               int off)
     {
 
 
@@ -173,27 +173,27 @@ class DirectShortBufferRS
 
 
 
-	super(db, mark, pos, lim, cap, off);
+        super(db, mark, pos, lim, cap, off);
 
     }
 
     public ShortBuffer slice() {
-	int pos = this.position();
-	int lim = this.limit();
-	assert (pos <= lim);
-	int rem = (pos <= lim ? lim - pos : 0);
-	int off = (pos << 1);
+        int pos = this.position();
+        int lim = this.limit();
+        assert (pos <= lim);
+        int rem = (pos <= lim ? lim - pos : 0);
+        int off = (pos << 1);
         assert (off >= 0);
-	return new DirectShortBufferRS(this, -1, 0, rem, rem, off);
+        return new DirectShortBufferRS(this, -1, 0, rem, rem, off);
     }
 
     public ShortBuffer duplicate() {
-	return new DirectShortBufferRS(this,
-					      this.markValue(),
-					      this.position(),
-					      this.limit(),
-					      this.capacity(),
-					      0);
+        return new DirectShortBufferRS(this,
+                                              this.markValue(),
+                                              this.position(),
+                                              this.limit(),
+                                              this.capacity(),
+                                              0);
     }
 
     public ShortBuffer asReadOnlyBuffer() {
@@ -205,7 +205,7 @@ class DirectShortBufferRS
 
 
 
-	return duplicate();
+        return duplicate();
 
     }
 
@@ -263,7 +263,7 @@ class DirectShortBufferRS
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -272,7 +272,7 @@ class DirectShortBufferRS
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -313,7 +313,7 @@ class DirectShortBufferRS
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -340,10 +340,10 @@ class DirectShortBufferRS
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
-    
+
     public ShortBuffer compact() {
 
 
@@ -357,19 +357,18 @@ class DirectShortBufferRS
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
     public boolean isDirect() {
-	return true;
+        return true;
     }
 
     public boolean isReadOnly() {
-	return true;
+        return true;
     }
 
-
 
 
 
@@ -409,14 +408,15 @@ class DirectShortBufferRS
 
 
 
-
+
+
 
 
 
     public ByteOrder order() {
 
-	return ((ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN)
-		? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN);
+        return ((ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN)
+                ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN);
 
 
 

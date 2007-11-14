@@ -1,6 +1,6 @@
-OPENJDK_VERSION = b22
-OPENJDK_DATE = 12_oct_2007
-OPENJDK_MD5SUM = 7cf9c2765fb16c36c07f961b2a009cb2
+OPENJDK_VERSION = b23
+OPENJDK_DATE = 30_oct_2007
+OPENJDK_MD5SUM = 7eed137c0321e0b5b75ff2d646ce0d0d
 
 # Top-Level Targets
 # =================
@@ -166,7 +166,7 @@ stamps/ports.stamp: stamps/extract.stamp
 	for target in ports/hotspot/build/*/platform_* \
 		      ports/hotspot/build/*/makefiles/* \
 		      ports/hotspot/src/*/* \
-		      ports/j2se/src/*/bin/*; do \
+		      ports/jdk/src/*/bin/*; do \
 	  link=$$(dirname $$target | sed 's/^ports/openjdk/'); \
 	  ln -sf $$PWD/$$target $$link; \
 	done
@@ -234,10 +234,10 @@ stamps/patch.stamp: stamps/extract.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
-	  if $(PATCH) -p0 --dry-run -s -t -f -F 0 < $$p ; \
+	  if $(PATCH) -l -p0 --dry-run -s -t -f -F 0 < $$p ; \
 	  then \
 	    echo Applying $$p ; \
-	    $(PATCH) -p0 < $$p ; \
+	    $(PATCH) -l -p0 < $$p ; \
 	  fi ; \
 	done
 	mkdir -p stamps
@@ -248,10 +248,10 @@ clean-patch:
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
-	  if $(PATCH) -p0 -R --dry-run -s -t -f < $$p ; \
+	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $$p ; \
 	  then \
 	    echo Reverting $$p ; \
-	    $(PATCH) -p0 -R < $$p ; \
+	    $(PATCH) -l -p0 -R < $$p ; \
 	  fi ; \
 	done
 
@@ -267,7 +267,6 @@ stamps/extract-ecj.stamp: stamps/download.stamp
 	  mv tmp-ecj/openjdk openjdk-ecj ; \
 	  rmdir tmp-ecj ; \
 	  chmod -R ug+w openjdk-ecj ; \
-	  rm -rf openjdk-ecj/jaxws; \
 	fi
 	mkdir -p stamps
 	touch stamps/extract-ecj.stamp
@@ -281,7 +280,7 @@ stamps/ports-ecj.stamp: stamps/extract.stamp
 	for target in ports/hotspot/build/*/platform_* \
 		      ports/hotspot/build/*/makefiles/* \
 		      ports/hotspot/src/*/* \
-		      ports/j2se/src/*/bin/*; do \
+		      ports/jdk/src/*/bin/*; do \
 	  link=$$(dirname $$target | sed 's/^ports/openjdk-ecj/'); \
 	  ln -sf $$PWD/$$target $$link; \
 	done
@@ -295,17 +294,17 @@ stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
-	  if $(PATCH) -p1 -d openjdk-ecj --dry-run -s -t -f -F 0 < $$p ; \
+	  if $(PATCH) -l -p1 -d openjdk-ecj --dry-run -s -t -f -F 0 < $$p ; \
 	  then \
 	    echo Applying $$p ; \
-	    $(PATCH) -p1 -d openjdk-ecj < $$p ; \
+	    $(PATCH) -l -p1 -d openjdk-ecj < $$p ; \
 	  fi ; \
 	done
 	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
-	if $(PATCH) -p0 --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
+	if $(PATCH) -p0 -l --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
 	then \
 	  echo Applying $(ICEDTEA_ECJ_PATCH) ; \
-	  $(PATCH) -p0 < $(ICEDTEA_ECJ_PATCH) ; \
+	  $(PATCH) -p0 -l < $(ICEDTEA_ECJ_PATCH) ; \
 	fi
 	mkdir -p stamps
 	touch stamps/patch-ecj.stamp
@@ -313,18 +312,18 @@ stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 clean-patch-ecj:
 	rm -f stamps/patch-ecj.stamp
 	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
-	if $(PATCH) -p0 -R --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
+	if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
 	then \
 	  echo Reverting $(ICEDTEA_ECJ_PATCH) ; \
-	  $(PATCH) -p0 -R < $(ICEDTEA_ECJ_PATCH) ; \
+	  $(PATCH) -p0 -l -R < $(ICEDTEA_ECJ_PATCH) ; \
 	fi
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
-	  if $(PATCH) -p1 -d openjdk-ecj -R --dry-run -s -t -f < $$p ; \
+	  if $(PATCH) -p1 -l -d openjdk-ecj -R --dry-run -s -t -f < $$p ; \
 	  then \
 	    echo Reverting $$p ; \
-	    $(PATCH) -p1 -d openjdk-ecj -R < $$p ; \
+	    $(PATCH) -p1 -l -d openjdk-ecj -R < $$p ; \
 	  fi ; \
 	done
 
@@ -540,13 +539,14 @@ ICEDTEA_COPY_DIRS = \
 	com/sun/jmx/snmp/agent \
 	com/sun/tools/jdi \
 	java/util \
-	java/rmi
+	java/rmi \
+	javax/net/ssl
 
 stamps/copy-source-files.stamp: stamps/extract.stamp stamps/patch.stamp
 	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
 	do \
 	  mkdir -p rt/$$copy_dir ; \
-	  cp -af openjdk/j2se/src/share/classes/$$copy_dir/*.java \
+	  cp -af openjdk/jdk/src/share/classes/$$copy_dir/*.java \
 	    rt/$$copy_dir ; \
 	done
 	mkdir -p stamps
@@ -559,8 +559,8 @@ clean-copy:
 	  rm -rf rt/$$copy_dir ; \
 	done
 
-SHARE = openjdk/j2se/src/share/classes
-SOLARIS = openjdk/j2se/src/solaris/classes
+SHARE = openjdk/jdk/src/share/classes
+SOLARIS = openjdk/jdk/src/solaris/classes
 LANGTOOLS = openjdk/langtools/src/share/classes
 JAXP = openjdk/jaxp/src/share/classes
 CORBA = openjdk/corba/src/share/classes
@@ -571,10 +571,10 @@ OPENJDK_SOURCEPATH_DIRS = \
 
 # tools.jar class files.
 stamps/tools-copy-source-files.stamp: stamps/extract.stamp stamps/patch.stamp
-	for copy_dir in `cat tools-copy/tools-j2se-copy-files.txt` ; \
+	for copy_dir in `cat tools-copy/tools-jdk-copy-files.txt` ; \
         do \
           mkdir -p tools/$$copy_dir ; \
-	  cp -arf openjdk/j2se/src/share/classes/$$copy_dir/* \
+	  cp -arf openjdk/jdk/src/share/classes/$$copy_dir/* \
             tools/$$copy_dir ; \
         done
 	
@@ -611,7 +611,6 @@ stamps/tools-class-files.stamp: tools-source-files.txt
 	$(JAVAC) $(MEMORY_LIMIT) -g -d lib/tools -bootclasspath '' -source 1.6 \
 	  -sourcepath 'rt:tools:$(OPENJDK_SOURCEPATH_DIRS):generated' \
 	  @$<
-	rm -rf openjdk/jaxws # Remove jaxws because of invalid license headers in b22.
 	mkdir -p stamps
 	touch stamps/tools-class-files.stamp
 

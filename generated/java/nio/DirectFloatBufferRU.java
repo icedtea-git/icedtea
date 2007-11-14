@@ -161,9 +161,9 @@ class DirectFloatBufferRU
 
     // For duplicates and slices
     //
-    DirectFloatBufferRU(DirectBuffer db,	        // package-private
-			       int mark, int pos, int lim, int cap,
-			       int off)
+    DirectFloatBufferRU(DirectBuffer db,         // package-private
+                               int mark, int pos, int lim, int cap,
+                               int off)
     {
 
 
@@ -173,27 +173,27 @@ class DirectFloatBufferRU
 
 
 
-	super(db, mark, pos, lim, cap, off);
+        super(db, mark, pos, lim, cap, off);
 
     }
 
     public FloatBuffer slice() {
-	int pos = this.position();
-	int lim = this.limit();
-	assert (pos <= lim);
-	int rem = (pos <= lim ? lim - pos : 0);
-	int off = (pos << 2);
+        int pos = this.position();
+        int lim = this.limit();
+        assert (pos <= lim);
+        int rem = (pos <= lim ? lim - pos : 0);
+        int off = (pos << 2);
         assert (off >= 0);
-	return new DirectFloatBufferRU(this, -1, 0, rem, rem, off);
+        return new DirectFloatBufferRU(this, -1, 0, rem, rem, off);
     }
 
     public FloatBuffer duplicate() {
-	return new DirectFloatBufferRU(this,
-					      this.markValue(),
-					      this.position(),
-					      this.limit(),
-					      this.capacity(),
-					      0);
+        return new DirectFloatBufferRU(this,
+                                              this.markValue(),
+                                              this.position(),
+                                              this.limit(),
+                                              this.capacity(),
+                                              0);
     }
 
     public FloatBuffer asReadOnlyBuffer() {
@@ -205,7 +205,7 @@ class DirectFloatBufferRU
 
 
 
-	return duplicate();
+        return duplicate();
 
     }
 
@@ -263,7 +263,7 @@ class DirectFloatBufferRU
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -272,7 +272,7 @@ class DirectFloatBufferRU
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -313,7 +313,7 @@ class DirectFloatBufferRU
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -340,10 +340,10 @@ class DirectFloatBufferRU
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
-    
+
     public FloatBuffer compact() {
 
 
@@ -357,19 +357,18 @@ class DirectFloatBufferRU
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
     public boolean isDirect() {
-	return true;
+        return true;
     }
 
     public boolean isReadOnly() {
-	return true;
+        return true;
     }
 
-
 
 
 
@@ -409,7 +408,8 @@ class DirectFloatBufferRU
 
 
 
-
+
+
 
 
 
@@ -419,8 +419,8 @@ class DirectFloatBufferRU
 
 
 
-	return ((ByteOrder.nativeOrder() != ByteOrder.BIG_ENDIAN)
-		? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN);
+        return ((ByteOrder.nativeOrder() != ByteOrder.BIG_ENDIAN)
+                ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN);
 
     }
 

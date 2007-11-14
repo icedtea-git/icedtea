@@ -52,7 +52,7 @@ class HeapDoubleBufferR
 
     */
 
-    HeapDoubleBufferR(int cap, int lim) {		// package-private
+    HeapDoubleBufferR(int cap, int lim) {            // package-private
 
 
 
@@ -60,8 +60,8 @@ class HeapDoubleBufferR
 
 
 
-	super(cap, lim);
-	this.isReadOnly = true;
+        super(cap, lim);
+        this.isReadOnly = true;
 
     }
 
@@ -73,14 +73,14 @@ class HeapDoubleBufferR
 
 
 
-	super(buf, off, len);
-	this.isReadOnly = true;
+        super(buf, off, len);
+        this.isReadOnly = true;
 
     }
 
     protected HeapDoubleBufferR(double[] buf,
-				   int mark, int pos, int lim, int cap,
-				   int off)
+                                   int mark, int pos, int lim, int cap,
+                                   int off)
     {
 
 
@@ -89,27 +89,27 @@ class HeapDoubleBufferR
 
 
 
-	super(buf, mark, pos, lim, cap, off);
-	this.isReadOnly = true;
+        super(buf, mark, pos, lim, cap, off);
+        this.isReadOnly = true;
 
     }
 
     public DoubleBuffer slice() {
-	return new HeapDoubleBufferR(hb,
-					-1,
-					0,
-					this.remaining(),
-					this.remaining(),
-					this.position() + offset);
+        return new HeapDoubleBufferR(hb,
+                                        -1,
+                                        0,
+                                        this.remaining(),
+                                        this.remaining(),
+                                        this.position() + offset);
     }
 
     public DoubleBuffer duplicate() {
-	return new HeapDoubleBufferR(hb,
-					this.markValue(),
-					this.position(),
-					this.limit(),
-					this.capacity(),
-					offset);
+        return new HeapDoubleBufferR(hb,
+                                        this.markValue(),
+                                        this.position(),
+                                        this.limit(),
+                                        this.capacity(),
+                                        offset);
     }
 
     public DoubleBuffer asReadOnlyBuffer() {
@@ -121,7 +121,7 @@ class HeapDoubleBufferR
 
 
 
-	return duplicate();
+        return duplicate();
 
     }
 
@@ -155,7 +155,7 @@ class HeapDoubleBufferR
 
 
     public boolean isReadOnly() {
-	return true;
+        return true;
     }
 
     public DoubleBuffer put(double x) {
@@ -163,7 +163,7 @@ class HeapDoubleBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -172,7 +172,7 @@ class HeapDoubleBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -185,7 +185,7 @@ class HeapDoubleBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -213,7 +213,7 @@ class HeapDoubleBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -225,11 +225,10 @@ class HeapDoubleBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
-
 
 
 
@@ -553,7 +552,8 @@ class HeapDoubleBufferR
 
 
 
-
+
+
 
 
 
@@ -584,7 +584,7 @@ class HeapDoubleBufferR
 
 
     public ByteOrder order() {
-	return ByteOrder.nativeOrder();
+        return ByteOrder.nativeOrder();
     }
 
 
