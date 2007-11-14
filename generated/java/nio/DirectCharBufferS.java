@@ -161,14 +161,14 @@ class DirectCharBufferS
 
     // For duplicates and slices
     //
-    DirectCharBufferS(DirectBuffer db,	        // package-private
-			       int mark, int pos, int lim, int cap,
-			       int off)
+    DirectCharBufferS(DirectBuffer db,         // package-private
+                               int mark, int pos, int lim, int cap,
+                               int off)
     {
 
-	super(mark, pos, lim, cap);
-	address = db.address() + off;
-	viewedBuffer = db;
+        super(mark, pos, lim, cap);
+        address = db.address() + off;
+        viewedBuffer = db;
 
 
 
@@ -178,32 +178,32 @@ class DirectCharBufferS
     }
 
     public CharBuffer slice() {
-	int pos = this.position();
-	int lim = this.limit();
-	assert (pos <= lim);
-	int rem = (pos <= lim ? lim - pos : 0);
-	int off = (pos << 1);
+        int pos = this.position();
+        int lim = this.limit();
+        assert (pos <= lim);
+        int rem = (pos <= lim ? lim - pos : 0);
+        int off = (pos << 1);
         assert (off >= 0);
-	return new DirectCharBufferS(this, -1, 0, rem, rem, off);
+        return new DirectCharBufferS(this, -1, 0, rem, rem, off);
     }
 
     public CharBuffer duplicate() {
-	return new DirectCharBufferS(this,
-					      this.markValue(),
-					      this.position(),
-					      this.limit(),
-					      this.capacity(),
-					      0);
+        return new DirectCharBufferS(this,
+                                              this.markValue(),
+                                              this.position(),
+                                              this.limit(),
+                                              this.capacity(),
+                                              0);
     }
 
     public CharBuffer asReadOnlyBuffer() {
 
-	return new DirectCharBufferRS(this,
-					   this.markValue(),
-					   this.position(),
-					   this.limit(),
-					   this.capacity(),
-					   0);
+        return new DirectCharBufferRS(this,
+                                           this.markValue(),
+                                           this.position(),
+                                           this.limit(),
+                                           this.capacity(),
+                                           0);
 
 
 
@@ -212,7 +212,7 @@ class DirectCharBufferS
 
 
     public long address() {
-	return address;
+        return address;
     }
 
     private long ix(int i) {
@@ -220,37 +220,37 @@ class DirectCharBufferS
     }
 
     public char get() {
-	return (Bits.swap(unsafe.getChar(ix(nextGetIndex()))));
+        return (Bits.swap(unsafe.getChar(ix(nextGetIndex()))));
     }
 
     public char get(int i) {
-	return (Bits.swap(unsafe.getChar(ix(checkIndex(i)))));
+        return (Bits.swap(unsafe.getChar(ix(checkIndex(i)))));
     }
 
     public CharBuffer get(char[] dst, int offset, int length) {
 
-	if ((length << 1) > Bits.JNI_COPY_TO_ARRAY_THRESHOLD) {
-	    checkBounds(offset, length, dst.length);
-	    int pos = position();
-	    int lim = limit();
-	    assert (pos <= lim);
-	    int rem = (pos <= lim ? lim - pos : 0);
-	    if (length > rem)
-		throw new BufferUnderflowException();
+        if ((length << 1) > Bits.JNI_COPY_TO_ARRAY_THRESHOLD) {
+            checkBounds(offset, length, dst.length);
+            int pos = position();
+            int lim = limit();
+            assert (pos <= lim);
+            int rem = (pos <= lim ? lim - pos : 0);
+            if (length > rem)
+                throw new BufferUnderflowException();
 
-	    if (order() != ByteOrder.nativeOrder())
-		Bits.copyToCharArray(ix(pos), dst,
-					  offset << 1,
-					  length << 1);
-	    else
-		Bits.copyToByteArray(ix(pos), dst,
-				     offset << 1,
-				     length << 1);
-	    position(pos + length);
-	} else {
-	    super.get(dst, offset, length);
-	}
-	return this;
+            if (order() != ByteOrder.nativeOrder())
+                Bits.copyToCharArray(ix(pos), dst,
+                                          offset << 1,
+                                          length << 1);
+            else
+                Bits.copyToByteArray(ix(pos), dst,
+                                     offset << 1,
+                                     length << 1);
+            position(pos + length);
+        } else {
+            super.get(dst, offset, length);
+        }
+        return this;
 
 
 
@@ -260,8 +260,8 @@ class DirectCharBufferS
 
     public CharBuffer put(char x) {
 
-	unsafe.putChar(ix(nextPutIndex()), Bits.swap((x)));
-	return this;
+        unsafe.putChar(ix(nextPutIndex()), Bits.swap((x)));
+        return this;
 
 
 
@@ -269,8 +269,8 @@ class DirectCharBufferS
 
     public CharBuffer put(int i, char x) {
 
-	unsafe.putChar(ix(checkIndex(i)), Bits.swap((x)));
-	return this;
+        unsafe.putChar(ix(checkIndex(i)), Bits.swap((x)));
+        return this;
 
 
 
@@ -278,40 +278,40 @@ class DirectCharBufferS
 
     public CharBuffer put(CharBuffer src) {
 
-	if (src instanceof DirectCharBufferS) {
-	    if (src == this)
-		throw new IllegalArgumentException();
-	    DirectCharBufferS sb = (DirectCharBufferS)src;
+        if (src instanceof DirectCharBufferS) {
+            if (src == this)
+                throw new IllegalArgumentException();
+            DirectCharBufferS sb = (DirectCharBufferS)src;
 
-	    int spos = sb.position();
-	    int slim = sb.limit();
-	    assert (spos <= slim);
-	    int srem = (spos <= slim ? slim - spos : 0);
+            int spos = sb.position();
+            int slim = sb.limit();
+            assert (spos <= slim);
+            int srem = (spos <= slim ? slim - spos : 0);
 
-	    int pos = position();
-	    int lim = limit();
-	    assert (pos <= lim);
-	    int rem = (pos <= lim ? lim - pos : 0);
+            int pos = position();
+            int lim = limit();
+            assert (pos <= lim);
+            int rem = (pos <= lim ? lim - pos : 0);
 
-	    if (srem > rem)
-		throw new BufferOverflowException();
- 	    unsafe.copyMemory(sb.ix(spos), ix(pos), srem << 1);
- 	    sb.position(spos + srem);
- 	    position(pos + srem);
-	} else if (src.hb != null) {
+            if (srem > rem)
+                throw new BufferOverflowException();
+            unsafe.copyMemory(sb.ix(spos), ix(pos), srem << 1);
+            sb.position(spos + srem);
+            position(pos + srem);
+        } else if (src.hb != null) {
 
-	    int spos = src.position();
-	    int slim = src.limit();
-	    assert (spos <= slim);
-	    int srem = (spos <= slim ? slim - spos : 0);
+            int spos = src.position();
+            int slim = src.limit();
+            assert (spos <= slim);
+            int srem = (spos <= slim ? slim - spos : 0);
 
-	    put(src.hb, src.offset + spos, srem);
-	    src.position(spos + srem);
+            put(src.hb, src.offset + spos, srem);
+            src.position(spos + srem);
 
-	} else {
-	    super.put(src);
-	}
-	return this;
+        } else {
+            super.put(src);
+        }
+        return this;
 
 
 
@@ -319,104 +319,104 @@ class DirectCharBufferS
 
     public CharBuffer put(char[] src, int offset, int length) {
 
-	if ((length << 1) > Bits.JNI_COPY_FROM_ARRAY_THRESHOLD) {
-	    checkBounds(offset, length, src.length);
-	    int pos = position();
-	    int lim = limit();
-	    assert (pos <= lim);
-	    int rem = (pos <= lim ? lim - pos : 0);
-	    if (length > rem)
-		throw new BufferOverflowException();
+        if ((length << 1) > Bits.JNI_COPY_FROM_ARRAY_THRESHOLD) {
+            checkBounds(offset, length, src.length);
+            int pos = position();
+            int lim = limit();
+            assert (pos <= lim);
+            int rem = (pos <= lim ? lim - pos : 0);
+            if (length > rem)
+                throw new BufferOverflowException();
 
-	    if (order() != ByteOrder.nativeOrder()) 
-		Bits.copyFromCharArray(src, offset << 1,
-					    ix(pos), length << 1);
-	    else
-		Bits.copyFromByteArray(src, offset << 1,
-				       ix(pos), length << 1);
-	    position(pos + length);
-	} else {
-	    super.put(src, offset, length);
-	}
-	return this;
+            if (order() != ByteOrder.nativeOrder())
+                Bits.copyFromCharArray(src, offset << 1,
+                                            ix(pos), length << 1);
+            else
+                Bits.copyFromByteArray(src, offset << 1,
+                                       ix(pos), length << 1);
+            position(pos + length);
+        } else {
+            super.put(src, offset, length);
+        }
+        return this;
 
 
 
     }
-    
+
     public CharBuffer compact() {
 
-	int pos = position();
-	int lim = limit();
-	assert (pos <= lim);
-	int rem = (pos <= lim ? lim - pos : 0);
+        int pos = position();
+        int lim = limit();
+        assert (pos <= lim);
+        int rem = (pos <= lim ? lim - pos : 0);
 
- 	unsafe.copyMemory(ix(pos), ix(0), rem << 1);
- 	position(rem);
-	limit(capacity());
+        unsafe.copyMemory(ix(pos), ix(0), rem << 1);
+        position(rem);
+        limit(capacity());
 	clearMark();
-	return this;
+        return this;
 
 
 
     }
 
     public boolean isDirect() {
-	return true;
+        return true;
     }
 
     public boolean isReadOnly() {
-	return false;
+        return false;
     }
 
-
+
 
 
     public String toString(int start, int end) {
-	if ((end > limit()) || (start > end))
-	    throw new IndexOutOfBoundsException();
-	try {
-	    int len = end - start;
-	    char[] ca = new char[len];
-	    CharBuffer cb = CharBuffer.wrap(ca);
-	    CharBuffer db = this.duplicate();
-	    db.position(start);
-	    db.limit(end);
-	    cb.put(db);
-	    return new String(ca);
-	} catch (StringIndexOutOfBoundsException x) {
-	    throw new IndexOutOfBoundsException();
-	}
+        if ((end > limit()) || (start > end))
+            throw new IndexOutOfBoundsException();
+        try {
+            int len = end - start;
+            char[] ca = new char[len];
+            CharBuffer cb = CharBuffer.wrap(ca);
+            CharBuffer db = this.duplicate();
+            db.position(start);
+            db.limit(end);
+            cb.put(db);
+            return new String(ca);
+        } catch (StringIndexOutOfBoundsException x) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
 
     // --- Methods to support CharSequence ---
 
     public CharSequence subSequence(int start, int end) {
-	int pos = position();
-	int lim = limit();
-	assert (pos <= lim);
-	pos = (pos <= lim ? pos : lim);
-	int len = lim - pos;
+        int pos = position();
+        int lim = limit();
+        assert (pos <= lim);
+        pos = (pos <= lim ? pos : lim);
+        int len = lim - pos;
 
-	if ((start < 0) || (end > len) || (start > end))
-	    throw new IndexOutOfBoundsException();
-	int sublen = end - start;
- 	int off = (pos + start) << 1;
+        if ((start < 0) || (end > len) || (start > end))
+            throw new IndexOutOfBoundsException();
+        int sublen = end - start;
+        int off = (pos + start) << 1;
         assert (off >= 0);
-	return new DirectCharBufferS(this, -1, 0, sublen, sublen, off);
+        return new DirectCharBufferS(this, -1, 0, sublen, sublen, off);
     }
 
 
 
-
+
 
 
 
     public ByteOrder order() {
 
-	return ((ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN)
-		? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN);
+        return ((ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN)
+                ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN);
 
 
 

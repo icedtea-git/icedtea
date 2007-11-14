@@ -52,7 +52,7 @@ class HeapShortBufferR
 
     */
 
-    HeapShortBufferR(int cap, int lim) {		// package-private
+    HeapShortBufferR(int cap, int lim) {            // package-private
 
 
 
@@ -60,8 +60,8 @@ class HeapShortBufferR
 
 
 
-	super(cap, lim);
-	this.isReadOnly = true;
+        super(cap, lim);
+        this.isReadOnly = true;
 
     }
 
@@ -73,14 +73,14 @@ class HeapShortBufferR
 
 
 
-	super(buf, off, len);
-	this.isReadOnly = true;
+        super(buf, off, len);
+        this.isReadOnly = true;
 
     }
 
     protected HeapShortBufferR(short[] buf,
-				   int mark, int pos, int lim, int cap,
-				   int off)
+                                   int mark, int pos, int lim, int cap,
+                                   int off)
     {
 
 
@@ -89,27 +89,27 @@ class HeapShortBufferR
 
 
 
-	super(buf, mark, pos, lim, cap, off);
-	this.isReadOnly = true;
+        super(buf, mark, pos, lim, cap, off);
+        this.isReadOnly = true;
 
     }
 
     public ShortBuffer slice() {
-	return new HeapShortBufferR(hb,
-					-1,
-					0,
-					this.remaining(),
-					this.remaining(),
-					this.position() + offset);
+        return new HeapShortBufferR(hb,
+                                        -1,
+                                        0,
+                                        this.remaining(),
+                                        this.remaining(),
+                                        this.position() + offset);
     }
 
     public ShortBuffer duplicate() {
-	return new HeapShortBufferR(hb,
-					this.markValue(),
-					this.position(),
-					this.limit(),
-					this.capacity(),
-					offset);
+        return new HeapShortBufferR(hb,
+                                        this.markValue(),
+                                        this.position(),
+                                        this.limit(),
+                                        this.capacity(),
+                                        offset);
     }
 
     public ShortBuffer asReadOnlyBuffer() {
@@ -121,7 +121,7 @@ class HeapShortBufferR
 
 
 
-	return duplicate();
+        return duplicate();
 
     }
 
@@ -155,7 +155,7 @@ class HeapShortBufferR
 
 
     public boolean isReadOnly() {
-	return true;
+        return true;
     }
 
     public ShortBuffer put(short x) {
@@ -163,7 +163,7 @@ class HeapShortBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -172,7 +172,7 @@ class HeapShortBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -185,7 +185,7 @@ class HeapShortBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -213,7 +213,7 @@ class HeapShortBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -225,11 +225,10 @@ class HeapShortBufferR
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
-
 
 
 
@@ -553,7 +552,8 @@ class HeapShortBufferR
 
 
 
-
+
+
 
 
 
@@ -584,7 +584,7 @@ class HeapShortBufferR
 
 
     public ByteOrder order() {
-	return ByteOrder.nativeOrder();
+        return ByteOrder.nativeOrder();
     }
 
 

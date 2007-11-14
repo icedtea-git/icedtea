@@ -71,7 +71,7 @@ A Note About License Headers
 Some sources downloaded from openjdk.java.net do not display the GPL
 license header.  Instances are:
 
- - The files in openjdk/j2se/src/share/classes/javax/xml/stream/ seem to 
+ - The files in openjdk/jdk/src/share/classes/javax/xml/stream/ seem to 
    comprise the BEA-StAX source code
 
    http://ftpna2.bea.com/pub/downloads/jsr173.jar
@@ -81,7 +81,7 @@ license header.  Instances are:
    that the modifications are owned by Sun.
 
  - We are assuming that these files are owned by Sun:
-   openjdk/j2se/src/share/classes/**/resources/*.properties
+   openjdk/jdk/src/share/classes/**/resources/*.properties
 
 
 gcjwebplugin
@@ -98,8 +98,8 @@ gcjwebplugin itself is a shared object, gcjwebplugin.so, built from a
 single source file, gcjwebplugin.cc.  The IcedTea adaptation of
 gcjwebplugin communicates through named pipes with a modified version
 of IcedTea's appletviewer.  Two source files,
-openjdk/j2se/src/share/classes/sun/applet/PluginAppletViewer.java,
-openjdk/j2se/src/share/classes/sun/applet/PluginMain.java are added to
+openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java,
+openjdk/jdk/src/share/classes/sun/applet/PluginMain.java are added to
 rt.jar and tools.jar to provide gcjwebplugin with an interface into
 the appletviewer code.  This support code is provided in
 patches/icedtea-plugin.patch.
