@@ -114,6 +114,7 @@ class Assembler : public AbstractAssembler {
   void andi_(Register dst, Register a, int b);
   void b(address a);
   void bc(int bo, int bi, address a);
+  void bcl(int bo, int bi, address a);
   void bclr(int bo, int bi);
   void bclrl(int bo, int bi);
   void bl(address a);

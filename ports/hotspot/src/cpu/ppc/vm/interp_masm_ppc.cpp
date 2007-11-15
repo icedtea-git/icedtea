@@ -34,10 +34,7 @@ REGISTER_DEFINITION(Register, Rstate);
 
 void InterpreterMacroAssembler::set_last_Java_frame()
 {
-  Label label;
-
-  bl(label);
-  bind(label);
+  bcl(31, 20, pc() + 4);  // magic branch that preserves the link stack
   mflr(r0);
   store(r0, Address(Rthread, JavaThread::last_Java_pc_offset()));
   store(r1, Address(Rthread, JavaThread::last_Java_sp_offset()));
