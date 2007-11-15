@@ -1,5 +1,31 @@
 2007-11-15  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.hpp
+	(Rstate): Moved declaration from assembler_ppc.hpp.
+	(STATE): Moved definition from cppInterpreter_ppc.cpp.
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp
+	(Rstate): Moved definition from register_definitions_ppc.cpp.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+	(Rstate): Moved declaration to interp_masm_ppc.hpp.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp
+	(STATE): Moved definition to interp_masm_ppc.hpp.
+	* ports/hotspot/src/cpu/ppc/vm/register_definitions_ppc.cpp
+	(Rstate): Moved definition to interp_masm_ppc.cpp.
+
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.hpp
+	(fixup_after_potential_safepoint): New method.
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp
+	(fixup_after_potential_safepoint): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp
+	(generate_normal_entry, generate_native_entry):
+	Replace method pointer reloads with calls to the above
+	to make what is happening more obvious.
+	(generate_native_entry): Add an extra fixup.
+	* ports/hotspot/src/cpu/ppc/vm/interpreter_ppc.cpp
+	(generate_slow_signature_handler): Add an extra fixup.
+
+2007-11-15  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/ppc/vm/icache_ppc.hpp
 	(line_size, log2_line_size): Reduce cache line size.
 	* ports/hotspot/src/cpu/ppc/vm/icache_ppc.cpp

@@ -93,6 +93,7 @@ address AbstractInterpreterGenerator::generate_slow_signature_handler()
   __ prolog (frame);
   __ call (CAST_FROM_FN_PTR(address,
                             InterpreterRuntime::slow_signature_handler));
+  __ fixup_after_potential_safepoint ();
   __ epilog (frame);
 
   // Load the register images into the registers
