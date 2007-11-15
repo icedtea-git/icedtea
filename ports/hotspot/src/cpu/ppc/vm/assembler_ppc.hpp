@@ -30,9 +30,6 @@
 REGISTER_DECLARATION(Register, Rmethod, r31);
 REGISTER_DECLARATION(Register, Rlocals, r30);
 REGISTER_DECLARATION(Register, Rthread, r29);
-#ifdef CC_INTERP
-REGISTER_DECLARATION(Register, Rstate,  r28);
-#endif // CC_INTERP
 
 
 // Address is an abstraction used to represent a memory location

@@ -109,7 +109,3 @@ REGISTER_DEFINITION(SpecialPurposeRegister, ctr);
 REGISTER_DEFINITION(Register, Rmethod);
 REGISTER_DEFINITION(Register, Rlocals);
 REGISTER_DEFINITION(Register, Rthread);
-#ifdef CC_INTERP
-REGISTER_DEFINITION(Register, Rstate);
-#endif
-

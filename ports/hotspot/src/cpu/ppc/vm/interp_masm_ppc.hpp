@@ -25,6 +25,13 @@
 
 // This file specializes the assember with interpreter-specific macros
 
+#ifdef CC_INTERP
+REGISTER_DECLARATION(Register, Rstate, r28);
+
+#define STATE(field_name) \
+  (Address(Rstate, byte_offset_of(BytecodeInterpreter, field_name)))
+#endif // CC_INTERP
+
 class InterpreterMacroAssembler : public MacroAssembler {
  public:
   InterpreterMacroAssembler(CodeBuffer* code) : MacroAssembler(code) {}
@@ -32,5 +39,7 @@ class InterpreterMacroAssembler : public MacroAssembler {
   // Object locking
   void lock_object(Register entry);
   void unlock_object(Register entry);
-};
 
+  // Safepoints
+  void fixup_after_potential_safepoint();
+};

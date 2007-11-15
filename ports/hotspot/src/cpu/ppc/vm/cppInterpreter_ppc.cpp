@@ -39,8 +39,6 @@ extern "C" void RecursiveInterpreterActivation(interpreterState istate)
 }
 
 #define __ _masm->
-#define STATE(field_name) \
-  (Address(Rstate, byte_offset_of(BytecodeInterpreter, field_name)))
 
 // Non-volatile registers we use
 const Register          Rmonitor = r27;
@@ -526,6 +524,7 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ mr (r3, Rthread);
   __ mr (r4, Rmethod);
   __ call (CAST_FROM_FN_PTR(address, InterpreterRuntime::prepare_native_call));
+  __ fixup_after_potential_safepoint ();
   __ load (r0, Address(Rthread, Thread::pending_exception_offset()));
   __ compare (r0, 0);
   __ bne (return_to_caller);
@@ -633,10 +632,8 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ mr (r3, Rthread);
   __ call (CAST_FROM_FN_PTR(address,
        JavaThread::check_special_condition_for_native_trans));
+  __ fixup_after_potential_safepoint ();
   __ bind (no_block);
-
-  // The method pointer may have changed if there was a safepoint
-  __ load (Rmethod, STATE(_method));
 
   // Change the thread state
   __ load (r0, _thread_in_Java);
@@ -805,9 +802,7 @@ address InterpreterGenerator::generate_normal_entry(bool synchronized)
 
   __ mr (r3, Rstate);
   __ call (interpreter);
-
-  // The method pointer may have changed if there was a safepoint
-  __ load (Rmethod, STATE(_method));
+  __ fixup_after_potential_safepoint ();
 
   // Clear the frame anchor
   __ reset_last_Java_frame ();

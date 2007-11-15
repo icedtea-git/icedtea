@@ -26,7 +26,11 @@
 #include "incls/_precompiled.incl"
 #include "incls/_interp_masm_ppc.cpp.incl"
 
-// Lock object
+#ifdef CC_INTERP
+REGISTER_DEFINITION(Register, Rstate);
+#endif
+
+// Lock an object
 //
 // Arguments:
 //  monitor: BasicObjectLock to be used for locking
@@ -68,7 +72,7 @@ void InterpreterMacroAssembler::lock_object(Register entry)
   bind(done);
 }
 
-// Unlocks an object. Throws an IllegalMonitorException if
+// Unlock an object. Throws an IllegalMonitorException if
 // object is not locked by current thread.
 //
 // Arguments:
@@ -118,4 +122,15 @@ void InterpreterMacroAssembler::unlock_object(Register entry)
 
   unimplemented(__FILE__, __LINE__);
   bind(done);
+}
+
+// Reload everything that might have changed after a safepoint
+
+void InterpreterMacroAssembler::fixup_after_potential_safepoint()
+{
+#ifdef CC_INTERP
+  load(Rmethod, STATE(_method));
+#else
+  Unimplemented();
+#endif
 }
