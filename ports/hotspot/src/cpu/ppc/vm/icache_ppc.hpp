@@ -35,8 +35,8 @@ class ICache : public AbstractICache {
 #else
     stub_size      = 80,  // Size of the icache flush stub in bytes
 #endif // PPC32
-    line_size      = 128, // Icache line size in bytes
-    log2_line_size = 7    // log2(line_size)
+    line_size      = 32,  // Icache line size in bytes
+    log2_line_size = 5    // log2(line_size)
   };
 
   // Use default implementation

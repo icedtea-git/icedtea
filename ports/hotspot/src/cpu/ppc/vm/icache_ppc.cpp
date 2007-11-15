@@ -28,7 +28,6 @@
 
 #define __ _masm->
 
-#ifdef ASSERT
 static int get_cache_block_size()
 {
   // Measure the cache block size by zeroing the first cache block
@@ -49,14 +48,13 @@ static int get_cache_block_size()
   free(page);
   return blocksize;
 }
-#endif // ASSERT
 
 void ICacheStubGenerator::generate_icache_flush(
   ICache::flush_icache_stub_t* flush_icache_stub) {
 
   StubCodeMark mark(this, "ICache", "flush_icache_stub");
 
-  assert(ICache::line_size <= get_cache_block_size(), "line_size too large");
+  guarantee(ICache::line_size <= get_cache_block_size(),"line_size too large");
   assert(ICache::line_size == 1 << ICache::log2_line_size, "doh");
 
   address start = __ enter();
