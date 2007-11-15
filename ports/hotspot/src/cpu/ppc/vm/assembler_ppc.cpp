@@ -241,6 +241,10 @@ void Assembler::bc(int bo, int bi, address a)
 {
   emit_instruction(16, bo, bi, branch_target(pc(), a, 14), false, false);
 }
+void Assembler::bcl(int bo, int bi, address a)
+{
+  emit_instruction(16, bo, bi, branch_target(pc(), a, 14), false, true);
+}
 void Assembler::bclr(int bo, int bi)
 {
   emit_instruction(19, bo, bi, 0, 16, false);
