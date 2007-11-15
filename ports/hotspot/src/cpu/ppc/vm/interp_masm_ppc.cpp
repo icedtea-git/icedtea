@@ -30,6 +30,27 @@
 REGISTER_DEFINITION(Register, Rstate);
 #endif
 
+// Set the last Java frame pointer
+
+void InterpreterMacroAssembler::set_last_Java_frame()
+{
+  Label label;
+
+  bl(label);
+  bind(label);
+  mflr(r0);
+  store(r0, Address(Rthread, JavaThread::last_Java_pc_offset()));
+  store(r1, Address(Rthread, JavaThread::last_Java_sp_offset()));
+}
+
+// Clear the last Java frame pointer
+
+void InterpreterMacroAssembler::reset_last_Java_frame()
+{
+  load(r0, 0);
+  store(r0, Address(Rthread, JavaThread::last_Java_sp_offset()));
+}
+
 // Lock an object
 //
 // Arguments:

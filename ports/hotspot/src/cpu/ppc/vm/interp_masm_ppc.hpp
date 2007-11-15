@@ -36,6 +36,10 @@ class InterpreterMacroAssembler : public MacroAssembler {
  public:
   InterpreterMacroAssembler(CodeBuffer* code) : MacroAssembler(code) {}
 
+  // Frame anchor tracking
+  void set_last_Java_frame();
+  void reset_last_Java_frame();
+
   // Object locking
   void lock_object(Register entry);
   void unlock_object(Register entry);

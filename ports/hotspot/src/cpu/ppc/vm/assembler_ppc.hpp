@@ -352,9 +352,6 @@ class MacroAssembler : public Assembler {
 
   void cmpxchg_(Register exchange, Register dst, Register compare);
 
-  void set_last_Java_frame();
-  void reset_last_Java_frame();
-
   void serialize_memory(Register tmp1, Register tmp2);
 
   void calc_padding_for_alignment(Register dst, Register src, int align);
