@@ -1196,23 +1196,6 @@ void MacroAssembler::cmpxchg_(Register exchange, Register dst, Register comp)
   bind(done);
 }
 
-void MacroAssembler::set_last_Java_frame()
-{
-  Label label;
-
-  bl(label);
-  bind(label);
-  mflr(r0);
-  store(r0, Address(Rthread, JavaThread::last_Java_pc_offset()));
-  store(r1, Address(Rthread, JavaThread::last_Java_sp_offset()));
-}
-
-void MacroAssembler::reset_last_Java_frame()
-{
-  load(r0, 0);
-  store(r0, Address(Rthread, JavaThread::last_Java_sp_offset()));
-}
-
 // Write serialization page so VM thread can do a pseudo remote membar.
 void MacroAssembler::serialize_memory(Register tmp1, Register tmp2)
 {
