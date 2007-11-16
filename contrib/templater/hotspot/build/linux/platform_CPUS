@@ -1,0 +1,19 @@
+os_family = linux
+
+arch = @@basecpu@@
+
+arch_model = @@basecpu@@
+
+os_arch = linux_@@basecpu@@
+
+os_arch_model = linux_@@basecpu@@
+
+lib_arch = @@basecpu@@
+
+compiler = gcc
+
+gnu_dis_arch = @@basecpu@@
+
+sysdefs = -DLINUX -D_GNU_SOURCE -D@@basecpu.upper()@@@@
+basecpu == "ppc" and (" -D" + (cpu == "ppc" and "PPC32" or "PPC64"))
+@@ -DCC_INTERP -DXXX_EVIL_EVIL_EVIL
