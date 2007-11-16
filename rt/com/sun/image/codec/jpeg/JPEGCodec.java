@@ -1,5 +1,6 @@
 /* JPEGCodec.java -- 
    Copyright (C) 2007 Free Software Foundation, Inc.
+   Copyright (C) 2007 Matthew Flaschen
 
    This file is part of GNU Classpath.
 
@@ -39,22 +40,107 @@ package com.sun.image.codec.jpeg;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import com.sun.image.codec.jpeg.*;
+import java.io.IOException;
+
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+
+import javax.imageio.*;
+import javax.imageio.stream.*;
+import javax.imageio.plugins.jpeg.*;
+
+import java.util.Iterator;
 
 public class JPEGCodec
 {
 
-	public JPEGCodec()
-	{
-	}	
-
 	public static JPEGImageDecoder createJPEGDecoder(InputStream is)
 	{
-		return null;
+		return new ImageIOJPEGImageDecoder(is);
 	}
 
 	public static JPEGImageEncoder createJPEGEncoder(OutputStream os)
 	{
 		return null;
+	}
+
+	public static JPEGImageDecoder createJPEGDecoder(InputStream src, JPEGDecodeParam jdp)
+	{
+		return null; 
+	}
+        
+	public static JPEGImageEncoder createJPEGEncoder(OutputStream dest, JPEGEncodeParam jep)
+	{
+		return null;
+	}
+        
+	public static JPEGEncodeParam getDefaultJPEGEncodeParam(BufferedImage bi)
+	{
+		return null;
+	}
+        
+	public static JPEGEncodeParam getDefaultJPEGEncodeParam(int numBands, int colorID)
+	{
+		return null;
+	}
+		
+	public static JPEGEncodeParam getDefaultJPEGEncodeParam(JPEGDecodeParam jdp)
+	{
+		return null;
+	}
+        
+	public static JPEGEncodeParam getDefaultJPEGEncodeParam(Raster ras, int colorID)
+	{
+		return null;
+	}
+        
+
+	private static class ImageIOJPEGImageDecoder implements JPEGImageDecoder
+	{
+		
+		private static final String JPGMime = "image/jpeg";
+    
+		private ImageReader JPGReader;
+		
+		private InputStream in;
+		
+		private ImageIOJPEGImageDecoder (InputStream newIs)
+		{
+			in = newIs;
+			
+			Iterator<ImageReader> JPGReaderIter = ImageIO.getImageReadersByMIMEType(JPGMime);
+			if(JPGReaderIter.hasNext())
+			{
+				JPGReader  = JPGReaderIter.next();
+			}
+			
+			JPGReader.setInput(new MemoryCacheImageInputStream(in));
+		}
+
+		public BufferedImage decodeAsBufferedImage() throws IOException, ImageFormatException
+		{
+			return JPGReader.read(0);
+		}
+		
+		public Raster decodeAsRaster() throws IOException, ImageFormatException
+		{
+			return JPGReader.readRaster(0, null);
+		}
+		
+		public InputStream getInputStream()
+		{
+			return in;
+		}
+		
+		public JPEGDecodeParam getJPEGDecodeParam()
+		{
+			return null;
+		}
+
+		public void setJPEGDecodeParam(JPEGDecodeParam jdp)
+		{
+			return;
+		}
+
 	}
 }

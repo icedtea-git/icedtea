@@ -1,15 +1,14 @@
-/* JPEGImageDecoder.java -- 
-   Copyright (C) 2007 Free Software Foundation, Inc.
+/* ImageFormatException.java
    Copyright (C) 2007 Matthew Flaschen
 
-   This file is part of GNU Classpath.
+   This file is part of IcedTea
 
-   GNU Classpath is free software; you can redistribute it and/or modify
+   IcedTea is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
    any later version.
 
-   GNU Classpath is distributed in the hope that it will be useful, but
+   IcedTea is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    General Public License for more details.
@@ -36,25 +35,17 @@
    obligated to do so.  If you do not wish to do so, delete this
    exception statement from your version. */
 
-
 package com.sun.image.codec.jpeg;
-import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 
-import java.io.InputStream;
-import java.io.IOException;
-
-
-public interface JPEGImageDecoder
+public class ImageFormatException extends RuntimeException
 {
+	public ImageFormatException()
+	{
+		this("");
+	}
 
-	public BufferedImage decodeAsBufferedImage() throws IOException, ImageFormatException;
-	
-	public Raster decodeAsRaster() throws IOException, ImageFormatException;
-	
-	public InputStream getInputStream();
-
-	public JPEGDecodeParam getJPEGDecodeParam();
-
-	public void setJPEGDecodeParam(JPEGDecodeParam jdp);
+	public ImageFormatException(String s)
+	{
+		super(s);
+	}
 }
