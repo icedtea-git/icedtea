@@ -33,7 +33,7 @@
 	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
 	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
 	(bcl): New instruction.
-	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp
 	(set_last_Java_frame): Preserve the link stack.
 
 2007-11-15  Gary Benson  <gbenson@redhat.com>
