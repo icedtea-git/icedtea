@@ -1,3 +1,9 @@
+2007-11-16  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am (ICEDTEA_PATCHES): Add
+	patches/icedtea-lcms-leak.patch.
+	* Makefile.in: Regenerate.
+
 2007-11-16  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp
@@ -89,7 +95,7 @@
 2007-11-15  Lillian Angel  <langel@redhat.com>
 	    Joshua Sumali  <jsumali@redhat.com>
 
-	* Makefile.am: Changed j2se to jdk. 
+	* Makefile.am: Changed j2se to jdk.
 	(OPENJDK_VERSION): Updated to b23.
 	(OPENJDK_DATE): Likewise.
 	(OPENJDK_MD5SUM): Likewise.
@@ -538,7 +544,7 @@
 	* patches/icedtea-xinerama.patch: Likewise.
 
 2007-10-12  Lillian Angel  <langel@redhat.com>
-	
+
 	* NEWS: Updated for 1.4.
 
 2007-10-12  Andrew Haley  <aph@redhat.com>
@@ -584,7 +590,7 @@
 	* patches/icedtea-debuginfo.patch: Add
 	openjdk/hotspot/build/linux/makefiles/gcc.make.
 	Add -g to CFLAGS_REQUIRED in
-	openjdk/j2se/make/common/Defs-linux.gmk	
+	openjdk/j2se/make/common/Defs-linux.gmk
 
 2007-10-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
@@ -895,9 +901,9 @@
 2007-09-04  Lillian Angel  <langel@redhat.com>
 
 	* .hgignore: Updated to ignore tools/
-	* Makefile.am: Updated to b19. A version of tools.jar is now 
-	generated at the beginning of the build. It is now required to 
-	build other hotspot sources. rt.jar has been renamed to rt-closed.jar, 
+	* Makefile.am: Updated to b19. A version of tools.jar is now
+	generated at the beginning of the build. It is now required to
+	build other hotspot sources. rt.jar has been renamed to rt-closed.jar,
 	and ALT_CLOSED_JDK_IMPORT_PATH has been replaced with
 	ALT_BINARY_PLUGS_PATH, as per b19 changes.
 	* Makefile.in: Regenerated.
@@ -932,7 +938,7 @@
 	* Makefile.in: Regenerated.
 
 2007-08-29  Lillian Angel  <langel@redhat.com>
-	
+
 	* Makefile.am: Should make lib/rt and lib/jce because javac
 	doesn't create the directories on the fly.
 	* Makefile.in: Regenerate
@@ -1083,7 +1089,7 @@
 
 2007-08-16  Lillian Angel  <langel@redhat.com>
 
-	* Makefile.am: Removed targets to generated properties files. 
+	* Makefile.am: Removed targets to generated properties files.
 	* Makefile.in: Regenerated.
 
 2007-08-15  Lillian Angel  <langel@redhat.com>
@@ -1091,7 +1097,7 @@
 	* Makefile.am: Added new patch.
 	* Makefile.in: Regenerated
 	* README: Added license header information
-	* patches/icedtea-license-headers.patch: New patch to patch scripts to 
+	* patches/icedtea-license-headers.patch: New patch to patch scripts to
 	use GPL	license header instead of proprietary one.
 
 2007-08-15  Thomas Fitzsimmons  <fitzsim@redhat.com>
@@ -1313,7 +1319,7 @@
 	new file.
 	* jce/gnu/java/security/icedtea/IcedTls.java: add
 	`CertBundleKeyStoreImpl' to provider.
-	
+
 2007-07-18  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* configure.ac: Bump version to 1.2.
@@ -1338,7 +1344,7 @@
 
 	* jce/gnu/javax/crypto/jce/GnuCrypto.java: Added PBEWithMD5AndDES and
 	PBE providers.
-	* jce/gnu/javax/crypto/jce/cipher/CipherAdapter.java: 
+	* jce/gnu/javax/crypto/jce/cipher/CipherAdapter.java:
 	(engineUpdate): Fixed blockCount and buffer size.
 	(engineUpdate): Fixed blockCount.
 	* jce/gnu/javax/crypto/key/GnuPBEKey.java
@@ -1396,7 +1402,7 @@
 
 	* patches/icedtea-assembler_amd64.patch: New file.
 	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-assembler_amd64.patch.
-	(icedtea-debug): New target 
+	(icedtea-debug): New target
 
 2007-07-08  Mark Wielaard  <mark@klomp.org>
 
@@ -1554,7 +1560,7 @@
 2007-07-05  Casey Marshall  <csm@gnu.org>
 
 	* jce/gnu/java/security/icedtea/IcedTls.java: New Class.
-	* jce/gnu/java/security/icedtea/GNUTlsRsaPreMasterSecretGeneratorImpl.java: 
+	* jce/gnu/java/security/icedtea/GNUTlsRsaPreMasterSecretGeneratorImpl.java:
 	New Class.
 	* jce/gnu/java/security/icedtea/GNUTlsPrfGeneratorImpl.java: New Class.
 	* jce/gnu/java/security/icedtea/GNUTlsMasterSecretGenerator.java: New Class.
@@ -1750,19 +1756,19 @@
 
 2007-06-27  Lillian Angel  <langel@redhat.com>
 
-	* rt/java/util/Timer.java 
-	rt/javax/security/auth/callback/ChoiceCallback.java 
-	rt/javax/security/auth/callback/ConfirmationCallback.java 
-	rt/javax/security/auth/callback/LanguageCallback.java 
-	rt/javax/security/auth/callback/NameCallback.java 
-	rt/javax/security/auth/callback/TextInputCallback.java 
-	rt/javax/security/auth/callback/TextOutputCallback.java 
-	rt/javax/security/sasl/AuthenticationException.java 
-	rt/javax/security/sasl/Sasl.java 
-	rt/javax/security/sasl/SaslClient.java 
-	rt/javax/security/sasl/SaslClientFactory.java 
-	rt/javax/security/sasl/SaslException.java 
-	rt/javax/security/sasl/SaslServer.java 
+	* rt/java/util/Timer.java
+	rt/javax/security/auth/callback/ChoiceCallback.java
+	rt/javax/security/auth/callback/ConfirmationCallback.java
+	rt/javax/security/auth/callback/LanguageCallback.java
+	rt/javax/security/auth/callback/NameCallback.java
+	rt/javax/security/auth/callback/TextInputCallback.java
+	rt/javax/security/auth/callback/TextOutputCallback.java
+	rt/javax/security/sasl/AuthenticationException.java
+	rt/javax/security/sasl/Sasl.java
+	rt/javax/security/sasl/SaslClient.java
+	rt/javax/security/sasl/SaslClientFactory.java
+	rt/javax/security/sasl/SaslException.java
+	rt/javax/security/sasl/SaslServer.java
 	rt/javax/security/sasl/SaslServerFactory.java: Removed from repo. They
 	are being copied from the openjdk src anyways.
 
@@ -2347,7 +2353,7 @@
 	* configure: Likewise.
 
 2007-06-20  Lillian Angel  <langel@redhat.com>
-	
+
 	* patches/icedtea-copy-plugs.patch: Fixed paths.
 
 2007-06-20  Lillian Angel  <langel@redhat.com>
@@ -2435,7 +2441,7 @@
 2007-06-14  Lillian Angel  <langel@redhat.com>
 
 	* icedtea-version.patch: Changes LAUNCHER_NAME to "java" instead of
-	"openjdk". Also, removes -MILESTONE from RELEASE string. "java 
+	"openjdk". Also, removes -MILESTONE from RELEASE string. "java
 	-version" now outputs the expected string.
 	* Makefile.am: Added new patch to list.
 
