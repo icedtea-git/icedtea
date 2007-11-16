@@ -3,6 +3,7 @@
 	* Makefile.am (ICEDTEA_PATCHES): Add
 	patches/icedtea-lcms-leak.patch.
 	* Makefile.in: Regenerate.
+	* patches/icedtea-lcms-leak.patch: New file.
 
 2007-11-16  Gary Benson  <gbenson@redhat.com>
 

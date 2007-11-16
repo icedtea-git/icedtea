@@ -1,0 +1,14 @@
+--- openjdk/jdk/src/share/native/sun/java2d/cmm/lcms/LCMS.c.orig	2007-11-15 19:07:12.000000000 -0500
++++ openjdk/jdk/src/share/native/sun/java2d/cmm/lcms/LCMS.c	2007-11-15 19:09:31.000000000 -0500
+@@ -183,9 +183,10 @@
+     sProf.pf = cmsOpenProfileFromMem((LPVOID)dataArray, (DWORD) dataSize);
+ 
+     if (sProf.pf == NULL) {
++        (*env)->ReleaseByteArrayElements (env, data, dataArray, 0);
+         JNU_ThrowIllegalArgumentException(env, "Invalid profile data");
+     }
+-
++    (*env)->ReleaseByteArrayElements (env, data, dataArray, 0);
+     return sProf.j;
+ }
+ 
