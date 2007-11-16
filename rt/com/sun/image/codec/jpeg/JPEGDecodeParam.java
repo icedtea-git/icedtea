@@ -36,25 +36,9 @@
    obligated to do so.  If you do not wish to do so, delete this
    exception statement from your version. */
 
-
 package com.sun.image.codec.jpeg;
-import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 
-import java.io.InputStream;
-import java.io.IOException;
-
-
-public interface JPEGImageDecoder
+public interface JPEGDecodeParam
 {
 
-	public BufferedImage decodeAsBufferedImage() throws IOException, ImageFormatException;
-	
-	public Raster decodeAsRaster() throws IOException, ImageFormatException;
-	
-	public InputStream getInputStream();
-
-	public JPEGDecodeParam getJPEGDecodeParam();
-
-	public void setJPEGDecodeParam(JPEGDecodeParam jdp);
 }

@@ -1,3 +1,16 @@
+2007-11-16  Lillian Angel  <langel@redhat.com>
+
+	* AUTHORS: Added Mathhew Flaschen.
+
+2007-11-16  Matthew Flaschen  <matthew.flaschen@gatech.edu>
+
+	* rt/com/sun/image/codec/jpeg/JPEGCodec.java: Partially implemented.
+	* rt/com/sun/image/codec/jpeg/JPEGImageDecoder.java: Implemented.
+	* rt/com/sun/image/codec/jpeg/ImageFormatException.java: New Class,
+	implemented.
+	* rt/com/sun/image/codec/jpeg/JPEGDecodeParam.java: New Class,
+	stubbed.
+
 2007-11-16  Gary Benson  <gbenson@redhat.com>
 
 	* contrib: New directory.
