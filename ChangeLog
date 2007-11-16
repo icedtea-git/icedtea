@@ -1,3 +1,8 @@
+2007-11-16  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp
+	(set_last_Java_frame): Really preserve the link stack.
+
 2007-11-16  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Added Mathhew Flaschen.
