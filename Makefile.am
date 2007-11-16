@@ -203,6 +203,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
 	patches/icedtea-ports.patch \
+	patches/icedtea-lcms-leak.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
