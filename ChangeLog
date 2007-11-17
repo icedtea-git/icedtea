@@ -1,3 +1,8 @@
+2007-11-17  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* patches/icedtea-lcms-leak.patch: Release array immediately after
+	cmsOpenProfileFromMem.
+
 2007-11-16  Lillian Angel  <langel@redhat.com>
 
 	* INSTALL: Updated.
