@@ -38,7 +38,9 @@ To bootstrap IcedTea with ecj:
 make
 
 To build IcedTea with an older version of IcedTea, use:
-./configure --with-icedtea [default location: /usr/lib/jvm/java-icedtea]
+./configure --with-icedtea 
+	[default location: /usr/lib/jvm/java-icedtea, 
+		to specifiy location use --with-icedtea-home=/path/to/icedtea]
 make
 
 
