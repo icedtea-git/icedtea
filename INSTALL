@@ -30,21 +30,22 @@ giflib-devel
 libpng-devel
 libjpeg-devel
 zlib-devel
-java-1.7.0-icedtea-devel (or IcedTea <= b19 built)
 
 See ./configure --help if you need to override defaults.
 
+To bootstrap IcedTea with ecj:
 ./configure 
-	--with-icedtea-home=/path/to/old/icedtea 
-		[default /usr/lib/jvm/java-icedtea]
 make
+
+To build IcedTea with an older version of IcedTea, use:
+./configure --with-icedtea [default location: /usr/lib/jvm/java-icedtea]
+make
+
 
 There is currently no install target.
 
 IcedTea ends up in openjdk/control/build/linux-i586 or
 openjdk/control/build/linux-amd64 when the build completes.
-
-This builds IcedTea against a previously built IcedTea.
 
 
 Rebuilding The IcedTea Plugs
