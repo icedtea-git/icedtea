@@ -1,5 +1,11 @@
 2007-11-16  Lillian Angel  <langel@redhat.com>
 
+	* Makefile.am
+	(stamps/bootstrap-directory-ecj.stamp): Fixed file checks.
+	* Makefile.in: Regenerated.
+
+2007-11-16  Lillian Angel  <langel@redhat.com>
+
 	* INSTALL: Updated.
 
 2007-11-16  Thomas Fitzsimmons  <fitzsim@redhat.com>
