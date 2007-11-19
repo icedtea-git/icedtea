@@ -590,6 +590,7 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
 
   // Make the call
   __ call (function);
+  __ fixup_after_potential_safepoint ();
 
   // The result will be in r3 (and maybe r4 on 32-bit) or f1.
   // Wherever it is, we need to store it before calling anything

@@ -1,3 +1,8 @@
+2007-11-19  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp
+	(generate_native_entry): Add a missing safepoint reload.
+
 2007-11-17  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* patches/icedtea-lcms-leak.patch: Release array immediately after
