@@ -1,5 +1,19 @@
 2007-11-20  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
+	(bcctrl, bctrl): New methods.
+
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
+	(call): Use bctrl instead of blrl to preserve the link stack.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp
+	(generate_normal_entry, generate_native_entry,
+	generate_convert_result): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp
+	(generate_call_stub): Likewise.
+
+2007-11-20  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/ppc/vm/register_ppc.hpp
 	(noreg): Declare.
 	* ports/hotspot/src/cpu/ppc/vm/register_definitions_ppc.cpp

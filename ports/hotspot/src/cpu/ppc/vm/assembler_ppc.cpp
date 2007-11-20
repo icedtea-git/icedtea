@@ -241,6 +241,10 @@ void Assembler::bc(int bo, int bi, address a)
 {
   emit_instruction(16, bo, bi, branch_target(pc(), a, 14), false, false);
 }
+void Assembler::bcctrl(int bo, int bi)
+{
+  emit_instruction(19, bo, bi, 0, 528, true);
+}
 void Assembler::bcl(int bo, int bi, address a)
 {
   emit_instruction(16, bo, bi, branch_target(pc(), a, 14), false, true);
@@ -448,6 +452,10 @@ void Assembler::stdx(Register src, Register a, Register b)
 
 // Standard mnemonics common to 32- and 64-bit implementations
 
+void Assembler::bctrl()
+{
+  bcctrl(20, 0);
+}
 void Assembler::bdnz(Label& l)
 {
   bc(16, 0, l);
@@ -989,8 +997,8 @@ void MacroAssembler::call(Register func)
   func = r0;
 #endif // PPC64
 
-  mtlr(func);
-  blrl();
+  mtctr(func);
+  bctrl();
 
 #ifdef PPC64
   ld (r2, Address(r1, 40));

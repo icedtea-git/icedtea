@@ -265,8 +265,8 @@ class StubGenerator: public StubCodeGenerator
     __ mr (Rmethod, method);
     __ mr (Rlocals, locals);
     __ mr (Rthread, thread);
-    __ mtlr (entry_point);
-    __ blrl();
+    __ mtctr (entry_point);
+    __ bctrl();
 
     // This is used to identify call_stub stack frames
     return_address = __ pc();

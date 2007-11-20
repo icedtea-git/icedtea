@@ -553,8 +553,8 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
 #endif
 
   // Call signature handler
-  __ mtlr (handler);
-  __ blrl ();
+  __ mtctr (handler);
+  __ bctrl ();
   __ mr (handler, r0);
 
   // Pass JNIEnv
@@ -686,8 +686,8 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ mr (r4, r4_save);
 #endif
   __ fmr (f1, f1_save);
-  __ mtlr (handler);
-  __ blrl ();
+  __ mtctr (handler);
+  __ bctrl ();
 
   // Unwind the current activation and return
   __ bind (return_to_caller);
@@ -846,8 +846,8 @@ address InterpreterGenerator::generate_normal_entry(bool synchronized)
 
   // Non-interpreted methods are dispatched normally -----------------
   __ bind (call_non_interpreted_method);
-  __ mtlr (r0);
-  __ blrl ();
+  __ mtctr (r0);
+  __ bctrl ();
 
   // Restore Rstate
   __ load (Rstate, Address(r1, StackFrame::back_chain_offset * wordSize));
@@ -1260,8 +1260,8 @@ void CppInterpreterGenerator::generate_convert_result(address* converter_array)
   __ lwz (r0, Address(Rmethod, methodOopDesc::result_index_offset()));
   __ shift_left (r0, r0, LogBytesPerWord);
   __ load_indexed (r0, r5, r0);
-  __ mtlr (r0);
-  __ blrl ();
+  __ mtctr (r0);
+  __ bctrl ();
 }
 
 // Remove the activation created by generate_compute_interpreter_state.
