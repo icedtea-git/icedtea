@@ -521,10 +521,11 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ load (handler, signature_handler_addr);
   __ compare (handler, 0);
   __ bne (got_signature_handler);
-  __ mr (r3, Rthread);
-  __ mr (r4, Rmethod);
-  __ call (CAST_FROM_FN_PTR(address, InterpreterRuntime::prepare_native_call));
-  __ fixup_after_potential_safepoint ();
+  __ call_VM (noreg,
+              CAST_FROM_FN_PTR(address,
+                               InterpreterRuntime::prepare_native_call),
+              Rmethod,
+              CALL_VM_NO_EXCEPTION_CHECKS);
   __ load (r0, Address(Rthread, Thread::pending_exception_offset()));
   __ compare (r0, 0);
   __ bne (return_to_caller);
@@ -619,7 +620,8 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   }
 
   // Check for safepoint operation in progress and/or pending
-  // suspend requests
+  // suspend requests.  We use a leaf call in order to leave
+  // the last_Java_frame setup undisturbed.
   Label block, no_block;
 
   __ load (r3, (intptr_t) SafepointSynchronize::address_of_state());
@@ -630,9 +632,9 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ compare (r0, 0);
   __ beq (no_block);
   __ bind (block);
-  __ mr (r3, Rthread);
-  __ call (CAST_FROM_FN_PTR(address,
-       JavaThread::check_special_condition_for_native_trans));
+  __ call_VM_leaf (
+       CAST_FROM_FN_PTR(address, 
+                        JavaThread::check_special_condition_for_native_trans));
   __ fixup_after_potential_safepoint ();
   __ bind (no_block);
 

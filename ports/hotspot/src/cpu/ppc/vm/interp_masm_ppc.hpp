@@ -33,11 +33,18 @@ REGISTER_DECLARATION(Register, Rstate, r28);
 #endif // CC_INTERP
 
 class InterpreterMacroAssembler : public MacroAssembler {
+ protected:
+  // Support for VM calls
+  virtual void call_VM_leaf_base(address entry_point);
+  virtual void call_VM_base(Register oop_result,
+                            address entry_point,
+                            CallVMFlags flags);
+
  public:
   InterpreterMacroAssembler(CodeBuffer* code) : MacroAssembler(code) {}
 
   // Frame anchor tracking
-  void set_last_Java_frame();
+  void set_last_Java_frame(Register lr_save = noreg);
   void reset_last_Java_frame();
 
   // Object locking

@@ -1200,6 +1200,119 @@ void MacroAssembler::cmpxchg_(Register exchange, Register dst, Register comp)
   bind(done);
 }
 
+void MacroAssembler::call_VM_pass_args(Register arg_1,
+                                       Register arg_2,
+                                       Register arg_3)
+{
+  if (arg_1 != r4) {
+    assert(arg_2 != r4, "smashed argument");
+    assert(arg_3 != r4, "smashed argument");
+    mr(r4, arg_1);
+  }
+
+  if (arg_2 == noreg) {
+    assert (arg_3 == noreg, "what?");
+    return;
+  }
+
+  if (arg_2 != r5) {
+    assert(arg_3 != r5, "smashed argument");
+    mr(r5, arg_2);
+  }
+
+  if (arg_3 != noreg && arg_3 != r6) {
+    mr(r6, arg_3);
+  }
+}
+                                  
+void MacroAssembler::call_VM_base(Register oop_result,
+                                  address entry_point,
+                                  CallVMFlags flags)
+{
+  StackFrame frame;
+
+  if (flags & CALL_VM_PRESERVE_LR)
+    prolog(frame);
+
+  mr(r3, Rthread);
+  call(entry_point);
+
+  if (flags & CALL_VM_PRESERVE_LR)
+    epilog(frame);
+
+  if (!(flags & CALL_VM_NO_EXCEPTION_CHECKS)) {
+    Label ok;
+    load(r0, Address(Rthread, Thread::pending_exception_offset()));
+    compare (r0, 0);
+    beq(ok);
+    unimplemented(__FILE__, __LINE__);
+    bind(ok);
+  }
+
+  if (oop_result->is_valid()) {
+    unimplemented(__FILE__, __LINE__);
+  }
+}
+
+void MacroAssembler::call_VM(Register oop_result, 
+                             address entry_point, 
+                             CallVMFlags flags)
+{
+  call_VM_base(oop_result, entry_point, flags);
+}
+void MacroAssembler::call_VM(Register oop_result, 
+                             address entry_point, 
+                             Register arg_1, 
+                             CallVMFlags flags)
+{
+  call_VM_pass_args(arg_1);
+  call_VM_base(oop_result, entry_point, flags);
+}
+void MacroAssembler::call_VM(Register oop_result,
+                             address entry_point,
+                             Register arg_1, Register arg_2,
+                             CallVMFlags flags)
+{
+  call_VM_pass_args(arg_1, arg_2);
+  call_VM_base(oop_result, entry_point, flags);
+}
+void MacroAssembler::call_VM(Register oop_result,
+                             address entry_point, 
+                             Register arg_1, Register arg_2, Register arg_3,
+                             CallVMFlags flags)
+{
+  call_VM_pass_args(arg_1, arg_2, arg_3);
+  call_VM_base(oop_result, entry_point, flags);
+}
+
+void MacroAssembler::call_VM_leaf_base(address entry_point)
+{
+  mr(r3, Rthread);
+  call(entry_point);
+}
+
+void MacroAssembler::call_VM_leaf(address entry_point)
+{
+  call_VM_leaf_base(entry_point);
+}
+void MacroAssembler::call_VM_leaf(address entry_point, Register arg_1)
+{
+  call_VM_pass_args(arg_1);
+  call_VM_leaf_base(entry_point);
+}
+void MacroAssembler::call_VM_leaf(address entry_point, Register arg_1,
+                                  Register arg_2)
+{
+  call_VM_pass_args(arg_1, arg_2);
+  call_VM_leaf_base(entry_point);
+}
+void MacroAssembler::call_VM_leaf(address entry_point, Register arg_1,
+                                  Register arg_2, Register arg_3)
+{
+  call_VM_pass_args(arg_1, arg_2, arg_3);
+  call_VM_leaf_base(entry_point);
+}
+
 // Write serialization page so VM thread can do a pseudo remote membar.
 void MacroAssembler::serialize_memory(Register tmp1, Register tmp2)
 {

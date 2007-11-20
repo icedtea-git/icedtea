@@ -1,3 +1,28 @@
+2007-11-20  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/ppc/vm/register_ppc.hpp
+	(noreg): Declare.
+	* ports/hotspot/src/cpu/ppc/vm/register_definitions_ppc.cpp
+	(noreg): Define.
+
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.hpp
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp
+	(set_last_Java_frame): Optionally preserve the link register.
+
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
+	(call_VM, call_VM_leaf, call_VM_base, call_VM_leaf_base,
+	call_VM_pass_args): New methods.
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.hpp
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp
+	(call_VM_base, call_VM_leaf_base): Likewise.
+
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp
+	(generate_native_entry): Use call_VM and call_VM_leaf
+	when making VM calls.
+	* ports/hotspot/src/cpu/ppc/vm/interpreter_ppc.cpp
+	(generate_slow_signature_handler): Likewise.
+
 2007-11-19  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp

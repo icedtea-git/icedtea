@@ -30,14 +30,48 @@
 REGISTER_DEFINITION(Register, Rstate);
 #endif
 
-// Set the last Java frame pointer
+// Interpreter-specific support for VM calls
 
-void InterpreterMacroAssembler::set_last_Java_frame()
+void InterpreterMacroAssembler::call_VM_base(Register oop_result,
+                                             address entry_point,
+                                             CallVMFlags flags)
 {
+  // Set the Java frame anchor
+  set_last_Java_frame(flags & CALL_VM_PRESERVE_LR ? r3 : noreg);
+
+  // Make the call
+  MacroAssembler::call_VM_base(oop_result, entry_point, flags);
+
+  // Clear the Java frame anchor
+  reset_last_Java_frame();
+
+  // Reload anything that may have changed if there was a safepoint
+  fixup_after_potential_safepoint();
+}
+
+void InterpreterMacroAssembler::call_VM_leaf_base(address entry_point)
+{
+  // Make the call
+  MacroAssembler::call_VM_leaf_base(entry_point);
+}
+
+// Set the last Java frame pointer
+// NB trashes LR unless you pass it a register to store it in
+
+void InterpreterMacroAssembler::set_last_Java_frame(Register lr_save)
+{
+  assert_different_registers(lr_save, r0);
+
+  if (lr_save->is_valid())
+    mflr(lr_save);
+
   bcl(20, 31, pc() + 4);  // magic branch that preserves the link stack
   mflr(r0);
   store(r0, Address(Rthread, JavaThread::last_Java_pc_offset()));
   store(r1, Address(Rthread, JavaThread::last_Java_sp_offset()));
+
+  if (lr_save->is_valid())
+    mtlr(lr_save);
 }
 
 // Clear the last Java frame pointer
