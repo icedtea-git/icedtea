@@ -311,12 +311,43 @@ class StackFrame {
 };
 
 
+// Flags for MacroAssembler::call_VM
+
+enum CallVMFlags {
+  CALL_VM_DEFAULTS            = 0,
+  CALL_VM_NO_EXCEPTION_CHECKS = 1,
+  CALL_VM_PRESERVE_LR         = 2
+};
+
+
 // MacroAssembler extends Assembler by frequently used macros.
 //
 // Instructions for which a 'better' code sequence exists depending
 // on arguments should also go in here.
 
 class MacroAssembler : public Assembler {
+ protected:
+  // Support for VM calls
+  //
+  // This is the base routine called by the different versions of
+  // call_VM_leaf. The interpreter may customize this version by
+  // overriding it for its purposes (e.g., to save/restore additional
+  // registers when doing a VM call).
+  virtual void call_VM_leaf_base(address entry_point);
+  
+  // This is the base routine called by the different versions of
+  // call_VM. The interpreter may customize this version by overriding
+  // it for its purposes (e.g., to save/restore additional registers
+  // when doing a VM call).
+  virtual void call_VM_base(Register oop_result,
+                            address entry_point,
+                            CallVMFlags flags);
+
+ private:
+  void call_VM_pass_args(Register arg_1,
+                         Register arg_2 = noreg,
+                         Register arg_3 = noreg);
+  
  public:
   MacroAssembler(CodeBuffer* code) : Assembler(code) {}
 
@@ -353,6 +384,32 @@ class MacroAssembler : public Assembler {
 
   void cmpxchg_(Register exchange, Register dst, Register compare);
 
+  // Support for VM calls
+  void call_VM(Register oop_result, 
+               address entry_point, 
+               CallVMFlags flags = CALL_VM_DEFAULTS);
+  void call_VM(Register oop_result, 
+               address entry_point, 
+               Register arg_1, 
+               CallVMFlags flags = CALL_VM_DEFAULTS);
+  void call_VM(Register oop_result,
+               address entry_point,
+               Register arg_1, Register arg_2,
+               CallVMFlags flags = CALL_VM_DEFAULTS);
+  void call_VM(Register oop_result,
+               address entry_point, 
+               Register arg_1, Register arg_2, Register arg_3,
+               CallVMFlags flags = CALL_VM_DEFAULTS);
+
+  void call_VM_leaf(address entry_point);
+  void call_VM_leaf(address entry_point,
+                    Register arg_1);
+  void call_VM_leaf(address entry_point,
+                    Register arg_1, Register arg_2);
+  void call_VM_leaf(address entry_point,
+                    Register arg_1, Register arg_2, Register arg_3);
+
+  // Support for serializing memory accesses between threads
   void serialize_memory(Register tmp1, Register tmp2);
 
   void calc_padding_for_alignment(Register dst, Register src, int align);

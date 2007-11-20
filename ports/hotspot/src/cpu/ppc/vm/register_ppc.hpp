@@ -64,6 +64,8 @@ class RegisterImpl : public AbstractRegisterImpl {
   const char* name() const;
 };
 
+CONSTANT_REGISTER_DECLARATION(Register, noreg, (-1));
+
 // The integer registers of the ppc architecture
 CONSTANT_REGISTER_DECLARATION(Register, r0,   (0));
 CONSTANT_REGISTER_DECLARATION(Register, r1,   (1));

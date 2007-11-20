@@ -26,6 +26,8 @@
 #include "incls/_precompiled.incl"
 #include "incls/_register_definitions_ppc.cpp.incl"
 
+REGISTER_DEFINITION(Register, noreg);
+
 REGISTER_DEFINITION(Register, r0);
 REGISTER_DEFINITION(Register, r1);
 REGISTER_DEFINITION(Register, r2);

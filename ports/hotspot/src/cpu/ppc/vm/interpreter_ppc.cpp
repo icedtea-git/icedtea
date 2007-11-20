@@ -83,18 +83,12 @@ address AbstractInterpreterGenerator::generate_slow_signature_handler()
   __ maybe_extend_frame (required_bytes, available_bytes);
 
   // Fill in the parameter list space and register images
-  StackFrame frame;
-
-  __ mr (r3, Rthread);
-  __ mr (r4, Rmethod);
-  __ mr (r5, Rlocals);
   __ la (r6, Address(r1, StackFrame::link_area_words * wordSize));
-
-  __ prolog (frame);
-  __ call (CAST_FROM_FN_PTR(address,
-                            InterpreterRuntime::slow_signature_handler));
-  __ fixup_after_potential_safepoint ();
-  __ epilog (frame);
+  __ call_VM (noreg,
+              CAST_FROM_FN_PTR(address,
+                               InterpreterRuntime::slow_signature_handler),
+              Rmethod, Rlocals, r6,
+              CALL_VM_PRESERVE_LR);
 
   // Load the register images into the registers
   const Register src = r11;
