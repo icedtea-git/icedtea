@@ -266,9 +266,9 @@
  	@$(java-vm-cleanup)
 --- openjdk.old/corba/make/common/Defs-linux.gmk	2007-10-12 03:49:13.000000000 -0400
 +++ openjdk-ecj/corba/make/common/Defs-linux.gmk	2007-10-31 13:57:35.000000000 -0400
-@@ -256,7 +256,7 @@
- #
- VM_NAME         = server
+@@ -260,7 +260,7 @@
+   VM_NAME       = server
+ endif
  JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
 -JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
 +JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -lgcj $(JVMLIB)

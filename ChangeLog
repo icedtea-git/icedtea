@@ -1,3 +1,13 @@
+2007-11-22  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-core-build.patch
+	* patches/icedtea-ports.patch:
+	Build libjvm.so as client rather than server
+	* patches/icedtea-ecj.patch: Remake for the above.
+	* ports/jdk/src/solaris/bin/ppc/jvm.cfg
+	* ports/jdk/src/solaris/bin/ppc64/jvm.cfg:
+	Updated for the above.
+
 2007-11-20  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
