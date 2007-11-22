@@ -414,6 +414,9 @@ class MacroAssembler : public Assembler {
   // Support for serializing memory accesses between threads
   void serialize_memory(Register tmp1, Register tmp2);
 
+  // Support for VerifyOops
+  void verify_oop(Register reg, const char* s = "broken oop");
+
   void calc_padding_for_alignment(Register dst, Register src, int align);
   void maybe_extend_frame(Register required_bytes, Register available_bytes);
   void get_mirror_handle(Register dst);

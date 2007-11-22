@@ -142,6 +142,7 @@ address CppInterpreterGenerator::generate_result_handler_for(BasicType type)
 
   case T_OBJECT:
     __ load (r3, STATE(_oop_temp));
+    __ verify_oop (r3);
     break;
 
   default:
@@ -199,6 +200,7 @@ address CppInterpreterGenerator::generate_tosca_to_stack_converter(
     break;
 
   case T_OBJECT:
+    __ verify_oop (r3);
     __ store (r3, Address(Rlocals, 0));
     __ subi (Rlocals, Rlocals, wordSize);
     break;
@@ -260,6 +262,7 @@ address CppInterpreterGenerator::generate_stack_to_stack_converter(
   case T_OBJECT:
     __ load (stack, STATE(_stack));
     __ load (r0, Address(stack, wordSize));
+    __ verify_oop (r0);
     __ store (r0, Address(Rlocals, 0));
     __ subi (Rlocals, Rlocals, wordSize);
     break;
@@ -320,6 +323,7 @@ address CppInterpreterGenerator::generate_stack_to_native_abi_converter(
   case T_OBJECT:
     __ load (stack, STATE(_stack));
     __ load (r3, Address(stack, wordSize));
+    __ verify_oop (r3);
     break;
 
   default:
@@ -829,6 +833,7 @@ address InterpreterGenerator::generate_normal_entry(bool synchronized)
   __ bind (call_method);
 
   __ load (Rmethod, STATE(_result._to_call._callee));
+  __ verify_oop(Rmethod);
   __ load (Rlocals, STATE(_stack));
   __ lhz (r0, Address(Rmethod, methodOopDesc::size_of_parameters_offset()));
   __ shift_left (r0, r0, LogBytesPerWord);
@@ -880,6 +885,7 @@ address InterpreterGenerator::generate_normal_entry(bool synchronized)
   __ store (Rlocals, STATE(_stack));
   __ load (Rlocals, STATE(_locals));
   __ load (Rmethod, STATE(_method));
+  __ verify_oop(Rmethod);
   __ load (r0, BytecodeInterpreter::method_resume);
   __ stw (r0, STATE(_msg));
   __ b (call_interpreter);

@@ -182,6 +182,7 @@ void InterpreterMacroAssembler::fixup_after_potential_safepoint()
 {
 #ifdef CC_INTERP
   load(Rmethod, STATE(_method));
+  verify_oop(Rmethod);
 #else
   Unimplemented();
 #endif
