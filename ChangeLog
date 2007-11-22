@@ -1,6 +1,12 @@
 2007-11-22  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-core-build.patch
+	* patches/icedtea-ports.patch: Rearrange such that removing
+	the core build patch will cause a compiler 1 build.
+
+2007-11-22  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-core-build.patch
 	* patches/icedtea-ports.patch:
 	Build libjvm.so as client rather than server
 	* patches/icedtea-ecj.patch: Remake for the above.
