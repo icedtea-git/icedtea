@@ -1,5 +1,19 @@
 2007-11-22  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
+	(verify_oop): New method.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp
+	(generate_result_handler_for,
+	generate_tosca_to_stack_converter,
+	generate_stack_to_stack_converter,
+	generate_stack_to_native_abi_converter,
+	generate_normal_entry): Add calls to the above.
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp
+	(fixup_after_potential_safepoint): Likewise.
+
+2007-11-22  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/ppc/vm/globalDefinitions_ppc.hpp
 	(StackAlignmentInBytes): New constant.
 	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp

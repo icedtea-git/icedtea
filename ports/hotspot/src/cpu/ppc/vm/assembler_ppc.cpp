@@ -1333,6 +1333,14 @@ void MacroAssembler::serialize_memory(Register tmp1, Register tmp2)
   stwx(tmp1, tmp2, tmp1);
 }
 
+void MacroAssembler::verify_oop(Register reg, const char* s)
+{
+  if (!VerifyOops)
+    return;
+
+  Unimplemented();
+}
+
 void MacroAssembler::calc_padding_for_alignment(
   Register dst, Register src, int align) {
 #ifdef ASSERT
