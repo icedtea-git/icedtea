@@ -60,6 +60,10 @@ public class TagEntry
     this.signature = sig;
     this.offset = offset;
     this.size = size;
+    // Prevent invalid tag data from exhausting heap memory.  See
+    // <https://bugzilla.redhat.com/show_bug.cgi?id=318621>.
+    if (size > data.length)
+      throw new IllegalArgumentException("Invalid tag size.");
     this.data = new byte[size];
     System.arraycopy(data, offset, this.data, 0, size);
   }

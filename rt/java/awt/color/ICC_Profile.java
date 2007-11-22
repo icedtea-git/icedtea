@@ -328,10 +328,8 @@ public class ICC_Profile implements Serializable
    */
   public static ICC_Profile getInstance(byte[] data)
   {
-    ProfileHeader header = new ProfileHeader(data);
-
     // get header and verify it
-    header = new ProfileHeader(data);
+    ProfileHeader header = new ProfileHeader(data);
     header.verifyHeader(data.length);
 
     Hashtable tags = createTagTable(data);
