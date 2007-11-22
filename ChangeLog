@@ -1,5 +1,19 @@
 2007-11-22  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/ppc/vm/globalDefinitions_ppc.hpp
+	(StackAlignmentInBytes): New constant.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
+	(StackFrame::generate_prolog,
+	MacroAssembler::maybe_extend_frame,
+	MacroAssembler::dump_int): Use the above.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp
+	(CppInterpreterGenerator::generate_compute_interpreter_state,
+	AbstractInterpreter::size_top_interpreter_activation): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp
+	(generate_call_stub): Likewise.
+
+2007-11-22  Gary Benson  <gbenson@redhat.com>
+
 	* patches/icedtea-core-build.patch
 	* patches/icedtea-ports.patch: Rearrange such that removing
 	the core build patch will cause a compiler 1 build.

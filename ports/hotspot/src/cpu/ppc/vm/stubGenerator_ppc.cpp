@@ -175,7 +175,7 @@ class StubGenerator: public StubCodeGenerator
     const Register padding    = r12;
 
     __ addi (frame_size, parameter_bytes, StubRoutines::call_stub_base_size());
-    __ calc_padding_for_alignment (padding, frame_size, 16);
+    __ calc_padding_for_alignment (padding, frame_size, StackAlignmentInBytes);
     __ add (frame_size, frame_size, padding);
 
     // Save the link register and create the new frame

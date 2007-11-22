@@ -826,7 +826,7 @@ void StackFrame::generate_prolog(MacroAssembler *masm)
   // Calculate the aligned frame size
   while (true) {
     _frame_size = unaligned_size();
-    if (_frame_size % 16 == 0)
+    if (_frame_size % StackAlignmentInBytes == 0)
       break;
     _locals++;
   }
@@ -1362,7 +1362,7 @@ void MacroAssembler::maybe_extend_frame(
   const Register padding     = available_bytes;
 
   sub(extra_bytes, required_bytes, available_bytes);
-  calc_padding_for_alignment(padding, extra_bytes, 16);
+  calc_padding_for_alignment(padding, extra_bytes, StackAlignmentInBytes);
   add(extra_bytes, extra_bytes, padding);
 
   // Extend the frame
@@ -1466,7 +1466,9 @@ void MacroAssembler::dump_int(const char* prefix, Register src)
   prolog(frame);
   if (src == r1) {
     int framesize = frame.unaligned_size();
-    framesize += (16 - (framesize & 15)) & 15;
+    framesize += (StackAlignmentInBytes -
+                  (framesize & (StackAlignmentInBytes - 1))) &
+                 (StackAlignmentInBytes - 1);
     addi(r4, r1, framesize);
   }
   else if (src != r4) {
