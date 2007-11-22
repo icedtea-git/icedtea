@@ -1,3 +1,20 @@
+diff -ru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
+--- openjdk.orig/hotspot/make/Makefile	2007-11-21 14:49:24.000000000 +0000
++++ openjdk/hotspot/make/Makefile	2007-11-21 14:50:04.000000000 +0000
+@@ -167,9 +167,13 @@
+                       BuildUser=$(USERNAME) \
+ 		      $(MAKE_ARGS) $(VM_TARGET)
+ else
++  ifeq ($(findstring ppc,$(ARCH)),)
+ 	$(CD) $(OUTPUTDIR); \
+ 	    $(MAKE) -f $(ABS_OS_MAKEFILE) \
+ 		      $(MAKE_ARGS) $(VM_TARGET)
++  else
++	@$(ECHO) "No compiler2 ($(VM_TARGET)) for ARCH=$(ARCH)"
++  endif
+ endif
+ 
+ generic_buildkernel:
 diff -ru openjdk.orig/hotspot/build/linux/makefiles/buildtree.make openjdk/hotspot/build/linux/makefiles/buildtree.make
 --- openjdk.orig/hotspot/build/linux/makefiles/buildtree.make	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/build/linux/makefiles/buildtree.make	2007-11-08 11:36:15.000000000 +0000

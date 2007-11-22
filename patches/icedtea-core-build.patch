@@ -14,8 +14,8 @@ diff -ru openjdk.orig/control/make/hotspot-rules.gmk openjdk/control/make/hotspo
  HOTSPOT_BUILD_ARGUMENTS += ALT_OUTPUTDIR=$(HOTSPOT_OUTPUTDIR)
  HOTSPOT_BUILD_ARGUMENTS += ALT_EXPORT_PATH=$(HOTSPOT_EXPORT_PATH)
 diff -ru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
---- openjdk.orig/hotspot/make/Makefile	2007-10-12 08:45:12.000000000 +0100
-+++ openjdk/hotspot/make/Makefile	2007-11-08 09:40:57.000000000 +0000
+--- openjdk.orig/hotspot/make/Makefile	2007-10-30 08:46:19.000000000 +0000
++++ openjdk/hotspot/make/Makefile	2007-11-21 16:10:20.000000000 +0000
 @@ -91,6 +91,15 @@
  all_debug:     jvmg jvmg1 jvmgkernel docs export_debug
  all_optimized: optimized optimized1 optimizedkernel docs export_optimized
@@ -38,12 +38,25 @@ diff -ru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
  
 +$(CORE_VM_TARGETS):
 +	$(CD) $(GAMMADIR)/make; \
-+	$(MAKE) VM_TARGET=$@ generic_build2 $(ALT_OUT)
++	$(MAKE) VM_TARGET=$@ generic_buildcore $(ALT_OUT)
 +
  # Build compiler1 (client) rule, different for platforms
  generic_build1:
  	$(MKDIR) -p $(OUTPUTDIR)
-@@ -207,17 +220,24 @@
+@@ -177,6 +190,12 @@
+ 	@$(ECHO) "No kernel ($(VM_TARGET)) for OS_NAME=$(OSNAME)"
+ endif
+ 
++generic_buildcore:
++	$(MKDIR) -p $(OUTPUTDIR)
++	$(CD) $(OUTPUTDIR); \
++	    $(MAKE) -f $(ABS_OS_MAKEFILE) \
++		      $(MAKE_ARGS) $(VM_TARGET)
++
+ # Export file rule
+ generic_export: $(EXPORT_LIST)
+ export_product:
+@@ -207,17 +226,24 @@
  C1_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler1
  C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler2
  KERNEL_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_kernel
@@ -74,7 +87,7 @@ diff -ru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
  endif
  
  # Bin files (windows)
-@@ -264,8 +284,13 @@
+@@ -264,8 +290,13 @@
  ifneq ($(OSNAME),windows)
  $(EXPORT_JRE_LIB_ARCH_DIR)/%.so: $(C2_DIR)/%.so
  	$(install-file)
@@ -97,10 +110,10 @@ diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspo
  #else
 +#if defined(COMPILER1) || defined(COMPILER2)
    #define VMTYPE COMPILER1_PRESENT("Client")   \
-                  COMPILER2_PRESENT("Server")   
+                  COMPILER2_PRESENT("Server")
 +#else
 +  #define VMTYPE "Core"
 +#endif // COMPILER1 || COMPILER2
  #endif // TIERED
  #endif // KERNEL
-
+ 
