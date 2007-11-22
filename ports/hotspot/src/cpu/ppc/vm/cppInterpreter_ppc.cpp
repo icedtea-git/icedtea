@@ -1101,7 +1101,7 @@ void CppInterpreterGenerator::generate_compute_interpreter_state(bool native)
   __ bne (CRsync, not_synchronized_1);
   __ addi (frame_size, frame_size, monitor_size);
   __ bind (not_synchronized_1);
-  __ calc_padding_for_alignment (padding, frame_size, 16);
+  __ calc_padding_for_alignment (padding, frame_size, StackAlignmentInBytes);
   __ add (frame_size, frame_size, padding);
 
   // Save the link register and create the new frame
@@ -1345,7 +1345,7 @@ int AbstractInterpreter::size_top_interpreter_activation(methodOop method)
 
   int call_stub_frame = round_to(
     StubRoutines::call_stub_base_size() +
-    method->max_locals() * wordSize, 16);
+    method->max_locals() * wordSize, StackAlignmentInBytes);
 
   int interpreter_frame = round_to(
     frame.unaligned_size() +
@@ -1353,7 +1353,7 @@ int AbstractInterpreter::size_top_interpreter_activation(methodOop method)
     method->max_stack() * wordSize +
     (method->is_synchronized() ?
      frame::interpreter_frame_monitor_size() * wordSize : 0) +
-    sizeof(BytecodeInterpreter), 16);
+    sizeof(BytecodeInterpreter), StackAlignmentInBytes);
 
   return (call_stub_frame + interpreter_frame) / wordSize;
 }
