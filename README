@@ -46,7 +46,7 @@ Java compatibility
 
 IcedTea is derived from OpenJDK, Sun's open-source implementation of
 the Java SE platform.  At this time the build from which IcedTea was
-constructed corresponds to an early build (b21) of JDK 7.  When JDK 7
+constructed corresponds to an early build of JDK 7.  When JDK 7
 is complete it will implement the Java SE 7 Platform Specification.
 Work on that specification is underway, but far from final.  Any APIs
 in the JDK 7 implementation, whether new or old, are therefore subject
