@@ -1,3 +1,46 @@
+2007-11-23  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/ppc/vm/c1_CodeStubs_ppc.cpp: New file.
+	* ports/hotspot/src/cpu/ppc/vm/c1_Defs_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_FpuStackSim_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_FpuStackSim_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_FrameMap_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_FrameMap_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LIRAssembler_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LIRAssembler_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LIRGenerator_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LinearScan_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LinearScan_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_MacroAssembler_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_MacroAssembler_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_Runtime1_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_globals_ppc.hpp: Likewise.
+
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+	(MacroAssembler::null_check): New methods.
+	(MacroAssembler::needs_explicit_null_check): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
+	(MacroAssembler::null_check): Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/assembler_ppc.cpp
+	(MacroAssembler::needs_explicit_null_check): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/nativeInst_ppc.hpp
+	(NativeInstruction::is_jump): Likewise.
+	(nativeInstruction_at): Likewise.
+	(NativeMovRegMem): New class.
+	(nativeMovRegMem_at): New method.
+	(NativeGeneralJump): New class.
+	(nativeGeneralJump_at): New method.
+	* ports/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp
+	(SharedRuntime::c_calling_convention): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmreg_ppc.hpp
+	(VMRegImpl::as_Register): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmreg_ppc.cpp
+	(VMRegImpl::as_Register): Likewise.
+
+	* patches/icedtea-ports.patch
+	(hotspot/src/share/vm/c1/c1_LIR.hpp): Add special cases for PPC.
+	hotspot/src/share/vm/c1/c1_LIR.cpp): Likewise.
+
 2007-11-22  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* rt/java/awt/color/ICC_Profile.java (ICC_Profile(byte[])): Remove

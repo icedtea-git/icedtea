@@ -414,6 +414,10 @@ class MacroAssembler : public Assembler {
   // Support for serializing memory accesses between threads
   void serialize_memory(Register tmp1, Register tmp2);
 
+  // Support for NULL-checks
+  void null_check(Register reg, int offset = -1);
+  static bool needs_explicit_null_check(intptr_t offset);
+
   // Support for VerifyOops
   void verify_oop(Register reg, const char* s = "broken oop");
 

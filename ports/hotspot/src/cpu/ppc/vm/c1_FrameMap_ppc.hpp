@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 1999-2006 Sun Microsystems, Inc.  All Rights Reserved.
  * Copyright 2007 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -23,28 +23,14 @@
  *
  */
 
-#include "incls/_precompiled.incl"
-#include "incls/_vmreg_ppc.cpp.incl"
+ public:
+  enum {
+#ifdef XXX_EVIL_EVIL_EVIL
+    first_available_sp_in_frame = 0,
+    frame_pad_in_bytes = 0
+#endif
+  };
 
-void VMRegImpl::set_regName()
-{
-  int i = 0;
-  Register reg = ::as_Register(0);
-  for ( ; i < ConcreteRegisterImpl::max_gpr ; ) {
-    regName[i++] = reg->name();
-    reg = reg->successor();
-  }
-  FloatRegister freg = ::as_FloatRegister(0);
-  for ( ; i < ConcreteRegisterImpl::max_fpr ; ) {
-    regName[i++] = freg->name();
-    freg = freg->successor();
-  }
-  for ( ; i < ConcreteRegisterImpl::number_of_registers; i++) {
-    Unimplemented();
-  }
-}
+  static VMReg fpu_regname(int n);
 
-Register VMRegImpl::as_Register()
-{
-  Unimplemented();
-}
+  static bool is_caller_save_register(LIR_Opr reg);

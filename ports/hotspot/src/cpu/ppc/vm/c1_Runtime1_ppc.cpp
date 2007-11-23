@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
  * Copyright 2007 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -24,27 +24,14 @@
  */
 
 #include "incls/_precompiled.incl"
-#include "incls/_vmreg_ppc.cpp.incl"
+#include "incls/_c1_Runtime1_ppc.cpp.incl"
 
-void VMRegImpl::set_regName()
+OopMapSet* Runtime1::generate_code_for(StubID id, StubAssembler* sasm)
 {
-  int i = 0;
-  Register reg = ::as_Register(0);
-  for ( ; i < ConcreteRegisterImpl::max_gpr ; ) {
-    regName[i++] = reg->name();
-    reg = reg->successor();
-  }
-  FloatRegister freg = ::as_FloatRegister(0);
-  for ( ; i < ConcreteRegisterImpl::max_fpr ; ) {
-    regName[i++] = freg->name();
-    freg = freg->successor();
-  }
-  for ( ; i < ConcreteRegisterImpl::number_of_registers; i++) {
-    Unimplemented();
-  }
+  Unimplemented();
 }
 
-Register VMRegImpl::as_Register()
+void Runtime1::initialize_pd()
 {
   Unimplemented();
 }

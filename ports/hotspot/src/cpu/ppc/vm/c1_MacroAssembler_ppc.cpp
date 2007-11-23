@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
  * Copyright 2007 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -24,27 +24,19 @@
  */
 
 #include "incls/_precompiled.incl"
-#include "incls/_vmreg_ppc.cpp.incl"
+#include "incls/_c1_MacroAssembler_ppc.cpp.incl"
 
-void VMRegImpl::set_regName()
+void C1_MacroAssembler::verify_stack_oop(int stack_offset)
 {
-  int i = 0;
-  Register reg = ::as_Register(0);
-  for ( ; i < ConcreteRegisterImpl::max_gpr ; ) {
-    regName[i++] = reg->name();
-    reg = reg->successor();
-  }
-  FloatRegister freg = ::as_FloatRegister(0);
-  for ( ; i < ConcreteRegisterImpl::max_fpr ; ) {
-    regName[i++] = freg->name();
-    freg = freg->successor();
-  }
-  for ( ; i < ConcreteRegisterImpl::number_of_registers; i++) {
-    Unimplemented();
-  }
+  Unimplemented();
 }
 
-Register VMRegImpl::as_Register()
+void C1_MacroAssembler::verified_entry()
+{
+  Unimplemented();
+}
+
+void C1_MacroAssembler::build_frame(int frame_size_in_bytes)
 {
   Unimplemented();
 }
