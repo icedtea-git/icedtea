@@ -1333,6 +1333,18 @@ void MacroAssembler::serialize_memory(Register tmp1, Register tmp2)
   stwx(tmp1, tmp2, tmp1);
 }
 
+void MacroAssembler::null_check(Register reg, int offset) {
+  if (needs_explicit_null_check((intptr_t) offset)) {
+    // provoke OS NULL exception if reg = NULL by
+    // accessing M[reg] w/o changing any registers
+    Unimplemented();
+  }
+  else {
+    // nothing to do, (later) access of M[reg + offset]
+    // will provoke OS NULL exception if reg = NULL
+  }
+}
+
 void MacroAssembler::verify_oop(Register reg, const char* s)
 {
   if (!VerifyOops)

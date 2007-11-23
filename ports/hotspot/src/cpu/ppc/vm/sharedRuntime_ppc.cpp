@@ -246,3 +246,10 @@ void SharedRuntime::generate_stubs()
   _polling_page_return_handler_blob =
     generate_unimplemented_safepoint_blob(__FILE__, __LINE__);
 }
+
+int SharedRuntime::c_calling_convention(const BasicType *sig_bt,
+                                         VMRegPair *regs,
+                                         int total_args_passed)
+{
+  Unimplemented();
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 1999-2006 Sun Microsystems, Inc.  All Rights Reserved.
  * Copyright 2007 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -24,27 +24,37 @@
  */
 
 #include "incls/_precompiled.incl"
-#include "incls/_vmreg_ppc.cpp.incl"
+#include "incls/_c1_FrameMap_ppc.cpp.incl"
 
-void VMRegImpl::set_regName()
+void FrameMap::init()
 {
-  int i = 0;
-  Register reg = ::as_Register(0);
-  for ( ; i < ConcreteRegisterImpl::max_gpr ; ) {
-    regName[i++] = reg->name();
-    reg = reg->successor();
-  }
-  FloatRegister freg = ::as_FloatRegister(0);
-  for ( ; i < ConcreteRegisterImpl::max_fpr ; ) {
-    regName[i++] = freg->name();
-    freg = freg->successor();
-  }
-  for ( ; i < ConcreteRegisterImpl::number_of_registers; i++) {
-    Unimplemented();
-  }
+  Unimplemented();
 }
 
-Register VMRegImpl::as_Register()
+LIR_Opr FrameMap::map_to_opr(BasicType type, VMRegPair* reg, bool)
+{
+  Unimplemented();
+}
+
+LIR_Opr FrameMap::_caller_save_cpu_regs[] = { 0, };
+LIR_Opr FrameMap::_caller_save_fpu_regs[] = { 0, };
+
+bool FrameMap::validate_frame()
+{
+  Unimplemented();
+}
+
+VMReg FrameMap::fpu_regname(int n)
+{
+  Unimplemented();
+}
+
+LIR_Opr FrameMap::stack_pointer()
+{
+  Unimplemented();
+}
+
+bool FrameMap::is_caller_save_register(LIR_Opr reg)
 {
   Unimplemented();
 }

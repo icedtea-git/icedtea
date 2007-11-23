@@ -41,11 +41,21 @@
 class NativeInstruction VALUE_OBJ_CLASS_SPEC
 {
  public:
+  bool is_jump()
+  {
+    Unimplemented();
+  }
+
   bool is_safepoint_poll()
   {
     Unimplemented();
   }
 };
+
+inline NativeInstruction* nativeInstruction_at(address address)
+{
+  Unimplemented();
+}
 
 class NativeCall : public NativeInstruction
 {
@@ -129,6 +139,30 @@ inline NativeMovConstReg* nativeMovConstReg_at(address address)
   Unimplemented();
 }
 
+class NativeMovRegMem : public NativeInstruction
+{
+ public:
+  int offset() const
+  {
+    Unimplemented();
+  }
+
+  void set_offset(intptr_t x)
+  {
+    Unimplemented();
+  }
+
+  void add_offset_in_bytes(int add_offset)
+  {
+    Unimplemented();
+  }
+};
+
+inline NativeMovRegMem* nativeMovRegMem_at(address address)
+{
+  Unimplemented();
+}
+
 class NativeJump : public NativeInstruction
 {
  public:
@@ -161,6 +195,30 @@ class NativeJump : public NativeInstruction
 };
 
 inline NativeJump* nativeJump_at(address address)
+{
+  Unimplemented();
+}
+
+class NativeGeneralJump : public NativeInstruction
+{
+ public:
+  address jump_destination() const
+  {
+    Unimplemented();
+  }
+
+  static void insert_unconditional(address code_pos, address entry)
+  {
+    Unimplemented();
+  }
+
+  static void replace_mt_safe(address instr_addr, address code_buffer)
+  {
+    Unimplemented();
+  }
+};
+
+inline NativeGeneralJump* nativeGeneralJump_at(address address)
 {
   Unimplemented();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
  * Copyright 2007 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -24,27 +24,39 @@
  */
 
 #include "incls/_precompiled.incl"
-#include "incls/_vmreg_ppc.cpp.incl"
+#include "incls/_c1_LinearScan_ppc.cpp.incl"
 
-void VMRegImpl::set_regName()
+void LinearScan::allocate_fpu_stack()
 {
-  int i = 0;
-  Register reg = ::as_Register(0);
-  for ( ; i < ConcreteRegisterImpl::max_gpr ; ) {
-    regName[i++] = reg->name();
-    reg = reg->successor();
-  }
-  FloatRegister freg = ::as_FloatRegister(0);
-  for ( ; i < ConcreteRegisterImpl::max_fpr ; ) {
-    regName[i++] = freg->name();
-    freg = freg->successor();
-  }
-  for ( ; i < ConcreteRegisterImpl::number_of_registers; i++) {
-    Unimplemented();
-  }
+  Unimplemented();
 }
 
-Register VMRegImpl::as_Register()
+bool LinearScan::is_processed_reg_num(int reg_num)
+{
+  Unimplemented();
+}
+
+int LinearScan::num_physical_regs(BasicType type)
+{
+  Unimplemented();
+}
+
+bool LinearScan::requires_adjacent_regs(BasicType type)
+{
+  Unimplemented();
+}
+
+bool LinearScan::is_caller_save(int assigned_reg)
+{
+  Unimplemented();
+}
+
+void LinearScan::pd_add_temps(LIR_Op* op)
+{
+  Unimplemented();
+}
+
+bool LinearScanWalker::pd_init_regs_for_alloc(Interval* cur)
 {
   Unimplemented();
 }
