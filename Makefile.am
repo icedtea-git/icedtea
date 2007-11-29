@@ -335,6 +335,9 @@ clean-patch-ecj:
 stamps/bootstrap-directory.stamp: stamps/icedtea-against-ecj.stamp
 	rm -rf bootstrap/icedtea
 	ln -s $(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/ bootstrap/icedtea
+	if ! test -d bootstrap/icedtea/include; then \
+	  ln -sf $(ICEDTEA_BUILD_DIR_ECJ)/include bootstrap/icedtea/include; \
+	fi
 	mkdir -p stamps
 	touch stamps/bootstrap-directory.stamp
 
@@ -387,6 +390,13 @@ stamps/bootstrap-directory-ecj.stamp:
 	ln -sf $(XERCES2_JAR) bootstrap/ecj/lib/endorsed/xerces-j2.jar
 	mkdir -p bootstrap/ecj/jre/lib
 	ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(INSTALL_ARCH_DIR) bootstrap/ecj/jre/lib/
+	mkdir -p bootstrap/ecj/include
+	for i in $(SYSTEM_GCJ_DIR)/include/*; do \
+	  test -r $$i | continue; \
+	  i=`basename $$i`; \
+	  rm -f bootstrap/ecj/include/$$i; \
+	  ln -s $(SYSTEM_GCJ_DIR)/include/$$i bootstrap/ecj/include/$$i; \
+	done
 	if test -f bootstrap/jdk1.7.0/jre/lib/tools.jar ; \
 	then \
 		mkdir -p bootstrap/ecj/lib ; \

@@ -1,3 +1,8 @@
+2007-11-29  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Create symlinks to find jni header files.
+	* Makefile.in: Regenerate.
+
 2007-11-29  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/os_cpu/linux_ppc/vm/assembler_ppc.cpp
