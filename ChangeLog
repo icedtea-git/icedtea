@@ -1,3 +1,8 @@
+2007-11-29  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/assembler_ppc.cpp
+	(MacroAssembler::needs_explicit_null_check): Fix broken definition.
+
 2007-11-23  Lillian Angel  <langel@redhat.com>
 	
 	Fixes Bug #80

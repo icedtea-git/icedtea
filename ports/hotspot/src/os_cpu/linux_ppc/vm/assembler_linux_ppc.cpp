@@ -26,6 +26,7 @@
 #include "incls/_precompiled.incl"
 #include "incls/_assembler_linux_ppc.cpp.incl"
 
-bool MacroAssembler::needs_explicit_null_check(int offset) {
+bool MacroAssembler::needs_explicit_null_check(intptr_t offset)
+{
   Unimplemented();
 }
