@@ -1,5 +1,10 @@
 2007-11-30  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp
+	(generate_native_entry): Add support for UseMembar.
+
+2007-11-30  Gary Benson  <gbenson@redhat.com>
+
 	Fixes Bug #83
 	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.cpp
 	(JVM_handle_linux_signal): Handle segfaults when the memory

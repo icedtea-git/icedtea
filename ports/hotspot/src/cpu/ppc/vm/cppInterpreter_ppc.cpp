@@ -618,9 +618,12 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ load (r0, _thread_in_native_trans);
   __ stw (r0, thread_state_addr);
 
-  // Write serialization page
+  // Ensure the new state is visible to the VM thread.
   if(os::is_MP()) {
-    __ serialize_memory (r3, r4);
+    if (UseMembar)
+      __ sync ();
+    else
+      __ serialize_memory (r3, r4);
   }
 
   // Check for safepoint operation in progress and/or pending
