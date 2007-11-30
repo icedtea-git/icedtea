@@ -260,7 +260,7 @@ diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspo
 diff -ru openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp openjdk/hotspot/src/share/vm/utilities/macros.hpp
 --- openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/utilities/macros.hpp	2007-11-08 11:36:15.000000000 +0000
-@@ -176,6 +176,14 @@
+@@ -176,6 +176,30 @@
  #define NOT_SPARC(code) code
  #endif
  
@@ -270,6 +270,22 @@ diff -ru openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp openjdk/hotspot/
 +#else
 +#define PPC_ONLY(code)
 +#define NOT_PPC(code) code
++#endif
++
++#ifdef PPC32
++#define PPC32_ONLY(code) code
++#define NOT_PPC32(code)
++#else
++#define PPC32_ONLY(code)
++#define NOT_PPC32(code) code
++#endif
++
++#ifdef PPC64
++#define PPC64_ONLY(code) code
++#define NOT_PPC64(code)
++#else
++#define PPC64_ONLY(code)
++#define NOT_PPC64(code) code
 +#endif
 +
  #define FIX_THIS(code) report_assertion_failure("FIX_THIS",__FILE__, __LINE__, "")
