@@ -1,3 +1,10 @@
+2007-11-30  Gary Benson  <gbenson@redhat.com>
+
+	Fixes Bug #83
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.cpp
+	(JVM_handle_linux_signal): Handle segfaults when the memory
+	serialization page is write protected.
+
 2007-11-29  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am: Create symlinks to find jni header files.
