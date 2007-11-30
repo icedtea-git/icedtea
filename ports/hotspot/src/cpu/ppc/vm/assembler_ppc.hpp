@@ -27,9 +27,9 @@
 
 // Non-volatile registers used by the interpreter
 
-REGISTER_DECLARATION(Register, Rmethod, r31);
-REGISTER_DECLARATION(Register, Rlocals, r30);
-REGISTER_DECLARATION(Register, Rthread, r29);
+REGISTER_DECLARATION(Register, Rthread, r31);
+REGISTER_DECLARATION(Register, Rmethod, r30);
+REGISTER_DECLARATION(Register, Rlocals, r29);
 
 
 // Address is an abstraction used to represent a memory location

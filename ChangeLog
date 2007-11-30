@@ -1,5 +1,10 @@
 2007-11-30  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+	(Rthread, Rmethod, Rlocals): Reorder so Rthread is last.
+
+2007-11-30  Gary Benson  <gbenson@redhat.com>
+
 	* patches/icedtea-ports.patch
 	(hotspot/src/share/vm/utilities/macros.hpp):
 	Added PPC32_ONLY, NOT_PPC32, PPC64_ONLY and NOT_PPC64.
