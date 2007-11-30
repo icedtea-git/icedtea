@@ -108,6 +108,32 @@ JVM_handle_linux_signal(int sig,
     }
   }
 
+  JavaThread* thread = NULL;
+  VMThread* vmthread = NULL;
+  if (os::Linux::signal_handlers_are_installed) {
+    if (t != NULL ){
+      if(t->is_Java_thread()) {
+        thread = (JavaThread*)t;
+      }
+      else if(t->is_VM_thread()){
+        vmthread = (VMThread *)t;
+      }
+    }
+  }
+
+  if (info != NULL && thread != NULL) {
+    // Check to see if we caught the safepoint code in the process
+    // of write protecting the memory serialization page.  It write
+    // enables the page immediately after protecting it so we can
+    // just return to retry the write.
+    if (sig == SIGSEGV &&
+        os::is_memory_serialize_page(thread, (address) info->si_addr)) {
+      // Block current thread until permission is restored.
+      os::block_on_serialize_page_trap();
+      return true;
+    }
+  }
+
   const char *fmt = "caught unhandled signal %d";
   char buf[64];
 
