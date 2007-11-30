@@ -1,5 +1,11 @@
 2007-11-30  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-ports.patch
+	(hotspot/src/share/vm/utilities/macros.hpp):
+	Added PPC32_ONLY, NOT_PPC32, PPC64_ONLY and NOT_PPC64.
+
+2007-11-30  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp
 	(generate_native_entry): Add support for UseMembar.
 
