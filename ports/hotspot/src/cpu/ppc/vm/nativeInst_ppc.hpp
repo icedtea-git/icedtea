@@ -181,15 +181,13 @@ class NativeJump : public NativeInstruction
   }
 
   static void check_verified_entry_alignment(address entry,
-                                             address verified_entry)
-  {
-    Unimplemented();
+                                             address verified_entry) {
+    // nothing to do for ppc
   }
 
   static void patch_verified_entry(address entry,
                                    address verified_entry,
-                                   address dest)
-  {
+                                   address dest) {
     Unimplemented();
   }
 };

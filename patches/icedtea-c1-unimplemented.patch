@@ -1,0 +1,136 @@
+--- openjdk-ecj/hotspot/src/share/vm/c1/c1_LIR.hpp	2007-12-03 09:55:25.000000000 +0000
++++ openjdk/hotspot/src/share/vm/c1/c1_LIR.hpp	2007-12-03 09:30:13.000000000 +0000
+@@ -656,6 +656,9 @@
+ class    LIR_OpTypeCheck;
+ class    LIR_OpCompareAndSwap;
+ class    LIR_OpProfileCall;
++#ifdef PPC
++class    LIR_OpUnimplemented;
++#endif
+ 
+ 
+ // LIR operation codes
+@@ -764,6 +767,11 @@
+   , begin_opMDOProfile
+     , lir_profile_call
+   , end_opMDOProfile
++#ifdef PPC
++  , begin_opUnimplemented
++    , lir_unimplemented
++  , end_opUnimplemented
++#endif
+ };
+ 
+ 
+@@ -898,6 +906,9 @@
+   virtual LIR_OpTypeCheck* as_OpTypeCheck() { return NULL; }
+   virtual LIR_OpCompareAndSwap* as_OpCompareAndSwap() { return NULL; }
+   virtual LIR_OpProfileCall* as_OpProfileCall() { return NULL; }
++#ifdef PPC
++  virtual LIR_OpUnimplemented* as_OpUnimplemented() { return NULL; }
++#endif
+ 
+   virtual void verify() const {}
+ };
+@@ -1579,6 +1590,24 @@
+   virtual void print_instr(outputStream* out) const PRODUCT_RETURN;
+ };
+ 
++#ifdef PPC
++// LIR_OpUnimplemented
++class LIR_OpUnimplemented : public LIR_Op {
++ private:
++  const char* _file;
++  const int   _line;
++
++ public:
++  LIR_OpUnimplemented(const char* file, int line)
++    : LIR_Op(lir_unimplemented, LIR_OprFact::illegalOpr, NULL),
++      _file(file),
++      _line(line) {}
++
++  virtual void emit_code(LIR_Assembler* masm);
++  virtual LIR_OpUnimplemented* as_OpUnimplemented() { return this; }
++  virtual void print_instr(outputStream* out) const PRODUCT_RETURN;
++};
++#endif
+ 
+ class LIR_InsertionBuffer;
+ 
+@@ -1837,6 +1866,14 @@
+ 
+   // methodDataOop profiling
+   void profile_call(ciMethod* method, int bci, LIR_Opr mdo, LIR_Opr recv, LIR_Opr t1, ciKlass* cha_klass) { append(new LIR_OpProfileCall(lir_profile_call, method, bci, mdo, recv, t1, cha_klass)); }
++
++  // stubbing
++#ifdef PPC
++  void unimplemented(const char* file, int line)
++  {
++    append(new LIR_OpUnimplemented(file, line));
++  }
++#endif
+ };
+ 
+ void print_LIR(BlockList* blocks);
+--- openjdk-ecj/hotspot/src/share/vm/c1/c1_LIR.cpp	2007-12-03 09:55:25.000000000 +0000
++++ openjdk/hotspot/src/share/vm/c1/c1_LIR.cpp	2007-12-03 09:50:04.000000000 +0000
+@@ -861,6 +861,16 @@
+       break;
+     }
+ 
++#ifdef PPC
++// LIR_OpUnimplemented:
++    case lir_unimplemented: {
++      assert(op->as_OpUnimplemented() != NULL, "must be");
++      assert(op->_info == NULL, "info not used by this instruction");
++      assert(op->_result->is_illegal(), "not used");
++      break;
++    }
++#endif
++
+   default:
+     ShouldNotReachHere();
+   }
+@@ -1003,6 +1013,12 @@
+   masm->emit_profile_call(this);
+ }
+ 
++#ifdef PPC
++void LIR_OpUnimplemented::emit_code(LIR_Assembler* masm) {
++  masm->emit_unimplemented(_file, _line);
++}
++#endif
++
+ 
+ // LIR_List
+ LIR_List::LIR_List(Compilation* compilation, BlockBegin* block)
+@@ -1617,6 +1633,10 @@
+      case lir_cas_int:               s = "cas_int";      break;
+      // LIR_OpProfileCall
+      case lir_profile_call:          s = "profile_call";  break;
++#ifdef PPC
++     // LIR_OpUnimplemented
++     case lir_unimplemented:         s = "unimplemented"; break;
++#endif
+ 
+      case lir_none:                  ShouldNotReachHere();break;
+     default:                         s = "illegal_op";    break;
+@@ -1869,6 +1889,18 @@
+   tmp1()->print(out);          out->print(" ");
+ }
+ 
++#ifdef PPC
++// LIR_OpUnimplemented
++void LIR_OpUnimplemented::print_instr(outputStream* out) const {
++  char sep = os::file_separator()[0];
++  const char *file = strrchr(_file, sep);
++  if (file)
++    file++;
++  else
++    file = _file;
++  out->print("[%s:%d]", file, _line);
++}
++#endif // PPC
+ 
+ #endif // PRODUCT
+ 

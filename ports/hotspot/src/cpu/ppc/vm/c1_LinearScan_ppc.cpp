@@ -33,17 +33,31 @@ void LinearScan::allocate_fpu_stack()
 
 bool LinearScan::is_processed_reg_num(int reg_num)
 {
+#ifdef XXX_EVIL_EVIL_EVIL
+  return true;
+#else
   Unimplemented();
+#endif
 }
 
 int LinearScan::num_physical_regs(BasicType type)
 {
-  Unimplemented();
+#ifdef PPC32
+  if (type == T_LONG) {
+#ifdef XXX_EVIL_EVIL_EVIL
+    // XXX how to enforce "alignment"?
+    return 2;
+#else
+    Unimplemented();
+#endif // XXX_EVIL_EVIL_EVIL
+  }
+#endif // PPC32
+  return 1;
 }
 
 bool LinearScan::requires_adjacent_regs(BasicType type)
 {
-  Unimplemented();
+  return type == T_LONG;
 }
 
 bool LinearScan::is_caller_save(int assigned_reg)
@@ -53,10 +67,15 @@ bool LinearScan::is_caller_save(int assigned_reg)
 
 void LinearScan::pd_add_temps(LIR_Op* op)
 {
-  Unimplemented();
+  // No special case behaviours yet
 }
 
 bool LinearScanWalker::pd_init_regs_for_alloc(Interval* cur)
 {
+#ifdef XXX_EVIL_EVIL_EVIL
+  // XXX how to stop it from using r13?
+  return false;
+#else
   Unimplemented();
+#endif
 }

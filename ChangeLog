@@ -1,3 +1,93 @@
+2007-12-04  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-c1-unimplemented.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Add the above.
+	* Makefile.in: Regenerate.
+
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+	(is_simm, is_simm16): New methods.
+	* ports/hotspot/src/cpu/ppc/vm/c1_CodeStubs_ppc.cpp
+	(RangeCheckStub::RangeCheckStub): Implement.
+	(NewInstanceStub::NewInstanceStub): Likewise.
+	(NewInstanceStub::emit_code): Re-stub.
+	* ports/hotspot/src/cpu/ppc/vm/c1_Defs_ppc.hpp
+	(pd_nof_cpu_regs_frame_map): Set.
+	(pd_nof_fpu_regs_frame_map): Likewise.
+	(pd_nof_caller_save_cpu_regs_frame_map): Likewise.
+	(pd_nof_caller_save_fpu_regs_frame_map): Likewise.
+	(pd_nof_cpu_regs_linearscan): Likewise.
+	(pd_nof_fpu_regs_linearscan): Likewise.
+	(pd_first_cpu_reg): Likewise.
+	(pd_last_cpu_reg): Likewise.
+	(pd_last_fpu_reg): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_FrameMap_ppc.hpp
+	(gpr_opr, gpr_oop_opr, fpr_opr): New fields.
+	(as_long_opr): New method.
+	* ports/hotspot/src/cpu/ppc/vm/c1_FrameMap_ppc.cpp
+	(FrameMap::init): Partially implement.
+	(FrameMap::map_to_opr): Likewise.
+	(FrameMap::validate_frame): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LIRAssembler_ppc.hpp
+	(emit_unimplemented): New method.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LIRAssembler_ppc.cpp
+	(receiverOpr): Partially implement.
+	(initial_frame_size_in_bytes): Implement.
+	(check_icache): Re-stub.
+	(emit_exception_handler): Likewise.
+	(emit_deopt_handler): Likewise.
+	(align_call): Implement.
+	(call): Re-stub.
+	(const2mem): Likewise.
+	(const2reg): Likewise.
+	(reg2reg): Likewise.
+	(reg2mem): Likewise.
+	(return_op): Likewise.
+	(emit_static_call_stub): Likewise.
+	(shift_op): Likewise.
+	(emit_alloc_obj): Likewise.
+	(peephole): Implement.
+	(emit_unimplemented): New method.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LIRGenerator_ppc.cpp
+	(load_byte_item): Implement.
+	(load_nonconstant): Likewise.
+	(result_register_for): Partially implement.
+	(can_store_as_constant): Implement.
+	(can_inline_as_constant): Likewise.
+	(generate_address): Implement.
+	(emit_array_address): Partially implement.
+	(cmp_reg_mem): Re-stub.
+	(strength_reduce_multiply): Implement.
+	(do_ArithmeticOp_Int): New method.
+	(do_ArithmeticOp): Partially implement.
+	(do_NewInstance): Likewise.
+	(do_BlockBegin): Re-stub.
+	(do_If): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LinearScan_ppc.cpp
+	(is_processed_reg_num): Partially implement.
+	(num_physical_regs): Likewise.
+	(requires_adjacent_regs): Implement.
+	(pd_add_temps): Likewise.
+	(pd_init_regs_for_alloc): Partially implement.
+	* ports/hotspot/src/cpu/ppc/vm/c1_MacroAssembler_ppc.hpp
+	(pd_init): Implement.
+	* ports/hotspot/src/cpu/ppc/vm/c1_MacroAssembler_ppc.cpp
+	(verified_entry): Re-stub.
+	(build_frame): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_Runtime1_ppc.cpp
+	(generate_code_for): Re-stub.
+	* ports/hotspot/src/cpu/ppc/vm/nativeInst_ppc.hpp
+	(NativeJump::check_verified_entry_alignment): Implement.
+	(NativeJump::patch_verified_entry): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp
+	(out_preserve_stack_slots): Partially implement.
+	* ports/hotspot/src/cpu/ppc/vm/vmreg_ppc.cpp
+	(is_Register): New method.
+	(is_FloatRegister): Likewise.
+	(as_Register): Implement.
+	(as_FloatRegister): Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.cpp
+	(non_memory_address_word): Implement.
+
 2007-11-30  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp

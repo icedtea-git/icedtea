@@ -31,6 +31,14 @@
 #endif
   };
 
+  static LIR_Opr gpr_opr[nof_cpu_regs];
+  static LIR_Opr gpr_oop_opr[nof_cpu_regs];
+  static LIR_Opr fpr_opr[nof_fpu_regs];
+
+  static LIR_Opr as_long_opr(Register r, Register r2) {
+    return LIR_OprFact::double_cpu(cpu_reg2rnr(r), cpu_reg2rnr(r2));
+  }
+
   static VMReg fpu_regname(int n);
 
   static bool is_caller_save_register(LIR_Opr reg);

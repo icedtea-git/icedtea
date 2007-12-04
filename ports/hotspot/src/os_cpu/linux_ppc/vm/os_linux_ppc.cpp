@@ -45,7 +45,10 @@ frame os::current_frame()
 
 char* os::non_memory_address_word()
 {
-  Unimplemented();
+  // Must never look like an address returned by reserve_memory,
+  // even in its subfields (as defined by the CPU immediate fields,
+  // if the CPU splits constants across multiple instructions).
+  return (char*) -1;
 }
 
 void os::initialize_thread()

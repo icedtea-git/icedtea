@@ -26,10 +26,14 @@
 #include "incls/_precompiled.incl"
 #include "incls/_c1_CodeStubs_ppc.cpp.incl"
 
+#define __ ce->masm()->
+
 RangeCheckStub::RangeCheckStub(CodeEmitInfo* info, LIR_Opr index,
                                bool throw_index_out_of_bounds_exception)
+  : _throw_index_out_of_bounds_exception(throw_index_out_of_bounds_exception),
+    _index(index)
 {
-  Unimplemented();
+  _info = new CodeEmitInfo(info);
 }
 
 void RangeCheckStub::emit_code(LIR_Assembler* ce)
@@ -46,12 +50,20 @@ NewInstanceStub::NewInstanceStub(LIR_Opr klass_reg, LIR_Opr result,
                                  ciInstanceKlass* klass, CodeEmitInfo* info,
                                  Runtime1::StubID stub_id)
 {
-  Unimplemented();
+  _result = result;
+  _klass = klass;
+  _klass_reg = klass_reg;
+  _info = new CodeEmitInfo(info);
+  assert(stub_id == Runtime1::new_instance_id ||
+         stub_id == Runtime1::fast_new_instance_id ||
+         stub_id == Runtime1::fast_new_instance_init_check_id,
+         "need new_instance id");
+  _stub_id = stub_id;
 }
 
 void NewInstanceStub::emit_code(LIR_Assembler* ce)
 {
-  Unimplemented();
+  __ unimplemented (__FILE__, __LINE__);
 }
 
 MonitorEnterStub::MonitorEnterStub(LIR_Opr obj_reg, LIR_Opr lock_reg,

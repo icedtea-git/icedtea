@@ -181,7 +181,11 @@ int Deoptimization::last_frame_adjust(int callee_parameters, int callee_locals)
 
 uint SharedRuntime::out_preserve_stack_slots()
 {
+#ifdef XXX_EVIL_EVIL_EVIL
+  return 0;
+#else
   Unimplemented();
+#endif
 }
 
 static RuntimeStub* generate_unimplemented_runtime_stub(const char* file,

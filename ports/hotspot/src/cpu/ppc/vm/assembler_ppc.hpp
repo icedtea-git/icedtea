@@ -67,6 +67,18 @@ class Assembler : public AbstractAssembler {
   Assembler(CodeBuffer* code) : AbstractAssembler(code) {}
 
  private:
+  static bool is_simm(int x, int nbits)
+  {
+    return -(1 << nbits - 1) <= x && x < (1 << nbits - 1);
+  }
+
+ public:
+  static bool is_simm16(int x)
+  {
+    return is_simm(x, 16);
+  }
+
+ private:
   // Instruction emitters for the various forms.
   // Every instruction should ultimately come through one of these.
   void emit_instruction(int opcode, int li, bool aa, bool lk);

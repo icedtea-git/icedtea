@@ -25,5 +25,5 @@
 
   void pd_init()
   {
-    Unimplemented();
+    // nothing to do
   }
