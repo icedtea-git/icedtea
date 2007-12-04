@@ -216,6 +216,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-linker-options.patch \
 	patches/icedtea-ports.patch \
 	patches/icedtea-lcms-leak.patch \
+	patches/icedtea-c1-unimplemented.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 

@@ -33,10 +33,10 @@ void C1_MacroAssembler::verify_stack_oop(int stack_offset)
 
 void C1_MacroAssembler::verified_entry()
 {
-  Unimplemented();
+  unimplemented(__FILE__, __LINE__);
 }
 
 void C1_MacroAssembler::build_frame(int frame_size_in_bytes)
 {
-  Unimplemented();
+  unimplemented(__FILE__, __LINE__);
 }

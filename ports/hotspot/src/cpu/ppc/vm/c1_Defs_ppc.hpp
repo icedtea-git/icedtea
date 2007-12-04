@@ -40,27 +40,27 @@ enum {
 enum {
 #ifdef XXX_EVIL_EVIL_EVIL
   // numbers of registers used during code emission
-  pd_nof_cpu_regs_frame_map = 0,
-  pd_nof_fpu_regs_frame_map = 0,
+  pd_nof_cpu_regs_frame_map = 32,
+  pd_nof_fpu_regs_frame_map = 32,
 
   // numbers of registers killed by calls
-  pd_nof_caller_save_cpu_regs_frame_map = 1,
-  pd_nof_caller_save_fpu_regs_frame_map = 1,
+  pd_nof_caller_save_cpu_regs_frame_map = 11,
+  pd_nof_caller_save_fpu_regs_frame_map = 14,
 
   // numbers of registers visible to register allocator
   pd_nof_cpu_regs_reg_alloc = 0,
   pd_nof_fpu_regs_reg_alloc = 0,
 
   // numbers of registers visible to linear scan
-  pd_nof_cpu_regs_linearscan = 0,
-  pd_nof_fpu_regs_linearscan = 0,
+  pd_nof_cpu_regs_linearscan = 32,
+  pd_nof_fpu_regs_linearscan = 32,
   pd_nof_xmm_regs_linearscan = 0,
 
   // specifics
-  pd_first_cpu_reg = 0,
-  pd_last_cpu_reg  = 0,
+  pd_first_cpu_reg = 3,  // skip r0, r1 and r2
+  pd_last_cpu_reg  = 30, // skip Rthread
   pd_first_fpu_reg = 0,
-  pd_last_fpu_reg  = 0,
+  pd_last_fpu_reg  = 31,
 #endif
 };
 

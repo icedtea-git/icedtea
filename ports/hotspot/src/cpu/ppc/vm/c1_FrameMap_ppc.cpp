@@ -26,22 +26,69 @@
 #include "incls/_precompiled.incl"
 #include "incls/_c1_FrameMap_ppc.cpp.incl"
 
-void FrameMap::init()
-{
-  Unimplemented();
-}
-
 LIR_Opr FrameMap::map_to_opr(BasicType type, VMRegPair* reg, bool)
 {
-  Unimplemented();
+  LIR_Opr opr = LIR_OprFact::illegalOpr;
+  VMReg r_1 = reg->first();
+  VMReg r_2 = reg->second();
+  if (r_1->is_stack()) {
+    Unimplemented();
+  }
+  else if (r_1->is_Register()) {
+    Register reg = r_1->as_Register();
+    if (r_2->is_Register()) {
+      Register reg2 = r_2->as_Register();
+      opr = as_long_opr(reg2, reg);
+    } else if (type == T_OBJECT) {
+      opr = as_oop_opr(reg);
+    } else {
+      opr = as_opr(reg);
+    }
+  }
+  else if (r_1->is_FloatRegister()) {
+    Unimplemented();
+  }
+  else {
+    ShouldNotReachHere();
+  }
+  return opr;
 }
+
+LIR_Opr FrameMap::gpr_opr[];
+LIR_Opr FrameMap::gpr_oop_opr[];
+LIR_Opr FrameMap::fpr_opr[];
 
 LIR_Opr FrameMap::_caller_save_cpu_regs[] = { 0, };
 LIR_Opr FrameMap::_caller_save_fpu_regs[] = { 0, };
 
+void FrameMap::init()
+{
+  if (_init_done)
+    return;
+
+  for (int i = 0; i < nof_cpu_regs; i++) {
+    map_register(i, as_Register(i));
+    gpr_opr[i] = LIR_OprFact::single_cpu(i);
+    gpr_oop_opr[i] = LIR_OprFact::single_cpu_oop(i);
+  }
+
+  for (int i = 0, j = 0; j < nof_caller_save_cpu_regs; i++) {
+    if (i != 1 && i != 2)
+      _caller_save_cpu_regs[j++] = LIR_OprFact::single_cpu(i);
+  }
+
+  for (int i = 0; i < nof_caller_save_fpu_regs; i++) {
+    _caller_save_fpu_regs[i] = LIR_OprFact::single_fpu(i);
+  }
+
+  _init_done = true;
+}
+
 bool FrameMap::validate_frame()
 {
-  Unimplemented();
+#ifdef XXX_EVIL_EVIL_EVIL
+  return true;
+#endif
 }
 
 VMReg FrameMap::fpu_regname(int n)

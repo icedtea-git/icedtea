@@ -31,3 +31,5 @@
     deopt_handler_size     = 1*K
 #endif
   };
+
+  void emit_unimplemented(const char* file, int line);
