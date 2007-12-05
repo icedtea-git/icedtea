@@ -1,3 +1,8 @@
+2007-12-05  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am (EXTRA_DIST): Add ports directory.
+	* Makefile.in: Regenerate.
+
 2007-12-04  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-c1-unimplemented.patch: New file.
