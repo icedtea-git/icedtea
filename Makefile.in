@@ -191,7 +191,7 @@ OPENJDK_VERSION = b23
 OPENJDK_DATE = 30_oct_2007
 OPENJDK_MD5SUM = 7eed137c0321e0b5b75ff2d646ce0d0d
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
-	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib
+	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports
 
 
 # OpenJDK build environment.
