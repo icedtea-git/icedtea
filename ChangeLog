@@ -1,3 +1,9 @@
+2007-12-07  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Removed libjsoundalso.so, libjsound.so,libt2k.so.
+	* Makefile.in: Regenerate.
+	* rt/gnu/java/io/Base64InputStream.java: Removed, not used.
+
 2007-12-05  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am (EXTRA_DIST): Add ports directory.
