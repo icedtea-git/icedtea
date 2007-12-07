@@ -524,10 +524,7 @@ clean-tools-jar: clean-tools-jar clean-tools
 # Shared objects.
 SHARED_OBJECT_FILES = \
 	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libdcpr.so \
-	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libjsoundalsa.so \
-	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libjsound.so \
-	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libjsoundhs.so \
-	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libt2k.so
+	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libjsoundhs.so
 
 $(SHARED_OBJECT_FILES):
 	mkdir -p bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)
