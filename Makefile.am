@@ -18,7 +18,7 @@ distclean-local: clean-copy
 install:
 
 .PHONY: \
-	env env-ecj snapshot clean-clone clean-clone clean-patch \
+	env env-ecj snapshot clean-clone clean-update clean-patch \
 	clean-clone-ecj clean-patch-ecj clean-bootstrap-directory \
 	clean-bootstrap-directory-symlink clean-bootstrap-directory-ecj \
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
@@ -132,7 +132,7 @@ clean-clone:
 	rm -f stamps/clone.stamp
 	rm -rf openjdk
 
-update:
+stamps/update.stamp:
 	if test -d openjdk ; \
         then \
 	  cd openjdk; \
@@ -140,6 +140,10 @@ update:
           hg fupdate; \
 	  cd ..; \
 	fi
+	touch stamps/update.stamp
+
+clean-update:
+	rm -f stamps/update.stamp
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/clone.stamp
@@ -212,7 +216,7 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-cacao-jvm-cfg.patch
 endif
 
-stamps/patch.stamp: stamps/clone.stamp update
+stamps/patch.stamp: stamps/clone.stamp stamps/update.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
@@ -416,7 +420,7 @@ endif
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-icedtea: update stamps/tools.stamp stamps/plugs.stamp \
+icedtea: stamps/update.stamp stamps/tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
@@ -427,7 +431,7 @@ icedtea: update stamps/tools.stamp stamps/plugs.stamp \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
-icedtea-debug: update stamps/bootstrap-directory-symlink.stamp \
+icedtea-debug: stamps/update.stamp stamps/bootstrap-directory-symlink.stamp \
 	stamps/tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
@@ -692,3 +696,5 @@ tools-class-files: stamps/tools-class-files.stamp
 tools-copy-source-files: stamps/tools-copy-source-files.stamp
 
 tools: stamps/tools.stamp
+
+update: stamps/update.stamp
