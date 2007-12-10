@@ -1,6 +1,7 @@
 2007-12-10  Lillian Angel  <langel@redhat.com>
 
-	* Makefile.am: Added --with-openjdk-src-zip support back in.
+	* Makefile.am: Added --with-openjdk-src-zip support back in. Also,
+	openjdk is cloned based on release tag.
 	* Makefile.in: Regenerate.
 	* acinclude.m4: Added --with-openjdk-src-zip support back in.
 	* configure: Regenerate.
