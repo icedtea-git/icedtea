@@ -146,6 +146,7 @@ STRIP = @STRIP@
 SYSTEM_ANT_DIR = @SYSTEM_ANT_DIR@
 SYSTEM_GCJ_DIR = @SYSTEM_GCJ_DIR@
 SYSTEM_ICEDTEA_DIR = @SYSTEM_ICEDTEA_DIR@
+TAR = @TAR@
 UNZIP = @UNZIP@
 VERSION = @VERSION@
 WGET = @WGET@
@@ -612,6 +613,14 @@ env-ecj:
 # Mercurial snapshot.
 snapshot: dist
 	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
+
+# Creates archive of openjdk.
+dist-openjdk:
+	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-dist/openjdk
+	find -name \\.hg* | xargs rm -rf 
+	cd openjdk-dist && $(TAR) czf openjdk-$(OPENJDK_VERSION).tar.gz openjdk/
+	mv openjdk-dist/openjdk-$(OPENJDK_VERSION).tar.gz . 
+	rm -rf openjdk-dist
 
 stamps/clone.stamp:
 	if ! test -d openjdk ; then \

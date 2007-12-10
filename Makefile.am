@@ -115,6 +115,14 @@ env-ecj:
 snapshot: dist
 	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
 
+# Creates archive of openjdk.
+dist-openjdk:
+	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-dist/openjdk
+	find -name \\.hg* | xargs rm -rf 
+	cd openjdk-dist && $(TAR) czf openjdk-$(OPENJDK_VERSION).tar.gz openjdk/
+	mv openjdk-dist/openjdk-$(OPENJDK_VERSION).tar.gz . 
+	rm -rf openjdk-dist
+
 # OpenJDK Source Preparation Targets
 # ==================================
 
