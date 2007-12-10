@@ -18,7 +18,7 @@ distclean-local: clean-copy
 install:
 
 .PHONY: \
-	env env-ecj snapshot clean-clone clean-update clean-patch \
+	env env-ecj snapshot clean-clone clean-patch \
 	clean-clone-ecj clean-patch-ecj clean-bootstrap-directory \
 	clean-bootstrap-directory-symlink clean-bootstrap-directory-ecj \
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
@@ -121,29 +121,27 @@ snapshot: dist
 # Download OpenJDK sources.
 OPENJDK_URL = http://hg.openjdk.java.net/jdk7/jdk7
 
+if USE_ALT_OPENJDK_SRC_ZIP
+  OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
+else
+  OPENJDK_SRC_ZIP =
+endif
+
 stamps/clone.stamp:
-	if ! test -d openjdk ; \
-	then \
-	  hg fclone $(OPENJDK_URL) openjdk; \
+	if ! test -d openjdk ; then \
+	  if [ $(OPENJDK_SRC_ZIP) ] ; then \
+	    $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
+	  else \
+	    hg fclone -r jdk7-b24 $(OPENJDK_URL) openjdk; \
+	  fi ; \
 	fi
+	chmod -R ug+w openjdk
+	mkdir -p stamps
 	touch stamps/clone.stamp
 
 clean-clone:
 	rm -f stamps/clone.stamp
 	rm -rf openjdk
-
-stamps/update.stamp:
-	if test -d openjdk ; \
-        then \
-	  cd openjdk; \
-          hg fpull; \
-          hg fupdate; \
-	  cd ..; \
-	fi
-	touch stamps/update.stamp
-
-clean-update:
-	rm -f stamps/update.stamp
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/clone.stamp
@@ -216,7 +214,7 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-cacao-jvm-cfg.patch
 endif
 
-stamps/patch.stamp: stamps/clone.stamp stamps/update.stamp
+stamps/patch.stamp: stamps/clone.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
@@ -246,10 +244,17 @@ clean-patch:
 
 # Extract OpenJDK sources for ecj.
 stamps/clone-ecj.stamp: stamps/clone.stamp
-	if ! test -d openjdk-ecj ; \
-	then \
-	  hg fclone $(OPENJDK_URL) openjdk-ecj ; \
+	if ! test -d openjdk ; then \
+  	  if [ $(OPENJDK_SRC_ZIP) ] ; \
+          then \
+            $(UNZIP) -q $(OPENJDK_SRC_ZIP) -d tmp-ecj; \
+	    mv tmp-ecj/openjdk openjdk-ecj ; \
+	    rmdir tmp-ecj; \
+          else \
+            hg fclone -r jdk7-b24 $(OPENJDK_URL) openjdk-ecj; \
+          fi ; \
 	fi
+	chmod -R ug+w openjdk-ecj
 	mkdir -p stamps
 	touch stamps/clone-ecj.stamp
 
@@ -420,7 +425,7 @@ endif
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-icedtea: stamps/update.stamp stamps/tools.stamp stamps/plugs.stamp \
+icedtea: stamps/tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
@@ -431,7 +436,7 @@ icedtea: stamps/update.stamp stamps/tools.stamp stamps/plugs.stamp \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
-icedtea-debug: stamps/update.stamp stamps/bootstrap-directory-symlink.stamp \
+icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
@@ -696,5 +701,3 @@ tools-class-files: stamps/tools-class-files.stamp
 tools-copy-source-files: stamps/tools-copy-source-files.stamp
 
 tools: stamps/tools.stamp
-
-update: stamps/update.stamp

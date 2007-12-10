@@ -710,7 +710,6 @@ PATCH
 UNZIP
 WGET
 CHMOD
-MERCURIAL
 GAWK
 SYSTEM_GCJ_DIR
 SYSTEM_ICEDTEA_DIR
@@ -731,6 +730,9 @@ XALAN2_JAR
 XALAN2_SERIALIZER_JAR
 XERCES2_JAR
 FREETYPE2_INC_DIR
+USE_ALT_OPENJDK_SRC_ZIP_TRUE
+USE_ALT_OPENJDK_SRC_ZIP_FALSE
+ALT_OPENJDK_SRC_ZIP
 OPENJDK_SRC_DIR
 GNU_CLASSLIB_FOUND_TRUE
 GNU_CLASSLIB_FOUND_FALSE
@@ -1376,6 +1378,7 @@ Optional Packages:
   --with-xalan2-serializer-jar
                           specify location of the xalan2-serializer jar
   --with-xerces2-jar      specify location of the xerces2 jar
+  --with-openjdk-src-zip  specify the location of the openjdk source zip
   --with-openjdk-src-dir  specify the location of the openjdk sources
   --with-cacao            use CACAO as VM
 
@@ -4700,115 +4703,6 @@ echo "$as_me: error: chmod program not found in PATH" >&2;}
 
 
 if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}hg", so it can be a program name with args.
-set dummy ${ac_tool_prefix}hg; ac_word=$2
-{ echo "$as_me:$LINENO: checking for $ac_word" >&5
-echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
-if test "${ac_cv_path_MERCURIAL+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  case $MERCURIAL in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_MERCURIAL="$MERCURIAL" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-  for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_MERCURIAL="$as_dir/$ac_word$ac_exec_ext"
-    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-MERCURIAL=$ac_cv_path_MERCURIAL
-if test -n "$MERCURIAL"; then
-  { echo "$as_me:$LINENO: result: $MERCURIAL" >&5
-echo "${ECHO_T}$MERCURIAL" >&6; }
-else
-  { echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6; }
-fi
-
-
-fi
-if test -z "$ac_cv_path_MERCURIAL"; then
-  ac_pt_MERCURIAL=$MERCURIAL
-  # Extract the first word of "hg", so it can be a program name with args.
-set dummy hg; ac_word=$2
-{ echo "$as_me:$LINENO: checking for $ac_word" >&5
-echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
-if test "${ac_cv_path_ac_pt_MERCURIAL+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  case $ac_pt_MERCURIAL in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_ac_pt_MERCURIAL="$ac_pt_MERCURIAL" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-  for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_ac_pt_MERCURIAL="$as_dir/$ac_word$ac_exec_ext"
-    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-ac_pt_MERCURIAL=$ac_cv_path_ac_pt_MERCURIAL
-if test -n "$ac_pt_MERCURIAL"; then
-  { echo "$as_me:$LINENO: result: $ac_pt_MERCURIAL" >&5
-echo "${ECHO_T}$ac_pt_MERCURIAL" >&6; }
-else
-  { echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6; }
-fi
-
-  if test "x$ac_pt_MERCURIAL" = x; then
-    MERCURIAL=""
-  else
-    case $cross_compiling:$ac_tool_warned in
-yes:)
-{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
-whose name does not start with the host triplet.  If you think this
-configuration is useful to you, please write to autoconf@gnu.org." >&5
-echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
-whose name does not start with the host triplet.  If you think this
-configuration is useful to you, please write to autoconf@gnu.org." >&2;}
-ac_tool_warned=yes ;;
-esac
-    MERCURIAL=$ac_pt_MERCURIAL
-  fi
-else
-  MERCURIAL="$ac_cv_path_MERCURIAL"
-fi
-
- if test x"$MERCURIAL" = x ; then
-   { { echo "$as_me:$LINENO: error: hg program not found in PATH" >&5
-echo "$as_me: error: hg program not found in PATH" >&2;}
-   { (exit 1); exit 1; }; }
- fi
-
-
-if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}gawk", so it can be a program name with args.
 set dummy ${ac_tool_prefix}gawk; ac_word=$2
 { echo "$as_me:$LINENO: checking for $ac_word" >&5
@@ -6926,6 +6820,41 @@ echo "${ECHO_T}no" >&6; }
 echo "$as_me: error: \"Freetype headers not found - try installing freetype-devel\"" >&2;}
    { (exit 1); exit 1; }; }
     fi
+
+
+
+  { echo "$as_me:$LINENO: checking openjdk source zip" >&5
+echo $ECHO_N "checking openjdk source zip... $ECHO_C" >&6; }
+
+# Check whether --with-openjdk-src-zip was given.
+if test "${with_openjdk_src_zip+set}" = set; then
+  withval=$with_openjdk_src_zip;
+    ALT_OPENJDK_SRC_ZIP=${withval}
+     if test x = x; then
+  USE_ALT_OPENJDK_SRC_ZIP_TRUE=
+  USE_ALT_OPENJDK_SRC_ZIP_FALSE='#'
+else
+  USE_ALT_OPENJDK_SRC_ZIP_TRUE='#'
+  USE_ALT_OPENJDK_SRC_ZIP_FALSE=
+fi
+
+
+else
+
+    ALT_OPENJDK_SRC_ZIP="not specified"
+     if test x != x; then
+  USE_ALT_OPENJDK_SRC_ZIP_TRUE=
+  USE_ALT_OPENJDK_SRC_ZIP_FALSE='#'
+else
+  USE_ALT_OPENJDK_SRC_ZIP_TRUE='#'
+  USE_ALT_OPENJDK_SRC_ZIP_FALSE=
+fi
+
+
+fi
+
+  { echo "$as_me:$LINENO: result: ${ALT_OPENJDK_SRC_ZIP}" >&5
+echo "${ECHO_T}${ALT_OPENJDK_SRC_ZIP}" >&6; }
 
 
 
@@ -10104,6 +10033,20 @@ echo "$as_me: error: conditional \"WITH_ICEDTEA\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${USE_ALT_OPENJDK_SRC_ZIP_TRUE}" && test -z "${USE_ALT_OPENJDK_SRC_ZIP_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_ALT_OPENJDK_SRC_ZIP_TRUE}" && test -z "${USE_ALT_OPENJDK_SRC_ZIP_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${GNU_CLASSLIB_FOUND_TRUE}" && test -z "${GNU_CLASSLIB_FOUND_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"GNU_CLASSLIB_FOUND\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -10744,8 +10687,8 @@ PATCH!$PATCH$ac_delim
 UNZIP!$UNZIP$ac_delim
 WGET!$WGET$ac_delim
 CHMOD!$CHMOD$ac_delim
-MERCURIAL!$MERCURIAL$ac_delim
 GAWK!$GAWK$ac_delim
+SYSTEM_GCJ_DIR!$SYSTEM_GCJ_DIR$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -10787,7 +10730,6 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
-SYSTEM_GCJ_DIR!$SYSTEM_GCJ_DIR$ac_delim
 SYSTEM_ICEDTEA_DIR!$SYSTEM_ICEDTEA_DIR$ac_delim
 SYSTEM_ANT_DIR!$SYSTEM_ANT_DIR$ac_delim
 WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
@@ -10806,6 +10748,9 @@ XALAN2_JAR!$XALAN2_JAR$ac_delim
 XALAN2_SERIALIZER_JAR!$XALAN2_SERIALIZER_JAR$ac_delim
 XERCES2_JAR!$XERCES2_JAR$ac_delim
 FREETYPE2_INC_DIR!$FREETYPE2_INC_DIR$ac_delim
+USE_ALT_OPENJDK_SRC_ZIP_TRUE!$USE_ALT_OPENJDK_SRC_ZIP_TRUE$ac_delim
+USE_ALT_OPENJDK_SRC_ZIP_FALSE!$USE_ALT_OPENJDK_SRC_ZIP_FALSE$ac_delim
+ALT_OPENJDK_SRC_ZIP!$ALT_OPENJDK_SRC_ZIP$ac_delim
 OPENJDK_SRC_DIR!$OPENJDK_SRC_DIR$ac_delim
 GNU_CLASSLIB_FOUND_TRUE!$GNU_CLASSLIB_FOUND_TRUE$ac_delim
 GNU_CLASSLIB_FOUND_FALSE!$GNU_CLASSLIB_FOUND_FALSE$ac_delim
