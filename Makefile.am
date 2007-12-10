@@ -132,7 +132,7 @@ stamps/clone.stamp:
 	  if [ $(OPENJDK_SRC_ZIP) ] ; then \
 	    $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
 	  else \
-	    hg fclone -r jdk7-b24 $(OPENJDK_URL) openjdk; \
+	    hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk; \
 	  fi ; \
 	fi
 	chmod -R ug+w openjdk
@@ -251,7 +251,7 @@ stamps/clone-ecj.stamp: stamps/clone.stamp
 	    mv tmp-ecj/openjdk openjdk-ecj ; \
 	    rmdir tmp-ecj; \
           else \
-            hg fclone -r jdk7-b24 $(OPENJDK_URL) openjdk-ecj; \
+            hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-ecj; \
           fi ; \
 	fi
 	chmod -R ug+w openjdk-ecj
