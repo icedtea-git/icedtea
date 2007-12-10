@@ -1,5 +1,10 @@
 2007-12-10  Lillian Angel  <langel@redhat.com>
 
+	* configure.ac: Removed checks for unused tools.
+	* configure: Regenerate.
+
+2007-12-10  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am (dist-openjdk): New target to create openjdk zip.
 	* Makefile.in: Regenerate.
 	* configure.ac: Added check for tar tool.
