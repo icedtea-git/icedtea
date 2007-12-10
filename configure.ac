@@ -13,6 +13,7 @@ FIND_TOOL([FIND], [find])
 FIND_TOOL([MD5SUM], [md5sum])
 FIND_TOOL([PATCH], [patch])
 FIND_TOOL([UNZIP], [unzip])
+FIND_TOOL([TAR], [tar])
 FIND_TOOL([WGET], [wget])
 FIND_TOOL([CHMOD], [chmod])
 dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
