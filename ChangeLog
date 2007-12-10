@@ -1,5 +1,9 @@
 2007-12-10  Lillian Angel  <langel@redhat.com>
 
+	* INSTALL: Added note about new target dist-openjdk.
+
+2007-12-10  Lillian Angel  <langel@redhat.com>
+
 	* configure.ac: Removed checks for unused tools.
 	* configure: Regenerate.
 
