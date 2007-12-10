@@ -64,3 +64,9 @@ the rt plugs certain files need to be deleted before restarting the build.
 
 To view all targets that create stamp files, see 
 Makefile.am (section 'All Stamped Targets').
+
+
+Important Targets
+-----------------
+
+- 'make dist-openjdk' creates a tarball of the openjdk sources for the current release.
