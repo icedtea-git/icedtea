@@ -251,7 +251,6 @@ package java.nio;
  *
  * @author Mark Reinhold
  * @author JSR-51 Expert Group
- * @version 1.69, 07/05/05
  * @since 1.4
  */
 
@@ -264,26 +263,27 @@ public abstract class LongBuffer
     // reduce the number of virtual method invocations needed to access these
     // values, which is especially costly when coding small buffers.
     //
-    final long[] hb;			// Non-null only for heap buffers
+    final long[] hb;                  // Non-null only for heap buffers
     final int offset;
-    boolean isReadOnly;			// Valid only for heap buffers
+    boolean isReadOnly;                 // Valid only for heap buffers
 
     // Creates a new buffer with the given mark, position, limit, capacity,
     // backing array, and array offset
     //
-    LongBuffer(int mark, int pos, int lim, int cap,	// package-private
-		 long[] hb, int offset)
+    LongBuffer(int mark, int pos, int lim, int cap,   // package-private
+                 long[] hb, int offset)
     {
-	super(mark, pos, lim, cap);
-	this.hb = hb;
-	this.offset = offset;
+        super(mark, pos, lim, cap);
+        this.hb = hb;
+        this.offset = offset;
     }
 
     // Creates a new buffer with the given mark, position, limit, and capacity
     //
-    LongBuffer(int mark, int pos, int lim, int cap) {	// package-private
-	this(mark, pos, lim, cap, null, 0);
+    LongBuffer(int mark, int pos, int lim, int cap) { // package-private
+        this(mark, pos, lim, cap, null, 0);
     }
+
 
 
 
@@ -312,7 +312,8 @@ public abstract class LongBuffer
      * Allocates a new long buffer.
      *
      * <p> The new buffer's position will be zero, its limit will be its
-     * capacity, and its mark will be undefined.  It will have a {@link #array
+     * capacity, its mark will be undefined, and each of its elements will be
+     * initialized to zero.  It will have a {@link #array
      * </code>backing array<code>}, and its {@link #arrayOffset </code>array
      * offset<code>} will be zero.
      *
@@ -325,9 +326,9 @@ public abstract class LongBuffer
      *          If the <tt>capacity</tt> is a negative integer
      */
     public static LongBuffer allocate(int capacity) {
-	if (capacity < 0)
-	    throw new IllegalArgumentException();
-	return new HeapLongBuffer(capacity, capacity);
+        if (capacity < 0)
+            throw new IllegalArgumentException();
+        return new HeapLongBuffer(capacity, capacity);
     }
 
     /**
@@ -362,13 +363,13 @@ public abstract class LongBuffer
      *          parameters do not hold
      */
     public static LongBuffer wrap(long[] array,
-				    int offset, int length)
+                                    int offset, int length)
     {
-	try {
-	    return new HeapLongBuffer(array, offset, length);
-	} catch (IllegalArgumentException x) {
-	    throw new IndexOutOfBoundsException();
-	}
+        try {
+            return new HeapLongBuffer(array, offset, length);
+        } catch (IllegalArgumentException x) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     /**
@@ -380,7 +381,7 @@ public abstract class LongBuffer
      * <tt>array.length</tt>, its position will be zero, and its mark will be
      * undefined.  Its {@link #array </code>backing array<code>} will be the
      * given array, and its {@link #arrayOffset </code>array offset<code>} will
-     * be zero.  </p> 
+     * be zero.  </p>
      *
      * @param  array
      *         The array that will back this buffer
@@ -388,7 +389,7 @@ public abstract class LongBuffer
      * @return  The new long buffer
      */
     public static LongBuffer wrap(long[] array) {
-	return wrap(array, 0, array.length);
+        return wrap(array, 0, array.length);
     }
 
 
@@ -540,7 +541,7 @@ public abstract class LongBuffer
      */
     public abstract LongBuffer asReadOnlyBuffer();
 
-
+
     // -- Singleton get/put methods --
 
     /**
@@ -556,7 +557,7 @@ public abstract class LongBuffer
 
     /**
      * Relative <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
-     * 
+     *
      * <p> Writes the given long into this buffer at the current
      * position, and then increments the position. </p>
      *
@@ -590,7 +591,7 @@ public abstract class LongBuffer
 
     /**
      * Absolute <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
-     * 
+     *
      * <p> Writes the given long into this buffer at the given
      * index. </p>
      *
@@ -611,7 +612,7 @@ public abstract class LongBuffer
      */
     public abstract LongBuffer put(int index, long l);
 
-
+
     // -- Bulk get operations --
 
     /**
@@ -664,13 +665,13 @@ public abstract class LongBuffer
      *          parameters do not hold
      */
     public LongBuffer get(long[] dst, int offset, int length) {
-	checkBounds(offset, length, dst.length);
-	if (length > remaining())
-	    throw new BufferUnderflowException();
-	int end = offset + length;
-	for (int i = offset; i < end; i++)
-	    dst[i] = get();
-	return this;
+        checkBounds(offset, length, dst.length);
+        if (length > remaining())
+            throw new BufferUnderflowException();
+        int end = offset + length;
+        for (int i = offset; i < end; i++)
+            dst[i] = get();
+        return this;
     }
 
     /**
@@ -690,10 +691,10 @@ public abstract class LongBuffer
      *          remaining in this buffer
      */
     public LongBuffer get(long[] dst) {
-	return get(dst, 0, dst.length);
+        return get(dst, 0, dst.length);
     }
 
-
+
     // -- Bulk put operations --
 
     /**
@@ -738,14 +739,14 @@ public abstract class LongBuffer
      *          If this buffer is read-only
      */
     public LongBuffer put(LongBuffer src) {
-	if (src == this)
-	    throw new IllegalArgumentException();
-	int n = src.remaining();
-	if (n > remaining())
-	    throw new BufferOverflowException();
-	for (int i = 0; i < n; i++)
-	    put(src.get());
-	return this;
+        if (src == this)
+            throw new IllegalArgumentException();
+        int n = src.remaining();
+        if (n > remaining())
+            throw new BufferOverflowException();
+        for (int i = 0; i < n; i++)
+            put(src.get());
+        return this;
     }
 
     /**
@@ -799,13 +800,13 @@ public abstract class LongBuffer
      *          If this buffer is read-only
      */
     public LongBuffer put(long[] src, int offset, int length) {
-	checkBounds(offset, length, src.length);
-	if (length > remaining())
-	    throw new BufferOverflowException();
-	int end = offset + length;
-	for (int i = offset; i < end; i++)
-	    this.put(src[i]);
-	return this;
+        checkBounds(offset, length, src.length);
+        if (length > remaining())
+            throw new BufferOverflowException();
+        int end = offset + length;
+        for (int i = offset; i < end; i++)
+            this.put(src[i]);
+        return this;
     }
 
     /**
@@ -828,7 +829,7 @@ public abstract class LongBuffer
      *          If this buffer is read-only
      */
     public final LongBuffer put(long[] src) {
-	return put(src, 0, src.length);
+        return put(src, 0, src.length);
     }
 
 
@@ -916,7 +917,7 @@ public abstract class LongBuffer
 
 
 
-
+
     // -- Other stuff --
 
     /**
@@ -931,7 +932,7 @@ public abstract class LongBuffer
      *          is backed by an array and is not read-only
      */
     public final boolean hasArray() {
-	return (hb != null) && !isReadOnly;
+        return (hb != null) && !isReadOnly;
     }
 
     /**
@@ -954,11 +955,11 @@ public abstract class LongBuffer
      *          If this buffer is not backed by an accessible array
      */
     public final long[] array() {
-	if (hb == null)
-	    throw new UnsupportedOperationException();
-	if (isReadOnly)
-	    throw new ReadOnlyBufferException();
-	return hb;
+        if (hb == null)
+            throw new UnsupportedOperationException();
+        if (isReadOnly)
+            throw new ReadOnlyBufferException();
+        return hb;
     }
 
     /**
@@ -982,11 +983,11 @@ public abstract class LongBuffer
      *          If this buffer is not backed by an accessible array
      */
     public final int arrayOffset() {
-	if (hb == null)
-	    throw new UnsupportedOperationException();
-	if (isReadOnly)
-	    throw new ReadOnlyBufferException();
-	return offset;
+        if (hb == null)
+            throw new UnsupportedOperationException();
+        if (isReadOnly)
+            throw new ReadOnlyBufferException();
+        return offset;
     }
 
     /**
@@ -1045,16 +1046,16 @@ public abstract class LongBuffer
      * @return  A summary string
      */
     public String toString() {
-	StringBuffer sb = new StringBuffer();
-	sb.append(getClass().getName());
-	sb.append("[pos=");
-	sb.append(position());
-	sb.append(" lim=");
-	sb.append(limit());
-	sb.append(" cap=");
-	sb.append(capacity());
-	sb.append("]");
-	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        sb.append(getClass().getName());
+        sb.append("[pos=");
+        sb.append(position());
+        sb.append(" lim=");
+        sb.append(limit());
+        sb.append(" cap=");
+        sb.append(capacity());
+        sb.append("]");
+        return sb.toString();
     }
 
 
@@ -1076,11 +1077,11 @@ public abstract class LongBuffer
      * @return  The current hash code of this buffer
      */
     public int hashCode() {
-	int h = 1;
-	int p = position();
-	for (int i = limit() - 1; i >= p; i--)
-	    h = 31 * h + (int)get(i);
-	return h;
+        int h = 1;
+        int p = position();
+        for (int i = limit() - 1; i >= p; i--)
+            h = 31 * h + (int)get(i);
+        return h;
     }
 
     /**
@@ -1109,24 +1110,24 @@ public abstract class LongBuffer
      *           given object
      */
     public boolean equals(Object ob) {
-	if (this == ob)
-	    return true;
-	if (!(ob instanceof LongBuffer))
-	    return false;
-	LongBuffer that = (LongBuffer)ob;
-	if (this.remaining() != that.remaining())
-	    return false;
-	int p = this.position();
-	for (int i = this.limit() - 1, j = that.limit() - 1; i >= p; i--, j--) {
-	    long v1 = this.get(i);
-	    long v2 = that.get(j);
-	    if (v1 != v2) {
-		if ((v1 != v1) && (v2 != v2))	// For float and double
-		    continue;
-		return false;
-	    }
-	}
-	return true;
+        if (this == ob)
+            return true;
+        if (!(ob instanceof LongBuffer))
+            return false;
+        LongBuffer that = (LongBuffer)ob;
+        if (this.remaining() != that.remaining())
+            return false;
+        int p = this.position();
+        for (int i = this.limit() - 1, j = that.limit() - 1; i >= p; i--, j--) {
+            long v1 = this.get(i);
+            long v2 = that.get(j);
+            if (v1 != v2) {
+                if ((v1 != v1) && (v2 != v2))   // For float and double
+                    continue;
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -1139,26 +1140,26 @@ public abstract class LongBuffer
      * <p> A long buffer is not comparable to any other type of object.
      *
      * @return  A negative integer, zero, or a positive integer as this buffer
-     *		is less than, equal to, or greater than the given buffer
+     *          is less than, equal to, or greater than the given buffer
      */
     public int compareTo(LongBuffer that) {
-	int n = this.position() + Math.min(this.remaining(), that.remaining());
-	for (int i = this.position(), j = that.position(); i < n; i++, j++) {
-	    long v1 = this.get(i);
-	    long v2 = that.get(j);
-	    if (v1 == v2)
-		continue;
-	    if ((v1 != v1) && (v2 != v2)) 	// For float and double
-		continue;
-	    if (v1 < v2)
-		return -1;
-	    return +1;
-	}
-	return this.remaining() - that.remaining();
+        int n = this.position() + Math.min(this.remaining(), that.remaining());
+        for (int i = this.position(), j = that.position(); i < n; i++, j++) {
+            long v1 = this.get(i);
+            long v2 = that.get(j);
+            if (v1 == v2)
+                continue;
+            if ((v1 != v1) && (v2 != v2))       // For float and double
+                continue;
+            if (v1 < v2)
+                return -1;
+            return +1;
+        }
+        return this.remaining() - that.remaining();
     }
 
 
-
+
     // -- Other char stuff --
 
 
@@ -1353,7 +1354,7 @@ public abstract class LongBuffer
 
 
 
-
+
     // -- Other byte stuff: Access to binary data --
 
 

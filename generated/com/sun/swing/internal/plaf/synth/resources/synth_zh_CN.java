@@ -14,6 +14,7 @@ public final class synth_zh_CN extends ListResourceBundle {
             { "FileChooser.fileSizeHeaderText", "\u5927\u5C0F" },
             { "FileChooser.fileTypeHeaderText", "\u7C7B\u578B" },
             { "FileChooser.filesOfTypeLabelText", "\u6587\u4EF6\u7C7B\u578B\uFF1A" },
+            { "FileChooser.folderNameLabelText", "Folder name:" },
             { "FileChooser.homeFolderAccessibleName", "\u8D77\u59CB\u76EE\u5F55" },
             { "FileChooser.homeFolderToolTipText", "\u8D77\u59CB\u76EE\u5F55" },
             { "FileChooser.listViewButtonAccessibleName", "\u5217\u8868" },

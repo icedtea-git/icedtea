@@ -28,7 +28,7 @@
 package java.nio;
 
 
-class ByteBufferAsShortBufferRB			// package-private
+class ByteBufferAsShortBufferRB                  // package-private
     extends ByteBufferAsShortBufferB
 {
 
@@ -39,7 +39,7 @@ class ByteBufferAsShortBufferRB			// package-private
 
 
 
-    ByteBufferAsShortBufferRB(ByteBuffer bb) {	// package-private
+    ByteBufferAsShortBufferRB(ByteBuffer bb) {   // package-private
 
 
 
@@ -52,40 +52,40 @@ class ByteBufferAsShortBufferRB			// package-private
 
 
 
-	super(bb);
+        super(bb);
 
     }
 
     ByteBufferAsShortBufferRB(ByteBuffer bb,
-				     int mark, int pos, int lim, int cap,
-				     int off)
+                                     int mark, int pos, int lim, int cap,
+                                     int off)
     {
 
 
 
 
 
-	super(bb, mark, pos, lim, cap, off);
+        super(bb, mark, pos, lim, cap, off);
 
     }
 
     public ShortBuffer slice() {
-	int pos = this.position();
-	int lim = this.limit();
-	assert (pos <= lim);
-	int rem = (pos <= lim ? lim - pos : 0);
-	int off = (pos << 1) + offset;
+        int pos = this.position();
+        int lim = this.limit();
+        assert (pos <= lim);
+        int rem = (pos <= lim ? lim - pos : 0);
+        int off = (pos << 1) + offset;
         assert (off >= 0);
-	return new ByteBufferAsShortBufferRB(bb, -1, 0, rem, rem, off);
+        return new ByteBufferAsShortBufferRB(bb, -1, 0, rem, rem, off);
     }
 
     public ShortBuffer duplicate() {
-	return new ByteBufferAsShortBufferRB(bb,
-						    this.markValue(),
-						    this.position(),
-						    this.limit(),
-						    this.capacity(),
-						    offset);
+        return new ByteBufferAsShortBufferRB(bb,
+                                                    this.markValue(),
+                                                    this.position(),
+                                                    this.limit(),
+                                                    this.capacity(),
+                                                    offset);
     }
 
     public ShortBuffer asReadOnlyBuffer() {
@@ -97,7 +97,7 @@ class ByteBufferAsShortBufferRB			// package-private
 
 
 
-	return duplicate();
+        return duplicate();
 
     }
 
@@ -122,7 +122,7 @@ class ByteBufferAsShortBufferRB			// package-private
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -131,7 +131,7 @@ class ByteBufferAsShortBufferRB			// package-private
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
@@ -152,16 +152,16 @@ class ByteBufferAsShortBufferRB			// package-private
 
 
 
-	throw new ReadOnlyBufferException();
+        throw new ReadOnlyBufferException();
 
     }
 
     public boolean isDirect() {
-	return bb.isDirect();
+        return bb.isDirect();
     }
 
     public boolean isReadOnly() {
-	return true;
+        return true;
     }
 
 
@@ -206,7 +206,7 @@ class ByteBufferAsShortBufferRB			// package-private
 
     public ByteOrder order() {
 
-	return ByteOrder.BIG_ENDIAN;
+        return ByteOrder.BIG_ENDIAN;
 
 
 

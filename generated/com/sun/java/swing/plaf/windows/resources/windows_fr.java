@@ -15,6 +15,7 @@ public final class windows_fr extends ListResourceBundle {
             { "FileChooser.fileSizeHeaderText", "Taille" },
             { "FileChooser.fileTypeHeaderText", "Type" },
             { "FileChooser.filesOfTypeLabelText", "Fichiers du type :" },
+            { "FileChooser.folderNameLabelText", "Folder name:" },
             { "FileChooser.homeFolderAccessibleName", "Accueil" },
             { "FileChooser.homeFolderToolTipText", "R\u00E9pertoire d'accueil" },
             { "FileChooser.listViewActionLabelText", "Liste" },
@@ -28,6 +29,8 @@ public final class windows_fr extends ListResourceBundle {
             { "FileChooser.saveInLabelText", "Enregistrer dans :" },
             { "FileChooser.upFolderAccessibleName", "Vers le haut" },
             { "FileChooser.upFolderToolTipText", "Remonte d'un niveau." },
+            { "FileChooser.viewMenuButtonAccessibleName", "View Menu" },
+            { "FileChooser.viewMenuButtonToolTipText", "View Menu" },
             { "FileChooser.viewMenuLabelText", "Affichage" },
         };
     }

@@ -19,6 +19,8 @@ public final class gtk_ja extends ListResourceBundle {
             { "FileChooser.newFolderButtonMnemonic", "78" },
             { "FileChooser.newFolderButtonText", "\u65B0\u898F\u30D5\u30A9\u30EB\u30C0" },
             { "FileChooser.newFolderDialogText", "\u30D5\u30A9\u30EB\u30C0\u540D:" },
+            { "FileChooser.newFolderNoDirectoryErrorText", "Error creating directory \"{0}\": No such file or directory" },
+            { "FileChooser.newFolderNoDirectoryErrorTitleText", "Error" },
             { "FileChooser.openButtonMnemonic", "79" },
             { "FileChooser.openButtonText", "\u4E86\u89E3" },
             { "FileChooser.openButtonToolTipText", "\u9078\u629E\u3057\u305F\u30D5\u30A1\u30A4\u30EB\u3092\u958B\u304F" },

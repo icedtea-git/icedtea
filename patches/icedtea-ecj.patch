@@ -762,8 +762,8 @@ diff -ru openjdk-ecj.orig/jaxp/make/build.xml openjdk-ecj/jaxp/make/build.xml
  endif
  
  ifdef ALT_OUTPUTDIR
---- oipenjdk/control/make/make/jdk-rules.gmk	2007-10-30 04:00:10.000000000 -0400
-+++ openjdk-ecj/control/make/make/jdk-rules.gmk	2007-11-13 14:54:50.000000000 -0500
+--- oipenjdk/make/jdk-rules.gmk	2007-10-30 04:00:10.000000000 -0400
++++ openjdk-ecj/make/jdk-rules.gmk	2007-11-13 14:54:50.000000000 -0500
 @@ -63,7 +63,7 @@
  endif
  

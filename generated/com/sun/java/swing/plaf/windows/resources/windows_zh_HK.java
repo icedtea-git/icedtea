@@ -15,6 +15,7 @@ public final class windows_zh_HK extends ListResourceBundle {
             { "FileChooser.fileSizeHeaderText", "\u5927\u5C0F" },
             { "FileChooser.fileTypeHeaderText", "\u985E\u578B" },
             { "FileChooser.filesOfTypeLabelText", "\u6A94\u6848\u985E\u578B\uFE55" },
+            { "FileChooser.folderNameLabelText", "Folder name:" },
             { "FileChooser.homeFolderAccessibleName", "\u4E3B\u76EE\u9304" },
             { "FileChooser.homeFolderToolTipText", "\u56DE\u4E3B\u76EE\u9304" },
             { "FileChooser.listViewActionLabelText", "\u6E05\u55AE" },
@@ -28,6 +29,8 @@ public final class windows_zh_HK extends ListResourceBundle {
             { "FileChooser.saveInLabelText", "\u5132\u5B58\u65BC\uFF1A" },
             { "FileChooser.upFolderAccessibleName", "\u5F80\u4E0A" },
             { "FileChooser.upFolderToolTipText", "\u5F80\u4E0A\u4E00\u5C64" },
+            { "FileChooser.viewMenuButtonAccessibleName", "View Menu" },
+            { "FileChooser.viewMenuButtonToolTipText", "View Menu" },
             { "FileChooser.viewMenuLabelText", "\u6AA2\u8996" },
         };
     }

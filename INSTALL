@@ -30,6 +30,7 @@ giflib-devel
 libpng-devel
 libjpeg-devel
 zlib-devel
+mercurial 0.9.5 + forest extension
 
 See ./configure --help if you need to override defaults.
 

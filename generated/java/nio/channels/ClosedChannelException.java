@@ -1,5 +1,6 @@
 /*
- * Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2000-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,6 +22,7 @@
  * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
+ *
  */
 
 // -- This file was mechanically generated: Do not edit! -- //
@@ -41,6 +43,8 @@ package java.nio.channels;
 public class ClosedChannelException
     extends java.io.IOException
 {
+
+    private static final long serialVersionUID = 882777185433553857L;
 
     /**
      * Constructs an instance of this class.

@@ -15,6 +15,7 @@ FIND_TOOL([PATCH], [patch])
 FIND_TOOL([UNZIP], [unzip])
 FIND_TOOL([WGET], [wget])
 FIND_TOOL([CHMOD], [chmod])
+FIND_TOOL([MERCURIAL], [hg])
 dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
@@ -113,7 +114,6 @@ else
   AC_CONFIG_FILES([javap], [chmod +x javap])
 fi
 FIND_FREETYPE
-WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
 ENABLE_FAST_BUILD
 
