@@ -29,19 +29,19 @@ import java.io.PrintStream;
 
 public class Version {
     private static final String jconsole_version =
-        "1.7.0-internal-root_25_may_2007_16_33-b00";
+        "1.7.0-b24";
 
     public static void print(PrintStream ps) {
         printFullVersion(ps);
 
         ps.println(Resources.getText("Name and Build",
-                                     System.getProperty("java.runtime.name"), 
+                                     System.getProperty("java.runtime.name"),
                                      System.getProperty("java.runtime.version")));
 
         ps.println(Resources.getText("Name Build and Mode",
                                      System.getProperty("java.vm.name"),
                                      System.getProperty("java.vm.version"),
-                                     System.getProperty("java.vm.info"))); 
+                                     System.getProperty("java.vm.info")));
 
     }
 

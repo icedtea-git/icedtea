@@ -14,6 +14,7 @@ public final class synth_fr extends ListResourceBundle {
             { "FileChooser.fileSizeHeaderText", "Taille" },
             { "FileChooser.fileTypeHeaderText", "Type" },
             { "FileChooser.filesOfTypeLabelText", "Fichiers du type :" },
+            { "FileChooser.folderNameLabelText", "Folder name:" },
             { "FileChooser.homeFolderAccessibleName", "Accueil" },
             { "FileChooser.homeFolderToolTipText", "R\u00E9pertoire d'accueil" },
             { "FileChooser.listViewButtonAccessibleName", "Liste" },

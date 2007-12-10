@@ -251,7 +251,6 @@ import java.io.IOException;
  *
  * @author Mark Reinhold
  * @author JSR-51 Expert Group
- * @version 1.69, 07/05/05
  * @since 1.4
  */
 
@@ -264,26 +263,27 @@ public abstract class CharBuffer
     // reduce the number of virtual method invocations needed to access these
     // values, which is especially costly when coding small buffers.
     //
-    final char[] hb;			// Non-null only for heap buffers
+    final char[] hb;                  // Non-null only for heap buffers
     final int offset;
-    boolean isReadOnly;			// Valid only for heap buffers
+    boolean isReadOnly;                 // Valid only for heap buffers
 
     // Creates a new buffer with the given mark, position, limit, capacity,
     // backing array, and array offset
     //
-    CharBuffer(int mark, int pos, int lim, int cap,	// package-private
-		 char[] hb, int offset)
+    CharBuffer(int mark, int pos, int lim, int cap,   // package-private
+                 char[] hb, int offset)
     {
-	super(mark, pos, lim, cap);
-	this.hb = hb;
-	this.offset = offset;
+        super(mark, pos, lim, cap);
+        this.hb = hb;
+        this.offset = offset;
     }
 
     // Creates a new buffer with the given mark, position, limit, and capacity
     //
-    CharBuffer(int mark, int pos, int lim, int cap) {	// package-private
-	this(mark, pos, lim, cap, null, 0);
+    CharBuffer(int mark, int pos, int lim, int cap) { // package-private
+        this(mark, pos, lim, cap, null, 0);
     }
+
 
 
 
@@ -312,7 +312,8 @@ public abstract class CharBuffer
      * Allocates a new character buffer.
      *
      * <p> The new buffer's position will be zero, its limit will be its
-     * capacity, and its mark will be undefined.  It will have a {@link #array
+     * capacity, its mark will be undefined, and each of its elements will be
+     * initialized to zero.  It will have a {@link #array
      * </code>backing array<code>}, and its {@link #arrayOffset </code>array
      * offset<code>} will be zero.
      *
@@ -325,9 +326,9 @@ public abstract class CharBuffer
      *          If the <tt>capacity</tt> is a negative integer
      */
     public static CharBuffer allocate(int capacity) {
-	if (capacity < 0)
-	    throw new IllegalArgumentException();
-	return new HeapCharBuffer(capacity, capacity);
+        if (capacity < 0)
+            throw new IllegalArgumentException();
+        return new HeapCharBuffer(capacity, capacity);
     }
 
     /**
@@ -362,13 +363,13 @@ public abstract class CharBuffer
      *          parameters do not hold
      */
     public static CharBuffer wrap(char[] array,
-				    int offset, int length)
+                                    int offset, int length)
     {
-	try {
-	    return new HeapCharBuffer(array, offset, length);
-	} catch (IllegalArgumentException x) {
-	    throw new IndexOutOfBoundsException();
-	}
+        try {
+            return new HeapCharBuffer(array, offset, length);
+        } catch (IllegalArgumentException x) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     /**
@@ -380,7 +381,7 @@ public abstract class CharBuffer
      * <tt>array.length</tt>, its position will be zero, and its mark will be
      * undefined.  Its {@link #array </code>backing array<code>} will be the
      * given array, and its {@link #arrayOffset </code>array offset<code>} will
-     * be zero.  </p> 
+     * be zero.  </p>
      *
      * @param  array
      *         The array that will back this buffer
@@ -388,7 +389,7 @@ public abstract class CharBuffer
      * @return  The new character buffer
      */
     public static CharBuffer wrap(char[] array) {
-	return wrap(array, 0, array.length);
+        return wrap(array, 0, array.length);
     }
 
 
@@ -400,7 +401,7 @@ public abstract class CharBuffer
      * rewinding of the buffer is performed.
      *
      * @param target the buffer to read characters into
-     * @return The number of characters added to the buffer, or 
+     * @return The number of characters added to the buffer, or
      *         -1 if this source of characters is at its end
      * @throws IOException if an I/O error occurs
      * @throws NullPointerException if target is null
@@ -457,16 +458,16 @@ public abstract class CharBuffer
      *          parameters do not hold
      */
     public static CharBuffer wrap(CharSequence csq, int start, int end) {
-	try {
-	    return new StringCharBuffer(csq, start, end);
-	} catch (IllegalArgumentException x) {
-	    throw new IndexOutOfBoundsException();
-	}
+        try {
+            return new StringCharBuffer(csq, start, end);
+        } catch (IllegalArgumentException x) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     /**
      * Wraps a character sequence into a buffer.
-     * 
+     *
      * <p> The content of the new, read-only buffer will be the content of the
      * given character sequence.  The new buffer's capacity and limit will be
      * <tt>csq.length()</tt>, its position will be zero, and its mark will be
@@ -479,7 +480,7 @@ public abstract class CharBuffer
      * @return  The new character buffer
      */
     public static CharBuffer wrap(CharSequence csq) {
-	return wrap(csq, 0, csq.length());
+        return wrap(csq, 0, csq.length());
     }
 
 
@@ -540,7 +541,7 @@ public abstract class CharBuffer
      */
     public abstract CharBuffer asReadOnlyBuffer();
 
-
+
     // -- Singleton get/put methods --
 
     /**
@@ -556,7 +557,7 @@ public abstract class CharBuffer
 
     /**
      * Relative <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
-     * 
+     *
      * <p> Writes the given character into this buffer at the current
      * position, and then increments the position. </p>
      *
@@ -590,7 +591,7 @@ public abstract class CharBuffer
 
     /**
      * Absolute <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
-     * 
+     *
      * <p> Writes the given character into this buffer at the given
      * index. </p>
      *
@@ -611,7 +612,7 @@ public abstract class CharBuffer
      */
     public abstract CharBuffer put(int index, char c);
 
-
+
     // -- Bulk get operations --
 
     /**
@@ -664,13 +665,13 @@ public abstract class CharBuffer
      *          parameters do not hold
      */
     public CharBuffer get(char[] dst, int offset, int length) {
-	checkBounds(offset, length, dst.length);
-	if (length > remaining())
-	    throw new BufferUnderflowException();
-	int end = offset + length;
-	for (int i = offset; i < end; i++)
-	    dst[i] = get();
-	return this;
+        checkBounds(offset, length, dst.length);
+        if (length > remaining())
+            throw new BufferUnderflowException();
+        int end = offset + length;
+        for (int i = offset; i < end; i++)
+            dst[i] = get();
+        return this;
     }
 
     /**
@@ -690,10 +691,10 @@ public abstract class CharBuffer
      *          remaining in this buffer
      */
     public CharBuffer get(char[] dst) {
-	return get(dst, 0, dst.length);
+        return get(dst, 0, dst.length);
     }
 
-
+
     // -- Bulk put operations --
 
     /**
@@ -738,14 +739,14 @@ public abstract class CharBuffer
      *          If this buffer is read-only
      */
     public CharBuffer put(CharBuffer src) {
-	if (src == this)
-	    throw new IllegalArgumentException();
-	int n = src.remaining();
-	if (n > remaining())
-	    throw new BufferOverflowException();
-	for (int i = 0; i < n; i++)
-	    put(src.get());
-	return this;
+        if (src == this)
+            throw new IllegalArgumentException();
+        int n = src.remaining();
+        if (n > remaining())
+            throw new BufferOverflowException();
+        for (int i = 0; i < n; i++)
+            put(src.get());
+        return this;
     }
 
     /**
@@ -799,13 +800,13 @@ public abstract class CharBuffer
      *          If this buffer is read-only
      */
     public CharBuffer put(char[] src, int offset, int length) {
-	checkBounds(offset, length, src.length);
-	if (length > remaining())
-	    throw new BufferOverflowException();
-	int end = offset + length;
-	for (int i = offset; i < end; i++)
-	    this.put(src[i]);
-	return this;
+        checkBounds(offset, length, src.length);
+        if (length > remaining())
+            throw new BufferOverflowException();
+        int end = offset + length;
+        for (int i = offset; i < end; i++)
+            this.put(src[i]);
+        return this;
     }
 
     /**
@@ -828,7 +829,7 @@ public abstract class CharBuffer
      *          If this buffer is read-only
      */
     public final CharBuffer put(char[] src) {
-	return put(src, 0, src.length);
+        return put(src, 0, src.length);
     }
 
 
@@ -886,10 +887,10 @@ public abstract class CharBuffer
      *          If this buffer is read-only
      */
     public CharBuffer put(String src, int start, int end) {
-	checkBounds(start, end - start, src.length());
-	for (int i = start; i < end; i++)
-	    this.put(src.charAt(i));
-	return this;
+        checkBounds(start, end - start, src.length());
+        for (int i = start; i < end; i++)
+            this.put(src.charAt(i));
+        return this;
     }
 
     /**
@@ -911,12 +912,12 @@ public abstract class CharBuffer
      *          If this buffer is read-only
      */
     public final CharBuffer put(String src) {
-	return put(src, 0, src.length());
+        return put(src, 0, src.length());
     }
 
 
 
-
+
     // -- Other stuff --
 
     /**
@@ -931,7 +932,7 @@ public abstract class CharBuffer
      *          is backed by an array and is not read-only
      */
     public final boolean hasArray() {
-	return (hb != null) && !isReadOnly;
+        return (hb != null) && !isReadOnly;
     }
 
     /**
@@ -954,11 +955,11 @@ public abstract class CharBuffer
      *          If this buffer is not backed by an accessible array
      */
     public final char[] array() {
-	if (hb == null)
-	    throw new UnsupportedOperationException();
-	if (isReadOnly)
-	    throw new ReadOnlyBufferException();
-	return hb;
+        if (hb == null)
+            throw new UnsupportedOperationException();
+        if (isReadOnly)
+            throw new ReadOnlyBufferException();
+        return hb;
     }
 
     /**
@@ -982,11 +983,11 @@ public abstract class CharBuffer
      *          If this buffer is not backed by an accessible array
      */
     public final int arrayOffset() {
-	if (hb == null)
-	    throw new UnsupportedOperationException();
-	if (isReadOnly)
-	    throw new ReadOnlyBufferException();
-	return offset;
+        if (hb == null)
+            throw new UnsupportedOperationException();
+        if (isReadOnly)
+            throw new ReadOnlyBufferException();
+        return offset;
     }
 
     /**
@@ -1076,11 +1077,11 @@ public abstract class CharBuffer
      * @return  The current hash code of this buffer
      */
     public int hashCode() {
-	int h = 1;
-	int p = position();
-	for (int i = limit() - 1; i >= p; i--)
-	    h = 31 * h + (int)get(i);
-	return h;
+        int h = 1;
+        int p = position();
+        for (int i = limit() - 1; i >= p; i--)
+            h = 31 * h + (int)get(i);
+        return h;
     }
 
     /**
@@ -1109,24 +1110,24 @@ public abstract class CharBuffer
      *           given object
      */
     public boolean equals(Object ob) {
-	if (this == ob)
-	    return true;
-	if (!(ob instanceof CharBuffer))
-	    return false;
-	CharBuffer that = (CharBuffer)ob;
-	if (this.remaining() != that.remaining())
-	    return false;
-	int p = this.position();
-	for (int i = this.limit() - 1, j = that.limit() - 1; i >= p; i--, j--) {
-	    char v1 = this.get(i);
-	    char v2 = that.get(j);
-	    if (v1 != v2) {
-		if ((v1 != v1) && (v2 != v2))	// For float and double
-		    continue;
-		return false;
-	    }
-	}
-	return true;
+        if (this == ob)
+            return true;
+        if (!(ob instanceof CharBuffer))
+            return false;
+        CharBuffer that = (CharBuffer)ob;
+        if (this.remaining() != that.remaining())
+            return false;
+        int p = this.position();
+        for (int i = this.limit() - 1, j = that.limit() - 1; i >= p; i--, j--) {
+            char v1 = this.get(i);
+            char v2 = that.get(j);
+            if (v1 != v2) {
+                if ((v1 != v1) && (v2 != v2))   // For float and double
+                    continue;
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -1139,26 +1140,26 @@ public abstract class CharBuffer
      * <p> A char buffer is not comparable to any other type of object.
      *
      * @return  A negative integer, zero, or a positive integer as this buffer
-     *		is less than, equal to, or greater than the given buffer
+     *          is less than, equal to, or greater than the given buffer
      */
     public int compareTo(CharBuffer that) {
-	int n = this.position() + Math.min(this.remaining(), that.remaining());
-	for (int i = this.position(), j = that.position(); i < n; i++, j++) {
-	    char v1 = this.get(i);
-	    char v2 = that.get(j);
-	    if (v1 == v2)
-		continue;
-	    if ((v1 != v1) && (v2 != v2)) 	// For float and double
-		continue;
-	    if (v1 < v2)
-		return -1;
-	    return +1;
-	}
-	return this.remaining() - that.remaining();
+        int n = this.position() + Math.min(this.remaining(), that.remaining());
+        for (int i = this.position(), j = that.position(); i < n; i++, j++) {
+            char v1 = this.get(i);
+            char v2 = that.get(j);
+            if (v1 == v2)
+                continue;
+            if ((v1 != v1) && (v2 != v2))       // For float and double
+                continue;
+            if (v1 < v2)
+                return -1;
+            return +1;
+        }
+        return this.remaining() - that.remaining();
     }
 
 
-
+
     // -- Other char stuff --
 
 
@@ -1174,10 +1175,10 @@ public abstract class CharBuffer
      * @return  The specified string
      */
     public String toString() {
-	return toString(position(), limit());
+        return toString(position(), limit());
     }
 
-    abstract String toString(int start, int end);	// package-private
+    abstract String toString(int start, int end);       // package-private
 
 
     // --- Methods to support CharSequence ---
@@ -1193,7 +1194,7 @@ public abstract class CharBuffer
      * @return  The length of this character buffer
      */
     public final int length() {
-	return remaining();
+        return remaining();
     }
 
     /**
@@ -1201,7 +1202,7 @@ public abstract class CharBuffer
      * position. </p>
      *
      * @param  index
-     *         The index of the character to be read, relative to the position; 
+     *         The index of the character to be read, relative to the position;
      *         must be non-negative and smaller than <tt>remaining()</tt>
      *
      * @return  The character at index
@@ -1229,7 +1230,7 @@ public abstract class CharBuffer
      *
      * @param  start
      *         The index, relative to the current position, of the first
-     *         character in the subsequence; must be non-negative and no larger 
+     *         character in the subsequence; must be non-negative and no larger
      *         than <tt>remaining()</tt>
      *
      * @param  end
@@ -1252,7 +1253,7 @@ public abstract class CharBuffer
     /**
      * Appends the specified character sequence  to this
      * buffer&nbsp;&nbsp;<i>(optional operation)</i>.
-     * 
+     *
      * <p> An invocation of this method of the form <tt>dst.append(csq)</tt>
      * behaves in exactly the same way as the invocation
      *
@@ -1281,16 +1282,16 @@ public abstract class CharBuffer
      * @since  1.5
      */
     public CharBuffer append(CharSequence csq) {
-	if (csq == null)
-	    return put("null");
-	else
-	    return put(csq.toString());
+        if (csq == null)
+            return put("null");
+        else
+            return put(csq.toString());
     }
 
     /**
      * Appends a subsequence of the  specified character sequence  to this
      * buffer&nbsp;&nbsp;<i>(optional operation)</i>.
-     * 
+     *
      * <p> An invocation of this method of the form <tt>dst.append(csq, start,
      * end)</tt> when <tt>csq</tt> is not <tt>null</tt>, behaves in exactly the
      * same way as the invocation
@@ -1320,14 +1321,14 @@ public abstract class CharBuffer
      * @since  1.5
      */
     public CharBuffer append(CharSequence csq, int start, int end) {
-	CharSequence cs = (csq == null ? "null" : csq);
-	return put(cs.subSequence(start, end).toString());
+        CharSequence cs = (csq == null ? "null" : csq);
+        return put(cs.subSequence(start, end).toString());
     }
 
     /**
      * Appends the specified character  to this
      * buffer&nbsp;&nbsp;<i>(optional operation)</i>.
-     * 
+     *
      * <p> An invocation of this method of the form <tt>dst.append(c)</tt>
      * behaves in exactly the same way as the invocation
      *
@@ -1348,12 +1349,12 @@ public abstract class CharBuffer
      * @since  1.5
      */
     public CharBuffer append(char c) {
-	return put(c);
+        return put(c);
     }
 
 
 
-
+
     // -- Other byte stuff: Access to binary data --
 
 

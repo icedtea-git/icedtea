@@ -15,6 +15,7 @@ public final class windows_sv extends ListResourceBundle {
             { "FileChooser.fileSizeHeaderText", "Storlek" },
             { "FileChooser.fileTypeHeaderText", "Typ" },
             { "FileChooser.filesOfTypeLabelText", "Filformat:" },
+            { "FileChooser.folderNameLabelText", "Folder name:" },
             { "FileChooser.homeFolderAccessibleName", "Hem" },
             { "FileChooser.homeFolderToolTipText", "Hem" },
             { "FileChooser.listViewActionLabelText", "Lista" },
@@ -28,6 +29,8 @@ public final class windows_sv extends ListResourceBundle {
             { "FileChooser.saveInLabelText", "Spara i:" },
             { "FileChooser.upFolderAccessibleName", "Upp" },
             { "FileChooser.upFolderToolTipText", "Upp en niv\u00E5" },
+            { "FileChooser.viewMenuButtonAccessibleName", "View Menu" },
+            { "FileChooser.viewMenuButtonToolTipText", "View Menu" },
             { "FileChooser.viewMenuLabelText", "Vy" },
         };
     }

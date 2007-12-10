@@ -229,7 +229,7 @@ package java.nio;
  *
  * <blockquote><pre>
  * bb.putInt(0xCAFEBABE).putShort(3).putShort(45);</pre></blockquote>
- * 
+ *
 
 
 
@@ -251,7 +251,6 @@ package java.nio;
  *
  * @author Mark Reinhold
  * @author JSR-51 Expert Group
- * @version 1.69, 07/05/05
  * @since 1.4
  */
 
@@ -264,25 +263,25 @@ public abstract class ByteBuffer
     // reduce the number of virtual method invocations needed to access these
     // values, which is especially costly when coding small buffers.
     //
-    final byte[] hb;			// Non-null only for heap buffers
+    final byte[] hb;                  // Non-null only for heap buffers
     final int offset;
-    boolean isReadOnly;			// Valid only for heap buffers
+    boolean isReadOnly;                 // Valid only for heap buffers
 
     // Creates a new buffer with the given mark, position, limit, capacity,
     // backing array, and array offset
     //
-    ByteBuffer(int mark, int pos, int lim, int cap,	// package-private
-		 byte[] hb, int offset)
+    ByteBuffer(int mark, int pos, int lim, int cap,   // package-private
+                 byte[] hb, int offset)
     {
-	super(mark, pos, lim, cap);
-	this.hb = hb;
-	this.offset = offset;
+        super(mark, pos, lim, cap);
+        this.hb = hb;
+        this.offset = offset;
     }
 
     // Creates a new buffer with the given mark, position, limit, and capacity
     //
-    ByteBuffer(int mark, int pos, int lim, int cap) {	// package-private
-	this(mark, pos, lim, cap, null, 0);
+    ByteBuffer(int mark, int pos, int lim, int cap) { // package-private
+        this(mark, pos, lim, cap, null, 0);
     }
 
 
@@ -291,8 +290,9 @@ public abstract class ByteBuffer
      * Allocates a new direct byte buffer.
      *
      * <p> The new buffer's position will be zero, its limit will be its
-     * capacity, and its mark will be undefined.  Whether or not it has a
-     * {@link #hasArray </code>backing array<code>} is unspecified.  </p>
+     * capacity, its mark will be undefined, and each of its elements will be
+     * initialized to zero.  Whether or not it has a
+     * {@link #hasArray </code>backing array<code>} is unspecified.
      *
      * @param  capacity
      *         The new buffer's capacity, in bytes
@@ -312,7 +312,8 @@ public abstract class ByteBuffer
      * Allocates a new byte buffer.
      *
      * <p> The new buffer's position will be zero, its limit will be its
-     * capacity, and its mark will be undefined.  It will have a {@link #array
+     * capacity, its mark will be undefined, and each of its elements will be
+     * initialized to zero.  It will have a {@link #array
      * </code>backing array<code>}, and its {@link #arrayOffset </code>array
      * offset<code>} will be zero.
      *
@@ -325,9 +326,9 @@ public abstract class ByteBuffer
      *          If the <tt>capacity</tt> is a negative integer
      */
     public static ByteBuffer allocate(int capacity) {
-	if (capacity < 0)
-	    throw new IllegalArgumentException();
-	return new HeapByteBuffer(capacity, capacity);
+        if (capacity < 0)
+            throw new IllegalArgumentException();
+        return new HeapByteBuffer(capacity, capacity);
     }
 
     /**
@@ -362,13 +363,13 @@ public abstract class ByteBuffer
      *          parameters do not hold
      */
     public static ByteBuffer wrap(byte[] array,
-				    int offset, int length)
+                                    int offset, int length)
     {
-	try {
-	    return new HeapByteBuffer(array, offset, length);
-	} catch (IllegalArgumentException x) {
-	    throw new IndexOutOfBoundsException();
-	}
+        try {
+            return new HeapByteBuffer(array, offset, length);
+        } catch (IllegalArgumentException x) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     /**
@@ -380,7 +381,7 @@ public abstract class ByteBuffer
      * <tt>array.length</tt>, its position will be zero, and its mark will be
      * undefined.  Its {@link #array </code>backing array<code>} will be the
      * given array, and its {@link #arrayOffset </code>array offset<code>} will
-     * be zero.  </p> 
+     * be zero.  </p>
      *
      * @param  array
      *         The array that will back this buffer
@@ -388,7 +389,7 @@ public abstract class ByteBuffer
      * @return  The new byte buffer
      */
     public static ByteBuffer wrap(byte[] array) {
-	return wrap(array, 0, array.length);
+        return wrap(array, 0, array.length);
     }
 
 
@@ -540,7 +541,7 @@ public abstract class ByteBuffer
      */
     public abstract ByteBuffer asReadOnlyBuffer();
 
-
+
     // -- Singleton get/put methods --
 
     /**
@@ -556,7 +557,7 @@ public abstract class ByteBuffer
 
     /**
      * Relative <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
-     * 
+     *
      * <p> Writes the given byte into this buffer at the current
      * position, and then increments the position. </p>
      *
@@ -590,7 +591,7 @@ public abstract class ByteBuffer
 
     /**
      * Absolute <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
-     * 
+     *
      * <p> Writes the given byte into this buffer at the given
      * index. </p>
      *
@@ -611,7 +612,7 @@ public abstract class ByteBuffer
      */
     public abstract ByteBuffer put(int index, byte b);
 
-
+
     // -- Bulk get operations --
 
     /**
@@ -664,13 +665,13 @@ public abstract class ByteBuffer
      *          parameters do not hold
      */
     public ByteBuffer get(byte[] dst, int offset, int length) {
-	checkBounds(offset, length, dst.length);
-	if (length > remaining())
-	    throw new BufferUnderflowException();
-	int end = offset + length;
-	for (int i = offset; i < end; i++)
-	    dst[i] = get();
-	return this;
+        checkBounds(offset, length, dst.length);
+        if (length > remaining())
+            throw new BufferUnderflowException();
+        int end = offset + length;
+        for (int i = offset; i < end; i++)
+            dst[i] = get();
+        return this;
     }
 
     /**
@@ -690,10 +691,10 @@ public abstract class ByteBuffer
      *          remaining in this buffer
      */
     public ByteBuffer get(byte[] dst) {
-	return get(dst, 0, dst.length);
+        return get(dst, 0, dst.length);
     }
 
-
+
     // -- Bulk put operations --
 
     /**
@@ -738,14 +739,14 @@ public abstract class ByteBuffer
      *          If this buffer is read-only
      */
     public ByteBuffer put(ByteBuffer src) {
-	if (src == this)
-	    throw new IllegalArgumentException();
-	int n = src.remaining();
-	if (n > remaining())
-	    throw new BufferOverflowException();
-	for (int i = 0; i < n; i++)
-	    put(src.get());
-	return this;
+        if (src == this)
+            throw new IllegalArgumentException();
+        int n = src.remaining();
+        if (n > remaining())
+            throw new BufferOverflowException();
+        for (int i = 0; i < n; i++)
+            put(src.get());
+        return this;
     }
 
     /**
@@ -799,13 +800,13 @@ public abstract class ByteBuffer
      *          If this buffer is read-only
      */
     public ByteBuffer put(byte[] src, int offset, int length) {
-	checkBounds(offset, length, src.length);
-	if (length > remaining())
-	    throw new BufferOverflowException();
-	int end = offset + length;
-	for (int i = offset; i < end; i++)
-	    this.put(src[i]);
-	return this;
+        checkBounds(offset, length, src.length);
+        if (length > remaining())
+            throw new BufferOverflowException();
+        int end = offset + length;
+        for (int i = offset; i < end; i++)
+            this.put(src[i]);
+        return this;
     }
 
     /**
@@ -828,7 +829,7 @@ public abstract class ByteBuffer
      *          If this buffer is read-only
      */
     public final ByteBuffer put(byte[] src) {
-	return put(src, 0, src.length);
+        return put(src, 0, src.length);
     }
 
 
@@ -916,7 +917,7 @@ public abstract class ByteBuffer
 
 
 
-
+
     // -- Other stuff --
 
     /**
@@ -931,7 +932,7 @@ public abstract class ByteBuffer
      *          is backed by an array and is not read-only
      */
     public final boolean hasArray() {
-	return (hb != null) && !isReadOnly;
+        return (hb != null) && !isReadOnly;
     }
 
     /**
@@ -954,11 +955,11 @@ public abstract class ByteBuffer
      *          If this buffer is not backed by an accessible array
      */
     public final byte[] array() {
-	if (hb == null)
-	    throw new UnsupportedOperationException();
-	if (isReadOnly)
-	    throw new ReadOnlyBufferException();
-	return hb;
+        if (hb == null)
+            throw new UnsupportedOperationException();
+        if (isReadOnly)
+            throw new ReadOnlyBufferException();
+        return hb;
     }
 
     /**
@@ -982,11 +983,11 @@ public abstract class ByteBuffer
      *          If this buffer is not backed by an accessible array
      */
     public final int arrayOffset() {
-	if (hb == null)
-	    throw new UnsupportedOperationException();
-	if (isReadOnly)
-	    throw new ReadOnlyBufferException();
-	return offset;
+        if (hb == null)
+            throw new UnsupportedOperationException();
+        if (isReadOnly)
+            throw new ReadOnlyBufferException();
+        return offset;
     }
 
     /**
@@ -1020,7 +1021,7 @@ public abstract class ByteBuffer
      *     out.write(buf);
      *     buf.compact();    // In case of partial write
      * }</pre></blockquote>
-     * 
+     *
 
      *
      * @return  This buffer
@@ -1045,16 +1046,16 @@ public abstract class ByteBuffer
      * @return  A summary string
      */
     public String toString() {
-	StringBuffer sb = new StringBuffer();
-	sb.append(getClass().getName());
-	sb.append("[pos=");
-	sb.append(position());
-	sb.append(" lim=");
-	sb.append(limit());
-	sb.append(" cap=");
-	sb.append(capacity());
-	sb.append("]");
-	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        sb.append(getClass().getName());
+        sb.append("[pos=");
+        sb.append(position());
+        sb.append(" lim=");
+        sb.append(limit());
+        sb.append(" cap=");
+        sb.append(capacity());
+        sb.append("]");
+        return sb.toString();
     }
 
 
@@ -1076,11 +1077,11 @@ public abstract class ByteBuffer
      * @return  The current hash code of this buffer
      */
     public int hashCode() {
-	int h = 1;
-	int p = position();
-	for (int i = limit() - 1; i >= p; i--)
-	    h = 31 * h + (int)get(i);
-	return h;
+        int h = 1;
+        int p = position();
+        for (int i = limit() - 1; i >= p; i--)
+            h = 31 * h + (int)get(i);
+        return h;
     }
 
     /**
@@ -1109,24 +1110,24 @@ public abstract class ByteBuffer
      *           given object
      */
     public boolean equals(Object ob) {
-	if (this == ob)
-	    return true;
-	if (!(ob instanceof ByteBuffer))
-	    return false;
-	ByteBuffer that = (ByteBuffer)ob;
-	if (this.remaining() != that.remaining())
-	    return false;
-	int p = this.position();
-	for (int i = this.limit() - 1, j = that.limit() - 1; i >= p; i--, j--) {
-	    byte v1 = this.get(i);
-	    byte v2 = that.get(j);
-	    if (v1 != v2) {
-		if ((v1 != v1) && (v2 != v2))	// For float and double
-		    continue;
-		return false;
-	    }
-	}
-	return true;
+        if (this == ob)
+            return true;
+        if (!(ob instanceof ByteBuffer))
+            return false;
+        ByteBuffer that = (ByteBuffer)ob;
+        if (this.remaining() != that.remaining())
+            return false;
+        int p = this.position();
+        for (int i = this.limit() - 1, j = that.limit() - 1; i >= p; i--, j--) {
+            byte v1 = this.get(i);
+            byte v2 = that.get(j);
+            if (v1 != v2) {
+                if ((v1 != v1) && (v2 != v2))   // For float and double
+                    continue;
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -1139,26 +1140,26 @@ public abstract class ByteBuffer
      * <p> A byte buffer is not comparable to any other type of object.
      *
      * @return  A negative integer, zero, or a positive integer as this buffer
-     *		is less than, equal to, or greater than the given buffer
+     *          is less than, equal to, or greater than the given buffer
      */
     public int compareTo(ByteBuffer that) {
-	int n = this.position() + Math.min(this.remaining(), that.remaining());
-	for (int i = this.position(), j = that.position(); i < n; i++, j++) {
-	    byte v1 = this.get(i);
-	    byte v2 = that.get(j);
-	    if (v1 == v2)
-		continue;
-	    if ((v1 != v1) && (v2 != v2)) 	// For float and double
-		continue;
-	    if (v1 < v2)
-		return -1;
-	    return +1;
-	}
-	return this.remaining() - that.remaining();
+        int n = this.position() + Math.min(this.remaining(), that.remaining());
+        for (int i = this.position(), j = that.position(); i < n; i++, j++) {
+            byte v1 = this.get(i);
+            byte v2 = that.get(j);
+            if (v1 == v2)
+                continue;
+            if ((v1 != v1) && (v2 != v2))       // For float and double
+                continue;
+            if (v1 < v2)
+                return -1;
+            return +1;
+        }
+        return this.remaining() - that.remaining();
     }
 
 
-
+
     // -- Other char stuff --
 
 
@@ -1353,7 +1354,7 @@ public abstract class ByteBuffer
 
 
 
-
+
     // -- Other byte stuff: Access to binary data --
 
 
@@ -1376,10 +1377,10 @@ public abstract class ByteBuffer
 
 
 
-    boolean bigEndian					// package-private
-	= true;
-    boolean nativeByteOrder				// package-private
-	= (Bits.byteOrder() == ByteOrder.BIG_ENDIAN);
+    boolean bigEndian                                   // package-private
+        = true;
+    boolean nativeByteOrder                             // package-private
+        = (Bits.byteOrder() == ByteOrder.BIG_ENDIAN);
 
     /**
      * Retrieves this buffer's byte order.
@@ -1392,7 +1393,7 @@ public abstract class ByteBuffer
      * @return  This buffer's byte order
      */
     public final ByteOrder order() {
-	return bigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
+        return bigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
     }
 
     /**
@@ -1406,16 +1407,16 @@ public abstract class ByteBuffer
      * @return  This buffer
      */
     public final ByteBuffer order(ByteOrder bo) {
-	bigEndian = (bo == ByteOrder.BIG_ENDIAN);
-	nativeByteOrder =
-	    (bigEndian == (Bits.byteOrder() == ByteOrder.BIG_ENDIAN));
-	return this;
+        bigEndian = (bo == ByteOrder.BIG_ENDIAN);
+        nativeByteOrder =
+            (bigEndian == (Bits.byteOrder() == ByteOrder.BIG_ENDIAN));
+        return this;
     }
 
     // Unchecked accessors, for use by ByteBufferAs-X-Buffer classes
     //
-    abstract byte _get(int i);				// package-private
-    abstract void _put(int i, byte b);			// package-private
+    abstract byte _get(int i);                          // package-private
+    abstract void _put(int i, byte b);                  // package-private
 
 
     /**

@@ -14,6 +14,7 @@ public final class synth_sv extends ListResourceBundle {
             { "FileChooser.fileSizeHeaderText", "Storlek" },
             { "FileChooser.fileTypeHeaderText", "Typ" },
             { "FileChooser.filesOfTypeLabelText", "Filformat:" },
+            { "FileChooser.folderNameLabelText", "Folder name:" },
             { "FileChooser.homeFolderAccessibleName", "Hem" },
             { "FileChooser.homeFolderToolTipText", "Hem" },
             { "FileChooser.listViewButtonAccessibleName", "Lista" },

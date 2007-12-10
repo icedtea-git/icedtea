@@ -9,6 +9,7 @@ public final class motif_sv extends ListResourceBundle {
             { "FileChooser.cancelButtonText", "Avbryt" },
             { "FileChooser.cancelButtonToolTipText", "Avbryt \u00D6ppna fil." },
             { "FileChooser.enterFileNameLabelText", "Ange filnamn:" },
+            { "FileChooser.enterFolderNameLabelText", "Enter folder name:" },
             { "FileChooser.filesLabelText", "Filer" },
             { "FileChooser.filterLabelText", "Filter" },
             { "FileChooser.foldersLabelText", "Mappar" },

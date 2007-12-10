@@ -15,6 +15,7 @@ public final class metal_de extends ListResourceBundle {
             { "FileChooser.fileSizeHeaderText", "Gr\u00F6\u00DFe" },
             { "FileChooser.fileTypeHeaderText", "Typ" },
             { "FileChooser.filesOfTypeLabelText", "Dateityp:" },
+            { "FileChooser.folderNameLabelText", "Folder name:" },
             { "FileChooser.homeFolderAccessibleName", "Home" },
             { "FileChooser.homeFolderToolTipText", "Home" },
             { "FileChooser.listViewActionLabelText", "Liste" },

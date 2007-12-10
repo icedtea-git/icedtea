@@ -15,6 +15,7 @@ public final class metal_ja extends ListResourceBundle {
             { "FileChooser.fileSizeHeaderText", "\u30B5\u30A4\u30BA" },
             { "FileChooser.fileTypeHeaderText", "\u578B" },
             { "FileChooser.filesOfTypeLabelText", "\u30D5\u30A1\u30A4\u30EB\u30BF\u30A4\u30D7:" },
+            { "FileChooser.folderNameLabelText", "Folder name:" },
             { "FileChooser.homeFolderAccessibleName", "\u30DB\u30FC\u30E0" },
             { "FileChooser.homeFolderToolTipText", "\u30DB\u30FC\u30E0" },
             { "FileChooser.listViewActionLabelText", "\u30EA\u30B9\u30C8" },

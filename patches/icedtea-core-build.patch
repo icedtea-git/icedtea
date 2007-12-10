@@ -1,6 +1,6 @@
 diff -ru openjdk.orig/control/make/hotspot-rules.gmk openjdk/control/make/hotspot-rules.gmk
 --- openjdk.orig/control/make/hotspot-rules.gmk	2007-10-12 08:45:09.000000000 +0100
-+++ openjdk/control/make/make/hotspot-rules.gmk	2007-11-08 09:40:57.000000000 +0000
++++ openjdk/make/hotspot-rules.gmk	2007-11-08 09:40:57.000000000 +0000
 @@ -72,6 +72,11 @@
    HOTSPOT_TARGET = all_fastdebug
  endif
