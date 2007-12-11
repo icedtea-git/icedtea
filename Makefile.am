@@ -228,7 +228,7 @@ clean-patch:
 
 # Extract OpenJDK sources for ecj.
 stamps/clone-ecj.stamp: stamps/clone.stamp
-	if ! test -d openjdk ; then \
+	if ! test -d openjdk-ecj ; then \
   	  if [ $(OPENJDK_SRC_ZIP) ] ; \
           then \
             $(UNZIP) -q $(OPENJDK_SRC_ZIP) -d tmp-ecj; \
