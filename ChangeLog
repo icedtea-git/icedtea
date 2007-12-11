@@ -1,7 +1,7 @@
 2007-12-11  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am 
-	(stamps/clone-ecj.stamp): Added -n to test.
+	(stamps/clone-ecj.stamp): Added -z to test, instead of -n.
 	(stamps/clone.stamp): Likewise.
 	* Makefile.in: Regenerate.
 
