@@ -137,7 +137,7 @@ endif
 
 stamps/clone.stamp:
 	if ! test -d openjdk ; then \
-	  if [ -n $(OPENJDK_SRC_ZIP) ] ; then \
+	  if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
 	    $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
 	  else \
 	    hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk; \
@@ -253,7 +253,7 @@ clean-patch:
 # Extract OpenJDK sources for ecj.
 stamps/clone-ecj.stamp: stamps/clone.stamp
 	if ! test -d openjdk-ecj ; then \
-  	  if [ -n $(OPENJDK_SRC_ZIP) ] ; \
+  	  if [ ! -z $(OPENJDK_SRC_ZIP) ] ; \
           then \
             $(UNZIP) -q $(OPENJDK_SRC_ZIP) -d tmp-ecj; \
 	    mv tmp-ecj/openjdk openjdk-ecj ; \
