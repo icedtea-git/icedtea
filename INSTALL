@@ -69,4 +69,4 @@ Makefile.am (section 'All Stamped Targets').
 Important Targets
 -----------------
 
-- 'make dist-openjdk' creates a tarball of the openjdk sources for the current release.
+- 'make dist-openjdk' creates a zip of the openjdk sources for the current release.

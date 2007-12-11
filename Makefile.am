@@ -118,9 +118,9 @@ snapshot: dist
 # Creates archive of openjdk.
 dist-openjdk:
 	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-dist/openjdk
-	find -name \\.hg* | xargs rm -rf 
-	cd openjdk-dist && $(TAR) czf openjdk-$(OPENJDK_VERSION).tar.gz openjdk/
-	mv openjdk-dist/openjdk-$(OPENJDK_VERSION).tar.gz . 
+	find -name \\.hg* | xargs rm -rf	
+	cd openjdk-dist && $(ZIP) -r openjdk-$(OPENJDK_VERSION) openjdk/
+	mv openjdk-dist/openjdk-$(OPENJDK_VERSION).zip . 
 	rm -rf openjdk-dist
 
 # OpenJDK Source Preparation Targets

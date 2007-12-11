@@ -1,5 +1,13 @@
 2007-12-10  Lillian Angel  <langel@redhat.com>
 
+	* INSTALL: Updated important targets section.
+	* Makefile.am (dist-openjdk): Changed to create zip, not tarball.
+	* Makefile.in: Regenerate.
+	* configure.ac: Added check for zip and unzip tools
+	* configure: Regenerate. 
+
+2007-12-10  Lillian Angel  <langel@redhat.com>
+
 	* INSTALL: Added note about new target dist-openjdk.
 
 2007-12-10  Lillian Angel  <langel@redhat.com>
