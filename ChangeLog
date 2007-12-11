@@ -1,5 +1,14 @@
 2007-12-11  Lillian Angel  <langel@redhat.com>
 
+	* Makefile.am
+	(stamps/clone-ecj.stamp): Fixed to copy over openjdk dir instead of
+	cloning again, or unzip sources specified.
+	(stamps/patch-ecj.stamp): Only apply ecj patch, assuming all other
+	patches have already been applied to the openjdk sources.
+	* Makefile.in: Regenerate.
+
+2007-12-11  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am 
 	(stamps/clone-ecj.stamp): Added -z to test, instead of -n.
 	(stamps/clone.stamp): Likewise.

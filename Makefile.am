@@ -251,17 +251,18 @@ clean-patch:
 # ======================================
 
 # Extract OpenJDK sources for ecj.
-stamps/clone-ecj.stamp: stamps/clone.stamp
+stamps/clone-ecj.stamp: stamps/patch.stamp
 	if ! test -d openjdk-ecj ; then \
+	  mkdir -p tmp-ecj ; \
   	  if [ ! -z $(OPENJDK_SRC_ZIP) ] ; \
           then \
             $(UNZIP) -q $(OPENJDK_SRC_ZIP) -d tmp-ecj; \
-	    mv tmp-ecj/openjdk openjdk-ecj ; \
-	    rmdir tmp-ecj; \
           else \
-            hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-ecj; \
+	    cp -a openjdk tmp-ecj; \
           fi ; \
 	fi
+	mv tmp-ecj/openjdk openjdk-ecj
+	rmdir tmp-ecj
 	chmod -R ug+w openjdk-ecj
 	mkdir -p stamps
 	touch stamps/clone-ecj.stamp
@@ -286,15 +287,6 @@ stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
 ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch
 
 stamps/patch-ecj.stamp: stamps/clone-ecj.stamp
-	for p in $(ICEDTEA_PATCHES) ; \
-	do \
-	  echo Checking $$p ; \
-	  if $(PATCH) -l -p1 -d openjdk-ecj --dry-run -s -t -f -F 0 < $$p ; \
-	  then \
-	    echo Applying $$p ; \
-	    $(PATCH) -l -p1 -d openjdk-ecj < $$p ; \
-	  fi ; \
-	done
 	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
 	if $(PATCH) -p0 -l --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
 	then \
