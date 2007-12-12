@@ -649,49 +649,10 @@ void Assembler::pd_patch_instruction(address branch, address target)
 }
 
 #ifndef PRODUCT
-
 void Assembler::pd_print_patched_instruction(address branch)
 {
   Unimplemented();
 }
-
-void Assembler::disassemble(const char *what, address start, address end)
-{
-  const char *fmt = "/tmp/aztec-%d.%c";
-  char c_file[BUFSIZ], o_file[BUFSIZ];
-  sprintf(c_file, fmt, getpid(), 'c');
-  sprintf(o_file, fmt, getpid(), 'o');
-
-  FILE *fp = fopen(c_file, "w");
-  if (fp == NULL)
-    fatal2("%s:%d: can't write file", __FILE__, __LINE__);
-
-  fputs("unsigned char start[] = {", fp);
-  for (address a = start; a < end; a++) {
-    if (a != start)
-      fputc(',', fp);
-    fprintf(fp, "0x%02x", *a);
-  }
-  fputs("};\n", fp);
-  fclose(fp);
-
-  char cmd[BUFSIZ];
-  sprintf(cmd, "gcc -m%d -c %s -o %s", wordSize * 8, c_file, o_file);
-  if (system(cmd) != 0)
-    fatal2("%s:%d: can't compile file", __FILE__, __LINE__);
-
-  printf("%s: %p-%p:\n", what, start, end);
-  fflush(stdout);
-  sprintf(cmd, "objdump -D -j .data %s | grep '^....:'", o_file);
-  if (system(cmd) != 0)
-    fatal2("%s:%d: can't disassemble file", __FILE__, __LINE__);
-  putchar('\n');
-  fflush(stdout);
-
-  unlink(c_file);
-  unlink(o_file);
-}
-
 #endif // PRODUCT
 
 // 32-bit ABI:

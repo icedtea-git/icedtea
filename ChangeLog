@@ -1,5 +1,16 @@
 2007-12-12  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/ppc/vm/disassembler_ppc.hpp
+	(decode): Implement.
+	* ports/hotspot/src/cpu/ppc/vm/disassembler_ppc.cpp
+	(decode): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+	(disassemble): Remove.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
+	(disassemble): Likewise.
+
+2007-12-12  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
 	(mpclr): New method.
 	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
