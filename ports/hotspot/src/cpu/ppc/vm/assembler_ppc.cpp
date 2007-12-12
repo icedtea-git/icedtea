@@ -971,6 +971,12 @@ void MacroAssembler::lwax(Register dst, Register a, Register b)
   extsw(dst, dst);
 #endif
 }
+void MacroAssembler::mpclr()
+{
+  // move pc to lr
+  // 20, 31 is a magic branch that preserves the link stack
+  bcl(20, 31, pc() + 4);
+}
 
 // Operations which are different on PPC32/64
 

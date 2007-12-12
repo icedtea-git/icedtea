@@ -1,3 +1,12 @@
+2007-12-12  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+	(mpclr): New method.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
+	(mpclr): Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp
+	(set_last_Java_frame): Use the above.
+
 2007-12-12  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am

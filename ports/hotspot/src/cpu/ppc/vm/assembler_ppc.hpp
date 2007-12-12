@@ -375,6 +375,7 @@ class MacroAssembler : public Assembler {
   void lhax(Register dst, Register a, Register b);
   void lwa(Register dst, const Address& src);
   void lwax(Register dst, Register a, Register b);
+  void mpclr();
 
   // Operations which are different on PPC32/64
   void call(address addr);

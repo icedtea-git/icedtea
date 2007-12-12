@@ -65,7 +65,7 @@ void InterpreterMacroAssembler::set_last_Java_frame(Register lr_save)
   if (lr_save->is_valid())
     mflr(lr_save);
 
-  bcl(20, 31, pc() + 4);  // magic branch that preserves the link stack
+  mpclr();
   mflr(r0);
   store(r0, Address(Rthread, JavaThread::last_Java_pc_offset()));
   store(r1, Address(Rthread, JavaThread::last_Java_sp_offset()));
