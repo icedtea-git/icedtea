@@ -231,11 +231,6 @@ class Assembler : public AbstractAssembler {
 #ifndef PRODUCT
   static void pd_print_patched_instruction(address branch);
 #endif // PRODUCT
-
-  // Disassemble a region of memory to stdout
-#ifndef PRODUCT
-  static void disassemble(const char *what, address start, address end);
-#endif // PRODUCT
 };
 
 
