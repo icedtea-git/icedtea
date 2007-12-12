@@ -271,15 +271,6 @@ clean-patch-ecj:
 	  echo Reverting $(ICEDTEA_ECJ_PATCH) ; \
 	  $(PATCH) -p0 -l -R < $(ICEDTEA_ECJ_PATCH) ; \
 	fi
-	for p in $(ICEDTEA_PATCHES) ; \
-	do \
-	  echo Checking $$p ; \
-	  if $(PATCH) -p1 -l -d openjdk-ecj -R --dry-run -s -t -f < $$p ; \
-	  then \
-	    echo Reverting $$p ; \
-	    $(PATCH) -p1 -l -d openjdk-ecj -R < $$p ; \
-	  fi ; \
-	done
 
 # Bootstrap Directory Targets
 # ===========================
