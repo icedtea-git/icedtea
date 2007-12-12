@@ -687,8 +687,10 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
       g_mutex_lock (data->appletviewer_mutex);
 
       plugin_send_message_to_appletviewer (data, data->instance_string);
-      gchar *window_message = g_strdup_printf ("handle %ld",
-                                               (gulong) window->window);
+      gchar *window_message = g_strdup_printf ("handle %ld width %d height %d",
+                                               (gulong) window->window,
+						window->width,
+						window->height);
       plugin_send_message_to_appletviewer (data, window_message);
       g_free (window_message);
       window_message = NULL;
