@@ -1,3 +1,14 @@
+2007-12-12  Lillian Angel <langel@redhat.com>
+
+	Fixes Bug #76
+	* gcjwebplugin.cc
+	(GCJ_SetWindow): Passes width and height with handle.
+	* patches/icedtea-plugin.patch
+	(PluginMain.java): Fixed to accept width and height, and change size
+	of plugin when required.
+	(PluginAppletViewer.java): Added listeners to window, change
+	attributes of applet when required.
+
 2007-12-12  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/ppc/vm/disassembler_ppc.hpp
