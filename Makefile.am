@@ -226,20 +226,11 @@ clean-patch:
 # OpenJDK ecj Source Preparation Targets
 # ======================================
 
-# Extract OpenJDK sources for ecj.
+# Copy over OpenJDK sources for ecj.
 stamps/clone-ecj.stamp: stamps/patch.stamp
 	if ! test -d openjdk-ecj ; then \
-	  mkdir -p tmp-ecj ; \
-  	  if [ ! -z $(OPENJDK_SRC_ZIP) ] ; \
-          then \
-            $(UNZIP) -q $(OPENJDK_SRC_ZIP) -d tmp-ecj; \
-          else \
-	    cp -a openjdk tmp-ecj; \
-          fi ; \
+	    cp -a openjdk openjdk-ecj ; \
 	fi
-	mv tmp-ecj/openjdk openjdk-ecj
-	rmdir tmp-ecj
-	chmod -R ug+w openjdk-ecj
 	mkdir -p stamps
 	touch stamps/clone-ecj.stamp
 
