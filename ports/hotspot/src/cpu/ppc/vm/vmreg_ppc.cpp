@@ -57,7 +57,7 @@ bool VMRegImpl::is_FloatRegister()
 Register VMRegImpl::as_Register()
 {
   assert(is_Register(), "must be");
-  return ::as_Register(value());  
+  return ::as_Register(value());
 }
 
 FloatRegister VMRegImpl::as_FloatRegister()

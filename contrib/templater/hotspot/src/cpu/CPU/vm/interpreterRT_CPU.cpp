@@ -246,7 +246,18 @@ void InterpreterRuntime::SignatureHandlerGenerator::generate(
 
 void InterpreterRuntime::SlowSignatureHandler::pass_int()
 {
-  Unimplemented();
+  jint src = *(jint *)
+    (_from + Interpreter::local_offset_in_bytes(offset()));
+
+  if (_gp_regs <= _gp_reg_max) {
+    *(jint *)(_gp_regs++) = src;
+#ifdef PPC64
+    _st_args++;
+#endif
+  }
+  else {
+    *(jint *)(_st_args++) = src;
+  }
 }
 
 void InterpreterRuntime::SlowSignatureHandler::pass_long()
@@ -293,7 +304,21 @@ void InterpreterRuntime::SlowSignatureHandler::pass_double()
 
 void InterpreterRuntime::SlowSignatureHandler::pass_object()
 {
-  Unimplemented();
+  intptr_t *src = (intptr_t *)
+    (_from + Interpreter::local_offset_in_bytes(offset()));
+
+  if (*src == 0)
+    src = NULL;
+
+  if (_gp_regs <= _gp_reg_max) {
+    *(intptr_t **)(_gp_regs++) = src;
+#ifdef PPC64
+    _st_args++;
+#endif
+  }
+  else {
+    *(intptr_t **)(_st_args++) = src;
+  }
 }
 
 IRT_ENTRY(address, 

@@ -1199,7 +1199,7 @@ void MacroAssembler::call_VM_pass_args(Register arg_1,
     mr(r6, arg_3);
   }
 }
-                                  
+
 void MacroAssembler::call_VM_base(Register oop_result,
                                   address entry_point,
                                   CallVMFlags flags)
@@ -1229,15 +1229,15 @@ void MacroAssembler::call_VM_base(Register oop_result,
   }
 }
 
-void MacroAssembler::call_VM(Register oop_result, 
-                             address entry_point, 
+void MacroAssembler::call_VM(Register oop_result,
+                             address entry_point,
                              CallVMFlags flags)
 {
   call_VM_base(oop_result, entry_point, flags);
 }
-void MacroAssembler::call_VM(Register oop_result, 
-                             address entry_point, 
-                             Register arg_1, 
+void MacroAssembler::call_VM(Register oop_result,
+                             address entry_point,
+                             Register arg_1,
                              CallVMFlags flags)
 {
   call_VM_pass_args(arg_1);
@@ -1252,7 +1252,7 @@ void MacroAssembler::call_VM(Register oop_result,
   call_VM_base(oop_result, entry_point, flags);
 }
 void MacroAssembler::call_VM(Register oop_result,
-                             address entry_point, 
+                             address entry_point,
                              Register arg_1, Register arg_2, Register arg_3,
                              CallVMFlags flags)
 {

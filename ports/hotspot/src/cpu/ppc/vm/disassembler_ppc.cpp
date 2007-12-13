@@ -60,7 +60,7 @@ class InstructionParser {
 
     case 30:
       return (_instruction >> 2) & 7;
-      
+
     case 58:
     case 62:
       return _instruction & 3;
@@ -86,7 +86,7 @@ class InstructionParser {
   int read_reg() {
     return read(5);
   }
-  
+
   int read_xo() {
     int xo = read(10);
     assert(xo == extended_opcode(), "should be");
@@ -99,7 +99,7 @@ class InstructionDefinition {
   typedef void (*printer_t)(InstructionParser& p,
                             const InstructionDefinition& d,
                             outputStream *st);
- private:  
+ private:
   int         _opcode;
   int         _xo;
   const char *_mnemonic;
@@ -135,13 +135,13 @@ const char *branch_condition(int BO, int BI)
   switch (CONDITION(BO, BI)) {
   case CONDITION(12, 0):
     return "lt";
-    
+
   case CONDITION(4, 1):
     return "le";
-    
+
   case CONDITION(12, 2):
     return "eq";
-    
+
   case CONDITION(4, 0):
     return "ge";
 
@@ -189,7 +189,7 @@ INSTRUCTION_PRINTER(print_B_bc)
     st->print_cr("BO = %d, BI = %d", BO, BI & 3);
     ShouldNotReachHere();
   }
-  
+
   const char *cond = branch_condition(BO, BI);
   int cr = BI >> 2;
   address tgt = (address) (p.pc() + (BD << 2));
@@ -198,7 +198,7 @@ INSTRUCTION_PRINTER(print_B_bc)
     st->print("b%s%s%s cr%d, %p", cond, LK ? "l" : "", AA ? "a" : "", cr, tgt);
   else
     st->print("b%s%s%s %p", cond, LK ? "l" : "", AA ? "a" : "", tgt);
-}  
+}
 
 INSTRUCTION_PRINTER(print_I_b)
 {
@@ -237,7 +237,7 @@ INSTRUCTION_PRINTER(print_D_reg_reg_simm)
     SI = -SI;
   }
 
-  st->print("%s r%d, %s%d, %d", mnemonic, RT, RA ? "r" : "", RA, SI); 
+  st->print("%s r%d, %s%d, %d", mnemonic, RT, RA ? "r" : "", RA, SI);
 }
 
 INSTRUCTION_PRINTER(print_D_reg_reg_uimm)
@@ -249,7 +249,7 @@ INSTRUCTION_PRINTER(print_D_reg_reg_uimm)
   if (p.opcode() == 24 && RT == 0 && RA == 0 && UI == 0)
     st->print("nop");
   else
-    st->print("%s r%d, r%d, %d", d.mnemonic(), RA, RT, UI); 
+    st->print("%s r%d, r%d, %d", d.mnemonic(), RA, RT, UI);
 }
 
 INSTRUCTION_PRINTER(print_D_reg_addr)
@@ -258,7 +258,7 @@ INSTRUCTION_PRINTER(print_D_reg_addr)
   int RA = p.read_reg();
   int D  = p.read_signed(16);
 
-  st->print("%s r%d, %d(%s%d)", d.mnemonic(), RT, D, RA ? "r" : "", RA); 
+  st->print("%s r%d, %d(%s%d)", d.mnemonic(), RT, D, RA ? "r" : "", RA);
 }
 
 INSTRUCTION_PRINTER(print_D_freg_addr)
@@ -267,7 +267,7 @@ INSTRUCTION_PRINTER(print_D_freg_addr)
   int RA  = p.read_reg();
   int D   = p.read_signed(16);
 
-  st->print("%s f%d, %d(%s%d)", d.mnemonic(), FRT, D, RA ? "r" : "", RA); 
+  st->print("%s f%d, %d(%s%d)", d.mnemonic(), FRT, D, RA ? "r" : "", RA);
 }
 
 INSTRUCTION_PRINTER(print_DS_reg_addr)
@@ -276,7 +276,7 @@ INSTRUCTION_PRINTER(print_DS_reg_addr)
   int RA = p.read_reg();
   int DS = p.read_signed(14);
 
-  st->print("%s r%d, %d(%s%d)", d.mnemonic(), RT, DS << 2, RA ? "r" : "", RA); 
+  st->print("%s r%d, %d(%s%d)", d.mnemonic(), RT, DS << 2, RA ? "r" : "", RA);
 }
 
 INSTRUCTION_PRINTER(print_X_bcspr)
@@ -309,7 +309,7 @@ INSTRUCTION_PRINTER(print_X_bcspr)
 
   st->print("b%s%s%s", cond, spr, LK ? "l" : "");
 }
-  
+
 INSTRUCTION_PRINTER(print_M)
 {
   assert(p.opcode() == 21, "should be");
@@ -324,7 +324,7 @@ INSTRUCTION_PRINTER(print_M)
   if (MB == 0 && 31 - SH == ME)
     st->print("slwi%s r%d, r%d, %d", Rc ? "." : "", RA, RS, SH);
   else if (ME == 31 && 32 - MB == SH)
-    st->print("srwi%s r%d, r%d, %d", Rc ? "." : "", RA, RS, MB);      
+    st->print("srwi%s r%d, r%d, %d", Rc ? "." : "", RA, RS, MB);
   else
     ShouldNotReachHere();
 }
@@ -375,8 +375,8 @@ INSTRUCTION_PRINTER(print_X_reg_reg_reg)
     int s = RA;
     RA = RB;
     RB = s;
-  } 
-  
+  }
+
   st->print("%s%s r%d, r%d, r%d", mnemonic, Rc ? "." : "", RT, RA, RB);
 }
 
@@ -394,8 +394,8 @@ INSTRUCTION_PRINTER(print_X_reg_regorzero_reg)
     int s = RA;
     RA = RB;
     RB = s;
-  } 
-  
+  }
+
   st->print("%s%s r%d, %s%d, r%d", mnemonic, Rc ? "." : "", RT,
             RA ? "r" : "", RA, RB);
 }
@@ -409,7 +409,7 @@ INSTRUCTION_PRINTER(print_X_res_regorzero_reg)
   int Rc = p.read(1);
 
   assert(x1 == 0, "should do");
-  
+
   st->print("%s%s %s%d, r%d", d.mnemonic(), Rc ? "." : "",
             RA ? "r" : "", RA, RB);
 }
@@ -423,7 +423,7 @@ INSTRUCTION_PRINTER(print_X_reg_reg_res)
   int Rc = p.read(1);
 
   assert(x1 == 0, "should do");
-  
+
   st->print("%s%s r%d, r%d", d.mnemonic(), Rc ? "." : "", RT, RA);
 }
 
@@ -436,7 +436,7 @@ INSTRUCTION_PRINTER(print_X_reg_res_res)
   int Rc = p.read(1);
 
   assert(x1 == 0 && x2 == 0, "should do");
-  
+
   st->print("%s%s r%d", d.mnemonic(), Rc ? "." : "", RT);
 }
 
@@ -463,7 +463,7 @@ INSTRUCTION_PRINTER(print_X_switched_regreg)
   int Rc = p.read(1);
 
   assert(x1 == 0, "should do");
-  
+
   st->print("%s%s r%d, r%d", d.mnemonic(), Rc ? "." : "", RA, RS);
 }
 
@@ -476,7 +476,7 @@ INSTRUCTION_PRINTER(print_X_reserved)
   int Rc = p.read(1);
 
   assert(x1 == 0 && x2 == 0 && x3 == 0 && Rc == 0, "should do");
-  
+
   st->print("%s", d.mnemonic());
 }
 
@@ -571,7 +571,7 @@ INSTRUCTION_PRINTER(print_X_freg_res_freg)
   int Rc  = p.read(1);
 
   assert(x1 == 0, "should do");
-  
+
   st->print("%s%s f%d, f%d", d.mnemonic(), Rc ? "." : "", FRT, FRB);
 }
 

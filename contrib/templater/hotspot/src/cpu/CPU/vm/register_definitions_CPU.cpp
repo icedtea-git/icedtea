@@ -27,6 +27,8 @@
 #include "incls/_register_definitions_@@cpu@@.cpp.incl"
 
 #ifdef PPC
+REGISTER_DEFINITION(Register, noreg);
+
 REGISTER_DEFINITION(Register, r0);
 REGISTER_DEFINITION(Register, r1);
 REGISTER_DEFINITION(Register, r2);
@@ -110,8 +112,4 @@ REGISTER_DEFINITION(SpecialPurposeRegister, ctr);
 REGISTER_DEFINITION(Register, Rmethod);
 REGISTER_DEFINITION(Register, Rlocals);
 REGISTER_DEFINITION(Register, Rthread);
-#ifdef CC_INTERP
-REGISTER_DEFINITION(Register, Rstate);
-#endif
-
 #endif // PPC

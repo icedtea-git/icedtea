@@ -640,7 +640,7 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ beq (no_block);
   __ bind (block);
   __ call_VM_leaf (
-       CAST_FROM_FN_PTR(address, 
+       CAST_FROM_FN_PTR(address,
                         JavaThread::check_special_condition_for_native_trans));
   __ fixup_after_potential_safepoint ();
   __ bind (no_block);

@@ -343,7 +343,7 @@ class MacroAssembler : public Assembler {
   // overriding it for its purposes (e.g., to save/restore additional
   // registers when doing a VM call).
   virtual void call_VM_leaf_base(address entry_point);
-  
+
   // This is the base routine called by the different versions of
   // call_VM. The interpreter may customize this version by overriding
   // it for its purposes (e.g., to save/restore additional registers
@@ -356,7 +356,7 @@ class MacroAssembler : public Assembler {
   void call_VM_pass_args(Register arg_1,
                          Register arg_2 = noreg,
                          Register arg_3 = noreg);
-  
+
  public:
   MacroAssembler(CodeBuffer* code) : Assembler(code) {}
 
@@ -395,19 +395,19 @@ class MacroAssembler : public Assembler {
   void cmpxchg_(Register exchange, Register dst, Register compare);
 
   // Support for VM calls
-  void call_VM(Register oop_result, 
-               address entry_point, 
+  void call_VM(Register oop_result,
+               address entry_point,
                CallVMFlags flags = CALL_VM_DEFAULTS);
-  void call_VM(Register oop_result, 
-               address entry_point, 
-               Register arg_1, 
+  void call_VM(Register oop_result,
+               address entry_point,
+               Register arg_1,
                CallVMFlags flags = CALL_VM_DEFAULTS);
   void call_VM(Register oop_result,
                address entry_point,
                Register arg_1, Register arg_2,
                CallVMFlags flags = CALL_VM_DEFAULTS);
   void call_VM(Register oop_result,
-               address entry_point, 
+               address entry_point,
                Register arg_1, Register arg_2, Register arg_3,
                CallVMFlags flags = CALL_VM_DEFAULTS);
 
