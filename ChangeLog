@@ -1,5 +1,9 @@
 2007-12-13  Gary Benson  <gbenson@redhat.com>
 
+	* contrib/templater/generate.py (preprocess): Remove a PPCism.
+
+2007-12-13  Gary Benson  <gbenson@redhat.com>
+
 	* contrib/templater/*: Imported changes from PPC port.
 
 	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp:
