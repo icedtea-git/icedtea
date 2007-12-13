@@ -39,8 +39,6 @@ extern "C" void RecursiveInterpreterActivation(interpreterState istate)
 }
 
 #define __ _masm->
-#define STATE(field_name) \
-  (Address(Rstate, byte_offset_of(BytecodeInterpreter, field_name)))
 
 // Non-volatile registers we use
 const Register          Rmonitor = r27;
@@ -144,6 +142,7 @@ address CppInterpreterGenerator::generate_result_handler_for(BasicType type)
 
   case T_OBJECT:
     __ load (r3, STATE(_oop_temp));
+    __ verify_oop (r3);
     break;
 
   default:
@@ -201,6 +200,7 @@ address CppInterpreterGenerator::generate_tosca_to_stack_converter(
     break;
 
   case T_OBJECT:
+    __ verify_oop (r3);
     __ store (r3, Address(Rlocals, 0));
     __ subi (Rlocals, Rlocals, wordSize);
     break;
@@ -262,6 +262,7 @@ address CppInterpreterGenerator::generate_stack_to_stack_converter(
   case T_OBJECT:
     __ load (stack, STATE(_stack));
     __ load (r0, Address(stack, wordSize));
+    __ verify_oop (r0);
     __ store (r0, Address(Rlocals, 0));
     __ subi (Rlocals, Rlocals, wordSize);
     break;
@@ -322,6 +323,7 @@ address CppInterpreterGenerator::generate_stack_to_native_abi_converter(
   case T_OBJECT:
     __ load (stack, STATE(_stack));
     __ load (r3, Address(stack, wordSize));
+    __ verify_oop (r3);
     break;
     
   default:
@@ -523,9 +525,11 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ load (handler, signature_handler_addr);
   __ compare (handler, 0);
   __ bne (got_signature_handler);
-  __ mr (r3, Rthread);
-  __ mr (r4, Rmethod);
-  __ call (CAST_FROM_FN_PTR(address, InterpreterRuntime::prepare_native_call));
+  __ call_VM (noreg,
+              CAST_FROM_FN_PTR(address,
+                               InterpreterRuntime::prepare_native_call),
+              Rmethod,
+              CALL_VM_NO_EXCEPTION_CHECKS);
   __ load (r0, Address(Rthread, Thread::pending_exception_offset()));
   __ compare (r0, 0);
   __ bne (return_to_caller);
@@ -539,20 +543,22 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   Label got_function;
 
   __ load (function, native_function_addr);
-  __ compare (function, 0);
-  __ bne (got_function);
-  __ mr (r3, Rthread);
-  __ mr (r4, Rmethod);
-  __ call (CAST_FROM_FN_PTR(address, InterpreterRuntime::prepare_native_call));
-  __ load (r0, Address(Rthread, Thread::pending_exception_offset()));
-  __ compare (r0, 0);
-  __ bne (return_to_caller);
-  __ load (function, native_function_addr);
-  __ bind (got_function);
+#ifdef ASSERT
+  {
+    // InterpreterRuntime::prepare_native_call() sets the mirror
+    // handle and native function address first and the signature
+    // handler last, so function should always be set here.
+    Label ok;
+    __ compare (function, 0);
+    __ bne (ok);
+    __ should_not_reach_here (__FILE__, __LINE__);
+    __ bind (ok);
+  }
+#endif
 
   // Call signature handler
-  __ mtlr (handler);
-  __ blrl ();
+  __ mtctr (handler);
+  __ bctrl ();
   __ mr (handler, r0);
 
   // Pass JNIEnv
@@ -589,6 +595,7 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
 
   // Make the call
   __ call (function);
+  __ fixup_after_potential_safepoint ();
 
   // The result will be in r3 (and maybe r4 on 32-bit) or f1.
   // Wherever it is, we need to store it before calling anything
@@ -611,13 +618,17 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ load (r0, _thread_in_native_trans);
   __ stw (r0, thread_state_addr);
 
-  // Write serialization page
+  // Ensure the new state is visible to the VM thread.
   if(os::is_MP()) {
-    __ serialize_memory (r3, r4);
+    if (UseMembar)
+      __ sync ();
+    else
+      __ serialize_memory (r3, r4);
   }
 
   // Check for safepoint operation in progress and/or pending
-  // suspend requests
+  // suspend requests.  We use a leaf call in order to leave
+  // the last_Java_frame setup undisturbed.
   Label block, no_block;
 
   __ load (r3, (intptr_t) SafepointSynchronize::address_of_state());
@@ -628,9 +639,10 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ compare (r0, 0);
   __ beq (no_block);
   __ bind (block);
-  __ mr (r3, Rthread);
-  __ call (CAST_FROM_FN_PTR(address,
-       JavaThread::check_special_condition_for_native_trans));
+  __ call_VM_leaf (
+       CAST_FROM_FN_PTR(address, 
+                        JavaThread::check_special_condition_for_native_trans));
+  __ fixup_after_potential_safepoint ();
   __ bind (no_block);
 
   // Change the thread state
@@ -681,8 +693,8 @@ address InterpreterGenerator::generate_native_entry(bool synchronized)
   __ mr (r4, r4_save);
 #endif
   __ fmr (f1, f1_save);
-  __ mtlr (handler);
-  __ blrl ();
+  __ mtctr (handler);
+  __ bctrl ();
   
   // Unwind the current activation and return
   __ bind (return_to_caller);
@@ -800,6 +812,7 @@ address InterpreterGenerator::generate_normal_entry(bool synchronized)
 
   __ mr (r3, Rstate);
   __ call (interpreter);
+  __ fixup_after_potential_safepoint ();
 
   // Clear the frame anchor
   __ reset_last_Java_frame ();
@@ -823,6 +836,7 @@ address InterpreterGenerator::generate_normal_entry(bool synchronized)
   __ bind (call_method);
 
   __ load (Rmethod, STATE(_result._to_call._callee));
+  __ verify_oop(Rmethod);
   __ load (Rlocals, STATE(_stack));
   __ lhz (r0, Address(Rmethod, methodOopDesc::size_of_parameters_offset()));
   __ shift_left (r0, r0, LogBytesPerWord);
@@ -840,8 +854,8 @@ address InterpreterGenerator::generate_normal_entry(bool synchronized)
 
   // Non-interpreted methods are dispatched normally -----------------
   __ bind (call_non_interpreted_method);
-  __ mtlr (r0);
-  __ blrl ();
+  __ mtctr (r0);
+  __ bctrl ();
 
   // Restore Rstate
   __ load (Rstate, Address(r1, StackFrame::back_chain_offset * wordSize));
@@ -874,6 +888,7 @@ address InterpreterGenerator::generate_normal_entry(bool synchronized)
   __ store (Rlocals, STATE(_stack));
   __ load (Rlocals, STATE(_locals));
   __ load (Rmethod, STATE(_method));
+  __ verify_oop(Rmethod);
   __ load (r0, BytecodeInterpreter::method_resume);
   __ stw (r0, STATE(_msg));
   __ b (call_interpreter);
@@ -1095,7 +1110,7 @@ void CppInterpreterGenerator::generate_compute_interpreter_state(bool native)
   __ bne (CRsync, not_synchronized_1);
   __ addi (frame_size, frame_size, monitor_size);
   __ bind (not_synchronized_1);
-  __ calc_padding_for_alignment (padding, frame_size, 16);
+  __ calc_padding_for_alignment (padding, frame_size, StackAlignmentInBytes);
   __ add (frame_size, frame_size, padding);
 
   // Save the link register and create the new frame
@@ -1254,8 +1269,8 @@ void CppInterpreterGenerator::generate_convert_result(address* converter_array)
   __ lwz (r0, Address(Rmethod, methodOopDesc::result_index_offset()));
   __ shift_left (r0, r0, LogBytesPerWord);
   __ load_indexed (r0, r5, r0);
-  __ mtlr (r0);
-  __ blrl ();
+  __ mtctr (r0);
+  __ bctrl ();
 }
 
 // Remove the activation created by generate_compute_interpreter_state.
@@ -1339,7 +1354,7 @@ int AbstractInterpreter::size_top_interpreter_activation(methodOop method)
 
   int call_stub_frame = round_to(
     StubRoutines::call_stub_base_size() +
-    method->max_locals() * wordSize, 16);
+    method->max_locals() * wordSize, StackAlignmentInBytes);
 
   int interpreter_frame = round_to(
     frame.unaligned_size() +
@@ -1347,7 +1362,7 @@ int AbstractInterpreter::size_top_interpreter_activation(methodOop method)
     method->max_stack() * wordSize +
     (method->is_synchronized() ?
      frame::interpreter_frame_monitor_size() * wordSize : 0) +
-    sizeof(BytecodeInterpreter), 16);
+    sizeof(BytecodeInterpreter), StackAlignmentInBytes);
 
   return (call_stub_frame + interpreter_frame) / wordSize;
 }

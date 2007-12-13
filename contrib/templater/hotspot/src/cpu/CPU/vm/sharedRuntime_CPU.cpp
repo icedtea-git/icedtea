@@ -185,7 +185,15 @@ int Deoptimization::last_frame_adjust(int callee_parameters, int callee_locals)
 
 uint SharedRuntime::out_preserve_stack_slots()
 {
+#ifdef PPC
+#ifdef XXX_EVIL_EVIL_EVIL
+  return 0;
+#else
   Unimplemented();
+#endif
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 static RuntimeStub* generate_unimplemented_runtime_stub(const char* file,
@@ -249,4 +257,11 @@ void SharedRuntime::generate_stubs()
     generate_unimplemented_safepoint_blob(__FILE__, __LINE__);
   _polling_page_return_handler_blob =
     generate_unimplemented_safepoint_blob(__FILE__, __LINE__);
+}
+
+int SharedRuntime::c_calling_convention(const BasicType *sig_bt,
+                                         VMRegPair *regs,
+                                         int total_args_passed)
+{
+  Unimplemented();
 }

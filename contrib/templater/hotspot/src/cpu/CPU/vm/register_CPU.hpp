@@ -66,6 +66,8 @@ class RegisterImpl : public AbstractRegisterImpl {
   const char* name() const;
 };
 
+CONSTANT_REGISTER_DECLARATION(Register, noreg, (-1));
+
 // The integer registers of the @@cpu@@ architecture
 #ifdef PPC
 CONSTANT_REGISTER_DECLARATION(Register, r0,   (0));

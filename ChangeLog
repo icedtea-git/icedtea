@@ -1,3 +1,14 @@
+2007-12-13  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/templater/*: Imported changes from PPC port.
+
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp:
+	Regenerated from templater (whitespace changes only).
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/disassembler_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmreg_ppc.cpp: Likewise.
+
 2007-12-12  Lillian Angel <langel@redhat.com>
 
 	Fixes Bug #76

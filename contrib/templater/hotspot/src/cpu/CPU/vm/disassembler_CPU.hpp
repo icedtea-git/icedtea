@@ -29,18 +29,10 @@
 class Disassembler 
 {
  public:
-  static void decode(CodeBlob *cb, outputStream* st = NULL)
-  {
-    Unimplemented();
-  }
-
-  static void decode(nmethod* nm, outputStream* st = NULL)
-  {
-    Unimplemented();
-  }
-
-  static void decode(u_char* begin, u_char* end, outputStream* st = NULL)
-  {
-    Unimplemented();
-  }
+  static void decode(CodeBlob *cb, outputStream *st = NULL)
+    PRODUCT_RETURN;
+  static void decode(nmethod *nm, outputStream *st = NULL)
+    PRODUCT_RETURN;
+  static void decode(u_char *begin, u_char *end, outputStream *st = NULL)
+    PRODUCT_RETURN;
 };

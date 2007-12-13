@@ -25,12 +25,32 @@
 
 // This file specializes the assember with interpreter-specific macros
 
+#ifdef CC_INTERP
+REGISTER_DECLARATION(Register, Rstate, r28);
+
+#define STATE(field_name) \
+  (Address(Rstate, byte_offset_of(BytecodeInterpreter, field_name)))
+#endif // CC_INTERP
+
 class InterpreterMacroAssembler : public MacroAssembler {
+ protected:
+  // Support for VM calls
+  virtual void call_VM_leaf_base(address entry_point);
+  virtual void call_VM_base(Register oop_result,
+                            address entry_point,
+                            CallVMFlags flags);
+
  public:
   InterpreterMacroAssembler(CodeBuffer* code) : MacroAssembler(code) {}
+
+  // Frame anchor tracking
+  void set_last_Java_frame(Register lr_save = noreg);
+  void reset_last_Java_frame();
 
   // Object locking
   void lock_object(Register entry);
   void unlock_object(Register entry);
-};
 
+  // Safepoints
+  void fixup_after_potential_safepoint();
+};

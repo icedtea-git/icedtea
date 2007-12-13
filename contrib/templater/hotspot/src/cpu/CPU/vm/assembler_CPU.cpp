@@ -242,6 +242,14 @@ void Assembler::bc(int bo, int bi, address a)
 {
   emit_instruction(16, bo, bi, branch_target(pc(), a, 14), false, false);
 }
+void Assembler::bcctrl(int bo, int bi)
+{
+  emit_instruction(19, bo, bi, 0, 528, true);
+}
+void Assembler::bcl(int bo, int bi, address a)
+{
+  emit_instruction(16, bo, bi, branch_target(pc(), a, 14), false, true);
+}
 void Assembler::bclr(int bo, int bi)
 {
   emit_instruction(19, bo, bi, 0, 16, false);
@@ -445,6 +453,10 @@ void Assembler::stdx(Register src, Register a, Register b)
 
 // Standard mnemonics common to 32- and 64-bit implementations
 
+void Assembler::bctrl()
+{
+  bcctrl(20, 0);
+}
 void Assembler::bdnz(Label& l)
 {
   bc(16, 0, l);
@@ -639,49 +651,10 @@ void Assembler::pd_patch_instruction(address branch, address target)
 
 #endif // PPC
 #ifndef PRODUCT
-
 void Assembler::pd_print_patched_instruction(address branch)
 {
   Unimplemented();
 }
-
-void Assembler::disassemble(const char *what, address start, address end)
-{
-  const char *fmt = "/tmp/aztec-%d.%c";
-  char c_file[BUFSIZ], o_file[BUFSIZ];
-  sprintf(c_file, fmt, getpid(), 'c');
-  sprintf(o_file, fmt, getpid(), 'o');
-
-  FILE *fp = fopen(c_file, "w");
-  if (fp == NULL)
-    fatal2("%s:%d: can't write file", __FILE__, __LINE__);
-
-  fputs("unsigned char start[] = {", fp);
-  for (address a = start; a < end; a++) {
-    if (a != start)
-      fputc(',', fp);
-    fprintf(fp, "0x%02x", *a);
-  }
-  fputs("};\n", fp);
-  fclose(fp);
-
-  char cmd[BUFSIZ];
-  sprintf(cmd, "gcc -m%d -c %s -o %s", wordSize * 8, c_file, o_file);
-  if (system(cmd) != 0)
-    fatal2("%s:%d: can't compile file", __FILE__, __LINE__);
-
-  printf("%s: %p-%p:\n", what, start, end);
-  fflush(stdout);
-  sprintf(cmd, "objdump -D -j .data %s | grep '^....:'", o_file);
-  if (system(cmd) != 0)
-    fatal2("%s:%d: can't disassemble file", __FILE__, __LINE__);
-  putchar('\n');
-  fflush(stdout);
-
-  unlink(c_file);
-  unlink(o_file);
-}
-
 #endif // PRODUCT
 #ifdef PPC
 
@@ -817,7 +790,7 @@ void StackFrame::generate_prolog(MacroAssembler *masm)
   // Calculate the aligned frame size
   while (true) {
     _frame_size = unaligned_size();
-    if (_frame_size % 16 == 0)
+    if (_frame_size % StackAlignmentInBytes == 0)
       break;
     _locals++;
   }
@@ -962,6 +935,12 @@ void MacroAssembler::lwax(Register dst, Register a, Register b)
   extsw(dst, dst);
 #endif
 }
+void MacroAssembler::mpclr()
+{
+  // move pc to lr
+  // 20, 31 is a magic branch that preserves the link stack
+  bcl(20, 31, pc() + 4);
+}
 
 // Operations which are different on PPC32/64
 
@@ -988,8 +967,8 @@ void MacroAssembler::call(Register func)
   func = r0;
 #endif // PPC64
 
-  mtlr(func);
-  blrl();
+  mtctr(func);
+  bctrl();
 
 #ifdef PPC64
   ld (r2, Address(r1, 40));
@@ -1199,21 +1178,117 @@ void MacroAssembler::cmpxchg_(Register exchange, Register dst, Register comp)
   bind(done);
 }
 
-void MacroAssembler::set_last_Java_frame()
+void MacroAssembler::call_VM_pass_args(Register arg_1,
+                                       Register arg_2,
+                                       Register arg_3)
 {
-  Label label;
+  if (arg_1 != r4) {
+    assert(arg_2 != r4, "smashed argument");
+    assert(arg_3 != r4, "smashed argument");
+    mr(r4, arg_1);
+  }
 
-  bl(label);
-  bind(label);
-  mflr(r0);
-  store(r0, Address(Rthread, JavaThread::last_Java_pc_offset()));  
-  store(r1, Address(Rthread, JavaThread::last_Java_sp_offset()));
+  if (arg_2 == noreg) {
+    assert (arg_3 == noreg, "what?");
+    return;
+  }
+
+  if (arg_2 != r5) {
+    assert(arg_3 != r5, "smashed argument");
+    mr(r5, arg_2);
+  }
+
+  if (arg_3 != noreg && arg_3 != r6) {
+    mr(r6, arg_3);
+  }
+}
+                                  
+void MacroAssembler::call_VM_base(Register oop_result,
+                                  address entry_point,
+                                  CallVMFlags flags)
+{
+  StackFrame frame;
+
+  if (flags & CALL_VM_PRESERVE_LR)
+    prolog(frame);
+
+  mr(r3, Rthread);
+  call(entry_point);
+
+  if (flags & CALL_VM_PRESERVE_LR)
+    epilog(frame);
+
+  if (!(flags & CALL_VM_NO_EXCEPTION_CHECKS)) {
+    Label ok;
+    load(r0, Address(Rthread, Thread::pending_exception_offset()));
+    compare (r0, 0);
+    beq(ok);
+    unimplemented(__FILE__, __LINE__);
+    bind(ok);
+  }
+
+  if (oop_result->is_valid()) {
+    unimplemented(__FILE__, __LINE__);
+  }
 }
 
-void MacroAssembler::reset_last_Java_frame()
+void MacroAssembler::call_VM(Register oop_result, 
+                             address entry_point, 
+                             CallVMFlags flags)
 {
-  load(r0, 0);
-  store(r0, Address(Rthread, JavaThread::last_Java_sp_offset()));
+  call_VM_base(oop_result, entry_point, flags);
+}
+void MacroAssembler::call_VM(Register oop_result, 
+                             address entry_point, 
+                             Register arg_1, 
+                             CallVMFlags flags)
+{
+  call_VM_pass_args(arg_1);
+  call_VM_base(oop_result, entry_point, flags);
+}
+void MacroAssembler::call_VM(Register oop_result,
+                             address entry_point,
+                             Register arg_1, Register arg_2,
+                             CallVMFlags flags)
+{
+  call_VM_pass_args(arg_1, arg_2);
+  call_VM_base(oop_result, entry_point, flags);
+}
+void MacroAssembler::call_VM(Register oop_result,
+                             address entry_point, 
+                             Register arg_1, Register arg_2, Register arg_3,
+                             CallVMFlags flags)
+{
+  call_VM_pass_args(arg_1, arg_2, arg_3);
+  call_VM_base(oop_result, entry_point, flags);
+}
+
+void MacroAssembler::call_VM_leaf_base(address entry_point)
+{
+  mr(r3, Rthread);
+  call(entry_point);
+}
+
+void MacroAssembler::call_VM_leaf(address entry_point)
+{
+  call_VM_leaf_base(entry_point);
+}
+void MacroAssembler::call_VM_leaf(address entry_point, Register arg_1)
+{
+  call_VM_pass_args(arg_1);
+  call_VM_leaf_base(entry_point);
+}
+void MacroAssembler::call_VM_leaf(address entry_point, Register arg_1,
+                                  Register arg_2)
+{
+  call_VM_pass_args(arg_1, arg_2);
+  call_VM_leaf_base(entry_point);
+}
+void MacroAssembler::call_VM_leaf(address entry_point, Register arg_1,
+                                  Register arg_2, Register arg_3)
+{
+  call_VM_pass_args(arg_1, arg_2, arg_3);
+  call_VM_leaf_base(entry_point);
 }
 
 // Write serialization page so VM thread can do a pseudo remote membar.
@@ -1226,6 +1301,26 @@ void MacroAssembler::serialize_memory(Register tmp1, Register tmp2)
   andi_(tmp1, tmp1, os::vm_page_size() - sizeof(int));
   load(tmp2, (intptr_t) os::get_memory_serialize_page());
   stwx(tmp1, tmp2, tmp1);
+}
+
+void MacroAssembler::null_check(Register reg, int offset) {
+  if (needs_explicit_null_check((intptr_t) offset)) {
+    // provoke OS NULL exception if reg = NULL by
+    // accessing M[reg] w/o changing any registers
+    Unimplemented();
+  }
+  else {
+    // nothing to do, (later) access of M[reg + offset]
+    // will provoke OS NULL exception if reg = NULL
+  }
+}
+
+void MacroAssembler::verify_oop(Register reg, const char* s)
+{
+  if (!VerifyOops)
+    return;
+
+  Unimplemented();
 }
 
 void MacroAssembler::calc_padding_for_alignment(
@@ -1257,7 +1352,7 @@ void MacroAssembler::maybe_extend_frame(
   const Register padding     = available_bytes;
 
   sub(extra_bytes, required_bytes, available_bytes);
-  calc_padding_for_alignment(padding, extra_bytes, 16);
+  calc_padding_for_alignment(padding, extra_bytes, StackAlignmentInBytes);
   add(extra_bytes, extra_bytes, padding);
 
   // Extend the frame
@@ -1362,7 +1457,9 @@ void MacroAssembler::dump_int(const char* prefix, Register src)
   prolog(frame);
   if (src == r1) {
     int framesize = frame.unaligned_size();
-    framesize += (16 - (framesize & 15)) & 15;
+    framesize += (StackAlignmentInBytes -
+                  (framesize & (StackAlignmentInBytes - 1))) &
+                 (StackAlignmentInBytes - 1);
     addi(r4, r1, framesize);
   }
   else if (src != r4) {

@@ -29,7 +29,6 @@
 #define __ _masm->
 
 #ifdef PPC
-#ifdef ASSERT
 static int get_cache_block_size()
 {
   // Measure the cache block size by zeroing the first cache block
@@ -50,7 +49,6 @@ static int get_cache_block_size()
   free(page);
   return blocksize;
 }
-#endif // ASSERT
 #endif // PPC
 
 void ICacheStubGenerator::generate_icache_flush(
@@ -59,7 +57,7 @@ void ICacheStubGenerator::generate_icache_flush(
   StubCodeMark mark(this, "ICache", "flush_icache_stub");
 
 #ifdef PPC
-  assert(ICache::line_size <= get_cache_block_size(), "line_size too large");
+  guarantee(ICache::line_size <= get_cache_block_size(),"line_size too large");
   assert(ICache::line_size == 1 << ICache::log2_line_size, "doh");
   
   address start = __ enter();

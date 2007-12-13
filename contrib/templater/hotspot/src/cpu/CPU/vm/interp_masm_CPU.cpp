@@ -26,7 +26,63 @@
 #include "incls/_precompiled.incl"
 #include "incls/_interp_masm_@@cpu@@.cpp.incl"
 
-// Lock object
+#ifdef CC_INTERP
+REGISTER_DEFINITION(Register, Rstate);
+#endif
+
+// Interpreter-specific support for VM calls
+
+void InterpreterMacroAssembler::call_VM_base(Register oop_result,
+                                             address entry_point,
+                                             CallVMFlags flags)
+{
+  // Set the Java frame anchor
+  set_last_Java_frame(flags & CALL_VM_PRESERVE_LR ? r3 : noreg);
+
+  // Make the call
+  MacroAssembler::call_VM_base(oop_result, entry_point, flags);
+
+  // Clear the Java frame anchor
+  reset_last_Java_frame();
+
+  // Reload anything that may have changed if there was a safepoint
+  fixup_after_potential_safepoint();
+}
+
+void InterpreterMacroAssembler::call_VM_leaf_base(address entry_point)
+{
+  // Make the call
+  MacroAssembler::call_VM_leaf_base(entry_point);
+}
+
+// Set the last Java frame pointer
+// NB trashes LR unless you pass it a register to store it in
+
+void InterpreterMacroAssembler::set_last_Java_frame(Register lr_save)
+{
+  assert_different_registers(lr_save, r0);
+
+  if (lr_save->is_valid())
+    mflr(lr_save);
+
+  mpclr();
+  mflr(r0);
+  store(r0, Address(Rthread, JavaThread::last_Java_pc_offset()));
+  store(r1, Address(Rthread, JavaThread::last_Java_sp_offset()));
+
+  if (lr_save->is_valid())
+    mtlr(lr_save);
+}
+
+// Clear the last Java frame pointer
+
+void InterpreterMacroAssembler::reset_last_Java_frame()
+{
+  load(r0, 0);
+  store(r0, Address(Rthread, JavaThread::last_Java_sp_offset()));
+}
+
+// Lock an object
 //
 // Arguments:
 //  monitor: BasicObjectLock to be used for locking
@@ -68,7 +124,7 @@ void InterpreterMacroAssembler::lock_object(Register entry)
   bind(done);
 }
 
-// Unlocks an object. Throws an IllegalMonitorException if
+// Unlock an object. Throws an IllegalMonitorException if
 // object is not locked by current thread.
 //
 // Arguments:
@@ -118,4 +174,16 @@ void InterpreterMacroAssembler::unlock_object(Register entry)
 
   unimplemented(__FILE__, __LINE__);
   bind(done);
+}
+
+// Reload everything that might have changed after a safepoint
+
+void InterpreterMacroAssembler::fixup_after_potential_safepoint()
+{
+#ifdef CC_INTERP
+  load(Rmethod, STATE(_method));
+  verify_oop(Rmethod);
+#else
+  Unimplemented();
+#endif
 }

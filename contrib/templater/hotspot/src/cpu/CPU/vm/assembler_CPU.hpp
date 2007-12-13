@@ -28,12 +28,9 @@
 // Non-volatile registers used by the interpreter
 
 #ifdef PPC
-REGISTER_DECLARATION(Register, Rmethod, r31);
-REGISTER_DECLARATION(Register, Rlocals, r30);
-REGISTER_DECLARATION(Register, Rthread, r29);
-#ifdef CC_INTERP
-REGISTER_DECLARATION(Register, Rstate,  r28);
-#endif // CC_INTERP
+REGISTER_DECLARATION(Register, Rthread, r31);
+REGISTER_DECLARATION(Register, Rmethod, r30);
+REGISTER_DECLARATION(Register, Rlocals, r29);
 #endif // PPC
 
 
@@ -72,6 +69,18 @@ class Address {
 class Assembler : public AbstractAssembler {
  public:
   Assembler(CodeBuffer* code) : AbstractAssembler(code) {}
+
+ private:
+  static bool is_simm(int x, int nbits)
+  {
+    return -(1 << nbits - 1) <= x && x < (1 << nbits - 1);
+  }
+
+ public:
+  static bool is_simm16(int x)
+  {
+    return is_simm(x, 16);
+  }
 
 #ifdef PPC
  private:
@@ -122,6 +131,8 @@ class Assembler : public AbstractAssembler {
   void andi_(Register dst, Register a, int b);
   void b(address a);
   void bc(int bo, int bi, address a);
+  void bcctrl(int bo, int bi);
+  void bcl(int bo, int bi, address a);
   void bclr(int bo, int bi);
   void bclrl(int bo, int bi);
   void bl(address a);
@@ -177,6 +188,7 @@ class Assembler : public AbstractAssembler {
 #endif // PPC64
 
   // Standard mnemonics common to 32- and 64-bit implementations
+  void bctrl();
   void bdnz(Label& l);
   void beq(Label& l);
   void beqlr();
@@ -225,11 +237,6 @@ class Assembler : public AbstractAssembler {
   static void pd_print_patched_instruction(address branch);
 #endif // PRODUCT
 #endif // PPC
-
-  // Disassemble a region of memory to stdout
-#ifndef PRODUCT
-  static void disassemble(const char *what, address start, address end);
-#endif // PRODUCT
 };
 
 
@@ -321,12 +328,43 @@ class StackFrame {
 #endif // PPC
 
 
+// Flags for MacroAssembler::call_VM
+
+enum CallVMFlags {
+  CALL_VM_DEFAULTS            = 0,
+  CALL_VM_NO_EXCEPTION_CHECKS = 1,
+  CALL_VM_PRESERVE_LR         = 2
+};
+
+
 // MacroAssembler extends Assembler by frequently used macros.
 //
 // Instructions for which a 'better' code sequence exists depending
 // on arguments should also go in here.
 
 class MacroAssembler : public Assembler {
+ protected:
+  // Support for VM calls
+  //
+  // This is the base routine called by the different versions of
+  // call_VM_leaf. The interpreter may customize this version by
+  // overriding it for its purposes (e.g., to save/restore additional
+  // registers when doing a VM call).
+  virtual void call_VM_leaf_base(address entry_point);
+  
+  // This is the base routine called by the different versions of
+  // call_VM. The interpreter may customize this version by overriding
+  // it for its purposes (e.g., to save/restore additional registers
+  // when doing a VM call).
+  virtual void call_VM_base(Register oop_result,
+                            address entry_point,
+                            CallVMFlags flags);
+
+ private:
+  void call_VM_pass_args(Register arg_1,
+                         Register arg_2 = noreg,
+                         Register arg_3 = noreg);
+  
  public:
   MacroAssembler(CodeBuffer* code) : Assembler(code) {}
 
@@ -341,6 +379,7 @@ class MacroAssembler : public Assembler {
   void lhax(Register dst, Register a, Register b);
   void lwa(Register dst, const Address& src);
   void lwax(Register dst, Register a, Register b);
+  void mpclr();
   
   // Operations which are different on PPC32/64
   void call(address addr);
@@ -365,10 +404,40 @@ class MacroAssembler : public Assembler {
 
   void cmpxchg_(Register exchange, Register dst, Register compare);
 
-  void set_last_Java_frame();
-  void reset_last_Java_frame();
+  // Support for VM calls
+  void call_VM(Register oop_result, 
+               address entry_point, 
+               CallVMFlags flags = CALL_VM_DEFAULTS);
+  void call_VM(Register oop_result, 
+               address entry_point, 
+               Register arg_1, 
+               CallVMFlags flags = CALL_VM_DEFAULTS);
+  void call_VM(Register oop_result,
+               address entry_point,
+               Register arg_1, Register arg_2,
+               CallVMFlags flags = CALL_VM_DEFAULTS);
+  void call_VM(Register oop_result,
+               address entry_point, 
+               Register arg_1, Register arg_2, Register arg_3,
+               CallVMFlags flags = CALL_VM_DEFAULTS);
 
+  void call_VM_leaf(address entry_point);
+  void call_VM_leaf(address entry_point,
+                    Register arg_1);
+  void call_VM_leaf(address entry_point,
+                    Register arg_1, Register arg_2);
+  void call_VM_leaf(address entry_point,
+                    Register arg_1, Register arg_2, Register arg_3);
+
+  // Support for serializing memory accesses between threads
   void serialize_memory(Register tmp1, Register tmp2);
+
+  // Support for NULL-checks
+  void null_check(Register reg, int offset = -1);
+  static bool needs_explicit_null_check(intptr_t offset);
+
+  // Support for VerifyOops
+  void verify_oop(Register reg, const char* s = "broken oop");
 
   void calc_padding_for_alignment(Register dst, Register src, int align);
   void maybe_extend_frame(Register required_bytes, Register available_bytes);
