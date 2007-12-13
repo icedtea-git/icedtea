@@ -253,7 +253,7 @@ clean-patch:
 # Copy over OpenJDK sources for ecj.
 stamps/clone-ecj.stamp: stamps/patch.stamp
 	if ! test -d openjdk-ecj ; then \
-	    cp -a openjdk openjdk-ecj ; \
+	    cp -al openjdk openjdk-ecj ; \
 	fi
 	mkdir -p stamps
 	touch stamps/clone-ecj.stamp
