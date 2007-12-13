@@ -97,7 +97,9 @@ def preprocess(src, cpu):
             assert False
 
     assert mode == [COPY]
-    return dst.replace("_LP64", "PPC64")
+    if cpu == "PPC":
+        dst = dst.replace("_LP64", "PPC64")
+    return dst
 
 def untabify(line):
     bits = line.split("\t")
