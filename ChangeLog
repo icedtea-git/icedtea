@@ -1,5 +1,10 @@
 2007-12-14  Lillian Angel  <langel@redhat.com>
 
+	* configure.ac: Updated to version 1.5.
+	* configure: Regenerate.
+
+2007-12-14  Lillian Angel  <langel@redhat.com>
+
 	Fixes Bug #88
 	* configure.ac: Added check for hg.
 	* configure: Regenerate.
