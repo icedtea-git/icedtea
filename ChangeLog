@@ -1,3 +1,10 @@
+2007-12-14  Joshua Sumali  <jsumali@redhat.com>
+
+	Fixes Bug #87
+	* Makefile.am: Added icedtea-timerqueue.patch.
+	* Makefile.in: Regenerate.
+	* patches/icedtea-timerqueue.patch: New patch.
+
 2007-12-14  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/ppc/vm/bytecodeInterpreter_ppc.inline.hpp
