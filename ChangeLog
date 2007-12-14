@@ -1,3 +1,8 @@
+2007-12-14  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/ppc/vm/bytecodeInterpreter_ppc.inline.hpp
+	(VMmemCopy64): Use 64-bit operations on ppc64.
+
 2007-12-13  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am
