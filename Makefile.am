@@ -195,6 +195,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ports.patch \
 	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-c1-unimplemented.patch \
+	patches/icedtea-timerqueue.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
