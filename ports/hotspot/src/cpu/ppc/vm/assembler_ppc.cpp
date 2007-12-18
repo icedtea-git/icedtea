@@ -1466,3 +1466,8 @@ void MacroAssembler::dump_int(const char* prefix, Register src)
   epilog(frame);
 }
 #endif // PRODUCT
+
+void MacroAssembler::bang_stack_with_offset(int offset)
+{
+  Unimplemented();
+}
