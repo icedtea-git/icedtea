@@ -25,13 +25,12 @@
 
 // The definitions needed for @@cpu@@ assembly code generation.
 
+#ifdef PPC
 // Non-volatile registers used by the interpreter
 
-#ifdef PPC
 REGISTER_DECLARATION(Register, Rthread, r31);
 REGISTER_DECLARATION(Register, Rmethod, r30);
 REGISTER_DECLARATION(Register, Rlocals, r29);
-#endif // PPC
 
 
 // Address is an abstraction used to represent a memory location
@@ -62,6 +61,7 @@ class Address {
 };
 
 
+#endif // PPC
 // The @@cpu@@ Assembler: Pure assembler doing NO optimizations on
 // the instruction level; i.e., what you write is what you get.
 // The Assembler is generating code into a CodeBuffer.
@@ -69,6 +69,7 @@ class Address {
 class Assembler : public AbstractAssembler {
  public:
   Assembler(CodeBuffer* code) : AbstractAssembler(code) {}
+#ifdef PPC
 
  private:
   static bool is_simm(int x, int nbits)
@@ -82,7 +83,6 @@ class Assembler : public AbstractAssembler {
     return is_simm(x, 16);
   }
 
-#ifdef PPC
  private:
   // Instruction emitters for the various forms.
   // Every instruction should ultimately come through one of these.
@@ -230,19 +230,19 @@ class Assembler : public AbstractAssembler {
   void b(Label& l);
   void bc(int bo, int bi, Label& l);
   void bl(Label& l);
+#endif // PPC
 
   // Function to fix up forward branches
   void pd_patch_instruction(address branch, address target);
 #ifndef PRODUCT  
   static void pd_print_patched_instruction(address branch);
 #endif // PRODUCT
-#endif // PPC
 };
 
+#ifdef PPC
 
 // StackFrame is used to generate prologs and epilogs
 
-#ifdef PPC
 class StackFrame {
  private:
   int _params;
@@ -325,7 +325,6 @@ class StackFrame {
   int unaligned_size();
   int start_of_locals();
 };
-#endif // PPC
 
 
 // Flags for MacroAssembler::call_VM
@@ -337,12 +336,14 @@ enum CallVMFlags {
 };
 
 
+#endif // PPC
 // MacroAssembler extends Assembler by frequently used macros.
 //
 // Instructions for which a 'better' code sequence exists depending
 // on arguments should also go in here.
 
 class MacroAssembler : public Assembler {
+#ifdef PPC
  protected:
   // Support for VM calls
   //
@@ -365,15 +366,16 @@ class MacroAssembler : public Assembler {
                          Register arg_2 = noreg,
                          Register arg_3 = noreg);
   
+#endif // PPC
  public:
   MacroAssembler(CodeBuffer* code) : Assembler(code) {}
 
   void align(int modulus);
+#ifdef PPC
 
   void prolog(StackFrame& frame) { frame.generate_prolog(this); }
   void epilog(StackFrame& frame) { frame.generate_epilog(this); }
 
-#ifdef PPC
   // Non-standard mnemonics
   void lbax(Register dst, Register a, Register b);
   void lhax(Register dst, Register a, Register b);
@@ -400,7 +402,6 @@ class MacroAssembler : public Assembler {
   void store_indexed(Register src, Register a, Register b);
   void store_update(Register src, const Address& dst);
   void store_update_indexed(Register src, Register a, Register b);
-#endif // PPC
 
   void cmpxchg_(Register exchange, Register dst, Register compare);
 
@@ -461,17 +462,20 @@ class MacroAssembler : public Assembler {
   void dump_int(const char* prefix, Register src);
 #endif // PRODUCT
 
-  void bang_stack_with_offset(int offset)
-  {
-    Unimplemented();
-  }
+#endif // PPC
+  void bang_stack_with_offset(int offset);
 };
 
 #ifdef ASSERT
-inline bool AbstractAssembler::pd_check_instruction_mark() { Unimplemented(); }
+inline bool AbstractAssembler::pd_check_instruction_mark()
+{
+  Unimplemented();
+}
 #endif
 
+#ifdef PPC
 #define UnimplementedStub() \
   (__ generate_unimplemented_stub(__FILE__, __LINE__))
 #define UnimplementedEntry() \
   (__ generate_unimplemented_entry(__FILE__, __LINE__))
+#endif // PPC

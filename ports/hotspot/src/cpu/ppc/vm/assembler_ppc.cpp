@@ -1403,7 +1403,6 @@ void MacroAssembler::untested(const char* file, int line, const char* message)
     CAST_FROM_FN_PTR(address, report_untested), file, line, message);
 }
 
-
 address MacroAssembler::generate_unimplemented_stub(const char* file, int line)
 {
   address start = enter();

@@ -37,6 +37,7 @@ RuntimeStub        *SharedRuntime::_resolve_static_call_blob;
 
 #define __ masm->
 
+#ifdef PPC
 // Read the array of BasicTypes from a signature, and compute where
 // the arguments should go.  Values in the VMRegPair regs array refer
 // to 4-byte quantities.  XXX describe the mapping
@@ -47,6 +48,7 @@ RuntimeStub        *SharedRuntime::_resolve_static_call_blob;
 
 // XXX I'm not very confident I have all the set1/set2's and ++/+=2's right
 
+#endif // PPC
 int SharedRuntime::java_calling_convention(const BasicType *sig_bt,
                                            VMRegPair *regs,
                                            int total_args_passed,
@@ -200,6 +202,7 @@ static RuntimeStub* generate_unimplemented_runtime_stub(const char* file,
 							int line,
 							const char* name)
 {
+#ifdef PPC
   ResourceMark rm;
   CodeBuffer buffer(name, 1000, 512);
   MacroAssembler* masm = new MacroAssembler(&buffer);
@@ -215,11 +218,15 @@ static RuntimeStub* generate_unimplemented_runtime_stub(const char* file,
   masm->flush();
   return RuntimeStub::new_runtime_stub(name, &buffer, frame_complete,
 				       frame_size_in_words, oop_maps, true);
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 static SafepointBlob* generate_unimplemented_safepoint_blob(const char* file,
 							    int line)
 {
+#ifdef PPC
   ResourceMark rm;
   CodeBuffer buffer("handler_blob", 2048, 1024);
   MacroAssembler* masm = new MacroAssembler(&buffer);
@@ -233,6 +240,9 @@ static SafepointBlob* generate_unimplemented_safepoint_blob(const char* file,
   __ blr();
   masm->flush();
   return SafepointBlob::create(&buffer, oop_maps, frame_size_in_words);
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 void SharedRuntime::generate_stubs()

@@ -62,6 +62,8 @@ inline void Atomic::store(jint store_value, volatile jint* dest)
 {
 #ifdef PPC
   *dest = store_value;
+#else
+   Unimplemented(); 
 #endif
 }
 // inline void Atomic::store(jlong store_value, volatile jlong* dest)

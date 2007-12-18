@@ -27,6 +27,7 @@
 #include "incls/_disassembler_@@cpu@@.cpp.incl"
 
 #ifndef PRODUCT
+#ifdef PPC
 class InstructionParser {
  private:
   intptr_t _addr;
@@ -652,11 +653,16 @@ static void print_instruction_at(address addr, outputStream *st)
 
 // External interface
 
+#endif // PPC
 void Disassembler::decode(CodeBlob *cb, outputStream *st)
 {
+#ifdef PPC
   st = st ? st : tty;
   st->print_cr("Decoding CodeBlob " INTPTR_FORMAT, cb);
   decode(cb->instructions_begin(), cb->instructions_end(), st);
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 void Disassembler::decode(nmethod *nm, outputStream *st)
@@ -666,6 +672,7 @@ void Disassembler::decode(nmethod *nm, outputStream *st)
 
 void Disassembler::decode(u_char *begin, u_char *end, outputStream *st)
 {
+#ifdef PPC
   st = st ? st : tty;
   CodeBlob *cb = CodeCache::find_blob_unsafe(begin);
   for (u_char *addr = begin; addr < end; addr += 4) {
@@ -682,5 +689,8 @@ void Disassembler::decode(u_char *begin, u_char *end, outputStream *st)
 
     st->cr();
   }
+#else
+  Unimplemented();
+#endif // PPC
 }
 #endif // PRODUCT

@@ -25,6 +25,7 @@
 
 // native method calls
 
+#ifdef PPC
 class StackArgument
 {
  private:
@@ -52,7 +53,6 @@ class StackArgument
   void pass();
 };
 
-#ifdef PPC
 enum {
   gp_reg_start = 4, // r3 contains the JNIEnv
   gp_reg_max   = 10,
@@ -63,10 +63,11 @@ enum {
   fp_reg_max   = 13
 #endif // PPC32
 };
-#endif // PPC
 
+#endif // PPC
 class SignatureHandlerGenerator : public NativeSignatureIterator
 {
+#ifdef PPC
  private:
   MacroAssembler* _masm;
 
@@ -76,6 +77,7 @@ class SignatureHandlerGenerator : public NativeSignatureIterator
 
   GrowableArray<StackArgument>* _st_args;
 
+#endif // PPC
  private:
   void pass_int();
   void pass_long();
@@ -85,12 +87,13 @@ class SignatureHandlerGenerator : public NativeSignatureIterator
 
 #ifdef PPC
   void pass_on_stack(const Address& src, BasicType type);
-#endif
   
+#endif
  public:
   SignatureHandlerGenerator(methodHandle method, CodeBuffer* buffer) 
     : NativeSignatureIterator(method) 
   {
+#ifdef PPC
     _masm = new MacroAssembler(buffer);
 
     _gp_reg = gp_reg_start;
@@ -105,11 +108,15 @@ class SignatureHandlerGenerator : public NativeSignatureIterator
 #endif
 
     _st_args  = new GrowableArray<StackArgument>();
+#else
+    Unimplemented();
+#endif // PPC
   }
 
   void generate(uint64_t fingerprint);
 };
 
+#ifdef PPC
 class SlowSignatureHandler : public NativeSignatureIterator
 {
  private:
@@ -153,3 +160,4 @@ class SlowSignatureHandler : public NativeSignatureIterator
     _fp_reg_max = fp_regs + fp_reg_max - fp_reg_start;
   }
 };
+#endif // PPC

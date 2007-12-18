@@ -26,6 +26,7 @@
 #include "incls/_precompiled.incl"
 #include "incls/_interp_masm_@@cpu@@.cpp.incl"
 
+#ifdef PPC
 #ifdef CC_INTERP
 REGISTER_DEFINITION(Register, Rstate);
 #endif
@@ -187,3 +188,4 @@ void InterpreterMacroAssembler::fixup_after_potential_safepoint()
   Unimplemented();
 #endif
 }
+#endif // PPC

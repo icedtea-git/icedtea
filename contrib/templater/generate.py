@@ -40,12 +40,12 @@ def preprocess(src, cpu):
     while src:
         thing = things.match(src)
         if not thing:
-            if mode[-1] != COND_FALSE:
+            if COND_FALSE not in mode:
                 dst += src
             break
         before, thing, src = thing.groups()
         src = thing + src
-        if mode[-1] != COND_FALSE:
+        if COND_FALSE not in mode:
             dst += before
         end = ends.get(thing, "\n")
         index = src.find(end)
@@ -54,7 +54,7 @@ def preprocess(src, cpu):
         thing = src[:index]
         src = src[index:]
         if not thing.startswith("#"):
-            if mode[-1] != COND_FALSE:
+            if COND_FALSE not in mode:
                 dst += thing
             continue
         args = thing.strip().split()
@@ -63,7 +63,7 @@ def preprocess(src, cpu):
             cmd += args.pop(0)
 
         if cmd in ("#include", "#define", "#undef"):
-            if mode[-1] != COND_FALSE:
+            if COND_FALSE not in mode:
                 dst += thing
         elif cmd in ("#ifdef", "#ifndef"):
             us, them = {
@@ -76,7 +76,8 @@ def preprocess(src, cpu):
                 mode.append(them)
             else:
                 mode.append(COPY)
-                dst += thing
+                if COND_FALSE not in mode:
+                    dst += thing
         elif cmd == "#if":
             for check in [cpu] + other_cpus:
                 assert "defined(%s)" % check not in args
@@ -88,9 +89,10 @@ def preprocess(src, cpu):
             elif mode[-1] == COND_FALSE:
                 mode[-1] = COND_TRUE
             else:
-                dst += thing
+                if COND_FALSE not in mode:
+                    dst += thing
         elif cmd == "#endif":
-            if mode[-1] == COPY:
+            if mode[-1] == COPY and COND_FALSE not in mode:
                 dst += thing
             mode.pop()
         else:

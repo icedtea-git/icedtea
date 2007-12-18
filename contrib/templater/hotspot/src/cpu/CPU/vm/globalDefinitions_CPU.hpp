@@ -23,4 +23,6 @@
  *
  */
 
+#ifdef PPC
 const int StackAlignmentInBytes = 16;
+#endif // PPC

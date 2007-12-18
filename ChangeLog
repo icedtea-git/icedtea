@@ -1,5 +1,18 @@
 2007-12-18  Gary Benson  <gbenson@redhat.com>
 
+	* contrib/templater/*: Wrap all PPC-specifics with conditionals.
+
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp:
+	Regenerated from templater (whitespace changes only).
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/frame_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/registerMap_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/stubRoutines_ppc.hpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.cpp: Likewise.
+
+2007-12-18  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.cpp
 	(_Copy_conjoint_jints_atomic): Invert conditionals for readability.
 	(_Copy_conjoint_jints_atomic): Likewise.

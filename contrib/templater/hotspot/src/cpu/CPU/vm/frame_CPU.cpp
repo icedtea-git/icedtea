@@ -39,11 +39,16 @@ void RegisterMap::check_location_valid()
 
 bool frame::is_interpreted_frame() const
 {
+#ifdef PPC
   return Interpreter::contains(pc());
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 frame frame::sender_for_entry_frame(RegisterMap *map) const
 {
+#ifdef PPC
   assert(map != NULL, "map must be set");
   // Java frame called from C; skip all C frames and return top C
   // frame of that chunk as the sender
@@ -53,6 +58,9 @@ frame frame::sender_for_entry_frame(RegisterMap *map) const
   map->clear(); 
   assert(map->include_argument_oops(), "should be set by clear");
   return frame(jfa->last_Java_sp(), jfa->last_Java_pc());
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 frame frame::sender_for_interpreter_frame(RegisterMap *map) const

@@ -178,9 +178,7 @@ CONSTANT_REGISTER_DECLARATION(FloatRegister, f28, (28));
 CONSTANT_REGISTER_DECLARATION(FloatRegister, f29, (29));
 CONSTANT_REGISTER_DECLARATION(FloatRegister, f30, (30));
 CONSTANT_REGISTER_DECLARATION(FloatRegister, f31, (31));
-#endif // PPC
 
-#ifdef PPC
 // Use ConditionRegister as shortcut
 class ConditionRegisterImpl;
 typedef ConditionRegisterImpl* ConditionRegister;

@@ -26,9 +26,9 @@
 #include "incls/_precompiled.incl"
 #include "incls/_register_definitions_@@cpu@@.cpp.incl"
 
-#ifdef PPC
 REGISTER_DEFINITION(Register, noreg);
 
+#ifdef PPC
 REGISTER_DEFINITION(Register, r0);
 REGISTER_DEFINITION(Register, r1);
 REGISTER_DEFINITION(Register, r2);
