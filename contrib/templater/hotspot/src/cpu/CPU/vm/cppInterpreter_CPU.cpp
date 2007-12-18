@@ -27,6 +27,7 @@
 #include "incls/_cppInterpreter_@@cpu@@.cpp.incl"
 
 #ifdef CC_INTERP
+#ifdef PPC
 
 // The address of this function is stored in the LR save area
 // while we are recursed in the frame manager/C++ interpreter.
@@ -61,6 +62,7 @@ static Label fast_accessor_slow_entry_path;
 // Stuff for caching identical entries
 static address normal_entry = NULL;
 static address native_entry = NULL;
+#endif // PPC
 
 int AbstractInterpreter::BasicType_as_index(BasicType type)
 {
@@ -90,10 +92,15 @@ int AbstractInterpreter::BasicType_as_index(BasicType type)
 
 bool CppInterpreter::contains(address pc)
 {
+#ifdef PPC
   return pc == CAST_FROM_FN_PTR(address, RecursiveInterpreterActivation)
     || _code->contains(pc);
+#else
+  Unimplemented();
+#endif // PPC
 }
 
+#ifdef PPC
 // A result is the register or registers defined in the native ABI
 // for that type, unless it is an OOP in which case it will have
 // been unboxed and saved in the frame.  Preprocess it.
@@ -1288,6 +1295,7 @@ void CppInterpreterGenerator::generate_unwind_interpreter_state()
   __ load (r0, Address(r1, StackFrame::lr_save_offset * wordSize));
   __ mtlr (r0);  
 }
+#endif // PPC
 
 address AbstractInterpreterGenerator::generate_method_entry(
     AbstractInterpreter::MethodKind kind) {
@@ -1350,6 +1358,7 @@ InterpreterGenerator::InterpreterGenerator(StubQueue* code)
 
 int AbstractInterpreter::size_top_interpreter_activation(methodOop method)
 {
+#ifdef PPC
   StackFrame frame;
 
   int call_stub_frame = round_to(
@@ -1365,6 +1374,9 @@ int AbstractInterpreter::size_top_interpreter_activation(methodOop method)
     sizeof(BytecodeInterpreter), StackAlignmentInBytes);
 
   return (call_stub_frame + interpreter_frame) / wordSize;
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 // Deoptimization helpers for C++ interpreter

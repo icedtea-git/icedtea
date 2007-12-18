@@ -23,19 +23,19 @@
  *  
  */
 
-// A frame represents a physical stack frame (an activation).  Frames
-// can be C or Java frames, and the Java frames can be interpreted or
-// compiled.  In contrast, vframes represent source-level activations,
-// so that one physical frame can correspond to multiple source level
-// frames because of inlining.  A frame is comprised of {pc, sp}
+  // A frame represents a physical stack frame (an activation).  Frames
+  // can be C or Java frames, and the Java frames can be interpreted or
+  // compiled.  In contrast, vframes represent source-level activations,
+  // so that one physical frame can correspond to multiple source level
+  // frames because of inlining.  A frame is comprised of {pc, sp}
 
+#ifdef PPC
  public:
   enum {
-#ifdef PPC
     pc_return_offset = 0
-#endif // PPC
   };
 
+#endif // PPC
  public:
   // Constructors
   frame(intptr_t* sp);

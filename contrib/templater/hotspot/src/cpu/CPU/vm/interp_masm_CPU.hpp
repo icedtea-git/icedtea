@@ -25,6 +25,7 @@
 
 // This file specializes the assember with interpreter-specific macros
 
+#ifdef PPC
 #ifdef CC_INTERP
 REGISTER_DECLARATION(Register, Rstate, r28);
 
@@ -32,7 +33,9 @@ REGISTER_DECLARATION(Register, Rstate, r28);
   (Address(Rstate, byte_offset_of(BytecodeInterpreter, field_name)))
 #endif // CC_INTERP
 
+#endif // PPC
 class InterpreterMacroAssembler : public MacroAssembler {
+#ifdef PPC
  protected:
   // Support for VM calls
   virtual void call_VM_leaf_base(address entry_point);
@@ -40,8 +43,10 @@ class InterpreterMacroAssembler : public MacroAssembler {
                             address entry_point,
                             CallVMFlags flags);
 
+#endif // PPC
  public:
   InterpreterMacroAssembler(CodeBuffer* code) : MacroAssembler(code) {}
+#ifdef PPC
 
   // Frame anchor tracking
   void set_last_Java_frame(Register lr_save = noreg);
@@ -53,4 +58,5 @@ class InterpreterMacroAssembler : public MacroAssembler {
 
   // Safepoints
   void fixup_after_potential_safepoint();
+#endif // PPC
 };

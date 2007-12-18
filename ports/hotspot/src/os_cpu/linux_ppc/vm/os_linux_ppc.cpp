@@ -23,7 +23,7 @@
  *
  */
 
-// do not include  precompiled  header file
+// do not include precompiled header file
 #include "incls/_os_linux_ppc.cpp.incl"
 
 address os::current_stack_pointer()

@@ -32,6 +32,7 @@
 
 void InterpreterRuntime::SignatureHandlerGenerator::pass_int()
 {
+#ifdef PPC
   const Address src(Rlocals, Interpreter::local_offset_in_bytes(offset()));
 
   if (_gp_reg <= gp_reg_max) {
@@ -43,10 +44,14 @@ void InterpreterRuntime::SignatureHandlerGenerator::pass_int()
   else {
     pass_on_stack(src, T_INT);
   }
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 void InterpreterRuntime::SignatureHandlerGenerator::pass_long()
 {
+#ifdef PPC
 #ifdef PPC32
   const Address srch(Rlocals, Interpreter::local_offset_in_bytes(offset()));
   const Address srcl(Rlocals, Interpreter::local_offset_in_bytes(offset()+1));
@@ -71,10 +76,14 @@ void InterpreterRuntime::SignatureHandlerGenerator::pass_long()
     pass_on_stack(src, T_LONG);
   }
 #endif // PPC32
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 void InterpreterRuntime::SignatureHandlerGenerator::pass_float()
 {
+#ifdef PPC
   const Address src(Rlocals, Interpreter::local_offset_in_bytes(offset()));
 
   if (_fp_reg <= fp_reg_max) {
@@ -86,10 +95,14 @@ void InterpreterRuntime::SignatureHandlerGenerator::pass_float()
   else {
     pass_on_stack(src, T_FLOAT);
   }
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 void InterpreterRuntime::SignatureHandlerGenerator::pass_double()
 {
+#ifdef PPC
   const Address src(Rlocals, Interpreter::local_offset_in_bytes(offset() + 1));
 
   if (_fp_reg <= fp_reg_max) {
@@ -101,10 +114,14 @@ void InterpreterRuntime::SignatureHandlerGenerator::pass_double()
   else {
     pass_on_stack(src, T_DOUBLE);
   }
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 void InterpreterRuntime::SignatureHandlerGenerator::pass_object()
 {
+#ifdef PPC
   const Address src(Rlocals, Interpreter::local_offset_in_bytes(offset()));
 
   if (_gp_reg <= gp_reg_max) {
@@ -124,8 +141,12 @@ void InterpreterRuntime::SignatureHandlerGenerator::pass_object()
   else {
     pass_on_stack(src, T_OBJECT);
   }
+#else
+  Unimplemented();
+#endif // PPC
 }
 
+#ifdef PPC
 void InterpreterRuntime::SignatureHandlerGenerator::pass_on_stack(
   const Address& src, BasicType type)
 {
@@ -202,9 +223,11 @@ void InterpreterRuntime::StackArgument::pass()
   }
 }
 
+#endif // PPC
 void InterpreterRuntime::SignatureHandlerGenerator::generate(
   uint64_t fingerprint) 
 {
+#ifdef PPC
   // Generate code to handle register arguments
   iterate(fingerprint);
 
@@ -239,7 +262,11 @@ void InterpreterRuntime::SignatureHandlerGenerator::generate(
   __ blr ();
 
   __ flush ();
+#else
+  Unimplemented();
+#endif // PPC
 }
+#ifdef PPC
 
 
 // Implementation of SlowSignatureHandler
@@ -348,6 +375,7 @@ IRT_ENTRY(address,
   return Interpreter::result_handler(m->result_type());
 IRT_END
 
+#endif // PPC
 
 // Implementation of SignatureHandlerLibrary
 

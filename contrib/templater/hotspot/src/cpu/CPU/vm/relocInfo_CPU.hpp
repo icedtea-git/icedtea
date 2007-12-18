@@ -27,8 +27,10 @@
  private:
   enum 
   {
+#ifdef PPC
 #ifdef XXX_EVIL_EVIL_EVIL
     offset_unit  =  1,
     format_width =  1
 #endif // XXX_EVIL_EVIL_EVIL
+#endif // PPC
   };

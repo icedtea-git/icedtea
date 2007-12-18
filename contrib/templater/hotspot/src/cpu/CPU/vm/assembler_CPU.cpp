@@ -648,16 +648,16 @@ void Assembler::pd_patch_instruction(address branch, address target)
     Unimplemented();
   }
 }
-
 #endif // PPC
+
 #ifndef PRODUCT
 void Assembler::pd_print_patched_instruction(address branch)
 {
   Unimplemented();
 }
 #endif // PRODUCT
-#ifdef PPC
 
+#ifdef PPC
 // 32-bit ABI:
 //
 //     | ...                  |
@@ -1406,8 +1406,6 @@ void MacroAssembler::untested(const char* file, int line, const char* message)
     CAST_FROM_FN_PTR(address, report_untested), file, line, message);
 }
 
-#endif // PPC
-
 address MacroAssembler::generate_unimplemented_stub(const char* file, int line)
 {
   address start = enter();
@@ -1470,3 +1468,9 @@ void MacroAssembler::dump_int(const char* prefix, Register src)
   epilog(frame);
 }
 #endif // PRODUCT
+
+#endif // PPC
+void MacroAssembler::bang_stack_with_offset(int offset)
+{
+  Unimplemented();
+}

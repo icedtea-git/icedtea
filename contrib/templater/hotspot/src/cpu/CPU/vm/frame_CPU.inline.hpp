@@ -150,6 +150,8 @@ inline jint frame::interpreter_frame_expression_stack_direction()
 {
 #ifdef PPC
   return -1;
+#else
+  Unimplemented();
 #endif // PPC
 }
 
@@ -160,13 +162,19 @@ inline intptr_t* frame::id() const
 {
 #ifdef PPC
   return sp();
+#else
+  Unimplemented();
 #endif // PPC
 }
 
 inline JavaCallWrapper* frame::entry_frame_call_wrapper() const
 {
+#ifdef PPC
   assert(is_entry_frame(), "must be an entry frame");
   return *(JavaCallWrapper**) ((address) sender_sp() - call_wrapper_offset());
+#else
+  Unimplemented();
+#endif // PPC 
 }
 
 inline void frame::set_saved_oop_result(RegisterMap* map, oop obj)

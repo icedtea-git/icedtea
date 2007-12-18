@@ -23,14 +23,18 @@
  *  
  */
 
-// This file holds the platform specific parts of the StubRoutines
-// definition. See stubRoutines.hpp for a description on how to
-// extend it.
+  // This file holds the platform specific parts of the StubRoutines
+  // definition. See stubRoutines.hpp for a description on how to
+  // extend it.
 
  public:
   static bool returns_to_call_stub(address return_pc)
   {
+#ifdef PPC
     return return_pc == _call_stub_return_address;
+#else
+    Unimplemented();
+#endif // PPC
   }
 
   enum platform_dependent_constants 

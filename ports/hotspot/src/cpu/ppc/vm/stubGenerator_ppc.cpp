@@ -372,7 +372,6 @@ class StubGenerator: public StubCodeGenerator
     __ blr ();
 
     return start;
-
   }
 
   void generate_arraycopy_stubs()

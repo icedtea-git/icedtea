@@ -23,8 +23,10 @@
  *  
  */
 
+#ifdef PPC
   void generate_adjust_callers_stack();
   void generate_compute_interpreter_state(bool native); 
   void generate_more_monitors();
   void generate_convert_result(address* converter_array);
   void generate_unwind_interpreter_state();
+#endif // PPC

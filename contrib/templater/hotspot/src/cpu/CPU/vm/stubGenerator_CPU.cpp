@@ -380,7 +380,6 @@ class StubGenerator: public StubCodeGenerator
 #else
     return UnimplementedStub();
 #endif // PPC
-    
   }
 
   void generate_arraycopy_stubs()

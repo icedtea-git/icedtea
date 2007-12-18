@@ -42,11 +42,8 @@ inline int32_t BytecodeInterpreter::VMfloatCompare(jfloat op1, jfloat op2, int32
 }
 
 inline void BytecodeInterpreter::VMmemCopy64(uint32_t to[2], const uint32_t from[2]) {
-  // x86 can do unaligned copies but not 64bits at a time
-  to[0] = from[0]; to[1] = from[1];
+  *(uint64_t *) to = *(uint64_t *) from;
 }
-
-// The long operations depend on compiler support for "long long" on x86
 
 inline jlong BytecodeInterpreter::VMlongAdd(jlong op1, jlong op2) {
   return op1 + op2;

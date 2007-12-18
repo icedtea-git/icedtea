@@ -30,6 +30,7 @@
 
 address AbstractInterpreterGenerator::generate_slow_signature_handler()
 {
+#ifdef PPC
   address start = __ pc();
 
   const Address param_words_addr(
@@ -113,6 +114,9 @@ address AbstractInterpreterGenerator::generate_slow_signature_handler()
   __ blr ();
 
   return start;
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 address InterpreterGenerator::generate_math_entry(
@@ -121,6 +125,7 @@ address InterpreterGenerator::generate_math_entry(
   if (!InlineIntrinsics)
     return NULL;
 
+#ifdef PPC
   address start = __ pc();
 
   switch (kind) {
@@ -157,6 +162,9 @@ address InterpreterGenerator::generate_math_entry(
   }
 
   return start;
+#else
+  Unimplemented();
+#endif // PPC
 }
 
 address InterpreterGenerator::generate_abstract_entry()
