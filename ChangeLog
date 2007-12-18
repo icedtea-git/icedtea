@@ -1,5 +1,11 @@
 2007-12-18  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.cpp
+	(_Copy_conjoint_jints_atomic): Invert conditionals for readability.
+	(_Copy_conjoint_jints_atomic): Likewise.
+
+2007-12-18  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/ppc/vm/bytes_ppc.hpp
 	(is_Java_byte_ordering_different): Add little endian support.
 	(get_Java_u2, get_Java_u4, get_Java_u8): Likewise.
