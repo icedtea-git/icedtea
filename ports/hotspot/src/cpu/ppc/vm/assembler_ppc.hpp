@@ -451,10 +451,7 @@ class MacroAssembler : public Assembler {
   void dump_int(const char* prefix, Register src);
 #endif // PRODUCT
 
-  void bang_stack_with_offset(int offset)
-  {
-    Unimplemented();
-  }
+  void bang_stack_with_offset(int offset);
 };
 
 #ifdef ASSERT
