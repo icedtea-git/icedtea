@@ -281,23 +281,23 @@ void os::print_context(outputStream* st, void* context)
 
 extern "C" {
 
-#ifndef PPC32
+#ifdef PPC64
   void _Copy_conjoint_jints_atomic(jint* from, jint* to, size_t count)
   {
     Unimplemented();
   }
-#endif // !PPC32
+#endif // PPC64
 
-#ifndef PPC64
+#ifdef PPC32
   void _Copy_conjoint_jlongs_atomic(jlong* from, jlong* to, size_t count)
   {
-#if defined(PPC32) && defined(XXX_EVIL_EVIL_EVIL)
+#ifdef XXX_EVIL_EVIL_EVIL
     _Copy_conjoint_jints_atomic((jint *) from, (jint *) to, count * 2);
 #else
     Unimplemented();
-#endif // PPC32 && XXX_EVIL_EVIL_EVIL
+#endif // XXX_EVIL_EVIL_EVIL
   }
-#endif // !PPC64
+#endif // PPC32
 
   void _Copy_conjoint_jshorts_atomic(jshort* from, jshort* to, size_t count)
   {
