@@ -1,5 +1,12 @@
 2007-12-18  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/ppc/vm/bytes_ppc.hpp
+	(is_Java_byte_ordering_different): Add little endian support.
+	(get_Java_u2, get_Java_u4, get_Java_u8): Likewise.
+	(put_Java_u2, put_Java_u4, put_Java_u8): Likewise.
+
+2007-12-18  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
 	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp
 	(bang_stack_with_offset): Move function body from header.
