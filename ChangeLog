@@ -1,3 +1,9 @@
+2007-12-19  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-version.patch: Added patch to change bug report url.
+	* patches/icedtea-ecj.patch: Removed date from generated files.
+	* generated/*: Updated files.
+
 2007-12-18  Gary Benson  <gbenson@redhat.com>
 
 	* contrib/templater/*: Wrap all PPC-specifics with conditionals.
