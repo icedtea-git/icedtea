@@ -1,5 +1,11 @@
 2007-12-20  Lillian Angel  <langel@redhat.com>
 
+	Fixes Bug #65
+	* patches/icedtea-antialias.patch: Changed to only turn on AA when
+	text AA is on. Otherwise, AA is ignored.
+
+2007-12-20  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Added checks for ICEDTEA_HOME and SYSTEM_GCJ_DIR.
 	* Makefile.in: Regenerate.
 
