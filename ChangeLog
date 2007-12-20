@@ -1,8 +1,7 @@
 2007-12-20  Lillian Angel  <langel@redhat.com>
 
 	Fixes Bug #65
-	* patches/icedtea-antialias.patch: Changed to only turn on AA when
-	text AA is on. Otherwise, AA is ignored.
+	* patches/icedtea-antialias.patch: Removed. Antialiasing works.
 
 2007-12-20  Lillian Angel  <langel@redhat.com>
 
