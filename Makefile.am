@@ -325,14 +325,7 @@ endif
 stamps/bootstrap-directory-symlink.stamp: $(BOOTSTRAP_DIRECTORY_STAMP)
 	mkdir -p bootstrap
 	rm -f bootstrap/jdk1.6.0
-	if test -d $(ICEDTEA_HOME); \
-	then \
-	  ln -sf $(ICEDTEA_HOME) bootstrap/jdk1.6.0; \
-	else \
-	  echo $(ICEDTEA_HOME) " cannot be found. Try reconfiguring with " \
-	    "--with-icedtea-home=/path/to/java-icedtea-devel"; \
-          exit 1; \
-	fi
+	ln -sf $(ICEDTEA_HOME) bootstrap/jdk1.6.0; \
 	if ! bootstrap/jdk1.6.0/bin/java -version ; \
          then \
            echo "bootstrap/jdk1.6.0/bin/java" \
