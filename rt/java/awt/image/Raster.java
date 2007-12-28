@@ -329,8 +329,9 @@ public class Raster
       {
         SampleModel sm = new MultiPixelPackedSampleModel(dataType, w, h, bitsPerBand);
 
-        if (dataType == DataBuffer.TYPE_BYTE)
-          return new ByteInterleavedRaster(sm, location);
+        if ((dataType == DataBuffer.TYPE_BYTE) &&
+            (bitsPerBand == 1 || bitsPerBand == 2 || bitsPerBand == 4))
+          return new BytePackedRaster(sm, location);
         else if (dataType == DataBuffer.TYPE_USHORT || dataType == DataBuffer.TYPE_INT)
           return new SunWritableRaster(sm, location);
         else
@@ -480,8 +481,9 @@ public class Raster
     if (location == null)
       location = new Point(0,0);
 
-    if (dataBuffer.getDataType() == DataBuffer.TYPE_BYTE)
-      return new ByteInterleavedRaster(sm, dataBuffer, location);
+    if ((dataBuffer.getDataType() == DataBuffer.TYPE_BYTE) &&
+        (bitsPerPixel == 1 || bitsPerPixel == 2 || bitsPerPixel == 4))
+      return new BytePackedRaster(sm, dataBuffer, location);
     else if (dataBuffer.getDataType() == DataBuffer.TYPE_USHORT 
       || dataBuffer.getDataType() == DataBuffer.TYPE_INT)
       return new SunWritableRaster(sm, dataBuffer, location);
