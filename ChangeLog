@@ -1,3 +1,9 @@
+2007-12-28  Lillian Angel  <langel@redhat.com>
+
+	* rt/java/awt/image/Raster.java
+	(createPackedRaster): Changed to create a BytePackedRaster instead of
+	a ByteInterleavedRaster.
+
 2007-12-21  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Took out invalid check for ICEDTEA_HOME.
