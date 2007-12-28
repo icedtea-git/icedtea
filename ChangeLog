@@ -1,6 +1,13 @@
 2007-12-28  Lillian Angel  <langel@redhat.com>
 
 	* rt/java/awt/image/Raster.java
+	(createPackedRaster): Added dataType check and fixed if-else
+	conditions.
+	(createPackedRaster): Likewise.
+
+2007-12-28  Lillian Angel  <langel@redhat.com>
+
+	* rt/java/awt/image/Raster.java
 	(createPackedRaster): Changed to create a BytePackedRaster instead of
 	a ByteInterleavedRaster.
 
