@@ -1,3 +1,12 @@
+New in release 1.5 (2008-01-03)
+
+- ppc/ppc64 support.
+- ecj bootstrapping re-implemented.
+- Updated to OpenJDK b24 build (now uses mercurial).
+- System libraries (libpng, libjpeg, zlib, giflib) are used 
+instead of OpenJDK's implementations.
+- Several bug fixes.
+
 New in release 1.4 (2007-10-12)
 
 * Updated to OpenJDK b21 build (README and INSTALL updated accordingly).
