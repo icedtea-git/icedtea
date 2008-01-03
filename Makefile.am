@@ -117,6 +117,12 @@ snapshot: dist
 
 # Creates archive of openjdk.
 dist-openjdk:
+	if ! hg fclone -h; \
+	then \
+	echo "No forest extension found. Please refer to" \
+          "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
+          exit 1; \
+	fi
 	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-dist/openjdk
 	find -name \\.hg* | xargs rm -rf	
 	cd openjdk-dist && $(ZIP) -r openjdk-$(OPENJDK_VERSION) openjdk/
@@ -140,6 +146,12 @@ stamps/clone.stamp:
 	  if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
 	    $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
 	  else \
+	    if ! hg fclone -h; \
+            then \
+              echo "No forest extension found. Please refer to" \
+              "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
+              exit 1; \
+            fi; \
 	    hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk; \
 	  fi ; \
 	fi
