@@ -13,7 +13,6 @@ FIND_TOOL([FIND], [find])
 FIND_TOOL([PATCH], [patch])
 FIND_TOOL([ZIP], [zip])
 FIND_TOOL([UNZIP], [unzip])
-FIND_TOOL([MERCURIAL], [hg])
 FIND_TOOL([CHMOD], [chmod])
 dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.
@@ -117,6 +116,10 @@ WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
 AC_CHECK_WITH_CACAO
 ENABLE_FAST_BUILD
+
+if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
+  FIND_TOOL([MERCURIAL], [hg])
+fi
 
 CHECK_HEADERS
 
