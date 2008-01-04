@@ -666,11 +666,17 @@ snapshot: dist
 
 # Creates archive of openjdk.
 dist-openjdk:
-	if ! hg fclone -h; \
+	if ! hg; \
 	then \
-	echo "No forest extension found. Please refer to" \
-          "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
-          exit 1; \
+	  echo "Mercurial cannot be found. Please install it and try again."; \
+	  exit 1; \
+	else \
+	  if ! hg fclone -h; \
+	  then \
+	    echo "No forest extension found. Please refer to" \
+              "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
+            exit 1; \
+	  fi; \
 	fi
 	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-dist/openjdk
 	find -name \\.hg* | xargs rm -rf	

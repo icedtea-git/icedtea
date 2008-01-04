@@ -708,7 +708,6 @@ FIND
 PATCH
 ZIP
 UNZIP
-MERCURIAL
 CHMOD
 GAWK
 SYSTEM_GCJ_DIR
@@ -738,6 +737,7 @@ GNU_CLASSLIB_FOUND_TRUE
 GNU_CLASSLIB_FOUND_FALSE
 FAST_BUILD_TRUE
 FAST_BUILD_FALSE
+MERCURIAL
 CPP
 GREP
 EGREP
@@ -4481,115 +4481,6 @@ echo "$as_me: error: unzip program not found in PATH" >&2;}
 
 
 if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}hg", so it can be a program name with args.
-set dummy ${ac_tool_prefix}hg; ac_word=$2
-{ echo "$as_me:$LINENO: checking for $ac_word" >&5
-echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
-if test "${ac_cv_path_MERCURIAL+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  case $MERCURIAL in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_MERCURIAL="$MERCURIAL" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-  for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_MERCURIAL="$as_dir/$ac_word$ac_exec_ext"
-    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-MERCURIAL=$ac_cv_path_MERCURIAL
-if test -n "$MERCURIAL"; then
-  { echo "$as_me:$LINENO: result: $MERCURIAL" >&5
-echo "${ECHO_T}$MERCURIAL" >&6; }
-else
-  { echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6; }
-fi
-
-
-fi
-if test -z "$ac_cv_path_MERCURIAL"; then
-  ac_pt_MERCURIAL=$MERCURIAL
-  # Extract the first word of "hg", so it can be a program name with args.
-set dummy hg; ac_word=$2
-{ echo "$as_me:$LINENO: checking for $ac_word" >&5
-echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
-if test "${ac_cv_path_ac_pt_MERCURIAL+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  case $ac_pt_MERCURIAL in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_ac_pt_MERCURIAL="$ac_pt_MERCURIAL" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-  for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_ac_pt_MERCURIAL="$as_dir/$ac_word$ac_exec_ext"
-    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-ac_pt_MERCURIAL=$ac_cv_path_ac_pt_MERCURIAL
-if test -n "$ac_pt_MERCURIAL"; then
-  { echo "$as_me:$LINENO: result: $ac_pt_MERCURIAL" >&5
-echo "${ECHO_T}$ac_pt_MERCURIAL" >&6; }
-else
-  { echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6; }
-fi
-
-  if test "x$ac_pt_MERCURIAL" = x; then
-    MERCURIAL=""
-  else
-    case $cross_compiling:$ac_tool_warned in
-yes:)
-{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
-whose name does not start with the host triplet.  If you think this
-configuration is useful to you, please write to autoconf@gnu.org." >&5
-echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
-whose name does not start with the host triplet.  If you think this
-configuration is useful to you, please write to autoconf@gnu.org." >&2;}
-ac_tool_warned=yes ;;
-esac
-    MERCURIAL=$ac_pt_MERCURIAL
-  fi
-else
-  MERCURIAL="$ac_cv_path_MERCURIAL"
-fi
-
- if test x"$MERCURIAL" = x ; then
-   { { echo "$as_me:$LINENO: error: hg program not found in PATH" >&5
-echo "$as_me: error: hg program not found in PATH" >&2;}
-   { (exit 1); exit 1; }; }
- fi
-
-
-if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}chmod", so it can be a program name with args.
 set dummy ${ac_tool_prefix}chmod; ac_word=$2
 { echo "$as_me:$LINENO: checking for $ac_word" >&5
@@ -6915,6 +6806,118 @@ fi
 fi
 
 
+
+if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
+  if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}hg", so it can be a program name with args.
+set dummy ${ac_tool_prefix}hg; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_MERCURIAL+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $MERCURIAL in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_MERCURIAL="$MERCURIAL" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_MERCURIAL="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+MERCURIAL=$ac_cv_path_MERCURIAL
+if test -n "$MERCURIAL"; then
+  { echo "$as_me:$LINENO: result: $MERCURIAL" >&5
+echo "${ECHO_T}$MERCURIAL" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_MERCURIAL"; then
+  ac_pt_MERCURIAL=$MERCURIAL
+  # Extract the first word of "hg", so it can be a program name with args.
+set dummy hg; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ac_pt_MERCURIAL+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ac_pt_MERCURIAL in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_MERCURIAL="$ac_pt_MERCURIAL" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ac_pt_MERCURIAL="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_MERCURIAL=$ac_cv_path_ac_pt_MERCURIAL
+if test -n "$ac_pt_MERCURIAL"; then
+  { echo "$as_me:$LINENO: result: $ac_pt_MERCURIAL" >&5
+echo "${ECHO_T}$ac_pt_MERCURIAL" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_pt_MERCURIAL" = x; then
+    MERCURIAL=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    MERCURIAL=$ac_pt_MERCURIAL
+  fi
+else
+  MERCURIAL="$ac_cv_path_MERCURIAL"
+fi
+
+ if test x"$MERCURIAL" = x ; then
+   { { echo "$as_me:$LINENO: error: hg program not found in PATH" >&5
+echo "$as_me: error: hg program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
+
+
+fi
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -10636,10 +10639,10 @@ FIND!$FIND$ac_delim
 PATCH!$PATCH$ac_delim
 ZIP!$ZIP$ac_delim
 UNZIP!$UNZIP$ac_delim
-MERCURIAL!$MERCURIAL$ac_delim
 CHMOD!$CHMOD$ac_delim
 GAWK!$GAWK$ac_delim
 SYSTEM_GCJ_DIR!$SYSTEM_GCJ_DIR$ac_delim
+SYSTEM_ICEDTEA_DIR!$SYSTEM_ICEDTEA_DIR$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -10681,7 +10684,6 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
-SYSTEM_ICEDTEA_DIR!$SYSTEM_ICEDTEA_DIR$ac_delim
 SYSTEM_ANT_DIR!$SYSTEM_ANT_DIR$ac_delim
 WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
 WITH_ICEDTEA_FALSE!$WITH_ICEDTEA_FALSE$ac_delim
@@ -10707,6 +10709,7 @@ GNU_CLASSLIB_FOUND_TRUE!$GNU_CLASSLIB_FOUND_TRUE$ac_delim
 GNU_CLASSLIB_FOUND_FALSE!$GNU_CLASSLIB_FOUND_FALSE$ac_delim
 FAST_BUILD_TRUE!$FAST_BUILD_TRUE$ac_delim
 FAST_BUILD_FALSE!$FAST_BUILD_FALSE$ac_delim
+MERCURIAL!$MERCURIAL$ac_delim
 CPP!$CPP$ac_delim
 GREP!$GREP$ac_delim
 EGREP!$EGREP$ac_delim
