@@ -694,3 +694,7 @@ tools-class-files: stamps/tools-class-files.stamp
 tools-copy-source-files: stamps/tools-copy-source-files.stamp
 
 tools: stamps/tools.stamp
+
+ports: stamps/ports.stamp
+
+clean: distclean-local

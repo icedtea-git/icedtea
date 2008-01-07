@@ -1,5 +1,13 @@
 2008-01-07  Lillian Angel  <langel@redhat.com>
 
+	Fixes Bug #93
+	* Makefile.am
+	(clean): New target- alias for distclean.
+	(ports): New target- alias for stamps/ports.stamp.
+
+2008-01-07  Lillian Angel  <langel@redhat.com>
+	
+	Fixes Bug #92
 	* Makefile.am
 	(gcjwebplugin.so): Added check for ENABLE_PLUGIN.
 	* Makefile.in: Regenerate.
