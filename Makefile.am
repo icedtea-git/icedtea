@@ -438,10 +438,13 @@ icedtea: stamps/tools.stamp stamps/plugs.stamp \
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ j2se_only
-	cp -af gcjwebplugin.so \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -af gcjwebplugin.so \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	if test "$(ENABLE_PLUGIN)" == "yes" ; \
+        then \
+	  cp -af gcjwebplugin.so \
+	    $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
+	  cp -af gcjwebplugin.so \
+	    $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
+	fi
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
 icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
@@ -451,10 +454,13 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  j2se_fastdebug_only
-	cp -af gcjwebplugin.so \
-	 $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -af gcjwebplugin.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	if test "$(ENABLE_PLUGIN)" == "yes" ; \
+        then \
+	  cp -af gcjwebplugin.so \
+	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
+	  cp -af gcjwebplugin.so \
+	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
+	fi
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
 
@@ -664,11 +670,14 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
-	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
-	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
-	  $(GTK_CFLAGS) $(GTK_LIBS) \
-	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -fpic -shared -o $@ $<
+	if test "$(ENABLE_PLUGIN)" == "yes" ; \
+	then \
+	  $(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+	    $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
+	    $(GTK_CFLAGS) $(GTK_LIBS) \
+	    -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	    -fpic -shared -o $@ $< ; \
+	fi
 
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so

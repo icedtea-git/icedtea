@@ -99,6 +99,7 @@ ECHO_T = @ECHO_T@
 ECJ = @ECJ@
 ECJ_JAR = @ECJ_JAR@
 EGREP = @EGREP@
+ENABLE_PLUGIN = @ENABLE_PLUGIN@
 EXEEXT = @EXEEXT@
 FIND = @FIND@
 FREETYPE2_INC_DIR = @FREETYPE2_INC_DIR@
@@ -1042,11 +1043,14 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
-	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
-	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
-	  $(GTK_CFLAGS) $(GTK_LIBS) \
-	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -fpic -shared -o $@ $<
+	if test "$(ENABLE_PLUGIN)" == "yes" ; \
+	then \
+	  $(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+	    $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
+	    $(GTK_CFLAGS) $(GTK_LIBS) \
+	    -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	    -fpic -shared -o $@ $< ; \
+	fi
 
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
