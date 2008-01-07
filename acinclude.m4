@@ -214,7 +214,12 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
       LIBGCJ_JAR=/usr/share/java/libgcj-4.1.2.jar
       AC_MSG_RESULT(${LIBGCJ_JAR})
     else
-      AC_MSG_RESULT(no)
+      if test -e "/usr/share/java/libgcj-4.1.jar"; then
+        LIBGCJ_JAR=/usr/share/java/libgcj-4.1.jar
+	AC_MSG_RESULT(${LIBGCJ_JAR})
+      else
+        AC_MSG_RESULT(no)
+      fi
     fi
   fi
   if test -z "${LIBGCJ_JAR}"; then
