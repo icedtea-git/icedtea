@@ -713,6 +713,7 @@ GAWK
 SYSTEM_GCJ_DIR
 SYSTEM_ICEDTEA_DIR
 SYSTEM_ANT_DIR
+ENABLE_PLUGIN
 WITH_ICEDTEA_TRUE
 WITH_ICEDTEA_FALSE
 BUILD_ARCH_DIR
@@ -1351,6 +1352,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
+  --disable-gcjwebplugin  Disable compilation of browser plugin
   --enable-fast-build     optimize for quick building: use -O0 and do not
                           build documentation
 
@@ -4752,6 +4754,15 @@ else
 
               SYSTEM_ANT_DIR=/usr/share/ant
 
+fi
+
+
+
+# Check whether --enable-gcjwebplugin was given.
+if test "${enable_gcjwebplugin+set}" = set; then
+  enableval=$enable_gcjwebplugin; ENABLE_PLUGIN="$val"
+else
+  ENABLE_PLUGIN='yes'
 fi
 
 
@@ -9035,6 +9046,7 @@ echo "$as_me: error: \"zlib not found - try installing zlib-devel\"" >&2;}
 fi
 
 
+if test "$ENABLE_PLUGIN" = "yes"; then
 
 
 if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
@@ -9839,6 +9851,7 @@ fi
 
 
 
+fi
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -10685,6 +10698,7 @@ ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
 SYSTEM_ANT_DIR!$SYSTEM_ANT_DIR$ac_delim
+ENABLE_PLUGIN!$ENABLE_PLUGIN$ac_delim
 WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
 WITH_ICEDTEA_FALSE!$WITH_ICEDTEA_FALSE$ac_delim
 BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
@@ -10724,7 +10738,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 38; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 39; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

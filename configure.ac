@@ -68,6 +68,12 @@ AC_ARG_WITH([ant-home],
             ])
 AC_SUBST(SYSTEM_ANT_DIR)
 
+AC_ARG_ENABLE([gcjwebplugin],
+	      [AS_HELP_STRING([--disable-gcjwebplugin], 
+	      		      [Disable compilation of browser plugin])],
+	      [ENABLE_PLUGIN="$val"], [ENABLE_PLUGIN='yes'])
+AC_SUBST(ENABLE_PLUGIN)
+
 AC_ARG_WITH([icedtea],
         [AS_HELP_STRING([--with-icedtea],
                         [build IcedTea with system-installed IcedTea])],
@@ -136,6 +142,7 @@ AC_CHECK_LIB(z, main,
 	, [AC_MSG_ERROR("zlib not found - try installing zlib-devel")])
 
 dnl Check for plugin support headers and libraries.
+if test "$ENABLE_PLUGIN" = "yes"; then
 PKG_CHECK_MODULES(MOZILLA, mozilla-plugin, [MOZILLA_FOUND=yes], \
   [MOZILLA_FOUND=no])
 if test "x${MOZILLA_FOUND}" = xno
@@ -177,5 +184,6 @@ AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIB_LIBS)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
+fi
 
 AC_OUTPUT
