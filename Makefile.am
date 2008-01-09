@@ -12,7 +12,7 @@ distclean-local: clean-copy
 	rm -rf lib
 	rm -rf openjdk-ecj
 	rm -rf openjdk
-	rm -rf tools
+	rm -rf hotspot-tools
 	rm -f gcjwebplugin.so
 
 install:
@@ -24,7 +24,7 @@ install:
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
 	clean-tools-jar clean-tools clean-shared-objects \
-	clean-copy clean-rt clean-gcjwebplugin
+	clean-copy clean-rt clean-gcjwebplugin clean-tools
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports
@@ -225,6 +225,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-c1-unimplemented.patch \
 	patches/icedtea-timerqueue.patch \
+	patches/icedtea-jnlp-launcher.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
@@ -433,34 +434,40 @@ endif
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-icedtea: stamps/tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
+icedtea: stamps/hotspot-tools.stamp stamps/plugs.stamp \
+	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
+	stamps/tools.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ j2se_only
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-        then \
+	  then \
 	  cp -af gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
 	  cp -af gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
+	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/tools.jar \
+	  -C lib/tools .
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
 icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
-	stamps/tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
+	stamps/hotspot-tools.stamp stamps/plugs.stamp \
+	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
+	stamps/tools.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  j2se_fastdebug_only
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-        then \
+	  then \
 	  cp -af gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
 	  cp -af gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
+	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/tools.jar \
+	  -C lib/tools .
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
 
@@ -476,7 +483,7 @@ icedtea-against-icedtea: \
 # OpenJDK ecj Targets
 # ===================
 
-stamps/icedtea-ecj.stamp: stamps/tools.stamp stamps/plugs.stamp \
+stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
@@ -506,9 +513,9 @@ stamps/plugs.stamp: $(SHARED_OBJECT_FILES) \
 	mkdir -p stamps
 	touch stamps/plugs.stamp
 
-stamps/tools.stamp: bootstrap/jdk1.7.0/jre/lib/tools.jar
+stamps/hotspot-tools.stamp: bootstrap/jdk1.7.0/jre/lib/tools.jar
 	mkdir -p stamps
-	touch stamps/tools.stamp
+	touch stamps/hotspot-tools.stamp
 
 clean-plugs: clean-plugs clean-shared-objects \
 	clean-copy clean-rt
@@ -516,7 +523,7 @@ clean-plugs: clean-plugs clean-shared-objects \
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
 clean-tools-jar: clean-tools-jar clean-tools
-	rm -f stamps/tools.stamp
+	rm -f stamps/hotspot-tools.stamp
 	rm -rf tools/
 	rm -f bootstrap/jdk1.7.0/jre/lib/tools.jar
 
@@ -578,62 +585,62 @@ OPENJDK_SOURCEPATH_DIRS = \
         $(SHARE):$(SOLARIS):$(LANGTOOLS):$(JAXP):$(CORBA):$(JAXWS)
 
 # tools.jar class files.
-stamps/tools-copy-source-files.stamp: stamps/patch.stamp
+stamps/hotspot-tools-copy-source-files.stamp: stamps/patch.stamp
 	for copy_dir in `cat tools-copy/tools-jdk-copy-files.txt` ; \
-        do \
-          mkdir -p tools/$$copy_dir ; \
+	do \
+	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -arf openjdk/jdk/src/share/classes/$$copy_dir/* \
-            tools/$$copy_dir ; \
-        done
+	    hotspot-tools/$$copy_dir ; \
+	done
 	
 	for copy_dir in `cat tools-copy/tools-langtools-copy-files.txt` ; \
 	do \
-	  mkdir -p tools/$$copy_dir ; \
+	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -arf openjdk/langtools/src/share/classes/$$copy_dir/* \
-	    tools/$$copy_dir ; \
+	    hotspot-tools/$$copy_dir ; \
 	done
-
+	
 	for copy_dir in `cat tools-copy/tools-corba-copy-files.txt` ; \
 	do \
-	  mkdir -p tools/$$copy_dir ; \
+	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -arf openjdk/corba/src/share/classes/$$copy_dir/* \
-	    tools/$$copy_dir ; \
+	    hotspot-tools/$$copy_dir ; \
 	done
-
+	
 	for copy_dir in `cat tools-copy/tools-jaxws-copy-files.txt` ; \
 	do \
-	  mkdir -p tools/$$copy_dir ; \
+	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -arf openjdk/jaxws/src/share/classes/$$copy_dir/* \
-	    tools/$$copy_dir ; \
+	    hotspot-tools/$$copy_dir ; \
 	done
 	
 	mkdir -p stamps
-	touch stamps/tools-copy-source-files.stamp
+	touch stamps/hotspot-tools-copy-source-files.stamp
 
-tools-source-files.txt: stamps/clone.stamp \
-	stamps/tools-copy-source-files.stamp
-	find tools -name '*.java' | sort > $@
-	mkdir -p lib/tools
+hotspot-tools-source-files.txt: stamps/clone.stamp \
+	stamps/hotspot-tools-copy-source-files.stamp
+	find hotspot-tools -name '*.java' | sort > $@
+	mkdir -p lib/hotspot-tools
 
-stamps/tools-class-files.stamp: tools-source-files.txt
-	$(JAVAC) $(MEMORY_LIMIT) -g -d lib/tools -bootclasspath '' -source 1.6 \
-	  -sourcepath 'rt:tools:$(OPENJDK_SOURCEPATH_DIRS):generated' \
+stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt
+	$(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools -bootclasspath '' -source 1.6 \
+	  -sourcepath 'rt:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):generated' \
 	  @$<
 	mkdir -p stamps
-	touch stamps/tools-class-files.stamp
+	touch stamps/hotspot-tools-class-files.stamp
 
-clean-tools:
-	rm -rf lib/tools
-	rm -f stamps/tools-class-files.stamp
-	rm -f tools-source-files.txt
-	rm -f stamps/tools-copy-source-files.stamp
+clean-hotspot-tools:
+	rm -rf lib/hotspot-tools
+	rm -f stamps/hotspot-tools-class-files.stamp
+	rm -f hotspot-tools-source-files.txt
+	rm -f stamps/hotspot-tools-copy-source-files.stamp
 
 # tools.jar
-bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/tools-class-files.stamp
+bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib/
-	$(JAR) cf $@ -C lib/tools com -C lib/tools sun \
-	  -C lib/tools org -C lib/tools gnu -C lib/tools java \
-	  -C lib/tools javax
+	$(JAR) cf $@ -C lib/hotspot-tools com -C lib/hotspot-tools sun \
+	  -C lib/hotspot-tools org -C lib/hotspot-tools gnu -C lib/hotspot-tools java \
+	  -C lib/hotspot-tools javax
 	if test -d bootstrap/ecj ; \
 	then \
 	  mkdir -p bootstrap/ecj/lib/; \
@@ -682,6 +689,30 @@ gcjwebplugin.so: gcjwebplugin.cc
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
 
+#extra tools
+stamps/tools.stamp: stamps/tools-class-files.stamp
+	touch stamps/tools.stamp
+
+tools-source-files.txt: stamps/clone.stamp
+	find tools -name '*.java' | sort > $@
+
+stamps/tools-class-files.stamp: tools-source-files.txt \
+	stamps/rt-class-files.stamp
+	mkdir -p lib/tools
+	$(JAVAC) $(MEMORY_LIMIT) -g -d lib/tools \
+	  -source 1.6 \
+	  -sourcepath tools \
+	  @$<
+	cp tools/default.jnlp lib/tools
+	cp -r tools/netx/jnlp/resources lib/tools/netx/jnlp
+	mkdir -p stamps
+	touch stamps/tools-class-files.stamp
+
+clean-tools:
+	rm -rf lib/tools
+	rm -rf stamps/tools-class-files.stamp
+	rm -rf tools-source-files.txt
+
 # All Stamped Targets
 # ===================
 
@@ -713,9 +744,11 @@ plugs: stamps/plugs.stamp
 
 rt-class-files: stamps/rt-class-files.stamp
 
-tools-class-files: stamps/tools-class-files.stamp
+hotspot-tools-class-files: stamps/hotspot-tools-class-files.stamp
 
-tools-copy-source-files: stamps/tools-copy-source-files.stamp
+hotspot-tools-copy-source-files: stamps/hotspot-tools-copy-source-files.stamp
+
+hotspot-tools: stamps/hotspot-tools.stamp
 
 tools: stamps/tools.stamp
 
