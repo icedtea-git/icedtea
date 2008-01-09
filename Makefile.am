@@ -713,8 +713,8 @@ clean-tools:
 	rm -rf stamps/tools-class-files.stamp
 	rm -rf tools-source-files.txt
 
-# All Stamped Targets
-# ===================
+# Target Aliases
+# ===============
 
 bootstrap-directory-ecj: stamps/bootstrap-directory-ecj.stamp
 
@@ -729,8 +729,6 @@ copy-source-files: stamps/copy-source-files.stamp
 clone: stamps/clone.stamp
 
 clone-ecj: stamps/clone-ecj.stamp
-
-clone: stamps/clone.stamp
 
 icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
 
@@ -752,6 +750,10 @@ hotspot-tools: stamps/hotspot-tools.stamp
 
 tools: stamps/tools.stamp
 
+tools-class-files: stamps/tools-class-files.stamp
+
 ports: stamps/ports.stamp
+
+ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
