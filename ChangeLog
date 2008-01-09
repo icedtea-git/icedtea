@@ -1,3 +1,103 @@
+2008-01-09  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Added building of NetX as our drop-in replacement for
+	javaws. Since upstream NetX is dormant, we will be hosting and modifying
+	the NetX source in this repository, particularly in the new tools
+	directory. The old tools directory which was used in building the
+	bootstrap/jdk1.7.0 tools.jar during the build has been renamed to 
+	hotspot-tools.  
+	* Makefile.in: Regenerated.
+	* configure.ac: Added check for fastjar, required for NetX when building
+	with ecj.
+	* configure: Regenerated.
+	* README: Updated.
+	* patches/icedtea-jnlp-launcher.patch: New File.
+	* tools/default.jnlp: New File.
+	* tools/javax/jnlp/BasicService.java: Likewise.
+	* tools/javax/jnlp/ClipboardService.java: Likewise.
+	* tools/javax/jnlp/DownloadService.java: Likewise.
+	* tools/javax/jnlp/DownloadServiceListener.java: Likewise.
+	* tools/javax/jnlp/ExtensionInstallerService.java: Likewise.
+	* tools/javax/jnlp/FileContents.java: Likewise.
+	* tools/javax/jnlp/FileOpenService.java: Likewise.
+	* tools/javax/jnlp/FileSaveService.java: Likewise.
+	* tools/javax/jnlp/JNLPRandomAccessFile.java: Likewise.
+	* tools/javax/jnlp/PersistenceService.java: Likewise.
+	* tools/javax/jnlp/PrintService.java: Likewise.
+	* tools/javax/jnlp/ServiceManager.java: Likewise.
+	* tools/javax/jnlp/ServiceManagerStub.java: Likewise.
+	* tools/javax/jnlp/UnavailableServiceException.java: Likewise.
+	* tools/nanoxml/XMLElement.java: Likewise.
+	* tools/nanoxml/XMLParseException.java: Likewise.
+	* tools/netx/jnlp/AppletDesc.java: Likewise.
+	* tools/netx/jnlp/ApplicationDesc.java: Likewise.
+	* tools/netx/jnlp/ComponentDesc.java: Likewise.
+	* tools/netx/jnlp/DefaultLaunchHandler.java: Likewise.
+	* tools/netx/jnlp/ExtensionDesc.java: Likewise.
+	* tools/netx/jnlp/IconDesc.java: Likewise.
+	* tools/netx/jnlp/InformationDesc.java: Likewise.
+	* tools/netx/jnlp/InstallerDesc.java: Likewise.
+	* tools/netx/jnlp/JARDesc.java: Likewise.
+	* tools/netx/jnlp/JNLPFile.java: Likewise.
+	* tools/netx/jnlp/JREDesc.java: Likewise.
+	* tools/netx/jnlp/LaunchException.java: Likewise.
+	* tools/netx/jnlp/LaunchHandler.java: Likewise.
+	* tools/netx/jnlp/Launcher.java: Likewise.
+	* tools/netx/jnlp/PackageDesc.java: Likewise.
+	* tools/netx/jnlp/ParseException.java: Likewise.
+	* tools/netx/jnlp/Parser.java: Likewise.
+	* tools/netx/jnlp/PropertyDesc.java: Likewise.
+	* tools/netx/jnlp/ResourcesDesc.java: Likewise.
+	* tools/netx/jnlp/SecurityDesc.java: Likewise.
+	* tools/netx/jnlp/Version.java: Likewise.
+	* tools/netx/jnlp/cache/CacheEntry.java: Likewise.
+	* tools/netx/jnlp/cache/CacheUtil.java: Likewise.
+	* tools/netx/jnlp/cache/DefaultDownloadIndicator.java: Likewise.
+	* tools/netx/jnlp/cache/DownloadIndicator.java: Likewise.
+	* tools/netx/jnlp/cache/Resource.java: Likewise.
+	* tools/netx/jnlp/cache/ResourceTracker.java: Likewise.
+	* tools/netx/jnlp/cache/UpdatePolicy.java: Likewise.
+	* tools/netx/jnlp/cache/package.html: Likewise.
+	* tools/netx/jnlp/event/ApplicationEvent.java: Likewise.
+	* tools/netx/jnlp/event/ApplicationListener.java: Likewise.
+	* tools/netx/jnlp/event/DownloadEvent.java: Likewise.
+	* tools/netx/jnlp/event/DownloadListener.java: Likewise.
+	* tools/netx/jnlp/event/package.html: Likewise.
+	* tools/netx/jnlp/package.html: Likewise.
+	* tools/netx/jnlp/resources/Manifest.mf: Likewise.
+	* tools/netx/jnlp/resources/Messages.properties: Likewise.
+	* tools/netx/jnlp/resources/default.jnlp: Likewise.
+	* tools/netx/jnlp/resources/install.png: Likewise.
+	* tools/netx/jnlp/resources/netx-icon.png: Likewise.
+	* tools/netx/jnlp/runtime/AppThreadGroup.java: Likewise.
+	* tools/netx/jnlp/runtime/AppletAudioClip.java: Likewise.
+	* tools/netx/jnlp/runtime/AppletEnvironment.java: Likewise.
+	* tools/netx/jnlp/runtime/AppletInstance.java: Likewise.
+	* tools/netx/jnlp/runtime/ApplicationInstance.java: Likewise.
+	* tools/netx/jnlp/runtime/Boot.java: Likewise.
+	* tools/netx/jnlp/runtime/Boot13.java: Likewise.
+	* tools/netx/jnlp/runtime/InstallDialog.java: Likewise.
+	* tools/netx/jnlp/runtime/JNLPClassLoader.java: Likewise.
+	* tools/netx/jnlp/runtime/JNLPPolicy.java: Likewise.
+	* tools/netx/jnlp/runtime/JNLPRuntime.java: Likewise.
+	* tools/netx/jnlp/runtime/JNLPSecurityManager.java: Likewise.
+	* tools/netx/jnlp/runtime/package.html: Likewise.
+	* tools/netx/jnlp/services/ServiceUtil.java: Likewise.
+	* tools/netx/jnlp/services/XBasicService.java: Likewise.
+	* tools/netx/jnlp/services/XDownloadService.java: Likewise.
+	* tools/netx/jnlp/services/XExtensionInstallerService.java: Likewise.
+	* tools/netx/jnlp/services/XFileContents.java: Likewise.
+	* tools/netx/jnlp/services/XPersistenceService.java: Likewise.
+	* tools/netx/jnlp/services/XServiceManagerStub.java: Likewise.
+	* tools/netx/jnlp/services/package.html: Likewise.
+	* tools/netx/jnlp/tools/JarRunner.java: Likewise.
+	* tools/netx/jnlp/tools/JarSigner.java: Likewise.
+	* tools/netx/jnlp/tools/JarSignerResources.java: Likewise.
+	* tools/netx/jnlp/tools/KeyStoreUtil.java: Likewise.
+	* tools/netx/jnlp/util/PropertiesFile.java: Likewise.
+	* tools/netx/jnlp/util/Reflect.java: Likewise.
+	* tools/netx/jnlp/util/WeakList.java: Likewise.
+
 2008-01-07  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Added Dalibor Topic.

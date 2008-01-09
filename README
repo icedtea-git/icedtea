@@ -103,3 +103,17 @@ openjdk/jdk/src/share/classes/sun/applet/PluginMain.java are added to
 rt.jar and tools.jar to provide gcjwebplugin with an interface into
 the appletviewer code.  This support code is provided in
 patches/icedtea-plugin.patch.
+
+NetX
+====
+
+NetX provides a drop-in replacement for javaws (Java Web Start). Since
+upstream NetX is dormant, we will be hosting and modifying the sources
+in the IcedTea repository, particularly in the icedtea/tools directory.
+
+The NetX sources are built into openjdk/build/arch/j2sdk-image/lib/tools.jar
+and a javaws binary is created in openjdk/build/arch/j2sdk-image/bin/.
+
+IcedTea's NetX currently supports verification of signed jars. This can be
+enabled by passing the -verify option to javaws.
+
