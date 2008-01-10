@@ -313,6 +313,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-c1-unimplemented.patch \
 	patches/icedtea-timerqueue.patch \
 	patches/icedtea-jnlp-launcher.patch \
+	patches/icedtea-generated.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
