@@ -466,7 +466,7 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	  cp -af gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
-	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/tools.jar \
+	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/lib/tools.jar \
 	  -C lib/tools .
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
