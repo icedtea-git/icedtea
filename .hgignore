@@ -15,6 +15,7 @@ javac
 javap
 gcjwebplugin.so
 rt-source-files.txt
+hotspot-tools-source-files.txt
 tools-source-files.txt
 rt/com/sun/jdi/AbsentInformationException.java
 rt/com/sun/jdi/Accessible.java
@@ -432,4 +433,3 @@ generated/sun/awt/X11/XAWTIcon64_java_icon32_png.java
 generated/sun/awt/X11/XAWTIcon64_java_icon48_png.java
 generated/sun/awt/X11/generator/sizer.32
 generated/sun/awt/X11/generator/sizer.32.c
-generated/sun/awt/X11/generator/sizes.32
