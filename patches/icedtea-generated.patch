@@ -5,6 +5,6 @@
  
  SPP = spp.sh
 -SPP_CMD = $(SH) $(SPP)
-+SPP_CMD = /bin/sh $(SPP)
++SPP_CMD = /bin/bash $(SPP)
  
  FILES_genout = $(FILES_gen:%.java=$(GENSRCDIR)/%.java)
