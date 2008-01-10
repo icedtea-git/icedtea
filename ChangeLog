@@ -1,3 +1,9 @@
+2008-01-10  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(icedtea-debug): Fixed path. No longer failing.
+	* Makefile.in: Regenerate.
+
 2008-01-09  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Added missing target aliases.
