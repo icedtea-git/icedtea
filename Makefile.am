@@ -435,7 +435,8 @@ endif
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-icedtea: stamps/hotspot-tools.stamp stamps/plugs.stamp \
+icedtea: stamps/bootstrap-directory-symlink.stamp \
+	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
 	stamps/tools.stamp
 	$(MAKE) \
