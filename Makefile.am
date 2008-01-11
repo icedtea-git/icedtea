@@ -215,6 +215,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-timerqueue.patch \
 	patches/icedtea-jnlp-launcher.patch \
 	patches/icedtea-generated.patch \
+	patches/icedtea-lib64.patch
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
