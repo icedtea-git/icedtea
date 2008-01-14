@@ -1,3 +1,11 @@
+2008-01-14  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-libraries.patch
+	(jpegdecoder.c): Changed dlopen calls to use full-paths and to check
+	/usr/lib64, if libjpeg.so is not found in /usr/lib. Cannot depend on
+	default search paths in this case.
+	(imageioJPEG.c): Likewise.
+
 2008-01-13  Lillian Angel  <langel@redhat.com>
 
 	Fixes Bug #98
