@@ -1,3 +1,10 @@
+2008-01-13  Lillian Angel  <langel@redhat.com>
+
+	Fixes Bug #98
+	* patches/icedtea-libraries.patch
+	(jpegdecoder.c): Fixed paths in dlopen calls.
+	(imageioJPEG.c): Likewise.
+
 2008-01-11  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-lib64.patch: New patch. Properly sets system
