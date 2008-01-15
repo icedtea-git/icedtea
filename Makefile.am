@@ -62,8 +62,7 @@ ICEDTEA_ENV = \
 
 if WITH_CACAO
 ICEDTEA_ENV += \
-	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)" \
-	"ALT_JDK_IMPORT_PATH=$(CACAO)"
+	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
 endif
 
 env:
@@ -103,8 +102,7 @@ ICEDTEA_ENV_ECJ = \
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
-	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)" \
-	"ALT_JDK_IMPORT_PATH=$(CACAO)"
+	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
 endif
 
 env-ecj:
@@ -233,14 +231,7 @@ ICEDTEA_PATCHES = \
 
 if WITH_CACAO
 ICEDTEA_PATCHES += \
-	patches/icedtea-cacao-Compiler-gcc-gmk.patch \
-	patches/icedtea-cacao-Defs-linux-gmk.patch \
-	patches/icedtea-cacao-Platform-gmk.patch \
-	patches/icedtea-cacao-Program-gmk.patch \
-	patches/icedtea-cacao-docs-Makefile.patch \
-	patches/icedtea-cacao-instrument-Makefile.patch \
-	patches/icedtea-cacao-java-c.patch \
-	patches/icedtea-cacao-jvm-cfg.patch
+	patches/icedtea-cacao.patch
 endif
 
 stamps/patch.stamp: stamps/clone.stamp
@@ -429,7 +420,11 @@ clean-bootstrap-directory-symlink-ecj:
 # ===============
 
 if WITH_ICEDTEA
+if WITH_CACAO
+  MEMORY_LIMIT = -J-Xmx1024m
+else
   MEMORY_LIMIT = -J-Xmx512m
+endif
 else
   MEMORY_LIMIT =
 endif
