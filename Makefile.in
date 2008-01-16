@@ -314,7 +314,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-timerqueue.patch \
 	patches/icedtea-jnlp-launcher.patch \
 	patches/icedtea-generated.patch \
-	patches/icedtea-lib64.patch
+	patches/icedtea-lib64.patch \
+	$(FAST_BUILD_PATCH) \
+	$(DISTRIBUTION_PATCHES)
 
 
 # Patch OpenJDK for plug replacements and ecj.
@@ -718,8 +720,6 @@ stamps/ports.stamp: stamps/clone.stamp
 	done
 	mkdir -p stamps
 	touch stamps/ports.stamp
-	$(FAST_BUILD_PATCH) \
-	$(DISTRIBUTION_PATCHES)
 
 stamps/patch.stamp: stamps/clone.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
