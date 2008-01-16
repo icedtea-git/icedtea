@@ -1,3 +1,15 @@
+2008-01-16  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-ecj.patch
+	(langtools/make/Makefile): Removed JAVAC, and added javac.executable
+	to ANT_OPTIONS. The correct javac is now used when ant is run.
+	(jaxws/make/Makefile): Likewise.
+	(jaxp/make/Makefile): Likewise.
+	(langtools/make/build.xml): Added executable arg to all javac
+	instances.
+	(jaxp/make/build.xml): Likewise.
+	(jaxws/make/build.xml): Likewise.
+
 2008-01-14  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-libraries.patch

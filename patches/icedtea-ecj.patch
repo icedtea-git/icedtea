@@ -91,28 +91,6 @@
  	    $(ECHO) "}; }" >> $$classname;  \
  	done
  	$(TOUCH) $@
---- openjdk.old/langtools/make/Makefile	2007-10-29 10:51:24.000000000 -0400
-+++ openjdk-ecj/langtools/make/Makefile	2007-10-29 10:56:14.000000000 -0400
-@@ -113,7 +113,7 @@
- 
- ifdef ALT_BOOTDIR
-   ANT_OPTIONS += -Dboot.java.home=$(ALT_BOOTDIR)
--  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
-+  ANT_JAVA_HOME = JAVAC=$(ALT_BOOTDIR)/bin/javac
- endif
- 
- ifdef ALT_OUTPUTDIR
---- openjdk.old/jaxp/make/Makefile	2007-10-29 10:51:24.000000000 -0400
-+++ openjdk-ecj/jaxp/make/Makefile	2007-10-29 10:57:29.000000000 -0400
-@@ -80,7 +80,7 @@
- endif
- 
- ifdef ALT_BOOTDIR
--  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
-+  ANT_JAVA_HOME = JAVAC=$(ALT_BOOTDIR)/bin/javac
- endif
- 
- ifdef ALT_OUTPUTDIR
 --- openjdk.old/corba/make/org/omg/sources/Makefile	2007-10-12 03:49:14.000000000 -0400
 +++ openjdk-ecj/corba/make/org/omg/sources/Makefile	2007-10-30 11:57:03.000000000 -0400
 @@ -93,8 +93,6 @@
@@ -650,63 +628,6 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
  
  # options for the <javadoc> task for javac
  javadoc.jls3.url=http://java.sun.com/docs/books/jls/
-diff -ru openjdk-ecj.orig/jaxp/make/build.xml openjdk-ecj/jaxp/make/build.xml
---- openjdk-ecj.orig/jaxp/make/build.xml	2007-10-12 08:50:26.000000000 +0100
-+++ openjdk-ecj/jaxp/make/build.xml	2007-11-09 10:25:54.000000000 +0000
-@@ -71,7 +71,8 @@
-       <mkdir dir="${build.toolclasses.dir}"/>
-       <javac srcdir="${make.tools.dir}/StripProperties"
- 		destdir="${build.toolclasses.dir}/"
--		classpath="${ant.home}/lib/ant.jar"/>
-+		classpath="${ant.home}/lib/ant.jar"
-+		source="1.5"/>
-       <taskdef name="pstrip"
- 		 classname="StripPropertiesTask"
- 		 classpath="${build.toolclasses.dir}/"/>
-@@ -85,7 +86,8 @@
-              destdir="${build.classes.dir}"
-              memoryInitialSize="${javac.memoryInitialSize}"
-              memoryMaximumSize="${javac.memoryMaximumSize}"
--             target="${javac.target}">
-+             target="${javac.target}"
-+             source="1.5">
-          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
-          <compilerarg line="${javac.version.opt}"/>
-       </javac>
---- openjdk.old/langtools/make/build.xml	2007-10-12 03:47:30.000000000 -0400
-+++ openjdk-ecj/langtools/make/build.xml	2007-11-12 10:30:47.000000000 -0500
-@@ -497,7 +497,9 @@
-                        includes="@{includes}"
-                        sourcepath=""
-                        includeAntRuntime="no"
--                       target="@{javac.target}">
-+                       target="@{javac.target}"
-+                       source="1.5">
-+		    <compilerarg line="-bootclasspath @{classes.dir}:../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar"/>
-                     <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
-                     <compilerarg line="${javac.version.opt}"/>
-                     <compilerarg line="-Xlint"/>
-@@ -511,7 +513,9 @@
-                        includeAntRuntime="no"
-                        target="@{javac.target}"
-                        debug="${javac.debug}" 
--                       debuglevel="${javac.debuglevel}">
-+                       debuglevel="${javac.debuglevel}"
-+                       source="1.5">
-+		    <compilerarg line="-bootclasspath @{classes.dir}:../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar"/>
-                     <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
-                     <compilerarg value="-Xbootclasspath/p:@{classes.dir}"/>
-                     <compilerarg line="${javac.no.jdk.warnings}"/>
-@@ -563,7 +567,8 @@
-         <mkdir dir="${build.toolclasses.dir}"/>
-         <javac srcdir="${make.tools.dir}/CompileProperties"
-                destdir="${build.toolclasses.dir}/"
--               classpath="${ant.home}/lib/ant.jar"/>
-+               classpath="${ant.home}/lib/ant.jar"
-+               source="1.5"/>
-         <taskdef name="pcompile"
-                  classname="CompilePropertiesTask" 
-                  classpath="${build.toolclasses.dir}/"/>
 --- openjdk.old/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2007-10-12 03:54:09.000000000 -0400
 +++ openjdk-ecj/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2007-11-13 10:29:46.000000000 -0500
 @@ -647,9 +647,6 @@
@@ -749,19 +670,6 @@ diff -ru openjdk-ecj.orig/jaxp/make/build.xml openjdk-ecj/jaxp/make/build.xml
 
  # Langtools
  ifdef LANGTOOLS_DIST
---- oiipenjdk/jaxws/make/Makefile	2007-11-13 11:02:07.000000000 -0500
-+++ openjdk-ecj/jaxws/make/Makefile	2007-11-13 10:09:36.000000000 -0500
-@@ -80,8 +80,8 @@
- endif
- 
- ifdef ALT_BOOTDIR
--  ANT_OPTIONS += -Dplugs=$(ALT_BINARY_PLUGS_PATH)
--  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
-+  ANT_OPTIONS += -Dboot.java.home=$(ALT_BOOTDIR)
-+  ANT_JAVA_HOME = JAVAC=$(ALT_BOOTDIR)/bin/javac
- endif
- 
- ifdef ALT_OUTPUTDIR
 --- oipenjdk/make/jdk-rules.gmk	2007-10-30 04:00:10.000000000 -0400
 +++ openjdk-ecj/make/jdk-rules.gmk	2007-11-13 14:54:50.000000000 -0500
 @@ -63,7 +63,7 @@
@@ -876,32 +784,6 @@ diff -ru openjdk-ecj.orig/jaxp/make/build.xml openjdk-ecj/jaxp/make/build.xml
  ifneq ($(PLATFORM), windows)
  	$(call copy-man-pages,$(JDK_IMAGE_DIR),$(JDK_MAN_PAGES))
  endif # !windows
---- opeinjdk//jaxws/make/build.xml	2007-11-13 16:47:23.000000000 -0500
-+++ openjdk-ecj/jaxws/make/build.xml	2007-11-13 16:48:08.000000000 -0500
-@@ -84,7 +84,8 @@
-       <mkdir dir="${build.toolclasses.dir}"/>
-       <javac srcdir="${make.tools.dir}/StripProperties"
- 		destdir="${build.toolclasses.dir}/"
--		classpath="${ant.home}/lib/ant.jar"/>
-+		classpath="${ant.home}/lib/ant.jar"
-+		source="1.5"/>
-       <taskdef name="pstrip"
- 		 classname="StripPropertiesTask"
- 		 classpath="${build.toolclasses.dir}/"/>
-@@ -99,9 +100,10 @@
-              memoryInitialSize="${javac.memoryInitialSize}"
-              memoryMaximumSize="${javac.memoryMaximumSize}"
-              target="${javac.target}"
--             excludes="com/sun/tools/internal/txw2/**">
--	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${plugs}/jre/lib/tools.jar:${plugs}/jre/lib/rt-closed.jar"/>
--         <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
-+             excludes="com/sun/tools/internal/txw2/**"
-+	     source="1.5">
-+         <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar"/>
-+	 <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
-          <compilerarg line="${javac.version.opt}"/>
-          <compilerarg line="${javac.no.jdk.warnings}"/>
-       </javac>
 --- opeiinjdk/jdk/src/share/classes/java/lang/Float.java	2007-10-30 04:36:02.000000000 -0400
 +++ openjdk-ecj/jdk/src/share/classes/java/lang/Float.java	2007-11-13 16:53:02.000000000 -0500
 @@ -76,7 +76,7 @@
@@ -970,3 +852,134 @@ diff -ru openjdk-ecj.orig/jaxp/make/build.xml openjdk-ecj/jaxp/make/build.xml
  	(.println pw)))
  
  (define (write-factory-method class-name exception-group-name pw)
+--- openjdk.old/langtools/make/Makefile	2008-01-16 10:23:52.000000000 -0500
++++ openjdk-ecj/langtools/make/Makefile	2008-01-16 10:42:51.000000000 -0500
+@@ -113,7 +113,7 @@
+ 
+ ifdef ALT_BOOTDIR
+   ANT_OPTIONS += -Dboot.java.home=$(ALT_BOOTDIR)
+-  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
++  ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
+ endif
+ 
+ ifdef ALT_OUTPUTDIR
+--- openjdk.old/langtools/make/build.xml	2008-01-07 10:12:20.000000000 -0500
++++ openjdk-ecj/langtools/make/build.xml	2008-01-16 10:40:54.000000000 -0500
+@@ -497,7 +497,10 @@
+                        includes="@{includes}"
+                        sourcepath=""
+                        includeAntRuntime="no"
+-                       target="@{javac.target}">
++                       target="@{javac.target}"
++		       executable="${javac.executable}"
++                       source="1.5">
++		    <compilerarg line="-bootclasspath @{classes.dir}:../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar"/>
+                     <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
+                     <compilerarg line="${javac.version.opt}"/>
+                     <compilerarg line="-Xlint"/>
+@@ -511,7 +514,10 @@
+                        includeAntRuntime="no"
+                        target="@{javac.target}"
+                        debug="${javac.debug}" 
+-                       debuglevel="${javac.debuglevel}">
++		       executable="${javac.executable}"
++                       debuglevel="${javac.debuglevel}"
++                       source="1.5">
++		    <compilerarg line="-bootclasspath @{classes.dir}:../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar"/>
+                     <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
+                     <compilerarg value="-Xbootclasspath/p:@{classes.dir}"/>
+                     <compilerarg line="${javac.no.jdk.warnings}"/>
+@@ -562,8 +568,11 @@
+     <target name="-def-pcompile">
+         <mkdir dir="${build.toolclasses.dir}"/>
+         <javac srcdir="${make.tools.dir}/CompileProperties"
++	       fork="true"
+                destdir="${build.toolclasses.dir}/"
+-               classpath="${ant.home}/lib/ant.jar"/>
++               classpath="${ant.home}/lib/ant.jar"
++	       executable="${javac.executable}"
++               source="1.5"/>
+         <taskdef name="pcompile"
+                  classname="CompilePropertiesTask" 
+                  classpath="${build.toolclasses.dir}/"/>
+--- openjdk.old/jaxp/make/build.xml	2008-01-07 10:07:02.000000000 -0500
++++ openjdk-ecj/jaxp/make/build.xml	2008-01-16 10:59:22.000000000 -0500
+@@ -71,7 +71,10 @@
+       <mkdir dir="${build.toolclasses.dir}"/>
+       <javac srcdir="${make.tools.dir}/StripProperties"
+ 		destdir="${build.toolclasses.dir}/"
+-		classpath="${ant.home}/lib/ant.jar"/>
++		classpath="${ant.home}/lib/ant.jar"
++		fork="true"
++		executable="${javac.executable}"
++		source="1.5"/>
+       <taskdef name="pstrip"
+ 		 classname="StripPropertiesTask"
+ 		 classpath="${build.toolclasses.dir}/"/>
+@@ -85,7 +88,9 @@
+              destdir="${build.classes.dir}"
+              memoryInitialSize="${javac.memoryInitialSize}"
+              memoryMaximumSize="${javac.memoryMaximumSize}"
+-             target="${javac.target}">
++             target="${javac.target}"
++             executable="${javac.executable}"
++             source="1.5">
+          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
+          <compilerarg line="${javac.version.opt}"/>
+       </javac>
+--- openjdk.old/jaxws/make/build.xml	2008-01-16 10:23:52.000000000 -0500
++++ openjdk-ecj/jaxws/make/build.xml	2008-01-16 11:01:00.000000000 -0500
+@@ -84,7 +84,10 @@
+       <mkdir dir="${build.toolclasses.dir}"/>
+       <javac srcdir="${make.tools.dir}/StripProperties"
+ 		destdir="${build.toolclasses.dir}/"
+-		classpath="${ant.home}/lib/ant.jar"/>
++		fork="true"
++                executable="${javac.executable}"
++		classpath="${ant.home}/lib/ant.jar"
++		source="1.5"/>
+       <taskdef name="pstrip"
+ 		 classname="StripPropertiesTask"
+ 		 classpath="${build.toolclasses.dir}/"/>
+@@ -96,12 +99,14 @@
+       <javac fork="true"
+              srcdir="${src.classes.dir}"
+              destdir="${build.classes.dir}"
++             executable="${javac.executable}"
+              memoryInitialSize="${javac.memoryInitialSize}"
+              memoryMaximumSize="${javac.memoryMaximumSize}"
+              target="${javac.target}"
+-             excludes="com/sun/tools/internal/txw2/**">
+-	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${plugs}/jre/lib/tools.jar:${plugs}/jre/lib/rt-closed.jar"/>
+-         <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
++             excludes="com/sun/tools/internal/txw2/**"
++	     source="1.5">
++         <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar"/>
++	 <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
+          <compilerarg line="${javac.version.opt}"/>
+          <compilerarg line="${javac.no.jdk.warnings}"/>
+       </javac>
+--- openjdk.old/jaxp/make/Makefile	2008-01-16 10:23:52.000000000 -0500
++++ openjdk-ecj/jaxp/make/Makefile	2008-01-16 11:02:39.000000000 -0500
+@@ -80,7 +80,7 @@
+ endif
+ 
+ ifdef ALT_BOOTDIR
+-  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
++  ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
+ endif
+ 
+ ifdef ALT_OUTPUTDIR
+--- openjdk.old/jaxws/make/Makefile	2008-01-16 10:23:52.000000000 -0500
++++ openjdk-ecj/jaxws/make/Makefile	2008-01-16 11:03:10.000000000 -0500
+@@ -80,8 +80,8 @@
+ endif
+ 
+ ifdef ALT_BOOTDIR
+-  ANT_OPTIONS += -Dplugs=$(ALT_BINARY_PLUGS_PATH)
+-  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
++  ANT_OPTIONS += -Dboot.java.home=$(ALT_BOOTDIR)
++  ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
+ endif
+ 
+ ifdef ALT_OUTPUTDIR
