@@ -710,8 +710,6 @@ stamps/ports.stamp: stamps/clone.stamp
 	done
 	mkdir -p stamps
 	touch stamps/ports.stamp
-	$(FAST_BUILD_PATCH) \
-	$(DISTRIBUTION_PATCHES)
 
 stamps/patch.stamp: stamps/clone.stamp
 	for p in $(ICEDTEA_PATCHES) ; \

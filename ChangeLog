@@ -1,5 +1,10 @@
 2008-01-16  Lillian Angel  <langel@redhat.com>
 
+	* Makefile.am: Fixed typo.
+	* Makefile.in: Regenerate.
+
+2008-01-16  Lillian Angel  <langel@redhat.com>
+
 	* patches/icedtea-ecj.patch
 	(langtools/make/Makefile): Removed JAVAC, and added javac.executable
 	to ANT_OPTIONS. The correct javac is now used when ant is run.
