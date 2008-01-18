@@ -1,3 +1,21 @@
+2008-01-18  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added new env var ICEDTEA_BOOT_DIR. 
+	(env): Updated to use ICEDTEA_BOOT_DIR.
+	(env-ecj): Likewise.
+	(stamps/hotspot-tools-class-files.stamp): Added check. If
+	stamps/icedtea-ecj.stamp doesn't exist, use JAVAC. Otherwise, use
+	ICEDTEA_BOOT_DIR/bin/javac.
+	(bootstrap/jdk1.7.0/jre/lib/tools.jar): Added check. If
+	stamps/icedtea-ecj.stamp doesn't exist, use JAR. Otherwise,
+	use ICEDTEA_BOOT_DIR/bin/jar.
+	(bootstrap/jdk1.7.0/jre/lib/rt-closed.jar): Likewise.
+	(stamps/rt-class-files.stamp): Added check. If
+	stamps/icedtea-ecj.stamp doesn't exist, use JAVAC. Otherwise,
+	use ICEDTEA_BOOT_DIR/bin/javac.
+	(stamps/tools-class-files.stamp): Likewise.
+	* Makefile.in: Regenerate.
+
 2008-01-16  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Fixed typo.
