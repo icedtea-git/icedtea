@@ -362,15 +362,33 @@ diff -ru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Def
  JVMLIB          = -L$(LIBDIR)/$(LIBARCH)/$(VM_NAME) -ljvm
  JAVALIB         = -ljava $(JVMLIB)
  
-diff -ru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2007-11-08 11:34:54.000000000 +0000
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2007-11-08 11:36:15.000000000 +0000
-@@ -74,13 +74,13 @@
-     # sparc or sparcv9
-     REQUIRED_CC_VER = 4.0
-     REQUIRED_GCC_VER = 4.0.*
+diff -r 37a05a11f281 make/common/shared/Compiler-gcc.gmk
+--- a/jdk/make/common/shared/Compiler-gcc.gmk       Sat Dec 01 00:00:00 2007 +0000
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk       Wed Jan 23 14:02:23 2008 +0100
+@@ -70,28 +70,51 @@ ifeq ($(PLATFORM), linux)
+   else
+     CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
+   endif
+-  ifneq ("$(findstring sparc,$(ARCH))", "")
+-    # sparc or sparcv9
+-    REQUIRED_CC_VER = 4.0
+-    REQUIRED_GCC_VER = 4.0.*
 -  else
 -  ifeq ($(ARCH_DATA_MODEL), 32)
++  ifeq ($(ARCH), alpha)
++    # alpha
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
++  endif
++  ifeq ($(ARCH), amd64)
++    # amd64
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
++  endif
++  ifeq ($(ARCH), arm)
++    # arm
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
 +  endif
 +  ifeq ($(ARCH), i586)
      # i586
@@ -378,19 +396,35 @@ diff -ru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/c
      REQUIRED_GCC_VER = 3.2.1*
      REQUIRED_GCC_VER_INT = 3.2.1-7a
 -  else
-+  endif
-   ifeq ($(ARCH), amd64)
-     # amd64
-     REQUIRED_CC_VER = 3.2
-@@ -91,7 +91,10 @@
+-  ifeq ($(ARCH), amd64)
+-    # amd64
+-    REQUIRED_CC_VER = 3.2
+-    REQUIRED_GCC_VER = 3.2.*
+   endif
+   ifeq ($(ARCH), ia64)
+     # ia64
      REQUIRED_CC_VER = 3.2
      REQUIRED_GCC_VER = 2.9[56789].*
    endif
--  endif
++  ifeq ($(ARCH), mips)
++    # mips
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
+   endif
 +  ifneq ("$(findstring ppc,$(ARCH))", "")
 +    # ppc or ppc64
 +    REQUIRED_CC_VER = 3.2
 +    REQUIRED_GCC_VER = 3.2.*
++  endif
++  ifneq ("$(findstring s390,$(ARCH))", "")
++    # s390 or s390x
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
++  endif
++  ifneq ("$(findstring sparc,$(ARCH))", "")
++    # sparc or sparcv9
++    REQUIRED_CC_VER = 4.0
++    REQUIRED_GCC_VER = 4.0.*
    endif
    # Option used to create a shared library
    SHARED_LIBRARY_FLAG = -shared -mimpure-text
@@ -544,13 +578,37 @@ diff -ru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist
  	$(install-import-file)
  
  $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(LIBJSIG_NAME) \
-diff -ru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax/sound/SoundDefs.gmk
---- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2007-11-08 11:34:54.000000000 +0000
-+++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2007-11-08 11:36:15.000000000 +0000
-@@ -71,6 +71,14 @@
-   CPPFLAGS += -DX_ARCH=X_AMD64
- endif # ARCH amd64
+diff -r 37a05a11f281 make/javax/sound/SoundDefs.gmk
+--- a/jdk/make/javax/sound/SoundDefs.gmk    Sat Dec 01 00:00:00 2007 +0000
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk    Wed Jan 23 14:39:17 2008 +0100
+@@ -55,9 +55,45 @@ ifeq ($(PLATFORM), solaris)
  
+ endif # PLATFORM solaris
+ 
++ifeq ($(ARCH), alpha)
++  CPPFLAGS += -DX_ARCH=X_ALPHA
++endif # ARCH alpha
++
++ifeq ($(ARCH), amd64)
++  CPPFLAGS += -DX_ARCH=X_AMD64
++endif # ARCH amd64
++
++ifeq ($(ARCH), arm)
++  CPPFLAGS += -DX_ARCH=X_ARM
++endif # ARCH arm
++
+ ifeq ($(ARCH), i586)
+   CPPFLAGS += -DX_ARCH=X_I586
+ endif # ARCH i586
++
++ifeq ($(ARCH), ia64)
++  CPPFLAGS += -DX_ARCH=X_IA64
++endif # ARCH ia64
++
++ifeq ($(ARCH), mips)
++  CPPFLAGS += -DX_ARCH=X_MIPS
++endif # ARCH mips
++
 +ifeq ($(ARCH), ppc)
 +  CPPFLAGS += -DX_ARCH=X_PPC
 +endif # ARCH ppc
@@ -559,18 +617,51 @@ diff -ru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax/
 +  CPPFLAGS += -DX_ARCH=X_PPC64
 +endif # ARCH ppc64
 +
++ifeq ($(ARCH), s390)
++  CPPFLAGS += -DX_ARCH=X_S390
++endif # ARCH s390
++
++ifeq ($(ARCH), s390x)
++  CPPFLAGS += -DX_ARCH=X_S390X
++endif # ARCH s390x
+ 
+ ifeq ($(ARCH), sparc)
+   CPPFLAGS += -DX_ARCH=X_SPARC
+@@ -66,10 +102,6 @@ ifeq ($(ARCH), sparcv9)
+ ifeq ($(ARCH), sparcv9)
+   CPPFLAGS += -DX_ARCH=X_SPARCV9
+ endif # ARCH sparcv9
+-
+-ifeq ($(ARCH), amd64)
+-  CPPFLAGS += -DX_ARCH=X_AMD64
+-endif # ARCH amd64
+ 
  
  # files needed for MIDI i/o
- MIDIFILES_c = \
-diff -ru openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
---- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2007-11-08 11:34:54.000000000 +0000
-+++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2007-11-08 11:36:15.000000000 +0000
-@@ -38,6 +38,8 @@
- #define X_SPARCV9       3
- #define X_IA64          4
- #define X_AMD64         5
-+#define X_PPC           6
-+#define X_PPC64         7
+diff -r 37a05a11f281 src/share/native/com/sun/media/sound/SoundDefs.h
+--- a/jdk/src/share/native/com/sun/media/sound/SoundDefs.h  Sat Dec 01 00:00:00 2007 +0000
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h  Wed Jan 23 14:39:17 2008 +0100
+@@ -33,11 +33,18 @@
+ #define X_LINUX         3
+ 
+ // types for X_ARCH
+-#define X_I586          1
+-#define X_SPARC         2
+-#define X_SPARCV9       3
+-#define X_IA64          4
+-#define X_AMD64         5
++#define X_ALPHA         1
++#define X_AMD64         2
++#define X_ARM           3
++#define X_I586          4
++#define X_IA64          5
++#define X_MIPS          6
++#define X_PPC           7
++#define X_PPC64         8
++#define X_S390          9
++#define X_S390X         10
++#define X_SPARC         11
++#define X_SPARCV9       12
  
  // **********************************
  // Make sure you set X_PLATFORM and X_ARCH defines correctly.
