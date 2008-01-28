@@ -1,3 +1,7 @@
+2008-01-28  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-lib64.patch: Added other multilib systems.
+
 2008-01-18  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Added new env var ICEDTEA_BOOT_DIR. 

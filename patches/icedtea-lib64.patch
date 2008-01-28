@@ -5,7 +5,7 @@
   *        7: The default directories, normally /lib and /usr/lib.
   */
 +
-+#ifdef __amd64__
++#if defined(AMD64) || defined(_LP64) && (defined(PPC) || defined(S390))
 +#define DEFAULT_LIBPATH "/lib:/usr/lib:/usr/lib64:/lib64"
 +#else
  #define DEFAULT_LIBPATH "/lib:/usr/lib"
