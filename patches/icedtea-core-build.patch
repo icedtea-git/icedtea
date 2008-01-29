@@ -6,7 +6,7 @@ diff -ru openjdk.orig/control/make/hotspot-rules.gmk openjdk/control/make/hotspo
  endif
  
 +# Use the special build targets on PPC for now
-+ifneq ($(findstring ppc,$(ARCH)),)
++ifneq ($(filter ppc ppc64,$(ARCH)),)
 +  HOTSPOT_TARGET := $(HOTSPOT_TARGET)core
 +endif
 +
@@ -71,7 +71,7 @@ diff -ru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
 -  MISC_DIR=$(C1_DIR)
 -  GEN_DIR=$(C1_BASE_DIR)/generated
 +# Misc files and generated files need to come from the correct area
-+ifneq ($(findstring ppc,$(ARCH)),)
++ifneq ($(filter ppc ppc64,$(ARCH)),)
 +  MISC_DIR=$(CORE_DIR)
 +  GEN_DIR=$(CORE_BASE_DIR)/generated
  else
@@ -91,7 +91,7 @@ diff -ru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
  ifneq ($(OSNAME),windows)
  $(EXPORT_JRE_LIB_ARCH_DIR)/%.so: $(C2_DIR)/%.so
  	$(install-file)
-+ifneq ($(findstring ppc,$(ARCH)),)
++ifneq ($(filter ppc ppc64,$(ARCH)),)
 +$(EXPORT_CLIENT_DIR)/%.so:       $(CORE_DIR)/%.so
 +	$(install-file)
 +else

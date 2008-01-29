@@ -1,0 +1,101 @@
+diff -ru openjdk-ecj/hotspot/build/linux/makefiles/vm.make openjdk-ecj.new/hotspot/build/linux/makefiles/vm.make
+--- openjdk/hotspot/build/linux/makefiles/vm.make	2008-01-24 13:17:20.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/vm.make	2008-01-21 15:18:48.000000000 +0000
+@@ -150,6 +150,9 @@
+ 
+   LIBS_VM                  += $(LIBS)
+ endif
++ifeq ($(SRCARCH), zero)
++LIBS_VM += -lffi
++endif
+ 
+ LINK_VM = $(LINK_LIB.c)
+ 
+diff -ru openjdk/hotspot/src/share/vm/runtime/icache.cpp openjdk/hotspot/src/share/vm/runtime/icache.cpp
+--- openjdk/hotspot/src/share/vm/runtime/icache.cpp	2007-10-30 08:46:35.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/icache.cpp	2008-01-21 15:18:48.000000000 +0000
+@@ -78,6 +78,7 @@
+ }
+ 
+ void AbstractICache::invalidate_range(address start, int nbytes) {
++#ifndef ZERO
+   static bool firstTime = true;
+   if (firstTime) {
+     guarantee(start == CAST_FROM_FN_PTR(address, _flush_icache_stub),
+@@ -97,6 +98,7 @@
+   }
+   call_flush_stub(start, round_to(nbytes, ICache::line_size) >>
+                          ICache::log2_line_size);
++#endif // ZERO
+ }
+ 
+ // For init.cpp
+diff -ru openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp
+--- openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp	2007-10-30 08:46:35.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp	2008-01-24 13:26:36.000000000 +0000
+@@ -126,9 +126,17 @@
+   // Fill block with bad_handle values
+   void zap();
+ 
++#ifdef ZERO
++ protected:
++  friend class CppInterpreter;
++#endif // ZERO
++
+   // No more handles in the both the current and following blocks
+   void clear() { _top = 0; }
+ 
++#ifdef ZERO
++ private:
++#endif // ZERO
+   // Free list computation
+   void rebuild_free_list();
+ 
+diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/share/vm/utilities/vmError.cpp
+--- openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-01-24 13:17:27.000000000 +0000
++++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-01-24 13:21:20.000000000 +0000
+@@ -24,6 +24,11 @@
+ 
+ # include "incls/_precompiled.incl"
+ # include "incls/_vmError.cpp.incl"
++
++# ifdef ZERO
++# include <interpreterRuntime.hpp>
++# include <stackPrinter_zero.hpp>
++# endif //
+ 
+ // List of environment variables that should be reported in error log file.
+ const char *env_list[] = {
+@@ -392,6 +397,7 @@
+        st->cr();
+      }
+ 
++#ifndef ZERO
+   STEP(110, "(printing stack bounds)" )
+ 
+      if (_verbose) {
+@@ -449,11 +455,16 @@
+           st->cr();
+        }
+      }
++#endif // !ZERO
+ 
+   STEP(130, "(printing Java stack)" )
+ 
+      if (_verbose && _thread && _thread->is_Java_thread()) {
+        JavaThread* jt = (JavaThread*)_thread;
++#ifdef ZERO
++       st->print_cr("Java stack:");
++       JavaStackPrinter(st, buf, sizeof(buf)).print(jt);
++#else
+        if (jt->has_last_Java_frame()) {
+          st->print_cr("Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)");
+          for(StackFrameStream sfs(jt); !sfs.is_done(); sfs.next()) {
+@@ -461,6 +472,7 @@
+            st->cr();
+          }
+        }
++#endif // ZERO
+      }
+ 
+   STEP(140, "(printing VM operation)" )
