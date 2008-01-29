@@ -299,50 +299,6 @@ diff -ru openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp openjdk/hotspot/
  #define FIX_THIS(code) report_assertion_failure("FIX_THIS",__FILE__, __LINE__, "")
  
  #define define_pd_global(type, name, value) const type pd_##name = value;
---- openjdk.orig/hotspot/src/share/vm/c1/c1_LIR.hpp	2007-10-30 08:46:25.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/c1/c1_LIR.hpp	2007-11-22 16:12:59.000000000 +0000
-@@ -422,9 +422,7 @@
-   XMMRegister as_xmm_double_reg() const;
-   // for compatibility with RInfo
-   int fpu () const                                  { return lo_reg_half(); }
--#endif
--
--#ifdef SPARC
-+#else
-   FloatRegister as_float_reg   () const;
-   FloatRegister as_double_reg  () const;
- #endif
-@@ -549,6 +547,9 @@
-   static LIR_Opr single_xmm(int reg)            { return (LIR_Opr)((reg  << LIR_OprDesc::reg1_shift) |                                     LIR_OprDesc::float_type  | LIR_OprDesc::fpu_register | LIR_OprDesc::single_size | LIR_OprDesc::is_xmm_mask); }
-   static LIR_Opr double_xmm(int reg)            { return (LIR_Opr)((reg  << LIR_OprDesc::reg1_shift) | (reg  << LIR_OprDesc::reg2_shift) | LIR_OprDesc::double_type | LIR_OprDesc::fpu_register | LIR_OprDesc::double_size | LIR_OprDesc::is_xmm_mask); }
- #endif
-+#ifdef PPC
-+  static LIR_Opr double_fpu(int reg)            { Unimplemented(); }
-+#endif
- 
- 
-   static LIR_Opr virtual_register(int index, BasicType type) {
---- openjdk.orig/hotspot/src/share/vm/c1/c1_LIR.cpp	2007-10-30 08:46:25.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/c1/c1_LIR.cpp	2007-11-22 16:12:59.000000000 +0000
-@@ -63,6 +63,18 @@
- 
- #endif
- 
-+#ifdef PPC
-+
-+FloatRegister LIR_OprDesc::as_float_reg() const {
-+  Unimplemented();
-+}
-+
-+FloatRegister LIR_OprDesc::as_double_reg() const {
-+  Unimplemented();
-+}
-+
-+#endif
-+
- LIR_Opr LIR_OprFact::illegalOpr = LIR_OprFact::illegal();
- 
- LIR_Opr LIR_OprFact::value_type(ValueType* type) {
 diff -ru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
 --- openjdk.orig/jdk/make/common/Defs-linux.gmk	2007-11-08 11:35:35.000000000 +0000
 +++ openjdk/jdk/make/common/Defs-linux.gmk	2007-11-08 11:36:15.000000000 +0000

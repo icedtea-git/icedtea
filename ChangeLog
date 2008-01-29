@@ -1,5 +1,13 @@
 2008-01-29  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-c1-unimplemented.patch: Removed file.
+	* Makefile.am (ICEDTEA_PATCHES): Removed the above.
+	* Makefile.in: Regenerated.
+
+	* patches/icedtea-ports.patch: Removed some cruft.
+
+2008-01-29  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp: New file.
 	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/assembler_zero.inline.hpp: Likewise.
