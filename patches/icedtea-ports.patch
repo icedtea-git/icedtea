@@ -5,7 +5,7 @@ diff -ru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
                        BuildUser=$(USERNAME) \
  		      $(MAKE_ARGS) $(VM_TARGET)
  else
-+  ifeq ($(findstring ppc,$(ARCH)),)
++  ifeq ($(filter ppc ppc64,$(ARCH)),)
  	$(CD) $(OUTPUTDIR); \
  	    $(MAKE) -f $(ABS_OS_MAKEFILE) \
  		      $(MAKE_ARGS) $(VM_TARGET)
@@ -45,7 +45,7 @@ diff -ru openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/bu
 +# ppc64
 +ifeq ($(ARCH), ppc64)
 +  ARCH_DATA_MODEL  = 64
-+    MAKE_ARGS        += LP64=1
++  MAKE_ARGS        += LP64=1
 +  PLATFORM         = linux-ppc64
 +  VM_PLATFORM      = linux_ppc64
 +  HS_ARCH          = ppc
@@ -64,7 +64,7 @@ diff -ru openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/bu
 -ifeq ($(ARCH_DATA_MODEL), 32)
 -  EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
 +EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
-+ifeq ($(HS_ARCH), ppc)
++ifneq ($(filter ppc zero,$(HS_ARCH)),)
    EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
    EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjsig.so
    EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.so 
@@ -101,39 +101,43 @@ diff -ru openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/bui
 diff -ru openjdk.orig/hotspot/build/linux/makefiles/sa.make openjdk/hotspot/build/linux/makefiles/sa.make
 --- openjdk.orig/hotspot/build/linux/makefiles/sa.make	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/build/linux/makefiles/sa.make	2007-11-08 11:36:15.000000000 +0000
-@@ -51,10 +51,10 @@
+@@ -51,10 +51,12 @@
  SA_PROPERTIES = $(SA_CLASSDIR)/sa.properties
  
  # if $(AGENT_DIR) does not exist, we don't build SA
 -# also, we don't build SA on Itanium.
-+# also, we don't build SA on Itanium or PPC.
++# also, we don't build SA on Itanium, PPC or zero.
  
  all: 
 -	if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" ] ; then \
-+	if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" -a "$(SRCARCH)" != "ppc" ] ; then \
++	if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" \
++			     -a "$(SRCARCH)" != "ppc" \
++			     -a "$(SRCARCH)" != "zero" ] ; then \
  	   $(MAKE) -f sa.make $(GENERATED)/sa-jdi.jar; \
  	fi
  
 diff -ru openjdk.orig/hotspot/build/linux/makefiles/saproc.make openjdk/hotspot/build/linux/makefiles/saproc.make
 --- openjdk.orig/hotspot/build/linux/makefiles/saproc.make	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/build/linux/makefiles/saproc.make	2007-11-08 11:36:15.000000000 +0000
-@@ -44,10 +44,10 @@
+@@ -44,10 +44,12 @@
  DEST_SAPROC = $(JDK_LIBDIR)/$(LIBSAPROC)
  
  # if $(AGENT_DIR) does not exist, we don't build SA
 -# also, we don't build SA on Itanium.
-+# also, we don't build SA on Itanium or PPC.
++# also, we don't build SA on Itanium, PPC or zero.
  
  checkAndBuildSA:
 -	$(QUIETLY) if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" ] ; then \
-+	$(QUIETLY) if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" -a "$(SRCARCH)" != "ppc" ] ; then \
++	$(QUIETLY) if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" \
++					-a "$(SRCARCH)" != "ppc" \
++                                       -a "$(SRCARCH)" != "zero" ] ; then \
  	   $(MAKE) -f vm.make $(LIBSAPROC); \
  	fi
  
 diff -ru openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
 --- openjdk.orig/hotspot/make/defs.make	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/make/defs.make	2007-11-08 11:36:15.000000000 +0000
-@@ -191,15 +191,17 @@
+@@ -191,15 +191,18 @@
  
    # Use uname output for SRCARCH, but deal with platform differences. If ARCH
    # is not explicitly listed below, it is treated as x86. 
@@ -149,11 +153,12 @@ diff -ru openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
 +  ARCH/ppc64  = ppc
  
 -  # BUILDARCH is usually the same as SRCARCH, except for sparcv9
-+  # BUILDARCH is usually the same as SRCARCH, except for sparcv9 and ppc64
++  # BUILDARCH is usually the same as SRCARCH, except for sparcv9,
++  # ppc64 and zero
    BUILDARCH = $(SRCARCH)
    ifeq ($(BUILDARCH), x86)
      ifdef LP64
-@@ -213,6 +215,11 @@
+@@ -213,6 +216,14 @@
        BUILDARCH = sparcv9
      endif
    endif
@@ -162,10 +167,13 @@ diff -ru openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
 +      BUILDARCH = ppc64
 +    endif
 +  endif
++  ifeq ($(BUILDARCH), zero)
++    BUILDARCH = $(ARCH)
++  endif
  
    # LIBARCH is 1:1 mapping from BUILDARCH
    LIBARCH         = $(LIBARCH/$(BUILDARCH))
-@@ -221,8 +228,10 @@
+@@ -221,8 +232,10 @@
    LIBARCH/sparc   = sparc
    LIBARCH/sparcv9 = sparcv9
    LIBARCH/ia64    = ia64
