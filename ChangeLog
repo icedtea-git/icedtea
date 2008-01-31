@@ -1,5 +1,18 @@
 2008-01-31  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/bytes_zero.hpp
+	(get_native_u2): Implement for little endian machines.
+	(get_native_u4): Likewise.
+	(get_native_u8): Likewise.
+	(put_native_u2): Likewise.
+	(put_native_u4): Likewise.
+	(put_native_u8): Likewise.
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+	(accessor_entry): Work on little endian machines.
+
+2008-01-31  Gary Benson  <gbenson@redhat.com>
+
 	* Makefile.am (hotspot, hotspot-helper): New rules.
 	* Makefile.in: Regenerated.
 

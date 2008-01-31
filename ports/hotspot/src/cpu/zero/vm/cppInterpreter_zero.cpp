@@ -398,15 +398,16 @@ void CppInterpreter::accessor_entry(methodOop method, TRAPS)
   // Read the field index from the bytecode, which looks like this:
   //  0:  aload_0
   //  1:  getfield
-  //  2:    index (high byte)
-  //  3:    index (low byte)
+  //  2:    index
+  //  3:    index
   //  4:  ireturn/areturn
+  // NB this is not raw bytecode: index is in machine order
   u1 *code = method->code_base();
   assert(code[0] == Bytecodes::_aload_0 &&
          code[1] == Bytecodes::_getfield &&
          (code[4] == Bytecodes::_ireturn ||
           code[4] == Bytecodes::_areturn), "should do");
-  u2 index = code[2] << 8 | code[3];
+  u2 index = Bytes::get_native_u2(&code[2]);
 
   // Get the entry from the constant pool cache, and drop into
   // the slow path if it has not been resolved

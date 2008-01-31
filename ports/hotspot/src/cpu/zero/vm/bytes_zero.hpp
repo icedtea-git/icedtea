@@ -1,6 +1,6 @@
 /*
  * Copyright 1997-2002 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2007 Red Hat, Inc.
+ * Copyright 2007, 2008 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,6 +38,102 @@ class Bytes: AllStatic {
 
   // Efficient reading and writing of unaligned unsigned data in
   // platform-specific byte ordering.
+#ifdef VM_LITTLE_ENDIAN
+  static inline u2   get_native_u2(address p){
+    return (intptr_t(p) & 1) == 0
+             ?   *(u2*)p
+             :   ( u2(p[1]) << 8 )
+               | ( u2(p[0])      );
+  }
+
+  static inline u4   get_native_u4(address p) {
+    switch (intptr_t(p) & 3) {
+     case 0:  return *(u4*)p;
+
+     case 2:  return (  u4( ((u2*)p)[1] ) << 16  )
+                   | (  u4( ((u2*)p)[0] )                  );
+
+    default:  return ( u4(p[3]) << 24 )
+                   | ( u4(p[2]) << 16 )
+                   | ( u4(p[1]) <<  8 )
+                   |   u4(p[0]);
+    }
+  }
+
+  static inline u8   get_native_u8(address p) {
+    switch (intptr_t(p) & 7) {
+      case 0:  return *(u8*)p;
+
+      case 4:  return (  u8( ((u4*)p)[1] ) << 32  )
+                    | (  u8( ((u4*)p)[0] )        );
+
+      case 2:  return (  u8( ((u2*)p)[3] ) << 48  )
+                    | (  u8( ((u2*)p)[2] ) << 32  )
+                    | (  u8( ((u2*)p)[1] ) << 16  )
+                    | (  u8( ((u2*)p)[0] )        );
+
+     default:  return ( u8(p[7]) << 56 )
+                    | ( u8(p[6]) << 48 )
+                    | ( u8(p[5]) << 40 )
+                    | ( u8(p[4]) << 32 )
+                    | ( u8(p[3]) << 24 )
+                    | ( u8(p[2]) << 16 )
+                    | ( u8(p[1]) <<  8 )
+                    |   u8(p[0]);
+    }
+  }
+
+  static inline void put_native_u2(address p, u2 x)   {
+    if ( (intptr_t(p) & 1) == 0 )  *(u2*)p = x;
+    else {
+      p[1] = x >> 8;
+      p[0] = x;
+    }
+  }
+
+  static inline void put_native_u4(address p, u4 x) {
+    switch ( intptr_t(p) & 3 ) {
+    case 0:  *(u4*)p = x;
+              break;
+
+    case 2:  ((u2*)p)[1] = x >> 16;
+             ((u2*)p)[0] = x;
+             break;
+
+    default: ((u1*)p)[3] = x >> 24;
+             ((u1*)p)[2] = x >> 16;
+             ((u1*)p)[1] = x >>  8;
+             ((u1*)p)[0] = x;
+             break;
+    }
+  }
+
+  static inline void put_native_u8(address p, u8 x) {
+    switch ( intptr_t(p) & 7 ) {
+    case 0:  *(u8*)p = x;
+             break;
+
+    case 4:  ((u4*)p)[1] = x >> 32;
+             ((u4*)p)[0] = x;
+             break;
+
+    case 2:  ((u2*)p)[3] = x >> 48;
+             ((u2*)p)[2] = x >> 32;
+             ((u2*)p)[1] = x >> 16;
+             ((u2*)p)[0] = x;
+             break;
+
+    default: ((u1*)p)[7] = x >> 56;
+             ((u1*)p)[6] = x >> 48;
+             ((u1*)p)[5] = x >> 40;
+             ((u1*)p)[4] = x >> 32;
+             ((u1*)p)[3] = x >> 24;
+             ((u1*)p)[2] = x >> 16;
+             ((u1*)p)[1] = x >>  8;
+             ((u1*)p)[0] = x;
+    }
+  }
+#else
   static inline u2   get_native_u2(address p){
     return (intptr_t(p) & 1) == 0
              ?   *(u2*)p
@@ -132,6 +228,7 @@ class Bytes: AllStatic {
              ((u1*)p)[7] = x;
     }
   }
+#endif // VM_LITTLE_ENDIAN
 
 
   // Efficient reading and writing of unaligned unsigned data in Java
