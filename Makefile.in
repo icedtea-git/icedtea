@@ -643,7 +643,8 @@ install:
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
 	clean-tools-jar clean-tools clean-shared-objects \
-	clean-copy clean-rt clean-gcjwebplugin clean-tools
+	clean-copy clean-rt clean-gcjwebplugin clean-tools \
+	hotspot hotspot-helper
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -942,6 +943,22 @@ stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	  openjdk-ecj/build/$(LINUX_DIR)
 	mkdir -p stamps
 	touch stamps/icedtea-ecj.stamp
+
+hotspot:
+	rm -f stamps/bootstrap-directory-symlink-ecj.stamp
+	rm -f stamps/icedtea-ecj.stamp
+	rm -f stamps/icedtea-against-ecj.stamp
+	$(MAKE) hotspot-helper
+	cp openjdk-ecj/build/$(LINUX_DIR)/hotspot/import/jre/lib/$(BUILD_ARCH_DIR)/client/libjvm.so \
+	   openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/client
+	@echo "Hotspot is served:" openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image
+
+hotspot-helper: stamps/bootstrap-directory-symlink-ecj.stamp \
+	stamps/hotspot-tools.stamp stamps/plugs.stamp \
+	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
+	$(MAKE) \
+	  $(ICEDTEA_ENV_ECJ) \
+	  -C openjdk-ecj hotspot
 
 clean-icedtea-ecj: stamps/clone-ecj.stamp
 	rm -f stamps/icedtea-ecj.stamp
