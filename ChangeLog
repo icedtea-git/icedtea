@@ -1,5 +1,10 @@
 2008-01-31  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp
+	(LOTS_OF_REGS): Define as appropriate for lots of targets.
+
+2008-01-31  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/bytes_zero.hpp
 	(get_native_u2): Implement for little endian machines.
 	(get_native_u4): Likewise.
