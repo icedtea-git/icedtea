@@ -60,18 +60,33 @@ public class AppletInstance extends ApplicationInstance {
     }
 
     /**
+     * 
+     */
+    public AppletInstance(JNLPFile file, ThreadGroup group, ClassLoader loader, Applet applet, Container cont) {
+        super(file, group, loader);
+        this.applet = applet;
+        this.environment = new AppletEnvironment(file, this, cont);
+    }
+
+    /**
      * Sets whether the applet is resizable or not.  Applets default
      * to being not resizable.
      */
     public void setResizable(boolean resizable) {
-        environment.getAppletFrame().setResizable(resizable);
+        Container c = environment.getAppletFrame();
+        if (c instanceof Frame)
+            ((Frame) c).setResizable(resizable);
     }
 
     /**
      * Returns whether the applet is resizable.
      */
     public boolean isResizable() {
-        return environment.getAppletFrame().isResizable();
+        Container c = environment.getAppletFrame();
+        if (c instanceof Frame)
+            return ((Frame) c).isResizable();
+
+        return false;
     }
 
     /**

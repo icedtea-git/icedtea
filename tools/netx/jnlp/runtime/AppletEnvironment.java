@@ -27,6 +27,7 @@ import java.io.*;
 import javax.swing.*;
 import netx.jnlp.*;
 import netx.jnlp.util.*;
+import sun.applet.AppletViewerPanel;
 
 /**
  * The applet environment including stub, context, and frame.  The
@@ -51,8 +52,8 @@ public class AppletEnvironment implements AppletContext, AppletStub {
     /** the parameters */
     private Map parameters;
 
-    /** the applet frame */
-    private Frame frame;
+    /** the applet container */
+    private Container cont;
 
     /** weak references to the audio clips */
     private WeakList weakClips = new WeakList();
@@ -68,17 +69,26 @@ public class AppletEnvironment implements AppletContext, AppletStub {
      * Create a new applet environment for the applet specified by
      * the JNLP file.
      */
-    public AppletEnvironment(JNLPFile file, final AppletInstance appletInstance) {
+    public AppletEnvironment(JNLPFile file, final AppletInstance appletInstance, Container cont) {
         this.file = file;
         this.appletInstance = appletInstance;
         this.applet = appletInstance.getApplet();
 
         parameters = file.getApplet().getParameters();
-        frame = new Frame(file.getApplet().getName() + " - Applet");
+        this.cont = cont;
+    }
+
+    /**
+     * Create a new applet environment for the applet specified by
+     * the JNLP file, in a new frame.
+     */
+    public AppletEnvironment(JNLPFile file, final AppletInstance appletInstance) {
+        this(file, appletInstance, null);
+
+        Frame frame = new Frame(file.getApplet().getName() + " - Applet");
         frame.setResizable(false);
 
         appletInstance.addWindow(frame);
-
         // may not need this once security manager can close windows
         // that do not have app code on the stack
         WindowListener closer = new WindowAdapter() {
@@ -88,6 +98,7 @@ public class AppletEnvironment implements AppletContext, AppletStub {
             }
         };
         frame.addWindowListener(closer);
+        this.cont = frame;
     }
 
     /**
@@ -119,8 +130,9 @@ public class AppletEnvironment implements AppletContext, AppletStub {
      * Returns the frame that contains the applet.  Disposing this
      * frame will destroy the applet.
      */
-    public Frame getAppletFrame() {
-        return frame;
+    public Container getAppletFrame() {
+        // TODO: rename this method to getAppletContainer ?
+        return cont;
     }
 
     /**
@@ -137,27 +149,35 @@ public class AppletEnvironment implements AppletContext, AppletStub {
         try {
             AppletDesc appletDesc = file.getApplet();
 
-            applet.setStub(this);
+            if (cont instanceof AppletStub)
+                applet.setStub((AppletStub)cont);
+            else
+                applet.setStub(this);
 
-            frame.setLayout(new BorderLayout());
-            frame.add(applet);
-            frame.validate();
-            frame.pack(); // cause insets to be calculated
+            cont.setLayout(new BorderLayout());
+            cont.add("Center", applet);
+            cont.validate();
 
-            Insets insets = frame.getInsets();
-            frame.setSize(appletDesc.getWidth() + insets.left + insets.right,
-                          appletDesc.getHeight() + insets.top + insets.bottom);
+            // This is only needed if the applet is in its own frame.
+            if (cont instanceof Frame) {
+                Frame frame = (Frame) cont;
+                frame.pack(); // cause insets to be calculated
 
+                Insets insets = frame.getInsets();
+                frame.setSize(appletDesc.getWidth() + insets.left + insets.right,
+                              appletDesc.getHeight() + insets.top + insets.bottom);
+            }
+    
             // do first because some applets need to be displayed before
             // starting (they use Component.getImage or something)
-            frame.show();
+            cont.show();
 
             applet.init();
             applet.start();
 
-            frame.invalidate(); // this should force the applet to
-            frame.validate();   // the correct size and to repaint
-            frame.repaint();
+            cont.invalidate(); // this should force the applet to
+            cont.validate();   // the correct size and to repaint
+            cont.repaint();
         }
         catch (Exception ex) {
             if (JNLPRuntime.isDebug())
@@ -273,10 +293,13 @@ public class AppletEnvironment implements AppletContext, AppletStub {
     public void appletResize(int width, int height) {
         checkDestroyed();
 
-        Insets insets = frame.getInsets();
+        if (cont instanceof Frame) {
+            Frame frame = (Frame) cont;
+            Insets insets = frame.getInsets();
 
-        frame.setSize(width + insets.left + insets.right,
-                      height + insets.top + insets.bottom);
+            frame.setSize(width + insets.left + insets.right,
+                          height + insets.top + insets.bottom);
+        }
     }
 
     public AppletContext getAppletContext() {
@@ -297,10 +320,16 @@ public class AppletEnvironment implements AppletContext, AppletStub {
         return file.getApplet().getDocumentBase();
     }
 
+    // FIXME: Sun's applet code forces all parameters to lower case.
+    // Does Netx's JNLP code do the same, so we can remove the first lookup?
     public String getParameter(String name) {
         checkDestroyed();
 
-        return (String) parameters.get(name);
+        String s = (String) parameters.get(name);
+        if (s != null)
+            return s;
+
+        return (String) parameters.get(name.toLowerCase());
     }
 
     public boolean isActive() {
