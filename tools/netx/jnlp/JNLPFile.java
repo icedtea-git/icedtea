@@ -103,6 +103,11 @@ public class JNLPFile {
         }
     }
 
+    /**
+     * Empty stub, allowing child classes to override the constructor
+     */
+    protected JNLPFile() {
+    }
 
     /**
      * Create a JNLPFile from a URL.

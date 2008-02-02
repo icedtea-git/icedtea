@@ -18,6 +18,7 @@
 package netx.jnlp;
 
 import java.applet.*;
+import java.awt.Container;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -132,14 +133,34 @@ public class Launcher {
 
     /**
      * Launches a JNLP file by calling the launch method for the
-     * appropriate file type.
+     * appropriate file type.  The application will be started in
+     * a new window.
      *
      * @param file the JNLP file to launch
      * @return the application instance
      * @throws LaunchException if an error occurred while launching (also sent to handler)
      */
     public ApplicationInstance launch(JNLPFile file) throws LaunchException {
-        TgThread tg = new TgThread(file);
+        return launch(file, null);
+    }
+
+    /**
+     * Launches a JNLP file inside the given container if it is an applet.  Specifying a
+     * container has no effect for Applcations and Installers.
+     *
+     * @param file the JNLP file to launch
+     * @param cont the container in which to place the application, if it is an applet
+     * @return the application instance
+     * @throws LaunchException if an error occurred while launching (also sent to handler)
+     */
+    public ApplicationInstance launch(JNLPFile file, Container cont) throws LaunchException {
+        TgThread tg;
+
+        if (cont == null)
+          tg = new TgThread(file);
+        else
+          tg = new TgThread(file, cont);
+
         tg.start();
 
         try {
@@ -157,7 +178,7 @@ public class Launcher {
             handler.launchCompleted(tg.getApplication());
 
         return tg.getApplication();
-    }
+    }    
 
     /**
      * Launches a JNLP file by calling the launch method for the
@@ -330,12 +351,12 @@ public class Launcher {
      * @param file the JNLP file
      * @param enableCodeBase whether to add the codebase URL to the classloader
      */
-    protected ApplicationInstance launchApplet(JNLPFile file, boolean enableCodeBase) throws LaunchException {
+    protected ApplicationInstance launchApplet(JNLPFile file, boolean enableCodeBase, Container cont) throws LaunchException {
         if (!file.isApplet())
             throw launchError(new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LNotApplet"), R("LNotAppletInfo")));
 
         try {
-            AppletInstance applet= createApplet(file, enableCodeBase);
+            AppletInstance applet= createApplet(file, enableCodeBase, cont);
             applet.initialize();
 
             applet.getAppletEnvironment().startApplet(); // this should be a direct call to applet instance
@@ -363,7 +384,7 @@ public class Launcher {
      *
      * @param enableCodeBase whether to add the code base URL to the classloader
      */
-    protected AppletInstance createApplet(JNLPFile file, boolean enableCodeBase) throws LaunchException {
+    protected AppletInstance createApplet(JNLPFile file, boolean enableCodeBase, Container cont) throws LaunchException {
         try {
             JNLPClassLoader loader = JNLPClassLoader.getInstance(file, updatePolicy);
 
@@ -376,7 +397,12 @@ public class Launcher {
             Class appletClass = loader.loadClass(appletName);
             Applet applet = (Applet) appletClass.newInstance();
 
-            AppletInstance appletInstance = new AppletInstance(file, group, loader, applet);
+            AppletInstance appletInstance;
+            if (cont == null)
+              appletInstance = new AppletInstance(file, group, loader, applet);
+            else
+              appletInstance = new AppletInstance(file, group, loader, applet, cont);
+
             group.setApplication(appletInstance);
             loader.setApplication(appletInstance);
 
@@ -452,11 +478,17 @@ public class Launcher {
         private JNLPFile file;
         private ApplicationInstance application;
         private LaunchException exception;
+        private Container cont;
 
         TgThread(JNLPFile file) {
+            this(file, null);
+        }
+
+        TgThread(JNLPFile file, Container cont) {
             super(createThreadGroup(file), file.getTitle());
 
             this.file = file;
+            this.cont = cont;
         }
 
         public void run() {
@@ -467,7 +499,7 @@ public class Launcher {
                 if (file.isApplication())
                     application = launchApplication(file);
                 else if (file.isApplet())
-                    application = launchApplet(file, true); // enable applet code base
+                    application = launchApplet(file, true, cont); // enable applet code base
                 else if (file.isInstaller())
                     application = launchInstaller(file);
                 else 
