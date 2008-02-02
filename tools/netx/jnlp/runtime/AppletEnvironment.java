@@ -27,7 +27,6 @@ import java.io.*;
 import javax.swing.*;
 import netx.jnlp.*;
 import netx.jnlp.util.*;
-import sun.applet.AppletViewerPanel;
 
 /**
  * The applet environment including stub, context, and frame.  The
