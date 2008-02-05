@@ -1,15 +1,15 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -25,15 +25,31 @@ import java.security.*;
 import javax.jnlp.*;
 import netx.jnlp.*;
 import netx.jnlp.runtime.*;
+import netx.jnlp.security.SecurityWarningDialog;
+
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  * Provides static methods to interact useful for using the JNLP
  * services.<p>
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
- * @version $Revision: 1.8 $ 
+ * @author <a href="mailto:jsumali@redhat.com">Joshua Sumali</a>
+ * @version $Revision: 1.8 $
  */
 public class ServiceUtil {
+
+    private static String R(String key) {
+        return JNLPRuntime.getMessage(key);
+    }
+
+    /**
+     * Types of system access that may need permissions.
+     */
+    public static enum AccessType {
+        READ_FILE, WRITE_FILE, CLIPBOARD_READ, CLIPBOARD_WRITE, PRINTER
+    }
 
     /**
      * Returns the BasicService reference, or null if the service is
@@ -120,12 +136,12 @@ public class ServiceUtil {
      */
     static Object createPrivilegedProxy(Class iface, final Object receiver) {
         return java.lang.reflect.Proxy.newProxyInstance(XServiceManagerStub.class.getClassLoader(),
-                                      new Class[] { iface },
-                                      new PrivilegedHandler(receiver));
+                new Class[] { iface },
+                new PrivilegedHandler(receiver));
     }
 
-    /** 
-     * calls the object's method using privileged access 
+    /**
+     * calls the object's method using privileged access
      */
     private static class PrivilegedHandler implements InvocationHandler {
         private final Object receiver;
@@ -157,6 +173,27 @@ public class ServiceUtil {
         }
     };
 
-}
+    /**
+     * Returns whether the app requesting a service is signed. If the app is
+     * unsigned, the user is prompted with a dialog asking if the action
+     * should be allowed.
+     */
+    static boolean checkAccess(SecurityWarningDialog.AccessType type) {
 
+        ApplicationInstance app = JNLPRuntime.getApplication();
+        if (app != null) {
+            if (!app.isSigned()) {
+                return SecurityWarningDialog.showWarningDialog(type,
+                        app.getJNLPFile());
+            } else if (app.isSigned()) {
+
+                //just return true here regardless if the app
+                //has signing issues -- at this point the user would've
+                //already decided to run the app anyways.
+                return true;
+            }
+        }
+        return false; //deny
+    }
+}
 

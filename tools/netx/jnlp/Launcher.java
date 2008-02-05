@@ -429,7 +429,6 @@ public class Launcher {
             return app;
         }
         catch (Exception ex) {
-            //throw launchError(new LaunchException(file, ex, R("LSFatal"), R("CLInit"), R("LInitApplet"), R("LInitAppletInfo")));
             throw new LaunchException(file, ex, R("LSFatal"), R("CLInit"), R("LInitApplet"), R("LInitAppletInfo"));
         }
     }
