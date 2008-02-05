@@ -730,7 +730,6 @@ ECJ_JAR
 LIBGCJ_OLD_TRUE
 LIBGCJ_OLD_FALSE
 LIBGCJ_JAR
-LIBGCJ_OLD
 XALAN2_JAR
 XALAN2_SERIALIZER_JAR
 XERCES2_JAR
@@ -6632,7 +6631,6 @@ echo "$as_me: error: \"A LIBGCJ jar was not found.\"" >&2;}
 
 
 
-
 # Check whether --with-xalan2-jar was given.
 if test "${with_xalan2_jar+set}" = set; then
   withval=$with_xalan2_jar;
@@ -10879,7 +10877,6 @@ ECJ_JAR!$ECJ_JAR$ac_delim
 LIBGCJ_OLD_TRUE!$LIBGCJ_OLD_TRUE$ac_delim
 LIBGCJ_OLD_FALSE!$LIBGCJ_OLD_FALSE$ac_delim
 LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim
-LIBGCJ_OLD!$LIBGCJ_OLD$ac_delim
 XALAN2_JAR!$XALAN2_JAR$ac_delim
 XALAN2_SERIALIZER_JAR!$XALAN2_SERIALIZER_JAR$ac_delim
 XERCES2_JAR!$XERCES2_JAR$ac_delim
@@ -10907,7 +10904,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 44; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 43; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
