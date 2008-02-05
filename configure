@@ -725,8 +725,8 @@ JAVAC
 JAVAH
 JAR
 RMIC
-LIBGCJ_OLD_TRUE
-LIBGCJ_OLD_FALSE
+GCC_OLD_TRUE
+GCC_OLD_FALSE
 ECJ
 ECJ_JAR
 LIBGCJ_JAR
@@ -4942,11 +4942,11 @@ then
   RMIC=${SYSTEM_ICEDTEA_DIR}/bin/rmic
 
    if test x != x; then
-  LIBGCJ_OLD_TRUE=
-  LIBGCJ_OLD_FALSE='#'
+  GCC_OLD_TRUE=
+  GCC_OLD_FALSE='#'
 else
-  LIBGCJ_OLD_TRUE='#'
-  LIBGCJ_OLD_FALSE=
+  GCC_OLD_TRUE='#'
+  GCC_OLD_FALSE=
 fi
 
 else
@@ -6571,11 +6571,11 @@ echo "$as_me: error: \"A ECJ jar was not found.\"" >&2;}
 
 
    if test x != x; then
-  LIBGCJ_OLD_TRUE=
-  LIBGCJ_OLD_FALSE='#'
+  GCC_OLD_TRUE=
+  GCC_OLD_FALSE='#'
 else
-  LIBGCJ_OLD_TRUE='#'
-  LIBGCJ_OLD_FALSE=
+  GCC_OLD_TRUE='#'
+  GCC_OLD_FALSE=
 fi
 
 
@@ -6610,11 +6610,11 @@ echo "${ECHO_T}${LIBGCJ_JAR}" >&6; }
 echo "${ECHO_T}${LIBGCJ_JAR}" >&6; }
       else
 	 if test x = x; then
-  LIBGCJ_OLD_TRUE=
-  LIBGCJ_OLD_FALSE='#'
+  GCC_OLD_TRUE=
+  GCC_OLD_FALSE='#'
 else
-  LIBGCJ_OLD_TRUE='#'
-  LIBGCJ_OLD_FALSE=
+  GCC_OLD_TRUE='#'
+  GCC_OLD_FALSE=
 fi
 
         if test -e "/usr/share/java/libgcj-4.1.2.jar"; then
@@ -10205,24 +10205,24 @@ echo "$as_me: error: conditional \"WITH_ICEDTEA\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
-if test -z "${LIBGCJ_OLD_TRUE}" && test -z "${LIBGCJ_OLD_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"LIBGCJ_OLD\" was never defined.
+if test -z "${GCC_OLD_TRUE}" && test -z "${GCC_OLD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"GCC_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"LIBGCJ_OLD\" was never defined.
+echo "$as_me: error: conditional \"GCC_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
-if test -z "${LIBGCJ_OLD_TRUE}" && test -z "${LIBGCJ_OLD_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"LIBGCJ_OLD\" was never defined.
+if test -z "${GCC_OLD_TRUE}" && test -z "${GCC_OLD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"GCC_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"LIBGCJ_OLD\" was never defined.
+echo "$as_me: error: conditional \"GCC_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
-if test -z "${LIBGCJ_OLD_TRUE}" && test -z "${LIBGCJ_OLD_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"LIBGCJ_OLD\" was never defined.
+if test -z "${GCC_OLD_TRUE}" && test -z "${GCC_OLD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"GCC_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"LIBGCJ_OLD\" was never defined.
+echo "$as_me: error: conditional \"GCC_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -10936,8 +10936,8 @@ JAVAC!$JAVAC$ac_delim
 JAVAH!$JAVAH$ac_delim
 JAR!$JAR$ac_delim
 RMIC!$RMIC$ac_delim
-LIBGCJ_OLD_TRUE!$LIBGCJ_OLD_TRUE$ac_delim
-LIBGCJ_OLD_FALSE!$LIBGCJ_OLD_FALSE$ac_delim
+GCC_OLD_TRUE!$GCC_OLD_TRUE$ac_delim
+GCC_OLD_FALSE!$GCC_OLD_FALSE$ac_delim
 ECJ!$ECJ$ac_delim
 ECJ_JAR!$ECJ_JAR$ac_delim
 LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim

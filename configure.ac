@@ -108,7 +108,7 @@ then
   AC_SUBST(JAR)
   RMIC=${SYSTEM_ICEDTEA_DIR}/bin/rmic
   AC_SUBST(RMIC)
-  AM_CONDITIONAL(LIBGCJ_OLD, test x != x)
+  AM_CONDITIONAL(GCC_OLD, test x != x)
 else
   FIND_JAVA
   FIND_JAVAC
