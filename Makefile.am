@@ -29,7 +29,8 @@ install:
 	hotspot hotspot-helper
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
-	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports
+	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
+	tools patches/icedtea-gcc-4.3.patch 
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)

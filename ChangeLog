@@ -1,5 +1,11 @@
 2008-02-05  Lillian Angel  <langel@redhat.com>
 
+	* Makefile.am
+	(EXTRA_DIST): Added tools and gcc patch.
+	* Makefile.in: Regenerate.
+
+2008-02-05  Lillian Angel  <langel@redhat.com>
+
 	* acinclude.m4: Moved conditional to beginning of LIBGCJ block.
 	* configure: Regenerate.
 	* configure.ac: Set LIBGCJ_OLD conditional to false if --with-icedtea
