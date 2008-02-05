@@ -107,6 +107,7 @@ JAVAC = @JAVAC@
 JAVAH = @JAVAH@
 LDFLAGS = @LDFLAGS@
 LIBGCJ_JAR = @LIBGCJ_JAR@
+LIBGCJ_OLD = @LIBGCJ_OLD@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LTLIBOBJS = @LTLIBOBJS@
@@ -279,6 +280,10 @@ OPENJDK_URL = http://hg.openjdk.java.net/jdk7/jdk7
 
 # Patch OpenJDK sources for plug replacements.
 @FAST_BUILD_TRUE@FAST_BUILD_PATCH = patches/icedtea-speed.patch
+@LIBGCJ_OLD_FALSE@GCC_PATCH = patches/icedtea-gcc-4.3.patch
+
+# If new libgcj is installed, apply 4.3 patch
+@LIBGCJ_OLD_TRUE@GCC_PATCH = 
 ICEDTEA_PATCHES = \
 	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-version.patch \
@@ -319,7 +324,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \
-	patches/icedtea-gcc-4.3.patch \
+	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 

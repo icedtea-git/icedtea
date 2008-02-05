@@ -1,3 +1,12 @@
+2008-02-05  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Only apply patches/icedtea-gcc-4.3.patch if
+	libgcj-4.3.0.jar is installed.
+	* Makefile.in: Regenerate.
+	* acinclude.m4: If libgcj-4.3*.jar is not found, then search for
+	libgcj-4.1*.jar and set LIBGCJ_OLD.
+	* configure: Regenerate.
+
 2008-02-05  Bernhard Rosenkränzer  <bero@arklinux.org>
 
 	* configure.ac: Added check for jar. If fastjar is not found, then jar

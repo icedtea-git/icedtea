@@ -197,7 +197,7 @@ AC_DEFUN([FIND_ECJ_JAR],
 AC_DEFUN([FIND_LIBGCJ_JAR],
 [
   AC_ARG_WITH([libgcj-jar],
-              [AS_HELP_STRING(--with-libgcj-jar,specify location of the libgcj jar)],
+              [AS_HELP_STRING(--with-libgcj-jar,specify location of the libgcj 4.3.0 jar)],
   [
     if test -f "${withval}"; then
       AC_MSG_CHECKING(libgcj jar)
@@ -209,7 +209,8 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
     LIBGCJ_JAR=
   ])
   if test -z "${LIBGCJ_JAR}"; then
-    AC_MSG_CHECKING(for libgcj-4.1.2.jar)
+    AM_CONDITIONAL(LIBGCJ_OLD, test x != x)
+    AC_MSG_CHECKING(for libgcj-4.3.0.jar or lib-4.1.2.jar)
     if test -e "/usr/share/java/libgcj-4.3.0.jar"; then
       LIBGCJ_JAR=/usr/share/java/libgcj-4.3.0.jar
       AC_MSG_RESULT(${LIBGCJ_JAR})
@@ -218,7 +219,18 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
         LIBGCJ_JAR=/usr/share/java/libgcj-4.3.jar
 	AC_MSG_RESULT(${LIBGCJ_JAR})
       else
-        AC_MSG_RESULT(no)
+	AM_CONDITIONAL(LIBGCJ_OLD, test x = x)
+        if test -e "/usr/share/java/libgcj-4.1.2.jar"; then
+          LIBGCJ_JAR=/usr/share/java/libgcj-4.1.2.jar
+          AC_MSG_RESULT(${LIBGCJ_JAR})
+	else
+	  if test -e "/usr/share/java/libgcj-4.1.jar"; then
+            LIBGCJ_JAR=/usr/share/java/libgcj-4.1.jar
+            AC_MSG_RESULT(${LIBGCJ_JAR})
+	  else
+	    AC_MSG_RESULT(no)
+	  fi
+	fi
       fi
     fi
   fi
@@ -226,6 +238,7 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
     AC_MSG_ERROR("A LIBGCJ jar was not found.")
   fi
   AC_SUBST(LIBGCJ_JAR)
+  AC_SUBST(LIBGCJ_OLD)
 ])
 
 AC_DEFUN([FIND_JAVAH],
