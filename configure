@@ -727,7 +727,10 @@ JAR
 RMIC
 ECJ
 ECJ_JAR
+LIBGCJ_OLD_TRUE
+LIBGCJ_OLD_FALSE
 LIBGCJ_JAR
+LIBGCJ_OLD
 XALAN2_JAR
 XALAN2_SERIALIZER_JAR
 XERCES2_JAR
@@ -1377,7 +1380,7 @@ Optional Packages:
   --with-jar              specify location of the jar
   --with-rmic             specify location of the rmic
   --with-ecj-jar          specify location of the ECJ jar
-  --with-libgcj-jar       specify location of the libgcj jar
+  --with-libgcj-jar       specify location of the libgcj 4.3.0 jar
   --with-xalan2-jar       specify location of the xalan2 jar
   --with-xalan2-serializer-jar
                           specify location of the xalan2-serializer jar
@@ -6579,8 +6582,16 @@ else
 fi
 
   if test -z "${LIBGCJ_JAR}"; then
-    { echo "$as_me:$LINENO: checking for libgcj-4.1.2.jar" >&5
-echo $ECHO_N "checking for libgcj-4.1.2.jar... $ECHO_C" >&6; }
+     if test x != x; then
+  LIBGCJ_OLD_TRUE=
+  LIBGCJ_OLD_FALSE='#'
+else
+  LIBGCJ_OLD_TRUE='#'
+  LIBGCJ_OLD_FALSE=
+fi
+
+    { echo "$as_me:$LINENO: checking for libgcj-4.3.0.jar or lib-4.1.2.jar" >&5
+echo $ECHO_N "checking for libgcj-4.3.0.jar or lib-4.1.2.jar... $ECHO_C" >&6; }
     if test -e "/usr/share/java/libgcj-4.3.0.jar"; then
       LIBGCJ_JAR=/usr/share/java/libgcj-4.3.0.jar
       { echo "$as_me:$LINENO: result: ${LIBGCJ_JAR}" >&5
@@ -6591,8 +6602,28 @@ echo "${ECHO_T}${LIBGCJ_JAR}" >&6; }
 	{ echo "$as_me:$LINENO: result: ${LIBGCJ_JAR}" >&5
 echo "${ECHO_T}${LIBGCJ_JAR}" >&6; }
       else
-        { echo "$as_me:$LINENO: result: no" >&5
+	 if test x = x; then
+  LIBGCJ_OLD_TRUE=
+  LIBGCJ_OLD_FALSE='#'
+else
+  LIBGCJ_OLD_TRUE='#'
+  LIBGCJ_OLD_FALSE=
+fi
+
+        if test -e "/usr/share/java/libgcj-4.1.2.jar"; then
+          LIBGCJ_JAR=/usr/share/java/libgcj-4.1.2.jar
+          { echo "$as_me:$LINENO: result: ${LIBGCJ_JAR}" >&5
+echo "${ECHO_T}${LIBGCJ_JAR}" >&6; }
+	else
+	  if test -e "/usr/share/java/libgcj-4.1.jar"; then
+            LIBGCJ_JAR=/usr/share/java/libgcj-4.1.jar
+            { echo "$as_me:$LINENO: result: ${LIBGCJ_JAR}" >&5
+echo "${ECHO_T}${LIBGCJ_JAR}" >&6; }
+	  else
+	    { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
+	  fi
+	fi
       fi
     fi
   fi
@@ -6601,6 +6632,7 @@ echo "${ECHO_T}no" >&6; }
 echo "$as_me: error: \"A LIBGCJ jar was not found.\"" >&2;}
    { (exit 1); exit 1; }; }
   fi
+
 
 
 
@@ -10167,6 +10199,20 @@ echo "$as_me: error: conditional \"WITH_ICEDTEA\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${LIBGCJ_OLD_TRUE}" && test -z "${LIBGCJ_OLD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"LIBGCJ_OLD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"LIBGCJ_OLD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${LIBGCJ_OLD_TRUE}" && test -z "${LIBGCJ_OLD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"LIBGCJ_OLD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"LIBGCJ_OLD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${USE_ALT_OPENJDK_SRC_ZIP_TRUE}" && test -z "${USE_ALT_OPENJDK_SRC_ZIP_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -10879,7 +10925,10 @@ JAR!$JAR$ac_delim
 RMIC!$RMIC$ac_delim
 ECJ!$ECJ$ac_delim
 ECJ_JAR!$ECJ_JAR$ac_delim
+LIBGCJ_OLD_TRUE!$LIBGCJ_OLD_TRUE$ac_delim
+LIBGCJ_OLD_FALSE!$LIBGCJ_OLD_FALSE$ac_delim
 LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim
+LIBGCJ_OLD!$LIBGCJ_OLD$ac_delim
 XALAN2_JAR!$XALAN2_JAR$ac_delim
 XALAN2_SERIALIZER_JAR!$XALAN2_SERIALIZER_JAR$ac_delim
 XERCES2_JAR!$XERCES2_JAR$ac_delim
