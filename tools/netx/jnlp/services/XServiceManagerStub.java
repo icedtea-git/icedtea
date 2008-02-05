@@ -41,11 +41,14 @@ public class XServiceManagerStub implements ServiceManagerStub {
     // run less code in the secure environment (or avoid privileged
     // actions by giving permission to the code source).
 
-    private static String serviceNames[] = {
+	private static String serviceNames[] = {
         "javax.jnlp.BasicService", // required
         "javax.jnlp.DownloadService", // required
         "javax.jnlp.ExtensionInstallerService", // required
         "javax.jnlp.PersistenceService",
+        "javax.jnlp.FileOpenService",
+        "javax.jnlp.FileSaveService",
+        "javax.jnlp.ClipboardService"
     };
 
     private static Object services[] = {
@@ -53,6 +56,9 @@ public class XServiceManagerStub implements ServiceManagerStub {
         ServiceUtil.createPrivilegedProxy(DownloadService.class, new XDownloadService()),
         ServiceUtil.createPrivilegedProxy(ExtensionInstallerService.class, new XExtensionInstallerService()),
         ServiceUtil.createPrivilegedProxy(PersistenceService.class, new XPersistenceService()),
+        ServiceUtil.createPrivilegedProxy(FileOpenService.class, new XFileOpenService()),
+        ServiceUtil.createPrivilegedProxy(FileSaveService.class, new XFileSaveService()),
+        ServiceUtil.createPrivilegedProxy(ClipboardService.class, new XClipboardService()),
     };
 
 

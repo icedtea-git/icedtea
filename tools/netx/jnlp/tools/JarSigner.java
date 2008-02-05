@@ -33,9 +33,15 @@ import java.text.Collator;
 import java.text.MessageFormat;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.security.cert.CertPath;
 import java.security.*;
 import sun.security.x509.*;
 import sun.security.util.*;
+
+import netx.jnlp.cache.*;
+import netx.jnlp.*;
+import netx.jnlp.security.*;
+import netx.jnlp.runtime.JNLPRuntime;
 
 /**
  * <p>The jarsigner utility.
@@ -45,6 +51,10 @@ import sun.security.util.*;
  */
 
 public class JarSigner {
+
+    private static String R(String key) {
+        return JNLPRuntime.getMessage(key);
+    }
 
     private static final Collator collator = Collator.getInstance();
     static {
@@ -108,10 +118,11 @@ public class JarSigner {
     // read zip entry raw bytes
     private ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
     private byte[] buffer = new byte[8192];
- //   private ContentSigner signingMechanism = null;
+//   private ContentSigner signingMechanism = null;
     private String altSignerClass = null;
     private String altSignerClasspath = null;
     private ZipFile zipFile = null;
+    private boolean hasUnsignedEntry = false;
     private boolean hasExpiredCert = false;
     private boolean hasExpiringCert = false;
     private boolean notYetValidCert = false;
@@ -119,6 +130,73 @@ public class JarSigner {
     private boolean badKeyUsage = false;
     private boolean badExtendedKeyUsage = false;
     private boolean badNetscapeCertType = false;
+
+    private boolean allVerified = true;
+
+    private boolean anyJarsSigned = false;
+
+    /** all of the jar files that were verified */
+    private ArrayList<String> verifiedJars = null;
+
+    /** all of the jar files that were not verified */
+    private ArrayList<String> unverifiedJars = null;
+
+    /** the certificates used for jar verification */
+    private ArrayList<CertPath> certs = null;
+
+    /** details of this signing */
+    private ArrayList<String> details = new ArrayList<String>();
+
+    public boolean hasSigningIssues() {
+        return hasExpiredCert || notYetValidCert || badKeyUsage
+               || badExtendedKeyUsage || badNetscapeCertType;
+    }
+
+    public boolean allVerified() {
+        return allVerified;
+    }
+
+    public boolean anyJarsSigned() {
+        return anyJarsSigned;
+    }
+
+    public ArrayList<String> getDetails() {
+        return details;
+    }
+
+    public ArrayList<CertPath> getCerts() {
+        return certs;
+    }
+
+    public void verifyJars(List<JARDesc> jars, ResourceTracker tracker)
+    throws Exception {
+
+        for (int i = 0; i < jars.size(); i++) {
+
+            JARDesc jar = (JARDesc) jars.get(i);
+            verifiedJars = new ArrayList<String>();
+            unverifiedJars = new ArrayList<String>();
+            certs = new ArrayList<CertPath>();
+
+            try {
+                String localFile = tracker.getCacheFile(jar.getLocation()).getAbsolutePath();
+                boolean result = verifyJar(localFile);
+
+                if (!result) {
+                    //allVerified is true until we encounter a problem
+                    //with one or more jars
+                    allVerified = false;
+                    unverifiedJars.add(localFile);
+                } else {
+                    verifiedJars.add(localFile);
+                }
+            } catch (Exception e){
+                //We may catch exceptions from using js.verifyJar(localFile).
+                e.printStackTrace();
+                throw e;
+            }
+        }
+    }
 
     public boolean verifyJar(String jarName) throws Exception {
         boolean anySigned = false;
@@ -167,14 +245,16 @@ public class JarSigner {
                                         && !signatureRelated(name);
                     if (isSigned) {
                         for (int i = 0; i < signers.length; i++) {
-                            Certificate cert =
-                                signers[i].getSignerCertPath()
-                                    .getCertificates().get(0);
+                            CertPath certPath = signers[i].getSignerCertPath();
+                            if (!certs.contains(certPath))
+                                certs.add(certPath);
+                            Certificate cert = signers[i].getSignerCertPath()
+                                .getCertificates().get(0);
                             if (cert instanceof X509Certificate) {
                                 checkCertUsage((X509Certificate)cert, null);
                                 if (!showcerts) {
                                     long notAfter = ((X509Certificate)cert)
-                                        .getNotAfter().getTime();
+                                                    .getNotAfter().getTime();
 
                                     if (notAfter < now) {
                                         hasExpiredCert = true;
@@ -185,10 +265,39 @@ public class JarSigner {
                             }
                         }
                     }
-
                 } //while e has more elements
             } //if man not null
-            
+
+            //Alert the user if any of the following are true.
+            if (!anySigned) {
+
+            } else {
+                anyJarsSigned = true;
+
+                //warnings
+                if (hasUnsignedEntry || hasExpiredCert || hasExpiringCert ||
+                        badKeyUsage || badExtendedKeyUsage || badNetscapeCertType ||
+                        notYetValidCert) {
+
+                    addToDetails(R("SRunWithoutRestrictions"));
+
+                    if (badKeyUsage)
+                        addToDetails(R("SBadKeyUsage"));
+                    if (badExtendedKeyUsage)
+                        addToDetails(R("SBadExtendedKeyUsage"));
+                    if (badNetscapeCertType)
+                        addToDetails(R("SBadNetscapeCertType"));
+                    if (hasUnsignedEntry)
+                        addToDetails(R("SHasUnsignedEntry"));
+                    if (hasExpiredCert)
+                        addToDetails(R("SHasExpiredCert"));
+                    if (hasExpiringCert)
+                        addToDetails(R("SHasExpiringCert"));
+                    if (notYetValidCert)
+                        addToDetails(R("SNotYetValidCert"));
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
@@ -198,8 +307,16 @@ public class JarSigner {
             }
         }
 
-        return anySigned;
+        //anySigned does not guarantee that all files were signed.
+        return anySigned && !(hasUnsignedEntry || hasExpiredCert
+                              || badKeyUsage || badExtendedKeyUsage || badNetscapeCertType
+                              || notYetValidCert);
     }
+
+	private void addToDetails(String detail) {
+		if (!details.contains(detail))
+			details.add(detail);
+	}
 
     private static MessageFormat validityTimeForm = null;
     private static MessageFormat notYetTimeForm = null;
@@ -210,7 +327,7 @@ public class JarSigner {
 
 
     Hashtable<Certificate, String> storeHash =
-                                new Hashtable<Certificate, String>();
+        new Hashtable<Certificate, String>();
 
     /**
      * signature-related files include:
@@ -219,20 +336,20 @@ public class JarSigner {
      * . META-INF/*.SF
      * . META-INF/*.DSA
      * . META-INF/*.RSA
-     * 
+     *
      * Required for verifyJar()
      */
     private boolean signatureRelated(String name) {
         String ucName = name.toUpperCase();
         if (ucName.equals(JarFile.MANIFEST_NAME) ||
-            ucName.equals(META_INF) ||
-            (ucName.startsWith(SIG_PREFIX) &&
-                ucName.indexOf("/") == ucName.lastIndexOf("/"))) {
+                ucName.equals(META_INF) ||
+                (ucName.startsWith(SIG_PREFIX) &&
+                 ucName.indexOf("/") == ucName.lastIndexOf("/"))) {
             return true;
         }
 
         if (ucName.startsWith(META_INF) &&
-            SignatureFileVerifier.isBlockOrSF(ucName)) {
+                SignatureFileVerifier.isBlockOrSF(ucName)) {
             // .SF/.DSA/.RSA files in META-INF subdirs
             // are not considered signature-related
             return (ucName.indexOf("/") == ucName.lastIndexOf("/"));
@@ -248,7 +365,7 @@ public class JarSigner {
      *            NetscapeCertType has codeSigning flag turned on.
      *            If null, the class field badKeyUsage, badExtendedKeyUsage,
      *            badNetscapeCertType will be set.
-     *            
+     *
      * Required for verifyJar()
      */
     void checkCertUsage(X509Certificate userCert, boolean[] bad) {
@@ -293,18 +410,18 @@ public class JarSigner {
         try {
             // OID_NETSCAPE_CERT_TYPE
             byte[] netscapeEx = userCert.getExtensionValue
-                    ("2.16.840.1.113730.1.1");
+                                ("2.16.840.1.113730.1.1");
             if (netscapeEx != null) {
                 DerInputStream in = new DerInputStream(netscapeEx);
                 byte[] encoded = in.getOctetString();
                 encoded = new DerValue(encoded).getUnalignedBitString()
-                        .toByteArray();
+                .toByteArray();
 
                 NetscapeCertTypeExtension extn =
-                        new NetscapeCertTypeExtension(encoded);
+                    new NetscapeCertTypeExtension(encoded);
 
                 Boolean val = (Boolean)extn.get(
-                        NetscapeCertTypeExtension.OBJECT_SIGNING);
+                                  NetscapeCertTypeExtension.OBJECT_SIGNING);
                 if (!val) {
                     if (bad != null) {
                         bad[2] = true;

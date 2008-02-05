@@ -81,7 +81,7 @@ public class JNLPRuntime {
     private static boolean headless = false;
 
 	/** whether we'll be checking for jar signing */
-	private static boolean verify = false;
+	private static boolean verify = true;
 
     /** whether the runtime uses security */
     private static boolean securityEnabled = true;

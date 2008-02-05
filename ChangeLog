@@ -1,3 +1,40 @@
+2008-02-05  Joshua Sumali  <jsumali@redhat.com>
+
+	* tools/netx/jnlp/Launcher.java: Removed unused line.
+	* tools/netx/jnlp/resources/Messages.properties: Added security messages
+	for security dialogs.
+	* tools/netx/jnlp/runtime/ApplicationInstance.java: Added signing field.
+	* tools/netx/jnlp/runtime/Boot.java: Use jar root default.jnlp
+	* tools/netx/jnlp/runtime/JNLPClassLoader.java: Added security warning
+	dialogs when running signed code.
+	* tools/netx/jnlp/runtime/JNLPRuntime.java: Enable code signing
+	verification by default.
+	* tools/netx/jnlp/services/ServiceUtil.java: Added enum for different
+	access types that may need permissions.
+	(checkAccess(AccessType)): New method.
+	* tools/netx/jnlp/services/XDownloadService.java: Fixed typo.
+	* tools/netx/jnlp/services/XExtensionInstallerService.java: Likewise.
+	* tools/netx/jnlp/services/XServiceManagerStub.java: Added support for new
+	services.
+	* tools/netx/jnlp/tools/JarSigner.java:
+	(verifyJars): New method.
+	(allVerified): Likewise.
+	(anyJarsSigned): Likewise.
+	(getDetails): Likewise.
+	(getCerts): Likewise.
+	(verifyJar): Keep track of CertPaths used for CertsInfoPane
+	* tools/netx/jnlp/security/CertsInfoPane.java: New file.
+	* tools/netx/jnlp/security/MoreInfoPane.java: Likewise.
+	* tools/netx/jnlp/security/SecurityDialogUI.java: Likewise.
+	* tools/netx/jnlp/security/SecurityWarningDialog.java: Likewise.
+	* tools/netx/jnlp/security/SecurityWarningOptionPane.java: Likewise.
+	* tools/netx/jnlp/services/XClipboardService.java: Likewise.
+	* tools/netx/jnlp/services/XFileOpenService.java: Likewise.
+	* tools/netx/jnlp/services/XFileSaveService.java: Likewise.
+	* tools/netx/jnlp/tools/CharacterEncoder.java: Likewise.
+	* tools/netx/jnlp/tools/HexDumpEncoder.java: Likewise.
+	* ChangeLog: Added fkung's 2 latest ChangeLog entries.
+
 2008-02-05  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am
@@ -37,6 +74,38 @@
 	* Makefile.in: Regenerate.
 	* acinclude.m4: Updated for libgcj-4.3.0.jar.
 	* AUTHORS: Added Bernhard Rosenkränzer.
+
+2008-02-02  Francis Kung  <fkung@redhat.com>
+
+	* tools/netx/jnlp/Parser.java: Re-added Node class.
+	* tools/netx/jnlp/runtime/AppletEnvironment.java: Removed unused import.
+
+2008-02-02  Francis Kung  <fkung@redhat.com>
+
+	* tools/netx/jnlp/JNLPFile.java: Added empty protected constructor.
+	* tools/netx/jnlp/Launcher.java
+	(launch(JNLPFile)): Delegate to new method.
+	(launch(JNLPFile, Container)): New method.
+	(launchApplet): Added Container parameter.
+	(createApplet): Likewise.
+	(TgThread): Added private Container field.
+	(TgThread.constructor(JNLPFile)): Delegate to new constructor.
+	(TgThread.constructor(JNLPFile, Container)): New method.
+	(TgThread.run): Launch applet with container argument.
+	* tools/netx/jnlp/runtime/AppletEnvironment.java
+	(Frame): Renamed field to...
+	(Container): New field.
+	(AppletEnvironment(JNLPFile, AppletInstance, Container)): New method.
+	(AppletEnvironment(JNLPFile, AppletInstance)): Delegate to new method.
+	(getAppletFrame): Return Container instead of Frame.
+	(startApplet): Replace Frame with Container.
+	(appletResize): Likewise.
+	(getParameter): Add lower-case check.
+	* tools/netx/jnlp/runtime/AppletInstance.java
+	(AppletInstance(JNLPFile, ThreadGroup, ClassLoader, Applet, Container)):
+	New method.
+	(setResizable): Only resize if the container is a Frame.
+	(isResizable): Return false if container is not a Frame.
 
 2008-02-01  Gary Benson  <gbenson@redhat.com>
 
