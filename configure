@@ -725,10 +725,10 @@ JAVAC
 JAVAH
 JAR
 RMIC
-ECJ
-ECJ_JAR
 LIBGCJ_OLD_TRUE
 LIBGCJ_OLD_FALSE
+ECJ
+ECJ_JAR
 LIBGCJ_JAR
 XALAN2_JAR
 XALAN2_SERIALIZER_JAR
@@ -4941,6 +4941,14 @@ then
 
   RMIC=${SYSTEM_ICEDTEA_DIR}/bin/rmic
 
+   if test x != x; then
+  LIBGCJ_OLD_TRUE=
+  LIBGCJ_OLD_FALSE='#'
+else
+  LIBGCJ_OLD_TRUE='#'
+  LIBGCJ_OLD_FALSE=
+fi
+
 else
 
 
@@ -6562,6 +6570,14 @@ echo "$as_me: error: \"A ECJ jar was not found.\"" >&2;}
 
 
 
+   if test x != x; then
+  LIBGCJ_OLD_TRUE=
+  LIBGCJ_OLD_FALSE='#'
+else
+  LIBGCJ_OLD_TRUE='#'
+  LIBGCJ_OLD_FALSE=
+fi
+
 
 # Check whether --with-libgcj-jar was given.
 if test "${with_libgcj_jar+set}" = set; then
@@ -6581,14 +6597,6 @@ else
 fi
 
   if test -z "${LIBGCJ_JAR}"; then
-     if test x != x; then
-  LIBGCJ_OLD_TRUE=
-  LIBGCJ_OLD_FALSE='#'
-else
-  LIBGCJ_OLD_TRUE='#'
-  LIBGCJ_OLD_FALSE=
-fi
-
     { echo "$as_me:$LINENO: checking for libgcj-4.3.0.jar or lib-4.1.2.jar" >&5
 echo $ECHO_N "checking for libgcj-4.3.0.jar or lib-4.1.2.jar... $ECHO_C" >&6; }
     if test -e "/usr/share/java/libgcj-4.3.0.jar"; then
@@ -10211,6 +10219,13 @@ echo "$as_me: error: conditional \"LIBGCJ_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${LIBGCJ_OLD_TRUE}" && test -z "${LIBGCJ_OLD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"LIBGCJ_OLD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"LIBGCJ_OLD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${USE_ALT_OPENJDK_SRC_ZIP_TRUE}" && test -z "${USE_ALT_OPENJDK_SRC_ZIP_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -10921,10 +10936,10 @@ JAVAC!$JAVAC$ac_delim
 JAVAH!$JAVAH$ac_delim
 JAR!$JAR$ac_delim
 RMIC!$RMIC$ac_delim
-ECJ!$ECJ$ac_delim
-ECJ_JAR!$ECJ_JAR$ac_delim
 LIBGCJ_OLD_TRUE!$LIBGCJ_OLD_TRUE$ac_delim
 LIBGCJ_OLD_FALSE!$LIBGCJ_OLD_FALSE$ac_delim
+ECJ!$ECJ$ac_delim
+ECJ_JAR!$ECJ_JAR$ac_delim
 LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim
 XALAN2_JAR!$XALAN2_JAR$ac_delim
 XALAN2_SERIALIZER_JAR!$XALAN2_SERIALIZER_JAR$ac_delim
