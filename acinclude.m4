@@ -196,6 +196,7 @@ AC_DEFUN([FIND_ECJ_JAR],
 
 AC_DEFUN([FIND_LIBGCJ_JAR],
 [
+  AM_CONDITIONAL(LIBGCJ_OLD, test x != x)
   AC_ARG_WITH([libgcj-jar],
               [AS_HELP_STRING(--with-libgcj-jar,specify location of the libgcj 4.3.0 jar)],
   [
@@ -209,7 +210,6 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
     LIBGCJ_JAR=
   ])
   if test -z "${LIBGCJ_JAR}"; then
-    AM_CONDITIONAL(LIBGCJ_OLD, test x != x)
     AC_MSG_CHECKING(for libgcj-4.3.0.jar or lib-4.1.2.jar)
     if test -e "/usr/share/java/libgcj-4.3.0.jar"; then
       LIBGCJ_JAR=/usr/share/java/libgcj-4.3.0.jar
