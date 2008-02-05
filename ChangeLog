@@ -1,3 +1,11 @@
+2008-02-05  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Changed LIBGCJ_OLD to GCC_OLD.
+	* Makefile.in: Regenerate.
+	* acinclude.m4: Renamed LIBGCJ_OLD to GCC_OLD.
+	* configure: Regenerate.
+	* configure.ac: Renamed LIBGCJ_OLD to GCC_OLD.
+
 2008-02-05  Joshua Sumali  <jsumali@redhat.com>
 
 	* tools/netx/jnlp/Launcher.java: Removed unused line.
