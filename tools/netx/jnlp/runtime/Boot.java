@@ -64,7 +64,7 @@ public final class Boot implements PrivilegedAction {
     /** the JNLP file to open if -jnlp not specified (null for no default) */
     private static final String defaultFile = "jar:"
         + Boot.class.getProtectionDomain().getCodeSource().getLocation()
-        + "!/netx/jnlp/resources/default.jnlp";
+        + "!/default.jnlp";
 
     private static final String miniLicense = "\n"
         + "   netx - an open-source JNLP client.\n"

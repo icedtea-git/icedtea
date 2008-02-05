@@ -59,6 +59,8 @@ public class ApplicationInstance {
     /** list of application listeners  */
     private EventListenerList listeners = new EventListenerList();
 
+	/** whether or not this application is signed */
+	private boolean isSigned = false;
 
     /**
      * Create an application instance for the file.
@@ -67,6 +69,7 @@ public class ApplicationInstance {
         this.file = file;
         this.group = group;
         this.loader = loader;
+        this.isSigned = ((JNLPClassLoader) loader).getSigning();
     }
 
     /**
@@ -235,5 +238,11 @@ public class ApplicationInstance {
         weakWindows.trimToSize();
     }
 
+	/**
+	 * Returns whether or not this jar is signed.
+	 */
+	public boolean isSigned() {
+		return isSigned;
+	}
 }
 

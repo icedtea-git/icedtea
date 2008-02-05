@@ -25,7 +25,7 @@ import javax.jnlp.*;
 import netx.jnlp.*;
 
 /**
- * The BasicService JNLP service.
+ * The ExtensionInstallerService JNLP service.
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
  * @version $Revision: 1.6 $ 

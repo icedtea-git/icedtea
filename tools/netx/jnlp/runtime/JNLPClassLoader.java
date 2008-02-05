@@ -29,6 +29,8 @@ import javax.swing.JOptionPane;
 import netx.jnlp.cache.*;
 import netx.jnlp.*;
 import netx.jnlp.tools.JarSigner;
+import netx.jnlp.services.*;
+import netx.jnlp.security.*;
 
 /**
  * Classloader that takes it's resources from a JNLP file.  If the
@@ -95,6 +97,11 @@ public class JNLPClassLoader extends URLClassLoader {
 
 	/** all of the jar files that were not verified */
 	private ArrayList<String> unverifiedJars = null;
+
+	/** the jarsigner tool to verify our jars */
+	private JarSigner js = null;
+
+	private boolean signing = false;
 
     /**
      * Create a new JNLPClassLoader from the specified file.
@@ -229,48 +236,48 @@ public class JNLPClassLoader extends URLClassLoader {
 		//Verify jars if the -verify option is passed.
 		if (JNLPRuntime.isVerifying()) {
 
-			boolean allVerified;
-
+			JarSigner js;
 			waitForJars(initialJars); //download the jars first.
 
 			try {
-				allVerified = verifyJars(initialJars);
+				js = verifyJars(initialJars);
 			} catch (Exception e) {
-
 				//we caught an Exception from the JarSigner class.
 				e.printStackTrace();
 				throw new LaunchException(null, null, R("LSFatal"),
 					R("LCInit"), R("LFatalVerification"), R("LFatalVerificationInfo"));
 			}
 
-			if (!allVerified) {
+			//Case when at least one jar has some signing
+			if (js.anyJarsSigned()){
+				signing = true;
+				//if there was some problem with the signing...
+				if (!js.allVerified()) {
 
-				String listOfVerifiedJars = "The following jars were verified:\n";
-				String listOfUnverifiedJars = "The following jars were unverified:\n";
+					boolean b = SecurityWarningDialog.showWarningDialog(
+						SecurityWarningDialog.AccessType.UNVERIFIED, file,
+						js.getCerts(), js.getDetails());
+					if (!b)
+						throw new LaunchException(null, null, R("LSFatal"), 
+							R("LCLaunching"), R("LNotVerified"), "");
+				} else {
+					//jar is completely verified, but we still need to show
+					//a dialog
 
-				if (verifiedJars.size() != 0)
-					for (int i = 0; i < verifiedJars.size(); i++)
-						listOfVerifiedJars += verifiedJars.get(i) + "\n";
+					boolean b = SecurityWarningDialog.showWarningDialog(
+						SecurityWarningDialog.AccessType.VERIFIED, file,
+						js.getCerts(), js.getDetails());
+					if (!b)
+						throw new LaunchException(null, null, R("LSFatal"),
+							R("LCLaunching"), R("LCancelOnUserRequest"), "");
+				}
+			} else {
 
-				if (unverifiedJars.size() != 0)
-					for (int i = 0; i < unverifiedJars.size(); i++)
-						listOfUnverifiedJars += unverifiedJars.get(i) + "\n";
-
-				//Open dialog, ask user if they still want to run the applet.
-				int i = JOptionPane.showConfirmDialog(null, 
-						R("LNotVerifiedDialog")+"\n\n"
-						+listOfVerifiedJars+"\n"
-						+listOfUnverifiedJars+"\n"
-						+R("LAskToContinue"),
-						"Warning", JOptionPane.YES_NO_OPTION);
-				
-				if (i == 1)
-					throw new LaunchException(null, null, R("LSFatal"), 
-						R("LCLaunching"), R("LNotVerified"), "");
+				signing = false;
+				//otherwise this jar is simply unsigned -- make sure to ask
+				//for permission on certain actions
 			}
-
 		}
-
 
         activateJars(initialJars);
     }
@@ -518,36 +525,11 @@ public class JNLPClassLoader extends URLClassLoader {
 	 *
 	 * @param jars the jars to be verified.
 	 */
-	private boolean verifyJars(List<JARDesc> jars) throws Exception {
+	private JarSigner verifyJars(List<JARDesc> jars) throws Exception {
 	
-		boolean allVerified = true;
-		
-		JarSigner js = new JarSigner();
-		verifiedJars = new ArrayList<String>();
-		unverifiedJars = new ArrayList<String>();
-
-		for (int i = 0; i < jars.size(); i++) {
-			
-			JARDesc jar = (JARDesc) jars.get(i);
-			
-			try {
-				String localFile = tracker.getCacheFile(jar.getLocation()).getAbsolutePath();
-				boolean result = js.verifyJar(localFile);
-
-				if (!result) {
-					allVerified = false;
-					unverifiedJars.add(localFile);
-				} else {
-					verifiedJars.add(localFile);
-				}
-			} catch (Exception e){
-				//We may catch exceptions from using js.verifyJar(localFile).
-				e.printStackTrace();
-				throw e;
-			}
-		}
-		
-		return allVerified;
+		js = new JarSigner();
+		js.verifyJars(jars, tracker);
+		return js;
 	}
 
     /**
@@ -750,6 +732,10 @@ public class JNLPClassLoader extends URLClassLoader {
     public String getExtensionHREF() {
         return file.getFileLocation().toString();
     }
+
+	public boolean getSigning() {
+		return signing;
+	}
 
 }
 
