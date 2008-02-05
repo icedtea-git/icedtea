@@ -1,3 +1,21 @@
+2008-02-05  Bernhard Rosenkränzer  <bero@arklinux.org>
+
+	* configure.ac: Added check for jar. If fastjar is not found, then jar
+	is used.
+	* configure: Regenerate.
+	* patches/icedtea-gcc-4.3.patch: New patch for gcc 4.3.
+
+2008-02-05  Lillian Angel  <langel@redhat.com>
+
+	Fixes Bug #96
+	* Makefile.am
+	(clean-tools): Added clean-hotspot-tools to dependencies.
+	(ICEDTEA_PATCHES): Added gcc 4.3 patches.
+	(INSTALL): Updated for libgcj-4.3.0.
+	* Makefile.in: Regenerate.
+	* acinclude.m4: Updated for libgcj-4.3.0.jar.
+	* AUTHORS: Added Bernhard Rosenkränzer.
+
 2008-02-01  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-lib64.patch: Fixed to silence warning.
