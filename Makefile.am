@@ -190,6 +190,13 @@ else
   FAST_BUILD_PATCH =
 endif
 
+# If new libgcj is installed, apply 4.3 patch
+if LIBGCJ_OLD
+  GCC_PATCH =
+else
+  GCC_PATCH = patches/icedtea-gcc-4.3.patch
+endif
+
 ICEDTEA_PATCHES = \
 	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-version.patch \
@@ -230,7 +237,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \
-	patches/icedtea-gcc-4.3.patch \
+	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
