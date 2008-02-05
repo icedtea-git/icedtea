@@ -7,7 +7,8 @@ all-local: icedtea-against-icedtea
 
 distclean-local: clean-copy
 	rm -rf stamps
-	rm -f rt-source-files.txt tools-source-files.txt
+	rm -f rt-source-files.txt tools-source-files.txt \
+	  hotspot-tools-source-files.txt
 	rm -rf bootstrap
 	rm -rf lib
 	rm -rf openjdk-ecj
@@ -24,7 +25,7 @@ install:
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
 	clean-tools-jar clean-tools clean-shared-objects \
-	clean-copy clean-rt clean-gcjwebplugin clean-tools \
+	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
 	hotspot hotspot-helper
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
@@ -229,6 +230,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \
+	patches/icedtea-gcc-4.3.patch \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
@@ -539,7 +541,7 @@ clean-plugs: clean-plugs clean-shared-objects \
 	rm -f stamps/plugs.stamp
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
-clean-tools-jar: clean-tools-jar clean-tools
+clean-tools-jar: clean-hotspot-tools clean-tools
 	rm -f stamps/hotspot-tools.stamp
 	rm -rf tools/
 	rm -f bootstrap/jdk1.7.0/jre/lib/tools.jar
