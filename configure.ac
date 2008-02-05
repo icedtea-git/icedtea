@@ -14,7 +14,11 @@ FIND_TOOL([PATCH], [patch])
 FIND_TOOL([ZIP], [zip])
 FIND_TOOL([UNZIP], [unzip])
 FIND_TOOL([CHMOD], [chmod])
-FIND_TOOL([FASTJAR], [fastjar])
+AC_CHECK_TOOLS([FASTJAR], [fastjar jar])
+if test "x$FASTJAR" = x; then
+	AC_MSG_ERROR([Can't find fastjar or jar])
+fi
+AC_SUBST([FASTJAR])
 dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])

@@ -1,0 +1,84 @@
+--- openjdk/hotspot/src/share/vm/adlc/adlc.hpp.ark	2008-01-11 14:15:41.000000000 +0000
++++ openjdk/hotspot/src/share/vm/adlc/adlc.hpp	2008-01-11 14:16:14.000000000 +0000
+@@ -29,7 +29,7 @@
+ // standard library constants
+ #include "stdio.h"
+ #include "stdlib.h"
+-#if _MSC_VER >= 1300  // Visual C++ 7.0 or later
++#if (defined(__GNUC__) && __GNUC__ >= 3) || (_MSC_VER >= 1300)  // gcc 3.0 or later or Visual C++ 7.0 or later
+ #include <iostream>
+ #else
+ #include <iostream.h>
+--- openjdk/hotspot/src/share/vm/adlc/filebuff.cpp.ark	2008-01-11 14:17:17.000000000 +0000
++++ openjdk/hotspot/src/share/vm/adlc/filebuff.cpp	2008-01-11 14:17:34.000000000 +0000
+@@ -25,6 +25,8 @@
+ // FILEBUFF.CPP - Routines for handling a parser file buffer
+ #include "adlc.hpp"
+ 
++using namespace std;
++
+ //------------------------------FileBuff---------------------------------------
+ // Create a new parsing buffer
+ FileBuff::FileBuff( BufferedFile *fptr, ArchDesc& archDesc) : _fp(fptr), _AD(archDesc) {
+--- openjdk/hotspot/src/share/vm/adlc/filebuff.hpp.ark	2008-01-11 14:14:45.000000000 +0000
++++ openjdk/hotspot/src/share/vm/adlc/filebuff.hpp	2008-01-11 14:15:34.000000000 +0000
+@@ -24,7 +24,7 @@
+ 
+ // FILEBUFF.HPP - Definitions for parser file buffering routines
+ 
+-#if _MSC_VER >= 1300  // Visual C++ 7.0 or later
++#if (defined(__GNUC__) && __GNUC__ >= 3) || (_MSC_VER >= 1300)  // gcc 3.0 or later, or Visual C++ 7.0 or later
+ #include <iostream>
+ #else
+ #include <iostream.h>
+@@ -96,8 +96,11 @@
+   FileBuffRegion *copy();                   // Deep copy
+   FileBuffRegion *merge(FileBuffRegion*); // Merge 2 regions; delete input
+ 
+-//  void print(std::ostream&);
+-//  friend std::ostream& operator<< (std::ostream&, FileBuffRegion&);
++#if defined(__GNUC__) && __GNUC__ >= 3
++  void print(std::ostream&);
++  friend std::ostream& operator<< (std::ostream&, FileBuffRegion&);
++#else
+   void print(ostream&);
+   friend ostream& operator<< (ostream&, FileBuffRegion&);
++#endif
+ };
+--- openjdk/hotspot/build/linux/makefiles/gcc.make.ark	2008-01-11 14:24:05.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2008-01-11 14:24:27.000000000 +0000
+@@ -94,7 +94,8 @@
+ endif
+ 
+ # Compiler warnings are treated as errors
+-WARNINGS_ARE_ERRORS = -Werror
++# Commented out for now because of gcc 4.3 warnings OpenJDK isn't ready for
++#WARNINGS_ARE_ERRORS = -Werror
+ # Except for a few acceptable ones
+ ACCEPTABLE_WARNINGS = -Wpointer-arith -Wconversion -Wsign-compare
+ CFLAGS_WARN/DEFAULT = $(WARNINGS_ARE_ERRORS) $(ACCEPTABLE_WARNINGS)
+--- openjdk/hotspot/build/solaris/makefiles/gcc.make.ark	2008-01-11 14:24:33.000000000 +0000
++++ openjdk/hotspot/build/solaris/makefiles/gcc.make	2008-01-11 14:24:48.000000000 +0000
+@@ -109,7 +109,8 @@
+ 
+ 
+ # Compiler warnings are treated as errors 
+-WARNINGS_ARE_ERRORS = -Werror 
++# Commented out for now because of gcc 4.3 warnings OpenJDK isn't ready for
++# WARNINGS_ARE_ERRORS = -Werror 
+ # Enable these warnings. See 'info gcc' about details on these options
+ ADDITIONAL_WARNINGS = -Wpointer-arith -Wconversion -Wsign-compare 
+ CFLAGS_WARN/DEFAULT = $(WARNINGS_ARE_ERRORS) $(ADDITIONAL_WARNINGS) 
+--- openjdk/jdk/make/common/Defs-linux.gmk.ark	2008-01-11 14:20:26.000000000 +0000
++++ openjdk/jdk/make/common/Defs-linux.gmk	2008-01-11 14:21:10.000000000 +0000
+@@ -139,7 +139,9 @@
+ # Treat compiler warnings as errors, if warnings not allowed
+ #
+ ifeq ($(COMPILER_WARNINGS_FATAL),true)
+-  GCC_WARNINGS += -Werror
++  # gcc 4.3 introduces new warnings OpenJDK code isn't quite ready for, such as
++  # "cast from double to float may chance its value". Let's ignore this for now.
++  # GCC_WARNINGS += -Werror
+ endif
+ 
+ #
