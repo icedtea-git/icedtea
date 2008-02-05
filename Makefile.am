@@ -191,8 +191,8 @@ else
   FAST_BUILD_PATCH =
 endif
 
-# If new libgcj is installed, apply 4.3 patch
-if LIBGCJ_OLD
+# If new gcc is installed, apply 4.3 patch
+if GCC_OLD
   GCC_PATCH =
 else
   GCC_PATCH = patches/icedtea-gcc-4.3.patch
