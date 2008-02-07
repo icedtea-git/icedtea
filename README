@@ -114,6 +114,6 @@ in the IcedTea repository, particularly in the icedtea/tools directory.
 The NetX sources are built into openjdk/build/arch/j2sdk-image/lib/tools.jar
 and a javaws binary is created in openjdk/build/arch/j2sdk-image/bin/.
 
-IcedTea's NetX currently supports verification of signed jars. This can be
-enabled by passing the -verify option to javaws.
+IcedTea's NetX currently supports verification of signed jars by default
+and provides some services specified by the jnlp API.
 
