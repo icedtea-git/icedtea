@@ -123,7 +123,6 @@ else
   AC_CONFIG_FILES([javac], [chmod +x javac])
   AC_CONFIG_FILES([javap], [chmod +x javap])
 fi
-FIND_FREETYPE
 WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
 AC_CHECK_WITH_CACAO
@@ -133,20 +132,115 @@ if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
   FIND_TOOL([MERCURIAL], [hg])
 fi
 
-CHECK_HEADERS
-
-AC_CHECK_LIB(Xtst, XTestQueryExtension,
-	, [AC_MSG_ERROR("libXtst not found - try installing libXtst-devel")])
-AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
-	, [AC_MSG_ERROR("libXinerama not found - try installing libXinerama-devel")])
-AC_CHECK_LIB(png, main,
-        , [AC_MSG_ERROR("libpng not found - try installing libpng-devel")])
+dnl pkgconfig cannot be used to finid these headers and libraries.
+AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
+	,[AC_MSG_ERROR("CUPS headers were not found - 
+	try installing cups-devel.")])
+AC_CHECK_HEADERS([X11/X.h],[]
+	,[AC_MSG_ERROR("xorg headers were not found - 
+	try installing xorg-x11-proto-devel.")])
+AC_CHECK_HEADERS([Xm/Xm.h Xm/XmP.h Xm/Display.h],[]
+	,[AC_MSG_ERROR("motif headers were not found - 
+	try installing lesstif-devel.")])
 AC_CHECK_LIB(jpeg, main,
         , [AC_MSG_ERROR("libjpeg not found - try installing libjpeg-devel")])
 AC_CHECK_LIB(gif, main,
         , [AC_MSG_ERROR("giflib not found - try installing giflib-devel")])
 AC_CHECK_LIB(z, main,
 	, [AC_MSG_ERROR("zlib not found - try installing zlib-devel")])
+
+dnl Check for Xproto headers and libraries.
+PKG_CHECK_MODULES(XPROTO, xproto,[XPROTO_FOUND=yes],[XPROTO_FOUND=no])
+if test "x${XPROTO_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find Xproto headers - \
+  Try installing xorg-x11-proto-devel.])
+fi
+AC_SUBST(XT_CFLAGS)
+AC_SUBST(XT_LIBS)
+
+dnl Check for libXt headers and libraries.
+PKG_CHECK_MODULES(XT, xt,[XT_FOUND=yes],[XT_FOUND=no])
+if test "x${XT_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find Xt - \
+  Try installing libXt-devel.])
+fi
+AC_SUBST(XT_CFLAGS)
+AC_SUBST(XT_LIBS)
+
+dnl Check for libXp headers and libraries.
+PKG_CHECK_MODULES(XP, xp,[XP_FOUND=yes],[XP_FOUND=no])
+if test "x${XP_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find Xp - \
+  Try installing libXp-devel.])
+fi
+AC_SUBST(XP_CFLAGS)
+AC_SUBST(XP_LIBS)
+
+dnl Check for libX11 headers and libraries.
+PKG_CHECK_MODULES(X11, x11,[X11_FOUND=yes],[X11_FOUND=no])
+if test "x${X11_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find x11 - \
+  Try installing libX11-devel.])
+fi
+AC_SUBST(X11_CFLAGS)
+AC_SUBST(X11_LIBS)
+
+dnl Check for libXinerama headers and libraries.
+PKG_CHECK_MODULES(XINERAMA, xinerama,[XINERAMA_FOUND=yes]
+	,[XINERAMA_FOUND=no])
+if test "x${XINERAMA_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find Xinerama - \
+  Try installing libXinerama-devel.])
+fi
+AC_SUBST(XINERAMA_CFLAGS)
+AC_SUBST(XINERAMA_LIBS)
+
+dnl Check for libpng headers and libraries.
+PKG_CHECK_MODULES(LIBPNG, libpng,[LIBPNG_FOUND=yes]
+	,[LIBPNG_FOUND=no])
+if test "x${LIBPNG_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find libpng - \
+  Try installing libpng-devel.])
+fi
+AC_SUBST(LIBPNG_CFLAGS)
+AC_SUBST(LIBPNG_LIBS)
+
+dnl Check for libXtst headers and libraries.
+PKG_CHECK_MODULES(XTST, xtst,[XTST_FOUND=yes],[XTST_FOUND=no])
+if test "x${XTST_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find Xtst - \
+  Try installing libXtst-devel.])
+fi
+AC_SUBST(XTST_CFLAGS)
+AC_SUBST(XTST_LIBS)
+
+dnl Check for freetype2 headers and libraries.
+PKG_CHECK_MODULES(FREETYPE2, freetype2,[FREETYPE2_FOUND=yes]
+	,[FREETYPE2_FOUND=no])
+if test "x${FREETYPE2_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find freetype2 - \
+  Try installing freetype2-devel.])
+fi 
+AC_SUBST(FREETYPE2_CFLAGS)
+AC_SUBST(FREETYPE2_LIBS)
+
+dnl Check for alsa headers and libraries.
+PKG_CHECK_MODULES(ALSA, alsa,[ALSA_FOUND=yes],[ALSA_FOUND=no])
+if test "x${ALSA_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find alsa - \
+  Try installing alsa-lib-devel.])
+fi
+AC_SUBST(ALSA_CFLAGS)
+AC_SUBST(ALSA_LIBS)
 
 dnl Check for plugin support headers and libraries.
 if test "$ENABLE_PLUGIN" = "yes"; then
