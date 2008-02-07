@@ -487,31 +487,6 @@ AC_DEFUN([FIND_XERCES2_JAR],
   AC_SUBST(XERCES2_JAR)
 ])
 
-AC_DEFUN([CHECK_HEADERS],
-[
-  AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[],[AC_MSG_ERROR("CUPS headers were not found - try installing cups-devel.")])
-  AC_CHECK_HEADERS([X11/X.h X11/Xproto.h],[],[AC_MSG_ERROR("xorg headers were not found - try installing xorg-x11-proto-devel.")])
-  AC_CHECK_HEADERS([X11/Xlib.h X11/Xutil.h],[],[AC_MSG_ERROR("libX11 headers were not found - try installing libX11-devel.")])
-  AC_CHECK_HEADERS([X11/Intrinsic.h X11/Shell.h X11/StringDefs.h],[],[AC_MSG_ERROR("libXt headers were not found - try installing libXt-devel.")])
-  AC_CHECK_HEADERS(X11/extensions/Print.h,[],[AC_MSG_ERROR("libXp headers were not found - try installing libXp-devel.")])
-  AC_CHECK_HEADERS([Xm/Xm.h Xm/XmP.h Xm/Display.h],[],[AC_MSG_ERROR("motif headers were not found - try installing lesstif-devel.")])
-  AC_CHECK_HEADERS([alsa/asoundlib.h],[],[AC_MSG_ERROR("ALSA headers were not found - try installing alsa-lib-devel.")])
-])
-
-AC_DEFUN([FIND_FREETYPE],
-[
-    AC_CHECK_LIB(freetype, FT_Init_FreeType, [], [AC_MSG_ERROR("Freetype not found - try installing freetype-devel")])
-    AC_MSG_CHECKING(for freetype header directory)
-    if test -d "/usr/include/freetype2"; then
-      FREETYPE2_INC_DIR=/usr/include/freetype2
-      AC_MSG_RESULT(${FREETYPE2_INC_DIR})
-    else
-      AC_MSG_RESULT(no)
-      AC_MSG_ERROR("Freetype headers not found - try installing freetype-devel")
-    fi
-    AC_SUBST(FREETYPE2_INC_DIR)
-])
-
 AC_DEFUN([ENABLE_FAST_BUILD],
 [
   AC_ARG_ENABLE([fast-build],
