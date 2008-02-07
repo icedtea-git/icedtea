@@ -1,3 +1,11 @@
+2008-02-07  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.in: Regenerate.
+	* acinclude.m4: Removed FIND_FREETYPE2 and CHECK_HEADERS block.
+	* configure: Regenerate.
+	* configure.ac: Added pkg-config check for all packages using 
+	pkg-config.
+
 2008-02-07  Joshua Sumali  <jsumali@redhat.com>
 
 	* README: Updated NetX information.
