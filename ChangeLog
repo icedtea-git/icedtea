@@ -1,5 +1,11 @@
 2008-02-11  Lillian Angel  <langel@redhat.com>
 
+	* patches/icedtea-libraries.patch: Changed to dlopen libjpeg.so.62
+	instead of libjpeg.so.
+	* INSTALL: Added libjpeg version 6b to build requirements.
+
+2008-02-11  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Changed cp -a arg to -dpPR.
 	* Makefile.in: Regenerate.
 
