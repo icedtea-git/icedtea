@@ -24791,9 +24791,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  Java_sun_awt_image_JPEGImageDecoder_initIDs(JNIEnv *env, jclass cls,
                                              jclass InputStreamClass)
  {
-+    void *handle = dlopen("/usr/lib/libjpeg.so", RTLD_LAZY | RTLD_GLOBAL);
++    void *handle = dlopen("/usr/lib/libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
 +    if (handle == NULL)
-+      handle = dlopen("/usr/lib64/libjpeg.so", RTLD_LAZY | RTLD_GLOBAL);
++      handle = dlopen("/usr/lib64/libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
 + 
 +    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
 +    if (jpegstderror == NULL) {
@@ -25301,9 +25301,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
 +METHODDEF(void)
 +initIDs()
 +{
-+    void *handle = dlopen("/usr/lib/libjpeg.so", RTLD_LAZY | RTLD_GLOBAL);
++    void *handle = dlopen("/usr/lib/libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
 +    if (handle == NULL)
-+      handle = dlopen("/usr/lib64/libjpeg.so", RTLD_LAZY | RTLD_GLOBAL);
++      handle = dlopen("/usr/lib64/libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
 +    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
 +    if (jpegstderror == NULL) {
 +       dlclose(handle);

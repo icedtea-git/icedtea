@@ -28,7 +28,7 @@ ant >= 1.6.5
 libXinerama-devel
 giflib-devel
 libpng-devel
-libjpeg-devel
+libjpeg-devel = 6b
 zlib-devel
 mercurial 0.9.5 + forest extension
 
