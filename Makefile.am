@@ -278,7 +278,7 @@ clean-patch:
 # Copy over OpenJDK sources for ecj.
 stamps/clone-ecj.stamp: stamps/patch.stamp
 	if ! test -d openjdk-ecj ; then \
-	    cp -al openjdk openjdk-ecj ; \
+	    cp -dpPRl openjdk openjdk-ecj ; \
 	fi
 	mkdir -p stamps
 	touch stamps/clone-ecj.stamp
@@ -453,9 +453,9 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	  -C openjdk/ j2se_only
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
 	  then \
-	  cp -af gcjwebplugin.so \
+	  cp -dpPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
-	  cp -af gcjwebplugin.so \
+	  cp -dpPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
 	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/tools.jar \
@@ -472,9 +472,9 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	  j2se_fastdebug_only
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
 	  then \
-	  cp -af gcjwebplugin.so \
+	  cp -dpPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
-	  cp -af gcjwebplugin.so \
+	  cp -dpPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
 	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/lib/tools.jar \
@@ -588,7 +588,7 @@ stamps/copy-source-files.stamp: stamps/patch.stamp
 	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
 	do \
 	  mkdir -p rt/$$copy_dir ; \
-	  cp -af openjdk/jdk/src/share/classes/$$copy_dir/*.java \
+	  cp -dpPRf openjdk/jdk/src/share/classes/$$copy_dir/*.java \
 	    rt/$$copy_dir ; \
 	done
 	mkdir -p stamps
@@ -616,28 +616,28 @@ stamps/hotspot-tools-copy-source-files.stamp: stamps/patch.stamp
 	for copy_dir in `cat tools-copy/tools-jdk-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
-	  cp -arf openjdk/jdk/src/share/classes/$$copy_dir/* \
+	  cp -dpPRf openjdk/jdk/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
 	
 	for copy_dir in `cat tools-copy/tools-langtools-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
-	  cp -arf openjdk/langtools/src/share/classes/$$copy_dir/* \
+	  cp -dpPRf openjdk/langtools/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
 	
 	for copy_dir in `cat tools-copy/tools-corba-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
-	  cp -arf openjdk/corba/src/share/classes/$$copy_dir/* \
+	  cp -dpPRf openjdk/corba/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
 	
 	for copy_dir in `cat tools-copy/tools-jaxws-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
-	  cp -arf openjdk/jaxws/src/share/classes/$$copy_dir/* \
+	  cp -dpPRf openjdk/jaxws/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
 	
@@ -768,7 +768,7 @@ stamps/tools-class-files.stamp: tools-source-files.txt \
           @$< ; \
         fi
 	cp tools/default.jnlp lib/tools
-	cp -r tools/netx/jnlp/resources lib/tools/netx/jnlp
+	cp -R tools/netx/jnlp/resources lib/tools/netx/jnlp
 	mkdir -p stamps
 	touch stamps/tools-class-files.stamp
 
