@@ -1,3 +1,8 @@
+2008-02-11  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Changed cp -a arg to -dpPR.
+	* Makefile.in: Regenerate.
+
 2008-02-07  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.in: Regenerate.
