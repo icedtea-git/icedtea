@@ -303,32 +303,34 @@ diff -ru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist
 diff -ru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
 --- openjdk.orig/jdk/make/common/Defs-linux.gmk	2007-11-08 11:35:35.000000000 +0000
 +++ openjdk/jdk/make/common/Defs-linux.gmk	2007-11-08 11:36:15.000000000 +0000
-@@ -258,7 +258,11 @@ endif
+@@ -258,7 +258,12 @@ endif
  # -L to the -ljvm, this is because -ljava depends on -ljvm, whereas
  # the library itself should not.
  #
 -VM_NAME         = server
-+ifneq ($(wildcard $(LIBDIR)/$(LIBARCH)/server/libjvm.so),)
-+  VM_NAME       = server
-+else
-+  VM_NAME       = core
-+endif
++VM_NAME = $(shell for dir in server client core; do \
++                    if [ -d $(LIBDIR)/$(LIBARCH)/$$dir ]; then \
++		      echo $$dir; \
++		      break; \
++		    fi; \
++		  done)
  JVMLIB          = -L$(LIBDIR)/$(LIBARCH)/$(VM_NAME) -ljvm
  JAVALIB         = -ljava $(JVMLIB)
  
 diff -ru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common/Defs-linux.gmk
 --- openjdk.orig/corba/make/common/Defs-linux.gmk	Tue Feb 05 15:52:33 2008 +0000
 +++ openjdk/corba/make/common/Defs-linux.gmk	Mon Feb 11 10:01:46 2008 +0000
-@@ -250,7 +254,11 @@ endif
+@@ -250,7 +254,12 @@ endif
  # -L to the -ljvm, this is because -ljava depends on -ljvm, whereas
  # the library itself should not.
  #
 -VM_NAME         = server
-+ifneq ($(wildcard $(BOOTDIR)/jre/lib/$(LIBARCH)/server/libjvm.so),)
-+  VM_NAME       = server
-+else
-+  VM_NAME       = core
-+endif
++VM_NAME = $(shell for dir in server client core; do \
++                    if [ -d $(BOOTDIR)/jre/lib/$(LIBARCH)/$$dir ]; then \
++		      echo $$dir; \
++		      break; \
++		    fi; \
++		  done)
  JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
  JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
  
