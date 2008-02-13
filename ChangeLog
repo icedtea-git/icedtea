@@ -1,3 +1,30 @@
+2008-02-13  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4 (SET_CORE_BUILD): New check.
+	* configure.ac: Call the above.
+	* Makefile.am
+	(ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Add ICEDTEA_CORE_BUILD.
+	(hotspot): Updated libjvm.so location.
+	* configure, Makefile.in: Regenerated.
+
+	* patches/icedtea-ports.patch: Use zero on ppc and ppc64.
+	Removed everything relating to the ppc-specific port.
+	Moved several hunks into icedtea-core-build.patch.
+	* patches/icedtea-core-build.patch: Completely reworked.
+
+	* ports/hotspot/build/linux/makefiles/ppc.make: Use zero.
+	* ports/hotspot/build/linux/makefiles/ppc64.make: Likewise.
+	* ports/hotspot/build/linux/platform_ppc: Likewise.
+	* ports/hotspot/build/linux/platform_ppc64: Likewise.
+
+	* ports/jdk/src/solaris/bin/alpha/jvm.cfg: Change default to core.
+	* ports/jdk/src/solaris/bin/arm/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/mips/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/ppc/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/ppc64/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/s390/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/s390x/jvm.cfg: Likewise.
+
 2008-02-11  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-libraries.patch: Changed to dlopen libjpeg.so.62

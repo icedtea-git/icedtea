@@ -720,6 +720,7 @@ WITH_ICEDTEA_TRUE
 WITH_ICEDTEA_FALSE
 BUILD_ARCH_DIR
 INSTALL_ARCH_DIR
+ICEDTEA_CORE_BUILD
 JAVA
 JAVAC
 JAVAH
@@ -4986,6 +4987,16 @@ fi
       ;;
   esac
 
+
+
+
+  if test -f "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}" && \
+     grep -q "arch.*=.*zero" "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}"
+  then
+    ICEDTEA_CORE_BUILD=yes
+  else
+    ICEDTEA_CORE_BUILD=
+  fi
 
 
 if test "${with_icedtea}" == true
@@ -10827,6 +10838,7 @@ WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
 WITH_ICEDTEA_FALSE!$WITH_ICEDTEA_FALSE$ac_delim
 BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
 INSTALL_ARCH_DIR!$INSTALL_ARCH_DIR$ac_delim
+ICEDTEA_CORE_BUILD!$ICEDTEA_CORE_BUILD$ac_delim
 JAVA!$JAVA$ac_delim
 JAVAC!$JAVAC$ac_delim
 JAVAH!$JAVAH$ac_delim
@@ -10884,7 +10896,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 60; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 61; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
