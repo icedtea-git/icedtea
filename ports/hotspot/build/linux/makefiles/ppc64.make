@@ -1,6 +1,6 @@
 #
 # Copyright 2003-2005 Sun Microsystems, Inc.  All Rights Reserved.
-# Copyright 2007 Red Hat, Inc.
+# Copyright 2007, 2008 Red Hat, Inc.
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 # This code is free software; you can redistribute it and/or modify it
@@ -22,9 +22,6 @@
 # have any questions.
 #
 #
-
-# Not included in includeDB because it has no dependencies
-Obj_Files += linux_ppc64.o
 
 # The copied fdlibm routines in sharedRuntimeTrig.o must not be optimized
 OPT_CFLAGS/sharedRuntimeTrig.o = $(OPT_CFLAGS/NOOPT)
