@@ -63,7 +63,8 @@ ICEDTEA_ENV = \
 	"ENDORSED=-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
 	"CLASSPATH=" \
 	"LD_LIBRARY_PATH=" \
-	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)"
+	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)" \
+	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)"
 
 if WITH_CACAO
 ICEDTEA_ENV += \
@@ -103,7 +104,8 @@ ICEDTEA_ENV_ECJ = \
 	"CLASSPATH=" \
 	"LD_LIBRARY_PATH=" \
 	"GENSRCDIR=$(abs_top_srcdir)/generated" \
-	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)"
+	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)" \
+	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)"
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
@@ -509,8 +511,8 @@ hotspot:
 	rm -f stamps/icedtea-ecj.stamp
 	rm -f stamps/icedtea-against-ecj.stamp
 	$(MAKE) hotspot-helper
-	cp openjdk-ecj/build/$(LINUX_DIR)/hotspot/import/jre/lib/$(BUILD_ARCH_DIR)/client/libjvm.so \
-	   openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/client
+	cp openjdk-ecj/build/$(LINUX_DIR)/hotspot/import/jre/lib/$(BUILD_ARCH_DIR)/core/libjvm.so \
+	   openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/core
 	@echo "Hotspot is served:" openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image
 
 hotspot-helper: stamps/bootstrap-directory-symlink-ecj.stamp \

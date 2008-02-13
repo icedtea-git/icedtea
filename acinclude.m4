@@ -18,6 +18,18 @@ AC_DEFUN([SET_ARCH_DIRS],
   AC_SUBST(INSTALL_ARCH_DIR)
 ])
 
+AC_DEFUN([SET_CORE_BUILD],
+[
+  if test -f "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}" && \
+     grep -q "arch.*=.*zero" "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}"
+  then
+    ICEDTEA_CORE_BUILD=yes
+  else
+    ICEDTEA_CORE_BUILD=
+  fi
+  AC_SUBST(ICEDTEA_CORE_BUILD)
+])
+
 AC_DEFUN([FIND_JAVAC],
 [
   user_specified_javac=

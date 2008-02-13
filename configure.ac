@@ -96,6 +96,7 @@ AC_ARG_WITH([icedtea],
 AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" == true)
 
 SET_ARCH_DIRS
+SET_CORE_BUILD
 if test "${with_icedtea}" == true
 then
   JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
