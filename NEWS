@@ -1,3 +1,10 @@
+New in release 1.6 (2008-02-13)
+
+- Zero-assembler implemented.
+- Netx support added. Still a work-in-progress.
+- Updated to build with gcc 4.3.
+- Many bug fixes.
+
 New in release 1.5 (2008-01-03)
 
 - ppc/ppc64 support.
