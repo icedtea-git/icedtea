@@ -98,7 +98,6 @@ GLIB_LIBS = @GLIB_LIBS@
 GREP = @GREP@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
-ICEDTEA_CORE_BUILD = @ICEDTEA_CORE_BUILD@
 INSTALL = @INSTALL@
 INSTALL_ARCH_DIR = @INSTALL_ARCH_DIR@
 INSTALL_DATA = @INSTALL_DATA@
@@ -232,6 +231,8 @@ ICEDTEA_BOOT_DIR = \
 ICEDTEA_ENDORSED_DIR = \
 	$(ICEDTEA_BOOT_DIR)/lib/endorsed
 
+@CORE_BUILD_FALSE@ICEDTEA_CORE_BUILD = 
+@CORE_BUILD_TRUE@ICEDTEA_CORE_BUILD = yes
 ICEDTEA_ENV = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
@@ -300,6 +301,10 @@ OPENJDK_URL = http://hg.openjdk.java.net/jdk7/jdk7
 
 # Patch OpenJDK sources for plug replacements.
 @FAST_BUILD_TRUE@FAST_BUILD_PATCH = patches/icedtea-speed.patch
+@ZERO_BUILD_FALSE@ZERO_BUILD_PATCH = 
+
+# If --enable-zero was passed then patch the build files
+@ZERO_BUILD_TRUE@ZERO_BUILD_PATCH = patches/icedtea-always-zero.patch
 @GCC_OLD_FALSE@GCC_PATCH = patches/icedtea-gcc-4.3.patch
 
 # If new gcc is installed, apply 4.3 patch
@@ -346,6 +351,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-zero.patch \
 	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
+	$(ZERO_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
 

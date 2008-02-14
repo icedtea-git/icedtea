@@ -1,3 +1,16 @@
+2008-02-14  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-always-zero.patch: New file.
+	* acinclude.m4
+	(ENABLE_ZERO_BUILD): New macro.
+	(SET_CORE_BUILD): Rewritten to accomodate the above.
+	* configure.ac: Call ENABLE_ZERO_BUILD, and move the
+	call to SET_CORE_BUILD so it's after it.
+	* Makefile.am
+	(ICEDTEA_CORE_BUILD): Rearrange slightly.
+	(ICEDTEA_PATCHES): Conditionally add zero build patch.
+	* Makefile.in, configure: Regenerate.
+
 2008-02-13  Lillian Angel <langel@redhat.com>
 
 	* configure.ac: Updated IcedTea version.
