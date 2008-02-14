@@ -45,6 +45,11 @@ ICEDTEA_BOOT_DIR= \
 	$(abs_top_srcdir)/bootstrap/jdk1.6.0
 ICEDTEA_ENDORSED_DIR = \
 	$(ICEDTEA_BOOT_DIR)/lib/endorsed
+if CORE_BUILD
+  ICEDTEA_CORE_BUILD = yes
+else
+  ICEDTEA_CORE_BUILD =
+endif
 ICEDTEA_ENV = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
@@ -193,6 +198,13 @@ else
   FAST_BUILD_PATCH =
 endif
 
+# If --enable-zero was passed then patch the build files
+if ZERO_BUILD
+  ZERO_BUILD_PATCH = patches/icedtea-always-zero.patch
+else
+  ZERO_BUILD_PATCH =
+endif
+
 # If new gcc is installed, apply 4.3 patch
 if GCC_OLD
   GCC_PATCH =
@@ -242,6 +254,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-zero.patch \
 	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
+	$(ZERO_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
 if WITH_CACAO

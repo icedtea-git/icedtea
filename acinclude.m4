@@ -18,18 +18,6 @@ AC_DEFUN([SET_ARCH_DIRS],
   AC_SUBST(INSTALL_ARCH_DIR)
 ])
 
-AC_DEFUN([SET_CORE_BUILD],
-[
-  if test -f "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}" && \
-     grep -q "arch.*=.*zero" "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}"
-  then
-    ICEDTEA_CORE_BUILD=yes
-  else
-    ICEDTEA_CORE_BUILD=
-  fi
-  AC_SUBST(ICEDTEA_CORE_BUILD)
-])
-
 AC_DEFUN([FIND_JAVAC],
 [
   user_specified_javac=
@@ -519,6 +507,33 @@ AC_DEFUN([FIND_TOOL],
    AC_MSG_ERROR([$2 program not found in PATH])
  fi
  AC_SUBST([$1])
+])
+
+AC_DEFUN([ENABLE_ZERO_BUILD],
+[
+  AC_ARG_ENABLE([zero],
+                [AS_HELP_STRING(--enable-zero,use zero-assembler port on non-zero platforms)],
+  [
+    AM_CONDITIONAL(ZERO_BUILD, test x = x)
+  ],
+  [
+    AM_CONDITIONAL(ZERO_BUILD, test x != x)
+  ])
+])
+
+AC_DEFUN([SET_CORE_BUILD],
+[
+  if test "x${ZERO_BUILD_TRUE}" = x; then
+    AM_CONDITIONAL(CORE_BUILD, test x = x)
+  else
+    if test -f "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}" && \
+       grep -q "arch.*=.*zero" "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}"
+    then
+      AM_CONDITIONAL(CORE_BUILD, test x = x)
+    else
+      AM_CONDITIONAL(CORE_BUILD, test x != x)
+    fi
+  fi
 ])
 
 
