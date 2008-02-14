@@ -1,0 +1,148 @@
+diff -r b8a03891e55e openjdk/hotspot/make/defs.make
+--- openjdk/hotspot/make/defs.make	Thu Feb 14 12:46:26 2008 +0000
++++ openjdk/hotspot/make/defs.make	Thu Feb 14 13:06:37 2008 +0000
+@@ -209,6 +209,7 @@ ifneq ($(OSNAME),windows)
+     else
+       BUILDARCH = i486
+     endif
++    SRCARCH = zero
+   endif
+   ifeq ($(BUILDARCH), sparc)
+     ifdef LP64
+diff -r b8a03891e55e openjdk/hotspot/build/linux/platform_amd64
+--- openjdk/hotspot/build/linux/platform_amd64	Thu Feb 14 12:46:26 2008 +0000
++++ openjdk/hotspot/build/linux/platform_amd64	Thu Feb 14 12:57:36 2008 +0000
+@@ -1,12 +1,12 @@ os_family = linux
+ os_family = linux
+ 
+-arch = x86
++arch = zero
+ 
+-arch_model = x86_64
++arch_model = zero
+ 
+-os_arch = linux_x86
++os_arch = linux_zero
+ 
+-os_arch_model = linux_x86_64
++os_arch_model = linux_zero
+ 
+ lib_arch = amd64
+ 
+@@ -14,4 +14,4 @@ compiler = gcc
+ 
+ gnu_dis_arch = amd64
+ 
+-sysdefs = -DLINUX -D_GNU_SOURCE -DAMD64
++sysdefs = -DLINUX -D_GNU_SOURCE -DAMD64 -DCC_INTERP -DZERO
+diff -r b8a03891e55e openjdk/hotspot/build/linux/platform_i486
+--- openjdk/hotspot/build/linux/platform_i486	Thu Feb 14 12:46:26 2008 +0000
++++ openjdk/hotspot/build/linux/platform_i486	Thu Feb 14 12:57:36 2008 +0000
+@@ -1,12 +1,12 @@ os_family = linux
+ os_family = linux
+ 
+-arch = x86
++arch = zero
+ 
+-arch_model = x86_32
++arch_model = zero
+ 
+-os_arch = linux_x86
++os_arch = linux_zero
+ 
+-os_arch_model = linux_x86_32
++os_arch_model = linux_zero
+ 
+ lib_arch = i386
+ 
+@@ -14,4 +14,4 @@ compiler = gcc
+ 
+ gnu_dis_arch = i386
+ 
+-sysdefs = -DLINUX -D_GNU_SOURCE -DIA32
++sysdefs = -DLINUX -D_GNU_SOURCE -DIA32 -DCC_INTERP -DZERO
+diff -r b8a03891e55e openjdk/hotspot/build/linux/makefiles/defs.make
+--- openjdk/hotspot/build/linux/makefiles/defs.make	Thu Feb 14 12:46:26 2008 +0000
++++ openjdk/hotspot/build/linux/makefiles/defs.make	Thu Feb 14 12:58:03 2008 +0000
+@@ -68,12 +68,12 @@ ifeq ($(ARCH), x86_64)
+     MAKE_ARGS       += LP64=1
+     PLATFORM        = linux-amd64
+     VM_PLATFORM     = linux_amd64
+-    HS_ARCH         = x86
++    HS_ARCH         = zero
+   else
+     ARCH_DATA_MODEL = 32
+     PLATFORM        = linux-i586
+     VM_PLATFORM     = linux_i486
+-    HS_ARCH         = x86
++    HS_ARCH         = zero
+     # We have to reset ARCH to i686 since SRCARCH relies on it
+     ARCH            = i686   
+   endif
+@@ -84,7 +84,7 @@ ifeq ($(ARCH), i686)
+   ARCH_DATA_MODEL  = 32
+   PLATFORM         = linux-i586
+   VM_PLATFORM      = linux_i486
+-  HS_ARCH          = x86
++  HS_ARCH          = zero
+ endif
+ 
+ # ppc
+diff -r b8a03891e55e openjdk/hotspot/build/linux/makefiles/amd64.make
+--- openjdk/hotspot/build/linux/makefiles/amd64.make	Thu Feb 14 12:46:26 2008 +0000
++++ openjdk/hotspot/build/linux/makefiles/amd64.make	Thu Feb 14 12:57:36 2008 +0000
+@@ -22,9 +22,6 @@
+ #  
+ #
+ 
+-# Not included in includeDB because it has no dependencies
+-Obj_Files += linux_x86_64.o
+-
+ # The copied fdlibm routines in sharedRuntimeTrig.o must not be optimized
+ OPT_CFLAGS/sharedRuntimeTrig.o = $(OPT_CFLAGS/NOOPT)
+ # The copied fdlibm routines in sharedRuntimeTrans.o must not be optimized
+diff -r b8a03891e55e openjdk/hotspot/build/linux/makefiles/i486.make
+--- openjdk/hotspot/build/linux/makefiles/i486.make	Thu Feb 14 12:46:26 2008 +0000
++++ openjdk/hotspot/build/linux/makefiles/i486.make	Thu Feb 14 12:57:36 2008 +0000
+@@ -22,10 +22,6 @@
+ #  
+ #
+ 
+-# TLS helper, assembled from .s file
+-# Not included in includeDB because it has no dependencies
+-Obj_Files += linux_x86_32.o
+-
+ # The copied fdlibm routines in sharedRuntimeTrig.o must not be optimized
+ OPT_CFLAGS/sharedRuntimeTrig.o = $(OPT_CFLAGS/NOOPT)
+ # The copied fdlibm routines in sharedRuntimeTrans.o must not be optimized
+diff -r b8a03891e55e openjdk/jdk/src/solaris/bin/amd64/jvm.cfg
+--- openjdk/jdk/src/solaris/bin/amd64/jvm.cfg	Thu Feb 14 12:46:26 2008 +0000
++++ openjdk/jdk/src/solaris/bin/amd64/jvm.cfg	Thu Feb 14 13:07:27 2008 +0000
+@@ -31,8 +31,9 @@
+ # "-XXaltjvm=<jvm_dir>" option, but that too is unsupported
+ # and may not be available in a future release.
+ #
+--server KNOWN
++-core KNOWN
+ -client IGNORE
++-server IGNORE
+ -hotspot ERROR
+ -classic WARN
+ -native ERROR
+diff -r b8a03891e55e openjdk/jdk/src/solaris/bin/i586/jvm.cfg
+--- openjdk/jdk/src/solaris/bin/i586/jvm.cfg	Thu Feb 14 12:46:26 2008 +0000
++++ openjdk/jdk/src/solaris/bin/i586/jvm.cfg	Thu Feb 14 13:07:27 2008 +0000
+@@ -30,9 +30,10 @@
+ # "-XXaltjvm=<jvm_dir>" option, but that too is unsupported
+ # and may not be available in a future release.
+ #
+--client IF_SERVER_CLASS -server
+--server KNOWN
+--hotspot ALIASED_TO -client
++-core KNOWN
++-client IGNORE
++-server IGNORE
++-hotspot ERROR
+ -classic WARN
+ -native ERROR
+ -green ERROR

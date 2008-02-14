@@ -96,7 +96,6 @@ AC_ARG_WITH([icedtea],
 AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" == true)
 
 SET_ARCH_DIRS
-SET_CORE_BUILD
 if test "${with_icedtea}" == true
 then
   JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
@@ -128,6 +127,8 @@ WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
 AC_CHECK_WITH_CACAO
 ENABLE_FAST_BUILD
+ENABLE_ZERO_BUILD
+SET_CORE_BUILD
 
 if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
   FIND_TOOL([MERCURIAL], [hg])

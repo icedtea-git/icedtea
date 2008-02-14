@@ -720,7 +720,6 @@ WITH_ICEDTEA_TRUE
 WITH_ICEDTEA_FALSE
 BUILD_ARCH_DIR
 INSTALL_ARCH_DIR
-ICEDTEA_CORE_BUILD
 JAVA
 JAVAC
 JAVAH
@@ -745,6 +744,10 @@ WITH_CACAO_FALSE
 CACAO
 FAST_BUILD_TRUE
 FAST_BUILD_FALSE
+ZERO_BUILD_TRUE
+ZERO_BUILD_FALSE
+CORE_BUILD_TRUE
+CORE_BUILD_FALSE
 MERCURIAL
 CPP
 GREP
@@ -1398,6 +1401,7 @@ Optional Features:
   --disable-gcjwebplugin  Disable compilation of browser plugin
   --enable-fast-build     optimize for quick building: use -O0 and do not
                           build documentation
+  --enable-zero           use zero-assembler port on non-zero platforms
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -4989,16 +4993,6 @@ fi
 
 
 
-
-  if test -f "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}" && \
-     grep -q "arch.*=.*zero" "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}"
-  then
-    ICEDTEA_CORE_BUILD=yes
-  else
-    ICEDTEA_CORE_BUILD=
-  fi
-
-
 if test "${with_icedtea}" == true
 then
   JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
@@ -6992,6 +6986,67 @@ fi
 
 fi
 
+
+
+  # Check whether --enable-zero was given.
+if test "${enable_zero+set}" = set; then
+  enableval=$enable_zero;
+     if test x = x; then
+  ZERO_BUILD_TRUE=
+  ZERO_BUILD_FALSE='#'
+else
+  ZERO_BUILD_TRUE='#'
+  ZERO_BUILD_FALSE=
+fi
+
+
+else
+
+     if test x != x; then
+  ZERO_BUILD_TRUE=
+  ZERO_BUILD_FALSE='#'
+else
+  ZERO_BUILD_TRUE='#'
+  ZERO_BUILD_FALSE=
+fi
+
+
+fi
+
+
+
+  if test "x${ZERO_BUILD_TRUE}" = x; then
+     if test x = x; then
+  CORE_BUILD_TRUE=
+  CORE_BUILD_FALSE='#'
+else
+  CORE_BUILD_TRUE='#'
+  CORE_BUILD_FALSE=
+fi
+
+  else
+    if test -f "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}" && \
+       grep -q "arch.*=.*zero" "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}"
+    then
+       if test x = x; then
+  CORE_BUILD_TRUE=
+  CORE_BUILD_FALSE='#'
+else
+  CORE_BUILD_TRUE='#'
+  CORE_BUILD_FALSE=
+fi
+
+    else
+       if test x != x; then
+  CORE_BUILD_TRUE=
+  CORE_BUILD_FALSE='#'
+else
+  CORE_BUILD_TRUE='#'
+  CORE_BUILD_FALSE=
+fi
+
+    fi
+  fi
 
 
 if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
@@ -10168,6 +10223,41 @@ echo "$as_me: error: conditional \"FAST_BUILD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${ZERO_BUILD_TRUE}" && test -z "${ZERO_BUILD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"ZERO_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"ZERO_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${ZERO_BUILD_TRUE}" && test -z "${ZERO_BUILD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"ZERO_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"ZERO_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${CORE_BUILD_TRUE}" && test -z "${CORE_BUILD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"CORE_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"CORE_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${CORE_BUILD_TRUE}" && test -z "${CORE_BUILD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"CORE_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"CORE_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${CORE_BUILD_TRUE}" && test -z "${CORE_BUILD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"CORE_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"CORE_BUILD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${FAST_BUILD_TRUE}" && test -z "${FAST_BUILD_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"FAST_BUILD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -10838,7 +10928,6 @@ WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
 WITH_ICEDTEA_FALSE!$WITH_ICEDTEA_FALSE$ac_delim
 BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
 INSTALL_ARCH_DIR!$INSTALL_ARCH_DIR$ac_delim
-ICEDTEA_CORE_BUILD!$ICEDTEA_CORE_BUILD$ac_delim
 JAVA!$JAVA$ac_delim
 JAVAC!$JAVAC$ac_delim
 JAVAH!$JAVAH$ac_delim
@@ -10863,6 +10952,10 @@ WITH_CACAO_FALSE!$WITH_CACAO_FALSE$ac_delim
 CACAO!$CACAO$ac_delim
 FAST_BUILD_TRUE!$FAST_BUILD_TRUE$ac_delim
 FAST_BUILD_FALSE!$FAST_BUILD_FALSE$ac_delim
+ZERO_BUILD_TRUE!$ZERO_BUILD_TRUE$ac_delim
+ZERO_BUILD_FALSE!$ZERO_BUILD_FALSE$ac_delim
+CORE_BUILD_TRUE!$CORE_BUILD_TRUE$ac_delim
+CORE_BUILD_FALSE!$CORE_BUILD_FALSE$ac_delim
 MERCURIAL!$MERCURIAL$ac_delim
 CPP!$CPP$ac_delim
 GREP!$GREP$ac_delim
@@ -10896,7 +10989,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 61; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 64; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
