@@ -124,7 +124,7 @@ snapshot: dist
 # ==================================
 
 # Download OpenJDK sources.
-OPENJDK_URL = http://download.java.net/openjdk/jdk6/ 
+OPENJDK_URL = http://download.java.net/openjdk/jdk6/promoted/$(OPENJDK_VERSION)/
 
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
@@ -140,7 +140,7 @@ stamps/download.stamp:
 	 then \
 	   mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
 	 fi ; \
-	 $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP_BASE) -O $(OPENJDK_SRC_ZIP); \
+	 $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
 	fi
 	mkdir -p stamps
 	touch stamps/download.stamp
