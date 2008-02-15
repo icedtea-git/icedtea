@@ -1,5 +1,10 @@
 2008-02-15  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp: Build on x86.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.cpp: Likewise.
+
+2008-02-15  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/build/linux/makefiles/arm.make: New file.
 	* ports/hotspot/build/linux/makefiles/ia64.make: Likewise.
 	* ports/hotspot/build/linux/makefiles/s390.make: Likewise.

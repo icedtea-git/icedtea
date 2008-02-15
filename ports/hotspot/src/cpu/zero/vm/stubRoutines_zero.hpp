@@ -39,3 +39,12 @@
     code_size2 = 0       // if these are too small.  Simply increase
   };                     // them if that happens.
 
+#ifdef IA32
+  class i486
+  {
+    friend class VMStructs;
+
+   private:
+    static address _call_stub_compiled_return;
+  };
+#endif // IA32
