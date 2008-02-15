@@ -109,6 +109,8 @@ JAVA = @JAVA@
 JAVAC = @JAVAC@
 JAVAH = @JAVAH@
 LDFLAGS = @LDFLAGS@
+LIBFFI_CFLAGS = @LIBFFI_CFLAGS@
+LIBFFI_LIBS = @LIBFFI_LIBS@
 LIBGCJ_JAR = @LIBGCJ_JAR@
 LIBOBJS = @LIBOBJS@
 LIBPNG_CFLAGS = @LIBPNG_CFLAGS@
@@ -352,6 +354,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \
+	patches/icedtea-lesstif-64.patch \
 	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
 	$(ZERO_BUILD_PATCH) \
