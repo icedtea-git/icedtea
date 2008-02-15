@@ -1,4 +1,6 @@
-OPENJDK_VERSION = b24
+OPENJDK_DATE = 12_feb_2008
+OPENJDK_MD5SUM = 660e6230dfc4cdc8a7c93bc3e7e60120
+OPENJDK_VERSION = b05
 
 # Top-Level Targets
 # =================
@@ -32,9 +34,12 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
 	tools patches/icedtea-gcc-4.3.patch 
 
+# The Binary plugs directory is called jdk1.7.0 for historical reasons. The
+# name is completely irrelevant; only contains the plugs to build IcedTea.
+
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
-BUILD_OUTPUT_DIR = openjdk/build/$(LINUX_DIR)
+BUILD_OUTPUT_DIR = openjdk/control/build/$(LINUX_DIR)
 ICEDTEA_BUILD_DIR = \
 	$(abs_top_srcdir)/$(BUILD_OUTPUT_DIR)
 ICEDTEA_RT = \
@@ -54,8 +59,8 @@ ICEDTEA_ENV = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
         "BUILD_NUMBER=$(OPENJDK_VERSION)" \
-        "JRE_RELEASE_VERSION=1.7.0-$(OPENJDK_VERSION)" \
-        "HOTSPOT_RELEASE_VERSION=1.7.0-$(OPENJDK_VERSION)" \
+        "JRE_RELEASE_VERSION=1.6.0-$(OPENJDK_VERSION)" \
+        "HOTSPOT_RELEASE_VERSION=1.6.0-$(OPENJDK_VERSION)" \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
@@ -82,15 +87,15 @@ env:
 
 # OpenJDK ecj build environment.
 ICEDTEA_BUILD_DIR_ECJ = \
-	$(abs_top_srcdir)/openjdk-ecj/build/$(LINUX_DIR)/
+	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/
 ICEDTEA_CLS_DIR_ECJ = \
-	$(abs_top_srcdir)/openjdk-ecj/build/$(LINUX_DIR)/classes
+	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/classes
 ICEDTEA_ENV_ECJ = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
 	"BUILD_NUMBER=$(OPENJDK_VERSION)" \
-        "JRE_RELEASE_VERSION=1.7.0-$(OPENJDK_VERSION)" \
-        "HOTSPOT_RELEASE_VERSION=1.7.0-$(OPENJDK_VERSION)" \
+        "JRE_RELEASE_VERSION=1.6.0-$(OPENJDK_VERSION)" \
+        "HOTSPOT_RELEASE_VERSION=1.6.0-$(OPENJDK_VERSION)" \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
@@ -125,62 +130,37 @@ env-ecj:
 snapshot: dist
 	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
 
-# Creates archive of openjdk.
-dist-openjdk:
-	if ! hg; \
-	then \
-	  echo "Mercurial cannot be found. Please install it and try again."; \
-	  exit 1; \
-	else \
-	  if ! hg fclone -h; \
-	  then \
-	    echo "No forest extension found. Please refer to" \
-              "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
-            exit 1; \
-	  fi; \
-	fi
-	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-dist/openjdk
-	find -name \\.hg* | xargs rm -rf	
-	cd openjdk-dist && $(ZIP) -r openjdk-$(OPENJDK_VERSION) openjdk/
-	mv openjdk-dist/openjdk-$(OPENJDK_VERSION).zip . 
-	rm -rf openjdk-dist
-
 # OpenJDK Source Preparation Targets
 # ==================================
 
 # Download OpenJDK sources.
-OPENJDK_URL = http://hg.openjdk.java.net/jdk7/jdk7
+OPENJDK_URL = http://download.java.net/openjdk/jdk6/ 
 
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 else
-  OPENJDK_SRC_ZIP =
+  OPENJDK_SRC_ZIP = openjdk-6-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).tar.gz
 endif
 
-stamps/clone.stamp:
-	if ! test -d openjdk ; then \
-	  if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
-	    $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
-	  else \
-	    if ! hg fclone -h; \
-            then \
-              echo "No forest extension found. Please refer to" \
-              "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
-              exit 1; \
-            fi; \
-	    hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk; \
-	  fi ; \
+stamps/download.stamp:
+	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
+	 | $(MD5SUM) --check ; \
+	then \
+	 if [ $(OPENJDK_SRC_ZIP) ] ; \
+	 then \
+	   mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
+	 fi ; \
+	 $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP_BASE) -O $(OPENJDK_SRC_ZIP); \
 	fi
-	chmod -R ug+w openjdk
 	mkdir -p stamps
-	touch stamps/clone.stamp
+	touch stamps/download.stamp
 
-clean-clone:
-	rm -f stamps/clone.stamp
-	rm -rf openjdk
+clean-download:
+	rm -f stamps/download.stamp
+	rm -f $(OPENJDK_SRC_ZIP)
 
 # Link ports sources into tree
-stamps/ports.stamp: stamps/clone.stamp
+stamps/ports.stamp: stamps/extract.stamp
 	for target in ports/hotspot/build/*/platform_* \
 		      ports/hotspot/build/*/makefiles/* \
 		      ports/hotspot/src/*/* \
@@ -237,9 +217,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
 	patches/icedtea-javafiles.patch \
-	patches/icedtea-bytecodeInterpreterWithChecks.patch \
 	patches/icedtea-corba.patch \
-	patches/icedtea-bytecodeInterpreter.patch \
 	patches/icedtea-signature-iterator.patch \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-test-atomic-operations.patch \
@@ -262,7 +240,20 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-cacao.patch
 endif
 
-stamps/patch.stamp: stamps/clone.stamp
+stamps/extract.stamp: stamps/download.stamp
+	if ! test -d openjdk ; \
+	then \
+	  mkdir openjdk ; \
+	  $(TAR) xf $(OPENJDK_SRC_ZIP) -C openjdk; \
+	  chmod -R ug+w openjdk ; \
+	fi
+	mkdir -p stamps
+	touch stamps/extract.stamp
+
+clean-extract:
+	rm -f stamps/extract.stamp
+
+stamps/patch.stamp: stamps/extract.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
@@ -291,19 +282,19 @@ clean-patch:
 # ======================================
 
 # Copy over OpenJDK sources for ecj.
-stamps/clone-ecj.stamp: stamps/patch.stamp
+stamps/extract-ecj.stamp: stamps/patch.stamp
 	if ! test -d openjdk-ecj ; then \
 	    cp -pPRl openjdk openjdk-ecj ; \
 	fi
 	mkdir -p stamps
-	touch stamps/clone-ecj.stamp
+	touch stamps/extract-ecj.stamp
 
-clean-clone-ecj:
-	rm -f stamps/clone-ecj.stamp
+clean-extract-ecj:
+	rm -f stamps/extract-ecj.stamp
 	rm -rf openjdk-ecj
 
 # Link ports sources into tree
-stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
+stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 	for target in ports/hotspot/build/*/platform_* \
 		      ports/hotspot/build/*/makefiles/* \
 		      ports/hotspot/src/*/* \
@@ -317,7 +308,7 @@ stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch
 
-stamps/patch-ecj.stamp: stamps/clone-ecj.stamp
+stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
 	if $(PATCH) -p0 -l --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
 	then \
@@ -342,7 +333,7 @@ clean-patch-ecj:
 # bootstrap/icedtea.
 stamps/bootstrap-directory.stamp: stamps/icedtea-against-ecj.stamp
 	rm -rf bootstrap/icedtea
-	ln -s $(abs_top_srcdir)/openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image/ bootstrap/icedtea
+	ln -s $(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/ bootstrap/icedtea
 	if ! test -d bootstrap/icedtea/include; then \
 	  ln -sf $(ICEDTEA_BUILD_DIR_ECJ)/include bootstrap/icedtea/include; \
 	fi
@@ -465,7 +456,7 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	stamps/tools.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/ j2se_only
+	  -C openjdk/control/make/
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
 	  then \
 	  cp -pPRf gcjwebplugin.so \
@@ -483,8 +474,8 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/tools.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/ \
-	  j2se_fastdebug_only
+	  -C openjdk/control/make \
+	  debug_build
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
 	  then \
 	  cp -pPRf gcjwebplugin.so \
@@ -497,10 +488,10 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
 
-clean-icedtea: stamps/clone.stamp
+clean-icedtea: stamps/extract.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/ clobber
+	  -C openjdk/control/make clobber
 
 icedtea-against-icedtea: \
 	stamps/bootstrap-directory-symlink.stamp \
@@ -513,9 +504,9 @@ stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj/ j2se_only
+	  -C openjdk-ecj/control/make
 	@echo "ecj-poured IcedTea is served:" \
-	  openjdk-ecj/build/$(LINUX_DIR)
+	  openjdk-ecj/control/build/$(LINUX_DIR)
 	mkdir -p stamps
 	touch stamps/icedtea-ecj.stamp
 
@@ -524,22 +515,22 @@ hotspot:
 	rm -f stamps/icedtea-ecj.stamp
 	rm -f stamps/icedtea-against-ecj.stamp
 	$(MAKE) hotspot-helper
-	cp openjdk-ecj/build/$(LINUX_DIR)/hotspot/import/jre/lib/$(BUILD_ARCH_DIR)/core/libjvm.so \
-	   openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/core
-	@echo "Hotspot is served:" openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image
+	cp openjdk-ecj/control/build/$(LINUX_DIR)/hotspot/import/jre/lib/$(BUILD_ARCH_DIR)/core/libjvm.so \
+	   openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/core
+	@echo "Hotspot is served:" openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image
 
 hotspot-helper: stamps/bootstrap-directory-symlink-ecj.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj hotspot
+	  -C openjdk-ecj/control/make hotspot
 
-clean-icedtea-ecj: stamps/clone-ecj.stamp
+clean-icedtea-ecj: stamps/extract-ecj.stamp
 	rm -f stamps/icedtea-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj/ clobber
+	  -C openjdk-ecj/control/make clobber
 
 stamps/icedtea-against-ecj.stamp: \
 	stamps/bootstrap-directory-symlink-ecj.stamp \
@@ -659,7 +650,7 @@ stamps/hotspot-tools-copy-source-files.stamp: stamps/patch.stamp
 	mkdir -p stamps
 	touch stamps/hotspot-tools-copy-source-files.stamp
 
-hotspot-tools-source-files.txt: stamps/clone.stamp \
+hotspot-tools-source-files.txt: stamps/extract.stamp \
 	stamps/hotspot-tools-copy-source-files.stamp
 	find hotspot-tools -name '*.java' | sort > $@
 	mkdir -p lib/hotspot-tools
@@ -706,7 +697,7 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	fi
 
 # rt-closed.jar class files.
-rt-source-files.txt: stamps/clone.stamp stamps/copy-source-files.stamp
+rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
 	find rt -name '*.java' | sort > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt
@@ -764,7 +755,7 @@ clean-gcjwebplugin:
 stamps/tools.stamp: stamps/tools-class-files.stamp
 	touch stamps/tools.stamp
 
-tools-source-files.txt: stamps/clone.stamp
+tools-source-files.txt: stamps/extract.stamp
 	find tools -name '*.java' | sort > $@
 
 stamps/tools-class-files.stamp: tools-source-files.txt \
@@ -805,9 +796,11 @@ bootstrap-directory-symlink: stamps/bootstrap-directory-symlink.stamp
 
 copy-source-files: stamps/copy-source-files.stamp
 
-clone: stamps/clone.stamp
+download: stamps/download.stamp
 
-clone-ecj: stamps/clone-ecj.stamp
+extract: stamps/extract.stamp
+
+extract-ecj: stamps/extract-ecj.stamp
 
 icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
 

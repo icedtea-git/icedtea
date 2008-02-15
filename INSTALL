@@ -1,5 +1,5 @@
-Building IcedTea
-================
+Building IcedTea 1.6.0
+======================
 
 For convenience we've provided make targets that automatically
 download, extract and patch the source code from openjdk.java.net, in
@@ -15,7 +15,7 @@ lesstif
 Freetype2
 patch
 sed
-unzip
+tar
 md5sum
 wget
 alsa

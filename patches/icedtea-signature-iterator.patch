@@ -1,7 +1,7 @@
 diff -r ee6af95bc459 openjdk/hotspot/src/share/vm/interpreter/oopMapCache.cpp
 --- openjdk/hotspot/src/share/vm/interpreter/oopMapCache.cpp	Fri Nov 02 09:42:25 2007 +0000
 +++ openjdk/hotspot/src/share/vm/interpreter/oopMapCache.cpp	Fri Nov 02 09:44:37 2007 +0000
-@@ -281,7 +281,7 @@ class MaskFillerForNative: public Native
+@@ -284,7 +284,7 @@ class MaskFillerForNative: public Native
   public:
    void pass_int()                                { /* ignore */ }
    void pass_long()                               { /* ignore */ }
@@ -13,7 +13,7 @@ diff -r ee6af95bc459 openjdk/hotspot/src/share/vm/interpreter/oopMapCache.cpp
 diff -r ee6af95bc459 openjdk/hotspot/src/share/vm/runtime/signature.hpp
 --- openjdk/hotspot/src/share/vm/runtime/signature.hpp	Fri Nov 02 09:42:25 2007 +0000
 +++ openjdk/hotspot/src/share/vm/runtime/signature.hpp	Fri Nov 02 09:48:28 2007 +0000
-@@ -275,11 +275,14 @@ class NativeSignatureIterator: public Si
+@@ -278,11 +278,14 @@ class NativeSignatureIterator: public Si
  
    void do_bool  ()                     { pass_int();    _jni_offset++; _offset++;       }
    void do_char  ()                     { pass_int();    _jni_offset++; _offset++;       }
@@ -30,7 +30,7 @@ diff -r ee6af95bc459 openjdk/hotspot/src/share/vm/runtime/signature.hpp
    void do_double()                     { pass_double(); _jni_offset += 2; _offset += 2; }
  #endif
    void do_byte  ()                     { pass_int();    _jni_offset++; _offset++;       }
-@@ -303,8 +306,10 @@ class NativeSignatureIterator: public Si
+@@ -306,8 +309,10 @@ class NativeSignatureIterator: public Si
    virtual void pass_int()              = 0;
    virtual void pass_long()             = 0;
    virtual void pass_object()           = 0;

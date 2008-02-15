@@ -1,7 +1,7 @@
 diff -urN openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
 --- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2007-10-12 03:46:00.000000000 -0400
 +++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2007-10-12 18:24:12.000000000 -0400
-@@ -373,6 +379,20 @@
+@@ -376,6 +382,20 @@
      }
    }
  
