@@ -6,27 +6,11 @@
 #include <X11/Xatom.h>
 #include <stdio.h>
 
+#include <Xm/MwmUtil.h>
 #include <X11/extensions/Xdbe.h>
 #include "awt_p.h"
 #include "color.h"
 #include "colordata.h"
-
-typedef struct
-
-{
-
-    unsigned long flags;
-
-    unsigned long functions;
-
-    unsigned long decorations;
-
-    long inputMode;
-
-    unsigned long status;
-
-} PropMwmHints;
-
 
 
 int main(){

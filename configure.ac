@@ -11,9 +11,10 @@ AC_PROG_CXX
 
 FIND_TOOL([FIND], [find])
 FIND_TOOL([PATCH], [patch])
-FIND_TOOL([ZIP], [zip])
-FIND_TOOL([UNZIP], [unzip])
+FIND_TOOL([TAR], [tar])
 FIND_TOOL([CHMOD], [chmod])
+FIND_TOOL([MD5SUM], [md5sum])
+FIND_TOOL([WGET], [wget])
 AC_CHECK_TOOLS([FASTJAR], [fastjar jar])
 if test "x$FASTJAR" = x; then
 	AC_MSG_ERROR([Can't find fastjar or jar])
@@ -128,10 +129,6 @@ WITH_OPENJDK_SRC_DIR
 ENABLE_FAST_BUILD
 ENABLE_ZERO_BUILD
 SET_CORE_BUILD
-
-if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
-  FIND_TOOL([MERCURIAL], [hg])
-fi
 
 dnl pkgconfig cannot be used to finid these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]

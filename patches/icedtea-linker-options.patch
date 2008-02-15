@@ -22,18 +22,6 @@ diff -ru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Def
  LDFLAGS_COMMON  += $(LDFLAGS_DEFS_OPTION)
  
  #
-diff -ru openjdk.orig/jdk/make/common/Program.gmk openjdk/jdk/make/common/Program.gmk
---- openjdk.orig/jdk/make/common/Program.gmk	2007-11-08 13:45:46.000000000 +0000
-+++ openjdk/jdk/make/common/Program.gmk	2007-11-08 13:42:44.000000000 +0000
-@@ -85,7 +85,7 @@
- 	endif
-     endif
-     ifeq ($(PLATFORM), linux)
--	LDFLAGS += -lz -z origin
-+	LDFLAGS += -lz -Wl,-z -Wl,origin
- 	LDFLAGS += -Wl,--allow-shlib-undefined
- 	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../lib/$(LIBARCH)/jli
- 	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../jre/lib/$(LIBARCH)/jli
 diff -ru openjdk.orig/jdk/make/java/instrument/Makefile openjdk/jdk/make/java/instrument/Makefile
 --- openjdk.orig/jdk/make/java/instrument/Makefile	2007-11-08 13:45:46.000000000 +0000
 +++ openjdk/jdk/make/java/instrument/Makefile	2007-11-08 13:42:25.000000000 +0000
