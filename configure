@@ -777,6 +777,8 @@ GLIB_CFLAGS
 GLIB_LIBS
 GTK_CFLAGS
 GTK_LIBS
+LIBFFI_CFLAGS
+LIBFFI_LIBS
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -816,7 +818,9 @@ MOZILLA_LIBS
 GLIB_CFLAGS
 GLIB_LIBS
 GTK_CFLAGS
-GTK_LIBS'
+GTK_LIBS
+LIBFFI_CFLAGS
+LIBFFI_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1472,6 +1476,9 @@ Some influential environment variables:
   GLIB_LIBS   linker flags for GLIB, overriding pkg-config
   GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
   GTK_LIBS    linker flags for GTK, overriding pkg-config
+  LIBFFI_CFLAGS
+              C compiler flags for LIBFFI, overriding pkg-config
+  LIBFFI_LIBS linker flags for LIBFFI, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -10013,6 +10020,94 @@ fi
 
 fi
 
+case "$build" in
+        *ppc*)
+
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for LIBFFI" >&5
+echo $ECHO_N "checking for LIBFFI... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$LIBFFI_CFLAGS"; then
+        pkg_cv_LIBFFI_CFLAGS="$LIBFFI_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libffi\"") >&5
+  ($PKG_CONFIG --exists --print-errors "libffi") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_LIBFFI_CFLAGS=`$PKG_CONFIG --cflags "libffi" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$LIBFFI_LIBS"; then
+        pkg_cv_LIBFFI_LIBS="$LIBFFI_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libffi\"") >&5
+  ($PKG_CONFIG --exists --print-errors "libffi") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_LIBFFI_LIBS=`$PKG_CONFIG --libs "libffi" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LIBFFI_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "libffi"`
+        else
+	        LIBFFI_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "libffi"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LIBFFI_PKG_ERRORS" >&5
+
+	{ echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+                LIBFFI_FOUND=no
+elif test $pkg_failed = untried; then
+	LIBFFI_FOUND=no
+else
+	LIBFFI_CFLAGS=$pkg_cv_LIBFFI_CFLAGS
+	LIBFFI_LIBS=$pkg_cv_LIBFFI_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	LIBFFI_FOUND=yes
+fi
+          if test "x${LIBFFI_FOUND}" = xno
+          then
+            { { echo "$as_me:$LINENO: error: Could not find libffi headers - \
+                         Try installing libffi-devel." >&5
+echo "$as_me: error: Could not find libffi headers - \
+                         Try installing libffi-devel." >&2;}
+   { (exit 1); exit 1; }; }
+          fi
+
+
+        ;;
+        *i*86*)
+        ;;
+esac
+
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -10985,11 +11080,13 @@ GLIB_CFLAGS!$GLIB_CFLAGS$ac_delim
 GLIB_LIBS!$GLIB_LIBS$ac_delim
 GTK_CFLAGS!$GTK_CFLAGS$ac_delim
 GTK_LIBS!$GTK_LIBS$ac_delim
+LIBFFI_CFLAGS!$LIBFFI_CFLAGS$ac_delim
+LIBFFI_LIBS!$LIBFFI_LIBS$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 64; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 66; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

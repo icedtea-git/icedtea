@@ -289,4 +289,20 @@ AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 fi
 
+case "$build" in
+        *ppc*)
+          dnl Check for libffi headers and libraries.
+          PKG_CHECK_MODULES(LIBFFI, libffi,[LIBFFI_FOUND=yes],[LIBFFI_FOUND=no])
+          if test "x${LIBFFI_FOUND}" = xno
+          then
+            AC_MSG_ERROR([Could not find libffi headers - \
+                         Try installing libffi-devel.])
+          fi
+          AC_SUBST(LIBFFI_CFLAGS)
+          AC_SUBST(LIBFFI_LIBS)
+        ;;
+        *i*86*)
+        ;;
+esac
+
 AC_OUTPUT

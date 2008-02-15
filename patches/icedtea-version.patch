@@ -1,6 +1,6 @@
 --- openjdk.old/jdk/make/common/shared/Defs.gmk	2007-09-13 03:52:42.000000000 -0400
 +++ openjdk/jdk/make/common/shared/Defs.gmk	2007-09-18 16:24:59.000000000 -0400
-@@ -186,13 +186,13 @@
+@@ -194,13 +194,13 @@
  
  # Default names
  LAUNCHER_NAME = java
@@ -17,7 +17,7 @@
    PRODUCT_SUFFIX = Runtime Environment
    COMPANY_NAME =
  endif
-@@ -250,12 +250,7 @@
+@@ -258,12 +258,7 @@
  JDK_UNDERSCORE_VERSION =  $(subst .,_,$(JDK_VERSION))
  JDK_MKTG_UNDERSCORE_VERSION =  $(subst .,_,$(JDK_MKTG_VERSION))
  
@@ -31,20 +31,9 @@
  
  # FULL_VERSION is RELEASE and -BUILD_NUMBER if BUILD_NUMBER is set
  ifdef BUILD_NUMBER
---- openjdk.old/hotspot/build/hotspot_distro	2007-09-27 22:30:19.000000000 -0400
-+++ openjdk/hotspot/build/hotspot_distro	2007-09-28 11:07:28.000000000 -0400
-@@ -27,6 +27,6 @@
- #
- 
- # Don't put quotes (fail windows build).
--HOTSPOT_VM_DISTRO=OpenJDK
-+HOTSPOT_VM_DISTRO=IcedTea
- COMPANY_NAME=
--PRODUCT_NAME=OpenJDK
-+PRODUCT_NAME=IcedTea
 --- openjdk.old/hotspot/build/windows/projectfiles/common/Makefile	2007-09-27 22:30:19.000000000 -0400
 +++ openjdk/hotspot/build/windows/projectfiles/common/Makefile	2007-09-28 11:07:50.000000000 -0400
-@@ -125,7 +125,7 @@
+@@ -123,7 +123,7 @@
  !if exists($(HOTSPOTWORKSPACE)\src\closed)
  HOTSPOT_VM_DISTRO="Java HotSpot(TM)"
  !else
@@ -55,7 +44,7 @@
  
 --- openjdk.old/hotspot/src/share/vm/runtime/arguments.cpp	2007-12-10 15:46:40.000000000 -0500
 +++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2007-12-19 09:41:41.000000000 -0500
-@@ -25,7 +25,7 @@
+@@ -28,7 +28,7 @@
  #include "incls/_precompiled.incl"
  #include "incls/_arguments.cpp.incl"
  
@@ -64,3 +53,14 @@
  #define DEFAULT_JAVA_LAUNCHER  "generic"
  
  char**  Arguments::_jvm_flags_array             = NULL;
+--- openjdkold/hotspot/build/linux/makefiles/vm.make	2008-02-12 04:14:13.000000000 -0500
++++ openjdk/hotspot/build/linux/makefiles/vm.make	2008-02-15 14:46:59.000000000 -0500
+@@ -98,7 +98,7 @@
+   ifeq ($(CLOSED_DIR_EXISTS), true)
+     VM_DISTRO = -DHOTSPOT_VM_DISTRO="\"Java HotSpot(TM)\""
+   else
+-    VM_DISTRO = -DHOTSPOT_VM_DISTRO="\"OpenJDK\""
++    VM_DISTRO = -DHOTSPOT_VM_DISTRO="\"IcedTea\""
+   endif
+ endif
+ 
