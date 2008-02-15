@@ -31,6 +31,7 @@ libpng-devel
 libjpeg-devel = 6b
 zlib-devel
 mercurial 0.9.5 + forest extension
+on ppc/ppc64, you will need libffi
 
 See ./configure --help if you need to override defaults.
 

@@ -230,6 +230,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \
+	patches/icedtea-lesstif-64.patch \
 	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
 	$(ZERO_BUILD_PATCH) \
