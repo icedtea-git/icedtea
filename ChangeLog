@@ -1,3 +1,14 @@
+2008-02-15  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/build/linux/makefiles/arm.make: New file.
+	* ports/hotspot/build/linux/makefiles/ia64.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/s390.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/s390x.make: Likewise.
+	* ports/hotspot/build/linux/platform_arm: Likewise.
+	* ports/hotspot/build/linux/platform_ia64: Likewise.
+	* ports/hotspot/build/linux/platform_s390: Likewise.
+	* ports/hotspot/build/linux/platform_s390x: Likewise.
+
 2008-02-14  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-always-zero.patch: New file.
