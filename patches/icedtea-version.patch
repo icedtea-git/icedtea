@@ -53,14 +53,3 @@
  #define DEFAULT_JAVA_LAUNCHER  "generic"
  
  char**  Arguments::_jvm_flags_array             = NULL;
---- openjdkold/hotspot/build/linux/makefiles/vm.make	2008-02-12 04:14:13.000000000 -0500
-+++ openjdk/hotspot/build/linux/makefiles/vm.make	2008-02-15 14:46:59.000000000 -0500
-@@ -98,7 +98,7 @@
-   ifeq ($(CLOSED_DIR_EXISTS), true)
-     VM_DISTRO = -DHOTSPOT_VM_DISTRO="\"Java HotSpot(TM)\""
-   else
--    VM_DISTRO = -DHOTSPOT_VM_DISTRO="\"OpenJDK\""
-+    VM_DISTRO = -DHOTSPOT_VM_DISTRO="\"IcedTea\""
-   endif
- endif
- 

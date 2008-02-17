@@ -1,3 +1,12 @@
+2008-02-17  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (patch.stamp): Stop and fail when patch doesn't apply.
+	(clean-patch): Warn and fail when patch doesn't revert.
+	(patch-ecj.stamp): Fail when patch doesn't apply.
+	(clean-patch-ecj): Fail when patch doesn't revert.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-version.patch: Remove extra hunk.
+
 2008-02-15  Lillian Angel  <langel@redhat.com>
 
 	* configure.ac: Added conditional check for libffi.
