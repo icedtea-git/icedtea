@@ -10021,7 +10021,7 @@ fi
 fi
 
 case "$build" in
-        *ppc*)
+        *powerpc*)
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for LIBFFI" >&5

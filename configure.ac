@@ -290,7 +290,7 @@ AC_SUBST(GTK_LIBS)
 fi
 
 case "$build" in
-        *ppc*)
+        *powerpc*)
           dnl Check for libffi headers and libraries.
           PKG_CHECK_MODULES(LIBFFI, libffi,[LIBFFI_FOUND=yes],[LIBFFI_FOUND=no])
           if test "x${LIBFFI_FOUND}" = xno
