@@ -99,3 +99,13 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
       }
  
    STEP(140, "(printing VM operation)" )
+--- gcc.make	2008-02-17 15:21:38.000000000 -0500
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2008-02-17 15:22:02.000000000 -0500
+@@ -50,6 +50,7 @@
+ PICFLAG = -fPIC
+ else
+ PICFLAG = -fpic
++CFLAGS += $(LIBFFI_CFLAGS)
+ endif
+ 
+ VM_PICFLAG/LIBJVM = $(PICFLAG)
