@@ -514,6 +514,8 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
   AC_ARG_ENABLE([zero],
                 [AS_HELP_STRING(--enable-zero,use zero-assembler port on non-zero platforms)],
   [
+    AC_MSG_CHECKING(zero-assembler port)
+    AC_MSG_RESULT(will apply patches/icedtea-always-zero.patch)
     AM_CONDITIONAL(ZERO_BUILD, test x = x)
   ],
   [

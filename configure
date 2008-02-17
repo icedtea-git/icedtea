@@ -7107,6 +7107,10 @@ fi
   # Check whether --enable-zero was given.
 if test "${enable_zero+set}" = set; then
   enableval=$enable_zero;
+    { echo "$as_me:$LINENO: checking zero-assembler port" >&5
+echo $ECHO_N "checking zero-assembler port... $ECHO_C" >&6; }
+    { echo "$as_me:$LINENO: result: will apply patches/icedtea-always-zero.patch" >&5
+echo "${ECHO_T}will apply patches/icedtea-always-zero.patch" >&6; }
      if test x = x; then
   ZERO_BUILD_TRUE=
   ZERO_BUILD_FALSE='#'
