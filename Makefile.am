@@ -255,29 +255,45 @@ clean-extract:
 	rm -f stamps/extract.stamp
 
 stamps/patch.stamp: stamps/extract.stamp
+	all_patches_ok=yes; \
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
-	  echo Checking $$p ; \
-	  if $(PATCH) -l -p0 --dry-run -s -t -f -F 0 < $$p ; \
+	  if test x$${all_patches_ok} == "xyes" \
+	     && echo Checking $$p \
+	     && $(PATCH) -l -p0 --dry-run -s -t -f -F 0 < $$p ; \
 	  then \
 	    echo Applying $$p ; \
 	    $(PATCH) -l -p0 < $$p ; \
+	  else \
+	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
-	done
-	mkdir -p stamps
-	touch stamps/patch.stamp
+	done ; \
+	mkdir -p stamps ; \
+	touch stamps/patch.stamp ; \
+	if ! test x$${all_patches_ok} == "xyes"; then \
+	  echo ERROR patch $${all_patches_ok} FAILED! ; \
+	  echo WARNING make clean-patch before retrying a fix ; \
+	  false; \
+       fi
+
 
 clean-patch:
 	rm -f stamps/patch.stamp
 	for p in $(ICEDTEA_PATCHES) ; \
+	all_patches_ok=yes; \
 	do \
 	  echo Checking $$p ; \
 	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $$p ; \
 	  then \
 	    echo Reverting $$p ; \
 	    $(PATCH) -l -p0 -R < $$p ; \
+	  else \
+	    all_patches_ok=no ; \
 	  fi ; \
-	done
+	done ; \
+	if ! test x$${all_patches_ok} == "xyes" ; then \
+	  echo "WARNING Not all patches reverted cleanly" ; \
+	fi
 
 # OpenJDK ecj Source Preparation Targets
 # ======================================
@@ -315,9 +331,11 @@ stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 	then \
 	  echo Applying $(ICEDTEA_ECJ_PATCH) ; \
 	  $(PATCH) -p0 -l < $(ICEDTEA_ECJ_PATCH) ; \
+	  mkdir -p stamps; \
+	  touch stamps/patch-ecj.stamp; \
+	else \
+	  false; \
 	fi
-	mkdir -p stamps
-	touch stamps/patch-ecj.stamp
 
 clean-patch-ecj:
 	rm -f stamps/patch-ecj.stamp
@@ -326,6 +344,8 @@ clean-patch-ecj:
 	then \
 	  echo Reverting $(ICEDTEA_ECJ_PATCH) ; \
 	  $(PATCH) -p0 -l -R < $(ICEDTEA_ECJ_PATCH) ; \
+	else \
+	  false; \
 	fi
 
 # Bootstrap Directory Targets
