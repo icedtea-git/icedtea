@@ -1,4 +1,13 @@
 2008-02-17  Lillian Angel  <langel@redhat.com>
+	
+	* Makfile.am: Defined HOTSPOT_VM_DISTRO.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-zero.patch: Added patch to add libffi_cflags to
+	CFLAGS.
+	* configure.ac: Fixed indentation.
+	* configure: Regenerated.
+
+2008-02-17  Lillian Angel  <langel@redhat.com>
 
 	* configure.ac: Fixed build check for libffi.
 	* configure: Regenerated.

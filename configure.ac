@@ -295,7 +295,7 @@ case "$build" in
           if test "x${LIBFFI_FOUND}" = xno
           then
             AC_MSG_ERROR([Could not find libffi headers - \
-                         Try installing libffi-devel.])
+	    Try installing libffi-devel.])
           fi
           AC_SUBST(LIBFFI_CFLAGS)
           AC_SUBST(LIBFFI_LIBS)
