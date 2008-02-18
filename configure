@@ -10020,8 +10020,7 @@ fi
 
 fi
 
-case "$build" in
-        *powerpc*)
+if test "x${CORE_BUILD_TRUE}" = x; then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for LIBFFI" >&5
@@ -10093,20 +10092,17 @@ else
 echo "${ECHO_T}yes" >&6; }
 	LIBFFI_FOUND=yes
 fi
-          if test "x${LIBFFI_FOUND}" = xno
-          then
-            { { echo "$as_me:$LINENO: error: Could not find libffi headers - \
-	    Try installing libffi-devel." >&5
+  if test "x${LIBFFI_FOUND}" = xno
+  then
+    { { echo "$as_me:$LINENO: error: Could not find libffi headers - \
+    Try installing libffi-devel." >&5
 echo "$as_me: error: Could not find libffi headers - \
-	    Try installing libffi-devel." >&2;}
+    Try installing libffi-devel." >&2;}
    { (exit 1); exit 1; }; }
-          fi
+  fi
+fi
 
 
-        ;;
-        *i*86*)
-        ;;
-esac
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
