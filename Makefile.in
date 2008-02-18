@@ -222,7 +222,7 @@ top_srcdir = @top_srcdir@
 OPENJDK_VERSION = b24
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
-	tools patches/icedtea-gcc-4.3.patch 
+	tools patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch
 
 
 # OpenJDK build environment.
