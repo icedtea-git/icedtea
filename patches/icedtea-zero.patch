@@ -99,18 +99,3 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
       }
  
    STEP(140, "(printing VM operation)" )
---- jdk7/hotspot/build/linux/makefiles/buildtree.make	2008-01-29 16:03:30.000000000 -0500
-+++ openjdk/hotspot/build/linux/makefiles/buildtree.make	2008-02-18 09:59:36.000000000 -0500
-@@ -63,7 +63,11 @@
- # For now, until the compiler is less wobbly:
- TESTFLAGS	= -Xbatch -showversion
- 
--PLATFORM_FILE	= $(GAMMADIR)/build/$(OS_FAMILY)/platform_$(BUILDARCH)
-+ifeq ($(ARCH), zero)
-+PLATFORM_FILE  = $(GAMMADIR)/build/$(OS_FAMILY)/platform_$(BUILDARCH)
-+else
-+ PLATFORM_FILE  = $(GAMMADIR)/build/$(OS_FAMILY)/platform_$(ARCH)
-+endif
- 
- ifdef FORCE_TIERED
- ifeq		($(VARIANT),tiered)

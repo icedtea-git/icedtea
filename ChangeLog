@@ -1,5 +1,9 @@
 2008-02-18  Lillian Angel  <langel@redhat.com>
 
+	* patches/icedtea-zero.patch: Removed invalid patch.
+
+2008-02-18  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Added icedtea-always-zero.patch to DIST.
 	* Makefile.in: Regenerated.
 	* patches/icedtea-zero.patch: Removed erronous patch.
