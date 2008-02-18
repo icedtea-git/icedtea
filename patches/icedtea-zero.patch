@@ -93,7 +93,7 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
    LIBS_VM                  += $(STATIC_STDCXX) $(LIBS)
  endif
 +ifeq ($(SRCARCH), zero)
-+LIBS_VM += -lffi
++LIBS_VM += $(LIBFFI_LIBS)
 +endif
 +
  
@@ -109,3 +109,18 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
  CFLAGS += $(VM_PICFLAG)
  CFLAGS += -fno-rtti
  CFLAGS += -fno-exceptions
+diff -r 8e9761ee6dd6 openjdk/hotspot/build/linux/makefiles/buildtree.make
+--- openjdk/hotspot/build/linux/makefiles/buildtree.make	Mon Feb 18 11:56:36 2008 +0000
++++ openjdk/hotspot/build/linux/makefiles/buildtree.make	Mon Feb 18 12:03:06 2008 +0000
+@@ -60,7 +60,11 @@ QUIETLY$(MAKE_VERBOSE)	= @
+ # For now, until the compiler is less wobbly:
+ TESTFLAGS	= -Xbatch -showversion
+ 
++ifeq ($(ARCH), zero)
++PLATFORM_FILE	= $(GAMMADIR)/build/$(OS_FAMILY)/platform_$(BUILDARCH)
++else
+ PLATFORM_FILE	= $(GAMMADIR)/build/$(OS_FAMILY)/platform_$(ARCH)
++endif
+ 
+ ifdef FORCE_TIERED
+ ifeq		($(VARIANT),tiered)
