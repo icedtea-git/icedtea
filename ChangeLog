@@ -1,3 +1,9 @@
+2008-02-18  Gary Benson  <gbenson@redhat.com>
+
+	* configure.ac: Check for libffi whenever building with zero.
+	* Makefile.am (ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Pass libffi settings.
+	* Makefile.in, configure: Regenerated.
+
 2008-02-17  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am (patch.stamp): Stop and fail when patch doesn't apply.
