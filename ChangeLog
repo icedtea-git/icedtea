@@ -1,5 +1,10 @@
 2008-02-19  Joshua Sumali  <jsumali@redhat.com>
 
+	* netx/jnlp/security/CertWarningPane.java: Import the publisher's
+	certificate instead of root certificate to trusted.certs.
+
+2008-02-19  Joshua Sumali  <jsumali@redhat.com>
+
 	* tools/netx/jnlp/resources/Messages.properties: Added new messages for
 	trusted and untrusted certificates.
 	* tools/netx/jnlp/runtime/JNLPClassloader.java: Fixed code for showing
