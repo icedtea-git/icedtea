@@ -210,7 +210,7 @@ public class CertWarningPane extends SecurityDialogUI {
 				try {
 					KeyTool kt = new KeyTool();
 					Certificate c =
-						((SecurityWarningDialog)optionPane).getJarSigner().getRoot();
+						((SecurityWarningDialog)optionPane).getJarSigner().getPublisher();
 					kt.importCert(c);
 				} catch (Exception ex) {
 					//TODO: Let NetX show a dialog here notifying user 
