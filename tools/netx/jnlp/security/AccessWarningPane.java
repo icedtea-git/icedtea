@@ -1,4 +1,4 @@
-/* SecurityWarningOptionPane.java
+/* AccessWarningPane.java
    Copyright (C) 2008 Red Hat, Inc.
 
 This file is part of IcedTea.
@@ -47,9 +47,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.ComponentAdapter;
+import java.util.List;
+import java.security.cert.Certificate;
+import java.security.cert.CertPath;
 import sun.swing.DefaultLookup;
 import netx.jnlp.runtime.JNLPRuntime;
 import netx.jnlp.JNLPFile;
+import netx.jnlp.tools.KeyTool;
 
 /**
  * Provides the look and feel for a SecurityWarningDialog. These dialogs are
@@ -59,9 +63,11 @@ import netx.jnlp.JNLPFile;
  *
  * @author <a href="mailto:jsumali@redhat.com">Joshua Sumali</a>
  */
-public class SecurityWarningOptionPane extends SecurityDialogUI {
+public class AccessWarningPane extends SecurityDialogUI {
 
-	public SecurityWarningOptionPane(JComponent x) {
+	JCheckBox alwaysAllow;
+
+	public AccessWarningPane(JComponent x) {
 		super(x);
 	}
 
@@ -95,45 +101,32 @@ public class SecurityWarningOptionPane extends SecurityDialogUI {
 		} catch (Exception e) {
 		}
 
-		//Used to determine whether we need another JLabel on the bottom
-		//of our dialog.
-		boolean signingRelated =
-		    (type == SecurityWarningDialog.AccessType.VERIFIED
-		     || type == SecurityWarningDialog.AccessType.UNVERIFIED);
-
 		//Top label
 		String topLabelText = "";
 		String propertyName = "";
 		switch (type) {
-		case VERIFIED:
-			topLabelText = R("SSigVerified");
-			propertyName = "OptionPane.informationIcon";
-			break;
-		case UNVERIFIED:
-			topLabelText = R("SSigUnverified");
-			propertyName = "OptionPane.warningIcon";
-			break;
-		case READ_FILE:
-			topLabelText = R("SFileReadAccess");
-			propertyName = "OptionPane.warningIcon";
-			break;
-		case WRITE_FILE:
-			topLabelText = R("SFileWriteAccess");
-			propertyName = "OptionPane.warningIcon";
-			break;
-		case CLIPBOARD_READ:
-			topLabelText = R("SClipboardReadAccess");
-			propertyName = "OptionPane.warningIcon";
-			break;
-		case CLIPBOARD_WRITE:
-			topLabelText = R("SClipboardWriteAccess");
-			propertyName = "OptionPane.warningIcon";
-			break;
-		case PRINTER:
-			topLabelText = R("SPrinterAccess");
-			propertyName = "OptionPane.warningIcon";
-			break;
+			case READ_FILE:
+				topLabelText = R("SFileReadAccess");
+				propertyName = "OptionPane.warningIcon";
+				break;
+			case WRITE_FILE:
+				topLabelText = R("SFileWriteAccess");
+				propertyName = "OptionPane.warningIcon";
+				break;
+			case CLIPBOARD_READ:
+				topLabelText = R("SClipboardReadAccess");
+				propertyName = "OptionPane.warningIcon";
+				break;
+			case CLIPBOARD_WRITE:
+				topLabelText = R("SClipboardWriteAccess");
+				propertyName = "OptionPane.warningIcon";
+				break;
+			case PRINTER:
+				topLabelText = R("SPrinterAccess");
+				propertyName = "OptionPane.warningIcon";
+				break;
 		}
+		
 		//TODO: Get system icons and add them to our dialogs.
 		//Icon icon = (Icon)DefaultLookup.get(optionPane,this,propertyName);
 		JLabel topLabel = new JLabel(htmlWrap(topLabelText));
@@ -153,33 +146,23 @@ public class SecurityWarningOptionPane extends SecurityDialogUI {
 		JLabel fromLabel = new JLabel("From:   " + from);
 		fromLabel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
-		//TODO: enable this checkbox once we have a way to
-		//keep track of our trusted signers.
-		JCheckBox alwaysTrust;
-		if (signingRelated)   
-			alwaysTrust = new JCheckBox(
-				"Always trust content from this publisher");
-		else
-			alwaysTrust = new JCheckBox("Always allow this action.");
-		alwaysTrust.setEnabled(false);
+		alwaysAllow = new JCheckBox("Always allow this action");
+		alwaysAllow.setEnabled(false);
 
 		JPanel infoPanel = new JPanel(new GridLayout(4,1));
 		infoPanel.add(nameLabel);
 		infoPanel.add(publisherLabel);
 		infoPanel.add(fromLabel);
-		infoPanel.add(alwaysTrust);
+		infoPanel.add(alwaysAllow);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(25,25,25,25));
 
 		//run and cancel buttons
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
-		String runButtonText = "Run";
-		if (!signingRelated)
-			runButtonText = "Allow";
-
-		JButton run = new JButton(runButtonText);
+		
+		JButton run = new JButton("Allow");
 		JButton cancel = new JButton("Cancel");
 		run.addActionListener(createButtonActionListener(0));
+		run.addActionListener(new CheckBoxListener());
 		cancel.addActionListener(createButtonActionListener(1));
 		initialFocusComponent = cancel;
 		buttonPanel.add(run);
@@ -193,27 +176,6 @@ public class SecurityWarningOptionPane extends SecurityDialogUI {
 		main.add(infoPanel);
 		main.add(buttonPanel);
 
-		//optional bottom panel, for when we're dealing with signing
-		//(as opposed to file/clipboard/printer access).
-		if (signingRelated) {
-
-			JLabel bottomLabel;
-			JButton moreInfo = new JButton("More information...");
-			moreInfo.addActionListener(new MoreInfoButtonListener());
-			if (type == SecurityWarningDialog.AccessType.VERIFIED)
-				bottomLabel = new JLabel(htmlWrap(R("STrustedSource")));
-			else
-				bottomLabel = new JLabel(htmlWrap(R("SUntrustedSource")));
-
-			JPanel bottomPanel = new JPanel();
-			bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
-			bottomPanel.add(bottomLabel);
-			bottomPanel.add(moreInfo);
-			bottomPanel.setPreferredSize(new Dimension(500,50));
-			bottomPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-			main.add(bottomPanel);
-		}
-
 		optionPane.add(main, BorderLayout.CENTER);
 	}
 
@@ -225,12 +187,12 @@ public class SecurityWarningOptionPane extends SecurityDialogUI {
         return "<html>"+s+"</html>";
     }
 
-	private class MoreInfoButtonListener implements ActionListener {
+	private class CheckBoxListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			SecurityWarningDialog.showMoreInfoDialog(
-				((SecurityWarningDialog)optionPane).getCerts(),
-				((SecurityWarningDialog)optionPane).getDetails(), 
-				optionPane);
+			if (alwaysAllow != null && alwaysAllow.isSelected()) {
+				// TODO: somehow tell the ApplicationInstance
+				// to stop asking for permission
+			}
 		}
 	}
 

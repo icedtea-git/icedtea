@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.security.cert.CertPath;
 import java.security.cert.X509Certificate;
+import java.security.MessageDigest;
 import java.math.BigInteger;
 import javax.security.auth.x500.X500Principal;
 import sun.security.x509.*;
@@ -97,7 +98,8 @@ public class CertsInfoPane extends SecurityDialogUI {
 				+ " (" + issuerString + ")");
 
 		//not self signed
-		if (firstPath.getCertificates().size() > 1) {
+		if (!firstCert.getSubjectDN().equals(firstCert.getIssuerDN()) 
+			&& (firstPath.getCertificates().size() > 1)) {
 			X509Certificate secondCert = 
 				((X509Certificate)firstPath.getCertificates().get(1));
 			subjectString = 
@@ -118,7 +120,7 @@ public class CertsInfoPane extends SecurityDialogUI {
 	 * Constructs the GUI components of this UI
 	 */
 	protected void installComponents() {
-		certs = ((SecurityWarningDialog)optionPane).getCerts();
+		certs = ((SecurityWarningDialog)optionPane).getJarSigner().getCerts();
 		buildTree();
 		certNames = new String[certs.get(0).getCertificates().size()];
 		certsData = new ArrayList<String[][]>();
@@ -139,13 +141,30 @@ public class CertsInfoPane extends SecurityDialogUI {
             HexDumpEncoder encoder = new HexDumpEncoder();
             String signature = encoder.encodeBuffer(c.getSignature());
 
+			String md5Hash = "";
+			String sha1Hash = "";
+			try {
+				MessageDigest digest = MessageDigest.getInstance("MD5");
+				digest.update(c.getEncoded());
+				md5Hash = makeFingerprint(digest.digest());
+
+				digest = MessageDigest.getInstance("SHA-1");
+				digest.update(c.getEncoded());
+				sha1Hash = makeFingerprint(digest.digest());
+			} catch (Exception e) {
+				//fail quietly
+			}
+
             String[][] cert = { {"Version", version},
                                 {"Serial", serialNumber},
                                 {"Signature Algorithm", signatureAlg},
                                 {"Issuer", issuer},
                                 {"Validity", validity},
                                 {"Subject", subject},
-                                {"Signature", signature} };
+                                {"Signature", signature},
+								{"MD5 Fingerprint", md5Hash},
+								{"SHA1 Fingerprint", sha1Hash}
+								};
             certsData.add(cert);
             certNames[i] = getCN(c.getSubjectX500Principal().getName())
 				+ " (" + getCN(c.getIssuerX500Principal().getName()) + ")";
@@ -309,4 +328,19 @@ public class CertsInfoPane extends SecurityDialogUI {
             }
         }
     }
+
+	/**
+	 * Makes a human readable hash fingerprint.
+	 * For example: 11:22:33:44:AA:BB:CC:DD:EE:FF.
+	 */
+	private String makeFingerprint(byte[] hash) {
+		String fingerprint = "";
+		for (int i = 0; i < hash.length; i++) {
+			if (!fingerprint.equals(""))
+				fingerprint += ":";
+			fingerprint += Integer.toHexString(
+				((hash[i] & 0xFF)|0x100)).substring(1,3);
+		}
+		return fingerprint.toUpperCase();
+	}
 }
