@@ -25,10 +25,12 @@ import java.security.*;
 import java.lang.reflect.*;
 import javax.jnlp.*;
 import javax.swing.JOptionPane;
+import java.security.cert.Certificate;
 
 import netx.jnlp.cache.*;
 import netx.jnlp.*;
 import netx.jnlp.tools.JarSigner;
+import netx.jnlp.tools.KeyTool;
 import netx.jnlp.services.*;
 import netx.jnlp.security.*;
 
@@ -233,7 +235,6 @@ public class JNLPClassLoader extends URLClassLoader {
         if (strict)
             fillInPartJars(initialJars); // add in each initial part's lazy jars
 
-		//Verify jars if the -verify option is passed.
 		if (JNLPRuntime.isVerifying()) {
 
 			JarSigner js;
@@ -243,6 +244,8 @@ public class JNLPClassLoader extends URLClassLoader {
 				js = verifyJars(initialJars);
 			} catch (Exception e) {
 				//we caught an Exception from the JarSigner class.
+				//Note: one of these exceptions could be from not being able
+				//to read the cacerts or trusted.certs files.
 				e.printStackTrace();
 				throw new LaunchException(null, null, R("LSFatal"),
 					R("LCInit"), R("LFatalVerification"), R("LFatalVerificationInfo"));
@@ -251,25 +254,32 @@ public class JNLPClassLoader extends URLClassLoader {
 			//Case when at least one jar has some signing
 			if (js.anyJarsSigned()){
 				signing = true;
-				//if there was some problem with the signing...
-				if (!js.allVerified()) {
 
-					boolean b = SecurityWarningDialog.showWarningDialog(
-						SecurityWarningDialog.AccessType.UNVERIFIED, file,
-						js.getCerts(), js.getDetails());
-					if (!b)
-						throw new LaunchException(null, null, R("LSFatal"), 
-							R("LCLaunching"), R("LNotVerified"), "");
+				//user does not trust this publisher
+				if (!js.getAlreadyTrustPublisher()) {
+					if (!js.getRootInCacerts()) { //root cert is not in cacerts
+						boolean b = SecurityWarningDialog.showCertWarningDialog(
+							SecurityWarningDialog.AccessType.UNVERIFIED, file, js);
+						if (!b)
+							throw new LaunchException(null, null, R("LSFatal"), 
+								R("LCLaunching"), R("LNotVerified"), "");
+					} else if (js.getRootInCacerts()) { //root cert is in cacerts
+						boolean b = false;
+						if (js.noSigningIssues())
+							b = SecurityWarningDialog.showCertWarningDialog(
+									SecurityWarningDialog.AccessType.VERIFIED, file, js);
+						else if (!js.noSigningIssues())
+							b = SecurityWarningDialog.showCertWarningDialog(
+									SecurityWarningDialog.AccessType.SIGNING_ERROR, file, js);
+						if (!b)
+							throw new LaunchException(null, null, R("LSFatal"),
+								R("LCLaunching"), R("LCancelOnUserRequest"), "");
+					}
 				} else {
-					//jar is completely verified, but we still need to show
-					//a dialog
-
-					boolean b = SecurityWarningDialog.showWarningDialog(
-						SecurityWarningDialog.AccessType.VERIFIED, file,
-						js.getCerts(), js.getDetails());
-					if (!b)
-						throw new LaunchException(null, null, R("LSFatal"),
-							R("LCLaunching"), R("LCancelOnUserRequest"), "");
+					/**
+					 * If the user trusts this publisher (i.e. the publisher's certificate
+					 * is in the user's trusted.certs file), we do not show any dialogs.
+					 */
 				}
 			} else {
 

@@ -183,7 +183,7 @@ public class ServiceUtil {
         ApplicationInstance app = JNLPRuntime.getApplication();
         if (app != null) {
             if (!app.isSigned()) {
-                return SecurityWarningDialog.showWarningDialog(type,
+                return SecurityWarningDialog.showAccessWarningDialog(type,
                         app.getJNLPFile());
             } else if (app.isSigned()) {
 
