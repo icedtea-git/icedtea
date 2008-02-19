@@ -42,6 +42,7 @@ import netx.jnlp.cache.*;
 import netx.jnlp.*;
 import netx.jnlp.security.*;
 import netx.jnlp.runtime.JNLPRuntime;
+import netx.jnlp.tools.KeyTool;
 
 /**
  * <p>The jarsigner utility.
@@ -67,10 +68,6 @@ public class JarSigner {
     // prefix for new signature-related files in META-INF directory
     private static final String SIG_PREFIX = META_INF + "SIG-";
 
-    private static final Class[] PARAM_STRING = { String.class };
-
-    private static final String NONE = "NONE";
-    private static final String P11KEYSTORE = "PKCS11";
 
     private static final long SIX_MONTHS = 180*24*60*60*1000L; //milliseconds
 
@@ -115,14 +112,6 @@ public class JarSigner {
     boolean signManifest = true; // "sign" the whole manifest
     boolean externalSF = true; // leave the .SF out of the PKCS7 block
 
-    // read zip entry raw bytes
-    private ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
-    private byte[] buffer = new byte[8192];
-//   private ContentSigner signingMechanism = null;
-    private String altSignerClass = null;
-    private String altSignerClasspath = null;
-    private ZipFile zipFile = null;
-    private boolean hasUnsignedEntry = false;
     private boolean hasExpiredCert = false;
     private boolean hasExpiringCert = false;
     private boolean notYetValidCert = false;
@@ -131,7 +120,17 @@ public class JarSigner {
     private boolean badExtendedKeyUsage = false;
     private boolean badNetscapeCertType = false;
 
-    private boolean allVerified = true;
+    private boolean alreadyTrustPublisher = false;
+    private boolean rootInCacerts = false;
+    
+    /**
+     * The single certPath used in this JarSiging. We're only keeping
+     * track of one here, since in practice there's only one signer
+     * for a JNLP Application.
+     */
+    private CertPath certPath = null;
+    
+    private boolean noSigningIssues = true;
 
     private boolean anyJarsSigned = false;
 
@@ -147,13 +146,25 @@ public class JarSigner {
     /** details of this signing */
     private ArrayList<String> details = new ArrayList<String>();
 
+    public boolean getAlreadyTrustPublisher() {
+    	return alreadyTrustPublisher;
+    }
+    
+    public boolean getRootInCacerts() {
+    	return rootInCacerts;
+    }
+    
+    public CertPath getCertPath() {
+    	return certPath;
+    }
+    
     public boolean hasSigningIssues() {
         return hasExpiredCert || notYetValidCert || badKeyUsage
                || badExtendedKeyUsage || badNetscapeCertType;
     }
 
-    public boolean allVerified() {
-        return allVerified;
+    public boolean noSigningIssues() {
+        return noSigningIssues;
     }
 
     public boolean anyJarsSigned() {
@@ -181,18 +192,19 @@ public class JarSigner {
             try {
                 String localFile = tracker.getCacheFile(jar.getLocation()).getAbsolutePath();
                 boolean result = verifyJar(localFile);
+                checkTrustedCerts();
 
                 if (!result) {
                     //allVerified is true until we encounter a problem
                     //with one or more jars
-                    allVerified = false;
+                    noSigningIssues = false;
                     unverifiedJars.add(localFile);
                 } else {
                     verifiedJars.add(localFile);
                 }
             } catch (Exception e){
-                //We may catch exceptions from using js.verifyJar(localFile).
-                e.printStackTrace();
+                // We may catch exceptions from using verifyJar()
+            	// or from checkTrustedCerts	
                 throw e;
             }
         }
@@ -244,10 +256,19 @@ public class JarSigner {
                     hasUnsignedEntry |= !je.isDirectory() && !isSigned
                                         && !signatureRelated(name);
                     if (isSigned) {
+                    	// TODO: Perhaps we should check here that
+                    	// signers.length is only of size 1, and throw an
+                    	// exception if it's not?
                         for (int i = 0; i < signers.length; i++) {
                             CertPath certPath = signers[i].getSignerCertPath();
                             if (!certs.contains(certPath))
                                 certs.add(certPath);
+                            
+                            //we really only want the first certPath
+                            if (!certPath.equals(this.certPath)){
+                            	this.certPath = certPath;
+                            }
+                            
                             Certificate cert = signers[i].getSignerCertPath()
                                 .getCertificates().get(0);
                             if (cert instanceof X509Certificate) {
@@ -313,18 +334,71 @@ public class JarSigner {
                               || notYetValidCert);
     }
 
+    /**
+     * Checks the user's trusted.certs file and the cacerts file to see
+     * if a publisher's and/or CA's certificate exists there.
+     */
+    private void checkTrustedCerts() throws Exception {
+    	if (certPath != null) {
+    		try {
+    			KeyTool kt = new KeyTool();
+    			alreadyTrustPublisher = kt.isTrusted(getPublisher());
+   				rootInCacerts = kt.checkCacertsForCertificate(getRoot());
+    		} catch (Exception e) {
+    			// TODO: Warn user about not being able to
+    			// look through their cacerts/trusted.certs
+    			// file depending on exception.
+    			throw e;
+    		}
+    		
+    		if (!rootInCacerts)
+    			addToDetails(R("SUntrustedCertificate"));
+    		else 
+    			addToDetails(R("STrustedCertificate"));
+    	}
+    }
+    
+    /** 
+     * Returns the application's publisher's certificate.
+     */
+    public Certificate getPublisher() {
+    	if (certPath != null) {
+    		List<? extends Certificate> certList 
+			= certPath.getCertificates();
+    		if (certList.size() > 0) {
+    			return (Certificate)certList.get(0);
+    		} else {
+    			return null;
+    		}
+    	} else {
+    		return null;
+    	}
+    }
+    
+    /**
+     * Returns the application's root's certificate. This
+     * may return the same certificate as getPublisher() in
+     * the event that the application is self signed.
+     */
+    public Certificate getRoot() {
+    	if (certPath != null) {
+    		List<? extends Certificate> certList 
+			= certPath.getCertificates();
+    		if (certList.size() > 0) {
+    			return (Certificate)certList.get(
+    				certList.size() - 1);
+    		} else {
+    			return null;
+    		}
+    	} else {
+    		return null;
+    	}
+    }
+    
 	private void addToDetails(String detail) {
 		if (!details.contains(detail))
 			details.add(detail);
 	}
-
-    private static MessageFormat validityTimeForm = null;
-    private static MessageFormat notYetTimeForm = null;
-    private static MessageFormat expiredTimeForm = null;
-    private static MessageFormat expiringTimeForm = null;
-
-    private static MessageFormat signTimeForm = null;
-
 
     Hashtable<Certificate, String> storeHash =
         new Hashtable<Certificate, String>();

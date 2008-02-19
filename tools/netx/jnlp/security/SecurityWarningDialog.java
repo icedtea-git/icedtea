@@ -46,6 +46,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.security.cert.CertPath;
+import netx.jnlp.tools.JarSigner;
 
 /**
  * Provides methods for showing security warning dialogs
@@ -57,10 +58,12 @@ public class SecurityWarningDialog extends JOptionPane {
 
 	/** Types of dialogs we can create */
 	public static enum DialogType {
-		WARNING,
+		CERT_WARNING,
 		MORE_INFO,
-		CERT_INFO
+		CERT_INFO,
+		ACCESS_WARNING
 	}
+	
 	/** The types of access which may need user permission. */
 	public static enum AccessType {
         READ_FILE,
@@ -69,7 +72,8 @@ public class SecurityWarningDialog extends JOptionPane {
         CLIPBOARD_WRITE,
         PRINTER,
         VERIFIED,
-        UNVERIFIED
+        UNVERIFIED,
+        SIGNING_ERROR
     }
 
 	/** The type of dialog we want to show */
@@ -81,57 +85,54 @@ public class SecurityWarningDialog extends JOptionPane {
 	/** The application file assocated with this security warning */
 	private JNLPFile file;
 
-	/** The Certificates associated with this application */
-	private ArrayList<CertPath> certs;
-
-	/** Details of the signing */
-	private ArrayList<String> details;
-
+	private JarSigner jarSigner;
+	
 	/** Whether or not this object has been fully initialized */
 	private boolean initialized = false;
 
 	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
-		JNLPFile file, ArrayList<CertPath> certs, 
-		ArrayList<String> details) {
+			JNLPFile file) {
 		this.dialogType = dialogType;
 		this.accessType = accessType;
 		this.file = file;
-		this.certs = certs;
-		this.details = details;
+		this.jarSigner = null;
 		initialized = true;
 		updateUI();
 	}
-
+	
+	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
+			JNLPFile file, JarSigner jarSigner) {
+			this.dialogType = dialogType;
+			this.accessType = accessType;
+			this.file = file;
+			this.jarSigner = jarSigner;
+			initialized = true;
+			updateUI();
+	}
+	
+	/**
+	 * Returns if this dialog has been fully initialized yet.
+	 * @return true if this dialog has been initialized, and false otherwise.
+	 */
 	public boolean isInitialized(){
 		return initialized;
 	}
 	
-	public static boolean showWarningDialog(AccessType accessType, 
-		JNLPFile file) {
-	 	return showWarningDialog(accessType, file, null, null);
-	}
-
 	/**
-	 * Shows a security warning dialog according to the specified type of
-	 * access. If <code>type</code> is one of AccessType.VERIFIED or
-	 * AccessType.UNVERIFIED, extra details will be available with regards
-	 * to code signing and signing certificates.
-	 *
-	 * @param accessType the type of warning dialog to show
-	 * @param file the JNLPFile associated with this warning
-	 * @param certs the signing certificates assocated with this warning, 
-	 * if any. Can be null.
-	 * @param details the extra details associated with this warning. Can be null.
+	 * Shows a warning dialog for different types of system access (i.e. file
+	 * open/save, clipboard read/write, printing, etc).
+	 * 
+	 * @param accessType the type of system access requested.
+	 * @param file the jnlp file associated with the requesting application.
+	 * @return true if permission was granted by the user, false otherwise.
 	 */
-	public static boolean showWarningDialog(AccessType accessType, 
-		JNLPFile file, ArrayList<CertPath> certs, 
-		ArrayList<String> details) {
-		SecurityWarningDialog swd = 
-			new SecurityWarningDialog(DialogType.WARNING, accessType, file,
-			certs, details);
+	public static boolean showAccessWarningDialog(AccessType accessType, 
+		JNLPFile file) {
+		SecurityWarningDialog swd = new SecurityWarningDialog(
+				DialogType.ACCESS_WARNING, accessType, file);
 		JDialog dialog = swd.createDialog();
 		swd.selectInitialValue();
-		dialog.setResizable(false);
+		dialog.setResizable(true);
 		centerDialog(dialog);
 		dialog.setVisible(true);
 		dialog.dispose();
@@ -148,24 +149,58 @@ public class SecurityWarningDialog extends JOptionPane {
 			return false;
 		}
 	}
+	
+	/**
+	 * Shows a security warning dialog according to the specified type of
+	 * access. If <code>type</code> is one of AccessType.VERIFIED or
+	 * AccessType.UNVERIFIED, extra details will be available with regards
+	 * to code signing and signing certificates.
+	 *
+	 * @param accessType the type of warning dialog to show
+	 * @param file the JNLPFile associated with this warning
+	 * @param jarSigner the JarSigner used to verify this application
+	 */
+	public static boolean showCertWarningDialog(AccessType accessType, 
+			JNLPFile file, JarSigner jarSigner) {
+		SecurityWarningDialog swd = 
+			new SecurityWarningDialog(DialogType.CERT_WARNING, accessType, file,
+			jarSigner);
+		JDialog dialog = swd.createDialog();
+		swd.selectInitialValue();
+		dialog.setResizable(true);
+		centerDialog(dialog);
+		dialog.setVisible(true);
+		dialog.dispose();
 
+		Object selectedValue = swd.getValue();
+		if (selectedValue == null) {
+			return false;
+		} else if (selectedValue instanceof Integer) {
+			if (((Integer)selectedValue).intValue() == 0)
+				return true;
+			else
+				return false;
+		} else {
+			return false;
+		}
+	}
+	
 	/**
 	 * Shows more information regarding jar code signing
 	 *
-	 * @param certs the certificates used in this signing
-	 * @param details the extra details regarding this signing
+	 * @param jarSigner the JarSigner used to verify this application
+	 * @param parent the parent option pane
 	 */
 	public static void showMoreInfoDialog(
-		ArrayList<CertPath> certs,
-		ArrayList<String> details, JOptionPane parent) {
+		JarSigner jarSigner, JOptionPane parent) {
 
 		SecurityWarningDialog swd =
 			new SecurityWarningDialog(DialogType.MORE_INFO, null, null,
-			certs, details);
+			jarSigner);
 		JDialog dialog = swd.createDialog();
 		dialog.setLocationRelativeTo(parent);
 		swd.selectInitialValue();
-		dialog.setResizable(false);
+		dialog.setResizable(true);
 		dialog.setVisible(true);
 		dialog.dispose();
 	}
@@ -175,10 +210,10 @@ public class SecurityWarningDialog extends JOptionPane {
 	 *
 	 * @param certs the certificates used in signing.
 	 */
-	public static void showCertInfoDialog(ArrayList<CertPath> certs,
+	public static void showCertInfoDialog(JarSigner jarSigner,
 		JOptionPane parent) {
 		SecurityWarningDialog swd = new SecurityWarningDialog(DialogType.CERT_INFO,
-			null, null, certs, null);
+			null, null, jarSigner);
 		JDialog dialog = swd.createDialog();
 		dialog.setLocationRelativeTo(parent);
 		swd.selectInitialValue();
@@ -189,13 +224,15 @@ public class SecurityWarningDialog extends JOptionPane {
 
 	//Modified from javax.swing.JOptionPane
 	private JDialog createDialog() {
-		String dialogTitle;
-		if (dialogType == DialogType.WARNING)
+		String dialogTitle = "";
+		if (dialogType == DialogType.CERT_WARNING)
 			dialogTitle = "Warning - Security";
 		else if (dialogType == DialogType.MORE_INFO)
 			dialogTitle = "More Information";
-		else
+		else if (dialogType == DialogType.CERT_INFO)
 			dialogTitle = "Details - Certificate";
+		else if (dialogType == DialogType.ACCESS_WARNING)
+			dialogTitle = "Security Warning";
 
 		final JDialog dialog = new JDialog((Frame)null, dialogTitle, true);
 		
@@ -253,13 +290,9 @@ public class SecurityWarningDialog extends JOptionPane {
 	public JNLPFile getFile() {
 		return file;
 	}
-
-	public ArrayList<CertPath> getCerts() {
-		return certs;
-	}
-
-	public ArrayList<String> getDetails() {
-		return details;
+	
+	public JarSigner getJarSigner() {
+		return jarSigner;
 	}
 
 	/**
@@ -268,12 +301,14 @@ public class SecurityWarningDialog extends JOptionPane {
 	 */
 	public void updateUI() {
 
-		if (dialogType == DialogType.WARNING)
-			setUI((OptionPaneUI) new SecurityWarningOptionPane(this));
+		if (dialogType == DialogType.CERT_WARNING)
+			setUI((OptionPaneUI) new CertWarningPane(this));
 		else if (dialogType == DialogType.MORE_INFO)
 			setUI((OptionPaneUI) new MoreInfoPane(this));
 		else if (dialogType == DialogType.CERT_INFO)
 			setUI((OptionPaneUI) new CertsInfoPane(this));
+		else if (dialogType == DialogType.ACCESS_WARNING)
+			setUI((OptionPaneUI) new AccessWarningPane(this));
 	}
 
 	private static void centerDialog(JDialog dialog) {

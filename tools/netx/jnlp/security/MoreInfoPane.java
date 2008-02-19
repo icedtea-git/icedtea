@@ -62,7 +62,8 @@ public class MoreInfoPane extends SecurityDialogUI {
 	 */
 	protected void installComponents() {
 		ArrayList<String> details = 
-			((SecurityWarningDialog)optionPane).getDetails();
+			((SecurityWarningDialog)optionPane)
+				.getJarSigner().getDetails();
 
 		int numLabels = details.size();
 		JPanel errorPanel = new JPanel(new GridLayout(numLabels,1));
@@ -98,8 +99,9 @@ public class MoreInfoPane extends SecurityDialogUI {
 
 	private class CertInfoButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+        	//TODO: Change to ((SecurityWarningDialog) optionPane).showCertInfoDialog()
             SecurityWarningDialog.showCertInfoDialog(
-				((SecurityWarningDialog)optionPane).getCerts(),
+				((SecurityWarningDialog)optionPane).getJarSigner(),
 				optionPane);
         }
     }
