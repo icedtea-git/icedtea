@@ -126,9 +126,12 @@ public class KeyTool {
 			boolean madeDir = false;
 			if (!certDir.isDirectory()) { //directory does not exist
 				madeDir = (new File(homeDir+certPath)).mkdirs();
-			}
-			
-			if (madeDir) {
+			} 
+		
+			// If we successfully made the directory,
+			// or the directory already exists (but the file does 
+			// not), then create the keystore.
+			if (madeDir || certDir.isDirectory()) {
 				usercerts = KeyStore.getInstance("JKS");
 				usercerts.load(null, password);
 				fos = new FileOutputStream(certFile);
