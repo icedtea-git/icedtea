@@ -1,6 +1,11 @@
 2008-02-19  Joshua Sumali  <jsumali@redhat.com>
 
-	* netx/jnlp/security/CertWarningPane.java: Import the publisher's
+	* tools/netx/jnlp/tools/KeyTool.java: Instantiate usercerts before trying to
+	load it.
+
+2008-02-19  Joshua Sumali  <jsumali@redhat.com>
+
+	* tools/netx/jnlp/security/CertWarningPane.java: Import the publisher's
 	certificate instead of root certificate to trusted.certs.
 
 2008-02-19  Joshua Sumali  <jsumali@redhat.com>
