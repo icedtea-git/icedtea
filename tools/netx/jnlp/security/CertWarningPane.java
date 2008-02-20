@@ -141,11 +141,13 @@ public class CertWarningPane extends SecurityDialogUI {
 
 		//run and cancel buttons
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
-		String runButtonText = "Run";
-
-		JButton run = new JButton(runButtonText);
+		JButton run = new JButton("Run");
 		JButton cancel = new JButton("Cancel");
+		int buttonWidth = Math.max(run.getMinimumSize().width, cancel.getMinimumSize().width);
+		int buttonHeight = run.getMinimumSize().height;
+		Dimension d = new Dimension(buttonWidth, buttonHeight);
+		run.setPreferredSize(d);
+		cancel.setPreferredSize(d);
 		run.addActionListener(createButtonActionListener(0));
 		run.addActionListener(new CheckBoxListener());
 		cancel.addActionListener(createButtonActionListener(1));
