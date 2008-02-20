@@ -129,6 +129,7 @@ public class KeyTool {
 			}
 			
 			if (madeDir) {
+				usercerts = KeyStore.getInstance("JKS");
 				usercerts.load(null, password);
 				fos = new FileOutputStream(certFile);
 				usercerts.store(fos,	password);
