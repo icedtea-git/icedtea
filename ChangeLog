@@ -1,3 +1,10 @@
+2008-02-20  Joshua Sumali  <jsumali@redhat.com>
+
+	* tools/netx/jnlp/security/CertWarningPane.java: Make run and cancel
+	buttons of equal width.
+	* tools/netx/jnlp/tools/KeyTool.java: Create new trusted.certs if
+	directory exists but file does not.
+
 2008-02-19  Joshua Sumali  <jsumali@redhat.com>
 
 	* tools/netx/jnlp/tools/KeyTool.java: Instantiate usercerts before trying to
