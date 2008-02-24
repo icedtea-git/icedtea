@@ -104,6 +104,19 @@ rt.jar and tools.jar to provide gcjwebplugin with an interface into
 the appletviewer code.  This support code is provided in
 patches/icedtea-plugin.patch.
 
+Experimental LiveConnect support
+================================
+
+The configure option --enable-liveconnect enables experimental
+LiveConnect support, implemented by IcedTeaPlugin.cc and
+patches/icedtea-liveconnect.patch.  Currently IcedTeaPlugin.cc will
+only build against a very recent version of XULRunner, such as that
+available in Fedora Rawhide as of 2008-02-23.  The required
+development headers are provided by the xulrunner-devel package.
+
+To run IcedTeaPlugin you'll need to add
+/usr/lib/xulrunner-sdk-1.9pre/sdk/lib/ to LD_LIBRARY_PATH.
+
 NetX
 ====
 
