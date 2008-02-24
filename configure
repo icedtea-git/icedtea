@@ -715,7 +715,10 @@ GAWK
 SYSTEM_GCJ_DIR
 SYSTEM_ICEDTEA_DIR
 SYSTEM_ANT_DIR
-ENABLE_PLUGIN
+ENABLE_PLUGIN_TRUE
+ENABLE_PLUGIN_FALSE
+ENABLE_LIVECONNECT_TRUE
+ENABLE_LIVECONNECT_FALSE
 WITH_ICEDTEA_TRUE
 WITH_ICEDTEA_FALSE
 BUILD_ARCH_DIR
@@ -768,12 +771,15 @@ FREETYPE2_CFLAGS
 FREETYPE2_LIBS
 ALSA_CFLAGS
 ALSA_LIBS
+XULRUNNER_VERSION
+XULRUNNER_CFLAGS
+XULRUNNER_LIBS
+GTK_CFLAGS
+GTK_LIBS
 MOZILLA_CFLAGS
 MOZILLA_LIBS
 GLIB_CFLAGS
 GLIB_LIBS
-GTK_CFLAGS
-GTK_LIBS
 LIBFFI_CFLAGS
 LIBFFI_LIBS
 LIBOBJS
@@ -810,12 +816,14 @@ FREETYPE2_CFLAGS
 FREETYPE2_LIBS
 ALSA_CFLAGS
 ALSA_LIBS
+XULRUNNER_CFLAGS
+XULRUNNER_LIBS
+GTK_CFLAGS
+GTK_LIBS
 MOZILLA_CFLAGS
 MOZILLA_LIBS
 GLIB_CFLAGS
 GLIB_LIBS
-GTK_CFLAGS
-GTK_LIBS
 LIBFFI_CFLAGS
 LIBFFI_LIBS'
 
@@ -1400,6 +1408,7 @@ Optional Features:
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
   --disable-gcjwebplugin  Disable compilation of browser plugin
+  --enable-liveconnect    Enable experimental LiveConnect plugin
   --enable-fast-build     optimize for quick building: use -O0 and do not
                           build documentation
   --enable-zero           use zero-assembler port on non-zero platforms
@@ -1464,14 +1473,18 @@ Some influential environment variables:
               linker flags for FREETYPE2, overriding pkg-config
   ALSA_CFLAGS C compiler flags for ALSA, overriding pkg-config
   ALSA_LIBS   linker flags for ALSA, overriding pkg-config
+  XULRUNNER_CFLAGS
+              C compiler flags for XULRUNNER, overriding pkg-config
+  XULRUNNER_LIBS
+              linker flags for XULRUNNER, overriding pkg-config
+  GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
+  GTK_LIBS    linker flags for GTK, overriding pkg-config
   MOZILLA_CFLAGS
               C compiler flags for MOZILLA, overriding pkg-config
   MOZILLA_LIBS
               linker flags for MOZILLA, overriding pkg-config
   GLIB_CFLAGS C compiler flags for GLIB, overriding pkg-config
   GLIB_LIBS   linker flags for GLIB, overriding pkg-config
-  GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
-  GTK_LIBS    linker flags for GTK, overriding pkg-config
   LIBFFI_CFLAGS
               C compiler flags for LIBFFI, overriding pkg-config
   LIBFFI_LIBS linker flags for LIBFFI, overriding pkg-config
@@ -4945,11 +4958,34 @@ fi
 
 # Check whether --enable-gcjwebplugin was given.
 if test "${enable_gcjwebplugin+set}" = set; then
-  enableval=$enable_gcjwebplugin; ENABLE_PLUGIN="$val"
+  enableval=$enable_gcjwebplugin; enable_plugin="$val"
 else
-  ENABLE_PLUGIN='yes'
+  enable_plugin="yes"
 fi
 
+ if test "x${enable_plugin}" = "xyes"; then
+  ENABLE_PLUGIN_TRUE=
+  ENABLE_PLUGIN_FALSE='#'
+else
+  ENABLE_PLUGIN_TRUE='#'
+  ENABLE_PLUGIN_FALSE=
+fi
+
+
+# Check whether --enable-liveconnect was given.
+if test "${enable_liveconnect+set}" = set; then
+  enableval=$enable_liveconnect; enable_liveconnect="yes"
+else
+  enable_liveconnect="no"
+fi
+
+ if test "x${enable_liveconnect}" = "xyes"; then
+  ENABLE_LIVECONNECT_TRUE=
+  ENABLE_LIVECONNECT_FALSE='#'
+else
+  ENABLE_LIVECONNECT_TRUE='#'
+  ENABLE_LIVECONNECT_FALSE=
+fi
 
 
 
@@ -9291,7 +9327,245 @@ fi
 
 
 
-if test "$ENABLE_PLUGIN" = "yes"; then
+if test "x${enable_liveconnect}" = "xyes"
+then
+  XULRUNNER_VERSION=`pkg-config --modversion libxul`
+
+
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for XULRUNNER" >&5
+echo $ECHO_N "checking for XULRUNNER... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$XULRUNNER_CFLAGS"; then
+        pkg_cv_XULRUNNER_CFLAGS="$XULRUNNER_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre\"") >&5
+  ($PKG_CONFIG --exists --print-errors "\
+    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_XULRUNNER_CFLAGS=`$PKG_CONFIG --cflags "\
+    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$XULRUNNER_LIBS"; then
+        pkg_cv_XULRUNNER_LIBS="$XULRUNNER_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre\"") >&5
+  ($PKG_CONFIG --exists --print-errors "\
+    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_XULRUNNER_LIBS=`$PKG_CONFIG --libs "\
+    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        XULRUNNER_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "\
+    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre"`
+        else
+	        XULRUNNER_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "\
+    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$XULRUNNER_PKG_ERRORS" >&5
+
+	{ { echo "$as_me:$LINENO: error: Package requirements (\
+    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre) were not met:
+
+$XULRUNNER_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables XULRUNNER_CFLAGS
+and XULRUNNER_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&5
+echo "$as_me: error: Package requirements (\
+    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre) were not met:
+
+$XULRUNNER_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables XULRUNNER_CFLAGS
+and XULRUNNER_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&2;}
+   { (exit 1); exit 1; }; }
+elif test $pkg_failed = untried; then
+	{ { echo "$as_me:$LINENO: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables XULRUNNER_CFLAGS
+and XULRUNNER_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&5
+echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables XULRUNNER_CFLAGS
+and XULRUNNER_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+else
+	XULRUNNER_CFLAGS=$pkg_cv_XULRUNNER_CFLAGS
+	XULRUNNER_LIBS=$pkg_cv_XULRUNNER_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	:
+fi
+
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for GTK" >&5
+echo $ECHO_N "checking for GTK... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GTK_CFLAGS"; then
+        pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\"") >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GTK_LIBS"; then
+        pkg_cv_GTK_LIBS="$GTK_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\"") >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gtk+-2.0"`
+        else
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtk+-2.0"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GTK_PKG_ERRORS" >&5
+
+	{ { echo "$as_me:$LINENO: error: Package requirements (gtk+-2.0) were not met:
+
+$GTK_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&5
+echo "$as_me: error: Package requirements (gtk+-2.0) were not met:
+
+$GTK_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&2;}
+   { (exit 1); exit 1; }; }
+elif test $pkg_failed = untried; then
+	{ { echo "$as_me:$LINENO: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&5
+echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+else
+	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
+	GTK_LIBS=$pkg_cv_GTK_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	:
+fi
+else
+  if test "x${enable_plugin}" = "xyes"
+  then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -9354,10 +9628,10 @@ fi
 	{ echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
                 \
-  MOZILLA_FOUND=no
+      MOZILLA_FOUND=no
 elif test $pkg_failed = untried; then
 	\
-  MOZILLA_FOUND=no
+      MOZILLA_FOUND=no
 else
 	MOZILLA_CFLAGS=$pkg_cv_MOZILLA_CFLAGS
 	MOZILLA_LIBS=$pkg_cv_MOZILLA_LIBS
@@ -9365,8 +9639,8 @@ else
 echo "${ECHO_T}yes" >&6; }
 	MOZILLA_FOUND=yes
 fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -9437,11 +9711,11 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -9512,11 +9786,11 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -9587,11 +9861,11 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -9662,11 +9936,11 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -9737,15 +10011,15 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
-  { { echo "$as_me:$LINENO: error: Could not find plugin support headers and libraries." >&5
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
+      { { echo "$as_me:$LINENO: error: Could not find plugin support headers and libraries." >&5
 echo "$as_me: error: Could not find plugin support headers and libraries." >&2;}
    { (exit 1); exit 1; }; }
-fi
+    fi
 
 
 pkg_failed=no
@@ -9976,6 +10250,7 @@ fi
 
 
 
+  fi
 fi
 
 if test "x${CORE_BUILD_TRUE}" = x; then
@@ -10206,6 +10481,20 @@ if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"am__fastdepCXX\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${ENABLE_PLUGIN_TRUE}" && test -z "${ENABLE_PLUGIN_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"ENABLE_PLUGIN\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"ENABLE_PLUGIN\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${ENABLE_LIVECONNECT_TRUE}" && test -z "${ENABLE_LIVECONNECT_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"ENABLE_LIVECONNECT\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"ENABLE_LIVECONNECT\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -10965,7 +11254,10 @@ for ac_last_try in false false false false false :; do
 SYSTEM_GCJ_DIR!$SYSTEM_GCJ_DIR$ac_delim
 SYSTEM_ICEDTEA_DIR!$SYSTEM_ICEDTEA_DIR$ac_delim
 SYSTEM_ANT_DIR!$SYSTEM_ANT_DIR$ac_delim
-ENABLE_PLUGIN!$ENABLE_PLUGIN$ac_delim
+ENABLE_PLUGIN_TRUE!$ENABLE_PLUGIN_TRUE$ac_delim
+ENABLE_PLUGIN_FALSE!$ENABLE_PLUGIN_FALSE$ac_delim
+ENABLE_LIVECONNECT_TRUE!$ENABLE_LIVECONNECT_TRUE$ac_delim
+ENABLE_LIVECONNECT_FALSE!$ENABLE_LIVECONNECT_FALSE$ac_delim
 WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
 WITH_ICEDTEA_FALSE!$WITH_ICEDTEA_FALSE$ac_delim
 BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
@@ -11018,19 +11310,22 @@ FREETYPE2_CFLAGS!$FREETYPE2_CFLAGS$ac_delim
 FREETYPE2_LIBS!$FREETYPE2_LIBS$ac_delim
 ALSA_CFLAGS!$ALSA_CFLAGS$ac_delim
 ALSA_LIBS!$ALSA_LIBS$ac_delim
+XULRUNNER_VERSION!$XULRUNNER_VERSION$ac_delim
+XULRUNNER_CFLAGS!$XULRUNNER_CFLAGS$ac_delim
+XULRUNNER_LIBS!$XULRUNNER_LIBS$ac_delim
+GTK_CFLAGS!$GTK_CFLAGS$ac_delim
+GTK_LIBS!$GTK_LIBS$ac_delim
 MOZILLA_CFLAGS!$MOZILLA_CFLAGS$ac_delim
 MOZILLA_LIBS!$MOZILLA_LIBS$ac_delim
 GLIB_CFLAGS!$GLIB_CFLAGS$ac_delim
 GLIB_LIBS!$GLIB_LIBS$ac_delim
-GTK_CFLAGS!$GTK_CFLAGS$ac_delim
-GTK_LIBS!$GTK_LIBS$ac_delim
 LIBFFI_CFLAGS!$LIBFFI_CFLAGS$ac_delim
 LIBFFI_LIBS!$LIBFFI_LIBS$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 66; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 72; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

@@ -1,5 +1,22 @@
 OPENJDK_VERSION = b24
 
+if ENABLE_LIVECONNECT
+ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
+ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
+PLUGIN_PATCH = patches/icedtea-liveconnect.patch
+else
+ICEDTEAPLUGIN_CLEAN =
+ICEDTEAPLUGIN_TARGET =
+PLUGIN_PATCH = patches/icedtea-plugin.patch
+if ENABLE_PLUGIN
+GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
+GCJWEBPLUGIN_TARGET = gcjwebplugin.so
+else
+GCJWEBPLUGIN_CLEAN =
+GCJWEBPLUGIN_TARGET =
+endif
+endif
+
 # Top-Level Targets
 # =================
 
@@ -14,7 +31,13 @@ distclean-local: clean-copy
 	rm -rf openjdk-ecj
 	rm -rf openjdk
 	rm -rf hotspot-tools
+if ENABLE_LIVECONNECT
+	rm -f IcedTeaPlugin.so
+else
+if ENABLE_PLUGIN
 	rm -f gcjwebplugin.so
+endif
+endif
 
 install:
 
@@ -25,12 +48,14 @@ install:
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
 	clean-tools-jar clean-tools clean-shared-objects \
-	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
-	hotspot hotspot-helper
+	clean-copy clean-hotspot-tools clean-rt $(GCJWEBPLUGIN_CLEAN) \
+	$(ICEDTEAPLUGIN_CLEAN) hotspot hotspot-helper
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
-	tools patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch
+	tools patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch \
+	patches/icedtea-plugin.patch patches/icedtea-liveconnect.patch \
+	IcedTeaPlugin.cc
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
@@ -217,7 +242,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-debuginfo.patch \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-license-headers.patch \
-	patches/icedtea-plugin.patch \
+	$(PLUGIN_PATCH) \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-certbundle.patch \
@@ -274,7 +299,6 @@ stamps/patch.stamp: stamps/clone.stamp
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
 	fi
-	
 
 clean-patch:
 	rm -f stamps/patch.stamp
@@ -468,37 +492,49 @@ endif
 # you change it in the icedtea-debug target as well.
 icedtea: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
-	stamps/tools.stamp
+	stamps/ports.stamp stamps/patch.stamp $(GCJWEBPLUGIN_TARGET) \
+	$(ICEDTEAPLUGIN_TARGET) stamps/tools.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/
-	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-	  then \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
-	fi
+if ENABLE_LIVECONNECT
+	cp -pPRf IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+else
+if ENABLE_PLUGIN
+	cp -pPRf gcjwebplugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf gcjwebplugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+endif
+endif
 	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/tools.jar \
 	  -C lib/tools .
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
 icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
-	stamps/tools.stamp
+	stamps/ports.stamp stamps/patch.stamp $(GCJWEBPLUGIN_TARGET) \
+	$(ICEDTEAPLUGIN_TARGET) stamps/tools.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  debug_build
-	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-	  then \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
-	fi
+if ENABLE_LIVECONNECT
+	cp -pPRf IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+else
+if ENABLE_PLUGIN
+	cp -pPRf gcjwebplugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf gcjwebplugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+endif
+endif
 	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/lib/tools.jar \
 	  -C lib/tools .
 	@echo "IcedTea (debug build) is served:" \
@@ -641,28 +677,24 @@ stamps/hotspot-tools-copy-source-files.stamp: stamps/patch.stamp
 	  cp -pPRf openjdk/jdk/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
-	
 	for copy_dir in `cat tools-copy/tools-langtools-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -pPRf openjdk/langtools/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
-	
 	for copy_dir in `cat tools-copy/tools-corba-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -pPRf openjdk/corba/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
-	
 	for copy_dir in `cat tools-copy/tools-jaxws-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -pPRf openjdk/jaxws/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
-	
 	mkdir -p stamps
 	touch stamps/hotspot-tools-copy-source-files.stamp
 
@@ -753,19 +785,40 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	  cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar bootstrap/ecj/jre/lib/rt.jar; \
 	fi
 
+if ENABLE_LIVECONNECT
+# IcedTeaPlugin.so.
+# Mozilla is compiled with -fshort-wchar.
+IcedTeaPlugin.so: IcedTeaPlugin.cc
+	$(CXX) $(CXXFLAGS) \
+	  -DXPCOM_GLUE_USE_NSPR \
+	  $(XULRUNNER_CFLAGS) \
+	  `echo $(XULRUNNER_LIBS) | sed 's%/lib\ %/sdk/lib\ %'` \
+	  -I/usr/include/xulrunner-sdk-$(XULRUNNER_VERSION)/oji \
+	  -I/usr/include/xulrunner-sdk-$(XULRUNNER_VERSION)/caps \
+	  -I/usr/include/xulrunner-sdk-$(XULRUNNER_VERSION)/liveconnect \
+	  -I/usr/include/xulrunner-sdk-$(XULRUNNER_VERSION)/necko \
+	  -I/usr/include/xulrunner-sdk-$(XULRUNNER_VERSION)/string \
+	  -I/usr/include/xulrunner-sdk-$(XULRUNNER_VERSION)/xpcom \
+	  $(GTK_CFLAGS) $(GTK_LIBS) \
+	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	  -fpic -fshort-wchar --shared -o $@ $<
+
+clean-IcedTeaPlugin:
+	rm -f IcedTeaPlugin.so
+else
+if ENABLE_PLUGIN
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
-	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-	then \
-	  $(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
-	    $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
-	    $(GTK_CFLAGS) $(GTK_LIBS) \
-	    -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	    -fpic -shared -o $@ $< ; \
-	fi
+	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
+	  $(GTK_CFLAGS) $(GTK_LIBS) \
+	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	  -fpic -shared -o $@ $<
 
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
+endif
+endif
 
 #extra tools
 stamps/tools.stamp: stamps/tools-class-files.stamp

@@ -1,3 +1,17 @@
+2008-02-23  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* IcedTeaPlugin.cc: New file.
+	* Makefile.am: Add ENABLE_LIVECONNECT and ENABLE_PLUGIN
+	conditionals.
+	* Makefile.in: Regenerate.
+	* README: Document --enable-liveconnect.
+	* configure.ac: Define ENABLE_LIVECONNECT and ENABLE_PLUGIN
+	conditionals.  Add --enable-liveconnect option.  Add XULRunner
+	pkg-config checks.
+	* configure: Regenerate.
+	* .hgignore: Add IcedTeaPlugin.so.
+	* patches/icedtea-liveconnect.patch: New file.
+
 2008-02-20  Joshua Sumali  <jsumali@redhat.com>
 
 	* tools/netx/jnlp/security/CertWarningPane.java: Make run and cancel

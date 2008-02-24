@@ -14,6 +14,7 @@ config.status
 javac
 javap
 gcjwebplugin.so
+IcedTeaPlugin.so
 rt-source-files.txt
 hotspot-tools-source-files.txt
 tools-source-files.txt
