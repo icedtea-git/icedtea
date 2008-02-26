@@ -1,5 +1,14 @@
 2008-02-26  Lillian Angel  <langel@redhat.com>
 
+	* Makefile.am
+	(FREETYPE2_INC_DIR): Removed.
+	(FREETYPE2_HEADERS): New var.
+	(FT2_LIB): New var.
+	* patches/icedtea-headers.patch: Added freetype patches.
+	* Makefile.in: Regenerated.
+
+2008-02-26  Lillian Angel  <langel@redhat.com>
+
 	* patches/icedtea-libraries.patch: Fixed dlopen calls. No longer
 	hardcoding paths to libjpeg.so.62.
 
