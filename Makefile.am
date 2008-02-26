@@ -55,7 +55,7 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
 	tools patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch \
 	patches/icedtea-plugin.patch patches/icedtea-liveconnect.patch \
-	IcedTeaPlugin.cc
+	IcedTeaPlugin.cc patches/icedtea-freetype.patch
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
@@ -75,6 +75,7 @@ if CORE_BUILD
 else
   ICEDTEA_CORE_BUILD =
 endif
+
 ICEDTEA_ENV = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
@@ -94,10 +95,11 @@ ICEDTEA_ENV = \
 	"ENDORSED=-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
 	"CLASSPATH=" \
 	"LD_LIBRARY_PATH=" \
-	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)" \
 	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
 	"LIBFFI_CFLAGS=$(LIBFFI_CFLAGS)" \
-	"LIBFFI_LIBS=$(LIBFFI_LIBS)"
+	"LIBFFI_LIBS=$(LIBFFI_LIBS)" \
+	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
+	"FT2_LIB=$(FREETYPE2_LIBS)"
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -133,10 +135,11 @@ ICEDTEA_ENV_ECJ = \
 	"CLASSPATH=" \
 	"LD_LIBRARY_PATH=" \
 	"GENSRCDIR=$(abs_top_srcdir)/generated" \
-	"FREETYPE2_INC_DIR=$(FREETYPE2_INC_DIR)" \
 	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
 	"LIBFFI_CFLAGS=$(LIBFFI_CFLAGS)" \
-	"LIBFFI_LIBS=$(LIBFFI_LIBS)"
+	"LIBFFI_LIBS=$(LIBFFI_LIBS)" \
+	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
+	"FT2_LIB=$(FREETYPE2_LIBS)"
 
 env-ecj:
 	@echo 'unset JAVA_HOME'
@@ -273,6 +276,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \
+	patches/icedtea-freetype.patch \
 	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
 	$(ZERO_BUILD_PATCH) \
