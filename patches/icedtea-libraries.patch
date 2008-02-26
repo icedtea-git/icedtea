@@ -24741,8 +24741,8 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  endif
  endif #LINUX
  endif #PLATFORM
---- openjdkold/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-02-12 04:08:13.000000000 -0500
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-02-26 08:52:21.000000000 -0500
+--- oldopenjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-01-04 18:21:02.000000000 -0500
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-02-26 09:07:15.000000000 -0500
 @@ -51,7 +51,9 @@
  
  /* headers from the JPEG library */
@@ -24817,30 +24817,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  /*
   * Defined in jpegdecoder.c.  Copy code from there if and
   * when that disappears. */
-@@ -376,9 +434,6 @@
-     pixelBuffer pixelBuf;     // Buffer for pixels
- 
-     jboolean abortFlag;       // Passed down from Java abort method
--
--    UINT8 scale[MAX_BANDS][NUM_INPUT_VALUES];
--    int bandSizes[MAX_BANDS]; // For scaling to-from non-8-bit images
- } imageIOData, *imageIODataPtr;
- 
- /*
-@@ -417,12 +472,6 @@
- 
-     data->abortFlag = JNI_FALSE;
- 
--    for (i = 0; i < MAX_BANDS; i ++) {
--        data->bandSizes[i] = 0;
--        for (j = 0; j < NUM_INPUT_VALUES; j++) {
--            data->scale[i][j] = 0;
--        }
--    }
-     return data;
- }
- 
-@@ -615,7 +664,7 @@
+@@ -606,7 +664,7 @@
          return;
      }
  
@@ -24849,7 +24826,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
  }
  
-@@ -640,7 +689,7 @@
+@@ -631,7 +689,7 @@
          return;
      }
  
@@ -24858,7 +24835,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
  }
  
-@@ -658,7 +707,7 @@
+@@ -649,7 +707,7 @@
              free(cinfo->dest);
              cinfo->dest = NULL;
          }
@@ -24867,7 +24844,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          free(info);
      }
  }
-@@ -694,14 +743,14 @@
+@@ -685,14 +743,14 @@
              decomp = (j_decompress_ptr) cinfo;
              if (decomp->quant_tbl_ptrs[i] == NULL) {
                  decomp->quant_tbl_ptrs[i] =
@@ -24884,7 +24861,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              }
              quant_ptr = comp->quant_tbl_ptrs[i];
          }
-@@ -777,14 +826,14 @@
+@@ -768,14 +826,14 @@
              decomp = (j_decompress_ptr) cinfo;
              if (decomp->dc_huff_tbl_ptrs[i] == NULL) {
                  decomp->dc_huff_tbl_ptrs[i] =
@@ -24901,7 +24878,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              }
              huff_ptr = comp->dc_huff_tbl_ptrs[i];
          }
-@@ -798,14 +847,14 @@
+@@ -789,14 +847,14 @@
              decomp = (j_decompress_ptr) cinfo;
              if (decomp->ac_huff_tbl_ptrs[i] == NULL) {
                  decomp->ac_huff_tbl_ptrs[i] =
@@ -24918,7 +24895,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              }
              huff_ptr = comp->ac_huff_tbl_ptrs[i];
          }
-@@ -1346,6 +1395,8 @@
+@@ -1337,6 +1395,8 @@
       jclass ImageInputStreamClass,
       jclass qTableClass,
       jclass huffClass) {
@@ -24927,7 +24904,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      ImageInputStream_readID = (*env)->GetMethodID(env,
                                                    ImageInputStreamClass,
-@@ -1431,7 +1482,7 @@
+@@ -1422,7 +1482,7 @@
      }
  
      /* We set up the normal JPEG error routines, then override error_exit. */
@@ -24936,7 +24913,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      jerr->pub.error_exit = sun_jpeg_error_exit;
      /* We need to setup our own print routines */
      jerr->pub.output_message = sun_jpeg_output_message;
-@@ -1448,11 +1499,11 @@
+@@ -1439,11 +1499,11 @@
      }
  
      /* Perform library initialization */
@@ -24950,7 +24927,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      /*
       * Now set up our source.
-@@ -1470,7 +1521,7 @@
+@@ -1461,7 +1521,7 @@
      cinfo->src->init_source = imageio_init_source;
      cinfo->src->fill_input_buffer = imageio_fill_input_buffer;
      cinfo->src->skip_input_data = imageio_skip_input_data;
@@ -24959,7 +24936,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      cinfo->src->term_source = imageio_term_source;
  
      /* set up the association to persist for future calls */
-@@ -1588,7 +1639,7 @@
+@@ -1579,7 +1639,7 @@
          src->bytes_in_buffer = 0;
      }
  
@@ -24968,7 +24945,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      if (ret == JPEG_HEADER_TABLES_ONLY) {
          retval = JNI_TRUE;
-@@ -1709,7 +1760,7 @@
+@@ -1700,7 +1760,7 @@
                                 cinfo->num_components,
                                 read_icc_profile(env, cinfo));
          if (reset) {
@@ -24977,42 +24954,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          }
      }
  
-@@ -1836,34 +1887,6 @@
- 
-     (*env)->ReleaseIntArrayElements(env, srcBands, body, JNI_ABORT);
- 
--    bandSize = (*env)->GetIntArrayElements(env, bandSizes, NULL);
--
--    for (i = 0; i < numBands; i++) {
--        if (bandSize[i] != JPEG_BAND_SIZE) {
--            mustScale = TRUE;
--            break;
--        }
--    }
--
--    if (mustScale) {
--        // Build any scale tables that aren't already OK
--        for (i = 0; i < numBands; i++) {
--            if (data->bandSizes[i] != bandSize[i]) {
--                data->bandSizes[i] = bandSize[i];
--                maxBandValue = (1 << bandSize[i]) - 1;
--                halfMaxBandValue = maxBandValue >> 1;
--                for (j = 0; j <= maxBandValue; j++) {
--                    data->scale[i][j] =
--                        (UINT8)((j*MAX_JPEG_BAND_VALUE
--                                 + halfMaxBandValue)/maxBandValue);
--                }
--            }
--        }
--    }
--
--    (*env)->ReleaseIntArrayElements(env, bandSizes,
--                                    bandSize, JNI_ABORT);
--
- #ifdef DEBUG
-     printf("---- in reader.read ----\n");
-     printf("numBands is %d\n", numBands);
-@@ -1933,7 +1956,7 @@
+@@ -1896,7 +1956,7 @@
                     TRUE);
      }
  
@@ -25021,7 +24963,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      if (progressive) {
          cinfo->buffered_image = TRUE;
          cinfo->input_scan_number = minProgressivePass+1; // Java count from 0
-@@ -1945,7 +1968,7 @@
+@@ -1908,7 +1968,7 @@
  
      data->streamBuf.suspendable = FALSE;
  
@@ -25030,7 +24972,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      // loop over progressive passes
      done = FALSE;
-@@ -1953,7 +1976,7 @@
+@@ -1916,7 +1976,7 @@
          if (progressive) {
              // initialize the next pass.  Note that this skips up to
              // the first interesting pass.
@@ -25039,7 +24981,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              if (wantUpdates) {
                  (*env)->CallVoidMethod(env, this,
                                         JPEGImageReader_passStartedID,
-@@ -1969,7 +1992,7 @@
+@@ -1932,7 +1992,7 @@
          // Skip until the first interesting line
          while ((data->abortFlag == JNI_FALSE)
                 && ((jint)cinfo->output_scanline < sourceYStart)) {
@@ -25048,7 +24990,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          }
  
          scanlineLimit = sourceYStart+sourceHeight;
-@@ -1982,19 +2005,12 @@
+@@ -1945,7 +2005,7 @@
          while ((data->abortFlag == JNI_FALSE)
                 && ((jint)cinfo->output_scanline < scanlineLimit)) {
  
@@ -25057,21 +24999,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
              // Now mangle it into our buffer
              out = data->pixelBuf.buf.bp;
--            if (mustScale) {
--                for (in = scanLinePtr+sourceXStart*cinfo->num_components;
--                     in < pixelLimit;
--                     in += pixelStride) {
--                    for (i = 0; i < numBands; i++) {
--                        *out++ = data->scale[i][*(in+bands[i])];
--                    }
--                }
--            } else if (orderedBands && (pixelStride == numBands)) {
-+
-+            if (orderedBands && (pixelStride == numBands)) {
-                 // Optimization: The component bands are ordered sequentially,
-                 // so we can simply use memcpy() to copy the intermediate
-                 // scanline buffer into the raster.
-@@ -2037,13 +2053,13 @@
+@@ -1993,13 +2053,13 @@
                  skipLines = linesLeft;
              }
              for(i = 0; i < skipLines; i++) {
@@ -25088,7 +25016,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
                  || (cinfo->input_scan_number > maxProgressivePass)) {
                  done = TRUE;
              }
-@@ -2063,9 +2079,9 @@
+@@ -2019,9 +2079,9 @@
      if (cinfo->output_scanline == cinfo->output_height) {
          //    if ((cinfo->output_scanline == cinfo->output_height) &&
          //(jpeg_input_complete(cinfo))) {  // We read the whole file
@@ -25100,7 +25028,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      }
  
      free(scanLinePtr);
-@@ -2111,7 +2127,7 @@
+@@ -2067,7 +2127,7 @@
  
      cinfo = (j_decompress_ptr) data->jpegObj;
  
@@ -25109,7 +25037,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  }
  
  
-@@ -2317,6 +2333,142 @@
+@@ -2273,6 +2333,142 @@
  
  /********************** end of destination manager ************/
  
@@ -25252,7 +25180,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  /********************** Writer JNI calls **********************/
  
  
-@@ -2328,6 +2480,8 @@
+@@ -2284,6 +2480,8 @@
       jclass qTableClass,
       jclass huffClass) {
  
@@ -25261,7 +25189,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      ImageOutputStream_writeID = (*env)->GetMethodID(env,
                                                      IOSClass,
                                                      "write",
-@@ -2401,7 +2555,7 @@
+@@ -2357,7 +2555,7 @@
      }
  
      /* We set up the normal JPEG error routines, then override error_exit. */
@@ -25270,7 +25198,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      jerr->pub.error_exit = sun_jpeg_error_exit;
      /* We need to setup our own print routines */
      jerr->pub.output_message = sun_jpeg_output_message;
-@@ -2418,7 +2572,7 @@
+@@ -2374,7 +2572,7 @@
      }
  
      /* Perform library initialization */
@@ -25279,7 +25207,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      /* Now set up the destination  */
      dest = malloc(sizeof(struct jpeg_destination_mgr));
-@@ -2527,7 +2681,7 @@
+@@ -2483,7 +2681,7 @@
          return;
      }
  
@@ -25288,7 +25216,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      data->streamBuf.suspendable = FALSE;
      if (qtables != NULL) {
-@@ -2542,7 +2696,7 @@
+@@ -2498,7 +2696,7 @@
                     DCHuffmanTables, ACHuffmanTables, TRUE);
      }
  
@@ -25297,66 +25225,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      RELEASE_ARRAYS(env, data, NULL);
  }
  
-@@ -2588,9 +2742,9 @@
-     jint *scanData;
-     jint *bandSize;
-     int maxBandValue, halfMaxBandValue;
--    boolean mustScale = FALSE;
-     imageIODataPtr data = (imageIODataPtr) ptr;
-     j_compress_ptr cinfo;
-+    UINT8** scale = NULL;
- 
-     /* verify the inputs */
- 
-@@ -2631,24 +2785,32 @@
- 
-     for (i = 0; i < numBands; i++) {
-         if (bandSize[i] != JPEG_BAND_SIZE) {
--            mustScale = TRUE;
--            break;
--        }
--    }
-+            if (scale == NULL) {
-+                scale = (UINT8**) calloc(numBands, sizeof(UINT8*));
- 
--    if (mustScale) {
--        // Build any scale tables that aren't already OK
--        for (i = 0; i < numBands; i++) {
--            if (data->bandSizes[i] != bandSize[i]) {
--                data->bandSizes[i] = bandSize[i];
--                maxBandValue = (1 << bandSize[i]) - 1;
--                halfMaxBandValue = maxBandValue >> 1;
--                for (j = 0; j <= maxBandValue; j++) {
--                    data->scale[i][j] =
--                        (UINT8)((j*MAX_JPEG_BAND_VALUE
--                                 + halfMaxBandValue)/maxBandValue);
-+                if (scale == NULL) {
-+                    JNU_ThrowByName( env, "java/lang/OutOfMemoryError",
-+                                     "Writing JPEG Stream");
-+                    return JNI_FALSE;
-                 }
-             }
-+
-+            maxBandValue = (1 << bandSize[i]) - 1;
-+
-+            scale[i] = (UINT8*) malloc((maxBandValue + 1) * sizeof(UINT8));
-+
-+            if (scale[i] == NULL) {
-+                JNU_ThrowByName( env, "java/lang/OutOfMemoryError",
-+                                 "Writing JPEG Stream");
-+                return JNI_FALSE;
-+            }
-+
-+            halfMaxBandValue = maxBandValue >> 1;
-+
-+            for (j = 0; j <= maxBandValue; j++) {
-+                scale[i][j] = (UINT8)
-+                    ((j*MAX_JPEG_BAND_VALUE + halfMaxBandValue)/maxBandValue);
-+            }
-         }
-     }
- 
-@@ -2698,9 +2860,9 @@
+@@ -2662,9 +2860,9 @@
      cinfo->input_components = numBands;
      cinfo->in_color_space = inCs;
  
@@ -25368,7 +25237,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      cinfo->optimize_coding = optimize;
  
-@@ -2737,7 +2899,7 @@
+@@ -2701,7 +2899,7 @@
      (*env)->ReleaseIntArrayElements(env, QtableSelectors,
                                      qsels, JNI_ABORT);
  
@@ -25377,7 +25246,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      qlen = setQTables(env, (j_common_ptr) cinfo, qtables, writeDQT);
  
-@@ -2762,7 +2924,7 @@
+@@ -2726,7 +2924,7 @@
  
      if (progressive) {
          if (numScans == 0) { // then use default scans
@@ -25386,7 +25255,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          } else {
              cinfo->num_scans = numScans;
              // Copy the scanInfo to a local array
-@@ -2804,7 +2966,7 @@
+@@ -2768,7 +2966,7 @@
  #endif
  
      // start the compressor; tables must already be set
@@ -25395,37 +25264,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      if (haveMetadata) {
          // Flush the buffer
-@@ -2844,31 +3006,28 @@
-         out = scanLinePtr;
-         pixelLimit = in + srcWidth*numBands;
-         pixelStride = numBands*stepX;
--        if (mustScale) {
--            for (; in < pixelLimit; in += pixelStride) {
--                for (i = 0; i < numBands; i++) {
--                    *out++ = data->scale[i][*(in+i)];
-+        for (; in < pixelLimit; in += pixelStride) {
-+            for (i = 0; i < numBands; i++) {
-+                if (scale !=NULL && scale[i] != NULL) {
-+                    *out++ = scale[i][*(in+i)];
- #ifdef DEBUG
-                     if (in == data->pixelBuf.buf.bp){ // Just the first pixel
-                         printf("in %d -> out %d, ", *(in+i), *(out-i-1));
-                     }
- #endif
--                }
-+
- #ifdef DEBUG
-                     if (in == data->pixelBuf.buf.bp){ // Just the first pixel
-                         printf("\n");
-                     }
- #endif
--            }
--        } else {
--            for (; in < pixelLimit; in += pixelStride) {
--                for (i = 0; i < numBands; i++) {
-+                } else {
-                     *out++ = *(in+i);
-                 }
+@@ -2829,7 +3027,7 @@
              }
          }
          // write it out
@@ -25434,7 +25273,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          targetLine += stepY;
      }
  
-@@ -2877,10 +3036,20 @@
+@@ -2838,9 +3036,9 @@
       * so use jpeg_abort instead of jpeg_finish_compress.
       */
      if (cinfo->next_scanline == cinfo->image_height) {
@@ -25444,21 +25283,10 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
 -        jpeg_abort((j_common_ptr)cinfo);
 +        jpegabort((j_common_ptr)cinfo);
      }
-+
-+    if (scale != NULL) {
-+        for (i = 0; i < numBands; i++) {
-+            if (scale[i] != NULL) {
-+                free(scale[i]);
-+            }
-+        }
-+        free(scale);
-+    }
-+
-     free(scanLinePtr);
-     RELEASE_ARRAYS(env, data, NULL);
-     return data->abortFlag;
---- openjdkold/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-02-12 04:08:14.000000000 -0500
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-02-26 08:51:54.000000000 -0500
+ 
+     if (scale != NULL) {
+--- oldopenjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-01-04 18:21:02.000000000 -0500
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-02-26 09:06:55.000000000 -0500
 @@ -45,7 +45,9 @@
  #undef boolean
  #undef FAR
