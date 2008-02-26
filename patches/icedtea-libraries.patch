@@ -24741,265 +24741,8 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  endif
  endif #LINUX
  endif #PLATFORM
---- origopenjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-01-04 18:21:02.000000000 -0500
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-01-13 23:54:15.000000000 -0500
-@@ -45,7 +45,9 @@
- #undef boolean
- #undef FAR
- #include <jpeglib.h>
--#include "jerror.h"
-+#include <jerror.h>
-+#include <dlfcn.h>
-+
- 
- /* The method IDs we cache. Note that the last two belongs to the
-  * java.io.InputStream class.
-@@ -56,6 +58,32 @@
- static jmethodID InputStream_readID;
- static jmethodID InputStream_availableID;
- 
-+typedef struct jpeg_error_mgr * (*fn_jpegstderror)(struct jpeg_error_mgr *);
-+typedef void (*fn_jpegcreatedecompress)(j_decompress_ptr, int, size_t);
-+typedef boolean (*fn_jpegresynctorestart)(j_decompress_ptr, int);
-+typedef JDIMENSION (*fn_jpegreadscanlines)(j_decompress_ptr, JSAMPARRAY, JDIMENSION);
-+typedef boolean (*fn_jpegfinishoutput)(j_decompress_ptr);
-+typedef int (*fn_jpegreadheader)(j_decompress_ptr, boolean);
-+typedef boolean (*fn_jpegstartdecompress)(j_decompress_ptr);
-+typedef boolean (*fn_jpeghasmultiplescans)(j_decompress_ptr);
-+typedef void (*fn_jpegdestroydecompress)(j_decompress_ptr);
-+typedef int (*fn_jpegconsumeinput)(j_decompress_ptr);
-+typedef boolean (*fn_jpegfinishdecompress)(j_decompress_ptr);
-+typedef boolean (*fn_jpegstartoutput)(j_decompress_ptr, int);
-+
-+fn_jpegstderror jpegstderror;
-+fn_jpegstartoutput jpegstartoutput;
-+fn_jpegfinishdecompress jpegfinishdecompress;
-+fn_jpegconsumeinput jpegconsumeinput;
-+fn_jpegdestroydecompress jpegdestroydecompress; 
-+fn_jpeghasmultiplescans jpeghasmultiplescans;
-+fn_jpegstartdecompress jpegstartdecompress;
-+fn_jpegreadheader jpegreadheader;
-+fn_jpegfinishoutput jpegfinishoutput;
-+fn_jpegreadscanlines jpegreadscanlines;
-+fn_jpegresynctorestart jpegresynctorestart;
-+fn_jpegcreatedecompress jpegcreatedecompress;
-+
- /* Initialize the Java VM instance variable when the library is
-    first loaded */
- JavaVM *jvm;
-@@ -462,6 +490,70 @@
- Java_sun_awt_image_JPEGImageDecoder_initIDs(JNIEnv *env, jclass cls,
-                                             jclass InputStreamClass)
- {
-+    void *handle = dlopen("/usr/lib/libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
-+    if (handle == NULL)
-+      handle = dlopen("/usr/lib64/libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
-+ 
-+    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
-+    if (jpegstderror == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegdestroydecompress = (fn_jpegdestroydecompress)dlsym(handle, "jpeg_destroy_decompress");
-+    if (jpegdestroydecompress == NULL) {
-+       dlclose(handle);
-+    }  
-+
-+    jpegcreatedecompress = (fn_jpegcreatedecompress)dlsym(handle, "jpeg_CreateDecompress");
-+    if (jpegcreatedecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegreadheader = (fn_jpegreadheader)dlsym(handle, "jpeg_read_header");
-+    if (jpegreadheader == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpeghasmultiplescans = (fn_jpeghasmultiplescans)dlsym(handle, "jpeg_has_multiple_scans");
-+    if (jpeghasmultiplescans == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegstartdecompress = (fn_jpegstartdecompress)dlsym(handle, "jpeg_start_decompress");
-+    if (jpegstartdecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegconsumeinput = (fn_jpegconsumeinput)dlsym(handle, "jpeg_consume_input");
-+    if (jpegconsumeinput == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegstartoutput = (fn_jpegstartoutput)dlsym(handle, "jpeg_start_output");
-+    if (jpegstartoutput == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegfinishdecompress = (fn_jpegfinishdecompress)dlsym(handle, "jpeg_finish_decompress");
-+    if (jpegfinishdecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegreadscanlines = (fn_jpegreadscanlines)dlsym(handle, "jpeg_read_scanlines");
-+    if (jpegreadscanlines == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegfinishoutput = (fn_jpegfinishoutput)dlsym(handle, "jpeg_finish_output");
-+    if (jpegfinishoutput == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegresynctorestart = (fn_jpegresynctorestart)dlsym(handle, "jpeg_resync_to_restart");
-+    if (jpegresynctorestart == NULL) {
-+       dlclose(handle);
-+    }
-+
-     sendHeaderInfoID = (*env)->GetMethodID(env, cls, "sendHeaderInfo",
-                                            "(IIZZZ)Z");
-     sendPixelsByteID = (*env)->GetMethodID(env, cls, "sendPixels", "([BI)Z");
-@@ -519,7 +611,7 @@
-   /* Step 1: allocate and initialize JPEG decompression object */
- 
-   /* We set up the normal JPEG error routines, then override error_exit. */
--  cinfo.err = jpeg_std_error(&jerr.pub);
-+  cinfo.err = jpegstderror(&jerr.pub);
-   jerr.pub.error_exit = sun_jpeg_error_exit;
- 
-   /* We need to setup our own print routines */
-@@ -530,7 +622,7 @@
-     /* If we get here, the JPEG code has signaled an error.
-      * We need to clean up the JPEG object, close the input file, and return.
-      */
--    jpeg_destroy_decompress(&cinfo);
-+    jpegdestroydecompress(&cinfo);
-     RELEASE_ARRAYS(env, &jsrc);
-     if (!(*env)->ExceptionOccurred(env)) {
-         char buffer[JMSG_LENGTH_MAX];
-@@ -541,7 +633,7 @@
-     return;
-   }
-   /* Now we can initialize the JPEG decompression object. */
--  jpeg_create_decompress(&cinfo);
-+  jpegcreatedecompress(&cinfo, JPEG_LIB_VERSION, (size_t) sizeof(struct jpeg_decompress_struct));
- 
-   /* Step 2: specify data source (eg, a file) */
- 
-@@ -555,17 +647,17 @@
-   jsrc.pub.init_source = sun_jpeg_init_source;
-   jsrc.pub.fill_input_buffer = sun_jpeg_fill_input_buffer;
-   jsrc.pub.skip_input_data = sun_jpeg_skip_input_data;
--  jsrc.pub.resync_to_restart = jpeg_resync_to_restart; /* use default method */
-+  jsrc.pub.resync_to_restart = jpegresynctorestart; /* use default method */
-   jsrc.pub.term_source = sun_jpeg_term_source;
-   if (!GET_ARRAYS(env, &jsrc)) {
--    jpeg_destroy_decompress(&cinfo);
-+    jpegdestroydecompress(&cinfo);
-     return;
-   }
-   /* Step 3: read file parameters with jpeg_read_header() */
- 
--  (void) jpeg_read_header(&cinfo, TRUE);
-+  (void) jpegreadheader(&cinfo, TRUE);
-   /* select buffered-image mode if it is a progressive JPEG only */
--  buffered_mode = cinfo.buffered_image = jpeg_has_multiple_scans(&cinfo);
-+  buffered_mode = cinfo.buffered_image = jpeghasmultiplescans(&cinfo);
-   grayscale = (cinfo.out_color_space == JCS_GRAYSCALE);
- #ifdef YCCALPHA
-   hasalpha = (cinfo.out_color_space == JCS_RGBA);
-@@ -584,7 +676,7 @@
-                                   grayscale, hasalpha, buffered_mode);
-   if ((*env)->ExceptionOccurred(env) || !ret) {
-     /* No more interest in this image... */
--    jpeg_destroy_decompress(&cinfo);
-+    jpegdestroydecompress(&cinfo);
-     return;
-   }
-   /* Make a one-row-high sample array with enough room to expand to ints */
-@@ -595,7 +687,7 @@
-   }
- 
-   if (jsrc.hOutputBuffer == 0 || !GET_ARRAYS(env, &jsrc)) {
--    jpeg_destroy_decompress(&cinfo);
-+    jpegdestroydecompress(&cinfo);
-     return;
-   }
- 
-@@ -613,7 +705,7 @@
- 
-   /* Step 5: Start decompressor */
- 
--  jpeg_start_decompress(&cinfo);
-+  jpegstartdecompress(&cinfo);
- 
-   /* We may need to do some setup of our own at this point before reading
-    * the data.  After jpeg_start_decompress() we have the correct scaled
-@@ -638,28 +730,28 @@
-           do {
-               sun_jpeg_fill_suspended_buffer(&cinfo);
-               jsrc.suspendable = TRUE;
--              ret = jpeg_consume_input(&cinfo);
-+	      ret = jpegconsumeinput(&cinfo);
-               jsrc.suspendable = FALSE;
-           } while (ret != JPEG_SUSPENDED && ret != JPEG_REACHED_EOI);
-           if (ret == JPEG_REACHED_EOI) {
-               final_pass = TRUE;
-               cinfo.dct_method = JDCT_ISLOW;
-           }
--          jpeg_start_output(&cinfo, cinfo.input_scan_number);
-+	  jpegstartoutput(&cinfo, cinfo.input_scan_number);
-       }
-       while (cinfo.output_scanline < cinfo.output_height) {
-           if (! final_pass) {
-               do {
-                   sun_jpeg_fill_suspended_buffer(&cinfo);
-                   jsrc.suspendable = TRUE;
--                  ret = jpeg_consume_input(&cinfo);
-+		  ret = jpegconsumeinput(&cinfo);
-                   jsrc.suspendable = FALSE;
-               } while (ret != JPEG_SUSPENDED && ret != JPEG_REACHED_EOI);
-               if (ret == JPEG_REACHED_EOI) {
-                   break;
-               }
-           }
--          (void) jpeg_read_scanlines(&cinfo, (JSAMPARRAY) &(jsrc.outbuf), 1);
-+	  (void) jpegreadscanlines(&cinfo, (JSAMPARRAY) &(jsrc.outbuf), 1);
- 
-           if (grayscale) {
-               RELEASE_ARRAYS(env, &jsrc);
-@@ -695,18 +787,18 @@
-           if ((*env)->ExceptionOccurred(env) || !ret ||
-               !GET_ARRAYS(env, &jsrc)) {
-               /* No more interest in this image... */
--              jpeg_destroy_decompress(&cinfo);
-+	      jpegdestroydecompress(&cinfo);
-               return;
-           }
-       }
-       if (buffered_mode) {
--          jpeg_finish_output(&cinfo);
-+	  jpegfinishoutput(&cinfo);
-       }
-   } while (! final_pass);
- 
-   /* Step 7: Finish decompression */
- 
--  (void) jpeg_finish_decompress(&cinfo);
-+  (void) jpegfinishdecompress(&cinfo);
-   /* We can ignore the return value since suspension is not possible
-    * with the stdio data source.
-    * (nor with the Java data source)
-@@ -715,7 +807,7 @@
-   /* Step 8: Release JPEG decompression object */
- 
-   /* This is an important step since it will release a good deal of memory. */
--  jpeg_destroy_decompress(&cinfo);
-+  jpegdestroydecompress(&cinfo);
- 
-   /* After finish_decompress, we can close the input file.
-    * Here we postpone it until after no more JPEG errors are possible,
---- origopenjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-01-04 18:21:02.000000000 -0500
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-01-13 23:53:42.000000000 -0500
+--- openjdkold/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-02-12 04:08:13.000000000 -0500
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-02-26 08:52:21.000000000 -0500
 @@ -51,7 +51,9 @@
  
  /* headers from the JPEG library */
@@ -25074,7 +24817,30 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  /*
   * Defined in jpegdecoder.c.  Copy code from there if and
   * when that disappears. */
-@@ -606,7 +664,7 @@
+@@ -376,9 +434,6 @@
+     pixelBuffer pixelBuf;     // Buffer for pixels
+ 
+     jboolean abortFlag;       // Passed down from Java abort method
+-
+-    UINT8 scale[MAX_BANDS][NUM_INPUT_VALUES];
+-    int bandSizes[MAX_BANDS]; // For scaling to-from non-8-bit images
+ } imageIOData, *imageIODataPtr;
+ 
+ /*
+@@ -417,12 +472,6 @@
+ 
+     data->abortFlag = JNI_FALSE;
+ 
+-    for (i = 0; i < MAX_BANDS; i ++) {
+-        data->bandSizes[i] = 0;
+-        for (j = 0; j < NUM_INPUT_VALUES; j++) {
+-            data->scale[i][j] = 0;
+-        }
+-    }
+     return data;
+ }
+ 
+@@ -615,7 +664,7 @@
          return;
      }
  
@@ -25083,7 +24849,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
  }
  
-@@ -631,7 +689,7 @@
+@@ -640,7 +689,7 @@
          return;
      }
  
@@ -25092,7 +24858,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
  }
  
-@@ -649,7 +707,7 @@
+@@ -658,7 +707,7 @@
              free(cinfo->dest);
              cinfo->dest = NULL;
          }
@@ -25101,7 +24867,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          free(info);
      }
  }
-@@ -685,14 +743,14 @@
+@@ -694,14 +743,14 @@
              decomp = (j_decompress_ptr) cinfo;
              if (decomp->quant_tbl_ptrs[i] == NULL) {
                  decomp->quant_tbl_ptrs[i] =
@@ -25118,7 +24884,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              }
              quant_ptr = comp->quant_tbl_ptrs[i];
          }
-@@ -768,14 +826,14 @@
+@@ -777,14 +826,14 @@
              decomp = (j_decompress_ptr) cinfo;
              if (decomp->dc_huff_tbl_ptrs[i] == NULL) {
                  decomp->dc_huff_tbl_ptrs[i] =
@@ -25135,7 +24901,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              }
              huff_ptr = comp->dc_huff_tbl_ptrs[i];
          }
-@@ -789,14 +847,14 @@
+@@ -798,14 +847,14 @@
              decomp = (j_decompress_ptr) cinfo;
              if (decomp->ac_huff_tbl_ptrs[i] == NULL) {
                  decomp->ac_huff_tbl_ptrs[i] =
@@ -25152,7 +24918,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              }
              huff_ptr = comp->ac_huff_tbl_ptrs[i];
          }
-@@ -1337,6 +1395,8 @@
+@@ -1346,6 +1395,8 @@
       jclass ImageInputStreamClass,
       jclass qTableClass,
       jclass huffClass) {
@@ -25161,7 +24927,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      ImageInputStream_readID = (*env)->GetMethodID(env,
                                                    ImageInputStreamClass,
-@@ -1422,7 +1482,7 @@
+@@ -1431,7 +1482,7 @@
      }
  
      /* We set up the normal JPEG error routines, then override error_exit. */
@@ -25170,7 +24936,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      jerr->pub.error_exit = sun_jpeg_error_exit;
      /* We need to setup our own print routines */
      jerr->pub.output_message = sun_jpeg_output_message;
-@@ -1439,11 +1499,11 @@
+@@ -1448,11 +1499,11 @@
      }
  
      /* Perform library initialization */
@@ -25184,7 +24950,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      /*
       * Now set up our source.
-@@ -1461,7 +1521,7 @@
+@@ -1470,7 +1521,7 @@
      cinfo->src->init_source = imageio_init_source;
      cinfo->src->fill_input_buffer = imageio_fill_input_buffer;
      cinfo->src->skip_input_data = imageio_skip_input_data;
@@ -25193,7 +24959,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      cinfo->src->term_source = imageio_term_source;
  
      /* set up the association to persist for future calls */
-@@ -1579,7 +1639,7 @@
+@@ -1588,7 +1639,7 @@
          src->bytes_in_buffer = 0;
      }
  
@@ -25202,7 +24968,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      if (ret == JPEG_HEADER_TABLES_ONLY) {
          retval = JNI_TRUE;
-@@ -1700,7 +1760,7 @@
+@@ -1709,7 +1760,7 @@
                                 cinfo->num_components,
                                 read_icc_profile(env, cinfo));
          if (reset) {
@@ -25211,7 +24977,42 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          }
      }
  
-@@ -1896,7 +1956,7 @@
+@@ -1836,34 +1887,6 @@
+ 
+     (*env)->ReleaseIntArrayElements(env, srcBands, body, JNI_ABORT);
+ 
+-    bandSize = (*env)->GetIntArrayElements(env, bandSizes, NULL);
+-
+-    for (i = 0; i < numBands; i++) {
+-        if (bandSize[i] != JPEG_BAND_SIZE) {
+-            mustScale = TRUE;
+-            break;
+-        }
+-    }
+-
+-    if (mustScale) {
+-        // Build any scale tables that aren't already OK
+-        for (i = 0; i < numBands; i++) {
+-            if (data->bandSizes[i] != bandSize[i]) {
+-                data->bandSizes[i] = bandSize[i];
+-                maxBandValue = (1 << bandSize[i]) - 1;
+-                halfMaxBandValue = maxBandValue >> 1;
+-                for (j = 0; j <= maxBandValue; j++) {
+-                    data->scale[i][j] =
+-                        (UINT8)((j*MAX_JPEG_BAND_VALUE
+-                                 + halfMaxBandValue)/maxBandValue);
+-                }
+-            }
+-        }
+-    }
+-
+-    (*env)->ReleaseIntArrayElements(env, bandSizes,
+-                                    bandSize, JNI_ABORT);
+-
+ #ifdef DEBUG
+     printf("---- in reader.read ----\n");
+     printf("numBands is %d\n", numBands);
+@@ -1933,7 +1956,7 @@
                     TRUE);
      }
  
@@ -25220,7 +25021,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      if (progressive) {
          cinfo->buffered_image = TRUE;
          cinfo->input_scan_number = minProgressivePass+1; // Java count from 0
-@@ -1908,7 +1968,7 @@
+@@ -1945,7 +1968,7 @@
  
      data->streamBuf.suspendable = FALSE;
  
@@ -25229,7 +25030,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      // loop over progressive passes
      done = FALSE;
-@@ -1916,7 +1976,7 @@
+@@ -1953,7 +1976,7 @@
          if (progressive) {
              // initialize the next pass.  Note that this skips up to
              // the first interesting pass.
@@ -25238,7 +25039,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              if (wantUpdates) {
                  (*env)->CallVoidMethod(env, this,
                                         JPEGImageReader_passStartedID,
-@@ -1932,7 +1992,7 @@
+@@ -1969,7 +1992,7 @@
          // Skip until the first interesting line
          while ((data->abortFlag == JNI_FALSE)
                 && ((jint)cinfo->output_scanline < sourceYStart)) {
@@ -25247,7 +25048,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          }
  
          scanlineLimit = sourceYStart+sourceHeight;
-@@ -1945,7 +2005,7 @@
+@@ -1982,19 +2005,12 @@
          while ((data->abortFlag == JNI_FALSE)
                 && ((jint)cinfo->output_scanline < scanlineLimit)) {
  
@@ -25256,7 +25057,21 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
              // Now mangle it into our buffer
              out = data->pixelBuf.buf.bp;
-@@ -1993,13 +2053,13 @@
+-            if (mustScale) {
+-                for (in = scanLinePtr+sourceXStart*cinfo->num_components;
+-                     in < pixelLimit;
+-                     in += pixelStride) {
+-                    for (i = 0; i < numBands; i++) {
+-                        *out++ = data->scale[i][*(in+bands[i])];
+-                    }
+-                }
+-            } else if (orderedBands && (pixelStride == numBands)) {
++
++            if (orderedBands && (pixelStride == numBands)) {
+                 // Optimization: The component bands are ordered sequentially,
+                 // so we can simply use memcpy() to copy the intermediate
+                 // scanline buffer into the raster.
+@@ -2037,13 +2053,13 @@
                  skipLines = linesLeft;
              }
              for(i = 0; i < skipLines; i++) {
@@ -25273,7 +25088,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
                  || (cinfo->input_scan_number > maxProgressivePass)) {
                  done = TRUE;
              }
-@@ -2019,9 +2079,9 @@
+@@ -2063,9 +2079,9 @@
      if (cinfo->output_scanline == cinfo->output_height) {
          //    if ((cinfo->output_scanline == cinfo->output_height) &&
          //(jpeg_input_complete(cinfo))) {  // We read the whole file
@@ -25285,7 +25100,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      }
  
      free(scanLinePtr);
-@@ -2067,7 +2127,7 @@
+@@ -2111,7 +2127,7 @@
  
      cinfo = (j_decompress_ptr) data->jpegObj;
  
@@ -25294,16 +25109,15 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  }
  
  
-@@ -2273,6 +2333,143 @@
+@@ -2317,6 +2333,142 @@
  
  /********************** end of destination manager ************/
  
 +METHODDEF(void)
 +initIDs()
 +{
-+    void *handle = dlopen("/usr/lib/libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
-+    if (handle == NULL)
-+      handle = dlopen("/usr/lib64/libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
++    void *handle = dlopen("libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
++    
 +    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
 +    if (jpegstderror == NULL) {
 +       dlclose(handle);
@@ -25438,7 +25252,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  /********************** Writer JNI calls **********************/
  
  
-@@ -2284,6 +2481,8 @@
+@@ -2328,6 +2480,8 @@
       jclass qTableClass,
       jclass huffClass) {
  
@@ -25447,7 +25261,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      ImageOutputStream_writeID = (*env)->GetMethodID(env,
                                                      IOSClass,
                                                      "write",
-@@ -2357,7 +2556,7 @@
+@@ -2401,7 +2555,7 @@
      }
  
      /* We set up the normal JPEG error routines, then override error_exit. */
@@ -25456,7 +25270,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      jerr->pub.error_exit = sun_jpeg_error_exit;
      /* We need to setup our own print routines */
      jerr->pub.output_message = sun_jpeg_output_message;
-@@ -2374,7 +2573,7 @@
+@@ -2418,7 +2572,7 @@
      }
  
      /* Perform library initialization */
@@ -25465,7 +25279,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      /* Now set up the destination  */
      dest = malloc(sizeof(struct jpeg_destination_mgr));
-@@ -2483,7 +2682,7 @@
+@@ -2527,7 +2681,7 @@
          return;
      }
  
@@ -25474,7 +25288,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      data->streamBuf.suspendable = FALSE;
      if (qtables != NULL) {
-@@ -2498,7 +2697,7 @@
+@@ -2542,7 +2696,7 @@
                     DCHuffmanTables, ACHuffmanTables, TRUE);
      }
  
@@ -25483,7 +25297,66 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      RELEASE_ARRAYS(env, data, NULL);
  }
  
-@@ -2662,9 +2861,9 @@
+@@ -2588,9 +2742,9 @@
+     jint *scanData;
+     jint *bandSize;
+     int maxBandValue, halfMaxBandValue;
+-    boolean mustScale = FALSE;
+     imageIODataPtr data = (imageIODataPtr) ptr;
+     j_compress_ptr cinfo;
++    UINT8** scale = NULL;
+ 
+     /* verify the inputs */
+ 
+@@ -2631,24 +2785,32 @@
+ 
+     for (i = 0; i < numBands; i++) {
+         if (bandSize[i] != JPEG_BAND_SIZE) {
+-            mustScale = TRUE;
+-            break;
+-        }
+-    }
++            if (scale == NULL) {
++                scale = (UINT8**) calloc(numBands, sizeof(UINT8*));
+ 
+-    if (mustScale) {
+-        // Build any scale tables that aren't already OK
+-        for (i = 0; i < numBands; i++) {
+-            if (data->bandSizes[i] != bandSize[i]) {
+-                data->bandSizes[i] = bandSize[i];
+-                maxBandValue = (1 << bandSize[i]) - 1;
+-                halfMaxBandValue = maxBandValue >> 1;
+-                for (j = 0; j <= maxBandValue; j++) {
+-                    data->scale[i][j] =
+-                        (UINT8)((j*MAX_JPEG_BAND_VALUE
+-                                 + halfMaxBandValue)/maxBandValue);
++                if (scale == NULL) {
++                    JNU_ThrowByName( env, "java/lang/OutOfMemoryError",
++                                     "Writing JPEG Stream");
++                    return JNI_FALSE;
+                 }
+             }
++
++            maxBandValue = (1 << bandSize[i]) - 1;
++
++            scale[i] = (UINT8*) malloc((maxBandValue + 1) * sizeof(UINT8));
++
++            if (scale[i] == NULL) {
++                JNU_ThrowByName( env, "java/lang/OutOfMemoryError",
++                                 "Writing JPEG Stream");
++                return JNI_FALSE;
++            }
++
++            halfMaxBandValue = maxBandValue >> 1;
++
++            for (j = 0; j <= maxBandValue; j++) {
++                scale[i][j] = (UINT8)
++                    ((j*MAX_JPEG_BAND_VALUE + halfMaxBandValue)/maxBandValue);
++            }
+         }
+     }
+ 
+@@ -2698,9 +2860,9 @@
      cinfo->input_components = numBands;
      cinfo->in_color_space = inCs;
  
@@ -25495,7 +25368,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      cinfo->optimize_coding = optimize;
  
-@@ -2701,7 +2900,7 @@
+@@ -2737,7 +2899,7 @@
      (*env)->ReleaseIntArrayElements(env, QtableSelectors,
                                      qsels, JNI_ABORT);
  
@@ -25504,7 +25377,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      qlen = setQTables(env, (j_common_ptr) cinfo, qtables, writeDQT);
  
-@@ -2726,7 +2925,7 @@
+@@ -2762,7 +2924,7 @@
  
      if (progressive) {
          if (numScans == 0) { // then use default scans
@@ -25513,7 +25386,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          } else {
              cinfo->num_scans = numScans;
              // Copy the scanInfo to a local array
-@@ -2768,7 +2967,7 @@
+@@ -2804,7 +2966,7 @@
  #endif
  
      // start the compressor; tables must already be set
@@ -25522,7 +25395,37 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      if (haveMetadata) {
          // Flush the buffer
-@@ -2829,7 +3028,7 @@
+@@ -2844,31 +3006,28 @@
+         out = scanLinePtr;
+         pixelLimit = in + srcWidth*numBands;
+         pixelStride = numBands*stepX;
+-        if (mustScale) {
+-            for (; in < pixelLimit; in += pixelStride) {
+-                for (i = 0; i < numBands; i++) {
+-                    *out++ = data->scale[i][*(in+i)];
++        for (; in < pixelLimit; in += pixelStride) {
++            for (i = 0; i < numBands; i++) {
++                if (scale !=NULL && scale[i] != NULL) {
++                    *out++ = scale[i][*(in+i)];
+ #ifdef DEBUG
+                     if (in == data->pixelBuf.buf.bp){ // Just the first pixel
+                         printf("in %d -> out %d, ", *(in+i), *(out-i-1));
+                     }
+ #endif
+-                }
++
+ #ifdef DEBUG
+                     if (in == data->pixelBuf.buf.bp){ // Just the first pixel
+                         printf("\n");
+                     }
+ #endif
+-            }
+-        } else {
+-            for (; in < pixelLimit; in += pixelStride) {
+-                for (i = 0; i < numBands; i++) {
++                } else {
+                     *out++ = *(in+i);
+                 }
              }
          }
          // write it out
@@ -25531,7 +25434,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          targetLine += stepY;
      }
  
-@@ -2838,9 +3037,9 @@
+@@ -2877,10 +3036,20 @@
       * so use jpeg_abort instead of jpeg_finish_compress.
       */
      if (cinfo->next_scanline == cinfo->image_height) {
@@ -25541,5 +25444,271 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
 -        jpeg_abort((j_common_ptr)cinfo);
 +        jpegabort((j_common_ptr)cinfo);
      }
++
++    if (scale != NULL) {
++        for (i = 0; i < numBands; i++) {
++            if (scale[i] != NULL) {
++                free(scale[i]);
++            }
++        }
++        free(scale);
++    }
++
+     free(scanLinePtr);
+     RELEASE_ARRAYS(env, data, NULL);
+     return data->abortFlag;
+--- openjdkold/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-02-12 04:08:14.000000000 -0500
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-02-26 08:51:54.000000000 -0500
+@@ -45,7 +45,9 @@
+ #undef boolean
+ #undef FAR
+ #include <jpeglib.h>
+-#include "jerror.h"
++#include <jerror.h>
++#include <dlfcn.h>
++
  
-     if (scale != NULL) {
+ /* The method IDs we cache. Note that the last two belongs to the
+  * java.io.InputStream class.
+@@ -56,6 +58,32 @@
+ static jmethodID InputStream_readID;
+ static jmethodID InputStream_availableID;
+ 
++typedef struct jpeg_error_mgr * (*fn_jpegstderror)(struct jpeg_error_mgr *);
++typedef void (*fn_jpegcreatedecompress)(j_decompress_ptr, int, size_t);
++typedef boolean (*fn_jpegresynctorestart)(j_decompress_ptr, int);
++typedef JDIMENSION (*fn_jpegreadscanlines)(j_decompress_ptr, JSAMPARRAY, JDIMENSION);
++typedef boolean (*fn_jpegfinishoutput)(j_decompress_ptr);
++typedef int (*fn_jpegreadheader)(j_decompress_ptr, boolean);
++typedef boolean (*fn_jpegstartdecompress)(j_decompress_ptr);
++typedef boolean (*fn_jpeghasmultiplescans)(j_decompress_ptr);
++typedef void (*fn_jpegdestroydecompress)(j_decompress_ptr);
++typedef int (*fn_jpegconsumeinput)(j_decompress_ptr);
++typedef boolean (*fn_jpegfinishdecompress)(j_decompress_ptr);
++typedef boolean (*fn_jpegstartoutput)(j_decompress_ptr, int);
++
++fn_jpegstderror jpegstderror;
++fn_jpegstartoutput jpegstartoutput;
++fn_jpegfinishdecompress jpegfinishdecompress;
++fn_jpegconsumeinput jpegconsumeinput;
++fn_jpegdestroydecompress jpegdestroydecompress; 
++fn_jpeghasmultiplescans jpeghasmultiplescans;
++fn_jpegstartdecompress jpegstartdecompress;
++fn_jpegreadheader jpegreadheader;
++fn_jpegfinishoutput jpegfinishoutput;
++fn_jpegreadscanlines jpegreadscanlines;
++fn_jpegresynctorestart jpegresynctorestart;
++fn_jpegcreatedecompress jpegcreatedecompress;
++
+ /* Initialize the Java VM instance variable when the library is
+    first loaded */
+ JavaVM *jvm;
+@@ -462,6 +490,68 @@
+ Java_sun_awt_image_JPEGImageDecoder_initIDs(JNIEnv *env, jclass cls,
+                                             jclass InputStreamClass)
+ {
++    void *handle = dlopen("libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
++ 
++    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
++    if (jpegstderror == NULL) {
++       dlclose(handle);
++    }
++
++    jpegdestroydecompress = (fn_jpegdestroydecompress)dlsym(handle, "jpeg_destroy_decompress");
++    if (jpegdestroydecompress == NULL) {
++       dlclose(handle);
++    }  
++
++    jpegcreatedecompress = (fn_jpegcreatedecompress)dlsym(handle, "jpeg_CreateDecompress");
++    if (jpegcreatedecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegreadheader = (fn_jpegreadheader)dlsym(handle, "jpeg_read_header");
++    if (jpegreadheader == NULL) {
++       dlclose(handle);
++    }
++
++    jpeghasmultiplescans = (fn_jpeghasmultiplescans)dlsym(handle, "jpeg_has_multiple_scans");
++    if (jpeghasmultiplescans == NULL) {
++       dlclose(handle);
++    }
++
++    jpegstartdecompress = (fn_jpegstartdecompress)dlsym(handle, "jpeg_start_decompress");
++    if (jpegstartdecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegconsumeinput = (fn_jpegconsumeinput)dlsym(handle, "jpeg_consume_input");
++    if (jpegconsumeinput == NULL) {
++       dlclose(handle);
++    }
++
++    jpegstartoutput = (fn_jpegstartoutput)dlsym(handle, "jpeg_start_output");
++    if (jpegstartoutput == NULL) {
++       dlclose(handle);
++    }
++
++    jpegfinishdecompress = (fn_jpegfinishdecompress)dlsym(handle, "jpeg_finish_decompress");
++    if (jpegfinishdecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegreadscanlines = (fn_jpegreadscanlines)dlsym(handle, "jpeg_read_scanlines");
++    if (jpegreadscanlines == NULL) {
++       dlclose(handle);
++    }
++
++    jpegfinishoutput = (fn_jpegfinishoutput)dlsym(handle, "jpeg_finish_output");
++    if (jpegfinishoutput == NULL) {
++       dlclose(handle);
++    }
++
++    jpegresynctorestart = (fn_jpegresynctorestart)dlsym(handle, "jpeg_resync_to_restart");
++    if (jpegresynctorestart == NULL) {
++       dlclose(handle);
++    }
++
+     sendHeaderInfoID = (*env)->GetMethodID(env, cls, "sendHeaderInfo",
+                                            "(IIZZZ)Z");
+     sendPixelsByteID = (*env)->GetMethodID(env, cls, "sendPixels", "([BI)Z");
+@@ -519,7 +609,7 @@
+   /* Step 1: allocate and initialize JPEG decompression object */
+ 
+   /* We set up the normal JPEG error routines, then override error_exit. */
+-  cinfo.err = jpeg_std_error(&jerr.pub);
++  cinfo.err = jpegstderror(&jerr.pub);
+   jerr.pub.error_exit = sun_jpeg_error_exit;
+ 
+   /* We need to setup our own print routines */
+@@ -530,7 +620,7 @@
+     /* If we get here, the JPEG code has signaled an error.
+      * We need to clean up the JPEG object, close the input file, and return.
+      */
+-    jpeg_destroy_decompress(&cinfo);
++    jpegdestroydecompress(&cinfo);
+     RELEASE_ARRAYS(env, &jsrc);
+     if (!(*env)->ExceptionOccurred(env)) {
+         char buffer[JMSG_LENGTH_MAX];
+@@ -541,7 +631,7 @@
+     return;
+   }
+   /* Now we can initialize the JPEG decompression object. */
+-  jpeg_create_decompress(&cinfo);
++  jpegcreatedecompress(&cinfo, JPEG_LIB_VERSION, (size_t) sizeof(struct jpeg_decompress_struct));
+ 
+   /* Step 2: specify data source (eg, a file) */
+ 
+@@ -555,17 +645,17 @@
+   jsrc.pub.init_source = sun_jpeg_init_source;
+   jsrc.pub.fill_input_buffer = sun_jpeg_fill_input_buffer;
+   jsrc.pub.skip_input_data = sun_jpeg_skip_input_data;
+-  jsrc.pub.resync_to_restart = jpeg_resync_to_restart; /* use default method */
++  jsrc.pub.resync_to_restart = jpegresynctorestart; /* use default method */
+   jsrc.pub.term_source = sun_jpeg_term_source;
+   if (!GET_ARRAYS(env, &jsrc)) {
+-    jpeg_destroy_decompress(&cinfo);
++    jpegdestroydecompress(&cinfo);
+     return;
+   }
+   /* Step 3: read file parameters with jpeg_read_header() */
+ 
+-  (void) jpeg_read_header(&cinfo, TRUE);
++  (void) jpegreadheader(&cinfo, TRUE);
+   /* select buffered-image mode if it is a progressive JPEG only */
+-  buffered_mode = cinfo.buffered_image = jpeg_has_multiple_scans(&cinfo);
++  buffered_mode = cinfo.buffered_image = jpeghasmultiplescans(&cinfo);
+   grayscale = (cinfo.out_color_space == JCS_GRAYSCALE);
+ #ifdef YCCALPHA
+   hasalpha = (cinfo.out_color_space == JCS_RGBA);
+@@ -584,7 +674,7 @@
+                                   grayscale, hasalpha, buffered_mode);
+   if ((*env)->ExceptionOccurred(env) || !ret) {
+     /* No more interest in this image... */
+-    jpeg_destroy_decompress(&cinfo);
++    jpegdestroydecompress(&cinfo);
+     return;
+   }
+   /* Make a one-row-high sample array with enough room to expand to ints */
+@@ -595,7 +685,7 @@
+   }
+ 
+   if (jsrc.hOutputBuffer == 0 || !GET_ARRAYS(env, &jsrc)) {
+-    jpeg_destroy_decompress(&cinfo);
++    jpegdestroydecompress(&cinfo);
+     return;
+   }
+ 
+@@ -613,7 +703,7 @@
+ 
+   /* Step 5: Start decompressor */
+ 
+-  jpeg_start_decompress(&cinfo);
++  jpegstartdecompress(&cinfo);
+ 
+   /* We may need to do some setup of our own at this point before reading
+    * the data.  After jpeg_start_decompress() we have the correct scaled
+@@ -638,28 +728,28 @@
+           do {
+               sun_jpeg_fill_suspended_buffer(&cinfo);
+               jsrc.suspendable = TRUE;
+-              ret = jpeg_consume_input(&cinfo);
++	      ret = jpegconsumeinput(&cinfo);
+               jsrc.suspendable = FALSE;
+           } while (ret != JPEG_SUSPENDED && ret != JPEG_REACHED_EOI);
+           if (ret == JPEG_REACHED_EOI) {
+               final_pass = TRUE;
+               cinfo.dct_method = JDCT_ISLOW;
+           }
+-          jpeg_start_output(&cinfo, cinfo.input_scan_number);
++	  jpegstartoutput(&cinfo, cinfo.input_scan_number);
+       }
+       while (cinfo.output_scanline < cinfo.output_height) {
+           if (! final_pass) {
+               do {
+                   sun_jpeg_fill_suspended_buffer(&cinfo);
+                   jsrc.suspendable = TRUE;
+-                  ret = jpeg_consume_input(&cinfo);
++		  ret = jpegconsumeinput(&cinfo);
+                   jsrc.suspendable = FALSE;
+               } while (ret != JPEG_SUSPENDED && ret != JPEG_REACHED_EOI);
+               if (ret == JPEG_REACHED_EOI) {
+                   break;
+               }
+           }
+-          (void) jpeg_read_scanlines(&cinfo, (JSAMPARRAY) &(jsrc.outbuf), 1);
++	  (void) jpegreadscanlines(&cinfo, (JSAMPARRAY) &(jsrc.outbuf), 1);
+ 
+           if (grayscale) {
+               RELEASE_ARRAYS(env, &jsrc);
+@@ -695,18 +785,18 @@
+           if ((*env)->ExceptionOccurred(env) || !ret ||
+               !GET_ARRAYS(env, &jsrc)) {
+               /* No more interest in this image... */
+-              jpeg_destroy_decompress(&cinfo);
++	      jpegdestroydecompress(&cinfo);
+               return;
+           }
+       }
+       if (buffered_mode) {
+-          jpeg_finish_output(&cinfo);
++	  jpegfinishoutput(&cinfo);
+       }
+   } while (! final_pass);
+ 
+   /* Step 7: Finish decompression */
+ 
+-  (void) jpeg_finish_decompress(&cinfo);
++  (void) jpegfinishdecompress(&cinfo);
+   /* We can ignore the return value since suspension is not possible
+    * with the stdio data source.
+    * (nor with the Java data source)
+@@ -715,7 +805,7 @@
+   /* Step 8: Release JPEG decompression object */
+ 
+   /* This is an important step since it will release a good deal of memory. */
+-  jpeg_destroy_decompress(&cinfo);
++  jpegdestroydecompress(&cinfo);
+ 
+   /* After finish_decompress, we can close the input file.
+    * Here we postpone it until after no more JPEG errors are possible,
