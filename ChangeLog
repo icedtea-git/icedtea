@@ -1,3 +1,8 @@
+2008-02-26  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-libraries.patch: Fixed dlopen calls. No longer
+	hardcoding paths to libjpeg.so.62.
+
 2008-02-23  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* IcedTeaPlugin.cc: New file.
