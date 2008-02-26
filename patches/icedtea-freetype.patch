@@ -26,7 +26,7 @@
  CFLAGS       += -DHEADLESS
  CXXFLAGS     += -DHEADLESS
  
-+FREETYPE_HEADERS=$(shell $(ECHO) \"$(FREETYPE2_HEADERS)\" | grep -o ^.*[a\-z])
++FREETYPE_HEADERS=$(shell $(ECHO) \"$(FREETYPE2_HEADERS)\" | grep -o .I.*[a\-z])
 +
  ifndef OPENJDK
    CPPFLAGS += -I$(CLOSED_SRC)/share/native/$(PKGDIR)/t2k
