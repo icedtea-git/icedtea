@@ -884,8 +884,6 @@ hotspot-tools-copy-source-files: stamps/hotspot-tools-copy-source-files.stamp
 
 hotspot-tools: stamps/hotspot-tools.stamp
 
-tools-class-files: stamps/tools-class-files.stamp
-
 default-jnlp: stamps/default-jnlp.stamp
 
 ports: stamps/ports.stamp
