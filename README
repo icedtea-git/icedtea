@@ -102,7 +102,13 @@ openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java,
 openjdk/jdk/src/share/classes/sun/applet/PluginMain.java are added to
 rt.jar and tools.jar to provide gcjwebplugin with an interface into
 the appletviewer code.  This support code is provided in
-patches/icedtea-plugin.patch.
+patches/icedtea-webservices.patch.
+
+If the option --enable-netx-plugin is passed to configure, this will
+make all applets run through NetX security instead of the default
+security manager. This feature is experimental, and is not enabled by
+default. Note that if --disable-gcjwebplugin is used, --enable-netx-plugin
+will not work.
 
 Experimental LiveConnect support
 ================================
@@ -122,11 +128,12 @@ NetX
 
 NetX provides a drop-in replacement for javaws (Java Web Start). Since
 upstream NetX is dormant, we will be hosting and modifying the sources
-in the IcedTea repository, particularly in the icedtea/tools directory.
+in the IcedTea repository, particularly in the rt/net/sourceforge/jnlp 
+directory.
 
-The NetX sources are built into openjdk/build/arch/j2sdk-image/lib/tools.jar
-and a javaws binary is created in openjdk/build/arch/j2sdk-image/bin/.
+The NetX sources are currently built into rt.jar
 
-IcedTea's NetX currently supports verification of signed jars by default
-and provides some services specified by the jnlp API.
+IcedTea's NetX currently supports verification of signed jars, trusted
+certificate storing, system certificate store checking, and provides 
+some services specified by the jnlp API.
 
