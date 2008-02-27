@@ -1,6 +1,42 @@
-diff -urN openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk openjdk/jdk/make/common/internal/BinaryPlugs.gmk
---- openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk/jdk/make/common/internal/BinaryPlugs.gmk	2007-10-12 17:23:25.000000000 -0400
+diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2007-10-12 04:01:55.000000000 -0400
++++ openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2007-10-12 17:17:28.000000000 -0400
+@@ -1154,7 +1154,7 @@
+             Set<BitSet> getterIndexSets = newSet();
+             for (Constructor constr : annotatedConstrList) {
+                 String[] propertyNames =
+-                    constr.getAnnotation(propertyNamesClass).value();
++                    ((ConstructorProperties)constr.getAnnotation(propertyNamesClass)).value();
+ 
+                 Type[] paramTypes = constr.getGenericParameterTypes();
+                 if (paramTypes.length != propertyNames.length) {
+diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2007-10-12 04:01:56.000000000 -0400
++++ openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2007-10-12 17:17:28.000000000 -0400
+@@ -78,6 +78,9 @@
+      */
+     public long            timeStamp ;
+ 
++    // TODO: IcedTea: I am a stub.
++    static public int trapAuthenticationFailure = 0;
++
+ 
+ 
+     /**
+--- openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java        2007-10-12 04:02:14.000000000 -0400
++++ openjdk/jdk/src/share/classes/java/beans/MetaData.java     2007-10-12 17:17:28.000000000 -0400
+@@ -1564,7 +1564,7 @@
+     }
+
+     private static String[] getAnnotationValue(Constructor constructor) {
+-        ConstructorProperties annotation = constructor.getAnnotation(ConstructorProperties.class);
++        ConstructorProperties annotation = ((ConstructorProperties) constructor.getAnnotation(ConstructorProperties.class));
+         return (annotation != null)
+                 ? annotation.value()
+                 : null;
+
+--- openjdk/jdk/make/common/internal/BinaryPlugs.gmk.orig	2008-02-21 00:02:59.000000000 -0500
++++ openjdk/jdk/make/common/internal/BinaryPlugs.gmk	2008-02-21 11:53:48.000000000 -0500
 @@ -51,8 +51,6 @@
  com/sun/jmx/snmp/SnmpDataTypeEnums.class \
  com/sun/jmx/snmp/SnmpDefinitions.class \
@@ -39,21 +75,25 @@ diff -urN openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk openjdk/jdk/make
  java/awt/color/ICC_Profile.class \
  java/awt/color/ICC_ProfileGray.class \
  java/awt/color/ICC_ProfileRGB.class \
-@@ -160,10 +147,12 @@
+@@ -160,10 +147,16 @@
  java/awt/image/renderable/RenderableImageProducer.class \
  java/awt/image/renderable/RenderedImageFactory.class
  
 +PLUG_GNU_CLASS_NAMES = gnu
 +
++PLUG_JAVAX_CLASS_NAMES = javax/jnlp
++
++PLUG_NETX_CLASS_NAMES = net
++
  # Class list temp files (used by both import and export of plugs)
  
  PLUG_TEMPDIR=$(ABS_TEMPDIR)/plugs
 -PLUG_CLASS_AREAS = jmf sound awt
-+PLUG_CLASS_AREAS = jmf sound awt gnu
++PLUG_CLASS_AREAS = jmf sound awt gnu javax netx
  PLUG_CLISTS = $(PLUG_CLASS_AREAS:%=$(PLUG_TEMPDIR)/%.clist)
  
  # Create jargs file command
-@@ -191,6 +180,11 @@
+@@ -191,6 +184,21 @@
  	@for i in $(PLUG_AWT_CLASS_NAMES) ; do \
  	  $(ECHO) "$$i" >> $@ ; \
  	done
@@ -62,19 +102,33 @@ diff -urN openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk openjdk/jdk/make
 +	@for i in $(PLUG_GNU_CLASS_NAMES) ; do \
 +	  $(ECHO) "$$i" >> $@ ; \
 +	done
++$(PLUG_TEMPDIR)/javax.clist:
++	@$(prep-target)
++	@for i in $(PLUG_JAVAX_CLASS_NAMES) ; do \
++	  $(ECHO) "$$i" >> $@ ; \
++	done
++$(PLUG_TEMPDIR)/netx.clist:
++	@$(prep-target)
++	@for i in $(PLUG_NETX_CLASS_NAMES) ; do \
++	  $(ECHO) "$$i" >> $@ ; \
++	done
  $(PLUG_TEMPDIR)/all.clist: $(PLUG_CLISTS)
  	@$(prep-target)
  	$(CAT) $(PLUG_CLISTS) > $@
-@@ -200,6 +194,8 @@
+@@ -200,6 +208,12 @@
  	$(plug-create-jargs)
  $(PLUG_TEMPDIR)/awt.jargs: $(PLUG_TEMPDIR)/awt.clist
  	$(plug-create-jargs)
 +$(PLUG_TEMPDIR)/gnu.jargs: $(PLUG_TEMPDIR)/gnu.clist
 +	$(plug-create-jargs)
++$(PLUG_TEMPDIR)/javax.jargs: $(PLUG_TEMPDIR)/javax.clist
++	$(plug-create-jargs)
++$(PLUG_TEMPDIR)/netx.jargs: $(PLUG_TEMPDIR)/netx.clist
++	$(plug-create-jargs)
  $(PLUG_TEMPDIR)/all.jargs: $(PLUG_TEMPDIR)/all.clist
  	$(plug-create-jargs)
  
-@@ -224,9 +220,9 @@
+@@ -224,9 +238,9 @@
  # Import classes command
  
  define import-binary-plug-classes
@@ -86,12 +140,16 @@ diff -urN openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk openjdk/jdk/make
  endef # import-binary-plug-classes
  
  # Import specific area classes (the classes are always created)
-@@ -237,13 +233,16 @@
+@@ -237,13 +251,22 @@
  	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/sound.clist)
  import-binary-plug-awt-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/awt.clist
  	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/awt.clist)
 +import-binary-plug-gnu-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/gnu.clist
 +	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/gnu.clist)
++import-binary-plug-javax-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/javax.clist
++	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/javax.clist)
++import-binary-plug-netx-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/netx.clist
++	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/netx.clist)
  
  # Import all classes from the jar file
  
@@ -100,44 +158,9 @@ diff -urN openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk openjdk/jdk/make
  	     import-binary-plug-sound-classes \
 -	     import-binary-plug-awt-classes
 +	     import-binary-plug-awt-classes \
-+	     import-binary-plug-gnu-classes
++	     import-binary-plug-gnu-classes \
++	     import-binary-plug-javax-classes \
++	     import-binary-plug-netx-classes
  
  # Import native libraries
  
-diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java
---- openjdk.orig/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2007-10-12 04:01:55.000000000 -0400
-+++ openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2007-10-12 17:17:28.000000000 -0400
-@@ -1154,7 +1154,7 @@
-             Set<BitSet> getterIndexSets = newSet();
-             for (Constructor constr : annotatedConstrList) {
-                 String[] propertyNames =
--                    constr.getAnnotation(propertyNamesClass).value();
-+                    ((ConstructorProperties)constr.getAnnotation(propertyNamesClass)).value();
- 
-                 Type[] paramTypes = constr.getGenericParameterTypes();
-                 if (paramTypes.length != propertyNames.length) {
-diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java
---- openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2007-10-12 04:01:56.000000000 -0400
-+++ openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2007-10-12 17:17:28.000000000 -0400
-@@ -78,6 +78,9 @@
-      */
-     public long            timeStamp ;
- 
-+    // TODO: IcedTea: I am a stub.
-+    static public int trapAuthenticationFailure = 0;
-+
- 
- 
-     /**
---- openjdk.orig/j2se/src/share/classes/java/beans/MetaData.java        2007-10-12 04:02:14.000000000 -0400
-+++ openjdk/jdk/src/share/classes/java/beans/MetaData.java     2007-10-12 17:17:28.000000000 -0400
-@@ -1564,7 +1564,7 @@
-     }
-
-     private static String[] getAnnotationValue(Constructor constructor) {
--        ConstructorProperties annotation = constructor.getAnnotation(ConstructorProperties.class);
-+        ConstructorProperties annotation = ((ConstructorProperties) constructor.getAnnotation(ConstructorProperties.class));
-         return (annotation != null)
-                 ? annotation.value()
-                 : null;
-

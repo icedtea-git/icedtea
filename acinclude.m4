@@ -535,3 +535,18 @@ AC_DEFUN([SET_CORE_BUILD],
     fi
   fi
 ])
+
+AC_DEFUN([ENABLE_NETX_PLUGIN],
+[
+  AC_ARG_ENABLE([netx-plugin],
+                [AS_HELP_STRING(--enable-netx-plugin,enable experimental caching and security support in applet plugin)],
+  [
+    AC_MSG_CHECKING(netx plugin)
+    AC_MSG_RESULT(will enable netx plugin)
+    AM_CONDITIONAL(NETX_PLUGIN, test x = x)
+  ],
+  [
+    AM_CONDITIONAL(NETX_PLUGIN, test x != x)
+  ])
+])
+

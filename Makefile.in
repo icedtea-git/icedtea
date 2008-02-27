@@ -216,12 +216,14 @@ OPENJDK_VERSION = b24
 @ENABLE_LIVECONNECT_TRUE@ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 @ENABLE_LIVECONNECT_FALSE@ICEDTEAPLUGIN_TARGET = 
 @ENABLE_LIVECONNECT_TRUE@ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
-@ENABLE_LIVECONNECT_FALSE@PLUGIN_PATCH = patches/icedtea-plugin.patch
+@ENABLE_LIVECONNECT_FALSE@PLUGIN_PATCH = patches/icedtea-webservices.patch
 @ENABLE_LIVECONNECT_TRUE@PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_FALSE@GCJWEBPLUGIN_CLEAN = 
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_FALSE@GCJWEBPLUGIN_TARGET = 
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@GCJWEBPLUGIN_TARGET = gcjwebplugin.so
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_FALSE@NETX_PATCH = 
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@@NETX_PLUGIN_TRUE@NETX_PATCH = patches/icedtea-netx-plugin.patch
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
 	tools patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch \
@@ -343,6 +345,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-license-headers.patch \
 	$(PLUGIN_PATCH) \
+	$(NETX_PATCH) \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-certbundle.patch \
@@ -369,7 +372,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ports.patch \
 	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-timerqueue.patch \
-	patches/icedtea-jnlp-launcher.patch \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \
@@ -976,10 +978,16 @@ clean-bootstrap-directory-symlink-ecj:
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-icedtea: stamps/bootstrap-directory-symlink.stamp \
+icedtea: stamps/icedtea-compile.stamp stamps/default-jnlp.stamp
+	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
+
+# if you are working on tools.jar or netx, you can add
+# "touch stamps/icedtea-compile.stamp" to the end of this rule to avoid
+# rebuilding OpenJDK on each run.
+stamps/icedtea-compile.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp $(GCJWEBPLUGIN_TARGET) \
-	$(ICEDTEAPLUGIN_TARGET) stamps/tools.stamp
+	$(ICEDTEAPLUGIN_TARGET)
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/
@@ -991,14 +999,20 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	cp -pPRf gcjwebplugin.so \
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/tools.jar \
-	  -C lib/tools .
+	touch stamps/icedtea-compile.stamp
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
-icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
+icedtea-debug: stamps/icedtea-compile-debug.stamp
+	@echo "IcedTea (debug build) is served:" \
+	 $(BUILD_OUTPUT_DIR)-debug
+
+# if you are working on tools.jar or netx, you can add
+# "touch stamps/icedtea-compile-debug.stamp" to the end of this rule to avoid
+# rebuilding OpenJDK on each run.
+stamps/icedtea-compile-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp $(GCJWEBPLUGIN_TARGET) \
-	$(ICEDTEAPLUGIN_TARGET) stamps/tools.stamp
+	$(ICEDTEAPLUGIN_TARGET)
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1011,8 +1025,7 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	cp -pPRf gcjwebplugin.so \
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/lib/tools.jar \
-	  -C lib/tools .
+	touch stamps/icedtea-compile-debug.stamp
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
 
@@ -1020,6 +1033,7 @@ clean-icedtea: stamps/clone.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ clobber
+	rm -f stamps/icedtea-compile*.stamp
 
 icedtea-against-icedtea: \
 	stamps/bootstrap-directory-symlink.stamp \
@@ -1209,6 +1223,8 @@ stamps/rt-class-files.stamp: rt-source-files.txt
           -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated \
           @$< ; \
         fi
+	cp -r rt/net/sourceforge/jnlp/resources \
+	  lib/rt/net/sourceforge/jnlp/
 	mkdir -p stamps
 	touch stamps/rt-class-files.stamp
 
@@ -1223,10 +1239,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -f stamps/icedtea-ecj.stamp ; \
         then \
           $(JAR) cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
-          -C lib/rt javax -C lib/rt sun -C lib/rt org ; \
+          -C lib/rt javax -C lib/rt sun -C lib/rt org -C lib/rt net ; \
 	else \
           $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
-          -C lib/rt javax -C lib/rt sun -C lib/rt org ; \
+          -C lib/rt javax -C lib/rt sun -C lib/rt org -C lib/rt net ; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
@@ -1263,37 +1279,12 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@clean-gcjwebplugin:
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	rm -f gcjwebplugin.so
 
-#extra tools
-stamps/tools.stamp: stamps/tools-class-files.stamp
-	touch stamps/tools.stamp
-
-tools-source-files.txt: stamps/clone.stamp
-	find tools -name '*.java' | sort > $@
-
-stamps/tools-class-files.stamp: tools-source-files.txt \
-	stamps/rt-class-files.stamp
-	mkdir -p lib/tools
-	if ! test -f stamps/icedtea-ecj.stamp ; \
-        then \
-	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/tools \
-          -source 1.6 \
-          -sourcepath tools \
-          @$< ; \
-        else \
-	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/tools \
-          -source 1.6 \
-          -sourcepath tools \
-          @$< ; \
-        fi
-	cp tools/default.jnlp lib/tools
-	cp -R tools/netx/jnlp/resources lib/tools/netx/jnlp
-	mkdir -p stamps
-	touch stamps/tools-class-files.stamp
-
-clean-tools:
-	rm -rf lib/tools
-	rm -rf stamps/tools-class-files.stamp
-	rm -rf tools-source-files.txt
+stamps/default-jnlp.stamp:
+	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
+	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
+	touch stamps/default-jnlp.stamp
 
 # Target Aliases
 # ===============
@@ -1330,9 +1321,9 @@ hotspot-tools-copy-source-files: stamps/hotspot-tools-copy-source-files.stamp
 
 hotspot-tools: stamps/hotspot-tools.stamp
 
-tools: stamps/tools.stamp
-
 tools-class-files: stamps/tools-class-files.stamp
+
+default-jnlp: stamps/default-jnlp.stamp
 
 ports: stamps/ports.stamp
 
