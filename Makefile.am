@@ -517,9 +517,9 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
 	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib
 	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
 
