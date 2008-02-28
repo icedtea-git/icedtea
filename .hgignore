@@ -6,7 +6,6 @@ autom4te.cache
 openjdk
 bootstrap
 lib
-tools
 stamps
 Makefile
 config.log
@@ -17,7 +16,6 @@ gcjwebplugin.so
 IcedTeaPlugin.so
 rt-source-files.txt
 hotspot-tools-source-files.txt
-tools-source-files.txt
 rt/com/sun/jdi/AbsentInformationException.java
 rt/com/sun/jdi/Accessible.java
 rt/com/sun/jdi/ArrayReference.java

@@ -1,3 +1,9 @@
+2008-02-28  Mark Wielaard  <mwielaard@redhat.com>
+
+	* Makefile.am (EXTRA_DIST): Removed tools and icedtea-plugin.patch.
+	* Makefile.in: Regenerated.
+	* .hgignore: Removed tools and tools-source-files.txt.
+
 2008-02-27  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/runtime/InstallDialog.java: Fix bad resource

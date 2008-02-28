@@ -57,8 +57,8 @@ install:
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
-	tools patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch \
-	patches/icedtea-plugin.patch patches/icedtea-liveconnect.patch \
+	patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch \
+	patches/icedtea-liveconnect.patch \
 	IcedTeaPlugin.cc patches/icedtea-freetype.patch
 
 # OpenJDK build environment.
