@@ -55,7 +55,7 @@ class InstallDialog extends Dialog implements ActionListener {
         super(createFrame(), R("CChooseCache"), true);
 
         background = 
-            new ImageIcon(getClass().getClassLoader().getResource("netx/jnlp/resources/install.png"));
+            new ImageIcon(getClass().getClassLoader().getResource("net/sourceforge/jnlp/resources/install.png"));
 
         setLayout(new BorderLayout());
         setBackground(Color.white);
