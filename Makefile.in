@@ -237,7 +237,7 @@ OPENJDK_VERSION = b24
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch \
-	patches/icedtea-liveconnect.patch \
+	patches/icedtea-liveconnect.patch patches/icedtea-webservices.patch \
 	IcedTeaPlugin.cc patches/icedtea-freetype.patch
 
 
@@ -681,7 +681,7 @@ install:
 	clean-bootstrap-directory-symlink clean-bootstrap-directory-ecj \
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
-	clean-tools-jar clean-tools clean-shared-objects \
+	clean-tools-jar clean-shared-objects \
 	clean-copy clean-hotspot-tools clean-rt $(GCJWEBPLUGIN_CLEAN) \
 	$(ICEDTEAPLUGIN_CLEAN) hotspot hotspot-helper
 
@@ -1048,9 +1048,8 @@ clean-plugs: clean-plugs clean-shared-objects \
 	rm -f stamps/plugs.stamp
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
-clean-tools-jar: clean-hotspot-tools clean-tools
+clean-tools-jar: clean-hotspot-tools
 	rm -f stamps/hotspot-tools.stamp
-	rm -rf tools/
 	rm -f bootstrap/jdk1.7.0/jre/lib/tools.jar
 
 $(SHARED_OBJECT_FILES):
@@ -1230,13 +1229,6 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@clean-gcjwebplugin:
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	rm -f gcjwebplugin.so
 
-stamps/default-jnlp.stamp: stamps/icedtea-compile.stamp
-	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
-	touch stamps/default-jnlp.stamp
-
 # Target Aliases
 # ===============
 
@@ -1272,17 +1264,11 @@ hotspot-tools-copy-source-files: stamps/hotspot-tools-copy-source-files.stamp
 
 hotspot-tools: stamps/hotspot-tools.stamp
 
-default-jnlp: stamps/default-jnlp.stamp
-
 ports: stamps/ports.stamp
 
 ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
-
-icedtea-compile: stamps/icedtea-compile.stamp
-
-icedtea-compile-ecj: stamps/icedtea-compile-ecj.stamp
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

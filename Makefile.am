@@ -51,14 +51,14 @@ install:
 	clean-bootstrap-directory-symlink clean-bootstrap-directory-ecj \
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
-	clean-tools-jar clean-tools clean-shared-objects \
+	clean-tools-jar clean-shared-objects \
 	clean-copy clean-hotspot-tools clean-rt $(GCJWEBPLUGIN_CLEAN) \
 	$(ICEDTEAPLUGIN_CLEAN) hotspot hotspot-helper
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch \
-	patches/icedtea-liveconnect.patch \
+	patches/icedtea-liveconnect.patch patches/icedtea-webservices.patch \
 	IcedTeaPlugin.cc patches/icedtea-freetype.patch
 
 # OpenJDK build environment.
@@ -517,13 +517,7 @@ endif
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-icedtea: stamps/icedtea-compile.stamp stamps/default-jnlp.stamp
-	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
-
-# if you are working on tools.jar or netx, you can add
-# "touch stamps/icedtea-compile.stamp" to the end of this rule to avoid
-# rebuilding OpenJDK on each run.
-stamps/icedtea-compile.stamp: stamps/bootstrap-directory-symlink.stamp \
+icedtea: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp $(GCJWEBPLUGIN_TARGET) \
 	$(ICEDTEAPLUGIN_TARGET)
@@ -543,15 +537,13 @@ if ENABLE_PLUGIN
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 endif
+	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
+	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
+	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
-icedtea-debug: stamps/icedtea-compile-debug.stamp
-	@echo "IcedTea (debug build) is served:" \
-	 $(BUILD_OUTPUT_DIR)-debug
-
-# if you are working on tools.jar or netx, you can add
-# "touch stamps/icedtea-compile-debug.stamp" to the end of this rule to avoid
-# rebuilding OpenJDK on each run.
-stamps/icedtea-compile-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
+icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp $(GCJWEBPLUGIN_TARGET) \
 	$(ICEDTEAPLUGIN_TARGET)
@@ -572,6 +564,12 @@ if ENABLE_PLUGIN
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 endif
+	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib
+	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib
+	@echo "IcedTea (debug build) is served:" \
+	  $(BUILD_OUTPUT_DIR)-debug
 
 clean-icedtea: stamps/clone.stamp
 	$(MAKE) \
@@ -641,9 +639,8 @@ clean-plugs: clean-plugs clean-shared-objects \
 	rm -f stamps/plugs.stamp
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
-clean-tools-jar: clean-hotspot-tools clean-tools
+clean-tools-jar: clean-hotspot-tools
 	rm -f stamps/hotspot-tools.stamp
-	rm -rf tools/
 	rm -f bootstrap/jdk1.7.0/jre/lib/tools.jar
 
 # Shared objects.
@@ -856,13 +853,6 @@ clean-gcjwebplugin:
 endif
 endif
 
-stamps/default-jnlp.stamp: stamps/icedtea-compile.stamp
-	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
-	touch stamps/default-jnlp.stamp
-
 # Target Aliases
 # ===============
 
@@ -898,14 +888,9 @@ hotspot-tools-copy-source-files: stamps/hotspot-tools-copy-source-files.stamp
 
 hotspot-tools: stamps/hotspot-tools.stamp
 
-default-jnlp: stamps/default-jnlp.stamp
-
 ports: stamps/ports.stamp
 
 ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
 
-icedtea-compile: stamps/icedtea-compile.stamp
-
-icedtea-compile-ecj: stamps/icedtea-compile-ecj.stamp

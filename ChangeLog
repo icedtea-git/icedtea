@@ -1,3 +1,19 @@
+2008-02-28  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am
+	(.PHONY): Remove clean-tools.
+	(EXTRA_DIST): Add icedtea-webservices.patch
+	(icedtea-compile.stamp): Removed this stamp to go back to old building of
+	icedtea target.
+	(icedtea-compile-debug.stamp): Likewise.
+	(clean-tools-jar): Remove clean-tools dependency.
+	(default-jnlp.stamp): Moved to be part of icedtea and icedtea-debug
+	targets.
+	(default-jnlp): Remove unused target.
+	(icedtea-compile): Likewise.
+	(icedtea-compile-ecj): Likewise.
+	* Makefile.in: Regenerated.
+
 2008-02-28  Gary Benson  <gbenson@redhat.com>
 
 	* contrib/templater/README: Changed a URL.
