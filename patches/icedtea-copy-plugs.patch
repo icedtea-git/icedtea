@@ -33,8 +33,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  
                  Type[] paramTypes = constr.getGenericParameterTypes();
                  if (paramTypes.length != propertyNames.length) {
---- openjdk6/jdk/make/common/internal/BinaryPlugs.gmk	2008-02-12 04:03:53.000000000 -0500
-+++ openjdk/jdk/make/common/internal/BinaryPlugs.gmk	2008-02-15 10:42:22.000000000 -0500
+--- openjdk/jdk/make/common/internal/BinaryPlugs.gmk.orig	2008-02-27 16:48:35.000000000 -0500
++++ openjdk/jdk/make/common/internal/BinaryPlugs.gmk	2008-02-27 16:46:09.000000000 -0500
 @@ -51,28 +51,19 @@
  com/sun/jmx/snmp/SnmpDataTypeEnums.class \
  com/sun/jmx/snmp/SnmpDefinitions.class \
@@ -76,19 +76,23 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  java/awt/color/ICC_Profile.class \
  java/awt/color/ICC_ProfileGray.class \
  java/awt/color/ICC_ProfileRGB.class \
-@@ -162,8 +150,10 @@
+@@ -162,8 +150,14 @@
  
  # Class list temp files (used by both import and export of plugs)
  
 +PLUG_GNU_CLASS_NAMES = gnu
 +
++PLUG_JAVAX_CLASS_NAMES = javax/jnlp
++
++PLUG_NETX_CLASS_NAMES = net
++
  PLUG_TEMPDIR=$(ABS_TEMPDIR)/plugs
 -PLUG_CLASS_AREAS = jmf sound awt
-+PLUG_CLASS_AREAS = jmf sound awt gnu
++PLUG_CLASS_AREAS = jmf sound awt gnu javax netx
  PLUG_CLISTS = $(PLUG_CLASS_AREAS:%=$(PLUG_TEMPDIR)/%.clist)
  
  # Create jargs file command
-@@ -191,6 +181,11 @@
+@@ -191,6 +185,21 @@
  	@for i in $(PLUG_AWT_CLASS_NAMES) ; do \
  	  $(ECHO) "$$i" >> $@ ; \
  	done
@@ -97,19 +101,33 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
 +	@for i in $(PLUG_GNU_CLASS_NAMES) ; do \
 +	  $(ECHO) "$$i" >> $@ ; \
 +	done
++$(PLUG_TEMPDIR)/javax.clist:
++	@$(prep-target)
++	@for i in $(PLUG_JAVAX_CLASS_NAMES) ; do \
++	  $(ECHO) "$$i" >> $@ ; \
++	done
++$(PLUG_TEMPDIR)/netx.clist:
++	@$(prep-target)
++	@for i in $(PLUG_NETX_CLASS_NAMES) ; do \
++	  $(ECHO) "$$i" >> $@ ; \
++	done
  $(PLUG_TEMPDIR)/all.clist: $(PLUG_CLISTS)
  	@$(prep-target)
  	$(CAT) $(PLUG_CLISTS) > $@
-@@ -200,6 +195,8 @@
+@@ -200,6 +209,12 @@
  	$(plug-create-jargs)
  $(PLUG_TEMPDIR)/awt.jargs: $(PLUG_TEMPDIR)/awt.clist
  	$(plug-create-jargs)
 +$(PLUG_TEMPDIR)/gnu.jargs: $(PLUG_TEMPDIR)/gnu.clist
 +	$(plug-create-jargs)
++$(PLUG_TEMPDIR)/javax.jargs: $(PLUG_TEMPDIR)/javax.clist
++	$(plug-create-jargs)
++$(PLUG_TEMPDIR)/netx.jargs: $(PLUG_TEMPDIR)/netx.clist
++	$(plug-create-jargs)
  $(PLUG_TEMPDIR)/all.jargs: $(PLUG_TEMPDIR)/all.clist
  	$(plug-create-jargs)
  
-@@ -229,9 +226,9 @@
+@@ -229,9 +244,9 @@
  # Import classes command
  
  define import-binary-plug-classes
@@ -121,12 +139,16 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  endef # import-binary-plug-classes
  
  else # IMPORT_BINARY_PLUGS
-@@ -263,13 +260,16 @@
+@@ -263,13 +278,22 @@
  	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/sound.clist)
  import-binary-plug-awt-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/awt.clist
  	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/awt.clist)
 +import-binary-plug-gnu-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/gnu.clist
 +	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/gnu.clist)
++import-binary-plug-javax-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/javax.clist
++	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/javax.clist)
++import-binary-plug-netx-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/netx.clist
++	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/netx.clist)
  
  # Import all classes from the jar file
  
@@ -135,7 +157,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  	     import-binary-plug-sound-classes \
 -	     import-binary-plug-awt-classes
 +	     import-binary-plug-awt-classes \
-+             import-binary-plug-gnu-classes
++	     import-binary-plug-gnu-classes \
++		 import-binary-plug-javax-classes \
++		 import-binary-plug-netx-classes \
  
  # Import native libraries
  
