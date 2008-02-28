@@ -129,6 +129,7 @@ WITH_OPENJDK_SRC_DIR
 AC_CHECK_WITH_CACAO
 ENABLE_FAST_BUILD
 ENABLE_ZERO_BUILD
+ENABLE_NETX_PLUGIN
 SET_CORE_BUILD
 
 dnl pkgconfig cannot be used to finid these headers and libraries.

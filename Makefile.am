@@ -2,6 +2,12 @@ OPENJDK_DATE = 12_feb_2008
 OPENJDK_MD5SUM = 660e6230dfc4cdc8a7c93bc3e7e60120
 OPENJDK_VERSION = b05
 
+if NETX_PLUGIN
+NETX_PATCH = patches/icedtea-netx-plugin.patch
+else
+NETX_PATCH =
+endif
+
 # Top-Level Targets
 # =================
 
@@ -26,7 +32,7 @@ install:
 	clean-bootstrap-directory-symlink clean-bootstrap-directory-ecj \
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
-	clean-tools-jar clean-tools clean-shared-objects \
+	clean-tools-jar clean-shared-objects \
 	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
 	hotspot hotspot-helper
 
@@ -207,7 +213,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-debuginfo.patch \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-license-headers.patch \
-	patches/icedtea-plugin.patch \
+	patches/icedtea-webservices.patch \
+	$(NETX_PATCH) \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-certbundle.patch \
@@ -232,7 +239,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ports.patch \
 	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-timerqueue.patch \
-	patches/icedtea-jnlp-launcher.patch \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \
@@ -479,8 +485,7 @@ endif
 # you change it in the icedtea-debug target as well.
 icedtea: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
-	stamps/tools.stamp
+	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/
@@ -491,14 +496,15 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	  cp -pPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
-	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/tools.jar \
-	  -C lib/tools .
+	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
+	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
 icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
-	stamps/tools.stamp
+	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
@@ -510,8 +516,10 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	  cp -pPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
-	$(FASTJAR) uf $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/lib/tools.jar \
-	  -C lib/tools .
+	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
+	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
 
@@ -582,7 +590,7 @@ clean-plugs: clean-plugs clean-shared-objects \
 	rm -f stamps/plugs.stamp
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
-clean-tools-jar: clean-hotspot-tools clean-tools
+clean-tools-jar: clean-hotspot-tools
 	rm -f stamps/hotspot-tools.stamp
 	rm -rf tools/
 	rm -f bootstrap/jdk1.7.0/jre/lib/tools.jar
@@ -740,6 +748,8 @@ stamps/rt-class-files.stamp: rt-source-files.txt
           -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated \
           @$< ; \
         fi
+	cp -r rt/net/sourceforge/jnlp/resources \
+	  lib/rt/net/sourceforge/jnlp/
 	mkdir -p stamps
 	touch stamps/rt-class-files.stamp
 
@@ -754,10 +764,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -f stamps/icedtea-ecj.stamp ; \
         then \
           $(JAR) cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
-          -C lib/rt javax -C lib/rt sun -C lib/rt org ; \
+          -C lib/rt javax -C lib/rt sun -C lib/rt org -C lib/rt net; \
 	else \
           $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
-          -C lib/rt javax -C lib/rt sun -C lib/rt org ; \
+          -C lib/rt javax -C lib/rt sun -C lib/rt org -C lib/rt net; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
@@ -777,38 +787,6 @@ gcjwebplugin.so: gcjwebplugin.cc
 
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
-
-#extra tools
-stamps/tools.stamp: stamps/tools-class-files.stamp
-	touch stamps/tools.stamp
-
-tools-source-files.txt: stamps/extract.stamp
-	find tools -name '*.java' | sort > $@
-
-stamps/tools-class-files.stamp: tools-source-files.txt \
-	stamps/rt-class-files.stamp
-	mkdir -p lib/tools
-	if ! test -f stamps/icedtea-ecj.stamp ; \
-        then \
-	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/tools \
-          -source 1.6 \
-          -sourcepath tools \
-          @$< ; \
-        else \
-	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/tools \
-          -source 1.6 \
-          -sourcepath tools \
-          @$< ; \
-        fi
-	cp tools/default.jnlp lib/tools
-	cp -R tools/netx/jnlp/resources lib/tools/netx/jnlp
-	mkdir -p stamps
-	touch stamps/tools-class-files.stamp
-
-clean-tools:
-	rm -rf lib/tools
-	rm -rf stamps/tools-class-files.stamp
-	rm -rf tools-source-files.txt
 
 # Target Aliases
 # ===============
@@ -846,10 +824,6 @@ hotspot-tools-class-files: stamps/hotspot-tools-class-files.stamp
 hotspot-tools-copy-source-files: stamps/hotspot-tools-copy-source-files.stamp
 
 hotspot-tools: stamps/hotspot-tools.stamp
-
-tools: stamps/tools.stamp
-
-tools-class-files: stamps/tools-class-files.stamp
 
 ports: stamps/ports.stamp
 
