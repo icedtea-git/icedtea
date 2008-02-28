@@ -1,5 +1,10 @@
 2008-02-27  Joshua Sumali  <jsumali@redhat.com>
 
+	* rt/net/sourceforge/jnlp/runtime/InstallDialog.java: Fix bad resource
+	path.
+
+2008-02-27  Joshua Sumali  <jsumali@redhat.com>
+
 	* Makefile.am:
 	(tools-class-files): Removed unused target.
 	* Makefile.in: Regenerated.
