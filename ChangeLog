@@ -1,3 +1,14 @@
+2008-02-28  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(stamps/default-jnlp.stamp): Added dependency.
+	(stamps/icedtea-compile.stamp): Removed touch at end of rule. Should
+	follow what the comment says.
+	(stamps/icedtea-compile-ecj.stamp): Likewise.
+	(icedtea-compile): Added new alias target.
+	(icedtea-compile-ecj): Likewise.
+	* Makefile.in: Regenerated.
+
 2008-02-28  Mark Wielaard  <mwielaard@redhat.com>
 
 	* Makefile.am (EXTRA_DIST): Removed tools and icedtea-plugin.patch.
