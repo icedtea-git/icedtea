@@ -1230,7 +1230,7 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@clean-gcjwebplugin:
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	rm -f gcjwebplugin.so
 
-stamps/default-jnlp.stamp:
+stamps/default-jnlp.stamp: stamps/icedtea-compile.stamp
 	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
 	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
@@ -1279,6 +1279,10 @@ ports: stamps/ports.stamp
 ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
+
+icedtea-compile: stamps/icedtea-compile.stamp
+
+icedtea-compile-ecj: stamps/icedtea-compile-ecj.stamp
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

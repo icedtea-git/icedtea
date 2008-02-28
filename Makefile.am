@@ -543,8 +543,6 @@ if ENABLE_PLUGIN
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 endif
-	touch stamps/icedtea-compile.stamp
-	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
 icedtea-debug: stamps/icedtea-compile-debug.stamp
 	@echo "IcedTea (debug build) is served:" \
@@ -574,9 +572,6 @@ if ENABLE_PLUGIN
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 endif
-	touch stamps/icedtea-compile-debug.stamp
-	@echo "IcedTea (debug build) is served:" \
-	  $(BUILD_OUTPUT_DIR)-debug
 
 clean-icedtea: stamps/clone.stamp
 	$(MAKE) \
@@ -861,7 +856,7 @@ clean-gcjwebplugin:
 endif
 endif
 
-stamps/default-jnlp.stamp:
+stamps/default-jnlp.stamp: stamps/icedtea-compile.stamp
 	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
 	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
@@ -910,3 +905,7 @@ ports: stamps/ports.stamp
 ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
+
+icedtea-compile: stamps/icedtea-compile.stamp
+
+icedtea-compile-ecj: stamps/icedtea-compile-ecj.stamp
