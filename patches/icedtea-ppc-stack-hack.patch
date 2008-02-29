@@ -14,3 +14,19 @@ diff -r 6a85c2ba896a openjdk/hotspot/src/os/linux/vm/os_linux.cpp
    } else {
      // let pthread_create() pick the default value.
    }
+diff -r 536e71398adf openjdk/jdk/src/solaris/bin/java_md.c
+--- openjdk/jdk/src/solaris/bin/java_md.c	Fri Feb 29 11:03:05 2008 +0000
++++ openjdk/jdk/src/solaris/bin/java_md.c	Fri Feb 29 16:24:48 2008 +0000
+@@ -1254,7 +1254,12 @@ ContinueInNewThread0(int (JNICALL *conti
+     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+ 
+     if (stack_size > 0) {
++#ifdef PPC
++      // https://bugzilla.redhat.com/show_bug.cgi?id=435337      
++      pthread_attr_setstacksize(&attr, stack_size + 64*K);
++#else
+       pthread_attr_setstacksize(&attr, stack_size);
++#endif // PPC
+     }
+ 
+     if (pthread_create(&tid, &attr, (void *(*)(void*))continuation, (void*)args) == 0) {
