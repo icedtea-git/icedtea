@@ -1,3 +1,9 @@
+2008-02-29  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-ppc-stack-hack.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Added the above.
+	* Makefile.in: Regenerated.
+
 2008-02-28  Joshua Sumali  <jsumali@redhat.com>
 
 	* Makefile.am
