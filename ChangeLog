@@ -1,3 +1,12 @@
+2008-03-03  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-ppc-stack-hack.patch: Removed.
+	* Makefile.am (ICEDTEA_PATCHES): Removed the above.
+	* Makefile.in: Regenerated.
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	(current_stack_region): Fudge reported stack size.
+
 2008-02-29  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-ppc-stack-hack.patch: More.

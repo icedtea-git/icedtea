@@ -245,8 +245,13 @@ static void current_stack_region(address* bottom, size_t* size) {
      }
 
      pthread_attr_destroy(&attr);
-
   }
+
+#ifdef PPC
+  // https://bugzilla.redhat.com/show_bug.cgi?id=435337
+  *size -= 64*K;
+#endif
+
   assert(os::current_stack_pointer() >= *bottom &&
          os::current_stack_pointer() < *bottom + *size, "just checking");
 }
