@@ -1,5 +1,10 @@
 2008-03-03  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-ports.patch
+	(hotspot/src/share/vm/runtime/mutex.hpp): Reworked.
+
+2008-03-03  Gary Benson  <gbenson@redhat.com>
+
 	* patches/icedtea-ppc-stack-hack.patch: Removed.
 	* Makefile.am (ICEDTEA_PATCHES): Removed the above.
 	* Makefile.in: Regenerated.
