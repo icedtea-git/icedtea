@@ -171,28 +171,26 @@ diff -ru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/o
 diff -ru openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp openjdk/hotspot/src/share/vm/runtime/mutex.hpp
 --- openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/runtime/mutex.hpp	2007-11-08 11:36:15.000000000 +0000
-@@ -61,19 +61,15 @@
- } ; 
+@@ -61,18 +61,10 @@ union SplitWord {   // full-word with se
+ } ;
  
  // Endian-ness ... index of least-significant byte in SplitWord.Bytes[]
 -#ifdef AMD64        // little
-+#if defined(IA32) || defined(AMD64) || defined(IA64) // little
++#ifdef VM_LITTLE_ENDIAN
   #define _LSBINDEX 0
  #else
 -#if IA32            // little
 - #define _LSBINDEX 0
 -#else
 -#ifdef SPARC        // big
-+#if defined(SPARC) || defined(PPC) // big
   #define _LSBINDEX (sizeof(intptr_t)-1)
- #else
-  #error "unknown architecture"
- #endif
- #endif
+-#else
+- #error "unknown architecture"
 -#endif
+-#endif
+ #endif
  
- class ParkEvent ;  
- 
+ class ParkEvent ;
 diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
 --- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2007-11-08 11:36:15.000000000 +0000
