@@ -281,7 +281,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \
 	patches/icedtea-freetype.patch \
-	patches/icedtea-ppc-stack-hack.patch \
 	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
 	$(ZERO_BUILD_PATCH) \
