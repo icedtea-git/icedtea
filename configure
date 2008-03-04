@@ -9611,6 +9611,81 @@ if test -n "$PKG_CONFIG"; then
         pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
     else
         if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"mozilla-plugin libxul\"") >&5
+  ($PKG_CONFIG --exists --print-errors "mozilla-plugin libxul") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_MOZILLA_CFLAGS=`$PKG_CONFIG --cflags "mozilla-plugin libxul" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$MOZILLA_LIBS"; then
+        pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"mozilla-plugin libxul\"") >&5
+  ($PKG_CONFIG --exists --print-errors "mozilla-plugin libxul") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_MOZILLA_LIBS=`$PKG_CONFIG --libs "mozilla-plugin libxul" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "mozilla-plugin libxul"`
+        else
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "mozilla-plugin libxul"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$MOZILLA_PKG_ERRORS" >&5
+
+	{ echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+                \
+      MOZILLA_FOUND=no
+elif test $pkg_failed = untried; then
+	\
+      MOZILLA_FOUND=no
+else
+	MOZILLA_CFLAGS=$pkg_cv_MOZILLA_CFLAGS
+	MOZILLA_LIBS=$pkg_cv_MOZILLA_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	MOZILLA_FOUND=yes
+fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
+
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for MOZILLA" >&5
+echo $ECHO_N "checking for MOZILLA... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$MOZILLA_CFLAGS"; then
+        pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"mozilla-plugin\"") >&5
   ($PKG_CONFIG --exists --print-errors "mozilla-plugin") 2>&5
   ac_status=$?
@@ -9662,18 +9737,18 @@ fi
 
 	{ echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
-                \
-      MOZILLA_FOUND=no
+                MOZILLA_FOUND=no
 elif test $pkg_failed = untried; then
-	\
-      MOZILLA_FOUND=no
+	MOZILLA_FOUND=no
 else
 	MOZILLA_CFLAGS=$pkg_cv_MOZILLA_CFLAGS
 	MOZILLA_LIBS=$pkg_cv_MOZILLA_LIBS
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
-	MOZILLA_FOUND=yes
+	\
+      MOZILLA_FOUND=yes
 fi
+    fi
     if test "x${MOZILLA_FOUND}" = xno
     then
 
