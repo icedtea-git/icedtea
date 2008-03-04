@@ -663,7 +663,7 @@ all-local: icedtea-against-icedtea
 
 distclean-local: clean-copy
 	rm -rf stamps
-	rm -f rt-source-files.txt tools-source-files.txt \
+	rm -f rt-source-files.txt \
 	  hotspot-tools-source-files.txt
 	rm -rf bootstrap
 	rm -rf lib
