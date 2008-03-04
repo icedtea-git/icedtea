@@ -19,8 +19,6 @@ public final class gtk_zh_HK extends ListResourceBundle {
             { "FileChooser.newFolderButtonMnemonic", "78" },
             { "FileChooser.newFolderButtonText", "\u65B0\u6A94\u6848\u593E" },
             { "FileChooser.newFolderDialogText", "\u6A94\u6848\u593E\u540D\u7A31:" },
-            { "FileChooser.newFolderNoDirectoryErrorText", "Error creating directory \"{0}\": No such file or directory" },
-            { "FileChooser.newFolderNoDirectoryErrorTitleText", "Error" },
             { "FileChooser.openButtonMnemonic", "79" },
             { "FileChooser.openButtonText", "\u78BA\u5B9A" },
             { "FileChooser.openButtonToolTipText", "\u958B\u555F\u9078\u53D6\u7684\u6A94\u6848\u3002" },

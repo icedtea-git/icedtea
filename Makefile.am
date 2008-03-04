@@ -15,7 +15,7 @@ all-local: icedtea-against-icedtea
 
 distclean-local: clean-copy
 	rm -rf stamps
-	rm -f rt-source-files.txt tools-source-files.txt \
+	rm -f rt-source-files.txt \
 	  hotspot-tools-source-files.txt
 	rm -rf bootstrap
 	rm -rf lib
@@ -38,7 +38,7 @@ install:
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
-	tools patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch
+	patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.

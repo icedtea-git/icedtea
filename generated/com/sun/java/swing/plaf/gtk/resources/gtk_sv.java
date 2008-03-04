@@ -19,8 +19,6 @@ public final class gtk_sv extends ListResourceBundle {
             { "FileChooser.newFolderButtonMnemonic", "70" },
             { "FileChooser.newFolderButtonText", "Ny mapp" },
             { "FileChooser.newFolderDialogText", "Mapp:" },
-            { "FileChooser.newFolderNoDirectoryErrorText", "Error creating directory \"{0}\": No such file or directory" },
-            { "FileChooser.newFolderNoDirectoryErrorTitleText", "Error" },
             { "FileChooser.openButtonMnemonic", "79" },
             { "FileChooser.openButtonText", "OK" },
             { "FileChooser.openButtonToolTipText", "\u00D6ppna den markerade filen." },
