@@ -31,7 +31,7 @@
  #include <iostream>
  #else
  #include <iostream.h>
-@@ -96,8 +96,11 @@
+@@ -99,8 +99,11 @@
    FileBuffRegion *copy();                   // Deep copy
    FileBuffRegion *merge(FileBuffRegion*); // Merge 2 regions; delete input
  

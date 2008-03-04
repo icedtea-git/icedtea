@@ -1,5 +1,5 @@
---- openjdk.orig/jdk/make/common/Release.gmk	2007-10-26 16:46:41.000000000 -0400
-+++ openjdk/jdk/make/common/Release.gmk	2007-11-07 11:46:22.000000000 -0500
+--- openjdk.orig/jdk/make/common/Release.gmk	2008-02-28 04:39:40.000000000 -0500
++++ openjdk/jdk/make/common/Release.gmk	2008-02-29 14:34:26.000000000 -0500
 @@ -338,8 +338,6 @@
  # Bug 5008685 - exclude jconsole from sun/tools
  #
@@ -14,7 +14,7 @@
  	com/sun/tools/internal/xjc       \
  	com/sun/tools/internal/ws       \
 -	META-INF/services/com.sun.mirror.apt.AnnotationProcessorFactory \
--	META-INF/services/com.sun.tools.xjc.Plugin \
+-	META-INF/services/com.sun.tools.internal.xjc.Plugin \
  	com/sun/istack/internal/tools       \
  	com/sun/istack/internal/ws       \
          com/sun/codemodel       \
@@ -33,7 +33,7 @@
 -	$(ECHO) "META-INF/services/com.sun.jdi.connect.Connector" >> $@
 -	$(ECHO) "META-INF/services/com.sun.jdi.connect.spi.TransportService" >> $@
 -	$(ECHO) "META-INF/services/com.sun.mirror.apt.AnnotationProcessorFactory" >> $@
--	$(ECHO) "META-INF/services/com.sun.tools.xjc.Plugin" >> $@
+-	$(ECHO) "META-INF/services/com.sun.tools.internal.xjc.Plugin" >> $@
  	$(ECHO) "com/sun/tools/" >> $@
  	$(ECHO) "sun/jvmstat/" >> $@
  	$(ECHO) "sun/rmi/rmic/" >> $@

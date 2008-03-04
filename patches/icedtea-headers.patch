@@ -11,7 +11,7 @@
  
 --- openjdkold/jdk/make/tools/freetypecheck/Makefile	2008-01-04 18:20:30.000000000 -0500
 +++ openjdk/jdk/make/tools/freetypecheck/Makefile	2008-02-26 11:21:34.000000000 -0500
-@@ -54,7 +54,7 @@
+@@ -61,7 +61,7 @@
    ifeq ($(PLATFORM), solaris)
      FT_OPTIONS += -R $(FT_LIB) -lfreetype
    else #linux
@@ -22,7 +22,7 @@
  
 --- openjdkold/jdk/make/common/Defs.gmk	2008-01-04 18:20:29.000000000 -0500
 +++ openjdk/jdk/make/common/Defs.gmk	2008-02-26 11:21:49.000000000 -0500
-@@ -225,7 +225,7 @@
+@@ -237,7 +237,7 @@
    ifeq ($(PLATFORM), windows)
      FREETYPE_LIB = $(FREETYPE_LIB_PATH)/freetype.lib
    else

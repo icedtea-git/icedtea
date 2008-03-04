@@ -57,7 +57,7 @@ diff -ru openjdk.orig/hotspot/build/linux/makefiles/saproc.make openjdk/hotspot/
 diff -ru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
 --- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2007-11-08 11:36:15.000000000 +0000
-@@ -171,6 +171,12 @@
+@@ -174,6 +174,12 @@
  #  else
  static char cpu_arch[] = "sparc";
  #  endif
@@ -70,7 +70,7 @@ diff -ru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/o
  #else
  #error Add appropriate cpu_arch setting
  #endif
-@@ -2372,7 +2378,8 @@
+@@ -2370,7 +2376,8 @@
      // format has been changed), we'll use the largest page size supported by
      // the processor.
  
@@ -83,7 +83,7 @@ diff -ru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/o
 diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
 --- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2007-11-08 11:36:15.000000000 +0000
-@@ -147,7 +147,8 @@
+@@ -146,7 +146,8 @@
  #define CPU      IA32_ONLY("x86")                \
                   IA64_ONLY("ia64")               \
                   AMD64_ONLY("amd64")             \
@@ -96,7 +96,7 @@ diff -ru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspo
 diff -ru openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp openjdk/hotspot/src/share/vm/utilities/macros.hpp
 --- openjdk.orig/hotspot/src/share/vm/utilities/macros.hpp	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/utilities/macros.hpp	2007-11-08 11:36:15.000000000 +0000
-@@ -176,6 +176,14 @@
+@@ -156,6 +156,14 @@
  #define NOT_SPARC(code) code
  #endif
  
@@ -194,7 +194,7 @@ diff -r 37a05a11f281 make/common/shared/Compiler-gcc.gmk
 diff -ru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/common/shared/Platform.gmk
 --- openjdk.orig/jdk/make/common/shared/Platform.gmk	2007-11-08 11:34:54.000000000 +0000
 +++ openjdk/jdk/make/common/shared/Platform.gmk	2007-11-08 11:36:15.000000000 +0000
-@@ -223,9 +223,9 @@
+@@ -225,9 +225,9 @@
        ARCH=sparcv9
      endif
    else

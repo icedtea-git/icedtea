@@ -1,7 +1,7 @@
 diff -ru openjdk/hotspot/src/share/vm/runtime/icache.cpp openjdk/hotspot/src/share/vm/runtime/icache.cpp
 --- openjdk/hotspot/src/share/vm/runtime/icache.cpp	2007-10-30 08:46:35.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/runtime/icache.cpp	2008-01-21 15:18:48.000000000 +0000
-@@ -78,6 +78,7 @@
+@@ -81,6 +81,7 @@
  }
  
  void AbstractICache::invalidate_range(address start, int nbytes) {
@@ -9,7 +9,7 @@ diff -ru openjdk/hotspot/src/share/vm/runtime/icache.cpp openjdk/hotspot/src/sha
    static bool firstTime = true;
    if (firstTime) {
      guarantee(start == CAST_FROM_FN_PTR(address, _flush_icache_stub),
-@@ -97,6 +98,7 @@
+@@ -100,6 +101,7 @@
    }
    call_flush_stub(start, round_to(nbytes, ICache::line_size) >>
                           ICache::log2_line_size);
@@ -20,7 +20,7 @@ diff -ru openjdk/hotspot/src/share/vm/runtime/icache.cpp openjdk/hotspot/src/sha
 diff -ru openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp
 --- openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp	2007-10-30 08:46:35.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp	2008-01-24 13:26:36.000000000 +0000
-@@ -126,9 +126,17 @@
+@@ -129,9 +129,17 @@
    // Fill block with bad_handle values
    void zap();
  
@@ -41,7 +41,7 @@ diff -ru openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp openjdk/hotspot/src
 diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/share/vm/utilities/vmError.cpp
 --- openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-01-24 13:17:27.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-01-24 13:21:20.000000000 +0000
-@@ -24,6 +24,11 @@
+@@ -27,6 +27,11 @@
  
  # include "incls/_precompiled.incl"
  # include "incls/_vmError.cpp.incl"
@@ -53,7 +53,7 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
  
  // List of environment variables that should be reported in error log file.
  const char *env_list[] = {
-@@ -392,6 +397,7 @@
+@@ -395,6 +400,7 @@
         st->cr();
       }
  
@@ -61,7 +61,7 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
    STEP(110, "(printing stack bounds)" )
  
       if (_verbose) {
-@@ -449,11 +455,16 @@
+@@ -452,11 +453,16 @@
            st->cr();
         }
       }
@@ -78,7 +78,7 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
         if (jt->has_last_Java_frame()) {
           st->print_cr("Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)");
           for(StackFrameStream sfs(jt); !sfs.is_done(); sfs.next()) {
-@@ -461,6 +472,7 @@
+@@ -464,6 +475,7 @@
             st->cr();
           }
         }
