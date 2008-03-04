@@ -243,6 +243,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ports.patch \
 	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-timerqueue.patch \
+	patches/icedtea-lesstif-64.patch \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \

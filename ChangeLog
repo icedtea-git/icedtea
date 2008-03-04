@@ -1,3 +1,9 @@
+2008-03-04  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-lesstif-64.patch: Reverted.
+	* Makefile.am: Added above patch.
+	* Makefile.in: Regenerated.
+
 2008-03-04  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-ports.patch: Moved HotSpot 7 specific hunk to...
