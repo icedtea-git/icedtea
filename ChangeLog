@@ -1,3 +1,24 @@
+2008-03-03  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Updated to b06.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-ant.patch: Updated line numbers for b06.
+	* patches/icedtea-bytebuffer-compact.patch: Likewise.
+	* patches/icedtea-copy-plugs.patch: Likewise.
+	* patches/icedtea-core-build.patch: Likewise.
+	* patches/icedtea-gcc-4.3.patch: Likewise.
+	* patches/icedtea-headers.patch: Likewise.
+	* patches/icedtea-lib64.patch: Likewise.
+	* patches/icedtea-libraries.patch: Likewise.
+	* patches/icedtea-ports.patch: Likewise.
+	* patches/icedtea-sunsrc.patch: Likewise.
+	* patches/icedtea-tools.patch: Likewise.
+	* patches/icedtea-use-system-tzdata.patch: Likewise.
+	* patches/icedtea-zero.patch: Likewise.
+	* patches/icedtea-graphics.patch: Removed awt patches since new awt code 
+	is included in b06.
+	* rt/java/awt/*: Removed files since they are newly opened in b06.
+
 2008-02-28  Joshua Sumali  <jsumali@redhat.com>
 
 	* Makefile.am:

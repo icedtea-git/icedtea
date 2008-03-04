@@ -116,7 +116,7 @@ diff -ru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist
  ifeq ($(PLATFORM), windows)
  #  Windows     vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  Windows
  
-@@ -119,8 +149,7 @@
+@@ -122,8 +152,7 @@
  	$(LIB_LOCATION)/$(SERVER_LOCATION)/$(JVMMAP_NAME) \
  	$(LIB_LOCATION)/$(SERVER_LOCATION)/$(JVMPDB_NAME)
  
@@ -126,7 +126,7 @@ diff -ru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist
    IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(JVMMAP_NAME) \
                   $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(JVMPDB_NAME)
  endif
-@@ -151,17 +180,25 @@
+@@ -154,17 +183,25 @@
  #  NOT Windows vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  NOT Windows
  
  IMPORT_LIST += \
@@ -156,7 +156,7 @@ diff -ru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist
  ifeq ($(PLATFORM), solaris)
  #  solaris   vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  solaris
  
-@@ -195,11 +232,25 @@
+@@ -198,11 +235,25 @@
  $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(JVM_NAME): $(HOTSPOT_CLIENT_PATH)/$(JVM_NAME)
  	$(install-import-file)
  
@@ -184,7 +184,7 @@ diff -ru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist
  	@$(prep-target)
  	$(LN) -s ../$(LIBJSIG_NAME) $@
  
-@@ -224,6 +275,9 @@
+@@ -227,6 +278,9 @@
  $(LIB_LOCATION)/$(CLIENT_LOCATION)/Xusage.txt : $(HOTSPOT_CLIENT_PATH)/Xusage.txt
  	$(install-import-file)
  

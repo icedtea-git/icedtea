@@ -42,7 +42,7 @@
          return this;
      }
  
-@@ -367,7 +367,7 @@
+@@ -368,7 +368,7 @@
       */
      public final Buffer rewind() {
          position = 0;
@@ -51,7 +51,7 @@
          return this;
      }
  
-@@ -548,4 +548,8 @@
+@@ -547,4 +547,8 @@
              throw new IndexOutOfBoundsException();
      }
  
