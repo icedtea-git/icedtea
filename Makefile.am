@@ -194,7 +194,20 @@ else
   GCC_PATCH = patches/icedtea-gcc-4.3.patch
 endif
 
+# If CORE_BUILD is set then we are building zero and need
+# to patch up to OpenJDK 7 HotSpot for the C++ interpreter.
+if CORE_BUILD
+  HOTSPOT_7_PATCHES = \
+	patches/icedtea-hotspot-6b06-7b24.patch \
+	patches/icedtea-hotspot7-build-fixes.patch \
+	patches/icedtea-bytecodeInterpreter.patch \
+	patches/icedtea-bytecodeInterpreterWithChecks.patch
+else
+  HOTSPOT_7_PATCHES = 
+endif
+
 ICEDTEA_PATCHES = \
+	$(HOTSPOT_7_PATCHES) \
 	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
