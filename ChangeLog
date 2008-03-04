@@ -1,3 +1,7 @@
+2008-03-04  Joshua Sumali  <jsumali@redhat.com>
+
+	* patches/icedtea-use-system-tzdata.patch: Add missing hunk.
+
 2008-03-04  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-hotspot-6b06-7b24.patch: New file.
