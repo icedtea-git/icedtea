@@ -1,3 +1,12 @@
+2008-03-03  Lillian Angel  <langel@redhat.com>
+
+	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
+	* generated/sun/awt/X11/generator/sizer.32.c: Likewise.
+	* patches/icedtea-lesstif-64.patch: Removed.
+	* Makefile.am: Removed above patch.
+	* Makefile.in: Regenerated.
+	* rt/java/io/PushbackReader.java: New file.
+
 2008-03-03  Joshua Sumali  <jsumali@redhat.com>
 
 	* generated/sun/awt/X11/generator/sizer.32: Accidentally committed this
