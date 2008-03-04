@@ -1,3 +1,7 @@
+2008-03-04  Lillian Angel  <langel@redhat.com>
+
+	* rt/com/sun/image/codec/jpeg/*: Removed unneeded plugs.
+
 2008-03-04  Matthias Klose  <doko@ubuntu.com>
 
 	* configure.ac: Check for xulrunner-1.9.
