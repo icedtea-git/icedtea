@@ -243,7 +243,7 @@ AC_SUBST(ALSA_LIBS)
 
 dnl Check for plugin support headers and libraries.
 if test "$ENABLE_PLUGIN" = "yes"; then
-PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul-unstable, [MOZILLA_FOUND=yes], \
+PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul, [MOZILLA_FOUND=yes], \
   [MOZILLA_FOUND=no])
 if test "x${MOZILLA_FOUND}" = xno
 then
