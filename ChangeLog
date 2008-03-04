@@ -1,3 +1,10 @@
+2008-03-04  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-ports.patch: Moved HotSpot 7 specific hunk to...
+	* patches/icedtea-hotspot7-ports.patch: New file.
+	* Makefile.am: Added the above.
+	* Makefile.in: Regenerated.
+
 2008-03-04  Joshua Sumali  <jsumali@redhat.com>
 
 	* patches/icedtea-use-system-tzdata.patch: Add missing hunk.
