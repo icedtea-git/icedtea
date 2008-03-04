@@ -1,3 +1,9 @@
+2008-03-04  Lillian Angel  <langel@redhat.com>
+
+	* generated/*: Updated generated files.
+	* Makefile.am: Fixed distclean target.
+	* Makefile.in: Regenerated.
+
 2008-03-03  Lillian Angel  <langel@redhat.com>
 
 	* generated/sun/awt/X11/generator/sizer.32: Regenerated.

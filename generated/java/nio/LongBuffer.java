@@ -307,13 +307,11 @@ public abstract class LongBuffer
 
 
 
-
     /**
      * Allocates a new long buffer.
      *
      * <p> The new buffer's position will be zero, its limit will be its
-     * capacity, its mark will be undefined, and each of its elements will be
-     * initialized to zero.  It will have a {@link #array
+     * capacity, and its mark will be undefined.  It will have a {@link #array
      * </code>backing array<code>}, and its {@link #arrayOffset </code>array
      * offset<code>} will be zero.
      *
