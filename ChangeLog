@@ -1,5 +1,11 @@
 2008-03-03  Joshua Sumali  <jsumali@redhat.com>
 
+	* generated/sun/awt/X11/generator/sizer.32: Accidentally committed this
+	in revision 633. Reverting back to rev 632.
+	* generated/sun/awt/X11/generator/sizer.32.c: Likewise.
+
+2008-03-03  Joshua Sumali  <jsumali@redhat.com>
+
 	* Makefile.am: Updated to b06.
 	* Makefile.in: Regenerated.
 	* patches/icedtea-ant.patch: Updated line numbers for b06.
