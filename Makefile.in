@@ -331,6 +331,7 @@ OPENJDK_URL = http://download.java.net/openjdk/jdk6/promoted/$(OPENJDK_VERSION)/
 @CORE_BUILD_TRUE@HOTSPOT_7_PATCHES = \
 @CORE_BUILD_TRUE@	patches/icedtea-hotspot-6b06-7b24.patch \
 @CORE_BUILD_TRUE@	patches/icedtea-hotspot7-build-fixes.patch \
+@CORE_BUILD_TRUE@	patches/icedtea-hotspot7-ports.patch \
 @CORE_BUILD_TRUE@	patches/icedtea-bytecodeInterpreter.patch \
 @CORE_BUILD_TRUE@	patches/icedtea-bytecodeInterpreterWithChecks.patch
 

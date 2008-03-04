@@ -200,6 +200,7 @@ if CORE_BUILD
   HOTSPOT_7_PATCHES = \
 	patches/icedtea-hotspot-6b06-7b24.patch \
 	patches/icedtea-hotspot7-build-fixes.patch \
+	patches/icedtea-hotspot7-ports.patch \
 	patches/icedtea-bytecodeInterpreter.patch \
 	patches/icedtea-bytecodeInterpreterWithChecks.patch
 else
