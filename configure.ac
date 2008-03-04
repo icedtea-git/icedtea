@@ -261,7 +261,7 @@ then
 else
   if test "x${enable_plugin}" = "xyes"
   then
-    PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul, [MOZILLA_FOUND=yes], \
+    PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul-unstable, [MOZILLA_FOUND=yes], \
       [MOZILLA_FOUND=no])
     if test "x${MOZILLA_FOUND}" = xno
     then
