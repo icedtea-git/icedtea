@@ -1,5 +1,15 @@
 2008-03-04  Lillian Angel  <langel@redhat.com>
 
+	* rt/com/sun/script: Removed.
+	* rt/java/io: Removed.
+	* rt/javax/script: Removed.
+	* rt/sun/: Removed.
+	* Makefile.am: Updated rt.jar.
+	* Makefile.in: Regenerated.
+	* .hgignore: Updated with new files copied from openjdk srcs.
+
+2008-03-04  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Removed gnu from tools.jar.
 	* Makefile.in: Regenerated.
 
