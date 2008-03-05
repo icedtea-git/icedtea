@@ -6,11 +6,25 @@
 #include <X11/Xatom.h>
 #include <stdio.h>
 
-#include <Xm/MwmUtil.h>
 #include <X11/extensions/Xdbe.h>
 #include "awt_p.h"
 #include "color.h"
 #include "colordata.h"
+
+/* the struct below was copied from MwmUtil.h to workaround a lesstif bug:
+   http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6586752 */
+
+typedef struct PROPMOTIFWMHINTS {
+/* 32-bit property items are stored as long on the client (whether
+ * that means 32 bits or 64).  XChangeProperty handles the conversion
+ * to the actual 32-bit quantities sent to the server.
+ */
+    unsigned long   flags;
+    unsigned long   functions;
+    unsigned long   decorations;
+    long            inputMode;
+    unsigned long   status;
+} PropMwmHints;
 
 
 int main(){
