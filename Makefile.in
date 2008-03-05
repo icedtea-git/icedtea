@@ -1124,11 +1124,11 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	if ! test -f stamps/icedtea-ecj.stamp ; \
         then \
     	  $(JAR) cf $@ -C lib/hotspot-tools com -C lib/hotspot-tools sun \
-	    -C lib/hotspot-tools org -C lib/hotspot-tools gnu -C lib/hotspot-tools java \
+	    -C lib/hotspot-tools org -C lib/hotspot-tools java \
 	    -C lib/hotspot-tools javax ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/hotspot-tools com -C lib/hotspot-tools sun \
-            -C lib/hotspot-tools org -C lib/hotspot-tools gnu -C lib/hotspot-tools java \
+            -C lib/hotspot-tools org -C lib/hotspot-tools java \
             -C lib/hotspot-tools javax ; \
 	fi
 	if test -d bootstrap/ecj ; \
@@ -1170,10 +1170,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
 	if ! test -f stamps/icedtea-ecj.stamp ; \
         then \
-          $(JAR) cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
+          $(JAR) cf $@ -C lib/rt com -C lib/rt java \
           -C lib/rt javax -C lib/rt sun -C lib/rt org -C lib/rt net; \
 	else \
-          $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt gnu -C lib/rt java \
+          $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
           -C lib/rt javax -C lib/rt sun -C lib/rt org -C lib/rt net; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
