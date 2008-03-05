@@ -213,7 +213,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch \
-	patches/icedtea-paths.patch \
 	patches/icedtea-debuginfo.patch \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-license-headers.patch \
