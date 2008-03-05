@@ -615,6 +615,7 @@ ICEDTEA_COPY_DIRS = \
 	com/sun/jdi/request \
 	com/sun/jmx/snmp/agent \
 	com/sun/tools/jdi \
+	java/io \
 	java/util \
 	java/rmi \
 	javax/net/ssl
@@ -758,10 +759,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -f stamps/icedtea-ecj.stamp ; \
         then \
           $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-          -C lib/rt javax -C lib/rt sun -C lib/rt org -C lib/rt net; \
+          -C lib/rt javax -C lib/rt net; \
 	else \
           $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-          -C lib/rt javax -C lib/rt sun -C lib/rt org -C lib/rt net; \
+          -C lib/rt javax -C lib/rt net; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
