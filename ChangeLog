@@ -1,5 +1,9 @@
 2008-03-05  Gary Benson  <gbenson@redhat.com>
 
+	* contrib/templater/README: Updated URL.
+
+2008-03-05  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/ppc/vm/jni_ppc.h: Removed.
 	* ports/hotspot/src/os_cpu/linux_ppc/vm/linux_ppc.s: Likewise.
 	* ports/hotspot/src/os_cpu/linux_ppc/vm/linux_ppc64.s: Likewise.
