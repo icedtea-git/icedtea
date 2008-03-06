@@ -1,3 +1,37 @@
+2008-03-06  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Added new 'extra' targets. These new targets build the
+	sources in the extra/ directory to build about.jar, which is the new
+	sample jnlp application for javaws. 
+	* Makefile.in: Regenerated.
+	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
+	* rt/net/sourceforge/jnlp/resources/Manifest.mf: Fix boot class typo.
+	* rt/net/sourceforge/jnlp/resources/Messages.properties: Improved command
+	line options.
+	* rt/net/sourceforge/jnlp/runtime/Boot.java: Changed command line
+	behaviour. Sample application now only runs if the -about flag is passed.
+	* rt/net/sourceforge/jnlp/runtime/JNLPRuntime.java: Remove call to
+	printStackTrace.
+	* rt/net/sourceforge/jnlp/security/CertsInfoPane.java: Rearranged methods
+	and relaxed visibility in some fields/methods for SingleCertInfoPane
+	class.
+	* rt/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Added
+	single certificate dialog showing.
+	* rt/net/sourceforge/jnlp/tools/KeyTool.java: Moved KeyStore retrieving to
+	new SecurityUtil class.
+	* extra/net/sourceforge/jnlp/about/HTMLPanel.java: New File.
+	* extra/net/sourceforge/jnlp/about/Main.java: Likewise.
+	* extra/net/sourceforge/jnlp/about/resources/about.html: Likewise.
+	* extra/net/sourceforge/jnlp/about/resources/applications.html: Likewise.
+	* extra/net/sourceforge/jnlp/about/resources/jamIcon.jpg: Likewise.
+	* extra/net/sourceforge/jnlp/about/resources/notes.html: Likewise.
+	* rt/net/sourceforge/jnlp/resources/about.jnlp: Likewise.
+	* rt/net/sourceforge/jnlp/security/SecurityUtil.java: Likewise.
+	* rt/net/sourceforge/jnlp/security/SingleCertInfoPane.java: Likewise.
+	* rt/net/sourceforge/jnlp/security/viewer/CertificatePane.java: Likewise.
+	* rt/net/sourceforge/jnlp/security/viewer/CertificateViewer.java:
+	Likewise.
+
 2008-03-05  Gary Benson  <gbenson@redhat.com>
 
 	* contrib/templater/README: Updated URL.

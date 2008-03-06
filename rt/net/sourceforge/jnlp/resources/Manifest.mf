@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 Created-By: jnlp.sourceforge.net
 Specification-Title: netx JNLP client
 Sealed: true
-Main-Class: net.sourceforge.jnlp.netx.jnlp.runtime.Boot13
+Main-Class: net.sourceforge.jnlp.runtime.Boot13
 
