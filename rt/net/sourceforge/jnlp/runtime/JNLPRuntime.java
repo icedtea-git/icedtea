@@ -442,7 +442,6 @@ public class JNLPRuntime {
             resources = ResourceBundle.getBundle("net.sourceforge.jnlp.resources.Messages");
         }
         catch (Exception ex) {
-			ex.printStackTrace();
             throw new IllegalStateException("Missing resource bundle in netx.jar:net/sourceforge/jnlp/resource/Messages.properties");
         }
     }

@@ -700,9 +700,11 @@ all-local: icedtea-against-icedtea
 distclean-local: clean-copy
 	rm -rf stamps
 	rm -f rt-source-files.txt \
-	  hotspot-tools-source-files.txt
+	  hotspot-tools-source-files.txt \
+	  extra-source-files.txt
 	rm -rf bootstrap
 	rm -rf lib
+	rm -rf extra-lib
 	rm -rf openjdk-ecj
 	rm -rf openjdk
 	rm -rf hotspot-tools
@@ -718,7 +720,7 @@ install:
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
 	clean-tools-jar clean-shared-objects \
 	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
-	hotspot hotspot-helper
+	hotspot hotspot-helper clean-extra
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -967,7 +969,8 @@ clean-bootstrap-directory-symlink-ecj:
 # you change it in the icedtea-debug target as well.
 icedtea: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
+	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
+	extra-lib/about.jar
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/
@@ -978,15 +981,18 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	  cp -pPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
-	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	cp rt/net/sourceforge/jnlp/resources/about.jnlp \
+	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	cp rt/net/sourceforge/jnlp/resources/about.jnlp \
+	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 
 icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so
+	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
+	extra-lib/about.jar
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
@@ -999,8 +1005,10 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
 	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib
 	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
@@ -1226,6 +1234,42 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
 	  cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar bootstrap/ecj/jre/lib/rt.jar; \
+	fi
+
+# extras -- used to create about.jar for javaws.
+extra-source-files.txt:
+	find extra -name '*.java' | sort > $@
+
+stamps/extra-class-files.stamp: extra-source-files.txt \
+	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
+	mkdir -p extra-lib
+	if ! test -f stamps/icedtea-ecj.stamp ; \
+	  then \
+	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib -bootclasspath '' -source 1.6 \
+	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+		@extra-source-files.txt ; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
+	    -bootclasspath '' -source 1.6 \
+	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+		@extra-source-files.txt ; \
+	fi
+	cp -r extra/net/sourceforge/jnlp/about/resources \
+	  extra-lib/net/sourceforge/jnlp/about
+	mkdir -p stamps
+	touch $@
+
+clean-extra:
+	rm -rf extra-lib
+	rm -f stamps/extra-class-files.stamp
+	rm -f extra-source-files.txt
+
+extra-lib/about.jar: stamps/extra-class-files.stamp
+	if ! test -f stamps/icedtea-ecj.stamp ; \
+	  then \
+	  $(JAR) cf $@ -C extra-lib net ; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net ; \
 	fi
 
 # gcjwebplugin.so.

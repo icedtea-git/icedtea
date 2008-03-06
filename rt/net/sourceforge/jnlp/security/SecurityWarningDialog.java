@@ -44,10 +44,12 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.plaf.OptionPaneUI;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.security.cert.CertPath;
+import java.security.cert.X509Certificate;
 
 /**
  * Provides methods for showing security warning dialogs
@@ -62,6 +64,7 @@ public class SecurityWarningDialog extends JOptionPane {
 		CERT_WARNING,
 		MORE_INFO,
 		CERT_INFO,
+		SINGLE_CERT_INFO,
 		ACCESS_WARNING,
 		APPLET_WARNING
 	}
@@ -89,6 +92,8 @@ public class SecurityWarningDialog extends JOptionPane {
 
 	private JarSigner jarSigner;
 	
+	private X509Certificate cert;
+	
 	/** Whether or not this object has been fully initialized */
 	private boolean initialized = false;
 
@@ -108,6 +113,17 @@ public class SecurityWarningDialog extends JOptionPane {
 			this.accessType = accessType;
 			this.file = file;
 			this.jarSigner = jarSigner;
+			initialized = true;
+			updateUI();
+	}
+	
+	//for displaying a single certificate
+	public SecurityWarningDialog(DialogType dialogType, X509Certificate c) {
+			this.dialogType = dialogType;
+			this.accessType = null;
+			this.file = null;
+			this.jarSigner = null;
+			this.cert = c;
 			initialized = true;
 			updateUI();
 	}
@@ -224,6 +240,24 @@ public class SecurityWarningDialog extends JOptionPane {
 		dialog.dispose();
 	}
 
+	/**
+	 * Displays a single certificate's information.
+	 * 
+	 * @param c
+	 * @param optionPane
+	 */
+	public static void showSingleCertInfoDialog(X509Certificate c, 
+			JOptionPane parent) {
+
+		SecurityWarningDialog swd = new SecurityWarningDialog(DialogType.SINGLE_CERT_INFO, c);
+			JDialog dialog = swd.createDialog();
+			dialog.setLocationRelativeTo(parent);
+			swd.selectInitialValue();
+			dialog.setResizable(true);
+			dialog.setVisible(true);
+			dialog.dispose();
+	}
+	
 	public static int showAppletWarning() {
         	SecurityWarningDialog swd = new SecurityWarningDialog(DialogType.APPLET_WARNING,
             		null, null, null);
@@ -320,6 +354,10 @@ public class SecurityWarningDialog extends JOptionPane {
 	public JarSigner getJarSigner() {
 		return jarSigner;
 	}
+	
+	public X509Certificate getCert() {
+		return cert;
+	}
 
 	/**
 	 * Updates the UI using SecurityWarningOptionPane, instead of the
@@ -333,6 +371,8 @@ public class SecurityWarningDialog extends JOptionPane {
 			setUI((OptionPaneUI) new MoreInfoPane(this));
 		else if (dialogType == DialogType.CERT_INFO)
 			setUI((OptionPaneUI) new CertsInfoPane(this));
+		else if (dialogType == DialogType.SINGLE_CERT_INFO)
+			setUI((OptionPaneUI) new SingleCertInfoPane(this));
 		else if (dialogType == DialogType.ACCESS_WARNING)
 			setUI((OptionPaneUI) new AccessWarningPane(this));
 		else if (dialogType == DialogType.APPLET_WARNING)

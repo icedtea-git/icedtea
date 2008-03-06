@@ -25,20 +25,30 @@
 
 package net.sourceforge.jnlp.tools;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import net.sourceforge.jnlp.security.SecurityUtil;
+
+import sun.misc.BASE64Encoder;
+import sun.security.provider.X509Factory;
 
 /**
  * This tool manages the user's trusted certificates
@@ -54,19 +64,20 @@ public class KeyTool {
 	private KeyStore cacerts = null;
 	// System ca-bundle.crt
 	private KeyStore systemcerts = null;
-	private String homeDir = null;
-	private final String certPath = "/.netx/security/";
-	private final String certFile = "trusted.certs";
-	private String fullCertPath = null;
-	//private CertificateFactory cf = null;
+	
+	private String fullCertPath = SecurityUtil.getTrustedCertsFilename();
 
-	private FileInputStream fis = null;
 	private FileOutputStream fos = null;
 
 	/**
 	 * Whether we trust the system cacerts file.
 	 */
 	private boolean trustcacerts = true;
+	
+	/**
+	 * Whether we print certificates in rfc, base64 encoding.
+	 */
+	private boolean rfc = true;
 	
 	private final char[] password = "changeit".toCharArray();
 
@@ -78,13 +89,36 @@ public class KeyTool {
 	public KeyTool() throws Exception {
 
 		// Initialize all the keystores.
-		usercerts = getUserKeyStore();
-		cacerts = getCacertsKeyStore(); 
-		systemcerts = getSystemCertStore();
+		usercerts = SecurityUtil.getUserKeyStore();
+		cacerts = SecurityUtil.getCacertsKeyStore(); 
+		systemcerts = SecurityUtil.getSystemCertStore();
 	}
 
 	/**
-	 * Add's a trusted certificate to the user's keystore.
+	 * Adds a trusted certificate to the user's keystore.
+	 * @return true if the add was successful, false otherwise.
+	 */
+	public boolean importCert(File file) throws Exception {
+	
+		BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+		CertificateFactory cf = CertificateFactory.getInstance("X509");
+		X509Certificate cert = null;
+		
+		if (bis.available() >= 1) {
+			try {
+			cert = (X509Certificate)cf.generateCertificate(bis);
+			} catch (ClassCastException cce) {
+				throw new Exception("Input file is not an X509 Certificate");
+			} catch (CertificateException ce) {
+				throw new Exception("Input file is not an X509 Certificate");
+			}
+		}
+	
+		return importCert((Certificate)cert);
+	}
+	
+	/**
+	 * Adds a trusted certificate to the user's keystore.
 	 * @return true if the add was successful, false otherwise.
 	 */
 	public boolean importCert(Certificate cert) throws Exception {
@@ -109,41 +143,6 @@ public class KeyTool {
 		Random r = new Random();
 		String token = Long.toString(Math.abs(r.nextLong()), 36);
 		return "trustedCert-" + token;
-	}
-	
-	/**
-	 * Checks the user's home directory to see if the trusted.certs file exists.
-	 * If it does not exist, it tries to create an empty keystore.
-	 * @return true if the trusted.certs file exists or a new trusted.certs
-	 * was created successfully, otherwise false.
-	 */
-	private boolean checkFiles() throws Exception {
-
-		File certFile = new File(fullCertPath);
-
-		if (!certFile.isFile()) { //file does not exist
-			File certDir = new File(homeDir+certPath);
-			boolean madeDir = false;
-			if (!certDir.isDirectory()) { //directory does not exist
-				madeDir = (new File(homeDir+certPath)).mkdirs();
-			}
-		
-			// If we successfully made the directory,
-            // or the directory already exists (but the file does 
-            // not), then create the keystore.
-			if (madeDir || certDir.isDirectory()) {
-				usercerts = KeyStore.getInstance("JKS");
-				usercerts.load(null, password);
-				fos = new FileOutputStream(certFile);
-				usercerts.store(fos,	password);
-				fos.close();
-				return true;
-			} else {
-				return false;
-			}
-		} else { //cert file already exists
-			return true;
-		}
 	}
 	
 	/**
@@ -283,81 +282,6 @@ public class KeyTool {
         return cert.getSubjectDN().equals(cert.getIssuerDN());
     }
 
-	/**
-	 * Returns the keystore associated with the users
-	 * trusted.certs file, or null otherwise.
-	 */
-	private KeyStore getUserKeyStore() throws Exception {
-
-		homeDir = System.getProperty("user.home");
-		fullCertPath = homeDir + certPath + certFile;
-		KeyStore ks = KeyStore.getInstance("JKS");
-
-		if (ks != null && checkFiles()) {
-			fis = new FileInputStream(fullCertPath);
-			ks.load(fis, password);
-			if (fis != null)
-				fis.close();
-		}
-		return ks;
-	}
-
-    /**
-     * Returns the keystore associated with the JDK cacerts file, 
-	 * or null otherwise.
-     */
-    private KeyStore getCacertsKeyStore() throws Exception {
-
-		KeyStore caks = null;
-		FileInputStream fis = null;
-
-		try {
-        	String sep = File.separator;
-        	File file = new File(System.getProperty("java.home") + sep
-							+ "lib" + sep + "security" + sep
-							+ "cacerts");
-        	caks = null;
-            fis = new FileInputStream(file);
-            caks = KeyStore.getInstance("JKS");
-            caks.load(fis, null);
-		} catch (Exception e) {
-			caks = null;
-		} finally {
-			if (fis != null)
-				fis.close();
-		}
-
-		return caks;
-    }
-
-	/**
-	 * Returns the keystore associated with the system certs file,
-	 * or null otherwise.
-	 */
-	private KeyStore getSystemCertStore() throws Exception {
-
-		KeyStore caks = null;
-		FileInputStream fis = null;
-
-		try {
-			String file = System.getProperty("javax.net.ssl.trustStore");
-			String type = System.getProperty("javax.net.ssl.trustStoreType");
-			String provider = "SUN";
-			char[] password = System.getProperty(
-				"javax.net.ssl.trustStorePassword").toCharArray();
-        	caks = KeyStore.getInstance(type);
-        	fis = new FileInputStream(file);
-        	caks.load(fis, password);
-		} catch (Exception e) {
-			caks = null;
-		} finally {
-			if (fis != null)
-				fis.close();
-		}
-		
-		return caks;
-	}
-
     /**
      * Checks if a given certificate is part of the user's cacerts
      * keystore.
@@ -428,7 +352,7 @@ public class KeyTool {
             keystorecerts2Hashtable(usercerts, certs);
         }
         if (trustcacerts) { //if we're trusting the cacerts
-        	KeyStore caks = getCacertsKeyStore();
+        	KeyStore caks = SecurityUtil.getCacertsKeyStore();
             if (caks!=null && caks.size()>0) {
                 if (certs == null) {
                     certs = new Hashtable<Principal, Vector<Certificate>>(11);
@@ -534,6 +458,20 @@ public class KeyTool {
         return false;
     }
 
+    public static void dumpCert(Certificate cert, PrintStream out)
+    	throws IOException, CertificateException {
+    	
+    	boolean printRfc = true;
+        if (printRfc) {
+            BASE64Encoder encoder = new BASE64Encoder();
+            out.println(X509Factory.BEGIN_CERT);
+            encoder.encodeBuffer(cert.getEncoded(), out);
+            out.println(X509Factory.END_CERT);
+        } else {
+            out.write(cert.getEncoded()); // binary
+        }
+    }
+    
 	public static void main(String[] args) throws Exception {
 		KeyTool kt = new KeyTool();
 		kt.doPrintEntries(System.out);
