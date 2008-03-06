@@ -1,5 +1,10 @@
 2008-03-06  Joshua Sumali  <jsumali@redhat.com>
 
+	* Makefile.am: Added extra to EXTRA_DIST.
+	* Makefile.in: Regenerated.
+
+2008-03-06  Joshua Sumali  <jsumali@redhat.com>
+
 	* Makefile.am: Added new 'extra' targets. These new targets build the
 	sources in the extra/ directory to build about.jar, which is the new
 	sample jnlp application for javaws. 

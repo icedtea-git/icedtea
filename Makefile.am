@@ -40,7 +40,7 @@ install:
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
-	patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch
+	patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch extra
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
