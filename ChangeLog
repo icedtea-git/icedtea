@@ -1,3 +1,8 @@
+2008-03-06  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp
+	(ThreadStackSize): Increased by 512kb to cope with 64kb pages.
+
 2008-03-04  Matthias Klose  <doko@ubuntu.com>
 
 	* configure.ac: Check for xulrunner-1.9.
