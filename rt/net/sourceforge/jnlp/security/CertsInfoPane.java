@@ -121,7 +121,6 @@ public class CertsInfoPane extends SecurityDialogUI {
 	 * Fills in certsNames, certsData with data from the certificates.
 	 */
 	protected void populateTable() {
-		certs = ((SecurityWarningDialog)optionPane).getJarSigner().getCerts();
 		certNames = new String[certs.get(0).getCertificates().size()];
 		certsData = new ArrayList<String[][]>();
 
@@ -179,6 +178,7 @@ public class CertsInfoPane extends SecurityDialogUI {
 	 * Constructs the GUI components of this UI
 	 */
 	protected void installComponents() {
+		certs = ((SecurityWarningDialog)optionPane).getJarSigner().getCerts();
 		buildTree();
 		populateTable();
 		/**

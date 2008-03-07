@@ -1,3 +1,7 @@
+2008-03-07  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/security/CertsInfoPane.java: Fix null	pointer.
+
 2008-03-06  Joshua Sumali  <jsumali@redhat.com>
 
 	* Makefile.am: Added extra to EXTRA_DIST.
