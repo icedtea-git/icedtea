@@ -1,3 +1,9 @@
+2008-03-10  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	(current_stack_region): Rewritten to cope with guard pages and ia64.
+	(default_stack_size, default_guard_size): Comment fixes.
+
 2008-03-07  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/security/CertsInfoPane.java: Fix null	pointer.
