@@ -5384,7 +5384,28 @@ fi
 
 
 
-if test "${with_icedtea}" == true || test "${with_openjdk}" == true
+if test "${with_openjdk}" == true
+then
+  JAVA=$SYSTEM_OPENJDK_DIR/bin/java
+
+  JAVAC=${SYSTEM_OPENJDK_DIR}/bin/javac
+
+  JAVAH=${SYSTEM_OPENJDK_DIR}/bin/javah
+
+  JAR=${SYSTEM_OPENJDK_DIR}/bin/jar
+
+  RMIC=${SYSTEM_OPENJDK_DIR}/bin/rmic
+
+   if test x != x; then
+  GCC_OLD_TRUE=
+  GCC_OLD_FALSE='#'
+else
+  GCC_OLD_TRUE='#'
+  GCC_OLD_FALSE=
+fi
+
+else
+if test "${with_icedtea}" == true
 then
   JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
 
@@ -7242,6 +7263,7 @@ echo "$as_me: error: \"A xerces2 jar was not found.\"" >&2;}
 
   ac_config_files="$ac_config_files javap"
 
+fi
 fi
 
   { echo "$as_me:$LINENO: checking openjdk source zip" >&5
@@ -10644,6 +10666,13 @@ if test -z "${WITH_OPENJDK_TRUE}" && test -z "${WITH_OPENJDK_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"WITH_OPENJDK\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"WITH_OPENJDK\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${GCC_OLD_TRUE}" && test -z "${GCC_OLD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"GCC_OLD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"GCC_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi

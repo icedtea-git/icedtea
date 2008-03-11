@@ -132,7 +132,21 @@ AC_ARG_WITH([openjdk],
 AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" == true)
 
 SET_ARCH_DIRS
-if test "${with_icedtea}" == true || test "${with_openjdk}" == true
+if test "${with_openjdk}" == true
+then
+  JAVA=$SYSTEM_OPENJDK_DIR/bin/java
+  AC_SUBST(JAVA)
+  JAVAC=${SYSTEM_OPENJDK_DIR}/bin/javac
+  AC_SUBST(JAVAC)
+  JAVAH=${SYSTEM_OPENJDK_DIR}/bin/javah
+  AC_SUBST(JAVAH)
+  JAR=${SYSTEM_OPENJDK_DIR}/bin/jar
+  AC_SUBST(JAR)
+  RMIC=${SYSTEM_OPENJDK_DIR}/bin/rmic
+  AC_SUBST(RMIC)
+  AM_CONDITIONAL(GCC_OLD, test x != x)
+else
+if test "${with_icedtea}" == true
 then
   JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
   AC_SUBST(JAVA)
@@ -158,6 +172,7 @@ else
   FIND_XERCES2_JAR
   AC_CONFIG_FILES([javac], [chmod +x javac])
   AC_CONFIG_FILES([javap], [chmod +x javap])
+fi
 fi
 WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
