@@ -7227,6 +7227,7 @@ else
     XERCES2_JAR=
 
 fi
+fi
 
   if test -z "${XERCES2_JAR}"; then
     { echo "$as_me:$LINENO: checking for xerces2 jar" >&5
@@ -10666,6 +10667,13 @@ if test -z "${WITH_OPENJDK_TRUE}" && test -z "${WITH_OPENJDK_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"WITH_OPENJDK\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"WITH_OPENJDK\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${GCC_OLD_TRUE}" && test -z "${GCC_OLD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"GCC_OLD\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"GCC_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
