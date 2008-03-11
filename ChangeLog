@@ -1,3 +1,10 @@
+2008-03-11  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added check for WITH_OPENJDK.
+	* Makefile.in: Regenerated.
+	* configure: Regenerated.
+	* configure.ac: Added --with-openjdk and --with-openjdk-home options.
+
 2008-03-11  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-gcc-suffix.patch: Update, use GCC_SUFFIX in more

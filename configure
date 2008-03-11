@@ -716,11 +716,14 @@ FASTJAR
 ac_ct_FASTJAR
 GAWK
 SYSTEM_GCJ_DIR
+SYSTEM_OPENJDK_DIR
 SYSTEM_ICEDTEA_DIR
 SYSTEM_ANT_DIR
 ENABLE_PLUGIN
 WITH_ICEDTEA_TRUE
 WITH_ICEDTEA_FALSE
+WITH_OPENJDK_TRUE
+WITH_OPENJDK_FALSE
 BUILD_ARCH_DIR
 INSTALL_ARCH_DIR
 JAVA
@@ -1418,10 +1421,13 @@ Optional Packages:
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-gcj-home         gcj home directory (default is
                           /usr/lib/jvm/java-gcj)
+  --with-openjdk-home     OpenJDK home directory (default is
+                          /usr/lib/jvm/java-openjdk)
   --with-icedtea-home     IcedTea home directory (default is
                           /usr/lib/jvm/java-icedtea)
   --with-ant-home         Ant home directory (default is /usr/share/ant)
   --with-icedtea          build IcedTea with system-installed IcedTea
+  --with-openjdk          build IcedTea with system-installed OpenJDK
   --with-java             specify location of the 1.5 java vm
   --with-ecj              bytecode compilation with ecj
   --with-javac            bytecode compilation with javac
@@ -5243,6 +5249,25 @@ fi
 
 
 
+# Check whether --with-openjdk-home was given.
+if test "${with_openjdk_home+set}" = set; then
+  withval=$with_openjdk_home;
+              if test "x${withval}" == x
+              then
+                SYSTEM_OPENJDK_DIR=/usr/lib/jvm/java-openjdk
+              else
+                SYSTEM_OPENJDK_DIR=${withval}
+              fi
+
+else
+
+              SYSTEM_OPENJDK_DIR=/usr/lib/jvm/java-openjdk
+
+fi
+
+
+
+
 # Check whether --with-icedtea-home was given.
 if test "${with_icedtea_home+set}" = set; then
   withval=$with_icedtea_home;
@@ -5312,6 +5337,32 @@ fi
 else
   WITH_ICEDTEA_TRUE='#'
   WITH_ICEDTEA_FALSE=
+fi
+
+
+
+# Check whether --with-openjdk was given.
+if test "${with_openjdk+set}" = set; then
+  withval=$with_openjdk;
+          if test "x${withval}" != xno
+          then
+            with_openjdk=true
+          else
+            with_openjdk=false
+          fi
+
+else
+
+          with_openjdk=false
+
+fi
+
+ if test "${with_openjdk}" == true; then
+  WITH_OPENJDK_TRUE=
+  WITH_OPENJDK_FALSE='#'
+else
+  WITH_OPENJDK_TRUE='#'
+  WITH_OPENJDK_FALSE=
 fi
 
 
@@ -10589,6 +10640,13 @@ echo "$as_me: error: conditional \"WITH_ICEDTEA\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${WITH_OPENJDK_TRUE}" && test -z "${WITH_OPENJDK_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"WITH_OPENJDK\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"WITH_OPENJDK\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${GCC_OLD_TRUE}" && test -z "${GCC_OLD_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"GCC_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -11360,11 +11418,14 @@ FASTJAR!$FASTJAR$ac_delim
 ac_ct_FASTJAR!$ac_ct_FASTJAR$ac_delim
 GAWK!$GAWK$ac_delim
 SYSTEM_GCJ_DIR!$SYSTEM_GCJ_DIR$ac_delim
+SYSTEM_OPENJDK_DIR!$SYSTEM_OPENJDK_DIR$ac_delim
 SYSTEM_ICEDTEA_DIR!$SYSTEM_ICEDTEA_DIR$ac_delim
 SYSTEM_ANT_DIR!$SYSTEM_ANT_DIR$ac_delim
 ENABLE_PLUGIN!$ENABLE_PLUGIN$ac_delim
 WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
 WITH_ICEDTEA_FALSE!$WITH_ICEDTEA_FALSE$ac_delim
+WITH_OPENJDK_TRUE!$WITH_OPENJDK_TRUE$ac_delim
+WITH_OPENJDK_FALSE!$WITH_OPENJDK_FALSE$ac_delim
 BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
 INSTALL_ARCH_DIR!$INSTALL_ARCH_DIR$ac_delim
 JAVA!$JAVA$ac_delim
@@ -11431,7 +11492,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 70; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 73; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
