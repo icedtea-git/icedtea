@@ -132,7 +132,7 @@ AC_ARG_WITH([openjdk],
 AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" == true)
 
 SET_ARCH_DIRS
-if test "${with_icedtea}" == true
+if test "${with_icedtea}" == true || test "${with_openjdk}" == true
 then
   JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
   AC_SUBST(JAVA)
