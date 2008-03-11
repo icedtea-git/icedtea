@@ -5,6 +5,7 @@ syntax: regexp
 autom4te.cache
 openjdk
 bootstrap
+debian
 lib
 tools
 stamps
