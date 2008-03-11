@@ -43,6 +43,23 @@ AC_ARG_WITH([gcj-home],
             ])
 AC_SUBST(SYSTEM_GCJ_DIR)
 
+AC_ARG_WITH([openjdk-home],
+            [AS_HELP_STRING([--with-openjdk-home],
+                            [OpenJDK home directory \
+                             (default is /usr/lib/jvm/java-openjdk)])],
+            [
+              if test "x${withval}" == x
+              then
+                SYSTEM_OPENJDK_DIR=/usr/lib/jvm/java-openjdk
+              else
+                SYSTEM_OPENJDK_DIR=${withval}
+              fi
+            ],
+            [
+              SYSTEM_OPENJDK_DIR=/usr/lib/jvm/java-openjdk
+            ])
+AC_SUBST(SYSTEM_OPENJDK_DIR)
+
 AC_ARG_WITH([icedtea-home],
             [AS_HELP_STRING([--with-icedtea-home],
                             [IcedTea home directory \
@@ -97,6 +114,22 @@ AC_ARG_WITH([icedtea],
           with_icedtea=false
         ])
 AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" == true)
+
+AC_ARG_WITH([openjdk],
+        [AS_HELP_STRING([--with-openjdk],
+                        [build IcedTea with system-installed OpenJDK])],
+        [
+          if test "x${withval}" != xno
+          then
+            with_openjdk=true
+          else
+            with_openjdk=false
+          fi
+        ],
+        [
+          with_openjdk=false
+        ])
+AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" == true)
 
 SET_ARCH_DIRS
 if test "${with_icedtea}" == true
