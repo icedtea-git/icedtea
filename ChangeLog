@@ -1,5 +1,10 @@
 2008-03-11  Matthias Klose  <doko@ubuntu.com>
 
+	* patches/icedtea-gcc-suffix.patch: Update, use GCC_SUFFIX in more
+	places.
+
+2008-03-11  Matthias Klose  <doko@ubuntu.com>
+
 	* configure.ac: Check for zip and unzip.
 	* configure: Regenerated.
 

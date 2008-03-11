@@ -46,3 +46,27 @@
    endif
    ifneq ("$(findstring sparc,$(ARCH))", "")
      # sparc or sparcv9
+--- openjdk/corba/make/common/shared/Compiler-gcc.gmk~	2008-01-14 14:05:43.738465508 +0100
++++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	2008-01-14 14:19:33.640984398 +0100
+@@ -58,17 +58,17 @@
+ ifeq ($(PLATFORM), linux)
+ 
+   # Settings specific to Linux
+-  CC             = $(COMPILER_PATH)gcc
+-  CPP            = $(COMPILER_PATH)gcc -E
++  CC             = $(COMPILER_PATH)gcc$(GCC_SUFFIX)
++  CPP            = $(COMPILER_PATH)gcc$(GCC_SUFFIX) -E
+   # statically link libstdc++ before C++ ABI is stablized on Linux
+   STATIC_CXX     = true
+   ifeq ($(STATIC_CXX),true)
+     # g++ always dynamically links libstdc++, even we use "-Wl,-Bstatic -lstdc++"
+     # We need to use gcc to statically link the C++ runtime. gcc and g++ use
+     # the same subprocess to compile C++ files, so it is OK to build using gcc.
+-    CXX            = $(COMPILER_PATH)gcc
++    CXX            = $(COMPILER_PATH)gcc$(GCC_SUFFIX)
+   else
+-    CXX            = $(COMPILER_PATH)g++
++    CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
+   endif
+   ifneq ("$(findstring sparc,$(ARCH))", "")
+     # sparc or sparcv9
