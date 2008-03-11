@@ -15,6 +15,8 @@ FIND_TOOL([TAR], [tar])
 FIND_TOOL([CHMOD], [chmod])
 FIND_TOOL([MD5SUM], [md5sum])
 FIND_TOOL([WGET], [wget])
+FIND_TOOL([ZIP], [zip])
+FIND_TOOL([UNZIP], [unzip])
 AC_CHECK_TOOLS([FASTJAR], [fastjar jar])
 if test "x$FASTJAR" = x; then
 	AC_MSG_ERROR([Can't find fastjar or jar])

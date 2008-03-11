@@ -710,6 +710,8 @@ TAR
 CHMOD
 MD5SUM
 WGET
+ZIP
+UNZIP
 FASTJAR
 ac_ct_FASTJAR
 GAWK
@@ -4779,6 +4781,224 @@ fi
  if test x"$WGET" = x ; then
    { { echo "$as_me:$LINENO: error: wget program not found in PATH" >&5
 echo "$as_me: error: wget program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
+
+
+if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}zip", so it can be a program name with args.
+set dummy ${ac_tool_prefix}zip; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ZIP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ZIP in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ZIP="$ZIP" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ZIP="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ZIP=$ac_cv_path_ZIP
+if test -n "$ZIP"; then
+  { echo "$as_me:$LINENO: result: $ZIP" >&5
+echo "${ECHO_T}$ZIP" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_ZIP"; then
+  ac_pt_ZIP=$ZIP
+  # Extract the first word of "zip", so it can be a program name with args.
+set dummy zip; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ac_pt_ZIP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ac_pt_ZIP in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_ZIP="$ac_pt_ZIP" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ac_pt_ZIP="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_ZIP=$ac_cv_path_ac_pt_ZIP
+if test -n "$ac_pt_ZIP"; then
+  { echo "$as_me:$LINENO: result: $ac_pt_ZIP" >&5
+echo "${ECHO_T}$ac_pt_ZIP" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_pt_ZIP" = x; then
+    ZIP=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    ZIP=$ac_pt_ZIP
+  fi
+else
+  ZIP="$ac_cv_path_ZIP"
+fi
+
+ if test x"$ZIP" = x ; then
+   { { echo "$as_me:$LINENO: error: zip program not found in PATH" >&5
+echo "$as_me: error: zip program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
+
+
+if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}unzip", so it can be a program name with args.
+set dummy ${ac_tool_prefix}unzip; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_UNZIP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $UNZIP in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_UNZIP="$UNZIP" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_UNZIP="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+UNZIP=$ac_cv_path_UNZIP
+if test -n "$UNZIP"; then
+  { echo "$as_me:$LINENO: result: $UNZIP" >&5
+echo "${ECHO_T}$UNZIP" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_UNZIP"; then
+  ac_pt_UNZIP=$UNZIP
+  # Extract the first word of "unzip", so it can be a program name with args.
+set dummy unzip; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ac_pt_UNZIP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ac_pt_UNZIP in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_UNZIP="$ac_pt_UNZIP" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ac_pt_UNZIP="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_UNZIP=$ac_cv_path_ac_pt_UNZIP
+if test -n "$ac_pt_UNZIP"; then
+  { echo "$as_me:$LINENO: result: $ac_pt_UNZIP" >&5
+echo "${ECHO_T}$ac_pt_UNZIP" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_pt_UNZIP" = x; then
+    UNZIP=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    UNZIP=$ac_pt_UNZIP
+  fi
+else
+  UNZIP="$ac_cv_path_UNZIP"
+fi
+
+ if test x"$UNZIP" = x ; then
+   { { echo "$as_me:$LINENO: error: unzip program not found in PATH" >&5
+echo "$as_me: error: unzip program not found in PATH" >&2;}
    { (exit 1); exit 1; }; }
  fi
 
@@ -11093,8 +11313,8 @@ TAR!$TAR$ac_delim
 CHMOD!$CHMOD$ac_delim
 MD5SUM!$MD5SUM$ac_delim
 WGET!$WGET$ac_delim
-FASTJAR!$FASTJAR$ac_delim
-ac_ct_FASTJAR!$ac_ct_FASTJAR$ac_delim
+ZIP!$ZIP$ac_delim
+UNZIP!$UNZIP$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -11136,6 +11356,8 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+FASTJAR!$FASTJAR$ac_delim
+ac_ct_FASTJAR!$ac_ct_FASTJAR$ac_delim
 GAWK!$GAWK$ac_delim
 SYSTEM_GCJ_DIR!$SYSTEM_GCJ_DIR$ac_delim
 SYSTEM_ICEDTEA_DIR!$SYSTEM_ICEDTEA_DIR$ac_delim
@@ -11209,7 +11431,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 68; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 70; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
