@@ -1,5 +1,10 @@
 2008-03-11  Lillian Angel  <langel@redhat.com>
 
+	* configure: Regenerated.
+	* configure.ac: Added conditional for WITH_OPENJDK.
+
+2008-03-11  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Added check for WITH_OPENJDK.
 	* Makefile.in: Regenerated.
 	* configure: Regenerated.
