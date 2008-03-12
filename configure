@@ -10499,11 +10499,237 @@ echo "${ECHO_T}yes" >&6; }
 fi
   if test "x${LIBFFI_FOUND}" = xno
   then
-    { { echo "$as_me:$LINENO: error: Could not find libffi headers - \
-    Try installing libffi-devel." >&5
+    LIBFFI_FOUND=
+    if test "${ac_cv_header_ffi_h+set}" = set; then
+  { echo "$as_me:$LINENO: checking for ffi.h" >&5
+echo $ECHO_N "checking for ffi.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_ffi_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_ffi_h" >&5
+echo "${ECHO_T}$ac_cv_header_ffi_h" >&6; }
+else
+  # Is the header compilable?
+{ echo "$as_me:$LINENO: checking ffi.h usability" >&5
+echo $ECHO_N "checking ffi.h usability... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$ac_includes_default
+#include <ffi.h>
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+  ac_header_compiler=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_header_compiler=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
+echo "${ECHO_T}$ac_header_compiler" >&6; }
+
+# Is the header present?
+{ echo "$as_me:$LINENO: checking ffi.h presence" >&5
+echo $ECHO_N "checking ffi.h presence... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <ffi.h>
+_ACEOF
+if { (ac_try="$ac_cpp conftest.$ac_ext"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null && {
+	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       }; then
+  ac_header_preproc=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  ac_header_preproc=no
+fi
+
+rm -f conftest.err conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
+echo "${ECHO_T}$ac_header_preproc" >&6; }
+
+# So?  What about this header?
+case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
+  yes:no: )
+    { echo "$as_me:$LINENO: WARNING: ffi.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: ffi.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ffi.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: ffi.h: proceeding with the compiler's result" >&2;}
+    ac_header_preproc=yes
+    ;;
+  no:yes:* )
+    { echo "$as_me:$LINENO: WARNING: ffi.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: ffi.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ffi.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: ffi.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ffi.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: ffi.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ffi.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: ffi.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ffi.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: ffi.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ffi.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: ffi.h: in the future, the compiler will take precedence" >&2;}
+    ( cat <<\_ASBOX
+## --------------------------------- ##
+## Report this to fitzsim@redhat.com ##
+## --------------------------------- ##
+_ASBOX
+     ) | sed "s/^/$as_me: WARNING:     /" >&2
+    ;;
+esac
+{ echo "$as_me:$LINENO: checking for ffi.h" >&5
+echo $ECHO_N "checking for ffi.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_ffi_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_header_ffi_h=$ac_header_preproc
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_ffi_h" >&5
+echo "${ECHO_T}$ac_cv_header_ffi_h" >&6; }
+
+fi
+if test $ac_cv_header_ffi_h = yes; then
+  LIBFFI_CFLAGS=
+else
+  LIBFFI_FOUND=no
+fi
+
+
+    { echo "$as_me:$LINENO: checking for library containing ffi_call" >&5
+echo $ECHO_N "checking for library containing ffi_call... $ECHO_C" >&6; }
+if test "${ac_cv_search_ffi_call+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_func_search_save_LIBS=$LIBS
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char ffi_call ();
+int
+main ()
+{
+return ffi_call ();
+  ;
+  return 0;
+}
+_ACEOF
+for ac_lib in '' ffi; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
+  ac_cv_search_ffi_call=$ac_res
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext
+  if test "${ac_cv_search_ffi_call+set}" = set; then
+  break
+fi
+done
+if test "${ac_cv_search_ffi_call+set}" = set; then
+  :
+else
+  ac_cv_search_ffi_call=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_search_ffi_call" >&5
+echo "${ECHO_T}$ac_cv_search_ffi_call" >&6; }
+ac_res=$ac_cv_search_ffi_call
+if test "$ac_res" != no; then
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+  LIBFFI_LIBS=-lffi
+else
+  LIBFFI_FOUND=no
+fi
+
+    if test "x${LIBFFI_FOUND}" = xno
+    then
+      { { echo "$as_me:$LINENO: error: Could not find libffi headers - \
+      Try installing libffi-devel, libffi-dev or libffi4-dev." >&5
 echo "$as_me: error: Could not find libffi headers - \
-    Try installing libffi-devel." >&2;}
+      Try installing libffi-devel, libffi-dev or libffi4-dev." >&2;}
    { (exit 1); exit 1; }; }
+    fi
   fi
 fi
 
@@ -11851,7 +12077,7 @@ echo "$as_me: executing $ac_file commands" >&6;}
   # each Makefile.in and add a new line on top of each file to say so.
   # Grep'ing the whole file is not good either: AIX grep has a line
   # limit of 2048, but all sed's we know have understand at least 4000.
-  if sed 10q "$mf" | grep '^#.*generated by automake' > /dev/null 2>&1; then
+  if sed -n 's,^#.*generated by automake.*,X,p' "$mf" | grep X >/dev/null 2>&1; then
     dirpart=`$as_dirname -- "$mf" ||
 $as_expr X"$mf" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
 	 X"$mf" : 'X\(//\)[^/]' \| \
