@@ -515,6 +515,14 @@ else
   MEMORY_LIMIT =
 endif
 
+if WITH_CACAO
+  ICEDTEA_BUILD_TARGET=j2se_only
+  ICEDTEA_DEBUG_BUILD_TARGET=j2se_fastdebug_only
+else
+  ICEDTEA_BUILD_TARGET=
+  ICEDTEA_DEBUG_BUILD_TARGET=debug_build
+endif
+
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
 icedtea: stamps/bootstrap-directory-symlink.stamp \
@@ -523,7 +531,8 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	$(ICEDTEAPLUGIN_TARGET)
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/ j2se_only
+	  -C openjdk/ \
+	  $(ICEDTEA_BUILD_TARGET)
 if ENABLE_LIVECONNECT
 	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
@@ -550,7 +559,7 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
-	  j2se_fastdebug_only
+	  $(ICEDTEA_DEBUG_BUILD_TARGET)
 if ENABLE_LIVECONNECT
 	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)

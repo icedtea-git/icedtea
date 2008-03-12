@@ -376,6 +376,10 @@ ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch
 # ===============
 @WITH_CACAO_TRUE@@WITH_ICEDTEA_TRUE@MEMORY_LIMIT = -J-Xmx1024m
 @WITH_ICEDTEA_FALSE@MEMORY_LIMIT = 
+@WITH_CACAO_FALSE@ICEDTEA_BUILD_TARGET = 
+@WITH_CACAO_TRUE@ICEDTEA_BUILD_TARGET = j2se_only
+@WITH_CACAO_FALSE@ICEDTEA_DEBUG_BUILD_TARGET = debug_build
+@WITH_CACAO_TRUE@ICEDTEA_DEBUG_BUILD_TARGET = j2se_fastdebug_only
 
 # Shared objects.
 SHARED_OBJECT_FILES = \
@@ -973,7 +977,8 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	$(ICEDTEAPLUGIN_TARGET)
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/ j2se_only
+	  -C openjdk/ \
+	  $(ICEDTEA_BUILD_TARGET)
 @ENABLE_LIVECONNECT_TRUE@	cp -pPRf IcedTeaPlugin.so \
 @ENABLE_LIVECONNECT_TRUE@	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 @ENABLE_LIVECONNECT_TRUE@	cp -pPRf IcedTeaPlugin.so \
@@ -995,7 +1000,7 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
-	  j2se_fastdebug_only
+	  $(ICEDTEA_DEBUG_BUILD_TARGET)
 @ENABLE_LIVECONNECT_TRUE@	cp -pPRf IcedTeaPlugin.so \
 @ENABLE_LIVECONNECT_TRUE@	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 @ENABLE_LIVECONNECT_TRUE@	cp -pPRf IcedTeaPlugin.so \

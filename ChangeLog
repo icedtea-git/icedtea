@@ -1,5 +1,11 @@
 2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
+	* Makefile.am (ICEDTEA_BUILD_TARGET): Added.
+	(ICEDTEA_DEBUG_BUILD_TARGET): Likewise.
+	* Makefile.in: Regenerated.
+
+2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
 	* Makefile.in: Regenerated after transplanting.
 	* aclocal.m4: Likewise.
 	* configure: Likewise.
