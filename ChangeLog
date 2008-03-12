@@ -1,5 +1,10 @@
 2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
+	* Makefile.am (stamps/icedtea-ecj.stamp): Use
+	ICEDTEA_BUILD_TARGET.
+
+2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
 	* .hgtags: Removed duplicate tags.
 
 2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>

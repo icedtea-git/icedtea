@@ -597,7 +597,8 @@ stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj/ j2se_only
+	  -C openjdk-ecj/ \
+	  $(ICEDTEA_BUILD_TARGET)
 	@echo "ecj-poured IcedTea is served:" \
 	  openjdk-ecj/build/$(LINUX_DIR)
 	mkdir -p stamps
