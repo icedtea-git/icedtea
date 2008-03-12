@@ -346,8 +346,14 @@ if test "x${CORE_BUILD_TRUE}" = x; then
   PKG_CHECK_MODULES(LIBFFI, libffi,[LIBFFI_FOUND=yes],[LIBFFI_FOUND=no])
   if test "x${LIBFFI_FOUND}" = xno
   then
-    AC_MSG_ERROR([Could not find libffi headers - \
-    Try installing libffi-devel.])
+    LIBFFI_FOUND=
+    AC_CHECK_HEADER([ffi.h],[LIBFFI_CFLAGS=],[LIBFFI_FOUND=no])
+    AC_SEARCH_LIBS([ffi_call], [ffi],[LIBFFI_LIBS=-lffi],[LIBFFI_FOUND=no])
+    if test "x${LIBFFI_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find libffi headers - \
+      Try installing libffi-devel, libffi-dev or libffi4-dev.])
+    fi
   fi
 fi
 AC_SUBST(LIBFFI_CFLAGS)
