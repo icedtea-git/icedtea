@@ -1,3 +1,9 @@
+2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* Makefile.in: Regenerated after transplanting.
+	* aclocal.m4: Likewise.
+	* configure: Likewise.
+
 2008-03-06  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp
