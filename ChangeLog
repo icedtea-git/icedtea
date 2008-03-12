@@ -1,5 +1,9 @@
 2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
+	* .hgtags: Removed duplicate tags.
+
+2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
 	* Makefile.am (ICEDTEA_BUILD_TARGET): Added.
 	(ICEDTEA_DEBUG_BUILD_TARGET): Likewise.
 	* Makefile.in: Regenerated.
