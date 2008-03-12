@@ -1019,7 +1019,7 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
  		  done)
  JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
 -JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
-+JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -lgcj $(JVMLIB)
++JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -L$(dir $(shell $(if $(GCJ),$(GCJ),$(subst gcc,gcj,$(CC))) --print-file-name=libgcj.so)) -lgcj $(JVMLIB)
  
  #
  # We want to privatize JVM symbols on Solaris. This is so the user can

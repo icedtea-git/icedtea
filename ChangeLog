@@ -1,5 +1,10 @@
 2008-03-12  Matthias Klose  <doko@ubuntu.com>
 
+	* patches/icedtea-ecj.patch (openjdk/corba/make/common/Defs-linux.gmk):
+	Find libgcj.so when the version of gcc != the version of gcj.
+
+2008-03-12  Matthias Klose  <doko@ubuntu.com>
+
 	* configure.ac: Check for ffi.h/libffi.so without pkg-config.
 	* configure: Regenerated.
 
