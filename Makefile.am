@@ -253,6 +253,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero.patch \
+	patches/icedtea-print-lsb-release.patch \
 	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
 	$(ZERO_BUILD_PATCH) \
