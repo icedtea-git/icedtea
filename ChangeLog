@@ -1,3 +1,53 @@
+2008-03-17  Gary Benson  <gbenson@redhat.com>
+
+	* platform_zero.in: New file.
+	* ports/hotspot/build/linux/makefiles/zero.make: Likewise.
+
+	* acinclude.m4
+	(SET_ARCH_DIRS): Added special case for arm.
+	(ENABLE_ZERO_BUILD): Added new substitutions (ZERO_LIBARCH,
+	ZERO_BITSPERWORD, ZERO_ENDIANNESS, ZERO_ARCHDEF and ZERO_ARCHFLAG)
+	and new generated file (platform_zero).
+	(SET_CORE_BUILD): Enable whenever zero is used.
+	* Makefile.am
+	(ZERO_PATCHES): New variable listing all zero patches.
+	(EXTRA_DIST): Added ZERO_PATCHES.
+	(ZERO_PATCHES_COND): New variable listing zero patches when used.
+	(ICEDTEA_PATCHES): Grouped all zero patches into ZERO_PATCHES_COND,
+	added icedtea-zero-build.patch and icedtea-static-libstdc++.patch,
+	and removed icedtea-always-zero.patch.
+	(stamps/ports.stamp, stamps/ports-ecj.stamp): Use platform_zero.
+	(ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Pass ZERO_* variables through.
+	* Makefile.in, configure: Regenerated.
+
+	* patches/icedtea-zero.patch: Split build system bits into...
+	* patches/icedtea-zero-build.patch: New file.
+	* patches/icedtea-hotspot7-ports.patch: Merged into icedtea-zero.patch.
+	* patches/icedtea-ports.patch: Moved hotspot-specific bits into
+	icedtea-zero.patch.
+	* patches/icedtea-signature-iterator.patch: Rebased.
+	* patches/icedtea-test-atomic-operations.patch: Likewise.
+	* patches/icedtea-signed-types.patch: Likewise, and missing
+	hunk reinstated.
+	* patches/icedtea-text-relocations.patch: Base conditional
+	on ZERO_LIBARCH rather than BUILDARCH.
+	* patches/icedtea-always-zero.patch: Removed.
+
+	* ports/hotspot/build/linux/makefiles/arm.make: Removed.
+	* ports/hotspot/build/linux/makefiles/ia64.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/ppc.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/ppc64.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/s390.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/s390x.make: Likewise.
+	* ports/hotspot/build/linux/platform_arm: Likewise.
+	* ports/hotspot/build/linux/platform_ia64: Likewise.
+	* ports/hotspot/build/linux/platform_ppc: Likewise.
+	* ports/hotspot/build/linux/platform_ppc64: Likewise.
+	* ports/hotspot/build/linux/platform_s390: Likewise.
+	* ports/hotspot/build/linux/platform_s390x: Likewise.
+
+	* .hgignore: Added platform_zero.
+	
 2008-03-14  Lillian Angel  <langel@redhat.com>
 
 	* .hgignore: Updated.

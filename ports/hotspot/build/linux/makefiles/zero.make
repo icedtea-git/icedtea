@@ -1,6 +1,6 @@
 #
 # Copyright 2003-2005 Sun Microsystems, Inc.  All Rights Reserved.
-# Copyright 2008 Red Hat, Inc.
+# Copyright 2007, 2008 Red Hat, Inc.
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 # This code is free software; you can redistribute it and/or modify it
@@ -23,18 +23,19 @@
 #
 #
 
-# Not included in includeDB because it has no dependencies
-Obj_Files += linux_ia64.o
-
 # The copied fdlibm routines in sharedRuntimeTrig.o must not be optimized
 OPT_CFLAGS/sharedRuntimeTrig.o = $(OPT_CFLAGS/NOOPT)
 # The copied fdlibm routines in sharedRuntimeTrans.o must not be optimized
 OPT_CFLAGS/sharedRuntimeTrans.o = $(OPT_CFLAGS/NOOPT)
 
-# Specify that the CPU is little endian
-CFLAGS += -DVM_LITTLE_ENDIAN
+# Specify that the CPU is little endian, if necessary
+ifeq ($(ZERO_ENDIANNESS), little)
+  CFLAGS += -DVM_LITTLE_ENDIAN
+endif
 
-# Specify that the CPU is 64 bit
-CFLAGS += -D_LP64=1
+# Specify that the CPU is 64 bit, if necessary
+ifeq ($(ZERO_BITSPERWORD), 64)
+  CFLAGS += -D_LP64=1
+endif
 
 OPT_CFLAGS/compactingPermGenGen.o = -O1

@@ -19,6 +19,7 @@ extra-source-files.txt
 rt-source-files.txt
 hotspot-tools-source-files.txt
 tools-source-files.txt
+platform_zero
 rt/com/sun/jdi/AbsentInformationException.java
 rt/com/sun/jdi/Accessible.java
 rt/com/sun/jdi/ArrayReference.java

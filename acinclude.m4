@@ -9,6 +9,10 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=i586
       INSTALL_ARCH_DIR=i386
       ;;
+    arm*-*-*)
+      BUILD_ARCH_DIR=arm
+      INSTALL_ARCH_DIR=arm
+      ;;
     *)
       BUILD_ARCH_DIR=`uname -m`
       INSTALL_ARCH_DIR=$BUILD_ARCH_DIR
@@ -511,31 +515,82 @@ AC_DEFUN([FIND_TOOL],
 
 AC_DEFUN([ENABLE_ZERO_BUILD],
 [
+  AC_MSG_CHECKING(whether to use the zero-assembler port)
+  use_zero=no
   AC_ARG_ENABLE([zero],
-                [AS_HELP_STRING(--enable-zero,use zero-assembler port on non-zero platforms)],
+                [AS_HELP_STRING(--enable-zero,
+                               use zero-assembler port on non-zero platforms)],
   [
-    AC_MSG_CHECKING(zero-assembler port)
-    AC_MSG_RESULT(will apply patches/icedtea-always-zero.patch)
-    AM_CONDITIONAL(ZERO_BUILD, test x = x)
+    use_zero=yes
   ],
   [
-    AM_CONDITIONAL(ZERO_BUILD, test x != x)
+    case "${host}" in
+      i?86-*-*) ;;
+      x86_64-*-*) ;;
+      *)
+        use_zero=yes
+    esac
   ])
+  AC_MSG_RESULT($use_zero)
+  AM_CONDITIONAL(ZERO_BUILD, test "x${use_zero}" = xyes)
+
+  ZERO_LIBARCH=
+  ZERO_BITSPERWORD=
+  ZERO_ENDIANNESS=
+  ZERO_ARCHDEF=
+  ZERO_ARCHFLAG=
+  if test "x${use_zero}" = xyes; then
+    ZERO_LIBARCH="${INSTALL_ARCH_DIR}"
+    dnl can't use AC_CHECK_SIZEOF on multilib
+    case "${ZERO_LIBARCH}" in
+      i386|ppc|s390)
+        ZERO_BITSPERWORD=32
+        ;;
+      amd64|ppc64|s390x)
+        ZERO_BITSPERWORD=64
+        ;;
+      *)
+        AC_CHECK_SIZEOF(void *)
+        ZERO_BITSPERWORD=`expr "${ac_cv_sizeof_void_p}" "*" 8`
+    esac
+    AC_C_BIGENDIAN([ZERO_ENDIANNESS="big"], [ZERO_ENDIANNESS="little"])
+    case "${ZERO_LIBARCH}" in
+      i386)
+        ZERO_ARCHDEF="IA32"
+        ;;
+      ppc*)
+        ZERO_ARCHDEF="PPC"
+        ;;
+      s390*)
+        ZERO_ARCHDEF="S390"
+        ;;
+      *)
+        ZERO_ARCHDEF=`echo ${ZERO_LIBARCH} | tr a-z A-Z`
+    esac
+    dnl multilib machines need telling which mode to build for
+    case "${ZERO_LIBARCH}" in
+      i386|ppc)
+        ZERO_ARCHFLAG="-m32"
+        ;;
+      s390)
+        ZERO_ARCHFLAG="-m31"
+        ;;
+      amd64|ppc64|s390x)
+        ZERO_ARCHFLAG="-m64"
+        ;;
+    esac
+    AC_CONFIG_FILES([platform_zero])
+  fi
+  AC_SUBST(ZERO_LIBARCH)
+  AC_SUBST(ZERO_BITSPERWORD)
+  AC_SUBST(ZERO_ENDIANNESS)
+  AC_SUBST(ZERO_ARCHDEF)
+  AC_SUBST(ZERO_ARCHFLAG)
 ])
 
 AC_DEFUN([SET_CORE_BUILD],
 [
-  if test "x${ZERO_BUILD_TRUE}" = x; then
-    AM_CONDITIONAL(CORE_BUILD, test x = x)
-  else
-    if test -f "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}" && \
-       grep -q "arch.*=.*zero" "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}"
-    then
-      AM_CONDITIONAL(CORE_BUILD, test x = x)
-    else
-      AM_CONDITIONAL(CORE_BUILD, test x != x)
-    fi
-  fi
+  AM_CONDITIONAL(CORE_BUILD, test "x${ZERO_BUILD_TRUE}" = x)
 ])
 
 AC_DEFUN([ENABLE_NETX_PLUGIN],

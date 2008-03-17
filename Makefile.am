@@ -40,12 +40,7 @@ install:
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
-	patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch extra \
-	patches/icedtea-hotspot-6b06-7b24.patch \
-        patches/icedtea-hotspot7-build-fixes.patch \
-        patches/icedtea-hotspot7-ports.patch \
-        patches/icedtea-bytecodeInterpreter.patch \
-        patches/icedtea-bytecodeInterpreterWithChecks.patch
+	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES)
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -68,6 +63,11 @@ if CORE_BUILD
 else
   ICEDTEA_CORE_BUILD =
 endif
+if ZERO_BUILD
+  ICEDTEA_ZERO_BUILD = yes
+else
+  ICEDTEA_ZERO_BUILD =
+endif
 ICEDTEA_ENV = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
@@ -87,6 +87,12 @@ ICEDTEA_ENV = \
 	"CLASSPATH=" \
 	"LD_LIBRARY_PATH=" \
 	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
+	"ICEDTEA_ZERO_BUILD=$(ICEDTEA_ZERO_BUILD)" \
+	"ZERO_LIBARCH=$(ZERO_LIBARCH)" \
+	"ZERO_BITSPERWORD=$(ZERO_BITSPERWORD)" \
+	"ZERO_ENDIANNESS=$(ZERO_ENDIANNESS)" \
+	"ZERO_ARCHDEF=$(ZERO_ARCHDEF)" \
+	"ZERO_ARCHFLAG=$(ZERO_ARCHFLAG)" \
 	"LIBFFI_CFLAGS=$(LIBFFI_CFLAGS)" \
 	"LIBFFI_LIBS=$(LIBFFI_LIBS)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
@@ -126,6 +132,12 @@ ICEDTEA_ENV_ECJ = \
 	"LD_LIBRARY_PATH=" \
 	"GENSRCDIR=$(abs_top_srcdir)/generated" \
 	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
+	"ICEDTEA_ZERO_BUILD=$(ICEDTEA_ZERO_BUILD)" \
+	"ZERO_LIBARCH=$(ZERO_LIBARCH)" \
+	"ZERO_BITSPERWORD=$(ZERO_BITSPERWORD)" \
+	"ZERO_ENDIANNESS=$(ZERO_ENDIANNESS)" \
+	"ZERO_ARCHDEF=$(ZERO_ARCHDEF)" \
+	"ZERO_ARCHFLAG=$(ZERO_ARCHFLAG)" \
 	"LIBFFI_CFLAGS=$(LIBFFI_CFLAGS)" \
 	"LIBFFI_LIBS=$(LIBFFI_LIBS)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
@@ -170,13 +182,13 @@ clean-download:
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
-	for target in ports/hotspot/build/*/platform_* \
-		      ports/hotspot/build/*/makefiles/* \
+	for target in ports/hotspot/build/*/makefiles/* \
 		      ports/hotspot/src/*/* \
 		      ports/jdk/src/*/bin/*; do \
 	  link=$$(dirname $$target | sed 's/^ports/openjdk/'); \
 	  ln -sf $$PWD/$$target $$link; \
 	done
+	ln -sf $$PWD/platform_zero openjdk/hotspot/build/linux
 	mkdir -p stamps
 	touch stamps/ports.stamp
 
@@ -187,13 +199,6 @@ else
   FAST_BUILD_PATCH =
 endif
 
-# If --enable-zero was passed then patch the build files
-if ZERO_BUILD
-  ZERO_BUILD_PATCH = patches/icedtea-always-zero.patch
-else
-  ZERO_BUILD_PATCH =
-endif
-
 # If new gcc is installed, apply 4.3 patch
 if GCC_OLD
   GCC_PATCH =
@@ -201,21 +206,26 @@ else
   GCC_PATCH = patches/icedtea-gcc-4.3.patch
 endif
 
-# If CORE_BUILD is set then we are building zero and need
+# If ZERO_BUILD is set then we are building zero and need
 # to patch up to OpenJDK 7 HotSpot for the C++ interpreter.
-if CORE_BUILD
-  HOTSPOT_7_PATCHES = \
+ZERO_PATCHES = \
 	patches/icedtea-hotspot-6b06-7b24.patch \
 	patches/icedtea-hotspot7-build-fixes.patch \
-	patches/icedtea-hotspot7-ports.patch \
 	patches/icedtea-bytecodeInterpreter.patch \
-	patches/icedtea-bytecodeInterpreterWithChecks.patch
+	patches/icedtea-bytecodeInterpreterWithChecks.patch \
+	patches/icedtea-signature-iterator.patch \
+	patches/icedtea-signed-types.patch \
+	patches/icedtea-test-atomic-operations.patch \
+	patches/icedtea-zero.patch
+
+if ZERO_BUILD
+  ZERO_PATCHES_COND = $(ZERO_PATCHES)
 else
-  HOTSPOT_7_PATCHES = 
+  ZERO_PATCHES_COND = 
 endif
 
 ICEDTEA_PATCHES = \
-	$(HOTSPOT_7_PATCHES) \
+	$(ZERO_PATCHES_COND) \
 	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
@@ -241,22 +251,19 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-libraries.patch \
 	patches/icedtea-javafiles.patch \
 	patches/icedtea-corba.patch \
-	patches/icedtea-signature-iterator.patch \
-	patches/icedtea-signed-types.patch \
-	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
 	patches/icedtea-ports.patch \
+	patches/icedtea-static-libstdc++.patch \
 	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-timerqueue.patch \
 	patches/icedtea-lesstif-64.patch \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
-	patches/icedtea-zero.patch \
+	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
-	$(ZERO_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
 stamps/extract.stamp: stamps/download.stamp
@@ -330,13 +337,13 @@ clean-extract-ecj:
 
 # Link ports sources into tree
 stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
-	for target in ports/hotspot/build/*/platform_* \
-		      ports/hotspot/build/*/makefiles/* \
+	for target in ports/hotspot/build/*/makefiles/* \
 		      ports/hotspot/src/*/* \
 		      ports/jdk/src/*/bin/*; do \
 	  link=$$(dirname $$target | sed 's/^ports/openjdk-ecj/'); \
 	  ln -sf $$PWD/$$target $$link; \
 	done
+	ln -sf $$PWD/platform_zero openjdk-ecj/hotspot/build/linux
 	mkdir -p stamps
 	touch stamps/ports-ecj.stamp
 
