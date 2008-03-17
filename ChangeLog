@@ -1,5 +1,9 @@
 2008-03-17  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-static-libstdc++.patch: New file.
+
+2008-03-17  Gary Benson  <gbenson@redhat.com>
+
 	* platform_zero.in: New file.
 	* ports/hotspot/build/linux/makefiles/zero.make: Likewise.
 
