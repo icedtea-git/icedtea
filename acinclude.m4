@@ -550,3 +550,29 @@ AC_DEFUN([ENABLE_NETX_PLUGIN],
   ])
 ])
 
+AC_DEFUN([AC_CHECK_WITH_CACAO],
+[
+  AC_MSG_CHECKING(whether to use CACAO as VM)
+  AC_ARG_WITH([cacao],
+	      [AS_HELP_STRING(--with-cacao,use CACAO as VM)],
+  [
+    case "${withval}" in
+      yes)
+        CACAO=/usr/local/cacao
+        ;;
+      no)
+        CACAO=no
+        ;;
+      *)
+      CACAO=${withval}
+        ;;
+    esac
+  ],
+  [
+    CACAO=no
+  ])
+
+  AC_MSG_RESULT(${CACAO})
+  AM_CONDITIONAL(WITH_CACAO, test x"${CACAO}" != "xno")
+  AC_SUBST(CACAO)
+])

@@ -59,7 +59,8 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch \
 	patches/icedtea-liveconnect.patch patches/icedtea-webservices.patch \
-	IcedTeaPlugin.cc patches/icedtea-freetype.patch
+	IcedTeaPlugin.cc patches/icedtea-freetype.patch \
+	patches/icedtea-cacao.patch
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
@@ -105,6 +106,11 @@ ICEDTEA_ENV = \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)"
 
+if WITH_CACAO
+ICEDTEA_ENV += \
+	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
+endif
+
 env:
 	@echo 'unset JAVA_HOME'
 	@echo 'export $(ICEDTEA_ENV)'
@@ -144,6 +150,11 @@ ICEDTEA_ENV_ECJ = \
 	"LIBFFI_LIBS=$(LIBFFI_LIBS)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)"
+
+if WITH_CACAO
+ICEDTEA_ENV_ECJ += \
+	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
+endif
 
 env-ecj:
 	@echo 'unset JAVA_HOME'
@@ -285,6 +296,11 @@ ICEDTEA_PATCHES = \
 	$(FAST_BUILD_PATCH) \
 	$(ZERO_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
+
+if WITH_CACAO
+ICEDTEA_PATCHES += \
+	patches/icedtea-cacao.patch
+endif
 
 stamps/patch.stamp: stamps/clone.stamp
 	all_patches_ok=yes; \
@@ -491,9 +507,21 @@ clean-bootstrap-directory-symlink-ecj:
 # ===============
 
 if WITH_ICEDTEA
+if WITH_CACAO
+  MEMORY_LIMIT = -J-Xmx1024m
+else
   MEMORY_LIMIT = -J-Xmx512m
+endif
 else
   MEMORY_LIMIT =
+endif
+
+if WITH_CACAO
+  ICEDTEA_BUILD_TARGET=j2se_only
+  ICEDTEA_DEBUG_BUILD_TARGET=j2se_fastdebug_only
+else
+  ICEDTEA_BUILD_TARGET=
+  ICEDTEA_DEBUG_BUILD_TARGET=debug_build
 endif
 
 # If you change anything here in the icedtea target, please make sure
@@ -504,7 +532,8 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	$(ICEDTEAPLUGIN_TARGET)
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/
+	  -C openjdk/ \
+	  $(ICEDTEA_BUILD_TARGET)
 if ENABLE_LIVECONNECT
 	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
@@ -531,7 +560,7 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
-	  debug_build
+	  $(ICEDTEA_DEBUG_BUILD_TARGET)
 if ENABLE_LIVECONNECT
 	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
@@ -569,7 +598,8 @@ stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj/
+	  -C openjdk-ecj/ \
+	  $(ICEDTEA_BUILD_TARGET)
 	@echo "ecj-poured IcedTea is served:" \
 	  openjdk-ecj/build/$(LINUX_DIR)
 	mkdir -p stamps
@@ -755,7 +785,7 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	  ln -sf $(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
 	    $(abs_top_srcdir)/bootstrap/ecj/lib/tools.jar; \
 	fi
- 
+
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/clone.stamp stamps/copy-source-files.stamp
 	find rt -name '*.java' | sort > $@

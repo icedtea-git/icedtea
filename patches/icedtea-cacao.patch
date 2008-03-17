@@ -1,0 +1,13 @@
+diff -r 37a05a11f281 src/share/bin/java.c
+--- origopenjdk/jdk/src/share/bin/java.c	Sat Dec 01 00:00:00 2007 +0000
++++ openjdk/jdk/src/share/bin/java.c	Tue Jan 15 16:13:54 2008 +0100
+@@ -1955,7 +1955,8 @@ ContinueInNewThread(InvocationFunctions*
+       args.classname = classname;
+       args.ifn = *ifn;
+ 
+-      rslt = ContinueInNewThread0(JavaMain, threadStackSize, (void*)&args);
++/*       rslt = ContinueInNewThread0(JavaMain, threadStackSize, (void*)&args); */
++      rslt = JavaMain((void*)&args);
+       /* If the caller has deemed there is an error we
+        * simply return that, otherwise we return the value of
+        * the callee
