@@ -1,24 +1,3 @@
-2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* Makefile.am (stamps/icedtea-ecj.stamp): Use
-	ICEDTEA_BUILD_TARGET.
-
-2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* .hgtags: Removed duplicate tags.
-
-2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* Makefile.am (ICEDTEA_BUILD_TARGET): Added.
-	(ICEDTEA_DEBUG_BUILD_TARGET): Likewise.
-	* Makefile.in: Regenerated.
-
-2007-03-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* Makefile.in: Regenerated after transplanting.
-	* aclocal.m4: Likewise.
-	* configure: Likewise.
-
 2008-03-06  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp
@@ -1803,10 +1782,6 @@
 	patch.
 	* tools-copy-files.txt: Removed.
 
-2007-11-07  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* Makefile.in: Regenerated after transplanting.
-
 2007-11-07  Gary Benson  <gbenson@redhat.com>
 
 	* acinclude.m4 (SET_ARCH_DIRS): Remove redundant special cases.
@@ -1856,12 +1831,6 @@
 	create OpenJDK's libjpeg.so without files common to the system
 	installed libjpeg.so.
 
-2007-10-23  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* j2se/make/common/Defs-linux.gmk: Updated for b22.
-	* j2se/make/common/shared/Platform.gmk: Likewise.
-	* j2se/src/share/bin/java.c: Likewise.
-
 2007-10-22  Lillian Angel  <langel@redhat.com>
 
 	* configure.ac: Fixed typo. libgif should be giflib.
@@ -1895,12 +1864,6 @@
 2007-10-18  Lillian Angel  <langel@redhat.com>
 
 	* README: Updated.
-
-2007-10-17  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* Makefile.in: Regenerated (I was too lazy to merge all
-	conflicts).
-	* configure: Likewise.
 
 2007-10-16  Francis Kung  <fkung@redhat.com>
 
@@ -2115,33 +2078,10 @@
 	* Makefile.am (ICEDTEA_PATCHES):  Add above patch.
 	* Makefile.in: Regenerated.
 
-2007-09-18  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* patches/icedtea-cacao-jvm-cfg.patch: Added
-	j2se/src/solaris/bin/ppc/jvm.cfg.
-
-2007-09-16  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* Makefile.am [WITH_CACAO] (ICEDTEA_ENV): Set
-	ALT_HOTSPOT_IMPORT_PATH and ALT_JDK_IMPORT_PATH to CACAO
-	directory.
-	* Makefile.in: Regenerated.
-
-2007-09-16  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* Makefile.am (ICEDTEA_PATCHES): Added
-	patches/icedtea-cacao-docs-Makefile.patch.
-	* Makefile.in: Regenerated.
-	* patches/icedtea-cacao-docs-Makefile.patch: New file.
-
 2007-09-14  Keith Seitz  <keiths@redhat.com>
 
 	* configure.ac: Added check for libXtst.
 	* configure: Regenerated.
-
-2007-09-13  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* patches/icedtea-cacao-instrument-Makefile.patch: New file.
 
 2007-09-13  Lillian Angel  <langel@redhat.com>
 
@@ -2157,24 +2097,6 @@
 
 	* Makefile.am: Fixed target typo.
 	* Makefile.in: Regenerated.
-
-2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* Makefile.am: Added WITH_CACAO stuff.
-	* Makefile.in: Regenerated.
-	* acinclude.m4 (AC_CHECK_WITH_CACAO): New function.
-	* configure.ac (AC_CHECK_WITH_CACAO): Added.
-	* configure: Regenerated.
-	* patches/icedtea-cacao-Compiler-gcc-gmk.patch,
-	patches/icedtea-cacao-Defs-linux-gmk.patch,
-	patches/icedtea-cacao-Platform-gmk.patch,
-	patches/icedtea-cacao-Program-gmk.patch,
-	patches/icedtea-cacao-java-c.patch,
-	patches/icedtea-cacao-jvm-cfg.patch: New file.
-
-2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
-
-	* README.cacao: New file.
 
 2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
@@ -2195,7 +2117,7 @@
 	* Makefile.am: Added BUILD_NUMBER to environment. This should be
 	updated with each bXX release. Also, added dependency for
 	icedtea-debug target.
-	* Makefile.in: Regenerate.
+	* Makefile.in: Regenerated.
 
 2007-09-12  Joshua Sumali  <jsumali@redhat.com>
 
