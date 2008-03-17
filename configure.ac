@@ -174,7 +174,6 @@ else
   AC_CONFIG_FILES([javap], [chmod +x javap])
 fi
 fi
-fi
 WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
 AC_CHECK_WITH_CACAO

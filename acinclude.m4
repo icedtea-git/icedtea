@@ -607,8 +607,6 @@ AC_DEFUN([ENABLE_NETX_PLUGIN],
   ])
 ])
 
-
-
 AC_DEFUN([AC_CHECK_WITH_CACAO],
 [
   AC_MSG_CHECKING(whether to use CACAO as VM)
