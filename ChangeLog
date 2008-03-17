@@ -1,3 +1,8 @@
+2008-03-17  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-version.patch: Removed patches that changed OpenJDK
+	naming to IcedTea.
+
 2008-03-17  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-static-libstdc++.patch: New file.
