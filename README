@@ -137,3 +137,11 @@ IcedTea's NetX currently supports verification of signed jars, trusted
 certificate storing, system certificate store checking, and provides 
 some services specified by the jnlp API.
 
+CACAO as VM
+===========
+
+The --with-cacao configure option replaces the libjvm.so from Sun's
+HotSpot with the one from the CACAO VM.  This enables the usage of
+IcedTea on architectures which are not supported by the HotSpot VM,
+besides the HotSpot zero port.  In contrast to the HotSpot zero port,
+CACAO provides a Just-In-Time compiler for various architectures.
