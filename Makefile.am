@@ -59,7 +59,8 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch \
 	patches/icedtea-liveconnect.patch patches/icedtea-webservices.patch \
-	IcedTeaPlugin.cc patches/icedtea-freetype.patch
+	IcedTeaPlugin.cc patches/icedtea-freetype.patch \
+	patches/icedtea-cacao.patch
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
