@@ -43,8 +43,9 @@ host_triplet = @host@
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/javac.in $(srcdir)/javap.in \
-	$(top_srcdir)/configure AUTHORS COPYING ChangeLog INSTALL NEWS \
-	config.guess config.sub install-sh missing
+	$(srcdir)/platform_zero.in $(top_srcdir)/configure AUTHORS \
+	COPYING ChangeLog INSTALL NEWS config.guess config.sub \
+	install-sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
 	$(top_srcdir)/configure.ac
@@ -53,7 +54,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = javac javap
+CONFIG_CLEAN_FILES = javac javap platform_zero
 SOURCES =
 DIST_SOURCES =
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -170,6 +171,11 @@ XTST_CFLAGS = @XTST_CFLAGS@
 XTST_LIBS = @XTST_LIBS@
 XT_CFLAGS = @XT_CFLAGS@
 XT_LIBS = @XT_LIBS@
+ZERO_ARCHDEF = @ZERO_ARCHDEF@
+ZERO_ARCHFLAG = @ZERO_ARCHFLAG@
+ZERO_BITSPERWORD = @ZERO_BITSPERWORD@
+ZERO_ENDIANNESS = @ZERO_ENDIANNESS@
+ZERO_LIBARCH = @ZERO_LIBARCH@
 ZIP = @ZIP@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -229,12 +235,7 @@ OPENJDK_VERSION = b06
 @NETX_PLUGIN_TRUE@NETX_PATCH = patches/icedtea-netx-plugin.patch
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
-	patches/icedtea-gcc-4.3.patch patches/icedtea-always-zero.patch extra \
-	patches/icedtea-hotspot-6b06-7b24.patch \
-        patches/icedtea-hotspot7-build-fixes.patch \
-        patches/icedtea-hotspot7-ports.patch \
-        patches/icedtea-bytecodeInterpreter.patch \
-        patches/icedtea-bytecodeInterpreterWithChecks.patch
+	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES)
 
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
@@ -424,6 +425,8 @@ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 javac: $(top_builddir)/config.status $(srcdir)/javac.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 javap: $(top_builddir)/config.status $(srcdir)/javap.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+platform_zero: $(top_builddir)/config.status $(srcdir)/platform_zero.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 tags: TAGS
 TAGS:
@@ -716,13 +719,13 @@ clean-download:
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
-	for target in ports/hotspot/build/*/platform_* \
-		      ports/hotspot/build/*/makefiles/* \
+	for target in ports/hotspot/build/*/makefiles/* \
 		      ports/hotspot/src/*/* \
 		      ports/jdk/src/*/bin/*; do \
 	  link=$$(dirname $$target | sed 's/^ports/openjdk/'); \
 	  ln -sf $$PWD/$$target $$link; \
 	done
+	ln -sf $$PWD/platform_zero openjdk/hotspot/build/linux
 	mkdir -p stamps
 	touch stamps/ports.stamp
 
@@ -796,13 +799,13 @@ clean-extract-ecj:
 
 # Link ports sources into tree
 stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
-	for target in ports/hotspot/build/*/platform_* \
-		      ports/hotspot/build/*/makefiles/* \
+	for target in ports/hotspot/build/*/makefiles/* \
 		      ports/hotspot/src/*/* \
 		      ports/jdk/src/*/bin/*; do \
 	  link=$$(dirname $$target | sed 's/^ports/openjdk-ecj/'); \
 	  ln -sf $$PWD/$$target $$link; \
 	done
+	ln -sf $$PWD/platform_zero openjdk-ecj/hotspot/build/linux
 	mkdir -p stamps
 	touch stamps/ports-ecj.stamp
 
