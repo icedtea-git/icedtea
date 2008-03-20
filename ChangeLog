@@ -70,10 +70,6 @@
 2008-03-12  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-ecj.patch (openjdk/corba/make/common/Defs-linux.gmk):
-
-2008-03-12  Matthias Klose  <doko@ubuntu.com>
-
-	* patches/icedtea-ecj.patch (openjdk/corba/make/common/Defs-linux.gmk):
 	Find libgcj.so when the version of gcc != the version of gcj.
 
 2008-03-12  Matthias Klose  <doko@ubuntu.com>
