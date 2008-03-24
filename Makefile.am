@@ -286,7 +286,7 @@ stamps/extract.stamp: stamps/download.stamp
 	if ! test -d openjdk ; \
 	then \
 	  mkdir openjdk ; \
-	  $(TAR) xf $(OPENJDK_SRC_ZIP) -C openjdk; \
+	  $(TAR) xzf $(OPENJDK_SRC_ZIP) -C openjdk; \
 	  chmod -R ug+w openjdk ; \
 	fi
 	mkdir -p stamps
