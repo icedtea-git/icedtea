@@ -1,3 +1,10 @@
+2008-03-25  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Updated to b07.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-libraries.patch: Update to b07.
+	* patches/icedtea-lesstif-64.patch: Remove, integrated in b07.
+
 2008-03-24  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am

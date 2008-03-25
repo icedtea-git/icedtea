@@ -1,6 +1,6 @@
-OPENJDK_DATE = 28_feb_2008
-OPENJDK_MD5SUM = 08bdfb4d78340788969a4edd853fcd2b
-OPENJDK_VERSION = b06
+OPENJDK_DATE = 20_mar_2008
+OPENJDK_MD5SUM = 9753b5807efe32be4fa168fc4e855b51
+OPENJDK_VERSION = b07
 
 if NETX_PLUGIN
 NETX_PATCH = patches/icedtea-netx-plugin.patch
@@ -268,7 +268,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-static-libstdc++.patch \
 	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-timerqueue.patch \
-	patches/icedtea-lesstif-64.patch \
 	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero-build.patch \
