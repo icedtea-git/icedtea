@@ -1,3 +1,10 @@
+2008-03-26  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(dist-openjdk): Fixed to only remove hg-related files from the openjdk
+	clone.
+	* Makefile.in: Regenerated.
+
 2008-03-06  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp
