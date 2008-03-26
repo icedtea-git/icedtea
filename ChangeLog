@@ -1,3 +1,8 @@
+2008-03-26  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp
+	(LOTS_OF_REGS): Default to no.
+
 2008-03-25  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am: Updated to b07.
