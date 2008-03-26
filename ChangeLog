@@ -1,5 +1,37 @@
 2008-03-26  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-zero-build.patch: Added zero-specific bits to
+	class library makefiles.
+	* patches/icedtea-cacao.patch: Moved platform-specific bits from
+	icedtea-ports.patch.
+	* patches/icedtea-ports.patch: Removed.
+
+	* jvm.cfg.in: New file.
+	* ergo.c.in: Likewise.
+	* acinclude.m4
+	(ENABLE_ZERO_BUILD): Added new generated files jvm.cfg and ergo.c.
+	* Makefile.am
+	(stamps/ports.stamp, stamps/ports-ecj.stamp): Use jvm.cfg and ergo.c.
+	(ICEDTEA_PATCHES): Removed icedtea-ports.patch.
+	* Makefile.in, aclocal.m4, configure: Regenerated.
+	* .hgignore: Added jvm.cfg and ergo.c.
+
+	* ports/jdk/src/solaris/bin/alpha/jvm.cfg: Removed.
+	* ports/jdk/src/solaris/bin/arm/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/mips/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/ppc/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/ppc64/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/s390/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/s390x/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_alpha.c: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_arm.c: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_ia64.c: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_mips.c: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_ppc.c: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_s390.c: Likewise.
+
+2008-03-26  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp
 	(LOTS_OF_REGS): Default to no.
 

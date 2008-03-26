@@ -194,12 +194,18 @@ clean-download:
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
 	for target in ports/hotspot/build/*/makefiles/* \
-		      ports/hotspot/src/*/* \
-		      ports/jdk/src/*/bin/*; do \
+		      ports/hotspot/src/*/*; do \
 	  link=$$(dirname $$target | sed 's/^ports/openjdk/'); \
 	  ln -sf $$PWD/$$target $$link; \
 	done
 	ln -sf $$PWD/platform_zero openjdk/hotspot/build/linux
+	if ! test "x$(CORE_BUILD)$(WITH_CACAO)" = "xno"; then \
+	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
+	  ln -sf $$PWD/jvm.cfg openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
+	fi
+	if ! test "x$(ZERO_BUILD)$(WITH_CACAO)" = "xno"; then \
+	  ln -sf $$PWD/ergo.c openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
+	fi
 	mkdir -p stamps
 	touch stamps/ports.stamp
 
@@ -264,7 +270,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-corba.patch \
 	patches/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
-	patches/icedtea-ports.patch \
 	patches/icedtea-static-libstdc++.patch \
 	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-timerqueue.patch \
@@ -353,12 +358,18 @@ clean-extract-ecj:
 # Link ports sources into tree
 stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 	for target in ports/hotspot/build/*/makefiles/* \
-		      ports/hotspot/src/*/* \
-		      ports/jdk/src/*/bin/*; do \
+		      ports/hotspot/src/*/*; do \
 	  link=$$(dirname $$target | sed 's/^ports/openjdk-ecj/'); \
 	  ln -sf $$PWD/$$target $$link; \
 	done
 	ln -sf $$PWD/platform_zero openjdk-ecj/hotspot/build/linux
+	if ! test "x$(CORE_BUILD)$(WITH_CACAO)" = "xno"; then \
+	  mkdir -p openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
+	  ln -sf $$PWD/jvm.cfg openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
+	fi
+	if ! test "x$(ZERO_BUILD)$(WITH_CACAO)" = "xno"; then \
+	  ln -sf $$PWD/ergo.c openjdk-ecj/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
+	fi
 	mkdir -p stamps
 	touch stamps/ports-ecj.stamp
 
