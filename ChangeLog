@@ -1,3 +1,9 @@
+2008-03-27  Gary Benson  <gbenson@redhat.com>
+
+	* Makefile.am
+	(stamps/ports.stamp, stamps/ports-ecj.stamp): Fixed broken cacao
+	detection.
+
 2008-03-26  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-zero-build.patch: Added zero-specific bits to

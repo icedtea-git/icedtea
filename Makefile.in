@@ -776,11 +776,11 @@ stamps/ports.stamp: stamps/extract.stamp
 	  ln -sf $$PWD/$$target $$link; \
 	done
 	ln -sf $$PWD/platform_zero openjdk/hotspot/build/linux
-	if ! test "x$(CORE_BUILD)$(WITH_CACAO)" = "xno"; then \
+	if ! test "x$(CORE_BUILD)$(CACAO)" = "xno"; then \
 	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
 	  ln -sf $$PWD/jvm.cfg openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
 	fi
-	if ! test "x$(ZERO_BUILD)$(WITH_CACAO)" = "xno"; then \
+	if ! test "x$(ZERO_BUILD)$(CACAO)" = "xno"; then \
 	  ln -sf $$PWD/ergo.c openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
 	fi
 	mkdir -p stamps
@@ -862,11 +862,11 @@ stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 	  ln -sf $$PWD/$$target $$link; \
 	done
 	ln -sf $$PWD/platform_zero openjdk-ecj/hotspot/build/linux
-	if ! test "x$(CORE_BUILD)$(WITH_CACAO)" = "xno"; then \
+	if ! test "x$(CORE_BUILD)$(CACAO)" = "xno"; then \
 	  mkdir -p openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
 	  ln -sf $$PWD/jvm.cfg openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
 	fi
-	if ! test "x$(ZERO_BUILD)$(WITH_CACAO)" = "xno"; then \
+	if ! test "x$(ZERO_BUILD)$(CACAO)" = "xno"; then \
 	  ln -sf $$PWD/ergo.c openjdk-ecj/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
 	fi
 	mkdir -p stamps
