@@ -11,8 +11,8 @@
  }
  
 diff -r 63b67d07d5e9 openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- a/openjdk/jdk/make/common/shared/Compiler-gcc.gmk	Tue Mar 25 16:27:33 2008 +0000
-+++ b/openjdk/jdk/make/common/shared/Compiler-gcc.gmk	Wed Mar 26 08:24:35 2008 +0000
+--- ../openjdk/jdk/make/common/shared/Compiler-gcc.gmk	Tue Mar 25 16:27:33 2008 +0000
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	Wed Mar 26 08:24:35 2008 +0000
 @@ -75,28 +75,51 @@ ifeq ($(PLATFORM), linux)
      REQUIRED_CC_VER = 3.2
      REQUIRED_GCC_VER = 3.2.*
@@ -77,8 +77,8 @@ diff -r 63b67d07d5e9 openjdk/jdk/make/common/shared/Compiler-gcc.gmk
    endif
    # Option used to create a shared library
 diff -r 63b67d07d5e9 openjdk/jdk/make/javax/sound/SoundDefs.gmk
---- a/openjdk/jdk/make/javax/sound/SoundDefs.gmk	Tue Mar 25 16:27:33 2008 +0000
-+++ b/openjdk/jdk/make/javax/sound/SoundDefs.gmk	Wed Mar 26 08:29:28 2008 +0000
+--- ../openjdk/jdk/make/javax/sound/SoundDefs.gmk	Tue Mar 25 16:27:33 2008 +0000
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	Wed Mar 26 08:29:28 2008 +0000
 @@ -58,9 +58,45 @@ ifdef ICEDTEA_ZERO_BUILD
  ifdef ICEDTEA_ZERO_BUILD
    CPPFLAGS += -DX_ARCH=X_ZERO
@@ -137,8 +137,8 @@ diff -r 63b67d07d5e9 openjdk/jdk/make/javax/sound/SoundDefs.gmk
  
  
 diff -r 63b67d07d5e9 openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
---- a/openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	Tue Mar 25 16:27:33 2008 +0000
-+++ b/openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	Wed Mar 26 08:38:14 2008 +0000
+--- ../openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	Tue Mar 25 16:27:33 2008 +0000
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	Wed Mar 26 08:38:14 2008 +0000
 @@ -33,12 +33,19 @@
  #define X_LINUX         3
  
