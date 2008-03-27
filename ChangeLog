@@ -1,3 +1,13 @@
+2008-03-27  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Added icedtea-netx-applet-visibility.patch.
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Likewise.
+	* configure: Likewise.
+	* patches/icedtea-webservices.patch: Moved patches to sun.applet from
+	here ...
+	* patches/icedtea-netx-applet-visbility.patch: To here. New file.
+
 2008-03-26  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am

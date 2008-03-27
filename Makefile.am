@@ -262,6 +262,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-license-headers.patch \
 	$(PLUGIN_PATCH) \
 	$(NETX_PATCH) \
+	patches/icedtea-netx-applet-visbility.patch \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-certbundle.patch \
