@@ -1,3 +1,9 @@
+2008-03-27  Lillian Angel  <langel@redhat.com>
+	
+	* Makefile.am
+	(clean-patch): Fixed so patches are actually reverted.
+	* Makefile.in: Regenerated.
+
 2008-03-27  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* patches/icedtea-cacao.patch: Fixed the paths so the patch

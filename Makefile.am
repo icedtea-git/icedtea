@@ -324,8 +324,8 @@ stamps/patch.stamp: stamps/extract.stamp
 
 clean-patch:
 	rm -f stamps/patch.stamp
-	for p in $(ICEDTEA_PATCHES) ; \
 	all_patches_ok=yes; \
+	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
 	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $$p ; \
