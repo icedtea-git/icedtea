@@ -342,7 +342,7 @@ AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 fi
 
-if test "x${CORE_BUILD_TRUE}" = x; then
+if test "x${ZERO_BUILD_TRUE}" = x; then
   dnl Check for libffi headers and libraries.
   PKG_CHECK_MODULES(LIBFFI, libffi,[LIBFFI_FOUND=yes],[LIBFFI_FOUND=no])
   if test "x${LIBFFI_FOUND}" = xno

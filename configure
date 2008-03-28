@@ -11100,7 +11100,7 @@ fi
 
 fi
 
-if test "x${CORE_BUILD_TRUE}" = x; then
+if test "x${ZERO_BUILD_TRUE}" = x; then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for LIBFFI" >&5
