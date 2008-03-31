@@ -1,3 +1,8 @@
+2008-03-31  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Added checks for file and cpio.
+	* configure: Likewise.
+
 2008-03-28  Gary Benson  <gbenson@redhat.com>
 
 	* configure.ac: Check for libffi for zero builds only.
