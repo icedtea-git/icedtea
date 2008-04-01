@@ -278,6 +278,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
+	patches/icedtea-arm-uname.patch \
 	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
