@@ -1,3 +1,8 @@
+2008-04-02  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/runtime/InstallDialog.java: Removed image
+	loading.
+
 2008-04-02  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-zero.patch: Workaround for arm.

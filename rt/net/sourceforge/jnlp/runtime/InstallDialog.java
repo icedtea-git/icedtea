@@ -54,8 +54,10 @@ class InstallDialog extends Dialog implements ActionListener {
     InstallDialog() {
         super(createFrame(), R("CChooseCache"), true);
 
+		/*
         background = 
             new ImageIcon(getClass().getClassLoader().getResource("net/sourceforge/jnlp/resources/install.png"));
+		*/
 
         setLayout(new BorderLayout());
         setBackground(Color.white);
@@ -118,8 +120,10 @@ class InstallDialog extends Dialog implements ActionListener {
     }
 
     public void paint(Graphics g) {
+		/*
         Insets sin = super.getInsets();
         g.drawImage(background.getImage(), sin.left, sin.top, this);
+		*/
     }
 
     public void actionPerformed(ActionEvent evt) {
