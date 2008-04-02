@@ -1,3 +1,7 @@
+2008-04-02  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-zero.patch: Workaround for arm.
+	
 2008-04-01  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-arm-uname.patch: New file.
