@@ -39,7 +39,7 @@ FAQ:
   http://icedtea.classpath.org/wiki/FrequentlyAskedQuestions
 
 Anonymous Mercurial checkout:
-  hg clone http://icedtea.classpath.org/hg/icedtea
+  hg clone http://icedtea.classpath.org/hg/icedtea6
 
 Java compatibility
 ------------------
@@ -54,6 +54,8 @@ to minor adjustments, major revisions, or even outright removal
 between now and the time that the Java SE 7 Platform Specification is
 finalized.  Please take these facts into account before depending upon
 IcedTea.
+
+Recently, OpenJDK6 was released. This build is now based on that release.
 
 How the Stub Replacements were Produced
 ---------------------------------------
