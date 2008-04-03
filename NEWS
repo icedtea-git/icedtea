@@ -1,3 +1,16 @@
+New in release 1.1 (2008-04-04)
+
+- Zero builds on any architecture.
+- New features added to NetX:
+   - Certificate fingerprints now show as part 
+     of certificate details.
+   - gcjwebplugin can now run applets through NetX, 
+     taking advantage of NetX's sandboxing and application security.
+   - User trusted certificates can be managed by passing the -viewer 
+     option to NetX. 
+- Updated to b08.
+- Several bug fixes.
+
 New in release 1.0 (2008-02-15)
 
 - Initial release
