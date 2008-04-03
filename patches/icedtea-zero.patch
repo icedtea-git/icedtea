@@ -133,3 +133,29 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
       }
  
    STEP(140, "(printing VM operation)" )
+diff -r 789c601c8ba9 openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Tue Apr 01 14:49:28 2008 +0100
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Wed Apr 02 09:51:37 2008 +0100
+@@ -1690,7 +1690,8 @@ void * os::dll_load(const char *filename
+     {EM_SPARC32PLUS, EM_SPARC,   ELFCLASS32, ELFDATA2MSB, (char*)"Sparc 32"},
+     {EM_SPARCV9,     EM_SPARCV9, ELFCLASS64, ELFDATA2MSB, (char*)"Sparc v9 64"},
+     {EM_PPC,         EM_PPC,     ELFCLASS32, ELFDATA2MSB, (char*)"Power PC 32"},
+-    {EM_PPC64,       EM_PPC64,   ELFCLASS64, ELFDATA2MSB, (char*)"Power PC 64"}
++    {EM_PPC64,       EM_PPC64,   ELFCLASS64, ELFDATA2MSB, (char*)"Power PC 64"},
++    {EM_ARM,         EM_ARM,     ELFCLASS32, ELFDATA2LSB, (char*)"ARM"}
+   };
+ 
+   #if  (defined IA32)
+@@ -1707,9 +1708,11 @@ void * os::dll_load(const char *filename
+     static  Elf32_Half running_arch_code=EM_PPC64;
+   #elif  (defined __powerpc__)
+     static  Elf32_Half running_arch_code=EM_PPC;
++  #elif  (defined ARM)
++    static  Elf32_Half running_arch_code=EM_ARM;    
+   #else
+     #error Method os::dll_load requires that one of following is defined:\
+-         IA32, AMD64, IA64, __sparc, __powerpc__
++         IA32, AMD64, IA64, __sparc, __powerpc__, ARM
+   #endif
+ 
+   // Identify compatability class for VM's architecture and library's architecture
