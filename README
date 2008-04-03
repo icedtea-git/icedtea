@@ -48,14 +48,16 @@ IcedTea is derived from OpenJDK, Sun's open-source implementation of
 the Java SE platform.  At this time the build from which IcedTea was
 constructed corresponds to an early build of JDK 7.  When JDK 7
 is complete it will implement the Java SE 7 Platform Specification.
-Work on that specification is underway, but far from final.  Any APIs
-in the JDK 7 implementation, whether new or old, are therefore subject
-to minor adjustments, major revisions, or even outright removal
+Any APIs in the JDK 7 implementation, whether new or old, are therefore 
+subject to minor adjustments, major revisions, or even outright removal
 between now and the time that the Java SE 7 Platform Specification is
 finalized.  Please take these facts into account before depending upon
 IcedTea.
 
-Recently, OpenJDK6 was released. This build is now based on that release.
+Recently, OpenJDK6 was released. This build (IcedTea6) is based on 
+that release. OpenJDK6 is approximately 99% complete in terms of encumberences.
+IcedTea provides autotools support, a portable interpreter for ppc and 
+ppc64 support, plugin support and Web Start support.
 
 How the Stub Replacements were Produced
 ---------------------------------------
