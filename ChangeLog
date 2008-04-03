@@ -1,3 +1,7 @@
+2008-04-03  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated for icedtea6.
+
 2008-03-31  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-jpegclasses.patch: Added new class.
