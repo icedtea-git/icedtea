@@ -7302,8 +7302,8 @@ else
 fi
 
   if test -z "${LIBGCJ_JAR}"; then
-    { echo "$as_me:$LINENO: checking for libgcj-4.3.0.jar or lib-4.1.2.jar" >&5
-echo $ECHO_N "checking for libgcj-4.3.0.jar or lib-4.1.2.jar... $ECHO_C" >&6; }
+    { echo "$as_me:$LINENO: checking for libgcj-4.3.0.jar or libgcj-4.1.2.jar" >&5
+echo $ECHO_N "checking for libgcj-4.3.0.jar or libgcj-4.1.2.jar... $ECHO_C" >&6; }
     if test -e "/usr/share/java/libgcj-4.3.0.jar"; then
       LIBGCJ_JAR=/usr/share/java/libgcj-4.3.0.jar
       { echo "$as_me:$LINENO: result: ${LIBGCJ_JAR}" >&5
