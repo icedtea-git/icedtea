@@ -1,5 +1,10 @@
 2008-04-03  Lillian Angel  <langel@redhat.com>
 
+	* configure.ac: Updated version.
+	* configure: Regenerated.
+
+2008-04-03  Lillian Angel  <langel@redhat.com>
+
 	* README: Updated.
 	* INSTALL: Updated.
 
