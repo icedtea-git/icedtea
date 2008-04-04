@@ -1,3 +1,9 @@
+2008-04-04  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-ia64-bugfix.patch: New file.
+	* Makefile.am: Added the above.
+	* Makefile.in: Regenerated.
+
 2008-04-03  Lillian Angel  <langel@redhat.com>
 
 	* acinclude.m4: Fixed typo.

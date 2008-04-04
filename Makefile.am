@@ -233,7 +233,8 @@ ZERO_PATCHES = \
 	patches/icedtea-signature-iterator.patch \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-test-atomic-operations.patch \
-	patches/icedtea-zero.patch
+	patches/icedtea-zero.patch \
+	patches/icedtea-ia64-bugfix.patch
 
 if ZERO_BUILD
   ZERO_PATCHES_COND = $(ZERO_PATCHES)
