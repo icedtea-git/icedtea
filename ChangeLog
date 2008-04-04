@@ -1,3 +1,23 @@
+2008-04-04  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/cache/CacheUtil.java: Added debugging code.
+	* rt/net/sourceforge/jnlp/runtime/Boot.java: Likewise.
+	* rt/net/sourceforge/jnlp/runtime/AppletEnvironment.java: Improved Applet
+	displaying.
+	* rt/net/sourceforge/jnlp/runtime/InstallDialog.java: Fixed image loading
+	on the cache dialog.
+	* rt/net/sourceforge/jnlp/runtime/JNLPRuntime.java: Fixed window icon
+	loading.
+	* rt/net/sourceforge/jnlp/security/AccessWarningPane.java: Added icons to
+	warning dialogs.
+	* rt/net/sourceforge/jnlp/security/CertWarningPane.java: Likewise.
+	* rt/net/sourceforge/jnlp/security/MoreInfoPane.java: Likewise.
+	* rt/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Added
+	NETWORK as type of security access.
+	* rt/net/sourceforge/jnlp/resources/info-small.png: New file.
+	* rt/net/sourceforge/jnlp/resources/warning-small.png: Likewise.
+	* rt/net/sourceforge/jnlp/resources/warning.png: Likewise.
+
 2008-04-04  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-ia64-bugfix.patch: New file.

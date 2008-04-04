@@ -76,6 +76,7 @@ public class SecurityWarningDialog extends JOptionPane {
         CLIPBOARD_READ,
         CLIPBOARD_WRITE,
         PRINTER,
+		NETWORK,
         VERIFIED,
         UNVERIFIED,
         SIGNING_ERROR

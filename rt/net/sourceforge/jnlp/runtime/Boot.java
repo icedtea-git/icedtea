@@ -236,6 +236,8 @@ public final class Boot implements PrivilegedAction {
         		url = new URL(ServiceUtil.getBasicService().getCodeBase(), location);
         } catch (Exception e) {
         	fatalError("Invalid jnlp file " + location);
+        	if (JNLPRuntime.isDebug())
+        		e.printStackTrace();
         }
         
         boolean strict = (null != getOption("-strict"));
