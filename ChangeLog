@@ -1,3 +1,9 @@
+2008-04-07  Joshua Sumali  <jsumali@redhat.com>
+
+	* patches/icedtea-netx-plugin.patch: Removed reflection hunk.
+	* rt/net/sourceforge/jnlp/Parser.java: Removed inner Node class to ...
+	* rt/net/sourceforge/jnlp/Node.java: here, as a separate class.
+
 2008-04-07  Gary Benson  <gbenson@redhat.com>
 
 	* acinclude.m4 (ENABLE_ZERO_BUILD): Added sparc and sparc64.
