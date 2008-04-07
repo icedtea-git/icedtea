@@ -543,10 +543,10 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
     ZERO_LIBARCH="${INSTALL_ARCH_DIR}"
     dnl can't use AC_CHECK_SIZEOF on multilib
     case "${ZERO_LIBARCH}" in
-      i386|ppc|s390)
+      i386|ppc|s390|sparc)
         ZERO_BITSPERWORD=32
         ;;
-      amd64|ppc64|s390x)
+      amd64|ppc64|s390x|sparc64)
         ZERO_BITSPERWORD=64
         ;;
       *)
@@ -564,18 +564,21 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
       s390*)
         ZERO_ARCHDEF="S390"
         ;;
+      sparc*)
+        ZERO_ARCHDEF="SPARC"
+        ;;
       *)
         ZERO_ARCHDEF=`echo ${ZERO_LIBARCH} | tr a-z A-Z`
     esac
     dnl multilib machines need telling which mode to build for
     case "${ZERO_LIBARCH}" in
-      i386|ppc)
+      i386|ppc|sparc)
         ZERO_ARCHFLAG="-m32"
         ;;
       s390)
         ZERO_ARCHFLAG="-m31"
         ;;
-      amd64|ppc64|s390x)
+      amd64|ppc64|s390x|sparc64)
         ZERO_ARCHFLAG="-m64"
         ;;
     esac

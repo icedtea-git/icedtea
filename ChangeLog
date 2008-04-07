@@ -1,3 +1,8 @@
+2008-04-07  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4 (ENABLE_ZERO_BUILD): Added sparc and sparc64.
+	* configure: Regenerated.	
+
 2008-04-04  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/cache/CacheUtil.java: Added debugging code.
