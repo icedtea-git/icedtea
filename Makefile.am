@@ -104,6 +104,11 @@ ICEDTEA_ENV += \
 	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
 endif
 
+if !ENABLE_DOCS
+ICEDTEA_ENV += \
+	"NO_DOCS=true"
+endif
+
 env:
 	@echo 'unset JAVA_HOME'
 	@echo 'export $(ICEDTEA_ENV)'
@@ -152,6 +157,11 @@ ICEDTEA_ENV_ECJ = \
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
 	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
+endif
+
+if !ENABLE_DOCS
+ICEDTEA_ENV_ECJ += \
+	"NO_DOCS=true"
 endif
 
 env-ecj:

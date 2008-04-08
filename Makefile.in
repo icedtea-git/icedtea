@@ -34,10 +34,16 @@ host_triplet = @host@
 @WITH_CACAO_TRUE@am__append_1 = \
 @WITH_CACAO_TRUE@	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
 
-@WITH_CACAO_TRUE@am__append_2 = \
-@WITH_CACAO_TRUE@	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
+@ENABLE_DOCS_FALSE@am__append_2 = \
+@ENABLE_DOCS_FALSE@	"NO_DOCS=true"
 
 @WITH_CACAO_TRUE@am__append_3 = \
+@WITH_CACAO_TRUE@	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
+
+@ENABLE_DOCS_FALSE@am__append_4 = \
+@ENABLE_DOCS_FALSE@	"NO_DOCS=true"
+
+@WITH_CACAO_TRUE@am__append_5 = \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao.patch
 
 subdir = .
@@ -289,7 +295,7 @@ ICEDTEA_ENV = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ZERO_ARCHFLAG=$(ZERO_ARCHFLAG)" \
 	"LIBFFI_CFLAGS=$(LIBFFI_CFLAGS)" "LIBFFI_LIBS=$(LIBFFI_LIBS)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
-	"FT2_LIB=$(FREETYPE2_LIBS)" $(am__append_1)
+	"FT2_LIB=$(FREETYPE2_LIBS)" $(am__append_1) $(am__append_2)
 
 # OpenJDK ecj build environment.
 ICEDTEA_BUILD_DIR_ECJ = \
@@ -326,7 +332,7 @@ ICEDTEA_ENV_ECJ = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ZERO_ARCHFLAG=$(ZERO_ARCHFLAG)" \
 	"LIBFFI_CFLAGS=$(LIBFFI_CFLAGS)" "LIBFFI_LIBS=$(LIBFFI_LIBS)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
-	"FT2_LIB=$(FREETYPE2_LIBS)" $(am__append_2)
+	"FT2_LIB=$(FREETYPE2_LIBS)" $(am__append_3) $(am__append_4)
 
 # OpenJDK Source Preparation Targets
 # ==================================
@@ -387,7 +393,7 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
 	patches/icedtea-arm-uname.patch $(GCC_PATCH) \
-	$(FAST_BUILD_PATCH) $(DISTRIBUTION_PATCHES) $(am__append_3)
+	$(FAST_BUILD_PATCH) $(DISTRIBUTION_PATCHES) $(am__append_5)
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch

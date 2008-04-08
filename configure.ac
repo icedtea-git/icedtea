@@ -101,6 +101,12 @@ AC_ARG_ENABLE([gcjwebplugin],
 	      [ENABLE_PLUGIN="$val"], [ENABLE_PLUGIN='yes'])
 AC_SUBST(ENABLE_PLUGIN)
 
+AC_ARG_ENABLE([docs],
+	      [AS_HELP_STRING([--disable-docs], 
+	      		      [Disable generation of documentation])],
+	      [ENABLE_DOCS="$val"], [ENABLE_DOCS='yes'])
+AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
+
 AC_ARG_WITH([icedtea],
         [AS_HELP_STRING([--with-icedtea],
                         [build IcedTea with system-installed IcedTea])],

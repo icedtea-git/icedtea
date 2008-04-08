@@ -722,6 +722,8 @@ SYSTEM_OPENJDK_DIR
 SYSTEM_ICEDTEA_DIR
 SYSTEM_ANT_DIR
 ENABLE_PLUGIN
+ENABLE_DOCS_TRUE
+ENABLE_DOCS_FALSE
 WITH_ICEDTEA_TRUE
 WITH_ICEDTEA_FALSE
 WITH_OPENJDK_TRUE
@@ -1417,6 +1419,7 @@ Optional Features:
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
   --disable-gcjwebplugin  Disable compilation of browser plugin
+  --disable-docs          Disable generation of documentation
   --enable-fast-build     optimize for quick building: use -O0 and do not
                           build documentation
   --enable-zero           use zero-assembler port on non-zero platforms
@@ -5537,6 +5540,22 @@ else
   ENABLE_PLUGIN='yes'
 fi
 
+
+
+# Check whether --enable-docs was given.
+if test "${enable_docs+set}" = set; then
+  enableval=$enable_docs; ENABLE_DOCS="$val"
+else
+  ENABLE_DOCS='yes'
+fi
+
+ if test x$ENABLE_DOCS = xyes; then
+  ENABLE_DOCS_TRUE=
+  ENABLE_DOCS_FALSE='#'
+else
+  ENABLE_DOCS_TRUE='#'
+  ENABLE_DOCS_FALSE=
+fi
 
 
 
@@ -11780,6 +11799,13 @@ echo "$as_me: error: conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${ENABLE_DOCS_TRUE}" && test -z "${ENABLE_DOCS_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"ENABLE_DOCS\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"ENABLE_DOCS\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${WITH_ICEDTEA_TRUE}" && test -z "${WITH_ICEDTEA_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"WITH_ICEDTEA\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -12560,6 +12586,8 @@ SYSTEM_OPENJDK_DIR!$SYSTEM_OPENJDK_DIR$ac_delim
 SYSTEM_ICEDTEA_DIR!$SYSTEM_ICEDTEA_DIR$ac_delim
 SYSTEM_ANT_DIR!$SYSTEM_ANT_DIR$ac_delim
 ENABLE_PLUGIN!$ENABLE_PLUGIN$ac_delim
+ENABLE_DOCS_TRUE!$ENABLE_DOCS_TRUE$ac_delim
+ENABLE_DOCS_FALSE!$ENABLE_DOCS_FALSE$ac_delim
 WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
 WITH_ICEDTEA_FALSE!$WITH_ICEDTEA_FALSE$ac_delim
 WITH_OPENJDK_TRUE!$WITH_OPENJDK_TRUE$ac_delim
@@ -12635,7 +12663,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 83; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 85; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
