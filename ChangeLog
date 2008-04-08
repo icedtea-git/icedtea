@@ -1,3 +1,7 @@
+2008-04-08  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-text-relocations.patch: Use -fPIC on sparc/sparc64.
+
 2008-04-08  Joshua Sumali  <jsumali@redhat.com>
 
 	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
