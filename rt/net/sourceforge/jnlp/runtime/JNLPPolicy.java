@@ -17,10 +17,7 @@
 
 package net.sourceforge.jnlp.runtime;
 
-import java.awt.*;
-import javax.swing.*;
 import java.security.*;
-
 
 /**
  * Policy for JNLP environment.  This class delegates to the
@@ -55,13 +52,17 @@ public class JNLPPolicy extends Policy {
      * for the source.
      */
     public PermissionCollection getPermissions(CodeSource source) {
-        if (source == null
-            || source.equals(systemSource) 
-            || source.equals(shellSource))
+        if (source.equals(systemSource) || source.equals(shellSource))
             return getAllPermissions();
 
         // if we check the SecurityDesc here then keep in mind that
         // code can add properties at runtime to the ResourcesDesc!
+        if (JNLPRuntime.getApplication() != null) {
+        	if (JNLPRuntime.getApplication().getClassLoader() instanceof JNLPClassLoader) {
+        		JNLPClassLoader cl = (JNLPClassLoader) JNLPRuntime.getApplication().getClassLoader();
+        		return cl.getPermissions(source);
+        	}
+        }
 
         // delegate to original Policy object; required to run under WebStart
         return systemPolicy.getPermissions(source);
@@ -84,6 +85,11 @@ public class JNLPPolicy extends Policy {
         return result;
     }
 
+	public boolean implies(ProtectionDomain domain, Permission permission) {
+		//Include the permissions that may be added during runtime.
+		PermissionCollection pc = getPermissions(domain.getCodeSource());
+		return super.implies(domain, permission) || pc.implies(permission);
+	}
 }
 
 

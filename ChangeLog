@@ -1,3 +1,39 @@
+2008-04-08  Joshua Sumali  <jsumali@redhat.com>
+
+	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
+	* patches/icedtea-webservices.patch: Relaxed visiblity a bit more in
+	sun.applet.AppletPanel for NetxPanel.
+	* rt/net/sourceforge/jnlp/Launcher.java
+	(getApplet(file, enableCodeBase, container)): New method.
+	(createAppletObject(file, enableCodeBase, container)): Likewise.
+	* rt/net/sourceforge/jnlp/NetxPanel.java: Removed run() and replaced with
+	new method runLoader().
+	* rt/net/sourceforge/jnlp/PluginBridge.java: Refactored.
+	(isApplet): New method.
+	(isApplication): Likewise.
+	(isComponent): Likewise.
+	(isInstaller): Likewise.
+	* rt/net/sourceforge/jnlp/resources/Messages.properties: Added message for
+	network access.
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java
+	(runtimePermissions): New field.
+	(setSecurity): New method.
+	(addPermission(perm)): Likewise.
+	(getSecurity): Likewise.
+	* rt/net/sourceforge/jnlp/runtime/JNLPPolicy.java: Check runtime
+	permissions for permissions that may have been granted by the user.
+	(implies): New method.
+	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Catch socket
+	permission requests, and ask user for permission when application is
+	unsigned.
+	(askPermission(perm)): New method.
+	(addPermission(perm)): Likewise.
+	* rt/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Add NETWORK
+	type access, and allow passing of parameters for message dialogs.
+	(showAccessWarningDialogs(accessType, file, extras)): New method.
+	* rt/net/sourceforge/jnlp/services/ServiceUtil.java
+	(checkAccess(type, extras)): New method.
+
 2008-04-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am: Add NO_DOCS option as

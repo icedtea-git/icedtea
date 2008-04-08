@@ -47,8 +47,6 @@ import javax.swing.plaf.OptionPaneUI;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.security.cert.CertPath;
 import java.security.cert.X509Certificate;
 
 /**
@@ -76,7 +74,7 @@ public class SecurityWarningDialog extends JOptionPane {
         CLIPBOARD_READ,
         CLIPBOARD_WRITE,
         PRINTER,
-		NETWORK,
+        NETWORK,
         VERIFIED,
         UNVERIFIED,
         SIGNING_ERROR
@@ -95,6 +93,12 @@ public class SecurityWarningDialog extends JOptionPane {
 	
 	private X509Certificate cert;
 	
+	/** An optional String array that's only necessary when a dialog
+	 * label requires some parameters (e.g. showing which address an application
+	 * is trying to connect to).
+	 */ 
+	private Object[] extras;
+	
 	/** Whether or not this object has been fully initialized */
 	private boolean initialized = false;
 
@@ -110,23 +114,34 @@ public class SecurityWarningDialog extends JOptionPane {
 	
 	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
 			JNLPFile file, JarSigner jarSigner) {
-			this.dialogType = dialogType;
-			this.accessType = accessType;
-			this.file = file;
-			this.jarSigner = jarSigner;
-			initialized = true;
-			updateUI();
+		this.dialogType = dialogType;
+		this.accessType = accessType;
+		this.file = file;
+		this.jarSigner = jarSigner;
+		initialized = true;
+		updateUI();
+	}
+	
+	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
+			JNLPFile file, Object[] extras) {
+		this.dialogType = dialogType;
+		this.accessType = accessType;
+		this.file = file;
+		this.jarSigner = null;
+		initialized = true;
+		this.extras = extras;
+		updateUI();
 	}
 	
 	//for displaying a single certificate
 	public SecurityWarningDialog(DialogType dialogType, X509Certificate c) {
-			this.dialogType = dialogType;
-			this.accessType = null;
-			this.file = null;
-			this.jarSigner = null;
-			this.cert = c;
-			initialized = true;
-			updateUI();
+		this.dialogType = dialogType;
+		this.accessType = null;
+		this.file = null;
+		this.jarSigner = null;
+		this.cert = c;
+		initialized = true;
+		updateUI();
 	}
 	
 	/**
@@ -147,27 +162,42 @@ public class SecurityWarningDialog extends JOptionPane {
 	 */
 	public static boolean showAccessWarningDialog(AccessType accessType, 
 		JNLPFile file) {
-		SecurityWarningDialog swd = new SecurityWarningDialog(
-				DialogType.ACCESS_WARNING, accessType, file);
-		JDialog dialog = swd.createDialog();
-		swd.selectInitialValue();
-		dialog.setResizable(true);
-		centerDialog(dialog);
-		dialog.setVisible(true);
-		dialog.dispose();
-
-		Object selectedValue = swd.getValue();
-		if (selectedValue == null) {
-			return false;
-		} else if (selectedValue instanceof Integer) {
-			if (((Integer)selectedValue).intValue() == 0)
-				return true;
-			else
-				return false;
-		} else {
-			return false;
-		}
+		return showAccessWarningDialog(accessType, file, null);
 	}
+	
+	/**
+	 * Shows a warning dialog for different types of system access (i.e. file
+	 * open/save, clipboard read/write, printing, etc).
+	 * 
+	 * @param accessType the type of system access requested.
+	 * @param file the jnlp file associated with the requesting application.
+	 * @param extras an optional array of Strings (typically) that gets 
+	 * passed to the dialog labels.
+	 * @return true if permission was granted by the user, false otherwise.
+	 */
+	public static boolean showAccessWarningDialog(AccessType accessType, 
+			JNLPFile file, Object[] extras) {
+			SecurityWarningDialog swd = new SecurityWarningDialog(
+					DialogType.ACCESS_WARNING, accessType, file, extras);
+			JDialog dialog = swd.createDialog();
+			swd.selectInitialValue();
+			dialog.setResizable(true);
+			centerDialog(dialog);
+			dialog.setVisible(true);
+			dialog.dispose();
+
+			Object selectedValue = swd.getValue();
+			if (selectedValue == null) {
+				return false;
+			} else if (selectedValue instanceof Integer) {
+				if (((Integer)selectedValue).intValue() == 0)
+					return true;
+				else
+					return false;
+			} else {
+				return false;
+			}
+		}
 	
 	/**
 	 * Shows a security warning dialog according to the specified type of
@@ -261,7 +291,7 @@ public class SecurityWarningDialog extends JOptionPane {
 	
 	public static int showAppletWarning() {
         	SecurityWarningDialog swd = new SecurityWarningDialog(DialogType.APPLET_WARNING,
-            		null, null, null);
+            		null, null, (JarSigner) null);
         	JDialog dialog = swd.createDialog();
 		centerDialog(dialog);
         	swd.selectInitialValue();
@@ -375,7 +405,7 @@ public class SecurityWarningDialog extends JOptionPane {
 		else if (dialogType == DialogType.SINGLE_CERT_INFO)
 			setUI((OptionPaneUI) new SingleCertInfoPane(this));
 		else if (dialogType == DialogType.ACCESS_WARNING)
-			setUI((OptionPaneUI) new AccessWarningPane(this));
+			setUI((OptionPaneUI) new AccessWarningPane(this, extras));
 		else if (dialogType == DialogType.APPLET_WARNING)
 			setUI((OptionPaneUI) new AppletWarningPane(this));
 	}
