@@ -25,69 +25,63 @@
 
 // Implementation of class atomic
 
-// inline void Atomic::store(jbyte store_value, jbyte* dest)
-// {
-//   Unimplemented();
-// }
-// inline void Atomic::store(jshort store_value, jshort* dest)
-// {
-//   Unimplemented();
-// }
-// inline void Atomic::store(jint store_value, jint* dest)
-// {
-//   Unimplemented();
-// }
-// inline void Atomic::store(jlong store_value, jlong* dest)
-// {
-//   Unimplemented();
-// }
-inline void Atomic::store_ptr(intptr_t store_value, intptr_t* dest)
-{
-  Unimplemented();
-}
-// inline void Atomic::store_ptr(void* store_value, void* dest)
-// {
-//   Unimplemented();
-// }
+#ifdef ARM
+typedef int (__kernel_cmpxchg_t)(int oldval, int newval, volatile int *ptr);
+#define __kernel_cmpxchg (*(__kernel_cmpxchg_t *) 0xffff0fc0)
 
-// inline void Atomic::store(jbyte store_value, volatile jbyte* dest)
-// {
-//   Unimplemented();
-// }
-// inline void Atomic::store(jshort store_value, volatile jshort* dest)
-// {
-//   Unimplemented();
-// }
+static inline int arm_compare_and_swap(volatile int *ptr,
+                                       int oldval,
+                                       int newval) {
+  int old = *ptr;
+  __kernel_cmpxchg(oldval, newval, (volatile int*) ptr);
+  return old;
+}
+
+static inline int arm_add_and_fetch(volatile int *dest, int add_value)
+{
+  arm_compare_and_swap(dest, *dest, *dest + add_value);
+  return *dest;
+}
+
+static inline int arm_lock_test_and_set(volatile int *ptr, int newval)
+{
+  int old = *ptr;
+  arm_compare_and_swap(ptr, *ptr, newval);
+  return old;
+}
+#endif // ARM
+
 inline void Atomic::store(jint store_value, volatile jint* dest)
 {
   *dest = store_value;
 }
-// inline void Atomic::store(jlong store_value, volatile jlong* dest)
-// {
-//   Unimplemented();
-// }
-// inline void Atomic::store_ptr(intptr_t store_value, volatile intptr_t* dest)
-// {
-//   Unimplemented();
-// }
-// inline void Atomic::store_ptr(void* store_value, volatile void* dest)
-// {
-//   Unimplemented();
-// }
+
+inline void Atomic::store_ptr(intptr_t store_value, intptr_t* dest)
+{
+  Unimplemented();
+}
 
 inline jint Atomic::add(jint add_value, volatile jint* dest)
 {
+#ifdef ARM
+  return arm_add_and_fetch(dest, add_value);
+#else
   return __sync_add_and_fetch(dest, add_value);
+#endif // ARM
 }
 
 inline intptr_t Atomic::add_ptr(intptr_t add_value, volatile intptr_t* dest)
 {
+#ifdef ARM
+  return arm_add_and_fetch(dest, add_value);
+#else
   return __sync_add_and_fetch(dest, add_value);
+#endif // ARM
 }
 
 inline void* Atomic::add_ptr(intptr_t add_value, volatile void* dest)
 {
-  return (void*)add_ptr(add_value, (volatile intptr_t*)dest);
+  return (void *) add_ptr(add_value, (volatile intptr_t *) dest);
 }
 
 inline void Atomic::inc(volatile jint* dest)
@@ -122,39 +116,64 @@ inline void Atomic::dec_ptr(volatile void* dest)
 
 inline jint Atomic::xchg(jint exchange_value, volatile jint* dest)
 {
+#ifdef ARM
+  return arm_lock_test_and_set(dest, exchange_value);
+#else
   // __sync_lock_test_and_set is a bizarrely named atomic exchange
   // operation.  Note that some platforms only support this with the
   // limitation that the only valid value to store is the immediate
   // constant 1.  There is a test for this in JNI_CreateJavaVM().
   return __sync_lock_test_and_set (dest, exchange_value);
+#endif // ARM
 }
 
-inline intptr_t Atomic::xchg_ptr(intptr_t exchange_value, volatile intptr_t* dest)
-{
+inline intptr_t Atomic::xchg_ptr(intptr_t exchange_value,
+                                 volatile intptr_t* dest) {
+#ifdef ARM
+  return arm_lock_test_and_set(dest, exchange_value);
+#else
   return __sync_lock_test_and_set (dest, exchange_value);
+#endif // ARM
 }
 
 inline void* Atomic::xchg_ptr(void* exchange_value, volatile void* dest)
 {
-  return (void*)xchg_ptr((intptr_t)exchange_value, (volatile intptr_t*)dest);
+  return (void *) xchg_ptr((intptr_t) exchange_value,
+                           (volatile intptr_t*) dest);
 }
 
-inline jint Atomic::cmpxchg(jint exchange_value, volatile jint* dest, jint compare_value)
-{
+inline jint Atomic::cmpxchg(jint exchange_value,
+                            volatile jint* dest,
+                            jint compare_value) {
+#ifdef ARM
+  return arm_compare_and_swap(dest, compare_value, exchange_value);
+#else
+  return __sync_val_compare_and_swap(dest, compare_value, exchange_value);
+#endif // ARM
+}
+
+inline jlong Atomic::cmpxchg(jlong exchange_value,
+                             volatile jlong* dest,
+                             jlong compare_value) {
+
   return __sync_val_compare_and_swap(dest, compare_value, exchange_value);
 }
 
-inline jlong Atomic::cmpxchg(jlong exchange_value, volatile jlong* dest, jlong compare_value)
-{
+inline intptr_t Atomic::cmpxchg_ptr(intptr_t exchange_value,
+                                    volatile intptr_t* dest,
+                                    intptr_t compare_value) {
+#ifdef ARM
+  return arm_compare_and_swap(dest, compare_value, exchange_value);
+#else
   return __sync_val_compare_and_swap(dest, compare_value, exchange_value);
+#endif // ARM
 }
 
-inline intptr_t Atomic::cmpxchg_ptr(intptr_t exchange_value, volatile intptr_t* dest, intptr_t compare_value)
-{
-  return __sync_val_compare_and_swap(dest, compare_value, exchange_value);
-}
+inline void* Atomic::cmpxchg_ptr(void* exchange_value,
+                                 volatile void* dest,
+                                 void* compare_value) {
 
-inline void* Atomic::cmpxchg_ptr(void* exchange_value, volatile void* dest, void* compare_value)
-{
-  return (void*)cmpxchg_ptr((intptr_t)exchange_value, (volatile intptr_t*)dest, (intptr_t)compare_value);
+  return (void *) cmpxchg_ptr((intptr_t) exchange_value,
+                              (volatile intptr_t*) dest,
+                              (intptr_t) compare_value);
 }

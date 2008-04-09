@@ -1,3 +1,19 @@
+2008-04-09  Gary Benson  <gbenson@redhat.com>
+	    Xerxes Rånby <xerxes@zafena.se>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp
+	(__kernel_cmpxchg_t): New type.
+	(__kernel_cmpxchg): New macro.
+	(arm_compare_and_swap): New function.
+	(Atomic::cmpxchg): Use the above on arm.
+	(Atomic::cmpxchg_ptr): Likewise.
+	(arm_add_and_fetch): New function.
+	(Atomic::add): Use the above on arm.
+	(Atomic::add_ptr): Likewise.	
+	(arm_lock_test_and_set): New function.
+	(Atomic::xchg): Use the above on arm.
+	(Atomic::xchg_ptr): Likewise.	
+
 2008-04-08  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-text-relocations.patch: Use -fPIC on sparc/sparc64.
