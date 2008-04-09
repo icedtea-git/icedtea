@@ -1,3 +1,7 @@
+2008-04-09  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-libraries.patch: Updated LDLIBS for jpeg.
+
 2008-04-09  Gary Benson  <gbenson@redhat.com>
 	    Xerxes Rånby <xerxes@zafena.se>
 
