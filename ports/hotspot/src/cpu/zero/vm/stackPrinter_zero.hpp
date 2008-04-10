@@ -36,10 +36,16 @@ class ZeroStackPrinter {
   void print(JavaThread *thread)
   {
     intptr_t *lo_addr = thread->zero_stack()->sp();
-    intptr_t *hi_addr = (intptr_t *) thread->top_zero_frame();
+    if (!lo_addr) {
+      _st->print(" stack not set up");
+      return;
+    }
 
-    assert(lo_addr, "stack not set up?");
-    assert(hi_addr, "no frames pushed?");
+    intptr_t *hi_addr = (intptr_t *) thread->top_zero_frame();
+    if (!hi_addr) {
+      _st->print("no frames pushed"); 
+      return;
+    }
     assert(hi_addr >= lo_addr, "corrupted stack");
 
     bool top_frame = true;

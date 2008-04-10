@@ -1,5 +1,10 @@
 2008-04-10  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
+	(ZeroStackPrinter::print): Fail gracefully when not set up.
+
+2008-04-10  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/javaStack_zero.hpp: Renamed as...
 	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp: New file.
 	Renamed JavaStack as ZeroStack, JavaFrame as ZeroFrame, and
