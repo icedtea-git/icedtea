@@ -67,4 +67,4 @@ address ShouldNotReachHereStub();
 // Nothing to do with the assembler (or lack of),
 // just a real convenient place to include these.
 #include <ffi.h>
-#include <javaStack_zero.hpp>
+#include <stack_zero.hpp>

@@ -30,7 +30,7 @@
  public:
   static bool returns_to_call_stub(address return_pc)
   {
-    return ((JavaFrame *) return_pc)->is_entry_frame();
+    return ((ZeroFrame *) return_pc)->is_entry_frame();
   }
 
   enum platform_dependent_constants

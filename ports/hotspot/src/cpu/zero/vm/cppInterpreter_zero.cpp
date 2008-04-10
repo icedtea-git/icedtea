@@ -40,7 +40,7 @@
 void CppInterpreter::normal_entry(methodOop method, TRAPS)
 {
   JavaThread *thread = (JavaThread *) THREAD;
-  JavaStack *stack = thread->java_stack();
+  ZeroStack *stack = thread->zero_stack();
 
   // Adjust the caller's stack frame to accomodate any additional
   // local variables we have contiguously with our parameters.
@@ -55,7 +55,7 @@ void CppInterpreter::normal_entry(methodOop method, TRAPS)
 
   // Allocate and initialize our frame.
   InterpreterFrame *frame = InterpreterFrame::build(stack, method, thread);
-  thread->push_Java_frame(frame);
+  thread->push_zero_frame(frame);
   interpreterState istate = frame->interpreter_state();
 
   intptr_t *result = NULL;
@@ -137,7 +137,7 @@ void CppInterpreter::normal_entry(methodOop method, TRAPS)
   }
 
   // Unwind the current frame
-  thread->pop_Java_frame();
+  thread->pop_zero_frame();
 
   // Pop our local variables
   stack->set_sp(stack->sp() + method->max_locals());
@@ -150,11 +150,11 @@ void CppInterpreter::normal_entry(methodOop method, TRAPS)
 void CppInterpreter::native_entry(methodOop method, TRAPS)
 {
   JavaThread *thread = (JavaThread *) THREAD;
-  JavaStack *stack = thread->java_stack();
+  ZeroStack *stack = thread->zero_stack();
 
   // Allocate and initialize our frame
   InterpreterFrame *frame = InterpreterFrame::build(stack, method, thread);
-  thread->push_Java_frame(frame);
+  thread->push_zero_frame(frame);
   interpreterState istate = frame->interpreter_state();
   intptr_t *locals = istate->locals();
 
@@ -176,7 +176,7 @@ void CppInterpreter::native_entry(methodOop method, TRAPS)
       else {
         CALL_VM_NOCHECK(InterpreterRuntime::monitorenter(thread, monitor));
         if (HAS_PENDING_EXCEPTION) {
-          thread->pop_Java_frame();
+          thread->pop_zero_frame();
           return;
         }
       }
@@ -188,7 +188,7 @@ void CppInterpreter::native_entry(methodOop method, TRAPS)
   if (handlerAddr == NULL) {
     CALL_VM_NOCHECK(InterpreterRuntime::prepare_native_call(thread, method));
     if (HAS_PENDING_EXCEPTION) {
-      thread->pop_Java_frame();
+      thread->pop_zero_frame();
       return;
     }
     handlerAddr = method->signature_handler();
@@ -198,7 +198,7 @@ void CppInterpreter::native_entry(methodOop method, TRAPS)
     CALL_VM_NOCHECK(handlerAddr =
       InterpreterRuntime::slow_signature_handler(thread, method, NULL, NULL));
     if (HAS_PENDING_EXCEPTION) {
-      thread->pop_Java_frame();
+      thread->pop_zero_frame();
       return;
     }
   }
@@ -304,7 +304,7 @@ void CppInterpreter::native_entry(methodOop method, TRAPS)
   }
 
   // Unwind the current activation
-  thread->pop_Java_frame();
+  thread->pop_zero_frame();
 
   // Pop our parameters
   stack->set_sp(stack->sp() + method->size_of_parameters());
@@ -378,7 +378,7 @@ void CppInterpreter::native_entry(methodOop method, TRAPS)
 void CppInterpreter::accessor_entry(methodOop method, TRAPS)
 {
   JavaThread *thread = (JavaThread *) THREAD;
-  JavaStack *stack = thread->java_stack();
+  ZeroStack *stack = thread->zero_stack();
   intptr_t *locals = stack->sp();
 
   // Drop into the slow path if we need a safepoint check
@@ -509,7 +509,7 @@ void CppInterpreter::accessor_entry(methodOop method, TRAPS)
 void CppInterpreter::empty_entry(methodOop method, TRAPS)
 {
   JavaThread *thread = (JavaThread *) THREAD;
-  JavaStack *stack = thread->java_stack();
+  ZeroStack *stack = thread->zero_stack();
 
   // Drop into the slow path if we need a safepoint check
   if (SafepointSynchronize::do_call_back()) {
@@ -521,7 +521,7 @@ void CppInterpreter::empty_entry(methodOop method, TRAPS)
   stack->set_sp(stack->sp() + method->size_of_parameters());
 }
 
-InterpreterFrame *InterpreterFrame::build(JavaStack*       stack,
+InterpreterFrame *InterpreterFrame::build(ZeroStack*       stack,
                                           const methodOop  method,
                                           JavaThread*      thread)
 {

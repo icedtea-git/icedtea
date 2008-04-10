@@ -142,7 +142,7 @@ IRT_ENTRY(address,
                                                      methodOop   method,
                                                      intptr_t*   unused1,
                                                      intptr_t*   unused2))
-  JavaStack *stack = thread->java_stack();
+  ZeroStack *stack = thread->zero_stack();
 
   int required_words =
     (align_size_up(sizeof(ffi_cif), wordSize) >> LogBytesPerWord) +

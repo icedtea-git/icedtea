@@ -45,7 +45,7 @@ class StubGenerator: public StubCodeGenerator
     TRAPS)
   {
     JavaThread *thread = (JavaThread *) THREAD;
-    JavaStack *stack = thread->java_stack();
+    ZeroStack *stack = thread->zero_stack();
 
     // Make sure we have no pending exceptions
     assert(!HAS_PENDING_EXCEPTION, "call_stub called with pending exception");
@@ -55,14 +55,14 @@ class StubGenerator: public StubCodeGenerator
     if (stack->needs_setup()) {
       size_t stack_used = thread->stack_base() - (address) &stack_used;
       size_t stack_free = thread->stack_size() - stack_used;
-      size_t java_stack_size = align_size_down(stack_free / 2, wordSize);
+      size_t zero_stack_size = align_size_down(stack_free / 2, wordSize);
 
-      stack->setup(alloca(java_stack_size), java_stack_size);
+      stack->setup(alloca(zero_stack_size), zero_stack_size);
       stack_needs_teardown = true;
     }
 
     // Allocate and initialize our frame
-    thread->push_Java_frame(
+    thread->push_zero_frame(
       EntryFrame::build(stack, parameters, parameter_words, call_wrapper));
 
     // Make the call
@@ -86,7 +86,7 @@ class StubGenerator: public StubCodeGenerator
     }
 
     // Unwind our frame
-    thread->pop_Java_frame();
+    thread->pop_zero_frame();
 
     // Tear down the stack if necessary
     if (stack_needs_teardown)
@@ -228,7 +228,7 @@ void StubGenerator_generate(CodeBuffer* code, bool all)
   StubGenerator g(code, all);
 }
 
-EntryFrame *EntryFrame::build(JavaStack*       stack,
+EntryFrame *EntryFrame::build(ZeroStack*       stack,
                               const intptr_t*  parameters,
                               int              parameter_words,
                               JavaCallWrapper* call_wrapper)

@@ -1,3 +1,24 @@
+2008-04-10  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/javaStack_zero.hpp: Renamed as...
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp: New file.
+	Renamed JavaStack as ZeroStack, JavaFrame as ZeroFrame, and
+	JavaStackPrinter as ZeroStackPrinter.
+	* patches/icedtea-zero.patch: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/entryFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreterFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubGenerator_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp:
+	Likewise.
+
 2008-04-09  Dan Munckton  <lists@munckfish.net>
 
 	* patches/icedtea-xinerama.patch: Make Java Full Screen Exclusive Mode

@@ -48,7 +48,7 @@ inline frame::frame(intptr_t* sp)
 
 inline intptr_t* frame::sender_sp() const
 {
-  return (intptr_t *) ((JavaFrame *) sp())->next();
+  return (intptr_t *) ((ZeroFrame *) sp())->next();
 }
 
 inline intptr_t* frame::link() const

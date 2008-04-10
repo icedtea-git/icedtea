@@ -34,11 +34,11 @@
 // +--------------------+  ------------------
 // |  ...               |
 
-class EntryFrame : public JavaFrame {
-  friend class JavaStackPrinter;
+class EntryFrame : public ZeroFrame {
+  friend class ZeroStackPrinter;
 
  private:
-  EntryFrame() : JavaFrame()
+  EntryFrame() : ZeroFrame()
   {
     ShouldNotCallThis();
   }
@@ -50,7 +50,7 @@ class EntryFrame : public JavaFrame {
   };
 
  public:
-  static EntryFrame *build(JavaStack*       stack,
+  static EntryFrame *build(ZeroStack*       stack,
                            const intptr_t*  parameters,
                            int              parameter_words,
                            JavaCallWrapper* call_wrapper);

@@ -120,7 +120,7 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
         JavaThread* jt = (JavaThread*)_thread;
 +#ifdef ZERO
 +       st->print_cr("Java stack:");
-+       JavaStackPrinter(st, buf, sizeof(buf)).print(jt);
++       ZeroStackPrinter(st, buf, sizeof(buf)).print(jt);
 +#else
         if (jt->has_last_Java_frame()) {
           st->print_cr("Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)");

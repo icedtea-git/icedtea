@@ -99,7 +99,7 @@
 #define SET_LAST_JAVA_FRAME()
 #define RESET_LAST_JAVA_FRAME()
 
-// JavaStack Implementation
+// ZeroStack Implementation
 
 #undef STACK_INT
 #undef STACK_FLOAT

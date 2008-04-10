@@ -35,7 +35,7 @@ void RegisterMap::check_location_valid()
 
 bool frame::is_interpreted_frame() const
 {
-  return ((JavaFrame *) sp())->is_interpreter_frame();
+  return ((ZeroFrame *) sp())->is_interpreter_frame();
 }
 
 frame frame::sender_for_entry_frame(RegisterMap *map) const

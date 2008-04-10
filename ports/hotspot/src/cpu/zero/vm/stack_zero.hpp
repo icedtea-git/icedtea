@@ -23,14 +23,14 @@
  *
  */
 
-class JavaStack {
+class ZeroStack {
  private:
   intptr_t *_base; // the last available word
   intptr_t *_top;  // the word past the end of the stack
   intptr_t *_sp;   // the top word on the stack
 
  public:
-  JavaStack()
+  ZeroStack()
     : _base(NULL), _top(NULL), _sp(NULL) {}
 
   bool needs_setup() const
@@ -103,11 +103,11 @@ class JavaStack {
 // +--------------------+  ------------------
 // |  ...               |
 
-class JavaFrame {
-  friend class JavaStackPrinter;
+class ZeroFrame {
+  friend class ZeroStackPrinter;
 
  protected:
-  JavaFrame()
+  ZeroFrame()
   {
     ShouldNotCallThis();
   }
@@ -135,9 +135,9 @@ class JavaFrame {
   }
   
  public:
-  JavaFrame *next() const
+  ZeroFrame *next() const
   {
-    return (JavaFrame *) value_of_word(next_frame_off);
+    return (ZeroFrame *) value_of_word(next_frame_off);
   }
 
  protected:
