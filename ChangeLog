@@ -1,3 +1,7 @@
+2008-04-11  Lillian Angel  <langel@redhat.com>
+
+	* AUTHORS: Updated.
+
 2008-04-10  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
