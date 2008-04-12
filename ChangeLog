@@ -1,3 +1,8 @@
+2008-04-12  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am: Updated to OpenJDK b09 release.
+	* Makefile.in: Regenerated.
+
 2008-04-11  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Updated.

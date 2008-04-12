@@ -237,9 +237,9 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-OPENJDK_DATE = 26_mar_2008
-OPENJDK_MD5SUM = 18f325ec51da83783c48b1fcb72c053c
-OPENJDK_VERSION = b08
+OPENJDK_DATE = 11_apr_2008
+OPENJDK_MD5SUM = 9ef5b6e83ec0c7a32bffd1a4de50fe5c
+OPENJDK_VERSION = b09
 @NETX_PLUGIN_FALSE@NETX_PATCH = 
 @NETX_PLUGIN_TRUE@NETX_PATCH = patches/icedtea-netx-plugin.patch
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
@@ -392,9 +392,9 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
-	patches/icedtea-xinerama.patch \
-	patches/icedtea-arm-uname.patch $(GCC_PATCH) \
-	$(FAST_BUILD_PATCH) $(DISTRIBUTION_PATCHES) $(am__append_5)
+	patches/icedtea-xinerama.patch patches/icedtea-arm-uname.patch \
+	$(GCC_PATCH) $(FAST_BUILD_PATCH) $(DISTRIBUTION_PATCHES) \
+	$(am__append_5)
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch
