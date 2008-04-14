@@ -9,6 +9,9 @@ AC_PREFIX_DEFAULT([bootstrap])
 AC_PROG_CC
 AC_PROG_CXX
 
+FIND_TOOL([MAKE], [make])
+FIND_TOOL([GZIP], [gzip])
+FIND_TOOL([ANT], [ant])
 FIND_TOOL([FIND], [find])
 FIND_TOOL([PATCH], [patch])
 FIND_TOOL([TAR], [tar])

@@ -704,6 +704,9 @@ ac_ct_CXX
 CXXDEPMODE
 am__fastdepCXX_TRUE
 am__fastdepCXX_FALSE
+MAKE
+GZIP
+ANT
 FIND
 PATCH
 TAR
@@ -4148,6 +4151,333 @@ else
   am__fastdepCXX_FALSE=
 fi
 
+
+
+if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}make", so it can be a program name with args.
+set dummy ${ac_tool_prefix}make; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_MAKE+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $MAKE in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_MAKE="$MAKE" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_MAKE="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+MAKE=$ac_cv_path_MAKE
+if test -n "$MAKE"; then
+  { echo "$as_me:$LINENO: result: $MAKE" >&5
+echo "${ECHO_T}$MAKE" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_MAKE"; then
+  ac_pt_MAKE=$MAKE
+  # Extract the first word of "make", so it can be a program name with args.
+set dummy make; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ac_pt_MAKE+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ac_pt_MAKE in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_MAKE="$ac_pt_MAKE" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ac_pt_MAKE="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_MAKE=$ac_cv_path_ac_pt_MAKE
+if test -n "$ac_pt_MAKE"; then
+  { echo "$as_me:$LINENO: result: $ac_pt_MAKE" >&5
+echo "${ECHO_T}$ac_pt_MAKE" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_pt_MAKE" = x; then
+    MAKE=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    MAKE=$ac_pt_MAKE
+  fi
+else
+  MAKE="$ac_cv_path_MAKE"
+fi
+
+ if test x"$MAKE" = x ; then
+   { { echo "$as_me:$LINENO: error: make program not found in PATH" >&5
+echo "$as_me: error: make program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
+
+
+if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}gzip", so it can be a program name with args.
+set dummy ${ac_tool_prefix}gzip; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_GZIP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $GZIP in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_GZIP="$GZIP" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_GZIP="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+GZIP=$ac_cv_path_GZIP
+if test -n "$GZIP"; then
+  { echo "$as_me:$LINENO: result: $GZIP" >&5
+echo "${ECHO_T}$GZIP" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_GZIP"; then
+  ac_pt_GZIP=$GZIP
+  # Extract the first word of "gzip", so it can be a program name with args.
+set dummy gzip; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ac_pt_GZIP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ac_pt_GZIP in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_GZIP="$ac_pt_GZIP" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ac_pt_GZIP="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_GZIP=$ac_cv_path_ac_pt_GZIP
+if test -n "$ac_pt_GZIP"; then
+  { echo "$as_me:$LINENO: result: $ac_pt_GZIP" >&5
+echo "${ECHO_T}$ac_pt_GZIP" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_pt_GZIP" = x; then
+    GZIP=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    GZIP=$ac_pt_GZIP
+  fi
+else
+  GZIP="$ac_cv_path_GZIP"
+fi
+
+ if test x"$GZIP" = x ; then
+   { { echo "$as_me:$LINENO: error: gzip program not found in PATH" >&5
+echo "$as_me: error: gzip program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
+
+
+if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}ant", so it can be a program name with args.
+set dummy ${ac_tool_prefix}ant; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ANT+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ANT in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ANT="$ANT" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ANT="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ANT=$ac_cv_path_ANT
+if test -n "$ANT"; then
+  { echo "$as_me:$LINENO: result: $ANT" >&5
+echo "${ECHO_T}$ANT" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_ANT"; then
+  ac_pt_ANT=$ANT
+  # Extract the first word of "ant", so it can be a program name with args.
+set dummy ant; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ac_pt_ANT+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ac_pt_ANT in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_ANT="$ac_pt_ANT" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ac_pt_ANT="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_ANT=$ac_cv_path_ac_pt_ANT
+if test -n "$ac_pt_ANT"; then
+  { echo "$as_me:$LINENO: result: $ac_pt_ANT" >&5
+echo "${ECHO_T}$ac_pt_ANT" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_pt_ANT" = x; then
+    ANT=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    ANT=$ac_pt_ANT
+  fi
+else
+  ANT="$ac_cv_path_ANT"
+fi
+
+ if test x"$ANT" = x ; then
+   { { echo "$as_me:$LINENO: error: ant program not found in PATH" >&5
+echo "$as_me: error: ant program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
 
 
 if test -n "$ac_tool_prefix"; then
@@ -12549,14 +12879,14 @@ ac_ct_CXX!$ac_ct_CXX$ac_delim
 CXXDEPMODE!$CXXDEPMODE$ac_delim
 am__fastdepCXX_TRUE!$am__fastdepCXX_TRUE$ac_delim
 am__fastdepCXX_FALSE!$am__fastdepCXX_FALSE$ac_delim
+MAKE!$MAKE$ac_delim
+GZIP!$GZIP$ac_delim
+ANT!$ANT$ac_delim
 FIND!$FIND$ac_delim
 PATCH!$PATCH$ac_delim
 TAR!$TAR$ac_delim
 CHMOD!$CHMOD$ac_delim
 MD5SUM!$MD5SUM$ac_delim
-WGET!$WGET$ac_delim
-ZIP!$ZIP$ac_delim
-UNZIP!$UNZIP$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -12598,6 +12928,9 @@ _ACEOF
 ac_delim='%!_!# '
 for ac_last_try in false false false false false :; do
   cat >conf$$subs.sed <<_ACEOF
+WGET!$WGET$ac_delim
+ZIP!$ZIP$ac_delim
+UNZIP!$UNZIP$ac_delim
 CPIO!$CPIO$ac_delim
 FILE!$FILE$ac_delim
 FASTJAR!$FASTJAR$ac_delim
@@ -12686,7 +13019,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 86; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 89; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
