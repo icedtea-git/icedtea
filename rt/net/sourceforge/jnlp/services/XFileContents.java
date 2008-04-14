@@ -24,6 +24,7 @@ import java.lang.ref.*;
 import javax.jnlp.*;
 
 import net.sourceforge.jnlp.*;
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 /**
  * File contents.
@@ -105,7 +106,7 @@ class XFileContents implements FileContents {
      * @throws IOException if an I/O exception occurs.
      */
     public JNLPRandomAccessFile getRandomAccessFile(String mode) throws IOException {
-        return null;
+        return new XJNLPRandomAccessFile(file, mode);
     }
 
     /**
