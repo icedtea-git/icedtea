@@ -139,6 +139,22 @@ AC_ARG_WITH([openjdk],
         ])
 AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" == true)
 
+AC_ARG_WITH([parallel-jobs],
+	[AS_HELP_STRING([--with-parallel-jobs],
+			[build IcedTea using the specified number of parallel jobs])],
+	[
+          if test "x${withval}" == x
+          then
+            PARALLEL_JOBS=2
+          else
+            PARALLEL_JOBS=${withval}
+          fi
+        ],
+        [
+          PARALLEL_JOBS=2
+        ])
+AC_SUBST(PARALLEL_JOBS)
+	
 SET_ARCH_DIRS
 if test "${with_openjdk}" == true
 then

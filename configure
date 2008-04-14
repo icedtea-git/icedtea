@@ -728,6 +728,7 @@ WITH_ICEDTEA_TRUE
 WITH_ICEDTEA_FALSE
 WITH_OPENJDK_TRUE
 WITH_OPENJDK_FALSE
+PARALLEL_JOBS
 BUILD_ARCH_DIR
 INSTALL_ARCH_DIR
 JAVA
@@ -1438,6 +1439,8 @@ Optional Packages:
   --with-ant-home         Ant home directory (default is /usr/share/ant)
   --with-icedtea          build IcedTea with system-installed IcedTea
   --with-openjdk          build IcedTea with system-installed OpenJDK
+  --with-parallel-jobs    build IcedTea using the specified number of parallel
+                          jobs
   --with-java             specify location of the 1.5 java vm
   --with-ecj              bytecode compilation with ecj
   --with-javac            bytecode compilation with javac
@@ -5608,6 +5611,25 @@ else
   WITH_OPENJDK_TRUE='#'
   WITH_OPENJDK_FALSE=
 fi
+
+
+
+# Check whether --with-parallel-jobs was given.
+if test "${with_parallel_jobs+set}" = set; then
+  withval=$with_parallel_jobs;
+          if test "x${withval}" == x
+          then
+            PARALLEL_JOBS=2
+          else
+            PARALLEL_JOBS=${withval}
+          fi
+
+else
+
+          PARALLEL_JOBS=2
+
+fi
+
 
 
 
@@ -12592,6 +12614,7 @@ WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
 WITH_ICEDTEA_FALSE!$WITH_ICEDTEA_FALSE$ac_delim
 WITH_OPENJDK_TRUE!$WITH_OPENJDK_TRUE$ac_delim
 WITH_OPENJDK_FALSE!$WITH_OPENJDK_FALSE$ac_delim
+PARALLEL_JOBS!$PARALLEL_JOBS$ac_delim
 BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
 INSTALL_ARCH_DIR!$INSTALL_ARCH_DIR$ac_delim
 JAVA!$JAVA$ac_delim
@@ -12663,7 +12686,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 85; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 86; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
