@@ -295,6 +295,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jpegclasses.patch \
 	patches/icedtea-xinerama.patch \
 	patches/icedtea-arm-uname.patch \
+	patches/icedtea-ia64-fdlibm.patch \
 	$(GCC_PATCH) \
 	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)

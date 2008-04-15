@@ -1,0 +1,12 @@
+diff -r 8c25a5a32f56 openjdk/jdk/src/share/native/java/lang/fdlibm/include/fdlibm.h
+--- openjdk/jdk/src/share/native/java/lang/fdlibm/include/fdlibm.h	Sun Apr 13 16:00:28 2008 +0100
++++ openjdk/jdk/src/share/native/java/lang/fdlibm/include/fdlibm.h	Tue Apr 15 15:30:59 2008 +0100
+@@ -30,7 +30,7 @@
+ #ifdef __NEWVALID       /* special setup for Sun test regime */
+ #if defined(i386) || defined(i486) || \
+         defined(intel) || defined(x86) || \
+-        defined(i86pc) || defined(_M_IA64)
++        defined(i86pc) || defined(ia64)
+ #define _LITTLE_ENDIAN
+ #endif
+ #endif
