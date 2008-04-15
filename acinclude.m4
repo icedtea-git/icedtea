@@ -521,14 +521,26 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
                 [AS_HELP_STRING(--enable-zero,
                                use zero-assembler port on non-zero platforms)],
   [
-    use_zero=yes
+    case "${enableval}" in
+      no)
+        use_zero=no
+        ;;
+      *)
+        use_zero=yes
+        ;;
+    esac
   ],
   [
     case "${host}" in
       i?86-*-*) ;;
       x86_64-*-*) ;;
       *)
-        use_zero=yes
+        if test "x${CACAO}" != xno; then
+          use_zero=no
+        else
+          use_zero=yes
+        fi
+        ;;
     esac
   ])
   AC_MSG_RESULT($use_zero)
@@ -626,7 +638,7 @@ AC_DEFUN([AC_CHECK_WITH_CACAO],
         CACAO=no
         ;;
       *)
-      CACAO=${withval}
+        CACAO=${withval}
         ;;
     esac
   ],
