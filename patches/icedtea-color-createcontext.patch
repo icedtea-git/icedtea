@@ -1,0 +1,36 @@
+*** openjdk/jdk/src/share/classes/java/awt/Color.java.orig	2008-04-02 17:12:00.000000000 -0700
+--- openjdk/jdk/src/share/classes/java/awt/Color.java	2008-04-02 17:29:29.000000000 -0700
+*************** public class Color implements Paint, jav
+*** 251,256 ****
+--- 251,262 ----
+       */
+      private ColorSpace cs = null;
+  
++     /**
++      * The <code>PaintContext</code> for this solid color.
++      * @see #createContext
++      */
++     private transient PaintContext context;
++ 
+      /*
+       * JDK 1.1 serialVersionUID
+       */
+*************** public class Color implements Paint, jav
+*** 1205,1211 ****
+                                                     Rectangle2D r2d,
+                                                     AffineTransform xform,
+                                                     RenderingHints hints) {
+!         return new ColorPaintContext(getRGB(), cm);
+      }
+  
+      /**
+--- 1211,1219 ----
+                                                     Rectangle2D r2d,
+                                                     AffineTransform xform,
+                                                     RenderingHints hints) {
+!       if (context == null || !context.getColorModel().equals(cm))
+! 	context = new ColorPaintContext(getRGB(), cm);
+!       return context;
+      }
+  
+      /**
