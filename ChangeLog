@@ -1,3 +1,9 @@
+2008-04-16  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-core-build.patch: Install libjvm.so in server
+	rather than in core.
+	* jvm.cfg.in: Updated with new libjvm.so location.
+
 2008-04-15  Gary Benson  <gbenson@redhat.com>
             Yi Zhan <yi.zhan@intel.com>
 

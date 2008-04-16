@@ -36,10 +36,9 @@
 # "-XXaltjvm=<jvm_dir>" option, but that too is unsupported
 # and may not be available in a future release.
 #
--core KNOWN
--client IGNORE
--server IGNORE
+-server KNOWN
 -hotspot ERROR
 -classic WARN
+-client IGNORE
 -native ERROR
 -green ERROR
