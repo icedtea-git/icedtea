@@ -1,3 +1,9 @@
+2008-04-16  Andrew Haley  <aph@littlepinkcloud.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp
+	(arm_add_and_fetch, arm_lock_test_and_set, arm_compare_and_swap): 
+	Rewrite.
+
 2008-04-16  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-core-build.patch: Install libjvm.so in server
