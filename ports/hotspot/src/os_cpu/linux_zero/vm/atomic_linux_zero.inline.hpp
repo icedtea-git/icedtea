@@ -26,28 +26,69 @@
 // Implementation of class atomic
 
 #ifdef ARM
+
+/*
+ * __kernel_cmpxchg
+ *
+ * Atomically store newval in *ptr if *ptr is equal to oldval for user space.
+ * Return zero if *ptr was changed or non-zero if no exchange happened.
+ * The C flag is also set if *ptr was changed to allow for assembly
+ * optimization in the calling code.
+ *
+ */
+
 typedef int (__kernel_cmpxchg_t)(int oldval, int newval, volatile int *ptr);
 #define __kernel_cmpxchg (*(__kernel_cmpxchg_t *) 0xffff0fc0)
 
+
+
+/* Perform an atomic compare and swap: if the current value of `*PTR'
+   is OLDVAL, then write NEWVAL into `*PTR'.  Return the contents of
+   `*PTR' before the operation.*/
 static inline int arm_compare_and_swap(volatile int *ptr,
                                        int oldval,
-                                       int newval) {
-  int old = *ptr;
-  __kernel_cmpxchg(oldval, newval, (volatile int*) ptr);
-  return old;
-}
-
-static inline int arm_add_and_fetch(volatile int *dest, int add_value)
+                                       int newval) 
 {
-  arm_compare_and_swap(dest, *dest, *dest + add_value);
-  return *dest;
+  for (;;)
+    {
+      int prev = *ptr;
+      if (prev != oldval)
+	return prev;
+
+      if (__kernel_cmpxchg (prev, newval, ptr) == 0)
+	// Success.
+	return prev;
+
+      // We failed even though prev == oldval.  Try again.
+    }
 }
 
+/* Atomically add an int to memory.  */
+static inline int arm_add_and_fetch(volatile int *ptr, int add_value)
+{
+  for (;;)
+    {
+      // Loop until a __kernel_cmpxchg succeeds.
+
+      int prev = *ptr;
+
+      if (__kernel_cmpxchg (prev, prev + add_value, ptr) == 0)
+	return prev + add_value;
+    }
+}
+
+/* Atomically write VALUE into `*PTR' and returns the previous
+   contents of `*PTR'.  */
 static inline int arm_lock_test_and_set(volatile int *ptr, int newval)
 {
-  int old = *ptr;
-  arm_compare_and_swap(ptr, *ptr, newval);
-  return old;
+  for (;;)
+    {
+      // Loop until a __kernel_cmpxchg succeeds.
+      int prev = *ptr;
+
+      if (__kernel_cmpxchg (prev, newval, ptr) == 0)
+	return prev;
+    }
 }
 #endif // ARM
 
