@@ -551,7 +551,8 @@ public class Launcher {
 
         public void run() {
             try {
-                if (context)
+                // Do not create new AppContext if we're using NetX and gcjwebplugin.
+                if (context && !isPlugin)
                 	new Reflect().invokeStatic("sun.awt.SunToolkit", "createNewAppContext");
 
                 if (isPlugin) {

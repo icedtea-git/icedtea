@@ -1,3 +1,7 @@
+2008-04-17  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/Launcher.java: Fix applet focusing bug.
+
 2008-04-16  Keith Seitz  <keiths@redhat.com>
 
 	* patches/icedtea-LCMS-setTagData.patch: New file.
