@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0" href="about.jnlp" codebase=".">
+<jnlp spec="1.0" href="about.jnlp" codebase="http://icedtea.classpath.org/netx/">
   <information>
     <title>About window for NetX</title>
     <vendor>NetX</vendor>
