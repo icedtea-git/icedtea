@@ -1,5 +1,11 @@
 2008-04-21  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
+	* acinclude.m4 (SET_CORE_BUILD): Always set to true when building
+	--with-cacao.
+	* Makefile.in, aclocal.m4, configure: Regenerated.
+
+2008-04-21  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
 	* patches/icedtea-cacao.patch: Set the ARCH_DATA_MODEL correct for
 	almost all architectures (I missed that when merging in the
 	cacao-branch).
