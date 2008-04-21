@@ -303,6 +303,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-LCMS-setTagData.patch \
 	patches/icedtea-color-createcontext.patch \
+	patches/icedtea-fonts.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 

@@ -1,0 +1,57 @@
+--- openjdkold/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.properties	2008-03-26 14:30:01.000000000 +0530
++++ openjdk/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.properties	2008-04-21 11:21:49.000000000 +0530
+@@ -25,7 +25,7 @@
+ 
+ # Version
+ 
+-# Uses Fedora Core 6 fonts and file paths.
++# Uses Fedora 9 fonts and file paths.
+ version=1
+ 
+ # Component Font Mappings
+@@ -165,24 +165,24 @@
+ 
+ # Font File Names
+ 
+-filename.DejaVu_LGC_Sans=/usr/share/fonts/dejavu-lgc/DejaVuLGCSans.ttf
+-filename.DejaVu_LGC_Sans_Bold=/usr/share/fonts/dejavu-lgc/DejaVuLGCSans-Bold.ttf
+-filename.DejaVu_LGC_Sans_Oblique=/usr/share/fonts/dejavu-lgc/DejaVuLGCSans-Oblique.ttf
+-filename.DejaVu_LGC_Sans_Bold_Oblique=/usr/share/fonts/dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf
+-
+-filename.DejaVu_LGC_Sans_Mono=/usr/share/fonts/dejavu-lgc/DejaVuLGCSansMono.ttf
+-filename.DejaVu_LGC_Sans_Mono_Bold=/usr/share/fonts/dejavu-lgc/DejaVuLGCSansMono-Bold.ttf
+-filename.DejaVu_LGC_Sans_Mono_Oblique=/usr/share/fonts/dejavu-lgc/DejaVuLGCSansMono-Oblique.ttf
+-filename.DejaVu_LGC_Sans_Mono_Bold_Oblique=/usr/share/fonts/dejavu-lgc/DejaVuLGCSansMono-BoldOblique.ttf
+-
+-filename.DejaVu_LGC_Serif=/usr/share/fonts/dejavu-lgc/DejaVuLGCSerif.ttf
+-filename.DejaVu_LGC_Serif_Bold=/usr/share/fonts/dejavu-lgc/DejaVuLGCSerif-Bold.ttf
+-filename.DejaVu_LGC_Serif_Oblique=/usr/share/fonts/dejavu-lgc/DejaVuLGCSerif-Oblique.ttf
+-filename.DejaVu_LGC_Serif_Bold_Oblique=/usr/share/fonts/dejavu-lgc/DejaVuLGCSerif-BoldOblique.ttf
+-
+-filename.Sazanami_Gothic=/usr/share/fonts/japanese/TrueType/sazanami-gothic.ttf
+-filename.Sazanami_Mincho=/usr/share/fonts/japanese/TrueType/sazanami-mincho.ttf
+-filename.AR_PL_ShanHeiSun_Uni=/usr/share/fonts/chinese/TrueType/uming.ttf
+-filename.AR_PL_ZenKai_Uni=/usr/share/fonts/chinese/TrueType/ukai.ttf
+-filename.Baekmuk_Gulim=/usr/share/fonts/korean/TrueType/gulim.ttf
+-filename.Baekmuk_Batang=/usr/share/fonts/korean/TrueType/batang.ttf
++filename.DejaVu_LGC_Sans=/usr/share/fonts/dejavu/DejaVuLGCSans.ttf
++filename.DejaVu_LGC_Sans_Bold=/usr/share/fonts/dejavu/DejaVuLGCSans-Bold.ttf
++filename.DejaVu_LGC_Sans_Oblique=/usr/share/fonts/dejavu/DejaVuLGCSans-Oblique.ttf
++filename.DejaVu_LGC_Sans_Bold_Oblique=/usr/share/fonts/dejavu/DejaVuLGCSans-BoldOblique.ttf
++
++filename.DejaVu_LGC_Sans_Mono=/usr/share/fonts/dejavu/DejaVuLGCSansMono.ttf
++filename.DejaVu_LGC_Sans_Mono_Bold=/usr/share/fonts/dejavu/DejaVuLGCSansMono-Bold.ttf
++filename.DejaVu_LGC_Sans_Mono_Oblique=/usr/share/fonts/dejavu/DejaVuLGCSansMono-Oblique.ttf
++filename.DejaVu_LGC_Sans_Mono_Bold_Oblique=/usr/share/fonts/dejavu/DejaVuLGCSansMono-BoldOblique.ttf
++
++filename.DejaVu_LGC_Serif=/usr/share/fonts/dejavu/DejaVuLGCSerif.ttf
++filename.DejaVu_LGC_Serif_Bold=/usr/share/fonts/dejavu/DejaVuLGCSerif-Bold.ttf
++filename.DejaVu_LGC_Serif_Oblique=/usr/share/fonts/dejavu/DejaVuLGCSerif-Oblique.ttf
++filename.DejaVu_LGC_Serif_Bold_Oblique=/usr/share/fonts/dejavu/DejaVuLGCSerif-BoldOblique.ttf
++
++filename.Sazanami_Gothic=/usr/share/fonts/sazanami-fonts-gothic/sazanami-gothic.ttf
++filename.Sazanami_Mincho=/usr/share/fonts/sazanami-fonts-mincho/sazanami-mincho.ttf
++filename.AR_PL_ShanHeiSun_Uni=/usr/share/fonts/cjkunifonts-uming/uming.ttf
++filename.AR_PL_ZenKai_Uni=/usr/share/fonts/cjkunifonts-ukai/ukai.ttf
++filename.Baekmuk_Gulim=/usr/share/fonts/baekmuk-ttf-gulim/gulim.ttf
++filename.Baekmuk_Batang=/usr/share/fonts/baekmuk-ttf-batang/batang.ttf

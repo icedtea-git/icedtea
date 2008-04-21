@@ -1,4 +1,12 @@
 2008-04-21  Lillian Angel  <langel@redhat.com>
+	    Parag Nemade  <pnemade@redhat.com>
+
+	Fixes #443360
+	* patches/icedtea-fonts.patch: New patch to fix font paths.
+	* Makefile.am: Added new patch to the list.
+	* Makefile.in: Regenerated.
+
+2008-04-21  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-lib64.patch: Fixed order of library paths on 64-bit.
 	* generated/*: Regenerated.
