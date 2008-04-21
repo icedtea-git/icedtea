@@ -165,3 +165,79 @@ diff -r 63b67d07d5e9 openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.
  
  // **********************************
  // Make sure you set X_PLATFORM and X_ARCH defines correctly.
+--- openjdk/corba/make/common/shared/Platform.gmk~	2008-04-21 09:54:27.000000000 +0200
++++ openjdk/corba/make/common/shared/Platform.gmk	2008-04-21 16:14:54.000000000 +0200
+@@ -224,9 +224,34 @@
+   else
+     # i586 is 32-bit, amd64 is 64-bit
+     ifndef ARCH_DATA_MODEL
++      ifeq ($(ARCH), alpha)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), amd64)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), arm)
++        ARCH_DATA_MODEL=32
++      endif
+       ifeq ($(ARCH), i586)
+         ARCH_DATA_MODEL=32
+-      else
++      endif
++      ifeq ($(ARCH), ia64)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), mips)
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), ppc)
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), ppc64)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), s390)
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), s390x)
+         ARCH_DATA_MODEL=64
+       endif
+     endif
+--- openjdk/jdk/make/common/shared/Platform.gmk~	2008-04-21 09:54:27.000000000 +0200
++++ openjdk/jdk/make/common/shared/Platform.gmk	2008-04-21 16:15:00.000000000 +0200
+@@ -235,9 +235,34 @@
+   else
+     # i586 is 32-bit, amd64 is 64-bit
+     ifndef ARCH_DATA_MODEL
++      ifeq ($(ARCH), alpha)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), amd64)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), arm)
++        ARCH_DATA_MODEL=32
++      endif
+       ifeq ($(ARCH), i586)
+         ARCH_DATA_MODEL=32
+-      else
++      endif
++      ifeq ($(ARCH), ia64)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), mips)
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), ppc)
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), ppc64)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), s390)
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), s390x)
+         ARCH_DATA_MODEL=64
+       endif
+     endif
