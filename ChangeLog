@@ -1,4 +1,13 @@
-2008-04-21  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+2008-04-21  Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* ChangeLog: Fixed a typo in my name.
+
+2008-04-21  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/resources/about.jnlp: Use online signed
+	about.jar.
+
+2008-04-21  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* acinclude.m4 (ENABLE_FAST_BUILD): Removed.
 	(ENABLE_OPTIMIZATIONS): New function.
@@ -58,7 +67,7 @@
 	* Makefile.am (ICEDTEA_PATCHES): Added the above.
 	* aclocal.m4, Makefile.in: Regenerated.
 
-2008-04-15  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+2008-04-15  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* acinclude.m4 (ENABLE_ZERO_BUILD): Make --disable-zero work and
 	don't build zero by default when compiling --with-cacao.
@@ -2813,13 +2822,13 @@
 	* Makefile.am: Fixed target typo.
 	* Makefile.in: Regenerated.
 
-2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+2007-09-12  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* Makefile.am (icedtea-debug): Added -debug to target directory,
 	as found today by Andrew Haley.
 	* Makefile.in: Likewise.
 
-2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+2007-09-12  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* .hgignore: Added *~.
 
@@ -6442,13 +6451,13 @@
 	* Makefile.am: Fixed target typo.
 	* Makefile.in: Regenerated.
 
-2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+2007-09-12  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* Makefile.am (icedtea-debug): Added -debug to target directory,
 	as found today by Andrew Haley.
 	* Makefile.in: Likewise.
 
-2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+2007-09-12  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* .hgignore: Added *~.
 
