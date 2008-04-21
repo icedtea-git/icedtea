@@ -1,3 +1,8 @@
+2008-04-21  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-lib64.patch: Fixed order of library paths on 64-bit.
+	* generated/*: Regenerated.
+
 2008-04-21  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* ChangeLog: Fixed a typo in my name.

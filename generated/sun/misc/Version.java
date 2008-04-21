@@ -39,7 +39,7 @@ public class Version {
         "IcedTea Runtime Environment";
 
     private static final String java_runtime_version =
-        "1.6.0-b06";
+        "1.6.0-b09";
 
     static {
         init();
