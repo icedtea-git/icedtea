@@ -1,5 +1,18 @@
 2008-04-21  Christan Thalinger  <twisti@complang.tuwien.ac.at>
 
+	* acinclude.m4 (ENABLE_FAST_BUILD): Removed.
+	(ENABLE_OPTIMIZATIONS): New function.
+	* configure.ac (ENABLE_FAST_BUILD): Removed call.
+	(ENABLE_OPTIMIZATIONS): Added call.
+	* Makefile.am [!ENABLE_OPTIMIZATIONS] (ICEDTEA_ENV): Set
+	NO_OPTIMIZATIONS and CC_NO_OPT.
+	(FAST_BUILD_PATCH): Removed.
+	(ICEDTEA_PATCHES): Removed FAST_BUILD_PATCH.
+	* Makefile.in, configure: Regenerated.
+	* patches/icedtea-speed.patch: Removed.
+
+2008-04-21  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
 	* acinclude.m4 (SET_CORE_BUILD): Always set to true when building
 	--with-cacao.
 	* Makefile.in, aclocal.m4, configure: Regenerated.

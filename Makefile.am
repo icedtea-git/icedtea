@@ -39,7 +39,7 @@ install:
 	hotspot hotspot-helper clean-extra
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
-	gcjwebplugin.cc patches/icedtea-speed.patch tools-copy contrib ports \
+	gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-cacao.patch
 
@@ -106,6 +106,12 @@ ICEDTEA_ENV += \
 	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
 endif
 
+if !ENABLE_OPTIMIZATIONS
+ICEDTEA_ENV += \
+	"NO_OPTIMIZATIONS=true" \
+	"CC_NO_OPT=-O0 -g"
+endif
+
 if !ENABLE_DOCS
 ICEDTEA_ENV += \
 	"NO_DOCS=true"
@@ -161,6 +167,12 @@ ICEDTEA_ENV_ECJ = \
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
 	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
+endif
+
+if !ENABLE_OPTIMIZATIONS
+ICEDTEA_ENV_ECJ += \
+	"NO_OPTIMIZATIONS=true" \
+	"CC_NO_OPT=-O0 -g"
 endif
 
 if !ENABLE_DOCS
@@ -222,13 +234,6 @@ stamps/ports.stamp: stamps/extract.stamp
 	fi
 	mkdir -p stamps
 	touch stamps/ports.stamp
-
-# Patch OpenJDK sources for plug replacements.
-if FAST_BUILD
-  FAST_BUILD_PATCH = patches/icedtea-speed.patch
-else
-  FAST_BUILD_PATCH =
-endif
 
 # If new gcc is installed, apply 4.3 patch
 if GCC_OLD
@@ -299,7 +304,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-LCMS-setTagData.patch \
 	patches/icedtea-color-createcontext.patch \
 	$(GCC_PATCH) \
-	$(FAST_BUILD_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
 if WITH_CACAO

@@ -491,18 +491,27 @@ AC_DEFUN([FIND_XERCES2_JAR],
   AC_SUBST(XERCES2_JAR)
 ])
 
-AC_DEFUN([ENABLE_FAST_BUILD],
+AC_DEFUN([ENABLE_OPTIMIZATIONS],
 [
-  AC_ARG_ENABLE([fast-build],
-                [AS_HELP_STRING(--enable-fast-build,optimize for quick building: use -O0 and do not build documentation)],
+  AC_MSG_CHECKING(whether to disable optimizations)
+  AC_ARG_ENABLE([optimizations],
+                [AS_HELP_STRING(--disable-optimizations,build with -O0 -g [[default=no]])],
   [
-    AC_MSG_CHECKING(fast build)
-    AC_MSG_RESULT(will apply patches/icedtea-speed.patch)
-    AM_CONDITIONAL(FAST_BUILD, test x = x)
+    case "${enableval}" in
+      no)
+        AC_MSG_RESULT([yes, building with -O0 -g])
+        enable_optimizations=no
+        ;;
+      *)
+        AC_MSG_RESULT([no])
+        enable_optimizations=yes
+        ;;
+    esac
   ],
   [
-    AM_CONDITIONAL(FAST_BUILD, test x != x)
+    enable_optimizations=yes
   ])
+  AM_CONDITIONAL([ENABLE_OPTIMIZATIONS], test x"${enable_optimizations}" = "xyes")
 ])
 
 AC_DEFUN([FIND_TOOL],
