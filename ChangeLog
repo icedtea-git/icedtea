@@ -1,5 +1,10 @@
 2008-04-23  Joshua Sumali  <jsumali@redhat.com>
 
+	* java-javaws.png: Renamed to javaws.png
+	* javaws.png: New file.
+
+2008-04-23  Joshua Sumali  <jsumali@redhat.com>
+
 	* Makefile.am: Added new files to EXTRA_DIST.
 	* Makefile.in: Regenerated.
 	* java-javaws.png: New file.
