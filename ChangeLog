@@ -1,3 +1,9 @@
+2008-04-23  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* javaws.desktop (Name): Change to IcedTea Web Start.
+	(Comment): Change to IcedTea Application Launcher.
+	(Icon): Update to javaws.png.
+
 2008-04-23  Joshua Sumali  <jsumali@redhat.com>
 
 	* Makefile.am: Fixed javaws.png target in EXTRA_DIST.
