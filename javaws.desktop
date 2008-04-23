@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Java Web Start
+Comment=Java Application Launcher
+Exec=/usr/bin/javaws %f
+Icon=java-javaws.png
+Terminal=false
+Type=Application
+NoDisplay=true
+Categories=Network;WebBrowser;
+MimeType=application/x-java-jnlp-file;

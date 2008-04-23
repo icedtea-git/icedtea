@@ -1,3 +1,10 @@
+2008-04-23  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Added new files to EXTRA_DIST.
+	* Makefile.in: Regenerated.
+	* java-javaws.png: New file.
+	* javaws.desktop: Likewise.
+
 2008-04-23  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-fonts.patch: Updated to include Indic languages.
