@@ -1,3 +1,9 @@
+2008-04-23  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-fonts.patch: Updated to include Indic languages.
+	* patches/icedtea-lib64.patch: Removed /usr/lib/local and
+	/usr/lib64/local from default library path.
+
 2008-04-21  Lillian Angel  <langel@redhat.com>
 	    Parag Nemade  <pnemade@redhat.com>
 

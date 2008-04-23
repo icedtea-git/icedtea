@@ -7,9 +7,9 @@
 -#define DEFAULT_LIBPATH	"/lib:/usr/lib"
 +
 +#if defined(AMD64) || defined(_LP64) && (defined(PPC) || defined(S390))
-+#define DEFAULT_LIBPATH "/usr/lib64:/lib64:/usr/local/lib64:/lib:/usr/lib:/usr/local/lib"
++#define DEFAULT_LIBPATH "/usr/lib64:/lib64:/lib:/usr/lib"
 +#else
-+#define DEFAULT_LIBPATH	"/lib:/usr/lib:/usr/local/lib"
++#define DEFAULT_LIBPATH	"/lib:/usr/lib"
 +#endif
  
  #define EXTENSIONS_DIR	"/lib/ext"
