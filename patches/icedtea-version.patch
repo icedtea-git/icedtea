@@ -5,7 +5,7 @@
  # Default names
  LAUNCHER_NAME = java
 -PRODUCT_NAME = Java(TM)
-+PRODUCT_NAME = IcedTea
++PRODUCT_NAME = OpenJDK
  PRODUCT_SUFFIX = SE Runtime Environment
  COMPANY_NAME = Sun Microsystems, Inc.
  
@@ -13,7 +13,7 @@
 -  LAUNCHER_NAME = openjdk
 -  PRODUCT_NAME = OpenJDK
 +  LAUNCHER_NAME = java
-+  PRODUCT_NAME = IcedTea
++  PRODUCT_NAME = OpenJDK 
    PRODUCT_SUFFIX = Runtime Environment
    COMPANY_NAME =
  endif
