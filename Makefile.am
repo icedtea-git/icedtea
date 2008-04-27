@@ -303,6 +303,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-LCMS-setTagData.patch \
 	patches/icedtea-color-createcontext.patch \
+	patches/icedtea-color-profiles.patch \
 	patches/icedtea-fonts.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
@@ -366,11 +367,14 @@ clean-patch:
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
+stamps/overlay.stamp: stamps/patch.stamp
+	cp -r overlays/openjdk/* openjdk/ && touch stamps/overlay.stamp
+
 # OpenJDK ecj Source Preparation Targets
 # ======================================
 
 # Copy over OpenJDK sources for ecj.
-stamps/extract-ecj.stamp: stamps/patch.stamp
+stamps/extract-ecj.stamp: stamps/patch.stamp stamps/overlay.stamp
 	if ! test -d openjdk-ecj ; then \
 	    cp -pPRl openjdk openjdk-ecj ; \
 	fi
@@ -563,8 +567,8 @@ endif
 # you change it in the icedtea-debug target as well.
 icedtea: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
-	extra-lib/about.jar
+	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
+	gcjwebplugin.so extra-lib/about.jar
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/ \
@@ -586,8 +590,8 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 
 icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch.stamp gcjwebplugin.so \
-	extra-lib/about.jar
+	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
+	gcjwebplugin.so extra-lib/about.jar
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
@@ -741,7 +745,7 @@ OPENJDK_SOURCEPATH_DIRS = \
         $(SHARE):$(SOLARIS):$(LANGTOOLS):$(JAXP):$(CORBA):$(JAXWS)
 
 # tools.jar class files.
-stamps/hotspot-tools-copy-source-files.stamp: stamps/patch.stamp
+stamps/hotspot-tools-copy-source-files.stamp: stamps/patch.stamp stamps/overlay.stamp
 	for copy_dir in `cat tools-copy/tools-jdk-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
@@ -938,6 +942,8 @@ icedtea-ecj: stamps/icedtea-ecj.stamp
 patch-ecj: stamps/patch-ecj.stamp
 
 patch: stamps/patch.stamp
+
+overlay: stamps/overlay.stamp
 
 plugs: stamps/plugs.stamp
 

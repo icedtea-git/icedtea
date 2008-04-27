@@ -1,3 +1,18 @@
+2008-04-27  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-color-profiles.patch.
+	(stamps/overlay.stamp): New target.
+	(overlay): Likewise.
+	(stamps/extract-ecj.stamp): Depend on stamps/overlay.stamp.
+	(icedtea): Likewise.
+	(icedtea-debug): Likewise.
+	(stamps/hotspot-tools-copy-source-files.stamp): Likewise.
+	* Makefile.in: Regenerated.
+	* overlays/openjdk/jdk/src/share/lib/cmm/lcms/GRAY.pf: New file.
+	* overlays/openjdk/jdk/src/share/lib/cmm/lcms/LINEAR_RGB.pf: Likewise.
+	* overlays/openjdk/jdk/src/share/lib/cmm/lcms/PYCC.pf: Likewise.
+	* patches/icedtea-color-profiles.patch: New patch.
+
 2008-04-24  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-version.patch: Changed product name to OpenJDK.
