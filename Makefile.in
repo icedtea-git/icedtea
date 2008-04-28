@@ -788,15 +788,15 @@ snapshot: dist
 	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
 
 stamps/download.stamp:
-	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
-	 | $(MD5SUM) --check ; \
-	then \
-	 if [ $(OPENJDK_SRC_ZIP) ] ; \
-	 then \
-	   mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
-	 fi ; \
-	 $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
-	fi
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@	 | $(MD5SUM) --check ; \
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@	then \
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@	 if [ $(OPENJDK_SRC_ZIP) ] ; \
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@	 then \
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@	   mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@	 fi ; \
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@	 $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@	fi
 	mkdir -p stamps
 	touch stamps/download.stamp
 

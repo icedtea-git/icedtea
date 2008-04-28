@@ -201,6 +201,8 @@ else
 endif
 
 stamps/download.stamp:
+if USE_ALT_OPENJDK_SRC_ZIP
+else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	 | $(MD5SUM) --check ; \
 	then \
@@ -210,6 +212,7 @@ stamps/download.stamp:
 	 fi ; \
 	 $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
 	fi
+endif
 	mkdir -p stamps
 	touch stamps/download.stamp
 
