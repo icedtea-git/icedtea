@@ -309,6 +309,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-color-createcontext.patch \
 	patches/icedtea-color-profiles.patch \
 	patches/icedtea-fonts.patch \
+	patches/icedtea-gervill.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
