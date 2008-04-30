@@ -1,3 +1,7 @@
+2008-04-30  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* rt/net/sourceforge/jnlp/security/MoreInfoPane.java: Fix typo.
+
 2008-04-30  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am (ICEDTEA_PATCHES): Add patches/icedtea-gervill.patch.

@@ -85,7 +85,7 @@ public class MoreInfoPane extends SecurityDialogUI {
 		}
 
 		JPanel buttonsPanel = new JPanel(new BorderLayout());
-		JButton certDetails = new JButton("Cerificate Details");
+		JButton certDetails = new JButton("Certificate Details");
 		certDetails.addActionListener(new CertInfoButtonListener());
 		JButton close = new JButton("Close");
 		close.addActionListener(createButtonActionListener(0));
