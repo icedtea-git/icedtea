@@ -60,6 +60,8 @@ public class PATSoundbankReader extends SoundbankReader {
 			return snk;
 		} catch (InvalidFormatException e) {
 			return null;
+		} catch (IOException ioe) {
+			return null;
 		}
 	}
 

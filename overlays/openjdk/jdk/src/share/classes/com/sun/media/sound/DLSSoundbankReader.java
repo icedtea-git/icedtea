@@ -52,6 +52,10 @@ public class DLSSoundbankReader extends SoundbankReader {
 		{
 			return null;
 		}		
+		catch(IOException ioe)
+		{
+			return null;
+		}
 	}
 
 	public Soundbank getSoundbank(InputStream stream) throws InvalidMidiDataException, IOException {
@@ -68,7 +72,6 @@ public class DLSSoundbankReader extends SoundbankReader {
 	}
 	
 	public Soundbank getSoundbank(File file) throws InvalidMidiDataException, IOException {
-		if(!file.getPath().toLowerCase().endsWith(".dls")) return null;		
 		try
 		{
 			return new DLSSoundbank(file);

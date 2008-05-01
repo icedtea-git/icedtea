@@ -593,6 +593,9 @@ public class SoftSynthesizer implements AudioSynthesizer, ReferenceCountingDevic
 	}
 
 	public void unloadAllInstruments(Soundbank soundbank) {
+
+		if(soundbank == null || !isSoundbankSupported(soundbank))
+			throw new IllegalArgumentException("Unsupported soundbank: " + soundbank);
 		
 		if(!isOpen())
 			return;
@@ -619,6 +622,9 @@ public class SoftSynthesizer implements AudioSynthesizer, ReferenceCountingDevic
 
 	public void unloadInstruments(Soundbank soundbank, Patch[] patchList) {
 		
+		if(soundbank == null || !isSoundbankSupported(soundbank))
+			throw new IllegalArgumentException("Unsupported soundbank: " + soundbank);
+
 		if(!isOpen())
 			return;
 		

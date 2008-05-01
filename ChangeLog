@@ -1,3 +1,18 @@
+2008-05-01  Mark Wielaard  <mwielaard@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	DLSSoundbankReader.java (getSoundbank(URL)): Don't throw IOException.
+	(getSoundbank(File)): Allow soundbanks not ending in .dls.
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	PATSoundbankReader.java (getSoundbank(URL)): Don't throw IOException.
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	SF2SoundbankReader.java (getSoundbank(URL)): Likewise.
+	(getSoundbank(File)): Allow soundbanks not ending in .sf2.
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	SoftSynthesizer.java (unloadAllInstruments): Check if Soundbank
+	supported.
+	(unloadInstruments): Likewise.
+
 2008-04-30  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* rt/net/sourceforge/jnlp/security/MoreInfoPane.java: Fix typo.
