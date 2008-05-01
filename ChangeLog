@@ -1,6 +1,12 @@
 2008-05-01  Mark Wielaard  <mwielaard@redhat.com>
 
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	SoftChannel.java (controlChange): Reset least significant
+	controller if necessary.
+
+2008-05-01  Mark Wielaard  <mwielaard@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
 	DLSSoundbankReader.java (getSoundbank(URL)): Don't throw IOException.
 	(getSoundbank(File)): Allow soundbanks not ending in .dls.
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/

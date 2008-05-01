@@ -1170,7 +1170,13 @@ public class SoftChannel implements MidiChannel, ModelDirectedPlayer {
 				return;
 			}			
 
-			this.controller[controller] = value;
+			// Keep track of values (capped to 7 bit).
+			// Reset least significant (32 through 63)
+			// controller value when most significant
+			// (0 through 31) is set.
+			this.controller[controller] = value & 127;
+			if (controller < 32)
+				this.controller[controller + 32] = 0;
 
 			for (int i = 0; i < voices.length; i++)
 				if (voices[i].active)
