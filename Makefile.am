@@ -310,6 +310,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-color-profiles.patch \
 	patches/icedtea-fonts.patch \
 	patches/icedtea-gervill.patch \
+	patches/icedtea-directaudio-close-trick.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
