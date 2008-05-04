@@ -1,3 +1,9 @@
+2008-05-04  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (EXTRA_DIST): Add patches/icedtea-hat-spl-gpl.patch.
+	* Makefile.in: Regenerate.
+	* patches/icedtea-hat-spl-gpl.patch: New patch.
+
 2008-05-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am (EXTRA_DIST): Add patches/icedtea-netx-plugin.patch.

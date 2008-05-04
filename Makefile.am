@@ -312,6 +312,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-fonts.patch \
 	patches/icedtea-gervill.patch \
 	patches/icedtea-directaudio-close-trick.patch \
+	patches/icedtea-hat-spl-gpl.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
