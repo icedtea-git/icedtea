@@ -42,6 +42,7 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-cacao.patch javaws.png javaws.desktop \
+	patches/icedtea-netx-plugin.patch \
 	overlays extra jconsole.desktop policytool.desktop
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
