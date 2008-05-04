@@ -100,14 +100,14 @@ public class DLSSoundbank implements Soundbank {
 			d.i1 = riff.readUnsignedInt();
 			d.s1 = riff.readUnsignedShort();
 			d.s2 = riff.readUnsignedShort();
-			d.x1 = riff.readByte();
-			d.x2 = riff.readByte();
-			d.x3 = riff.readByte();
-			d.x4 = riff.readByte();
-			d.x5 = riff.readByte();
-			d.x6 = riff.readByte();
-			d.x7 = riff.readByte();
-			d.x8 = riff.readByte();
+			d.x1 = riff.readUnsignedByte();
+			d.x2 = riff.readUnsignedByte();
+			d.x3 = riff.readUnsignedByte();
+			d.x4 = riff.readUnsignedByte();
+			d.x5 = riff.readUnsignedByte();
+			d.x6 = riff.readUnsignedByte();
+			d.x7 = riff.readUnsignedByte();
+			d.x8 = riff.readUnsignedByte();
 			return d;
 		}
 		
@@ -1006,11 +1006,13 @@ public class DLSSoundbank implements Soundbank {
 		fmt_chunk.writeUnsignedShort(sampleformat);		
 		fmt_chunk.writeUnsignedShort(audioformat.getChannels());
 		fmt_chunk.writeUnsignedInt((long)audioformat.getSampleRate());
+		/*
 		long srate = (long)audioformat.getSampleRate();
 		srate *= audioformat.getChannels();
 		srate *= audioformat.getSampleSizeInBits() / 8;
 		//fmt_chunk.writeUnsignedInt((long)audioformat.getFrameRate());
-		fmt_chunk.writeUnsignedInt(srate);
+		fmt_chunk.writeUnsignedInt(srate);*/
+		fmt_chunk.writeUnsignedInt(((long)audioformat.getFrameRate())*audioformat.getFrameSize());
 		fmt_chunk.writeUnsignedShort(audioformat.getFrameSize());
 		fmt_chunk.writeUnsignedShort(audioformat.getSampleSizeInBits());
 		fmt_chunk.write(0);

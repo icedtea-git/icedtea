@@ -423,6 +423,7 @@ public class SoftChannel implements MidiChannel, ModelDirectedPlayer {
 	
 	public void noteOn(int noteNumber, int velocity) {
 
+		if(noteNumber < 0 || noteNumber > 127) return;
 		noteOn_internal(noteNumber, velocity);
 		if(current_mixer != null) current_mixer.noteOn(noteNumber, velocity);
 	}
@@ -551,6 +552,7 @@ public class SoftChannel implements MidiChannel, ModelDirectedPlayer {
 	
 	public void noteOff(int noteNumber, int velocity) {
 		
+		if(noteNumber < 0 || noteNumber > 127) return;
 		noteOff_internal(noteNumber, velocity);
 
 		if(current_mixer != null) current_mixer.noteOff(noteNumber, velocity);
@@ -644,6 +646,7 @@ public class SoftChannel implements MidiChannel, ModelDirectedPlayer {
 	}
 
 	public void noteOff(int noteNumber) {
+		if(noteNumber < 0 || noteNumber > 127) return;
 		noteOff_internal(noteNumber, 64);
 	}
 
@@ -1044,7 +1047,7 @@ public class SoftChannel implements MidiChannel, ModelDirectedPlayer {
 				}
 				
 				if(controller == 6)
-					val = (val & 127) + (value << 7);
+					val = /*(val & 127) +*/ (value << 7);
 				else if(controller == 38)
 					val = (val & (127 << 7)) + value;
 				else if(controller == 96 || controller == 97)
@@ -1161,7 +1164,7 @@ public class SoftChannel implements MidiChannel, ModelDirectedPlayer {
 			
 			
 			if (controller == 0x00) {
-				bank = (bank & 127) + (value << 7);
+				bank = /*(bank & 127) +*/ (value << 7);
 				return;
 			}
 
@@ -1170,13 +1173,9 @@ public class SoftChannel implements MidiChannel, ModelDirectedPlayer {
 				return;
 			}			
 
-			// Keep track of values (capped to 7 bit).
-			// Reset least significant (32 through 63)
-			// controller value when most significant
-			// (0 through 31) is set.
-			this.controller[controller] = value & 127;
-			if (controller < 32)
-				this.controller[controller + 32] = 0;
+			this.controller[controller] = value;
+			if(controller < 0x20)
+				this.controller[controller + 0x20] = 0;	
 
 			for (int i = 0; i < voices.length; i++)
 				if (voices[i].active)
@@ -1188,7 +1187,9 @@ public class SoftChannel implements MidiChannel, ModelDirectedPlayer {
 
 	public int getController(int controller) {
 		synchronized (control_mutex) {
-			return this.controller[controller];
+			// Should only return lower 7 bits,
+			// even when controller is "boosted" higher.
+			return this.controller[controller] & 127;
 		}
 	}
 

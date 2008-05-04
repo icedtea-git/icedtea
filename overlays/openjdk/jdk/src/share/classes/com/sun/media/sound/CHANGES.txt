@@ -1,3 +1,22 @@
+  - Removed: PATSoundBankReader removed because no format license is available.
+             It is also undocumented format. 
+  - Added: AudioFloatFormatConverter, used to convert 
+           between PCM_SIGNED, PCM_UNSIGNED, PCM_FLOAT in 8/16/24/32 bit (big/little endian),
+           and resample using (linear/cubic/sinc...) if needed.
+  - Added: WaveExtensibleReader, used to read WAV files using WAVE_FORMAT_EXTENSIBLE format.
+  - Added: WaveFloatFileWriter, used to writing WAV files with PCM_FLOAT encoding.
+  - Fix: AudioFloatConverter tests incorrectly AudioFormat frameSize against SampleSizeInBits
+         Support for 64-byte float added, and support for 32+ bit PCM samples.  
+         SampleSizeInBits  not dividable by 8 are now handled correctly.
+  - Fix: DLSID(GUID) values incorrectly read from files in DLSSoundBank.
+  - Fix: WaveFloatFileReader incorrectly sets framrate.
+  - Fix: DLSSoundbank writes avgBytesPerSec incorrectly if SampleSizeInBits is not dividable by 8.
+  - Fix: SoftChannel didn't reset concept of LSB control to 0 when MSB control value is set
+         (according to MIDI 1.0 Detailed Spec. page 12)
+  - Fix: SoftChannel, added check for illegal noteNumbers.
+         If illegal notenumber was used in NoteOn/NoteOff
+         a ArrayOutOfIndex exception was thrown.
+         
   - Fix: Default tempo in SoftMidiFileReader was supposed to be 500000 mpq or 120 bpm
   - Fix: Change type of info variable in SoftSynthesize into MidiDevice.Info
   - Fix: Fix instanceof check of p1 variable in ModelInstrumentComparator

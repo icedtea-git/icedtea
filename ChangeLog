@@ -1,5 +1,14 @@
 2008-05-04  Mark Wielaard  <mark@klomp.org>
 
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
+	Import new Gervill CVS. See CHANGES.txt. Changed:
+	AudioFloatConverter.java, DLSSoundbank.java, SoftChannel.java,
+	WaveFloatFileReader.java. Added: AudioFloatFormatConverter.java,
+	WaveExtensibleFileReader.java, WaveFloatFileWriter.java. Deleted:
+	PATInstrument.java, PATSample.java, PATSoundbankReader.java.
+
+2008-05-04  Mark Wielaard  <mark@klomp.org>
+
 	* Makefile.am (EXTRA_DIST): Add patches/icedtea-hat-spl-gpl.patch.
 	* Makefile.in: Regenerate.
 	* patches/icedtea-hat-spl-gpl.patch: New patch.
