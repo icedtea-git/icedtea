@@ -1,3 +1,7 @@
+2008-05-05  Lillian Angel  <langel@redhat.com>
+
+	* jconsole.desktop: Fixed typo.
+
 2008-05-04  Mark Wielaard  <mark@klomp.org>
 
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
