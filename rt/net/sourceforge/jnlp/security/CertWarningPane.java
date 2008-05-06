@@ -91,17 +91,12 @@ public class CertWarningPane extends SecurityDialogUI {
 		}
 
 		try {
-			//Really ugly way of getting the publisher...
-			if (file instanceof PluginBridge) {
-				Certificate c = ((SecurityWarningDialog)optionPane)
-					.getJarSigner().getPublisher();
-				if (c instanceof X509Certificate) {
-					publisher = getCN(((X509Certificate)c)
-						.getSubjectX500Principal().getName());
-				}
+			Certificate c = ((SecurityWarningDialog)optionPane)
+				.getJarSigner().getPublisher();
+			if (c instanceof X509Certificate) {
+				publisher = getCN(((X509Certificate)c)
+					.getSubjectX500Principal().getName());
 			}
-			else
-				publisher = file.getInformation().getVendor();
 		} catch (Exception e) {
 		}
 
