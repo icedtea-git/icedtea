@@ -1,3 +1,8 @@
+2008-05-07  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/cache/ResourceTracker.java: Close URL
+	connections nicely instead of leaving them open.
+
 2008-05-06  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/security/CertWarningPane.java: Get publisher
