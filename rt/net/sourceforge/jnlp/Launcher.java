@@ -21,6 +21,7 @@ import java.applet.*;
 import java.awt.Container;
 import java.io.*;
 import java.net.*;
+import java.util.jar.JarFile;
 import java.lang.reflect.*;
 
 import net.sourceforge.jnlp.cache.*;
@@ -317,6 +318,24 @@ public class Launcher {
             app.initialize();
 
             String mainName = file.getApplication().getMainClass();
+            
+            // When the application-desc field is empty, we should take a 
+            // look at the main jar for the main class.
+            if (mainName == null) {
+            	JARDesc mainJarDesc = file.getResources().getMainJAR();
+            	File f = CacheUtil.getCacheFile(mainJarDesc.getLocation(), null);
+            	if (f != null) {
+            		JarFile mainJar = new JarFile(f);
+            		mainName = mainJar.getManifest().
+            			getMainAttributes().getValue("Main-Class");
+            	}
+            }
+            
+            if (mainName == null)
+            	throw launchError(new LaunchException(file, null, 
+            		R("LSFatal"), R("LCClient"), R("LCantDetermineMainClass") , 
+            		R("LCantDetermineMainClassInfo")));
+            
             Class mainClass = app.getClassLoader().loadClass(mainName);
 
             Method main = mainClass.getDeclaredMethod("main", new Class[] {String[].class} );

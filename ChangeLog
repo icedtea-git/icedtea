@@ -1,5 +1,12 @@
 2008-05-07  Joshua Sumali  <jsumali@redhat.com>
 
+	* rt/net/sourceforge/jnlp/Launcher.java: Check main jar for main class in
+	case main class isn't specified in the jnlp file.
+	* rt/net/sourceforge/jnlp/resources/Messages.properties: Add main class 
+	error messages.
+
+2008-05-07  Joshua Sumali  <jsumali@redhat.com>
+
 	* rt/net/sourceforge/jnlp/cache/ResourceTracker.java: Close URL
 	connections nicely instead of leaving them open.
 
