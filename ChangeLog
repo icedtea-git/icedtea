@@ -1,3 +1,10 @@
+2008-05-08  Lillian Angel  <langel@redhat.com>
+
+	Fixes Bug #150
+	* patches/icedtea-certbundle.patch: Moved system properties defined in
+	hotspot to TrustManagerFactoryImpl.
+	* icedtea-use-system-tzdata.patch: Updated to patch cleanly.
+
 2008-05-07  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/Launcher.java: Check main jar for main class in
