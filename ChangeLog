@@ -1,3 +1,11 @@
+2008-05-08  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-directaudio-close-trick.patch: Use new static
+	lockLast for nOpen/nClose guarding.  Make lockNative non-static
+	again.  Do all checks before native calls of doIO inside
+	lockNative guard. Set doIO to false after nClose before dropping
+	lockNative guard.
+
 2008-05-08  Lillian Angel  <langel@redhat.com>
 
 	Fixes Bug #150
