@@ -1,5 +1,9 @@
 2008-05-09  Lillian Angel  <langel@redhat.com>
 
+	* patches/icedtea-certbundle.patch: Fixed typo.
+
+2008-05-09  Lillian Angel  <langel@redhat.com>
+
 	* icedtea-use-system-tzdata.patch: Added missing lines to patch.
 
 2008-05-08  Mark Wielaard  <mark@klomp.org>
