@@ -52,11 +52,11 @@ public class SoftLimiter implements SoftAudioProcessor {
 	SoftAudioBuffer bufferLout;
 
 	SoftAudioBuffer bufferRout;
+	
+	float controlrate;
 
-	SoftSynthesizer synth;
-
-	public void init(SoftSynthesizer synth) {
-		this.synth = synth;
+	public void init(float samplerate, float controlrate) {
+		this.controlrate = controlrate;
 	}
 
 	public void setInput(int pin, SoftAudioBuffer input) {
@@ -87,7 +87,7 @@ public class SoftLimiter implements SoftAudioProcessor {
 	public void processAudio() {
 		if (this.bufferL.isSilent()
 				&& (this.bufferR == null || this.bufferR.isSilent())) {
-			silentcounter += 1 / synth.getControlRate();
+			silentcounter += 1 / controlrate;
 
 			if (silentcounter > 60) {
 				if (!mix) {

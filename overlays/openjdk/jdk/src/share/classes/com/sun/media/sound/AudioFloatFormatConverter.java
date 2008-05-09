@@ -366,17 +366,20 @@ public class AudioFloatFormatConverter extends FormatConversionProvider {
 			int in_end = ibuffer_len;
 			while(remain > 0)
 			{
-				if(ibuffer_len < 0)
-				{
-					in_end = pad2;
-					if(ibuffer_index > in_end) break;	
-				}
-				else
+				if(ibuffer_len >= 0)
 				{
 					if(ibuffer_index >= (ibuffer_len+pad)) 
 						readNextBuffer();
 					in_end = ibuffer_len+pad;
 				}
+				
+				if(ibuffer_len < 0)
+				{
+					in_end = pad2;
+					if(ibuffer_index >= in_end) break;	
+				}
+				
+				
 				if(ibuffer_index < 0) 
 					break;
 				int preDestPos = destPos;
@@ -486,7 +489,7 @@ public class AudioFloatFormatConverter extends FormatConversionProvider {
 	}
 
 	public AudioFormat[] getTargetFormats(Encoding targetEncoding, AudioFormat sourceFormat) {
-		if(AudioFloatConverter.getConverter(sourceFormat) == null) return new AudioFormat[0];
+		if(!isConversionSupported(targetEncoding, sourceFormat)) return new AudioFormat[0];
 		int channels = sourceFormat.getChannels();
 		ArrayList<AudioFormat> formats = new ArrayList<AudioFormat>();
 		formats.add(new AudioFormat(Encoding.PCM_SIGNED, AudioSystem.NOT_SPECIFIED, 8, channels, channels, AudioSystem.NOT_SPECIFIED, false));

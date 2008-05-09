@@ -702,9 +702,11 @@ public class SoftMainMixer {
 		chorus = new SoftChorus();
 		agc = new SoftLimiter();
 
-		reverb.init(synth);
-		chorus.init(synth);
-		agc.init(synth);
+		float samplerate = synth.getFormat().getSampleRate();
+		float controlrate = synth.getControlRate();
+		reverb.init(samplerate, controlrate);
+		chorus.init(samplerate, controlrate);
+		agc.init(samplerate, controlrate);
 
 		reverb.setMixMode(true);
 		chorus.setMixMode(true);

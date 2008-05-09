@@ -238,8 +238,6 @@ public class SoftReverb implements SoftAudioProcessor {
 
 	private SoftAudioBuffer right;
 
-	private SoftSynthesizer synth;
-
 	private boolean dirty = true;
 
 	private float dirty_roomsize;
@@ -250,9 +248,13 @@ public class SoftReverb implements SoftAudioProcessor {
 
 	private float dirty_gain;
 	
-	public void init(SoftSynthesizer synth) {
-		this.synth = synth;
-		double samplerate = synth.getFormat().getSampleRate();
+	private float controlrate;
+	
+	private float samplerate;
+	
+	public void init(float samplerate, float controlrate) {
+		this.controlrate = controlrate;		
+		this.samplerate = samplerate;
 
 		double freqscale = ((double) samplerate) / 44100.0;
 		// freqscale = 1.0/ freqscale;
@@ -321,7 +323,7 @@ public class SoftReverb implements SoftAudioProcessor {
 	
 	public void processAudio() {
 		if (this.inputA.isSilent()) {
-			silentcounter += 1 / synth.getControlRate();
+			silentcounter += 1 / controlrate;
 
 			if (silentcounter > 60) {
 				if (!mix) {
@@ -473,7 +475,7 @@ public class SoftReverb implements SoftAudioProcessor {
 	}
 
 	public void setPreDelay(float value) {
-		delay.setDelay((int) (value * synth.getFormat().getSampleRate()));
+		delay.setDelay((int) (value * samplerate));
 	}
 
 	public void setGain(float gain) {
@@ -481,7 +483,7 @@ public class SoftReverb implements SoftAudioProcessor {
 	}
 
 	public void setDamp(float value) {
-		double x = (value / synth.getFormat().getSampleRate()) * (2 * Math.PI);
+		double x = (value / samplerate) * (2 * Math.PI);
 		double cx = 2 - Math.cos(x);
 		damp = (float) (cx - Math.sqrt(cx * cx - 1));
 		if (damp > 1)
