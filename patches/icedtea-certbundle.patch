@@ -230,7 +230,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/security/provider/CertBundleKey
                                  "javax.net.ssl.trustStorePassword", ""));
 -                return null;
 +                props.put("/etc/pki/tls/certs/ca-bundle.crt", System.getProperty(
-+                                "javax.net.ssl.trustStore");
++                                "javax.net.ssl.trustStore"));
 +		props.put("CertBundle", System.getProperty(
 +                                "javax.net.ssl.trustStoreType",
 +                                KeyStore.getDefaultType()));
