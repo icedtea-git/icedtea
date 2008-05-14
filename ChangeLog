@@ -1,3 +1,8 @@
+2008-05-14  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/security/CertsInfoPane.java: Fix certificate
+	viewer null pointer.
+
 2008-05-09  Mark Wielaard  <mwielaard@redhat.com>
 
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:

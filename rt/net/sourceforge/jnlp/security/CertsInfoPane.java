@@ -84,6 +84,7 @@ public class CertsInfoPane extends SecurityDialogUI {
 	 * Builds the JTree out of CertPaths.
 	 */
 	void buildTree() {
+		certs = ((SecurityWarningDialog)optionPane).getJarSigner().getCerts();
 		//for now, we're only going to display the first signer, even though
 		//jars can be signed by multiple people.
 		CertPath firstPath = certs.get(0);
@@ -178,7 +179,6 @@ public class CertsInfoPane extends SecurityDialogUI {
 	 * Constructs the GUI components of this UI
 	 */
 	protected void installComponents() {
-		certs = ((SecurityWarningDialog)optionPane).getJarSigner().getCerts();
 		buildTree();
 		populateTable();
 		/**
