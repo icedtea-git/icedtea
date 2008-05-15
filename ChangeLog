@@ -1,3 +1,10 @@
+2008-05-15  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-sparc.patch: New.
+	* Makefile.am: Add the icedtea-sparc patch.
+	* acinclude.m4: Don't default to the zero port on sparc.
+	* Makefile.in, configure: Regenerated.
+
 2008-05-14  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/security/CertsInfoPane.java: Fix certificate

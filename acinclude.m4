@@ -542,6 +542,7 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
   [
     case "${host}" in
       i?86-*-*) ;;
+      sparc*-*-*) ;;
       x86_64-*-*) ;;
       *)
         if test "x${CACAO}" != xno; then
