@@ -582,7 +582,7 @@ Reviewed-by: kamg
 +inline void     OrderAccess::release_store_ptr_fence(volatile void*     p, void*    v) { *(void* volatile *)p = v; fence(); }
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
 +++ openjdk/hotspot/src/os_cpu/linux_sparc/vm/os_linux_sparc.cpp	Thu Apr 24 15:07:57 2008 -0400
-@@ -0,0 +1,648 @@
+@@ -0,0 +1,658 @@
 +/*
 + * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
 + * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -847,6 +847,16 @@ Reviewed-by: kamg
 +}
 +
 +// Utility functions
++
++julong os::allocatable_physical_memory(julong size) {
++  julong result = MIN2(size, (julong)3800*M);
++   if (!is_allocatable(result)) {
++     // See comments under solaris for alignment considerations
++     julong reasonable_size = (julong)2*G - 2 * os::vm_page_size();
++     result =  MIN2(size, reasonable_size);
++   }
++   return result;
++}
 +
 +extern "C" void Fetch32PFI();
 +extern "C" void Fetch32Resume();
@@ -1231,7 +1241,6 @@ Reviewed-by: kamg
 +  // guard page, only enable glibc guard page for non-Java threads.
 +  return (thr_type == java_thread ? 0 : page_size());
 +}
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
 +++ openjdk/hotspot/src/os_cpu/linux_sparc/vm/os_linux_sparc.hpp	Thu Apr 24 15:07:57 2008 -0400
 @@ -0,0 +1,46 @@
 +/*
@@ -1786,25 +1795,6 @@ diff -urN openjdk/hotspot/build/linux/makefiles/sparc.make openjdk/hotspot/build
  VM_PICFLAG/LIBJVM = $(PICFLAG)
  VM_PICFLAG/AOUT   =
  
---- openjdk/hotspot/src/os_cpu/linux_sparc/vm/os_linux_sparc.cpp.orig	2008-05-13 22:48:33.000000000 +0000
-+++ openjdk/hotspot/src/os_cpu/linux_sparc/vm/os_linux_sparc.cpp	2008-05-14 06:58:25.000000000 +0000
-@@ -263,6 +263,16 @@
- 
- // Utility functions
- 
-+julong os::allocatable_physical_memory(julong size) {
-+  julong result = MIN2(size, (julong)3800*M);
-+   if (!is_allocatable(result)) {
-+     // See comments under solaris for alignment considerations
-+     julong reasonable_size = (julong)2*G - 2 * os::vm_page_size();
-+     result =  MIN2(size, reasonable_size);
-+   }
-+   return result;
-+}
-+
- extern "C" void Fetch32PFI();
- extern "C" void Fetch32Resume();
- extern "C" void FetchNPFI();
 --- openjdk/hotspot/build/linux/makefiles/defs.make.orig	2008-05-14 10:39:14.000000000 +0000
 +++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-05-14 15:18:21.000000000 +0000
 @@ -59,7 +59,7 @@
