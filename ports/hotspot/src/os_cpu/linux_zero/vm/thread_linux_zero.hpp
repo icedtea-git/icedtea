@@ -24,45 +24,45 @@
  */
 
  private:
-  JavaStack  _java_stack;
-  JavaFrame* _top_Java_frame;
+  ZeroStack  _zero_stack;
+  ZeroFrame* _top_zero_frame;
 
   void pd_initialize()
   {
-    _top_Java_frame = NULL;
+    _top_zero_frame = NULL;
   }
 
  public:
-  JavaStack *java_stack()
+  ZeroStack *zero_stack()
   {
-    return &_java_stack;
+    return &_zero_stack;
   }
 
  public:
-  JavaFrame *top_Java_frame()
+  ZeroFrame *top_zero_frame()
   {
-    return _top_Java_frame;
+    return _top_zero_frame;
   }
-  void push_Java_frame(JavaFrame *frame)
+  void push_zero_frame(ZeroFrame *frame)
   {
-    *(JavaFrame **) frame = _top_Java_frame;
-    _top_Java_frame = frame;
+    *(ZeroFrame **) frame = _top_zero_frame;
+    _top_zero_frame = frame;
   }
-  void pop_Java_frame()
+  void pop_zero_frame()
   {
-    _java_stack.set_sp((intptr_t *) _top_Java_frame + 1);
-    _top_Java_frame = *(JavaFrame **) _top_Java_frame;
+    _zero_stack.set_sp((intptr_t *) _top_zero_frame + 1);
+    _top_zero_frame = *(ZeroFrame **) _top_zero_frame;
   }
 
  public:
   void record_base_of_stack_pointer()
   {
-    assert(top_Java_frame() == NULL, "junk on stack prior to Java call");
+    assert(top_zero_frame() == NULL, "junk on stack prior to Java call");
   }
   void set_base_of_stack_pointer(intptr_t* base_sp)
   {
     assert(base_sp == NULL, "should be");
-    assert(top_Java_frame() == NULL, "junk on stack after Java call");
+    assert(top_zero_frame() == NULL, "junk on stack after Java call");
   }
 
  public:
@@ -70,7 +70,7 @@
   {
     JavaFrameAnchor *jfa = frame_anchor();
     jfa->set_last_Java_pc(NULL);
-    jfa->set_last_Java_sp((intptr_t *) top_Java_frame());
+    jfa->set_last_Java_sp((intptr_t *) top_zero_frame());
   }
   void reset_last_Java_frame()
   {

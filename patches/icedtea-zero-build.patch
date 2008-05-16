@@ -1,0 +1,298 @@
+diff -ru openjdk/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
+--- openjdk/hotspot/build/linux/makefiles/defs.make	2008-03-13 13:57:48.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-03-13 13:37:14.000000000 +0000
+@@ -37,6 +37,18 @@
+   ARCH_DATA_MODEL ?= 32
+ endif
+ 
++# zero
++ifdef ICEDTEA_ZERO_BUILD
++  ARCH_DATA_MODEL  = $(ZERO_BITSPERWORD)
++  ifeq ($(ARCH_DATA_MODEL), 64)
++    MAKE_ARGS      += LP64=1
++  endif
++  PLATFORM         = linux-zero
++  VM_PLATFORM      = linux_zero
++  HS_ARCH          = zero
++  ARCH             = zero
++endif
++
+ # ia64
+ ifeq ($(ARCH), ia64)
+   ARCH_DATA_MODEL = 64
+diff -ru openjdk/hotspot/make/defs.make openjdk/hotspot/make/defs.make
+--- openjdk/hotspot/make/defs.make	2008-02-28 10:02:25.000000000 +0000
++++ openjdk/hotspot/make/defs.make	2008-03-13 13:37:14.000000000 +0000
+@@ -199,13 +199,14 @@
+   # Use uname output for SRCARCH, but deal with platform differences. If ARCH
+   # is not explicitly listed below, it is treated as i486. Also note amd64 is
+   # a separate src arch, so LP64 && i486 ==> amd64.
+-  SRCARCH     = $(ARCH/$(filter sparc sparc64 ia64 amd64 x86_64,$(ARCH)))
++  SRCARCH     = $(ARCH/$(filter sparc sparc64 ia64 amd64 x86_64 zero,$(ARCH)))
+   ARCH/       = i486
+   ARCH/sparc  = sparc
+   ARCH/sparc64= sparc
+   ARCH/ia64   = ia64
+   ARCH/amd64  = amd64
+   ARCH/x86_64 = amd64
++  ARCH/zero   = zero
+   ifdef LP64
+     ifeq ($(SRCARCH), i486)
+       SRCARCH = amd64
+@@ -227,8 +228,9 @@
+   LIBARCH/sparc   = sparc
+   LIBARCH/sparcv9 = sparcv9
+   LIBARCH/ia64    = ia64
++  LIBARCH/zero    = $(ZERO_LIBARCH)
+ 
+-  LP64_ARCH = sparcv9 amd64 ia64
++  LP64_ARCH = sparcv9 amd64 ia64 zero
+ endif
+ 
+ # Required make macro settings for all platforms
+diff -ru openjdk/hotspot/build/linux/makefiles/buildtree.make openjdk/hotspot/build/linux/makefiles/buildtree.make
+--- openjdk/hotspot/build/linux/makefiles/buildtree.make	2008-02-28 10:02:19.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/buildtree.make	2008-03-13 13:37:14.000000000 +0000
+@@ -277,6 +277,7 @@
+ DATA_MODE/sparcv9 = 64
+ DATA_MODE/amd64   = 64
+ DATA_MODE/ia64    = 64
++DATA_MODE/zero    = $(ZERO_BITSPERWORD)
+ 
+ JAVA_FLAG/32 = -d32
+ JAVA_FLAG/64 = -d64
+diff -ru openjdk/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/build/linux/makefiles/gcc.make
+--- openjdk/hotspot/build/linux/makefiles/gcc.make	2008-03-13 13:57:48.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2008-03-13 13:37:20.000000000 +0000
+@@ -73,6 +76,7 @@
+ ARCHFLAG/ia64    =
+ ARCHFLAG/sparc   = -m32 -mcpu=v9
+ ARCHFLAG/sparcv9 = -m64 -mcpu=v9
++ARCHFLAG/zero    = $(ZERO_ARCHFLAG)
+ 
+ CFLAGS     += $(ARCHFLAG)
+ AOUT_FLAGS += $(ARCHFLAG)
+diff -ru openjdk/hotspot/build/linux/makefiles/sa.make openjdk/hotspot/build/linux/makefiles/sa.make
+--- openjdk/hotspot/build/linux/makefiles/sa.make	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/sa.make	2007-11-08 11:36:15.000000000 +0000
+@@ -51,10 +51,10 @@
+ SA_PROPERTIES = $(SA_CLASSDIR)/sa.properties
+ 
+ # if $(AGENT_DIR) does not exist, we don't build SA
+-# also, we don't build SA on Itanium.
++# also, we don't build SA on Itanium or zero.
+ 
+ all: 
+-	if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" ] ; then \
++	if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" -a "$(SRCARCH)" != "zero" ] ; then \
+ 	   $(MAKE) -f sa.make $(GENERATED)/sa-jdi.jar; \
+ 	fi
+ 
+diff -ru openjdk/hotspot/build/linux/makefiles/saproc.make openjdk/hotspot/build/linux/makefiles/saproc.make
+--- openjdk/hotspot/build/linux/makefiles/saproc.make	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/saproc.make	2007-11-08 11:36:15.000000000 +0000
+@@ -44,10 +44,10 @@
+ DEST_SAPROC = $(JDK_LIBDIR)/$(LIBSAPROC)
+ 
+ # if $(AGENT_DIR) does not exist, we don't build SA
+-# also, we don't build SA on Itanium.
++# also, we don't build SA on Itanium or zero.
+ 
+ checkAndBuildSA:
+-	$(QUIETLY) if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" ] ; then \
++	$(QUIETLY) if [ -d $(AGENT_DIR) -a "$(SRCARCH)" != "ia64" -a "$(SRCARCH)" != "zero" ] ; then \
+ 	   $(MAKE) -f vm.make $(LIBSAPROC); \
+ 	fi
+ 
+diff -ru openjdk/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/build/linux/makefiles/gcc.make
+--- openjdk/hotspot/build/linux/makefiles/gcc.make	2008-02-17 15:37:26.000000000 -0500
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2008-02-17 15:37:58.000000000 -0500
+@@ -57,6 +57,9 @@
+ 
+ VM_PICFLAG        = $(VM_PICFLAG/$(LINK_INTO))
+ 
++ifdef ICEDTEA_ZERO_BUILD
++CFLAGS += $(LIBFFI_CFLAGS)
++endif
+ CFLAGS += $(VM_PICFLAG)
+ CFLAGS += -fno-rtti
+ CFLAGS += -fno-exceptions
+diff -ru openjdk-ecj/hotspot/build/linux/makefiles/vm.make openjdk-ecj.new/hotspot/build/linux/makefiles/vm.make
+--- openjdk/hotspot/build/linux/makefiles/vm.make	2008-02-29 09:46:55.000000000 -0500
++++ openjdk/hotspot/build/linux/makefiles/vm.make	2008-02-29 09:47:30.000000000 -0500
+@@ -177,6 +177,9 @@
+ 
+   LIBS_VM                  += $(LIBS)
+ endif
++ifdef ICEDTEA_ZERO_BUILD
++LIBS_VM += $(LIBFFI_LIBS)
++endif
+ 
+ LINK_VM = $(LINK_LIB.c)
+ 
+diff -r c9fa8e3d5aa2 openjdk/jdk/make/common/Defs-linux.gmk
+--- openjdk/jdk/make/common/Defs-linux.gmk	Thu Mar 20 13:42:48 2008 +0000
++++ openjdk/jdk/make/common/Defs-linux.gmk	Thu Mar 20 13:45:05 2008 +0000
+@@ -109,8 +109,13 @@ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+ CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
+ LDFLAGS_COMMON_sparc    += -m32 -mcpu=v9
+-CFLAGS_REQUIRED         =  $(CFLAGS_REQUIRED_$(ARCH))
+-LDFLAGS_COMMON          += $(LDFLAGS_COMMON_$(ARCH))
++ifdef ICEDTEA_ZERO_BUILD
++  CFLAGS_REQUIRED       =  $(ZERO_ARCHFLAG)
++  LDFLAGS_COMMON        += $(ZERO_ARCHFLAG)
++else
++  CFLAGS_REQUIRED       =  $(CFLAGS_REQUIRED_$(ARCH))
++  LDFLAGS_COMMON        += $(LDFLAGS_COMMON_$(ARCH))
++endif
+ 
+ # Add in platform specific optimizations for all opt levels
+ CC_HIGHEST_OPT += $(_OPT_$(ARCH))
+diff -r c9fa8e3d5aa2 openjdk/jdk/make/common/shared/Compiler-gcc.gmk
+--- openjdk/jdk/make/common/shared/Compiler-gcc.gmk	Thu Mar 20 13:42:48 2008 +0000
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	Thu Mar 20 13:48:12 2008 +0000
+@@ -70,6 +70,11 @@ ifeq ($(PLATFORM), linux)
+   else
+     CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
+   endif
++  ifdef ICEDTEA_ZERO_BUILD
++    # zero
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
++  else
+   ifneq ("$(findstring sparc,$(ARCH))", "")
+     # sparc or sparcv9
+     REQUIRED_CC_VER = 4.0
+@@ -90,6 +95,7 @@ ifeq ($(PLATFORM), linux)
+     # ia64
+     REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 2.9[56789].*
++  endif
+   endif
+   endif
+   endif
+diff -r c9fa8e3d5aa2 openjdk/jdk/make/common/shared/Platform.gmk
+--- openjdk/jdk/make/common/shared/Platform.gmk	Thu Mar 20 13:42:48 2008 +0000
++++ openjdk/jdk/make/common/shared/Platform.gmk	Thu Mar 20 13:59:46 2008 +0000
+@@ -213,6 +213,11 @@ ifeq ($(SYSTEM_UNAME), Linux)
+   ARCH_FAMILY := $(ARCH)
+ 
+   # Linux builds may be 32-bit or 64-bit data model.
++  ifdef ICEDTEA_ZERO_BUILD
++    ifndef ARCH_DATA_MODEL
++      ARCH_DATA_MODEL = $(ZERO_BITSPERWORD)
++    endif
++  endif
+   ifeq ($(ARCH), sparc)
+     # Linux sparc build can be either 32-bit or 64-bit.
+     #   Default to 32, but allow explicit setting to 32 or 64.
+diff -r c9fa8e3d5aa2 openjdk/jdk/make/javax/sound/SoundDefs.gmk
+--- openjdk/jdk/make/javax/sound/SoundDefs.gmk	Thu Mar 20 13:42:48 2008 +0000
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	Thu Mar 20 14:11:46 2008 +0000
+@@ -55,21 +55,25 @@ ifeq ($(PLATFORM), solaris)
+ 
+ endif # PLATFORM solaris
+ 
+-ifeq ($(ARCH), i586)
+-  CPPFLAGS += -DX_ARCH=X_I586
+-endif # ARCH i586
++ifdef ICEDTEA_ZERO_BUILD
++  CPPFLAGS += -DX_ARCH=X_ZERO
++else
++  ifeq ($(ARCH), i586)
++    CPPFLAGS += -DX_ARCH=X_I586
++  endif # ARCH i586
+ 
+-ifeq ($(ARCH), sparc)
+-  CPPFLAGS += -DX_ARCH=X_SPARC
+-endif # ARCH sparc
++  ifeq ($(ARCH), sparc)
++    CPPFLAGS += -DX_ARCH=X_SPARC
++  endif # ARCH sparc
+ 
+-ifeq ($(ARCH), sparcv9)
+-  CPPFLAGS += -DX_ARCH=X_SPARCV9
+-endif # ARCH sparcv9
++  ifeq ($(ARCH), sparcv9)
++    CPPFLAGS += -DX_ARCH=X_SPARCV9
++  endif # ARCH sparcv9
+ 
+-ifeq ($(ARCH), amd64)
+-  CPPFLAGS += -DX_ARCH=X_AMD64
+-endif # ARCH amd64
++  ifeq ($(ARCH), amd64)
++    CPPFLAGS += -DX_ARCH=X_AMD64
++  endif # ARCH amd64
++endif
+ 
+ 
+ # files needed for MIDI i/o
+diff -r c9fa8e3d5aa2 openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
+--- openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	Thu Mar 20 13:42:48 2008 +0000
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	Thu Mar 20 14:14:29 2008 +0000
+@@ -38,6 +38,7 @@
+ #define X_SPARCV9       3
+ #define X_IA64          4
+ #define X_AMD64         5
++#define X_ZERO          6
+ 
+ // **********************************
+ // Make sure you set X_PLATFORM and X_ARCH defines correctly.
+diff -r c9fa8e3d5aa2 openjdk/corba/make/common/Defs-linux.gmk
+--- openjdk/corba/make/common/Defs-linux.gmk	Thu Mar 20 13:42:48 2008 +0000
++++ openjdk/corba/make/common/Defs-linux.gmk	Thu Mar 20 13:57:50 2008 +0000
+@@ -99,8 +99,13 @@ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+ CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
+ LDFLAGS_COMMON_sparc    += -m32 -mcpu=v9
+-CFLAGS_REQUIRED         =  $(CFLAGS_REQUIRED_$(ARCH))
+-LDFLAGS_COMMON          += $(LDFLAGS_COMMON_$(ARCH))
++ifdef ICEDTEA_ZERO_BUILD
++  CFLAGS_REQUIRED       =  $(ZERO_ARCHFLAG)
++  LDFLAGS_COMMON        += $(ZERO_ARCHFLAG)
++else
++  CFLAGS_REQUIRED       =  $(CFLAGS_REQUIRED_$(ARCH))
++  LDFLAGS_COMMON        += $(LDFLAGS_COMMON_$(ARCH))
++endif
+ 
+ # Add in platform specific optimizations for all opt levels
+ CC_HIGHEST_OPT += $(_OPT_$(ARCH))
+diff -r c9fa8e3d5aa2 openjdk/corba/make/common/shared/Compiler-gcc.gmk
+--- openjdk/corba/make/common/shared/Compiler-gcc.gmk	Thu Mar 20 13:42:48 2008 +0000
++++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	Thu Mar 20 13:59:09 2008 +0000
+@@ -70,6 +70,11 @@ ifeq ($(PLATFORM), linux)
+   else
+     CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
+   endif
++  ifdef ICEDTEA_ZERO_BUILD
++    # zero
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
++  else
+   ifneq ("$(findstring sparc,$(ARCH))", "")
+     # sparc or sparcv9
+     REQUIRED_CC_VER = 4.0
+@@ -90,6 +95,7 @@ ifeq ($(PLATFORM), linux)
+     # ia64
+     REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 2.9[56789].*
++  endif
+   endif
+   endif
+   endif
+diff -r c9fa8e3d5aa2 openjdk/corba/make/common/shared/Platform.gmk
+--- openjdk/corba/make/common/shared/Platform.gmk	Thu Mar 20 13:42:48 2008 +0000
++++ openjdk/corba/make/common/shared/Platform.gmk	Thu Mar 20 13:59:53 2008 +0000
+@@ -202,6 +202,11 @@ ifeq ($(SYSTEM_UNAME), Linux)
+   ARCH_FAMILY := $(ARCH)
+ 
+   # Linux builds may be 32-bit or 64-bit data model.
++  ifdef ICEDTEA_ZERO_BUILD
++    ifndef ARCH_DATA_MODEL
++      ARCH_DATA_MODEL = $(ZERO_BITSPERWORD)
++    endif
++  endif
+   ifeq ($(ARCH), sparc)
+     # Linux sparc build can be either 32-bit or 64-bit.
+     #   Default to 32, but allow explicit setting to 32 or 64.

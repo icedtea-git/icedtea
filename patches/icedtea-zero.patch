@@ -1,27 +1,50 @@
-diff -ru openjdk/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/build/linux/makefiles/gcc.make
---- openjdk/hotspot/build/linux/makefiles/gcc.make	2008-02-17 15:37:26.000000000 -0500
-+++ openjdk/hotspot/build/linux/makefiles/gcc.make	2008-02-17 15:37:58.000000000 -0500
-@@ -57,6 +57,7 @@
+diff -ru openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp openjdk/hotspot/src/share/vm/runtime/mutex.hpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp	2007-11-08 11:34:54.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/mutex.hpp	2007-11-08 11:36:15.000000000 +0000
+@@ -61,18 +61,10 @@ union SplitWord {   // full-word with se
+ } ;
  
- VM_PICFLAG        = $(VM_PICFLAG/$(LINK_INTO))
+ // Endian-ness ... index of least-significant byte in SplitWord.Bytes[]
+-#ifdef AMD64        // little
++#ifdef VM_LITTLE_ENDIAN
+  #define _LSBINDEX 0
+ #else
+-#if IA32            // little
+- #define _LSBINDEX 0
+-#else
+-#ifdef SPARC        // big
+  #define _LSBINDEX (sizeof(intptr_t)-1)
+-#else
+- #error "unknown architecture"
+-#endif
+-#endif
+ #endif
  
-+CFLAGS += $(LIBFFI_CFLAGS)
- CFLAGS += $(VM_PICFLAG)
- CFLAGS += -fno-rtti
- CFLAGS += -fno-exceptions
-diff -ru openjdk-ecj/hotspot/build/linux/makefiles/vm.make openjdk-ecj.new/hotspot/build/linux/makefiles/vm.make
---- openjdk/hotspot/build/linux/makefiles/vm.make	2008-01-24 13:17:20.000000000 +0000
-+++ openjdk/hotspot/build/linux/makefiles/vm.make	2008-01-21 15:18:48.000000000 +0000
-@@ -150,6 +150,9 @@
+ class ParkEvent ;
+diff -ru openjdk/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2008-03-13 13:57:48.000000000 +0000
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2008-03-13 13:37:14.000000000 +0000
+@@ -159,7 +159,9 @@
+ #endif
  
-   LIBS_VM                  += $(LIBS)
- endif
-+ifeq ($(SRCARCH), zero)
-+LIBS_VM += $(LIBFFI_LIBS)
-+endif
+ // Cpu architecture string
+-#if   defined(IA64)
++#if   defined(ZERO)
++static char cpu_arch[] = ZERO_LIBARCH;
++#elif defined(IA64)
+ static char cpu_arch[] = "ia64";
+ #elif defined(IA32)
+ static char cpu_arch[] = "i386";
+@@ -2354,7 +2356,9 @@
+     // format has been changed), we'll use the largest page size supported by
+     // the processor.
  
- LINK_VM = $(LINK_LIB.c)
++#ifndef ZERO
+     _large_page_size = IA32_ONLY(4 * M) AMD64_ONLY(2 * M) IA64_ONLY(256 * M) SPARC_ONLY(4 * M);
++#endif // ZERO
  
+     FILE *fp = fopen("/proc/meminfo", "r");
+     if (fp) {
 diff -ru openjdk/hotspot/src/share/vm/runtime/icache.cpp openjdk/hotspot/src/share/vm/runtime/icache.cpp
 --- openjdk/hotspot/src/share/vm/runtime/icache.cpp	2007-10-30 08:46:35.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/runtime/icache.cpp	2008-01-21 15:18:48.000000000 +0000
@@ -65,18 +88,18 @@ diff -ru openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp openjdk/hotspot/src
 diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/share/vm/utilities/vmError.cpp
 --- openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-01-24 13:17:27.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-01-24 13:21:20.000000000 +0000
-@@ -24,6 +24,11 @@
- 
+@@ -25,6 +25,11 @@
  # include "incls/_precompiled.incl"
  # include "incls/_vmError.cpp.incl"
-+
+ 
 +# ifdef ZERO
 +# include <interpreterRuntime.hpp>
 +# include <stackPrinter_zero.hpp>
 +# endif //
- 
++
  // List of environment variables that should be reported in error log file.
  const char *env_list[] = {
+   // All platforms
 @@ -392,6 +397,7 @@
         st->cr();
       }
@@ -97,7 +120,7 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
         JavaThread* jt = (JavaThread*)_thread;
 +#ifdef ZERO
 +       st->print_cr("Java stack:");
-+       JavaStackPrinter(st, buf, sizeof(buf)).print(jt);
++       ZeroStackPrinter(st, buf, sizeof(buf)).print(jt);
 +#else
         if (jt->has_last_Java_frame()) {
           st->print_cr("Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)");
@@ -110,3 +133,29 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
       }
  
    STEP(140, "(printing VM operation)" )
+diff -r 789c601c8ba9 openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Tue Apr 01 14:49:28 2008 +0100
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Wed Apr 02 09:51:37 2008 +0100
+@@ -1690,7 +1690,8 @@ void * os::dll_load(const char *filename
+     {EM_SPARC32PLUS, EM_SPARC,   ELFCLASS32, ELFDATA2MSB, (char*)"Sparc 32"},
+     {EM_SPARCV9,     EM_SPARCV9, ELFCLASS64, ELFDATA2MSB, (char*)"Sparc v9 64"},
+     {EM_PPC,         EM_PPC,     ELFCLASS32, ELFDATA2MSB, (char*)"Power PC 32"},
+-    {EM_PPC64,       EM_PPC64,   ELFCLASS64, ELFDATA2MSB, (char*)"Power PC 64"}
++    {EM_PPC64,       EM_PPC64,   ELFCLASS64, ELFDATA2MSB, (char*)"Power PC 64"},
++    {EM_ARM,         EM_ARM,     ELFCLASS32, ELFDATA2LSB, (char*)"ARM"}
+   };
+ 
+   #if  (defined IA32)
+@@ -1707,9 +1708,11 @@ void * os::dll_load(const char *filename
+     static  Elf32_Half running_arch_code=EM_PPC64;
+   #elif  (defined __powerpc__)
+     static  Elf32_Half running_arch_code=EM_PPC;
++  #elif  (defined ARM)
++    static  Elf32_Half running_arch_code=EM_ARM;    
+   #else
+     #error Method os::dll_load requires that one of following is defined:\
+-         IA32, AMD64, IA64, __sparc, __powerpc__
++         IA32, AMD64, IA64, __sparc, __powerpc__, ARM
+   #endif
+ 
+   // Identify compatability class for VM's architecture and library's architecture

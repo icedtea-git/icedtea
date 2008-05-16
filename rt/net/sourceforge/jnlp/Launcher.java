@@ -21,8 +21,7 @@ import java.applet.*;
 import java.awt.Container;
 import java.io.*;
 import java.net.*;
-import java.util.*;
-import java.security.*;
+import java.util.jar.JarFile;
 import java.lang.reflect.*;
 
 import net.sourceforge.jnlp.cache.*;
@@ -157,10 +156,12 @@ public class Launcher {
     public ApplicationInstance launch(JNLPFile file, Container cont) throws LaunchException {
         TgThread tg;
 
-        if (cont == null)
-          tg = new TgThread(file);
+        if (file instanceof PluginBridge && cont != null)
+        	tg = new TgThread(file, cont, true);
+        else if (cont == null)
+        	tg = new TgThread(file);
         else
-          tg = new TgThread(file, cont);
+        	tg = new TgThread(file, cont);
 
         tg.start();
 
@@ -317,6 +318,24 @@ public class Launcher {
             app.initialize();
 
             String mainName = file.getApplication().getMainClass();
+            
+            // When the application-desc field is empty, we should take a 
+            // look at the main jar for the main class.
+            if (mainName == null) {
+            	JARDesc mainJarDesc = file.getResources().getMainJAR();
+            	File f = CacheUtil.getCacheFile(mainJarDesc.getLocation(), null);
+            	if (f != null) {
+            		JarFile mainJar = new JarFile(f);
+            		mainName = mainJar.getManifest().
+            			getMainAttributes().getValue("Main-Class");
+            	}
+            }
+            
+            if (mainName == null)
+            	throw launchError(new LaunchException(file, null, 
+            		R("LSFatal"), R("LCClient"), R("LCantDetermineMainClass") , 
+            		R("LCantDetermineMainClassInfo")));
+            
             Class mainClass = app.getClassLoader().loadClass(mainName);
 
             Method main = mainClass.getDeclaredMethod("main", new Class[] {String[].class} );
@@ -357,11 +376,30 @@ public class Launcher {
             throw launchError(new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LNotApplet"), R("LNotAppletInfo")));
 
         try {
-            AppletInstance applet= createApplet(file, enableCodeBase, cont);
+            AppletInstance applet = createApplet(file, enableCodeBase, cont);
             applet.initialize();
-
+            
             applet.getAppletEnvironment().startApplet(); // this should be a direct call to applet instance
+            return applet;
+        }
+        catch (LaunchException lex) {
+            throw launchError(lex);
+        }
+        catch (Exception ex) {
+            throw launchError(new LaunchException(file, ex, R("LSFatal"), R("LCLaunching"), R("LCouldNotLaunch"), R("LCouldNotLaunchInfo")));
+        }
+    }
+    
+    /**
+     * Gets an ApplicationInstance, but does not launch the applet.
+     */
+    protected ApplicationInstance getApplet(JNLPFile file, boolean enableCodeBase, Container cont) throws LaunchException {
+        if (!file.isApplet())
+            throw launchError(new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LNotApplet"), R("LNotAppletInfo")));
 
+        try {
+            AppletInstance applet = createApplet(file, enableCodeBase, cont);
+            applet.initialize();
             return applet;
         }
         catch (LaunchException lex) {
@@ -418,7 +456,34 @@ public class Launcher {
         }
     }
 
+    /**
+     * Creates an Applet object from a JNLPFile. This is mainly to be used with
+     * gcjwebplugin.
+     * @param file the PluginBridge to be used.
+     * @param enableCodeBase whether to add the code base URL to the classloader.
+     */
+    protected Applet createAppletObject(JNLPFile file, boolean enableCodeBase, Container cont) throws LaunchException {
+        try {
+            JNLPClassLoader loader = JNLPClassLoader.getInstance(file, updatePolicy);
 
+            if (enableCodeBase || file.getResources().getJARs().length == 0)
+                loader.enableCodeBase();
+
+            String appletName = file.getApplet().getMainClass();
+
+			//Classloader chokes if there's '/' in the path to the main class.
+			//Must replace with '.' instead.
+			appletName = appletName.replace('/', '.');
+            Class appletClass = loader.loadClass(appletName);
+            Applet applet = (Applet) appletClass.newInstance();
+
+            return applet;
+        }
+        catch (Exception ex) {
+            throw launchError(new LaunchException(file, ex, R("LSFatal"), R("CLInit"), R("LInitApplet"), R("LInitAppletInfo")));
+        }
+    }
+    
     /**
      * Creates an Application.
      */
@@ -483,6 +548,7 @@ public class Launcher {
         private ApplicationInstance application;
         private LaunchException exception;
         private Container cont;
+        private boolean isPlugin = false;
 
         TgThread(JNLPFile file) {
             this(file, null);
@@ -494,20 +560,34 @@ public class Launcher {
             this.file = file;
             this.cont = cont;
         }
+        
+        TgThread(JNLPFile file, Container cont, boolean isPlugin) {
+            super(createThreadGroup(file), file.getTitle());
+            this.file = file;
+            this.cont = cont;
+            this.isPlugin = isPlugin;
+        }
 
         public void run() {
             try {
-                if (context)
-                    new Reflect().invokeStatic("sun.awt.SunToolkit", "createNewAppContext");
+                // Do not create new AppContext if we're using NetX and gcjwebplugin.
+                if (context && !isPlugin)
+                	new Reflect().invokeStatic("sun.awt.SunToolkit", "createNewAppContext");
 
-                if (file.isApplication())
-                    application = launchApplication(file);
-                else if (file.isApplet())
-                    application = launchApplet(file, true, cont); // enable applet code base
-                else if (file.isInstaller())
-                    application = launchInstaller(file);
-                else 
-                    throw launchError(new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LNotLaunchable"), R("LNotLaunchableInfo")));
+                if (isPlugin) {
+                	application = getApplet(file, true, cont);
+                } else {
+                	if (file.isApplication())
+                		application = launchApplication(file);
+                	else if (file.isApplet())
+                		application = launchApplet(file, true, cont); // enable applet code base
+                	else if (file.isInstaller())
+                		application = launchInstaller(file);
+                	else 
+                		throw launchError(new LaunchException(file, null, 
+                				R("LSFatal"), R("LCClient"), R("LNotLaunchable"), 
+                				R("LNotLaunchableInfo")));
+                }
             }
             catch (LaunchException ex) {
                 exception = ex;
@@ -521,6 +601,7 @@ public class Launcher {
         public ApplicationInstance getApplication() {
             return application;
         }
+        
     };
 
 

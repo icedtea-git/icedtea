@@ -1,5 +1,5 @@
-Building IcedTea
-================
+Building IcedTea 1.6.0
+======================
 
 For convenience we've provided make targets that automatically
 download, extract and patch the source code from openjdk.java.net, in
@@ -15,7 +15,7 @@ lesstif
 Freetype2
 patch
 sed
-unzip
+tar
 md5sum
 wget
 alsa
@@ -31,6 +31,7 @@ libpng-devel
 libjpeg-devel = 6b
 zlib-devel
 mercurial 0.9.5 + forest extension
+on ppc/ppc64, you will need libffi
 
 See ./configure --help if you need to override defaults.
 
@@ -64,9 +65,3 @@ the rt plugs certain files need to be deleted before restarting the build.
 
 To view all targets that create stamp files, see 
 Makefile.am (section 'All Stamped Targets').
-
-
-Important Targets
------------------
-
-- 'make dist-openjdk' creates a zip of the openjdk sources for the current release.

@@ -1,0 +1,29 @@
+# Changeset: 804b0757d801
+# Author:    prr
+# Date:      2008-04-24 11:58 -0700
+# URL:       http://hg.openjdk.java.net/jdk7/2d/jdk/rev/804b0757d801
+# 
+# 6523403: Need to provide lcms library with PYCC and LINEAR_RGB OS ICC profiles
+# Summary: Add two contributed profiles and a fix to GRAY.pf, all from Redhat, keiths at redhat.com contributed the GRAY.pf fix.
+# Reviewed-by: jgodinez, avu, prr
+# Contributed-by: aph at redhat.com
+#
+# .pf files can be found under overlays/openjdk/jdk/src/share/lib/cmm/lcms/
+
+--- openjdk/jdk/make/sun/cmm/Makefile.orig	2008-04-27 23:59:37.000000000 +0200
++++ openjdk/jdk/make/sun/cmm/Makefile	2008-04-27 23:59:45.000000000 +0200
+@@ -41,12 +41,8 @@
+ ICCPROFILE_DEST_DIR = $(LIBDIR)/cmm
+ 
+ iccprofiles: $(ICCPROFILE_DEST_DIR)/sRGB.pf $(ICCPROFILE_DEST_DIR)/GRAY.pf \
+-	     $(ICCPROFILE_DEST_DIR)/CIEXYZ.pf
+-
+-ifndef OPENJDK
+-iccprofiles:  $(ICCPROFILE_DEST_DIR)/PYCC.pf \
+-	      $(ICCPROFILE_DEST_DIR)/LINEAR_RGB.pf
+-endif
++	     $(ICCPROFILE_DEST_DIR)/CIEXYZ.pf $(ICCPROFILE_DEST_DIR)/PYCC.pf \
++	     $(ICCPROFILE_DEST_DIR)/LINEAR_RGB.pf
+ 
+ $(ICCPROFILE_DEST_DIR)/sRGB.pf: $(ICCPROFILE_SRC_DIR)/sRGB.pf
+ 	$(RM) $(ICCPROFILE_DEST_DIR)/sRGB.pf

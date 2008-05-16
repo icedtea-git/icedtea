@@ -33,7 +33,7 @@
  # Default target and expected 'do everything' target
 --- openjdk/jaxp/make/Makefile.orig	2007-10-14 21:50:24.000000000 -0400
 +++ openjdk/jaxp/make/Makefile	2007-10-14 21:50:56.000000000 -0400
-@@ -100,16 +100,9 @@
+@@ -99,16 +99,9 @@
    ANT_OPTIONS += -Dfindbugs.home=$(FINDBUGS_HOME)
  endif
  
@@ -74,7 +74,7 @@
    ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
  endif
  
-@@ -100,16 +101,9 @@
+@@ -99,16 +100,9 @@
    ANT_OPTIONS += -Dfindbugs.home=$(FINDBUGS_HOME)
  endif
  
@@ -96,7 +96,7 @@
  # Default target and expected 'do everything' target
 --- iopenjdk/jaxws/make/build.xml	2007-10-12 03:52:21.000000000 -0400
 +++ openjdk/jaxws/make/build.xml	2007-11-13 11:02:43.000000000 -0500
-@@ -100,6 +100,7 @@
+@@ -109,6 +109,7 @@
               memoryMaximumSize="${javac.memoryMaximumSize}"
               target="${javac.target}"
               excludes="com/sun/tools/internal/txw2/**">

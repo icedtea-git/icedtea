@@ -27,7 +27,8 @@ import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 import java.net.URL;
 import java.util.Hashtable;
-import sun.applet.*;
+
+import sun.applet.AppletViewerPanel;
 
 /**
  * This panel calls into netx to run an applet, and pipes the display
@@ -44,116 +45,68 @@ public class NetxPanel extends AppletViewerPanel
         super(documentURL, atts);
     }
 
-    public void run()
-    {
-        Thread curThread = Thread.currentThread();
-        boolean disposed = false;
-        while (!disposed && !curThread.isInterrupted()) {
-            AppletEvent evt;
-            try {
-                evt = getNextEvent();
-            } catch (InterruptedException e) {
-                showAppletStatus("bail");
-                return;
-            }
+    //Overriding to use Netx classloader. You might need to relax visibility
+    //in sun.applet.AppletPanel for runLoader().
+    protected void runLoader() {
 
-            try {
-                switch (evt.getID()) {
-                  case APPLET_LOAD:
-	          case APPLET_INIT:
-                      // TODO: split out the load/init/start steps in Netx
-                      break;
+    	try {
+    		bridge = new PluginBridge(baseURL, 
+    				getDocumentBase(),
+    				getJarFiles(), 
+    				getCode(),
+    				getWidth(), 
+    				getHeight(), 
+    				atts);
+    		
+    		//The custom NetX Policy and SecurityManager are set here.
+    		if (!JNLPRuntime.isInitialized()) {
+    			System.out.println("initializing JNLPRuntime...");
+    			JNLPRuntime.initialize();
+    		} else {
+    			System.out.println("JNLPRuntime already initialized");
+    		}
 
-                  case APPLET_START:
-                      // FIXME: in sun.applet.AppletPanel, the validation and running
-                      // of the applet all happen in the event dispatch thread.  Need
-                      // to carefully audit what they do and where, and see if we need
-                      // to do the same here or in netx code.
+    		doInit = true;
+    		dispatchAppletEvent(APPLET_LOADING, null);
+    		status = APPLET_LOAD;
+    		
+    		//FIXME: For some reason, when this applet is loaded by NetX, 
+    		//keyboard input will not make it to the applet when displayed in
+    		//firefox, unless a mouse button is held down.
+    		Launcher l = new Launcher();
+    		AppletInstance appInst = (AppletInstance) l.launch(bridge, this);
+    		applet = appInst.getApplet();
+    		
+    		//On the other hand, if you create an applet this way, it'll work
+    		//fine. Note that you might to open visibility in sun.applet.AppletPanel
+    		//for this to work (the loader field, and getClassLoader).
+    		//loader = getClassLoader(getCodeBase(), getClassLoaderCacheKey());
+    		//applet = createApplet(loader);
+    		
+    		// This shows that when using NetX's JNLPClassLoader, keyboard input
+    		// won't make it to the applet, whereas using sun.applet.AppletClassLoader
+    		// works just fine.
+    		
+    		dispatchAppletEvent(APPLET_LOADING_COMPLETED, null);
 
-                      bridge = new PluginBridge(baseURL,
-                                                getDocumentBase(),
-                                                getJarFiles(),
-                                                getCode(),
-                                                getWidth(), getHeight(),
-                                                atts);
-
-                      if (! JNLPRuntime.isInitialized())
-                          JNLPRuntime.initialize();
-
-                      Launcher l = new Launcher();
-                      dispatchAppletEvent(APPLET_LOADING_COMPLETED, null); // not quite..
-
-                      applet = ((AppletInstance)l.launch(bridge, this)).getApplet();
-
-                      status = APPLET_START;
-                      showAppletStatus("started");
-                      break;
-
-                case APPLET_STOP:
-                    if (status != APPLET_START) {
-                        showAppletStatus("notstarted");
-                        break;
-                    }
-
-                    status = APPLET_STOP;
-
-                    applet.setVisible(false);
-                    applet.stop();
-
-                    showAppletStatus("stopped");
-                    break;
-
-               case APPLET_DESTROY:
-                    if (status != APPLET_STOP && status != APPLET_INIT) {
-                        showAppletStatus("notstopped");
-                        break;
-                    }
-                    status = APPLET_DESTROY;
-
-                    applet.destroy();
-                    showAppletStatus("destroyed");
-                    break;
-
-                case APPLET_DISPOSE:
-                    if (status != APPLET_DESTROY && status != APPLET_LOAD) {
-                        showAppletStatus("notdestroyed");
-                        break;
-                    }
-                    status = APPLET_DISPOSE;
-
-                    remove(applet);
-                    applet = null;
-                    showAppletStatus("disposed");
-                    disposed = true;
-                    break;
-
-                case APPLET_QUIT:
-                    return;
-                }
-            } catch (Exception e) {
-                status = APPLET_ERROR;
-                if (e.getMessage() != null) {
-                    showAppletStatus("exception2", e.getClass().getName(),
-                                     e.getMessage());
-                } else {
-                    showAppletStatus("exception", e.getClass().getName());
-                }
-                showAppletException(e);
-            } catch (ThreadDeath e) {
-                showAppletStatus("death");
-                return;
-            } catch (Error e) {
-                status = APPLET_ERROR;
-                if (e.getMessage() != null) {
-                    showAppletStatus("error2", e.getClass().getName(),
-                                     e.getMessage());
-                } else {
-                    showAppletStatus("error", e.getClass().getName());
-                }
-                showAppletException(e);
-            }
-            clearLoadAbortRequest();
-        }
+    		if (applet != null)
+    		{
+    			// Stick it in the frame
+    			applet.setStub(this);
+    			applet.setVisible(false);
+    			add("Center", applet);
+    			showAppletStatus("loaded");
+    			validate();
+    		}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    // Reminder: Relax visibility in sun.applet.AppletPanel
+    protected synchronized void createAppletThread() {
+    	handler = new Thread(this);
+    	handler.start();
     }
 
 }

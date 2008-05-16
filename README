@@ -39,21 +39,22 @@ FAQ:
   http://icedtea.classpath.org/wiki/FrequentlyAskedQuestions
 
 Anonymous Mercurial checkout:
-  hg clone http://icedtea.classpath.org/hg/icedtea
+  hg clone http://icedtea.classpath.org/hg/icedtea6
 
 Java compatibility
 ------------------
 
 IcedTea is derived from OpenJDK, Sun's open-source implementation of
 the Java SE platform.  At this time the build from which IcedTea was
-constructed corresponds to an early build of JDK 7.  When JDK 7
-is complete it will implement the Java SE 7 Platform Specification.
-Work on that specification is underway, but far from final.  Any APIs
-in the JDK 7 implementation, whether new or old, are therefore subject
-to minor adjustments, major revisions, or even outright removal
-between now and the time that the Java SE 7 Platform Specification is
-finalized.  Please take these facts into account before depending upon
-IcedTea.
+constructed corresponds to an early build of JDK 7.  When JDK 7 is
+complete it will implement the Java SE 7 Platform Specification.  Any
+APIs in the JDK 7 implementation, whether new or old, are therefore
+subject to minor adjustments, major revisions, or even outright
+removal between now and the time that the Java SE 7 Platform
+Specification is finalized.  Please take these facts into account
+before depending upon IcedTea.  IcedTea provides autotools support, a
+portable interpreter for ppc and ppc64 support, plugin support and Web
+Start support.
 
 How the Stub Replacements were Produced
 ---------------------------------------
@@ -123,15 +124,21 @@ development headers are provided by the xulrunner-devel package.
 To run IcedTeaPlugin you'll need to add
 /usr/lib/xulrunner-sdk-1.9pre/sdk/lib/ to LD_LIBRARY_PATH.
 
+If the option --enable-netx-plugin is passed to configure, this will
+make all applets run through NetX security instead of the default
+security manager. This feature is experimental, and is not enabled by
+default. Note that if --disable-gcjwebplugin is used, --enable-netx-plugin
+will not work.
+
 NetX
 ====
 
 NetX provides a drop-in replacement for javaws (Java Web Start). Since
 upstream NetX is dormant, we will be hosting and modifying the sources
-in the IcedTea repository, particularly in the rt/net/sourceforge/jnlp 
+in the IcedTea repository, particularly in the rt/net/sourceforge/jnlp
 directory.
 
-The NetX sources are currently built into rt.jar
+The NetX sources are built into rt.jar
 
 IcedTea's NetX currently supports verification of signed jars, trusted
 certificate storing, system certificate store checking, and provides 

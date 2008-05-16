@@ -31,17 +31,6 @@
  
  # FULL_VERSION is RELEASE and -BUILD_NUMBER if BUILD_NUMBER is set
  ifdef BUILD_NUMBER
---- openjdk.old/hotspot/build/windows/projectfiles/common/Makefile	2007-09-27 22:30:19.000000000 -0400
-+++ openjdk/hotspot/build/windows/projectfiles/common/Makefile	2007-09-28 11:07:50.000000000 -0400
-@@ -123,7 +123,7 @@
- !if exists($(HOTSPOTWORKSPACE)\src\closed)
- HOTSPOT_VM_DISTRO="Java HotSpot(TM)"
- !else
--HOTSPOT_VM_DISTRO="OpenJDK"
-+HOTSPOT_VM_DISTRO="IcedTea"
- !endif
- !endif
- 
 --- openjdk.old/hotspot/src/share/vm/runtime/arguments.cpp	2007-12-10 15:46:40.000000000 -0500
 +++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2007-12-19 09:41:41.000000000 -0500
 @@ -28,7 +28,7 @@

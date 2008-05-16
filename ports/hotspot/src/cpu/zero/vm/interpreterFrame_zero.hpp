@@ -38,11 +38,11 @@
 // +--------------------+  ------------------
 // |  ...               |
 
-class InterpreterFrame : public JavaFrame {
-  friend class JavaStackPrinter;
+class InterpreterFrame : public ZeroFrame {
+  friend class ZeroStackPrinter;
 
  private:
-  InterpreterFrame() : JavaFrame()
+  InterpreterFrame() : ZeroFrame()
   {
     ShouldNotCallThis();
   }
@@ -56,7 +56,7 @@ class InterpreterFrame : public JavaFrame {
   };
 
  public:
-  static InterpreterFrame *build(JavaStack*       stack,
+  static InterpreterFrame *build(ZeroStack*       stack,
                                  const methodOop  method,
                                  JavaThread*      thread);
  public:

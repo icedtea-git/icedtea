@@ -1,3 +1,547 @@
+2008-05-15  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-sparc.patch: New.
+	* Makefile.am: Add the icedtea-sparc patch.
+	* acinclude.m4: Don't default to the zero port on sparc.
+	* Makefile.in, configure: Regenerated.
+
+2008-05-14  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/security/CertsInfoPane.java: Fix certificate
+	viewer null pointer.
+
+2008-05-09  Mark Wielaard  <mwielaard@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
+	Import Gervill fixes from CVS. See CHANGES.txt.
+	Check isConversionSupported() in
+	AudioFloatFormatConverter.getTargetFormats().
+	* patches/icedtea-gervill.patch: Add AudioFloatFormatConverter to
+	javax.sound.sampled.spi.FormatConversionProvider.
+
+2008-05-09  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-certbundle.patch: Fixed typo.
+
+2008-05-09  Lillian Angel  <langel@redhat.com>
+
+	* icedtea-use-system-tzdata.patch: Added missing lines to patch.
+
+2008-05-08  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-directaudio-close-trick.patch: Use new static
+	lockLast for nOpen/nClose guarding.  Make lockNative non-static
+	again.  Do all checks before native calls of doIO inside
+	lockNative guard. Set doIO to false after nClose before dropping
+	lockNative guard.
+
+2008-05-08  Lillian Angel  <langel@redhat.com>
+
+	Fixes Bug #150
+	* patches/icedtea-certbundle.patch: Moved system properties defined in
+	hotspot to TrustManagerFactoryImpl.
+	* icedtea-use-system-tzdata.patch: Updated to patch cleanly.
+
+2008-05-07  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/Launcher.java: Check main jar for main class in
+	case main class isn't specified in the jnlp file.
+	* rt/net/sourceforge/jnlp/resources/Messages.properties: Add main class 
+	error messages.
+
+2008-05-07  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/cache/ResourceTracker.java: Close URL
+	connections nicely instead of leaving them open.
+
+2008-05-06  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/security/CertWarningPane.java: Get publisher
+	name from certificate instead of vendor field in jnlp file.
+
+2008-05-05  Lillian Angel  <langel@redhat.com>
+
+	* jconsole.desktop: Fixed typo.
+
+2008-05-04  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
+	Import new Gervill CVS. See CHANGES.txt. Changed:
+	AudioFloatConverter.java, DLSSoundbank.java, SoftChannel.java,
+	WaveFloatFileReader.java. Added: AudioFloatFormatConverter.java,
+	WaveExtensibleFileReader.java, WaveFloatFileWriter.java. Deleted:
+	PATInstrument.java, PATSample.java, PATSoundbankReader.java.
+
+2008-05-04  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (EXTRA_DIST): Add patches/icedtea-hat-spl-gpl.patch.
+	* Makefile.in: Regenerate.
+	* patches/icedtea-hat-spl-gpl.patch: New patch.
+
+2008-05-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am (EXTRA_DIST): Add patches/icedtea-netx-plugin.patch.
+	* Makefile.in: Regenerate.
+
+2008-05-04  Mark Wielaard  <mwielaard@redhat.com>
+
+	* Makefile.am (ICEDTEA_PATCHES): Add
+	patches/icedtea-directaudio-close-trick.patch.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-directaudio-close-trick.patch: New patch.
+
+2008-05-01  Mark Wielaard  <mwielaard@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	SoftChannel.java (controlChange): Reset least significant
+	controller if necessary.
+
+2008-05-01  Mark Wielaard  <mwielaard@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	DLSSoundbankReader.java (getSoundbank(URL)): Don't throw IOException.
+	(getSoundbank(File)): Allow soundbanks not ending in .dls.
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	PATSoundbankReader.java (getSoundbank(URL)): Don't throw IOException.
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	SF2SoundbankReader.java (getSoundbank(URL)): Likewise.
+	(getSoundbank(File)): Allow soundbanks not ending in .sf2.
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	SoftSynthesizer.java (unloadAllInstruments): Check if Soundbank
+	supported.
+	(unloadInstruments): Likewise.
+
+2008-04-30  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* rt/net/sourceforge/jnlp/security/MoreInfoPane.java: Fix typo.
+
+2008-04-30  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (ICEDTEA_PATCHES): Add patches/icedtea-gervill.patch.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-gervill.patch: New patch.
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/*:
+	New Gervill files.
+
+2008-04-29  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(EXTRA_DIST): Added jconsole.desktop and policytool.desktop.
+	* Makefile.in: Regenerated.
+
+2008-04-29  Lillian Angel  <langel@redhat.com>
+
+	* jconsole.desktop: New file.
+	* policytool.desktop: New file.
+
+2008-04-28  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(EXTRA_DIST): Added overlays and extra.
+	* Makefile.in: Regenerated.
+
+2008-04-28  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Don't check md5sum if configured --with-openjdk-src-zip.
+	* Makefile.in: Regenerated.
+
+2008-04-27  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-color-profiles.patch.
+	(stamps/overlay.stamp): New target.
+	(overlay): Likewise.
+	(stamps/extract-ecj.stamp): Depend on stamps/overlay.stamp.
+	(icedtea): Likewise.
+	(icedtea-debug): Likewise.
+	(stamps/hotspot-tools-copy-source-files.stamp): Likewise.
+	* Makefile.in: Regenerated.
+	* overlays/openjdk/jdk/src/share/lib/cmm/lcms/GRAY.pf: New file.
+	* overlays/openjdk/jdk/src/share/lib/cmm/lcms/LINEAR_RGB.pf: Likewise.
+	* overlays/openjdk/jdk/src/share/lib/cmm/lcms/PYCC.pf: Likewise.
+	* patches/icedtea-color-profiles.patch: New patch.
+
+2008-04-24  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-version.patch: Changed product name to OpenJDK.
+
+2008-04-23  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* javaws.desktop (Name): Change to IcedTea Web Start.
+	(Comment): Change to IcedTea Application Launcher.
+	(Icon): Update to javaws.png.
+
+2008-04-23  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Fixed javaws.png target in EXTRA_DIST.
+	* Makefile.in: Regenerated.
+
+2008-04-23  Joshua Sumali  <jsumali@redhat.com>
+
+	* java-javaws.png: Renamed to javaws.png
+	* javaws.png: New file.
+
+2008-04-23  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Added new files to EXTRA_DIST.
+	* Makefile.in: Regenerated.
+	* java-javaws.png: New file.
+	* javaws.desktop: Likewise.
+
+2008-04-23  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-fonts.patch: Updated to include Indic languages.
+	* patches/icedtea-lib64.patch: Removed /usr/lib/local and
+	/usr/lib64/local from default library path.
+
+2008-04-21  Lillian Angel  <langel@redhat.com>
+	    Parag Nemade  <pnemade@redhat.com>
+
+	Fixes #443360
+	* patches/icedtea-fonts.patch: New patch to fix font paths.
+	* Makefile.am: Added new patch to the list.
+	* Makefile.in: Regenerated.
+
+2008-04-21  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-lib64.patch: Fixed order of library paths on 64-bit.
+	* generated/*: Regenerated.
+
+2008-04-21  Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* ChangeLog: Fixed a typo in my name.
+
+2008-04-21  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/resources/about.jnlp: Use online signed
+	about.jar.
+
+2008-04-21  Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* acinclude.m4 (ENABLE_FAST_BUILD): Removed.
+	(ENABLE_OPTIMIZATIONS): New function.
+	* configure.ac (ENABLE_FAST_BUILD): Removed call.
+	(ENABLE_OPTIMIZATIONS): Added call.
+	* Makefile.am [!ENABLE_OPTIMIZATIONS] (ICEDTEA_ENV): Set
+	NO_OPTIMIZATIONS and CC_NO_OPT.
+	(FAST_BUILD_PATCH): Removed.
+	(ICEDTEA_PATCHES): Removed FAST_BUILD_PATCH.
+	* Makefile.in, configure: Regenerated.
+	* patches/icedtea-speed.patch: Removed.
+
+2008-04-21  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* acinclude.m4 (SET_CORE_BUILD): Always set to true when building
+	--with-cacao.
+	* Makefile.in, aclocal.m4, configure: Regenerated.
+
+2008-04-21  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* patches/icedtea-cacao.patch: Set the ARCH_DATA_MODEL correct for
+	almost all architectures (I missed that when merging in the
+	cacao-branch).
+
+2008-04-17  Joshua Sumali  <jsumali@redhat.com>
+
+	* configure: Regenerated.
+	* configure.ac: Bump version number to 1.2.
+
+2008-04-17  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/Launcher.java: Fix applet focusing bug.
+
+2008-04-16  Keith Seitz  <keiths@redhat.com>
+
+	* patches/icedtea-LCMS-setTagData.patch: New file.
+	* patches/icedtea-color-createcontext.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Add above patches.
+	* Makefile.in: Regenerated.
+
+2008-04-16  Andrew Haley  <aph@littlepinkcloud.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp
+	(arm_add_and_fetch, arm_lock_test_and_set, arm_compare_and_swap): 
+	Rewrite.
+
+2008-04-16  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-core-build.patch: Install libjvm.so in server
+	rather than in core.
+	* jvm.cfg.in: Updated with new libjvm.so location.
+
+2008-04-15  Gary Benson  <gbenson@redhat.com>
+            Yi Zhan <yi.zhan@intel.com>
+
+	* patches/icedtea-ia64-fdlibm.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Added the above.
+	* aclocal.m4, Makefile.in: Regenerated.
+
+2008-04-15  Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* acinclude.m4 (ENABLE_ZERO_BUILD): Make --disable-zero work and
+	don't build zero by default when compiling --with-cacao.
+	* aclocal.m4, configure, Makefile.in: Regenerated.
+
+2008-04-14  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/services/XFileContents.java: Add support for
+	JNLPRandomAccessFile.
+	* rt/net/sourceforge/jnlp/services/XServiceManagerStub.java: Add
+	PrintService and JNLPRandomAccessFile services.
+	* rt/net/sourceforge/jnlp/services/XJNLPRandomAccessFile.java: New file.
+	* rt/net/sourceforge/jnlp/services/XPrintService.java: Likewise.
+
+2008-04-14  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.in: Regenerated.
+	* configure: Regenerated.
+	* configure.ac: Added checks for make, gzip and ant.
+
+2008-04-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Pass ALT_PARALLEL_COMPILE_JOBS and
+	HOTSPOT_BUILD_JOBS to ICEDTEA_ENV
+	and ICEDTEA_ENV_ECJ as configured.
+	* Makefile.in,
+	* configure:
+	Updated.
+	* configure.ac:
+	Add --with-parallel-jobs=x option.
+	
+2008-04-12  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am: Updated to OpenJDK b09 release.
+	* Makefile.in: Regenerated.
+
+2008-04-11  Lillian Angel  <langel@redhat.com>
+
+	* AUTHORS: Updated.
+
+2008-04-10  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
+	(ZeroStackPrinter::print): Fail gracefully when not set up.
+
+2008-04-10  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/javaStack_zero.hpp: Renamed as...
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp: New file.
+	Renamed JavaStack as ZeroStack, JavaFrame as ZeroFrame, and
+	JavaStackPrinter as ZeroStackPrinter.
+	* patches/icedtea-zero.patch: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/entryFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreterFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubGenerator_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp:
+	Likewise.
+
+2008-04-09  Dan Munckton  <lists@munckfish.net>
+
+	* patches/icedtea-xinerama.patch: Make Java Full Screen Exclusive Mode
+	work again with Xorg Server 1.3 and above (Java bug 6636469).
+
+2008-04-09  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-libraries.patch: Updated LDLIBS for jpeg.
+
+2008-04-09  Gary Benson  <gbenson@redhat.com>
+	    Xerxes Rånby <xerxes@zafena.se>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp
+	(__kernel_cmpxchg_t): New type.
+	(__kernel_cmpxchg): New macro.
+	(arm_compare_and_swap): New function.
+	(Atomic::cmpxchg): Use the above on arm.
+	(Atomic::cmpxchg_ptr): Likewise.
+	(arm_add_and_fetch): New function.
+	(Atomic::add): Use the above on arm.
+	(Atomic::add_ptr): Likewise.	
+	(arm_lock_test_and_set): New function.
+	(Atomic::xchg): Use the above on arm.
+	(Atomic::xchg_ptr): Likewise.	
+
+2008-04-08  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-text-relocations.patch: Use -fPIC on sparc/sparc64.
+
+2008-04-08  Joshua Sumali  <jsumali@redhat.com>
+
+	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
+	* patches/icedtea-webservices.patch: Relaxed visiblity a bit more in
+	sun.applet.AppletPanel for NetxPanel.
+	* rt/net/sourceforge/jnlp/Launcher.java
+	(getApplet(file, enableCodeBase, container)): New method.
+	(createAppletObject(file, enableCodeBase, container)): Likewise.
+	* rt/net/sourceforge/jnlp/NetxPanel.java: Removed run() and replaced with
+	new method runLoader().
+	* rt/net/sourceforge/jnlp/PluginBridge.java: Refactored.
+	(isApplet): New method.
+	(isApplication): Likewise.
+	(isComponent): Likewise.
+	(isInstaller): Likewise.
+	* rt/net/sourceforge/jnlp/resources/Messages.properties: Added message for
+	network access.
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java
+	(runtimePermissions): New field.
+	(setSecurity): New method.
+	(addPermission(perm)): Likewise.
+	(getSecurity): Likewise.
+	* rt/net/sourceforge/jnlp/runtime/JNLPPolicy.java: Check runtime
+	permissions for permissions that may have been granted by the user.
+	(implies): New method.
+	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Catch socket
+	permission requests, and ask user for permission when application is
+	unsigned.
+	(askPermission(perm)): New method.
+	(addPermission(perm)): Likewise.
+	* rt/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Add NETWORK
+	type access, and allow passing of parameters for message dialogs.
+	(showAccessWarningDialogs(accessType, file, extras)): New method.
+	* rt/net/sourceforge/jnlp/services/ServiceUtil.java
+	(checkAccess(type, extras)): New method.
+
+2008-04-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Add NO_DOCS option as
+	appropriate to ICEDTEA_ENV and ICEDTEA_ENV_ECJ
+	* Makefile.in: Regenerated.
+	* configure: Likewise.
+	* configure.ac: Add --disable-docs option.
+
+2008-04-07  Joshua Sumali  <jsumali@redhat.com>
+
+	* patches/icedtea-netx-plugin.patch: Removed reflection hunk.
+	* rt/net/sourceforge/jnlp/Parser.java: Removed inner Node class to ...
+	* rt/net/sourceforge/jnlp/Node.java: here, as a separate class.
+
+2008-04-07  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4 (ENABLE_ZERO_BUILD): Added sparc and sparc64.
+	* configure: Regenerated.	
+
+2008-04-04  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/cache/CacheUtil.java: Added debugging code.
+	* rt/net/sourceforge/jnlp/runtime/Boot.java: Likewise.
+	* rt/net/sourceforge/jnlp/runtime/AppletEnvironment.java: Improved Applet
+	displaying.
+	* rt/net/sourceforge/jnlp/runtime/InstallDialog.java: Fixed image loading
+	on the cache dialog.
+	* rt/net/sourceforge/jnlp/runtime/JNLPRuntime.java: Fixed window icon
+	loading.
+	* rt/net/sourceforge/jnlp/security/AccessWarningPane.java: Added icons to
+	warning dialogs.
+	* rt/net/sourceforge/jnlp/security/CertWarningPane.java: Likewise.
+	* rt/net/sourceforge/jnlp/security/MoreInfoPane.java: Likewise.
+	* rt/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Added
+	NETWORK as type of security access.
+	* rt/net/sourceforge/jnlp/resources/info-small.png: New file.
+	* rt/net/sourceforge/jnlp/resources/warning-small.png: Likewise.
+	* rt/net/sourceforge/jnlp/resources/warning.png: Likewise.
+
+2008-04-04  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-ia64-bugfix.patch: New file.
+	* Makefile.am: Added the above.
+	* Makefile.in: Regenerated.
+
+2008-04-03  Lillian Angel  <langel@redhat.com>
+
+	* acinclude.m4: Fixed typo.
+	* configure: Regenerated.
+
+2008-04-03  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated for next release.
+
+2008-04-03  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Updated version.
+	* configure: Regenerated.
+
+2008-04-03  Lillian Angel  <langel@redhat.com>
+
+	* README: Updated.
+	* INSTALL: Updated.
+
+2008-04-03  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated for icedtea6.
+
+2008-04-02  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/runtime/InstallDialog.java: Removed image
+	loading.
+
+2008-04-02  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-zero.patch: Workaround for arm.
+	
+2008-04-01  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-arm-uname.patch: New file.
+	* Makefile.am: Added the above.
+	* Makefile.in: Regenerated.
+
+2008-03-31  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-jpegclasses.patch: Added new class.
+
+2008-03-31  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added new patch.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-jpegclasses.patch: New patch. Provides stubs for
+	com.sun.image.codec.jpeg classes.
+
+2008-03-31  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Added checks for file and cpio.
+	* configure: Likewise.
+
+2008-03-28  Gary Benson  <gbenson@redhat.com>
+
+	* configure.ac: Check for libffi for zero builds only.
+	* configure: Regenerated.
+
+2008-03-28  Gary Benson  <gbenson@redhat.com>
+
+	* Makefile.am
+	(stamps/ports.stamp, stamps/ports-ecj.stamp): Fixed broken core
+	and zero detection.
+	* Makefile.in: Regenerated.
+
+2008-03-27  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Updated to OpenJDK b08 release.
+	* Makefile.in: Regenerated.
+
+2008-03-27  Lillian Angel  <langel@redhat.com>
+	
+	* Makefile.am
+	(clean-patch): Fixed so patches are actually reverted.
+	* Makefile.in: Regenerated.
+
+2008-03-27  Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* patches/icedtea-cacao.patch: Fixed the paths so the patch
+	actually applies.
+
+2008-03-27  Gary Benson  <gbenson@redhat.com>
+
+	* Makefile.am
+	(stamps/ports.stamp, stamps/ports-ecj.stamp): Fixed broken cacao
+	detection.
+	* Makefile.in: Regenerated.
+
 2008-03-27  Joshua Sumali  <jsumali@redhat.com>
 
 	* Makefile.am: Added icedtea-netx-applet-visibility.patch.
@@ -8,17 +552,380 @@
 	here ...
 	* patches/icedtea-netx-applet-visbility.patch: To here. New file.
 
+2008-03-26  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-zero-build.patch: Added zero-specific bits to
+	class library makefiles.
+	* patches/icedtea-cacao.patch: Moved platform-specific bits from
+	icedtea-ports.patch.
+	* patches/icedtea-ports.patch: Removed.
+
+	* jvm.cfg.in: New file.
+	* ergo.c.in: Likewise.
+	* acinclude.m4
+	(ENABLE_ZERO_BUILD): Added new generated files jvm.cfg and ergo.c.
+	* Makefile.am
+	(stamps/ports.stamp, stamps/ports-ecj.stamp): Use jvm.cfg and ergo.c.
+	(ICEDTEA_PATCHES): Removed icedtea-ports.patch.
+	* Makefile.in, aclocal.m4, configure: Regenerated.
+	* .hgignore: Added jvm.cfg and ergo.c.
+
+	* ports/jdk/src/solaris/bin/alpha/jvm.cfg: Removed.
+	* ports/jdk/src/solaris/bin/arm/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/mips/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/ppc/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/ppc64/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/s390/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/s390x/jvm.cfg: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_alpha.c: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_arm.c: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_ia64.c: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_mips.c: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_ppc.c: Likewise.
+	* ports/jdk/src/solaris/bin/ergo_s390.c: Likewise.
+
+2008-03-26  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp
+	(LOTS_OF_REGS): Default to no.
+
 2008-03-26  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am
 	(dist-openjdk): Fixed to only remove hg-related files from the openjdk
 	clone.
+
+2008-03-25  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Updated to b07.
 	* Makefile.in: Regenerated.
+	* patches/icedtea-libraries.patch: Update to b07.
+	* patches/icedtea-lesstif-64.patch: Remove, integrated in b07.
+
+2008-03-24  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(stamps/extract.stamp): Added -z option to TAR.
+	* Makefile.in: Regenerated.
+
+2008-03-20  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-version.patch: Added patch to fix launcher name.
+
+2008-03-17  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-version.patch: Removed patches that changed OpenJDK
+	naming to IcedTea.
+
+2008-03-17  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-static-libstdc++.patch: New file.
+
+2008-03-17  Gary Benson  <gbenson@redhat.com>
+
+	* platform_zero.in: New file.
+	* ports/hotspot/build/linux/makefiles/zero.make: Likewise.
+
+	* acinclude.m4
+	(SET_ARCH_DIRS): Added special case for arm.
+	(ENABLE_ZERO_BUILD): Added new substitutions (ZERO_LIBARCH,
+	ZERO_BITSPERWORD, ZERO_ENDIANNESS, ZERO_ARCHDEF and ZERO_ARCHFLAG)
+	and new generated file (platform_zero).
+	(SET_CORE_BUILD): Enable whenever zero is used.
+	* Makefile.am
+	(ZERO_PATCHES): New variable listing all zero patches.
+	(EXTRA_DIST): Added ZERO_PATCHES.
+	(ZERO_PATCHES_COND): New variable listing zero patches when used.
+	(ICEDTEA_PATCHES): Grouped all zero patches into ZERO_PATCHES_COND,
+	added icedtea-zero-build.patch and icedtea-static-libstdc++.patch,
+	and removed icedtea-always-zero.patch.
+	(stamps/ports.stamp, stamps/ports-ecj.stamp): Use platform_zero.
+	(ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Pass ZERO_* variables through.
+	* Makefile.in, configure: Regenerated.
+
+	* patches/icedtea-zero.patch: Split build system bits into...
+	* patches/icedtea-zero-build.patch: New file.
+	* patches/icedtea-hotspot7-ports.patch: Merged into icedtea-zero.patch.
+	* patches/icedtea-ports.patch: Moved hotspot-specific bits into
+	icedtea-zero.patch.
+	* patches/icedtea-signature-iterator.patch: Rebased.
+	* patches/icedtea-test-atomic-operations.patch: Likewise.
+	* patches/icedtea-signed-types.patch: Likewise, and missing
+	hunk reinstated.
+	* patches/icedtea-text-relocations.patch: Base conditional
+	on ZERO_LIBARCH rather than BUILDARCH.
+	* patches/icedtea-always-zero.patch: Removed.
+
+	* ports/hotspot/build/linux/makefiles/arm.make: Removed.
+	* ports/hotspot/build/linux/makefiles/ia64.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/ppc.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/ppc64.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/s390.make: Likewise.
+	* ports/hotspot/build/linux/makefiles/s390x.make: Likewise.
+	* ports/hotspot/build/linux/platform_arm: Likewise.
+	* ports/hotspot/build/linux/platform_ia64: Likewise.
+	* ports/hotspot/build/linux/platform_ppc: Likewise.
+	* ports/hotspot/build/linux/platform_ppc64: Likewise.
+	* ports/hotspot/build/linux/platform_s390: Likewise.
+	* ports/hotspot/build/linux/platform_s390x: Likewise.
+
+	* .hgignore: Added platform_zero.
+	
+2008-03-14  Lillian Angel  <langel@redhat.com>
+
+	* .hgignore: Updated.
+
+2008-03-12  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-print-lsb-release.patch: New.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	* Makefile.in: Regenerated.
+
+2008-03-12  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-ecj.patch (openjdk/corba/make/common/Defs-linux.gmk):
+	Find libgcj.so when the version of gcc != the version of gcj.
+
+2008-03-12  Matthias Klose  <doko@ubuntu.com>
+
+	* configure.ac: Check for ffi.h/libffi.so without pkg-config.
+	* configure: Regenerated.
+
+2008-03-11  Lillian Angel  <langel@redhat.com>
+
+	* configure: Regenerated.
+	* configure.ac: Added conditional for WITH_OPENJDK.
+
+2008-03-11  Matthias Klose  <doko@ubuntu.com>
+
+	* .hgignore: Add debian packaging directory.
+
+2008-03-11  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added check for WITH_OPENJDK.
+	* Makefile.in: Regenerated.
+	* configure: Regenerated.
+	* configure.ac: Added --with-openjdk and --with-openjdk-home options.
+
+2008-03-11  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-gcc-suffix.patch: Update, use GCC_SUFFIX in more
+	places.
+
+2008-03-11  Matthias Klose  <doko@ubuntu.com>
+
+	* configure.ac: Check for zip and unzip.
+	* configure: Regenerated.
+
+2008-03-10  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added patches to EXTRA_DIST.
+	* Makefile.in: Regenerated.
+
+2008-03-10  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	(current_stack_region): Rewritten to cope with guard pages and ia64.
+	(default_stack_size, default_guard_size): Comment fixes.
+
+2008-03-07  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/security/CertsInfoPane.java: Fix null	pointer.
+
+2008-03-06  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Added extra to EXTRA_DIST.
+	* Makefile.in: Regenerated.
+
+2008-03-06  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Added new 'extra' targets. These new targets build the
+	sources in the extra/ directory to build about.jar, which is the new
+	sample jnlp application for javaws. 
+	* Makefile.in: Regenerated.
+	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
+	* rt/net/sourceforge/jnlp/resources/Manifest.mf: Fix boot class typo.
+	* rt/net/sourceforge/jnlp/resources/Messages.properties: Improved command
+	line options.
+	* rt/net/sourceforge/jnlp/runtime/Boot.java: Changed command line
+	behaviour. Sample application now only runs if the -about flag is passed.
+	* rt/net/sourceforge/jnlp/runtime/JNLPRuntime.java: Remove call to
+	printStackTrace.
+	* rt/net/sourceforge/jnlp/security/CertsInfoPane.java: Rearranged methods
+	and relaxed visibility in some fields/methods for SingleCertInfoPane
+	class.
+	* rt/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Added
+	single certificate dialog showing.
+	* rt/net/sourceforge/jnlp/tools/KeyTool.java: Moved KeyStore retrieving to
+	new SecurityUtil class.
+	* extra/net/sourceforge/jnlp/about/HTMLPanel.java: New File.
+	* extra/net/sourceforge/jnlp/about/Main.java: Likewise.
+	* extra/net/sourceforge/jnlp/about/resources/about.html: Likewise.
+	* extra/net/sourceforge/jnlp/about/resources/applications.html: Likewise.
+	* extra/net/sourceforge/jnlp/about/resources/jamIcon.jpg: Likewise.
+	* extra/net/sourceforge/jnlp/about/resources/notes.html: Likewise.
+	* rt/net/sourceforge/jnlp/resources/about.jnlp: Likewise.
+	* rt/net/sourceforge/jnlp/security/SecurityUtil.java: Likewise.
+	* rt/net/sourceforge/jnlp/security/SingleCertInfoPane.java: Likewise.
+	* rt/net/sourceforge/jnlp/security/viewer/CertificatePane.java: Likewise.
+	* rt/net/sourceforge/jnlp/security/viewer/CertificateViewer.java:
+	Likewise.
+
+2008-03-05  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/templater/README: Updated URL.
+
+2008-03-05  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/ppc/vm/jni_ppc.h: Removed.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/linux_ppc.s: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/linux_ppc64.s: Likewise.
+
+2008-03-05  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.cpp: Removed.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/assembler_ppc.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytecodeInterpreter_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytecodeInterpreter_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytecodeInterpreter_ppc.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytecodes_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytecodes_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/bytes_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_CodeStubs_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_Defs_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_FpuStackSim_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_FpuStackSim_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_FrameMap_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_FrameMap_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LIRAssembler_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LIRAssembler_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LIRGenerator_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LinearScan_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_LinearScan_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_MacroAssembler_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_MacroAssembler_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_Runtime1_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/c1_globals_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/codeBuffer_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/copy_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreterGenerator_ppc.hpp:
+	Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/cppInterpreter_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/debug_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/depChecker_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/depChecker_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/disassembler_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/disassembler_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/dump_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/frame_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/frame_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/frame_ppc.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/globalDefinitions_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/globals_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/icBuffer_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/icache_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/icache_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interp_masm_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interpreterGenerator_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interpreterRT_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interpreterRT_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interpreter_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/interpreter_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/javaFrameAnchor_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/jniFastGetField_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/jniTypes_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/nativeInst_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/nativeInst_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/registerMap_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/register_definitions_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/register_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/register_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/relocInfo_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/relocInfo_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/stubRoutines_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/stubRoutines_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/templateInterpreterGenerator_ppc.hpp: 
+	Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/templateTable_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/templateTable_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmStructs_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vm_version_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmreg_ppc.cpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmreg_ppc.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vmreg_ppc.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/ppc/vm/vtableStubs_ppc.cpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/assembler_linux_ppc.cpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/atomic_linux_ppc.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/bytes_linux_ppc.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/globals_linux_ppc.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/orderAccess_linux_ppc.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.cpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/os_linux_ppc.hpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/prefetch_linux_ppc.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/threadLS_linux_ppc.cpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/threadLS_linux_ppc.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/thread_linux_ppc.cpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/thread_linux_ppc.hpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/vmStructs_linux_ppc.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_ppc/vm/vm_version_linux_ppc.cpp:
+	Likewise.
 
 2008-03-06  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp
 	(ThreadStackSize): Increased by 512kb to cope with 64kb pages.
+
+2008-03-05  Lillian Angel  <langel@redhat.com>
+
+	* .hgignore: Updated.
+	* Makefile.am: Added sun/awt to COPY_PLUGS.
+	* Makefile.in: Regenerated.
+	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
+	* generated/sun/awt/X11/generator/sizer.32.c: Regenerated.
+
+2008-03-04  Lillian Angel  <langel@redhat.com>
+
+	* rt/com/sun/script: Removed.
+	* rt/java/io: Removed.
+	* rt/javax/script: Removed.
+	* rt/sun/: Removed.
+	* Makefile.am: Updated rt.jar.
+	* Makefile.in: Regenerated.
+	* .hgignore: Updated with new files copied from openjdk srcs.
+
+2008-03-04  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Removed gnu from tools.jar.
+	* Makefile.in: Regenerated.
+
+2008-03-04  Lillian Angel  <langel@redhat.com>
+
+	* rt/gnu/*: Removed.
+	* Makefile.am: Removed icedtea-paths.patch.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-paths.patch: Removed.
+
+2008-03-04  Lillian Angel  <langel@redhat.com>
+
+	* rt/com/sun/image/codec/jpeg/*: Removed unneeded plugs.
 
 2008-03-04  Matthias Klose  <doko@ubuntu.com>
 
@@ -275,6 +1182,281 @@
 	* configure.ac: Added conditional check for libffi.
 	* configure: Regenerated.
 	* patches/icedtea-version.patch: Updated.
+
+2008-03-04  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-lesstif-64.patch: Reverted.
+	* Makefile.am: Added above patch.
+	* Makefile.in: Regenerated.
+
+2008-03-04  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-ports.patch: Moved HotSpot 7 specific hunk to...
+	* patches/icedtea-hotspot7-ports.patch: New file.
+	* Makefile.am: Added the above.
+	* Makefile.in: Regenerated.
+
+2008-03-04  Joshua Sumali  <jsumali@redhat.com>
+
+	* patches/icedtea-use-system-tzdata.patch: Add missing hunk.
+
+2008-03-04  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-hotspot-6b06-7b24.patch: New file.
+	* patches/icedtea-hotspot7-build-fixes.patch: Likewise.
+	* patches/icedtea-bytecodeInterpreter.patch: Likewise.
+	* patches/icedtea-bytecodeInterpreterWithChecks.patch: Likewise.
+	* Makefile.am: Apply the above patches when zero is being built.
+	* Makefile.in: Regenerated.
+
+	* patches/icedtea-linker-options.patch: Reinstate missing hunks.
+	* patches/icedtea-ports.patch: Likewise.
+	* patches/icedtea-zero.patch: Likewise.
+
+2008-03-04  Lillian Angel  <langel@redhat.com>
+
+	* generated/*: Updated generated files.
+	* Makefile.am: Fixed distclean target.
+	* Makefile.in: Regenerated.
+
+2008-03-03  Lillian Angel  <langel@redhat.com>
+
+	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
+	* generated/sun/awt/X11/generator/sizer.32.c: Likewise.
+	* patches/icedtea-lesstif-64.patch: Removed.
+	* Makefile.am: Removed above patch.
+	* Makefile.in: Regenerated.
+	* rt/java/io/PushbackReader.java: New file.
+
+2008-03-03  Joshua Sumali  <jsumali@redhat.com>
+
+	* generated/sun/awt/X11/generator/sizer.32: Accidentally committed this
+	in revision 633. Reverting back to rev 632.
+	* generated/sun/awt/X11/generator/sizer.32.c: Likewise.
+
+2008-03-03  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Updated to b06.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-ant.patch: Updated line numbers for b06.
+	* patches/icedtea-bytebuffer-compact.patch: Likewise.
+	* patches/icedtea-copy-plugs.patch: Likewise.
+	* patches/icedtea-core-build.patch: Likewise.
+	* patches/icedtea-gcc-4.3.patch: Likewise.
+	* patches/icedtea-headers.patch: Likewise.
+	* patches/icedtea-lib64.patch: Likewise.
+	* patches/icedtea-libraries.patch: Likewise.
+	* patches/icedtea-ports.patch: Likewise.
+	* patches/icedtea-sunsrc.patch: Likewise.
+	* patches/icedtea-tools.patch: Likewise.
+	* patches/icedtea-use-system-tzdata.patch: Likewise.
+	* patches/icedtea-zero.patch: Likewise.
+	* patches/icedtea-graphics.patch: Removed awt patches since new awt code 
+	is included in b06.
+	* rt/java/awt/*: Removed files since they are newly opened in b06.
+
+2008-02-28  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am:
+	(icedtea-debug): Fixed typo.
+	* Makefile.in: Regenerated.
+
+2008-02-27  Joshua Sumali  <jsumali@redhat.com>
+	    Francis Kung  <fkung@redhat.com>
+
+	* Makefile.am:
+	(tools.stamp): Removed since NetX sources moved from tools/ to rt/
+	(tools): Likewise.	
+	(tools-source-files.txt): Likewise.
+	(tools-class-files.stamp): Likewise.
+	(clean-tools): Likewise.
+	(rt-closed.jar): Add rt/net when creating jar.
+	(ICEDTEA_PATCHES): Add NETX_PLUGIN conditional.
+	* Makefile.in: Regeneraged.
+	* acinclude.m4: (ENABLE_NETX_PLUGIN): New macro
+	* configure: Regenerated.
+	* configure.ac: Add ENABLE_NETX_PLUGIN.
+	* README: Updated.
+	* patches/icedtea-copy-plugs.patch: Added importing of rt/net/* as binary
+	plugs to rt.jar.	
+	* patches/icedtea-netx-plugin.patch: New file. This patch is used when
+	NETX_PLUGIN is true.
+	* patches/icedtea-webservices.patch: New file. This is
+	icedtea-jnlp-launcher.patch and icedtea-plugin.patch combined into one.
+	* patches/icedtea-jnlp-launcher.patch: Removed.
+	* patches/icedtea-plugin.patch: Removed.
+	* tools/: This former directory for holding NetX sources was deleted and the
+	sources were moved to ...
+	* rt/net/sourceforge/: Here. NetX sources now follow correct package
+	naming.
+
+2008-02-26  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(FREETYPE2_INC_DIR): Removed.
+	(FREETYPE2_HEADERS): New var.
+	(FT2_LIB): New var.
+	* patches/icedtea-headers.patch: Added freetype patches.
+	* Makefile.in: Regenerated.
+
+2008-02-26  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-libraries.patch: Fixed dlopen calls. No longer
+	hardcoding paths to libjpeg.so.62.
+
+2008-02-20  Joshua Sumali  <jsumali@redhat.com>
+
+	* tools/netx/jnlp/security/CertWarningPane.java: Make run and cancel
+	buttons of equal width.
+	* tools/netx/jnlp/tools/KeyTool.java: Create new trusted.certs if
+	directory exists but file does not.
+
+2008-02-19  Joshua Sumali  <jsumali@redhat.com>
+
+	* tools/netx/jnlp/tools/KeyTool.java: Instantiate usercerts before trying to
+	load it.
+
+2008-02-19  Joshua Sumali  <jsumali@redhat.com>
+
+	* tools/netx/jnlp/security/CertWarningPane.java: Import the publisher's
+	certificate instead of root certificate to trusted.certs.
+
+2008-02-19  Joshua Sumali  <jsumali@redhat.com>
+
+	* tools/netx/jnlp/resources/Messages.properties: Added new messages for
+	trusted and untrusted certificates.
+	* tools/netx/jnlp/runtime/JNLPClassloader.java: Fixed code for showing
+	proper warning dialogs.
+	* tools/netx/jnlp/security/CertsInfoPane.java: Added SHA-1 and MD5
+	certificate fingerprints.
+	* tools/netx/jnlp/security/MoreInfoPane.java
+	(actionPerformed(e)): Changed getCerts() to getJarSigner()
+	* tools/netx/jnlp/security/SecurityWarningDialog.java
+	(DialogType): Added a new type of warning.
+	(certs): Removed this field and
+	(details): this field in favor of ...
+	(jarSigner): this new field.
+	(showAccessWarningDialog(accessType, file): Rewritten to show new warning
+	type.
+	(showMoreInfoDialog): Changed method signature to above field change.
+	(showCertInfoDialog): Likewise.
+	(getJarSigner): New Method.
+	(updateUI): Added extra case for new warning type.
+	* tools/netx/jnlp/services/ServiceUtil.java: Added extra parameter to
+	method call for	changes in SecurityWarningDialog.
+	* tools/netx/jnlp/tools/JarSigner.java
+	(allVerified): Field refactored to ...
+	(alreadyTrustPublisher): This.
+	(rootInCacerts): New Field.
+	(certPath): Likewise.
+	(noSigningIssues): Likewise.
+	(getAlreadyTrustPublisher): New method.
+	(getRootInCacerts): Likewise.
+	(getCertPath): Likewise.
+	(allVerified): Method refactored to ...
+	(noSigningIssues): This. 
+	(checkTrustedCerts): New method.
+	(getPublisher): Likewise.
+	(getRoot): Likewise.
+	* tools/netx/jnlp/security/AccessWarningPane.java: New file.
+	* tools/netx/jnlp/security/CertWarningPane.java: New file.
+	* tools/netx/jnlp/tools/KeyTool.java: New file.
+	* tools/netx/jnlp/security/SecurityWarningOptionPane.java: Removed since
+	this class was split into AccessWarningPane and CertWarningPane.
+
+2008-02-18  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added icedtea-always-zero.patch to DIST.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-zero.patch: Removed erronous patch.
+
+2008-02-18  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-zero.patch: Correctly locate the platform file.
+
+2008-02-18  Gary Benson  <gbenson@redhat.com>
+
+	* configure.ac: Check for libffi whenever building with zero.
+	* Makefile.am (ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Pass libffi settings.
+	* Makefile.in, configure: Regenerated.
+
+2008-02-17  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (patch.stamp): Stop and fail when patch doesn't apply.
+	(clean-patch): Warn and fail when patch doesn't revert.
+	(patch-ecj.stamp): Fail when patch doesn't apply.
+	(clean-patch-ecj): Fail when patch doesn't revert.
+	* Makefile.in: Regenerated.
+
+2008-02-15  Lillian Angel  <langel@redhat.com>
+
+	* acinclude.m4: Added configure msg.
+	* configure: Regenerated.
+	* patches/icedtea-always-zero.patch: Fixed to patch properly.
+
+2008-02-15  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-zero.patch: Added patch to add LIBFFI_CFLAGS to
+	CFLAGS.
+	* configure.ac: Added conditional check for libffi.
+	* configure: Regenerated.
+
+2008-02-15  Lillian Angel  <langel@redhat.com>
+
+	* INSTALL: Updated
+	* Makefile.am: Added new patch.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-version.patch: Fixed
+	* patches/icedtea-lesstif-64.patch: New patch.
+
+2008-02-15  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Updated version.
+	* configure: Regenerated.
+	* patches/icedtea-version.patch: Removed instances of "OpenJDK" in
+	hotspot.
+
+2008-02-15  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (OPENJDK_URL): Add promoted version.
+	* Makefile.in: Regenerated.
+
+2008-02-15  Lillian Angel  <langel@redhat.com>
+
+	* INSTALL: Updated.
+	* Makefile.am: Updated patches. Added download target, added extract
+	and extract-ecj targets. Removed clone and clone-ecj targets. Updated
+	all paths and targets appropriately.
+	* Makefile.in: Regenerate.
+	* configure: Regenerate.
+	* configure.ac: Added new tools: tar, md5sum.
+	* gcjwebplugin.cc: Updated for 1.6.0.
+	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
+	* generated/sun/awt/X11/generator/sizer.32.c: Regenerated.
+	* patches/icedtea-ant.patch: Updated.
+	* patches/icedtea-bytebuffer-compact.patch: Updated.
+	* patches/icedtea-certbundle.patch: Updated.
+	* patches/icedtea-copy-plugs.patch: Updated.
+	* patches/icedtea-core-build.patch: Updated.
+	* patches/icedtea-ecj.patch: Updated.
+	* patches/icedtea-gcc-4.3.patch: Updated.
+	* patches/icedtea-headers.patch: Updated.
+	* patches/icedtea-lib64.patch: Updated.
+	* patches/icedtea-libraries.patch: Updated.
+	* patches/icedtea-linker-options.patch: Updated.
+	* patches/icedtea-memory-limits.patch: Updated.
+	* patches/icedtea-plugin.patch: Updated.
+	* patches/icedtea-ports.patch: Updated.
+	* patches/icedtea-signature-iterator.patch: Updated.
+	* patches/icedtea-signed-types.patch: Updated.
+	* patches/icedtea-ssl.patch: Updated.
+	* patches/icedtea-test-atomic-operations.patch: Updated.
+	* patches/icedtea-use-system-tzdata.patch: Updated.
+	* patches/icedtea-version.patch: Updated.
+	* patches/icedtea-zero.patch: Updated.
+	* patches/icedtea-bytecodeInterpreter.patch: Removed.
+	* patches/icedtea-bytecodeInterpreterWithChecks.patch: Removed.
+	* rt/java/io/PushbackReader.java: Removed.
 
 2008-02-15  Gary Benson  <gbenson@redhat.com>
 
@@ -2115,13 +3297,13 @@
 	* Makefile.am: Fixed target typo.
 	* Makefile.in: Regenerated.
 
-2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+2007-09-12  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* Makefile.am (icedtea-debug): Added -debug to target directory,
 	as found today by Andrew Haley.
 	* Makefile.in: Likewise.
 
-2007-09-12  Christan Thalinger  <twisti@complang.tuwien.ac.at>
+2007-09-12  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* .hgignore: Added *~.
 
@@ -3841,4 +5023,5 @@
 2007-06-07  Andrew Haley  <aph@redhat.com>
 
 	* Makefile.am (ICEDTEA_ENV): Unset LD_LIBRARY_PATH.
+
 

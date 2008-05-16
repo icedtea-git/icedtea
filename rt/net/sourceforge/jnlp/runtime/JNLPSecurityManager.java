@@ -19,13 +19,17 @@ package net.sourceforge.jnlp.runtime;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.lang.ref.*;
 import javax.swing.*;
 import java.security.*;
 
+import net.sourceforge.jnlp.security.SecurityWarningDialog;
+import net.sourceforge.jnlp.services.ServiceUtil;
 import net.sourceforge.jnlp.util.*;
 
+import sun.security.util.SecurityConstants;
+
+import java.net.SocketPermission;
 
 /**
  * Security manager for JNLP environment.  This security manager
@@ -202,21 +206,21 @@ class JNLPSecurityManager extends SecurityManager {
      * Return the current Application, or null.
      */
     protected ApplicationInstance getApplication(Class stack[], int maxDepth) {
-        if (maxDepth <= 0)
-            maxDepth = stack.length;
+    	if (maxDepth <= 0)
+    		maxDepth = stack.length;
 
-        // this needs to be tightened up
-        for (int i=0; i < stack.length && i < maxDepth; i++) {
-            if (stack[i].getClassLoader() instanceof JNLPClassLoader) {
-                JNLPClassLoader loader = (JNLPClassLoader) stack[i].getClassLoader();
+    	// this needs to be tightened up
+    	for (int i=0; i < stack.length && i < maxDepth; i++) {
+    		if (stack[i].getClassLoader() instanceof JNLPClassLoader) {
+    			JNLPClassLoader loader = (JNLPClassLoader) stack[i].getClassLoader();
 
-                if (loader != null && loader.getApplication() != null) {
-                    return loader.getApplication();
-                }
-            }
-        }
+    			if (loader != null && loader.getApplication() != null) {
+    				return loader.getApplication();
+    			}
+    		} 
+    	}
 
-        return null;
+    	return null;
     }
 
     /**
@@ -238,31 +242,102 @@ class JNLPSecurityManager extends SecurityManager {
      */
     public void checkPermission(Permission perm) {
         String name = perm.getName();
-
+        
+        // Enable this manually -- it'll produce too much output for -verbose
+        // otherwise.
+//		if (true)
+//			System.out.println("Checking permission: " + perm.toString());
         if ("setPolicy".equals(name) ||
             "setSecurityManager".equals(name))
             throw new SecurityException(R("RCantReplaceSM"));
 
         try {
             // deny all permissions to stopped applications
-            if (JNLPRuntime.isDebug()) {
-                if (!"getClassLoader".equals(name)) {
-                    ApplicationInstance app = getApplication();
-                    if (app != null && !app.isRunning())
-                        throw new SecurityException(R("RDenyStopped"));
-                }
-            }
+        	// The call to getApplication() below might not work if an 
+        	// application hasn't been fully initialized yet.
+//            if (JNLPRuntime.isDebug()) {
+//                if (!"getClassLoader".equals(name)) {
+//                    ApplicationInstance app = getApplication();
+//                    if (app != null && !app.isRunning())
+//                        throw new SecurityException(R("RDenyStopped"));
+//                }
+//            }
+        	
+			try {
+				super.checkPermission(perm);
+			} catch (SecurityException se) {
+				
+				//This section is a special case for dealing with SocketPermissions.
+				if (JNLPRuntime.isDebug())
+					System.err.println("Requesting permission: " + perm.toString());
 
-            super.checkPermission(perm);
+				//Change this SocketPermission's action to connect and accept
+				//(and resolve). This is to avoid asking for connect permission 
+				//on every address resolve.
+				Permission tmpPerm;
+				if (perm instanceof SocketPermission) {
+					tmpPerm = new SocketPermission(perm.getName(), 
+							SecurityConstants.SOCKET_CONNECT_ACCEPT_ACTION);
+				} else
+					tmpPerm = perm;
+				
+				//askPermission will only prompt the user on SocketPermission 
+				//meaning we're denying all other SecurityExceptions that may arise.
+				if (askPermission(tmpPerm)) {
+					addPermission(tmpPerm);
+					//return quietly.
+				} else {
+					throw se;
+				}
+			}
         }
         catch (SecurityException ex) {
-            if (JNLPRuntime.isDebug())
-                System.out.println("denying permission: "+perm);
-
+            if (JNLPRuntime.isDebug()) {
+                System.out.println("Denying permission: "+perm);
+            }
             throw ex;
         }
     }
+    
+    /**
+     * Asks the user whether or not to grant permission.
+     * @param perm the permission to be granted
+     * @return true if the permission was granted, false otherwise.
+     */
+    private boolean askPermission(Permission perm)	{
+    	
+    	ApplicationInstance app = getApplication();
+    	if (app != null && !app.isSigned()) {
+        	if (perm instanceof SocketPermission 
+        			&& ServiceUtil.checkAccess(SecurityWarningDialog.AccessType.NETWORK, perm.getName())) {
+        		return true;
+        	}
+    	}
 
+    	return false;
+    }
+
+    /**
+     * Adds a permission to the JNLPClassLoader.
+     * @param perm the permission to add to the JNLPClassLoader
+     */
+    private void addPermission(Permission perm)	{
+    	if (JNLPRuntime.getApplication().getClassLoader() instanceof JNLPClassLoader) {
+
+    		JNLPClassLoader cl = (JNLPClassLoader) JNLPRuntime.getApplication().getClassLoader();
+    		cl.addPermission(perm);
+        	if (JNLPRuntime.isDebug()) {
+        		if (cl.getPermissions(null).implies(perm))
+        			System.err.println("Added permission: " + perm.toString());
+        		else
+        			System.err.println("Unable to add permission: " + perm.toString());
+        	}
+    	} else {
+        	if (JNLPRuntime.isDebug())
+        		System.err.println("Unable to add permission: " + perm + ", classloader not JNLP.");
+    	}
+    }
+    
     /**
      * Checks whether the window can be displayed without an applet
      * warning banner, and adds the window to the list of windows to

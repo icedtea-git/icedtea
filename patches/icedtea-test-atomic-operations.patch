@@ -5,7 +5,7 @@ diff -r d384f5a5bd0c hotspot/src/share/vm/prims/jni.cpp
    jint result = JNI_ERR;
    DT_RETURN_MARK(CreateJavaVM, jint, (const jint&)result);
  
-+  // We're about to use Atomic::xchg for locking.  On Aztec platforms
++  // We're about to use Atomic::xchg for locking.  On zero platforms
 +  // this is implemented using the GCC builtin __sync_lock_test_and_set
 +  // which is not guaranteed to do what we're using it for on all
 +  // platforms.  So we check it works before doing anything else.

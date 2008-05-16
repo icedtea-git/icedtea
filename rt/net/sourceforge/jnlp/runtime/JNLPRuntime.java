@@ -454,9 +454,8 @@ public class JNLPRuntime {
             return;
 
         try {
-            ClassLoader cl = JNLPRuntime.class.getClassLoader();
-            windowIcon = new javax.swing.ImageIcon(cl.getResource(
-            		"net/sourceforge/jnlp/resources/netx-icon.png")).getImage();
+            windowIcon = new javax.swing.ImageIcon((new sun.misc.Launcher())
+            		.getClassLoader().getResource("net/sourceforge/jnlp/resources/netx-icon.png")).getImage();
         }
         catch (Exception ex) {
             if (JNLPRuntime.isDebug())

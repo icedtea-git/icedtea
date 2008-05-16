@@ -115,10 +115,12 @@ public class CacheUtil {
         else {
             try {
                 // this is what URLClassLoader does
-                location.openConnection().getPermission();
+                return location.openConnection().getPermission();
             }
             catch (java.io.IOException ioe) {
                 // should try to figure out the permission
+            	if (JNLPRuntime.isDebug())
+            		ioe.printStackTrace();
             }
         }
 

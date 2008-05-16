@@ -4,7 +4,7 @@
  # Compiler flags
  
  # position-independent code
-+ifneq ($(filter ppc ppc64,$(BUILDARCH)),)
++ifneq ($(filter ppc ppc64 sparc sparc64,$(ZERO_LIBARCH)),)
  PICFLAG = -fPIC
 +else
 +PICFLAG = -fpic

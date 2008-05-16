@@ -54,9 +54,9 @@ class InstallDialog extends Dialog implements ActionListener {
     InstallDialog() {
         super(createFrame(), R("CChooseCache"), true);
 
-        background = 
-            new ImageIcon(getClass().getClassLoader().getResource("net/sourceforge/jnlp/resources/install.png"));
-
+        URL icon = (new sun.misc.Launcher()).getClassLoader().getResource("net/sourceforge/jnlp/resources/install.png");
+        
+        background = new ImageIcon(icon);
         setLayout(new BorderLayout());
         setBackground(Color.white);
 
@@ -118,8 +118,10 @@ class InstallDialog extends Dialog implements ActionListener {
     }
 
     public void paint(Graphics g) {
+		
         Insets sin = super.getInsets();
         g.drawImage(background.getImage(), sin.left, sin.top, this);
+		
     }
 
     public void actionPerformed(ActionEvent evt) {
@@ -157,7 +159,7 @@ class InstallDialog extends Dialog implements ActionListener {
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         id.setLocation(screen.width/2-id.getWidth()/2,
                        screen.height/2-id.getHeight()/2);
-        id.show();
+        id.setVisible(true);
 
         if (id.canceled)
             return null;

@@ -600,7 +600,8 @@ public class ResourceTracker {
 
         try {
             // create out second in case in does not exist
-            InputStream in = new BufferedInputStream( resource.connection.getInputStream() );
+            URLConnection con = resource.location.openConnection();
+            InputStream in = new BufferedInputStream(con.getInputStream());
             OutputStream out = CacheUtil.getOutputStream(resource.location, resource.downloadVersion);
             byte buf[] = new byte[1024];
             int rlen;
@@ -612,6 +613,10 @@ public class ResourceTracker {
 
             in.close();
             out.close();
+
+            // explicitly close the URLConnection.
+            if (con instanceof HttpURLConnection)
+                ((HttpURLConnection)con).disconnect();
 
             resource.changeStatus(DOWNLOADING, DOWNLOADED);
             synchronized(lock) {
@@ -648,7 +653,7 @@ public class ResourceTracker {
 
             synchronized(resource) {
                 resource.localFile = localFile;
-                resource.connection = connection;
+                // resource.connection = connection;
                 resource.size = size;
                 resource.changeStatus(CONNECT|CONNECTING, CONNECTED);
 
@@ -669,6 +674,10 @@ public class ResourceTracker {
                 lock.notifyAll(); // wake up wait's to check for completion
             }
             resource.fireDownloadEvent(); // fire CONNECTED
+
+            // explicitly close the URLConnection.
+			if (connection instanceof HttpURLConnection)
+                ((HttpURLConnection)connection).disconnect();
         }
         catch (Exception ex) {
             if (JNLPRuntime.isDebug())
@@ -857,6 +866,8 @@ public class ResourceTracker {
             synchronized (lock) {
                 // check for completion 
                 for (int i=0; i < resources.length; i++) {
+                	//NetX Deadlocking may be solved by removing this 
+                	//synch block.
                     synchronized (resources[i]) {
                         if (!resources[i].isSet(DOWNLOADED | ERROR)) {
                             finished = false;

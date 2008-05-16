@@ -22,6 +22,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+import java.lang.reflect.InvocationTargetException;
 import java.net.*;
 import java.io.*;
 import javax.swing.*;
@@ -168,16 +169,26 @@ public class AppletEnvironment implements AppletContext, AppletStub {
                               appletDesc.getHeight() + insets.top + insets.bottom);
             }
     
-            // do first because some applets need to be displayed before
-            // starting (they use Component.getImage or something)
-            cont.show();
+            try {
+            	SwingUtilities.invokeAndWait(new Runnable() {
+            		public void run() {
+            			// do first because some applets need to be displayed before
+            			// starting (they use Component.getImage or something)
+            			cont.setVisible(true);
 
-            applet.init();
-            applet.start();
+            			applet.init();
+            			applet.start();
 
-            cont.invalidate(); // this should force the applet to
-            cont.validate();   // the correct size and to repaint
-            cont.repaint();
+            			cont.invalidate(); // this should force the applet to
+            			cont.validate();   // the correct size and to repaint
+            			cont.repaint();
+            		}
+            	});
+            } catch (InterruptedException ie) {
+
+            } catch (InvocationTargetException ite) {
+
+            }
         }
         catch (Exception ex) {
             if (JNLPRuntime.isDebug())

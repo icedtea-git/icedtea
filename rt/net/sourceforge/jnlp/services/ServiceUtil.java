@@ -17,19 +17,13 @@
 
 package net.sourceforge.jnlp.services;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
 import java.lang.reflect.*;
 import java.security.*;
+
 import javax.jnlp.*;
 
-import net.sourceforge.jnlp.*;
 import net.sourceforge.jnlp.runtime.*;
 import net.sourceforge.jnlp.security.SecurityWarningDialog;
-
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 
 /**
  * Provides static methods to interact useful for using the JNLP
@@ -178,14 +172,34 @@ public class ServiceUtil {
      * Returns whether the app requesting a service is signed. If the app is
      * unsigned, the user is prompted with a dialog asking if the action
      * should be allowed.
+     * @param type the type of access being requested
+     * @param extras extra Strings (usually) that are passed to the dialog for
+     * message formatting.
+     * @return true if the access was granted, false otherwise.
      */
-    static boolean checkAccess(SecurityWarningDialog.AccessType type) {
+    public static boolean checkAccess(SecurityWarningDialog.AccessType type,
+    		Object... extras) {
 
         ApplicationInstance app = JNLPRuntime.getApplication();
         if (app != null) {
             if (!app.isSigned()) {
-                return SecurityWarningDialog.showAccessWarningDialog(type,
-                        app.getJNLPFile());
+            	final SecurityWarningDialog.AccessType tmpType = type;
+            	final Object[] tmpExtras = extras;
+            	final ApplicationInstance tmpApp = app;
+            	
+            	//We need to do this to allow proper icon loading for unsigned
+            	//applets, otherwise permissions won't be granted to load icons
+            	//from resources.jar.
+            	Object o = AccessController.doPrivileged(new PrivilegedAction() {
+                    public Object run() {
+                    	boolean b = SecurityWarningDialog.showAccessWarningDialog(tmpType,
+                                tmpApp.getJNLPFile(), tmpExtras);
+                    	return (Object) new Boolean(b);
+                    }
+                });
+            	
+            	return ((Boolean)o).booleanValue();
+                 
             } else if (app.isSigned()) {
 
                 //just return true here regardless if the app

@@ -25,6 +25,8 @@ import java.security.*;
 import java.lang.reflect.*;
 import javax.jnlp.*;
 import javax.swing.JOptionPane;
+
+
 import java.security.cert.Certificate;
 
 import net.sourceforge.jnlp.*;
@@ -90,6 +92,9 @@ public class JNLPClassLoader extends URLClassLoader {
 
     /** the security section */
     private SecurityDesc security;
+    
+    /** Permissions granted by the user during runtime. */
+    private ArrayList<Permission> runtimePermissions = new ArrayList<Permission>();
 
     /** all jars not yet part of classloader or active */
     private List available = new ArrayList();
@@ -119,7 +124,6 @@ public class JNLPClassLoader extends URLClassLoader {
         this.file = file;
         this.updatePolicy = policy;
         this.resources = file.getResources();
-        this.security = file.getSecurity();
 
         // initialize extensions
         initializeExtensions();
@@ -129,25 +133,46 @@ public class JNLPClassLoader extends URLClassLoader {
 
         initializeResources();
 
+        setSecurity();
+
+    }
+
+    private void setSecurity() {
 		/**
 		 * When we're trying to load an applet, file.getSecurity() will return
 		 * null since there is no jnlp file to specify permissions. We
 		 * determine security settings here, after trying to verify jars.
-		 * TODO: We still have to figure out what we want to do when
-		 * an application is unsigned, yet the user wants to give full permission.
 		 */
-		if (file instanceof PluginBridge && security == null) {
+		if (file instanceof PluginBridge) {
 			if (signing == true) {
 				this.security = new SecurityDesc(file, 
-					SecurityDesc.ALL_PERMISSIONS, null);
+					SecurityDesc.ALL_PERMISSIONS,
+					file.getCodeBase().getHost());
 			} else {
 				this.security = new SecurityDesc(file, 
 					SecurityDesc.SANDBOX_PERMISSIONS, 
 					file.getCodeBase().getHost());
 			}
+		} else { //regular jnlp file
+			
+			/**
+			 * If the application is signed, then we set the SecurityDesc to the
+			 * <security> tag in the jnlp file. Note that if an application is
+			 * signed, but there is no <security> tag in the jnlp file, the
+			 * application will get sandbox permissions.
+			 * If the application is unsigned, we ignore the <security> tag and 
+			 * use a sandbox instead. 
+			 */
+			if (signing == true) {
+				this.security = file.getSecurity();
+			} else {
+				this.security = new SecurityDesc(file, 
+						SecurityDesc.SANDBOX_PERMISSIONS, 
+						file.getCodeBase().getHost());
+			}
 		}
     }
-
+    
     /**
      * Returns a JNLP classloader for the specified JNLP file.
      *
@@ -226,6 +251,12 @@ public class JNLPClassLoader extends URLClassLoader {
             Permission p = CacheUtil.getReadPermission(jars[i].getLocation(),
                                                        jars[i].getVersion());
 
+            if (JNLPRuntime.isDebug()) {
+            	if (p == null)
+            		System.out.println("Unable to add permission for " + jars[i].getLocation());
+            	else
+            		System.out.println("Permission added: " + p.toString());
+            }
             if (p != null)
                 resourcePermissions.add(p);
         }
@@ -378,9 +409,17 @@ public class JNLPClassLoader extends URLClassLoader {
         for (int i=0; i < resourcePermissions.size(); i++)
             result.add((Permission) resourcePermissions.get(i));
 
+        // add in the permissions that the user granted.
+        for (int i=0; i < runtimePermissions.size(); i++)
+        	result.add(runtimePermissions.get(i));
+        
         return result;
     }
 
+    protected void addPermission(Permission p) {
+    	runtimePermissions.add(p);
+    }
+    
     /**
      * Adds to the specified list of JARS any other JARs that need
      * to be loaded at the same time as the JARs specified (ie, are
@@ -776,6 +815,9 @@ public class JNLPClassLoader extends URLClassLoader {
 		return signing;
 	}
 
+	protected SecurityDesc getSecurity() {
+		return security;
+	}
 }
 
 

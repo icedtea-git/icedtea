@@ -171,7 +171,6 @@ bool os::Linux::supports_variable_stack_size()
 
 size_t os::Linux::default_stack_size(os::ThreadType thr_type)
 {
-  // default stack size (compiler thread needs larger stack)
 #ifdef _LP64
   size_t s = (thr_type == os::compiler_thread ? 4 * M : 1 * M);
 #else
@@ -182,78 +181,78 @@ size_t os::Linux::default_stack_size(os::ThreadType thr_type)
 
 size_t os::Linux::default_guard_size(os::ThreadType thr_type)
 {
-  // Creating guard page is very expensive. Java thread has HotSpot
-  // guard page, only enable glibc guard page for non-Java threads.
+  // Only enable glibc guard pages for non-Java threads
+  // (Java threads have HotSpot guard pages)
   return (thr_type == java_thread ? 0 : page_size());
 }
 
-// Java thread:
-//
-//   Low memory addresses
-//    +------------------------+
-//    |                        |\  JavaThread created by VM does not have glibc
-//    |    glibc guard page    | - guard, attached Java thread usually has
-//    |                        |/  1 page glibc guard.
-// P1 +------------------------+ Thread::stack_base() - Thread::stack_size()
-//    |                        |\
-//    |  HotSpot Guard Pages   | - red and yellow pages
-//    |                        |/
-//    +------------------------+ JavaThread::stack_yellow_zone_base()
-//    |                        |\
-//    |      Normal Stack      | -
-//    |                        |/
-// P2 +------------------------+ Thread::stack_base()
-//
-// Non-Java thread:
-//
-//   Low memory addresses
-//    +------------------------+
-//    |                        |\
-//    |  glibc guard page      | - usually 1 page
-//    |                        |/
-// P1 +------------------------+ Thread::stack_base() - Thread::stack_size()
-//    |                        |\
-//    |      Normal Stack      | -
-//    |                        |/
-// P2 +------------------------+ Thread::stack_base()
-//
-// ** P1 (aka bottom) and size ( P2 = P1 - size) are the address and stack size returned from
-//    pthread_attr_getstack()
-
-static void current_stack_region(address* bottom, size_t* size) {
-  if (os::Linux::is_initial_thread()) {
-     // initial thread needs special handling because pthread_getattr_np()
-     // may return bogus value.
-     *bottom = os::Linux::initial_thread_stack_bottom();
-     *size = os::Linux::initial_thread_stack_size();
-  } else {
-     pthread_attr_t attr;
-
-     int rslt = pthread_getattr_np(pthread_self(), &attr);
-
-     // JVM needs to know exact stack location, abort if it fails
-     if (rslt != 0) {
-       if (rslt == ENOMEM) {
-         vm_exit_out_of_memory(0, "pthread_getattr_np");
-       } else {
-         fatal1("pthread_getattr_np failed with errno = %d", rslt);
-       }
-     }
-
-     if (pthread_attr_getstack(&attr, (void **)bottom, size) != 0 ) {
-         fatal("Can not locate current stack attributes!");
-     }
-
-     pthread_attr_destroy(&attr);
+static void current_stack_region(address *bottom, size_t *size)
+{
+  pthread_attr_t attr;
+  int res = pthread_getattr_np(pthread_self(), &attr);
+  if (res != 0) {
+    if (res == ENOMEM) {
+      vm_exit_out_of_memory(0, "pthread_getattr_np");
+    }
+    else {
+      fatal1("pthread_getattr_np failed with errno = %d", res);
+    }
   }
 
-#ifdef PPC
-  // https://bugzilla.redhat.com/show_bug.cgi?id=435337
-  *size -= 64*K;
-#endif
+  address stack_bottom;
+  size_t stack_bytes;
+  res = pthread_attr_getstack(&attr, (void **) &stack_bottom, &stack_bytes);
+  if (res != 0) {
+    fatal1("pthread_attr_getstack failed with errno = %d", res);
+  }
+  address stack_top = stack_bottom + stack_bytes;
 
-  assert(os::current_stack_pointer() >= *bottom &&
-         os::current_stack_pointer() < *bottom + *size, "just checking");
+  // The block of memory returned by pthread_attr_getstack() includes
+  // guard pages where present.  We need to trim these off.
+  size_t page_bytes = os::Linux::page_size();
+  assert(((intptr_t) stack_bottom & (page_bytes - 1)) == 0, "unaligned stack");
+
+  size_t guard_bytes;
+  res = pthread_attr_getguardsize(&attr, &guard_bytes);
+  if (res != 0) {
+    fatal1("pthread_attr_getguardsize failed with errno = %d", res);
+  }
+  int guard_pages = align_size_up(guard_bytes, page_bytes) / page_bytes;
+  assert(guard_bytes == guard_pages * page_bytes, "unaligned guard");
+
+#ifdef IA64
+  // IA64 has two stacks sharing the same area of memory, a normal
+  // stack growing downwards and a register stack growing upwards.
+  // Guard pages, if present, are in the centre.  This code splits
+  // the stack in two even without guard pages, though in theory
+  // there's nothing to stop us allocating more to the normal stack
+  // or more to the register stack if one or the other were found
+  // to grow faster.
+  int total_pages = align_size_down(stack_bytes, page_bytes) / page_bytes;
+  stack_bottom += (total_pages - guard_pages) / 2 * page_bytes;
+#endif // IA64
+
+  stack_bottom += guard_bytes;
+
+  pthread_attr_destroy(&attr);
+
+  // The initial thread has a growable stack, and the size reported
+  // by pthread_attr_getstack is the maximum size it could possibly
+  // be given what currently mapped.  This can be huge, so we cap it.
+  if (os::Linux::is_initial_thread()) {
+    stack_bytes = stack_top - stack_bottom;
+
+    if (stack_bytes > JavaThread::stack_size_at_create())
+      stack_bytes = JavaThread::stack_size_at_create();
+
+    stack_bottom = stack_top - stack_bytes;
+  }
+
+  assert(os::current_stack_pointer() >= stack_bottom, "should do");
+  assert(os::current_stack_pointer() < stack_top, "should do");
+
+  *bottom = stack_bottom;
+  *size = stack_top - stack_bottom;
 }
 
 address os::current_stack_base()

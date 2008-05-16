@@ -1,0 +1,2133 @@
+Changeset: d70a63c92b49
+Author:    ohair
+Date:      2008-04-30 17:34 -0700
+URL:       http://hg.openjdk.java.net/jdk7/build/jdk/rev/d70a63c92b49
+
+6695553: Cleanup GPLv2+SPL legal notices in hat sources
+Summary: Just correcting the legal notices on the HAT sources.
+Reviewed-by: alanb
+
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/Main.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/Main.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -23,18 +23,10 @@
+  * have any questions.
+  */
+ 
+-
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/build.xml	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/build.xml	Wed Apr 30 17:34:41 2008 -0700
+@@ -27,19 +27,9 @@
+ 
+ <!-- 
+ 
+- The contents of this file are subject to the Sun Public License
+- Version 1.0 (the "License"); you may not use this file except in
+- compliance with the License. A copy of the License is available at
+- http://www.sun.com/, and in the file LICENSE.html in the
+- doc directory.
+- 
+  The Original Code is HAT. The Initial Developer of the
+  Original Code is Bill Foote, with contributions from others
+- at JavaSoft/Sun. Portions created by Bill Foote and others
+- at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- 
+- In addition to the formal license, I ask that you don't
+- change the history or donations files without permission.
++ at JavaSoft/Sun.
+ 
+ -->
+ 
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/AbstractJavaHeapObjectVisitor.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/AbstractJavaHeapObjectVisitor.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/ArrayTypeCodes.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/ArrayTypeCodes.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/HackJavaValue.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/HackJavaValue.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaBoolean.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaBoolean.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaByte.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaByte.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaChar.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaChar.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaClass.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaClass.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaDouble.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaDouble.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaField.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaField.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaFloat.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaFloat.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaHeapObject.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaHeapObject.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaHeapObjectVisitor.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaHeapObjectVisitor.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaInt.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaInt.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaLazyReadObject.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaLazyReadObject.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaLong.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaLong.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaObject.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaObject.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaObjectArray.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaObjectArray.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaObjectRef.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaObjectRef.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaShort.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaShort.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaStatic.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaStatic.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaThing.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaThing.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaValue.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaValue.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaValueArray.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/JavaValueArray.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/ReachableExcludes.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/ReachableExcludes.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/ReachableExcludesImpl.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/ReachableExcludesImpl.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/ReachableObjects.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/ReachableObjects.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/ReferenceChain.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/ReferenceChain.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/Root.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/Root.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/Snapshot.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/Snapshot.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/StackFrame.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/StackFrame.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/StackTrace.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/model/StackTrace.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.model;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/oql/OQLEngine.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/oql/OQLEngine.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2007 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2007 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.oql;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/oql/OQLException.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/oql/OQLException.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.oql;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/oql/OQLQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/oql/OQLQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.oql;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/oql/ObjectVisitor.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/oql/ObjectVisitor.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.oql;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/FileReadBuffer.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/FileReadBuffer.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.parser;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/HprofReader.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/HprofReader.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -23,21 +23,11 @@
+  * have any questions.
+  */
+ 
++
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.parser;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/MappedReadBuffer.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/MappedReadBuffer.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -23,21 +23,11 @@
+  * have any questions.
+  */
+ 
++
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.parser;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/PositionDataInputStream.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/PositionDataInputStream.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.parser;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/PositionInputStream.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/PositionInputStream.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.parser;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/ReadBuffer.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/ReadBuffer.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.parser;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/Reader.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/parser/Reader.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.parser;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/AllClassesQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/AllClassesQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/AllRootsQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/AllRootsQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/ClassQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/ClassQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/FinalizerObjectsQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/FinalizerObjectsQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/FinalizerSummaryQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/FinalizerSummaryQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/HistogramQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/HistogramQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/HttpReader.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/HttpReader.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/InstancesCountQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/InstancesCountQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/InstancesQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/InstancesQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/OQLHelp.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/OQLHelp.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/OQLQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/OQLQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/ObjectQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/ObjectQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/PlatformClasses.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/PlatformClasses.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/QueryHandler.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/QueryHandler.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,20 +24,10 @@
+  */
+ 
+ 
+-
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/QueryListener.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/QueryListener.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/ReachableQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/ReachableQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,20 +24,10 @@
+  */
+ 
+ 
+-
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/RefsByTypeQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/RefsByTypeQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/RootStackQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/RootStackQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/RootsQuery.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/server/RootsQuery.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.server;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/util/ArraySorter.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/util/ArraySorter.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.util;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/util/Comparer.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/util/Comparer.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.util;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/util/CompositeEnumeration.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/util/CompositeEnumeration.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,20 +25,9 @@
+ 
+ 
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- *
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.util;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/util/Misc.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/util/Misc.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2006 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.util;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/util/VectorSorter.java	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/internal/util/VectorSorter.java	Wed Apr 30 17:34:41 2008 -0700
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 1997-2005 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -24,19 +24,10 @@
+  */
+ 
+ 
+-/* The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- *
++/*
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- *
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
++ * at JavaSoft/Sun.
+  */
+ 
+ package com.sun.tools.hat.internal.util;
+--- openjdk/jdk/src/share/classes/com/sun/tools/hat/resources/hat.js	Fri Apr 18 16:40:32 2008 -0700
++++ openjdk/jdk/src/share/classes/com/sun/tools/hat/resources/hat.js	Wed Apr 30 17:34:41 2008 -0700
+@@ -23,22 +23,10 @@
+  * have any questions.
+  */
+ 
+-
+ /*
+- * The contents of this file are subject to the Sun Public License
+- * Version 1.0 (the "License"); you may not use this file except in
+- * compliance with the License. A copy of the License is available at
+- * http://www.sun.com/, and in the file LICENSE.html in the
+- * doc directory.
+- * 
+  * The Original Code is HAT. The Initial Developer of the
+  * Original Code is Bill Foote, with contributions from others
+- * at JavaSoft/Sun. Portions created by Bill Foote and others
+- * at Javasoft/Sun are Copyright (C) 1997-2004. All Rights Reserved.
+- * 
+- * In addition to the formal license, I ask that you don't
+- * change the history or donations files without permission.
+- * 
++ * at JavaSoft/Sun.
+  */
+ 
+ var hatPkg = Packages.com.sun.tools.hat.internal;
+

@@ -39,21 +39,12 @@ package net.sourceforge.jnlp.security;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.OptionPaneUI;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.ComponentAdapter;
-import java.util.List;
-import java.security.cert.Certificate;
-import java.security.cert.CertPath;
-import sun.swing.DefaultLookup;
+import java.net.URL;
+
 import net.sourceforge.jnlp.JNLPFile;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
-import net.sourceforge.jnlp.tools.KeyTool;
 
 /**
  * Provides the look and feel for a SecurityWarningDialog. These dialogs are
@@ -66,9 +57,15 @@ import net.sourceforge.jnlp.tools.KeyTool;
 public class AccessWarningPane extends SecurityDialogUI {
 
 	JCheckBox alwaysAllow;
-
+	Object[] extras;
+	
 	public AccessWarningPane(JComponent x) {
 		super(x);
+	}
+
+	public AccessWarningPane(JComponent x, Object[] extras) {
+		super(x);
+		this.extras = extras;
 	}
 
 	/**
@@ -103,33 +100,31 @@ public class AccessWarningPane extends SecurityDialogUI {
 
 		//Top label
 		String topLabelText = "";
-		String propertyName = "";
 		switch (type) {
 			case READ_FILE:
 				topLabelText = R("SFileReadAccess");
-				propertyName = "OptionPane.warningIcon";
 				break;
 			case WRITE_FILE:
 				topLabelText = R("SFileWriteAccess");
-				propertyName = "OptionPane.warningIcon";
 				break;
 			case CLIPBOARD_READ:
 				topLabelText = R("SClipboardReadAccess");
-				propertyName = "OptionPane.warningIcon";
 				break;
 			case CLIPBOARD_WRITE:
 				topLabelText = R("SClipboardWriteAccess");
-				propertyName = "OptionPane.warningIcon";
 				break;
 			case PRINTER:
 				topLabelText = R("SPrinterAccess");
-				propertyName = "OptionPane.warningIcon";
 				break;
+			case NETWORK:
+				if (extras != null && extras.length >= 0)
+					topLabelText = R("SNetworkAccess", extras[0]);
+				else
+					topLabelText = R("SNetworkAccess", "(address here)");
 		}
 		
-		//TODO: Get system icons and add them to our dialogs.
-		//Icon icon = (Icon)DefaultLookup.get(optionPane,this,propertyName);
-		JLabel topLabel = new JLabel(htmlWrap(topLabelText));
+		ImageIcon icon = new ImageIcon((new sun.misc.Launcher()).getClassLoader().getResource("net/sourceforge/jnlp/resources/warning.png"));
+		JLabel topLabel = new JLabel(htmlWrap(topLabelText), icon, SwingConstants.LEFT);
 		topLabel.setFont(new Font(topLabel.getFont().toString(), 
 			Font.BOLD, 12));
 		JPanel topPanel = new JPanel(new BorderLayout());
@@ -181,6 +176,10 @@ public class AccessWarningPane extends SecurityDialogUI {
 
 	private static String R(String key) {
         return JNLPRuntime.getMessage(key);
+    }
+
+    private static String R(String key, Object param) {
+        return JNLPRuntime.getMessage(key, new Object[] {param});
     }
 
 	protected String htmlWrap (String s) {

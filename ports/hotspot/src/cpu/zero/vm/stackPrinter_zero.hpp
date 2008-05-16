@@ -23,30 +23,36 @@
  *
  */
 
-class JavaStackPrinter {
+class ZeroStackPrinter {
  private:
   outputStream* _st;
   char*         _buf;
   int           _buflen;
 
  public:
-  JavaStackPrinter(outputStream *st, char *buf, int buflen)
+  ZeroStackPrinter(outputStream *st, char *buf, int buflen)
     : _st(st), _buf(buf), _buflen(buflen) {}
 
   void print(JavaThread *thread)
   {
-    intptr_t *lo_addr = thread->java_stack()->sp();
-    intptr_t *hi_addr = (intptr_t *) thread->top_Java_frame();
+    intptr_t *lo_addr = thread->zero_stack()->sp();
+    if (!lo_addr) {
+      _st->print(" stack not set up");
+      return;
+    }
 
-    assert(lo_addr, "stack not set up?");
-    assert(hi_addr, "no frames pushed?");
+    intptr_t *hi_addr = (intptr_t *) thread->top_zero_frame();
+    if (!hi_addr) {
+      _st->print("no frames pushed"); 
+      return;
+    }
     assert(hi_addr >= lo_addr, "corrupted stack");
 
     bool top_frame = true;
     while (hi_addr) {
       if (!top_frame)
         _st->cr();      
-      JavaFrame *frame = (JavaFrame *) hi_addr;
+      ZeroFrame *frame = (ZeroFrame *) hi_addr;
       for (intptr_t *addr = lo_addr; addr <= hi_addr; addr++)
         print_word(frame, addr, top_frame);
       lo_addr = hi_addr + 1;
@@ -56,23 +62,23 @@ class JavaStackPrinter {
   }
 
  private:
-  void print_word(JavaFrame *frame, intptr_t *addr, bool top_frame)
+  void print_word(ZeroFrame *frame, intptr_t *addr, bool top_frame)
   {
     const char *field = NULL;
     const char *value = NULL;
 
     int word = (intptr_t *) frame - addr;
     switch (word) {
-    case JavaFrame::next_frame_off:
+    case ZeroFrame::next_frame_off:
       field = "next_frame";
       break;
-    case JavaFrame::frame_type_off:
+    case ZeroFrame::frame_type_off:
       field = "frame_type";
       switch (*addr) {
-      case JavaFrame::ENTRY_FRAME:
+      case ZeroFrame::ENTRY_FRAME:
         value = "ENTRY_FRAME";
         break;
-      case JavaFrame::INTERPRETER_FRAME:
+      case ZeroFrame::INTERPRETER_FRAME:
         value = "INTERPRETER_FRAME";
         break;
       }

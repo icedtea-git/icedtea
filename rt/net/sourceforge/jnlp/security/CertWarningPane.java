@@ -39,6 +39,8 @@ package net.sourceforge.jnlp.security;
 
 import java.awt.*;
 import javax.swing.*;
+
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.security.cert.Certificate;
@@ -89,17 +91,12 @@ public class CertWarningPane extends SecurityDialogUI {
 		}
 
 		try {
-			//Really ugly way of getting the publisher...
-			if (file instanceof PluginBridge) {
-				Certificate c = ((SecurityWarningDialog)optionPane)
-					.getJarSigner().getPublisher();
-				if (c instanceof X509Certificate) {
-					publisher = getCN(((X509Certificate)c)
-						.getSubjectX500Principal().getName());
-				}
+			Certificate c = ((SecurityWarningDialog)optionPane)
+				.getJarSigner().getPublisher();
+			if (c instanceof X509Certificate) {
+				publisher = getCN(((X509Certificate)c)
+					.getSubjectX500Principal().getName());
 			}
-			else
-				publisher = file.getInformation().getVendor();
 		} catch (Exception e) {
 		}
 
@@ -128,9 +125,9 @@ public class CertWarningPane extends SecurityDialogUI {
 			propertyName = "OptionPane.warningIcon";
 			break;
 		}
-		//TODO: Get system icons and add them to our dialogs.
-		//Icon icon = (Icon)DefaultLookup.get(optionPane,this,propertyName);
-		JLabel topLabel = new JLabel(htmlWrap(topLabelText));
+		ImageIcon icon = new ImageIcon((new sun.misc.Launcher())
+				.getClassLoader().getResource("net/sourceforge/jnlp/resources/warning.png"));
+		JLabel topLabel = new JLabel(htmlWrap(topLabelText), icon, SwingConstants.LEFT);
 		topLabel.setFont(new Font(topLabel.getFont().toString(), 
 				Font.BOLD, 12));
 		JPanel topPanel = new JPanel(new BorderLayout());
@@ -187,7 +184,6 @@ public class CertWarningPane extends SecurityDialogUI {
 		JButton moreInfo = new JButton("More information...");
 		moreInfo.addActionListener(new MoreInfoButtonListener());
 		
-		//TODO: This should check if the X500Issuer is in the cacerts file.
 		if (((SecurityWarningDialog)optionPane).getJarSigner().getRootInCacerts())
 			bottomLabel = new JLabel(htmlWrap(R("STrustedSource")));
 		else

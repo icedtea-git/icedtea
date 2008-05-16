@@ -4,25 +4,11 @@
  include $(BUILDDIR)/common/Mapfile-vers.gmk
  include $(BUILDDIR)/common/Library.gmk
  
-+LDLIBS += -ljpeg -ldl 
++LDLIBS += -ldl 
 +
  #
  # Add to ambient vpath to get files in a subdirectory
  #
---- oldopenjdk/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2007-10-12 04:03:44.000000000 -0400
-+++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2007-11-02 15:48:45.000000000 -0400
-@@ -87,11 +87,7 @@
- // bytes and byte arrays
- 
- typedef unsigned int uint;
--#ifdef _LP64
--typedef unsigned int uLong; // Historical zlib, should be 32-bit.
--#else
- typedef unsigned long uLong;
--#endif
- #ifdef _MSC_VER 
- typedef LONGLONG 	jlong;
- typedef DWORDLONG 	julong;
 --- openjdk.old/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2007-10-12 04:03:51.000000000 -0400
 +++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2007-10-22 12:50:36.000000000 -0400
 @@ -25,7 +25,7 @@
@@ -89,7 +75,7 @@
  	LDFLAGS += -Wl,--allow-shlib-undefined
  	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../lib/$(LIBARCH)/jli
  	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../jre/lib/$(LIBARCH)/jli
-@@ -250,7 +250,6 @@
+@@ -251,7 +251,6 @@
  endif
  
  OTHER_INCLUDES += -I$(LAUNCHER_SHARE_SRC)/bin -I$(LAUNCHER_PLATFORM_SRC)/bin
@@ -144,51 +130,6 @@
 -	infutil.c \
 -	inffast.c \
  	zip_util.c
---- openjdk.old/jdk/make/java/jli/Makefile	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk/jdk/make/java/jli/Makefile	2007-10-22 14:36:25.000000000 -0400
-@@ -44,8 +44,6 @@
- 
- include $(BUILDDIR)/common/Defs.gmk
- 
--ZLIB_VERSION = 1.1.3
--ZIP_SRC = $(SHARE_SRC)/native/java/util/zip/zlib-$(ZLIB_VERSION)
- LAUNCHER_SHARE_SRC = $(SHARE_SRC)/bin
- LAUNCHER_PLATFORM_SRC = $(PLATFORM_SRC)/bin
- 
-@@ -66,15 +64,7 @@
- 	parse_manifest.c \
- 	version_comp.c \
- 	wildcard.c \
--	jli_util.c \
--	inflate.c \
--	infblock.c \
--	inftrees.c \
--	infcodes.c \
--	inffast.c \
--	infutil.c \
--	zadler32.c \
--	zutil.c
-+	jli_util.c
- 
- ifneq ($(PLATFORM), windows)
- 
-@@ -99,7 +89,7 @@
- 	# Note: its important to keep this order meaning -lc is the
- 	# last library otherwise it could cause compatibility issues
- 	# by pulling in SUNW_private symbols from libc
--	LDLIBS = -ldl -lc
-+	LDLIBS = -lz -ldl -lc
- ifeq ($(USE_PTHREADS),true)
- 	LDLIBS += -lpthread
- endif # USE_PTHREADS 
-@@ -121,7 +111,6 @@
- 
- OTHER_INCLUDES += -I$(LAUNCHER_SHARE_SRC)
- OTHER_INCLUDES += -I$(LAUNCHER_PLATFORM_SRC)
--OTHER_INCLUDES += -I$(ZIP_SRC)
- 
- #
- # Library to compile.
 --- openjdk.old/jdk/src/share/native/java/util/zip/Inflater.c	2007-10-12 04:03:46.000000000 -0400
 +++ openjdk/jdk/src/share/native/java/util/zip/Inflater.c	2007-10-22 15:21:32.000000000 -0400
 @@ -35,7 +35,7 @@
@@ -314,7 +255,7 @@
  else # PLATFORM
    CFLAGS += -DWITH_WIN32
    OTHER_LDLIBS += kernel32.lib user32.lib gdi32.lib 
-@@ -76,12 +76,8 @@
+@@ -76,14 +76,10 @@
  #
  vpath %.c   $(SHARE_SRC)/native/$(PKGDIR)/splashscreen
  vpath %.c   $(SHARE_SRC)/native/$(PKGDIR)
@@ -327,6 +268,8 @@
  CPPFLAGS += -I$(PLATFORM_SRC)/native/$(PKGDIR)/splashscreen -I$(SHARE_SRC)/native/$(PKGDIR)/splashscreen
 -CPPFLAGS += -I$(SHARE_SRC)/native/$(PKGDIR)/image/jpeg -I$(SHARE_SRC)/native/java/util/zip/zlib-1.1.3
  
+ ifeq ($(PLATFORM), linux)
+   ifeq ($(ARCH_DATA_MODEL), 64)
 diff -ruN openjdk.old/jdk/make/sun/jpeg/FILES_c.gmk openjdk/jdk/make/sun/jpeg/FILES_c.gmk
 --- openjdk.old/jdk/make/sun/jpeg/FILES_c.gmk	2007-10-12 03:54:08.000000000 -0400
 +++ openjdk/jdk/make/sun/jpeg/FILES_c.gmk	2007-10-23 17:13:59.000000000 -0400
@@ -24741,8 +24684,73 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  endif
  endif #LINUX
  endif #PLATFORM
---- oldopenjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-01-04 18:21:02.000000000 -0500
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-02-26 09:07:15.000000000 -0500
+--- penjdk6/jdk/make/java/jli/Makefile	2008-02-12 04:03:55.000000000 -0500
++++ openjdk/jdk/make/java/jli/Makefile	2008-02-14 16:40:45.000000000 -0500
+@@ -44,8 +44,6 @@
+ 
+ include $(BUILDDIR)/common/Defs.gmk
+ 
+-ZLIB_VERSION = 1.1.3
+-ZIP_SRC = $(SHARE_SRC)/native/java/util/zip/zlib-$(ZLIB_VERSION)
+ LAUNCHER_SHARE_SRC = $(SHARE_SRC)/bin
+ LAUNCHER_PLATFORM_SRC = $(PLATFORM_SRC)/bin
+ 
+@@ -56,22 +54,14 @@
+ 	parse_manifest.c \
+ 	version_comp.c \
+ 	wildcard.c \
+-	jli_util.c \
+-	inflate.c \
+-	infblock.c \
+-	inftrees.c \
+-	infcodes.c \
+-	inffast.c \
+-	infutil.c \
+-	zadler32.c \
+-	zutil.c
++	jli_util.c
+ 
+ OTHER_CPPFLAGS += -DEXPAND_CLASSPATH_WILDCARDS
+ 
+ ifneq (,$(findstring $(PLATFORM), linux solaris))	# UNIX systems
+ 	LIB_LOCATION = $(LIBDIR)/$(LIBARCH)/jli
+ 	# Guarantee very limited dependencies
+-	LDLIBS = -lc
++	LDLIBS = -lz -lc 
+ endif
+ 
+ ifeq ($(PLATFORM), windows)
+@@ -98,7 +88,6 @@
+ 
+ OTHER_INCLUDES += -I$(LAUNCHER_SHARE_SRC)
+ OTHER_INCLUDES += -I$(LAUNCHER_PLATFORM_SRC)
+-OTHER_INCLUDES += -I$(ZIP_SRC)
+ 
+ #
+ # Library to compile.
+@@ -139,5 +128,5 @@
+ #
+ # Add to ambient vpath so we pick up the library files
+ #
+-vpath %.c $(LAUNCHER_SHARE_SRC) $(ZIP_SRC)
++vpath %.c $(LAUNCHER_SHARE_SRC)
+ 
+--- openjdk6/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2008-02-12 04:08:07.000000000 -0500
++++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2008-02-14 16:57:24.000000000 -0500
+@@ -87,11 +87,7 @@
+ // bytes and byte arrays
+ 
+ typedef unsigned int uint;
+-#ifdef _LP64
+-typedef unsigned int uLong; // Historical zlib, should be 32-bit.
+-#else
+ typedef unsigned long uLong;
+-#endif
+ #ifdef _MSC_VER
+ typedef LONGLONG        jlong;
+ typedef DWORDLONG       julong;
+--- openjdkold/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-02-12 04:08:13.000000000 -0500
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-02-26 11:02:52.000000000 -0500
 @@ -51,7 +51,9 @@
  
  /* headers from the JPEG library */
@@ -24817,7 +24825,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  /*
   * Defined in jpegdecoder.c.  Copy code from there if and
   * when that disappears. */
-@@ -606,7 +664,7 @@
+@@ -615,7 +673,7 @@
          return;
      }
  
@@ -24826,7 +24834,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
  }
  
-@@ -631,7 +689,7 @@
+@@ -640,7 +698,7 @@
          return;
      }
  
@@ -24835,7 +24843,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
  }
  
-@@ -649,7 +707,7 @@
+@@ -658,7 +716,7 @@
              free(cinfo->dest);
              cinfo->dest = NULL;
          }
@@ -24844,7 +24852,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          free(info);
      }
  }
-@@ -685,14 +743,14 @@
+@@ -694,14 +752,14 @@
              decomp = (j_decompress_ptr) cinfo;
              if (decomp->quant_tbl_ptrs[i] == NULL) {
                  decomp->quant_tbl_ptrs[i] =
@@ -24861,7 +24869,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              }
              quant_ptr = comp->quant_tbl_ptrs[i];
          }
-@@ -768,14 +826,14 @@
+@@ -777,14 +835,14 @@
              decomp = (j_decompress_ptr) cinfo;
              if (decomp->dc_huff_tbl_ptrs[i] == NULL) {
                  decomp->dc_huff_tbl_ptrs[i] =
@@ -24878,7 +24886,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              }
              huff_ptr = comp->dc_huff_tbl_ptrs[i];
          }
-@@ -789,14 +847,14 @@
+@@ -798,14 +856,14 @@
              decomp = (j_decompress_ptr) cinfo;
              if (decomp->ac_huff_tbl_ptrs[i] == NULL) {
                  decomp->ac_huff_tbl_ptrs[i] =
@@ -24895,7 +24903,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              }
              huff_ptr = comp->ac_huff_tbl_ptrs[i];
          }
-@@ -1337,6 +1395,8 @@
+@@ -1346,6 +1404,8 @@
       jclass ImageInputStreamClass,
       jclass qTableClass,
       jclass huffClass) {
@@ -24904,7 +24912,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      ImageInputStream_readID = (*env)->GetMethodID(env,
                                                    ImageInputStreamClass,
-@@ -1422,7 +1482,7 @@
+@@ -1431,7 +1491,7 @@
      }
  
      /* We set up the normal JPEG error routines, then override error_exit. */
@@ -24913,7 +24921,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      jerr->pub.error_exit = sun_jpeg_error_exit;
      /* We need to setup our own print routines */
      jerr->pub.output_message = sun_jpeg_output_message;
-@@ -1439,11 +1499,11 @@
+@@ -1448,11 +1508,11 @@
      }
  
      /* Perform library initialization */
@@ -24927,7 +24935,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      /*
       * Now set up our source.
-@@ -1461,7 +1521,7 @@
+@@ -1470,7 +1530,7 @@
      cinfo->src->init_source = imageio_init_source;
      cinfo->src->fill_input_buffer = imageio_fill_input_buffer;
      cinfo->src->skip_input_data = imageio_skip_input_data;
@@ -24936,7 +24944,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      cinfo->src->term_source = imageio_term_source;
  
      /* set up the association to persist for future calls */
-@@ -1579,7 +1639,7 @@
+@@ -1588,7 +1648,7 @@
          src->bytes_in_buffer = 0;
      }
  
@@ -24945,7 +24953,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      if (ret == JPEG_HEADER_TABLES_ONLY) {
          retval = JNI_TRUE;
-@@ -1700,7 +1760,7 @@
+@@ -1709,7 +1769,7 @@
                                 cinfo->num_components,
                                 read_icc_profile(env, cinfo));
          if (reset) {
@@ -24954,7 +24962,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          }
      }
  
-@@ -1896,7 +1956,7 @@
+@@ -1933,7 +1993,7 @@
                     TRUE);
      }
  
@@ -24963,7 +24971,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      if (progressive) {
          cinfo->buffered_image = TRUE;
          cinfo->input_scan_number = minProgressivePass+1; // Java count from 0
-@@ -1908,7 +1968,7 @@
+@@ -1945,7 +2005,7 @@
  
      data->streamBuf.suspendable = FALSE;
  
@@ -24972,7 +24980,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      // loop over progressive passes
      done = FALSE;
-@@ -1916,7 +1976,7 @@
+@@ -1953,7 +2013,7 @@
          if (progressive) {
              // initialize the next pass.  Note that this skips up to
              // the first interesting pass.
@@ -24981,7 +24989,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
              if (wantUpdates) {
                  (*env)->CallVoidMethod(env, this,
                                         JPEGImageReader_passStartedID,
-@@ -1932,7 +1992,7 @@
+@@ -1969,7 +2029,7 @@
          // Skip until the first interesting line
          while ((data->abortFlag == JNI_FALSE)
                 && ((jint)cinfo->output_scanline < sourceYStart)) {
@@ -24990,7 +24998,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          }
  
          scanlineLimit = sourceYStart+sourceHeight;
-@@ -1945,7 +2005,7 @@
+@@ -1982,7 +2042,7 @@
          while ((data->abortFlag == JNI_FALSE)
                 && ((jint)cinfo->output_scanline < scanlineLimit)) {
  
@@ -24999,7 +25007,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
              // Now mangle it into our buffer
              out = data->pixelBuf.buf.bp;
-@@ -1993,13 +2053,13 @@
+@@ -2037,13 +2097,13 @@
                  skipLines = linesLeft;
              }
              for(i = 0; i < skipLines; i++) {
@@ -25016,7 +25024,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
                  || (cinfo->input_scan_number > maxProgressivePass)) {
                  done = TRUE;
              }
-@@ -2019,9 +2079,9 @@
+@@ -2063,9 +2123,9 @@
      if (cinfo->output_scanline == cinfo->output_height) {
          //    if ((cinfo->output_scanline == cinfo->output_height) &&
          //(jpeg_input_complete(cinfo))) {  // We read the whole file
@@ -25028,7 +25036,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      }
  
      free(scanLinePtr);
-@@ -2067,7 +2127,7 @@
+@@ -2111,7 +2171,7 @@
  
      cinfo = (j_decompress_ptr) data->jpegObj;
  
@@ -25037,7 +25045,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  }
  
  
-@@ -2273,6 +2333,142 @@
+@@ -2317,6 +2377,142 @@
  
  /********************** end of destination manager ************/
  
@@ -25180,7 +25188,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  /********************** Writer JNI calls **********************/
  
  
-@@ -2284,6 +2480,8 @@
+@@ -2328,6 +2524,8 @@
       jclass qTableClass,
       jclass huffClass) {
  
@@ -25189,7 +25197,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      ImageOutputStream_writeID = (*env)->GetMethodID(env,
                                                      IOSClass,
                                                      "write",
-@@ -2357,7 +2555,7 @@
+@@ -2401,7 +2599,7 @@
      }
  
      /* We set up the normal JPEG error routines, then override error_exit. */
@@ -25198,7 +25206,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      jerr->pub.error_exit = sun_jpeg_error_exit;
      /* We need to setup our own print routines */
      jerr->pub.output_message = sun_jpeg_output_message;
-@@ -2374,7 +2572,7 @@
+@@ -2418,7 +2616,7 @@
      }
  
      /* Perform library initialization */
@@ -25207,7 +25215,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      /* Now set up the destination  */
      dest = malloc(sizeof(struct jpeg_destination_mgr));
-@@ -2483,7 +2681,7 @@
+@@ -2527,7 +2725,7 @@
          return;
      }
  
@@ -25216,7 +25224,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      data->streamBuf.suspendable = FALSE;
      if (qtables != NULL) {
-@@ -2498,7 +2696,7 @@
+@@ -2542,7 +2740,7 @@
                     DCHuffmanTables, ACHuffmanTables, TRUE);
      }
  
@@ -25225,7 +25233,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      RELEASE_ARRAYS(env, data, NULL);
  }
  
-@@ -2662,9 +2860,9 @@
+@@ -2698,9 +2896,9 @@
      cinfo->input_components = numBands;
      cinfo->in_color_space = inCs;
  
@@ -25237,7 +25245,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      cinfo->optimize_coding = optimize;
  
-@@ -2701,7 +2899,7 @@
+@@ -2737,7 +2935,7 @@
      (*env)->ReleaseIntArrayElements(env, QtableSelectors,
                                      qsels, JNI_ABORT);
  
@@ -25246,7 +25254,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      qlen = setQTables(env, (j_common_ptr) cinfo, qtables, writeDQT);
  
-@@ -2726,7 +2924,7 @@
+@@ -2762,7 +2960,7 @@
  
      if (progressive) {
          if (numScans == 0) { // then use default scans
@@ -25255,7 +25263,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          } else {
              cinfo->num_scans = numScans;
              // Copy the scanInfo to a local array
-@@ -2768,7 +2966,7 @@
+@@ -2804,7 +3002,7 @@
  #endif
  
      // start the compressor; tables must already be set
@@ -25264,7 +25272,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
  
      if (haveMetadata) {
          // Flush the buffer
-@@ -2829,7 +3027,7 @@
+@@ -2868,7 +3066,7 @@
              }
          }
          // write it out
@@ -25273,7 +25281,7 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
          targetLine += stepY;
      }
  
-@@ -2838,9 +3036,9 @@
+@@ -2877,9 +3075,9 @@
       * so use jpeg_abort instead of jpeg_finish_compress.
       */
      if (cinfo->next_scanline == cinfo->image_height) {
@@ -25283,10 +25291,10 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
 -        jpeg_abort((j_common_ptr)cinfo);
 +        jpegabort((j_common_ptr)cinfo);
      }
- 
-     if (scale != NULL) {
---- oldopenjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-01-04 18:21:02.000000000 -0500
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-02-26 09:06:55.000000000 -0500
+     free(scanLinePtr);
+     RELEASE_ARRAYS(env, data, NULL);
+--- openjdkold/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-02-12 04:08:14.000000000 -0500
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-02-26 11:01:37.000000000 -0500
 @@ -45,7 +45,9 @@
  #undef boolean
  #undef FAR

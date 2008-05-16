@@ -1,18 +1,16 @@
-diff -urN openjdk.orig/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp openjdk/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp
---- openjdk.orig/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp	2007-10-12 03:45:58.000000000 -0400
-+++ openjdk/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp	2007-10-12 17:32:54.000000000 -0400
-@@ -98,7 +98,7 @@
+--- penjdk6/hotspot/src/cpu/i486/vm/c2_globals_i486.hpp	2008-02-12 04:14:17.000000000 -0500
++++ openjdk/hotspot/src/cpu/i486/vm/c2_globals_i486.hpp	2008-02-14 16:32:33.000000000 -0500
+@@ -79,6 +79,6 @@
+ define_pd_global(uintx,CodeCacheMinBlockLength,      4);
  
- // Heap related flags
  define_pd_global(uintx, PermSize,    ScaleForWordSize(16*M));
 -define_pd_global(uintx, MaxPermSize, ScaleForWordSize(64*M));
 +define_pd_global(uintx, MaxPermSize, ScaleForWordSize(128*M));
  
- // Ergonomics related flags
  define_pd_global(bool, NeverActAsServerClassMachine, false);
---- ../openijdkb23/openjdk/hotspot/src/share/vm/runtime/globals.hpp	2007-10-30 04:46:35.000000000 -0400
-+++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2007-11-13 13:40:39.000000000 -0500
-@@ -2612,7 +2612,7 @@
+--- penjdk6/hotspot/src/share/vm/runtime/globals.hpp	2008-02-12 04:14:24.000000000 -0500
++++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2008-02-14 16:34:00.000000000 -0500
+@@ -2606,7 +2606,7 @@
            "an OS lock")                                                     \
                                                                              \
    /* gc parameters */                                                       \
@@ -20,4 +18,4 @@ diff -urN openjdk.orig/hotspot/src/cpu/x86/vm/c2_globals_x86.hpp openjdk/hotspot
 +  product(uintx, MaxHeapSize, ScaleForWordSize(512*M),                       \
            "Default maximum size for object heap (in bytes)")                \
                                                                              \
-   product_pd(uintx, NewSize,                                                \
+   product_pd(uintx, NewSize, 						    \

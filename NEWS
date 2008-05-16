@@ -1,58 +1,16 @@
-New in release 1.6 (2008-02-13)
+New in release 1.1 (2008-04-04)
 
-- Zero-assembler implemented.
-- Netx support added. Still a work-in-progress.
-- Updated to build with gcc 4.3.
-- Many bug fixes.
-
-New in release 1.5 (2008-01-03)
-
-- ppc/ppc64 support.
-- ecj bootstrapping re-implemented.
-- Updated to OpenJDK b24 build (now uses mercurial).
-- System libraries (libpng, libjpeg, zlib, giflib) are used 
-instead of OpenJDK's implementations.
+- Zero builds on any architecture.
+- New features added to NetX:
+   - Certificate fingerprints now show as part 
+     of certificate details.
+   - gcjwebplugin can now run applets through NetX, 
+     taking advantage of NetX's sandboxing and application security.
+   - User trusted certificates can be managed by passing the -viewer 
+     option to NetX. 
+- Updated to b08.
 - Several bug fixes.
 
-New in release 1.4 (2007-10-12)
+New in release 1.0 (2008-02-15)
 
-* Updated to OpenJDK b21 build (README and INSTALL updated accordingly).
-* Now using SSL/Crypto support included in b21, OpenSSL certs
-still read directly.
-* TZdata fix: uses System's timezone data.
-* Memory issue fix: maximum PermGen space set to 128M and MaxHeap
-to 512M.
-* Xinerama fix: uses system installed library instead.
-* DebugInfo fix: generates full debuginfo, regardless of
-optimization.
-* Fixed JConsole crash.
-* Several other bug fixes.
-
-New in release 1.3 (2007-08-29)
-
-* Updated to OpenJDK b18 build.
-* Web browser plugin support using gcjwebplugin.
-* Now using Font supported included in b18.
-* Graphics fixes.
-* SSL/Crypto fixes.
-* Refactored build process.
-
-New in release 1.2 (2007-08-01)
-
-* Updated to OpenJDK b16 build.
-* Freetype font support fully replacing the encumbered libt2k.
-* Path widening imported from GNU Classpath.
-* Window decorations on x86_64 fixed.
-* Bug fixes in various graphics classes.
-* Anti-aliasing support explicitly disabled (instead of crashing).
-* OpenSSL certs read directly
-* Various crypto bug fixes.
-
-New in release 1.1 (2007-07-12)
-
-* Color management and raster fixes for compatibility with LittleCMS.
-* Debuginfo is always generated.
-* Initial work to satisfy libt2k requirement with Freetype.
-* The GNU Crypto security providers have been imported from GNU
-  Classpath.
-* IcedTls security provider.
+- Initial release

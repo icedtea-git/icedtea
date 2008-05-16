@@ -1,27 +1,3 @@
-diff -urN openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
---- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2007-10-12 03:46:00.000000000 -0400
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2007-10-12 18:24:12.000000000 -0400
-@@ -373,6 +379,20 @@
-     }
-   }
- 
-+  SystemProperty* sp = Arguments::system_properties();
-+  Arguments::PropertyList_add (&sp,
-+			       "javax.net.ssl.trustStore",
-+			       "/etc/pki/tls/certs/ca-bundle.crt");
-+  Arguments::PropertyList_add (&sp,
-+			       "javax.net.ssl.trustStoreType",
-+			       "CertBundle");
-+  Arguments::PropertyList_add (&sp,
-+			       "javax.net.ssl.trustStoreProvider",
-+			       "");
-+  Arguments::PropertyList_add (&sp,
-+			       "javax.net.ssl.trustStorePassword",
-+			       "");
-+
- #undef malloc
- #undef getenv
- #undef EXTENSIONS_DIR
 diff -urN openjdk.orig/jdk/src/share/classes/sun/security/provider/CertBundleKeyStoreImpl.java openjdk/jdk/src/share/classes/sun/security/provider/CertBundleKeyStoreImpl.java
 --- openjdk.orig/jdk/src/share/classes/sun/security/provider/CertBundleKeyStoreImpl.java	1969-12-31 19:00:00.000000000 -0500
 +++ openjdk/jdk/src/share/classes/sun/security/provider/CertBundleKeyStoreImpl.java	2007-10-12 18:24:05.000000000 -0400
@@ -235,3 +211,30 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/security/provider/CertBundleKey
  
          /*
           * Policy
+--- openjdkold/jdk/src/share/classes/sun/security/ssl/TrustManagerFactoryImpl.java	2008-03-26 04:59:04.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/security/ssl/TrustManagerFactoryImpl.java	2008-05-08 10:49:22.000000000 -0400
+@@ -140,18 +140,18 @@
+ 
+         AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
+             public Void run() throws Exception {
+-                props.put("trustStore", System.getProperty(
+-                                "javax.net.ssl.trustStore"));
+                 props.put("javaHome", System.getProperty(
+                                         "java.home"));
+-                props.put("trustStoreType", System.getProperty(
+-                                "javax.net.ssl.trustStoreType",
+-                                KeyStore.getDefaultType()));
+                 props.put("trustStoreProvider", System.getProperty(
+                                 "javax.net.ssl.trustStoreProvider", ""));
+                 props.put("trustStorePasswd", System.getProperty(
+                                 "javax.net.ssl.trustStorePassword", ""));
+-                return null;
++                props.put("/etc/pki/tls/certs/ca-bundle.crt", System.getProperty(
++                                "javax.net.ssl.trustStore"));
++		props.put("CertBundle", System.getProperty(
++                                "javax.net.ssl.trustStoreType",
++                                KeyStore.getDefaultType()));
++	        return null;
+             }
+         });
+ 

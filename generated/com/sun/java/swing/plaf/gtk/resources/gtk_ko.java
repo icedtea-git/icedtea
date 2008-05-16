@@ -19,8 +19,6 @@ public final class gtk_ko extends ListResourceBundle {
             { "FileChooser.newFolderButtonMnemonic", "78" },
             { "FileChooser.newFolderButtonText", "\uC0C8 \uD3F4\uB354" },
             { "FileChooser.newFolderDialogText", "\uD3F4\uB354 \uC774\uB984:" },
-            { "FileChooser.newFolderNoDirectoryErrorText", "Error creating directory \"{0}\": No such file or directory" },
-            { "FileChooser.newFolderNoDirectoryErrorTitleText", "Error" },
             { "FileChooser.openButtonMnemonic", "79" },
             { "FileChooser.openButtonText", "\uD655\uC778" },
             { "FileChooser.openButtonToolTipText", "\uC120\uD0DD\uD55C \uD30C\uC77C\uC744 \uC5FD\uB2C8\uB2E4." },

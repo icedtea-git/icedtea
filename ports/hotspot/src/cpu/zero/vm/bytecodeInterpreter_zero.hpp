@@ -27,10 +27,8 @@
 
 #if defined(PPC) || defined(SPARC) || defined(IA64)
 #define LOTS_OF_REGS   // Use plenty of registers
-#elif defined(IA32) || defined(AMD64) || defined(ARM) || defined(S390)
-#undef LOTS_OF_REGS    // Loser platforms
 #else
-#error Add LOTS_OF_REGS as appropriate
+#undef LOTS_OF_REGS    // Loser platforms
 #endif
 
  private:
@@ -101,7 +99,7 @@
 #define SET_LAST_JAVA_FRAME()
 #define RESET_LAST_JAVA_FRAME()
 
-// JavaStack Implementation
+// ZeroStack Implementation
 
 #undef STACK_INT
 #undef STACK_FLOAT

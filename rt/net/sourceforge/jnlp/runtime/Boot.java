@@ -25,6 +25,7 @@ import java.security.*;
 import net.sourceforge.jnlp.*;
 import net.sourceforge.jnlp.cache.*;
 import net.sourceforge.jnlp.runtime.*;
+import net.sourceforge.jnlp.security.viewer.CertificateViewer;
 import net.sourceforge.jnlp.services.*;
 import net.sourceforge.jnlp.util.*;
 
@@ -51,8 +52,8 @@ public final class Boot implements PrivilegedAction {
     private static final String version = "0.5";
 
     /** the JNLP file to open to display the network-based about window */
-    private static final String aboutFile =
-        "http://jnlp.sourceforge.net/netx/about/netx"+version+".jnlp";
+    private static final String aboutFile = 
+    	System.getProperty("java.home") + "/lib/about.jnlp";
 
     /** the text to display before launching the about link */
     private static final String aboutMessage = ""
@@ -80,16 +81,21 @@ public final class Boot implements PrivilegedAction {
         + "\n";
 
     private static final String helpMessage = "\n"
-        + R("BOUsage")+"\n"
+        + "Usage:   " + R("BOUsage")+"\n"
+        + "         " + R("BOUsage2")+"\n"
+        + "\n"
+        + "control-options:"+"\n"
+        + "  -about                "+R("BOAbout")+"\n"
+        + "  -viewer               "+R("BOViewer")+"\n"
+        + "\n"
+        + "run-options:"+"\n"
         + "  -basedir dir          "+R("BOBasedir")+"\n"
-        + "  -jnlp location        "+R("BOJnlp")+"\n"
         + "  -arg arg              "+R("BOArg")+"\n"
         + "  -param name=value     "+R("BOParam")+"\n"
         + "  -property name=value  "+R("BOProperty")+"\n"
         + "  -update seconds       "+R("BOUpdate")+"\n"
         + "  -license              "+R("BOLicense")+"\n"
         + "  -verbose              "+R("BOVerbose")+"\n"
-        + "  -about                "+R("BOAbout")+"\n"
         + "  -nosecurity           "+R("BONosecurity")+"\n"
         + "  -noupdate             "+R("BONoupdate")+"\n"
         + "  -headless             "+R("BOHeadless")+"\n"
@@ -106,6 +112,18 @@ public final class Boot implements PrivilegedAction {
      */
     public static void main(String[] argsIn) {
         args = argsIn;
+        
+        if (null != getOption("-viewer")) {
+
+        	try {
+        		CertificateViewer.main(null);
+        		System.exit(0);
+        	} catch (Exception e) {
+        		// TODO Auto-generated catch block
+        		e.printStackTrace();
+        	}
+
+        }
 
         if (null != getOption("-license")) {
             System.out.println(miniLicense);
@@ -131,8 +149,6 @@ public final class Boot implements PrivilegedAction {
         if (null != getOption("-headless"))
             JNLPRuntime.setHeadless(true);
 
-	if (null != getOption("-verify"))
-            JNLPRuntime.setVerify(true);
 
         if (null != getOption("-noupdate"))
             JNLPRuntime.setDefaultUpdatePolicy(UpdatePolicy.NEVER);
@@ -174,14 +190,16 @@ public final class Boot implements PrivilegedAction {
         System.exit(1);
     }
 
-	private static String getDefaultFile() {
+    /**
+     * Returns the about.jnlp file in {java.home}/lib or null if this file
+     * does not exist.
+     */
+	private static String getAboutFile() {
 
-		String defaultJnlpFile = System.getProperty("java.home") 
-			+ "/lib/default.jnlp";
-		if (new File(defaultJnlpFile).exists())
-			return defaultJnlpFile;
-
-		return null;
+		if (new File(aboutFile).exists())
+			return aboutFile;
+		else
+			return null;
 	}
 
     /**
@@ -189,28 +207,39 @@ public final class Boot implements PrivilegedAction {
      * specified.
      */
     private static JNLPFile getFile() throws ParseException, MalformedURLException, IOException {
-        String location = getOption("-jnlp");
-
+    
+        String location = getJNLPFile();
+        
         // override -jnlp with aboutFile
-        if (null != getOption("-about"))
-            location = aboutFile;
+        if (getOption("-about") != null) {
+        	location = getAboutFile();
+        	if (location == null)
+        		fatalError("Unable to find about.jnlp in {java.home}/lib/");
+        } else {
+        	location = getJNLPFile();
+        }
 
-        // still null, use default
-        if (location == null) 
-            location = getDefaultFile();
-
-        if (location == null)
-            fatalError(R("BNeedsFile")+helpMessage);
-
+        if (location == null) {
+            System.out.println(helpMessage);
+            System.exit(1);
+        }
+        
         if (JNLPRuntime.isDebug())
             System.out.println(R("BFileLoc")+": "+location);
 
         URL url = null;
-        if (new File(location).exists())
-            url = new File(location).toURL(); // Why use file.getCanonicalFile?
-        else 
-            url = new URL(ServiceUtil.getBasicService().getCodeBase(), location);
 
+        try {
+        	if (new File(location).exists())
+        		url = new File(location).toURL(); // Why use file.getCanonicalFile?
+        	else 
+        		url = new URL(ServiceUtil.getBasicService().getCodeBase(), location);
+        } catch (Exception e) {
+        	fatalError("Invalid jnlp file " + location);
+        	if (JNLPRuntime.isDebug())
+        		e.printStackTrace();
+        }
+        
         boolean strict = (null != getOption("-strict"));
 
         JNLPFile file = new JNLPFile(url, strict);
@@ -291,6 +320,35 @@ public final class Boot implements PrivilegedAction {
         }
     }
 
+    /**
+     * Gets the JNLP file from the command line arguments, or exists upon error.
+     */
+    private static String getJNLPFile() {
+
+    	if (args.length == 0) {
+            System.out.println(helpMessage);
+            System.exit(0);
+    	} else if (args.length == 1) {
+    		
+    		String lastArg = args[args.length - 1];
+    		if (lastArg.endsWith(".jnlp")) {
+    			return args[args.length - 1];
+    		} else
+    			return null;
+    	} else {
+    		String lastArg = args[args.length - 1];
+    		String secondLastArg = args[args.length - 2];
+
+    		if (doubleArgs.indexOf(secondLastArg) == -1) {
+    			return lastArg;
+    		} else {
+                System.out.println(helpMessage);
+                System.exit(0);
+    		}
+    	}
+    	return null;
+    }
+    
     /**
      * Return value of the first occurence of the specified
      * option, or null if the option is not present.  If the

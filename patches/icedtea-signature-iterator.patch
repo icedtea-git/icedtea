@@ -6,7 +6,7 @@ diff -r ee6af95bc459 openjdk/hotspot/src/share/vm/interpreter/oopMapCache.cpp
    void pass_int()                                { /* ignore */ }
    void pass_long()                               { /* ignore */ }
 -#ifdef _LP64
-+#if defined(_LP64) || defined(PPC) || defined(ZERO)
++#if defined(_LP64) || defined(ZERO)
    void pass_float()                              { /* ignore */ }
  #endif
    void pass_double()                             { /* ignore */ }
@@ -17,7 +17,7 @@ diff -r ee6af95bc459 openjdk/hotspot/src/share/vm/runtime/signature.hpp
  
    void do_bool  ()                     { pass_int();    _jni_offset++; _offset++;       }
    void do_char  ()                     { pass_int();    _jni_offset++; _offset++;       }
-+#if defined(_LP64) || defined(PPC) || defined(ZERO)
++#if defined(_LP64) || defined(ZERO)
 +  void do_float ()                     { pass_float();  _jni_offset++; _offset++;       }
 +#else
 +  void do_float ()                     { pass_int();    _jni_offset++; _offset++;       }
@@ -34,7 +34,7 @@ diff -r ee6af95bc459 openjdk/hotspot/src/share/vm/runtime/signature.hpp
    virtual void pass_int()              = 0;
    virtual void pass_long()             = 0;
    virtual void pass_object()           = 0;
-+#if defined(_LP64) || defined(PPC) || defined(ZERO)
++#if defined(_LP64) || defined(ZERO)
 +  virtual void pass_float()            = 0;
 +#endif
  #ifdef _LP64

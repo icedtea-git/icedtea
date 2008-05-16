@@ -67,14 +67,14 @@ public class CertsInfoPane extends SecurityDialogUI {
 	
 	private ArrayList<CertPath> certs;
     private JList list;
-	private JTree tree;
+	protected JTree tree;
     private JTable table;
     private JTextArea output;
     private ListSelectionModel listSelectionModel;
     private ListSelectionModel tableSelectionModel;
-    private String[] certNames;
+    protected String[] certNames;
     private String[] columnNames = { "Field", "Value" };
-	private ArrayList<String[][]> certsData;
+	protected ArrayList<String[][]> certsData;
 
 	public CertsInfoPane(JComponent x) {
 		super(x);
@@ -83,7 +83,8 @@ public class CertsInfoPane extends SecurityDialogUI {
 	/**
 	 * Builds the JTree out of CertPaths.
 	 */
-	private void buildTree() {
+	void buildTree() {
+		certs = ((SecurityWarningDialog)optionPane).getJarSigner().getCerts();
 		//for now, we're only going to display the first signer, even though
 		//jars can be signed by multiple people.
 		CertPath firstPath = certs.get(0);
@@ -118,59 +119,68 @@ public class CertsInfoPane extends SecurityDialogUI {
 	}
 
 	/**
-	 * Constructs the GUI components of this UI
+	 * Fills in certsNames, certsData with data from the certificates.
 	 */
-	protected void installComponents() {
-		certs = ((SecurityWarningDialog)optionPane).getJarSigner().getCerts();
-		buildTree();
+	protected void populateTable() {
 		certNames = new String[certs.get(0).getCertificates().size()];
 		certsData = new ArrayList<String[][]>();
 
         for (int i = 0; i < certs.get(0).getCertificates().size(); i++) {
 
             X509Certificate c = (X509Certificate) certs.get(0).getCertificates().get(i);
-
-            String version = ""+c.getVersion();
-            String serialNumber = c.getSerialNumber().toString();
-            String signatureAlg = c.getSigAlgName();
-            String issuer = c.getIssuerX500Principal().toString();
-            String validity = new CertificateValidity(c.getNotBefore(),
-                                c.getNotAfter()).toString();
-            String subject = c.getSubjectX500Principal().toString();
-
-            //convert our signature into a nice human-readable form.
-            HexDumpEncoder encoder = new HexDumpEncoder();
-            String signature = encoder.encodeBuffer(c.getSignature());
-
-			String md5Hash = "";
-			String sha1Hash = "";
-			try {
-				MessageDigest digest = MessageDigest.getInstance("MD5");
-				digest.update(c.getEncoded());
-				md5Hash = makeFingerprint(digest.digest());
-
-				digest = MessageDigest.getInstance("SHA-1");
-				digest.update(c.getEncoded());
-				sha1Hash = makeFingerprint(digest.digest());
-			} catch (Exception e) {
-				//fail quietly
-			}
-
-            String[][] cert = { {"Version", version},
-                                {"Serial", serialNumber},
-                                {"Signature Algorithm", signatureAlg},
-                                {"Issuer", issuer},
-                                {"Validity", validity},
-                                {"Subject", subject},
-                                {"Signature", signature},
-								{"MD5 Fingerprint", md5Hash},
-								{"SHA1 Fingerprint", sha1Hash}
-								};
-            certsData.add(cert);
+            certsData.add(parseCert(c));
             certNames[i] = getCN(c.getSubjectX500Principal().getName())
 				+ " (" + getCN(c.getIssuerX500Principal().getName()) + ")";
         }
+	}
+	
+	protected String[][] parseCert(X509Certificate c) {
+		
+        String version = ""+c.getVersion();
+        String serialNumber = c.getSerialNumber().toString();
+        String signatureAlg = c.getSigAlgName();
+        String issuer = c.getIssuerX500Principal().toString();
+        String validity = new CertificateValidity(c.getNotBefore(),
+                            c.getNotAfter()).toString();
+        String subject = c.getSubjectX500Principal().toString();
 
+        //convert our signature into a nice human-readable form.
+        HexDumpEncoder encoder = new HexDumpEncoder();
+        String signature = encoder.encodeBuffer(c.getSignature());
+
+		String md5Hash = "";
+		String sha1Hash = "";
+		try {
+			MessageDigest digest = MessageDigest.getInstance("MD5");
+			digest.update(c.getEncoded());
+			md5Hash = makeFingerprint(digest.digest());
+
+			digest = MessageDigest.getInstance("SHA-1");
+			digest.update(c.getEncoded());
+			sha1Hash = makeFingerprint(digest.digest());
+		} catch (Exception e) {
+			//fail quietly
+		}
+
+        String[][] cert = { {"Version", version},
+                            {"Serial", serialNumber},
+                            {"Signature Algorithm", signatureAlg},
+                            {"Issuer", issuer},
+                            {"Validity", validity},
+                            {"Subject", subject},
+                            {"Signature", signature},
+							{"MD5 Fingerprint", md5Hash},
+							{"SHA1 Fingerprint", sha1Hash}
+							};
+        return cert;
+	}
+	
+	/**
+	 * Constructs the GUI components of this UI
+	 */
+	protected void installComponents() {
+		buildTree();
+		populateTable();
 		/**
 		//List of Certs
         list = new JList(certNames);
@@ -227,7 +237,7 @@ public class CertsInfoPane extends SecurityDialogUI {
 	/**
 	 * Extracts the CN field from a Certificate principal string.
 	 */
-	private String getCN(String principal) {
+	protected String getCN(String principal) {
         int start = principal.indexOf("CN=");
         int end = principal.indexOf(",", start);
 
@@ -276,7 +286,7 @@ public class CertsInfoPane extends SecurityDialogUI {
 	/**
 	 * Updates the JTable when the JTree selection has changed.
 	 */
-	private class TreeSelectionHandler implements TreeSelectionListener {
+	protected class TreeSelectionHandler implements TreeSelectionListener {
 		public void valueChanged(TreeSelectionEvent e) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 				tree.getLastSelectedPathComponent();

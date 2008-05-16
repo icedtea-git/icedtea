@@ -73,11 +73,19 @@ public class MoreInfoPane extends SecurityDialogUI {
 		errorPanel.setPreferredSize(new Dimension(400, 70*(numLabels)));
 
 		for (int i = 0; i < numLabels; i++) {
-			errorPanel.add(new JLabel(htmlWrap(details.get(i))));
+			ImageIcon icon = null;
+			if (details.get(i).equals(R("STrustedCertificate")))
+				icon = new ImageIcon((new sun.misc.Launcher())
+						.getClassLoader().getResource("net/sourceforge/jnlp/resources/info-small.png"));
+			else
+				icon = new ImageIcon((new sun.misc.Launcher())
+						.getClassLoader().getResource("net/sourceforge/jnlp/resources/warning-small.png"));
+
+			errorPanel.add(new JLabel(htmlWrap(details.get(i)), icon, SwingConstants.LEFT));
 		}
 
 		JPanel buttonsPanel = new JPanel(new BorderLayout());
-		JButton certDetails = new JButton("Cerificate Details");
+		JButton certDetails = new JButton("Certificate Details");
 		certDetails.addActionListener(new CertInfoButtonListener());
 		JButton close = new JButton("Close");
 		close.addActionListener(createButtonActionListener(0));
@@ -92,6 +100,10 @@ public class MoreInfoPane extends SecurityDialogUI {
         optionPane.add(main);
 	}
 
+    private static String R(String key) {
+        return JNLPRuntime.getMessage(key);
+    }
+    
 	/**
 	 * Needed to get word-wrap working in JLabels.
 	 */

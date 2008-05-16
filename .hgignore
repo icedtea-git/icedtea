@@ -5,6 +5,7 @@ syntax: regexp
 autom4te.cache
 openjdk
 bootstrap
+debian
 lib
 stamps
 Makefile
@@ -13,9 +14,13 @@ config.status
 javac
 javap
 gcjwebplugin.so
-IcedTeaPlugin.so
+extra-source-files.txt
 rt-source-files.txt
 hotspot-tools-source-files.txt
+tools-source-files.txt
+platform_zero
+jvm.cfg
+ergo.c
 rt/com/sun/jdi/AbsentInformationException.java
 rt/com/sun/jdi/Accessible.java
 rt/com/sun/jdi/ArrayReference.java
@@ -417,4 +422,6 @@ rt/javax/net/ssl/TrustManagerFactorySpi.java
 rt/javax/net/ssl/X509ExtendedKeyManager.java
 rt/javax/net/ssl/X509KeyManager.java
 rt/javax/net/ssl/X509TrustManager.java
+rt/java/io/
+rt/sun/awt
 generated/sun/awt/X11/generator/sizer.32.orig

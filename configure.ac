@@ -1,5 +1,5 @@
 AC_PREREQ([2.61])
-AC_INIT([icedtea], [1.6], [fitzsim@redhat.com])
+AC_INIT([icedtea6], [1.2], [fitzsim@redhat.com])
 AM_INIT_AUTOMAKE([tar-pax])
 AC_CONFIG_FILES([Makefile])
 AC_CANONICAL_HOST
@@ -9,11 +9,19 @@ AC_PREFIX_DEFAULT([bootstrap])
 AC_PROG_CC
 AC_PROG_CXX
 
+FIND_TOOL([MAKE], [make])
+FIND_TOOL([GZIP], [gzip])
+FIND_TOOL([ANT], [ant])
 FIND_TOOL([FIND], [find])
 FIND_TOOL([PATCH], [patch])
+FIND_TOOL([TAR], [tar])
+FIND_TOOL([CHMOD], [chmod])
+FIND_TOOL([MD5SUM], [md5sum])
+FIND_TOOL([WGET], [wget])
 FIND_TOOL([ZIP], [zip])
 FIND_TOOL([UNZIP], [unzip])
-FIND_TOOL([CHMOD], [chmod])
+FIND_TOOL([CPIO], [cpio])
+FIND_TOOL([FILE], [file])
 AC_CHECK_TOOLS([FASTJAR], [fastjar jar])
 if test "x$FASTJAR" = x; then
 	AC_MSG_ERROR([Can't find fastjar or jar])
@@ -39,6 +47,23 @@ AC_ARG_WITH([gcj-home],
               SYSTEM_GCJ_DIR=/usr/lib/jvm/java-gcj
             ])
 AC_SUBST(SYSTEM_GCJ_DIR)
+
+AC_ARG_WITH([openjdk-home],
+            [AS_HELP_STRING([--with-openjdk-home],
+                            [OpenJDK home directory \
+                             (default is /usr/lib/jvm/java-openjdk)])],
+            [
+              if test "x${withval}" == x
+              then
+                SYSTEM_OPENJDK_DIR=/usr/lib/jvm/java-openjdk
+              else
+                SYSTEM_OPENJDK_DIR=${withval}
+              fi
+            ],
+            [
+              SYSTEM_OPENJDK_DIR=/usr/lib/jvm/java-openjdk
+            ])
+AC_SUBST(SYSTEM_OPENJDK_DIR)
 
 AC_ARG_WITH([icedtea-home],
             [AS_HELP_STRING([--with-icedtea-home],
@@ -85,6 +110,12 @@ AC_ARG_ENABLE([liveconnect],
 	      [enable_liveconnect="yes"], [enable_liveconnect="no"])
 AM_CONDITIONAL(ENABLE_LIVECONNECT, test "x${enable_liveconnect}" = "xyes")
 
+AC_ARG_ENABLE([docs],
+	      [AS_HELP_STRING([--disable-docs], 
+	      		      [Disable generation of documentation])],
+	      [ENABLE_DOCS="$val"], [ENABLE_DOCS='yes'])
+AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
+
 AC_ARG_WITH([icedtea],
         [AS_HELP_STRING([--with-icedtea],
                         [build IcedTea with system-installed IcedTea])],
@@ -101,7 +132,53 @@ AC_ARG_WITH([icedtea],
         ])
 AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" == true)
 
+AC_ARG_WITH([openjdk],
+        [AS_HELP_STRING([--with-openjdk],
+                        [build IcedTea with system-installed OpenJDK])],
+        [
+          if test "x${withval}" != xno
+          then
+            with_openjdk=true
+          else
+            with_openjdk=false
+          fi
+        ],
+        [
+          with_openjdk=false
+        ])
+AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" == true)
+
+AC_ARG_WITH([parallel-jobs],
+	[AS_HELP_STRING([--with-parallel-jobs],
+			[build IcedTea using the specified number of parallel jobs])],
+	[
+          if test "x${withval}" == x
+          then
+            PARALLEL_JOBS=2
+          else
+            PARALLEL_JOBS=${withval}
+          fi
+        ],
+        [
+          PARALLEL_JOBS=2
+        ])
+AC_SUBST(PARALLEL_JOBS)
+	
 SET_ARCH_DIRS
+if test "${with_openjdk}" == true
+then
+  JAVA=$SYSTEM_OPENJDK_DIR/bin/java
+  AC_SUBST(JAVA)
+  JAVAC=${SYSTEM_OPENJDK_DIR}/bin/javac
+  AC_SUBST(JAVAC)
+  JAVAH=${SYSTEM_OPENJDK_DIR}/bin/javah
+  AC_SUBST(JAVAH)
+  JAR=${SYSTEM_OPENJDK_DIR}/bin/jar
+  AC_SUBST(JAR)
+  RMIC=${SYSTEM_OPENJDK_DIR}/bin/rmic
+  AC_SUBST(RMIC)
+  AM_CONDITIONAL(GCC_OLD, test x != x)
+else
 if test "${with_icedtea}" == true
 then
   JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
@@ -129,17 +206,14 @@ else
   AC_CONFIG_FILES([javac], [chmod +x javac])
   AC_CONFIG_FILES([javap], [chmod +x javap])
 fi
+fi
 WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
 AC_CHECK_WITH_CACAO
-ENABLE_FAST_BUILD
+ENABLE_OPTIMIZATIONS
 ENABLE_ZERO_BUILD
 ENABLE_NETX_PLUGIN
 SET_CORE_BUILD
-
-if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
-  FIND_TOOL([MERCURIAL], [hg])
-fi
 
 dnl pkgconfig cannot be used to finid these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
@@ -252,72 +326,70 @@ AC_SUBST(ALSA_CFLAGS)
 AC_SUBST(ALSA_LIBS)
 
 dnl Check for plugin support headers and libraries.
-if test "x${enable_liveconnect}" = "xyes"
+if test "$ENABLE_PLUGIN" = "yes"; then
+PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul-unstable, [MOZILLA_FOUND=yes], \
+  [MOZILLA_FOUND=no])
+if test "x${MOZILLA_FOUND}" = xno
 then
-  XULRUNNER_VERSION=`pkg-config --modversion libxul`
-  AC_SUBST(XULRUNNER_VERSION)
-  PKG_CHECK_MODULES(XULRUNNER, \
-    nspr mozilla-js mozilla-plugin libxul-embedding >= 1.9pre)
-  PKG_CHECK_MODULES(GTK, gtk+-2.0)
-else
-  if test "x${enable_plugin}" = "xyes"
-  then
-    PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul-unstable, [MOZILLA_FOUND=yes], \
-      [MOZILLA_FOUND=no])
-    if test "x${MOZILLA_FOUND}" = xno
-    then
-      PKG_CHECK_MODULES(MOZILLA, mozilla-plugin, \
-      [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-    fi
-    if test "x${MOZILLA_FOUND}" = xno
-    then
-      PKG_CHECK_MODULES(MOZILLA, firefox-plugin firefox-xpcom, \
-        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-    fi
-    if test "x${MOZILLA_FOUND}" = xno
-    then
-      PKG_CHECK_MODULES(MOZILLA, xulrunner-plugin xulrunner-xpcom, \
-        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-    fi
-    if test "x${MOZILLA_FOUND}" = xno
-    then
-      PKG_CHECK_MODULES(MOZILLA, mozilla-firefox-plugin mozilla-firefox-xpcom, \
-        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-    fi
-    if test "x${MOZILLA_FOUND}" = xno
-    then
-      PKG_CHECK_MODULES(MOZILLA, seamonkey-plugin seamonkey-xpcom, \
-        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-    fi
-    if test "x${MOZILLA_FOUND}" = xno
-    then
-      PKG_CHECK_MODULES(MOZILLA, iceape-plugin iceape-xpcom, \
-        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-    fi
-    if test "x${MOZILLA_FOUND}" = xno
-    then
-      AC_MSG_ERROR([Could not find plugin support headers and libraries.])
-    fi
-  
-    PKG_CHECK_MODULES(GLIB, glib-2.0)
-    PKG_CHECK_MODULES(GTK, gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0)
-  
-    AC_SUBST(MOZILLA_CFLAGS)
-    AC_SUBST(MOZILLA_LIBS)
-    AC_SUBST(GLIB_CFLAGS)
-    AC_SUBST(GLIB_LIBS)
-    AC_SUBST(GTK_CFLAGS)
-    AC_SUBST(GTK_LIBS)
-  fi
+  PKG_CHECK_MODULES(MOZILLA, mozilla-plugin, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  PKG_CHECK_MODULES(MOZILLA, firefox-plugin firefox-xpcom, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  PKG_CHECK_MODULES(MOZILLA, xulrunner-plugin xulrunner-xpcom, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  PKG_CHECK_MODULES(MOZILLA, mozilla-firefox-plugin mozilla-firefox-xpcom, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  PKG_CHECK_MODULES(MOZILLA, seamonkey-plugin seamonkey-xpcom, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  PKG_CHECK_MODULES(MOZILLA, iceape-plugin iceape-xpcom, \
+    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+fi
+if test "x${MOZILLA_FOUND}" = xno
+then
+  AC_MSG_ERROR([Could not find plugin support headers and libraries.])
 fi
 
-if test "x${CORE_BUILD_TRUE}" = x; then
+PKG_CHECK_MODULES(GLIB, glib-2.0)
+PKG_CHECK_MODULES(GTK, gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0)
+
+AC_SUBST(MOZILLA_CFLAGS)
+AC_SUBST(MOZILLA_LIBS)
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
+fi
+AC_SUBST(LIBFFI_CFLAGS)
+AC_SUBST(LIBFFI_LIBS)
+
+if test "x${ZERO_BUILD_TRUE}" = x; then
   dnl Check for libffi headers and libraries.
   PKG_CHECK_MODULES(LIBFFI, libffi,[LIBFFI_FOUND=yes],[LIBFFI_FOUND=no])
   if test "x${LIBFFI_FOUND}" = xno
   then
-    AC_MSG_ERROR([Could not find libffi headers - \
-    Try installing libffi-devel.])
+    LIBFFI_FOUND=
+    AC_CHECK_HEADER([ffi.h],[LIBFFI_CFLAGS=],[LIBFFI_FOUND=no])
+    AC_SEARCH_LIBS([ffi_call], [ffi],[LIBFFI_LIBS=-lffi],[LIBFFI_FOUND=no])
+    if test "x${LIBFFI_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find libffi headers - \
+      Try installing libffi-devel, libffi-dev or libffi4-dev.])
+    fi
   fi
 fi
 AC_SUBST(LIBFFI_CFLAGS)

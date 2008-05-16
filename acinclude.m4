@@ -9,6 +9,10 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=i586
       INSTALL_ARCH_DIR=i386
       ;;
+    arm*-*-*)
+      BUILD_ARCH_DIR=arm
+      INSTALL_ARCH_DIR=arm
+      ;;
     *)
       BUILD_ARCH_DIR=`uname -m`
       INSTALL_ARCH_DIR=$BUILD_ARCH_DIR
@@ -210,7 +214,7 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
     LIBGCJ_JAR=
   ])
   if test -z "${LIBGCJ_JAR}"; then
-    AC_MSG_CHECKING(for libgcj-4.3.0.jar or lib-4.1.2.jar)
+    AC_MSG_CHECKING(for libgcj-4.3.0.jar or libgcj-4.1.2.jar)
     if test -e "/usr/share/java/libgcj-4.3.0.jar"; then
       LIBGCJ_JAR=/usr/share/java/libgcj-4.3.0.jar
       AC_MSG_RESULT(${LIBGCJ_JAR})
@@ -487,18 +491,27 @@ AC_DEFUN([FIND_XERCES2_JAR],
   AC_SUBST(XERCES2_JAR)
 ])
 
-AC_DEFUN([ENABLE_FAST_BUILD],
+AC_DEFUN([ENABLE_OPTIMIZATIONS],
 [
-  AC_ARG_ENABLE([fast-build],
-                [AS_HELP_STRING(--enable-fast-build,optimize for quick building: use -O0 and do not build documentation)],
+  AC_MSG_CHECKING(whether to disable optimizations)
+  AC_ARG_ENABLE([optimizations],
+                [AS_HELP_STRING(--disable-optimizations,build with -O0 -g [[default=no]])],
   [
-    AC_MSG_CHECKING(fast build)
-    AC_MSG_RESULT(will apply patches/icedtea-speed.patch)
-    AM_CONDITIONAL(FAST_BUILD, test x = x)
+    case "${enableval}" in
+      no)
+        AC_MSG_RESULT([yes, building with -O0 -g])
+        enable_optimizations=no
+        ;;
+      *)
+        AC_MSG_RESULT([no])
+        enable_optimizations=yes
+        ;;
+    esac
   ],
   [
-    AM_CONDITIONAL(FAST_BUILD, test x != x)
+    enable_optimizations=yes
   ])
+  AM_CONDITIONAL([ENABLE_OPTIMIZATIONS], test x"${enable_optimizations}" = "xyes")
 ])
 
 AC_DEFUN([FIND_TOOL],
@@ -511,28 +524,103 @@ AC_DEFUN([FIND_TOOL],
 
 AC_DEFUN([ENABLE_ZERO_BUILD],
 [
+  AC_MSG_CHECKING(whether to use the zero-assembler port)
+  use_zero=no
   AC_ARG_ENABLE([zero],
-                [AS_HELP_STRING(--enable-zero,use zero-assembler port on non-zero platforms)],
+                [AS_HELP_STRING(--enable-zero,
+                               use zero-assembler port on non-zero platforms)],
   [
-    AM_CONDITIONAL(ZERO_BUILD, test x = x)
+    case "${enableval}" in
+      no)
+        use_zero=no
+        ;;
+      *)
+        use_zero=yes
+        ;;
+    esac
   ],
   [
-    AM_CONDITIONAL(ZERO_BUILD, test x != x)
+    case "${host}" in
+      i?86-*-*) ;;
+      sparc*-*-*) ;;
+      x86_64-*-*) ;;
+      *)
+        if test "x${CACAO}" != xno; then
+          use_zero=no
+        else
+          use_zero=yes
+        fi
+        ;;
+    esac
   ])
+  AC_MSG_RESULT($use_zero)
+  AM_CONDITIONAL(ZERO_BUILD, test "x${use_zero}" = xyes)
+
+  ZERO_LIBARCH=
+  ZERO_BITSPERWORD=
+  ZERO_ENDIANNESS=
+  ZERO_ARCHDEF=
+  ZERO_ARCHFLAG=
+  if test "x${use_zero}" = xyes; then
+    ZERO_LIBARCH="${INSTALL_ARCH_DIR}"
+    dnl can't use AC_CHECK_SIZEOF on multilib
+    case "${ZERO_LIBARCH}" in
+      i386|ppc|s390|sparc)
+        ZERO_BITSPERWORD=32
+        ;;
+      amd64|ppc64|s390x|sparc64)
+        ZERO_BITSPERWORD=64
+        ;;
+      *)
+        AC_CHECK_SIZEOF(void *)
+        ZERO_BITSPERWORD=`expr "${ac_cv_sizeof_void_p}" "*" 8`
+    esac
+    AC_C_BIGENDIAN([ZERO_ENDIANNESS="big"], [ZERO_ENDIANNESS="little"])
+    case "${ZERO_LIBARCH}" in
+      i386)
+        ZERO_ARCHDEF="IA32"
+        ;;
+      ppc*)
+        ZERO_ARCHDEF="PPC"
+        ;;
+      s390*)
+        ZERO_ARCHDEF="S390"
+        ;;
+      sparc*)
+        ZERO_ARCHDEF="SPARC"
+        ;;
+      *)
+        ZERO_ARCHDEF=`echo ${ZERO_LIBARCH} | tr a-z A-Z`
+    esac
+    dnl multilib machines need telling which mode to build for
+    case "${ZERO_LIBARCH}" in
+      i386|ppc|sparc)
+        ZERO_ARCHFLAG="-m32"
+        ;;
+      s390)
+        ZERO_ARCHFLAG="-m31"
+        ;;
+      amd64|ppc64|s390x|sparc64)
+        ZERO_ARCHFLAG="-m64"
+        ;;
+    esac
+  fi
+  AC_SUBST(ZERO_LIBARCH)
+  AC_SUBST(ZERO_BITSPERWORD)
+  AC_SUBST(ZERO_ENDIANNESS)
+  AC_SUBST(ZERO_ARCHDEF)
+  AC_SUBST(ZERO_ARCHFLAG)
+  AC_CONFIG_FILES([platform_zero])
+  AC_CONFIG_FILES([jvm.cfg])
+  AC_CONFIG_FILES([ergo.c])
 ])
 
 AC_DEFUN([SET_CORE_BUILD],
 [
-  if test "x${ZERO_BUILD_TRUE}" = x; then
-    AM_CONDITIONAL(CORE_BUILD, test x = x)
+  if test "x${CACAO}" != "xno"; then
+    AM_CONDITIONAL(CORE_BUILD, true)
   else
-    if test -f "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}" && \
-       grep -q "arch.*=.*zero" "ports/hotspot/build/linux/platform_${BUILD_ARCH_DIR}"
-    then
-      AM_CONDITIONAL(CORE_BUILD, test x = x)
-    else
-      AM_CONDITIONAL(CORE_BUILD, test x != x)
-    fi
+    AM_CONDITIONAL(CORE_BUILD, test "x${ZERO_BUILD_TRUE}" = x)
   fi
 ])
 
@@ -564,7 +652,7 @@ AC_DEFUN([AC_CHECK_WITH_CACAO],
         CACAO=no
         ;;
       *)
-      CACAO=${withval}
+        CACAO=${withval}
         ;;
     esac
   ],
