@@ -1,5 +1,11 @@
 2008-05-19  Mark Wielaard  <mark@klomp.org>
 
+	* test/jtreg/com/sun/javatest/lib/*.java: Added.
+	* .hgignore: Add test/hotspot, test/jdk, test/langtools and
+	test/jtreg/classes
+
+2008-05-19  Mark Wielaard  <mark@klomp.org>
+
 	* test/jtreg/*: New jtreg and jtharness sources.
 	* Makefile.am (distclean-local): Add clean-jtreg clean-jtreg-reports.
 	(.PHONY): Likewise.
