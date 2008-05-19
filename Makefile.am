@@ -13,7 +13,7 @@ endif
 
 all-local: icedtea-against-icedtea
 
-distclean-local: clean-copy
+distclean-local: clean-copy clean-jtreg clean-jtreg-reports
 	rm -rf stamps
 	rm -f rt-source-files.txt \
 	  hotspot-tools-source-files.txt \
@@ -36,14 +36,15 @@ install:
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
 	clean-tools-jar clean-shared-objects \
 	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
-	hotspot hotspot-helper clean-extra
+	hotspot hotspot-helper clean-extra clean-jtreg clean-jtreg-reports
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-cacao.patch javaws.png javaws.desktop \
 	patches/icedtea-netx-plugin.patch \
-	overlays extra jconsole.desktop policytool.desktop
+	overlays extra jconsole.desktop policytool.desktop \
+	test/jtreg
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -925,6 +926,55 @@ gcjwebplugin.so: gcjwebplugin.cc
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
 
+# jtreg
+
+stamps/jtreg.stamp:
+	rm -rf test/jtreg/classes
+	mkdir -p test/jtreg/classes
+	bootstrap/icedtea/bin/javac -g -d test/jtreg/classes -source 1.5 \
+		 -encoding iso-8859-1 `find test/jtreg/com -name '*.java'`
+	(cd test/jtreg; \
+	 ../../bootstrap/icedtea/bin/jar cfm ../jtreg.jar \
+		META-INF/MANIFEST.MF \
+		legal  README JavaTest.cmdMgrs.lst JavaTest.toolMgrs.lst \
+		`find com -type f -a -not -name '*.java'` \
+		-C classes com)
+	mkdir -p stamps
+	touch $@
+
+clean-jtreg:
+	rm -rf test/jtreg/classes
+	rm -f test/jtreg.jar
+	rm -f stamps/jtreg.stamp
+
+check-hotspot: jtreg
+	mkdir -p test/hotspot/JTwork test/hotspot/JTreport
+	bootstrap/icedtea/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+		-w:test/hotspot/JTwork -r:test/hotspot/JTreport \
+		-jdk:`pwd`/openjdk/control/build/$(LINUX_DIR)/j2sdk-image \
+		`pwd`/openjdk/hotspot/test
+
+check-langtools: jtreg
+	mkdir -p test/langtools/JTwork test/langtools/JTreport
+	bootstrap/icedtea/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+		-w:test/langtools/JTwork -r:test/langtools/JTreport \
+		-jdk:`pwd`/openjdk/control/build/$(LINUX_DIR)/j2sdk-image \
+		`pwd`/openjdk/langtools/test
+
+check-jdk: jtreg
+	mkdir -p test/jdk/JTwork test/jdk/JTreport
+	bootstrap/icedtea/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+		-w:test/jdk/JTwork -r:test/jdk/JTreport \
+		-jdk:`pwd`/openjdk/control/build/$(LINUX_DIR)/j2sdk-image \
+		`pwd`/openjdk/jdk/test
+
+clean-jtreg-reports:
+	rm -rf test/hotspot test/langtools test/jdk
+
+jtregcheck: jtreg check-hotspot check-langtools check-jdk
+
+check-local: jtregcheck
+
 # Target Aliases
 # ===============
 
@@ -969,3 +1019,5 @@ ports: stamps/ports.stamp
 ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
+
+jtreg: stamps/jtreg.stamp

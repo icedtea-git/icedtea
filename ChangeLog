@@ -1,3 +1,20 @@
+2008-05-19  Mark Wielaard  <mark@klomp.org>
+
+	* test/jtreg/*: New jtreg and jtharness sources.
+	* Makefile.am (distclean-local): Add clean-jtreg clean-jtreg-reports.
+	(.PHONY): Likewise.
+	(EXTRA_DIST): Add test/jtreg.
+	(stamps/jtreg.stamp): New target.
+	(clean-jtreg): Likewise.
+	(check-hotspot): Likewise.
+	(check-langtools): Likewise.
+	(check-jdk): Likewise.
+	(clean-jtreg-reports): Likewise.
+	(jtregcheck): Likewise.
+	(check-local): Likewise.
+	(jtreg): Likewise.
+	* Makefile.in: Regenerated.
+
 2008-05-16  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-sparc.patch: Merge os_linux_sparc.cpp patch hunks.
