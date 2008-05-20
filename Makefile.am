@@ -859,7 +859,7 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
 	  -source 1.6 \
  	  -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-	  -bootclasspath '' extra-source-files.txt
+	  -bootclasspath '' @extra-source-files.txt
 	cp -r extra/net/sourceforge/jnlp/about/resources \
 	  extra-lib/net/sourceforge/jnlp/about
 	mkdir -p stamps
