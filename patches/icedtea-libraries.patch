@@ -4,7 +4,7 @@
  include $(BUILDDIR)/common/Mapfile-vers.gmk
  include $(BUILDDIR)/common/Library.gmk
  
-+LDLIBS += -ljpeg -ldl 
++LDLIBS += -ldl 
 +
  #
  # Add to ambient vpath to get files in a subdirectory

@@ -1,5 +1,10 @@
 2008-05-21  Lillian Angel  <langel@redhat.com>
 
+	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
+	* patches/icedtea-libraries.patch: Updated LDLIBS.
+
+2008-05-21  Lillian Angel  <langel@redhat.com>
+
 	* .hgignore: Updated.
 	* Makefile.am: Updated to build with ecj properly.
 	* Makefile.in: Regenerated.
