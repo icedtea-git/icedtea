@@ -16,6 +16,7 @@ gcjwebplugin.so
 IcedTeaPlugin.so
 rt-source-files.txt
 hotspot-tools-source-files.txt
+hotspot-tools/
 rt/com/sun/jdi/AbsentInformationException.java
 rt/com/sun/jdi/Accessible.java
 rt/com/sun/jdi/ArrayReference.java
