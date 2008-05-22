@@ -1229,10 +1229,18 @@ hotspot-tools-source-files.txt: stamps/extract.stamp \
 	mkdir -p lib/hotspot-tools
 
 stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
-	  -source 1.6 \
-	  -sourcepath rt:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):generated \
-	  -bootclasspath '' @$<
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
+            -source 1.6 \
+            -sourcepath rt:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):generated \
+            -bootclasspath '' @$< ; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
+	    -source 1.6 \
+	    -sourcepath rt:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):generated \
+	    -bootclasspath '' @$< ; \
+	fi
 	mkdir -p stamps
 	touch stamps/hotspot-tools-class-files.stamp
 
@@ -1245,9 +1253,16 @@ clean-hotspot-tools:
 # tools.jar
 bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib/
-	$(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/hotspot-tools com -C lib/hotspot-tools sun \
-          -C lib/hotspot-tools org -C lib/hotspot-tools java \
-          -C lib/hotspot-tools javax
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAR) cf $@ -C lib/hotspot-tools com -C lib/hotspot-tools sun \
+            -C lib/hotspot-tools org -C lib/hotspot-tools java \
+            -C lib/hotspot-tools javax ; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/hotspot-tools com -C lib/hotspot-tools sun \
+            -C lib/hotspot-tools org -C lib/hotspot-tools java \
+            -C lib/hotspot-tools javax ; \
+	fi
 	if test -d bootstrap/ecj ; \
 	then \
 	  mkdir -p bootstrap/ecj/lib/; \
@@ -1261,10 +1276,18 @@ rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
 
 stamps/rt-class-files.stamp: rt-source-files.txt
 	mkdir -p lib/rt
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
-	  -source 1.6 \
-	  -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated \
-	  -bootclasspath '' @$<
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt \
+	    -source 1.6 \
+	    -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated \
+	    -bootclasspath '' @$< ; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
+            -source 1.6 \
+            -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated \
+            -bootclasspath '' @$< ; \
+	fi
 	cp -r rt/net/sourceforge/jnlp/resources \
 	  lib/rt/net/sourceforge/jnlp/
 	mkdir -p stamps
@@ -1278,8 +1301,14 @@ clean-rt:
 # rt-closed.jar.
 bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
-	$(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-          -C lib/rt javax -C lib/rt net -C lib/rt sun
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
+            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
+            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
+	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
 	  cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar bootstrap/ecj/jre/lib/rt.jar; \
@@ -1292,10 +1321,17 @@ extra-source-files.txt:
 stamps/extra-class-files.stamp: extra-source-files.txt \
 	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 	mkdir -p extra-lib
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
-	  -source 1.6 \
- 	  -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-	  -bootclasspath '' @extra-source-files.txt
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
+	    -source 1.6 \
+ 	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+	    -bootclasspath '' @extra-source-files.txt ; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
+            -source 1.6 \
+            -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+            -bootclasspath '' @extra-source-files.txt ; \
+	fi
 	cp -r extra/net/sourceforge/jnlp/about/resources \
 	  extra-lib/net/sourceforge/jnlp/about
 	mkdir -p stamps
@@ -1307,7 +1343,12 @@ clean-extra:
 	rm -f extra-source-files.txt
 
 extra-lib/about.jar: stamps/extra-class-files.stamp
-	$(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAR) cf $@ -C extra-lib net ; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net ; \
+	fi
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
