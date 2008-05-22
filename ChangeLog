@@ -1,3 +1,8 @@
+2008-05-22  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Updated conditions to use JAVAC.
+	* Makefile.in: Regenerated.
+
 2008-05-21  Lillian Angel  <langel@redhat.com>
 
 	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
