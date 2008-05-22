@@ -886,6 +886,7 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
 	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 	mkdir -p extra-lib
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
 	    -source 1.6 \
  	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
