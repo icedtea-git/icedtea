@@ -33,8 +33,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  
                  Type[] paramTypes = constr.getGenericParameterTypes();
                  if (paramTypes.length != propertyNames.length) {
---- openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk	2008-02-28 04:39:40.000000000 -0500
-+++ openjdk/jdk/make/common/internal/BinaryPlugs.gmk	2008-02-29 14:28:47.000000000 -0500
+--- openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk	2008-05-23 20:13:24.000000000 +0100
++++ openjdk/jdk/make/common/internal/BinaryPlugs.gmk	2008-05-23 20:22:20.000000000 +0100
 @@ -51,28 +51,19 @@
  com/sun/jmx/snmp/SnmpDataTypeEnums.class \
  com/sun/jmx/snmp/SnmpDefinitions.class \
@@ -117,7 +117,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  $(PLUG_TEMPDIR)/all.jargs: $(PLUG_TEMPDIR)/all.clist
  	$(plug-create-jargs)
  
-@@ -188,9 +206,9 @@
+@@ -183,9 +201,9 @@
  # Import classes command
  
  define import-binary-plug-classes
@@ -128,8 +128,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
 +($(CD) $(CLASSDESTDIR) && $(BOOT_JAR_CMD) xf $(PLUG_IMPORT_JARFILE) `$(CAT) $1`)
  endef # import-binary-plug-classes
  
- else # IMPORT_BINARY_PLUGS
-@@ -220,12 +238,21 @@
+ # Import specific area classes (the classes are always created)
+@@ -194,12 +212,21 @@
  	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/jmf.clist)
  import-binary-plug-sound-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/sound.clist
  	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/sound.clist)

@@ -1,3 +1,25 @@
+2008-05-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Add support for reverting
+	OpenJDK patches.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-copy-plugs.patch: Updated
+	for OpenJDK7 b26.
+	
+2008-05-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Add support for using
+	OpenJDK patches (diffs from non-master
+	repositories)
+	* Makefile.in: Regenerated.
+	
+2008-05-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Move build back to using
+	OpenJDK Mercurial repository after merge,
+	and upgrade to b26.
+	* Makefile.in: Regenerated.
+	
 2008-05-15  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-sparc.patch: New.
