@@ -385,19 +385,6 @@ stamps/patch.stamp: stamps/clone.stamp
 clean-patch:
 	rm -f stamps/patch.stamp
 	all_patches_ok=yes; \
-	cd $(abs_top_builddir)/openjdk/jdk; \
-	for p in $(OPENJDK_PATCHES) ; \
-	do \
-	  echo Checking $$p ; \
-	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
-	  then \
-	    echo Reverting $$p ; \
-	    $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
-	  else \
-	    all_patches_ok=no ; \
-	  fi ; \
-	done ; \
-	cd $(abs_top_builddir) ; \
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
@@ -409,6 +396,19 @@ clean-patch:
 	    all_patches_ok=no ; \
 	  fi ; \
 	done ; \
+	cd $(abs_top_builddir)/openjdk/jdk; \
+	for p in $(OPENJDK_PATCHES) ; \
+	do \
+	  echo Checking $$p ; \
+	  if $(PATCH) -l -p1 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
+	  then \
+	    echo Reverting $$p ; \
+	    $(PATCH) -l -p1 -R < $(abs_top_srcdir)/$$p ; \
+	  else \
+	    all_patches_ok=no ; \
+	  fi ; \
+	done ; \
+	cd $(abs_top_builddir) ; \
 	if ! test x$${all_patches_ok} == "xyes" ; then \
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi

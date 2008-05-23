@@ -1,71 +1,61 @@
---- openjdk.old/jdk/make/sun/jpeg/Makefile	2007-10-12 03:54:08.000000000 -0400
-+++ openjdk/jdk/make/sun/jpeg/Makefile	2007-10-24 15:15:25.000000000 -0400
-@@ -68,6 +68,8 @@
- include $(BUILDDIR)/common/Mapfile-vers.gmk
- include $(BUILDDIR)/common/Library.gmk
+diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/sun/java/pack/Makefile
+--- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2008-05-16 22:15:14.000000000 +0100
++++ openjdk/jdk/make/com/sun/java/pack/Makefile	2008-05-23 22:50:53.000000000 +0100
+@@ -64,23 +64,21 @@
+   ZIPOBJDIR = $(OUTPUTDIR)/tmp/sun/java.util.zip/zip/$(OBJDIRNAME)
  
-+LDLIBS += -ldl 
+   ZIPOBJS =  $(ZIPOBJDIR)/zcrc32.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/deflate.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/trees.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/zadler32.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/zutil.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/inflate.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/infblock.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/infcodes.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
+-	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
+-
+-  ZINCLUDE=-I$(SHARE_SRC)/native/java/util/zip/zlib-1.1.3
+-  OTHER_CXXFLAGS += $(ZINCLUDE)
+-  LDDFLAGS += $(ZIPOBJS)
++            $(ZIPOBJDIR)/deflate.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/trees.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/zadler32.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/zutil.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/inflate.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/infblock.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/infcodes.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
++            $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
 +
- #
- # Add to ambient vpath to get files in a subdirectory
- #
---- openjdk.old/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2007-10-12 04:03:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2007-10-22 12:50:36.000000000 -0400
-@@ -25,7 +25,7 @@
++  OTHER_LDLIBS += -lz
+ else
+   OTHER_CXXFLAGS += -DNO_ZLIB -DUNPACK_JNI
+-  OTHER_LDLIBS += $(JVMLIB)
++  OTHER_LDLIBS += -lz $(JVMLIB)
+ endif
  
- #include "splashscreen_impl.h"
- 
--#include "../libpng/png.h"
-+#include <png.h>
- 
- #include <setjmp.h>
- 
---- openjdk.old/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c	2007-10-12 04:03:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c	2007-10-22 12:50:36.000000000 -0400
-@@ -26,7 +26,7 @@
- #include "splashscreen_impl.h"
- #include "splashscreen_gfx.h"
- 
--#include "../giflib/gif_lib.h"
-+#include <gif_lib.h>
- 
- #define GIF_TRANSPARENT     0x01
- #define GIF_USER_INPUT      0x02
---- openjdk.old/jdk/src/share/native/java/util/zip/Adler32.c	2007-10-12 04:03:46.000000000 -0400
-+++ openjdk/jdk/src/share/native/java/util/zip/Adler32.c	2007-10-22 13:21:09.000000000 -0400
-@@ -29,7 +29,7 @@
- 
- #include "jni.h"
- #include "jni_util.h"
--#include "zlib.h"
-+#include <zlib.h>
- 
- #include "java_util_zip_Adler32.h"
- 
---- openjdk.old/jdk/src/share/native/java/util/zip/Deflater.c	2007-10-12 04:03:46.000000000 -0400
-+++ openjdk/jdk/src/share/native/java/util/zip/Deflater.c	2007-10-22 13:22:34.000000000 -0400
-@@ -32,7 +32,7 @@
- #include "jlong.h"
- #include "jni.h"
- #include "jni_util.h"
--#include "zlib.h"
-+#include <zlib.h>
- 
- #include "java_util_zip_Deflater.h"
- 
---- openjdk.old/jdk/src/share/native/java/util/zip/CRC32.c	2007-10-12 04:03:46.000000000 -0400
-+++ openjdk/jdk/src/share/native/java/util/zip/CRC32.c	2007-10-22 13:23:08.000000000 -0400
-@@ -29,7 +29,7 @@
- 
- #include "jni.h"
- #include "jni_util.h"
--#include "zlib.h"
-+#include <zlib.h>
- 
- #include "java_util_zip_CRC32.h"
- 
---- openjdk.old/jdk/make/common/Program.gmk	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk/jdk/make/common/Program.gmk	2007-10-22 13:26:06.000000000 -0400
+ CXXFLAGS_DBG += -DFULL
+@@ -102,12 +100,12 @@
+   COMPILER_WARNINGS_FATAL=false
+ else
+   LDOUTPUT = -o #Have a space 
+-  LDDFLAGS += -lc
++  LDDFLAGS += -lz -lc
+   OTHER_LDLIBS  += $(LIBCXX)
+ # setup the list of libraries to link in...
+ ifeq ($(PLATFORM), linux)
+ ifeq ("$(CC_VER_MAJOR)", "3")
+-  OTHER_LDLIBS  += -Wl,-Bstatic -lgcc_eh -Wl,-Bdynamic
++  OTHER_LDLIBS  += -lz -Wl,-Bstatic -lgcc_eh -Wl,-Bdynamic
+ endif
+ endif #LINUX
+ endif #PLATFORM
+diff -Nru openjdk.orig/jdk/make/common/Program.gmk openjdk/jdk/make/common/Program.gmk
+--- openjdk.orig/jdk/make/common/Program.gmk	2008-05-16 22:15:14.000000000 +0100
++++ openjdk/jdk/make/common/Program.gmk	2008-05-23 22:50:53.000000000 +0100
 @@ -85,7 +85,7 @@
  	endif
      endif
@@ -75,7 +65,7 @@
  	LDFLAGS += -Wl,--allow-shlib-undefined
  	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../lib/$(LIBARCH)/jli
  	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../jre/lib/$(LIBARCH)/jli
-@@ -251,7 +251,6 @@
+@@ -250,7 +250,6 @@
  endif
  
  OTHER_INCLUDES += -I$(LAUNCHER_SHARE_SRC)/bin -I$(LAUNCHER_PLATFORM_SRC)/bin
@@ -83,8 +73,80 @@
  
  # this may not be necessary...
  ifeq ($(PLATFORM), windows)
---- openjdk.old/jdk/make/java/zip/Makefile	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk/jdk/make/java/zip/Makefile	2007-10-22 13:27:01.000000000 -0400
+diff -Nru openjdk.orig/jdk/make/java/jli/Makefile openjdk/jdk/make/java/jli/Makefile
+--- openjdk.orig/jdk/make/java/jli/Makefile	2008-05-19 22:56:22.000000000 +0100
++++ openjdk/jdk/make/java/jli/Makefile	2008-05-23 22:56:04.000000000 +0100
+@@ -44,8 +44,6 @@
+ 
+ include $(BUILDDIR)/common/Defs.gmk
+ 
+-ZLIB_VERSION = 1.1.3
+-ZIP_SRC = $(SHARE_SRC)/native/java/util/zip/zlib-$(ZLIB_VERSION)
+ LAUNCHER_SHARE_SRC = $(SHARE_SRC)/bin
+ LAUNCHER_PLATFORM_SRC = $(PLATFORM_SRC)/bin
+ 
+@@ -66,15 +64,7 @@
+ 	parse_manifest.c \
+ 	version_comp.c \
+ 	wildcard.c \
+-	jli_util.c \
+-	inflate.c \
+-	infblock.c \
+-	inftrees.c \
+-	infcodes.c \
+-	inffast.c \
+-	infutil.c \
+-	zadler32.c \
+-	zutil.c
++	jli_util.c
+ 
+ ifneq ($(PLATFORM), windows)
+ 
+@@ -99,7 +89,7 @@
+ 	# Note: its important to keep this order meaning -lc is the
+ 	# last library otherwise it could cause compatibility issues
+ 	# by pulling in SUNW_private symbols from libc
+-	LDLIBS = -ldl -lc
++	LDLIBS = -ldl -lz -lc
+ ifeq ($(USE_PTHREADS),true)
+ 	LDLIBS += -lpthread
+ endif # USE_PTHREADS 
+@@ -122,7 +112,6 @@
+ 
+ OTHER_INCLUDES += -I$(LAUNCHER_SHARE_SRC)
+ OTHER_INCLUDES += -I$(LAUNCHER_PLATFORM_SRC)
+-OTHER_INCLUDES += -I$(ZIP_SRC)
+ 
+ #
+ # Library to compile.
+@@ -163,4 +152,4 @@
+ #
+ # Add to ambient vpath so we pick up the library files
+ #
+-vpath %.c $(LAUNCHER_SHARE_SRC) $(ZIP_SRC) $(LAUNCHER_PLATFORM_SRC)
++vpath %.c $(LAUNCHER_SHARE_SRC) $(LAUNCHER_PLATFORM_SRC)
+diff -Nru openjdk.orig/jdk/make/java/zip/FILES_c.gmk openjdk/jdk/make/java/zip/FILES_c.gmk
+--- openjdk.orig/jdk/make/java/zip/FILES_c.gmk	2008-05-16 22:15:14.000000000 +0100
++++ openjdk/jdk/make/java/zip/FILES_c.gmk	2008-05-23 22:50:53.000000000 +0100
+@@ -30,15 +30,4 @@
+ 	Inflater.c \
+ 	ZipFile.c \
+ 	ZipEntry.c \
+-	zadler32.c \
+-	zcrc32.c \
+-	deflate.c \
+-	trees.c \
+-	zutil.c \
+-	inflate.c \
+-	infblock.c \
+-	inftrees.c \
+-	infcodes.c \
+-	infutil.c \
+-	inffast.c \
+ 	zip_util.c
+diff -Nru openjdk.orig/jdk/make/java/zip/Makefile openjdk/jdk/make/java/zip/Makefile
+--- openjdk.orig/jdk/make/java/zip/Makefile	2008-05-16 22:15:14.000000000 +0100
++++ openjdk/jdk/make/java/zip/Makefile	2008-05-23 22:50:53.000000000 +0100
 @@ -30,8 +30,6 @@
  PRODUCT = sun
  include $(BUILDDIR)/common/Defs.gmk
@@ -112,49 +174,77 @@
  #
 -OTHER_LDLIBS = $(JVMLIB)
 +OTHER_LDLIBS = $(JVMLIB) -lz
---- openjdk.old/jdk/make/java/zip/FILES_c.gmk	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk/jdk/make/java/zip/FILES_c.gmk	2007-10-22 13:52:53.000000000 -0400
-@@ -30,15 +30,4 @@
- 	Inflater.c \
- 	ZipFile.c \
- 	ZipEntry.c \
--	zadler32.c \
--	zcrc32.c \
--	deflate.c \
--	trees.c \
--	zutil.c \
--	inflate.c \
--	infblock.c \
--	inftrees.c \
--	infcodes.c \
--	infutil.c \
--	inffast.c \
- 	zip_util.c
---- openjdk.old/jdk/src/share/native/java/util/zip/Inflater.c	2007-10-12 04:03:46.000000000 -0400
-+++ openjdk/jdk/src/share/native/java/util/zip/Inflater.c	2007-10-22 15:21:32.000000000 -0400
-@@ -35,7 +35,7 @@
- #include "jni.h"
- #include "jvm.h"
- #include "jni_util.h"
--#include "zlib.h"
-+#include <zlib.h>
- #include "java_util_zip_Inflater.h"
+diff -Nru openjdk.orig/jdk/make/sun/jpeg/FILES_c.gmk openjdk/jdk/make/sun/jpeg/FILES_c.gmk
+--- openjdk.orig/jdk/make/sun/jpeg/FILES_c.gmk	2008-05-16 22:15:15.000000000 +0100
++++ openjdk/jdk/make/sun/jpeg/FILES_c.gmk	2008-05-23 22:50:53.000000000 +0100
+@@ -25,51 +25,7 @@
  
- #define ThrowDataFormatException(env, msg) \
---- openjdk.old/jdk/src/share/native/java/util/zip/zip_util.c	2007-10-12 04:03:46.000000000 -0400
-+++ openjdk/jdk/src/share/native/java/util/zip/zip_util.c	2007-10-23 14:33:18.000000000 -0400
-@@ -44,7 +44,8 @@
- #include "io_util.h"
- #include "io_util_md.h"
- #include "zip_util.h"
--#include "zlib.h"
+ FILES_c = \
+ 	imageioJPEG.c \
+-	jpegdecoder.c \
+-	jcomapi.c \
+-	jdapimin.c \
+-	jdapistd.c \
+-	jdcoefct.c \
+-	jdcolor.c \
+-	jddctmgr.c \
+-	jdhuff.c \
+-	jdinput.c \
+-	jdmainct.c \
+-	jdmarker.c \
+-	jdmaster.c \
+-	jdmerge.c \
+-	jdphuff.c \
+-	jdpostct.c \
+-	jdsample.c \
+-	jerror.c \
+-	jidctflt.c \
+-	jidctfst.c \
+-	jidctint.c \
+-	jidctred.c \
+-	jmemmgr.c \
+-	jmemnobs.c \
+-	jquant1.c \
+-	jquant2.c \
+-	jutils.c \
+-	jcapimin.c \
+-	jcapistd.c \
+-	jccoefct.c \
+-	jccolor.c \
+-	jcdctmgr.c \
+-	jchuff.c \
+-	jcinit.c \
+-	jcmainct.c \
+-	jcmarker.c \
+-	jcmaster.c \
+-	jcparam.c \
+-	jcphuff.c \
+-	jcprepct.c \
+-	jcsample.c \
+-	jctrans.c \
+-	jdtrans.c \
+-	jfdctflt.c \
+-	jfdctfst.c \
+-	jfdctint.c
++	jpegdecoder.c
+ 
+ ifndef OPENJDK
+ FILES_c += \
+diff -Nru openjdk.orig/jdk/make/sun/jpeg/Makefile openjdk/jdk/make/sun/jpeg/Makefile
+--- openjdk.orig/jdk/make/sun/jpeg/Makefile	2008-05-16 22:15:15.000000000 +0100
++++ openjdk/jdk/make/sun/jpeg/Makefile	2008-05-23 22:50:53.000000000 +0100
+@@ -68,6 +68,8 @@
+ include $(BUILDDIR)/common/Mapfile-vers.gmk
+ include $(BUILDDIR)/common/Library.gmk
+ 
++LDLIBS += -ldl 
 +
-+#include <zlib.h>
- 
- /* USE_MMAP means mmap the CEN & ENDHDR part of the zip file. */
- #ifdef USE_MMAP
---- openjdk.old/jdk/make/sun/splashscreen/FILES_c.gmk	2007-10-12 03:54:08.000000000 -0400
-+++ openjdk/jdk/make/sun/splashscreen/FILES_c.gmk	2007-10-23 16:15:48.000000000 -0400
+ #
+ # Add to ambient vpath to get files in a subdirectory
+ #
+diff -Nru openjdk.orig/jdk/make/sun/splashscreen/FILES_c.gmk openjdk/jdk/make/sun/splashscreen/FILES_c.gmk
+--- openjdk.orig/jdk/make/sun/splashscreen/FILES_c.gmk	2008-05-16 22:15:15.000000000 +0100
++++ openjdk/jdk/make/sun/splashscreen/FILES_c.gmk	2008-05-23 22:50:53.000000000 +0100
 @@ -30,81 +30,5 @@
  	splashscreen_impl.c \
  	splashscreen_jpeg.c \
@@ -238,8 +328,9 @@
 -	jfdctint.c
 +	splashscreen_sys.c 
  
---- openjdk.old/jdk/make/sun/splashscreen/Makefile	2007-10-12 03:54:08.000000000 -0400
-+++ openjdk/jdk/make/sun/splashscreen/Makefile	2007-10-23 16:20:24.000000000 -0400
+diff -Nru openjdk.orig/jdk/make/sun/splashscreen/Makefile openjdk/jdk/make/sun/splashscreen/Makefile
+--- openjdk.orig/jdk/make/sun/splashscreen/Makefile	2008-05-19 22:56:22.000000000 +0100
++++ openjdk/jdk/make/sun/splashscreen/Makefile	2008-05-23 22:50:53.000000000 +0100
 @@ -59,12 +59,12 @@
  # C Flags
  #
@@ -270,65 +361,1019 @@
  
  ifeq ($(PLATFORM), linux)
    ifeq ($(ARCH_DATA_MODEL), 64)
-diff -ruN openjdk.old/jdk/make/sun/jpeg/FILES_c.gmk openjdk/jdk/make/sun/jpeg/FILES_c.gmk
---- openjdk.old/jdk/make/sun/jpeg/FILES_c.gmk	2007-10-12 03:54:08.000000000 -0400
-+++ openjdk/jdk/make/sun/jpeg/FILES_c.gmk	2007-10-23 17:13:59.000000000 -0400
-@@ -25,51 +25,7 @@
+diff -Nru openjdk.orig/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h
+--- openjdk.orig/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2008-05-23 22:50:53.000000000 +0100
+@@ -87,11 +87,7 @@
+ // bytes and byte arrays
  
- FILES_c = \
- 	imageioJPEG.c \
--	jpegdecoder.c \
--	jcomapi.c \
--	jdapimin.c \
--	jdapistd.c \
--	jdcoefct.c \
--	jdcolor.c \
--	jddctmgr.c \
--	jdhuff.c \
--	jdinput.c \
--	jdmainct.c \
--	jdmarker.c \
--	jdmaster.c \
--	jdmerge.c \
--	jdphuff.c \
--	jdpostct.c \
--	jdsample.c \
--	jerror.c \
--	jidctflt.c \
--	jidctfst.c \
--	jidctint.c \
--	jidctred.c \
--	jmemmgr.c \
--	jmemnobs.c \
--	jquant1.c \
--	jquant2.c \
--	jutils.c \
--	jcapimin.c \
--	jcapistd.c \
--	jccoefct.c \
--	jccolor.c \
--	jcdctmgr.c \
--	jchuff.c \
--	jcinit.c \
--	jcmainct.c \
--	jcmarker.c \
--	jcmaster.c \
--	jcparam.c \
--	jcphuff.c \
--	jcprepct.c \
--	jcsample.c \
--	jctrans.c \
--	jdtrans.c \
--	jfdctflt.c \
--	jfdctfst.c \
--	jfdctint.c
-+	jpegdecoder.c
+ typedef unsigned int uint;
+-#ifdef _LP64
+-typedef unsigned int uLong; // Historical zlib, should be 32-bit.
+-#else
+ typedef unsigned long uLong;
+-#endif
+ #ifdef _MSC_VER
+ typedef LONGLONG        jlong;
+ typedef DWORDLONG       julong;
+diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/Adler32.c openjdk/jdk/src/share/native/java/util/zip/Adler32.c
+--- openjdk.orig/jdk/src/share/native/java/util/zip/Adler32.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/java/util/zip/Adler32.c	2008-05-23 22:50:53.000000000 +0100
+@@ -29,7 +29,7 @@
  
- ifndef OPENJDK
- FILES_c += \
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapimin.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapimin.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapimin.c	2007-10-30 04:38:50.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapimin.c	1969-12-31 19:00:00.000000000 -0500
+ #include "jni.h"
+ #include "jni_util.h"
+-#include "zlib.h"
++#include <zlib.h>
+ 
+ #include "java_util_zip_Adler32.h"
+ 
+diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/CRC32.c openjdk/jdk/src/share/native/java/util/zip/CRC32.c
+--- openjdk.orig/jdk/src/share/native/java/util/zip/CRC32.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/java/util/zip/CRC32.c	2008-05-23 22:50:53.000000000 +0100
+@@ -29,7 +29,7 @@
+ 
+ #include "jni.h"
+ #include "jni_util.h"
+-#include "zlib.h"
++#include <zlib.h>
+ 
+ #include "java_util_zip_CRC32.h"
+ 
+diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/Deflater.c openjdk/jdk/src/share/native/java/util/zip/Deflater.c
+--- openjdk.orig/jdk/src/share/native/java/util/zip/Deflater.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/java/util/zip/Deflater.c	2008-05-23 22:50:53.000000000 +0100
+@@ -32,7 +32,7 @@
+ #include "jlong.h"
+ #include "jni.h"
+ #include "jni_util.h"
+-#include "zlib.h"
++#include <zlib.h>
+ 
+ #include "java_util_zip_Deflater.h"
+ 
+diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/Inflater.c openjdk/jdk/src/share/native/java/util/zip/Inflater.c
+--- openjdk.orig/jdk/src/share/native/java/util/zip/Inflater.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/java/util/zip/Inflater.c	2008-05-23 22:50:53.000000000 +0100
+@@ -35,7 +35,7 @@
+ #include "jni.h"
+ #include "jvm.h"
+ #include "jni_util.h"
+-#include "zlib.h"
++#include <zlib.h>
+ #include "java_util_zip_Inflater.h"
+ 
+ #define ThrowDataFormatException(env, msg) \
+diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/zip_util.c openjdk/jdk/src/share/native/java/util/zip/zip_util.c
+--- openjdk.orig/jdk/src/share/native/java/util/zip/zip_util.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/java/util/zip/zip_util.c	2008-05-23 22:50:53.000000000 +0100
+@@ -44,7 +44,8 @@
+ #include "io_util.h"
+ #include "io_util_md.h"
+ #include "zip_util.h"
+-#include "zlib.h"
++
++#include <zlib.h>
+ 
+ /* USE_MMAP means mmap the CEN & ENDHDR part of the zip file. */
+ #ifdef USE_MMAP
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/README openjdk/jdk/src/share/native/sun/awt/image/jpeg/README
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/README	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/README	1970-01-01 01:00:00.000000000 +0100
+@@ -1,385 +0,0 @@
+-The Independent JPEG Group's JPEG software
+-==========================================
+-
+-README for release 6b of 27-Mar-1998
+-====================================
+-
+-This distribution contains the sixth public release of the Independent JPEG
+-Group's free JPEG software.  You are welcome to redistribute this software and
+-to use it for any purpose, subject to the conditions under LEGAL ISSUES, below.
+-
+-Serious users of this software (particularly those incorporating it into
+-larger programs) should contact IJG at jpeg-info@uunet.uu.net to be added to
+-our electronic mailing list.  Mailing list members are notified of updates
+-and have a chance to participate in technical discussions, etc.
+-
+-This software is the work of Tom Lane, Philip Gladstone, Jim Boucher,
+-Lee Crocker, Julian Minguillon, Luis Ortiz, George Phillips, Davide Rossi,
+-Guido Vollbeding, Ge' Weijers, and other members of the Independent JPEG
+-Group.
+-
+-IJG is not affiliated with the official ISO JPEG standards committee.
+-
+-
+-DOCUMENTATION ROADMAP
+-=====================
+-
+-This file contains the following sections:
+-
+-OVERVIEW            General description of JPEG and the IJG software.
+-LEGAL ISSUES        Copyright, lack of warranty, terms of distribution.
+-REFERENCES          Where to learn more about JPEG.
+-ARCHIVE LOCATIONS   Where to find newer versions of this software.
+-RELATED SOFTWARE    Other stuff you should get.
+-FILE FORMAT WARS    Software *not* to get.
+-TO DO               Plans for future IJG releases.
+-
+-Other documentation files in the distribution are:
+-
+-User documentation:
+-  install.doc       How to configure and install the IJG software.
+-  usage.doc         Usage instructions for cjpeg, djpeg, jpegtran,
+-                    rdjpgcom, and wrjpgcom.
+-  *.1               Unix-style man pages for programs (same info as usage.doc).
+-  wizard.doc        Advanced usage instructions for JPEG wizards only.
+-  change.log        Version-to-version change highlights.
+-Programmer and internal documentation:
+-  libjpeg.doc       How to use the JPEG library in your own programs.
+-  example.c         Sample code for calling the JPEG library.
+-  structure.doc     Overview of the JPEG library's internal structure.
+-  filelist.doc      Road map of IJG files.
+-  coderules.doc     Coding style rules --- please read if you contribute code.
+-
+-Please read at least the files install.doc and usage.doc.  Useful information
+-can also be found in the JPEG FAQ (Frequently Asked Questions) article.  See
+-ARCHIVE LOCATIONS below to find out where to obtain the FAQ article.
+-
+-If you want to understand how the JPEG code works, we suggest reading one or
+-more of the REFERENCES, then looking at the documentation files (in roughly
+-the order listed) before diving into the code.
+-
+-
+-OVERVIEW
+-========
+-
+-This package contains C software to implement JPEG image compression and
+-decompression.  JPEG (pronounced "jay-peg") is a standardized compression
+-method for full-color and gray-scale images.  JPEG is intended for compressing
+-"real-world" scenes; line drawings, cartoons and other non-realistic images
+-are not its strong suit.  JPEG is lossy, meaning that the output image is not
+-exactly identical to the input image.  Hence you must not use JPEG if you
+-have to have identical output bits.  However, on typical photographic images,
+-very good compression levels can be obtained with no visible change, and
+-remarkably high compression levels are possible if you can tolerate a
+-low-quality image.  For more details, see the references, or just experiment
+-with various compression settings.
+-
+-This software implements JPEG baseline, extended-sequential, and progressive
+-compression processes.  Provision is made for supporting all variants of these
+-processes, although some uncommon parameter settings aren't implemented yet.
+-For legal reasons, we are not distributing code for the arithmetic-coding
+-variants of JPEG; see LEGAL ISSUES.  We have made no provision for supporting
+-the hierarchical or lossless processes defined in the standard.
+-
+-We provide a set of library routines for reading and writing JPEG image files,
+-plus two sample applications "cjpeg" and "djpeg", which use the library to
+-perform conversion between JPEG and some other popular image file formats.
+-The library is intended to be reused in other applications.
+-
+-In order to support file conversion and viewing software, we have included
+-considerable functionality beyond the bare JPEG coding/decoding capability;
+-for example, the color quantization modules are not strictly part of JPEG
+-decoding, but they are essential for output to colormapped file formats or
+-colormapped displays.  These extra functions can be compiled out of the
+-library if not required for a particular application.  We have also included
+-"jpegtran", a utility for lossless transcoding between different JPEG
+-processes, and "rdjpgcom" and "wrjpgcom", two simple applications for
+-inserting and extracting textual comments in JFIF files.
+-
+-The emphasis in designing this software has been on achieving portability and
+-flexibility, while also making it fast enough to be useful.  In particular,
+-the software is not intended to be read as a tutorial on JPEG.  (See the
+-REFERENCES section for introductory material.)  Rather, it is intended to
+-be reliable, portable, industrial-strength code.  We do not claim to have
+-achieved that goal in every aspect of the software, but we strive for it.
+-
+-We welcome the use of this software as a component of commercial products.
+-No royalty is required, but we do ask for an acknowledgement in product
+-documentation, as described under LEGAL ISSUES.
+-
+-
+-LEGAL ISSUES
+-============
+-
+-In plain English:
+-
+-1. We don't promise that this software works.  (But if you find any bugs,
+-   please let us know!)
+-2. You can use this software for whatever you want.  You don't have to pay us.
+-3. You may not pretend that you wrote this software.  If you use it in a
+-   program, you must acknowledge somewhere in your documentation that
+-   you've used the IJG code.
+-
+-In legalese:
+-
+-The authors make NO WARRANTY or representation, either express or implied,
+-with respect to this software, its quality, accuracy, merchantability, or
+-fitness for a particular purpose.  This software is provided "AS IS", and you,
+-its user, assume the entire risk as to its quality and accuracy.
+-
+-This software is copyright (C) 1991-1998, Thomas G. Lane.
+-All Rights Reserved except as specified below.
+-
+-Permission is hereby granted to use, copy, modify, and distribute this
+-software (or portions thereof) for any purpose, without fee, subject to these
+-conditions:
+-(1) If any part of the source code for this software is distributed, then this
+-README file must be included, with this copyright and no-warranty notice
+-unaltered; and any additions, deletions, or changes to the original files
+-must be clearly indicated in accompanying documentation.
+-(2) If only executable code is distributed, then the accompanying
+-documentation must state that "this software is based in part on the work of
+-the Independent JPEG Group".
+-(3) Permission for use of this software is granted only if the user accepts
+-full responsibility for any undesirable consequences; the authors accept
+-NO LIABILITY for damages of any kind.
+-
+-These conditions apply to any software derived from or based on the IJG code,
+-not just to the unmodified library.  If you use our work, you ought to
+-acknowledge us.
+-
+-Permission is NOT granted for the use of any IJG author's name or company name
+-in advertising or publicity relating to this software or products derived from
+-it.  This software may be referred to only as "the Independent JPEG Group's
+-software".
+-
+-We specifically permit and encourage the use of this software as the basis of
+-commercial products, provided that all warranty or liability claims are
+-assumed by the product vendor.
+-
+-
+-ansi2knr.c is included in this distribution by permission of L. Peter Deutsch,
+-sole proprietor of its copyright holder, Aladdin Enterprises of Menlo Park, CA.
+-ansi2knr.c is NOT covered by the above copyright and conditions, but instead
+-by the usual distribution terms of the Free Software Foundation; principally,
+-that you must include source code if you redistribute it.  (See the file
+-ansi2knr.c for full details.)  However, since ansi2knr.c is not needed as part
+-of any program generated from the IJG code, this does not limit you more than
+-the foregoing paragraphs do.
+-
+-The Unix configuration script "configure" was produced with GNU Autoconf.
+-It is copyright by the Free Software Foundation but is freely distributable.
+-The same holds for its supporting scripts (config.guess, config.sub,
+-ltconfig, ltmain.sh).  Another support script, install-sh, is copyright
+-by M.I.T. but is also freely distributable.
+-
+-It appears that the arithmetic coding option of the JPEG spec is covered by
+-patents owned by IBM, AT&T, and Mitsubishi.  Hence arithmetic coding cannot
+-legally be used without obtaining one or more licenses.  For this reason,
+-support for arithmetic coding has been removed from the free JPEG software.
+-(Since arithmetic coding provides only a marginal gain over the unpatented
+-Huffman mode, it is unlikely that very many implementations will support it.)
+-So far as we are aware, there are no patent restrictions on the remaining
+-code.
+-
+-The IJG distribution formerly included code to read and write GIF files.
+-To avoid entanglement with the Unisys LZW patent, GIF reading support has
+-been removed altogether, and the GIF writer has been simplified to produce
+-"uncompressed GIFs".  This technique does not use the LZW algorithm; the
+-resulting GIF files are larger than usual, but are readable by all standard
+-GIF decoders.
+-
+-We are required to state that
+-    "The Graphics Interchange Format(c) is the Copyright property of
+-    CompuServe Incorporated.  GIF(sm) is a Service Mark property of
+-    CompuServe Incorporated."
+-
+-
+-REFERENCES
+-==========
+-
+-We highly recommend reading one or more of these references before trying to
+-understand the innards of the JPEG software.
+-
+-The best short technical introduction to the JPEG compression algorithm is
+-	Wallace, Gregory K.  "The JPEG Still Picture Compression Standard",
+-	Communications of the ACM, April 1991 (vol. 34 no. 4), pp. 30-44.
+-(Adjacent articles in that issue discuss MPEG motion picture compression,
+-applications of JPEG, and related topics.)  If you don't have the CACM issue
+-handy, a PostScript file containing a revised version of Wallace's article is
+-available at ftp://ftp.uu.net/graphics/jpeg/wallace.ps.gz.  The file (actually
+-a preprint for an article that appeared in IEEE Trans. Consumer Electronics)
+-omits the sample images that appeared in CACM, but it includes corrections
+-and some added material.  Note: the Wallace article is copyright ACM and IEEE,
+-and it may not be used for commercial purposes.
+-
+-A somewhat less technical, more leisurely introduction to JPEG can be found in
+-"The Data Compression Book" by Mark Nelson and Jean-loup Gailly, published by
+-M&T Books (New York), 2nd ed. 1996, ISBN 1-55851-434-1.  This book provides
+-good explanations and example C code for a multitude of compression methods
+-including JPEG.  It is an excellent source if you are comfortable reading C
+-code but don't know much about data compression in general.  The book's JPEG
+-sample code is far from industrial-strength, but when you are ready to look
+-at a full implementation, you've got one here...
+-
+-The best full description of JPEG is the textbook "JPEG Still Image Data
+-Compression Standard" by William B. Pennebaker and Joan L. Mitchell, published
+-by Van Nostrand Reinhold, 1993, ISBN 0-442-01272-1.  Price US$59.95, 638 pp.
+-The book includes the complete text of the ISO JPEG standards (DIS 10918-1
+-and draft DIS 10918-2).  This is by far the most complete exposition of JPEG
+-in existence, and we highly recommend it.
+-
+-The JPEG standard itself is not available electronically; you must order a
+-paper copy through ISO or ITU.  (Unless you feel a need to own a certified
+-official copy, we recommend buying the Pennebaker and Mitchell book instead;
+-it's much cheaper and includes a great deal of useful explanatory material.)
+-In the USA, copies of the standard may be ordered from ANSI Sales at (212)
+-642-4900, or from Global Engineering Documents at (800) 854-7179.  (ANSI
+-doesn't take credit card orders, but Global does.)  It's not cheap: as of
+-1992, ANSI was charging $95 for Part 1 and $47 for Part 2, plus 7%
+-shipping/handling.  The standard is divided into two parts, Part 1 being the
+-actual specification, while Part 2 covers compliance testing methods.  Part 1
+-is titled "Digital Compression and Coding of Continuous-tone Still Images,
+-Part 1: Requirements and guidelines" and has document numbers ISO/IEC IS
+-10918-1, ITU-T T.81.  Part 2 is titled "Digital Compression and Coding of
+-Continuous-tone Still Images, Part 2: Compliance testing" and has document
+-numbers ISO/IEC IS 10918-2, ITU-T T.83.
+-
+-Some extensions to the original JPEG standard are defined in JPEG Part 3,
+-a newer ISO standard numbered ISO/IEC IS 10918-3 and ITU-T T.84.  IJG
+-currently does not support any Part 3 extensions.
+-
+-The JPEG standard does not specify all details of an interchangeable file
+-format.  For the omitted details we follow the "JFIF" conventions, revision
+-1.02.  A copy of the JFIF spec is available from:
+-	Literature Department
+-	C-Cube Microsystems, Inc.
+-	1778 McCarthy Blvd.
+-	Milpitas, CA 95035
+-	phone (408) 944-6300,  fax (408) 944-6314
+-A PostScript version of this document is available by FTP at
+-ftp://ftp.uu.net/graphics/jpeg/jfif.ps.gz.  There is also a plain text
+-version at ftp://ftp.uu.net/graphics/jpeg/jfif.txt.gz, but it is missing
+-the figures.
+-
+-The TIFF 6.0 file format specification can be obtained by FTP from
+-ftp://ftp.sgi.com/graphics/tiff/TIFF6.ps.gz.  The JPEG incorporation scheme
+-found in the TIFF 6.0 spec of 3-June-92 has a number of serious problems.
+-IJG does not recommend use of the TIFF 6.0 design (TIFF Compression tag 6).
+-Instead, we recommend the JPEG design proposed by TIFF Technical Note #2
+-(Compression tag 7).  Copies of this Note can be obtained from ftp.sgi.com or
+-from ftp://ftp.uu.net/graphics/jpeg/.  It is expected that the next revision
+-of the TIFF spec will replace the 6.0 JPEG design with the Note's design.
+-Although IJG's own code does not support TIFF/JPEG, the free libtiff library
+-uses our library to implement TIFF/JPEG per the Note.  libtiff is available
+-from ftp://ftp.sgi.com/graphics/tiff/.
+-
+-
+-ARCHIVE LOCATIONS
+-=================
+-
+-The "official" archive site for this software is ftp.uu.net (Internet
+-address 192.48.96.9).  The most recent released version can always be found
+-there in directory graphics/jpeg.  This particular version will be archived
+-as ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz.  If you don't have
+-direct Internet access, UUNET's archives are also available via UUCP; contact
+-help@uunet.uu.net for information on retrieving files that way.
+-
+-Numerous Internet sites maintain copies of the UUNET files.  However, only
+-ftp.uu.net is guaranteed to have the latest official version.
+-
+-You can also obtain this software in DOS-compatible "zip" archive format from
+-the SimTel archives (ftp://ftp.simtel.net/pub/simtelnet/msdos/graphics/), or
+-on CompuServe in the Graphics Support forum (GO CIS:GRAPHSUP), library 12
+-"JPEG Tools".  Again, these versions may sometimes lag behind the ftp.uu.net
+-release.
+-
+-The JPEG FAQ (Frequently Asked Questions) article is a useful source of
+-general information about JPEG.  It is updated constantly and therefore is
+-not included in this distribution.  The FAQ is posted every two weeks to
+-Usenet newsgroups comp.graphics.misc, news.answers, and other groups.
+-It is available on the World Wide Web at http://www.faqs.org/faqs/jpeg-faq/
+-and other news.answers archive sites, including the official news.answers
+-archive at rtfm.mit.edu: ftp://rtfm.mit.edu/pub/usenet/news.answers/jpeg-faq/.
+-If you don't have Web or FTP access, send e-mail to mail-server@rtfm.mit.edu
+-with body
+-	send usenet/news.answers/jpeg-faq/part1
+-	send usenet/news.answers/jpeg-faq/part2
+-
+-
+-RELATED SOFTWARE
+-================
+-
+-Numerous viewing and image manipulation programs now support JPEG.  (Quite a
+-few of them use this library to do so.)  The JPEG FAQ described above lists
+-some of the more popular free and shareware viewers, and tells where to
+-obtain them on Internet.
+-
+-If you are on a Unix machine, we highly recommend Jef Poskanzer's free
+-PBMPLUS software, which provides many useful operations on PPM-format image
+-files.  In particular, it can convert PPM images to and from a wide range of
+-other formats, thus making cjpeg/djpeg considerably more useful.  The latest
+-version is distributed by the NetPBM group, and is available from numerous
+-sites, notably ftp://wuarchive.wustl.edu/graphics/graphics/packages/NetPBM/.
+-Unfortunately PBMPLUS/NETPBM is not nearly as portable as the IJG software is;
+-you are likely to have difficulty making it work on any non-Unix machine.
+-
+-A different free JPEG implementation, written by the PVRG group at Stanford,
+-is available from ftp://havefun.stanford.edu/pub/jpeg/.  This program
+-is designed for research and experimentation rather than production use;
+-it is slower, harder to use, and less portable than the IJG code, but it
+-is easier to read and modify.  Also, the PVRG code supports lossless JPEG,
+-which we do not.  (On the other hand, it doesn't do progressive JPEG.)
+-
+-
+-FILE FORMAT WARS
+-================
+-
+-Some JPEG programs produce files that are not compatible with our library.
+-The root of the problem is that the ISO JPEG committee failed to specify a
+-concrete file format.  Some vendors "filled in the blanks" on their own,
+-creating proprietary formats that no one else could read.  (For example, none
+-of the early commercial JPEG implementations for the Macintosh were able to
+-exchange compressed files.)
+-
+-The file format we have adopted is called JFIF (see REFERENCES).  This format
+-has been agreed to by a number of major commercial JPEG vendors, and it has
+-become the de facto standard.  JFIF is a minimal or "low end" representation.
+-We recommend the use of TIFF/JPEG (TIFF revision 6.0 as modified by TIFF
+-Technical Note #2) for "high end" applications that need to record a lot of
+-additional data about an image.  TIFF/JPEG is fairly new and not yet widely
+-supported, unfortunately.
+-
+-The upcoming JPEG Part 3 standard defines a file format called SPIFF.
+-SPIFF is interoperable with JFIF, in the sense that most JFIF decoders should
+-be able to read the most common variant of SPIFF.  SPIFF has some technical
+-advantages over JFIF, but its major claim to fame is simply that it is an
+-official standard rather than an informal one.  At this point it is unclear
+-whether SPIFF will supersede JFIF or whether JFIF will remain the de-facto
+-standard.  IJG intends to support SPIFF once the standard is frozen, but we
+-have not decided whether it should become our default output format or not.
+-(In any case, our decoder will remain capable of reading JFIF indefinitely.)
+-
+-Various proprietary file formats incorporating JPEG compression also exist.
+-We have little or no sympathy for the existence of these formats.  Indeed,
+-one of the original reasons for developing this free software was to help
+-force convergence on common, open format standards for JPEG files.  Don't
+-use a proprietary file format!
+-
+-
+-TO DO
+-=====
+-
+-The major thrust for v7 will probably be improvement of visual quality.
+-The current method for scaling the quantization tables is known not to be
+-very good at low Q values.  We also intend to investigate block boundary
+-smoothing, "poor man's variable quantization", and other means of improving
+-quality-vs-file-size performance without sacrificing compatibility.
+-
+-In future versions, we are considering supporting some of the upcoming JPEG
+-Part 3 extensions --- principally, variable quantization and the SPIFF file
+-format.
+-
+-As always, speeding things up is of great interest.
+-
+-Please send bug reports, offers of help, etc. to jpeg-info@uunet.uu.net.
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-05-23 22:50:53.000000000 +0100
+@@ -51,7 +51,9 @@
+ 
+ /* headers from the JPEG library */
+ #include <jpeglib.h>
+-#include "jerror.h"
++#include <jerror.h>
++
++#include <dlfcn.h>
+ 
+ #undef MAX
+ #define MAX(a,b)        ((a) > (b) ? (a) : (b))
+@@ -75,6 +77,62 @@
+ static jfieldID JPEGHuffmanTable_lengthsID;
+ static jfieldID JPEGHuffmanTable_valuesID;
+ 
++static void initIDs();
++
++typedef struct jpeg_error_mgr * (*fn_jpegstderror)(struct jpeg_error_mgr *);
++typedef boolean (*fn_jpegresynctorestart)(j_decompress_ptr, int);
++typedef JDIMENSION (*fn_jpegreadscanlines)(j_decompress_ptr, JSAMPARRAY, JDIMENSION);
++typedef boolean (*fn_jpegfinishoutput)(j_decompress_ptr);
++typedef int (*fn_jpegreadheader)(j_decompress_ptr, boolean);
++typedef boolean (*fn_jpegstartdecompress)(j_decompress_ptr);
++typedef boolean (*fn_jpeghasmultiplescans)(j_decompress_ptr);
++typedef boolean (*fn_jpegfinishdecompress)(j_decompress_ptr);
++typedef boolean (*fn_jpegstartoutput)(j_decompress_ptr, int);
++typedef void (*fn_jpegabort)(j_common_ptr);
++typedef void (*fn_jpegabortdecompress)(j_decompress_ptr);
++typedef JHUFF_TBL * (*fn_jpegallochufftable)(j_common_ptr);
++typedef JQUANT_TBL * (*fn_jpegallocquanttable)(j_common_ptr);
++typedef void (*fn_jpegcreatecompress)(j_compress_ptr, int, size_t);
++typedef void (*fn_jpegcreatedecompress)(j_decompress_ptr, int, size_t);
++typedef void (*fn_jpegdestroy)(j_common_ptr);
++typedef void (*fn_jpegfinishcompress)(j_compress_ptr);
++typedef boolean (*fn_jpeginputcomplete)(j_decompress_ptr);
++typedef void (*fn_jpegsavemarkers)(j_decompress_ptr, int, unsigned int);
++typedef void (*fn_jpegsetcolorspace)(j_compress_ptr, J_COLOR_SPACE);
++typedef void (*fn_jpegsetdefaults)(j_compress_ptr);
++typedef void (*fn_jpegsimpleprogression)(j_compress_ptr);
++typedef void (*fn_jpegstartcompress)(j_compress_ptr, boolean);
++typedef void (*fn_jpegsuppresstables)(j_compress_ptr, boolean);
++typedef JDIMENSION (*fn_jpegwritescanlines)(j_compress_ptr, JSAMPARRAY, JDIMENSION);
++typedef void (*fn_jpegwritetables)(j_compress_ptr);
++
++fn_jpegabort jpegabort;
++fn_jpegabortdecompress jpegabortdecompress;
++fn_jpegallochufftable jpegallochufftable;
++fn_jpegallocquanttable jpegallocquanttable;
++fn_jpegcreatecompress jpegcreatecompress;
++fn_jpegcreatedecompress jpegcreatedecompress;
++fn_jpegdestroy jpegdestroy;
++fn_jpegfinishcompress jpegfinishcompress;
++fn_jpeginputcomplete jpeginputcomplete;
++fn_jpegsavemarkers jpegsavemarkers;
++fn_jpegsetcolorspace jpegsetcolorspace;
++fn_jpegsetdefaults jpegsetdefaults;
++fn_jpegsimpleprogression jpegsimpleprogression;
++fn_jpegstartcompress jpegstartcompress;
++fn_jpegsuppresstables jpegsuppresstables;
++fn_jpegwritescanlines jpegwritescanlines;
++fn_jpegwritetables jpegwritetables;
++fn_jpegstderror jpegstderror;
++fn_jpegstartoutput jpegstartoutput;
++fn_jpegfinishdecompress jpegfinishdecompress;
++fn_jpeghasmultiplescans jpeghasmultiplescans;
++fn_jpegstartdecompress jpegstartdecompress;
++fn_jpegreadheader jpegreadheader;
++fn_jpegfinishoutput jpegfinishoutput;
++fn_jpegreadscanlines jpegreadscanlines;
++fn_jpegresynctorestart jpegresynctorestart;
++
+ /*
+  * Defined in jpegdecoder.c.  Copy code from there if and
+  * when that disappears. */
+@@ -606,7 +664,7 @@
+         return;
+     }
+ 
+-    jpeg_abort(cinfo);  // Frees any markers, but not tables
++    jpegabort(cinfo);  // Frees any markers, but not tables
+ 
+ }
+ 
+@@ -631,7 +689,7 @@
+         return;
+     }
+ 
+-    jpeg_abort(cinfo);  // Does not reset tables
++    jpegabort(cinfo);  // Does not reset tables
+ 
+ }
+ 
+@@ -649,7 +707,7 @@
+             free(cinfo->dest);
+             cinfo->dest = NULL;
+         }
+-        jpeg_destroy(info);
++        jpegdestroy(info);
+         free(info);
+     }
+ }
+@@ -685,14 +743,14 @@
+             decomp = (j_decompress_ptr) cinfo;
+             if (decomp->quant_tbl_ptrs[i] == NULL) {
+                 decomp->quant_tbl_ptrs[i] =
+-                    jpeg_alloc_quant_table(cinfo);
++                    jpegallocquanttable(cinfo);
+             }
+             quant_ptr = decomp->quant_tbl_ptrs[i];
+         } else {
+             comp = (j_compress_ptr) cinfo;
+             if (comp->quant_tbl_ptrs[i] == NULL) {
+                 comp->quant_tbl_ptrs[i] =
+-                    jpeg_alloc_quant_table(cinfo);
++                    jpegallocquanttable(cinfo);
+             }
+             quant_ptr = comp->quant_tbl_ptrs[i];
+         }
+@@ -768,14 +826,14 @@
+             decomp = (j_decompress_ptr) cinfo;
+             if (decomp->dc_huff_tbl_ptrs[i] == NULL) {
+                 decomp->dc_huff_tbl_ptrs[i] =
+-                    jpeg_alloc_huff_table(cinfo);
++                    jpegallochufftable(cinfo);
+             }
+             huff_ptr = decomp->dc_huff_tbl_ptrs[i];
+         } else {
+             comp = (j_compress_ptr) cinfo;
+             if (comp->dc_huff_tbl_ptrs[i] == NULL) {
+                 comp->dc_huff_tbl_ptrs[i] =
+-                    jpeg_alloc_huff_table(cinfo);
++                    jpegallochufftable(cinfo);
+             }
+             huff_ptr = comp->dc_huff_tbl_ptrs[i];
+         }
+@@ -789,14 +847,14 @@
+             decomp = (j_decompress_ptr) cinfo;
+             if (decomp->ac_huff_tbl_ptrs[i] == NULL) {
+                 decomp->ac_huff_tbl_ptrs[i] =
+-                    jpeg_alloc_huff_table(cinfo);
++                    jpegallochufftable(cinfo);
+             }
+             huff_ptr = decomp->ac_huff_tbl_ptrs[i];
+         } else {
+             comp = (j_compress_ptr) cinfo;
+             if (comp->ac_huff_tbl_ptrs[i] == NULL) {
+                 comp->ac_huff_tbl_ptrs[i] =
+-                    jpeg_alloc_huff_table(cinfo);
++                    jpegallochufftable(cinfo);
+             }
+             huff_ptr = comp->ac_huff_tbl_ptrs[i];
+         }
+@@ -1337,6 +1395,8 @@
+      jclass ImageInputStreamClass,
+      jclass qTableClass,
+      jclass huffClass) {
++   
++    initIDs();
+ 
+     ImageInputStream_readID = (*env)->GetMethodID(env,
+                                                   ImageInputStreamClass,
+@@ -1422,7 +1482,7 @@
+     }
+ 
+     /* We set up the normal JPEG error routines, then override error_exit. */
+-    cinfo->err = jpeg_std_error(&(jerr->pub));
++    cinfo->err = jpegstderror(&(jerr->pub));
+     jerr->pub.error_exit = sun_jpeg_error_exit;
+     /* We need to setup our own print routines */
+     jerr->pub.output_message = sun_jpeg_output_message;
+@@ -1439,11 +1499,11 @@
+     }
+ 
+     /* Perform library initialization */
+-    jpeg_create_decompress(cinfo);
++    jpegcreatedecompress(cinfo, JPEG_LIB_VERSION, (size_t) sizeof(struct jpeg_decompress_struct));
+ 
+     // Set up to keep any APP2 markers, as these might contain ICC profile
+     // data
+-    jpeg_save_markers(cinfo, ICC_MARKER, 0xFFFF);
++    jpegsavemarkers(cinfo, ICC_MARKER, 0xFFFF);
+ 
+     /*
+      * Now set up our source.
+@@ -1461,7 +1521,7 @@
+     cinfo->src->init_source = imageio_init_source;
+     cinfo->src->fill_input_buffer = imageio_fill_input_buffer;
+     cinfo->src->skip_input_data = imageio_skip_input_data;
+-    cinfo->src->resync_to_restart = jpeg_resync_to_restart; // use default
++    cinfo->src->resync_to_restart = jpegresynctorestart; // use default
+     cinfo->src->term_source = imageio_term_source;
+ 
+     /* set up the association to persist for future calls */
+@@ -1579,7 +1639,7 @@
+         src->bytes_in_buffer = 0;
+     }
+ 
+-    ret = jpeg_read_header(cinfo, FALSE);
++    ret = jpegreadheader(cinfo, FALSE);
+ 
+     if (ret == JPEG_HEADER_TABLES_ONLY) {
+         retval = JNI_TRUE;
+@@ -1700,7 +1760,7 @@
+                                cinfo->num_components,
+                                read_icc_profile(env, cinfo));
+         if (reset) {
+-            jpeg_abort_decompress(cinfo);
++            jpegabortdecompress(cinfo);
+         }
+     }
+ 
+@@ -1896,7 +1956,7 @@
+                    TRUE);
+     }
+ 
+-    progressive = jpeg_has_multiple_scans(cinfo);
++    progressive = jpeghasmultiplescans(cinfo);
+     if (progressive) {
+         cinfo->buffered_image = TRUE;
+         cinfo->input_scan_number = minProgressivePass+1; // Java count from 0
+@@ -1908,7 +1968,7 @@
+ 
+     data->streamBuf.suspendable = FALSE;
+ 
+-    jpeg_start_decompress(cinfo);
++    jpegstartdecompress(cinfo);
+ 
+     // loop over progressive passes
+     done = FALSE;
+@@ -1916,7 +1976,7 @@
+         if (progressive) {
+             // initialize the next pass.  Note that this skips up to
+             // the first interesting pass.
+-            jpeg_start_output(cinfo, cinfo->input_scan_number);
++            jpegstartoutput(cinfo, cinfo->input_scan_number);
+             if (wantUpdates) {
+                 (*env)->CallVoidMethod(env, this,
+                                        JPEGImageReader_passStartedID,
+@@ -1932,7 +1992,7 @@
+         // Skip until the first interesting line
+         while ((data->abortFlag == JNI_FALSE)
+                && ((jint)cinfo->output_scanline < sourceYStart)) {
+-            jpeg_read_scanlines(cinfo, &scanLinePtr, 1);
++            jpegreadscanlines(cinfo, &scanLinePtr, 1);
+         }
+ 
+         scanlineLimit = sourceYStart+sourceHeight;
+@@ -1945,7 +2005,7 @@
+         while ((data->abortFlag == JNI_FALSE)
+                && ((jint)cinfo->output_scanline < scanlineLimit)) {
+ 
+-            jpeg_read_scanlines(cinfo, &scanLinePtr, 1);
++            jpegreadscanlines(cinfo, &scanLinePtr, 1);
+ 
+             // Now mangle it into our buffer
+             out = data->pixelBuf.buf.bp;
+@@ -1993,13 +2053,13 @@
+                 skipLines = linesLeft;
+             }
+             for(i = 0; i < skipLines; i++) {
+-                jpeg_read_scanlines(cinfo, &scanLinePtr, 1);
++                jpegreadscanlines(cinfo, &scanLinePtr, 1);
+             }
+         }
+         if (progressive) {
+-            jpeg_finish_output(cinfo); // Increments pass counter
++            jpegfinishoutput(cinfo); // Increments pass counter
+             // Call Java to notify pass complete
+-            if (jpeg_input_complete(cinfo)
++            if (jpeginputcomplete(cinfo)
+                 || (cinfo->input_scan_number > maxProgressivePass)) {
+                 done = TRUE;
+             }
+@@ -2019,9 +2079,9 @@
+     if (cinfo->output_scanline == cinfo->output_height) {
+         //    if ((cinfo->output_scanline == cinfo->output_height) &&
+         //(jpeg_input_complete(cinfo))) {  // We read the whole file
+-        jpeg_finish_decompress(cinfo);
++        jpegfinishdecompress(cinfo);
+     } else {
+-        jpeg_abort_decompress(cinfo);
++        jpegabortdecompress(cinfo);
+     }
+ 
+     free(scanLinePtr);
+@@ -2067,7 +2127,7 @@
+ 
+     cinfo = (j_decompress_ptr) data->jpegObj;
+ 
+-    jpeg_abort_decompress(cinfo);
++    jpegabortdecompress(cinfo);
+ }
+ 
+ 
+@@ -2273,6 +2333,142 @@
+ 
+ /********************** end of destination manager ************/
+ 
++METHODDEF(void)
++initIDs()
++{
++    void *handle = dlopen("libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
++    
++    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
++    if (jpegstderror == NULL) {
++       dlclose(handle);
++    }
++
++    jpegreadheader = (fn_jpegreadheader)dlsym(handle, "jpeg_read_header");
++    if (jpegreadheader == NULL) {
++       dlclose(handle);
++    }
++
++    jpeghasmultiplescans = (fn_jpeghasmultiplescans)dlsym(handle, "jpeg_has_multiple_scans");
++    if (jpeghasmultiplescans == NULL) {
++       dlclose(handle);
++    }
++
++    jpegstartdecompress = (fn_jpegstartdecompress)dlsym(handle, "jpeg_start_decompress");
++    if (jpegstartdecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegstartoutput = (fn_jpegstartoutput)dlsym(handle, "jpeg_start_output");
++    if (jpegstartoutput == NULL) {
++       dlclose(handle);
++    }
++
++    jpegfinishdecompress = (fn_jpegfinishdecompress)dlsym(handle, "jpeg_finish_decompress");
++    if (jpegfinishdecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegreadscanlines = (fn_jpegreadscanlines)dlsym(handle, "jpeg_read_scanlines");
++    if (jpegreadscanlines == NULL) {
++       dlclose(handle);
++    }
++
++    jpegfinishoutput = (fn_jpegfinishoutput)dlsym(handle, "jpeg_finish_output");
++    if (jpegfinishoutput == NULL) {
++       dlclose(handle);
++    }
++
++    jpegresynctorestart = (fn_jpegresynctorestart)dlsym(handle, "jpeg_resync_to_restart");
++    if (jpegresynctorestart == NULL) {
++       dlclose(handle);
++    }
++
++    jpegabort = (fn_jpegabort)dlsym(handle, "jpeg_abort");
++    if (jpegabort == NULL) {
++       dlclose(handle);
++    }
++ 
++    jpegabortdecompress = (fn_jpegabortdecompress)dlsym(handle, "jpeg_abort_decompress");
++    if (jpegabortdecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegallochufftable = (fn_jpegallochufftable)dlsym(handle, "jpeg_alloc_huff_table");
++    if (jpegallochufftable == NULL) {
++       dlclose(handle);
++    }
++
++    jpegallocquanttable = (fn_jpegallocquanttable)dlsym(handle, "jpeg_alloc_quant_table");
++    if (jpegallocquanttable == NULL) {
++       dlclose(handle);
++    }
++
++    jpegcreatecompress = (fn_jpegcreatecompress)dlsym(handle, "jpeg_CreateCompress");
++    if (jpegcreatecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegcreatedecompress = (fn_jpegcreatedecompress)dlsym(handle, "jpeg_CreateDecompress");
++    if (jpegcreatedecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegdestroy = (fn_jpegdestroy)dlsym(handle, "jpeg_destroy");
++    if (jpegdestroy == NULL) {
++       dlclose(handle);
++    }
++
++    jpegfinishcompress = (fn_jpegfinishcompress)dlsym(handle, "jpeg_finish_compress");
++    if (jpegfinishcompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpeginputcomplete = (fn_jpeginputcomplete)dlsym(handle, "jpeg_input_complete");
++    if (jpeginputcomplete == NULL) {
++       dlclose(handle);
++    }
++
++    jpegsavemarkers = (fn_jpegsavemarkers)dlsym(handle, "jpeg_save_markers");
++    if (jpegsavemarkers == NULL) {
++       dlclose(handle);
++    }
++
++    jpegsetcolorspace = (fn_jpegsetcolorspace)dlsym(handle, "jpeg_set_colorspace");
++    if (jpegsetcolorspace == NULL) {
++       dlclose(handle);
++    }
++
++    jpegsetdefaults = (fn_jpegsetdefaults)dlsym(handle, "jpeg_set_defaults");
++    if (jpegsetdefaults == NULL) {
++       dlclose(handle);
++    }
++
++    jpegsimpleprogression = (fn_jpegsimpleprogression)dlsym(handle, "jpeg_simple_progression");
++    if (jpegsimpleprogression == NULL) {
++       dlclose(handle);
++    }
++
++    jpegstartcompress = (fn_jpegstartcompress)dlsym(handle, "jpeg_start_compress");
++    if (jpegstartcompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegsuppresstables = (fn_jpegsuppresstables)dlsym(handle, "jpeg_suppress_tables");
++    if (jpegsuppresstables == NULL) {
++       dlclose(handle);
++    }
++
++    jpegwritescanlines = (fn_jpegwritescanlines)dlsym(handle, "jpeg_write_scanlines");
++    if (jpegwritescanlines == NULL) {
++       dlclose(handle);
++    }
++
++    jpegwritetables = (fn_jpegwritetables)dlsym(handle, "jpeg_write_tables");
++    if (jpegwritetables == NULL) {
++       dlclose(handle);
++    }
++}
++
+ /********************** Writer JNI calls **********************/
+ 
+ 
+@@ -2284,6 +2480,8 @@
+      jclass qTableClass,
+      jclass huffClass) {
+ 
++    initIDs();
++
+     ImageOutputStream_writeID = (*env)->GetMethodID(env,
+                                                     IOSClass,
+                                                     "write",
+@@ -2357,7 +2555,7 @@
+     }
+ 
+     /* We set up the normal JPEG error routines, then override error_exit. */
+-    cinfo->err = jpeg_std_error(&(jerr->pub));
++    cinfo->err = jpegstderror(&(jerr->pub));
+     jerr->pub.error_exit = sun_jpeg_error_exit;
+     /* We need to setup our own print routines */
+     jerr->pub.output_message = sun_jpeg_output_message;
+@@ -2374,7 +2572,7 @@
+     }
+ 
+     /* Perform library initialization */
+-    jpeg_create_compress(cinfo);
++    jpegcreatecompress(cinfo, JPEG_LIB_VERSION, (size_t) sizeof(struct jpeg_compress_struct));
+ 
+     /* Now set up the destination  */
+     dest = malloc(sizeof(struct jpeg_destination_mgr));
+@@ -2483,7 +2681,7 @@
+         return;
+     }
+ 
+-    jpeg_suppress_tables(cinfo, TRUE);  // Suppress writing of any current
++    jpegsuppresstables(cinfo, TRUE);  // Suppress writing of any current
+ 
+     data->streamBuf.suspendable = FALSE;
+     if (qtables != NULL) {
+@@ -2498,7 +2696,7 @@
+                    DCHuffmanTables, ACHuffmanTables, TRUE);
+     }
+ 
+-    jpeg_write_tables(cinfo); // Flushes the buffer for you
++    jpegwritetables(cinfo); // Flushes the buffer for you
+     RELEASE_ARRAYS(env, data, NULL);
+ }
+ 
+@@ -2662,9 +2860,9 @@
+     cinfo->input_components = numBands;
+     cinfo->in_color_space = inCs;
+ 
+-    jpeg_set_defaults(cinfo);
++    jpegsetdefaults(cinfo);
+ 
+-    jpeg_set_colorspace(cinfo, outCs);
++    jpegsetcolorspace(cinfo, outCs);
+ 
+     cinfo->optimize_coding = optimize;
+ 
+@@ -2701,7 +2899,7 @@
+     (*env)->ReleaseIntArrayElements(env, QtableSelectors,
+                                     qsels, JNI_ABORT);
+ 
+-    jpeg_suppress_tables(cinfo, TRUE);  // Disable writing any current
++    jpegsuppresstables(cinfo, TRUE);  // Disable writing any current
+ 
+     qlen = setQTables(env, (j_common_ptr) cinfo, qtables, writeDQT);
+ 
+@@ -2726,7 +2924,7 @@
+ 
+     if (progressive) {
+         if (numScans == 0) { // then use default scans
+-            jpeg_simple_progression(cinfo);
++            jpegsimpleprogression(cinfo);
+         } else {
+             cinfo->num_scans = numScans;
+             // Copy the scanInfo to a local array
+@@ -2768,7 +2966,7 @@
+ #endif
+ 
+     // start the compressor; tables must already be set
+-    jpeg_start_compress(cinfo, FALSE); // Leaves sent_table alone
++    jpegstartcompress(cinfo, FALSE); // Leaves sent_table alone
+ 
+     if (haveMetadata) {
+         // Flush the buffer
+@@ -2829,7 +3027,7 @@
+             }
+         }
+         // write it out
+-        jpeg_write_scanlines(cinfo, (JSAMPARRAY)&scanLinePtr, 1);
++        jpegwritescanlines(cinfo, (JSAMPARRAY)&scanLinePtr, 1);
+         targetLine += stepY;
+     }
+ 
+@@ -2838,9 +3036,9 @@
+      * so use jpeg_abort instead of jpeg_finish_compress.
+      */
+     if (cinfo->next_scanline == cinfo->image_height) {
+-        jpeg_finish_compress(cinfo);  // Flushes buffer with term_dest
++        jpegfinishcompress(cinfo);  // Flushes buffer with term_dest
+     } else {
+-        jpeg_abort((j_common_ptr)cinfo);
++        jpegabort((j_common_ptr)cinfo);
+     }
+ 
+     if (scale != NULL) {
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcapimin.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapimin.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcapimin.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapimin.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,284 +0,0 @@
 -/*
 - * reserved comment block
@@ -614,9 +1659,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapimin
 -   * each call to jpeg_write_tables().
 -   */
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapistd.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapistd.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapistd.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapistd.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcapistd.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapistd.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcapistd.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapistd.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,165 +0,0 @@
 -/*
 - * reserved comment block
@@ -783,9 +1828,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcapistd
 -  cinfo->next_scanline += lines_per_iMCU_row;
 -  return lines_per_iMCU_row;
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccoefct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccoefct.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccoefct.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccoefct.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jccoefct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccoefct.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jccoefct.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccoefct.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,453 +0,0 @@
 -/*
 - * reserved comment block
@@ -1240,9 +2285,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccoefct
 -    coef->whole_image[0] = NULL; /* flag for no virtual arrays */
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccolor.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccolor.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccolor.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccolor.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jccolor.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccolor.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jccolor.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccolor.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,462 +0,0 @@
 -/*
 - * reserved comment block
@@ -1706,9 +2751,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jccolor.
 -    break;
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcdctmgr.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcdctmgr.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcdctmgr.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcdctmgr.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcdctmgr.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcdctmgr.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcdctmgr.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcdctmgr.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,391 +0,0 @@
 -/*
 - * reserved comment block
@@ -2101,9 +3146,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcdctmgr
 -#endif
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jchuff.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jchuff.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,913 +0,0 @@
 -/*
 - * reserved comment block
@@ -3018,9 +4063,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.c
 -#endif
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.h	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jchuff.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jchuff.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,51 +0,0 @@
 -/*
 - * reserved comment block
@@ -3073,9 +4118,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jchuff.h
 -/* Generate an optimal table definition given the specified counts */
 -EXTERN(void) jpeg_gen_optimal_table
 -        JPP((j_compress_ptr cinfo, JHUFF_TBL * htbl, long freq[]));
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcinit.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcinit.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcinit.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcinit.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcinit.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcinit.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcinit.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcinit.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,76 +0,0 @@
 -/*
 - * reserved comment block
@@ -3153,9 +4198,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcinit.c
 -   */
 -  (*cinfo->marker->write_file_header) (cinfo);
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmainct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmainct.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmainct.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmainct.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcmainct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmainct.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcmainct.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmainct.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,297 +0,0 @@
 -/*
 - * reserved comment block
@@ -3454,9 +4499,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmainct
 -    }
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmarker.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmarker.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmarker.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmarker.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcmarker.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmarker.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcmarker.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmarker.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,682 +0,0 @@
 -/*
 - * reserved comment block
@@ -4140,9 +5185,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmarker
 -  /* Initialize private state */
 -  marker->last_restart_interval = 0;
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmaster.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmaster.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmaster.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmaster.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcmaster.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmaster.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcmaster.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmaster.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,594 +0,0 @@
 -/*
 - * reserved comment block
@@ -4738,9 +5783,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcmaster
 -  else
 -    master->total_passes = cinfo->num_scans;
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcomapi.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcomapi.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcomapi.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcomapi.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcomapi.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcomapi.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcomapi.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcomapi.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,110 +0,0 @@
 -/*
 - * reserved comment block
@@ -4852,9 +5897,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcomapi.
 -  tbl->sent_table = FALSE;      /* make sure this is false in any new table */
 -  return tbl;
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jconfig.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jconfig.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jconfig.h	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jconfig.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jconfig.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jconfig.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jconfig.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jconfig.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,43 +0,0 @@
 -/* jconfig.cfg --- source file edited by configure script */
 -/* see jconfig.doc for explanations */
@@ -4899,9 +5944,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jconfig.
 -#undef PROGRESS_REPORT
 -
 -#endif /* JPEG_CJPEG_DJPEG */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcparam.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcparam.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcparam.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcparam.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcparam.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcparam.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcparam.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcparam.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,614 +0,0 @@
 -/*
 - * reserved comment block
@@ -5517,9 +6562,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcparam.
 -}
 -
 -#endif /* C_PROGRESSIVE_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcphuff.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcphuff.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcphuff.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcphuff.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcphuff.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcphuff.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcphuff.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcphuff.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,837 +0,0 @@
 -/*
 - * reserved comment block
@@ -6358,9 +7403,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcphuff.
 -}
 -
 -#endif /* C_PROGRESSIVE_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcprepct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcprepct.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcprepct.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcprepct.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcprepct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcprepct.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcprepct.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcprepct.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,358 +0,0 @@
 -/*
 - * reserved comment block
@@ -6720,9 +7765,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcprepct
 -    }
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcsample.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcsample.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcsample.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcsample.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcsample.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcsample.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jcsample.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcsample.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,523 +0,0 @@
 -/*
 - * reserved comment block
@@ -7247,9 +8292,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jcsample
 -    TRACEMS(cinfo, 0, JTRC_SMOOTH_NOTIMPL);
 -#endif
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jctrans.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jctrans.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jctrans.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jctrans.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jctrans.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jctrans.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jctrans.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jctrans.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,392 +0,0 @@
 -/*
 - * reserved comment block
@@ -7643,9 +8688,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jctrans.
 -    coef->dummy_buffer[i] = buffer + i;
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapimin.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapimin.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapimin.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapimin.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdapimin.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapimin.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdapimin.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapimin.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,399 +0,0 @@
 -/*
 - * reserved comment block
@@ -8046,9 +9091,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapimin
 -  jpeg_abort((j_common_ptr) cinfo);
 -  return TRUE;
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapistd.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapistd.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapistd.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapistd.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdapistd.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapistd.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdapistd.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapistd.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,279 +0,0 @@
 -/*
 - * reserved comment block
@@ -8329,9 +9374,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdapistd
 -}
 -
 -#endif /* D_MULTISCAN_FILES_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcoefct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcoefct.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcoefct.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcoefct.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdcoefct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcoefct.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdcoefct.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcoefct.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,740 +0,0 @@
 -/*
 - * reserved comment block
@@ -9073,9 +10118,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcoefct
 -    coef->pub.coef_arrays = NULL; /* flag for no virtual arrays */
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcolor.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcolor.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcolor.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcolor.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdcolor.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcolor.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdcolor.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcolor.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,398 +0,0 @@
 -/*
 - * reserved comment block
@@ -9475,9 +10520,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdcolor.
 -  else
 -    cinfo->output_components = cinfo->out_color_components;
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdct.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdct.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdct.h	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdct.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdct.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdct.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdct.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdct.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,180 +0,0 @@
 -/*
 - * reserved comment block
@@ -9659,9 +10704,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdct.h o
 -#ifndef MULTIPLY16V16           /* default definition */
 -#define MULTIPLY16V16(var1,var2)  ((var1) * (var2))
 -#endif
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jddctmgr.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jddctmgr.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jddctmgr.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jddctmgr.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jddctmgr.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jddctmgr.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jddctmgr.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jddctmgr.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,273 +0,0 @@
 -/*
 - * reserved comment block
@@ -9936,9 +10981,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jddctmgr
 -    idct->cur_method[ci] = -1;
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,655 +0,0 @@
 -/*
 - * reserved comment block
@@ -10595,9 +11640,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.c
 -    entropy->dc_derived_tbls[i] = entropy->ac_derived_tbls[i] = NULL;
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.h	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,205 +0,0 @@
 -/*
 - * reserved comment block
@@ -10804,9 +11849,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdhuff.h
 -EXTERN(int) jpeg_huff_decode
 -        JPP((bitread_working_state * state, register bit_buf_type get_buffer,
 -             register int bits_left, d_derived_tbl * htbl, int min_bits));
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdinput.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdinput.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdinput.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdinput.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdinput.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdinput.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdinput.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdinput.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,385 +0,0 @@
 -/*
 - * reserved comment block
@@ -11193,9 +12238,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdinput.
 -  inputctl->pub.eoi_reached = FALSE;
 -  inputctl->inheaders = TRUE;
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmainct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmainct.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmainct.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmainct.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdmainct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmainct.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdmainct.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmainct.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,516 +0,0 @@
 -/*
 - * reserved comment block
@@ -11713,9 +12758,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmainct
 -                         (JDIMENSION) (rgroup * ngroups));
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmarker.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmarker.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmarker.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmarker.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdmarker.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmarker.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdmarker.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmarker.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,1384 +0,0 @@
 -/*
 - * reserved comment block
@@ -13101,9 +14146,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmarker
 -  else
 -    ERREXIT1(cinfo, JERR_UNKNOWN_MARKER, marker_code);
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmaster.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmaster.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmaster.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmaster.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdmaster.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmaster.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdmaster.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmaster.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,561 +0,0 @@
 -/*
 - * reserved comment block
@@ -13666,9 +14711,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmaster
 -
 -  master_selection(cinfo);
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmerge.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmerge.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmerge.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmerge.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdmerge.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmerge.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdmerge.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmerge.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,404 +0,0 @@
 -/*
 - * reserved comment block
@@ -14074,9 +15119,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdmerge.
 -}
 -
 -#endif /* UPSAMPLE_MERGING_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdphuff.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdphuff.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdphuff.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdphuff.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdphuff.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdphuff.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdphuff.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdphuff.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,672 +0,0 @@
 -/*
 - * reserved comment block
@@ -14750,9 +15795,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdphuff.
 -}
 -
 -#endif /* D_PROGRESSIVE_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdpostct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdpostct.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdpostct.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdpostct.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdpostct.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdpostct.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdpostct.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdpostct.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,294 +0,0 @@
 -/*
 - * reserved comment block
@@ -15048,9 +16093,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdpostct
 -    }
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdsample.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdsample.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdsample.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdsample.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdsample.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdsample.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdsample.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdsample.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,482 +0,0 @@
 -/*
 - * reserved comment block
@@ -15534,9 +16579,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdsample
 -    }
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdtrans.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdtrans.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdtrans.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdtrans.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdtrans.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdtrans.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jdtrans.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdtrans.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,147 +0,0 @@
 -/*
 - * reserved comment block
@@ -15685,9 +16730,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jdtrans.
 -    cinfo->progress->total_passes = 1;
 -  }
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jerror.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jerror.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,272 +0,0 @@
 -/*
 - * reserved comment block
@@ -15961,9 +17006,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.c
 -
 -  return err;
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.h	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jerror.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jerror.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,295 +0,0 @@
 -/*
 - * reserved comment block
@@ -16260,9 +17305,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jerror.h
 -   (*(cinfo)->err->emit_message) ((j_common_ptr) (cinfo), (lvl)))
 -
 -#endif /* JERROR_H */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctflt.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctflt.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctflt.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctflt.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jfdctflt.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctflt.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jfdctflt.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctflt.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,172 +0,0 @@
 -/*
 - * reserved comment block
@@ -16436,9 +17481,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctflt
 -}
 -
 -#endif /* DCT_FLOAT_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctfst.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctfst.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctfst.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctfst.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jfdctfst.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctfst.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jfdctfst.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctfst.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,228 +0,0 @@
 -/*
 - * reserved comment block
@@ -16668,9 +17713,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctfst
 -}
 -
 -#endif /* DCT_IFAST_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctint.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctint.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctint.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctint.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jfdctint.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctint.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jfdctint.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctint.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,287 +0,0 @@
 -/*
 - * reserved comment block
@@ -16959,9 +18004,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jfdctint
 -}
 -
 -#endif /* DCT_ISLOW_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctflt.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctflt.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctflt.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctflt.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jidctflt.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctflt.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jidctflt.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctflt.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,246 +0,0 @@
 -/*
 - * reserved comment block
@@ -17209,9 +18254,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctflt
 -}
 -
 -#endif /* DCT_FLOAT_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctfst.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctfst.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctfst.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctfst.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jidctfst.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctfst.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jidctfst.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctfst.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,372 +0,0 @@
 -/*
 - * reserved comment block
@@ -17585,9 +18630,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctfst
 -}
 -
 -#endif /* DCT_IFAST_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctint.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctint.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctint.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctint.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jidctint.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctint.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jidctint.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctint.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,393 +0,0 @@
 -/*
 - * reserved comment block
@@ -17982,9 +19027,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctint
 -}
 -
 -#endif /* DCT_ISLOW_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctred.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctred.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctred.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctred.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jidctred.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctred.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jidctred.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctred.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,402 +0,0 @@
 -/*
 - * reserved comment block
@@ -18388,9 +19433,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jidctred
 -}
 -
 -#endif /* IDCT_SCALING_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jinclude.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jinclude.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jinclude.h	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jinclude.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jinclude.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jinclude.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jinclude.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jinclude.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,95 +0,0 @@
 -/*
 - * reserved comment block
@@ -18487,9 +19532,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jinclude
 -  ((size_t) fread((void *) (buf), (size_t) 1, (size_t) (sizeofbuf), (file)))
 -#define JFWRITE(file,buf,sizeofbuf)  \
 -  ((size_t) fwrite((const void *) (buf), (size_t) 1, (size_t) (sizeofbuf), (file)))
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemmgr.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemmgr.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemmgr.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemmgr.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jmemmgr.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemmgr.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jmemmgr.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemmgr.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,1122 +0,0 @@
 -/*
 - * reserved comment block
@@ -19613,9 +20658,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemmgr.
 -#endif
 -
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemnobs.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemnobs.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemnobs.c	2007-10-30 04:38:51.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemnobs.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jmemnobs.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemnobs.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jmemnobs.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemnobs.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,113 +0,0 @@
 -/*
 - * reserved comment block
@@ -19730,9 +20775,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemnobs
 -{
 -  /* no work */
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemsys.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemsys.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemsys.h	2007-10-30 04:38:52.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemsys.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jmemsys.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemsys.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jmemsys.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemsys.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,202 +0,0 @@
 -/*
 - * reserved comment block
@@ -19936,9 +20981,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmemsys.
 -
 -EXTERN(long) jpeg_mem_init JPP((j_common_ptr cinfo));
 -EXTERN(void) jpeg_mem_term JPP((j_common_ptr cinfo));
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmorecfg.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmorecfg.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmorecfg.h	2007-10-30 04:38:52.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmorecfg.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jmorecfg.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmorecfg.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jmorecfg.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmorecfg.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,375 +0,0 @@
 -/*
 - * reserved comment block
@@ -20315,9 +21360,265 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jmorecfg
 -#endif
 -
 -#endif /* JPEG_INTERNAL_OPTIONS */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegint.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegint.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegint.h	2007-10-30 04:38:52.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegint.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-05-23 22:50:53.000000000 +0100
+@@ -45,7 +45,9 @@
+ #undef boolean
+ #undef FAR
+ #include <jpeglib.h>
+-#include "jerror.h"
++#include <jerror.h>
++#include <dlfcn.h>
++
+ 
+ /* The method IDs we cache. Note that the last two belongs to the
+  * java.io.InputStream class.
+@@ -56,6 +58,32 @@
+ static jmethodID InputStream_readID;
+ static jmethodID InputStream_availableID;
+ 
++typedef struct jpeg_error_mgr * (*fn_jpegstderror)(struct jpeg_error_mgr *);
++typedef void (*fn_jpegcreatedecompress)(j_decompress_ptr, int, size_t);
++typedef boolean (*fn_jpegresynctorestart)(j_decompress_ptr, int);
++typedef JDIMENSION (*fn_jpegreadscanlines)(j_decompress_ptr, JSAMPARRAY, JDIMENSION);
++typedef boolean (*fn_jpegfinishoutput)(j_decompress_ptr);
++typedef int (*fn_jpegreadheader)(j_decompress_ptr, boolean);
++typedef boolean (*fn_jpegstartdecompress)(j_decompress_ptr);
++typedef boolean (*fn_jpeghasmultiplescans)(j_decompress_ptr);
++typedef void (*fn_jpegdestroydecompress)(j_decompress_ptr);
++typedef int (*fn_jpegconsumeinput)(j_decompress_ptr);
++typedef boolean (*fn_jpegfinishdecompress)(j_decompress_ptr);
++typedef boolean (*fn_jpegstartoutput)(j_decompress_ptr, int);
++
++fn_jpegstderror jpegstderror;
++fn_jpegstartoutput jpegstartoutput;
++fn_jpegfinishdecompress jpegfinishdecompress;
++fn_jpegconsumeinput jpegconsumeinput;
++fn_jpegdestroydecompress jpegdestroydecompress; 
++fn_jpeghasmultiplescans jpeghasmultiplescans;
++fn_jpegstartdecompress jpegstartdecompress;
++fn_jpegreadheader jpegreadheader;
++fn_jpegfinishoutput jpegfinishoutput;
++fn_jpegreadscanlines jpegreadscanlines;
++fn_jpegresynctorestart jpegresynctorestart;
++fn_jpegcreatedecompress jpegcreatedecompress;
++
+ /* Initialize the Java VM instance variable when the library is
+    first loaded */
+ JavaVM *jvm;
+@@ -462,6 +490,68 @@
+ Java_sun_awt_image_JPEGImageDecoder_initIDs(JNIEnv *env, jclass cls,
+                                             jclass InputStreamClass)
+ {
++    void *handle = dlopen("libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
++ 
++    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
++    if (jpegstderror == NULL) {
++       dlclose(handle);
++    }
++
++    jpegdestroydecompress = (fn_jpegdestroydecompress)dlsym(handle, "jpeg_destroy_decompress");
++    if (jpegdestroydecompress == NULL) {
++       dlclose(handle);
++    }  
++
++    jpegcreatedecompress = (fn_jpegcreatedecompress)dlsym(handle, "jpeg_CreateDecompress");
++    if (jpegcreatedecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegreadheader = (fn_jpegreadheader)dlsym(handle, "jpeg_read_header");
++    if (jpegreadheader == NULL) {
++       dlclose(handle);
++    }
++
++    jpeghasmultiplescans = (fn_jpeghasmultiplescans)dlsym(handle, "jpeg_has_multiple_scans");
++    if (jpeghasmultiplescans == NULL) {
++       dlclose(handle);
++    }
++
++    jpegstartdecompress = (fn_jpegstartdecompress)dlsym(handle, "jpeg_start_decompress");
++    if (jpegstartdecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegconsumeinput = (fn_jpegconsumeinput)dlsym(handle, "jpeg_consume_input");
++    if (jpegconsumeinput == NULL) {
++       dlclose(handle);
++    }
++
++    jpegstartoutput = (fn_jpegstartoutput)dlsym(handle, "jpeg_start_output");
++    if (jpegstartoutput == NULL) {
++       dlclose(handle);
++    }
++
++    jpegfinishdecompress = (fn_jpegfinishdecompress)dlsym(handle, "jpeg_finish_decompress");
++    if (jpegfinishdecompress == NULL) {
++       dlclose(handle);
++    }
++
++    jpegreadscanlines = (fn_jpegreadscanlines)dlsym(handle, "jpeg_read_scanlines");
++    if (jpegreadscanlines == NULL) {
++       dlclose(handle);
++    }
++
++    jpegfinishoutput = (fn_jpegfinishoutput)dlsym(handle, "jpeg_finish_output");
++    if (jpegfinishoutput == NULL) {
++       dlclose(handle);
++    }
++
++    jpegresynctorestart = (fn_jpegresynctorestart)dlsym(handle, "jpeg_resync_to_restart");
++    if (jpegresynctorestart == NULL) {
++       dlclose(handle);
++    }
++
+     sendHeaderInfoID = (*env)->GetMethodID(env, cls, "sendHeaderInfo",
+                                            "(IIZZZ)Z");
+     sendPixelsByteID = (*env)->GetMethodID(env, cls, "sendPixels", "([BI)Z");
+@@ -519,7 +609,7 @@
+   /* Step 1: allocate and initialize JPEG decompression object */
+ 
+   /* We set up the normal JPEG error routines, then override error_exit. */
+-  cinfo.err = jpeg_std_error(&jerr.pub);
++  cinfo.err = jpegstderror(&jerr.pub);
+   jerr.pub.error_exit = sun_jpeg_error_exit;
+ 
+   /* We need to setup our own print routines */
+@@ -530,7 +620,7 @@
+     /* If we get here, the JPEG code has signaled an error.
+      * We need to clean up the JPEG object, close the input file, and return.
+      */
+-    jpeg_destroy_decompress(&cinfo);
++    jpegdestroydecompress(&cinfo);
+     RELEASE_ARRAYS(env, &jsrc);
+     if (!(*env)->ExceptionOccurred(env)) {
+         char buffer[JMSG_LENGTH_MAX];
+@@ -541,7 +631,7 @@
+     return;
+   }
+   /* Now we can initialize the JPEG decompression object. */
+-  jpeg_create_decompress(&cinfo);
++  jpegcreatedecompress(&cinfo, JPEG_LIB_VERSION, (size_t) sizeof(struct jpeg_decompress_struct));
+ 
+   /* Step 2: specify data source (eg, a file) */
+ 
+@@ -555,17 +645,17 @@
+   jsrc.pub.init_source = sun_jpeg_init_source;
+   jsrc.pub.fill_input_buffer = sun_jpeg_fill_input_buffer;
+   jsrc.pub.skip_input_data = sun_jpeg_skip_input_data;
+-  jsrc.pub.resync_to_restart = jpeg_resync_to_restart; /* use default method */
++  jsrc.pub.resync_to_restart = jpegresynctorestart; /* use default method */
+   jsrc.pub.term_source = sun_jpeg_term_source;
+   if (!GET_ARRAYS(env, &jsrc)) {
+-    jpeg_destroy_decompress(&cinfo);
++    jpegdestroydecompress(&cinfo);
+     return;
+   }
+   /* Step 3: read file parameters with jpeg_read_header() */
+ 
+-  (void) jpeg_read_header(&cinfo, TRUE);
++  (void) jpegreadheader(&cinfo, TRUE);
+   /* select buffered-image mode if it is a progressive JPEG only */
+-  buffered_mode = cinfo.buffered_image = jpeg_has_multiple_scans(&cinfo);
++  buffered_mode = cinfo.buffered_image = jpeghasmultiplescans(&cinfo);
+   grayscale = (cinfo.out_color_space == JCS_GRAYSCALE);
+ #ifdef YCCALPHA
+   hasalpha = (cinfo.out_color_space == JCS_RGBA);
+@@ -584,7 +674,7 @@
+                                   grayscale, hasalpha, buffered_mode);
+   if ((*env)->ExceptionOccurred(env) || !ret) {
+     /* No more interest in this image... */
+-    jpeg_destroy_decompress(&cinfo);
++    jpegdestroydecompress(&cinfo);
+     return;
+   }
+   /* Make a one-row-high sample array with enough room to expand to ints */
+@@ -595,7 +685,7 @@
+   }
+ 
+   if (jsrc.hOutputBuffer == 0 || !GET_ARRAYS(env, &jsrc)) {
+-    jpeg_destroy_decompress(&cinfo);
++    jpegdestroydecompress(&cinfo);
+     return;
+   }
+ 
+@@ -613,7 +703,7 @@
+ 
+   /* Step 5: Start decompressor */
+ 
+-  jpeg_start_decompress(&cinfo);
++  jpegstartdecompress(&cinfo);
+ 
+   /* We may need to do some setup of our own at this point before reading
+    * the data.  After jpeg_start_decompress() we have the correct scaled
+@@ -638,28 +728,28 @@
+           do {
+               sun_jpeg_fill_suspended_buffer(&cinfo);
+               jsrc.suspendable = TRUE;
+-              ret = jpeg_consume_input(&cinfo);
++	      ret = jpegconsumeinput(&cinfo);
+               jsrc.suspendable = FALSE;
+           } while (ret != JPEG_SUSPENDED && ret != JPEG_REACHED_EOI);
+           if (ret == JPEG_REACHED_EOI) {
+               final_pass = TRUE;
+               cinfo.dct_method = JDCT_ISLOW;
+           }
+-          jpeg_start_output(&cinfo, cinfo.input_scan_number);
++	  jpegstartoutput(&cinfo, cinfo.input_scan_number);
+       }
+       while (cinfo.output_scanline < cinfo.output_height) {
+           if (! final_pass) {
+               do {
+                   sun_jpeg_fill_suspended_buffer(&cinfo);
+                   jsrc.suspendable = TRUE;
+-                  ret = jpeg_consume_input(&cinfo);
++		  ret = jpegconsumeinput(&cinfo);
+                   jsrc.suspendable = FALSE;
+               } while (ret != JPEG_SUSPENDED && ret != JPEG_REACHED_EOI);
+               if (ret == JPEG_REACHED_EOI) {
+                   break;
+               }
+           }
+-          (void) jpeg_read_scanlines(&cinfo, (JSAMPARRAY) &(jsrc.outbuf), 1);
++	  (void) jpegreadscanlines(&cinfo, (JSAMPARRAY) &(jsrc.outbuf), 1);
+ 
+           if (grayscale) {
+               RELEASE_ARRAYS(env, &jsrc);
+@@ -695,18 +785,18 @@
+           if ((*env)->ExceptionOccurred(env) || !ret ||
+               !GET_ARRAYS(env, &jsrc)) {
+               /* No more interest in this image... */
+-              jpeg_destroy_decompress(&cinfo);
++	      jpegdestroydecompress(&cinfo);
+               return;
+           }
+       }
+       if (buffered_mode) {
+-          jpeg_finish_output(&cinfo);
++	  jpegfinishoutput(&cinfo);
+       }
+   } while (! final_pass);
+ 
+   /* Step 7: Finish decompression */
+ 
+-  (void) jpeg_finish_decompress(&cinfo);
++  (void) jpegfinishdecompress(&cinfo);
+   /* We can ignore the return value since suspension is not possible
+    * with the stdio data source.
+    * (nor with the Java data source)
+@@ -715,7 +805,7 @@
+   /* Step 8: Release JPEG decompression object */
+ 
+   /* This is an important step since it will release a good deal of memory. */
+-  jpeg_destroy_decompress(&cinfo);
++  jpegdestroydecompress(&cinfo);
+ 
+   /* After finish_decompress, we can close the input file.
+    * Here we postpone it until after no more JPEG errors are possible,
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpegint.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegint.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpegint.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegint.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,396 +0,0 @@
 -/*
 - * reserved comment block
@@ -20715,9 +22016,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegint.
 -struct jvirt_barray_control { long dummy; };
 -#endif
 -#endif /* INCOMPLETE_TYPES_BROKEN */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpeglib.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpeglib.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpeglib.h	2007-10-30 04:38:52.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpeglib.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpeglib.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpeglib.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpeglib.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpeglib.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,1100 +0,0 @@
 -/*
 - * reserved comment block
@@ -21819,9 +23120,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpeglib.
 -#endif
 -
 -#endif /* JPEGLIB_H */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant1.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant1.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant1.c	2007-10-30 04:38:52.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant1.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jquant1.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant1.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jquant1.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant1.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,860 +0,0 @@
 -/*
 - * reserved comment block
@@ -22683,9 +23984,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant1.
 -}
 -
 -#endif /* QUANT_1PASS_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant2.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant2.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant2.c	2007-10-30 04:38:52.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant2.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jquant2.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant2.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jquant2.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant2.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,1314 +0,0 @@
 -/*
 - * reserved comment block
@@ -24001,9 +25302,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jquant2.
 -}
 -
 -#endif /* QUANT_2PASS_SUPPORTED */
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jutils.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jutils.c
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jutils.c	2007-10-30 04:38:52.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jutils.c	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jutils.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jutils.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jutils.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jutils.c	1970-01-01 01:00:00.000000000 +0100
 @@ -1,183 +0,0 @@
 -/*
 - * reserved comment block
@@ -24188,9 +25489,9 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jutils.c
 -  }
 -#endif
 -}
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jversion.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jversion.h
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jversion.h	2007-10-30 04:38:52.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jversion.h	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jversion.h openjdk/jdk/src/share/native/sun/awt/image/jpeg/jversion.h
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jversion.h	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jversion.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,18 +0,0 @@
 -/*
 - * reserved comment block
@@ -24210,397 +25511,21 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/jversion
 -#define JVERSION        "6b  27-Mar-1998"
 -
 -#define JCOPYRIGHT      "Copyright (C) 1998, Thomas G. Lane"
-diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README openjdk/jdk/src/share/native/sun/awt/image/jpeg/README
---- ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README	2007-10-30 04:38:50.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/README	1969-12-31 19:00:00.000000000 -0500
-@@ -1,385 +0,0 @@
--The Independent JPEG Group's JPEG software
--==========================================
--
--README for release 6b of 27-Mar-1998
--====================================
--
--This distribution contains the sixth public release of the Independent JPEG
--Group's free JPEG software.  You are welcome to redistribute this software and
--to use it for any purpose, subject to the conditions under LEGAL ISSUES, below.
--
--Serious users of this software (particularly those incorporating it into
--larger programs) should contact IJG at jpeg-info@uunet.uu.net to be added to
--our electronic mailing list.  Mailing list members are notified of updates
--and have a chance to participate in technical discussions, etc.
--
--This software is the work of Tom Lane, Philip Gladstone, Jim Boucher,
--Lee Crocker, Julian Minguillon, Luis Ortiz, George Phillips, Davide Rossi,
--Guido Vollbeding, Ge' Weijers, and other members of the Independent JPEG
--Group.
--
--IJG is not affiliated with the official ISO JPEG standards committee.
--
--
--DOCUMENTATION ROADMAP
--=====================
--
--This file contains the following sections:
--
--OVERVIEW            General description of JPEG and the IJG software.
--LEGAL ISSUES        Copyright, lack of warranty, terms of distribution.
--REFERENCES          Where to learn more about JPEG.
--ARCHIVE LOCATIONS   Where to find newer versions of this software.
--RELATED SOFTWARE    Other stuff you should get.
--FILE FORMAT WARS    Software *not* to get.
--TO DO               Plans for future IJG releases.
--
--Other documentation files in the distribution are:
--
--User documentation:
--  install.doc       How to configure and install the IJG software.
--  usage.doc         Usage instructions for cjpeg, djpeg, jpegtran,
--                    rdjpgcom, and wrjpgcom.
--  *.1               Unix-style man pages for programs (same info as usage.doc).
--  wizard.doc        Advanced usage instructions for JPEG wizards only.
--  change.log        Version-to-version change highlights.
--Programmer and internal documentation:
--  libjpeg.doc       How to use the JPEG library in your own programs.
--  example.c         Sample code for calling the JPEG library.
--  structure.doc     Overview of the JPEG library's internal structure.
--  filelist.doc      Road map of IJG files.
--  coderules.doc     Coding style rules --- please read if you contribute code.
--
--Please read at least the files install.doc and usage.doc.  Useful information
--can also be found in the JPEG FAQ (Frequently Asked Questions) article.  See
--ARCHIVE LOCATIONS below to find out where to obtain the FAQ article.
--
--If you want to understand how the JPEG code works, we suggest reading one or
--more of the REFERENCES, then looking at the documentation files (in roughly
--the order listed) before diving into the code.
--
--
--OVERVIEW
--========
--
--This package contains C software to implement JPEG image compression and
--decompression.  JPEG (pronounced "jay-peg") is a standardized compression
--method for full-color and gray-scale images.  JPEG is intended for compressing
--"real-world" scenes; line drawings, cartoons and other non-realistic images
--are not its strong suit.  JPEG is lossy, meaning that the output image is not
--exactly identical to the input image.  Hence you must not use JPEG if you
--have to have identical output bits.  However, on typical photographic images,
--very good compression levels can be obtained with no visible change, and
--remarkably high compression levels are possible if you can tolerate a
--low-quality image.  For more details, see the references, or just experiment
--with various compression settings.
--
--This software implements JPEG baseline, extended-sequential, and progressive
--compression processes.  Provision is made for supporting all variants of these
--processes, although some uncommon parameter settings aren't implemented yet.
--For legal reasons, we are not distributing code for the arithmetic-coding
--variants of JPEG; see LEGAL ISSUES.  We have made no provision for supporting
--the hierarchical or lossless processes defined in the standard.
--
--We provide a set of library routines for reading and writing JPEG image files,
--plus two sample applications "cjpeg" and "djpeg", which use the library to
--perform conversion between JPEG and some other popular image file formats.
--The library is intended to be reused in other applications.
--
--In order to support file conversion and viewing software, we have included
--considerable functionality beyond the bare JPEG coding/decoding capability;
--for example, the color quantization modules are not strictly part of JPEG
--decoding, but they are essential for output to colormapped file formats or
--colormapped displays.  These extra functions can be compiled out of the
--library if not required for a particular application.  We have also included
--"jpegtran", a utility for lossless transcoding between different JPEG
--processes, and "rdjpgcom" and "wrjpgcom", two simple applications for
--inserting and extracting textual comments in JFIF files.
--
--The emphasis in designing this software has been on achieving portability and
--flexibility, while also making it fast enough to be useful.  In particular,
--the software is not intended to be read as a tutorial on JPEG.  (See the
--REFERENCES section for introductory material.)  Rather, it is intended to
--be reliable, portable, industrial-strength code.  We do not claim to have
--achieved that goal in every aspect of the software, but we strive for it.
--
--We welcome the use of this software as a component of commercial products.
--No royalty is required, but we do ask for an acknowledgement in product
--documentation, as described under LEGAL ISSUES.
--
--
--LEGAL ISSUES
--============
--
--In plain English:
--
--1. We don't promise that this software works.  (But if you find any bugs,
--   please let us know!)
--2. You can use this software for whatever you want.  You don't have to pay us.
--3. You may not pretend that you wrote this software.  If you use it in a
--   program, you must acknowledge somewhere in your documentation that
--   you've used the IJG code.
--
--In legalese:
--
--The authors make NO WARRANTY or representation, either express or implied,
--with respect to this software, its quality, accuracy, merchantability, or
--fitness for a particular purpose.  This software is provided "AS IS", and you,
--its user, assume the entire risk as to its quality and accuracy.
--
--This software is copyright (C) 1991-1998, Thomas G. Lane.
--All Rights Reserved except as specified below.
--
--Permission is hereby granted to use, copy, modify, and distribute this
--software (or portions thereof) for any purpose, without fee, subject to these
--conditions:
--(1) If any part of the source code for this software is distributed, then this
--README file must be included, with this copyright and no-warranty notice
--unaltered; and any additions, deletions, or changes to the original files
--must be clearly indicated in accompanying documentation.
--(2) If only executable code is distributed, then the accompanying
--documentation must state that "this software is based in part on the work of
--the Independent JPEG Group".
--(3) Permission for use of this software is granted only if the user accepts
--full responsibility for any undesirable consequences; the authors accept
--NO LIABILITY for damages of any kind.
--
--These conditions apply to any software derived from or based on the IJG code,
--not just to the unmodified library.  If you use our work, you ought to
--acknowledge us.
--
--Permission is NOT granted for the use of any IJG author's name or company name
--in advertising or publicity relating to this software or products derived from
--it.  This software may be referred to only as "the Independent JPEG Group's
--software".
--
--We specifically permit and encourage the use of this software as the basis of
--commercial products, provided that all warranty or liability claims are
--assumed by the product vendor.
--
--
--ansi2knr.c is included in this distribution by permission of L. Peter Deutsch,
--sole proprietor of its copyright holder, Aladdin Enterprises of Menlo Park, CA.
--ansi2knr.c is NOT covered by the above copyright and conditions, but instead
--by the usual distribution terms of the Free Software Foundation; principally,
--that you must include source code if you redistribute it.  (See the file
--ansi2knr.c for full details.)  However, since ansi2knr.c is not needed as part
--of any program generated from the IJG code, this does not limit you more than
--the foregoing paragraphs do.
--
--The Unix configuration script "configure" was produced with GNU Autoconf.
--It is copyright by the Free Software Foundation but is freely distributable.
--The same holds for its supporting scripts (config.guess, config.sub,
--ltconfig, ltmain.sh).  Another support script, install-sh, is copyright
--by M.I.T. but is also freely distributable.
--
--It appears that the arithmetic coding option of the JPEG spec is covered by
--patents owned by IBM, AT&T, and Mitsubishi.  Hence arithmetic coding cannot
--legally be used without obtaining one or more licenses.  For this reason,
--support for arithmetic coding has been removed from the free JPEG software.
--(Since arithmetic coding provides only a marginal gain over the unpatented
--Huffman mode, it is unlikely that very many implementations will support it.)
--So far as we are aware, there are no patent restrictions on the remaining
--code.
--
--The IJG distribution formerly included code to read and write GIF files.
--To avoid entanglement with the Unisys LZW patent, GIF reading support has
--been removed altogether, and the GIF writer has been simplified to produce
--"uncompressed GIFs".  This technique does not use the LZW algorithm; the
--resulting GIF files are larger than usual, but are readable by all standard
--GIF decoders.
--
--We are required to state that
--    "The Graphics Interchange Format(c) is the Copyright property of
--    CompuServe Incorporated.  GIF(sm) is a Service Mark property of
--    CompuServe Incorporated."
--
--
--REFERENCES
--==========
--
--We highly recommend reading one or more of these references before trying to
--understand the innards of the JPEG software.
--
--The best short technical introduction to the JPEG compression algorithm is
--	Wallace, Gregory K.  "The JPEG Still Picture Compression Standard",
--	Communications of the ACM, April 1991 (vol. 34 no. 4), pp. 30-44.
--(Adjacent articles in that issue discuss MPEG motion picture compression,
--applications of JPEG, and related topics.)  If you don't have the CACM issue
--handy, a PostScript file containing a revised version of Wallace's article is
--available at ftp://ftp.uu.net/graphics/jpeg/wallace.ps.gz.  The file (actually
--a preprint for an article that appeared in IEEE Trans. Consumer Electronics)
--omits the sample images that appeared in CACM, but it includes corrections
--and some added material.  Note: the Wallace article is copyright ACM and IEEE,
--and it may not be used for commercial purposes.
--
--A somewhat less technical, more leisurely introduction to JPEG can be found in
--"The Data Compression Book" by Mark Nelson and Jean-loup Gailly, published by
--M&T Books (New York), 2nd ed. 1996, ISBN 1-55851-434-1.  This book provides
--good explanations and example C code for a multitude of compression methods
--including JPEG.  It is an excellent source if you are comfortable reading C
--code but don't know much about data compression in general.  The book's JPEG
--sample code is far from industrial-strength, but when you are ready to look
--at a full implementation, you've got one here...
--
--The best full description of JPEG is the textbook "JPEG Still Image Data
--Compression Standard" by William B. Pennebaker and Joan L. Mitchell, published
--by Van Nostrand Reinhold, 1993, ISBN 0-442-01272-1.  Price US$59.95, 638 pp.
--The book includes the complete text of the ISO JPEG standards (DIS 10918-1
--and draft DIS 10918-2).  This is by far the most complete exposition of JPEG
--in existence, and we highly recommend it.
--
--The JPEG standard itself is not available electronically; you must order a
--paper copy through ISO or ITU.  (Unless you feel a need to own a certified
--official copy, we recommend buying the Pennebaker and Mitchell book instead;
--it's much cheaper and includes a great deal of useful explanatory material.)
--In the USA, copies of the standard may be ordered from ANSI Sales at (212)
--642-4900, or from Global Engineering Documents at (800) 854-7179.  (ANSI
--doesn't take credit card orders, but Global does.)  It's not cheap: as of
--1992, ANSI was charging $95 for Part 1 and $47 for Part 2, plus 7%
--shipping/handling.  The standard is divided into two parts, Part 1 being the
--actual specification, while Part 2 covers compliance testing methods.  Part 1
--is titled "Digital Compression and Coding of Continuous-tone Still Images,
--Part 1: Requirements and guidelines" and has document numbers ISO/IEC IS
--10918-1, ITU-T T.81.  Part 2 is titled "Digital Compression and Coding of
--Continuous-tone Still Images, Part 2: Compliance testing" and has document
--numbers ISO/IEC IS 10918-2, ITU-T T.83.
--
--Some extensions to the original JPEG standard are defined in JPEG Part 3,
--a newer ISO standard numbered ISO/IEC IS 10918-3 and ITU-T T.84.  IJG
--currently does not support any Part 3 extensions.
--
--The JPEG standard does not specify all details of an interchangeable file
--format.  For the omitted details we follow the "JFIF" conventions, revision
--1.02.  A copy of the JFIF spec is available from:
--	Literature Department
--	C-Cube Microsystems, Inc.
--	1778 McCarthy Blvd.
--	Milpitas, CA 95035
--	phone (408) 944-6300,  fax (408) 944-6314
--A PostScript version of this document is available by FTP at
--ftp://ftp.uu.net/graphics/jpeg/jfif.ps.gz.  There is also a plain text
--version at ftp://ftp.uu.net/graphics/jpeg/jfif.txt.gz, but it is missing
--the figures.
--
--The TIFF 6.0 file format specification can be obtained by FTP from
--ftp://ftp.sgi.com/graphics/tiff/TIFF6.ps.gz.  The JPEG incorporation scheme
--found in the TIFF 6.0 spec of 3-June-92 has a number of serious problems.
--IJG does not recommend use of the TIFF 6.0 design (TIFF Compression tag 6).
--Instead, we recommend the JPEG design proposed by TIFF Technical Note #2
--(Compression tag 7).  Copies of this Note can be obtained from ftp.sgi.com or
--from ftp://ftp.uu.net/graphics/jpeg/.  It is expected that the next revision
--of the TIFF spec will replace the 6.0 JPEG design with the Note's design.
--Although IJG's own code does not support TIFF/JPEG, the free libtiff library
--uses our library to implement TIFF/JPEG per the Note.  libtiff is available
--from ftp://ftp.sgi.com/graphics/tiff/.
--
--
--ARCHIVE LOCATIONS
--=================
--
--The "official" archive site for this software is ftp.uu.net (Internet
--address 192.48.96.9).  The most recent released version can always be found
--there in directory graphics/jpeg.  This particular version will be archived
--as ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz.  If you don't have
--direct Internet access, UUNET's archives are also available via UUCP; contact
--help@uunet.uu.net for information on retrieving files that way.
--
--Numerous Internet sites maintain copies of the UUNET files.  However, only
--ftp.uu.net is guaranteed to have the latest official version.
--
--You can also obtain this software in DOS-compatible "zip" archive format from
--the SimTel archives (ftp://ftp.simtel.net/pub/simtelnet/msdos/graphics/), or
--on CompuServe in the Graphics Support forum (GO CIS:GRAPHSUP), library 12
--"JPEG Tools".  Again, these versions may sometimes lag behind the ftp.uu.net
--release.
--
--The JPEG FAQ (Frequently Asked Questions) article is a useful source of
--general information about JPEG.  It is updated constantly and therefore is
--not included in this distribution.  The FAQ is posted every two weeks to
--Usenet newsgroups comp.graphics.misc, news.answers, and other groups.
--It is available on the World Wide Web at http://www.faqs.org/faqs/jpeg-faq/
--and other news.answers archive sites, including the official news.answers
--archive at rtfm.mit.edu: ftp://rtfm.mit.edu/pub/usenet/news.answers/jpeg-faq/.
--If you don't have Web or FTP access, send e-mail to mail-server@rtfm.mit.edu
--with body
--	send usenet/news.answers/jpeg-faq/part1
--	send usenet/news.answers/jpeg-faq/part2
--
--
--RELATED SOFTWARE
--================
--
--Numerous viewing and image manipulation programs now support JPEG.  (Quite a
--few of them use this library to do so.)  The JPEG FAQ described above lists
--some of the more popular free and shareware viewers, and tells where to
--obtain them on Internet.
--
--If you are on a Unix machine, we highly recommend Jef Poskanzer's free
--PBMPLUS software, which provides many useful operations on PPM-format image
--files.  In particular, it can convert PPM images to and from a wide range of
--other formats, thus making cjpeg/djpeg considerably more useful.  The latest
--version is distributed by the NetPBM group, and is available from numerous
--sites, notably ftp://wuarchive.wustl.edu/graphics/graphics/packages/NetPBM/.
--Unfortunately PBMPLUS/NETPBM is not nearly as portable as the IJG software is;
--you are likely to have difficulty making it work on any non-Unix machine.
--
--A different free JPEG implementation, written by the PVRG group at Stanford,
--is available from ftp://havefun.stanford.edu/pub/jpeg/.  This program
--is designed for research and experimentation rather than production use;
--it is slower, harder to use, and less portable than the IJG code, but it
--is easier to read and modify.  Also, the PVRG code supports lossless JPEG,
--which we do not.  (On the other hand, it doesn't do progressive JPEG.)
--
--
--FILE FORMAT WARS
--================
--
--Some JPEG programs produce files that are not compatible with our library.
--The root of the problem is that the ISO JPEG committee failed to specify a
--concrete file format.  Some vendors "filled in the blanks" on their own,
--creating proprietary formats that no one else could read.  (For example, none
--of the early commercial JPEG implementations for the Macintosh were able to
--exchange compressed files.)
--
--The file format we have adopted is called JFIF (see REFERENCES).  This format
--has been agreed to by a number of major commercial JPEG vendors, and it has
--become the de facto standard.  JFIF is a minimal or "low end" representation.
--We recommend the use of TIFF/JPEG (TIFF revision 6.0 as modified by TIFF
--Technical Note #2) for "high end" applications that need to record a lot of
--additional data about an image.  TIFF/JPEG is fairly new and not yet widely
--supported, unfortunately.
--
--The upcoming JPEG Part 3 standard defines a file format called SPIFF.
--SPIFF is interoperable with JFIF, in the sense that most JFIF decoders should
--be able to read the most common variant of SPIFF.  SPIFF has some technical
--advantages over JFIF, but its major claim to fame is simply that it is an
--official standard rather than an informal one.  At this point it is unclear
--whether SPIFF will supersede JFIF or whether JFIF will remain the de-facto
--standard.  IJG intends to support SPIFF once the standard is frozen, but we
--have not decided whether it should become our default output format or not.
--(In any case, our decoder will remain capable of reading JFIF indefinitely.)
--
--Various proprietary file formats incorporating JPEG compression also exist.
--We have little or no sympathy for the existence of these formats.  Indeed,
--one of the original reasons for developing this free software was to help
--force convergence on common, open format standards for JPEG files.  Don't
--use a proprietary file format!
--
--
--TO DO
--=====
--
--The major thrust for v7 will probably be improvement of visual quality.
--The current method for scaling the quantization tables is known not to be
--very good at low Q values.  We also intend to investigate block boundary
--smoothing, "poor man's variable quantization", and other means of improving
--quality-vs-file-size performance without sacrificing compatibility.
--
--In future versions, we are considering supporting some of the upcoming JPEG
--Part 3 extensions --- principally, variable quantization and the SPIFF file
--format.
--
--As always, speeding things up is of great interest.
--
--Please send bug reports, offers of help, etc. to jpeg-info@uunet.uu.net.
---- ../oipenjdkb23/openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c	2007-10-30 04:38:55.000000000 -0400
-+++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c	2007-11-13 15:42:04.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c	2008-05-23 22:50:53.000000000 +0100
+@@ -26,7 +26,7 @@
+ #include "splashscreen_impl.h"
+ #include "splashscreen_gfx.h"
+ 
+-#include "../giflib/gif_lib.h"
++#include <gif_lib.h>
+ 
+ #define GIF_TRANSPARENT     0x01
+ #define GIF_USER_INPUT      0x02
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c	2008-05-23 22:50:53.000000000 +0100
 @@ -25,9 +25,8 @@
  
  #include "splashscreen_impl.h"
@@ -24630,921 +25555,15 @@ diff -ruN ..openjdk.old/openjdk/jdk/src/share/native/sun/awt/image/jpeg/README o
      }
  
      src = (stream_src_ptr) cinfo->src;
---- ../opienjdkb23/openjdk/jdk/make/com/sun/java/pack/Makefile	2007-10-30 04:39:48.000000000 -0400
-+++ openjdk/jdk/make/com/sun/java/pack/Makefile	2007-11-13 16:47:23.000000000 -0500
-@@ -64,23 +64,21 @@
-   ZIPOBJDIR = $(OUTPUTDIR)/tmp/sun/java.util.zip/zip/$(OBJDIRNAME)
+diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c
+--- openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2008-05-16 22:15:22.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2008-05-23 22:50:53.000000000 +0100
+@@ -25,7 +25,7 @@
  
-   ZIPOBJS =  $(ZIPOBJDIR)/zcrc32.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/deflate.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/trees.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/zadler32.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/zutil.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/inflate.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/infblock.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/infcodes.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
--	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
--
--  ZINCLUDE=-I$(SHARE_SRC)/native/java/util/zip/zlib-1.1.3
--  OTHER_CXXFLAGS += $(ZINCLUDE)
--  LDDFLAGS += $(ZIPOBJS)
-+            $(ZIPOBJDIR)/deflate.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/trees.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/zadler32.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/zutil.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/inflate.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/infblock.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/infcodes.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
-+            $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
-+
-+  OTHER_LDLIBS += -lz
- else
-   OTHER_CXXFLAGS += -DNO_ZLIB -DUNPACK_JNI
--  OTHER_LDLIBS += $(JVMLIB)
-+  OTHER_LDLIBS += -lz $(JVMLIB)
- endif
+ #include "splashscreen_impl.h"
  
- CXXFLAGS_DBG += -DFULL
-@@ -102,12 +100,12 @@
-   COMPILER_WARNINGS_FATAL=false
- else
-   LDOUTPUT = -o #Have a space 
--  LDDFLAGS += -lc
-+  LDDFLAGS += -lz -lc
-   OTHER_LDLIBS  += $(LIBCXX)
- # setup the list of libraries to link in...
- ifeq ($(PLATFORM), linux)
- ifeq ("$(CC_VER_MAJOR)", "3")
--  OTHER_LDLIBS  += -Wl,-Bstatic -lgcc_eh -Wl,-Bdynamic
-+  OTHER_LDLIBS  += -lz -Wl,-Bstatic -lgcc_eh -Wl,-Bdynamic
- endif
- endif #LINUX
- endif #PLATFORM
---- penjdk6/jdk/make/java/jli/Makefile	2008-02-12 04:03:55.000000000 -0500
-+++ openjdk/jdk/make/java/jli/Makefile	2008-02-14 16:40:45.000000000 -0500
-@@ -44,8 +44,6 @@
+-#include "../libpng/png.h"
++#include <png.h>
  
- include $(BUILDDIR)/common/Defs.gmk
+ #include <setjmp.h>
  
--ZLIB_VERSION = 1.1.3
--ZIP_SRC = $(SHARE_SRC)/native/java/util/zip/zlib-$(ZLIB_VERSION)
- LAUNCHER_SHARE_SRC = $(SHARE_SRC)/bin
- LAUNCHER_PLATFORM_SRC = $(PLATFORM_SRC)/bin
- 
-@@ -56,22 +54,14 @@
- 	parse_manifest.c \
- 	version_comp.c \
- 	wildcard.c \
--	jli_util.c \
--	inflate.c \
--	infblock.c \
--	inftrees.c \
--	infcodes.c \
--	inffast.c \
--	infutil.c \
--	zadler32.c \
--	zutil.c
-+	jli_util.c
- 
- OTHER_CPPFLAGS += -DEXPAND_CLASSPATH_WILDCARDS
- 
- ifneq (,$(findstring $(PLATFORM), linux solaris))	# UNIX systems
- 	LIB_LOCATION = $(LIBDIR)/$(LIBARCH)/jli
- 	# Guarantee very limited dependencies
--	LDLIBS = -lc
-+	LDLIBS = -lz -lc 
- endif
- 
- ifeq ($(PLATFORM), windows)
-@@ -98,7 +88,6 @@
- 
- OTHER_INCLUDES += -I$(LAUNCHER_SHARE_SRC)
- OTHER_INCLUDES += -I$(LAUNCHER_PLATFORM_SRC)
--OTHER_INCLUDES += -I$(ZIP_SRC)
- 
- #
- # Library to compile.
-@@ -139,5 +128,5 @@
- #
- # Add to ambient vpath so we pick up the library files
- #
--vpath %.c $(LAUNCHER_SHARE_SRC) $(ZIP_SRC)
-+vpath %.c $(LAUNCHER_SHARE_SRC)
- 
---- openjdk6/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2008-02-12 04:08:07.000000000 -0500
-+++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2008-02-14 16:57:24.000000000 -0500
-@@ -87,11 +87,7 @@
- // bytes and byte arrays
- 
- typedef unsigned int uint;
--#ifdef _LP64
--typedef unsigned int uLong; // Historical zlib, should be 32-bit.
--#else
- typedef unsigned long uLong;
--#endif
- #ifdef _MSC_VER
- typedef LONGLONG        jlong;
- typedef DWORDLONG       julong;
---- openjdkold/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-02-12 04:08:13.000000000 -0500
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2008-02-26 11:02:52.000000000 -0500
-@@ -51,7 +51,9 @@
- 
- /* headers from the JPEG library */
- #include <jpeglib.h>
--#include "jerror.h"
-+#include <jerror.h>
-+
-+#include <dlfcn.h>
- 
- #undef MAX
- #define MAX(a,b)        ((a) > (b) ? (a) : (b))
-@@ -75,6 +77,62 @@
- static jfieldID JPEGHuffmanTable_lengthsID;
- static jfieldID JPEGHuffmanTable_valuesID;
- 
-+static void initIDs();
-+
-+typedef struct jpeg_error_mgr * (*fn_jpegstderror)(struct jpeg_error_mgr *);
-+typedef boolean (*fn_jpegresynctorestart)(j_decompress_ptr, int);
-+typedef JDIMENSION (*fn_jpegreadscanlines)(j_decompress_ptr, JSAMPARRAY, JDIMENSION);
-+typedef boolean (*fn_jpegfinishoutput)(j_decompress_ptr);
-+typedef int (*fn_jpegreadheader)(j_decompress_ptr, boolean);
-+typedef boolean (*fn_jpegstartdecompress)(j_decompress_ptr);
-+typedef boolean (*fn_jpeghasmultiplescans)(j_decompress_ptr);
-+typedef boolean (*fn_jpegfinishdecompress)(j_decompress_ptr);
-+typedef boolean (*fn_jpegstartoutput)(j_decompress_ptr, int);
-+typedef void (*fn_jpegabort)(j_common_ptr);
-+typedef void (*fn_jpegabortdecompress)(j_decompress_ptr);
-+typedef JHUFF_TBL * (*fn_jpegallochufftable)(j_common_ptr);
-+typedef JQUANT_TBL * (*fn_jpegallocquanttable)(j_common_ptr);
-+typedef void (*fn_jpegcreatecompress)(j_compress_ptr, int, size_t);
-+typedef void (*fn_jpegcreatedecompress)(j_decompress_ptr, int, size_t);
-+typedef void (*fn_jpegdestroy)(j_common_ptr);
-+typedef void (*fn_jpegfinishcompress)(j_compress_ptr);
-+typedef boolean (*fn_jpeginputcomplete)(j_decompress_ptr);
-+typedef void (*fn_jpegsavemarkers)(j_decompress_ptr, int, unsigned int);
-+typedef void (*fn_jpegsetcolorspace)(j_compress_ptr, J_COLOR_SPACE);
-+typedef void (*fn_jpegsetdefaults)(j_compress_ptr);
-+typedef void (*fn_jpegsimpleprogression)(j_compress_ptr);
-+typedef void (*fn_jpegstartcompress)(j_compress_ptr, boolean);
-+typedef void (*fn_jpegsuppresstables)(j_compress_ptr, boolean);
-+typedef JDIMENSION (*fn_jpegwritescanlines)(j_compress_ptr, JSAMPARRAY, JDIMENSION);
-+typedef void (*fn_jpegwritetables)(j_compress_ptr);
-+
-+fn_jpegabort jpegabort;
-+fn_jpegabortdecompress jpegabortdecompress;
-+fn_jpegallochufftable jpegallochufftable;
-+fn_jpegallocquanttable jpegallocquanttable;
-+fn_jpegcreatecompress jpegcreatecompress;
-+fn_jpegcreatedecompress jpegcreatedecompress;
-+fn_jpegdestroy jpegdestroy;
-+fn_jpegfinishcompress jpegfinishcompress;
-+fn_jpeginputcomplete jpeginputcomplete;
-+fn_jpegsavemarkers jpegsavemarkers;
-+fn_jpegsetcolorspace jpegsetcolorspace;
-+fn_jpegsetdefaults jpegsetdefaults;
-+fn_jpegsimpleprogression jpegsimpleprogression;
-+fn_jpegstartcompress jpegstartcompress;
-+fn_jpegsuppresstables jpegsuppresstables;
-+fn_jpegwritescanlines jpegwritescanlines;
-+fn_jpegwritetables jpegwritetables;
-+fn_jpegstderror jpegstderror;
-+fn_jpegstartoutput jpegstartoutput;
-+fn_jpegfinishdecompress jpegfinishdecompress;
-+fn_jpeghasmultiplescans jpeghasmultiplescans;
-+fn_jpegstartdecompress jpegstartdecompress;
-+fn_jpegreadheader jpegreadheader;
-+fn_jpegfinishoutput jpegfinishoutput;
-+fn_jpegreadscanlines jpegreadscanlines;
-+fn_jpegresynctorestart jpegresynctorestart;
-+
- /*
-  * Defined in jpegdecoder.c.  Copy code from there if and
-  * when that disappears. */
-@@ -615,7 +673,7 @@
-         return;
-     }
- 
--    jpeg_abort(cinfo);  // Frees any markers, but not tables
-+    jpegabort(cinfo);  // Frees any markers, but not tables
- 
- }
- 
-@@ -640,7 +698,7 @@
-         return;
-     }
- 
--    jpeg_abort(cinfo);  // Does not reset tables
-+    jpegabort(cinfo);  // Does not reset tables
- 
- }
- 
-@@ -658,7 +716,7 @@
-             free(cinfo->dest);
-             cinfo->dest = NULL;
-         }
--        jpeg_destroy(info);
-+        jpegdestroy(info);
-         free(info);
-     }
- }
-@@ -694,14 +752,14 @@
-             decomp = (j_decompress_ptr) cinfo;
-             if (decomp->quant_tbl_ptrs[i] == NULL) {
-                 decomp->quant_tbl_ptrs[i] =
--                    jpeg_alloc_quant_table(cinfo);
-+                    jpegallocquanttable(cinfo);
-             }
-             quant_ptr = decomp->quant_tbl_ptrs[i];
-         } else {
-             comp = (j_compress_ptr) cinfo;
-             if (comp->quant_tbl_ptrs[i] == NULL) {
-                 comp->quant_tbl_ptrs[i] =
--                    jpeg_alloc_quant_table(cinfo);
-+                    jpegallocquanttable(cinfo);
-             }
-             quant_ptr = comp->quant_tbl_ptrs[i];
-         }
-@@ -777,14 +835,14 @@
-             decomp = (j_decompress_ptr) cinfo;
-             if (decomp->dc_huff_tbl_ptrs[i] == NULL) {
-                 decomp->dc_huff_tbl_ptrs[i] =
--                    jpeg_alloc_huff_table(cinfo);
-+                    jpegallochufftable(cinfo);
-             }
-             huff_ptr = decomp->dc_huff_tbl_ptrs[i];
-         } else {
-             comp = (j_compress_ptr) cinfo;
-             if (comp->dc_huff_tbl_ptrs[i] == NULL) {
-                 comp->dc_huff_tbl_ptrs[i] =
--                    jpeg_alloc_huff_table(cinfo);
-+                    jpegallochufftable(cinfo);
-             }
-             huff_ptr = comp->dc_huff_tbl_ptrs[i];
-         }
-@@ -798,14 +856,14 @@
-             decomp = (j_decompress_ptr) cinfo;
-             if (decomp->ac_huff_tbl_ptrs[i] == NULL) {
-                 decomp->ac_huff_tbl_ptrs[i] =
--                    jpeg_alloc_huff_table(cinfo);
-+                    jpegallochufftable(cinfo);
-             }
-             huff_ptr = decomp->ac_huff_tbl_ptrs[i];
-         } else {
-             comp = (j_compress_ptr) cinfo;
-             if (comp->ac_huff_tbl_ptrs[i] == NULL) {
-                 comp->ac_huff_tbl_ptrs[i] =
--                    jpeg_alloc_huff_table(cinfo);
-+                    jpegallochufftable(cinfo);
-             }
-             huff_ptr = comp->ac_huff_tbl_ptrs[i];
-         }
-@@ -1346,6 +1404,8 @@
-      jclass ImageInputStreamClass,
-      jclass qTableClass,
-      jclass huffClass) {
-+   
-+    initIDs();
- 
-     ImageInputStream_readID = (*env)->GetMethodID(env,
-                                                   ImageInputStreamClass,
-@@ -1431,7 +1491,7 @@
-     }
- 
-     /* We set up the normal JPEG error routines, then override error_exit. */
--    cinfo->err = jpeg_std_error(&(jerr->pub));
-+    cinfo->err = jpegstderror(&(jerr->pub));
-     jerr->pub.error_exit = sun_jpeg_error_exit;
-     /* We need to setup our own print routines */
-     jerr->pub.output_message = sun_jpeg_output_message;
-@@ -1448,11 +1508,11 @@
-     }
- 
-     /* Perform library initialization */
--    jpeg_create_decompress(cinfo);
-+    jpegcreatedecompress(cinfo, JPEG_LIB_VERSION, (size_t) sizeof(struct jpeg_decompress_struct));
- 
-     // Set up to keep any APP2 markers, as these might contain ICC profile
-     // data
--    jpeg_save_markers(cinfo, ICC_MARKER, 0xFFFF);
-+    jpegsavemarkers(cinfo, ICC_MARKER, 0xFFFF);
- 
-     /*
-      * Now set up our source.
-@@ -1470,7 +1530,7 @@
-     cinfo->src->init_source = imageio_init_source;
-     cinfo->src->fill_input_buffer = imageio_fill_input_buffer;
-     cinfo->src->skip_input_data = imageio_skip_input_data;
--    cinfo->src->resync_to_restart = jpeg_resync_to_restart; // use default
-+    cinfo->src->resync_to_restart = jpegresynctorestart; // use default
-     cinfo->src->term_source = imageio_term_source;
- 
-     /* set up the association to persist for future calls */
-@@ -1588,7 +1648,7 @@
-         src->bytes_in_buffer = 0;
-     }
- 
--    ret = jpeg_read_header(cinfo, FALSE);
-+    ret = jpegreadheader(cinfo, FALSE);
- 
-     if (ret == JPEG_HEADER_TABLES_ONLY) {
-         retval = JNI_TRUE;
-@@ -1709,7 +1769,7 @@
-                                cinfo->num_components,
-                                read_icc_profile(env, cinfo));
-         if (reset) {
--            jpeg_abort_decompress(cinfo);
-+            jpegabortdecompress(cinfo);
-         }
-     }
- 
-@@ -1933,7 +1993,7 @@
-                    TRUE);
-     }
- 
--    progressive = jpeg_has_multiple_scans(cinfo);
-+    progressive = jpeghasmultiplescans(cinfo);
-     if (progressive) {
-         cinfo->buffered_image = TRUE;
-         cinfo->input_scan_number = minProgressivePass+1; // Java count from 0
-@@ -1945,7 +2005,7 @@
- 
-     data->streamBuf.suspendable = FALSE;
- 
--    jpeg_start_decompress(cinfo);
-+    jpegstartdecompress(cinfo);
- 
-     // loop over progressive passes
-     done = FALSE;
-@@ -1953,7 +2013,7 @@
-         if (progressive) {
-             // initialize the next pass.  Note that this skips up to
-             // the first interesting pass.
--            jpeg_start_output(cinfo, cinfo->input_scan_number);
-+            jpegstartoutput(cinfo, cinfo->input_scan_number);
-             if (wantUpdates) {
-                 (*env)->CallVoidMethod(env, this,
-                                        JPEGImageReader_passStartedID,
-@@ -1969,7 +2029,7 @@
-         // Skip until the first interesting line
-         while ((data->abortFlag == JNI_FALSE)
-                && ((jint)cinfo->output_scanline < sourceYStart)) {
--            jpeg_read_scanlines(cinfo, &scanLinePtr, 1);
-+            jpegreadscanlines(cinfo, &scanLinePtr, 1);
-         }
- 
-         scanlineLimit = sourceYStart+sourceHeight;
-@@ -1982,7 +2042,7 @@
-         while ((data->abortFlag == JNI_FALSE)
-                && ((jint)cinfo->output_scanline < scanlineLimit)) {
- 
--            jpeg_read_scanlines(cinfo, &scanLinePtr, 1);
-+            jpegreadscanlines(cinfo, &scanLinePtr, 1);
- 
-             // Now mangle it into our buffer
-             out = data->pixelBuf.buf.bp;
-@@ -2037,13 +2097,13 @@
-                 skipLines = linesLeft;
-             }
-             for(i = 0; i < skipLines; i++) {
--                jpeg_read_scanlines(cinfo, &scanLinePtr, 1);
-+                jpegreadscanlines(cinfo, &scanLinePtr, 1);
-             }
-         }
-         if (progressive) {
--            jpeg_finish_output(cinfo); // Increments pass counter
-+            jpegfinishoutput(cinfo); // Increments pass counter
-             // Call Java to notify pass complete
--            if (jpeg_input_complete(cinfo)
-+            if (jpeginputcomplete(cinfo)
-                 || (cinfo->input_scan_number > maxProgressivePass)) {
-                 done = TRUE;
-             }
-@@ -2063,9 +2123,9 @@
-     if (cinfo->output_scanline == cinfo->output_height) {
-         //    if ((cinfo->output_scanline == cinfo->output_height) &&
-         //(jpeg_input_complete(cinfo))) {  // We read the whole file
--        jpeg_finish_decompress(cinfo);
-+        jpegfinishdecompress(cinfo);
-     } else {
--        jpeg_abort_decompress(cinfo);
-+        jpegabortdecompress(cinfo);
-     }
- 
-     free(scanLinePtr);
-@@ -2111,7 +2171,7 @@
- 
-     cinfo = (j_decompress_ptr) data->jpegObj;
- 
--    jpeg_abort_decompress(cinfo);
-+    jpegabortdecompress(cinfo);
- }
- 
- 
-@@ -2317,6 +2377,142 @@
- 
- /********************** end of destination manager ************/
- 
-+METHODDEF(void)
-+initIDs()
-+{
-+    void *handle = dlopen("libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
-+    
-+    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
-+    if (jpegstderror == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegreadheader = (fn_jpegreadheader)dlsym(handle, "jpeg_read_header");
-+    if (jpegreadheader == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpeghasmultiplescans = (fn_jpeghasmultiplescans)dlsym(handle, "jpeg_has_multiple_scans");
-+    if (jpeghasmultiplescans == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegstartdecompress = (fn_jpegstartdecompress)dlsym(handle, "jpeg_start_decompress");
-+    if (jpegstartdecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegstartoutput = (fn_jpegstartoutput)dlsym(handle, "jpeg_start_output");
-+    if (jpegstartoutput == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegfinishdecompress = (fn_jpegfinishdecompress)dlsym(handle, "jpeg_finish_decompress");
-+    if (jpegfinishdecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegreadscanlines = (fn_jpegreadscanlines)dlsym(handle, "jpeg_read_scanlines");
-+    if (jpegreadscanlines == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegfinishoutput = (fn_jpegfinishoutput)dlsym(handle, "jpeg_finish_output");
-+    if (jpegfinishoutput == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegresynctorestart = (fn_jpegresynctorestart)dlsym(handle, "jpeg_resync_to_restart");
-+    if (jpegresynctorestart == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegabort = (fn_jpegabort)dlsym(handle, "jpeg_abort");
-+    if (jpegabort == NULL) {
-+       dlclose(handle);
-+    }
-+ 
-+    jpegabortdecompress = (fn_jpegabortdecompress)dlsym(handle, "jpeg_abort_decompress");
-+    if (jpegabortdecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegallochufftable = (fn_jpegallochufftable)dlsym(handle, "jpeg_alloc_huff_table");
-+    if (jpegallochufftable == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegallocquanttable = (fn_jpegallocquanttable)dlsym(handle, "jpeg_alloc_quant_table");
-+    if (jpegallocquanttable == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegcreatecompress = (fn_jpegcreatecompress)dlsym(handle, "jpeg_CreateCompress");
-+    if (jpegcreatecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegcreatedecompress = (fn_jpegcreatedecompress)dlsym(handle, "jpeg_CreateDecompress");
-+    if (jpegcreatedecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegdestroy = (fn_jpegdestroy)dlsym(handle, "jpeg_destroy");
-+    if (jpegdestroy == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegfinishcompress = (fn_jpegfinishcompress)dlsym(handle, "jpeg_finish_compress");
-+    if (jpegfinishcompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpeginputcomplete = (fn_jpeginputcomplete)dlsym(handle, "jpeg_input_complete");
-+    if (jpeginputcomplete == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegsavemarkers = (fn_jpegsavemarkers)dlsym(handle, "jpeg_save_markers");
-+    if (jpegsavemarkers == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegsetcolorspace = (fn_jpegsetcolorspace)dlsym(handle, "jpeg_set_colorspace");
-+    if (jpegsetcolorspace == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegsetdefaults = (fn_jpegsetdefaults)dlsym(handle, "jpeg_set_defaults");
-+    if (jpegsetdefaults == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegsimpleprogression = (fn_jpegsimpleprogression)dlsym(handle, "jpeg_simple_progression");
-+    if (jpegsimpleprogression == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegstartcompress = (fn_jpegstartcompress)dlsym(handle, "jpeg_start_compress");
-+    if (jpegstartcompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegsuppresstables = (fn_jpegsuppresstables)dlsym(handle, "jpeg_suppress_tables");
-+    if (jpegsuppresstables == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegwritescanlines = (fn_jpegwritescanlines)dlsym(handle, "jpeg_write_scanlines");
-+    if (jpegwritescanlines == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegwritetables = (fn_jpegwritetables)dlsym(handle, "jpeg_write_tables");
-+    if (jpegwritetables == NULL) {
-+       dlclose(handle);
-+    }
-+}
-+
- /********************** Writer JNI calls **********************/
- 
- 
-@@ -2328,6 +2524,8 @@
-      jclass qTableClass,
-      jclass huffClass) {
- 
-+    initIDs();
-+
-     ImageOutputStream_writeID = (*env)->GetMethodID(env,
-                                                     IOSClass,
-                                                     "write",
-@@ -2401,7 +2599,7 @@
-     }
- 
-     /* We set up the normal JPEG error routines, then override error_exit. */
--    cinfo->err = jpeg_std_error(&(jerr->pub));
-+    cinfo->err = jpegstderror(&(jerr->pub));
-     jerr->pub.error_exit = sun_jpeg_error_exit;
-     /* We need to setup our own print routines */
-     jerr->pub.output_message = sun_jpeg_output_message;
-@@ -2418,7 +2616,7 @@
-     }
- 
-     /* Perform library initialization */
--    jpeg_create_compress(cinfo);
-+    jpegcreatecompress(cinfo, JPEG_LIB_VERSION, (size_t) sizeof(struct jpeg_compress_struct));
- 
-     /* Now set up the destination  */
-     dest = malloc(sizeof(struct jpeg_destination_mgr));
-@@ -2527,7 +2725,7 @@
-         return;
-     }
- 
--    jpeg_suppress_tables(cinfo, TRUE);  // Suppress writing of any current
-+    jpegsuppresstables(cinfo, TRUE);  // Suppress writing of any current
- 
-     data->streamBuf.suspendable = FALSE;
-     if (qtables != NULL) {
-@@ -2542,7 +2740,7 @@
-                    DCHuffmanTables, ACHuffmanTables, TRUE);
-     }
- 
--    jpeg_write_tables(cinfo); // Flushes the buffer for you
-+    jpegwritetables(cinfo); // Flushes the buffer for you
-     RELEASE_ARRAYS(env, data, NULL);
- }
- 
-@@ -2698,9 +2896,9 @@
-     cinfo->input_components = numBands;
-     cinfo->in_color_space = inCs;
- 
--    jpeg_set_defaults(cinfo);
-+    jpegsetdefaults(cinfo);
- 
--    jpeg_set_colorspace(cinfo, outCs);
-+    jpegsetcolorspace(cinfo, outCs);
- 
-     cinfo->optimize_coding = optimize;
- 
-@@ -2737,7 +2935,7 @@
-     (*env)->ReleaseIntArrayElements(env, QtableSelectors,
-                                     qsels, JNI_ABORT);
- 
--    jpeg_suppress_tables(cinfo, TRUE);  // Disable writing any current
-+    jpegsuppresstables(cinfo, TRUE);  // Disable writing any current
- 
-     qlen = setQTables(env, (j_common_ptr) cinfo, qtables, writeDQT);
- 
-@@ -2762,7 +2960,7 @@
- 
-     if (progressive) {
-         if (numScans == 0) { // then use default scans
--            jpeg_simple_progression(cinfo);
-+            jpegsimpleprogression(cinfo);
-         } else {
-             cinfo->num_scans = numScans;
-             // Copy the scanInfo to a local array
-@@ -2804,7 +3002,7 @@
- #endif
- 
-     // start the compressor; tables must already be set
--    jpeg_start_compress(cinfo, FALSE); // Leaves sent_table alone
-+    jpegstartcompress(cinfo, FALSE); // Leaves sent_table alone
- 
-     if (haveMetadata) {
-         // Flush the buffer
-@@ -2868,7 +3066,7 @@
-             }
-         }
-         // write it out
--        jpeg_write_scanlines(cinfo, (JSAMPARRAY)&scanLinePtr, 1);
-+        jpegwritescanlines(cinfo, (JSAMPARRAY)&scanLinePtr, 1);
-         targetLine += stepY;
-     }
- 
-@@ -2877,9 +3075,9 @@
-      * so use jpeg_abort instead of jpeg_finish_compress.
-      */
-     if (cinfo->next_scanline == cinfo->image_height) {
--        jpeg_finish_compress(cinfo);  // Flushes buffer with term_dest
-+        jpegfinishcompress(cinfo);  // Flushes buffer with term_dest
-     } else {
--        jpeg_abort((j_common_ptr)cinfo);
-+        jpegabort((j_common_ptr)cinfo);
-     }
-     free(scanLinePtr);
-     RELEASE_ARRAYS(env, data, NULL);
---- openjdkold/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-02-12 04:08:14.000000000 -0500
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2008-02-26 11:01:37.000000000 -0500
-@@ -45,7 +45,9 @@
- #undef boolean
- #undef FAR
- #include <jpeglib.h>
--#include "jerror.h"
-+#include <jerror.h>
-+#include <dlfcn.h>
-+
- 
- /* The method IDs we cache. Note that the last two belongs to the
-  * java.io.InputStream class.
-@@ -56,6 +58,32 @@
- static jmethodID InputStream_readID;
- static jmethodID InputStream_availableID;
- 
-+typedef struct jpeg_error_mgr * (*fn_jpegstderror)(struct jpeg_error_mgr *);
-+typedef void (*fn_jpegcreatedecompress)(j_decompress_ptr, int, size_t);
-+typedef boolean (*fn_jpegresynctorestart)(j_decompress_ptr, int);
-+typedef JDIMENSION (*fn_jpegreadscanlines)(j_decompress_ptr, JSAMPARRAY, JDIMENSION);
-+typedef boolean (*fn_jpegfinishoutput)(j_decompress_ptr);
-+typedef int (*fn_jpegreadheader)(j_decompress_ptr, boolean);
-+typedef boolean (*fn_jpegstartdecompress)(j_decompress_ptr);
-+typedef boolean (*fn_jpeghasmultiplescans)(j_decompress_ptr);
-+typedef void (*fn_jpegdestroydecompress)(j_decompress_ptr);
-+typedef int (*fn_jpegconsumeinput)(j_decompress_ptr);
-+typedef boolean (*fn_jpegfinishdecompress)(j_decompress_ptr);
-+typedef boolean (*fn_jpegstartoutput)(j_decompress_ptr, int);
-+
-+fn_jpegstderror jpegstderror;
-+fn_jpegstartoutput jpegstartoutput;
-+fn_jpegfinishdecompress jpegfinishdecompress;
-+fn_jpegconsumeinput jpegconsumeinput;
-+fn_jpegdestroydecompress jpegdestroydecompress; 
-+fn_jpeghasmultiplescans jpeghasmultiplescans;
-+fn_jpegstartdecompress jpegstartdecompress;
-+fn_jpegreadheader jpegreadheader;
-+fn_jpegfinishoutput jpegfinishoutput;
-+fn_jpegreadscanlines jpegreadscanlines;
-+fn_jpegresynctorestart jpegresynctorestart;
-+fn_jpegcreatedecompress jpegcreatedecompress;
-+
- /* Initialize the Java VM instance variable when the library is
-    first loaded */
- JavaVM *jvm;
-@@ -462,6 +490,68 @@
- Java_sun_awt_image_JPEGImageDecoder_initIDs(JNIEnv *env, jclass cls,
-                                             jclass InputStreamClass)
- {
-+    void *handle = dlopen("libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
-+ 
-+    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
-+    if (jpegstderror == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegdestroydecompress = (fn_jpegdestroydecompress)dlsym(handle, "jpeg_destroy_decompress");
-+    if (jpegdestroydecompress == NULL) {
-+       dlclose(handle);
-+    }  
-+
-+    jpegcreatedecompress = (fn_jpegcreatedecompress)dlsym(handle, "jpeg_CreateDecompress");
-+    if (jpegcreatedecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegreadheader = (fn_jpegreadheader)dlsym(handle, "jpeg_read_header");
-+    if (jpegreadheader == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpeghasmultiplescans = (fn_jpeghasmultiplescans)dlsym(handle, "jpeg_has_multiple_scans");
-+    if (jpeghasmultiplescans == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegstartdecompress = (fn_jpegstartdecompress)dlsym(handle, "jpeg_start_decompress");
-+    if (jpegstartdecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegconsumeinput = (fn_jpegconsumeinput)dlsym(handle, "jpeg_consume_input");
-+    if (jpegconsumeinput == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegstartoutput = (fn_jpegstartoutput)dlsym(handle, "jpeg_start_output");
-+    if (jpegstartoutput == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegfinishdecompress = (fn_jpegfinishdecompress)dlsym(handle, "jpeg_finish_decompress");
-+    if (jpegfinishdecompress == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegreadscanlines = (fn_jpegreadscanlines)dlsym(handle, "jpeg_read_scanlines");
-+    if (jpegreadscanlines == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegfinishoutput = (fn_jpegfinishoutput)dlsym(handle, "jpeg_finish_output");
-+    if (jpegfinishoutput == NULL) {
-+       dlclose(handle);
-+    }
-+
-+    jpegresynctorestart = (fn_jpegresynctorestart)dlsym(handle, "jpeg_resync_to_restart");
-+    if (jpegresynctorestart == NULL) {
-+       dlclose(handle);
-+    }
-+
-     sendHeaderInfoID = (*env)->GetMethodID(env, cls, "sendHeaderInfo",
-                                            "(IIZZZ)Z");
-     sendPixelsByteID = (*env)->GetMethodID(env, cls, "sendPixels", "([BI)Z");
-@@ -519,7 +609,7 @@
-   /* Step 1: allocate and initialize JPEG decompression object */
- 
-   /* We set up the normal JPEG error routines, then override error_exit. */
--  cinfo.err = jpeg_std_error(&jerr.pub);
-+  cinfo.err = jpegstderror(&jerr.pub);
-   jerr.pub.error_exit = sun_jpeg_error_exit;
- 
-   /* We need to setup our own print routines */
-@@ -530,7 +620,7 @@
-     /* If we get here, the JPEG code has signaled an error.
-      * We need to clean up the JPEG object, close the input file, and return.
-      */
--    jpeg_destroy_decompress(&cinfo);
-+    jpegdestroydecompress(&cinfo);
-     RELEASE_ARRAYS(env, &jsrc);
-     if (!(*env)->ExceptionOccurred(env)) {
-         char buffer[JMSG_LENGTH_MAX];
-@@ -541,7 +631,7 @@
-     return;
-   }
-   /* Now we can initialize the JPEG decompression object. */
--  jpeg_create_decompress(&cinfo);
-+  jpegcreatedecompress(&cinfo, JPEG_LIB_VERSION, (size_t) sizeof(struct jpeg_decompress_struct));
- 
-   /* Step 2: specify data source (eg, a file) */
- 
-@@ -555,17 +645,17 @@
-   jsrc.pub.init_source = sun_jpeg_init_source;
-   jsrc.pub.fill_input_buffer = sun_jpeg_fill_input_buffer;
-   jsrc.pub.skip_input_data = sun_jpeg_skip_input_data;
--  jsrc.pub.resync_to_restart = jpeg_resync_to_restart; /* use default method */
-+  jsrc.pub.resync_to_restart = jpegresynctorestart; /* use default method */
-   jsrc.pub.term_source = sun_jpeg_term_source;
-   if (!GET_ARRAYS(env, &jsrc)) {
--    jpeg_destroy_decompress(&cinfo);
-+    jpegdestroydecompress(&cinfo);
-     return;
-   }
-   /* Step 3: read file parameters with jpeg_read_header() */
- 
--  (void) jpeg_read_header(&cinfo, TRUE);
-+  (void) jpegreadheader(&cinfo, TRUE);
-   /* select buffered-image mode if it is a progressive JPEG only */
--  buffered_mode = cinfo.buffered_image = jpeg_has_multiple_scans(&cinfo);
-+  buffered_mode = cinfo.buffered_image = jpeghasmultiplescans(&cinfo);
-   grayscale = (cinfo.out_color_space == JCS_GRAYSCALE);
- #ifdef YCCALPHA
-   hasalpha = (cinfo.out_color_space == JCS_RGBA);
-@@ -584,7 +674,7 @@
-                                   grayscale, hasalpha, buffered_mode);
-   if ((*env)->ExceptionOccurred(env) || !ret) {
-     /* No more interest in this image... */
--    jpeg_destroy_decompress(&cinfo);
-+    jpegdestroydecompress(&cinfo);
-     return;
-   }
-   /* Make a one-row-high sample array with enough room to expand to ints */
-@@ -595,7 +685,7 @@
-   }
- 
-   if (jsrc.hOutputBuffer == 0 || !GET_ARRAYS(env, &jsrc)) {
--    jpeg_destroy_decompress(&cinfo);
-+    jpegdestroydecompress(&cinfo);
-     return;
-   }
- 
-@@ -613,7 +703,7 @@
- 
-   /* Step 5: Start decompressor */
- 
--  jpeg_start_decompress(&cinfo);
-+  jpegstartdecompress(&cinfo);
- 
-   /* We may need to do some setup of our own at this point before reading
-    * the data.  After jpeg_start_decompress() we have the correct scaled
-@@ -638,28 +728,28 @@
-           do {
-               sun_jpeg_fill_suspended_buffer(&cinfo);
-               jsrc.suspendable = TRUE;
--              ret = jpeg_consume_input(&cinfo);
-+	      ret = jpegconsumeinput(&cinfo);
-               jsrc.suspendable = FALSE;
-           } while (ret != JPEG_SUSPENDED && ret != JPEG_REACHED_EOI);
-           if (ret == JPEG_REACHED_EOI) {
-               final_pass = TRUE;
-               cinfo.dct_method = JDCT_ISLOW;
-           }
--          jpeg_start_output(&cinfo, cinfo.input_scan_number);
-+	  jpegstartoutput(&cinfo, cinfo.input_scan_number);
-       }
-       while (cinfo.output_scanline < cinfo.output_height) {
-           if (! final_pass) {
-               do {
-                   sun_jpeg_fill_suspended_buffer(&cinfo);
-                   jsrc.suspendable = TRUE;
--                  ret = jpeg_consume_input(&cinfo);
-+		  ret = jpegconsumeinput(&cinfo);
-                   jsrc.suspendable = FALSE;
-               } while (ret != JPEG_SUSPENDED && ret != JPEG_REACHED_EOI);
-               if (ret == JPEG_REACHED_EOI) {
-                   break;
-               }
-           }
--          (void) jpeg_read_scanlines(&cinfo, (JSAMPARRAY) &(jsrc.outbuf), 1);
-+	  (void) jpegreadscanlines(&cinfo, (JSAMPARRAY) &(jsrc.outbuf), 1);
- 
-           if (grayscale) {
-               RELEASE_ARRAYS(env, &jsrc);
-@@ -695,18 +785,18 @@
-           if ((*env)->ExceptionOccurred(env) || !ret ||
-               !GET_ARRAYS(env, &jsrc)) {
-               /* No more interest in this image... */
--              jpeg_destroy_decompress(&cinfo);
-+	      jpegdestroydecompress(&cinfo);
-               return;
-           }
-       }
-       if (buffered_mode) {
--          jpeg_finish_output(&cinfo);
-+	  jpegfinishoutput(&cinfo);
-       }
-   } while (! final_pass);
- 
-   /* Step 7: Finish decompression */
- 
--  (void) jpeg_finish_decompress(&cinfo);
-+  (void) jpegfinishdecompress(&cinfo);
-   /* We can ignore the return value since suspension is not possible
-    * with the stdio data source.
-    * (nor with the Java data source)
-@@ -715,7 +805,7 @@
-   /* Step 8: Release JPEG decompression object */
- 
-   /* This is an important step since it will release a good deal of memory. */
--  jpeg_destroy_decompress(&cinfo);
-+  jpegdestroydecompress(&cinfo);
- 
-   /* After finish_decompress, we can close the input file.
-    * Here we postpone it until after no more JPEG errors are possible,

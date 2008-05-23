@@ -1,86 +1,7 @@
-diff -ru openjdk.orig/control/make/make/hotspot-rules.gmk openjdk/control/make/hotspot-rules.gmk
---- openjdk.orig/control/make/make/hotspot-rules.gmk	2007-10-12 08:45:09.000000000 +0100
-+++ openjdk/control/make/make/hotspot-rules.gmk	2007-11-08 09:40:57.000000000 +0000
-@@ -72,6 +72,10 @@
-   HOTSPOT_TARGET = all_fastdebug
- endif
- 
-+ifdef ICEDTEA_CORE_BUILD
-+  HOTSPOT_TARGET := $(HOTSPOT_TARGET)core
-+endif
-+
- HOTSPOT_BUILD_ARGUMENTS += $(COMMON_BUILD_ARGUMENTS)
- HOTSPOT_BUILD_ARGUMENTS += ALT_OUTPUTDIR=$(HOTSPOT_OUTPUTDIR)
- HOTSPOT_BUILD_ARGUMENTS += ALT_EXPORT_PATH=$(HOTSPOT_EXPORT_PATH)
-diff -u openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
---- openjdk.orig/hotspot/build/linux/makefiles/defs.make	2008-01-31 14:19:00.000000000 +0000
-+++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-02-01 15:57:40.000000000 +0000
-@@ -97,6 +97,7 @@ EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusa
- EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
- EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjsig.so
- EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.so
-+ifndef ICEDTEA_CORE_BUILD
- ifeq ($(ARCH_DATA_MODEL), 32)
-   EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
-   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
-@@ -111,3 +112,4 @@ else
-       EXPORT_LIST += $(EXPORT_LIB_DIR)/sa-jdi.jar
-     endif
- endif
-+endif
-diff -ru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist/Makefile
---- openjdk.orig/jdk/make/java/redist/Makefile	2008-01-31 14:20:37.000000000 +0000
-+++ openjdk/jdk/make/java/redist/Makefile	2008-02-04 10:11:04.000000000 +0000
-@@ -95,9 +95,11 @@ endif # INCLUDE_SA
- endif # INCLUDE_SA
- 
- # Hotspot client is only available on 32-bit builds
-+ifndef ICEDTEA_CORE_BUILD
- ifeq ($(ARCH_DATA_MODEL), 32)
-   IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(JVM_NAME) \
-                  $(LIB_LOCATION)/$(CLIENT_LOCATION)/Xusage.txt
-+endif
- endif
- 
- ifeq ($(PLATFORM), windows)
-@@ -161,6 +163,7 @@ ifeq ($(PLATFORM), solaris)
-   IMPORT_LIST += $(LIB_LOCATION)/$(SERVER_LOCATION)/$(JVMDB_NAME)
- endif 
- 
-+ifndef ICEDTEA_CORE_BUILD
- ifeq ($(ARCH_DATA_MODEL), 32)
- 
- IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(LIBJSIG_NAME)
-@@ -190,6 +193,8 @@ endif # 32bit solaris
- endif # 32bit solaris
- 
- endif # 32bit
-+
-+endif # ICEDTEA_CORE_BUILD
- 
- #  NOT Windows ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ NOT Windows
- 
-diff -ru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
---- openjdk.orig/jdk/make/common/Defs-linux.gmk	2007-11-08 11:35:35.000000000 +0000
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2007-11-08 11:36:15.000000000 +0000
-@@ -258,7 +258,12 @@ endif
- # -L to the -ljvm, this is because -ljava depends on -ljvm, whereas
- # the library itself should not.
- #
--VM_NAME         = server
-+VM_NAME = $(shell for dir in server client core; do \
-+                    if [ -d $(LIBDIR)/$(LIBARCH)/$$dir ]; then \
-+		      echo $$dir; \
-+		      break; \
-+		    fi; \
-+		  done)
- JVMLIB          = -L$(LIBDIR)/$(LIBARCH)/$(VM_NAME) -ljvm
- JAVALIB         = -ljava $(JVMLIB)
- 
-diff -ru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common/Defs-linux.gmk
---- openjdk.orig/corba/make/common/Defs-linux.gmk	Tue Feb 05 15:52:33 2008 +0000
-+++ openjdk/corba/make/common/Defs-linux.gmk	Mon Feb 11 10:01:46 2008 +0000
-@@ -250,7 +254,12 @@ endif
+diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common/Defs-linux.gmk
+--- openjdk.orig/corba/make/common/Defs-linux.gmk	2008-05-16 22:13:14.000000000 +0100
++++ openjdk/corba/make/common/Defs-linux.gmk	2008-05-23 23:04:55.000000000 +0100
+@@ -250,7 +250,12 @@
  # -L to the -ljvm, this is because -ljava depends on -ljvm, whereas
  # the library itself should not.
  #
@@ -94,12 +15,28 @@ diff -ru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common
  JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
  JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
  
-diff -r 79d639c8a75f openjdk/hotspot/make/Makefile
---- openjdk/hotspot/make/Makefile	Wed Apr 16 08:42:01 2008 +0100
-+++ openjdk/hotspot/make/Makefile	Wed Apr 16 08:49:31 2008 +0100
-@@ -90,6 +90,15 @@ all_debug:     jvmg jvmg1 docs export_de
- all_debug:     jvmg jvmg1 docs export_debug
- all_optimized: optimized optimized1 docs export_optimized
+diff -Nru openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
+--- openjdk.orig/hotspot/build/linux/makefiles/defs.make	2008-05-16 22:13:31.000000000 +0100
++++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-05-23 23:04:55.000000000 +0100
+@@ -97,6 +97,7 @@
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjsig.so
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.so
++ifndef ICEDTEA_CORE_BUILD
+ ifeq ($(ARCH_DATA_MODEL), 32)
+   EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
+   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
+@@ -111,3 +112,4 @@
+       EXPORT_LIST += $(EXPORT_LIB_DIR)/sa-jdi.jar
+     endif
+ endif
++endif
+diff -Nru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
+--- openjdk.orig/hotspot/make/Makefile	2008-05-16 22:13:31.000000000 +0100
++++ openjdk/hotspot/make/Makefile	2008-05-23 23:09:47.000000000 +0100
+@@ -91,6 +91,15 @@
+ all_debug:     jvmg jvmg1 jvmgkernel docs export_debug
+ all_optimized: optimized optimized1 optimizedkernel docs export_optimized
  
 +# Core (non-compiler) targets made available with this Makefile
 +CORE_VM_TARGETS=productcore fastdebugcore optimizedcore jvmgcore
@@ -113,31 +50,31 @@ diff -r 79d639c8a75f openjdk/hotspot/make/Makefile
  # Do everything
  world:         all create_jdk
  
-@@ -111,6 +120,10 @@ endif
- $(C2_VM_TARGETS):
+@@ -113,6 +122,10 @@
  	$(CD) $(GAMMADIR)/make; \
  	$(MAKE) VM_TARGET=$@ generic_build2 $(ALT_OUT)
-+
+ 
 +$(CORE_VM_TARGETS):
 +	$(CD) $(GAMMADIR)/make; \
 +	$(MAKE) VM_TARGET=$@ generic_buildcore $(ALT_OUT)
- 
- # Build compiler1 (client) rule, different for platforms
- generic_build1:
-@@ -153,6 +166,12 @@ else
- 	    $(MAKE) -f $(ABS_OS_MAKEFILE) \
++
+ $(KERNEL_VM_TARGETS):
+ 	$(CD) $(GAMMADIR)/make; \
+ 	$(MAKE) VM_TARGET=$@ generic_buildkernel $(ALT_OUT)
+@@ -159,6 +172,12 @@
  		      $(MAKE_ARGS) $(VM_TARGET)
  endif
-+
+ 
 +generic_buildcore:
 +	$(MKDIR) -p $(OUTPUTDIR)
 +	$(CD) $(OUTPUTDIR); \
 +		$(MAKE) -f $(ABS_OS_MAKEFILE) \
 +			$(MAKE_ARGS) $(VM_TARGET)
- 
- # Export file rule
- generic_export: $(EXPORT_LIST)
-@@ -182,11 +201,19 @@ XUSAGE=$(HS_SRC_DIR)/share/vm/Xusage.txt
++
+ generic_buildkernel:
+ 	$(MKDIR) -p $(OUTPUTDIR)
+ ifeq ($(OSNAME),windows)
+@@ -205,13 +224,21 @@
  XUSAGE=$(HS_SRC_DIR)/share/vm/Xusage.txt
  DOCS_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_docs
  C1_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler1
@@ -146,8 +83,10 @@ diff -r 79d639c8a75f openjdk/hotspot/make/Makefile
 +else
  C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler2
 +endif
+ KERNEL_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_kernel
  C1_DIR=$(C1_BASE_DIR)/$(VM_SUBDIR)
  C2_DIR=$(C2_BASE_DIR)/$(VM_SUBDIR)
+ KERNEL_DIR=$(KERNEL_BASE_DIR)/$(VM_SUBDIR)
  
  # Misc files and generated files need to come from C1 or C2 area
 +ifdef ICEDTEA_CORE_BUILD
@@ -157,7 +96,7 @@ diff -r 79d639c8a75f openjdk/hotspot/make/Makefile
  ifeq ($(ARCH_DATA_MODEL), 32)
    MISC_DIR=$(C1_DIR)
    GEN_DIR=$(C1_BASE_DIR)/generated
-@@ -194,6 +221,7 @@ else
+@@ -219,6 +246,7 @@
    MISC_DIR=$(C2_DIR)
    GEN_DIR=$(C2_BASE_DIR)/generated
  endif
@@ -165,23 +104,15 @@ diff -r 79d639c8a75f openjdk/hotspot/make/Makefile
  
  # Bin files (windows)
  ifeq ($(OSNAME),windows)
-@@ -264,6 +292,7 @@ endif
- 
- # Xusage file
- $(EXPORT_SERVER_DIR)/Xusage.txt $(EXPORT_CLIENT_DIR)/Xusage.txt: $(XUSAGE)
-+$(EXPORT_SERVER_DIR)/Xusage.txt $(EXPORT_CLIENT_DIR)/Xusage.txt $(EXPORT_KERNEL_DIR)/Xusage.txt: $(XUSAGE)
- 	$(prep-target)
- 	$(RM) $@.temp
- 	$(SED) 's/\(separated by \)[;:]/\1$(PATH_SEP)/g' $< > $@.temp
-diff -r 79d639c8a75f openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
---- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-02-12 04:14:24.000000000 -0500
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-02-14 17:39:45.000000000 -0500
-@@ -92,8 +92,12 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-19 22:56:22.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-23 23:12:10.000000000 +0100
+@@ -94,8 +94,12 @@
  #ifdef TIERED
    #define VMTYPE "Server"
  #else
 -  #define VMTYPE COMPILER1_PRESENT("Client")   \
--                 COMPILER2_PRESENT("Server")   
+-                 COMPILER2_PRESENT("Server")
 +#if defined(COMPILER1) || defined(COMPILER2)
 +   #define VMTYPE COMPILER1_PRESENT("Client")   \
 +                  COMPILER2_PRESENT("Server")
@@ -189,5 +120,69 @@ diff -r 79d639c8a75f openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
 +  #define VMTYPE "Core"
 +#endif // COMPILER1 || COMPILER2
  #endif // TIERED
+ #endif // KERNEL
  
- #ifndef HOTSPOT_VM_DISTRO
+diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2008-05-23 22:59:36.000000000 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2008-05-23 23:04:55.000000000 +0100
+@@ -258,7 +258,12 @@
+ # -L to the -ljvm, this is because -ljava depends on -ljvm, whereas
+ # the library itself should not.
+ #
+-VM_NAME         = server
++VM_NAME = $(shell for dir in server client core; do \
++                    if [ -d $(LIBDIR)/$(LIBARCH)/$$dir ]; then \
++		      echo $$dir; \
++		      break; \
++		    fi; \
++		  done)
+ JVMLIB          = -L$(LIBDIR)/$(LIBARCH)/$(VM_NAME) -ljvm
+ JAVALIB         = -ljava $(JVMLIB)
+ 
+diff -Nru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist/Makefile
+--- openjdk.orig/jdk/make/java/redist/Makefile	2008-05-16 22:15:14.000000000 +0100
++++ openjdk/jdk/make/java/redist/Makefile	2008-05-23 23:04:55.000000000 +0100
+@@ -95,10 +95,12 @@
+ endif # INCLUDE_SA
+ 
+ # Hotspot client is only available on 32-bit builds
++ifndef ICEDTEA_CORE_BUILD
+ ifeq ($(ARCH_DATA_MODEL), 32)
+   IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(JVM_NAME) \
+                  $(LIB_LOCATION)/$(CLIENT_LOCATION)/Xusage.txt
+ endif
++endif
+ 
+ ifeq ($(PLATFORM), windows)
+ #  Windows     vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  Windows
+@@ -158,6 +160,7 @@
+   IMPORT_LIST += $(LIB_LOCATION)/$(SERVER_LOCATION)/$(JVMDB_NAME)
+ endif 
+ 
++ifndef ICEDTEA_CORE_BUILD
+ ifeq ($(ARCH_DATA_MODEL), 32)
+ 
+ IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(LIBJSIG_NAME)
+@@ -188,6 +191,8 @@
+ 
+ endif # 32bit
+ 
++endif # ICEDTEA_CORE_BUILD
++
+ #  NOT Windows ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ NOT Windows
+ 
+ endif # PLATFORM
+diff -Nru openjdk.orig/make/hotspot-rules.gmk openjdk/make/hotspot-rules.gmk
+--- openjdk.orig/make/hotspot-rules.gmk	2008-05-23 23:04:41.000000000 +0100
++++ openjdk/make/hotspot-rules.gmk	2008-05-23 23:04:55.000000000 +0100
+@@ -72,6 +72,10 @@
+   HOTSPOT_TARGET = all_fastdebug
+ endif
+ 
++ifdef ICEDTEA_CORE_BUILD
++  HOTSPOT_TARGET := $(HOTSPOT_TARGET)core
++endif
++
+ HOTSPOT_BUILD_ARGUMENTS += $(COMMON_BUILD_ARGUMENTS)
+ HOTSPOT_BUILD_ARGUMENTS += ALT_OUTPUTDIR=$(HOTSPOT_OUTPUTDIR)
+ HOTSPOT_BUILD_ARGUMENTS += ALT_EXPORT_PATH=$(HOTSPOT_EXPORT_PATH)

@@ -1,3 +1,17 @@
+2008-05-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Revert OpenJDK patches
+	last and use -p1.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-ant.patch,
+	* patches/icedtea-core-build.patch,
+	* patches/icedtea-libraries.patch,
+	* patches/icedtea-memory-limits.patch,
+	* patches/icedtea-static-libstdc++.patch,
+	* patches/icedtea-sunsrc.patch,
+	* patches/icedtea-zero-build.patch:
+	Updated for b26.
+
 2008-05-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* patches/icedtea-headers.patch: Updated

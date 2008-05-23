@@ -1,5 +1,6 @@
---- openjdk.orig/jdk/make/common/Release.gmk	2008-02-28 04:39:40.000000000 -0500
-+++ openjdk/jdk/make/common/Release.gmk	2008-02-29 14:34:26.000000000 -0500
+diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Release.gmk
+--- openjdk.orig/jdk/make/common/Release.gmk	2008-05-23 22:40:01.000000000 +0100
++++ openjdk/jdk/make/common/Release.gmk	2008-05-23 22:41:52.000000000 +0100
 @@ -338,8 +338,6 @@
  # Bug 5008685 - exclude jconsole from sun/tools
  #
@@ -14,7 +15,7 @@
  	com/sun/tools/internal/xjc       \
  	com/sun/tools/internal/ws       \
 -	META-INF/services/com.sun.mirror.apt.AnnotationProcessorFactory \
--	META-INF/services/com.sun.tools.internal.xjc.Plugin \
+-	META-INF/services/com.sun.tools.xjc.Plugin \
  	com/sun/istack/internal/tools       \
  	com/sun/istack/internal/ws       \
          com/sun/codemodel       \
@@ -33,7 +34,7 @@
 -	$(ECHO) "META-INF/services/com.sun.jdi.connect.Connector" >> $@
 -	$(ECHO) "META-INF/services/com.sun.jdi.connect.spi.TransportService" >> $@
 -	$(ECHO) "META-INF/services/com.sun.mirror.apt.AnnotationProcessorFactory" >> $@
--	$(ECHO) "META-INF/services/com.sun.tools.internal.xjc.Plugin" >> $@
+-	$(ECHO) "META-INF/services/com.sun.tools.xjc.Plugin" >> $@
  	$(ECHO) "com/sun/tools/" >> $@
  	$(ECHO) "sun/jvmstat/" >> $@
  	$(ECHO) "sun/rmi/rmic/" >> $@
@@ -56,12 +57,3 @@
  	@($(CD) $(CLASSBINDIR) && $(java-vm-cleanup))
  
  # Create the rt.jar file list & non-class files list
-@@ -1006,6 +1000,8 @@
- 	    ($(CD) $$d && $(TAR) cf - -T $(ABS_TEMPDIR)/src-files.list ) \
- 	       | ($(CD) $(JDK_IMAGE_DIR)/src && $(TAR) xf -); \
- 	  fi; \
-+	  (($(CD) $$d && $(TAR) cf - -T $(ABS_TEMPDIR)/sun_sources_list ) \
-+		| ($(CD) $(JDK_IMAGE_DIR)/src && $(TAR) xf -)) > /dev/null 2>&1 ; \
- 	done
-   else
- 	for d in $(SOURCE_DIRS); do \
