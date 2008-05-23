@@ -39,7 +39,7 @@ install:
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
-	patches/icedtea-cacao.patch
+	patches/icedtea-cacao.patch $(OPENJDK_PATCHES)
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -266,6 +266,11 @@ else
   GCC_PATCH = patches/icedtea-gcc-4.3.patch
 endif
 
+# Patches from the other OpenJDK trees (should be removed
+# when in an official bxx release)
+OPENJDK_PATCHES = \
+	patches/openjdk-color.patch
+
 # If ZERO_BUILD is set then we are building zero and need
 # to patch up to OpenJDK 7 HotSpot for the C++ interpreter.
 ZERO_PATCHES = \
@@ -343,14 +348,28 @@ endif
 
 stamps/patch.stamp: stamps/clone.stamp
 	all_patches_ok=yes; \
+	cd $(abs_top_builddir)/openjdk/jdk; \
+	for p in $(OPENJDK_PATCHES) ; \
+	do \
+	  if test x$${all_patches_ok} == "xyes" \
+	     && echo Checking $$p \
+	     && $(PATCH) -l -p1 --dry-run -s -t -f -F 0 < $(abs_top_srcdir)/$$p ; \
+	  then \
+	    echo Applying $$p ; \
+	    $(PATCH) -l -p1 < $(abs_top_srcdir)/$$p ; \
+	  else \
+	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
+	  fi ; \
+	done ; \
+	cd $(abs_top_builddir) ; \
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  if test x$${all_patches_ok} == "xyes" \
 	     && echo Checking $$p \
-	     && $(PATCH) -l -p0 --dry-run -s -t -f -F 0 < $$p ; \
+	     && $(PATCH) -l -p0 --dry-run -s -t -f -F 0 < $(abs_top_srcdir)/$$p ; \
 	  then \
 	    echo Applying $$p ; \
-	    $(PATCH) -l -p0 < $$p ; \
+	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
 	  else \
 	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
