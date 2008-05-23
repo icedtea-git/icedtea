@@ -44,6 +44,10 @@
 	and upgrade to b26.
 	* Makefile.in: Regenerated.
 	
+2008-05-16  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-sparc.patch: Merge os_linux_sparc.cpp patch hunks.
+
 2008-05-15  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-sparc.patch: New.
