@@ -933,10 +933,10 @@ clean-gcjwebplugin:
 stamps/jtreg.stamp:
 	rm -rf test/jtreg/classes
 	mkdir -p test/jtreg/classes
-	bootstrap/icedtea/bin/javac -g -d test/jtreg/classes -source 1.5 \
+	$(ICEDTEA_BOOT_DIR)/bin/javac -g -d test/jtreg/classes -source 1.5 \
 		 -encoding iso-8859-1 `find test/jtreg/com -name '*.java'`
 	(cd test/jtreg; \
-	 ../../bootstrap/icedtea/bin/jar cfm ../jtreg.jar \
+	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm ../jtreg.jar \
 		META-INF/MANIFEST.MF \
 		legal  README JavaTest.cmdMgrs.lst JavaTest.toolMgrs.lst \
 		`find com -type f -a -not -name '*.java'` \
