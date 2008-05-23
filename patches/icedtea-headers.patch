@@ -1,6 +1,7 @@
---- oldopenjdk/hotspot/build/linux/makefiles/jvmti.make	2008-02-12 04:14:13.000000000 -0500
-+++ openjdk/hotspot/build/linux/makefiles/jvmti.make	2008-02-26 11:34:28.000000000 -0500
-@@ -57,7 +57,7 @@
+diff -Nru openjdk.orig/hotspot/build/linux/makefiles/jvmti.make openjdk/hotspot/build/linux/makefiles/jvmti.make
+--- openjdk.orig/hotspot/build/linux/makefiles/jvmti.make	2008-05-23 20:51:14.000000000 +0100
++++ openjdk/hotspot/build/linux/makefiles/jvmti.make	2008-05-23 20:54:13.000000000 +0100
+@@ -59,7 +59,7 @@
  
  JvmtiGeneratedFiles = $(JvmtiGeneratedNames:%=$(JvmtiOutDir)/%)
  
@@ -9,20 +10,10 @@
  
  .PHONY: all jvmtidocs clean cleanall
  
---- openjdkold/jdk/make/tools/freetypecheck/Makefile	2008-01-04 18:20:30.000000000 -0500
-+++ openjdk/jdk/make/tools/freetypecheck/Makefile	2008-02-26 11:21:34.000000000 -0500
-@@ -61,7 +61,7 @@
-   ifeq ($(PLATFORM), solaris)
-     FT_OPTIONS += -R $(FT_LIB) -lfreetype
-   else #linux
--      FT_OPTIONS += -Wl,-rpath -Wl,$(FT_LIB) -lfreetype
-+      FT_OPTIONS += -Wl,-rpath -Wl,$(FT_LIB) $(FT2_LIB)
-   endif
- endif
- 
---- openjdkold/jdk/make/common/Defs.gmk	2008-01-04 18:20:29.000000000 -0500
-+++ openjdk/jdk/make/common/Defs.gmk	2008-02-26 11:21:49.000000000 -0500
-@@ -237,7 +237,7 @@
+diff -Nru openjdk.orig/jdk/make/common/Defs.gmk openjdk/jdk/make/common/Defs.gmk
+--- openjdk.orig/jdk/make/common/Defs.gmk	2008-05-23 20:51:33.000000000 +0100
++++ openjdk/jdk/make/common/Defs.gmk	2008-05-23 20:58:12.000000000 +0100
+@@ -219,7 +219,7 @@
    ifeq ($(PLATFORM), windows)
      FREETYPE_LIB = $(FREETYPE_LIB_PATH)/freetype.lib
    else
@@ -31,14 +22,15 @@
    endif
  
    ifdef ALT_FREETYPE_HEADERS_PATH
---- oldopenjdk/jdk/make/sun/font/Makefile	2008-01-04 18:20:30.000000000 -0500
-+++ openjdk/jdk/make/sun/font/Makefile	2008-02-26 12:12:54.000000000 -0500
-@@ -161,10 +161,13 @@
+diff -Nru openjdk.orig/jdk/make/sun/font/Makefile openjdk/jdk/make/sun/font/Makefile
+--- openjdk.orig/jdk/make/sun/font/Makefile	2008-05-23 20:51:44.000000000 +0100
++++ openjdk/jdk/make/sun/font/Makefile	2008-05-23 20:56:56.000000000 +0100
+@@ -160,11 +160,13 @@
+ #
  CFLAGS       += -DHEADLESS
  CXXFLAGS     += -DHEADLESS
- 
 +FREETYPE_HEADERS=$(shell $(ECHO) \"$(FREETYPE2_HEADERS)\" | grep -o .I.*[a\-z])
-+
+ 
  ifndef OPENJDK
    CPPFLAGS += -I$(CLOSED_SRC)/share/native/$(PKGDIR)/t2k
  else
@@ -48,3 +40,15 @@
    OTHER_LDLIBS += $(FREETYPE_LIB)
  endif
  
+diff -Nru openjdk.orig/jdk/make/tools/freetypecheck/Makefile openjdk/jdk/make/tools/freetypecheck/Makefile
+--- openjdk.orig/jdk/make/tools/freetypecheck/Makefile	2008-05-23 20:51:57.000000000 +0100
++++ openjdk/jdk/make/tools/freetypecheck/Makefile	2008-05-23 20:54:53.000000000 +0100
+@@ -45,7 +45,7 @@
+   ifeq ($(PLATFORM), solaris)
+     FT_LD_OPTIONS += -R $(FREETYPE_LIB_PATH) -lfreetype
+   else #linux
+-      FT_LD_OPTIONS += -Wl,-rpath -Wl,$(FREETYPE_LIB_PATH) -lfreetype
++      FT_LD_OPTIONS += -Wl,-rpath -Wl,$(FREETYPE_LIB_PATH) $(FT2_LIB)
+   endif
+ endif
+ FT_OPTIONS += -I$(FREETYPE_HEADERS_PATH)
