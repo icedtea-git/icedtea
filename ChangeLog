@@ -1,10 +1,16 @@
-2008-05-23  Mark Wielaard  <mark@klomp.org>
+2008-05-25  Mark Wielaard  <mark@klomp.org>
 
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
 	Import Gervill fixes from CVS. See CHANGES.txt.
 	Added: Software Mixing Mixer.
 	Fix: AudioFloatFormatConverter.getTargetFormats()
 	* overlays/openjdk/jdk/test/com/sun/media/sound: Imported all tests.
+
+2008-05-25  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am: Use -source 1.5 whenever possible.
+	* Makefile.in: Regenerated.
+	* javac.in: Use -1.5.
 
 2008-05-23  Lillian Angel  <langel@redhat.com>
 
