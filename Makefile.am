@@ -796,12 +796,12 @@ stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
-            -source 1.6 \
+            -source 1.5 \
             -sourcepath rt:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):generated \
             -bootclasspath '' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
-	    -source 1.6 \
+	    -source 1.5 \
 	    -sourcepath rt:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):generated \
 	    -bootclasspath '' @$< ; \
 	fi
@@ -843,12 +843,12 @@ stamps/rt-class-files.stamp: rt-source-files.txt
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt \
-	    -source 1.6 \
+	    -source 1.5 \
 	    -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated \
 	    -bootclasspath '' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
-            -source 1.6 \
+            -source 1.5 \
             -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated \
             -bootclasspath '' @$< ; \
 	fi
@@ -888,12 +888,12 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
-	    -source 1.6 \
+	    -source 1.5 \
  	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
 	    -bootclasspath '' @extra-source-files.txt ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
-            -source 1.6 \
+            -source 1.5 \
             -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
             -bootclasspath '' @extra-source-files.txt ; \
 	fi
