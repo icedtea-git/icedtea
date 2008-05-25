@@ -664,3 +664,19 @@ AC_DEFUN([AC_CHECK_WITH_CACAO],
   AM_CONDITIONAL(WITH_CACAO, test x"${CACAO}" != "xno")
   AC_SUBST(CACAO)
 ])
+
+AC_DEFUN([SET_OS],
+[
+  case "${host_os}" in
+    linux-gnu)
+      BUILD_OS=linux
+      ;;
+    solaris*)
+      BUILD_OS=solaris
+      ;;
+    *)
+      BUILD_OS=$(uname -o)
+      ;;
+  esac
+  AC_SUBST(BUILD_OS)
+])

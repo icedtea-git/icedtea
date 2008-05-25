@@ -779,6 +779,11 @@ clean-copy:
 	  rm -rf rt/$$copy_dir ; \
 	done
 
+stamps/generated.stamp:
+	cp $(SOLARIS)/java/lang/UNIXProcess.java.$(BUILD_OS) \
+	  $(abs_top_srcdir)/generated/java/lang/UNIXProcess.java ;
+	touch stamps/generated.stamp
+
 SHARE = openjdk/jdk/src/share/classes
 SOLARIS = openjdk/jdk/src/solaris/classes
 LANGTOOLS = openjdk/langtools/src/share/classes
@@ -823,7 +828,8 @@ hotspot-tools-source-files.txt: stamps/clone.stamp \
 	find hotspot-tools -name '*.java' | sort > $@
 	mkdir -p lib/hotspot-tools
 
-stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt
+stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt \
+	stamps/generated.stamp
 	if ! test -f stamps/icedtea-ecj.stamp ; \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools -bootclasspath '' -source 1.6 \
@@ -868,7 +874,7 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 rt-source-files.txt: stamps/clone.stamp stamps/copy-source-files.stamp
 	find rt -name '*.java' | sort > $@
 
-stamps/rt-class-files.stamp: rt-source-files.txt
+stamps/rt-class-files.stamp: rt-source-files.txt stamps/generated.stamp
 	mkdir -p lib/rt
 	if ! test -f stamps/icedtea-ecj.stamp ; \
         then \
@@ -1004,6 +1010,8 @@ clone-ecj: stamps/clone-ecj.stamp
 copy-source-files: stamps/copy-source-files.stamp
 
 download: stamps/download.stamp
+
+generated: stamps/generated.stamp
 
 icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
 

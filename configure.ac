@@ -165,6 +165,7 @@ AC_ARG_WITH([parallel-jobs],
 AC_SUBST(PARALLEL_JOBS)
 	
 SET_ARCH_DIRS
+SET_OS
 if test "${with_openjdk}" == true
 then
   JAVA=$SYSTEM_OPENJDK_DIR/bin/java

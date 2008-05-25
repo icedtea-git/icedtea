@@ -737,6 +737,7 @@ WITH_OPENJDK_FALSE
 PARALLEL_JOBS
 BUILD_ARCH_DIR
 INSTALL_ARCH_DIR
+BUILD_OS
 JAVA
 JAVAC
 JAVAH
@@ -6008,6 +6009,20 @@ fi
       ;;
   esac
 
+
+
+
+  case "${host_os}" in
+    linux-gnu)
+      BUILD_OS=linux
+      ;;
+    solaris*)
+      BUILD_OS=solaris
+      ;;
+    *)
+      BUILD_OS=$(uname -o)
+      ;;
+  esac
 
 
 if test "${with_openjdk}" == true
@@ -13022,6 +13037,7 @@ WITH_OPENJDK_FALSE!$WITH_OPENJDK_FALSE$ac_delim
 PARALLEL_JOBS!$PARALLEL_JOBS$ac_delim
 BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
 INSTALL_ARCH_DIR!$INSTALL_ARCH_DIR$ac_delim
+BUILD_OS!$BUILD_OS$ac_delim
 JAVA!$JAVA$ac_delim
 JAVAC!$JAVAC$ac_delim
 JAVAH!$JAVAH$ac_delim
@@ -13091,7 +13107,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 92; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 93; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
