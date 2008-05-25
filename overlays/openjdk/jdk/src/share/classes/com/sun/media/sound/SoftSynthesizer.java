@@ -331,7 +331,10 @@ public class SoftSynthesizer implements AudioSynthesizer, ReferenceCountingDevic
 		return deviceid;
 	}
 
-	protected float getControlRate() {
+	/**
+ 	 * Returns the number of control changes per second.
+ 	 */
+	public float getControlRate() {
 		return controlrate;
 	}
 

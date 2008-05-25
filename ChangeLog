@@ -1,3 +1,11 @@
+2008-05-23  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
+	Import Gervill fixes from CVS. See CHANGES.txt.
+	Added: Software Mixing Mixer.
+	Fix: AudioFloatFormatConverter.getTargetFormats()
+	* overlays/openjdk/jdk/test/com/sun/media/sound: Imported all tests.
+
 2008-05-23  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Updated jtreg to use correct javac and jar.
