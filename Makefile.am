@@ -559,16 +559,16 @@ stamps/bootstrap-directory-ecj.stamp:
 	    --with-gcj-home=/path/to/java-gcj-devel ; \
           exit 1; \
 	fi
-	if test -f bootstrap/jdk1.7.0/jre/lib/tools.jar ; \
+	if test -f $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/tools.jar ; \
 	then \
-		mkdir -p bootstrap/ecj/lib ; \
+		mkdir -p $(abs_top_builddir)/bootstrap/ecj/lib ; \
 		ln -sf $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
 	            $(abs_top_builddir)/bootstrap/ecj/lib/tools.jar; \
 	fi
-	if test -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar ; \
+	if test -f $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar ; \
 	then \
-		cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-			bootstrap/ecj/jre/lib/rt.jar; \
+		cp $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+			$(abs_top_builddir)/bootstrap/ecj/jre/lib/rt.jar; \
 	fi 
 	mkdir -p stamps
 	touch stamps/bootstrap-directory-ecj.stamp
