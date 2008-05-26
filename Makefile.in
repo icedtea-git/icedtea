@@ -115,6 +115,7 @@ ECHO_T = @ECHO_T@
 ECJ = @ECJ@
 ECJ_JAR = @ECJ_JAR@
 EGREP = @EGREP@
+ENABLE_PLUGIN = @ENABLE_PLUGIN@
 EXEEXT = @EXEEXT@
 FASTJAR = @FASTJAR@
 FILE = @FILE@
@@ -150,6 +151,7 @@ LTLIBOBJS = @LTLIBOBJS@
 MAKE = @MAKE@
 MAKEINFO = @MAKEINFO@
 MD5SUM = @MD5SUM@
+MERCURIAL = @MERCURIAL@
 MKDIR_P = @MKDIR_P@
 MOZILLA_CFLAGS = @MOZILLA_CFLAGS@
 MOZILLA_LIBS = @MOZILLA_LIBS@
@@ -1391,11 +1393,14 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
-	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
-	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
-	  $(GTK_CFLAGS) $(GTK_LIBS) \
-	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -fpic -shared -o $@ $<
+	if test "$(ENABLE_PLUGIN)" == "yes" ; \
+	then \
+	  $(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+	    $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
+	    $(GTK_CFLAGS) $(GTK_LIBS) \
+	    -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	    -fpic -shared -o $@ $< ; \
+	fi
 
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so

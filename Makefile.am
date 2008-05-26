@@ -952,11 +952,14 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
-	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
-	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
-	  $(GTK_CFLAGS) $(GTK_LIBS) \
-	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -fpic -shared -o $@ $<
+	if test "$(ENABLE_PLUGIN)" == "yes" ; \
+	then \
+	  $(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+	    $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
+	    $(GTK_CFLAGS) $(GTK_LIBS) \
+	    -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	    -fpic -shared -o $@ $< ; \
+	fi
 
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so

@@ -1,5 +1,5 @@
 AC_PREREQ([2.61])
-AC_INIT([icedtea6], [1.2], [fitzsim@redhat.com])
+AC_INIT([icedtea], [1.6], [fitzsim@redhat.com])
 AM_INIT_AUTOMAKE([tar-pax])
 AC_CONFIG_FILES([Makefile])
 AC_CANONICAL_HOST
@@ -99,16 +99,10 @@ AC_ARG_WITH([ant-home],
 AC_SUBST(SYSTEM_ANT_DIR)
 
 AC_ARG_ENABLE([gcjwebplugin],
-	      [AS_HELP_STRING([--disable-gcjwebplugin],
+	      [AS_HELP_STRING([--disable-gcjwebplugin], 
 	      		      [Disable compilation of browser plugin])],
-	      [enable_plugin="$val"], [enable_plugin="yes"])
-AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
-
-AC_ARG_ENABLE([liveconnect],
-	      [AS_HELP_STRING([--enable-liveconnect],
-	      		      [Enable experimental LiveConnect plugin])],
-	      [enable_liveconnect="yes"], [enable_liveconnect="no"])
-AM_CONDITIONAL(ENABLE_LIVECONNECT, test "x${enable_liveconnect}" = "xyes")
+	      [ENABLE_PLUGIN="$val"], [ENABLE_PLUGIN='yes'])
+AC_SUBST(ENABLE_PLUGIN)
 
 AC_ARG_ENABLE([docs],
 	      [AS_HELP_STRING([--disable-docs], 
@@ -216,7 +210,11 @@ ENABLE_ZERO_BUILD
 ENABLE_NETX_PLUGIN
 SET_CORE_BUILD
 
-dnl pkgconfig cannot be used to finid these headers and libraries.
+if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
+  FIND_TOOL([MERCURIAL],[hg])
+fi
+
+dnl pkgconfig cannot be used to find these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
 	,[AC_MSG_ERROR("CUPS headers were not found - 
 	try installing cups-devel.")])
@@ -375,8 +373,6 @@ AC_SUBST(GLIB_LIBS)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 fi
-AC_SUBST(LIBFFI_CFLAGS)
-AC_SUBST(LIBFFI_LIBS)
 
 if test "x${ZERO_BUILD_TRUE}" = x; then
   dnl Check for libffi headers and libraries.
