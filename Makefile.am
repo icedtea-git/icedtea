@@ -97,7 +97,8 @@ ICEDTEA_ENV = \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
-	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)"
+	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
+	"JAVAC="
 
 if WITH_CACAO
 ICEDTEA_ENV += \
@@ -160,7 +161,8 @@ ICEDTEA_ENV_ECJ = \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
-	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)"
+	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
+	"JAVAC="
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
@@ -614,7 +616,7 @@ endif
 icedtea: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp \
-	gcjwebplugin.so extra-lib/about.jar
+	gcjwebplugin.so extra-lib/about.jar env
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -671,7 +673,7 @@ icedtea-against-icedtea: \
 # ===================
 
 stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
+	stamps/ports-ecj.stamp stamps/patch-ecj.stamp env-ecj
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj \

@@ -309,7 +309,7 @@ ICEDTEA_ENV = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
-	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" $(am__append_1) \
+	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" "JAVAC=" $(am__append_1) \
 	$(am__append_2) $(am__append_3)
 
 # OpenJDK ecj build environment.
@@ -349,7 +349,7 @@ ICEDTEA_ENV_ECJ = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
-	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" $(am__append_4) \
+	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" "JAVAC=" $(am__append_4) \
 	$(am__append_5) $(am__append_6)
 
 # OpenJDK Source Preparation Targets
@@ -1085,7 +1085,7 @@ clean-bootstrap-directory-symlink-ecj:
 icedtea: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp \
-	gcjwebplugin.so extra-lib/about.jar
+	gcjwebplugin.so extra-lib/about.jar env
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1142,7 +1142,7 @@ icedtea-against-icedtea: \
 # ===================
 
 stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
+	stamps/ports-ecj.stamp stamps/patch-ecj.stamp env-ecj
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj \
