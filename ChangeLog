@@ -1,5 +1,10 @@
 2008-05-26  Lillian Angel  <langel@redhat.com>
 
+	* iMakefile.am: Updated jtreg to use correct java.
+	* Makefile.in: Regenerated.
+
+2008-05-26  Lillian Angel  <langel@redhat.com>
+
 	* patches/icedtea-certbundle.patch: Added trustStore and
 	trustStoreType to props.
 
