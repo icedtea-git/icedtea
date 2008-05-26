@@ -1355,7 +1355,7 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 
 # extras -- used to create about.jar for javaws.
 extra-source-files.txt:
-	find extra -name '*.java' | sort > $@
+	find $(abs_top_srcdir)/extra -name '*.java' | sort > $@
 
 stamps/extra-class-files.stamp: extra-source-files.txt \
 	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar

@@ -33,13 +33,13 @@ public class Version {
         "java";
 
     private static final String java_version =
-        "1.6.0";
+        "1.7.0";
 
     private static final String java_runtime_name =
         "IcedTea Runtime Environment";
 
     private static final String java_runtime_version =
-        "1.6.0-b09";
+        "1.7.0-b26";
 
     static {
         init();
@@ -75,6 +75,15 @@ public class Version {
     }
 
     /**
+     * This is the same as print except that it adds an extra line-feed
+     * at the end, typically used by the -showversion in the launcher
+     */
+    public static void println() {
+        print(System.err);
+        System.err.println();
+    }
+
+    /**
      * Give a stream, it will print version info on it.
      */
     public static void print(PrintStream ps) {
@@ -92,6 +101,7 @@ public class Version {
         ps.println(java_vm_name + " (build " + java_vm_version + ", " +
                    java_vm_info + ")");
     }
+
 
     /**
      * Returns the major version of the running JVM if it's 1.6 or newer
