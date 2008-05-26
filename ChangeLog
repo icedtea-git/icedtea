@@ -1,5 +1,10 @@
 2008-05-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* patches/icedtea-libraries.patch:
+	Regenerated post-merge.
+
+2008-05-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* Makefile.am:
 	Don't pass JAVAC through to the OpenJDK
 	build and disable JAVA_HOME before building.
