@@ -46,7 +46,7 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 
 # OpenJDK build environment.
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
-BUILD_OUTPUT_DIR = openjdk/control/build/$(LINUX_DIR)
+BUILD_OUTPUT_DIR = openjdk/build/$(LINUX_DIR)
 ICEDTEA_BUILD_DIR = \
 	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)
 ICEDTEA_RT = \
@@ -121,9 +121,9 @@ env:
 
 # OpenJDK ecj build environment.
 ICEDTEA_BUILD_DIR_ECJ = \
-	$(abs_top_builddir)/openjdk-ecj/control/build/$(LINUX_DIR)/
+	$(abs_top_builddir)/openjdk-ecj/build/$(LINUX_DIR)/
 ICEDTEA_CLS_DIR_ECJ = \
-	$(abs_top_builddir)/openjdk-ecj/control/build/$(LINUX_DIR)/classes
+	$(abs_top_builddir)/openjdk-ecj/build/$(LINUX_DIR)/classes
 ICEDTEA_ENV_ECJ = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
@@ -481,7 +481,7 @@ clean-patch-ecj:
 # bootstrap/icedtea.
 stamps/bootstrap-directory.stamp: stamps/icedtea-against-ecj.stamp
 	rm -rf bootstrap/icedtea
-	ln -s $(abs_top_builddir)/openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/ bootstrap/icedtea
+	ln -s $(abs_top_builddir)/openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image/ bootstrap/icedtea
 	if ! test -d bootstrap/icedtea/include; then \
 	  ln -sf $(ICEDTEA_BUILD_DIR_ECJ)/include bootstrap/icedtea/include; \
 	fi
@@ -617,7 +617,7 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	gcjwebplugin.so extra-lib/about.jar
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/control/make/ \
+	  -C openjdk/ \
 	  $(ICEDTEA_BUILD_TARGET)
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
 	  then \
@@ -640,7 +640,7 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	gcjwebplugin.so extra-lib/about.jar
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/control/make \
+	  -C openjdk/ \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
 	  then \
@@ -661,7 +661,7 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 clean-icedtea: stamps/clone.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/control/make clobber
+	  -C openjdk/ clobber
 
 icedtea-against-icedtea: \
 	stamps/bootstrap-directory-symlink.stamp \
@@ -674,10 +674,10 @@ stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj/control/make \
+	  -C openjdk-ecj \
 	  $(ICEDTEA_BUILD_TARGET)
 	@echo "ecj-poured IcedTea is served:" \
-	  openjdk-ecj/control/build/$(LINUX_DIR)
+	  openjdk-ecj/build/$(LINUX_DIR)
 	mkdir -p stamps
 	touch stamps/icedtea-ecj.stamp
 
@@ -686,22 +686,22 @@ hotspot:
 	rm -f stamps/icedtea-ecj.stamp
 	rm -f stamps/icedtea-against-ecj.stamp
 	$(MAKE) hotspot-helper
-	cp openjdk-ecj/control/build/$(LINUX_DIR)/hotspot/import/jre/lib/$(BUILD_ARCH_DIR)/core/libjvm.so \
-	   openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/core
-	@echo "Hotspot is served:" openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image
+	cp openjdk-ecj/build/$(LINUX_DIR)/hotspot/import/jre/lib/$(BUILD_ARCH_DIR)/core/libjvm.so \
+	   openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/core
+	@echo "Hotspot is served:" openjdk-ecj/build/$(LINUX_DIR)/j2sdk-image
 
 hotspot-helper: stamps/bootstrap-directory-symlink-ecj.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj/control/make hotspot
+	  -C openjdk-ecj hotspot
 
 clean-icedtea-ecj: stamps/clone-ecj.stamp
 	rm -f stamps/icedtea-ecj.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
-	  -C openjdk-ecj/control/make clobber
+	  -C openjdk-ecj clobber
 
 stamps/icedtea-against-ecj.stamp: \
 	stamps/bootstrap-directory-symlink-ecj.stamp \
@@ -916,7 +916,7 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 
 # extras -- used to create about.jar for javaws.
 extra-source-files.txt:
-	find extra -name '*.java' | sort > $@
+	find $(abs_top_srcdir)/extra -name '*.java' | sort > $@
 
 stamps/extra-class-files.stamp: extra-source-files.txt \
 	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
