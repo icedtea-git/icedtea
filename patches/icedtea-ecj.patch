@@ -1,271 +1,6 @@
---- openjdk.old/hotspot/build/linux/Makefile	2007-10-12 03:46:24.000000000 -0400
-+++ openjdk-ecj/hotspot/build/linux/Makefile	2007-10-19 10:27:52.000000000 -0400
-@@ -244,28 +244,24 @@
- 
- $(TARGETS_C2):  $(SUBDIRS_C2)
- 	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && $(MAKE) $(MFLAGS)
--	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && ./test_gamma
- ifdef INSTALL
- 	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && $(MAKE) $(MFLAGS) install
- endif
- 
- $(TARGETS_TIERED):  $(SUBDIRS_TIERED)
- 	cd $(OSNAME)_$(BUILDARCH)_tiered/$(patsubst %tiered,%,$@) && $(MAKE) $(MFLAGS)
--	cd $(OSNAME)_$(BUILDARCH)_tiered/$(patsubst %tiered,%,$@) && ./test_gamma
- ifdef INSTALL
- 	cd $(OSNAME)_$(BUILDARCH)_tiered/$(patsubst %tiered,%,$@) && $(MAKE) $(MFLAGS) install
- endif
- 
- $(TARGETS_C1):  $(SUBDIRS_C1)
- 	cd $(OSNAME)_$(BUILDARCH)_compiler1/$(patsubst %1,%,$@) && $(MAKE) $(MFLAGS)
--	cd $(OSNAME)_$(BUILDARCH)_compiler1/$(patsubst %1,%,$@) && ./test_gamma
- ifdef INSTALL
- 	cd $(OSNAME)_$(BUILDARCH)_compiler1/$(patsubst %1,%,$@) && $(MAKE) $(MFLAGS) install
- endif
- 
- $(TARGETS_CORE):  $(SUBDIRS_CORE)
- 	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS)
--	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && ./test_gamma
- ifdef INSTALL
- 	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS) install
- endif
---- openjdk.old/jdk/make/common/BuildToolJar.gmk	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk-ecj/jdk/make/common/BuildToolJar.gmk	2007-10-19 10:51:47.000000000 -0400
-@@ -43,7 +43,8 @@
- 	@$(prep-target)
- 	@$(MKDIR) -p $(BUILDTOOLCLASSDIR)
- 	$(BOOT_JAVAC_CMD) -d $(BUILDTOOLCLASSDIR) \
--	    -sourcepath $(BUILDTOOL_SOURCE_ROOT) $(BUILDTOOL_MAIN_SOURCE_FILE)
-+	    -sourcepath $(BUILDTOOL_SOURCE_ROOT) -classpath $(ICEDTEA_RT) \
-+	    $(BUILDTOOL_MAIN_SOURCE_FILE)
- 	$(BOOT_JAR_CMD) cfm $@ $(BUILDTOOL_MANIFEST_FILE) \
- 	    -C $(BUILDTOOLCLASSDIR) $(PKGDIR) \
- 	    $(JAR_JFLAGS) || $(RM) $@
---- iopenjdk.old/jdk/make/Makefile	2007-10-12 03:54:03.000000000 -0400
-+++ openjdk-ecj/jdk/make/Makefile	2007-10-19 13:10:02.000000000 -0400
-@@ -239,7 +239,7 @@
- 
- all build:: sanity-all post-sanity-all
- 
--SUBDIRS    = tools java javax org sun sunw com jpda mkdemo mksample launchers
-+SUBDIRS    = tools java javax org sun sunw com jpda mksample launchers
- all build::
- 	$(SUBDIRS-loop)
- 
---- openjdk.old/corba/make/org/omg/sources/Makefile	2007-10-12 03:49:14.000000000 -0400
-+++ openjdk-ecj/corba/make/org/omg/sources/Makefile	2007-10-30 11:57:03.000000000 -0400
-@@ -93,8 +93,6 @@
- POAHELHOLFILES =    $(POA_GENERATED_HELP_HOL_java:%=$(GENSRCDIR)/%)
- 
- $(POAGENERATEDFILES):: $(POA.IDL)
--	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableServer" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -corba 3.0 -fall -pkgPrefix PortableServer org.omg $(POA.IDL)
--	$(RM) -r $(POAHELHOLFILES)
- 
- poa.compile: $(POAGENERATEDFILES)
- 
-@@ -110,10 +108,6 @@
- 
- # Generating and deleting unused files to reduce images size
- $(DYNANYFILES): $(DYNAMIC_ANY.IDL)
--	$(IDLJ) -td "$(GENSRCDIR)" $(DYNANY_IDLJ_FLAGS) $(DYNAMIC_ANY.IDL)
--	$(RM) $(DYNANY_DIR)/*POA*
--	$(RM) $(DYNANY_DIR)/*Holder*
--	$(RM) $(DYNANYDELETEFILES)
- 
- dynany.compile: $(DYNANYFILES)
- 
-@@ -125,12 +119,6 @@
- TR_IDLJ_FLAGS =-i "$(SRC_DIR)/org/omg/PortableInterceptor" -i "$(SRC_DIR)/org/omg/PortableServer" -i "$(SRC_DIR)/org/omg/CosTransactions"
- 
- $(TRGENERATEDFILES):: $(COSTRANSACTIONS.IDL) $(COSTSINTEROP.IDL)
--	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg -pkgPrefix CosTransactions org.omg $(COSTRANSACTIONS.IDL)
--	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg -pkgPrefix CosTSInteroperation org.omg $(COSTSINTEROP.IDL)
--#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
--#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fallTIE -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
--#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
--#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fallTIE -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
- 
- tr.compile: $(TRGENERATEDFILES)
- 
-@@ -144,7 +132,6 @@
- # _NamingContextImplBase.java and _BindingIteratorImplBase.java files
- # to GENSRC directory. Note that these two classes are deprecated.
- $(NSGENERATEDFILES): $(NAMESERVICE.IDL)
--	$(IDLJ) -td "$(GENSRCDIR)" -i $(NAMESERVICEDIR) -fall -pkgPrefix CosNaming org.omg $(NAMESERVICE.IDL)
- 
- ns.compile: $(NSGENERATEDFILES)
- 
-@@ -156,8 +143,6 @@
- IOPDELETEFILES =    $(IOP_TO_DELETE_FILES:%=$(GENSRCDIR)/%)
- 
- $(IOPGENERATEDFILES):: $(IOP.IDL)
--	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -corba 3.0 -D CORBA3 -pkgPrefix IOP org.omg $(IOP.IDL)
--	$(RM) -r $(IOPDELETEFILES)
- 
- iop.compile: $(IOPGENERATEDFILES)
- 
-@@ -169,8 +154,6 @@
- CORBAXDUPLICATEFILES = $(CORBA_DUPLICATE_java:%=$(GENSRCDIR)/%)
- 
- $(CORBAXGENERATEDFILES):: $(CORBAX.IDL)
--	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -corba 3.0 $(CORBAX.IDL)
--	$(RM) $(CORBAXDUPLICATEFILES)
- 
- corbax.compile: $(CORBAXGENERATEDFILES)
- 
-@@ -181,7 +164,6 @@
- MESSAGINGGENERATEDFILES = $(Messaging_java:%=$(GENSRCDIR)/%)
- 
- $(MESSAGINGGENERATEDFILES):: $(MESSAGING.IDL)
--	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -corba 3.0 -pkgPrefix Messaging org.omg $(MESSAGING.IDL)
- 
- messaging.compile: $(MESSAGINGGENERATEDFILES)
- 
-@@ -195,8 +177,6 @@
- PIHELHOLFILES = $(PI_GENERATED_HELP_HOL_java:%=$(GENSRCDIR)/%)
- 
- $(PIGENERATEDFILES):: $(INTERCEPTORS.IDL)
--	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -pkgPrefix PortableInterceptor org.omg -pkgPrefix Dynamic org.omg -pkgPrefix IOP org.omg -corba 3.0 -D CORBA3 $(INTERCEPTORS.IDL)
--	$(RM) $(PIHELHOLFILES)
- 
- pi.compile: $(PIGENERATEDFILES)
- 
---- openjdk.old/corba/make/sun/rmi/corbalogsources/Makefile	2007-10-12 03:49:14.000000000 -0400
-+++ openjdk-ecj/corba/make/sun/rmi/corbalogsources/Makefile	2007-10-30 11:57:25.000000000 -0400
-@@ -173,7 +173,6 @@
- ACTIVATIONFILES = $(com_sun_corba_se_spi_activation_java:%=$(GENSRCDIR)/%)
- 
- $(ACTIVATIONFILES): $(ACTIVATION.IDL)
--	$(IDLJ) -td $(GENSRCDIR) -i $(ACTIVATIONFILEDIR) -fall -oldImplBase -pkgPrefix activation com.sun.corba.se.spi $(ACTIVATION.IDL)
- 
- activation.idl.compile: $(ACTIVATIONFILES)
- 
-@@ -196,7 +195,6 @@
- 
- # REVISIT: remove -oldImplBase
- $(PORTABLEACTIVATIONFILES): $(PORTABLEACTIVATION.IDL)
--	$(IDLJ) -td $(GENSRCDIR) $(PORTABLEACTIVATION_INCLUDES) $(PORTABLEACTIVATION_PKG_PREFIXES) -fall -oldImplBase -corba 3.0 -D CORBA3 $(PORTABLEACTIVATION.IDL)
- 
- portableactivation.idl.compile: $(PORTABLEACTIVATIONFILES)
- 
---- openjdk.old/jdk/make/sun/javazic/Makefile	2007-10-12 03:54:08.000000000 -0400
-+++ openjdk-ecj/jdk/make/sun/javazic/Makefile	2007-10-30 14:32:25.000000000 -0400
-@@ -62,7 +62,8 @@
- $(WORKDIR)/$(MAPFILE): $(BUILDTOOLJARDIR)/javazic.jar $(TZFILES)
- 	$(RM) -r $(@D)
- 	$(prep-target)
--	$(BOOT_JAVA_CMD) -jar $(BUILDTOOLJARDIR)/javazic.jar -V "$(TZDATA_VER)" -d $(WORKDIR) $(TZFILES)
-+	$(BOOT_JAVA_CMD) -cp $(ICEDTEA_CLS_DIR):$(BUILDTOOLJARDIR)/javazic.jar \
-+		build.tools.javazic.Main -V "$(TZDATA_VER)" -d $(WORKDIR) $(TZFILES)
- 	@$(java-vm-cleanup)
- 
- $(INSTALLDIR)/$(MAPFILE): $(WORKDIR)/$(MAPFILE)
---- openjdk.old/jdk/make/sun/awt/Makefile	2007-10-30 15:27:06.000000000 -0400
-+++ openjdk-ecj/jdk/make/sun/awt/Makefile	2007-10-30 15:30:02.000000000 -0400
-@@ -400,10 +400,9 @@
- COMPILEFONTCONFIG_JARFILE = $(BUILDTOOLJARDIR)/compilefontconfig.jar
- 
- $(LIBDIR)/%.bfc: $(FONTCONFIGS_SRC)/$(FONTCONFIGS_SRC_PREFIX)%.properties \
--    $(COMPILEFONTCONFIG_JARFILE)
--	$(prep-target)
--	$(BOOT_JAVA_CMD) -jar $(COMPILEFONTCONFIG_JARFILE) $< $@
--	$(CHMOD) 444 $(@)
-+	$(COMPILEFONTCONFIG_JARFILE)
-+	$(CP) -f $(GENSRCDIR)/fontconfig/* $(LIBDIR)
-+	$(CHMOD) 444 $(LIBDIR)/*.bfc
- 	@$(java-vm-cleanup)
- 
- fontconfigs.clean :
---- openjdk.old/jdk/make/sun/text/Makefile	2007-10-12 03:54:08.000000000 -0400
-+++ openjdk-ecj/jdk/make/sun/text/Makefile	2007-10-30 15:32:46.000000000 -0400
-@@ -85,8 +85,9 @@
- 	$(BOOT_JAVAC_CMD) -d $(TEXT_CLASSES) \
- 		-sourcepath $(TEXT_SRCDIR) \
- 		$(BIRULES) $(BIINFO)
--	$(BOOT_JAVA_CMD) -Xbootclasspath/p:$(TEXT_CLASSES) \
--		-jar $(GENERATEBREAKITERATORDATA_JARFILE) \
-+	$(BOOT_JAVA_CMD)  \
-+		-cp $(TEXT_CLASSES):$(ICEDTEA_CLS_DIR):$(GENERATEBREAKITERATORDATA_JARFILE) \
-+		build.tools.generatebreakiteratordata.GenerateBreakIteratorData \
- 		-o $(CLASSDESTDIR)/sun/text/resources \
- 		-spec $(UNICODEDATA)/UnicodeData.txt \
- 		-language th
---- openjdk.old/jdk/make/java/text/Makefile	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk-ecj/jdk/make/java/text/Makefile	2007-10-30 14:26:53.000000000 -0400
-@@ -80,8 +80,8 @@
- 		-sourcepath $(TEXT_SRCDIR) \
- 		$(TEXT_SOURCES)
- 	$(MKDIR) -p  $(TEXT_CLASSDIR)
--	$(BOOT_JAVA_CMD) -Xbootclasspath/p:$(TEXT_CLASSES) \
--		-jar $(GENERATEBREAKITERATORDATA_JARFILE) \
-+	$(BOOT_JAVA_CMD) -cp $(TEXT_CLASSES):$(GENERATEBREAKITERATORDATA_JARFILE):$(ICEDTEA_CLS_DIR) \
-+		build.tools.generatebreakiteratordata.GenerateBreakIteratorData \
- 		-o $(TEXT_CLASSDIR) \
- 		-spec $(UNICODEDATA)/UnicodeData.txt
- 	@$(java-vm-cleanup)
---- openjdk.old/jdk/make/java/nio/Makefile	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk-ecj/jdk/make/java/nio/Makefile	2007-10-31 16:55:26.000000000 -0400
-@@ -31,7 +31,7 @@
- PACKAGE = java.nio
- LIBRARY = nio
- PRODUCT = java
--OTHER_JAVACFLAGS += -Xmaxwarns 1000 -Xlint:serial -Werror
-+OTHER_JAVACFLAGS += -Xlint:serial -Werror
- include $(BUILDDIR)/common/Defs.gmk
- 
- NIO_SRC = $(SHARE_SRC)/classes/java/nio
---- openjdk.old/corba/make/common/Rules.gmk	2007-10-12 03:49:14.000000000 -0400
-+++ openjdk-ecj/corba/make/common/Rules.gmk	2007-11-01 11:31:47.000000000 -0400
-@@ -197,8 +197,10 @@
- 	  $(ECHO) "# Java sources to be compiled: (listed in file $(JAVA_SOURCE_LIST))"; \
- 	  $(CAT) $(JAVA_SOURCE_LIST); \
- 	  $(ECHO) "# Running javac:"; \
--	  $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
--	  $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
-+	  $(ECHO) $(JAVAC_CMD) -bootclasspath $(ICEDTEA_RT):$(ICEDTEA_BUILD_DIR)/corba/classes \
-+		 -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
-+	  $(JAVAC_CMD) -bootclasspath $(ICEDTEA_RT):$(ICEDTEA_BUILD_DIR)/corba/classes \
-+		 -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
- 	fi
- 	@$(java-vm-cleanup)
- 
---- openjdk.old/corba/make/common/Defs.gmk	2007-10-12 03:49:14.000000000 -0400
-+++ openjdk-ecj/corba/make/common/Defs.gmk	2007-11-01 12:24:59.000000000 -0400
-@@ -53,6 +53,13 @@
- 
- _OUTPUTDIR=$(TOPDIR)/build/$(PLATFORM)-$(ARCH)
- 
-+
-+ifdef ALT_LANGTOOLS_DIST
-+  LANGTOOLS_DIST :=$(call FullPath,$(ALT_LANGTOOLS_DIST))
-+else
-+  LANGTOOLS_DIST =
-+endif 
-+
- #
- # Get platform definitions
- #
-@@ -129,8 +136,6 @@
- # for build tool jar files
- BUILDTOOLJARDIR     = $(OUTPUTDIR)/btjars
- ABS_BUILDTOOLJARDIR = $(ABS_OUTPUTDIR)/btjars
--# for generated java source files
--GENSRCDIR           = $(OUTPUTDIR)/gensrc
- # for generated C source files (not javah)
- GENNATIVESRCDIR     = $(OUTPUTDIR)/gennativesrc
- # for imported source files
-@@ -231,7 +236,7 @@
- # We define an intermediate variable for Java files because
- # we use its value later to help define $SOURCEPATH
- 
--VPATH0.java = $(GENSRCDIR)$(CLASSPATH_SEPARATOR)$(PLATFORM_SRC)/classes$(CLASSPATH_SEPARATOR)$(SHARE_SRC)/classes
-+VPATH0.java = $(GENSRCDIR)$(CLASSPATH_SEPARATOR)$(SHARE_SRC)/classes
- VPATH.java = $(VPATH0.java)
- vpath %.java $(VPATH.java)
- vpath %.class $(CLASSBINDIR)
-diff -ruN openjdk.old/corba/make/com/sun/corba/se/Makefile openjdk-ecj/corba/make/com/sun/corba/se/Makefile
---- openjdk.old/corba/make/com/sun/corba/se/Makefile	2007-10-12 03:49:13.000000000 -0400
-+++ openjdk-ecj/corba/make/com/sun/corba/se/Makefile	2007-11-06 15:07:45.000000000 -0500
+diff -Nru openjdk-ecj.orig/corba/make/com/sun/corba/se/Makefile openjdk-ecj/corba/make/com/sun/corba/se/Makefile
+--- openjdk-ecj.orig/corba/make/com/sun/corba/se/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/corba/make/com/sun/corba/se/Makefile	2008-05-26 01:35:35.000000000 +0100
 @@ -42,7 +42,7 @@
  # the rmic iiop backend needs some classes that are part of the impl/util
  # package.  These classes use log wrappers, so they must be built after
@@ -275,9 +10,9 @@ diff -ruN openjdk.old/corba/make/com/sun/corba/se/Makefile openjdk-ecj/corba/mak
  all build clean clobber::
  	$(SUBDIRS-loop)
  
-diff -ruN openjdk.old/corba/make/com/sun/corba/se/org/Makefile openjdk-ecj/corba/make/com/sun/corba/se/org/Makefile
---- openjdk.old/corba/make/com/sun/corba/se/org/Makefile	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk-ecj/corba/make/com/sun/corba/se/org/Makefile	2007-11-06 15:07:20.000000000 -0500
+diff -Nru openjdk-ecj.orig/corba/make/com/sun/corba/se/org/Makefile openjdk-ecj/corba/make/com/sun/corba/se/org/Makefile
+--- openjdk-ecj.orig/corba/make/com/sun/corba/se/org/Makefile	1970-01-01 01:00:00.000000000 +0100
++++ openjdk-ecj/corba/make/com/sun/corba/se/org/Makefile	2008-05-26 01:35:35.000000000 +0100
 @@ -0,0 +1,38 @@
 +#
 +# Copyright 2001-2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -317,9 +52,9 @@ diff -ruN openjdk.old/corba/make/com/sun/corba/se/org/Makefile openjdk-ecj/corba
 +# Include
 +#
 +include $(BUILDDIR)/common/Classes.gmk
-diff -ruN openjdk.old/corba/make/com/sun/corba/se/sources/Makefile openjdk-ecj/corba/make/com/sun/corba/se/sources/Makefile
---- openjdk.old/corba/make/com/sun/corba/se/sources/Makefile	2007-10-12 03:49:13.000000000 -0400
-+++ openjdk-ecj/corba/make/com/sun/corba/se/sources/Makefile	1969-12-31 19:00:00.000000000 -0500
+diff -Nru openjdk-ecj.orig/corba/make/com/sun/corba/se/sources/Makefile openjdk-ecj/corba/make/com/sun/corba/se/sources/Makefile
+--- openjdk-ecj.orig/corba/make/com/sun/corba/se/sources/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/corba/make/com/sun/corba/se/sources/Makefile	1970-01-01 01:00:00.000000000 +0100
 @@ -1,222 +0,0 @@
 -#
 -# Copyright 2000-2006 Sun Microsystems, Inc.  All Rights Reserved.
@@ -543,63 +278,316 @@ diff -ruN openjdk.old/corba/make/com/sun/corba/se/sources/Makefile openjdk-ecj/c
 -# Include
 -#
 -include $(BUILDDIR)/common/Rules.gmk
---- iopenjdk/jdk/make/common/Rules.gmk	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk-ecj/jdk/make/common/Rules.gmk	2007-11-07 11:02:53.000000000 -0500
-@@ -235,8 +235,9 @@
+diff -Nru openjdk-ecj.orig/corba/make/common/Defs-linux.gmk openjdk-ecj/corba/make/common/Defs-linux.gmk
+--- openjdk-ecj.orig/corba/make/common/Defs-linux.gmk	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/corba/make/common/Defs-linux.gmk	2008-05-26 01:35:42.000000000 +0100
+@@ -262,7 +262,7 @@
+ 		    fi; \
+ 		  done)
+ JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
+-JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
++JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -L$(dir $(shell $(if $(GCJ),$(GCJ),$(subst gcc,gcj,$(CC))) --print-file-name=libgcj.so)) -lgcj $(JVMLIB)
+ 
+ #
+ # We want to privatize JVM symbols on Solaris. This is so the user can
+diff -Nru openjdk-ecj.orig/corba/make/common/Defs.gmk openjdk-ecj/corba/make/common/Defs.gmk
+--- openjdk-ecj.orig/corba/make/common/Defs.gmk	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/corba/make/common/Defs.gmk	2008-05-26 01:35:35.000000000 +0100
+@@ -53,6 +53,13 @@
+ 
+ _OUTPUTDIR=$(TOPDIR)/build/$(PLATFORM)-$(ARCH)
+ 
++
++ifdef ALT_LANGTOOLS_DIST
++  LANGTOOLS_DIST :=$(call FullPath,$(ALT_LANGTOOLS_DIST))
++else
++  LANGTOOLS_DIST =
++endif 
++
+ #
+ # Get platform definitions
+ #
+@@ -129,8 +136,6 @@
+ # for build tool jar files
+ BUILDTOOLJARDIR     = $(OUTPUTDIR)/btjars
+ ABS_BUILDTOOLJARDIR = $(ABS_OUTPUTDIR)/btjars
+-# for generated java source files
+-GENSRCDIR           = $(OUTPUTDIR)/gensrc
+ # for generated C source files (not javah)
+ GENNATIVESRCDIR     = $(OUTPUTDIR)/gennativesrc
+ # for imported source files
+@@ -231,7 +236,7 @@
+ # We define an intermediate variable for Java files because
+ # we use its value later to help define $SOURCEPATH
+ 
+-VPATH0.java = $(GENSRCDIR)$(CLASSPATH_SEPARATOR)$(PLATFORM_SRC)/classes$(CLASSPATH_SEPARATOR)$(SHARE_SRC)/classes
++VPATH0.java = $(GENSRCDIR)$(CLASSPATH_SEPARATOR)$(SHARE_SRC)/classes
+ VPATH.java = $(VPATH0.java)
+ vpath %.java $(VPATH.java)
+ vpath %.class $(CLASSBINDIR)
+diff -Nru openjdk-ecj.orig/corba/make/common/Rules.gmk openjdk-ecj/corba/make/common/Rules.gmk
+--- openjdk-ecj.orig/corba/make/common/Rules.gmk	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/corba/make/common/Rules.gmk	2008-05-26 01:35:35.000000000 +0100
+@@ -197,8 +197,10 @@
  	  $(ECHO) "# Java sources to be compiled: (listed in file $(JAVA_SOURCE_LIST))"; \
  	  $(CAT) $(JAVA_SOURCE_LIST); \
  	  $(ECHO) "# Running javac:"; \
 -	  $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
 -	  $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
-+	   $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -bootclasspath "$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)" \
-+         -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
-+         $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -bootclasspath "$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
++	  $(ECHO) $(JAVAC_CMD) -bootclasspath $(ICEDTEA_RT):$(ICEDTEA_BUILD_DIR)/corba/classes \
++		 -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
++	  $(JAVAC_CMD) -bootclasspath $(ICEDTEA_RT):$(ICEDTEA_BUILD_DIR)/corba/classes \
++		 -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
  	fi
  	@$(java-vm-cleanup)
  
-@@ -302,6 +303,8 @@
- 	$(JAVAH_CMD) -d $(CLASSHDRDIR)/ \
- 		$(CLASSES.export) $(subst $$,\$$,$(EXPORTED_inner))
- 	@$(java-vm-cleanup)
-+	-mv $(CLASSHDRDIR)/java_lang_ClassLoader\$$NativeLibrary.h \
-+	  $(CLASSHDRDIR)/java_lang_ClassLoader_NativeLibrary.h
- 	@$(TOUCH) $@
+diff -Nru openjdk-ecj.orig/corba/make/common/shared/Defs-java.gmk openjdk-ecj/corba/make/common/shared/Defs-java.gmk
+--- openjdk-ecj.orig/corba/make/common/shared/Defs-java.gmk	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/corba/make/common/shared/Defs-java.gmk	2008-05-26 01:35:42.000000000 +0100
+@@ -117,31 +117,13 @@
+ JAVACFLAGS  += $(OTHER_JAVACFLAGS)
  
- classheaders.clean:
-diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/make/build.properties
---- openjdk-ecj.orig/langtools/make/build.properties	2007-10-12 08:47:30.000000000 +0100
-+++ openjdk-ecj/langtools/make/build.properties	2007-11-09 10:25:54.000000000 +0000
-@@ -66,7 +66,7 @@
- # set the following to -version to verify the versions of javac being used
- javac.version.opt = 
- # in time, there should be no exceptions to -Xlint:all
--javac.lint.opts = -Xlint:all,-unchecked,-deprecation,-fallthrough,-cast,-serial -Werror
-+javac.lint.opts = -Xlint:all,-unchecked,-deprecation,-fallthrough,-cast,-serial
+ # Needed for javah
+-JAVAHFLAGS += -bootclasspath $(CLASSBINDIR)
++JAVAHFLAGS += -bootclasspath $(CLASSBINDIR):$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)
  
- # options for the <javadoc> task for javac
- javadoc.jls3.url=http://java.sun.com/docs/books/jls/
---- openjdk.old/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2007-10-12 03:54:09.000000000 -0400
-+++ openjdk-ecj/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2007-11-13 10:29:46.000000000 -0500
-@@ -647,9 +647,6 @@
-             throws FileNotFoundException, IOException {
-         BufferedReader in = new BufferedReader(new FileReader(theTemplateFileName));
-         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(theOutputFileName)));
--        out.println(commentStart +
--            " This file was generated AUTOMATICALLY from a template file " +
--            new java.util.Date() + commentEnd);
-         int marklen = commandMarker.length();
-         LOOP: while(true) {
-             try {
-@@ -876,7 +873,6 @@
-         // liu : Add a comment showing the source of this table
-         result.append(commentStart + " The following tables and code generated using:" +
-                   commentEnd + "\n  ");
--        result.append(commentStart + ' ' + commandLineDescription + commentEnd + "\n  ");
+-# Langtools
+-ifdef LANGTOOLS_DIST
+-  JAVAC_JAR   = $(LANGTOOLS_DIST)/bootstrap/lib/javac.jar
+-  JAVAH_JAR   = $(LANGTOOLS_DIST)/bootstrap/lib/javah.jar
+-  JAVADOC_JAR = $(LANGTOOLS_DIST)/bootstrap/lib/javadoc.jar
+-  DOCLETS_JAR = $(LANGTOOLS_DIST)/bootstrap/lib/doclets.jar
+-  JAVAC_CMD   = $(BOOT_JAVA_CMD) \
+-		"-Xbootclasspath/p:$(JAVAC_JAR)" \
+-		-jar $(JAVAC_JAR) $(JAVACFLAGS)
+-  JAVAH_CMD   = $(BOOT_JAVA_CMD) \
+-		"-Xbootclasspath/p:$(JAVAH_JAR)$(CLASSPATH_SEPARATOR)$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)"  \
+-		-jar $(JAVAH_JAR) $(JAVAHFLAGS)
+-  JAVADOC_CMD = $(BOOT_JAVA_CMD) \
+-		"-Xbootclasspath/p:$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)$(CLASSPATH_SEPARATOR)$(DOCLETS_JAR)" \
+-		-jar $(JAVADOC_JAR)
+-else
+-  # If no explicit tools, use boot tools (add VM flags in this case)
+-  JAVAC_CMD     = $(JAVA_TOOLS_DIR)/javac $(JAVAC_JVM_FLAGS) \
++# If no explicit tools, use boot tools (add VM flags in this case)
++JAVAC_CMD     = $(JAVA_TOOLS_DIR)/javac $(JAVAC_JVM_FLAGS) \
+ 		  $(JAVACFLAGS)
+-  JAVAH_CMD     = $(JAVA_TOOLS_DIR)/javah \
++JAVAH_CMD     = $(JAVA_TOOLS_DIR)/javah \
+ 		  $(JAVAHFLAGS)
+-  JAVADOC_CMD   = $(JAVA_TOOLS_DIR)/javadoc $(JAVA_TOOLS_FLAGS:%=-J%)
+-endif
  
- 		if (plane == 0 && bLatin1 == false) {
-     	    genCaseMapTableDeclaration(result);
---- openjdk.old/jaxws/make/build.properties	2007-10-12 03:52:21.000000000 -0400
-+++ openjdk-ecj/jaxws/make/build.properties	2007-11-12 14:34:54.000000000 -0500
+ # Override of what javac to use (see deploy workspace)
+ ifdef JAVAC
+diff -Nru openjdk-ecj.orig/corba/make/org/omg/sources/Makefile openjdk-ecj/corba/make/org/omg/sources/Makefile
+--- openjdk-ecj.orig/corba/make/org/omg/sources/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/corba/make/org/omg/sources/Makefile	2008-05-26 01:35:35.000000000 +0100
+@@ -93,8 +93,6 @@
+ POAHELHOLFILES =    $(POA_GENERATED_HELP_HOL_java:%=$(GENSRCDIR)/%)
+ 
+ $(POAGENERATEDFILES):: $(POA.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableServer" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -corba 3.0 -fall -pkgPrefix PortableServer org.omg $(POA.IDL)
+-	$(RM) -r $(POAHELHOLFILES)
+ 
+ poa.compile: $(POAGENERATEDFILES)
+ 
+@@ -110,10 +108,6 @@
+ 
+ # Generating and deleting unused files to reduce images size
+ $(DYNANYFILES): $(DYNAMIC_ANY.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" $(DYNANY_IDLJ_FLAGS) $(DYNAMIC_ANY.IDL)
+-	$(RM) $(DYNANY_DIR)/*POA*
+-	$(RM) $(DYNANY_DIR)/*Holder*
+-	$(RM) $(DYNANYDELETEFILES)
+ 
+ dynany.compile: $(DYNANYFILES)
+ 
+@@ -125,12 +119,6 @@
+ TR_IDLJ_FLAGS =-i "$(SRC_DIR)/org/omg/PortableInterceptor" -i "$(SRC_DIR)/org/omg/PortableServer" -i "$(SRC_DIR)/org/omg/CosTransactions"
+ 
+ $(TRGENERATEDFILES):: $(COSTRANSACTIONS.IDL) $(COSTSINTEROP.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg -pkgPrefix CosTransactions org.omg $(COSTRANSACTIONS.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg -pkgPrefix CosTSInteroperation org.omg $(COSTSINTEROP.IDL)
+-#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
+-#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fallTIE -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
+-#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
+-#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fallTIE -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
+ 
+ tr.compile: $(TRGENERATEDFILES)
+ 
+@@ -144,7 +132,6 @@
+ # _NamingContextImplBase.java and _BindingIteratorImplBase.java files
+ # to GENSRC directory. Note that these two classes are deprecated.
+ $(NSGENERATEDFILES): $(NAMESERVICE.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i $(NAMESERVICEDIR) -fall -pkgPrefix CosNaming org.omg $(NAMESERVICE.IDL)
+ 
+ ns.compile: $(NSGENERATEDFILES)
+ 
+@@ -156,8 +143,6 @@
+ IOPDELETEFILES =    $(IOP_TO_DELETE_FILES:%=$(GENSRCDIR)/%)
+ 
+ $(IOPGENERATEDFILES):: $(IOP.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -corba 3.0 -D CORBA3 -pkgPrefix IOP org.omg $(IOP.IDL)
+-	$(RM) -r $(IOPDELETEFILES)
+ 
+ iop.compile: $(IOPGENERATEDFILES)
+ 
+@@ -169,8 +154,6 @@
+ CORBAXDUPLICATEFILES = $(CORBA_DUPLICATE_java:%=$(GENSRCDIR)/%)
+ 
+ $(CORBAXGENERATEDFILES):: $(CORBAX.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -corba 3.0 $(CORBAX.IDL)
+-	$(RM) $(CORBAXDUPLICATEFILES)
+ 
+ corbax.compile: $(CORBAXGENERATEDFILES)
+ 
+@@ -181,7 +164,6 @@
+ MESSAGINGGENERATEDFILES = $(Messaging_java:%=$(GENSRCDIR)/%)
+ 
+ $(MESSAGINGGENERATEDFILES):: $(MESSAGING.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -corba 3.0 -pkgPrefix Messaging org.omg $(MESSAGING.IDL)
+ 
+ messaging.compile: $(MESSAGINGGENERATEDFILES)
+ 
+@@ -195,8 +177,6 @@
+ PIHELHOLFILES = $(PI_GENERATED_HELP_HOL_java:%=$(GENSRCDIR)/%)
+ 
+ $(PIGENERATEDFILES):: $(INTERCEPTORS.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -pkgPrefix PortableInterceptor org.omg -pkgPrefix Dynamic org.omg -pkgPrefix IOP org.omg -corba 3.0 -D CORBA3 $(INTERCEPTORS.IDL)
+-	$(RM) $(PIHELHOLFILES)
+ 
+ pi.compile: $(PIGENERATEDFILES)
+ 
+diff -Nru openjdk-ecj.orig/corba/make/sun/rmi/corbalogsources/Makefile openjdk-ecj/corba/make/sun/rmi/corbalogsources/Makefile
+--- openjdk-ecj.orig/corba/make/sun/rmi/corbalogsources/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/corba/make/sun/rmi/corbalogsources/Makefile	2008-05-26 01:35:35.000000000 +0100
+@@ -173,7 +173,6 @@
+ ACTIVATIONFILES = $(com_sun_corba_se_spi_activation_java:%=$(GENSRCDIR)/%)
+ 
+ $(ACTIVATIONFILES): $(ACTIVATION.IDL)
+-	$(IDLJ) -td $(GENSRCDIR) -i $(ACTIVATIONFILEDIR) -fall -oldImplBase -pkgPrefix activation com.sun.corba.se.spi $(ACTIVATION.IDL)
+ 
+ activation.idl.compile: $(ACTIVATIONFILES)
+ 
+@@ -196,7 +195,6 @@
+ 
+ # REVISIT: remove -oldImplBase
+ $(PORTABLEACTIVATIONFILES): $(PORTABLEACTIVATION.IDL)
+-	$(IDLJ) -td $(GENSRCDIR) $(PORTABLEACTIVATION_INCLUDES) $(PORTABLEACTIVATION_PKG_PREFIXES) -fall -oldImplBase -corba 3.0 -D CORBA3 $(PORTABLEACTIVATION.IDL)
+ 
+ portableactivation.idl.compile: $(PORTABLEACTIVATIONFILES)
+ 
+diff -Nru openjdk-ecj.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/scripts/mc.scm openjdk-ecj/corba/src/share/classes/com/sun/tools/corba/se/logutil/scripts/mc.scm
+--- openjdk-ecj.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/scripts/mc.scm	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/corba/src/share/classes/com/sun/tools/corba/se/logutil/scripts/mc.scm	2008-05-26 01:35:42.000000000 +0100
+@@ -332,7 +332,6 @@
+ 	    (.printMsg pw "// Log wrapper class for Sun private system exceptions in group @" (list group)))
+ 	(.println pw "//")
+ 	(.printMsg pw "// Generated by mc.scm version @, DO NOT EDIT BY HAND!" (list version-string))
+-	(.printMsg pw "// Generated from input file @ on @" (list infile (java.util.Date.)))
+ 	(.println pw)))
+ 
+ (define (write-factory-method class-name exception-group-name pw)
+diff -Nru openjdk-ecj.orig/hotspot/build/linux/Makefile openjdk-ecj/hotspot/build/linux/Makefile
+--- openjdk-ecj.orig/hotspot/build/linux/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/hotspot/build/linux/Makefile	2008-05-26 01:35:35.000000000 +0100
+@@ -249,28 +249,24 @@
+ 
+ $(TARGETS_C2):  $(SUBDIRS_C2)
+ 	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && $(MAKE) $(MFLAGS)
+-	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && ./test_gamma
+ ifdef INSTALL
+ 	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && $(MAKE) $(MFLAGS) install
+ endif
+ 
+ $(TARGETS_TIERED):  $(SUBDIRS_TIERED)
+ 	cd $(OSNAME)_$(BUILDARCH)_tiered/$(patsubst %tiered,%,$@) && $(MAKE) $(MFLAGS)
+-	cd $(OSNAME)_$(BUILDARCH)_tiered/$(patsubst %tiered,%,$@) && ./test_gamma
+ ifdef INSTALL
+ 	cd $(OSNAME)_$(BUILDARCH)_tiered/$(patsubst %tiered,%,$@) && $(MAKE) $(MFLAGS) install
+ endif
+ 
+ $(TARGETS_C1):  $(SUBDIRS_C1)
+ 	cd $(OSNAME)_$(BUILDARCH)_compiler1/$(patsubst %1,%,$@) && $(MAKE) $(MFLAGS)
+-	cd $(OSNAME)_$(BUILDARCH)_compiler1/$(patsubst %1,%,$@) && ./test_gamma
+ ifdef INSTALL
+ 	cd $(OSNAME)_$(BUILDARCH)_compiler1/$(patsubst %1,%,$@) && $(MAKE) $(MFLAGS) install
+ endif
+ 
+ $(TARGETS_CORE):  $(SUBDIRS_CORE)
+ 	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS)
+-	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && ./test_gamma
+ ifdef INSTALL
+ 	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS) install
+ endif
+diff -Nru openjdk-ecj.orig/hotspot/build/linux/makefiles/sa.make openjdk-ecj/hotspot/build/linux/makefiles/sa.make
+--- openjdk-ecj.orig/hotspot/build/linux/makefiles/sa.make	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/hotspot/build/linux/makefiles/sa.make	2008-05-26 01:35:42.000000000 +0100
+@@ -72,7 +72,7 @@
+ 	$(QUIETLY) if [ ! -d $(SA_CLASSDIR) ] ; then \
+ 	  mkdir -p $(SA_CLASSDIR);        \
+ 	fi
+-	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -classpath $(SA_CLASSPATH) -g -d $(SA_CLASSDIR) $(AGENT_ALLFILES)
++	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -classpath $(SA_CLASSPATH):$(BOOT_JAVA_HOME)/jre/lib/rt.jar -g -d $(SA_CLASSDIR) $(AGENT_ALLFILES)
+ 	$(QUIETLY) $(REMOTE) $(COMPILE.RMIC)  -classpath $(SA_CLASSDIR) -d $(SA_CLASSDIR) sun.jvm.hotspot.debugger.remote.RemoteDebuggerServer
+ 	$(QUIETLY) echo "$(SA_BUILD_VERSION_PROP)" > $(SA_PROPERTIES)
+ 	$(QUIETLY) $(REMOTE) $(RUN.JAR) cf $@ -C $(SA_CLASSDIR)/ .
+diff -Nru openjdk-ecj.orig/jaxp/make/Makefile openjdk-ecj/jaxp/make/Makefile
+--- openjdk-ecj.orig/jaxp/make/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jaxp/make/Makefile	2008-05-26 01:35:42.000000000 +0100
+@@ -80,7 +80,7 @@
+ endif
+ 
+ ifdef ALT_BOOTDIR
+-  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
++  ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
+ endif
+ 
+ ifdef ALT_OUTPUTDIR
+diff -Nru openjdk-ecj.orig/jaxp/make/build.xml openjdk-ecj/jaxp/make/build.xml
+--- openjdk-ecj.orig/jaxp/make/build.xml	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jaxp/make/build.xml	2008-05-26 01:35:42.000000000 +0100
+@@ -71,7 +71,10 @@
+       <mkdir dir="${build.toolclasses.dir}"/>
+       <javac srcdir="${make.tools.dir}/StripProperties"
+ 		destdir="${build.toolclasses.dir}/"
+-		classpath="${ant.home}/lib/ant.jar"/>
++		classpath="${ant.home}/lib/ant.jar"
++		fork="true"
++		executable="${javac.executable}"
++		source="1.5"/>
+       <taskdef name="pstrip"
+ 		 classname="StripPropertiesTask"
+ 		 classpath="${build.toolclasses.dir}/"/>
+@@ -85,7 +88,9 @@
+              destdir="${build.classes.dir}"
+              memoryInitialSize="${javac.memoryInitialSize}"
+              memoryMaximumSize="${javac.memoryMaximumSize}"
+-             target="${javac.target}">
++             target="${javac.target}"
++             executable="${javac.executable}"
++             source="1.5">
+          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
+          <compilerarg line="${javac.version.opt}"/>
+       </javac>
+diff -Nru openjdk-ecj.orig/jaxws/make/Makefile openjdk-ecj/jaxws/make/Makefile
+--- openjdk-ecj.orig/jaxws/make/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jaxws/make/Makefile	2008-05-26 01:35:42.000000000 +0100
+@@ -80,8 +80,8 @@
+ endif
+ 
+ ifdef ALT_BOOTDIR
+-  ANT_OPTIONS += -Dplugs=$(ALT_BINARY_PLUGS_PATH)
+-  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
++  ANT_OPTIONS += -Dboot.java.home=$(ALT_BOOTDIR)
++  ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
+ endif
+ 
+ ifdef ALT_OUTPUTDIR
+diff -Nru openjdk-ecj.orig/jaxws/make/build.properties openjdk-ecj/jaxws/make/build.properties
+--- openjdk-ecj.orig/jaxws/make/build.properties	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jaxws/make/build.properties	2008-05-26 01:35:35.000000000 +0100
 @@ -37,7 +37,7 @@
  # set the following to -version to verify the versions of javac being used
  javac.version.opt = 
@@ -609,53 +597,67 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
  
  # JVM memory size
  javac.memoryInitialSize = 128m
---- oipenjdk/make/jdk-rules.gmk	2007-10-30 04:00:10.000000000 -0400
-+++ openjdk-ecj/control/make/make/jdk-rules.gmk	2007-11-13 14:54:50.000000000 -0500
-@@ -63,7 +63,7 @@
- endif
+diff -Nru openjdk-ecj.orig/jaxws/make/build.xml openjdk-ecj/jaxws/make/build.xml
+--- openjdk-ecj.orig/jaxws/make/build.xml	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jaxws/make/build.xml	2008-05-26 01:35:42.000000000 +0100
+@@ -84,7 +84,10 @@
+       <mkdir dir="${build.toolclasses.dir}"/>
+       <javac srcdir="${make.tools.dir}/StripProperties"
+ 		destdir="${build.toolclasses.dir}/"
+-		classpath="${ant.home}/lib/ant.jar"/>
++		fork="true"
++                executable="${javac.executable}"
++		classpath="${ant.home}/lib/ant.jar"
++		source="1.5"/>
+       <taskdef name="pstrip"
+ 		 classname="StripPropertiesTask"
+ 		 classpath="${build.toolclasses.dir}/"/>
+@@ -96,12 +99,14 @@
+       <javac fork="true"
+              srcdir="${src.classes.dir}"
+              destdir="${build.classes.dir}"
++             executable="${javac.executable}"
+              memoryInitialSize="${javac.memoryInitialSize}"
+              memoryMaximumSize="${javac.memoryMaximumSize}"
+              target="${javac.target}"
+-             excludes="com/sun/tools/internal/txw2/**">
+-	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${plugs}/jre/lib/tools.jar:${plugs}/jre/lib/rt-closed.jar"/>
+-         <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
++             excludes="com/sun/tools/internal/txw2/**"
++	     source="1.5">
++         <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar"/>
++	 <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
+          <compilerarg line="${javac.version.opt}"/>
+          <compilerarg line="${javac.no.jdk.warnings}"/>
+       </javac>
+diff -Nru openjdk-ecj.orig/jdk/make/Makefile openjdk-ecj/jdk/make/Makefile
+--- openjdk-ecj.orig/jdk/make/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/Makefile	2008-05-26 01:35:35.000000000 +0100
+@@ -239,7 +239,7 @@
  
- ifndef DEV_ONLY
--  JDK_BUILD_TARGETS = sanity all $(DOCS_TARGET) images
-+  JDK_BUILD_TARGETS = sanity all images
- else
-   JDK_BUILD_TARGETS = sanity all $(IMAGES_TARGET)
- endif
---- oipenjdk/jdk/make/common/shared/Defs-java.gmk	2007-11-13 15:08:08.000000000 -0500
-+++ openjdk-ecj/jdk/make/common/shared/Defs-java.gmk	2007-11-13 15:06:58.000000000 -0500
-@@ -118,30 +118,19 @@
- JAVACFLAGS  += $(OTHER_JAVACFLAGS)
+ all build:: sanity-all post-sanity-all
  
- # Needed for javah
--JAVAHFLAGS += -bootclasspath $(CLASSBINDIR)
-+JAVAHFLAGS += -bootclasspath $(CLASSBINDIR):$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)
+-SUBDIRS    = tools java javax org sun sunw com jpda mkdemo mksample launchers
++SUBDIRS    = tools java javax org sun sunw com jpda mksample launchers
+ all build::
+ 	$(SUBDIRS-loop)
  
- # Langtools
- ifdef LANGTOOLS_DIST
--  JAVAC_JAR   = $(LANGTOOLS_DIST)/bootstrap/lib/javac.jar
--  JAVAH_JAR   = $(LANGTOOLS_DIST)/bootstrap/lib/javah.jar
-   JAVADOC_JAR = $(LANGTOOLS_DIST)/bootstrap/lib/javadoc.jar
-   DOCLETS_JAR = $(LANGTOOLS_DIST)/bootstrap/lib/doclets.jar
--  JAVAC_CMD   = $(BOOT_JAVA_CMD) \
--		"-Xbootclasspath/p:$(JAVAC_JAR)" \
--		-jar $(JAVAC_JAR) $(JAVACFLAGS)
--  JAVAH_CMD   = $(BOOT_JAVA_CMD) \
--		"-Xbootclasspath/p:$(JAVAH_JAR)$(CLASSPATH_SEPARATOR)$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)"  \
--		-jar $(JAVAH_JAR) $(JAVAHFLAGS)
-   JAVADOC_CMD = $(BOOT_JAVA_CMD) \
- 		"-Xbootclasspath/p:$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)$(CLASSPATH_SEPARATOR)$(DOCLETS_JAR)" \
- 		-jar $(JAVADOC_JAR)
--else
--  # If no explicit tools, use boot tools (add VM flags in this case)
-   JAVAC_CMD     = $(JAVA_TOOLS_DIR)/javac $(JAVAC_JVM_FLAGS) \
- 		  $(JAVACFLAGS)
-   JAVAH_CMD     = $(JAVA_TOOLS_DIR)/javah \
- 		  $(JAVAHFLAGS)
--  JAVADOC_CMD   = $(JAVA_TOOLS_DIR)/javadoc $(JAVA_TOOLS_FLAGS:%=-J%)
- endif
- 
- # Override of what javac to use (see deploy workspace)
---- oipenjdk/jdk/make/common/Release.gmk	2007-11-13 16:47:23.000000000 -0500
-+++ openjdk-ecj/jdk/make/common/Release.gmk	2007-11-13 16:48:08.000000000 -0500
+diff -Nru openjdk-ecj.orig/jdk/make/common/BuildToolJar.gmk openjdk-ecj/jdk/make/common/BuildToolJar.gmk
+--- openjdk-ecj.orig/jdk/make/common/BuildToolJar.gmk	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/common/BuildToolJar.gmk	2008-05-26 01:35:35.000000000 +0100
+@@ -43,7 +43,8 @@
+ 	@$(prep-target)
+ 	@$(MKDIR) -p $(BUILDTOOLCLASSDIR)
+ 	$(BOOT_JAVAC_CMD) -d $(BUILDTOOLCLASSDIR) \
+-	    -sourcepath $(BUILDTOOL_SOURCE_ROOT) $(BUILDTOOL_MAIN_SOURCE_FILE)
++	    -sourcepath $(BUILDTOOL_SOURCE_ROOT) -classpath $(ICEDTEA_RT) \
++	    $(BUILDTOOL_MAIN_SOURCE_FILE)
+ 	$(BOOT_JAR_CMD) cfm $@ $(BUILDTOOL_MANIFEST_FILE) \
+ 	    -C $(BUILDTOOLCLASSDIR) $(PKGDIR) \
+ 	    $(JAR_JFLAGS) || $(RM) $@
+diff -Nru openjdk-ecj.orig/jdk/make/common/Release.gmk openjdk-ecj/jdk/make/common/Release.gmk
+--- openjdk-ecj.orig/jdk/make/common/Release.gmk	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/common/Release.gmk	2008-05-26 01:35:42.000000000 +0100
 @@ -649,10 +649,11 @@
  $(RES_JAR_ARGLIST): $(RES_JAR_FILELIST)
  	$(prep-target)
@@ -706,7 +708,7 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
  	@# CORBA supported orb.idl and ir.idl should be copied to lib
  	@#
  	$(CP) $(LIBDIR)/orb.idl $(JDK_IMAGE_DIR)/lib/orb.idl
-@@ -1040,16 +1029,6 @@
+@@ -1038,16 +1027,6 @@
  	$(CP) $(PLATFORM_SRC)/bin/java_md.h $(JDK_IMAGE_DIR)/src/launcher
  	$(CD) $(JDK_IMAGE_DIR)/src && $(ZIPEXE) -qr ../src.zip *
  	$(RM) -r $(JDK_IMAGE_DIR)/src
@@ -723,37 +725,850 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
  ifneq ($(PLATFORM), windows)
  	$(call copy-man-pages,$(JDK_IMAGE_DIR),$(JDK_MAN_PAGES))
  endif # !windows
---- opeiinjdk/jdk/src/share/classes/java/lang/Float.java	2007-10-30 04:36:02.000000000 -0400
-+++ openjdk-ecj/jdk/src/share/classes/java/lang/Float.java	2007-11-13 16:53:02.000000000 -0500
-@@ -76,7 +76,7 @@
-      * {@code 0x1.fffffeP+127f} and also equal to
-      * {@code Float.intBitsToFloat(0x7f7fffff)}.
-      */
--    public static final float MAX_VALUE = 0x1.fffffeP+127f; // 3.4028235e+38f
-+    public static final float MAX_VALUE = 3.4028235e+38f;
+diff -Nru openjdk-ecj.orig/jdk/make/common/Rules.gmk openjdk-ecj/jdk/make/common/Rules.gmk
+--- openjdk-ecj.orig/jdk/make/common/Rules.gmk	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/common/Rules.gmk	2008-05-26 01:41:27.000000000 +0100
+@@ -237,8 +237,9 @@
+ 	  $(ECHO) "# Java sources to be compiled: (listed in file $<)"; \
+ 	  $(CAT) $<.filtered; \
+ 	  $(ECHO) "# Running javac:"; \
+-	  $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$<.filtered; \
+-	  $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$<.filtered; \
++	  $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -bootclasspath "$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)" \
++          -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
++          $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -bootclasspath "$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
+ 	fi
+ 	@$(java-vm-cleanup)
  
-     /**
-      * A constant holding the smallest positive normal value of type
-@@ -86,7 +86,7 @@
-      *
-      * @since 1.6
-      */
--    public static final float MIN_NORMAL = 0x1.0p-126f; // 1.17549435E-38f
-+    public static final float MIN_NORMAL = 1.17549435E-38f;
+@@ -304,6 +305,8 @@
+ 	$(JAVAH_CMD) -d $(CLASSHDRDIR)/ \
+ 		$(CLASSES.export) $(subst $$,\$$,$(EXPORTED_inner))
+ 	@$(java-vm-cleanup)
++	-mv $(CLASSHDRDIR)/java_lang_ClassLoader\$$NativeLibrary.h \
++	  $(CLASSHDRDIR)/java_lang_ClassLoader_NativeLibrary.h
+ 	@$(TOUCH) $@
  
-     /**
-      * A constant holding the smallest positive nonzero value of type
-@@ -94,7 +94,7 @@
-      * hexadecimal floating-point literal {@code 0x0.000002P-126f}
-      * and also equal to {@code Float.intBitsToFloat(0x1)}.
-      */
--    public static final float MIN_VALUE = 0x0.000002P-126f; // 1.4e-45f
-+    public static final float MIN_VALUE = 1.4e-45f;
+ classheaders.clean:
+diff -Nru openjdk-ecj.orig/jdk/make/common/Rules.gmk~ openjdk-ecj/jdk/make/common/Rules.gmk~
+--- openjdk-ecj.orig/jdk/make/common/Rules.gmk~	1970-01-01 01:00:00.000000000 +0100
++++ openjdk-ecj/jdk/make/common/Rules.gmk~	2008-05-26 01:35:35.000000000 +0100
+@@ -0,0 +1,339 @@
++#
++# Copyright 1995-2007 Sun Microsystems, Inc.  All Rights Reserved.
++# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++#
++# This code is free software; you can redistribute it and/or modify it
++# under the terms of the GNU General Public License version 2 only, as
++# published by the Free Software Foundation.  Sun designates this
++# particular file as subject to the "Classpath" exception as provided
++# by Sun in the LICENSE file that accompanied this code.
++#
++# This code is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++# version 2 for more details (a copy is included in the LICENSE file that
++# accompanied this code).
++#
++# You should have received a copy of the GNU General Public License version
++# 2 along with this work; if not, write to the Free Software Foundation,
++# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++# Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++# CA 95054 USA or visit www.sun.com if you need additional information or
++# have any questions.
++#
++
++#
++#
++# Rules shared by all Java makefiles.
++#
++# Used to apply to source file $<, checks code conventions, issues warnings.
++define check-conventions
++  if [ "$(CONVENTION_WATCH)" = "true" ] ; then \
++    if [ "`$(CAT) -n -v -t $< | $(EGREP) -v '\@\(\#\)' | $(EGREP) '\^[MLI]'`" != "" ] ; then \
++      $(ECHO) "WARNING: File contains tabs, ^M, or ^L characters: $<"; \
++      if [ "$(CONVENTION_DETAILS)" = "true" ] ; then \
++        $(CAT) -n -v -t $< | $(EGREP) -v '\@\(\#\)' | $(EGREP) '\^[MLI]' ; \
++      fi; \
++    fi; \
++  fi
++endef
++
++# Make sure the default rule is all
++rules_default_rule: all
++
++#
++# Directory set up.  (Needed by deploy workspace)
++# 
++$(CLASSDESTDIR) $(CLASSHDRDIR) $(OBJDIR) $(OUTPUTDIR) $(BINDIR) $(LIBDIR) $(LIBDIR)/$(LIBARCH) $(TEMPDIR) $(EXTDIR):
++	$(MKDIR) -p $@ 
++
++#
++# All source tree areas for java/properties files (a few may be closed)
++#
++ifdef OPENJDK
++  ALL_CLASSES_SRC = $(SHARE_SRC)/classes $(PLATFORM_SRC)/classes
++else
++  ALL_CLASSES_SRC = \
++	$(CLOSED_SHARE_SRC)/classes $(CLOSED_PLATFORM_SRC)/classes \
++	$(SHARE_SRC)/classes $(PLATFORM_SRC)/classes
++endif
++
++#
++# If AUTO_FILES_PROPERTIES_DIRS used, automatically find properties files
++#
++ifdef AUTO_FILES_PROPERTIES_DIRS
++  AUTO_FILES_PROPERTIES_FILTERS1  = $(SCM_DIRs) 'X-*' '*-X-*' ',*'
++  AUTO_FILES_PROPERTIES_FILTERS1 += $(AUTO_PROPERTIES_PRUNE)
++  FILES_properties_find_filters1 = $(AUTO_FILES_PROPERTIES_FILTERS1:%=-name % -prune -o)
++  FILES_properties_auto1 := \
++     $(shell \
++        for dir in $(ALL_CLASSES_SRC) ; do \
++          if [ -d $$dir ] ; then \
++            ( $(CD) $$dir; \
++              for sdir in $(AUTO_FILES_PROPERTIES_DIRS); do \
++                if [ -d $$sdir ] ; then \
++                  $(FIND) $$sdir $(FILES_properties_find_filters1) \
++                                 -name '*.properties' -print ; \
++                fi ; \
++              done \
++            ); \
++          fi; \
++        done \
++      )
++else
++  FILES_properties_auto1 =
++endif # AUTO_FILES_PROPERTIES_DIRS
++
++# Add any automatically found properties files to the properties file list
++FILES_properties += $(FILES_properties_auto1)
++
++#
++# Get Resources help
++#
++include $(JDK_TOPDIR)/make/common/internal/Resources.gmk
++
++#
++# Compiling .java files.
++#
++
++#
++# Automatically add to FILES_java if AUTO_FILES_JAVA_DIRS is defined
++#
++#    There are two basic types of sources, normal source files and the
++#    generated ones. The Normal sources will be located in:
++#         $(ALL_CLASSES_SRC)
++#    The generated sources, which might show up late to dinner, are at:
++#         $(GENSRCDIR)
++#    and since they could be generated late, we need to be careful that
++#    we look for these sources late and not use the ':=' assignment which
++#    might miss their generation.
++
++ifdef AUTO_FILES_JAVA_DIRS
++  # Filter out these files or directories
++  AUTO_FILES_JAVA_SOURCE_FILTERS1  = $(SCM_DIRs) 'X-*' '*-X-*' '*-template.java' ',*'
++  AUTO_FILES_JAVA_SOURCE_FILTERS2  = 
++  AUTO_FILES_JAVA_SOURCE_FILTERS1 += $(AUTO_JAVA_PRUNE)
++  AUTO_FILES_JAVA_SOURCE_FILTERS2 += $(AUTO_JAVA_PRUNE)
++
++  # First list is the normal sources that should always be there,
++  #   by using the ':=', which means we do this processing once.
++  FILES_java_find_filters1 = $(AUTO_FILES_JAVA_SOURCE_FILTERS1:%=-name % -prune -o)
++  FILES_java_auto1 := \
++     $(shell \
++        for dir in $(ALL_CLASSES_SRC) ; do \
++          if [ -d $$dir ] ; then \
++            ( $(CD) $$dir; \
++              for sdir in $(AUTO_FILES_JAVA_DIRS); do \
++                if [ -d $$sdir ] ; then \
++                  $(FIND) $$sdir $(FILES_java_find_filters1) \
++                                 -name '*.java' -print ; \
++                fi ; \
++              done \
++            ); \
++          fi; \
++        done \
++      )
++  # Second list is the generated sources that should be rare, but will likely
++  #   show up late and we need to look for them at the last minute, so we
++  #   cannot use the ':=' assigment here. But if this gets expanded multiple
++  #   times, the if tests should make them relatively cheap.
++  FILES_java_find_filters2 = $(AUTO_FILES_JAVA_SOURCE_FILTERS2:%=-name % -prune -o)
++  FILES_java_auto2 = \
++     $(shell \
++        for dir in $(GENSRCDIR); do \
++          if [ -d $$dir ] ; then \
++            ( $(CD) $$dir; \
++              for sdir in $(AUTO_FILES_JAVA_DIRS); do \
++                if [ -d $$sdir ] ; then \
++                  $(FIND) $$sdir $(FILES_java_find_filters2) \
++                                 -name '*.java' -print ; \
++                fi ; \
++              done \
++            ); \
++          fi; \
++        done \
++      )
++else
++  FILES_java_auto1 =
++  FILES_java_auto2 =
++endif
++
++# Add all found java sources to FILES_java macro (if AUTO_FILES_JAVA_DIRS used)
++FILES_java += $(FILES_java_auto1) $(FILES_java_auto2)
++
++# File that will hold java source names that need compiling
++JAVA_SOURCE_LIST=$(TEMPDIR)/.classes.list
++
++# Add a java source to the list
++define add-java-file
++$(ECHO) "$?" >> $(JAVA_SOURCE_LIST)
++$(check-conventions)
++endef
++
++ifdef DEMOS
++$(CLASSDESTDIR)/%.class: $(SOURCEPATH)/%.java
++	@$(add-java-file)
++#Redirect zh_HK java files to tmp directory which created from zh_TW
++#$(CLASSDESTDIR)/%_zh_HK.class: $(JDK_L10N_TMP_OUTPUTDIR)/%_zh_HK.java
++#	@$(add-java-file)
++else
++
++#
++# Rules for closed files
++#
++# If filenames are duplicated between open/closed workspaces, prefer
++# the closed files.
++#
++# Rule ordering in this Makefile is important: some targets depend
++# on closed files replacing open ones, and thus the closed file rules
++# must be found before the open ones.
++#
++# Don't reorder without consulting teams that depend on this behavior.
++#
++ifndef OPENJDK
++$(CLASSDESTDIR)/%.class: $(CLOSED_PLATFORM_SRC)/classes/%.java
++	@$(add-java-file)
++$(CLASSDESTDIR)/%.class: $(CLOSED_SHARE_SRC)/classes/%.java
++	@$(add-java-file)
++endif
++
++$(CLASSDESTDIR)/%.class: $(GENSRCDIR)/%.java
++	@$(add-java-file)
++$(CLASSDESTDIR)/%.class: $(PLATFORM_SRC)/classes/%.java
++	@$(add-java-file)
++$(CLASSDESTDIR)/%.class: $(SHARE_SRC)/classes/%.java
++	@$(add-java-file)
++
++#Redirect zh_HK java files to tmp directory which created from zh_TW
++$(CLASSDESTDIR)/%_zh_HK.class: $(JDK_L10N_TMP_OUTPUTDIR)/%_zh_HK.java
++	@$(add-java-file)
++endif
++
++# List of class files needed
++FILES_class = $(FILES_java:%.java=$(CLASSDESTDIR)/%.class)
++
++# Got to include exported files.
++FILES_class += $(FILES_export:%.java=$(CLASSDESTDIR)/%.class)
++
++# Construct list of java sources we need to compile
++source_list_prime:
++	@$(MKDIR) -p $(TEMPDIR)
++# Note that we slip resources in so that compiled properties files get created:
++$(JAVA_SOURCE_LIST) : source_list_prime resources $(FILES_class)
++	@$(TOUCH) $@
++
++.delete.classlist:
++	@$(RM) $(JAVA_SOURCE_LIST)
++
++# Make sure all newer sources are compiled (in a batch)
++classes : $(CLASSES_INIT) .delete.classlist .compile.classlist
++
++.compile.classlist : $(JAVA_SOURCE_LIST)
++	@$(MKDIR) -p $(CLASSDESTDIR)
++	@$(RM) $<.filtered
++	@$(CAT) $< | $(NAWK) 'length>0' | $(SORT) -u > $<.filtered
++	@if [ `$(CAT) $<.filtered | $(WC) -l` -ge 1 ] ; then \
++	  $(ECHO) "# Java sources to be compiled: (listed in file $<)"; \
++	  $(CAT) $<.filtered; \
++	  $(ECHO) "# Running javac:"; \
++	  $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$<.filtered; \
++	  $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$<.filtered; \
++	fi
++	@$(java-vm-cleanup)
++
++clobber clean::
++	$(RM) $(JAVA_SOURCE_LIST)
++
++ifndef DONT_CLOBBER_CLASSES
++  ifndef PACKAGE
++    DONT_CLOBBER_CLASSES = true
++  else
++    DONT_CLOBBER_CLASSES = false
++  endif
++endif
++
++packages.clean:
++ifeq ($(DONT_CLOBBER_CLASSES),false)
++  ifdef AUTO_FILES_JAVA_DIRS
++	@for sdir in $(AUTO_FILES_JAVA_DIRS); do \
++	  $(ECHO) "$(RM) -r $(CLASSDESTDIR)/$$sdir"; \
++	  $(RM) -r $(CLASSDESTDIR)/$$sdir; \
++        done
++  else
++	$(RM) -r $(CLASSDESTDIR)/$(PKGDIR)
++  endif
++endif
++
++ifdef DEMOS
++classes.clean:
++	$(RM) -r $(DEMODST) $(CLASSDESTDIR)
++else
++classes.clean: packages.clean
++	$(RM) $(JAVA_SOURCE_LIST)
++endif
++
++#
++# C and C++ make dependencies
++#
++include $(JDK_TOPDIR)/make/common/internal/NativeCompileRules.gmk
++
++#
++# Running Javah to generate stuff into CClassHeaders.
++#
++
++ifdef FILES_export
++
++CLASSES.export  = $(subst /,.,$(FILES_export:%.java=%))
++CLASSES.export += $(subst /,.,$(FILES_export2:%.java=%))
++CLASSES.export += $(subst /,.,$(FILES_export3:%.java=%))
++CLASSES_export  = $(FILES_export:%.java=$(CLASSDESTDIR)/%.class)
++CLASSES_export += $(FILES_export2:%.java=$(CLASSDESTDIR)/%.class)
++CLASSES_export += $(FILES_export3:%.java=$(CLASSDESTDIR)/%.class)
++
++# Fix when deploy workspace makefiles don't depend on this name
++#CLASSHDR_DOTFILE=$(CLASSHDRDIR)/.classheaders
++
++CLASSHDR_DOTFILE=$(OBJDIR)/.class.headers.$(ARCH)
++
++classheaders: classes $(CLASSHDR_DOTFILE)
++
++$(CLASSHDR_DOTFILE): $(CLASSES_export)
++	$(prep-target)
++	@$(ECHO) "# Running javah:"
++	$(JAVAH_CMD) -d $(CLASSHDRDIR)/ \
++		$(CLASSES.export) $(subst $$,\$$,$(EXPORTED_inner))
++	@$(java-vm-cleanup)
++	-mv $(CLASSHDRDIR)/java_lang_ClassLoader\$$NativeLibrary.h \
++	  $(CLASSHDRDIR)/java_lang_ClassLoader_NativeLibrary.h
++	@$(TOUCH) $@
++
++classheaders.clean:
++	$(RM) $(CLASSHDR_DOTFILE)
++	$(RM) -r $(CLASSHDRDIR)
++
++else # FILES_export
++
++classheaders: classes
++
++classheaders.clean: 
++
++endif # FILES_export
++
++clean clobber:: classheaders.clean classes.clean .delete.classlist
++
++# 
++# Default dependencies
++#
++
++all: build
++
++build: classheaders
++
++default: all
++
++.PHONY: all build clean clobber \
++        .delete.classlist classes .compile.classlist classes.clean \
++	 classheaders classheaders.clean \
++	 batch_compile
++
+diff -Nru openjdk-ecj.orig/jdk/make/common/shared/Defs-java.gmk openjdk-ecj/jdk/make/common/shared/Defs-java.gmk
+--- openjdk-ecj.orig/jdk/make/common/shared/Defs-java.gmk	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/common/shared/Defs-java.gmk	2008-05-26 01:35:42.000000000 +0100
+@@ -118,30 +118,19 @@
+ JAVACFLAGS  += $(OTHER_JAVACFLAGS)
  
-     /**
-      * Maximum exponent a finite {@code float} variable may have.  It
---- opienjdk/jdk/src/share/classes/java/lang/Double.java	2007-10-30 04:36:02.000000000 -0400
-+++ openjdk-ecj/jdk/src/share/classes/java/lang/Double.java	2007-11-13 16:53:02.000000000 -0500
+ # Needed for javah
+-JAVAHFLAGS += -bootclasspath $(CLASSBINDIR)
++JAVAHFLAGS += -bootclasspath $(CLASSBINDIR):$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)
+ 
+ # Langtools
+ ifdef LANGTOOLS_DIST
+-  JAVAC_JAR   = $(LANGTOOLS_DIST)/bootstrap/lib/javac.jar
+-  JAVAH_JAR   = $(LANGTOOLS_DIST)/bootstrap/lib/javah.jar
+   JAVADOC_JAR = $(LANGTOOLS_DIST)/bootstrap/lib/javadoc.jar
+   DOCLETS_JAR = $(LANGTOOLS_DIST)/bootstrap/lib/doclets.jar
+-  JAVAC_CMD   = $(BOOT_JAVA_CMD) \
+-		"-Xbootclasspath/p:$(JAVAC_JAR)" \
+-		-jar $(JAVAC_JAR) $(JAVACFLAGS)
+-  JAVAH_CMD   = $(BOOT_JAVA_CMD) \
+-		"-Xbootclasspath/p:$(JAVAH_JAR)$(CLASSPATH_SEPARATOR)$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)"  \
+-		-jar $(JAVAH_JAR) $(JAVAHFLAGS)
+   JAVADOC_CMD = $(BOOT_JAVA_CMD) \
+ 		"-Xbootclasspath/p:$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)$(CLASSPATH_SEPARATOR)$(DOCLETS_JAR)" \
+ 		-jar $(JAVADOC_JAR)
+-else
+-  # If no explicit tools, use boot tools (add VM flags in this case)
+   JAVAC_CMD     = $(JAVA_TOOLS_DIR)/javac $(JAVAC_JVM_FLAGS) \
+ 		  $(JAVACFLAGS)
+   JAVAH_CMD     = $(JAVA_TOOLS_DIR)/javah \
+ 		  $(JAVAHFLAGS)
+-  JAVADOC_CMD   = $(JAVA_TOOLS_DIR)/javadoc $(JAVA_TOOLS_FLAGS:%=-J%)
+ endif
+ 
+ # Override of what javac to use (see deploy workspace)
+diff -Nru openjdk-ecj.orig/jdk/make/java/nio/Makefile openjdk-ecj/jdk/make/java/nio/Makefile
+--- openjdk-ecj.orig/jdk/make/java/nio/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/java/nio/Makefile	2008-05-26 01:35:35.000000000 +0100
+@@ -31,7 +31,7 @@
+ PACKAGE = java.nio
+ LIBRARY = nio
+ PRODUCT = java
+-OTHER_JAVACFLAGS += -Xmaxwarns 1000 -Xlint:serial -Werror
++OTHER_JAVACFLAGS += -Xlint:serial -Werror
+ include $(BUILDDIR)/common/Defs.gmk
+ 
+ NIO_SRC = $(SHARE_SRC)/classes/java/nio
+diff -Nru openjdk-ecj.orig/jdk/make/java/text/Makefile openjdk-ecj/jdk/make/java/text/Makefile
+--- openjdk-ecj.orig/jdk/make/java/text/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/java/text/Makefile	2008-05-26 01:35:35.000000000 +0100
+@@ -80,8 +80,8 @@
+ 		-sourcepath $(TEXT_SRCDIR) \
+ 		$(TEXT_SOURCES)
+ 	$(MKDIR) -p  $(TEXT_CLASSDIR)
+-	$(BOOT_JAVA_CMD) -Xbootclasspath/p:$(TEXT_CLASSES) \
+-		-jar $(GENERATEBREAKITERATORDATA_JARFILE) \
++	$(BOOT_JAVA_CMD) -cp $(TEXT_CLASSES):$(GENERATEBREAKITERATORDATA_JARFILE):$(ICEDTEA_CLS_DIR) \
++		build.tools.generatebreakiteratordata.GenerateBreakIteratorData \
+ 		-o $(TEXT_CLASSDIR) \
+ 		-spec $(UNICODEDATA)/UnicodeData.txt
+ 	@$(java-vm-cleanup)
+diff -Nru openjdk-ecj.orig/jdk/make/sun/awt/Makefile openjdk-ecj/jdk/make/sun/awt/Makefile
+--- openjdk-ecj.orig/jdk/make/sun/awt/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/sun/awt/Makefile	2008-05-26 01:35:35.000000000 +0100
+@@ -400,10 +400,9 @@
+ COMPILEFONTCONFIG_JARFILE = $(BUILDTOOLJARDIR)/compilefontconfig.jar
+ 
+ $(LIBDIR)/%.bfc: $(FONTCONFIGS_SRC)/$(FONTCONFIGS_SRC_PREFIX)%.properties \
+-    $(COMPILEFONTCONFIG_JARFILE)
+-	$(prep-target)
+-	$(BOOT_JAVA_CMD) -jar $(COMPILEFONTCONFIG_JARFILE) $< $@
+-	$(CHMOD) 444 $(@)
++	$(COMPILEFONTCONFIG_JARFILE)
++	$(CP) -f $(GENSRCDIR)/fontconfig/* $(LIBDIR)
++	$(CHMOD) 444 $(LIBDIR)/*.bfc
+ 	@$(java-vm-cleanup)
+ 
+ fontconfigs.clean :
+diff -Nru openjdk-ecj.orig/jdk/make/sun/javazic/Makefile openjdk-ecj/jdk/make/sun/javazic/Makefile
+--- openjdk-ecj.orig/jdk/make/sun/javazic/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/sun/javazic/Makefile	2008-05-26 01:35:35.000000000 +0100
+@@ -62,7 +62,8 @@
+ $(WORKDIR)/$(MAPFILE): $(BUILDTOOLJARDIR)/javazic.jar $(TZFILES)
+ 	$(RM) -r $(@D)
+ 	$(prep-target)
+-	$(BOOT_JAVA_CMD) -jar $(BUILDTOOLJARDIR)/javazic.jar -V "$(TZDATA_VER)" -d $(WORKDIR) $(TZFILES)
++	$(BOOT_JAVA_CMD) -cp $(ICEDTEA_CLS_DIR):$(BUILDTOOLJARDIR)/javazic.jar \
++		build.tools.javazic.Main -V "$(TZDATA_VER)" -d $(WORKDIR) $(TZFILES)
+ 	@$(java-vm-cleanup)
+ 
+ $(INSTALLDIR)/$(MAPFILE): $(WORKDIR)/$(MAPFILE)
+diff -Nru openjdk-ecj.orig/jdk/make/sun/text/Makefile openjdk-ecj/jdk/make/sun/text/Makefile
+--- openjdk-ecj.orig/jdk/make/sun/text/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/sun/text/Makefile	2008-05-26 01:35:35.000000000 +0100
+@@ -85,8 +85,9 @@
+ 	$(BOOT_JAVAC_CMD) -d $(TEXT_CLASSES) \
+ 		-sourcepath $(TEXT_SRCDIR) \
+ 		$(BIRULES) $(BIINFO)
+-	$(BOOT_JAVA_CMD) -Xbootclasspath/p:$(TEXT_CLASSES) \
+-		-jar $(GENERATEBREAKITERATORDATA_JARFILE) \
++	$(BOOT_JAVA_CMD)  \
++		-cp $(TEXT_CLASSES):$(ICEDTEA_CLS_DIR):$(GENERATEBREAKITERATORDATA_JARFILE) \
++		build.tools.generatebreakiteratordata.GenerateBreakIteratorData \
+ 		-o $(CLASSDESTDIR)/sun/text/resources \
+ 		-spec $(UNICODEDATA)/UnicodeData.txt \
+ 		-language th
+diff -Nru openjdk-ecj.orig/jdk/make/sun/xawt/Makefile openjdk-ecj/jdk/make/sun/xawt/Makefile
+--- openjdk-ecj.orig/jdk/make/sun/xawt/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/sun/xawt/Makefile	2008-05-26 01:39:25.000000000 +0100
+@@ -276,11 +276,7 @@
+ 
+ TEMPDIR_CLASSES = $(TEMPDIR)/classes
+ 
+-$(TEMPDIR_CLASSES)/sun/awt/X11/ToBin.class: ToBin.java
+-	@$(prep-target)
+-	$(BOOT_JAVAC_CMD) -d $(TEMPDIR_CLASSES) $<
+-
+-$(TEMPDIR)/.gen_icons: $(TEMPDIR_CLASSES)/sun/awt/X11/ToBin.class $(ICONS)
++$(TEMPDIR)/.gen_icons: $(ICONS)
+ 	$(prep-target)
+ 	for i in $(ICONS); do \
+             filename=`basename $$i`; \
+@@ -290,20 +286,14 @@
+ 	    $(ECHO) "package sun.awt.X11;" >> $$classname ; \
+ 	    $(ECHO) "public class XAWTIcon32_$$name {" >> $$classname; \
+ 	    $(ECHO) "public static int[] $$name = { " >> $$classname;  \
+-	    $(CAT) $$i | \
+-	      $(BOOT_JAVA_CMD) -cp $(TEMPDIR_CLASSES)  \
+-		-Djava.awt.headless=true \
+-		sun.awt.X11.ToBin >> $$classname; \
++	    $(ECHO) "0,0" >> $$classname ;  \
+ 	    $(ECHO) "}; }" >> $$classname;  \
+             classname=$(GEN_DIR)/XAWTIcon64_$$name.java; \
+ 	    $(RM) $$classname; \
+ 	    $(ECHO) "package sun.awt.X11;" >> $$classname ; \
+ 	    $(ECHO) "public class XAWTIcon64_$$name {" >> $$classname; \
+ 	    $(ECHO) "public static long[] $$name = { " >> $$classname;  \
+-	    $(CAT) $$i | \
+-	      $(BOOT_JAVA_CMD) -cp $(TEMPDIR_CLASSES)  \
+-		-Djava.awt.headless=true \
+-		sun.awt.X11.ToBin >> $$classname; \
++	    $(ECHO) "0,0" >> $$classname ; \
+ 	    $(ECHO) "}; }" >> $$classname;  \
+ 	done
+ 	$(TOUCH) $@
+diff -Nru openjdk-ecj.orig/jdk/make/sun/xawt/Makefile~ openjdk-ecj/jdk/make/sun/xawt/Makefile~
+--- openjdk-ecj.orig/jdk/make/sun/xawt/Makefile~	1970-01-01 01:00:00.000000000 +0100
++++ openjdk-ecj/jdk/make/sun/xawt/Makefile~	2008-05-26 01:39:20.000000000 +0100
+@@ -0,0 +1,304 @@
++#
++# Copyright 2002-2008 Sun Microsystems, Inc.  All Rights Reserved.
++# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++#
++# This code is free software; you can redistribute it and/or modify it
++# under the terms of the GNU General Public License version 2 only, as
++# published by the Free Software Foundation.  Sun designates this
++# particular file as subject to the "Classpath" exception as provided
++# by Sun in the LICENSE file that accompanied this code.
++#
++# This code is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++# version 2 for more details (a copy is included in the LICENSE file that
++# accompanied this code).
++#
++# You should have received a copy of the GNU General Public License version
++# 2 along with this work; if not, write to the Free Software Foundation,
++# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++# Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++# CA 95054 USA or visit www.sun.com if you need additional information or
++# have any questions.
++#
++
++BUILDDIR = ../..
++PACKAGE = sun.awt.X11
++LIBRARY = mawt
++LIBRARY_OUTPUT = xawt
++LIB_LOCATION = $(LIBDIR)/$(LIBARCH)/xawt
++PRODUCT = sun
++
++include $(BUILDDIR)/common/Defs.gmk
++
++GEN_DIR=$(GENSRCDIR)/sun/awt/X11
++
++CLASSES_INIT += $(TEMPDIR)/.gen.wrappers $(TEMPDIR)/.gen_icons touch.wrappers
++
++.PHONY: generated.clean
++
++#
++# Files
++#
++include FILES_c_unix.gmk
++include FILES_export_unix.gmk
++AUTO_FILES_JAVA_DIRS = sun/awt/X11
++AUTO_JAVA_PRUNE = WrapperGenerator.java
++
++LDFLAGS += -L$(OPENWIN_LIB)
++
++ifeq ($(PLATFORM), linux)
++LDFLAGS += -lpthread
++dummy := $(shell $(MKDIR) -p $(LIB_LOCATION))
++endif
++
++# Since this library will be living in a subdirectory below the other libraries
++#   we need to add an extra runpath so that libraries in the upper directory
++#   are found at runtime.
++LD_RUNPATH_EXTRAS = ..
++
++#
++# Rules.
++#
++include $(BUILDDIR)/common/Mapfile-vers.gmk
++include $(BUILDDIR)/common/Library.gmk
++
++#
++# Add to the ambient vpath to pick up files in subdirectories
++#
++vpath %.c   $(SHARE_SRC)/native/sunawt/alphacomposite
++vpath %.c   $(PLATFORM_SRC)/native/sun/xawt
++vpath %.c   $(PLATFORM_SRC)/native/sun/awt
++vpath %.c   $(SHARE_SRC)/native/sun/awt/debug
++vpath %.c   $(SHARE_SRC)/native/sun/awt/image
++vpath %.c   $(SHARE_SRC)/native/sun/awt/image/gif
++vpath %.c   $(SHARE_SRC)/native/sun/awt/image/cvutils
++vpath %.c   $(SHARE_SRC)/native/sun/awt/shell
++vpath %.c   $(SHARE_SRC)/native/sun/java2d
++vpath %.c   $(SHARE_SRC)/native/sun/java2d/loops
++vpath %.c   $(SHARE_SRC)/native/sun/java2d/pipe
++vpath %.c   $(SHARE_SRC)/native/sun/awt/medialib
++vpath %.cpp $(SHARE_SRC)/native/sun/image
++vpath %.c   $(SHARE_SRC)/native/sun/font
++vpath %.c   $(PLATFORM_SRC)/native/sun/awt/robot_child
++vpath %.c   $(SHARE_SRC)/native/sun/java2d/opengl
++vpath %.c   $(PLATFORM_SRC)/native/sun/java2d/opengl
++vpath %.c   $(PLATFORM_SRC)/native/sun/java2d/x11
++
++OTHER_LDLIBS = $(LIBM) -lawt -lXext -lX11 -ldl \
++                   $(LDFLAGS_COMMON) $(AWT_RUNPATH) $(OTHER_LDFLAGS) -lXtst -lXi
++
++ifeq  ($(PLATFORM), solaris)
++CPPFLAGS += -DFUNCPROTO=15
++dummy := $(shell $(MKDIR) -p $(LIB_LOCATION))
++endif
++
++CPPFLAGS += -I$(CUPS_HEADERS_PATH)
++
++CPPFLAGS += -DXAWT -DXAWT_HACK \
++        -I$(TEMPDIR)/../../sun.awt/awt/CClassHeaders \
++        -I$(PLATFORM_SRC)/native/sun/awt \
++	-I$(PLATFORM_SRC)/native/sun/xawt \
++        -I$(PLATFORM_SRC)/native/sun/jdga \
++        -I$(SHARE_SRC)/native/sun/awt/debug \
++        -I$(SHARE_SRC)/native/sun/awt/image/cvutils \
++        -I$(SHARE_SRC)/native/sun/java2d \
++	-I$(SHARE_SRC)/native/sun/java2d/loops \
++	-I$(SHARE_SRC)/native/sun/awt/image/cvutils \
++	-I$(SHARE_SRC)/native/sun/awt/image \
++	-I$(SHARE_SRC)/native/sun/font \
++	-I$(PLATFORM_SRC)/native/sun/java2d \
++	-I$(SHARE_SRC)/native/sun/java2d/pipe \
++	-I$(SHARE_SRC)/native/sun/java2d/opengl \
++	-I$(PLATFORM_SRC)/native/sun/java2d/opengl \
++	-I$(PLATFORM_SRC)/native/sun/java2d/x11 \
++	-I$(SHARE_SRC)/native/sun/dc/path \
++	-I$(SHARE_SRC)/native/sun/dc/doe \
++	-I$(SHARE_SRC)/native/sun/awt/alphacomposite \
++        -I$(SHARE_SRC)/native/sun/awt/medialib \
++	-I$(PLATFORM_SRC)/native/sun/awt/medialib \
++        -I$(PLATFORM_SRC)/native/sun/font \
++        -I$(SHARE_SRC)/native/sun/awt \
++        -I$(PLATFORM_SRC)/native/sun/awt 
++
++ifeq ($(PLATFORM), linux)
++# Allows for builds on Debian GNU Linux, X11 is in a different place 
++  CPPFLAGS += -I/usr/X11R6/include/X11/extensions \
++              -I/usr/include/X11/extensions \
++              -I$(OPENWIN_HOME)/include 
++endif
++
++ifeq ($(PLATFORM), solaris)
++  CPPFLAGS += -I$(OPENWIN_HOME)/include/X11/extensions
++endif
++
++ifeq ($(MILESTONE), internal)
++  CPPFLAGS += -DINTERNAL_BUILD
++endif
++
++#
++# Generation of wrappers
++#
++SIZER_DIR=$(GEN_DIR)/generator
++SIZER = $(SIZER_DIR)/sizer
++SIZER_32_C = $(SIZER).32.c
++SIZER_64_C = $(SIZER).64.c
++CFLAGS_32=$(CFLAGS)
++CFLAGS_64=$(CFLAGS)
++
++ifeq ($(PLATFORM), solaris)
++
++isalist:=$(shell $(ISAINFO))
++
++ifneq (,$(findstring sparcv9, $(isalist)))
++# On sparcv9 we generate both 32 and 64-bit sizers in spite of ARCH_DATA_MODEL.
++# On sparcv9 CFLAGS already contain $(XARCH_OPTION/64), so to generate 32-bit sizer we need to change this option.
++CFLAGS_32=$(subst $(XARCH_OPTION/64),$(XARCH_OPTION/32),$(CFLAGS))
++SIZERS = $(SIZER).32 $(SIZER).64
++SIZERS_C = $(SIZER_32_C) $(SIZER_64_C)
++SIZES = $(WRAPPER_GENERATOR_DIR)/sizes.32 $(WRAPPER_GENERATOR_DIR)/sizes.64
++CFLAGS_64=$(CFLAGS) $(XARCH_OPTION/64)
++else
++ifneq (,$(findstring amd64, $(isalist)))
++# On amd64 we generate both 32 and 64-bit sizers in spite of ARCH_DATA_MODEL.
++# On amd64 CFLAGS already contain $(XARCH_OPTION/64), so to generate 32-bit sizer we need to change this option.
++CFLAGS_32=$(subst $(XARCH_OPTION/64),$(XARCH_OPTION/32),$(CFLAGS))
++SIZERS = $(SIZER).32 $(SIZER).64
++SIZERS_C = $(SIZER_32_C) $(SIZER_64_C)
++SIZES = $(WRAPPER_GENERATOR_DIR)/sizes.32 $(WRAPPER_GENERATOR_DIR)/sizes.64
++CFLAGS_64=$(CFLAGS) $(XARCH_OPTION/64)
++else # !sparcv9 : includes (32-bit) sparc, i586
++SIZERS = $(SIZER).32
++SIZERS_C = $(SIZER_32_C)
++SIZES = $(WRAPPER_GENERATOR_DIR)/sizes.32
++endif # amd64
++endif # sparcv9
++
++else # !solaris
++
++ifeq ($(ARCH_DATA_MODEL), 32)
++SIZERS = $(SIZER).32
++SIZERS_C = $(SIZER_32_C)
++SIZES = $(WRAPPER_GENERATOR_DIR)/sizes.32
++else # !32
++SIZERS = $(SIZER).64
++SIZERS_C = $(SIZER_64_C)
++SIZES = $(WRAPPER_GENERATOR_DIR)/sizes.64
++endif # 32
++
++endif # solaris
++
++# XXX Hack for 6185483 - use hard-coded sizes.
++# Add the 64-bit platforms that need to be included into 32-bit build
++# and have sizes.64-$(PLATFORM)-$(LIBARCH) hardcoded in the workspace
++ifeq ($(PLATFORM)-$(LIBARCH), solaris-i386)
++# If you define DOHACK=true for some combination of $(PLATFORM)-$(LIBARCH),
++# make sure you have sizes.64-$(PLATFORM)-$(LIBARCH) pre-generated in
++# $(PLATFORM_SRC)/classes/sun/awt/X11/generator/
++DOHACK=true
++endif # Hack
++
++ifeq ($(DOHACK), true)
++PREDEFINED_SIZES_TMPL=$(PLATFORM_SRC)/classes/sun/awt/X11/generator/sizes.64-$(PLATFORM)-$(LIBARCH)
++PREDEFINED_SIZES=$(WRAPPER_GENERATOR_DIR)/sizes.64
++SIZES += $(WRAPPER_GENERATOR_DIR)/sizes.64
++endif
++
++ifeq ($(PLATFORM)-$(LIBARCH), solaris-amd64)
++DOCOMPARE=true
++endif
++# 64 bit sizers are generated on platform-libarch (left) for use 
++# on platform-libarch (right) and stored under the latter name.
++# Do compare manually stored and automatically generated pair(s) 
++# if DOCOMPARE=true, just after the generation.
++STORED_SIZES_TMPL_solaris_amd64=$(PLATFORM_SRC)/classes/sun/awt/X11/generator/sizes.64-solaris-i386
++
++WRAPPER_GENERATOR_JAVA=$(PLATFORM_SRC)/classes/sun/awt/X11/generator/WrapperGenerator.java
++WRAPPER_GENERATOR_DIR=$(GENSRCDIR)/sun/awt/X11/generator
++WRAPPER_GENERATOR_TEMPDIR=$(TEMPDIR)/sun/awt/X11/generator
++WRAPPER_GENERATOR_CLASS=$(WRAPPER_GENERATOR_TEMPDIR)/WrapperGenerator.class 
++XLIBTYPES=$(PLATFORM_SRC)/classes/sun/awt/X11/generator/xlibtypes.txt
++
++$(SIZERS): $(SIZERS_C) 
++	$(prep-target)
++	$(CC) $(CFLAGS_$(subst .,,$(suffix $@))) $(CPPFLAGS) -o $@ $(SIZER)$(suffix $@).c
++
++$(WRAPPER_GENERATOR_CLASS): $(WRAPPER_GENERATOR_JAVA)
++	$(prep-target)
++	$(BOOT_JAVAC_CMD) -d $(WRAPPER_GENERATOR_TEMPDIR) $(WRAPPER_GENERATOR_JAVA)
++
++$(SIZERS_C): $(WRAPPER_GENERATOR_CLASS) $(XLIBTYPES)
++	$(prep-target)
++	$(MKDIR) -p $(WRAPPER_GENERATOR_TEMPDIR)
++	$(BOOT_JAVA_CMD) -cp $(WRAPPER_GENERATOR_TEMPDIR) WrapperGenerator \
++	    $(SIZER_DIR) $(XLIBTYPES) "sizer" $(subst .,,$(suffix $(basename $@)))
++
++$(SIZES): $(SIZERS)
++	@if [ "$(DOHACK)$@" = "true$(PREDEFINED_SIZES)" ]; then \
++	    $(ECHO) COPYING $(PREDEFINED_SIZES_TMPL) into $@; \
++	    $(CP) $(PREDEFINED_SIZES_TMPL) $@; \
++	    $(CHMOD) +w $@;\
++	else	\
++	    $(ECHO) GENERATING $@; \
++	    $(WRAPPER_GENERATOR_DIR)/sizer$(suffix $@) > $@; \
++	fi
++	@if [ "$(DOCOMPARE)$(suffix $@)" = "true.64" ]; then \
++	    $(ECHO) COMPARING $@ and $(STORED_SIZES_TMPL_$(PLATFORM)_$(LIBARCH)); \
++	    $(DIFF) $@ $(STORED_SIZES_TMPL_$(PLATFORM)_$(LIBARCH)); \
++	fi
++
++$(TEMPDIR)/.gen.wrappers: $(SIZES) $(WRAPPER_GENERATOR_CLASS) $(XLIBTYPES)
++	$(BOOT_JAVA_CMD) -cp $(WRAPPER_GENERATOR_TEMPDIR) WrapperGenerator \
++	    $(GEN_DIR) $(XLIBTYPES) "gen" $(WRAPPER_GENERATOR_DIR)/sizes
++
++touch.wrappers: $(TEMPDIR)/.gen.wrappers
++	$(MKDIR) -p $(TEMPDIR)
++	$(TOUCH) $(TEMPDIR)/.gen.wrappers
++
++generated.clean:
++	$(RM) -r $(WRAPPER_GENERATOR_TEMPDIR)
++	$(RM) -r $(WRAPPER_GENERATOR_DIR)
++	$(RM) -r $(GEN_DIR)/*.java
++	$(RM) -r $(TEMPDIR)/.gen_icons
++
++ifdef OPENJDK
++    ICONS_PATH_PREFIX=$(PLATFORM_SRC)
++else
++    ICONS_PATH_PREFIX=$(CLOSED_SRC)/solaris
++endif
++
++ICONS = \
++    $(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon16.png \
++    $(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon24.png \
++    $(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon32.png \
++    $(ICONS_PATH_PREFIX)/classes/sun/awt/X11/java-icon48.png
++
++TEMPDIR_CLASSES = $(TEMPDIR)/classes
++
++$(TEMPDIR)/.gen_icons: $(ICONS)
++	$(prep-target)
++	for i in $(ICONS); do \
++            filename=`basename $$i`; \
++	    name=`$(ECHO) $$filename | $(TR) '\-.' '__'`;  \
++            classname=$(GEN_DIR)/XAWTIcon32_$$name.java; \
++	    $(RM) $$classname; \
++	    $(ECHO) "package sun.awt.X11;" >> $$classname ; \
++	    $(ECHO) "public class XAWTIcon32_$$name {" >> $$classname; \
++	    $(ECHO) "public static int[] $$name = { " >> $$classname;  \
++	    $(ECHO) "0,0" >> $$classname ;  \
++	    $(ECHO) "}; }" >> $$classname;  \
++            classname=$(GEN_DIR)/XAWTIcon64_$$name.java; \
++	    $(RM) $$classname; \
++	    $(ECHO) "package sun.awt.X11;" >> $$classname ; \
++	    $(ECHO) "public class XAWTIcon64_$$name {" >> $$classname; \
++	    $(ECHO) "public static long[] $$name = { " >> $$classname;  \
++ 	    $(ECHO) "0,0" >> $$classname ; \
++	    $(ECHO) "}; }" >> $$classname;  \
++	done
++	$(TOUCH) $@
++
++clean clobber:: generated.clean
++
++.PHONY: generated.clean robot_child
++
+diff -Nru openjdk-ecj.orig/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java openjdk-ecj/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java
+--- openjdk-ecj.orig/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2008-05-26 01:35:35.000000000 +0100
+@@ -647,9 +647,6 @@
+             throws FileNotFoundException, IOException {
+         BufferedReader in = new BufferedReader(new FileReader(theTemplateFileName));
+         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(theOutputFileName)));
+-        out.println(commentStart +
+-            " This file was generated AUTOMATICALLY from a template file " +
+-            new java.util.Date() + commentEnd);
+         int marklen = commandMarker.length();
+         LOOP: while(true) {
+             try {
+@@ -876,7 +873,6 @@
+         // liu : Add a comment showing the source of this table
+         result.append(commentStart + " The following tables and code generated using:" +
+                   commentEnd + "\n  ");
+-        result.append(commentStart + ' ' + commandLineDescription + commentEnd + "\n  ");
+ 
+                 if (plane == 0 && bLatin1 == false) {
+             genCaseMapTableDeclaration(result);
+diff -Nru openjdk-ecj.orig/jdk/src/share/classes/java/lang/Double.java openjdk-ecj/jdk/src/share/classes/java/lang/Double.java
+--- openjdk-ecj.orig/jdk/src/share/classes/java/lang/Double.java	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/src/share/classes/java/lang/Double.java	2008-05-26 01:35:42.000000000 +0100
 @@ -76,7 +76,7 @@
       * {@code 0x1.fffffffffffffP+1023} and also equal to
       * {@code Double.longBitsToDouble(0x7fefffffffffffffL)}.
@@ -781,18 +1596,39 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
  
      /**
       * Maximum exponent a finite {@code double} variable may have.
---- openjdk.old/corba/src/share/classes/com/sun/tools/corba/se/logutil/scripts/mc.scm	2007-12-10 15:46:46.000000000 -0500
-+++ openjdk-ecj/corba/src/share/classes/com/sun/tools/corba/se/logutil/scripts/mc.scm	2007-12-19 09:53:07.000000000 -0500
-@@ -332,7 +332,6 @@
- 	    (.printMsg pw "// Log wrapper class for Sun private system exceptions in group @" (list group)))
- 	(.println pw "//")
- 	(.printMsg pw "// Generated by mc.scm version @, DO NOT EDIT BY HAND!" (list version-string))
--	(.printMsg pw "// Generated from input file @ on @" (list infile (java.util.Date.)))
- 	(.println pw)))
+diff -Nru openjdk-ecj.orig/jdk/src/share/classes/java/lang/Float.java openjdk-ecj/jdk/src/share/classes/java/lang/Float.java
+--- openjdk-ecj.orig/jdk/src/share/classes/java/lang/Float.java	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/jdk/src/share/classes/java/lang/Float.java	2008-05-26 01:35:42.000000000 +0100
+@@ -76,7 +76,7 @@
+      * {@code 0x1.fffffeP+127f} and also equal to
+      * {@code Float.intBitsToFloat(0x7f7fffff)}.
+      */
+-    public static final float MAX_VALUE = 0x1.fffffeP+127f; // 3.4028235e+38f
++    public static final float MAX_VALUE = 3.4028235e+38f;
  
- (define (write-factory-method class-name exception-group-name pw)
---- openjdk.old/langtools/make/Makefile	2008-01-16 10:23:52.000000000 -0500
-+++ openjdk-ecj/langtools/make/Makefile	2008-01-16 10:42:51.000000000 -0500
+     /**
+      * A constant holding the smallest positive normal value of type
+@@ -86,7 +86,7 @@
+      *
+      * @since 1.6
+      */
+-    public static final float MIN_NORMAL = 0x1.0p-126f; // 1.17549435E-38f
++    public static final float MIN_NORMAL = 1.17549435E-38f;
+ 
+     /**
+      * A constant holding the smallest positive nonzero value of type
+@@ -94,7 +94,7 @@
+      * hexadecimal floating-point literal {@code 0x0.000002P-126f}
+      * and also equal to {@code Float.intBitsToFloat(0x1)}.
+      */
+-    public static final float MIN_VALUE = 0x0.000002P-126f; // 1.4e-45f
++    public static final float MIN_VALUE = 1.4e-45f;
+ 
+     /**
+      * Maximum exponent a finite {@code float} variable may have.  It
+diff -Nru openjdk-ecj.orig/langtools/make/Makefile openjdk-ecj/langtools/make/Makefile
+--- openjdk-ecj.orig/langtools/make/Makefile	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/langtools/make/Makefile	2008-05-26 01:35:42.000000000 +0100
 @@ -113,7 +113,7 @@
  
  ifdef ALT_BOOTDIR
@@ -802,8 +1638,21 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
  endif
  
  ifdef ALT_OUTPUTDIR
---- openjdk.old/langtools/make/build.xml	2008-01-07 10:12:20.000000000 -0500
-+++ openjdk-ecj/langtools/make/build.xml	2008-01-16 10:40:54.000000000 -0500
+diff -Nru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/make/build.properties
+--- openjdk-ecj.orig/langtools/make/build.properties	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/langtools/make/build.properties	2008-05-26 01:35:35.000000000 +0100
+@@ -66,7 +66,7 @@
+ # set the following to -version to verify the versions of javac being used
+ javac.version.opt = 
+ # in time, there should be no exceptions to -Xlint:all
+-javac.lint.opts = -Xlint:all,-unchecked,-deprecation,-fallthrough,-cast,-serial -Werror
++javac.lint.opts = -Xlint:all,-unchecked,-deprecation,-fallthrough,-cast,-serial
+ 
+ # options for the <javadoc> task for javac
+ javadoc.jls3.url=http://java.sun.com/docs/books/jls/
+diff -Nru openjdk-ecj.orig/langtools/make/build.xml openjdk-ecj/langtools/make/build.xml
+--- openjdk-ecj.orig/langtools/make/build.xml	2008-05-26 01:29:37.000000000 +0100
++++ openjdk-ecj/langtools/make/build.xml	2008-05-26 01:35:42.000000000 +0100
 @@ -497,7 +497,10 @@
                         includes="@{includes}"
                         sourcepath=""
@@ -841,185 +1690,15 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
          <taskdef name="pcompile"
                   classname="CompilePropertiesTask" 
                   classpath="${build.toolclasses.dir}/"/>
---- openjdk.old/jaxp/make/build.xml	2008-01-07 10:07:02.000000000 -0500
-+++ openjdk-ecj/jaxp/make/build.xml	2008-01-16 10:59:22.000000000 -0500
-@@ -71,7 +71,10 @@
-       <mkdir dir="${build.toolclasses.dir}"/>
-       <javac srcdir="${make.tools.dir}/StripProperties"
- 		destdir="${build.toolclasses.dir}/"
--		classpath="${ant.home}/lib/ant.jar"/>
-+		classpath="${ant.home}/lib/ant.jar"
-+		fork="true"
-+		executable="${javac.executable}"
-+		source="1.5"/>
-       <taskdef name="pstrip"
- 		 classname="StripPropertiesTask"
- 		 classpath="${build.toolclasses.dir}/"/>
-@@ -85,7 +88,9 @@
-              destdir="${build.classes.dir}"
-              memoryInitialSize="${javac.memoryInitialSize}"
-              memoryMaximumSize="${javac.memoryMaximumSize}"
--             target="${javac.target}">
-+             target="${javac.target}"
-+             executable="${javac.executable}"
-+             source="1.5">
-          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
-          <compilerarg line="${javac.version.opt}"/>
-       </javac>
---- openjdk.old/jaxws/make/build.xml	2008-01-16 10:23:52.000000000 -0500
-+++ openjdk-ecj/jaxws/make/build.xml	2008-01-16 11:01:00.000000000 -0500
-@@ -84,7 +84,10 @@
-       <mkdir dir="${build.toolclasses.dir}"/>
-       <javac srcdir="${make.tools.dir}/StripProperties"
- 		destdir="${build.toolclasses.dir}/"
--		classpath="${ant.home}/lib/ant.jar"/>
-+		fork="true"
-+                executable="${javac.executable}"
-+		classpath="${ant.home}/lib/ant.jar"
-+		source="1.5"/>
-       <taskdef name="pstrip"
- 		 classname="StripPropertiesTask"
- 		 classpath="${build.toolclasses.dir}/"/>
-@@ -96,12 +99,14 @@
-       <javac fork="true"
-              srcdir="${src.classes.dir}"
-              destdir="${build.classes.dir}"
-+             executable="${javac.executable}"
-              memoryInitialSize="${javac.memoryInitialSize}"
-              memoryMaximumSize="${javac.memoryMaximumSize}"
-              target="${javac.target}"
--             excludes="com/sun/tools/internal/txw2/**">
--	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${plugs}/jre/lib/tools.jar:${plugs}/jre/lib/rt-closed.jar"/>
--         <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
-+             excludes="com/sun/tools/internal/txw2/**"
-+	     source="1.5">
-+         <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar"/>
-+	 <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
-          <compilerarg line="${javac.version.opt}"/>
-          <compilerarg line="${javac.no.jdk.warnings}"/>
-       </javac>
---- openjdk.old/jaxp/make/Makefile	2008-01-16 10:23:52.000000000 -0500
-+++ openjdk-ecj/jaxp/make/Makefile	2008-01-16 11:02:39.000000000 -0500
-@@ -80,7 +80,7 @@
+diff -Nru openjdk-ecj.orig/make/jdk-rules.gmk openjdk-ecj/make/jdk-rules.gmk
+--- openjdk-ecj.orig/make/jdk-rules.gmk	2008-05-26 01:43:34.000000000 +0100
++++ openjdk-ecj/make/jdk-rules.gmk	2008-05-26 01:35:42.000000000 +0100
+@@ -63,7 +63,7 @@
  endif
  
- ifdef ALT_BOOTDIR
--  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
-+  ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
+ ifndef DEV_ONLY
+-  JDK_BUILD_TARGETS = sanity all $(DOCS_TARGET) images
++  JDK_BUILD_TARGETS = sanity all images
+ else
+   JDK_BUILD_TARGETS = sanity all $(IMAGES_TARGET)
  endif
- 
- ifdef ALT_OUTPUTDIR
---- openjdk.old/jaxws/make/Makefile	2008-01-16 10:23:52.000000000 -0500
-+++ openjdk-ecj/jaxws/make/Makefile	2008-01-16 11:03:10.000000000 -0500
-@@ -80,8 +80,8 @@
- endif
- 
- ifdef ALT_BOOTDIR
--  ANT_OPTIONS += -Dplugs=$(ALT_BINARY_PLUGS_PATH)
--  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
-+  ANT_OPTIONS += -Dboot.java.home=$(ALT_BOOTDIR)
-+  ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
- endif
- 
- ifdef ALT_OUTPUTDIR
---- openjdk6/hotspot/build/linux/makefiles/sa.make	2008-02-12 04:14:13.000000000 -0500
-+++ openjdk-ecj/hotspot/build/linux/makefiles/sa.make	2008-02-15 09:23:58.000000000 -0500
-@@ -72,7 +72,7 @@
- 	$(QUIETLY) if [ ! -d $(SA_CLASSDIR) ] ; then \
- 	  mkdir -p $(SA_CLASSDIR);        \
- 	fi
--	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -classpath $(SA_CLASSPATH) -g -d $(SA_CLASSDIR) $(AGENT_ALLFILES)
-+	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -classpath $(SA_CLASSPATH):$(BOOT_JAVA_HOME)/jre/lib/rt.jar -g -d $(SA_CLASSDIR) $(AGENT_ALLFILES)
- 	$(QUIETLY) $(REMOTE) $(COMPILE.RMIC)  -classpath $(SA_CLASSDIR) -d $(SA_CLASSDIR) sun.jvm.hotspot.debugger.remote.RemoteDebuggerServer
- 	$(QUIETLY) echo "$(SA_BUILD_VERSION_PROP)" > $(SA_PROPERTIES)
- 	$(QUIETLY) $(REMOTE) $(RUN.JAR) cf $@ -C $(SA_CLASSDIR)/ .
---- openoldjdk/jdk/make/sun/xawt/Makefile	2008-02-12 04:04:04.000000000 -0500
-+++ openjdk-ecj/jdk/make/sun/xawt/Makefile	2008-02-15 09:48:16.000000000 -0500
-@@ -278,11 +278,7 @@
- 
- TEMPDIR_CLASSES = $(TEMPDIR)/classes
- 
--$(TEMPDIR_CLASSES)/sun/awt/X11/ToBin.class: ToBin.java
--	@$(prep-target)
--	$(BOOT_JAVAC_CMD) -d $(TEMPDIR_CLASSES) $<
--
--$(TEMPDIR)/.gen_icons: $(TEMPDIR_CLASSES)/sun/awt/X11/ToBin.class $(ICONS)
-+$(TEMPDIR)/.gen_icons: $(ICONS)
- 	$(prep-target)
- 	for i in $(ICONS); do \
-             filename=`basename $$i`; \
-@@ -292,22 +288,14 @@
- 	    $(ECHO) "package sun.awt.X11;" >> $$classname ; \
- 	    $(ECHO) "public class XAWTIcon32_$$name {" >> $$classname; \
- 	    $(ECHO) "public static int[] $$name = { " >> $$classname;  \
--	    $(CAT) $$i | \
--	      $(BOOT_JAVA_CMD) -cp $(TEMPDIR_CLASSES)  \
--		-Dawt.toolkit=sun.awt.motif.MToolkit \
--		-Djava.awt.headless=true \
--		sun.awt.X11.ToBin >> $$classname; \
-+	    $(ECHO) "0,0" >> $$classname ;  \
- 	    $(ECHO) "}; }" >> $$classname;  \
--            classname=$(GEN_DIR)/XAWTIcon64_$$name.java; \
-+	    classname=$(GEN_DIR)/XAWTIcon64_$$name.java; \
- 	    $(RM) $$classname; \
- 	    $(ECHO) "package sun.awt.X11;" >> $$classname ; \
- 	    $(ECHO) "public class XAWTIcon64_$$name {" >> $$classname; \
- 	    $(ECHO) "public static long[] $$name = { " >> $$classname;  \
--	    $(CAT) $$i | \
--	      $(BOOT_JAVA_CMD) -cp $(TEMPDIR_CLASSES)  \
--		-Dawt.toolkit=sun.awt.motif.MToolkit \
--		-Djava.awt.headless=true \
--		sun.awt.X11.ToBin >> $$classname; \
-+	    $(ECHO) "0,0" >> $$classname ; \
- 	    $(ECHO) "}; }" >> $$classname;  \
- 	done
- 	$(TOUCH) $@
---- oldopenjdk/corba/make/common/shared/Defs-java.gmk	2008-02-12 04:15:10.000000000 -0500
-+++ openjdk-ecj/corba/make/common/shared/Defs-java.gmk	2008-02-15 11:01:50.000000000 -0500
-@@ -117,31 +117,13 @@
- JAVACFLAGS  += $(OTHER_JAVACFLAGS)
- 
- # Needed for javah
--JAVAHFLAGS += -bootclasspath $(CLASSBINDIR)
-+JAVAHFLAGS += -bootclasspath $(CLASSBINDIR):$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)
- 
--# Langtools
--ifdef LANGTOOLS_DIST
--  JAVAC_JAR   = $(LANGTOOLS_DIST)/bootstrap/lib/javac.jar
--  JAVAH_JAR   = $(LANGTOOLS_DIST)/bootstrap/lib/javah.jar
--  JAVADOC_JAR = $(LANGTOOLS_DIST)/bootstrap/lib/javadoc.jar
--  DOCLETS_JAR = $(LANGTOOLS_DIST)/bootstrap/lib/doclets.jar
--  JAVAC_CMD   = $(BOOT_JAVA_CMD) \
--		"-Xbootclasspath/p:$(JAVAC_JAR)" \
--		-jar $(JAVAC_JAR) $(JAVACFLAGS)
--  JAVAH_CMD   = $(BOOT_JAVA_CMD) \
--		"-Xbootclasspath/p:$(JAVAH_JAR)$(CLASSPATH_SEPARATOR)$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)"  \
--		-jar $(JAVAH_JAR) $(JAVAHFLAGS)
--  JAVADOC_CMD = $(BOOT_JAVA_CMD) \
--		"-Xbootclasspath/p:$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)$(CLASSPATH_SEPARATOR)$(DOCLETS_JAR)" \
--		-jar $(JAVADOC_JAR)
--else
--  # If no explicit tools, use boot tools (add VM flags in this case)
--  JAVAC_CMD     = $(JAVA_TOOLS_DIR)/javac $(JAVAC_JVM_FLAGS) \
-+# If no explicit tools, use boot tools (add VM flags in this case)
-+JAVAC_CMD     = $(JAVA_TOOLS_DIR)/javac $(JAVAC_JVM_FLAGS) \
- 		  $(JAVACFLAGS)
--  JAVAH_CMD     = $(JAVA_TOOLS_DIR)/javah \
-+JAVAH_CMD     = $(JAVA_TOOLS_DIR)/javah \
- 		  $(JAVAHFLAGS)
--  JAVADOC_CMD   = $(JAVA_TOOLS_DIR)/javadoc $(JAVA_TOOLS_FLAGS:%=-J%)
--endif
- 
- # Override of what javac to use (see deploy workspace)
- ifdef JAVAC
---- oldopenjdk/corba/make/common/Defs-linux.gmk	2008-02-15 11:02:45.000000000 -0500
-+++ openjdk-ecj/corba/make/common/Defs-linux.gmk	2008-02-15 11:05:09.000000000 -0500
-@@ -261,7 +261,7 @@
- 		    fi; \
- 		  done)
- JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
--JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
-+JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -L$(dir $(shell $(if $(GCJ),$(GCJ),$(subst gcc,gcj,$(CC))) --print-file-name=libgcj.so)) -lgcj $(JVMLIB)
- 
- #
- # We want to privatize JVM symbols on Solaris. This is so the user can

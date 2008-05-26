@@ -265,16 +265,16 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
 BUILD_OUTPUT_DIR = openjdk/control/build/$(LINUX_DIR)
 ICEDTEA_BUILD_DIR = \
-	$(abs_top_srcdir)/$(BUILD_OUTPUT_DIR)
+	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)
 
 ICEDTEA_RT = \
-	$(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
+	$(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
 ICEDTEA_CLS_DIR = \
-	$(abs_top_srcdir)/$(BUILD_OUTPUT_DIR)/classes
+	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)/classes
 
 ICEDTEA_BOOT_DIR = \
-	$(abs_top_srcdir)/bootstrap/jdk1.6.0
+	$(abs_top_builddir)/bootstrap/jdk1.6.0
 
 ICEDTEA_ENDORSED_DIR = \
 	$(ICEDTEA_BOOT_DIR)/lib/endorsed
@@ -289,7 +289,7 @@ ICEDTEA_ENV = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"HOTSPOT_RELEASE_VERSION=1.7.0-$(OPENJDK_VERSION)" "LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
-	"ALT_BINARY_PLUGS_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
+	"ALT_BINARY_PLUGS_PATH=$(abs_top_builddir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" "ICEDTEA_RT=$(ICEDTEA_RT)" \
 	"ICEDTEA_BUILD_DIR=$(ICEDTEA_BUILD_DIR)" \
 	"ICEDTEA_CLS_DIR=$(ICEDTEA_CLS_DIR)" \
@@ -312,10 +312,10 @@ ICEDTEA_ENV = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 
 # OpenJDK ecj build environment.
 ICEDTEA_BUILD_DIR_ECJ = \
-	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/
+	$(abs_top_builddir)/openjdk-ecj/control/build/$(LINUX_DIR)/
 
 ICEDTEA_CLS_DIR_ECJ = \
-	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/classes
+	$(abs_top_builddir)/openjdk-ecj/control/build/$(LINUX_DIR)/classes
 
 ICEDTEA_ENV_ECJ = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" "BUILD_NUMBER=$(OPENJDK_VERSION)" \
@@ -323,7 +323,7 @@ ICEDTEA_ENV_ECJ = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"HOTSPOT_RELEASE_VERSION=1.7.0-$(OPENJDK_VERSION)" "LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
-	"ALT_BINARY_PLUGS_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
+	"ALT_BINARY_PLUGS_PATH=$(abs_top_builddir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" "LIBGCJ_JAR=$(LIBGCJ_JAR)" \
 	"ICEDTEA_RT=$(ICEDTEA_RT)" \
 	"ICEDTEA_BUILD_DIR=$(ICEDTEA_BUILD_DIR_ECJ)" \
@@ -421,7 +421,7 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	$(GCC_PATCH) $(DISTRIBUTION_PATCHES) $(am__append_7)
 
 # Patch OpenJDK for plug replacements and ecj.
-ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch
+ICEDTEA_ECJ_PATCH = $(abs_top_srcdir)/patches/icedtea-ecj.patch
 @WITH_ICEDTEA_FALSE@@WITH_OPENJDK_FALSE@BOOTSTRAP_DIRECTORY_STAMP = stamps/bootstrap-directory.stamp
 @WITH_ICEDTEA_TRUE@@WITH_OPENJDK_FALSE@BOOTSTRAP_DIRECTORY_STAMP = 
 @WITH_OPENJDK_TRUE@BOOTSTRAP_DIRECTORY_STAMP = 
@@ -985,7 +985,7 @@ clean-patch-ecj:
 # bootstrap/icedtea.
 stamps/bootstrap-directory.stamp: stamps/icedtea-against-ecj.stamp
 	rm -rf bootstrap/icedtea
-	ln -s $(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/ bootstrap/icedtea
+	ln -s $(abs_top_builddir)/openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/ bootstrap/icedtea
 	if ! test -d bootstrap/icedtea/include; then \
 	  ln -sf $(ICEDTEA_BUILD_DIR_ECJ)/include bootstrap/icedtea/include; \
 	fi
@@ -1051,8 +1051,8 @@ stamps/bootstrap-directory-ecj.stamp:
 	if test -f bootstrap/jdk1.7.0/jre/lib/tools.jar ; \
 	then \
 		mkdir -p bootstrap/ecj/lib ; \
-		ln -sf $(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
-	            $(abs_top_srcdir)/bootstrap/ecj/lib/tools.jar; \
+		ln -sf $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
+	            $(abs_top_builddir)/bootstrap/ecj/lib/tools.jar; \
 	fi
 	if test -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar ; \
 	then \
@@ -1095,10 +1095,10 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	  cp -pPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
-	cp rt/net/sourceforge/jnlp/resources/about.jnlp \
+	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/about.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp rt/net/sourceforge/jnlp/resources/about.jnlp \
+	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/about.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
@@ -1118,10 +1118,10 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	  cp -pPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
-	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/default.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib
-	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/default.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib
 	@echo "IcedTea (debug build) is served:" \
@@ -1229,8 +1229,9 @@ clean-copy:
 	done
 
 stamps/generated.stamp:
+	mkdir -p generated/java/lang
 	cp $(SOLARIS)/java/lang/UNIXProcess.java.$(BUILD_OS) \
-	  $(abs_top_srcdir)/generated/java/lang/UNIXProcess.java ;
+	  generated/java/lang/UNIXProcess.java ;
 	touch stamps/generated.stamp
 
 # tools.jar class files.
@@ -1272,12 +1273,12 @@ stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt \
 	if ! test -f stamps/icedtea-ecj.stamp ; \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools -bootclasspath '' -source 1.6 \
-	    -sourcepath 'rt:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
+	    -sourcepath 'rt:generated:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
 	    @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
 	    -bootclasspath '' -source 1.6 \
-            -sourcepath 'rt:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
+            -sourcepath 'rt:generated:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
             @$< ; \
 	fi
 	mkdir -p stamps
@@ -1311,22 +1312,22 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/clone.stamp stamps/copy-source-files.stamp
-	find rt -name '*.java' | sort > $@
+	find $(abs_top_srcdir)/rt rt -name '*.java' | sort > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt stamps/generated.stamp
 	mkdir -p lib/rt
 	if ! test -f stamps/icedtea-ecj.stamp ; \
         then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt -bootclasspath '' -source 1.6 \
-          -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated \
+          -sourcepath 'generated:rt:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
           @$< ; \
         else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
 	  -bootclasspath '' -source 1.6 \
-          -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated \
+          -sourcepath 'generated:rt:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
           @$< ; \
         fi
-	cp -r rt/net/sourceforge/jnlp/resources \
+	cp -r $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources \
 	  lib/rt/net/sourceforge/jnlp/
 	mkdir -p stamps
 	touch stamps/rt-class-files.stamp
@@ -1370,7 +1371,7 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
 	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
 		@extra-source-files.txt ; \
 	fi
-	cp -r extra/net/sourceforge/jnlp/about/resources \
+	cp -r $(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources \
 	  extra-lib/net/sourceforge/jnlp/about
 	mkdir -p stamps
 	touch $@
