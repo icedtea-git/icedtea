@@ -21,6 +21,7 @@ tools-source-files.txt
 platform_zero
 jvm.cfg
 ergo.c
+hotspot-tools/
 rt/com/sun/jdi/AbsentInformationException.java
 rt/com/sun/jdi/Accessible.java
 rt/com/sun/jdi/ArrayReference.java

@@ -29,6 +29,7 @@ diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/
 +            $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
 +            $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
 +            $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
++LDLIBS += -ldl 
 +
 +  OTHER_LDLIBS += -lz
  else
