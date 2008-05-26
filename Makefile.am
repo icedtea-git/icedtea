@@ -315,6 +315,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-directaudio-close-trick.patch \
 	patches/icedtea-hat-spl-gpl.patch \
 	patches/icedtea-sparc.patch \
+	patches/icedtea-override-redirect-metacity.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
