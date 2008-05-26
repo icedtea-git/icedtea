@@ -213,17 +213,17 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/security/provider/CertBundleKey
           * Policy
 --- openjdkold/jdk/src/share/classes/sun/security/ssl/TrustManagerFactoryImpl.java	2008-03-26 04:59:04.000000000 -0400
 +++ openjdk/jdk/src/share/classes/sun/security/ssl/TrustManagerFactoryImpl.java	2008-05-08 10:49:22.000000000 -0400
-@@ -140,18 +140,18 @@
- 
-         AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
+@@ -142,16 +142,21 @@
              public Void run() throws Exception {
--                props.put("trustStore", System.getProperty(
--                                "javax.net.ssl.trustStore"));
-                 props.put("javaHome", System.getProperty(
-                                         "java.home"));
--                props.put("trustStoreType", System.getProperty(
--                                "javax.net.ssl.trustStoreType",
--                                KeyStore.getDefaultType()));
+                 props.put("trustStore", System.getProperty(
+                                 "javax.net.ssl.trustStore"));
+-                props.put("javaHome", System.getProperty(
+-                                        "java.home"));
+                 props.put("trustStoreType", System.getProperty(
+                                 "javax.net.ssl.trustStoreType",
+                                 KeyStore.getDefaultType()));
++		props.put("javaHome", System.getProperty(
++                                        "java.home"));
                  props.put("trustStoreProvider", System.getProperty(
                                  "javax.net.ssl.trustStoreProvider", ""));
                  props.put("trustStorePasswd", System.getProperty(
