@@ -341,7 +341,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-hat-spl-gpl.patch \
 	patches/icedtea-sparc.patch \
 	$(GCC_PATCH) \
-	$(DISTRIBUTION_PATCHES)
+	$(DISTRIBUTION_PATCHES) \
+	patches/icedtea-xslfix.patch
 
 if WITH_CACAO
 ICEDTEA_PATCHES += \
