@@ -1,7 +1,7 @@
-diff -r 9523b5ae0184 openjdk/hotspot/src/share/vm/asm/codeBuffer.hpp
---- openjdk/hotspot/src/share/vm/asm/codeBuffer.hpp	Fri Nov 02 09:26:45 2007 +0000
-+++ openjdk/hotspot/src/share/vm/asm/codeBuffer.hpp	Fri Nov 02 09:39:12 2007 +0000
-@@ -81,7 +81,7 @@ class CodeSection VALUE_OBJ_CLASS_SPEC {
+diff -Nru openjdk.orig/hotspot/src/share/vm/asm/codeBuffer.hpp openjdk/hotspot/src/share/vm/asm/codeBuffer.hpp
+--- openjdk.orig/hotspot/src/share/vm/asm/codeBuffer.hpp	2008-05-27 21:18:54.000000000 +0100
++++ openjdk/hotspot/src/share/vm/asm/codeBuffer.hpp	2008-05-27 21:56:42.000000000 +0100
+@@ -81,7 +81,7 @@
    address     _locs_point;      // last relocated position (grows upward)
    bool        _locs_own;        // did I allocate the locs myself?
    bool        _frozen;          // no more expansion of this section
@@ -10,14 +10,14 @@ diff -r 9523b5ae0184 openjdk/hotspot/src/share/vm/asm/codeBuffer.hpp
    CodeBuffer* _outer;           // enclosing CodeBuffer
  
    // (Note:  _locs_point used to be called _last_reloc_offset.)
-diff -r 9523b5ae0184 openjdk/hotspot/src/share/vm/utilities/ostream.cpp
---- openjdk/hotspot/src/share/vm/utilities/ostream.cpp	Fri Nov 02 09:26:45 2007 +0000
-+++ openjdk/hotspot/src/share/vm/utilities/ostream.cpp	Fri Nov 02 09:37:53 2007 +0000
-@@ -829,7 +829,7 @@ bool networkStream::connect(const char *
+diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/ostream.cpp openjdk/hotspot/src/share/vm/utilities/ostream.cpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/ostream.cpp	2008-05-27 21:18:54.000000000 +0100
++++ openjdk/hotspot/src/share/vm/utilities/ostream.cpp	2008-05-27 21:59:01.000000000 +0100
+@@ -829,7 +829,7 @@
    server.sin_port = htons(port);
  
    server.sin_addr.s_addr = inet_addr(ip);
--  if (server.sin_addr.s_addr == (unsigned long)-1) {
+-  if (server.sin_addr.s_addr == (uint32_t)-1) {
 +  if (server.sin_addr.s_addr == (in_addr_t)-1) {
  #ifdef _WINDOWS
      struct hostent* host = hpi::get_host_by_name((char*)ip);
