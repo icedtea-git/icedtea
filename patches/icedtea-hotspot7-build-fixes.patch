@@ -1,7 +1,7 @@
-diff -r 2323cafebabe openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
---- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-01-31 09:19:01.000000000 -0500
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-02-29 13:12:39.000000000 -0500
-@@ -86,16 +86,12 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-27 00:56:04.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-27 20:14:16.000000000 +0100
+@@ -88,16 +88,12 @@
    #define VMLP ""
  #endif
  
@@ -18,47 +18,3 @@ diff -r 2323cafebabe openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
  
  #ifndef HOTSPOT_VM_DISTRO
    #error HOTSPOT_VM_DISTRO must be defined
-diff -r 848a72e3bc9b openjdk/hotspot/build/linux/makefiles/top.make
---- openjdk/hotspot/build/linux/makefiles/top.make	Fri Feb 29 17:02:22 2008 +0000
-+++ openjdk/hotspot/build/linux/makefiles/top.make	Fri Feb 29 17:04:07 2008 +0000
-@@ -67,7 +67,9 @@ Include_DBs/GC          = $(VM)/includeD
-                           $(VM)/gc_implementation/includeDB_gc_serial \
-                           $(VM)/gc_implementation/includeDB_gc_shared
- 
--Include_DBs/CORE        = $(VM)/includeDB_core   $(Include_DBs/GC)
-+Include_DBs/CORE        = $(VM)/includeDB_core   $(Include_DBs/GC) \
-+                          $(VM)/includeDB_jvmti \
-+                          $(VM)/includeDB_features
- Include_DBs/COMPILER1   = $(Include_DBs/CORE) $(VM)/includeDB_compiler1
- Include_DBs/COMPILER2   = $(Include_DBs/CORE) $(VM)/includeDB_compiler2
- Include_DBs/TIERED      = $(Include_DBs/CORE) $(VM)/includeDB_compiler1 $(VM)/includeDB_compiler2
-diff -r 2323cafebabe openjdk/hotspot/build/linux/makefiles/jvmti.make
---- openjdk/hotspot/build/linux/makefiles/jvmti.make	2008-02-29 16:50:25.000000000 +0000
-+++ openjdk/hotspot/build/linux/makefiles/jvmti.make	2008-02-29 10:21:43.000000000 +0000
-@@ -36,6 +36,7 @@
- JvmtiOutDir = $(GENERATED)/jvmtifiles
- 
- JvmtiSrcDir = $(GAMMADIR)/src/share/vm/prims
-+InterpreterSrcDir = $(GAMMADIR)/src/share/vm/interpreter
- Src_Dirs += $(JvmtiSrcDir)
- 
- # set VPATH so make knows where to look for source files
-@@ -47,6 +48,7 @@
-         jvmtiEnter.cpp \
-         jvmtiEnterTrace.cpp \
-         jvmtiEnvRecommended.cpp\
-+        bytecodeInterpreterWithChecks.cpp \
-         jvmti.h \
- 
- JvmtiEnvFillSource = $(JvmtiSrcDir)/jvmtiEnvFill.java
-@@ -77,6 +79,10 @@
- 	@echo Generating $@
- 	$(XSLT) -IN $(JvmtiSrcDir)/jvmti.xml -XSL $(JvmtiSrcDir)/jvmtiEnter.xsl -OUT $(JvmtiOutDir)/jvmtiEnter.cpp -PARAM interface jvmti
- 
-+$(JvmtiOutDir)/bytecodeInterpreterWithChecks.cpp: $(JvmtiGenClass) $(InterpreterSrcDir)/bytecodeInterpreter.cpp $(InterpreterSrcDir)/bytecodeInterpreterWithChecks.xml $(InterpreterSrcDir)/bytecodeInterpreterWithChecks.xsl
-+	@echo Generating $@
-+	$(XSLT) -IN $(InterpreterSrcDir)/bytecodeInterpreterWithChecks.xml -XSL $(InterpreterSrcDir)/bytecodeInterpreterWithChecks.xsl -OUT $(JvmtiOutDir)/bytecodeInterpreterWithChecks.cpp 
-+
- $(JvmtiOutDir)/jvmtiEnterTrace.cpp: $(both) $(JvmtiSrcDir)/jvmtiEnter.xsl
- 	@echo Generating $@
- 	$(XSLT) -IN $(JvmtiSrcDir)/jvmti.xml -XSL $(JvmtiSrcDir)/jvmtiEnter.xsl -OUT $(JvmtiOutDir)/jvmtiEnterTrace.cpp -PARAM interface jvmti -PARAM trace Trace

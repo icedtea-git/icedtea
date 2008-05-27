@@ -1626,25 +1626,6 @@ diff -Nru openjdk-ecj.orig/jdk/src/share/classes/java/lang/Float.java openjdk-ec
  
      /**
       * Maximum exponent a finite {@code float} variable may have.  It
-diff -Nru openjdk-ecj.orig/jdk/src/share/classes/javax/management/AttributeValueExp.java openjdk-ecj/jdk/src/share/classes/javax/management/AttributeValueExp.java
---- openjdk-ecj.orig/jdk/src/share/classes/javax/management/AttributeValueExp.java	2008-05-26 19:27:49.000000000 +0100
-+++ openjdk-ecj/jdk/src/share/classes/javax/management/AttributeValueExp.java	2008-05-26 19:28:38.000000000 +0100
-@@ -113,7 +113,6 @@
-      * @exception BadBinaryOpValueExpException
-      *
-      */
--    @Override
-     public ValueExp apply(ObjectName name) throws BadStringOperationException, BadBinaryOpValueExpException,
-         BadAttributeValueExpException, InvalidApplicationException {
-         Object result = getAttribute(name);
-@@ -150,7 +149,6 @@
-        evaluted an AttributeValueExp can only appear inside a QueryExp,
-        and that QueryExp will itself have done setMBeanServer.  */
-     @Deprecated
--    @Override
-     public void setMBeanServer(MBeanServer s)  {
-     }
- 
 diff -Nru openjdk-ecj.orig/langtools/make/Makefile openjdk-ecj/langtools/make/Makefile
 --- openjdk-ecj.orig/langtools/make/Makefile	2008-05-26 01:29:37.000000000 +0100
 +++ openjdk-ecj/langtools/make/Makefile	2008-05-26 01:35:42.000000000 +0100

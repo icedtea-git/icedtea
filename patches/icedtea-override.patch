@@ -1,0 +1,19 @@
+diff -Nru openjdk-ecj.orig/jdk/src/share/classes/javax/management/AttributeValueExp.java openjdk-ecj/jdk/src/share/classes/javax/management/AttributeValueExp.java
+--- openjdk-ecj.orig/jdk/src/share/classes/javax/management/AttributeValueExp.java	2008-05-26 19:27:49.000000000 +0100
++++ openjdk-ecj/jdk/src/share/classes/javax/management/AttributeValueExp.java	2008-05-26 19:28:38.000000000 +0100
+@@ -113,7 +113,6 @@
+      * @exception BadBinaryOpValueExpException
+      *
+      */
+-    @Override
+     public ValueExp apply(ObjectName name) throws BadStringOperationException, BadBinaryOpValueExpException,
+         BadAttributeValueExpException, InvalidApplicationException {
+         Object result = getAttribute(name);
+@@ -150,7 +149,6 @@
+        evaluted an AttributeValueExp can only appear inside a QueryExp,
+        and that QueryExp will itself have done setMBeanServer.  */
+     @Deprecated
+-    @Override
+     public void setMBeanServer(MBeanServer s)  {
+     }
+ 
