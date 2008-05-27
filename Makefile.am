@@ -836,12 +836,12 @@ stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt \
 	if ! test -f stamps/icedtea-ecj.stamp ; \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools -bootclasspath '' -source 1.6 \
-	    -sourcepath 'rt:generated:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
+	    -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
 	    @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
 	    -bootclasspath '' -source 1.6 \
-            -sourcepath 'rt:generated:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
+            -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
             @$< ; \
 	fi
 	mkdir -p stamps
@@ -875,19 +875,19 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/clone.stamp stamps/copy-source-files.stamp
-	find $(abs_top_srcdir)/rt rt -name '*.java' | sort > $@
+	find $(abs_top_srcdir)/rt -name '*.java' | sort > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt stamps/generated.stamp
 	mkdir -p lib/rt
 	if ! test -f stamps/icedtea-ecj.stamp ; \
         then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt -bootclasspath '' -source 1.6 \
-          -sourcepath 'generated:rt:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
+          -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
           @$< ; \
         else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
 	  -bootclasspath '' -source 1.6 \
-          -sourcepath 'generated:rt:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
+          -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
           @$< ; \
         fi
 	cp -r $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources \
