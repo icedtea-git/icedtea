@@ -1314,7 +1314,7 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/clone.stamp stamps/copy-source-files.stamp
-	find $(abs_top_srcdir)/rt -name '*.java' | sort > $@
+	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt -name '*.java' | sort -u > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt stamps/generated.stamp
 	mkdir -p lib/rt

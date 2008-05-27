@@ -1,5 +1,13 @@
 2008-05-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* Makefile.am:
+	Do a find for rt files on both the
+	source dir and the build dir, removing
+	duplicates when these are the same.
+	* Makefile.in: Regenerated.
+
+2008-05-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* patches/icedtea-override.patch:
 	Correct paths in patch so it applies.
 	
