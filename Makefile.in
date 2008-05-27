@@ -1309,8 +1309,8 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	if test -d bootstrap/ecj ; \
 	then \
 	  mkdir -p bootstrap/ecj/lib/; \
-	  ln -sf $(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
-	    $(abs_top_srcdir)/bootstrap/ecj/lib/tools.jar; \
+	  ln -sf $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
+	    $(abs_top_builddir)/bootstrap/ecj/lib/tools.jar; \
 	fi
 
 # rt-closed.jar class files.
