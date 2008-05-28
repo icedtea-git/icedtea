@@ -390,7 +390,7 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-license-headers.patch \
 	patches/icedtea-webservices.patch $(NETX_PATCH) \
 	patches/icedtea-rmi_amd64.patch patches/icedtea-tools.patch \
-	patches/icedtea-certbundle.patch patches/icedtea-demos.patch \
+	patches/icedtea-demos.patch \
 	patches/icedtea-use-system-tzdata.patch \
 	patches/icedtea-headers.patch patches/icedtea-ant.patch \
 	patches/icedtea-gcc-suffix.patch \

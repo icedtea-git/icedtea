@@ -280,7 +280,6 @@ ICEDTEA_PATCHES = \
 	$(NETX_PATCH) \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
-	patches/icedtea-certbundle.patch \
 	patches/icedtea-demos.patch \
 	patches/icedtea-use-system-tzdata.patch \
 	patches/icedtea-headers.patch \
