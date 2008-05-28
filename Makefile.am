@@ -782,9 +782,9 @@ clean-copy:
 	done
 
 stamps/generated.stamp:
-	mkdir -p generated/java/lang
+	mkdir -p $(abs_top_srcdir)/generated/java/lang
 	cp $(SOLARIS)/java/lang/UNIXProcess.java.$(BUILD_OS) \
-	  generated/java/lang/UNIXProcess.java ;
+	  $(abs_top_srcdir)/generated/java/lang/UNIXProcess.java ;
 	touch stamps/generated.stamp
 
 SHARE = openjdk/jdk/src/share/classes
