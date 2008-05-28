@@ -1,3 +1,23 @@
+New in release 1.2 (2008-05-28)
+
+- Updated to b09 build.
+- Added the the lcms library with PYCC and LINEAR_RGB ICC
+  profiles.
+- Integrated Gervill to provide midi support.
+- JTreg integrated.
+- javaws/NetX fixes:
+  -improved security, namely catching Socket permissions during    
+  runtime
+  -implemented the remaining JNLP services api (PrintService, 
+  JNLPRandomAccessFile)
+  -applet focusing bug fixed
+- sparc/sparc64 port
+- Desktop file integration.
+- Various zero fixes.
+- Sound fixes.
+- Font fixes.
+- Several other bug fixes.
+
 New in release 1.1 (2008-04-04)
 
 - Zero builds on any architecture.

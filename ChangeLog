@@ -1,3 +1,7 @@
+2008-05-28  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated for release.
+
 2008-05-27  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* Makefile.am (ICEDTEA_PATCHES): Remove icedtea-certbundle.patch.
