@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-27 00:56:04.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-27 20:14:16.000000000 +0100
-@@ -88,16 +88,12 @@
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-27 22:41:12.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-28 11:58:57.000000000 +0100
+@@ -88,9 +88,6 @@
    #define VMLP ""
  #endif
  
@@ -11,8 +11,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotsp
  #ifdef TIERED
    #define VMTYPE "Server"
  #else
-   #define VMTYPE COMPILER1_PRESENT("Client")   \
-                  COMPILER2_PRESENT("Server")
+@@ -101,7 +98,6 @@
+   #define VMTYPE "Core"
+ #endif // COMPILER1 || COMPILER2
  #endif // TIERED
 -#endif // KERNEL
  

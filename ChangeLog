@@ -1,6 +1,17 @@
 2008-05-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
+	Apply zero patches at the end, not the start
+	so that the version of vm_version.cpp to which
+	icedtea-core-build.patch applies is known.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-hotspot7-build-fixes.patch:
+	Regenerated against the version of vm_version.cpp
+	modified by icedtea-core-build.patch.
+	
+2008-05-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
 	Ensure we generate UNIXProcess.java in the
 	source directory, as in the OpenJDK build itself.
 	* Makefile.in: Regenerated.

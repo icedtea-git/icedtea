@@ -291,7 +291,6 @@ else
 endif
 
 ICEDTEA_PATCHES = \
-	$(ZERO_PATCHES_COND) \
 	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
@@ -338,6 +337,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-directaudio-close-trick.patch \
 	patches/icedtea-hat-spl-gpl.patch \
 	patches/icedtea-sparc.patch \
+	$(ZERO_PATCHES_COND) \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES) \
 	patches/icedtea-xslfix.patch \

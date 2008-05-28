@@ -383,8 +383,8 @@ ZERO_PATCHES = \
 
 @ZERO_BUILD_FALSE@ZERO_PATCHES_COND = 
 @ZERO_BUILD_TRUE@ZERO_PATCHES_COND = $(ZERO_PATCHES)
-ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
-	patches/icedtea-copy-plugs.patch patches/icedtea-version.patch \
+ICEDTEA_PATCHES = patches/icedtea-copy-plugs.patch \
+	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch patches/icedtea-debuginfo.patch \
 	patches/icedtea-ssl.patch \
@@ -418,7 +418,7 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-fonts.patch patches/icedtea-gervill.patch \
 	patches/icedtea-directaudio-close-trick.patch \
 	patches/icedtea-hat-spl-gpl.patch patches/icedtea-sparc.patch \
-	$(GCC_PATCH) $(DISTRIBUTION_PATCHES) \
+	$(ZERO_PATCHES_COND) $(GCC_PATCH) $(DISTRIBUTION_PATCHES) \
 	patches/icedtea-xslfix.patch patches/icedtea-override.patch \
 	$(am__append_7)
 
