@@ -1,0 +1,19 @@
+--- openjdk/jdk/src/solaris/classes/sun/awt/X11/XWindowPeer.java.orig	2008-05-25 17:31:31.000000000 +0200
++++ openjdk/jdk/src/solaris/classes/sun/awt/X11/XWindowPeer.java	2008-05-25 17:33:32.000000000 +0200
+@@ -133,6 +133,7 @@
+     private static final int MAXIMUM_BUFFER_LENGTH_NET_WM_ICON = (2<<15) - 1;
+ 
+     void preInit(XCreateWindowParams params) {
++        target = (Component)params.get(TARGET);
+         params.put(REPARENTED,
+                    Boolean.valueOf(isOverrideRedirect() || isSimpleWindow()));
+         super.preInit(params);
+@@ -1122,6 +1123,8 @@
+ 
+     boolean isOverrideRedirect() {
+         return (XWM.getWMID() == XWM.OPENLOOK_WM ? true : false) ||
++            (XWM.getWMID() == XWM.METACITY_WM ? true : false) ||
++            target.getName().equals("###overrideRedirect###") ||
+             XTrayIconPeer.isTrayIconStuffWindow((Window)target);
+     }
+ 

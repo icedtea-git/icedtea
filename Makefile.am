@@ -305,7 +305,6 @@ ICEDTEA_PATCHES = \
 	$(NETX_PATCH) \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
-	patches/icedtea-certbundle.patch \
 	patches/icedtea-demos.patch \
 	patches/icedtea-use-system-tzdata.patch \
 	patches/icedtea-headers.patch \
@@ -340,6 +339,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-directaudio-close-trick.patch \
 	patches/icedtea-hat-spl-gpl.patch \
 	patches/icedtea-sparc.patch \
+	patches/icedtea-override-redirect-metacity.patch \
 	$(ZERO_PATCHES_COND) \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES) \
@@ -994,21 +994,21 @@ clean-jtreg:
 
 check-hotspot: jtreg
 	mkdir -p test/hotspot/JTwork test/hotspot/JTreport
-	bootstrap/icedtea/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/hotspot/JTwork -r:test/hotspot/JTreport \
 		-jdk:`pwd`/openjdk/control/build/$(LINUX_DIR)/j2sdk-image \
 		`pwd`/openjdk/hotspot/test
 
 check-langtools: jtreg
 	mkdir -p test/langtools/JTwork test/langtools/JTreport
-	bootstrap/icedtea/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/langtools/JTwork -r:test/langtools/JTreport \
 		-jdk:`pwd`/openjdk/control/build/$(LINUX_DIR)/j2sdk-image \
 		`pwd`/openjdk/langtools/test
 
 check-jdk: jtreg
 	mkdir -p test/jdk/JTwork test/jdk/JTreport
-	bootstrap/icedtea/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
 		-jdk:`pwd`/openjdk/control/build/$(LINUX_DIR)/j2sdk-image \
 		`pwd`/openjdk/jdk/test
