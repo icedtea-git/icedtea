@@ -11,7 +11,7 @@ endif
 
 all-local: icedtea-against-icedtea
 
-distclean-local: clean-copy
+distclean-local: clean-copy clean-jtreg clean-jtreg-reports
 	rm -rf stamps
 	rm -f rt-source-files.txt \
 	  hotspot-tools-source-files.txt \
@@ -34,12 +34,15 @@ install:
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
 	clean-tools-jar clean-shared-objects \
 	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
-	hotspot hotspot-helper clean-extra
+	hotspot hotspot-helper clean-extra clean-jtreg clean-jtreg-reports
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
-	patches/icedtea-cacao.patch $(OPENJDK_PATCHES)
+	patches/icedtea-cacao.patch $(OPENJDK_PATCHES) \
+	javaws.png javaws.desktop patches/icedtea-netx-plugin.patch \
+	overlays extra jconsole.desktop policytool.desktop
+	test/jtreg
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -833,16 +836,17 @@ hotspot-tools-source-files.txt: stamps/clone.stamp \
 
 stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt \
 	stamps/generated.stamp
-	if ! test -f stamps/icedtea-ecj.stamp ; \
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
-	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools -bootclasspath '' -source 1.6 \
-	    -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
-	    @$< ; \
+	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
+            -source 1.5 \
+            -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
+            -bootclasspath '' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
-	    -bootclasspath '' -source 1.6 \
+	    -source 1.5 \
             -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
-            @$< ; \
+	    -bootclasspath '' @$< ; \
 	fi
 	mkdir -p stamps
 	touch stamps/hotspot-tools-class-files.stamp
@@ -856,7 +860,7 @@ clean-hotspot-tools:
 # tools.jar
 bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib/
-	if ! test -f stamps/icedtea-ecj.stamp ; \
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
         then \
 	  $(JAR) cf $@ -C lib/hotspot-tools com -C lib/hotspot-tools sun \
 	    -C lib/hotspot-tools org -C lib/hotspot-tools java \
@@ -879,16 +883,17 @@ rt-source-files.txt: stamps/clone.stamp stamps/copy-source-files.stamp
 
 stamps/rt-class-files.stamp: rt-source-files.txt stamps/generated.stamp
 	mkdir -p lib/rt
-	if ! test -f stamps/icedtea-ecj.stamp ; \
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
         then \
-	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt -bootclasspath '' -source 1.6 \
-          -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
-          @$< ; \
+	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt \
+	    -source 1.5 \
+            -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
+	    -bootclasspath '' @$< ; \
         else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
-	  -bootclasspath '' -source 1.6 \
-          -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
-          @$< ; \
+            -source 1.5 \
+            -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
+            -bootclasspath '' @$< ; \
         fi
 	cp -r $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources \
 	  lib/rt/net/sourceforge/jnlp/
@@ -903,13 +908,13 @@ clean-rt:
 # rt-closed.jar.
 bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
-	if ! test -f stamps/icedtea-ecj.stamp ; \
-        then \
-          $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-          -C lib/rt javax -C lib/rt sun -C lib/rt net; \
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
+            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
 	else \
-          $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-          -C lib/rt javax -C lib/rt net -C lib/rt sun; \
+	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
+            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
@@ -923,16 +928,17 @@ extra-source-files.txt:
 stamps/extra-class-files.stamp: extra-source-files.txt \
 	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 	mkdir -p extra-lib
-	if ! test -f stamps/icedtea-ecj.stamp ; \
-	  then \
-	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib -bootclasspath '' -source 1.6 \
-	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-		@extra-source-files.txt ; \
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
+	    -source 1.5 \
+ 	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+	    -bootclasspath '' @extra-source-files.txt ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
-	    -bootclasspath '' -source 1.6 \
-	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-		@extra-source-files.txt ; \
+            -source 1.5 \
+            -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+            -bootclasspath '' @extra-source-files.txt ; \
 	fi
 	cp -r $(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources \
 	  extra-lib/net/sourceforge/jnlp/about
@@ -945,13 +951,12 @@ clean-extra:
 	rm -f extra-source-files.txt
 
 extra-lib/about.jar: stamps/extra-class-files.stamp
-	if ! test -f stamps/icedtea-ecj.stamp ; \
-	  then \
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
 	  $(JAR) cf $@ -C extra-lib net ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net ; \
 	fi
-
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
@@ -966,37 +971,54 @@ gcjwebplugin.so: gcjwebplugin.cc
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
 
-#extra tools
-stamps/tools.stamp: stamps/tools-class-files.stamp
-	touch stamps/tools.stamp
+# jtreg
 
-tools-source-files.txt: stamps/clone.stamp
-	find tools -name '*.java' | sort > $@
-
-stamps/tools-class-files.stamp: tools-source-files.txt \
-	stamps/rt-class-files.stamp
-	mkdir -p lib/tools
-	if ! test -f stamps/icedtea-ecj.stamp ; \
-        then \
-	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/tools \
-          -source 1.6 \
-          -sourcepath tools \
-          @$< ; \
-        else \
-	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/tools \
-          -source 1.6 \
-          -sourcepath tools \
-          @$< ; \
-        fi
-	cp tools/default.jnlp lib/tools
-	cp -R tools/netx/jnlp/resources lib/tools/netx/jnlp
+stamps/jtreg.stamp:
+	rm -rf test/jtreg/classes
+	mkdir -p test/jtreg/classes
+	$(ICEDTEA_BOOT_DIR)/bin/javac -g -d test/jtreg/classes -source 1.5 \
+		 -encoding iso-8859-1 `find test/jtreg/com -name '*.java'`
+	(cd test/jtreg; \
+	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm ../jtreg.jar \
+		META-INF/MANIFEST.MF \
+		legal  README JavaTest.cmdMgrs.lst JavaTest.toolMgrs.lst \
+		`find com -type f -a -not -name '*.java'` \
+		-C classes com)
 	mkdir -p stamps
-	touch stamps/tools-class-files.stamp
+	touch $@
 
-clean-tools:
-	rm -rf lib/tools
-	rm -rf stamps/tools-class-files.stamp
-	rm -rf tools-source-files.txt
+clean-jtreg:
+	rm -rf test/jtreg/classes
+	rm -f test/jtreg.jar
+	rm -f stamps/jtreg.stamp
+
+check-hotspot: jtreg
+	mkdir -p test/hotspot/JTwork test/hotspot/JTreport
+	bootstrap/icedtea/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+		-w:test/hotspot/JTwork -r:test/hotspot/JTreport \
+		-jdk:`pwd`/openjdk/control/build/$(LINUX_DIR)/j2sdk-image \
+		`pwd`/openjdk/hotspot/test
+
+check-langtools: jtreg
+	mkdir -p test/langtools/JTwork test/langtools/JTreport
+	bootstrap/icedtea/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+		-w:test/langtools/JTwork -r:test/langtools/JTreport \
+		-jdk:`pwd`/openjdk/control/build/$(LINUX_DIR)/j2sdk-image \
+		`pwd`/openjdk/langtools/test
+
+check-jdk: jtreg
+	mkdir -p test/jdk/JTwork test/jdk/JTreport
+	bootstrap/icedtea/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+		-w:test/jdk/JTwork -r:test/jdk/JTreport \
+		-jdk:`pwd`/openjdk/control/build/$(LINUX_DIR)/j2sdk-image \
+		`pwd`/openjdk/jdk/test
+
+clean-jtreg-reports:
+	rm -rf test/hotspot test/langtools test/jdk
+
+jtregcheck: jtreg check-hotspot check-langtools check-jdk
+
+check-local: jtregcheck
 
 # Target Aliases
 # ===============
@@ -1049,3 +1071,4 @@ ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
 
+jtreg: stamps/jtreg.stamp

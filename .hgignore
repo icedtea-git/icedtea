@@ -22,6 +22,10 @@ platform_zero
 jvm.cfg
 ergo.c
 hotspot-tools/
+test/hotspot
+test/jdk
+test/langtools
+test/jtreg/classes
 rt/com/sun/jdi/AbsentInformationException.java
 rt/com/sun/jdi/Accessible.java
 rt/com/sun/jdi/ArrayReference.java

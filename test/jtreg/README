@@ -1,0 +1,29 @@
+IcedJTReg
+---------
+
+This is a special "merge" of jtharness and jtreg to be compiled and
+run against the OpenJDK included in IcedTea. Please ONLY use this for
+testing inside the IcedTea environment. This is NOT a general jtreg
+and/or jtharness (source) distribution. In particular this version
+does NOT include support for javax.help, javax.servlet, javax.comm,
+junit, ant or the sun.com.jct classes. It is just a bare bones version
+that can be compiled and run against a "bare" JDK without needing any
+external libraries.
+
+PLEASE DO NOT PACKAGE AND DISTRIBUTE SEPARATELY FROM ICEDTEA
+
+For the full versions of jtharness and jtreg see:
+
+- http://openjdk.java.net/jtreg/
+- https://jtharness.dev.java.net/
+
+This version is based on:
+
+- jtharness-oss-4_1_3a-dev
+- jtreg-4_0-src-b01-29_apr_2008
+
+IcedJTReg is distrubuted under the GPLv2.0, like jtreg and jtharness.
+See the documents in the legal directory included in this release.
+
+Please direct questions about this version to the IcedTea mailinglist:
+<distro-pkg-dev@openjdk.java.net>

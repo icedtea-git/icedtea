@@ -224,6 +224,11 @@
 	repositories)
 	* Makefile.in: Regenerated.
 	
+2008-05-23  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Updated jtreg to use correct javac and jar.
+	* Makefile.in: Regenerated.
+
 2008-05-22  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Updated conditions to use JAVAC.
@@ -249,7 +254,30 @@
 	OpenJDK Mercurial repository after merge,
 	and upgrade to b26.
 	* Makefile.in: Regenerated.
-	
+
+2008-05-19  Mark Wielaard  <mark@klomp.org>
+
+	* test/jtreg/com/sun/javatest/lib/*.java: Added.
+	* .hgignore: Add test/hotspot, test/jdk, test/langtools and
+	test/jtreg/classes
+
+2008-05-19  Mark Wielaard  <mark@klomp.org>
+
+	* test/jtreg/*: New jtreg and jtharness sources.
+	* Makefile.am (distclean-local): Add clean-jtreg clean-jtreg-reports.
+	(.PHONY): Likewise.
+	(EXTRA_DIST): Add test/jtreg.
+	(stamps/jtreg.stamp): New target.
+	(clean-jtreg): Likewise.
+	(check-hotspot): Likewise.
+	(check-langtools): Likewise.
+	(check-jdk): Likewise.
+	(clean-jtreg-reports): Likewise.
+	(jtregcheck): Likewise.
+	(check-local): Likewise.
+	(jtreg): Likewise.
+	* Makefile.in: Regenerated.
+
 2008-05-16  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-sparc.patch: Merge os_linux_sparc.cpp patch hunks.

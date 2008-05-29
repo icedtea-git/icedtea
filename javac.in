@@ -31,4 +31,4 @@ then
 fi
 
 CLASSPATH=@ECJ_JAR@${CLASSPATH:+:}$CLASSPATH \
-  @JAVA@ org.eclipse.jdt.internal.compiler.batch.Main -1.6 -nowarn $bcoption $NEW_ARGS
+  @JAVA@ org.eclipse.jdt.internal.compiler.batch.Main -1.5 -nowarn $bcoption $NEW_ARGS
