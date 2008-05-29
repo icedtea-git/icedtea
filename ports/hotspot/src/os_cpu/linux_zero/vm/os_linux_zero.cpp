@@ -72,11 +72,6 @@ frame os::fetch_frame_from_context(void* ucVoid)
   Unimplemented();
 }
 
-julong os::allocatable_physical_memory(julong size)
-{
-  Unimplemented();
-}
-
 extern "C" int
 JVM_handle_linux_signal(int sig,
                         siginfo_t* info,
