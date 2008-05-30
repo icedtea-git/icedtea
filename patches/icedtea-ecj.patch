@@ -661,15 +661,14 @@ diff -Nru openjdk-ecj.orig/jdk/make/common/Release.gmk openjdk-ecj/jdk/make/comm
 @@ -649,10 +649,11 @@
  $(RES_JAR_ARGLIST): $(RES_JAR_FILELIST)
  	$(prep-target)
- 	$(SED) -e "s@^@-C $(CLASSBINDIR) @" $< > $@
 -$(RESOURCES_JAR): $(RES_JAR_ARGLIST) $(JAR_MANIFEST_FILE)
 +$(RESOURCES_JAR): $(RES_JAR_FILELIST) $(JAR_MANIFEST_FILE)
  	$(prep-target)
 -	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
 -	    @$(RES_JAR_ARGLIST) $(JAR_JFLAGS)
-+	(cd $(CLASSBINDIR) && $(CAT) $(RES_JAR_FILELIST) | \
-+	$(BOOT_JAR_CMD) c0mf@ $(JAR_MANIFEST_FILE) $@ \
-+	    $(JAR_JFLAGS))
++	(cd $(CLASSBINDIR) && \
++	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
++	    $(JAR_JFLAGS) `cat $(RES_JAR_FILELIST)`)
  	@$(java-vm-cleanup)
  
  # Create jsse.jar containing SunJSSE implementation classes
@@ -682,9 +681,9 @@ diff -Nru openjdk-ecj.orig/jdk/make/common/Release.gmk openjdk-ecj/jdk/make/comm
  	$(prep-target)
 -	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
 -	    @$(RT_JAR_ARGLIST) $(JAR_JFLAGS)
-+	(cd $(CLASSBINDIR) && $(CAT) $(RT_JAR_FILELIST) | \
-+	$(BOOT_JAR_CMD) c0mf@ $(JAR_MANIFEST_FILE) $@ \
-+	    $(JAR_JFLAGS))
++	(cd $(CLASSBINDIR) && \
++	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
++	    $(JAR_JFLAGS) `$(CAT) $(RT_JAR_FILELIST)`)
  	@$(java-vm-cleanup)
  
  # Meta-index construction to make core class loaders lazier
