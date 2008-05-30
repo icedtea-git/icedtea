@@ -101,13 +101,13 @@ AC_SUBST(SYSTEM_ANT_DIR)
 AC_ARG_ENABLE([gcjwebplugin],
 	      [AS_HELP_STRING([--disable-gcjwebplugin], 
 	      		      [Disable compilation of browser plugin])],
-	      [ENABLE_PLUGIN="$val"], [ENABLE_PLUGIN='yes'])
+	      [ENABLE_PLUGIN="${enableval}"], [ENABLE_PLUGIN='yes'])
 AC_SUBST(ENABLE_PLUGIN)
 
 AC_ARG_ENABLE([docs],
 	      [AS_HELP_STRING([--disable-docs], 
 	      		      [Disable generation of documentation])],
-	      [ENABLE_DOCS="$val"], [ENABLE_DOCS='yes'])
+	      [ENABLE_DOCS="${enableval}"], [ENABLE_DOCS='yes'])
 AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
 
 AC_ARG_WITH([icedtea],

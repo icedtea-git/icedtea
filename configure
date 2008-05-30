@@ -5869,7 +5869,7 @@ fi
 
 # Check whether --enable-gcjwebplugin was given.
 if test "${enable_gcjwebplugin+set}" = set; then
-  enableval=$enable_gcjwebplugin; ENABLE_PLUGIN="$val"
+  enableval=$enable_gcjwebplugin; ENABLE_PLUGIN="${enableval}"
 else
   ENABLE_PLUGIN='yes'
 fi
@@ -5878,7 +5878,7 @@ fi
 
 # Check whether --enable-docs was given.
 if test "${enable_docs+set}" = set; then
-  enableval=$enable_docs; ENABLE_DOCS="$val"
+  enableval=$enable_docs; ENABLE_DOCS="${enableval}"
 else
   ENABLE_DOCS='yes'
 fi
