@@ -37,7 +37,7 @@ install:
 	hotspot hotspot-helper clean-extra clean-jtreg clean-jtreg-reports
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
-	gcjwebplugin.cc tools-copy contrib ports \
+	gcjwebplugin.cc tools-copy contrib ${abs_top_srcdir}/ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-cacao.patch $(OPENJDK_PATCHES) \
 	javaws.png javaws.desktop patches/icedtea-netx-plugin.patch \
@@ -784,12 +784,6 @@ clean-copy:
 	  rm -rf rt/$$copy_dir ; \
 	done
 
-stamps/generated.stamp:
-	mkdir -p $(abs_top_srcdir)/generated/java/lang
-	cp $(SOLARIS)/java/lang/UNIXProcess.java.$(BUILD_OS) \
-	  $(abs_top_srcdir)/generated/java/lang/UNIXProcess.java ;
-	touch stamps/generated.stamp
-
 SHARE = openjdk/jdk/src/share/classes
 SOLARIS = openjdk/jdk/src/solaris/classes
 LANGTOOLS = openjdk/langtools/src/share/classes
@@ -834,8 +828,7 @@ hotspot-tools-source-files.txt: stamps/clone.stamp \
 	find hotspot-tools -name '*.java' | sort > $@
 	mkdir -p lib/hotspot-tools
 
-stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt \
-	stamps/generated.stamp
+stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt 
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
@@ -881,7 +874,7 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 rt-source-files.txt: stamps/clone.stamp stamps/copy-source-files.stamp
 	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt -name '*.java' | sort -u > $@
 
-stamps/rt-class-files.stamp: rt-source-files.txt stamps/generated.stamp
+stamps/rt-class-files.stamp: rt-source-files.txt
 	mkdir -p lib/rt
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
         then \
@@ -932,7 +925,7 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
 	    -source 1.5 \
- 	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
 	    -bootclasspath '' @extra-source-files.txt ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
@@ -1038,8 +1031,6 @@ clone-ecj: stamps/clone-ecj.stamp
 copy-source-files: stamps/copy-source-files.stamp
 
 download: stamps/download.stamp
-
-generated: stamps/generated.stamp
 
 icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
 
