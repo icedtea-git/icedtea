@@ -254,11 +254,12 @@ OPENJDK_VERSION = b26
 @NETX_PLUGIN_FALSE@NETX_PATCH = 
 @NETX_PLUGIN_TRUE@NETX_PATCH = patches/icedtea-netx-plugin.patch
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
-	gcjwebplugin.cc tools-copy contrib ${abs_top_srcdir}/ports \
+	gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-cacao.patch $(OPENJDK_PATCHES) \
 	javaws.png javaws.desktop patches/icedtea-netx-plugin.patch \
-	overlays extra jconsole.desktop policytool.desktop
+	overlays extra jconsole.desktop policytool.desktop \
+	test/jtreg
 
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
@@ -425,7 +426,7 @@ ICEDTEA_PATCHES = patches/icedtea-copy-plugs.patch \
 	$(am__append_7)
 
 # Patch OpenJDK for plug replacements and ecj.
-ICEDTEA_ECJ_PATCH = $(abs_top_srcdir)/patches/icedtea-ecj.patch
+ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch
 @WITH_ICEDTEA_FALSE@@WITH_OPENJDK_FALSE@BOOTSTRAP_DIRECTORY_STAMP = stamps/bootstrap-directory.stamp
 @WITH_ICEDTEA_TRUE@@WITH_OPENJDK_FALSE@BOOTSTRAP_DIRECTORY_STAMP = 
 @WITH_OPENJDK_TRUE@BOOTSTRAP_DIRECTORY_STAMP = 
@@ -785,7 +786,6 @@ install:
 	clean-tools-jar clean-shared-objects \
 	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
 	hotspot hotspot-helper clean-extra clean-jtreg clean-jtreg-reports
-	test/jtreg
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -843,18 +843,18 @@ clean-clone:
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/clone.stamp
-	for target in ${abs_top_srcdir}/ports/hotspot/build/*/makefiles/* \
-		      ${abs_top_srcdir}/ports/hotspot/src/*/*; do \
+	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
+		      $(abs_top_srcdir)/ports/hotspot/src/*/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'); \
 	  ln -sf $$target $$link; \
 	done
-	ln -sf ${abs_top_builddir}/platform_zero openjdk/hotspot/build/linux
+	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/build/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(CACAO)" = "xno"; then \
 	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
-	  ln -sf ${abs_top_builddir}/jvm.cfg openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
+	  ln -sf $(abs_top_builddir)/jvm.cfg openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
 	fi
 	if ! test "x$(ICEDTEA_ZERO_BUILD)$(CACAO)" = "xno"; then \
-	  ln -sf ${abs_top_builddir}/ergo.c openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
+	  ln -sf $(abs_top_builddir)/ergo.c openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
 	fi
 	mkdir -p stamps
 	touch stamps/ports.stamp
@@ -946,18 +946,18 @@ clean-clone-ecj:
 
 # Link ports sources into tree
 stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
-	for target in ${abs_top_srcdir}/ports/hotspot/build/*/makefiles/* \
-		      ${abs_top_srcdir}/ports/hotspot/src/*/*; do \
+	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
+		      $(abs_top_srcdir)/ports/hotspot/src/*/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk-ecj/'); \
 	  ln -sf $$target $$link; \
 	done
-	ln -sf ${abs_top_builddir}/platform_zero openjdk-ecj/hotspot/build/linux
+	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/build/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(CACAO)" = "xno"; then \
 	  mkdir -p openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
-	  ln -sf ${abs_top_builddir}/jvm.cfg openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
+	  ln -sf $(abs_top_builddir)/jvm.cfg openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
 	fi
 	if ! test "x$(ICEDTEA_ZERO_BUILD)$(CACAO)" = "xno"; then \
-	  ln -sf ${abs_top_builddir}/ergo.c openjdk-ecj/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
+	  ln -sf $(abs_top_builddir)/ergo.c openjdk-ecj/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
 	fi
 	mkdir -p stamps
 	touch stamps/ports-ecj.stamp

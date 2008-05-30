@@ -1,3 +1,9 @@
+2008-05-30  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Fixed dist to not include full path to ports, and
+	ICEDTEA_ECJ_PATCH. This fixes the problem with "make dist".
+	* Makefile.in: Regenerated.
+
 2008-05-30  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-ecj.patch: Use `cat file-list` not gjar -@ stdin.
