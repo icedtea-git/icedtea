@@ -1,3 +1,8 @@
+2008-06-01  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-ecj.patch: Correct patch by reinstating
+	accidentally removed line.
+
 2008-05-30  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Fixed dist to not include full path to ports, and
