@@ -1,6 +1,6 @@
-OPENJDK_DATE = 11_apr_2008
-OPENJDK_MD5SUM = 9ef5b6e83ec0c7a32bffd1a4de50fe5c
-OPENJDK_VERSION = b09
+OPENJDK_DATE = 30_may_2008
+OPENJDK_MD5SUM = 98e9eb16615605f76056135b0eb0b39f
+OPENJDK_VERSION = b10
 
 if NETX_PLUGIN
 NETX_PATCH = patches/icedtea-netx-plugin.patch
@@ -200,7 +200,7 @@ OPENJDK_URL = http://download.java.net/openjdk/jdk6/promoted/$(OPENJDK_VERSION)/
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 else
-  OPENJDK_SRC_ZIP = openjdk-6-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).tar.gz
+  OPENJDK_SRC_ZIP = openjdk-6-src-$(OPENJDK_VERSION)_$(OPENJDK_DATE).tar.gz
 endif
 
 stamps/download.stamp:
@@ -303,16 +303,13 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
-	patches/icedtea-xinerama.patch \
 	patches/icedtea-arm-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-LCMS-setTagData.patch \
 	patches/icedtea-color-createcontext.patch \
-	patches/icedtea-color-profiles.patch \
 	patches/icedtea-fonts.patch \
 	patches/icedtea-gervill.patch \
 	patches/icedtea-directaudio-close-trick.patch \
-	patches/icedtea-hat-spl-gpl.patch \
 	patches/icedtea-sparc.patch \
 	patches/icedtea-override-redirect-metacity.patch \
 	$(GCC_PATCH) \

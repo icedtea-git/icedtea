@@ -1,3 +1,24 @@
+2008-06-01  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (OPENJDK_DATE): Updated to 30_may_2008.
+	(OPENJDK_MD5SUM): Updated.
+	(OPENJDK_VERSION): Updated to b10.
+	(OPENJDK_SRC_ZIP): Adjusted to new underscore convention between
+	version and date in b10.
+	(ICEDTEA_PATCHES): Removed icedtea-xinerama.patch,
+	icedtea-color-profiles.patch and icedtea-hat-spl-gpl.patch.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-copy-plugs.patch: Adjusted to remove sound
+	references in b10.
+	* patches/icedtea-gervill.patch: Adjusted to new sound service
+	files in b10.
+	* overlays/openjdk/jdk/src/share/lib/cmm/lcms/GRAY.pf: Removed.
+	* overlays/openjdk/jdk/src/share/lib/cmm/lcms/LINEAR_RGB.pf: Removed.
+	* overlays/openjdk/jdk/src/share/lib/cmm/lcms/PYCC.pf: Removed.
+	* patches/icedtea-color-profiles.patch: Removed.
+	* patches/icedtea-hat-spl-gpl.patch: Removed.
+	* patches/icedtea-xinerama.patch: Removed.
+
 2008-05-30  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-ecj.patch: Use `cat file-list` not gjar -@ stdin.

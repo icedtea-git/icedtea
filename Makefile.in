@@ -249,9 +249,9 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-OPENJDK_DATE = 11_apr_2008
-OPENJDK_MD5SUM = 9ef5b6e83ec0c7a32bffd1a4de50fe5c
-OPENJDK_VERSION = b09
+OPENJDK_DATE = 30_may_2008
+OPENJDK_MD5SUM = 98e9eb16615605f76056135b0eb0b39f
+OPENJDK_VERSION = b10
 @NETX_PLUGIN_FALSE@NETX_PATCH = 
 @NETX_PLUGIN_TRUE@NETX_PATCH = patches/icedtea-netx-plugin.patch
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
@@ -360,7 +360,7 @@ ICEDTEA_ENV_ECJ = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 
 # Download OpenJDK sources.
 OPENJDK_URL = http://download.java.net/openjdk/jdk6/promoted/$(OPENJDK_VERSION)/
-@USE_ALT_OPENJDK_SRC_ZIP_FALSE@OPENJDK_SRC_ZIP = openjdk-6-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).tar.gz
+@USE_ALT_OPENJDK_SRC_ZIP_FALSE@OPENJDK_SRC_ZIP = openjdk-6-src-$(OPENJDK_VERSION)_$(OPENJDK_DATE).tar.gz
 @USE_ALT_OPENJDK_SRC_ZIP_TRUE@OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 @GCC_OLD_FALSE@GCC_PATCH = patches/icedtea-gcc-4.3.patch
 
@@ -409,14 +409,13 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
-	patches/icedtea-xinerama.patch patches/icedtea-arm-uname.patch \
+	patches/icedtea-arm-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-LCMS-setTagData.patch \
 	patches/icedtea-color-createcontext.patch \
-	patches/icedtea-color-profiles.patch \
 	patches/icedtea-fonts.patch patches/icedtea-gervill.patch \
 	patches/icedtea-directaudio-close-trick.patch \
-	patches/icedtea-hat-spl-gpl.patch patches/icedtea-sparc.patch \
+	patches/icedtea-sparc.patch \
 	patches/icedtea-override-redirect-metacity.patch $(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES) $(am__append_7)
 
