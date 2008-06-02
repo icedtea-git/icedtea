@@ -1,3 +1,14 @@
+2008-06-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Fix location of icedtea-ecj.patch for out-of-dir
+	and make distcheck builds, and rename ports target to
+	hotspot-ports to stop make dist downloading the JDK.
+	* Makefile.in: Regenerated.
+	* NEWS: Add release news.
+	* configure: Regenerated.
+	* configure.ac: Bump version number to 1.7.
+
 2008-06-01  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-ecj.patch: Correct patch by reinstating

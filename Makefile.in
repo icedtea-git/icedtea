@@ -426,7 +426,7 @@ ICEDTEA_PATCHES = patches/icedtea-copy-plugs.patch \
 	$(am__append_7)
 
 # Patch OpenJDK for plug replacements and ecj.
-ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch
+ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch
 @WITH_ICEDTEA_FALSE@@WITH_OPENJDK_FALSE@BOOTSTRAP_DIRECTORY_STAMP = stamps/bootstrap-directory.stamp
 @WITH_ICEDTEA_TRUE@@WITH_OPENJDK_FALSE@BOOTSTRAP_DIRECTORY_STAMP = 
 @WITH_OPENJDK_TRUE@BOOTSTRAP_DIRECTORY_STAMP = 
@@ -1496,9 +1496,9 @@ tools: stamps/tools.stamp
 
 tools-class-files: stamps/tools-class-files.stamp
 
-ports: stamps/ports.stamp
+hotspot-ports: stamps/ports.stamp
 
-ports-ecj: stamps/ports-ecj.stamp
+hotspot-ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
 

@@ -455,7 +455,7 @@ stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
 	touch stamps/ports-ecj.stamp
 
 # Patch OpenJDK for plug replacements and ecj.
-ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch
+ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch
 
 stamps/patch-ecj.stamp: stamps/clone-ecj.stamp
 	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
@@ -1056,9 +1056,9 @@ tools: stamps/tools.stamp
 
 tools-class-files: stamps/tools-class-files.stamp
 
-ports: stamps/ports.stamp
+hotspot-ports: stamps/ports.stamp
 
-ports-ecj: stamps/ports-ecj.stamp
+hotspot-ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
 
