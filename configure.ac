@@ -1,5 +1,5 @@
 AC_PREREQ([2.61])
-AC_INIT([icedtea], [1.7], [fitzsim@redhat.com])
+AC_INIT([icedtea], [1.8-pre], [fitzsim@redhat.com])
 AM_INIT_AUTOMAKE([tar-pax])
 AC_CONFIG_FILES([Makefile])
 AC_CANONICAL_HOST
