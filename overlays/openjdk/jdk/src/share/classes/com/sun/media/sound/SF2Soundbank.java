@@ -207,12 +207,12 @@ public class SF2Soundbank implements Soundbank {
 					{
 						if(avail - read > 65536)
 						{
-							chunk.read(sampleData, read, 65536);
+							chunk.readFully(sampleData, read, 65536);
 							read += 65536;
 						}
 						else
 						{
-							chunk.read(sampleData, read, avail - read);
+							chunk.readFully(sampleData, read, avail - read);
 							read = avail;
 						}
 						
@@ -238,12 +238,12 @@ public class SF2Soundbank implements Soundbank {
 					{
 						if(avail - read > 65536)
 						{
-							chunk.read(sampleData24, read, 65536);
+							chunk.readFully(sampleData24, read, 65536);
 							read += 65536;
 						}
 						else
 						{
-							chunk.read(sampleData24, read, avail - read);
+							chunk.readFully(sampleData24, read, avail - read);
 							read = avail;
 						}
 						

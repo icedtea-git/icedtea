@@ -100,10 +100,6 @@ public class SoftMainMixer {
 	
 	protected TreeMap<Long, Object> midimessages = new TreeMap<Long, Object>();	
 
-	double finetuning = 0;
-
-	double coarsetuning = 0;
-
 	double last_volume_left = 1.0;
 
 	double last_volume_right = 1.0;

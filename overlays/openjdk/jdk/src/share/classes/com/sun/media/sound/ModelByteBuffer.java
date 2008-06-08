@@ -26,6 +26,7 @@
 package com.sun.media.sound;
 
 import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -290,12 +291,12 @@ public class ModelByteBuffer {
 				{
 					if(avail - read > 65536)
 					{
-						raf.read(buffer, read, 65536);
+						raf.readFully(buffer, read, 65536);
 						read += 65536;
 					}
 					else
 					{
-						raf.read(buffer, read, avail - read);
+						raf.readFully(buffer, read, avail - read);
 						read = avail;
 					}
 					
@@ -324,10 +325,10 @@ public class ModelByteBuffer {
 		if(file == null)		
 			throw new IllegalStateException("No file associated with this ByteBuffer!");
 		
-		InputStream is = getInputStream();
+		DataInputStream is = new DataInputStream(getInputStream());
 		buffer = new byte[(int)capacity()];
 		offset = 0;
-		is.read(buffer);
+		is.readFully(buffer);
 		is.close();
 		
 	}

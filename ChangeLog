@@ -1,5 +1,11 @@
 2008-06-08  Mark Wielaard  <mark@klomp.org>
 
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
+	Import Gervill fixes from CVS. See CHANGES.txt.
+	* overlays/openjdk/jdk/test/com/sun/media/sound: Likewise.
+
+2008-06-08  Mark Wielaard  <mark@klomp.org>
+
 	* Makefile.am (ZERO_PATCHES): Add
 	patches/icedtea-eclipse-hotspot-6614100-7b24.patch.
 	(NON_ZERO_PATCHES): New patch list.

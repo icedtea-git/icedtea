@@ -40,7 +40,7 @@ import javax.sound.midi.Patch;
 
 public class SimpleInstrument extends ModelInstrument {
 
-	private class SimpleInstrumentPart {
+	private static class SimpleInstrumentPart {
 		ModelPerformer[] performers;
 
 		int keyFrom;

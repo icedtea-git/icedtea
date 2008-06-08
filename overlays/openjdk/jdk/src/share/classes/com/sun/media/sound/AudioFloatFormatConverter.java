@@ -47,7 +47,7 @@ import javax.sound.sampled.spi.FormatConversionProvider;
 
 public class AudioFloatFormatConverter extends FormatConversionProvider {
 
-	private class AudioFloatFormatConverterInputStream extends InputStream
+	private static class AudioFloatFormatConverterInputStream extends InputStream
 	{
 		private AudioFloatConverter converter;
 		private AudioFloatInputStream stream;
@@ -109,7 +109,7 @@ public class AudioFloatFormatConverter extends FormatConversionProvider {
 		
 	}
 	
-	private class AudioFloatInputStreamChannelMixer extends AudioFloatInputStream
+	private static class AudioFloatInputStreamChannelMixer extends AudioFloatInputStream
 	{
 		
 		private int targetChannels;
@@ -217,7 +217,7 @@ public class AudioFloatFormatConverter extends FormatConversionProvider {
 		
 	}
 	
-	private class AudioFloatInputStreamResampler extends AudioFloatInputStream
+	private static class AudioFloatInputStreamResampler extends AudioFloatInputStream
 	{
 		
 		private AudioFloatInputStream ais;
@@ -476,16 +476,16 @@ public class AudioFloatFormatConverter extends FormatConversionProvider {
 	}	
 
 	public Encoding[] getSourceEncodings() {
-		return formats;
+		return new Encoding[] {Encoding.PCM_SIGNED, Encoding.PCM_UNSIGNED, AudioFloatConverter.PCM_FLOAT};
 	}
 
 	public Encoding[] getTargetEncodings() {
-		return formats;
+		return new Encoding[] {Encoding.PCM_SIGNED, Encoding.PCM_UNSIGNED, AudioFloatConverter.PCM_FLOAT};
 	}
 
 	public Encoding[] getTargetEncodings(AudioFormat sourceFormat) {
 		if(AudioFloatConverter.getConverter(sourceFormat) == null) return new Encoding[0]; 
-		return formats;
+		return new Encoding[] {Encoding.PCM_SIGNED, Encoding.PCM_UNSIGNED, AudioFloatConverter.PCM_FLOAT};
 	}
 
 	public AudioFormat[] getTargetFormats(Encoding targetEncoding, AudioFormat sourceFormat) {

@@ -35,8 +35,6 @@ package com.sun.media.sound;
  */
 public class SoftSincResampler extends SoftAbstractResampler {
 
-	double[] din;
-
 	float[][][] sinc_table;
 
 	int sinc_scale_size = 100;

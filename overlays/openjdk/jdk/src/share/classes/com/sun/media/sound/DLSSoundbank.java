@@ -111,6 +111,10 @@ public class DLSSoundbank implements Soundbank {
 			return d;
 		}
 		
+		public int hashCode() {
+			return (int)i1;
+		}
+				
 		public boolean equals(Object obj) {
 			if(!(obj instanceof DLSID)) return false;
 			DLSID t = (DLSID)obj;
@@ -230,15 +234,15 @@ public class DLSSoundbank implements Soundbank {
 					if(!readCdlChunk(chunk))
 						throw new RIFFInvalidFormatException("DLS file isn't supported!");
 				}
-				if (chunk.getFormat().equals("colh")) {
+				//if (chunk.getFormat().equals("colh")) {
 					// - skipped because we will load the entire bank into memory
 					// long instrumentcount = chunk.readUnsignedInt();
 					// System.out.println("instrumentcount = "+ instrumentcount);					
-				}
-				if (chunk.getFormat().equals("ptbl")) {
+				//}
+				//if (chunk.getFormat().equals("ptbl")) {
 					// Pool Table Chunk
 					// - skipped because we will load the entire bank into memory
-				}	
+				//}	
 				if (chunk.getFormat().equals("vers")) {
 					major = chunk.readUnsignedInt();
 					minor = chunk.readUnsignedInt();
@@ -300,80 +304,80 @@ public class DLSSoundbank implements Soundbank {
 			case DLS_CDL_AND:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( ((x!=0) & (y!=0)) ?1:0));
+				stack.push(Long.valueOf( ((x!=0) && (y!=0)) ?1:0));
 				break;
 			case DLS_CDL_OR:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( ((x!=0) | (y!=0)) ?1:0));
+				stack.push(Long.valueOf( ((x!=0) || (y!=0)) ?1:0));
 				break;
 			case DLS_CDL_XOR:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( ((x!=0) ^ (y!=0)) ?1:0));
+				stack.push(Long.valueOf( ((x!=0) ^ (y!=0)) ?1:0));
 				break;
 			case DLS_CDL_ADD:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( x+y ));
+				stack.push(Long.valueOf( x+y ));
 				break;
 			case DLS_CDL_SUBTRACT:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( x-y ));
+				stack.push(Long.valueOf( x-y ));
 				break;
 			case DLS_CDL_MULTIPLY:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( x*y ));
+				stack.push(Long.valueOf( x*y ));
 				break;
 			case DLS_CDL_DIVIDE:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( x/y ));
+				stack.push(Long.valueOf( x/y ));
 				break;
 			case DLS_CDL_LOGICAL_AND:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( ((x!=0) & (y!=0)) ?1:0));
+				stack.push(Long.valueOf( ((x!=0) && (y!=0)) ?1:0));
 				break;
 			case DLS_CDL_LOGICAL_OR:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( ((x!=0) | (y!=0)) ?1:0));
+				stack.push(Long.valueOf( ((x!=0) || (y!=0)) ?1:0));
 				break;
 			case DLS_CDL_LT:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( (x < y) ?1:0));
+				stack.push(Long.valueOf( (x < y) ?1:0));
 				break;				
 			case DLS_CDL_LE:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( (x <= y) ?1:0));
+				stack.push(Long.valueOf( (x <= y) ?1:0));
 				break;				
 			case DLS_CDL_GT:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( (x > y) ?1:0));
+				stack.push(Long.valueOf( (x > y) ?1:0));
 				break;				
 			case DLS_CDL_GE:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( (x >= y) ?1:0));
+				stack.push(Long.valueOf( (x >= y) ?1:0));
 				break;				
 			case DLS_CDL_EQ:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long( (x == y) ?1:0));
+				stack.push(Long.valueOf( (x == y) ?1:0));
 				break;		
 			case DLS_CDL_NOT:
 				x = stack.pop();
 				y = stack.pop();
-				stack.push(new Long((x==0)?1:0));
+				stack.push(Long.valueOf((x==0)?1:0));
 				break;
 			case DLS_CDL_CONST:
-				stack.push(new Long(riff.readUnsignedInt()));
+				stack.push(Long.valueOf(riff.readUnsignedInt()));
 				break;
 			case DLS_CDL_QUERY:
 				uuid = DLSID.read(riff);
@@ -381,7 +385,7 @@ public class DLSSoundbank implements Soundbank {
 				break;				
 			case DLS_CDL_QUERYSUPPORTED:
 				uuid = DLSID.read(riff);
-				stack.push(new Long(cdlIsQuerySupported(uuid)?1:0));
+				stack.push(Long.valueOf(cdlIsQuerySupported(uuid)?1:0));
 				break;				
 			default:
 				break;
@@ -527,7 +531,7 @@ public class DLSSoundbank implements Soundbank {
 				if(format.equals("dlid"))
 				{
 					instrument.guid = new byte[16];
-					chunk.read(instrument.guid);	
+					chunk.readFully(instrument.guid);	
 				}
 				if(format.equals("insh"))
 				{
@@ -559,7 +563,7 @@ public class DLSSoundbank implements Soundbank {
 		long size = riff.readUnsignedInt();
 		long count = riff.readUnsignedInt();
 		
-		if(size - 8 != 0) riff.skip(size - 8);
+		if(size - 8 != 0) riff.skipBytes(size - 8);
 
 		for (int i = 0; i < count; i++) {
 			
@@ -579,7 +583,7 @@ public class DLSSoundbank implements Soundbank {
 		long size = riff.readUnsignedInt();
 		long count = riff.readUnsignedInt();
 		
-		if(size - 8 != 0) riff.skip(size - 8);
+		if(size - 8 != 0) riff.skipBytes(size - 8);
 
 		for (int i = 0; i < count; i++) {
 			
@@ -686,7 +690,7 @@ public class DLSSoundbank implements Soundbank {
 		
 		if(size > 20)
 		{
-			riff.skip(size - 20);
+			riff.skipBytes(size - 20);
 		}
 		
 		for (int i = 0; i < loops; i++) {
@@ -698,7 +702,7 @@ public class DLSSoundbank implements Soundbank {
 			sampleOptions.loops.add(loop);
 			if(size2 > 16)
 			{
-				riff.skip(size2 - 16);
+				riff.skipBytes(size2 - 16);
 			}			
 		}
 	}
@@ -776,7 +780,7 @@ public class DLSSoundbank implements Soundbank {
 				if(format.equals("dlid"))
 				{
 					sample.guid = new byte[16];
-					chunk.read(sample.guid);	
+					chunk.readFully(sample.guid);	
 				}	
 
 				if(format.equals("fmt "))
@@ -936,7 +940,7 @@ public class DLSSoundbank implements Soundbank {
 		List<Long> offsettable = new ArrayList<Long>(); 
 		for (DLSSample sample : samples) 
 		{
-			offsettable.add(new Long(wvpl.getFilePointer() - off));
+			offsettable.add(Long.valueOf(wvpl.getFilePointer() - off));
 			writeSample(wvpl.writeList("wave"), sample);
 		}
 		

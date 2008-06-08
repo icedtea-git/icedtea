@@ -53,7 +53,7 @@ public abstract class SoftMixingDataLine implements DataLine {
 			"Chorus Send") {
 	};
 
-	protected class AudioFloatInputStreamResampler extends
+	protected static class AudioFloatInputStreamResampler extends
 			AudioFloatInputStream {
 
 		private AudioFloatInputStream ais;

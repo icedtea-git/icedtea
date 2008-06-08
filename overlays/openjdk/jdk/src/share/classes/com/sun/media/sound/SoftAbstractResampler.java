@@ -60,8 +60,6 @@ public abstract class SoftAbstractResampler implements SoftResampler {
 
 		boolean eof;
 
-		boolean loopreadevent = false;
-
 		int sector_pos = 0;
 
 		int sector_size = 400;
@@ -94,8 +92,6 @@ public abstract class SoftAbstractResampler implements SoftResampler {
 		float samplerateconv = 1;
 
 		float pitchcorrection = 0;
-
-		boolean streammarked = true;
 
 		public ModelAbstractResamplerStream() {
 			pad = getPadding();
@@ -158,7 +154,6 @@ public abstract class SoftAbstractResampler implements SoftResampler {
 				Arrays.fill(ibuffer[i], sector_size, sector_size + pad2, 0);
 			ix[0] = pad;
 			eof = false;
-			loopreadevent = false;
 
 			ix[0] = sector_size + pad;
 			sector_pos = -1;

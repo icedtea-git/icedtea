@@ -36,7 +36,7 @@ import java.util.Arrays;
  */
 public class SoftChorus implements SoftAudioProcessor {
 
-	private class VariableDelay {
+	private static class VariableDelay {
 		private float[] delaybuffer;
 
 		private int rovepos = 0;
@@ -121,7 +121,7 @@ public class SoftChorus implements SoftAudioProcessor {
 
 	}
 
-	private class LFODelay {
+	private static class LFODelay {
 
 		private volatile double c_cos_delta;
 

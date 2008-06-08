@@ -14,7 +14,6 @@ Hightlight of features:
 
    * Downloadable Sound Level 2.2
    * SoundFonts 2.04 (24 bit)
-   * Gravis Ultrasound-compatible patches
    * Use Audio files (AIFF, AU and WAV) as SoundBanks
    * General Midi Level 2
    * MIDI Tuning Standard
@@ -80,7 +79,7 @@ Audio/Implementation Features:
     %WINDOWS_LOCATION%\system32\drivers\gm.dls
 
 * Multi-format soundbank support.
-    SoundFont 2.4, DLS 2.2, Gravis Patch soundbanks
+    SoundFont 2.4, DLS 2.2
     and Simple audio files are also supported
     as soundbanks like  WAV/AIFF/AU
     (and other audio files available thru Java SPI)   

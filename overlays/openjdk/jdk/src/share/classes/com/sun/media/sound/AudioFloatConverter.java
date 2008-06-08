@@ -923,7 +923,7 @@ public abstract class AudioFloatConverter {
 				if (format.getSampleSizeInBits() <= 8)
 					conv = new AudioFloatConversion8S();
 				else if (format.getSampleSizeInBits() > 8
-						& format.getSampleSizeInBits() <= 16)
+						&& format.getSampleSizeInBits() <= 16)
 					conv = new AudioFloatConversion16SL();
 				else if (format.getSampleSizeInBits() > 16
 						&& format.getSampleSizeInBits() <= 24)

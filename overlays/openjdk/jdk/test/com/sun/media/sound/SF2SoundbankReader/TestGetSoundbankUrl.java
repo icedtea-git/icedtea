@@ -1,5 +1,13 @@
+import java.io.File;
+import java.net.URL;
+
+import javax.sound.midi.Patch;
+import javax.sound.midi.Soundbank;
+
+import com.sun.media.sound.SF2SoundbankReader;
+
 /*
- * Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2007 Sun Microsystems, Inc.  All Rights Reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,47 +31,24 @@
  * have any questions.
  */
 
-package com.sun.media.sound;
+/* @test
+ @summary Test SF2SoundbankReader getSoundbank(File) method */
 
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.Mixer.Info;
-import javax.sound.sampled.spi.MixerProvider;
+public class TestGetSoundbankUrl {
 
-/**
- * Provider for software audio mixer
- * 
- * @version %I%, %E%
- * @author Karl Helgason
- */
-
-public class SoftMixingMixerProvider extends MixerProvider {
-
-	static SoftMixingMixer globalmixer = null;
-
-	static Thread lockthread = null;
-
-	protected final static Object mutex = new Object();
-
-	public Mixer getMixer(Info info) {
-		if (!(info == null || info == SoftMixingMixer.info)) {
-			throw new IllegalArgumentException("Mixer " + info.toString()
-					+ " not supported by this provider.");
-		}
-		synchronized (mutex) {
-			if (lockthread != null)
-				if (Thread.currentThread() == lockthread)
-					throw new IllegalArgumentException("Mixer "
-							+ info.toString()
-							+ " not supported by this provider.");
-			if (globalmixer == null)
-				globalmixer = new SoftMixingMixer();
-			return globalmixer;
-		}
-
+	private static void assertTrue(boolean value) throws Exception
+	{
+		if(!value)
+			throw new RuntimeException("assertTrue fails!");
 	}
-
-	public Info[] getMixerInfo() {
-		return new Info[] { SoftMixingMixer.info };
-	}
-
+		
+	public static void main(String[] args) throws Exception {
+		File file = new File(System.getProperty("test.src", "."), "ding.sf2");
+		URL url = file.toURI().toURL();
+		Soundbank sf2 = new SF2SoundbankReader().getSoundbank(url);
+		assertTrue(sf2.getInstruments().length == 1);
+		Patch patch = sf2.getInstruments()[0].getPatch();
+		assertTrue(patch.getProgram() == 0);
+		assertTrue(patch.getBank() == 0);
+	}	
 }

@@ -215,6 +215,7 @@ public class ModelByteBufferWavetable implements ModelWavetable
 			{			
 				e.printStackTrace();
 			}
+			if(ais == null) return null;
 			return AudioFloatInputStream.getInputStream(ais);
 		}
 		if(buffer.array() == null)

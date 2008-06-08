@@ -67,7 +67,7 @@ public class SoftMixingMixer implements Mixer {
 
 	protected static final String INFO_VERSION = "0.9";
 
-	protected static Mixer.Info info = new Info();
+	protected final static Mixer.Info info = new Info();
 
 	protected Object control_mutex = this;
 

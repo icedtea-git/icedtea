@@ -38,7 +38,7 @@ import javax.sound.midi.spi.MidiDeviceProvider;
  */
 public class SoftProvider extends MidiDeviceProvider {
 
-	protected static Info softinfo = SoftSynthesizer.info;
+	protected final static Info softinfo = SoftSynthesizer.info;
 
 	private static Info[] softinfos = { softinfo };
 

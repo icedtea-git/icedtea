@@ -71,9 +71,9 @@ public class SoftSynthesizer implements AudioSynthesizer, ReferenceCountingDevic
 
 	protected static final String INFO_DESCRIPTION = "Software MIDI Synthesizer";
 
-	protected static final String INFO_VERSION = "0.9";
+	protected static final String INFO_VERSION = "1.0";
 	
-	protected static MidiDevice.Info info = new Info();
+	protected final static MidiDevice.Info info = new Info();
 	
 	private static Soundbank defaultSoundBank = null;
 	
@@ -334,7 +334,7 @@ public class SoftSynthesizer implements AudioSynthesizer, ReferenceCountingDevic
 	/**
  	 * Returns the number of control changes per second.
  	 */
-	public float getControlRate() {
+	protected float getControlRate() {
 		return controlrate;
 	}
 
@@ -438,7 +438,7 @@ public class SoftSynthesizer implements AudioSynthesizer, ReferenceCountingDevic
 	public boolean loadInstrument(Instrument instrument) {
 
 		if (instrument == null || (!(instrument instanceof ModelInstrument)))
-			throw new IllegalArgumentException("Unsupported instrument: " + instrument.toString());				
+			throw new IllegalArgumentException("Unsupported instrument: " + instrument);				
 		List<ModelInstrument> instruments = new ArrayList<ModelInstrument>();
 		instruments.add((ModelInstrument)instrument);
 		return loadInstruments(instruments);		
@@ -447,7 +447,7 @@ public class SoftSynthesizer implements AudioSynthesizer, ReferenceCountingDevic
 	public void unloadInstrument(Instrument instrument) {
 		
 		if (instrument == null || (!(instrument instanceof ModelInstrument)))
-			throw new IllegalArgumentException("Unsupported instrument: " + instrument.toString());
+			throw new IllegalArgumentException("Unsupported instrument: " + instrument);
 		if(!isOpen())
 			return;		
 
@@ -925,7 +925,6 @@ public class SoftSynthesizer implements AudioSynthesizer, ReferenceCountingDevic
 												
 				if(sourceDataLine != null)
 				{
-					sourceDataLine.drain();
 					sourceDataLine.close();
 					sourceDataLine = null;					
 				}

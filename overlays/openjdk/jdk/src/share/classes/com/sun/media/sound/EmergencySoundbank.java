@@ -49,7 +49,7 @@ import com.sun.media.sound.SF2Soundbank;
  */ 
 public class EmergencySoundbank {
 	
-	public static String[] general_midi_instruments = { 
+	private final static String[] general_midi_instruments = { 
 	"Acoustic Grand Piano",
 	"Bright Acoustic Piano",
 	"Electric Grand Piano",

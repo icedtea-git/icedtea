@@ -49,7 +49,7 @@ public class SoftMixingSourceDataLine extends SoftMixingDataLine implements
 
 	private boolean open = false;
 
-	private AudioFormat format = null;
+	private AudioFormat format = new AudioFormat(44100.0f, 16, 2, true, false);
 
 	private int framesize;
 
@@ -71,7 +71,7 @@ public class SoftMixingSourceDataLine extends SoftMixingDataLine implements
 
 	private AudioFloatInputStream afis;
 
-	private class NonBlockingFloatInputStream extends AudioFloatInputStream {
+	private static class NonBlockingFloatInputStream extends AudioFloatInputStream {
 		AudioFloatInputStream ais;
 
 		public NonBlockingFloatInputStream(AudioFloatInputStream ais) {
@@ -271,8 +271,6 @@ public class SoftMixingSourceDataLine extends SoftMixingDataLine implements
 	}
 
 	public void open() throws LineUnavailableException {
-		if (format == null)
-			format = new AudioFormat(44100.0f, 16, 2, true, false);
 		open(format);
 	}
 

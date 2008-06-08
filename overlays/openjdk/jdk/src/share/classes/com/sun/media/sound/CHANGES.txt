@@ -1,3 +1,39 @@
+  - Cleanup: Make inner classes static 
+              AudioFloatFormatConverter.AudioFloatFormatConverterInputStream
+              AudioFloatFormatConverter.AudioFloatInputStreamChannelMixer
+              AudioFloatFormatConverter.AudioFloatInputStreamResampler
+              SimpleInstrument.SimpleInstrumentPart
+              SoftChorus.VariableDelay
+              SoftChorus.LFODelay
+              SoftMixingDataLine.AudioFloatInputStreamResampler
+              SoftMixingSourceDataLine.NonBlockingFloatInputStream
+              SoftReverb.AllPass
+              SoftReverb.Comb
+              SoftReverb.Delay
+  - Cleanup: Remove unused fields in:
+              SoftSincResampler.din, SoftLanczosResampler.din, 
+              SoftMainMixer.finetuning,  SoftMainMixer.coarsetuning
+              SoftJitterCorrector.JitterStream.nullbuff, 
+              SoftAbstractResampler.ModelAbstractResampler.loopread
+              SoftAbstractResampler.ModelAbstractResampler.streammarked
+  - Cleanup: Remove dead code from FFT.
+  - Cleanup: Make constant fields in SoftFilter final.
+  - Cleanup: Let SoftSynthesizer.info be final.
+  - Cleanup: Let SoftProvider.info be final.
+  - Fix: Unnecessary call to sourceDataLine.drain() in SoftSynthesizer 
+         causes random hangs in SoftSynthesizer.open jtreg test.
+         This happens when the synthesizer is opened and right after closed.
+         This will not happen if there is a delay between open and close call.
+  - Fix: ModelByteBufferAudioFileSoundbankReader, 
+         SoftAudioPusher, SoftJitterCorrector
+          don't ignore stream.read return value.
+  - Fix: NullPointerException in 
+         SoftSynthesizer.unloadInstrument if instrument = null       
+  - Fix: SoftJitterCorrector.getSoundbank(URL) may fail to close stream.
+  - Fix: Futile attempts to guard buffers variable in SoftJitterCorrector.
+  - Fix: RiffReader/SF2SoundbankReader/DLSSoundbank should use readfully instead of read 
+         when reading from stream.
+         JTreg tests where created to test for this.
   - Added: Software Mixing Mixer
   - Removed: PATSoundBankReader removed because no format license is available.
              It is also undocumented format. 
@@ -22,6 +58,7 @@
          If illegal notenumber was used in NoteOn/NoteOff
          a ArrayOutOfIndex exception was thrown.
          
+Version 1.0 (released in OpenJDK 6 b10)
   - Fix: Default tempo in SoftMidiFileReader was supposed to be 500000 mpq or 120 bpm
   - Fix: Change type of info variable in SoftSynthesize into MidiDevice.Info
   - Fix: Fix instanceof check of p1 variable in ModelInstrumentComparator
