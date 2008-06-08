@@ -259,12 +259,17 @@ ZERO_PATCHES = \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-zero.patch \
-	patches/icedtea-ia64-bugfix.patch
+	patches/icedtea-ia64-bugfix.patch \
+	patches/icedtea-eclipse-hotspot-6614100-7b24.patch
+
+# Patches needed when not using the newer OpenJDK 7 HotSpot for zero.
+NON_ZERO_PATCHES = \
+	patches/icedtea-eclipse-hotspot-6614100-6b06.patch
 
 if ZERO_BUILD
   ZERO_PATCHES_COND = $(ZERO_PATCHES)
 else
-  ZERO_PATCHES_COND = 
+  ZERO_PATCHES_COND = $(NON_ZERO_PATCHES)
 endif
 
 ICEDTEA_PATCHES = \

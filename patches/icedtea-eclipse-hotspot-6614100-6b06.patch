@@ -1,0 +1,56 @@
+# HG changeset patch
+# User never
+# Date 1212727493 25200
+# Node ID 65fe2bd8883932456557957163bf5c4e4af79469
+# Parent d4dbd9f91680840f6c719b0d23942b4d4eb00837
+6614100: EXCEPTION_ACCESS_VIOLATION while running Eclipse with 1.6.0_05-ea
+Reviewed-by: kvn, jrose, rasbold
+
+--- openjdk/hotspot/src/share/vm/opto/cfgnode.cpp.orig	2008-06-08 15:15:19.000000000 +0200
++++ openjdk/hotspot/src/share/vm/opto/cfgnode.cpp	2008-06-08 15:16:06.000000000 +0200
+@@ -1551,45 +1551,6 @@
+     if (opt != NULL)  return opt;
+   }
+ 
+-  if (in(1) != NULL && in(1)->Opcode() == Op_AddP && can_reshape) {
+-    // Try to undo Phi of AddP:
+-    //   (Phi (AddP base base y) (AddP base2 base2 y))
+-    // becomes:
+-    //   newbase := (Phi base base2)
+-    //   (AddP newbase newbase y)
+-    //
+-    // This occurs as a result of unsuccessful split_thru_phi and
+-    // interferes with taking advantage of addressing modes.  See the
+-    // clone_shift_expressions code in matcher.cpp
+-    Node* addp = in(1);
+-    const Type* type = addp->in(AddPNode::Base)->bottom_type();
+-    Node* y = addp->in(AddPNode::Offset);
+-    if (y != NULL && addp->in(AddPNode::Base) == addp->in(AddPNode::Address)) {
+-      // make sure that all the inputs are similar to the first one,
+-      // i.e. AddP with base == address and same offset as first AddP
+-      bool doit = true;
+-      for (uint i = 2; i < req(); i++) {
+-        if (in(i) == NULL ||
+-            in(i)->Opcode() != Op_AddP ||
+-            in(i)->in(AddPNode::Base) != in(i)->in(AddPNode::Address) ||
+-            in(i)->in(AddPNode::Offset) != y) {
+-          doit = false;
+-          break;
+-        }
+-        // Accumulate type for resulting Phi
+-        type = type->meet(in(i)->in(AddPNode::Base)->bottom_type());
+-      }
+-      if (doit) {
+-        Node* base = new (phase->C, in(0)->req()) PhiNode(in(0), type, NULL);
+-        for (uint i = 1; i < req(); i++) {
+-          base->init_req(i, in(i)->in(AddPNode::Base));
+-        }
+-        phase->is_IterGVN()->register_new_node_with_optimizer(base);
+-        return new (phase->C, 4) AddPNode(base, base, y);
+-      }
+-    }
+-  }
+-
+   // Split phis through memory merges, so that the memory merges will go away.
+   // Piggy-back this transformation on the search for a unique input....
+   // It will be as if the merged memory is the unique value of the phi.

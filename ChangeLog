@@ -1,3 +1,13 @@
+2008-06-08  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (ZERO_PATCHES): Add
+	patches/icedtea-eclipse-hotspot-6614100-7b24.patch.
+	(NON_ZERO_PATCHES): New patch list.
+	(ZERO_PATCHES_COND): Use new NON_ZERO_PATCHES list when necessary.
+	* Makefile.in: Regenerate.
+	* patches/icedtea-eclipse-hotspot-6614100-7b24.patch: New patch.
+	* patches/icedtea-eclipse-hotspot-6614100-6b06.patch: New patch.
+
 2008-06-01  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am (OPENJDK_DATE): Updated to 30_may_2008.
