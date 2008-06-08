@@ -22,22 +22,20 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 /**
- * 
  * Control signal processor interface
- * 
- * @version %I%, %E%
+ *
  * @author Karl Helgason
  */
 public interface SoftProcess extends SoftControl {
-	public void init(SoftSynthesizer synth);
 
-	public double[] get(int instance, String name);
+    public void init(SoftSynthesizer synth);
 
-	public void processControlLogic();
+    public double[] get(int instance, String name);
 
-	public void reset();
+    public void processControlLogic();
+
+    public void reset();
 }

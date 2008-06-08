@@ -22,18 +22,14 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 /**
- * 
  * Basic resampler interface.
- * 
- * @version %I%, %E%
+ *
  * @author Karl Helgason
  */
 public interface SoftResampler {
 
-	public SoftResamplerStreamer openStreamer();
-
+    public SoftResamplerStreamer openStreamer();
 }

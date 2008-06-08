@@ -22,181 +22,170 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 /**
- * 
  * A simple look-ahead volume limiter with very fast attack and fast release.
  * This filter is used for preventing clipping.
- * 
- * @version %I%, %E%
+ *
  * @author Karl Helgason
  */
 public class SoftLimiter implements SoftAudioProcessor {
 
-	float lastmax = 0;
+    float lastmax = 0;
+    float gain = 1;
+    float[] temp_bufferL;
+    float[] temp_bufferR;
+    boolean mix = false;
+    SoftAudioBuffer bufferL;
+    SoftAudioBuffer bufferR;
+    SoftAudioBuffer bufferLout;
+    SoftAudioBuffer bufferRout;
+    float controlrate;
 
-	float gain = 1;
+    public void init(float samplerate, float controlrate) {
+        this.controlrate = controlrate;
+    }
 
-	float[] temp_bufferL;
+    public void setInput(int pin, SoftAudioBuffer input) {
+        if (pin == 0)
+            bufferL = input;
+        if (pin == 1)
+            bufferR = input;
+    }
 
-	float[] temp_bufferR;
+    public void setOutput(int pin, SoftAudioBuffer output) {
+        if (pin == 0)
+            bufferLout = output;
+        if (pin == 1)
+            bufferRout = output;
+    }
 
-	boolean mix = false;
+    public void setMixMode(boolean mix) {
+        this.mix = mix;
+    }
 
-	SoftAudioBuffer bufferL;
+    public void globalParameterControlChange(int[] slothpath, long param,
+            long value) {
+    }
 
-	SoftAudioBuffer bufferR;
+    double silentcounter = 0;
 
-	SoftAudioBuffer bufferLout;
+    public void processAudio() {
+        if (this.bufferL.isSilent()
+                && (this.bufferR == null || this.bufferR.isSilent())) {
+            silentcounter += 1 / controlrate;
 
-	SoftAudioBuffer bufferRout;
-	
-	float controlrate;
+            if (silentcounter > 60) {
+                if (!mix) {
+                    bufferLout.clear();
+                    bufferRout.clear();
+                }
+                return;
+            }
+        } else
+            silentcounter = 0;
 
-	public void init(float samplerate, float controlrate) {
-		this.controlrate = controlrate;
-	}
+        float[] bufferL = this.bufferL.array();
+        float[] bufferR = this.bufferR == null ? null : this.bufferR.array();
+        float[] bufferLout = this.bufferLout.array();
+        float[] bufferRout = this.bufferRout == null
+                                ? null : this.bufferRout.array();
 
-	public void setInput(int pin, SoftAudioBuffer input) {
-		if (pin == 0)
-			bufferL = input;
-		if (pin == 1)
-			bufferR = input;
-	}
+        if (temp_bufferL == null || temp_bufferL.length < bufferL.length)
+            temp_bufferL = new float[bufferL.length];
+        if (bufferR != null)
+            if (temp_bufferR == null || temp_bufferR.length < bufferR.length)
+                temp_bufferR = new float[bufferR.length];
 
-	public void setOutput(int pin, SoftAudioBuffer output) {
-		if (pin == 0)
-			bufferLout = output;
-		if (pin == 1)
-			bufferRout = output;
-	}
+        float max = 0;
+        int len = bufferL.length;
 
-	public void setMixMode(boolean mix) {
-		this.mix = mix;
-	}
+        if (bufferR == null) {
+            for (int i = 0; i < len; i++) {
+                if (bufferL[i] > max)
+                    max = bufferL[i];
+                if (-bufferL[i] > max)
+                    max = -bufferL[i];
+            }
+        } else {
+            for (int i = 0; i < len; i++) {
+                if (bufferL[i] > max)
+                    max = bufferL[i];
+                if (bufferR[i] > max)
+                    max = bufferR[i];
+                if (-bufferL[i] > max)
+                    max = -bufferL[i];
+                if (-bufferR[i] > max)
+                    max = -bufferR[i];
+            }
+        }
 
-	public void globalParameterControlChange(int[] slothpath, long param,
-			long value) {
+        float lmax = lastmax;
+        lastmax = max;
+        if (lmax > max)
+            max = lmax;
 
-	}
+        float newgain = 1;
+        if (max > 0.99f)
+            newgain = 0.99f / max;
+        else
+            newgain = 1;
 
-	double silentcounter = 0;
+        if (newgain > gain)
+            newgain = (newgain + gain * 9) / 10f;
 
-	public void processAudio() {
-		if (this.bufferL.isSilent()
-				&& (this.bufferR == null || this.bufferR.isSilent())) {
-			silentcounter += 1 / controlrate;
+        float gaindelta = (newgain - gain) / len;
+        if (mix) {
+            if (bufferR == null) {
+                for (int i = 0; i < len; i++) {
+                    gain += gaindelta;
+                    float bL = bufferL[i];
+                    float tL = temp_bufferL[i];
+                    temp_bufferL[i] = bL;
+                    bufferLout[i] += tL * gain;
+                }
+            } else {
+                for (int i = 0; i < len; i++) {
+                    gain += gaindelta;
+                    float bL = bufferL[i];
+                    float bR = bufferR[i];
+                    float tL = temp_bufferL[i];
+                    float tR = temp_bufferR[i];
+                    temp_bufferL[i] = bL;
+                    temp_bufferR[i] = bR;
+                    bufferLout[i] += tL * gain;
+                    bufferRout[i] += tR * gain;
+                }
+            }
 
-			if (silentcounter > 60) {
-				if (!mix) {
-					bufferLout.clear();
-					bufferRout.clear();
-				}
-				return;
-			}
-		} else
-			silentcounter = 0;
+        } else {
+            if (bufferR == null) {
+                for (int i = 0; i < len; i++) {
+                    gain += gaindelta;
+                    float bL = bufferL[i];
+                    float tL = temp_bufferL[i];
+                    temp_bufferL[i] = bL;
+                    bufferLout[i] = tL * gain;
+                }
+            } else {
+                for (int i = 0; i < len; i++) {
+                    gain += gaindelta;
+                    float bL = bufferL[i];
+                    float bR = bufferR[i];
+                    float tL = temp_bufferL[i];
+                    float tR = temp_bufferR[i];
+                    temp_bufferL[i] = bL;
+                    temp_bufferR[i] = bR;
+                    bufferLout[i] = tL * gain;
+                    bufferRout[i] = tR * gain;
+                }
+            }
 
-		float[] bufferL = this.bufferL.array();
-		float[] bufferR = this.bufferR == null ? null : this.bufferR.array();
-		float[] bufferLout = this.bufferLout.array();
-		float[] bufferRout = this.bufferRout == null ? null : this.bufferRout
-				.array();
+        }
+        gain = newgain;
+    }
 
-		if (temp_bufferL == null || temp_bufferL.length < bufferL.length)
-			temp_bufferL = new float[bufferL.length];
-		if (bufferR != null)
-			if (temp_bufferR == null || temp_bufferR.length < bufferR.length)
-				temp_bufferR = new float[bufferR.length];
-
-		float max = 0;
-		int len = bufferL.length;
-
-		if (bufferR == null)
-			for (int i = 0; i < len; i++) {
-				if (bufferL[i] > max)
-					max = bufferL[i];
-				if (-bufferL[i] > max)
-					max = -bufferL[i];
-			}
-		else
-			for (int i = 0; i < len; i++) {
-				if (bufferL[i] > max)
-					max = bufferL[i];
-				if (bufferR[i] > max)
-					max = bufferR[i];
-				if (-bufferL[i] > max)
-					max = -bufferL[i];
-				if (-bufferR[i] > max)
-					max = -bufferR[i];
-			}
-
-		float lmax = lastmax;
-		lastmax = max;
-		if (lmax > max)
-			max = lmax;
-
-		float newgain = 1;
-		if (max > 0.99f)
-			newgain = 0.99f / max;
-		else
-			newgain = 1;
-
-		if (newgain > gain)
-			newgain = (newgain + gain * 9) / 10f;
-
-		float gaindelta = (newgain - gain) / len;
-		if (mix) {
-			if (bufferR == null)
-				for (int i = 0; i < len; i++) {
-					gain += gaindelta;
-					float bL = bufferL[i];
-					float tL = temp_bufferL[i];
-					temp_bufferL[i] = bL;
-					bufferLout[i] += tL * gain;
-				}
-			else
-				for (int i = 0; i < len; i++) {
-					gain += gaindelta;
-					float bL = bufferL[i];
-					float bR = bufferR[i];
-					float tL = temp_bufferL[i];
-					float tR = temp_bufferR[i];
-					temp_bufferL[i] = bL;
-					temp_bufferR[i] = bR;
-					bufferLout[i] += tL * gain;
-					bufferRout[i] += tR * gain;
-				}
-
-		} else {
-			if (bufferR == null)
-				for (int i = 0; i < len; i++) {
-					gain += gaindelta;
-					float bL = bufferL[i];
-					float tL = temp_bufferL[i];
-					temp_bufferL[i] = bL;
-					bufferLout[i] = tL * gain;
-				}
-			else
-				for (int i = 0; i < len; i++) {
-					gain += gaindelta;
-					float bL = bufferL[i];
-					float bR = bufferR[i];
-					float tL = temp_bufferL[i];
-					float tR = temp_bufferR[i];
-					temp_bufferL[i] = bL;
-					temp_bufferR[i] = bR;
-					bufferLout[i] = tL * gain;
-					bufferRout[i] = tR * gain;
-				}
-
-		}
-		gain = newgain;
-	}
-
-	public void processControlLogic() {
-	}
-
+    public void processControlLogic() {
+    }
 }

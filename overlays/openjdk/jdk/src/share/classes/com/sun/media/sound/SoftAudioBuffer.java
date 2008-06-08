@@ -22,7 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 import java.util.Arrays;
@@ -31,82 +30,75 @@ import javax.sound.sampled.AudioFormat;
 
 /**
  * This class is used to store audio buffer.
- * 
- * @version %I%, %E%
+ *
  * @author Karl Helgason
  */
 public class SoftAudioBuffer {
 
-	private int size;
+    private int size;
+    private float[] buffer;
+    private boolean empty = true;
+    private AudioFormat format;
+    private AudioFloatConverter converter;
+    private byte[] converter_buffer;
 
-	private float[] buffer;
+    public SoftAudioBuffer(int size, AudioFormat format) {
+        this.size = size;
+        this.format = format;
+        converter = AudioFloatConverter.getConverter(format);
+    }
 
-	private boolean empty = true;
+    public AudioFormat getFormat() {
+        return format;
+    }
 
-	private AudioFormat format;
+    public int getSize() {
+        return size;
+    }
 
-	private AudioFloatConverter converter;
+    public void clear() {
+        if (!empty) {
+            Arrays.fill(buffer, 0);
+            empty = true;
+        }
+    }
 
-	private byte[] converter_buffer;
+    public boolean isSilent() {
+        return empty;
+    }
 
-	public SoftAudioBuffer(int size, AudioFormat format) {
-		this.size = size;
-		this.format = format;
-		converter = AudioFloatConverter.getConverter(format);
-	}
+    public float[] array() {
+        empty = false;
+        if (buffer == null)
+            buffer = new float[size];
+        return buffer;
+    }
 
-	public AudioFormat getFormat() {
-		return format;
-	}
+    public void get(byte[] buffer, int channel) {
 
-	public int getSize() {
-		return size;
-	}
+        int framesize_pc = (format.getFrameSize() / format.getChannels());
+        int c_len = size * framesize_pc;
+        if (converter_buffer == null || converter_buffer.length < c_len)
+            converter_buffer = new byte[c_len];
 
-	public void clear() {
-		if (!empty) {
-			Arrays.fill(buffer, 0);
-			empty = true;
-		}
-	}
+        if (format.getChannels() == 1) {
+            converter.toByteArray(array(), size, buffer);
+        } else {
+            converter.toByteArray(array(), size, converter_buffer);
+            if (channel >= format.getChannels())
+                return;
+            int z_stepover = format.getChannels() * framesize_pc;
+            int k_stepover = framesize_pc;
+            for (int j = 0; j < framesize_pc; j++) {
+                int k = j;
+                int z = channel * framesize_pc + j;
+                for (int i = 0; i < size; i++) {
+                    buffer[z] = converter_buffer[k];
+                    z += z_stepover;
+                    k += k_stepover;
+                }
+            }
+        }
 
-	public boolean isSilent() {
-		return empty;
-	}
-
-	public float[] array() {
-		empty = false;
-		if (buffer == null)
-			buffer = new float[size];
-		return buffer;
-	}
-
-	public void get(byte[] buffer, int channel) {
-
-		int framesize_pc = (format.getFrameSize() / format.getChannels());
-		int c_len = size * framesize_pc;
-		if (converter_buffer == null || converter_buffer.length < c_len)
-			converter_buffer = new byte[c_len];
-
-		if (format.getChannels() == 1) {
-			converter.toByteArray(array(), size, buffer);
-		} else {
-			converter.toByteArray(array(), size, converter_buffer);
-			if (channel >= format.getChannels())
-				return;
-			int z_stepover = format.getChannels() * framesize_pc;
-			int k_stepover = framesize_pc;
-			for (int j = 0; j < framesize_pc; j++) {
-				int k = j;
-				int z = channel * framesize_pc + j;
-				for (int i = 0; i < size; i++) {
-					buffer[z] = converter_buffer[k];
-					z += z_stepover;
-					k += k_stepover;
-				}
-			}
-		}
-
-	}
-
+    }
 }

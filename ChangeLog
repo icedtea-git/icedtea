@@ -1,6 +1,11 @@
 2008-06-08  Mark Wielaard  <mark@klomp.org>
 
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
+	Import Gervill CVS source reformatting.
+
+2008-06-08  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
 	Import Gervill fixes from CVS. See CHANGES.txt.
 	* overlays/openjdk/jdk/test/com/sun/media/sound: Likewise.
 

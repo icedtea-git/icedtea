@@ -22,7 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 import java.io.IOException;
@@ -32,386 +31,360 @@ import javax.sound.midi.MidiChannel;
 import javax.sound.midi.VoiceStatus;
 
 /**
- * 
- * Abstract resampler class. 
- * 
- * @version %I%, %E%
+ * Abstract resampler class.
+ *
  * @author Karl Helgason
  */
 public abstract class SoftAbstractResampler implements SoftResampler {
 
-	private class ModelAbstractResamplerStream implements SoftResamplerStreamer {
-		AudioFloatInputStream stream;
+    private class ModelAbstractResamplerStream implements SoftResamplerStreamer {
 
-		boolean stream_eof = false;
+        AudioFloatInputStream stream;
+        boolean stream_eof = false;
+        int loopmode;
+        boolean loopdirection = true; // true = forward
+        float loopstart;
+        float looplen;
+        float target_pitch;
+        float[] current_pitch = new float[1];
+        boolean started;
+        boolean eof;
+        int sector_pos = 0;
+        int sector_size = 400;
+        int sector_loopstart = -1;
+        boolean markset = false;
+        int marklimit = 0;
+        int streampos = 0;
+        int nrofchannels = 2;
+        boolean noteOff_flag = false;
+        float[][] ibuffer;
+        boolean ibuffer_order = true;
+        float[] sbuffer;
+        int pad;
+        int pad2;
+        float[] ix = new float[1];
+        int[] ox = new int[1];
+        float samplerateconv = 1;
+        float pitchcorrection = 0;
 
-		int loopmode;
-		boolean loopdirection = true; // true = forward
+        public ModelAbstractResamplerStream() {
+            pad = getPadding();
+            pad2 = getPadding() * 2;
+            ibuffer = new float[2][sector_size + pad2];
+            ibuffer_order = true;
+        }
 
-		float loopstart;
+        public void noteOn(MidiChannel channel, VoiceStatus voice,
+                int noteNumber, int velocity) {
+        }
 
-		float looplen;
+        public void noteOff(int velocity) {
+            noteOff_flag = true;
+        }
 
-		float target_pitch;
+        public void open(ModelWavetable osc, float outputsamplerate)
+                throws IOException {
 
-		float[] current_pitch = new float[1];
+            eof = false;
+            nrofchannels = osc.getChannels();
+            if (ibuffer.length < nrofchannels) {
+                ibuffer = new float[nrofchannels][sector_size + pad2];
+            }
 
-		boolean started;
+            stream = osc.openStream();
+            streampos = 0;
+            stream_eof = false;
+            pitchcorrection = osc.getPitchcorrection();
+            samplerateconv
+                    = stream.getFormat().getSampleRate() / outputsamplerate;
+            looplen = osc.getLoopLength();
+            loopstart = osc.getLoopStart();
+            sector_loopstart = (int) (loopstart / sector_size);
+            sector_loopstart = sector_loopstart - 1;
 
-		boolean eof;
+            sector_pos = 0;
 
-		int sector_pos = 0;
+            if (sector_loopstart < 0)
+                sector_loopstart = 0;
+            started = false;
+            loopmode = osc.getLoopType();
 
-		int sector_size = 400;
+            if (loopmode != 0) {
+                markset = false;
+                marklimit = nrofchannels * (int) (looplen + pad2 + 1);
+            } else
+                markset = true;
+            // loopmode = 0;
 
-		int sector_loopstart = -1;
+            target_pitch = samplerateconv;
+            current_pitch[0] = samplerateconv;
 
-		boolean markset = false;
+            ibuffer_order = true;
+            loopdirection = true;
+            noteOff_flag = false;
 
-		int marklimit = 0;
+            for (int i = 0; i < nrofchannels; i++)
+                Arrays.fill(ibuffer[i], sector_size, sector_size + pad2, 0);
+            ix[0] = pad;
+            eof = false;
 
-		int streampos = 0;
+            ix[0] = sector_size + pad;
+            sector_pos = -1;
+            streampos = -sector_size;
 
-		int nrofchannels = 2;
-		
-		boolean noteOff_flag = false;
+            nextBuffer();
+        }
 
-		float[][] ibuffer;
-		boolean ibuffer_order = true;
+        public void setPitch(float pitch) {
+            /*
+            this.pitch = (float) Math.pow(2f,
+            (pitchcorrection + pitch) / 1200.0f)
+             * samplerateconv;
+             */
+            this.target_pitch = (float)Math.exp(
+                    (pitchcorrection + pitch) * (Math.log(2.0) / 1200.0))
+                * samplerateconv;
 
-		float[] sbuffer;
+            if (!started)
+                current_pitch[0] = this.target_pitch;
+        }
 
-		int pad;
+        public void nextBuffer() throws IOException {
+            if (ix[0] < pad) {
+                if (markset) {
+                    // reset to target sector
+                    stream.reset();
+                    ix[0] += streampos - (sector_loopstart * sector_size);
+                    sector_pos = sector_loopstart;
+                    streampos = sector_pos * sector_size;
 
-		int pad2;
+                    // and go one sector backward
+                    ix[0] += sector_size;
+                    sector_pos -= 1;
+                    streampos -= sector_size;
+                    stream_eof = false;
+                }
+            }
 
-		float[] ix = new float[1];
-		
-		int[] ox = new int[1];
+            if (ix[0] >= sector_size + pad) {
+                if (stream_eof) {
+                    eof = true;
+                    return;
+                }
+            }
 
-		float samplerateconv = 1;
+            if (ix[0] >= sector_size * 4 + pad) {
+                int skips = (int)((ix[0] - sector_size * 4 + pad) / sector_size);
+                ix[0] -= sector_size * skips;
+                sector_pos += skips;
+                streampos += sector_size * skips;
+                stream.skip(sector_size * skips);
+            }
 
-		float pitchcorrection = 0;
+            while (ix[0] >= sector_size + pad) {
+                if (!markset) {
+                    if (sector_pos + 1 == sector_loopstart) {
+                        stream.mark(marklimit);
+                        markset = true;
+                    }
+                }
+                ix[0] -= sector_size;
+                sector_pos++;
+                streampos += sector_size;
 
-		public ModelAbstractResamplerStream() {
-			pad = getPadding();
-			pad2 = getPadding() * 2;
-			ibuffer = new float[2][sector_size + pad2];
-			ibuffer_order = true;		
-		}
+                for (int c = 0; c < nrofchannels; c++) {
+                    float[] cbuffer = ibuffer[c];
+                    for (int i = 0; i < pad2; i++)
+                        cbuffer[i] = cbuffer[i + sector_size];
+                }
 
-		public void noteOn(MidiChannel channel, VoiceStatus voice,
-				int noteNumber, int velocity) {
-		}
+                int ret;
+                if (nrofchannels == 1)
+                    ret = stream.read(ibuffer[0], pad2, sector_size);
+                else {
+                    int slen = sector_size * nrofchannels;
+                    if (sbuffer == null || sbuffer.length < slen)
+                        sbuffer = new float[slen];
+                    int sret = stream.read(sbuffer, 0, slen);
+                    if (sret == -1)
+                        ret = -1;
+                    else {
+                        ret = sret / nrofchannels;
+                        for (int i = 0; i < nrofchannels; i++) {
+                            float[] buff = ibuffer[i];
+                            int ix = i;
+                            int ix_step = nrofchannels;
+                            int ox = pad2;
+                            for (int j = 0; j < ret; j++, ix += ix_step, ox++)
+                                buff[ox] = sbuffer[ix];
+                        }
+                    }
 
-		public void noteOff(int velocity) {
-			noteOff_flag = true;
-		}
+                }
 
-		public void open(ModelWavetable osc, float outputsamplerate)
-				throws IOException {
+                if (ret == -1) {
+                    ret = 0;
+                    stream_eof = true;
+                    for (int i = 0; i < nrofchannels; i++)
+                        Arrays.fill(ibuffer[i], pad2, pad2 + sector_size, 0f);
+                    return;
+                }
+                if (ret != sector_size) {
+                    for (int i = 0; i < nrofchannels; i++)
+                        Arrays.fill(ibuffer[i], pad2 + ret, pad2 + sector_size, 0f);
+                }
 
-			eof = false;
-			nrofchannels = osc.getChannels();
-			if (ibuffer.length < nrofchannels)
-			{
-				ibuffer = new float[nrofchannels][sector_size + pad2];
-			}
+                ibuffer_order = true;
 
-			stream = osc.openStream();
-			streampos = 0;
-			stream_eof = false;
-			pitchcorrection = osc.getPitchcorrection();
-			samplerateconv = stream.getFormat().getSampleRate()
-					/ outputsamplerate;
-			looplen = osc.getLoopLength();
-			loopstart = osc.getLoopStart();
-			sector_loopstart = (int) (loopstart / sector_size);
-			sector_loopstart = sector_loopstart - 1;
+            }
 
-			sector_pos = 0;
+        }
 
-			if (sector_loopstart < 0)
-				sector_loopstart = 0;
-			started = false;
-			loopmode = osc.getLoopType();
+        public void reverseBuffers() {
+            ibuffer_order = !ibuffer_order;
+            for (int c = 0; c < nrofchannels; c++) {
+                float[] cbuff = ibuffer[c];
+                int len = cbuff.length - 1;
+                int len2 = cbuff.length / 2;
+                for (int i = 0; i < len2; i++) {
+                    float x = cbuff[i];
+                    cbuff[i] = cbuff[len - i];
+                    cbuff[len - i] = x;
+                }
+            }
+        }
 
-			if (loopmode != 0) {
-				markset = false;
-				marklimit = nrofchannels * (int) (looplen + pad2 + 1);
-			} else
-				markset = true;
-			// loopmode = 0;
+        public int read(float[][] buffer, int offset, int len)
+                throws IOException {
 
-			target_pitch = samplerateconv;
-			current_pitch[0] = samplerateconv;
-			
-			ibuffer_order = true;				
-			loopdirection = true;
-			noteOff_flag = false;
+            if (eof)
+                return -1;
 
-			for (int i = 0; i < nrofchannels; i++)
-				Arrays.fill(ibuffer[i], sector_size, sector_size + pad2, 0);
-			ix[0] = pad;
-			eof = false;
+            if (noteOff_flag)
+                if ((loopmode & 2) != 0)
+                    if (loopdirection)
+                        loopmode = 0;
 
-			ix[0] = sector_size + pad;
-			sector_pos = -1;
-			streampos = -sector_size;
 
-			nextBuffer();
-		}
+            float pitchstep = (target_pitch - current_pitch[0]) / len;
+            float[] current_pitch = this.current_pitch;
+            started = true;
 
-		public void setPitch(float pitch) {
-			/*
-			this.pitch = (float) Math.pow(2f,
-					(pitchcorrection + pitch) / 1200.0f)
-					* samplerateconv;
-			*/
-			this.target_pitch = (float) Math.exp(
-					(pitchcorrection + pitch) * (Math.log(2.0) / 1200.0))
-					* samplerateconv;
-			
-			if (!started)
-				current_pitch[0] = this.target_pitch;
-		}
+            int[] ox = this.ox;
+            ox[0] = offset;
+            int ox_end = len + offset;
 
-		public void nextBuffer() throws IOException {
-			if (ix[0] < pad) {
-				if (markset) {
-					// reset to target sector
-					stream.reset();
-					ix[0] += streampos - (sector_loopstart * sector_size);
-					sector_pos = sector_loopstart;
-					streampos = sector_pos * sector_size;
-					;
+            float ixend = sector_size + pad;
+            if (!loopdirection)
+                ixend = pad;
+            while (ox[0] != ox_end) {
+                nextBuffer();
+                if (!loopdirection) {
+                    // If we are in backward playing part of pingpong
+                    // or reverse loop
 
-					// and go one sector backward
-					ix[0] += sector_size;
-					sector_pos -= 1;
-					streampos -= sector_size;
-					stream_eof = false;
-				}
-			}
+                    if (streampos < (loopstart + pad)) {
+                        ixend = loopstart - streampos + pad2;
+                        if (ix[0] <= ixend) {
+                            if ((loopmode & 4) != 0) {
+                                // Ping pong loop, change loopdirection
+                                loopdirection = true;
+                                ixend = sector_size + pad;
+                                continue;
+                            }
 
-			if (ix[0] >= sector_size + pad)
-				if (stream_eof) {
-					eof = true;
-					return;
-				}
-			
-			if(ix[0] >= sector_size*4 + pad)
-			{
-				int skips = (int)( (ix[0] - sector_size*4 + pad)/sector_size );
-				ix[0] -= sector_size*skips;
-				sector_pos += skips;
-				streampos += sector_size*skips;
-				stream.skip(sector_size*skips);
-			} 
+                            ix[0] += looplen;
+                            ixend = pad;
+                            continue;
+                        }
+                    }
 
-			while (ix[0] >= sector_size + pad) {
-				if (!markset)
-					if (sector_pos + 1 == sector_loopstart) {
-						stream.mark(marklimit);
-						markset = true;
-					}
-				ix[0] -= sector_size;
-				sector_pos++;
-				streampos += sector_size;
+                    if (ibuffer_order != loopdirection)
+                        reverseBuffers();
 
-				for (int c = 0; c < nrofchannels; c++) {
-					float[] cbuffer = ibuffer[c];
-					for (int i = 0; i < pad2; i++)
-						cbuffer[i] = cbuffer[i + sector_size];
-				}
+                    ix[0] = (sector_size + pad2) - ix[0];
+                    ixend = (sector_size + pad2) - ixend;
+                    ixend++;
 
-				int ret;
-				if (nrofchannels == 1)
-					ret = stream.read(ibuffer[0], pad2, sector_size);
-				else {
-					int slen = sector_size * nrofchannels;
-					if (sbuffer == null || sbuffer.length < slen)
-						sbuffer = new float[slen];
-					int sret = stream.read(sbuffer, 0, slen);
-					if (sret == -1)
-						ret = -1;
-					else {
-						ret = sret / nrofchannels;
-						for (int i = 0; i < nrofchannels; i++) {
-							float[] buff = ibuffer[i];
-							int ix = i;
-							int ix_step = nrofchannels;
-							int ox = pad2;
-							for (int j = 0; j < ret; j++, ix += ix_step, ox++)
-								buff[ox] = sbuffer[ix];
-						}
-					}
+                    float bak_ix = ix[0];
+                    int bak_ox = ox[0];
+                    float bak_pitch = current_pitch[0];
+                    for (int i = 0; i < nrofchannels; i++) {
+                        if (buffer[i] != null) {
+                            ix[0] = bak_ix;
+                            ox[0] = bak_ox;
+                            current_pitch[0] = bak_pitch;
+                            interpolate(ibuffer[i], ix, ixend, current_pitch,
+                                    pitchstep, buffer[i], ox, ox_end);
+                        }
+                    }
 
-				}
+                    ix[0] = (sector_size + pad2) - ix[0];
+                    ixend--;
+                    ixend = (sector_size + pad2) - ixend;
 
-				if (ret == -1) {
-					ret = 0;
-					stream_eof = true;
-					for (int i = 0; i < nrofchannels; i++)
-						Arrays.fill(ibuffer[i], pad2, pad2 + sector_size, 0f);
-					return;
-				}
-				if (ret != sector_size)
-					for (int i = 0; i < nrofchannels; i++)
-						Arrays.fill(ibuffer[i], pad2 + ret, pad2 + sector_size,
-								0f);
-								
-				ibuffer_order = true;				
+                    if (eof) {
+                        current_pitch[0] = this.target_pitch;
+                        return ox[0] - offset;
+                    }
 
-			}
+                    continue;
+                }
+                if (loopmode != 0) {
+                    if (streampos + sector_size > (looplen + loopstart + pad)) {
+                        ixend = loopstart + looplen - streampos + pad2;
+                        if (ix[0] >= ixend) {
+                            if ((loopmode & 4) != 0 || (loopmode & 8) != 0) {
+                                // Ping pong or revese loop, change loopdirection
+                                loopdirection = false;
+                                ixend = pad;
+                                continue;
+                            }
+                            ixend = sector_size + pad;
+                            ix[0] -= looplen;
+                            continue;
+                        }
+                    }
+                }
 
-		}
-		
-		public void reverseBuffers()
-		{
-			ibuffer_order = !ibuffer_order;
-			for (int c = 0; c < nrofchannels; c++)
-			{
-				float[] cbuff = ibuffer[c];
-				int len = cbuff.length-1;
-				int len2 = cbuff.length/2; 
-				for (int i = 0; i < len2; i++) {
-					float x = cbuff[i];
-					cbuff[i] = cbuff[len - i];
-					cbuff[len - i] = x;
-				}
-			}
-		}
+                if (ibuffer_order != loopdirection)
+                    reverseBuffers();
 
-		public int read(float[][] buffer, int offset, int len)
-				throws IOException {
+                float bak_ix = ix[0];
+                int bak_ox = ox[0];
+                float bak_pitch = current_pitch[0];
+                for (int i = 0; i < nrofchannels; i++) {
+                    if (buffer[i] != null) {
+                        ix[0] = bak_ix;
+                        ox[0] = bak_ox;
+                        current_pitch[0] = bak_pitch;
+                        interpolate(ibuffer[i], ix, ixend, current_pitch,
+                                pitchstep, buffer[i], ox, ox_end);
+                    }
+                }
 
-			if (eof)
-				return -1;
-			
-			if(noteOff_flag)
-				if((loopmode & 2) != 0)
-					if(loopdirection)
-						loopmode = 0;
-			
-			
-			float pitchstep = (target_pitch - current_pitch[0]) / len;
-			float[] current_pitch = this.current_pitch;
-			started = true;
+                if (eof) {
+                    current_pitch[0] = this.target_pitch;
+                    return ox[0] - offset;
+                }
+            }
 
-			int[] ox = this.ox;
-			ox[0] = offset;
-			int ox_end = len + offset;			
-				
-			float ixend = sector_size + pad;
-			if(!loopdirection) ixend = pad;
-			while (ox[0] != ox_end) {
-				nextBuffer();
-				if(!loopdirection)
-				{
-					// If we are in backward playing part of pingpong or reverse loop
-					
-					if (streampos < (loopstart + pad)) {
-						ixend = loopstart - streampos + pad2;
-						if(ix[0] <= ixend)
-						{							
-							if((loopmode & 4) != 0)
-							{
-								// Ping pong loop, change loopdirection
-								loopdirection = true;
-								ixend = sector_size + pad;
-								continue;
-							}
-		
-							ix[0] += looplen;			
-							ixend = pad;
-							continue;							
-						}
-					}
-					
-					if(ibuffer_order != loopdirection) reverseBuffers();
-					
-					ix[0] = (sector_size + pad2) - ix[0];
-					ixend = (sector_size + pad2) - ixend;
-					ixend++;
-													
-					float bak_ix = ix[0];
-					int bak_ox = ox[0];
-					float bak_pitch = current_pitch[0];
-					for (int i = 0; i < nrofchannels; i++)
-						if (buffer[i] != null) {
-							ix[0] = bak_ix;
-							ox[0] = bak_ox;
-							current_pitch[0] = bak_pitch;
-							interpolate(ibuffer[i], ix, ixend, current_pitch, pitchstep,
-									buffer[i], ox, ox_end);
-						}
-					
-					ix[0] = (sector_size + pad2) - ix[0];
-					ixend--;
-					ixend = (sector_size + pad2) - ixend;
+            current_pitch[0] = this.target_pitch;
+            return len;
+        }
 
-					if (eof) {
-						current_pitch[0] = this.target_pitch;
-						return ox[0] - offset;
-					}					
-					
-					continue;
-				}
-				if (loopmode != 0)					
-					if (streampos + sector_size > (looplen + loopstart + pad)) {
-						ixend = loopstart + looplen - streampos + pad2;
-						if (ix[0] >= ixend) {							
-							if((loopmode & 4) != 0 || (loopmode & 8) != 0 )
-							{
-								// Ping pong or revese loop, change loopdirection
-								loopdirection = false;
-								ixend = pad;
-								continue;
-							}
-							ixend = sector_size + pad;
-							ix[0] -= looplen;							
-							continue;
-						}
-					}
-				
-				if(ibuffer_order != loopdirection) reverseBuffers();
+        public void close() throws IOException {
+            stream.close();
+        }
+    }
 
-				float bak_ix = ix[0];
-				int bak_ox = ox[0];
-				float bak_pitch = current_pitch[0];
-				for (int i = 0; i < nrofchannels; i++)
-					if (buffer[i] != null) {
-						ix[0] = bak_ix;
-						ox[0] = bak_ox;
-						current_pitch[0] = bak_pitch;
-						interpolate(ibuffer[i], ix, ixend, current_pitch, pitchstep,
-								buffer[i], ox, ox_end);
-					}
+    public abstract int getPadding();
 
-				if (eof) {
-					current_pitch[0] = this.target_pitch;
-					return ox[0] - offset;
-				}
-			}
+    public abstract void interpolate(float[] in, float[] in_offset,
+            float in_end, float[] pitch, float pitchstep, float[] out,
+            int[] out_offset, int out_end);
 
-			current_pitch[0] = this.target_pitch;
-			return len;
-		}
-
-		public void close() throws IOException {
-			stream.close();
-		}
-	}
-
-	public abstract int getPadding();
-
-	public abstract void interpolate(float[] in, float[] in_offset,
-			float in_end, float[] pitch, float pitchstep, float[] out,
-			int[] out_offset, int out_end);
-
-	public SoftResamplerStreamer openStreamer() {
-		return new ModelAbstractResamplerStream();
-	}
-
+    public SoftResamplerStreamer openStreamer() {
+        return new ModelAbstractResamplerStream();
+    }
 }

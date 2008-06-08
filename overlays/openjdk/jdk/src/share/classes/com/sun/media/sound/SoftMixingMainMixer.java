@@ -22,7 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 import java.io.IOException;
@@ -36,227 +35,225 @@ import javax.sound.sampled.AudioSystem;
 /**
  * Main mixer for SoftMixingMixer.
  * 
- * @version %I%, %E%
  * @author Karl Helgason
  */
-
 public class SoftMixingMainMixer {
 
-	public final static int CHANNEL_LEFT = 0;
+    public final static int CHANNEL_LEFT = 0;
 
-	public final static int CHANNEL_RIGHT = 1;
+    public final static int CHANNEL_RIGHT = 1;
 
-	public final static int CHANNEL_EFFECT1 = 2;
+    public final static int CHANNEL_EFFECT1 = 2;
 
-	public final static int CHANNEL_EFFECT2 = 3;
+    public final static int CHANNEL_EFFECT2 = 3;
 
-	public final static int CHANNEL_EFFECT3 = 4;
+    public final static int CHANNEL_EFFECT3 = 4;
 
-	public final static int CHANNEL_EFFECT4 = 5;
+    public final static int CHANNEL_EFFECT4 = 5;
 
-	public final static int CHANNEL_LEFT_DRY = 10;
+    public final static int CHANNEL_LEFT_DRY = 10;
 
-	public final static int CHANNEL_RIGHT_DRY = 11;
+    public final static int CHANNEL_RIGHT_DRY = 11;
 
-	public final static int CHANNEL_SCRATCH1 = 12;
+    public final static int CHANNEL_SCRATCH1 = 12;
 
-	public final static int CHANNEL_SCRATCH2 = 13;
+    public final static int CHANNEL_SCRATCH2 = 13;
 
-	public final static int CHANNEL_CHANNELMIXER_LEFT = 14;
+    public final static int CHANNEL_CHANNELMIXER_LEFT = 14;
 
-	public final static int CHANNEL_CHANNELMIXER_RIGHT = 15;
+    public final static int CHANNEL_CHANNELMIXER_RIGHT = 15;
 
-	private SoftMixingMixer mixer;
+    private SoftMixingMixer mixer;
 
-	private AudioInputStream ais;
+    private AudioInputStream ais;
 
-	private SoftAudioBuffer[] buffers;
+    private SoftAudioBuffer[] buffers;
 
-	private SoftAudioProcessor reverb;
+    private SoftAudioProcessor reverb;
 
-	private SoftAudioProcessor chorus;
+    private SoftAudioProcessor chorus;
 
-	private SoftAudioProcessor agc;
+    private SoftAudioProcessor agc;
 
-	private int nrofchannels;
+    private int nrofchannels;
 
-	private Object control_mutex;
+    private Object control_mutex;
 
-	private List<SoftMixingDataLine> openLinesList = new ArrayList<SoftMixingDataLine>();
+    private List<SoftMixingDataLine> openLinesList = new ArrayList<SoftMixingDataLine>();
 
-	private SoftMixingDataLine[] openLines = new SoftMixingDataLine[0];
+    private SoftMixingDataLine[] openLines = new SoftMixingDataLine[0];
 
-	public AudioInputStream getInputStream() {
-		return ais;
-	}
+    public AudioInputStream getInputStream() {
+        return ais;
+    }
 
-	protected void processAudioBuffers() {
-		for (int i = 0; i < buffers.length; i++) {
-			buffers[i].clear();
-		}
+    protected void processAudioBuffers() {
+        for (int i = 0; i < buffers.length; i++) {
+            buffers[i].clear();
+        }
 
-		SoftMixingDataLine[] openLines;
-		synchronized (control_mutex) {
-			openLines = this.openLines;
-			for (int i = 0; i < openLines.length; i++) {
-				openLines[i].processControlLogic();
-			}
-			chorus.processControlLogic();
-			reverb.processControlLogic();
-			agc.processControlLogic();
-		}
-		for (int i = 0; i < openLines.length; i++) {
-			openLines[i].processAudioLogic(buffers);
-		}
+        SoftMixingDataLine[] openLines;
+        synchronized (control_mutex) {
+            openLines = this.openLines;
+            for (int i = 0; i < openLines.length; i++) {
+                openLines[i].processControlLogic();
+            }
+            chorus.processControlLogic();
+            reverb.processControlLogic();
+            agc.processControlLogic();
+        }
+        for (int i = 0; i < openLines.length; i++) {
+            openLines[i].processAudioLogic(buffers);
+        }
 
-		chorus.processAudio();
-		reverb.processAudio();
+        chorus.processAudio();
+        reverb.processAudio();
 
-		agc.processAudio();
+        agc.processAudio();
 
-	}
+    }
 
-	public SoftMixingMainMixer(SoftMixingMixer mixer) {
-		this.mixer = mixer;
+    public SoftMixingMainMixer(SoftMixingMixer mixer) {
+        this.mixer = mixer;
 
-		nrofchannels = mixer.getFormat().getChannels();
+        nrofchannels = mixer.getFormat().getChannels();
 
-		int buffersize = (int) (mixer.getFormat().getSampleRate() / mixer
-				.getControlRate());
+        int buffersize = (int) (mixer.getFormat().getSampleRate() / mixer
+                .getControlRate());
 
-		control_mutex = mixer.control_mutex;
-		buffers = new SoftAudioBuffer[16];
-		for (int i = 0; i < buffers.length; i++) {
-			buffers[i] = new SoftAudioBuffer(buffersize, mixer.getFormat());
+        control_mutex = mixer.control_mutex;
+        buffers = new SoftAudioBuffer[16];
+        for (int i = 0; i < buffers.length; i++) {
+            buffers[i] = new SoftAudioBuffer(buffersize, mixer.getFormat());
 
-		}
+        }
 
-		reverb = new SoftReverb();
-		chorus = new SoftChorus();
-		agc = new SoftLimiter();
+        reverb = new SoftReverb();
+        chorus = new SoftChorus();
+        agc = new SoftLimiter();
 
-		float samplerate = mixer.getFormat().getSampleRate();
-		float controlrate = mixer.getControlRate();
-		reverb.init(samplerate, controlrate);
-		chorus.init(samplerate, controlrate);
-		agc.init(samplerate, controlrate);
+        float samplerate = mixer.getFormat().getSampleRate();
+        float controlrate = mixer.getControlRate();
+        reverb.init(samplerate, controlrate);
+        chorus.init(samplerate, controlrate);
+        agc.init(samplerate, controlrate);
 
-		reverb.setMixMode(true);
-		chorus.setMixMode(true);
-		agc.setMixMode(false);
+        reverb.setMixMode(true);
+        chorus.setMixMode(true);
+        agc.setMixMode(false);
 
-		chorus.setInput(0, buffers[CHANNEL_EFFECT2]);
-		chorus.setOutput(0, buffers[CHANNEL_LEFT]);
-		if (nrofchannels != 1)
-			chorus.setOutput(1, buffers[CHANNEL_RIGHT]);
-		chorus.setOutput(2, buffers[CHANNEL_EFFECT1]);
+        chorus.setInput(0, buffers[CHANNEL_EFFECT2]);
+        chorus.setOutput(0, buffers[CHANNEL_LEFT]);
+        if (nrofchannels != 1)
+            chorus.setOutput(1, buffers[CHANNEL_RIGHT]);
+        chorus.setOutput(2, buffers[CHANNEL_EFFECT1]);
 
-		reverb.setInput(0, buffers[CHANNEL_EFFECT1]);
-		reverb.setOutput(0, buffers[CHANNEL_LEFT]);
-		if (nrofchannels != 1)
-			reverb.setOutput(1, buffers[CHANNEL_RIGHT]);
+        reverb.setInput(0, buffers[CHANNEL_EFFECT1]);
+        reverb.setOutput(0, buffers[CHANNEL_LEFT]);
+        if (nrofchannels != 1)
+            reverb.setOutput(1, buffers[CHANNEL_RIGHT]);
 
-		agc.setInput(0, buffers[CHANNEL_LEFT]);
-		if (nrofchannels != 1)
-			agc.setInput(1, buffers[CHANNEL_RIGHT]);
-		agc.setOutput(0, buffers[CHANNEL_LEFT]);
-		if (nrofchannels != 1)
-			agc.setOutput(1, buffers[CHANNEL_RIGHT]);
+        agc.setInput(0, buffers[CHANNEL_LEFT]);
+        if (nrofchannels != 1)
+            agc.setInput(1, buffers[CHANNEL_RIGHT]);
+        agc.setOutput(0, buffers[CHANNEL_LEFT]);
+        if (nrofchannels != 1)
+            agc.setOutput(1, buffers[CHANNEL_RIGHT]);
 
-		InputStream in = new InputStream() {
+        InputStream in = new InputStream() {
 
-			private SoftAudioBuffer[] buffers = SoftMixingMainMixer.this.buffers;
+            private SoftAudioBuffer[] buffers = SoftMixingMainMixer.this.buffers;
 
-			private int nrofchannels = SoftMixingMainMixer.this.mixer
-					.getFormat().getChannels();
+            private int nrofchannels = SoftMixingMainMixer.this.mixer
+                    .getFormat().getChannels();
 
-			private int buffersize = buffers[0].getSize();
+            private int buffersize = buffers[0].getSize();
 
-			private byte[] bbuffer = new byte[buffersize
-					* (SoftMixingMainMixer.this.mixer.getFormat()
-							.getSampleSizeInBits() / 8) * nrofchannels];
+            private byte[] bbuffer = new byte[buffersize
+                    * (SoftMixingMainMixer.this.mixer.getFormat()
+                            .getSampleSizeInBits() / 8) * nrofchannels];
 
-			private int bbuffer_pos = 0;
+            private int bbuffer_pos = 0;
 
-			private byte[] single = new byte[1];
+            private byte[] single = new byte[1];
 
-			public void fillBuffer() {
-				processAudioBuffers();
-				for (int i = 0; i < nrofchannels; i++)
-					buffers[i].get(bbuffer, i);
-				bbuffer_pos = 0;
-			}
+            public void fillBuffer() {
+                processAudioBuffers();
+                for (int i = 0; i < nrofchannels; i++)
+                    buffers[i].get(bbuffer, i);
+                bbuffer_pos = 0;
+            }
 
-			public int read(byte[] b, int off, int len) {
-				int bbuffer_len = bbuffer.length;
-				int offlen = off + len;
-				byte[] bbuffer = this.bbuffer;
-				while (off < offlen)
-					if (available() == 0)
-						fillBuffer();
-					else {
-						int bbuffer_pos = this.bbuffer_pos;
-						while (off < offlen && bbuffer_pos < bbuffer_len)
-							b[off++] = bbuffer[bbuffer_pos++];
-						this.bbuffer_pos = bbuffer_pos;
-					}
-				return len;
-			}
+            public int read(byte[] b, int off, int len) {
+                int bbuffer_len = bbuffer.length;
+                int offlen = off + len;
+                byte[] bbuffer = this.bbuffer;
+                while (off < offlen)
+                    if (available() == 0)
+                        fillBuffer();
+                    else {
+                        int bbuffer_pos = this.bbuffer_pos;
+                        while (off < offlen && bbuffer_pos < bbuffer_len)
+                            b[off++] = bbuffer[bbuffer_pos++];
+                        this.bbuffer_pos = bbuffer_pos;
+                    }
+                return len;
+            }
 
-			public int read() throws IOException {
-				int ret = read(single);
-				if (ret == -1)
-					return -1;
-				return single[0] & 0xFF;
-			}
+            public int read() throws IOException {
+                int ret = read(single);
+                if (ret == -1)
+                    return -1;
+                return single[0] & 0xFF;
+            }
 
-			public int available() {
-				return bbuffer.length - bbuffer_pos;
-			}
+            public int available() {
+                return bbuffer.length - bbuffer_pos;
+            }
 
-			public void close() {
-				SoftMixingMainMixer.this.mixer.close();
-			}
+            public void close() {
+                SoftMixingMainMixer.this.mixer.close();
+            }
 
-		};
+        };
 
-		ais = new AudioInputStream(in, mixer.getFormat(),
-				AudioSystem.NOT_SPECIFIED);
+        ais = new AudioInputStream(in, mixer.getFormat(),
+                AudioSystem.NOT_SPECIFIED);
 
-	}
+    }
 
-	public void openLine(SoftMixingDataLine line) {
-		synchronized (control_mutex) {
-			openLinesList.add(line);
-			openLines = openLinesList
-					.toArray(new SoftMixingDataLine[openLinesList.size()]);
-		}
-	}
+    public void openLine(SoftMixingDataLine line) {
+        synchronized (control_mutex) {
+            openLinesList.add(line);
+            openLines = openLinesList
+                    .toArray(new SoftMixingDataLine[openLinesList.size()]);
+        }
+    }
 
-	public void closeLine(SoftMixingDataLine line) {
-		synchronized (control_mutex) {
-			openLinesList.remove(line);
-			openLines = openLinesList
-					.toArray(new SoftMixingDataLine[openLinesList.size()]);
-			if (openLines.length == 0)
-				if (mixer.implicitOpen)
-					mixer.close();
-		}
+    public void closeLine(SoftMixingDataLine line) {
+        synchronized (control_mutex) {
+            openLinesList.remove(line);
+            openLines = openLinesList
+                    .toArray(new SoftMixingDataLine[openLinesList.size()]);
+            if (openLines.length == 0)
+                if (mixer.implicitOpen)
+                    mixer.close();
+        }
 
-	}
+    }
 
-	public SoftMixingDataLine[] getOpenLines() {
-		synchronized (control_mutex) {
-			return openLines;
-		}
+    public SoftMixingDataLine[] getOpenLines() {
+        synchronized (control_mutex) {
+            return openLines;
+        }
 
-	}
+    }
 
-	public void close() {
-		SoftMixingDataLine[] openLines = this.openLines;
-		for (int i = 0; i < openLines.length; i++) {
-			openLines[i].close();
-		}
-	}
+    public void close() {
+        SoftMixingDataLine[] openLines = this.openLines;
+        for (int i = 0; i < openLines.length; i++) {
+            openLines[i].close();
+        }
+    }
 
 }
