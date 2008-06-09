@@ -1,3 +1,11 @@
+2008-06-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Fix implicit directory paths
+	and use of abs_top_srcdir where abs_top_builddir is
+	meant, so build works outside the source directory.
+	Also ensure JAVAC is unset during the OpenJDK build.
+	* Makefile.in: Regenerated.
+	
 2008-06-08  Mark Wielaard  <mark@klomp.org>
 
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:

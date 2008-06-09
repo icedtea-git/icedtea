@@ -53,13 +53,13 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 LINUX_DIR = linux-$(BUILD_ARCH_DIR)
 BUILD_OUTPUT_DIR = openjdk/control/build/$(LINUX_DIR)
 ICEDTEA_BUILD_DIR = \
-	$(abs_top_srcdir)/$(BUILD_OUTPUT_DIR)
+	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)
 ICEDTEA_RT = \
-	$(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
+	$(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 ICEDTEA_CLS_DIR = \
-	$(abs_top_srcdir)/$(BUILD_OUTPUT_DIR)/classes
+	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)/classes
 ICEDTEA_BOOT_DIR= \
-	$(abs_top_srcdir)/bootstrap/jdk1.6.0
+	$(abs_top_builddir)/bootstrap/jdk1.6.0
 ICEDTEA_ENDORSED_DIR = \
 	$(ICEDTEA_BOOT_DIR)/lib/endorsed
 if CORE_BUILD
@@ -81,7 +81,7 @@ ICEDTEA_ENV = \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
-	"ALT_BINARY_PLUGS_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
+	"ALT_BINARY_PLUGS_PATH=$(abs_top_builddir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
 	"ICEDTEA_RT=$(ICEDTEA_RT)" \
 	"ICEDTEA_BUILD_DIR=$(ICEDTEA_BUILD_DIR)" \
@@ -102,7 +102,8 @@ ICEDTEA_ENV = \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
-	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)"
+	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
+	"JAVAC="
 
 if WITH_CACAO
 ICEDTEA_ENV += \
@@ -126,9 +127,9 @@ env:
 
 # OpenJDK ecj build environment.
 ICEDTEA_BUILD_DIR_ECJ = \
-	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/
+	$(abs_top_builddir)/openjdk-ecj/control/build/$(LINUX_DIR)/
 ICEDTEA_CLS_DIR_ECJ = \
-	$(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/classes
+	$(abs_top_builddir)/openjdk-ecj/control/build/$(LINUX_DIR)/classes
 ICEDTEA_ENV_ECJ = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
@@ -138,7 +139,7 @@ ICEDTEA_ENV_ECJ = \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
-	"ALT_BINARY_PLUGS_PATH=$(abs_top_srcdir)/bootstrap/jdk1.7.0" \
+	"ALT_BINARY_PLUGS_PATH=$(abs_top_builddir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
 	"LIBGCJ_JAR=$(LIBGCJ_JAR)" \
 	"ICEDTEA_RT=$(ICEDTEA_RT)" \
@@ -165,7 +166,8 @@ ICEDTEA_ENV_ECJ = \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
-	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)"
+	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
+	"JAVAC="
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
@@ -225,18 +227,18 @@ clean-download:
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
-	for target in ports/hotspot/build/*/makefiles/* \
-		      ports/hotspot/src/*/*; do \
-	  link=$$(dirname $$target | sed 's/^ports/openjdk/'); \
-	  ln -sf $$PWD/$$target $$link; \
+	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
+		      $(abs_top_srcdir)/ports/hotspot/src/*/*; do \
+	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'); \
+	  ln -sf $$target $$link; \
 	done
-	ln -sf $$PWD/platform_zero openjdk/hotspot/build/linux
+	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/build/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(CACAO)" = "xno"; then \
 	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
-	  ln -sf $$PWD/jvm.cfg openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
+	  ln -sf $(abs_top_builddir)/jvm.cfg openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
 	fi
 	if ! test "x$(ICEDTEA_ZERO_BUILD)$(CACAO)" = "xno"; then \
-	  ln -sf $$PWD/ergo.c openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
+	  ln -sf $(abs_top_builddir)/ergo.c openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
 	fi
 	mkdir -p stamps
 	touch stamps/ports.stamp
@@ -344,10 +346,10 @@ stamps/patch.stamp: stamps/extract.stamp
 	do \
 	  if test x$${all_patches_ok} == "xyes" \
 	     && echo Checking $$p \
-	     && $(PATCH) -l -p0 --dry-run -s -t -f -F 0 < $$p ; \
+	     && $(PATCH) -l -p0 --dry-run -s -t -f -F 0 < $(abs_top_srcdir)/$$p ; \
 	  then \
 	    echo Applying $$p ; \
-	    $(PATCH) -l -p0 < $$p ; \
+	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
 	  else \
 	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
@@ -367,10 +369,10 @@ clean-patch:
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
-	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $$p ; \
+	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
 	  then \
 	    echo Reverting $$p ; \
-	    $(PATCH) -l -p0 -R < $$p ; \
+	    $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
 	  else \
 	    all_patches_ok=no ; \
 	  fi ; \
@@ -380,7 +382,7 @@ clean-patch:
 	fi
 
 stamps/overlay.stamp: stamps/patch.stamp
-	cp -r overlays/openjdk/* openjdk/ && touch stamps/overlay.stamp
+	cp -r $(abs_top_srcdir)/overlays/openjdk/* openjdk/ && touch stamps/overlay.stamp
 
 # OpenJDK ecj Source Preparation Targets
 # ======================================
@@ -399,24 +401,24 @@ clean-extract-ecj:
 
 # Link ports sources into tree
 stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
-	for target in ports/hotspot/build/*/makefiles/* \
-		      ports/hotspot/src/*/*; do \
-	  link=$$(dirname $$target | sed 's/^ports/openjdk-ecj/'); \
-	  ln -sf $$PWD/$$target $$link; \
+	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
+		      $(abs_top_srcdir)/ports/hotspot/src/*/*; do \
+	  link=$$(dirname $$target | sed 's/^.*ports/openjdk-ecj/'); \
+	  ln -sf $$target $$link; \
 	done
-	ln -sf $$PWD/platform_zero openjdk-ecj/hotspot/build/linux
+	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/build/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(CACAO)" = "xno"; then \
 	  mkdir -p openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
-	  ln -sf $$PWD/jvm.cfg openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
+	  ln -sf $(abs_top_builddir)/jvm.cfg openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
 	fi
 	if ! test "x$(ICEDTEA_ZERO_BUILD)$(CACAO)" = "xno"; then \
-	  ln -sf $$PWD/ergo.c openjdk-ecj/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
+	  ln -sf $(abs_top_builddir)/ergo.c openjdk-ecj/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
 	fi
 	mkdir -p stamps
 	touch stamps/ports-ecj.stamp
 
 # Patch OpenJDK for plug replacements and ecj.
-ICEDTEA_ECJ_PATCH = patches/icedtea-ecj.patch
+ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch
 
 stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
@@ -447,7 +449,7 @@ clean-patch-ecj:
 # bootstrap/icedtea.
 stamps/bootstrap-directory.stamp: stamps/icedtea-against-ecj.stamp
 	rm -rf bootstrap/icedtea
-	ln -s $(abs_top_srcdir)/openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/ bootstrap/icedtea
+	ln -s $(abs_top_builddir)/openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/ bootstrap/icedtea
 	if ! test -d bootstrap/icedtea/include; then \
 	  ln -sf $(ICEDTEA_BUILD_DIR_ECJ)/include bootstrap/icedtea/include; \
 	fi
@@ -523,16 +525,16 @@ stamps/bootstrap-directory-ecj.stamp:
 	    --with-gcj-home=/path/to/java-gcj-devel ; \
           exit 1; \
 	fi
-	if test -f bootstrap/jdk1.7.0/jre/lib/tools.jar ; \
+	if test -f $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/tools.jar ; \
 	then \
-		mkdir -p bootstrap/ecj/lib ; \
-		ln -sf $(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
-	            $(abs_top_srcdir)/bootstrap/ecj/lib/tools.jar; \
+		mkdir -p $(abs_top_builddir)/bootstrap/ecj/lib ; \
+		ln -sf $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
+	            $(abs_top_builddir)/bootstrap/ecj/lib/tools.jar; \
 	fi
-	if test -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar ; \
+	if test -f $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar ; \
 	then \
-		cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-			bootstrap/ecj/jre/lib/rt.jar; \
+		cp $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+			$(abs_top_builddir)/bootstrap/ecj/jre/lib/rt.jar; \
 	fi 
 	mkdir -p stamps
 	touch stamps/bootstrap-directory-ecj.stamp
@@ -592,10 +594,10 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	  cp -pPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
-	cp rt/net/sourceforge/jnlp/resources/about.jnlp \
+	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/about.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp rt/net/sourceforge/jnlp/resources/about.jnlp \
+	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/about.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
@@ -615,10 +617,10 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	  cp -pPRf gcjwebplugin.so \
 	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
 	fi
-	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/default.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib
-	cp rt/net/sourceforge/jnlp/resources/default.jnlp \
+	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/default.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib
 	@echo "IcedTea (debug build) is served:" \
@@ -758,34 +760,34 @@ OPENJDK_SOURCEPATH_DIRS = \
 
 # tools.jar class files.
 stamps/hotspot-tools-copy-source-files.stamp: stamps/patch.stamp stamps/overlay.stamp
-	for copy_dir in `cat tools-copy/tools-jdk-copy-files.txt` ; \
+	for copy_dir in `cat $(abs_top_srcdir)/tools-copy/tools-jdk-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -pPRf openjdk/jdk/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
-	
-	for copy_dir in `cat tools-copy/tools-langtools-copy-files.txt` ; \
+
+	for copy_dir in `cat $(abs_top_srcdir)/tools-copy/tools-langtools-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -pPRf openjdk/langtools/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
-	
-	for copy_dir in `cat tools-copy/tools-corba-copy-files.txt` ; \
+
+	for copy_dir in `cat $(abs_top_srcdir)/tools-copy/tools-corba-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -pPRf openjdk/corba/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
-	
-	for copy_dir in `cat tools-copy/tools-jaxws-copy-files.txt` ; \
+
+	for copy_dir in `cat $(abs_top_srcdir)/tools-copy/tools-jaxws-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
 	  cp -pPRf openjdk/jaxws/src/share/classes/$$copy_dir/* \
 	    hotspot-tools/$$copy_dir ; \
 	done
-	
+
 	mkdir -p stamps
 	touch stamps/hotspot-tools-copy-source-files.stamp
 
@@ -799,12 +801,12 @@ stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
             -source 1.5 \
-            -sourcepath rt:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):generated \
+            -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
             -bootclasspath '' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
 	    -source 1.5 \
-	    -sourcepath rt:hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):generated \
+	    -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
 	    -bootclasspath '' @$< ; \
 	fi
 	mkdir -p stamps
@@ -832,13 +834,13 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	if test -d bootstrap/ecj ; \
 	then \
 	  mkdir -p bootstrap/ecj/lib/; \
-	  ln -sf $(abs_top_srcdir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
-	    $(abs_top_srcdir)/bootstrap/ecj/lib/tools.jar; \
+	  ln -sf $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/tools.jar \
+	    $(abs_top_builddir)/bootstrap/ecj/lib/tools.jar; \
 	fi
- 
+
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
-	find rt -name '*.java' | sort > $@
+	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt -name '*.java' | sort -u > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt
 	mkdir -p lib/rt
@@ -846,15 +848,15 @@ stamps/rt-class-files.stamp: rt-source-files.txt
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt \
 	    -source 1.5 \
-	    -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated \
+	    -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
 	    -bootclasspath '' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
             -source 1.5 \
-            -sourcepath rt:$(OPENJDK_SOURCEPATH_DIRS):generated \
+            -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
             -bootclasspath '' @$< ; \
 	fi
-	cp -r rt/net/sourceforge/jnlp/resources \
+	cp -r $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources \
 	  lib/rt/net/sourceforge/jnlp/
 	mkdir -p stamps
 	touch stamps/rt-class-files.stamp
@@ -882,7 +884,7 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 
 # extras -- used to create about.jar for javaws.
 extra-source-files.txt:
-	find extra -name '*.java' | sort > $@
+	find $(abs_top_srcdir)/extra -name '*.java' | sort > $@
 
 stamps/extra-class-files.stamp: extra-source-files.txt \
 	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
@@ -891,7 +893,7 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
 	    -source 1.5 \
- 	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
 	    -bootclasspath '' @extra-source-files.txt ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
@@ -899,7 +901,7 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
             -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
             -bootclasspath '' @extra-source-files.txt ; \
 	fi
-	cp -r extra/net/sourceforge/jnlp/about/resources \
+	cp -r $(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources \
 	  extra-lib/net/sourceforge/jnlp/about
 	mkdir -p stamps
 	touch $@
