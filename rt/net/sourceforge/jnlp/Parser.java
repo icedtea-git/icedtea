@@ -946,10 +946,27 @@ class Parser {
             */
 
             /* NANO */
-            XMLElement xml = new XMLElement();
-            xml.parseFromReader(new InputStreamReader(input));
+            final XMLElement xml = new XMLElement();
+            final PipedInputStream pin = new PipedInputStream();
+            final PipedOutputStream pout = new PipedOutputStream(pin);
+            final InputStreamReader isr = new InputStreamReader(input);
+            
+            // Clean the jnlp xml file of all comments before passing
+            // it to the parser.
+            new Thread(
+                new Runnable(){
+                    public void run(){
+                        (new XMLElement()).sanitizeInput(isr, pout);
+                        try {
+                            pout.close();
+                        } catch (IOException ioe) {
+                            ioe.printStackTrace();
+                        }
+                    }
+                }
+            ).start();
+            xml.parseFromReader(new InputStreamReader(pin));
             Node jnlpNode = new Node(xml);
-
             return jnlpNode;
         }
         catch(Exception ex) {
