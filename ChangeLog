@@ -1,3 +1,11 @@
+2008-06-10  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Likewise.
+	* configure: Likewise.
+	* generated/sun/misc/Version.java: Likewise.
+	* generated/sun/tools/jconsole/Version.java: Likewise.
+
 2008-06-10  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-no-bcopy.patch: New.

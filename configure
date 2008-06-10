@@ -734,6 +734,7 @@ WITH_OPENJDK_FALSE
 PARALLEL_JOBS
 BUILD_ARCH_DIR
 INSTALL_ARCH_DIR
+JRE_ARCH_DIR
 JAVA
 JAVAC
 JAVAH
@@ -5992,6 +5993,7 @@ fi
 
 
 
+
 if test "${with_openjdk}" == true
 then
   JAVA=$SYSTEM_OPENJDK_DIR/bin/java
@@ -10231,11 +10233,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for XPROTO" >&5
 echo $ECHO_N "checking for XPROTO... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$XPROTO_CFLAGS"; then
-        pkg_cv_XPROTO_CFLAGS="$XPROTO_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$XPROTO_CFLAGS"; then
+    pkg_cv_XPROTO_CFLAGS="$XPROTO_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xproto\"") >&5
   ($PKG_CONFIG --exists --print-errors "xproto") 2>&5
   ac_status=$?
@@ -10245,15 +10246,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$XPROTO_LIBS"; then
-        pkg_cv_XPROTO_LIBS="$XPROTO_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$XPROTO_LIBS"; then
+    pkg_cv_XPROTO_LIBS="$XPROTO_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xproto\"") >&5
   ($PKG_CONFIG --exists --print-errors "xproto") 2>&5
   ac_status=$?
@@ -10263,9 +10262,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -10278,9 +10276,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        XPROTO_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "xproto"`
+	        XPROTO_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "xproto" 2>&1`
         else
-	        XPROTO_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "xproto"`
+	        XPROTO_PKG_ERRORS=`$PKG_CONFIG --print-errors "xproto" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$XPROTO_PKG_ERRORS" >&5
@@ -10313,11 +10311,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for XT" >&5
 echo $ECHO_N "checking for XT... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$XT_CFLAGS"; then
-        pkg_cv_XT_CFLAGS="$XT_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$XT_CFLAGS"; then
+    pkg_cv_XT_CFLAGS="$XT_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xt\"") >&5
   ($PKG_CONFIG --exists --print-errors "xt") 2>&5
   ac_status=$?
@@ -10327,15 +10324,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$XT_LIBS"; then
-        pkg_cv_XT_LIBS="$XT_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$XT_LIBS"; then
+    pkg_cv_XT_LIBS="$XT_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xt\"") >&5
   ($PKG_CONFIG --exists --print-errors "xt") 2>&5
   ac_status=$?
@@ -10345,9 +10340,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -10360,9 +10354,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        XT_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "xt"`
+	        XT_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "xt" 2>&1`
         else
-	        XT_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "xt"`
+	        XT_PKG_ERRORS=`$PKG_CONFIG --print-errors "xt" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$XT_PKG_ERRORS" >&5
@@ -10395,11 +10389,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for XP" >&5
 echo $ECHO_N "checking for XP... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$XP_CFLAGS"; then
-        pkg_cv_XP_CFLAGS="$XP_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$XP_CFLAGS"; then
+    pkg_cv_XP_CFLAGS="$XP_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xp\"") >&5
   ($PKG_CONFIG --exists --print-errors "xp") 2>&5
   ac_status=$?
@@ -10409,15 +10402,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$XP_LIBS"; then
-        pkg_cv_XP_LIBS="$XP_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$XP_LIBS"; then
+    pkg_cv_XP_LIBS="$XP_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xp\"") >&5
   ($PKG_CONFIG --exists --print-errors "xp") 2>&5
   ac_status=$?
@@ -10427,9 +10418,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -10442,9 +10432,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        XP_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "xp"`
+	        XP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "xp" 2>&1`
         else
-	        XP_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "xp"`
+	        XP_PKG_ERRORS=`$PKG_CONFIG --print-errors "xp" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$XP_PKG_ERRORS" >&5
@@ -10477,11 +10467,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for X11" >&5
 echo $ECHO_N "checking for X11... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$X11_CFLAGS"; then
-        pkg_cv_X11_CFLAGS="$X11_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$X11_CFLAGS"; then
+    pkg_cv_X11_CFLAGS="$X11_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"x11\"") >&5
   ($PKG_CONFIG --exists --print-errors "x11") 2>&5
   ac_status=$?
@@ -10491,15 +10480,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$X11_LIBS"; then
-        pkg_cv_X11_LIBS="$X11_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$X11_LIBS"; then
+    pkg_cv_X11_LIBS="$X11_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"x11\"") >&5
   ($PKG_CONFIG --exists --print-errors "x11") 2>&5
   ac_status=$?
@@ -10509,9 +10496,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -10524,9 +10510,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        X11_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "x11"`
+	        X11_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "x11" 2>&1`
         else
-	        X11_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "x11"`
+	        X11_PKG_ERRORS=`$PKG_CONFIG --print-errors "x11" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$X11_PKG_ERRORS" >&5
@@ -10559,11 +10545,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for XINERAMA" >&5
 echo $ECHO_N "checking for XINERAMA... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$XINERAMA_CFLAGS"; then
-        pkg_cv_XINERAMA_CFLAGS="$XINERAMA_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$XINERAMA_CFLAGS"; then
+    pkg_cv_XINERAMA_CFLAGS="$XINERAMA_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xinerama\"") >&5
   ($PKG_CONFIG --exists --print-errors "xinerama") 2>&5
   ac_status=$?
@@ -10573,15 +10558,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$XINERAMA_LIBS"; then
-        pkg_cv_XINERAMA_LIBS="$XINERAMA_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$XINERAMA_LIBS"; then
+    pkg_cv_XINERAMA_LIBS="$XINERAMA_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xinerama\"") >&5
   ($PKG_CONFIG --exists --print-errors "xinerama") 2>&5
   ac_status=$?
@@ -10591,9 +10574,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -10606,9 +10588,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        XINERAMA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "xinerama"`
+	        XINERAMA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "xinerama" 2>&1`
         else
-	        XINERAMA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "xinerama"`
+	        XINERAMA_PKG_ERRORS=`$PKG_CONFIG --print-errors "xinerama" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$XINERAMA_PKG_ERRORS" >&5
@@ -10642,11 +10624,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for LIBPNG" >&5
 echo $ECHO_N "checking for LIBPNG... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$LIBPNG_CFLAGS"; then
-        pkg_cv_LIBPNG_CFLAGS="$LIBPNG_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$LIBPNG_CFLAGS"; then
+    pkg_cv_LIBPNG_CFLAGS="$LIBPNG_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libpng\"") >&5
   ($PKG_CONFIG --exists --print-errors "libpng") 2>&5
   ac_status=$?
@@ -10656,15 +10637,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$LIBPNG_LIBS"; then
-        pkg_cv_LIBPNG_LIBS="$LIBPNG_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$LIBPNG_LIBS"; then
+    pkg_cv_LIBPNG_LIBS="$LIBPNG_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libpng\"") >&5
   ($PKG_CONFIG --exists --print-errors "libpng") 2>&5
   ac_status=$?
@@ -10674,9 +10653,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -10689,9 +10667,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        LIBPNG_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "libpng"`
+	        LIBPNG_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libpng" 2>&1`
         else
-	        LIBPNG_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "libpng"`
+	        LIBPNG_PKG_ERRORS=`$PKG_CONFIG --print-errors "libpng" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$LIBPNG_PKG_ERRORS" >&5
@@ -10725,11 +10703,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for XTST" >&5
 echo $ECHO_N "checking for XTST... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$XTST_CFLAGS"; then
-        pkg_cv_XTST_CFLAGS="$XTST_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$XTST_CFLAGS"; then
+    pkg_cv_XTST_CFLAGS="$XTST_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xtst\"") >&5
   ($PKG_CONFIG --exists --print-errors "xtst") 2>&5
   ac_status=$?
@@ -10739,15 +10716,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$XTST_LIBS"; then
-        pkg_cv_XTST_LIBS="$XTST_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$XTST_LIBS"; then
+    pkg_cv_XTST_LIBS="$XTST_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xtst\"") >&5
   ($PKG_CONFIG --exists --print-errors "xtst") 2>&5
   ac_status=$?
@@ -10757,9 +10732,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -10772,9 +10746,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        XTST_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "xtst"`
+	        XTST_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "xtst" 2>&1`
         else
-	        XTST_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "xtst"`
+	        XTST_PKG_ERRORS=`$PKG_CONFIG --print-errors "xtst" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$XTST_PKG_ERRORS" >&5
@@ -10807,11 +10781,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for FREETYPE2" >&5
 echo $ECHO_N "checking for FREETYPE2... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$FREETYPE2_CFLAGS"; then
-        pkg_cv_FREETYPE2_CFLAGS="$FREETYPE2_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$FREETYPE2_CFLAGS"; then
+    pkg_cv_FREETYPE2_CFLAGS="$FREETYPE2_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"freetype2\"") >&5
   ($PKG_CONFIG --exists --print-errors "freetype2") 2>&5
   ac_status=$?
@@ -10821,15 +10794,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$FREETYPE2_LIBS"; then
-        pkg_cv_FREETYPE2_LIBS="$FREETYPE2_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$FREETYPE2_LIBS"; then
+    pkg_cv_FREETYPE2_LIBS="$FREETYPE2_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"freetype2\"") >&5
   ($PKG_CONFIG --exists --print-errors "freetype2") 2>&5
   ac_status=$?
@@ -10839,9 +10810,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -10854,9 +10824,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        FREETYPE2_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "freetype2"`
+	        FREETYPE2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "freetype2" 2>&1`
         else
-	        FREETYPE2_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "freetype2"`
+	        FREETYPE2_PKG_ERRORS=`$PKG_CONFIG --print-errors "freetype2" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$FREETYPE2_PKG_ERRORS" >&5
@@ -10890,11 +10860,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for ALSA" >&5
 echo $ECHO_N "checking for ALSA... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$ALSA_CFLAGS"; then
-        pkg_cv_ALSA_CFLAGS="$ALSA_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$ALSA_CFLAGS"; then
+    pkg_cv_ALSA_CFLAGS="$ALSA_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"alsa\"") >&5
   ($PKG_CONFIG --exists --print-errors "alsa") 2>&5
   ac_status=$?
@@ -10904,15 +10873,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$ALSA_LIBS"; then
-        pkg_cv_ALSA_LIBS="$ALSA_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$ALSA_LIBS"; then
+    pkg_cv_ALSA_LIBS="$ALSA_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"alsa\"") >&5
   ($PKG_CONFIG --exists --print-errors "alsa") 2>&5
   ac_status=$?
@@ -10922,9 +10889,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -10937,9 +10903,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        ALSA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "alsa"`
+	        ALSA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "alsa" 2>&1`
         else
-	        ALSA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "alsa"`
+	        ALSA_PKG_ERRORS=`$PKG_CONFIG --print-errors "alsa" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$ALSA_PKG_ERRORS" >&5
@@ -10973,11 +10939,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
 echo $ECHO_N "checking for MOZILLA... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_CFLAGS"; then
-        pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_CFLAGS"; then
+    pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"mozilla-plugin libxul-unstable\"") >&5
   ($PKG_CONFIG --exists --print-errors "mozilla-plugin libxul-unstable") 2>&5
   ac_status=$?
@@ -10987,15 +10952,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_LIBS"; then
-        pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_LIBS"; then
+    pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"mozilla-plugin libxul-unstable\"") >&5
   ($PKG_CONFIG --exists --print-errors "mozilla-plugin libxul-unstable") 2>&5
   ac_status=$?
@@ -11005,9 +10968,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -11020,9 +10982,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "mozilla-plugin libxul-unstable"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "mozilla-plugin libxul-unstable" 2>&1`
         else
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "mozilla-plugin libxul-unstable"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --print-errors "mozilla-plugin libxul-unstable" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$MOZILLA_PKG_ERRORS" >&5
@@ -11048,11 +11010,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
 echo $ECHO_N "checking for MOZILLA... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_CFLAGS"; then
-        pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_CFLAGS"; then
+    pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"mozilla-plugin\"") >&5
   ($PKG_CONFIG --exists --print-errors "mozilla-plugin") 2>&5
   ac_status=$?
@@ -11062,15 +11023,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_LIBS"; then
-        pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_LIBS"; then
+    pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"mozilla-plugin\"") >&5
   ($PKG_CONFIG --exists --print-errors "mozilla-plugin") 2>&5
   ac_status=$?
@@ -11080,9 +11039,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -11095,9 +11053,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "mozilla-plugin"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "mozilla-plugin" 2>&1`
         else
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "mozilla-plugin"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --print-errors "mozilla-plugin" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$MOZILLA_PKG_ERRORS" >&5
@@ -11123,11 +11081,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
 echo $ECHO_N "checking for MOZILLA... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_CFLAGS"; then
-        pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_CFLAGS"; then
+    pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"firefox-plugin firefox-xpcom\"") >&5
   ($PKG_CONFIG --exists --print-errors "firefox-plugin firefox-xpcom") 2>&5
   ac_status=$?
@@ -11137,15 +11094,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_LIBS"; then
-        pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_LIBS"; then
+    pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"firefox-plugin firefox-xpcom\"") >&5
   ($PKG_CONFIG --exists --print-errors "firefox-plugin firefox-xpcom") 2>&5
   ac_status=$?
@@ -11155,9 +11110,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -11170,9 +11124,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "firefox-plugin firefox-xpcom"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "firefox-plugin firefox-xpcom" 2>&1`
         else
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "firefox-plugin firefox-xpcom"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --print-errors "firefox-plugin firefox-xpcom" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$MOZILLA_PKG_ERRORS" >&5
@@ -11198,11 +11152,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
 echo $ECHO_N "checking for MOZILLA... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_CFLAGS"; then
-        pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_CFLAGS"; then
+    pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xulrunner-plugin xulrunner-xpcom\"") >&5
   ($PKG_CONFIG --exists --print-errors "xulrunner-plugin xulrunner-xpcom") 2>&5
   ac_status=$?
@@ -11212,15 +11165,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_LIBS"; then
-        pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_LIBS"; then
+    pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"xulrunner-plugin xulrunner-xpcom\"") >&5
   ($PKG_CONFIG --exists --print-errors "xulrunner-plugin xulrunner-xpcom") 2>&5
   ac_status=$?
@@ -11230,9 +11181,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -11245,9 +11195,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "xulrunner-plugin xulrunner-xpcom"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "xulrunner-plugin xulrunner-xpcom" 2>&1`
         else
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "xulrunner-plugin xulrunner-xpcom"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --print-errors "xulrunner-plugin xulrunner-xpcom" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$MOZILLA_PKG_ERRORS" >&5
@@ -11273,11 +11223,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
 echo $ECHO_N "checking for MOZILLA... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_CFLAGS"; then
-        pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_CFLAGS"; then
+    pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"mozilla-firefox-plugin mozilla-firefox-xpcom\"") >&5
   ($PKG_CONFIG --exists --print-errors "mozilla-firefox-plugin mozilla-firefox-xpcom") 2>&5
   ac_status=$?
@@ -11287,15 +11236,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_LIBS"; then
-        pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_LIBS"; then
+    pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"mozilla-firefox-plugin mozilla-firefox-xpcom\"") >&5
   ($PKG_CONFIG --exists --print-errors "mozilla-firefox-plugin mozilla-firefox-xpcom") 2>&5
   ac_status=$?
@@ -11305,9 +11252,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -11320,9 +11266,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "mozilla-firefox-plugin mozilla-firefox-xpcom"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "mozilla-firefox-plugin mozilla-firefox-xpcom" 2>&1`
         else
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "mozilla-firefox-plugin mozilla-firefox-xpcom"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --print-errors "mozilla-firefox-plugin mozilla-firefox-xpcom" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$MOZILLA_PKG_ERRORS" >&5
@@ -11348,11 +11294,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
 echo $ECHO_N "checking for MOZILLA... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_CFLAGS"; then
-        pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_CFLAGS"; then
+    pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"seamonkey-plugin seamonkey-xpcom\"") >&5
   ($PKG_CONFIG --exists --print-errors "seamonkey-plugin seamonkey-xpcom") 2>&5
   ac_status=$?
@@ -11362,15 +11307,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_LIBS"; then
-        pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_LIBS"; then
+    pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"seamonkey-plugin seamonkey-xpcom\"") >&5
   ($PKG_CONFIG --exists --print-errors "seamonkey-plugin seamonkey-xpcom") 2>&5
   ac_status=$?
@@ -11380,9 +11323,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -11395,9 +11337,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "seamonkey-plugin seamonkey-xpcom"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "seamonkey-plugin seamonkey-xpcom" 2>&1`
         else
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "seamonkey-plugin seamonkey-xpcom"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --print-errors "seamonkey-plugin seamonkey-xpcom" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$MOZILLA_PKG_ERRORS" >&5
@@ -11423,11 +11365,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
 echo $ECHO_N "checking for MOZILLA... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_CFLAGS"; then
-        pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_CFLAGS"; then
+    pkg_cv_MOZILLA_CFLAGS="$MOZILLA_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"iceape-plugin iceape-xpcom\"") >&5
   ($PKG_CONFIG --exists --print-errors "iceape-plugin iceape-xpcom") 2>&5
   ac_status=$?
@@ -11437,15 +11378,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$MOZILLA_LIBS"; then
-        pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$MOZILLA_LIBS"; then
+    pkg_cv_MOZILLA_LIBS="$MOZILLA_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"iceape-plugin iceape-xpcom\"") >&5
   ($PKG_CONFIG --exists --print-errors "iceape-plugin iceape-xpcom") 2>&5
   ac_status=$?
@@ -11455,9 +11394,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -11470,9 +11408,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "iceape-plugin iceape-xpcom"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "iceape-plugin iceape-xpcom" 2>&1`
         else
-	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "iceape-plugin iceape-xpcom"`
+	        MOZILLA_PKG_ERRORS=`$PKG_CONFIG --print-errors "iceape-plugin iceape-xpcom" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$MOZILLA_PKG_ERRORS" >&5
@@ -11503,11 +11441,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for GLIB" >&5
 echo $ECHO_N "checking for GLIB... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$GLIB_CFLAGS"; then
-        pkg_cv_GLIB_CFLAGS="$GLIB_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$GLIB_CFLAGS"; then
+    pkg_cv_GLIB_CFLAGS="$GLIB_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"glib-2.0\"") >&5
   ($PKG_CONFIG --exists --print-errors "glib-2.0") 2>&5
   ac_status=$?
@@ -11517,15 +11454,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$GLIB_LIBS"; then
-        pkg_cv_GLIB_LIBS="$GLIB_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$GLIB_LIBS"; then
+    pkg_cv_GLIB_LIBS="$GLIB_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"glib-2.0\"") >&5
   ($PKG_CONFIG --exists --print-errors "glib-2.0") 2>&5
   ac_status=$?
@@ -11535,9 +11470,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -11550,9 +11484,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GLIB_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "glib-2.0"`
+	        GLIB_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "glib-2.0" 2>&1`
         else
-	        GLIB_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0"`
+	        GLIB_PKG_ERRORS=`$PKG_CONFIG --print-errors "glib-2.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GLIB_PKG_ERRORS" >&5
@@ -11614,11 +11548,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for GTK" >&5
 echo $ECHO_N "checking for GTK... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$GTK_CFLAGS"; then
-        pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$GTK_CFLAGS"; then
+    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0\"") >&5
   ($PKG_CONFIG --exists --print-errors "gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0") 2>&5
   ac_status=$?
@@ -11628,15 +11561,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$GTK_LIBS"; then
-        pkg_cv_GTK_LIBS="$GTK_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$GTK_LIBS"; then
+    pkg_cv_GTK_LIBS="$GTK_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0\"") >&5
   ($PKG_CONFIG --exists --print-errors "gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0") 2>&5
   ac_status=$?
@@ -11646,9 +11577,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -11661,9 +11591,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0"`
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0" 2>&1`
         else
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0"`
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GTK_PKG_ERRORS" >&5
@@ -11735,11 +11665,10 @@ pkg_failed=no
 { echo "$as_me:$LINENO: checking for LIBFFI" >&5
 echo $ECHO_N "checking for LIBFFI... $ECHO_C" >&6; }
 
-if test -n "$PKG_CONFIG"; then
-    if test -n "$LIBFFI_CFLAGS"; then
-        pkg_cv_LIBFFI_CFLAGS="$LIBFFI_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$LIBFFI_CFLAGS"; then
+    pkg_cv_LIBFFI_CFLAGS="$LIBFFI_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libffi\"") >&5
   ($PKG_CONFIG --exists --print-errors "libffi") 2>&5
   ac_status=$?
@@ -11749,15 +11678,13 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$LIBFFI_LIBS"; then
-        pkg_cv_LIBFFI_LIBS="$LIBFFI_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
+if test -n "$LIBFFI_LIBS"; then
+    pkg_cv_LIBFFI_LIBS="$LIBFFI_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
     { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libffi\"") >&5
   ($PKG_CONFIG --exists --print-errors "libffi") 2>&5
   ac_status=$?
@@ -11767,9 +11694,8 @@ if test -n "$PKG_CONFIG"; then
 else
   pkg_failed=yes
 fi
-    fi
-else
-	pkg_failed=untried
+ else
+    pkg_failed=untried
 fi
 
 
@@ -11782,9 +11708,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        LIBFFI_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "libffi"`
+	        LIBFFI_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libffi" 2>&1`
         else
-	        LIBFFI_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "libffi"`
+	        LIBFFI_PKG_ERRORS=`$PKG_CONFIG --print-errors "libffi" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$LIBFFI_PKG_ERRORS" >&5
@@ -12985,6 +12911,7 @@ WITH_OPENJDK_FALSE!$WITH_OPENJDK_FALSE$ac_delim
 PARALLEL_JOBS!$PARALLEL_JOBS$ac_delim
 BUILD_ARCH_DIR!$BUILD_ARCH_DIR$ac_delim
 INSTALL_ARCH_DIR!$INSTALL_ARCH_DIR$ac_delim
+JRE_ARCH_DIR!$JRE_ARCH_DIR$ac_delim
 JAVA!$JAVA$ac_delim
 JAVAC!$JAVAC$ac_delim
 JAVAH!$JAVAH$ac_delim
@@ -13054,7 +12981,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 89; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 90; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
