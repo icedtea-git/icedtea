@@ -1,3 +1,15 @@
+2008-06-10  Tom Callaway <tcallawa@redhat.com>
+	    Dennis Gilmore <dennis@ausil.us>
+
+	* patches/icedtea-sparc64-linux.patch,
+	patches/icedtea-sparc-ptracefix.patch,
+	patches/icedtea-sparc-trapsfix.patch: New.
+	* Makefile.am (ICEDTEA_PATCHES): Add above patches.
+	* Makefile.am (stamps/bootstrap-directory-ecj.stamp): Create
+	symlink to $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR).
+	* acinclude.m4: Set JRE_ARCH_DIR.
+	* Makefile.in, configure: Regenerate.
+
 2008-06-09  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/Parser.java: Remove comments from xml before

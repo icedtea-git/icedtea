@@ -318,6 +318,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-gervill.patch \
 	patches/icedtea-directaudio-close-trick.patch \
 	patches/icedtea-sparc.patch \
+	patches/icedtea-sparc64.patch \
+	patches/icedtea-sparc-ptracefix.patch \
+	patches/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
@@ -511,8 +514,13 @@ stamps/bootstrap-directory-ecj.stamp:
 	if test -d $(SYSTEM_GCJ_DIR); \
 	then \
 	  mkdir -p bootstrap/ecj/jre/lib; \
-	  ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(INSTALL_ARCH_DIR) \
+	  ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR) \
 	    bootstrap/ecj/jre/lib/; \
+	  if ! test -d /jre/lib/$(INSTALL_ARCH_DIR); \
+	  then \
+	    ln -sf ./$(JRE_ARCH_DIR) \
+	      bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
+	  fi; \
 	  mkdir -p bootstrap/ecj/include; \
 	  for i in $(SYSTEM_GCJ_DIR)/include/*; do \
 	    test -r $$i | continue; \
