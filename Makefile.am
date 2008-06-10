@@ -2,6 +2,8 @@ OPENJDK_DATE = 30_may_2008
 OPENJDK_MD5SUM = 98e9eb16615605f76056135b0eb0b39f
 OPENJDK_VERSION = b10
 
+JSCHEME_DIR = openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil
+
 if NETX_PLUGIN
 NETX_PATCH = patches/icedtea-netx-plugin.patch
 else
@@ -319,6 +321,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-directaudio-close-trick.patch \
 	patches/icedtea-sparc.patch \
 	patches/icedtea-override-redirect-metacity.patch \
+	patches/icedtea-jscheme.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
@@ -333,6 +336,8 @@ stamps/extract.stamp: stamps/download.stamp
 	  mkdir openjdk ; \
 	  $(TAR) xzf $(OPENJDK_SRC_ZIP) -C openjdk; \
 	  chmod -R ug+w openjdk ; \
+	  rm -rf $(JSCHEME_DIR)/lib; \
+	  rm -rf $(JSCHEME_DIR)/scripts; \
 	fi
 	mkdir -p stamps
 	touch stamps/extract.stamp
