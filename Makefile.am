@@ -322,6 +322,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-sparc-ptracefix.patch \
 	patches/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
+	patches/icedtea-no-bcopy.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
