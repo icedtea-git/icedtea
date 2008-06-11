@@ -1,3 +1,13 @@
+2008-06-11  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added JDK_UPDATE_VERSION to environment. Some applets,
+	like the Sun's verify Java version applet, check for the "_" in the
+	version string. Our version string format is now correct:
+	java version "1.6.0_0"
+	OpenJDK  Runtime Environment (build 1.6.0_0-b10)
+	OpenJDK Server VM (build 1.6.0_0-b10, mixed mode)
+	* Makefile.in: Regenerated.
+
 2008-06-10  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.in: Regenerated.
