@@ -9,6 +9,42 @@
 	tree.
 	* patches/icedtea-jscheme.patch: Added.
 	
+2008-06-11  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added JDK_UPDATE_VERSION to environment. Some applets,
+	like the Sun's verify Java version applet, check for the "_" in the
+	version string. Our version string format is now correct:
+	java version "1.6.0_0"
+	OpenJDK  Runtime Environment (build 1.6.0_0-b10)
+	OpenJDK Server VM (build 1.6.0_0-b10, mixed mode)
+	* Makefile.in: Regenerated.
+
+2008-06-10  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Likewise.
+	* configure: Likewise.
+	* generated/sun/misc/Version.java: Likewise.
+	* generated/sun/tools/jconsole/Version.java: Likewise.
+
+2008-06-10  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-no-bcopy.patch: New.
+	* Makefile.am (ICEDTEA_PATCHES): Add patch.
+	* Makefile.in: Regenerate.
+
+2008-06-10  Tom Callaway <tcallawa@redhat.com>
+	    Dennis Gilmore <dennis@ausil.us>
+
+	* patches/icedtea-sparc64-linux.patch,
+	patches/icedtea-sparc-ptracefix.patch,
+	patches/icedtea-sparc-trapsfix.patch: New.
+	* Makefile.am (ICEDTEA_PATCHES): Add above patches.
+	* Makefile.am (stamps/bootstrap-directory-ecj.stamp): Create
+	symlink to $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR).
+	* acinclude.m4: Set JRE_ARCH_DIR.
+	* Makefile.in, configure: Regenerate.
+
 2008-06-09  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/Parser.java: Remove comments from xml before

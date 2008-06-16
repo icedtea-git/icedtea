@@ -36,10 +36,10 @@ public class Version {
         "1.6.0";
 
     private static final String java_runtime_name =
-        "IcedTea Runtime Environment";
+        "OpenJDK  Runtime Environment";
 
     private static final String java_runtime_version =
-        "1.6.0-b09";
+        "1.6.0-b10";
 
     static {
         init();

@@ -64,6 +64,7 @@ ICEDTEA_BOOT_DIR= \
 	$(abs_top_builddir)/bootstrap/jdk1.6.0
 ICEDTEA_ENDORSED_DIR = \
 	$(ICEDTEA_BOOT_DIR)/lib/endorsed
+JDK_UPDATE_VERSION = 0
 if CORE_BUILD
   ICEDTEA_CORE_BUILD = yes
 else
@@ -78,8 +79,9 @@ ICEDTEA_ENV = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
         "BUILD_NUMBER=$(OPENJDK_VERSION)" \
-        "JRE_RELEASE_VERSION=1.6.0-$(OPENJDK_VERSION)" \
-        "HOTSPOT_RELEASE_VERSION=1.6.0-$(OPENJDK_VERSION)" \
+	"JDK_UPDATE_VERSION=$(JDK_UPDATE_VERSION)" \
+        "JRE_RELEASE_VERSION=1.6.0_$(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)" \
+        "HOTSPOT_RELEASE_VERSION=1.6.0_$(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)" \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
@@ -136,8 +138,9 @@ ICEDTEA_ENV_ECJ = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
 	"BUILD_NUMBER=$(OPENJDK_VERSION)" \
-        "JRE_RELEASE_VERSION=1.6.0-$(OPENJDK_VERSION)" \
-        "HOTSPOT_RELEASE_VERSION=1.6.0-$(OPENJDK_VERSION)" \
+	"JDK_UPDATE_VERSION=$(JDK_UPDATE_VERSION)" \
+        "JRE_RELEASE_VERSION=1.6.0_$(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)" \
+        "HOTSPOT_RELEASE_VERSION=1.6.0_$(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)" \
 	"LANG=C" \
 	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
@@ -320,7 +323,11 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-gervill.patch \
 	patches/icedtea-directaudio-close-trick.patch \
 	patches/icedtea-sparc.patch \
+	patches/icedtea-sparc64-linux.patch \
+	patches/icedtea-sparc-ptracefix.patch \
+	patches/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
+	patches/icedtea-no-bcopy.patch \
 	patches/icedtea-jscheme.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
@@ -516,8 +523,13 @@ stamps/bootstrap-directory-ecj.stamp:
 	if test -d $(SYSTEM_GCJ_DIR); \
 	then \
 	  mkdir -p bootstrap/ecj/jre/lib; \
-	  ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(INSTALL_ARCH_DIR) \
+	  ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR) \
 	    bootstrap/ecj/jre/lib/; \
+	  if ! test -d /jre/lib/$(INSTALL_ARCH_DIR); \
+	  then \
+	    ln -sf ./$(JRE_ARCH_DIR) \
+	      bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
+	  fi; \
 	  mkdir -p bootstrap/ecj/include; \
 	  for i in $(SYSTEM_GCJ_DIR)/include/*; do \
 	    test -r $$i | continue; \
