@@ -329,6 +329,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-no-bcopy.patch \
 	patches/icedtea-jscheme.patch \
+	patches/icedtea-dnd-updatecursor.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 

@@ -1,3 +1,9 @@
+2008-06-18  Keith Seitz  <keiths@redhat.com>
+
+	* patches/icedtea-dnd-updatecursor.patch: New file.
+	* Makefile.am (ICEDTEA_PATHCES): Add above patch.
+	* Makefile.in: Regenerated.
+
 2008-06-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR icedtea/140:

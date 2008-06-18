@@ -432,7 +432,8 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-no-bcopy.patch patches/icedtea-jscheme.patch \
-	$(GCC_PATCH) $(DISTRIBUTION_PATCHES) $(am__append_7)
+	patches/icedtea-dnd-updatecursor.patch $(GCC_PATCH) \
+	$(DISTRIBUTION_PATCHES) $(am__append_7)
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch
