@@ -330,6 +330,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-no-bcopy.patch \
 	patches/icedtea-jscheme.patch \
 	patches/icedtea-dnd-updatecursor.patch \
+	patches/icedtea-component.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 

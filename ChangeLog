@@ -1,3 +1,10 @@
+2008-06-19  Lillian Angel  <langel@redhat.com>
+
+	Fixes Bug #159
+	* patches/icedtea-component.patch: New file.
+	* Makefile.am (ICEDTEA_PATHCES): Add above patch.
+	* Makefile.in: Regenerated.
+
 2008-06-18  Keith Seitz  <keiths@redhat.com>
 
 	* patches/icedtea-dnd-updatecursor.patch: New file.
