@@ -176,7 +176,7 @@ diff -r 79d639c8a75f openjdk/hotspot/make/Makefile
 diff -r 79d639c8a75f openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
 --- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-02-12 04:14:24.000000000 -0500
 +++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-02-14 17:39:45.000000000 -0500
-@@ -92,8 +92,12 @@
+@@ -89,8 +89,12 @@
  #ifdef TIERED
    #define VMTYPE "Server"
  #else
