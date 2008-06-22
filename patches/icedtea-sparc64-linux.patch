@@ -1,17 +1,6 @@
-diff -Nru openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
---- openjdk.orig/hotspot/build/linux/makefiles/defs.make	2008-06-22 03:12:48.000000000 +0100
-+++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-06-22 03:27:20.000000000 +0100
-@@ -58,8 +58,8 @@
-   HS_ARCH         = ia64
- endif
- 
--# sparc
--ifneq (,$(filter $(ARCH), sparc sparc64))
-+# sparc64
-+ifeq ($(ARCH), sparc64)
-   ifeq ($(ARCH_DATA_MODEL), 64)
-     ARCH_DATA_MODEL  = 64
-     MAKE_ARGS        += LP64=1
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/defs.make openjdk/hotspot/make/linux/makefiles/defs.make
+--- openjdk.orig/hotspot/make/linux/makefiles/defs.make	2008-06-22 22:28:06.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/defs.make	2008-06-22 22:35:27.000000000 +0100
 @@ -73,6 +73,14 @@
    HS_ARCH            = sparc
  endif
@@ -27,40 +16,9 @@ diff -Nru openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/b
  # x86_64
  ifeq ($(ARCH), x86_64) 
    ifeq ($(ARCH_DATA_MODEL), 64)
-diff -Nru openjdk.orig/hotspot/build/linux/makefiles/sparcv9.make openjdk/hotspot/build/linux/makefiles/sparcv9.make
---- openjdk.orig/hotspot/build/linux/makefiles/sparcv9.make	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/hotspot/build/linux/makefiles/sparcv9.make	2008-06-22 03:27:20.000000000 +0100
-@@ -0,0 +1,27 @@
-+#
-+# Copyright 1999-2005 Sun Microsystems, Inc.  All Rights Reserved.
-+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-+#
-+# This code is free software; you can redistribute it and/or modify it
-+# under the terms of the GNU General Public License version 2 only, as
-+# published by the Free Software Foundation.
-+#
-+# This code is distributed in the hope that it will be useful, but WITHOUT
-+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-+# version 2 for more details (a copy is included in the LICENSE file that
-+# accompanied this code).
-+#
-+# You should have received a copy of the GNU General Public License version
-+# 2 along with this work; if not, write to the Free Software Foundation,
-+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
-+#
-+# Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
-+# CA 95054 USA or visit www.sun.com if you need additional information or
-+# have any questions.
-+#  
-+#
-+
-+# TLS helper, assembled from .s file
-+# Not included in includeDB because it has no dependencies
-+Obj_Files += linux_sparc.o
 diff -Nru openjdk.orig/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp openjdk/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp
---- openjdk.orig/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp	2008-05-27 22:28:29.000000000 +0100
-+++ openjdk/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp	2008-06-22 03:31:17.000000000 +0100
+--- openjdk.orig/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp	2008-06-22 20:44:41.000000000 +0100
++++ openjdk/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp	2008-06-22 22:35:27.000000000 +0100
 @@ -1112,20 +1112,12 @@
  
  void LIRGenerator::volatile_field_store(LIR_Opr value, LIR_Address* address,

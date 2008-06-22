@@ -1,4 +1,4 @@
-OPENJDK_VERSION = b26
+OPENJDK_VERSION = b29
 
 JSCHEME_DIR = openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil
 
@@ -253,12 +253,12 @@ clean-clone:
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/clone.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
+	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/*/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'); \
 	  ln -sf $$target $$link; \
 	done
-	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/build/linux
+	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/make/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(CACAO)" = "xno"; then \
 	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
 	  ln -sf $(abs_top_builddir)/jvm.cfg openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
@@ -278,8 +278,7 @@ endif
 
 # Patches from the other OpenJDK trees (should be removed
 # when in an official bxx release)
-OPENJDK_PATCHES = \
-	patches/openjdk-color.patch
+OPENJDK_PATCHES = 
 
 # If ZERO_BUILD is set then we are building zero and need
 # to patch up to OpenJDK 7 HotSpot for the C++ interpreter.
@@ -317,7 +316,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-gcc-suffix.patch \
 	patches/icedtea-bytebuffer-compact.patch \
 	patches/icedtea-float-double-trailing-zeros.patch \
-	patches/icedtea-gtkplaf.patch \
 	patches/icedtea-memory-limits.patch \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
@@ -333,29 +331,22 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
-	patches/icedtea-xinerama.patch \
 	patches/icedtea-arm-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-LCMS-setTagData.patch \
 	patches/icedtea-color-createcontext.patch \
-	patches/icedtea-color-profiles.patch \
 	patches/icedtea-fonts.patch \
 	patches/icedtea-gervill.patch \
 	patches/icedtea-directaudio-close-trick.patch \
-	patches/icedtea-hat-spl-gpl.patch \
-	patches/icedtea-sparc.patch \
 	patches/icedtea-sparc64-linux.patch \
 	patches/icedtea-sparc-ptracefix.patch \
 	patches/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
 	$(ZERO_PATCHES_COND) \
-	patches/icedtea-eclipse-hotspot-6614100-7b24.patch \
 	patches/icedtea-no-bcopy.patch \
 	patches/icedtea-jscheme.patch \
-	patches/icedtea-dnd-updatecursor.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES) \
-	patches/icedtea-xslfix.patch \
 	patches/icedtea-override.patch
 
 if WITH_CACAO
@@ -450,12 +441,12 @@ clean-clone-ecj:
 
 # Link ports sources into tree
 stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
+	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/*/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk-ecj/'); \
 	  ln -sf $$target $$link; \
 	done
-	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/build/linux
+	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/make/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(CACAO)" = "xno"; then \
 	  mkdir -p openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
 	  ln -sf $(abs_top_builddir)/jvm.cfg openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \

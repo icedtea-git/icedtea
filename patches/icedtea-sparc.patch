@@ -1751,9 +1751,9 @@ Reviewed-by: kamg
 +  return features;
 +}
 
-diff -urN openjdk/hotspot/build/linux/makefiles/sparc.make openjdk/hotspot/build/linux/makefiles/sparc.make
---- openjdk/hotspot/build/linux/makefiles/sparc.make	1970-01-01 00:00:00.000000000 +0000
-+++ openjdk/hotspot/build/linux/makefiles/sparc.make	2008-05-13 19:08:58.000000000 +0000
+diff -urN openjdk/hotspot/make/linux/makefiles/sparc.make openjdk/hotspot/make/linux/makefiles/sparc.make
+--- openjdk/hotspot/make/linux/makefiles/sparc.make	1970-01-01 00:00:00.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/sparc.make	2008-05-13 19:08:58.000000000 +0000
 @@ -0,0 +1,27 @@
 +#
 +# Copyright 1999-2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -1782,8 +1782,8 @@ diff -urN openjdk/hotspot/build/linux/makefiles/sparc.make openjdk/hotspot/build
 +# TLS helper, assembled from .s file
 +# Not included in includeDB because it has no dependencies
 +Obj_Files += linux_sparc.o
---- openjdk/hotspot/build/linux/makefiles/gcc.make.orig	2008-05-13 22:45:24.000000000 +0000
-+++ openjdk/hotspot/build/linux/makefiles/gcc.make	2008-05-13 22:46:34.000000000 +0000
+--- openjdk/hotspot/make/linux/makefiles/gcc.make.orig	2008-05-13 22:45:24.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-05-13 22:46:34.000000000 +0000
 @@ -52,6 +52,10 @@
  PICFLAG = -fpic
  endif
@@ -1795,8 +1795,8 @@ diff -urN openjdk/hotspot/build/linux/makefiles/sparc.make openjdk/hotspot/build
  VM_PICFLAG/LIBJVM = $(PICFLAG)
  VM_PICFLAG/AOUT   =
  
---- openjdk/hotspot/build/linux/makefiles/defs.make.orig	2008-05-14 10:39:14.000000000 +0000
-+++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-05-14 15:18:21.000000000 +0000
+--- openjdk/hotspot/make/linux/makefiles/defs.make.orig	2008-05-14 10:39:14.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/defs.make	2008-05-14 15:18:21.000000000 +0000
 @@ -59,7 +59,7 @@
  endif
  

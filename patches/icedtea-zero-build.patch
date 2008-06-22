@@ -55,9 +55,9 @@ diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/
    ifeq ($(ARCH), sparc)
      # Linux sparc build can be either 32-bit or 64-bit.
      #   Default to 32, but allow explicit setting to 32 or 64.
-diff -Nru openjdk.orig/hotspot/build/linux/makefiles/buildtree.make openjdk/hotspot/build/linux/makefiles/buildtree.make
---- openjdk.orig/hotspot/build/linux/makefiles/buildtree.make	2008-05-19 22:56:21.000000000 +0100
-+++ openjdk/hotspot/build/linux/makefiles/buildtree.make	2008-05-24 00:01:14.000000000 +0100
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/buildtree.make openjdk/hotspot/make/linux/makefiles/buildtree.make
+--- openjdk.orig/hotspot/make/linux/makefiles/buildtree.make	2008-05-19 22:56:21.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/buildtree.make	2008-05-24 00:01:14.000000000 +0100
 @@ -321,6 +321,7 @@
  DATA_MODE/sparcv9 = 64
  DATA_MODE/amd64   = 64
@@ -66,9 +66,9 @@ diff -Nru openjdk.orig/hotspot/build/linux/makefiles/buildtree.make openjdk/hots
  
  JAVA_FLAG/32 = -d32
  JAVA_FLAG/64 = -d64
-diff -Nru openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
---- openjdk.orig/hotspot/build/linux/makefiles/defs.make	2008-05-23 23:42:18.000000000 +0100
-+++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-05-24 00:01:14.000000000 +0100
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/defs.make openjdk/hotspot/make/linux/makefiles/defs.make
+--- openjdk.orig/hotspot/make/linux/makefiles/defs.make	2008-05-23 23:42:18.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/defs.make	2008-05-24 00:01:14.000000000 +0100
 @@ -37,6 +37,18 @@
    ARCH_DATA_MODEL ?= 32
  endif
@@ -88,9 +88,9 @@ diff -Nru openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/b
  # ia64
  ifeq ($(ARCH), ia64)
    ARCH_DATA_MODEL = 64
-diff -Nru openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/build/linux/makefiles/gcc.make
---- openjdk.orig/hotspot/build/linux/makefiles/gcc.make	2008-05-23 23:42:18.000000000 +0100
-+++ openjdk/hotspot/build/linux/makefiles/gcc.make	2008-05-24 00:01:14.000000000 +0100
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2008-05-23 23:42:18.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-05-24 00:01:14.000000000 +0100
 @@ -57,6 +57,9 @@
  
  VM_PICFLAG        = $(VM_PICFLAG/$(LINK_INTO))
@@ -109,9 +109,9 @@ diff -Nru openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/bu
  
  CFLAGS     += $(ARCHFLAG)
  AOUT_FLAGS += $(ARCHFLAG)
-diff -Nru openjdk.orig/hotspot/build/linux/makefiles/sa.make openjdk/hotspot/build/linux/makefiles/sa.make
---- openjdk.orig/hotspot/build/linux/makefiles/sa.make	2008-05-16 22:13:31.000000000 +0100
-+++ openjdk/hotspot/build/linux/makefiles/sa.make	2008-05-24 00:01:14.000000000 +0100
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/sa.make openjdk/hotspot/make/linux/makefiles/sa.make
+--- openjdk.orig/hotspot/make/linux/makefiles/sa.make	2008-05-16 22:13:31.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/sa.make	2008-05-24 00:01:14.000000000 +0100
 @@ -51,10 +51,10 @@
  SA_PROPERTIES = $(SA_CLASSDIR)/sa.properties
  
@@ -125,9 +125,9 @@ diff -Nru openjdk.orig/hotspot/build/linux/makefiles/sa.make openjdk/hotspot/bui
  	   $(MAKE) -f sa.make $(GENERATED)/sa-jdi.jar; \
  	fi
  
-diff -Nru openjdk.orig/hotspot/build/linux/makefiles/saproc.make openjdk/hotspot/build/linux/makefiles/saproc.make
---- openjdk.orig/hotspot/build/linux/makefiles/saproc.make	2008-05-16 22:13:31.000000000 +0100
-+++ openjdk/hotspot/build/linux/makefiles/saproc.make	2008-05-24 00:01:14.000000000 +0100
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/saproc.make openjdk/hotspot/make/linux/makefiles/saproc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/saproc.make	2008-05-16 22:13:31.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/saproc.make	2008-05-24 00:01:14.000000000 +0100
 @@ -44,10 +44,10 @@
  DEST_SAPROC = $(JDK_LIBDIR)/$(LIBSAPROC)
  
@@ -141,9 +141,9 @@ diff -Nru openjdk.orig/hotspot/build/linux/makefiles/saproc.make openjdk/hotspot
  	   $(MAKE) -f vm.make $(LIBSAPROC); \
  	fi
  
-diff -Nru openjdk.orig/hotspot/build/linux/makefiles/vm.make openjdk/hotspot/build/linux/makefiles/vm.make
---- openjdk.orig/hotspot/build/linux/makefiles/vm.make	2008-05-23 23:42:18.000000000 +0100
-+++ openjdk/hotspot/build/linux/makefiles/vm.make	2008-05-24 00:01:14.000000000 +0100
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2008-05-23 23:42:18.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/vm.make	2008-05-24 00:01:14.000000000 +0100
 @@ -152,6 +152,9 @@
  
    LIBS_VM                  += $(LIBS)

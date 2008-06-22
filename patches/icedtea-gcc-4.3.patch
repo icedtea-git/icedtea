@@ -45,8 +45,8 @@
    friend ostream& operator<< (ostream&, FileBuffRegion&);
 +#endif
  };
---- openjdk/hotspot/build/linux/makefiles/gcc.make.ark	2008-01-11 14:24:05.000000000 +0000
-+++ openjdk/hotspot/build/linux/makefiles/gcc.make	2008-01-11 14:24:27.000000000 +0000
+--- openjdk/hotspot/make/linux/makefiles/gcc.make.ark	2008-01-11 14:24:05.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-01-11 14:24:27.000000000 +0000
 @@ -94,7 +94,8 @@
  endif
  
@@ -57,8 +57,8 @@
  # Except for a few acceptable ones
  ACCEPTABLE_WARNINGS = -Wpointer-arith -Wconversion -Wsign-compare
  CFLAGS_WARN/DEFAULT = $(WARNINGS_ARE_ERRORS) $(ACCEPTABLE_WARNINGS)
---- openjdk/hotspot/build/solaris/makefiles/gcc.make.ark	2008-01-11 14:24:33.000000000 +0000
-+++ openjdk/hotspot/build/solaris/makefiles/gcc.make	2008-01-11 14:24:48.000000000 +0000
+--- openjdk/hotspot/make/solaris/makefiles/gcc.make.ark	2008-01-11 14:24:33.000000000 +0000
++++ openjdk/hotspot/make/solaris/makefiles/gcc.make	2008-01-11 14:24:48.000000000 +0000
 @@ -109,7 +109,8 @@
  
  

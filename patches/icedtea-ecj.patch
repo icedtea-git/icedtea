@@ -489,9 +489,9 @@ diff -Nru openjdk-ecj.orig/corba/src/share/classes/com/sun/tools/corba/se/loguti
  	(.println pw)))
  
  (define (write-factory-method class-name exception-group-name pw)
-diff -Nru openjdk-ecj.orig/hotspot/build/linux/Makefile openjdk-ecj/hotspot/build/linux/Makefile
---- openjdk-ecj.orig/hotspot/build/linux/Makefile	2008-05-27 22:28:29.000000000 +0100
-+++ openjdk-ecj/hotspot/build/linux/Makefile	2008-06-22 19:05:57.000000000 +0100
+diff -Nru openjdk-ecj.orig/hotspot/make/linux/Makefile openjdk-ecj/hotspot/make/linux/Makefile
+--- openjdk-ecj.orig/hotspot/make/linux/Makefile	2008-05-27 22:28:29.000000000 +0100
++++ openjdk-ecj/hotspot/make/linux/Makefile	2008-06-22 19:05:57.000000000 +0100
 @@ -249,28 +249,24 @@
  
  $(TARGETS_C2):  $(SUBDIRS_C2)
@@ -521,9 +521,9 @@ diff -Nru openjdk-ecj.orig/hotspot/build/linux/Makefile openjdk-ecj/hotspot/buil
  ifdef INSTALL
  	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS) install
  endif
-diff -Nru openjdk-ecj.orig/hotspot/build/linux/makefiles/sa.make openjdk-ecj/hotspot/build/linux/makefiles/sa.make
---- openjdk-ecj.orig/hotspot/build/linux/makefiles/sa.make	2008-06-22 18:36:24.000000000 +0100
-+++ openjdk-ecj/hotspot/build/linux/makefiles/sa.make	2008-06-22 19:05:57.000000000 +0100
+diff -Nru openjdk-ecj.orig/hotspot/make/linux/makefiles/sa.make openjdk-ecj/hotspot/make/linux/makefiles/sa.make
+--- openjdk-ecj.orig/hotspot/make/linux/makefiles/sa.make	2008-06-22 18:36:24.000000000 +0100
++++ openjdk-ecj/hotspot/make/linux/makefiles/sa.make	2008-06-22 19:05:57.000000000 +0100
 @@ -72,7 +72,7 @@
  	$(QUIETLY) if [ ! -d $(SA_CLASSDIR) ] ; then \
  	  mkdir -p $(SA_CLASSDIR);        \

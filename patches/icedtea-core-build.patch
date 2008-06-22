@@ -15,9 +15,9 @@ diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/commo
  JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
  JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
  
-diff -Nru openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
---- openjdk.orig/hotspot/build/linux/makefiles/defs.make	2008-05-27 22:28:29.000000000 +0100
-+++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-06-22 03:10:05.000000000 +0100
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/defs.make openjdk/hotspot/make/linux/makefiles/defs.make
+--- openjdk.orig/hotspot/make/linux/makefiles/defs.make	2008-05-27 22:28:29.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/defs.make	2008-06-22 03:10:05.000000000 +0100
 @@ -97,6 +97,7 @@
  EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
  EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjsig.so

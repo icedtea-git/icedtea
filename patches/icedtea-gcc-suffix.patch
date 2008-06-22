@@ -9,8 +9,8 @@
  
  JAVAH    = ${JAVA_HOME}/bin/javah
  
---- openjdk/hotspot/build/linux/makefiles/gcc.make~	2007-08-08 16:13:12.281815996 +0200
-+++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-08-08 16:36:52.573240769 +0200
+--- openjdk/hotspot/make/linux/makefiles/gcc.make~	2007-08-08 16:13:12.281815996 +0200
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2007-08-08 16:36:52.573240769 +0200
 @@ -25,8 +25,8 @@
  #------------------------------------------------------------------------
  # CC, CPP & AS

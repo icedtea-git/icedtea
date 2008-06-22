@@ -1,6 +1,6 @@
-diff -Nru openjdk.orig/hotspot/build/linux/makefiles/vm.make openjdk/hotspot/build/linux/makefiles/vm.make
---- openjdk.orig/hotspot/build/linux/makefiles/vm.make	2008-05-16 22:13:31.000000000 +0100
-+++ openjdk/hotspot/build/linux/makefiles/vm.make	2008-05-23 23:25:47.000000000 +0100
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2008-05-16 22:13:31.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/vm.make	2008-05-23 23:25:47.000000000 +0100
 @@ -124,6 +124,12 @@
  
  STATIC_CXX = true
