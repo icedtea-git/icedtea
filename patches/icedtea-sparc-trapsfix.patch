@@ -1,0 +1,21 @@
+diff -up openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp.BAD openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp
+--- openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp.BAD	2008-05-28 11:49:06.000000000 -0500
++++ openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp	2008-05-28 11:51:56.000000000 -0500
+@@ -25,7 +25,16 @@
+ #include "incls/_precompiled.incl"
+ #include "incls/_assembler_linux_sparc.cpp.incl"
+ 
+-#include <asm-sparc/traps.h>
++/* Headers for 32bit sparc with a 32bit userland end up in asm/
++ * Headers for 32bit sparc with a 64bit userland end up in asm-sparc/
++ * There is no traps.h in asm-sparc64/
++ */
++
++#if defined(__sparc__) && defined(__arch64__)
++# include <asm-sparc/traps.h>
++#else 
++# include <asm/traps.h>
++#endif
+ 
+ bool MacroAssembler::needs_explicit_null_check(intptr_t offset) {
+   // Since the linux kernel resides at the low end of

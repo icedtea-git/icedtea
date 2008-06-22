@@ -52,248 +52,19 @@ diff -Nru openjdk-ecj.orig/corba/make/com/sun/corba/se/org/Makefile openjdk-ecj/
 +# Include
 +#
 +include $(BUILDDIR)/common/Classes.gmk
-diff -Nru openjdk-ecj.orig/corba/make/com/sun/corba/se/sources/Makefile openjdk-ecj/corba/make/com/sun/corba/se/sources/Makefile
---- openjdk-ecj.orig/corba/make/com/sun/corba/se/sources/Makefile	2008-05-26 01:29:37.000000000 +0100
-+++ openjdk-ecj/corba/make/com/sun/corba/se/sources/Makefile	1970-01-01 01:00:00.000000000 +0100
-@@ -1,222 +0,0 @@
--#
--# Copyright 2000-2006 Sun Microsystems, Inc.  All Rights Reserved.
--# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
--#
--# This code is free software; you can redistribute it and/or modify it
--# under the terms of the GNU General Public License version 2 only, as
--# published by the Free Software Foundation.  Sun designates this
--# particular file as subject to the "Classpath" exception as provided
--# by Sun in the LICENSE file that accompanied this code.
--#
--# This code is distributed in the hope that it will be useful, but WITHOUT
--# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
--# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
--# version 2 for more details (a copy is included in the LICENSE file that
--# accompanied this code).
--#
--# You should have received a copy of the GNU General Public License version
--# 2 along with this work; if not, write to the Free Software Foundation,
--# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
--#
--# Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
--# CA 95054 USA or visit www.sun.com if you need additional information or
--# have any questions.
--#
--
--BUILDDIR = ../../../../..
--
--PACKAGE = com.sun.corba.se
--PRODUCT = org
--
--include $(BUILDDIR)/common/Defs.gmk
--
--#
--# Rules
--#
--all: build
--
--build: portableactivation.idl.compile logwrapper.generate logresource.generate 
--
--clean clobber:: portableactivation.idl.clean
--
--#
--# Files
--#
--CORBA_JMK_DIRECTORY=$(TOPDIR)/make/com/sun/corba/minclude/
--include $(CORBA_JMK_DIRECTORY)com_sun_corba_se_PortableActivationIDL.jmk
--include $(CORBA_JMK_DIRECTORY)com_sun_corba_se_impl_logging.jmk
--
--#
--# Dirs
--#
--
--SRC_DIR = $(SHARE_SRC)/classes
--CORBA_IDL_DIR = $(SRC_DIR)/org/omg/PortableServer
--PI_IDL_DIR = $(SRC_DIR)/org/omg/PortableInterceptor
--
--ACTIVATIONFILEDIR         = $(GENSRCDIR)/com/sun/corba/se/spi/activation
--PORTABLEACTIVATIONFILEDIR = $(GENSRCDIR)/com/sun/corba/se/PortableActivationIDL
--LOG_GENDIRECTORY          = $(GENSRCDIR)/com/sun/corba/se/impl/logging
--
--#
--# IDLs
--#
--
--ACTIVATION.IDL = $(SRC_DIR)/com/sun/corba/se/spi/activation/activation.idl
--PORTABLEACTIVATION.IDL = $(SRC_DIR)/com/sun/corba/se/PortableActivationIDL/activation.idl
--
--
--#
--# .mc files
--#
--ACTIVATION.MC   = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Activation.mc
--IOR.MC          = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/IOR.mc
--INTERCEPTORS.MC = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Interceptors.mc
--NAMING.MC       = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Naming.mc
--OMG.MC          = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/OMG.mc
--ORBUTIL.MC      = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/ORBUtil.mc
--POA.MC          = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/POA.mc
--UTIL.MC         = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Util.mc
--
--MC_GENERATE_CLASS = $(SRC_DIR)/com/sun/tools/corba/se/logutil/scripts/mc.scm -main main make-class
--MC_GENERATE_LOG_RB = $(SRC_DIR)/com/sun/tools/corba/se/logutil/scripts/mc.scm -main main make-resource 
--
--JSCHEME_GENERATE_CLASS = $(BOOT_JAVA_CMD) jscheme.REPL $(MC_GENERATE_CLASS) 
--JSCHEME_GENERATE_LOG_RB = $(BOOT_JAVA_CMD) jscheme.REPL $(MC_GENERATE_LOG_RB) 
--
--
--#
--# Activation 
--#
--
--ACTIVATIONFILES = $(com_sun_corba_se_spi_activation_java:%=$(GENSRCDIR)/%)
--
--$(ACTIVATIONFILES): $(ACTIVATION.IDL)
--	$(IDLJ) -td $(GENSRCDIR) -i $(ACTIVATIONFILEDIR) -fall -oldImplBase -pkgPrefix activation com.sun.corba.se.spi $(ACTIVATION.IDL)
--
--activation.idl.compile: $(ACTIVATIONFILES)
--
--activation.idl.clean:
--	$(RM) -f $(ACTIVATIONFILES)
--
--#
--# PortableActivationIDL
--#
--
--PORTABLEACTIVATIONFILES = $(com_sun_corba_se_PortableActivationIDL_java:%=$(GENSRCDIR)/%)
--
--PORTABLEACTIVATION_INCLUDES = -i $(CORBA_IDL_DIR) -i $(PI_IDL_DIR)
--
--PORTABLEACTIVATION_PKG_PREFIXES = -pkgPrefix PortableInterceptor org.omg \
--    -pkgPrefix PortableActivationIDL com.sun.corba.se \
--    -pkgPrefix Dynamic org.omg \
--    -pkgPrefix IOP org.omg
--
--# REVISIT: remove -oldImplBase
--$(PORTABLEACTIVATIONFILES): $(PORTABLEACTIVATION.IDL)
--	$(IDLJ) -td $(GENSRCDIR) $(PORTABLEACTIVATION_INCLUDES) $(PORTABLEACTIVATION_PKG_PREFIXES) -fall -oldImplBase -corba 3.0 -D CORBA3 $(PORTABLEACTIVATION.IDL)
--
--portableactivation.idl.compile: $(PORTABLEACTIVATIONFILES)
--
--portableactivation.idl.clean:
--	$(RM) -f $(PORTABLEACTIVATIONFILES)
--
--#
--# Generate LogWrapper classes
--#
--logwrapper.generate: \
--	$(LOG_GENDIRECTORY)/ActivationSystemException.java \
--	$(LOG_GENDIRECTORY)/IORSystemException.java \
--	$(LOG_GENDIRECTORY)/InterceptorsSystemException.java \
--	$(LOG_GENDIRECTORY)/NamingSystemException.java \
--	$(LOG_GENDIRECTORY)/OMGSystemException.java \
--	$(LOG_GENDIRECTORY)/ORBUtilSystemException.java \
--	$(LOG_GENDIRECTORY)/POASystemException.java \
--	$(LOG_GENDIRECTORY)/UtilSystemException.java
--
--$(LOG_GENDIRECTORY)/ActivationSystemException.java : $(ACTIVATION.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_CLASS) $(ACTIVATION.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/IORSystemException.java : $(IOR.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_CLASS) $(IOR.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/InterceptorsSystemException.java : $(INTERCEPTORS.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_CLASS) $(INTERCEPTORS.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/NamingSystemException.java : $(NAMING.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_CLASS) $(NAMING.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/OMGSystemException.java : $(OMG.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_CLASS) $(OMG.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/ORBUtilSystemException.java : $(ORBUTIL.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_CLASS) $(ORBUTIL.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/POASystemException.java : $(POA.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_CLASS) $(POA.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/UtilSystemException.java : $(UTIL.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_CLASS) $(UTIL.MC) $(LOG_GENDIRECTORY)
--
--logresource.generate: $(LOG_GENDIRECTORY)/LogStrings.properties
--
--$(LOG_GENDIRECTORY)/LogStrings.properties: \
--		$(LOG_GENDIRECTORY)/ActivationSystemException.resource \
--		$(LOG_GENDIRECTORY)/IORSystemException.resource \
--		$(LOG_GENDIRECTORY)/InterceptorsSystemException.resource \
--		$(LOG_GENDIRECTORY)/NamingSystemException.resource \
--		$(LOG_GENDIRECTORY)/OMGSystemException.resource \
--		$(LOG_GENDIRECTORY)/ORBUtilSystemException.resource \
--		$(LOG_GENDIRECTORY)/POASystemException.resource \
--		$(LOG_GENDIRECTORY)/UtilSystemException.resource
--	$(CAT) $(LOG_GENDIRECTORY)/*.resource > $(LOG_GENDIRECTORY)/LogStrings.properties
--
--$(LOG_GENDIRECTORY)/ActivationSystemException.resource : $(ACTIVATION.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_LOG_RB) $(ACTIVATION.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/IORSystemException.resource : $(IOR.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_LOG_RB) $(IOR.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/InterceptorsSystemException.resource : $(INTERCEPTORS.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_LOG_RB) $(INTERCEPTORS.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/NamingSystemException.resource : $(NAMING.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_LOG_RB) $(NAMING.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/OMGSystemException.resource : $(OMG.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_LOG_RB) $(OMG.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/ORBUtilSystemException.resource : $(ORBUTIL.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_LOG_RB) $(ORBUTIL.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/POASystemException.resource : $(POA.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_LOG_RB) $(POA.MC) $(LOG_GENDIRECTORY)
--
--$(LOG_GENDIRECTORY)/UtilSystemException.resource : $(UTIL.MC)
--	$(prep-target)
--	$(JSCHEME_GENERATE_LOG_RB) $(UTIL.MC) $(LOG_GENDIRECTORY)
--
--
--.PHONY: all build clean clobber \
--	activation.idl.compile activation.idl.clean \
--	portableactivation.idl.compile portableactivation.idl.clean
--
--#
--# Include
--#
--include $(BUILDDIR)/common/Rules.gmk
-diff -Nru openjdk-ecj.orig/corba/make/common/Defs-linux.gmk openjdk-ecj/corba/make/common/Defs-linux.gmk
---- openjdk-ecj.orig/corba/make/common/Defs-linux.gmk	2008-05-26 01:29:37.000000000 +0100
-+++ openjdk-ecj/corba/make/common/Defs-linux.gmk	2008-05-26 01:35:42.000000000 +0100
-@@ -262,7 +262,7 @@
- 		    fi; \
- 		  done)
- JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
--JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
-+JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -L$(dir $(shell $(if $(GCJ),$(GCJ),$(subst gcc,gcj,$(CC))) --print-file-name=libgcj.so)) -lgcj $(JVMLIB)
- 
- #
- # We want to privatize JVM symbols on Solaris. This is so the user can
-diff -Nru openjdk-ecj.orig/corba/make/common/Defs.gmk openjdk-ecj/corba/make/common/Defs.gmk
---- openjdk-ecj.orig/corba/make/common/Defs.gmk	2008-05-26 01:29:37.000000000 +0100
-+++ openjdk-ecj/corba/make/common/Defs.gmk	2008-05-26 01:35:35.000000000 +0100
-@@ -53,6 +53,13 @@
+--- iopenjdk/jdk/make/common/Rules.gmk	2007-10-12 03:54:05.000000000 -0400
++++ openjdk-ecj/jdk/make/common/Rules.gmk	2007-11-07 11:02:53.000000000 -0500
+@@ -235,8 +235,9 @@
+ 	  $(ECHO) "# Java sources to be compiled: (listed in file $(JAVA_SOURCE_LIST))"; \
+ 	  $(CAT) $(JAVA_SOURCE_LIST); \
+ 	  $(ECHO) "# Running javac:"; \
+-	  $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
+-	  $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
++	   $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -bootclasspath "$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)" \
++         -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
++         $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -bootclasspath "$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
+ 	fi
+ 	@$(java-vm-cleanup)
  
  _OUTPUTDIR=$(TOPDIR)/build/$(PLATFORM)-$(ARCH)
  
@@ -1625,10 +1396,9 @@ diff -Nru openjdk-ecj.orig/jdk/src/share/classes/java/lang/Float.java openjdk-ec
 +    public static final float MIN_VALUE = 1.4e-45f;
  
      /**
-      * Maximum exponent a finite {@code float} variable may have.  It
-diff -Nru openjdk-ecj.orig/langtools/make/Makefile openjdk-ecj/langtools/make/Makefile
---- openjdk-ecj.orig/langtools/make/Makefile	2008-05-26 01:29:37.000000000 +0100
-+++ openjdk-ecj/langtools/make/Makefile	2008-05-26 01:35:42.000000000 +0100
+      * Maximum exponent a finite {@code double} variable may have.
+--- openjdk.old/langtools/make/Makefile	2008-01-16 10:23:52.000000000 -0500
++++ openjdk-ecj/langtools/make/Makefile	2008-01-16 10:42:51.000000000 -0500
 @@ -113,7 +113,7 @@
  
  ifdef ALT_BOOTDIR
@@ -1702,3 +1472,331 @@ diff -Nru openjdk-ecj.orig/make/jdk-rules.gmk openjdk-ecj/make/jdk-rules.gmk
  else
    JDK_BUILD_TARGETS = sanity all $(IMAGES_TARGET)
  endif
+ 
+ ifdef ALT_OUTPUTDIR
+--- openjdk6/hotspot/build/linux/makefiles/sa.make	2008-02-12 04:14:13.000000000 -0500
++++ openjdk-ecj/hotspot/build/linux/makefiles/sa.make	2008-02-15 09:23:58.000000000 -0500
+@@ -72,7 +72,7 @@
+ 	$(QUIETLY) if [ ! -d $(SA_CLASSDIR) ] ; then \
+ 	  mkdir -p $(SA_CLASSDIR);        \
+ 	fi
+-	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -classpath $(SA_CLASSPATH) -g -d $(SA_CLASSDIR) $(AGENT_ALLFILES)
++	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -classpath $(SA_CLASSPATH):$(BOOT_JAVA_HOME)/jre/lib/rt.jar -g -d $(SA_CLASSDIR) $(AGENT_ALLFILES)
+ 	$(QUIETLY) $(REMOTE) $(COMPILE.RMIC)  -classpath $(SA_CLASSDIR) -d $(SA_CLASSDIR) sun.jvm.hotspot.debugger.remote.RemoteDebuggerServer
+ 	$(QUIETLY) echo "$(SA_BUILD_VERSION_PROP)" > $(SA_PROPERTIES)
+ 	$(QUIETLY) $(REMOTE) $(RUN.JAR) cf $@ -C $(SA_CLASSDIR)/ .
+--- openoldjdk/jdk/make/sun/xawt/Makefile	2008-02-12 04:04:04.000000000 -0500
++++ openjdk-ecj/jdk/make/sun/xawt/Makefile	2008-02-15 09:48:16.000000000 -0500
+@@ -278,11 +278,7 @@
+ 
+ TEMPDIR_CLASSES = $(TEMPDIR)/classes
+ 
+-$(TEMPDIR_CLASSES)/sun/awt/X11/ToBin.class: ToBin.java
+-	@$(prep-target)
+-	$(BOOT_JAVAC_CMD) -d $(TEMPDIR_CLASSES) $<
+-
+-$(TEMPDIR)/.gen_icons: $(TEMPDIR_CLASSES)/sun/awt/X11/ToBin.class $(ICONS)
++$(TEMPDIR)/.gen_icons: $(ICONS)
+ 	$(prep-target)
+ 	for i in $(ICONS); do \
+             filename=`basename $$i`; \
+@@ -292,22 +288,14 @@
+ 	    $(ECHO) "package sun.awt.X11;" >> $$classname ; \
+ 	    $(ECHO) "public class XAWTIcon32_$$name {" >> $$classname; \
+ 	    $(ECHO) "public static int[] $$name = { " >> $$classname;  \
+-	    $(CAT) $$i | \
+-	      $(BOOT_JAVA_CMD) -cp $(TEMPDIR_CLASSES)  \
+-		-Dawt.toolkit=sun.awt.motif.MToolkit \
+-		-Djava.awt.headless=true \
+-		sun.awt.X11.ToBin >> $$classname; \
++	    $(ECHO) "0,0" >> $$classname ;  \
+ 	    $(ECHO) "}; }" >> $$classname;  \
+-            classname=$(GEN_DIR)/XAWTIcon64_$$name.java; \
++	    classname=$(GEN_DIR)/XAWTIcon64_$$name.java; \
+ 	    $(RM) $$classname; \
+ 	    $(ECHO) "package sun.awt.X11;" >> $$classname ; \
+ 	    $(ECHO) "public class XAWTIcon64_$$name {" >> $$classname; \
+ 	    $(ECHO) "public static long[] $$name = { " >> $$classname;  \
+-	    $(CAT) $$i | \
+-	      $(BOOT_JAVA_CMD) -cp $(TEMPDIR_CLASSES)  \
+-		-Dawt.toolkit=sun.awt.motif.MToolkit \
+-		-Djava.awt.headless=true \
+-		sun.awt.X11.ToBin >> $$classname; \
++	    $(ECHO) "0,0" >> $$classname ; \
+ 	    $(ECHO) "}; }" >> $$classname;  \
+ 	done
+ 	$(TOUCH) $@
+--- oldopenjdk/corba/make/common/shared/Defs-java.gmk	2008-02-12 04:15:10.000000000 -0500
++++ openjdk-ecj/corba/make/common/shared/Defs-java.gmk	2008-02-15 11:01:50.000000000 -0500
+@@ -117,31 +117,13 @@
+ JAVACFLAGS  += $(OTHER_JAVACFLAGS)
+ 
+ # Needed for javah
+-JAVAHFLAGS += -bootclasspath $(CLASSBINDIR)
++JAVAHFLAGS += -bootclasspath $(CLASSBINDIR):$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)
+ 
+-# Langtools
+-ifdef LANGTOOLS_DIST
+-  JAVAC_JAR   = $(LANGTOOLS_DIST)/bootstrap/lib/javac.jar
+-  JAVAH_JAR   = $(LANGTOOLS_DIST)/bootstrap/lib/javah.jar
+-  JAVADOC_JAR = $(LANGTOOLS_DIST)/bootstrap/lib/javadoc.jar
+-  DOCLETS_JAR = $(LANGTOOLS_DIST)/bootstrap/lib/doclets.jar
+-  JAVAC_CMD   = $(BOOT_JAVA_CMD) \
+-		"-Xbootclasspath/p:$(JAVAC_JAR)" \
+-		-jar $(JAVAC_JAR) $(JAVACFLAGS)
+-  JAVAH_CMD   = $(BOOT_JAVA_CMD) \
+-		"-Xbootclasspath/p:$(JAVAH_JAR)$(CLASSPATH_SEPARATOR)$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)"  \
+-		-jar $(JAVAH_JAR) $(JAVAHFLAGS)
+-  JAVADOC_CMD = $(BOOT_JAVA_CMD) \
+-		"-Xbootclasspath/p:$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)$(CLASSPATH_SEPARATOR)$(DOCLETS_JAR)" \
+-		-jar $(JAVADOC_JAR)
+-else
+-  # If no explicit tools, use boot tools (add VM flags in this case)
+-  JAVAC_CMD     = $(JAVA_TOOLS_DIR)/javac $(JAVAC_JVM_FLAGS) \
++# If no explicit tools, use boot tools (add VM flags in this case)
++JAVAC_CMD     = $(JAVA_TOOLS_DIR)/javac $(JAVAC_JVM_FLAGS) \
+ 		  $(JAVACFLAGS)
+-  JAVAH_CMD     = $(JAVA_TOOLS_DIR)/javah \
++JAVAH_CMD     = $(JAVA_TOOLS_DIR)/javah \
+ 		  $(JAVAHFLAGS)
+-  JAVADOC_CMD   = $(JAVA_TOOLS_DIR)/javadoc $(JAVA_TOOLS_FLAGS:%=-J%)
+-endif
+ 
+ # Override of what javac to use (see deploy workspace)
+ ifdef JAVAC
+--- oldopenjdk/corba/make/common/Defs-linux.gmk	2008-02-15 11:02:45.000000000 -0500
++++ openjdk-ecj/corba/make/common/Defs-linux.gmk	2008-02-15 11:05:09.000000000 -0500
+@@ -261,7 +261,7 @@
+ 		    fi; \
+ 		  done)
+ JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
+-JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
++JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -L$(dir $(shell $(if $(GCJ),$(GCJ),$(subst gcc,gcj,$(CC))) --print-file-name=libgcj.so)) -lgcj $(JVMLIB)
+ 
+ #
+ # We want to privatize JVM symbols on Solaris. This is so the user can
+--- openjdk-ecj/corba/make/com/sun/corba/se/sources/Makefile	2008-06-09 03:12:48.000000000 +0100
++++ /dev/null	2008-05-17 00:35:13.224001676 +0100
+@@ -1,222 +0,0 @@
+-#
+-# Copyright 2000-2006 Sun Microsystems, Inc.  All Rights Reserved.
+-# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+-#
+-# This code is free software; you can redistribute it and/or modify it
+-# under the terms of the GNU General Public License version 2 only, as
+-# published by the Free Software Foundation.  Sun designates this
+-# particular file as subject to the "Classpath" exception as provided
+-# by Sun in the LICENSE file that accompanied this code.
+-#
+-# This code is distributed in the hope that it will be useful, but WITHOUT
+-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+-# version 2 for more details (a copy is included in the LICENSE file that
+-# accompanied this code).
+-#
+-# You should have received a copy of the GNU General Public License version
+-# 2 along with this work; if not, write to the Free Software Foundation,
+-# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+-#
+-# Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+-# CA 95054 USA or visit www.sun.com if you need additional information or
+-# have any questions.
+-#
+-
+-BUILDDIR = ../../../../..
+-
+-PACKAGE = com.sun.corba.se
+-PRODUCT = org
+-
+-include $(BUILDDIR)/common/Defs.gmk
+-
+-#
+-# Rules
+-#
+-all: build
+-
+-build: portableactivation.idl.compile logwrapper.generate logresource.generate 
+-
+-clean clobber:: portableactivation.idl.clean
+-
+-#
+-# Files
+-#
+-CORBA_JMK_DIRECTORY=$(TOPDIR)/make/com/sun/corba/minclude/
+-include $(CORBA_JMK_DIRECTORY)com_sun_corba_se_PortableActivationIDL.jmk
+-include $(CORBA_JMK_DIRECTORY)com_sun_corba_se_impl_logging.jmk
+-
+-#
+-# Dirs
+-#
+-
+-SRC_DIR = $(SHARE_SRC)/classes
+-CORBA_IDL_DIR = $(SRC_DIR)/org/omg/PortableServer
+-PI_IDL_DIR = $(SRC_DIR)/org/omg/PortableInterceptor
+-
+-ACTIVATIONFILEDIR         = $(GENSRCDIR)/com/sun/corba/se/spi/activation
+-PORTABLEACTIVATIONFILEDIR = $(GENSRCDIR)/com/sun/corba/se/PortableActivationIDL
+-LOG_GENDIRECTORY          = $(GENSRCDIR)/com/sun/corba/se/impl/logging
+-
+-#
+-# IDLs
+-#
+-
+-ACTIVATION.IDL = $(SRC_DIR)/com/sun/corba/se/spi/activation/activation.idl
+-PORTABLEACTIVATION.IDL = $(SRC_DIR)/com/sun/corba/se/PortableActivationIDL/activation.idl
+-
+-
+-#
+-# .mc files
+-#
+-ACTIVATION.MC   = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Activation.mc
+-IOR.MC          = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/IOR.mc
+-INTERCEPTORS.MC = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Interceptors.mc
+-NAMING.MC       = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Naming.mc
+-OMG.MC          = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/OMG.mc
+-ORBUTIL.MC      = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/ORBUtil.mc
+-POA.MC          = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/POA.mc
+-UTIL.MC         = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Util.mc
+-
+-MC_GENERATE_CLASS = make-class
+-MC_GENERATE_LOG_RB = make-resource 
+-
+-JSCHEME_GENERATE_CLASS = $(BOOT_JAVA_CMD) com.sun.tools.corba.se.logutil.MC $(MC_GENERATE_CLASS) 
+-JSCHEME_GENERATE_LOG_RB = $(BOOT_JAVA_CMD) com.sun.tools.corba.se.logutil.MC $(MC_GENERATE_LOG_RB) 
+-
+-
+-#
+-# Activation 
+-#
+-
+-ACTIVATIONFILES = $(com_sun_corba_se_spi_activation_java:%=$(GENSRCDIR)/%)
+-
+-$(ACTIVATIONFILES): $(ACTIVATION.IDL)
+-	$(IDLJ) -td $(GENSRCDIR) -i $(ACTIVATIONFILEDIR) -fall -oldImplBase -pkgPrefix activation com.sun.corba.se.spi $(ACTIVATION.IDL)
+-
+-activation.idl.compile: $(ACTIVATIONFILES)
+-
+-activation.idl.clean:
+-	$(RM) -f $(ACTIVATIONFILES)
+-
+-#
+-# PortableActivationIDL
+-#
+-
+-PORTABLEACTIVATIONFILES = $(com_sun_corba_se_PortableActivationIDL_java:%=$(GENSRCDIR)/%)
+-
+-PORTABLEACTIVATION_INCLUDES = -i $(CORBA_IDL_DIR) -i $(PI_IDL_DIR)
+-
+-PORTABLEACTIVATION_PKG_PREFIXES = -pkgPrefix PortableInterceptor org.omg \
+-    -pkgPrefix PortableActivationIDL com.sun.corba.se \
+-    -pkgPrefix Dynamic org.omg \
+-    -pkgPrefix IOP org.omg
+-
+-# REVISIT: remove -oldImplBase
+-$(PORTABLEACTIVATIONFILES): $(PORTABLEACTIVATION.IDL)
+-	$(IDLJ) -td $(GENSRCDIR) $(PORTABLEACTIVATION_INCLUDES) $(PORTABLEACTIVATION_PKG_PREFIXES) -fall -oldImplBase -corba 3.0 -D CORBA3 $(PORTABLEACTIVATION.IDL)
+-
+-portableactivation.idl.compile: $(PORTABLEACTIVATIONFILES)
+-
+-portableactivation.idl.clean:
+-	$(RM) -f $(PORTABLEACTIVATIONFILES)
+-
+-#
+-# Generate LogWrapper classes
+-#
+-logwrapper.generate: \
+-	$(LOG_GENDIRECTORY)/ActivationSystemException.java \
+-	$(LOG_GENDIRECTORY)/IORSystemException.java \
+-	$(LOG_GENDIRECTORY)/InterceptorsSystemException.java \
+-	$(LOG_GENDIRECTORY)/NamingSystemException.java \
+-	$(LOG_GENDIRECTORY)/OMGSystemException.java \
+-	$(LOG_GENDIRECTORY)/ORBUtilSystemException.java \
+-	$(LOG_GENDIRECTORY)/POASystemException.java \
+-	$(LOG_GENDIRECTORY)/UtilSystemException.java
+-
+-$(LOG_GENDIRECTORY)/ActivationSystemException.java : $(ACTIVATION.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_CLASS) $(ACTIVATION.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/IORSystemException.java : $(IOR.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_CLASS) $(IOR.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/InterceptorsSystemException.java : $(INTERCEPTORS.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_CLASS) $(INTERCEPTORS.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/NamingSystemException.java : $(NAMING.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_CLASS) $(NAMING.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/OMGSystemException.java : $(OMG.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_CLASS) $(OMG.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/ORBUtilSystemException.java : $(ORBUTIL.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_CLASS) $(ORBUTIL.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/POASystemException.java : $(POA.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_CLASS) $(POA.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/UtilSystemException.java : $(UTIL.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_CLASS) $(UTIL.MC) $(LOG_GENDIRECTORY)
+-
+-logresource.generate: $(LOG_GENDIRECTORY)/LogStrings.properties
+-
+-$(LOG_GENDIRECTORY)/LogStrings.properties: \
+-		$(LOG_GENDIRECTORY)/ActivationSystemException.resource \
+-		$(LOG_GENDIRECTORY)/IORSystemException.resource \
+-		$(LOG_GENDIRECTORY)/InterceptorsSystemException.resource \
+-		$(LOG_GENDIRECTORY)/NamingSystemException.resource \
+-		$(LOG_GENDIRECTORY)/OMGSystemException.resource \
+-		$(LOG_GENDIRECTORY)/ORBUtilSystemException.resource \
+-		$(LOG_GENDIRECTORY)/POASystemException.resource \
+-		$(LOG_GENDIRECTORY)/UtilSystemException.resource
+-	$(CAT) $(LOG_GENDIRECTORY)/*.resource > $(LOG_GENDIRECTORY)/LogStrings.properties
+-
+-$(LOG_GENDIRECTORY)/ActivationSystemException.resource : $(ACTIVATION.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_LOG_RB) $(ACTIVATION.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/IORSystemException.resource : $(IOR.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_LOG_RB) $(IOR.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/InterceptorsSystemException.resource : $(INTERCEPTORS.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_LOG_RB) $(INTERCEPTORS.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/NamingSystemException.resource : $(NAMING.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_LOG_RB) $(NAMING.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/OMGSystemException.resource : $(OMG.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_LOG_RB) $(OMG.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/ORBUtilSystemException.resource : $(ORBUTIL.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_LOG_RB) $(ORBUTIL.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/POASystemException.resource : $(POA.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_LOG_RB) $(POA.MC) $(LOG_GENDIRECTORY)
+-
+-$(LOG_GENDIRECTORY)/UtilSystemException.resource : $(UTIL.MC)
+-	$(prep-target)
+-	$(JSCHEME_GENERATE_LOG_RB) $(UTIL.MC) $(LOG_GENDIRECTORY)
+-
+-
+-.PHONY: all build clean clobber \
+-	activation.idl.compile activation.idl.clean \
+-	portableactivation.idl.compile portableactivation.idl.clean
+-
+-#
+-# Include
+-#
+-include $(BUILDDIR)/common/Rules.gmk

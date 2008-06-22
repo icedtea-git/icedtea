@@ -4,22 +4,32 @@ AC_DEFUN([SET_ARCH_DIRS],
     x86_64-*-*)
       BUILD_ARCH_DIR=amd64
       INSTALL_ARCH_DIR=amd64
+      JRE_ARCH_DIR=amd64
       ;;
     i?86-*-*)
       BUILD_ARCH_DIR=i586
       INSTALL_ARCH_DIR=i386
+      JRE_ARCH_DIR=i386
       ;;
     arm*-*-*)
       BUILD_ARCH_DIR=arm
       INSTALL_ARCH_DIR=arm
+      JRE_ARCH_DIR=arm
       ;;
+    sparc64-*-*)
+      BUILD_ARCH_DIR=sparcv9
+      INSTALL_ARCH_DIR=sparcv9
+      JRE_ARCH_DIR=sparc64
+       ;;
     *)
       BUILD_ARCH_DIR=`uname -m`
       INSTALL_ARCH_DIR=$BUILD_ARCH_DIR
+      JRE_ARCH_DIR=$INSTALL_ARCH_DIR
       ;;
   esac
   AC_SUBST(BUILD_ARCH_DIR)
   AC_SUBST(INSTALL_ARCH_DIR)
+  AC_SUBST(JRE_ARCH_DIR)
 ])
 
 AC_DEFUN([FIND_JAVAC],

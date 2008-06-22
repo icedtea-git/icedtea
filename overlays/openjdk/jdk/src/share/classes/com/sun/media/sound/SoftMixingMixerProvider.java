@@ -22,7 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 import javax.sound.sampled.Mixer;
@@ -32,38 +31,36 @@ import javax.sound.sampled.spi.MixerProvider;
 /**
  * Provider for software audio mixer
  * 
- * @version %I%, %E%
  * @author Karl Helgason
  */
-
 public class SoftMixingMixerProvider extends MixerProvider {
 
-	protected static SoftMixingMixer globalmixer = null;
+    static SoftMixingMixer globalmixer = null;
 
-	protected static Thread lockthread = null;
+    static Thread lockthread = null;
 
-	protected static Object mutex = new Object();
+    protected final static Object mutex = new Object();
 
-	public Mixer getMixer(Info info) {
-		if (!(info == null || info == SoftMixingMixer.info)) {
-			throw new IllegalArgumentException("Mixer " + info.toString()
-					+ " not supported by this provider.");
-		}
-		synchronized (mutex) {
-			if (lockthread != null)
-				if (Thread.currentThread() == lockthread)
-					throw new IllegalArgumentException("Mixer "
-							+ info.toString()
-							+ " not supported by this provider.");
-			if (globalmixer == null)
-				globalmixer = new SoftMixingMixer();
-			return globalmixer;
-		}
+    public Mixer getMixer(Info info) {
+        if (!(info == null || info == SoftMixingMixer.info)) {
+            throw new IllegalArgumentException("Mixer " + info.toString()
+                    + " not supported by this provider.");
+        }
+        synchronized (mutex) {
+            if (lockthread != null)
+                if (Thread.currentThread() == lockthread)
+                    throw new IllegalArgumentException("Mixer "
+                            + info.toString()
+                            + " not supported by this provider.");
+            if (globalmixer == null)
+                globalmixer = new SoftMixingMixer();
+            return globalmixer;
+        }
 
-	}
+    }
 
-	public Info[] getMixerInfo() {
-		return new Info[] { SoftMixingMixer.info };
-	}
+    public Info[] getMixerInfo() {
+        return new Info[] { SoftMixingMixer.info };
+    }
 
 }

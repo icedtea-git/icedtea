@@ -1,33 +1,7 @@
 # Adds the provides defined by gervill (and removes non-existing ones).
 # Gervill can be found in the overlays under
 # openjdk/jdk/src/share/classes/com/sun/media/sound
---- openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiDeviceProvider.orig	2008-04-30 16:12:37.000000000 +0200
-+++ openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiDeviceProvider	2008-04-30 16:06:18.000000000 +0200
-@@ -1,5 +1,5 @@
- # Providers for midi devices
--com.sun.media.sound.MixerSynthProvider
- com.sun.media.sound.RealTimeSequencerProvider
- com.sun.media.sound.MidiOutDeviceProvider
- com.sun.media.sound.MidiInDeviceProvider
-+com.sun.media.sound.SoftProvider
---- openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.SoundbankReader.orig	2008-04-30 16:13:18.000000000 +0200
-+++ openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.SoundbankReader	2008-04-30 16:07:16.000000000 +0200
-@@ -1,2 +1,6 @@
- # Providers for Soundbanks
--com.sun.media.sound.HsbParser
-+com.sun.media.sound.PATSoundbankReader
-+com.sun.media.sound.DLSSoundbankReader
-+com.sun.media.sound.JARSoundbankReader
-+com.sun.media.sound.AudioFileSoundbankReader
-+com.sun.media.sound.SF2SoundbankReader
---- openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.AudioFileReader.orig	2008-04-30 16:13:58.000000000 +0200
-+++ openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.AudioFileReader	2008-04-30 16:01:27.000000000 +0200
-@@ -2,3 +2,5 @@
- com.sun.media.sound.AuFileReader
- com.sun.media.sound.AiffFileReader
- com.sun.media.sound.WaveFileReader
-+com.sun.media.sound.WaveFloatFileReader
-+com.sun.media.sound.SoftMidiAudioFileReader
+# (This currently overrides the one from b10 because we track Gervill CVS)
 --- /home/mark/src/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.FormatConversionProvider	2008-04-13 01:05:30.000000000 +0200
 +++ openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.FormatConversionProvider	2008-05-09 02:54:26.000000000 +0200
 @@ -2,3 +2,4 @@

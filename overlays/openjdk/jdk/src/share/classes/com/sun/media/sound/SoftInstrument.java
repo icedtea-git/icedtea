@@ -22,74 +22,61 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 import javax.sound.midi.Instrument;
 import javax.sound.midi.MidiChannel;
 
 /**
- * 
  * Software synthesizer internal instrument.
- * 
- * @version %I%, %E%
+ *
  * @author Karl Helgason
  */
 public class SoftInstrument extends Instrument {
 
-	private SoftPerformer[] performers;
-	
-	private ModelPerformer[] modelperformers;
+    private SoftPerformer[] performers;
+    private ModelPerformer[] modelperformers;
+    private Object data;
+    private ModelInstrument ins;
 
-	private Object data;
+    public SoftInstrument(ModelInstrument ins) {
+        super(ins.getSoundbank(), ins.getPatch(), ins.getName(),
+                ins.getDataClass());
+        data = ins.getData();
+        this.ins = ins;
+        initPerformers(((ModelInstrument)ins).getPerformers());
+    }
 
-	private ModelInstrument ins;
+    public SoftInstrument(ModelInstrument ins,
+            ModelPerformer[] overrideperformers) {
+        super(ins.getSoundbank(), ins.getPatch(), ins.getName(),
+                ins.getDataClass());
+        data = ins.getData();
+        this.ins = ins;
+        initPerformers(overrideperformers);
+    }
 
-	public SoftInstrument(ModelInstrument ins) {
-		super(ins.getSoundbank(), ins.getPatch(), ins.getName(), ins
-				.getDataClass());
-		if (!(ins instanceof ModelInstrument))
-			throw new IllegalArgumentException(
-					"Instrument doesn't implement ModelInstrument interface!");
-		data = ins.getData();
-		this.ins = ins;
-		initPerformers(((ModelInstrument) ins).getPerformers());
-	}
+    private void initPerformers(ModelPerformer[] modelperformers) {
+        this.modelperformers = modelperformers;
+        performers = new SoftPerformer[modelperformers.length];
+        for (int i = 0; i < modelperformers.length; i++)
+            performers[i] = new SoftPerformer(modelperformers[i]);
+    }
 
-	public SoftInstrument(ModelInstrument ins,
-			ModelPerformer[] overrideperformers) {
-		super(ins.getSoundbank(), ins.getPatch(), ins.getName(), ins
-				.getDataClass());
-		if (!(ins instanceof ModelInstrument))
-			throw new IllegalArgumentException(
-					"Instrument doesn't implement ModelInstrument interface!");
-		data = ins.getData();
-		this.ins = ins;
-		initPerformers(overrideperformers);
-	}
+    public ModelDirector getDirector(MidiChannel channel,
+            ModelDirectedPlayer player) {
+        return ins.getDirector(modelperformers, channel, player);
+    }
 
-	private void initPerformers(ModelPerformer[] modelperformers) {
-		this.modelperformers = modelperformers;
-		performers = new SoftPerformer[modelperformers.length];
-		for (int i = 0; i < modelperformers.length; i++)
-			performers[i] = new SoftPerformer(modelperformers[i]);
-	}
-	
-	public ModelDirector getDirector(MidiChannel channel, ModelDirectedPlayer player)
-	{
-		return ins.getDirector(modelperformers, channel, player);
-	}
+    public ModelInstrument getSourceInstrument() {
+        return ins;
+    }
 
-	public ModelInstrument getSourceInstrument() {
-		return ins;
-	}
+    public Object getData() {
+        return data;
+    }
 
-	public Object getData() {
-		return data;
-	}
-
-	public SoftPerformer[] getPerformers() {
-		return performers;
-	}
-
+    public SoftPerformer[] getPerformers() {
+        return performers;
+    }
 }

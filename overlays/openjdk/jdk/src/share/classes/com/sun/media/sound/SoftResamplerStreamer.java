@@ -22,20 +22,17 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 import java.io.IOException;
 
 /**
- * 
  * Resampler stream interface.
- * 
- * @version %I%, %E%
+ *
  * @author Karl Helgason
  */
 public interface SoftResamplerStreamer extends ModelOscillatorStream {
-	public void open(ModelWavetable osc, float outputsamplerate)
-			throws IOException;
 
+    public void open(ModelWavetable osc, float outputsamplerate)
+            throws IOException;
 }

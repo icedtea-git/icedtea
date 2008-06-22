@@ -36,7 +36,7 @@ public class Version {
         "1.7.0";
 
     private static final String java_runtime_name =
-        "IcedTea Runtime Environment";
+        "OpenJDK  Runtime Environment";
 
     private static final String java_runtime_version =
         "1.7.0-b26";

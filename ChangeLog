@@ -1,3 +1,98 @@
+2008-06-20  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-zero-build.patch: Correctly set CPU.
+
+2008-06-20  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-core-build.patch: Defuzz.
+	
+2008-06-19  Lillian Angel  <langel@redhat.com>
+
+	Fixes Bug #159
+	* patches/icedtea-component.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Add above patch.
+	* Makefile.in: Regenerated.
+
+2008-06-18  Keith Seitz  <keiths@redhat.com>
+
+	* patches/icedtea-dnd-updatecursor.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Add above patch.
+	* Makefile.in: Regenerated.
+
+2008-06-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR icedtea/140:
+	* Makefile.am: Add icedtea-jscheme.patch and
+	remove jscheme jar files and scripts after
+	unzipping OpenJDK.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-ecj.patch: Updated for post-jscheme
+	tree.
+	* patches/icedtea-jscheme.patch: Added.
+	
+2008-06-11  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added JDK_UPDATE_VERSION to environment. Some applets,
+	like the Sun's verify Java version applet, check for the "_" in the
+	version string. Our version string format is now correct:
+	java version "1.7.0_0"
+	OpenJDK  Runtime Environment (build 1.7.0_0-b26)
+	OpenJDK Server VM (build 1.7.0_0-b26, mixed mode)
+	* Makefile.in: Regenerated.
+
+2008-06-10  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Likewise.
+	* configure: Likewise.
+	* generated/sun/misc/Version.java: Likewise.
+	* generated/sun/tools/jconsole/Version.java: Likewise.
+
+2008-06-10  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-no-bcopy.patch: New.
+	* Makefile.am (ICEDTEA_PATCHES): Add patch.
+	* Makefile.in: Regenerate.
+
+2008-06-10  Tom Callaway <tcallawa@redhat.com>
+	    Dennis Gilmore <dennis@ausil.us>
+
+	* patches/icedtea-sparc64-linux.patch,
+	patches/icedtea-sparc-ptracefix.patch,
+	patches/icedtea-sparc-trapsfix.patch: New.
+	* Makefile.am (ICEDTEA_PATCHES): Add above patches.
+	* Makefile.am (stamps/bootstrap-directory-ecj.stamp): Create
+	symlink to $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR).
+	* acinclude.m4: Set JRE_ARCH_DIR.
+	* Makefile.in, configure: Regenerate.
+
+2008-06-09  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/Parser.java: Remove comments from xml before
+	starting the application.
+	* rt/net/sourceforge/nanoxml/XMLElement.java: Be more tolerant to double
+	dashes in xml comments.
+	(sanitizeInput(InputStreamReader, PipedOutputStream)): New method.
+	(expectedInput(String, char)): New method.
+	
+2008-06-08  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
+	Import Gervill CVS source reformatting.
+
+2008-06-08  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
+	Import Gervill fixes from CVS. See CHANGES.txt.
+	* overlays/openjdk/jdk/test/com/sun/media/sound: Likewise.
+
+2008-06-08  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (ZERO_PATCHES): Add
+	patches/icedtea-eclipse-hotspot-6614100-7b24.patch.
+	* Makefile.in: Regenerate.
+	* patches/icedtea-eclipse-hotspot-6614100-7b24.patch: New patch.
+
 2008-06-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Add news stub for next release.
@@ -25,6 +120,13 @@
 	* Makefile.am: Fixed dist to not include full path to ports, and
 	ICEDTEA_ECJ_PATCH. This fixes the problem with "make dist".
 	* Makefile.in: Regenerated.
+
+2008-06-01  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-copy-plugs.patch: Adjusted to remove sound
+	references in b10.
+	* patches/icedtea-gervill.patch: Adjusted to new sound service
+	files in b10.
 
 2008-05-30  Mark Wielaard  <mark@klomp.org>
 

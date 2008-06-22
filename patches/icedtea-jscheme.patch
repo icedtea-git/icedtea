@@ -1,0 +1,1260 @@
+diff -Nru openjdk.orig/corba/make/com/sun/corba/se/sources/Makefile openjdk/corba/make/com/sun/corba/se/sources/Makefile
+--- openjdk.orig/corba/make/com/sun/corba/se/sources/Makefile	2008-06-09 02:21:48.000000000 +0100
++++ openjdk/corba/make/com/sun/corba/se/sources/Makefile	2008-06-09 02:27:44.000000000 +0100
+@@ -78,11 +78,11 @@
+ POA.MC          = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/POA.mc
+ UTIL.MC         = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Util.mc
+ 
+-MC_GENERATE_CLASS = $(SRC_DIR)/com/sun/tools/corba/se/logutil/scripts/mc.scm -main main make-class
+-MC_GENERATE_LOG_RB = $(SRC_DIR)/com/sun/tools/corba/se/logutil/scripts/mc.scm -main main make-resource 
++MC_GENERATE_CLASS = make-class
++MC_GENERATE_LOG_RB = make-resource 
+ 
+-JSCHEME_GENERATE_CLASS = $(BOOT_JAVA_CMD) jscheme.REPL $(MC_GENERATE_CLASS) 
+-JSCHEME_GENERATE_LOG_RB = $(BOOT_JAVA_CMD) jscheme.REPL $(MC_GENERATE_LOG_RB) 
++JSCHEME_GENERATE_CLASS = $(BOOT_JAVA_CMD) com.sun.tools.corba.se.logutil.MC $(MC_GENERATE_CLASS) 
++JSCHEME_GENERATE_LOG_RB = $(BOOT_JAVA_CMD) com.sun.tools.corba.se.logutil.MC $(MC_GENERATE_LOG_RB) 
+ 
+ 
+ #
+diff -Nru openjdk.orig/corba/make/sun/rmi/corbalogsources/Makefile openjdk/corba/make/sun/rmi/corbalogsources/Makefile
+--- openjdk.orig/corba/make/sun/rmi/corbalogsources/Makefile	2008-06-09 02:20:57.000000000 +0100
++++ openjdk/corba/make/sun/rmi/corbalogsources/Makefile	2008-06-10 01:16:32.000000000 +0100
+@@ -75,15 +75,14 @@
+ POA.MC          = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/POA.mc
+ UTIL.MC         = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Util.mc
+ 
+-MC_GENERATE_CLASS = $(SRC_DIR)/com/sun/tools/corba/se/logutil/scripts/mc.scm -main main make-class
+-MC_GENERATE_LOG_RB = $(SRC_DIR)/com/sun/tools/corba/se/logutil/scripts/mc.scm -main main make-resource 
++MC_GENERATE_CLASS = make-class
++MC_GENERATE_LOG_RB = make-resource 
+ 
+-JSCHEME_LIB_DIRECTORY=$(SRC_DIR)/com/sun/tools/corba/se/logutil/lib
+-JSCHEME_CLASSPATH=$(JSCHEME_LIB_DIRECTORY)/jscheme.jar$(CLASSPATH_SEPARATOR)$(JSCHEME_LIB_DIRECTORY)/jschemelogutil.jar
+-JSCHEME_GENERATE_CLASS = $(BOOT_JAVA_CMD) \
+-    -cp "$(JSCHEME_CLASSPATH)" jscheme.REPL $(MC_GENERATE_CLASS) 
+-JSCHEME_GENERATE_LOG_RB = $(BOOT_JAVA_CMD) \
+-    -cp "$(JSCHEME_CLASSPATH)" jscheme.REPL $(MC_GENERATE_LOG_RB) 
++MC_CLASSPATH=$(BUILDTOOLJARDIR)/MC.jar
++MCJ_GENERATE_CLASS = $(BOOT_JAVA_CMD) \
++    -cp "$(MC_CLASSPATH)" com.sun.tools.corba.se.logutil.MC $(MC_GENERATE_CLASS) 
++MCJ_GENERATE_LOG_RB = $(BOOT_JAVA_CMD) \
++    -cp "$(MC_CLASSPATH)" com.sun.tools.corba.se.logutil.MC $(MC_GENERATE_LOG_RB) 
+ 
+ 
+ #
+@@ -104,28 +103,28 @@
+ 	$(MKDIR) -p $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/ActivationSystemException.java : $(ACTIVATION.MC)
+-	$(JSCHEME_GENERATE_CLASS) $(ACTIVATION.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_CLASS) $(ACTIVATION.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/IORSystemException.java : $(IOR.MC)
+-	$(JSCHEME_GENERATE_CLASS) $(IOR.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_CLASS) $(IOR.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/InterceptorsSystemException.java : $(INTERCEPTORS.MC)
+-	$(JSCHEME_GENERATE_CLASS) $(INTERCEPTORS.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_CLASS) $(INTERCEPTORS.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/NamingSystemException.java : $(NAMING.MC)
+-	$(JSCHEME_GENERATE_CLASS) $(NAMING.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_CLASS) $(NAMING.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/OMGSystemException.java : $(OMG.MC)
+-	$(JSCHEME_GENERATE_CLASS) $(OMG.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_CLASS) $(OMG.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/ORBUtilSystemException.java : $(ORBUTIL.MC)
+-	$(JSCHEME_GENERATE_CLASS) $(ORBUTIL.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_CLASS) $(ORBUTIL.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/POASystemException.java : $(POA.MC)
+-	$(JSCHEME_GENERATE_CLASS) $(POA.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_CLASS) $(POA.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/UtilSystemException.java : $(UTIL.MC)
+-	$(JSCHEME_GENERATE_CLASS) $(UTIL.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_CLASS) $(UTIL.MC) $(LOG_GENDIRECTORY)
+ 
+ logresource.generate: $(LOG_GENDIRECTORY)/LogStrings.properties
+ 
+@@ -142,28 +141,28 @@
+ 	$(CAT) $(LOG_GENDIRECTORY)/*.resource > $(LOG_GENDIRECTORY)/LogStrings.properties
+ 
+ $(LOG_GENDIRECTORY)/ActivationSystemException.resource : $(ACTIVATION.MC)
+-	$(JSCHEME_GENERATE_LOG_RB) $(ACTIVATION.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_LOG_RB) $(ACTIVATION.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/IORSystemException.resource : $(IOR.MC)
+-	$(JSCHEME_GENERATE_LOG_RB) $(IOR.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_LOG_RB) $(IOR.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/InterceptorsSystemException.resource : $(INTERCEPTORS.MC)
+-	$(JSCHEME_GENERATE_LOG_RB) $(INTERCEPTORS.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_LOG_RB) $(INTERCEPTORS.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/NamingSystemException.resource : $(NAMING.MC)
+-	$(JSCHEME_GENERATE_LOG_RB) $(NAMING.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_LOG_RB) $(NAMING.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/OMGSystemException.resource : $(OMG.MC)
+-	$(JSCHEME_GENERATE_LOG_RB) $(OMG.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_LOG_RB) $(OMG.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/ORBUtilSystemException.resource : $(ORBUTIL.MC)
+-	$(JSCHEME_GENERATE_LOG_RB) $(ORBUTIL.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_LOG_RB) $(ORBUTIL.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/POASystemException.resource : $(POA.MC)
+-	$(JSCHEME_GENERATE_LOG_RB) $(POA.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_LOG_RB) $(POA.MC) $(LOG_GENDIRECTORY)
+ 
+ $(LOG_GENDIRECTORY)/UtilSystemException.resource : $(UTIL.MC)
+-	$(JSCHEME_GENERATE_LOG_RB) $(UTIL.MC) $(LOG_GENDIRECTORY)
++	$(MCJ_GENERATE_LOG_RB) $(UTIL.MC) $(LOG_GENDIRECTORY)
+ 
+ 
+ #
+diff -Nru openjdk.orig/corba/make/tools/logutil/Makefile openjdk/corba/make/tools/logutil/Makefile
+--- openjdk.orig/corba/make/tools/logutil/Makefile	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/corba/make/tools/logutil/Makefile	2008-06-10 01:32:00.000000000 +0100
+@@ -0,0 +1,43 @@
++#
++# Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
++# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++#
++# This code is free software; you can redistribute it and/or modify it
++# under the terms of the GNU General Public License version 2 only, as
++# published by the Free Software Foundation.  Sun designates this
++# particular file as subject to the "Classpath" exception as provided
++# by Sun in the LICENSE file that accompanied this code.
++#
++# This code is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++# version 2 for more details (a copy is included in the LICENSE file that
++# accompanied this code).
++#
++# You should have received a copy of the GNU General Public License version
++# 2 along with this work; if not, write to the Free Software Foundation,
++# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++# Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++# CA 95054 USA or visit www.sun.com if you need additional information or
++# have any questions.
++#
++
++#
++# Makefile for building the idlj tool
++#
++
++BUILDDIR = ../..
++PACKAGE = com.sun.tools.corba.se.logutil
++PRODUCT = tools
++PROGRAM = MC
++include $(BUILDDIR)/common/Defs.gmk
++
++BUILDTOOL_SOURCE_ROOT = $(SHARE_SRC)/classes
++BUILDTOOL_MAIN        = $(PKGDIR)/MC.java
++
++#
++# Build tool jar rules.
++#
++include $(BUILDDIR)/common/BuildToolJar.gmk
++
+diff -Nru openjdk.orig/corba/make/tools/Makefile openjdk/corba/make/tools/Makefile
+--- openjdk.orig/corba/make/tools/Makefile	2008-06-10 01:11:36.000000000 +0100
++++ openjdk/corba/make/tools/Makefile	2008-06-10 01:10:10.000000000 +0100
+@@ -33,6 +33,7 @@
+ SUBDIRS =                   \
+   strip_properties          \
+   idlj                      \
++  logutil		    \
+ 
+ all build clean clobber::
+ 	$(SUBDIRS-loop)
+diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/IndentingPrintWriter.java openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/IndentingPrintWriter.java
+--- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/IndentingPrintWriter.java	2008-06-09 02:33:37.000000000 +0100
++++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/IndentingPrintWriter.java	2008-06-09 02:33:56.000000000 +0100
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2003 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2003, 2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -30,7 +30,6 @@
+ import java.io.OutputStream ;
+ import java.io.BufferedWriter ;
+ import java.io.OutputStreamWriter ;
+-import jsint.Pair ;
+ import java.util.StringTokenizer ;
+ 
+ public class IndentingPrintWriter extends PrintWriter {
+@@ -38,22 +37,20 @@
+     private int indentWidth = 4 ;
+     private String indentString = "" ;
+ 
+-    public void printMsg( String msg, Pair data )
++    public void printMsg( String msg, Object... data )
+     {
+         // System.out.println( "printMsg called with msg=" + msg + " data=" + data ) ;
+         StringTokenizer st = new StringTokenizer( msg, "@", true ) ;
+         StringBuffer result = new StringBuffer() ;
+-        Object head = data.first ;
+-        Pair tail = (Pair)data.rest ;
+         String token = null ;
++	int pos = 0;
+ 
+         while (st.hasMoreTokens()) {
+             token = st.nextToken() ;
+             if (token.equals("@")) {
+-                if (head != null) {
+-                    result.append( head ) ;
+-                    head = tail.first ;
+-                    tail = (Pair)tail.rest ;
++                if (pos < data.length) {
++                    result.append( data[pos] ) ;
++		    ++pos;
+                 } else {
+                     throw new Error( "List too short for message" ) ;
+                 }
+diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputCode.java openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputCode.java
+--- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputCode.java	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputCode.java	2008-06-09 02:33:56.000000000 +0100
+@@ -0,0 +1,116 @@
++/*
++ * Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.  Sun designates this
++ * particular file as subject to the "Classpath" exception as provided
++ * by Sun in the LICENSE file that accompanied this code.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
++ */
++package com.sun.tools.corba.se.logutil;
++
++public class InputCode {
++
++  /**
++   * The name of this code.
++   */
++  private final String name;
++
++  /**
++   * The code.
++   */
++  private final int code;
++
++  /**
++   * The log level for this code.
++   */
++  private final String logLevel;
++
++  /**
++   * The error message for this code.
++   */
++  private final String message;
++
++  /**
++   * Creates a new error code with the specified name, code,
++   * log level and error message.
++   *
++   * @param name the name of the new code.
++   * @param code the code itself.
++   * @param logLevel the level of severity of this error.
++   * @param message the error message for this code.
++   */
++  public InputCode(final String name, final int code,
++		   final String logLevel, final String message) {
++    this.name = name;
++    this.code = code;
++    this.logLevel = logLevel;
++    this.message = message;
++  }
++
++  /**
++   * Returns the name of this code.
++   *
++   * @return the name of the code.
++   */
++  public String getName() {
++    return name;
++  }
++
++  /**
++   * Returns the code.
++   *
++   * @return the code.
++   */
++  public int getCode() {
++    return code;
++  }
++
++  /**
++   * Returns the severity of this code.
++   *
++   * @return the log level severity of the code.
++   */
++  public String getLogLevel() {
++    return logLevel;
++  }
++
++  /**
++   * Returns the error message for this code.
++   *
++   * @return the error message for this code.
++   */
++  public String getMessage() {
++    return message;
++  }
++
++  /**
++   * Returns a textual representation of this code.
++   *
++   * @return a textual representation.
++   */
++  public String toString() {
++    return getClass().getName() +
++      "[name=" + name +
++      ",code=" + code +
++      ",logLevel=" + logLevel +
++      ",message=" + message +
++      "]";
++  }
++
++}
+diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputException.java openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputException.java
+--- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputException.java	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputException.java	2008-06-09 02:33:56.000000000 +0100
+@@ -0,0 +1,95 @@
++/*
++ * Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.  Sun designates this
++ * particular file as subject to the "Classpath" exception as provided
++ * by Sun in the LICENSE file that accompanied this code.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
++ */
++package com.sun.tools.corba.se.logutil;
++
++import java.util.LinkedList;
++import java.util.Queue;
++
++public class InputException {
++
++  /**
++   * The name of this exception.
++   */
++  private final String name;
++
++  /**
++   * The codes associated with this exception.
++   */
++  private final Queue<InputCode> codes;
++
++  /**
++   * Constructs a new {@link InputException} with the
++   * specified name.
++   * 
++   * @param name the name of the new exception;
++   */
++  public InputException(final String name) {
++    this.name = name;
++    codes = new LinkedList<InputCode>();
++  }
++
++  /**
++   * Adds a new code to this exception.
++   *
++   * @param c the code to add.
++   */
++  public void add(InputCode c)
++  {
++    codes.offer(c);
++  }
++
++  /**
++   * Returns the name of this exception.
++   *
++   * @return the exception's name.
++   */
++  public String getName() {
++    return name;
++  }
++
++  /**
++   * Returns the codes associated with this exception.
++   *
++   * @return the exception's codes.
++   */
++  public Queue<InputCode> getCodes() {
++    return codes;
++  }
++
++  /**
++   * Returns a textual representation of this exception.
++   *
++   * @return a textual representation.
++   */
++  public String toString() {
++    return getClass().getName()
++      + "[name=" + name
++      + ",codes=" + codes 
++      + "]";
++  }
++
++
++}
++
+diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/Input.java openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/Input.java
+--- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/Input.java	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/Input.java	2008-06-09 02:33:56.000000000 +0100
+@@ -0,0 +1,211 @@
++/*
++ * Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.  Sun designates this
++ * particular file as subject to the "Classpath" exception as provided
++ * by Sun in the LICENSE file that accompanied this code.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
++ */
++
++package com.sun.tools.corba.se.logutil;
++
++import java.io.BufferedReader;
++import java.io.File;
++import java.io.FileInputStream;
++import java.io.FileNotFoundException;
++import java.io.InputStreamReader;
++import java.io.IOException;
++
++import java.util.LinkedList;
++import java.util.Queue;
++
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
++
++public class Input {
++
++  /**
++   * The name of the package this class will inhabit.
++   */
++  private String packageName;
++
++  /**
++   * The name of the generated class.
++   */
++  private String className;
++
++  /**
++   * The name of the group of exceptions handled by the class.
++   */
++  private String groupName;
++
++  /**
++   * The group of exceptions.
++   */
++  private Queue<InputException> exceptions;
++
++  /**
++   * Represents the current state of parsing the input.
++   */
++  private enum State
++  {
++    OUTER,
++    IN_CLASS,
++    IN_EXCEPTION_LIST
++  };
++
++  /**
++   * Regular expression to match each code line.
++   */
++  private static final Pattern EXCEPTION_INFO_REGEX = 
++    Pattern.compile("(\\w+)\\s*(\\d+)\\s*(\\w+)");
++
++  /**
++   * Parses the specified file to create a new {@link Input}
++   * object.
++   *
++   * @param filename the file to parse.
++   * @throws FileNotFoundException if the file can't be found.
++   * @throws IOException if an I/O error occurs.
++   */
++  public Input(final String filename) 
++  throws FileNotFoundException, IOException {
++    BufferedReader r =
++      new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
++    State state = State.OUTER;
++    InputException current = null;
++    exceptions = new LinkedList<InputException>();
++    String line;
++    while ((line = r.readLine()) != null) {
++      // Skip ; comments
++      if (line.startsWith(";"))
++	continue;
++
++      int index = line.indexOf("(");
++      if (index == -1)
++	continue;
++      
++      switch (state) {
++      case OUTER:
++	state = State.IN_CLASS;
++	String[] classInfo = line.substring(index).split(" ");
++	packageName = classInfo[0].substring(2, classInfo[0].length() - 1);
++	className = classInfo[1].substring(1, classInfo[1].length() - 1);
++	groupName = classInfo[2];
++	break;
++      case IN_CLASS:
++	state = State.IN_EXCEPTION_LIST;
++	break;
++      case IN_EXCEPTION_LIST:
++	boolean inQuote = false;
++	boolean inCode = false;
++	boolean end = false;
++	int start = index + 1;
++	Queue<String> lines = new LinkedList<String>();
++	for (int a = start; a < line.length(); ++a) {
++	  if (line.charAt(a) == '(' && !inCode && !inQuote) {
++	    if (current == null) 
++	      current =
++		new InputException(line.substring(start, a).trim());
++	    start = a + 1;
++	    inCode = true;
++	  }
++	  if (line.charAt(a) == '"')
++	    inQuote = !inQuote;
++	  if (line.charAt(a) == ')' && !inQuote) {
++	    if (inCode) {
++	      lines.offer(line.substring(start, a));
++	      inCode = false;
++	    } else 
++	      end = true;
++	  }
++	  if (!end && a == line.length() - 1)
++	    line += r.readLine();
++	}
++	for (String l : lines) {
++	  int stringStart = l.indexOf("\"") + 1;
++	  int stringEnd = l.indexOf("\"", stringStart);
++	  Matcher matcher = EXCEPTION_INFO_REGEX.matcher(l.substring(0, stringStart));
++	  if (matcher.find())
++	    current.add(new InputCode(matcher.group(1),
++				      Integer.parseInt(matcher.group(2)),
++				      matcher.group(3),
++				      l.substring(stringStart, stringEnd)));
++	}
++	exceptions.offer(current);
++	current = null;
++	break;
++      }
++    }
++  }
++
++  /**
++   * Returns the name of this group of exceptions.
++   *
++   * @return the name of this group of exceptions.
++   */
++  public String getGroupName()
++  {
++    return groupName;
++  }
++
++  /**
++   * Returns the name of the package this class will go in.
++   *
++   * @return the name of the package.
++   */
++  public String getPackageName()
++  {
++    return packageName;
++  }
++
++  /**
++   * Returns the name of the generated class.
++   *
++   * @return the name of the class.
++   */
++  public String getClassName()
++  {
++    return className;
++  }
++
++  /**
++   * Returns the exceptions contained in this class.
++   *
++   * @return the exceptions.
++   */
++  public Queue<InputException> getExceptions() {
++    return exceptions;
++  }
++
++  /**
++   * Returns a textual representation of this input.
++   *
++   * @return a textual representation.
++   */
++  public String toString() {
++    return getClass().getName() +
++      "[packageName=" + packageName +
++      ",className=" + className +
++      ",groupName=" + groupName +
++      ",exceptions=" + exceptions +
++      "]";
++  }
++
++}
+diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/MC.java openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/MC.java
+--- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/MC.java	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/MC.java	2008-06-09 02:33:56.000000000 +0100
+@@ -0,0 +1,559 @@
++/*
++ * Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.  Sun designates this
++ * particular file as subject to the "Classpath" exception as provided
++ * by Sun in the LICENSE file that accompanied this code.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
++ */
++package com.sun.tools.corba.se.logutil;
++
++import java.io.File;
++import java.io.FileNotFoundException;
++import java.io.FileOutputStream;
++import java.io.IOException;
++
++import java.util.Arrays;
++import java.util.Date;
++import java.util.Formatter;
++import java.util.List;
++import java.util.Queue;
++
++public class MC {
++
++  private static final String VERSION = "1.0";
++
++  private static final List<String> SUN_EXCEPTION_GROUPS = Arrays.asList(new String[]
++    { "SUNBASE", "ORBUTIL", "ACTIVATION", "NAMING", "INTERCEPTORS", "POA", "IOR", "UTIL" });
++
++  private static final List<String> EXCEPTIONS = Arrays.asList(new String[]
++    { "UNKNOWN", "BAD_PARAM", "NO_MEMORY", "IMP_LIMIT", "COMM_FAILURE", "INV_OBJREF", "NO_PERMISSION",
++      "INTERNAL", "MARSHAL", "INITIALIZE", "NO_IMPLEMENT", "BAD_TYPECODE", "BAD_OPERATION", "NO_RESOURCES", 
++      "NO_RESPONSE", "PERSIST_STORE", "BAD_INV_ORDER", "TRANSIENT", "FREE_MEM", "INV_IDENT", "INV_FLAG", 
++      "INTF_REPOS", "BAD_CONTEXT", "OBJ_ADAPTER", "DATA_CONVERSION", "OBJECT_NOT_EXIST", "TRANSACTION_REQUIRED", 
++      "TRANSACTION_ROLLEDBACK", "INVALID_TRANSACTION", "INV_POLICY", "CODESET_INCOMPATIBLE", "REBIND",
++      "TIMEOUT", "TRANSACTION_UNAVAILABLE", "BAD_QOS", "INVALID_ACTIVITY", "ACTIVITY_COMPLETED", 
++      "ACTIVITY_REQUIRED" });
++
++  /**
++   * Read the minor codes from the input file and
++   * write out a resource file.
++   *
++   * @param inFile the file to read the codes from.
++   * @param outDir the directory to write the resource file to.
++   * @throws FileNotFoundException if the input file can not be found.
++   * @throws IOException if an I/O error occurs.
++   */ 
++  private void makeResource(String inFile, String outDir) 
++  throws FileNotFoundException, IOException {
++    writeResource(outDir, new Input(inFile));
++  }
++
++  /**
++   * Create a new Java source file using the specified Scheme input file,
++   * and writing the result to the given output directory.
++   *
++   * @param inFile the file to read the data from.
++   * @param outDir the directory to write the Java class to.
++   * @throws FileNotFoundException if the input file can not be found.
++   * @throws IOException if an I/O error occurs.
++   */
++  private void makeClass(String inFile, String outDir) 
++  throws FileNotFoundException, IOException {
++    writeClass(inFile, outDir, new Input(inFile));
++  }
++
++  /**
++   * Writes out a Java source file using the data from the given
++   * {@link Input} object.  The result is written to {@code outDir}.
++   * The name of the input file is just used in the header of the
++   * resulting source file.
++   *
++   * @param inFile the name of the file the data was read from.
++   * @param outDir the directory to write the Java class to.
++   * @param input the parsed input data.
++   * @throws FileNotFoundException if the output file can't be written.
++   */ 
++  private void writeClass(String inFile, String outDir, Input input)
++    throws FileNotFoundException {
++    String packageName = input.getPackageName();
++    String className = input.getClassName();
++    String groupName = input.getGroupName();
++    Queue<InputException> exceptions = input.getExceptions();
++    FileOutputStream file = new FileOutputStream(outDir + File.separator + className + ".java");
++    IndentingPrintWriter pw = new IndentingPrintWriter(file);
++
++    writeClassHeader(inFile, groupName, pw);
++    pw.printMsg("package @ ;", packageName);
++    pw.println();
++    pw.println("import java.util.logging.Logger ;");
++    pw.println("import java.util.logging.Level ;");
++    pw.println();
++    pw.println("import org.omg.CORBA.OMGVMCID ;");
++    pw.println( "import com.sun.corba.se.impl.util.SUNVMCID ;");
++    pw.println( "import org.omg.CORBA.CompletionStatus ;");
++    pw.println( "import org.omg.CORBA.SystemException ;");
++    pw.println();
++    pw.println( "import com.sun.corba.se.spi.orb.ORB ;");
++    pw.println();
++    pw.println( "import com.sun.corba.se.spi.logging.LogWrapperFactory;");
++    pw.println();
++    pw.println( "import com.sun.corba.se.spi.logging.LogWrapperBase;");
++    pw.println();
++    writeImports(exceptions, pw);
++    pw.println();
++    pw.indent();
++    pw.printMsg("public class @ extends LogWrapperBase {", className);
++    pw.println();
++    pw.printMsg("public @( Logger logger )", className);
++    pw.indent();
++    pw.println( "{");
++    pw.undent();
++    pw.println( "super( logger ) ;");
++    pw.println( "}");
++    pw.println();
++    pw.flush();
++    writeFactoryMethod(className, groupName, pw);
++    writeExceptions(groupName, exceptions, className, pw);
++    pw.undent();
++    pw.println( );
++    pw.println( "}");
++    pw.flush();
++    pw.close();
++  }
++
++  /**
++   * Writes out the header of a Java source file.
++   *
++   * @param inFile the input file the file was generated from.
++   * @param groupName the group of exceptions the Java source file is for.
++   * @param pw the print writer used to write the output.
++   */
++  private void writeClassHeader(String inFile, String groupName,
++				IndentingPrintWriter pw) {
++    if (groupName.equals("OMG"))
++      pw.println("// Log wrapper class for standard exceptions");
++    else
++      pw.printMsg("// Log wrapper class for Sun private system exceptions in group @",
++		  groupName);
++    pw.println("//");
++    pw.printMsg("// Generated by MC.java version @, DO NOT EDIT BY HAND!", VERSION);
++    pw.printMsg("// Generated from input file @ on @", inFile, new Date());
++    pw.println();
++  }
++
++  /**
++   * Write out the import list for the exceptions.
++   *
++   * @param groups the exceptions that were parsed.
++   * @param pw the {@link IndentingPrintWriter} for writing to the file.
++   */
++  private void writeImports(Queue<InputException> exceptions,
++			    IndentingPrintWriter pw) {
++    if (exceptions == null)
++      return;
++    for (InputException e : exceptions) 
++      pw.println("import org.omg.CORBA." + e.getName() + " ;");
++  }
++
++  /**
++   * Write out the factory method for this group of exceptions.
++   *
++   * @param className the name of the generated class.
++   * @param groupName the name of this group of exceptions.
++   * @param pw the {@link IndentingPrintWriter} for writing to the file.
++   */
++  private void writeFactoryMethod(String className, String groupName,
++				  IndentingPrintWriter pw) {
++    pw.indent();
++    pw.println( "private static LogWrapperFactory factory = new LogWrapperFactory() {");
++    pw.println( "public LogWrapperBase create( Logger logger )" );
++    pw.indent();
++    pw.println( "{");
++    pw.undent();
++    pw.printMsg("return new @( logger ) ;", className);
++    pw.undent();
++    pw.println( "}" );
++    pw.println( "} ;" );
++    pw.println();
++    pw.printMsg("public static @ get( ORB orb, String logDomain )", className);
++    pw.indent();
++    pw.println( "{");
++    pw.indent();	
++    pw.printMsg( "@ wrapper = ", className);
++    pw.indent();
++    pw.printMsg( "(@) orb.getLogWrapper( logDomain, ", className);
++    pw.undent();	
++    pw.undent();	
++    pw.printMsg( "\"@\", factory ) ;", groupName);
++    pw.undent();	
++    pw.println( "return wrapper ;" );
++    pw.println( "} " );
++    pw.println();
++    pw.printMsg( "public static @ get( String logDomain )", className);
++    pw.indent();	
++    pw.println( "{");
++    pw.indent();	
++    pw.printMsg( "@ wrapper = ", className);
++    pw.indent();
++    pw.printMsg( "(@) ORB.staticGetLogWrapper( logDomain, ", className);
++    pw.undent();	
++    pw.undent();	
++    pw.printMsg( "\"@\", factory ) ;", groupName);
++    pw.undent();	
++    pw.println( "return wrapper ;" );
++    pw.println( "} " );
++    pw.println();
++  }
++
++  /**
++   * Writes out the exceptions themselves.
++   *
++   * @param groupName the name of this group of exceptions.
++   * @param exceptions the exceptions to write out.
++   * @param className the name of the generated class.
++   * @param pw the {@link IndentingPrintWriter} for writing to the file.
++   */
++  private void writeExceptions(String groupName, Queue<InputException> exceptions, 
++			       String className, IndentingPrintWriter pw) {
++    for (InputException e : exceptions) {
++      pw.println("///////////////////////////////////////////////////////////");
++      pw.printMsg("// @", e.getName());
++      pw.println("///////////////////////////////////////////////////////////");
++      pw.println();
++      for (InputCode c : e.getCodes()) 
++	writeMethods(groupName, e.getName(), c.getName(), c.getCode(),
++		     c.getLogLevel(), className, StringUtil.countArgs(c.getMessage()), pw);     
++      pw.flush();
++    }
++  }
++
++  /**
++   * Writes out the methods for a particular error.
++   *
++   * @param groupName the name of this group of exceptions.
++   * @param exceptionName the name of this particular exception.
++   * @param errorName the name of this particular error.
++   * @param code the minor code for this particular error.
++   * @param ident the name of the error in mixed-case identifier form.
++   * @param level the level at which to place log messages.
++   * @param className the name of the class for this group of exceptions.
++   * @param numParams the number of parameters the detail message takes.
++   * @param pw the print writer for writing to the file.
++   */
++  private void writeMethods(String groupName, String exceptionName, String errorName,
++			    int code, String level, String className, int numParams,
++			    IndentingPrintWriter pw) {
++    String ident = StringUtil.toMixedCase(errorName);
++    pw.printMsg("public static final int @ = @ ;", errorName, getBase(groupName, code));
++    pw.println();
++    pw.flush();
++    writeMethodStatusCause(groupName, exceptionName, errorName, ident, level,
++			   numParams, className, pw);
++    pw.println();
++    pw.flush();
++    writeMethodStatus(exceptionName, ident, numParams, pw);
++    pw.println();
++    pw.flush();
++    writeMethodCause(exceptionName, ident, numParams, pw);
++    pw.println();
++    pw.flush();
++    writeMethodNoArgs(exceptionName, ident, numParams, pw);
++    pw.println();
++    pw.flush();
++  }
++
++  /**
++   * Writes out a method for an error that takes a
++   * {@link org.omg.CORBA.CompletionStatus} and a cause.
++   *
++   * @param groupName the name of this group of exceptions.
++   * @param exceptionName the name of this particular exception.
++   * @param errorName the name of this particular error.
++   * @param ident the name of the error in mixed-case identifier form.
++   * @param logLevel the level at which to place log messages.
++   * @param numParams the number of parameters the detail message takes.
++   * @param className the name of the class for this group of exceptions.
++   * @param pw the print writer for writing to the file.
++   */
++  private void writeMethodStatusCause(String groupName, String exceptionName,
++				      String errorName, String ident,
++				      String logLevel, int numParams,
++				      String className, IndentingPrintWriter pw) {
++    pw.indent();
++    pw.printMsg( "public @ @( CompletionStatus cs, Throwable t@) {", exceptionName,
++		 ident, makeDeclArgs(true, numParams));
++    pw.printMsg( "@ exc = new @( @, cs ) ;", exceptionName, exceptionName, errorName);
++    pw.indent();
++    pw.println( "if (t != null)" );
++    pw.undent();
++    pw.println( "exc.initCause( t ) ;" );	
++    pw.println();
++    pw.indent();
++    pw.printMsg( "if (logger.isLoggable( Level.@ )) {", logLevel);
++    if (numParams > 0) {
++      pw.printMsg( "Object[] parameters = new Object[@] ;", numParams);
++      for (int a = 0; a < numParams; ++a)
++	pw.printMsg("parameters[@] = arg@ ;", a, a);
++    } else 
++      pw.println( "Object[] parameters = null ;");
++    pw.indent();
++    pw.printMsg( "doLog( Level.@, \"@.@\",", logLevel, groupName, ident);
++    pw.undent();
++    pw.undent();
++    pw.printMsg( "parameters, @.class, exc ) ;", className);
++    pw.println( "}");
++    pw.println();
++    
++    pw.undent();
++    pw.println( "return exc ;");
++    pw.println( "}");
++  }
++
++  /**
++   * Writes out a method for an error that takes a
++   * {@link org.omg.CORBA.CompletionStatus}.
++   *
++   * @param exceptionName the name of this particular exception.
++   * @param ident the name of the error in mixed-case identifier form.
++   * @param numParams the number of parameters the detail message takes.
++   * @param pw the print writer for writing to the file.
++   */
++  private void writeMethodStatus(String exceptionName, String ident,
++				 int numParams, IndentingPrintWriter pw) {
++    pw.indent();
++    pw.printMsg("public @ @( CompletionStatus cs@) {", exceptionName,
++		ident, makeDeclArgs(true, numParams));
++    pw.undent();
++    pw.printMsg("return @( cs, null@ ) ;", ident, makeCallArgs(true, numParams));
++    pw.println("}");
++  }
++
++  /**
++   * Writes out a method for an error that takes a cause.
++   *
++   * @param exceptionName the name of this particular exception.
++   * @param ident the name of the error in mixed-case identifier form.
++   * @param numParams the number of parameters the detail message takes.
++   * @param pw the print writer for writing to the file.
++   */
++  private void writeMethodCause(String exceptionName, String ident,
++				int numParams, IndentingPrintWriter pw) {
++    pw.indent();
++    pw.printMsg("public @ @( Throwable t@) {", exceptionName, ident,
++		makeDeclArgs(true, numParams));
++    pw.undent();
++    pw.printMsg("return @( CompletionStatus.COMPLETED_NO, t@ ) ;", ident,
++		makeCallArgs(true, numParams));
++    pw.println("}");
++  }
++
++  /**
++   * Writes out a method for an error that takes no arguments.
++   *
++   * @param exceptionName the name of this particular exception.
++   * @param ident the name of the error in mixed-case identifier form.
++   * @param numParams the number of parameters the detail message takes.
++   * @param pw the print writer for writing to the file.
++   */
++  private void writeMethodNoArgs(String exceptionName, String ident,
++				 int numParams, IndentingPrintWriter pw) {
++    
++    pw.indent();
++    pw.printMsg("public @ @( @) {", exceptionName, ident,
++		makeDeclArgs(false, numParams));
++    pw.undent();
++    pw.printMsg("return @( CompletionStatus.COMPLETED_NO, null@ ) ;",
++		ident, makeCallArgs(true, numParams));
++    pw.println("}");
++  }
++
++  /**
++   * Returns a list of comma-separated arguments with type declarations.
++   *
++   * @param leadingComma true if the list should start with a comma.
++   * @param numArgs the number of arguments to generate.
++   * @return the generated string.
++   */
++  private String makeDeclArgs(boolean leadingComma, int numArgs) {
++    return makeArgString("Object arg", leadingComma, numArgs);
++  }
++
++  /**
++   * Returns a list of comma-separated arguments without type declarations.
++   *
++   * @param leadingComma true if the list should start with a comma.
++   * @param numArgs the number of arguments to generate.
++   * @return the generated string.
++   */
++  private String makeCallArgs(boolean leadingComma, int numArgs) {
++    return makeArgString("arg", leadingComma, numArgs);
++  }
++
++  /**
++   * Returns a list of comma-separated arguments.
++   *
++   * @param prefixString the string with which to prefix each argument.
++   * @param leadingComma true if the list should start with a comma.
++   * @param numArgs the number of arguments to generate.
++   * @return the generated string.
++   */
++  private String makeArgString(String prefixString, boolean leadingComma,
++			       int numArgs) {
++    if (numArgs == 0)
++      return " ";
++    if (numArgs == 1) {
++      if (leadingComma)
++	return ", " + prefixString + (numArgs - 1);
++      else
++	return " " + prefixString + (numArgs - 1);
++    }
++    return makeArgString(prefixString, leadingComma, numArgs - 1) +
++      ", " + prefixString + (numArgs - 1);
++  }
++
++  /**
++   * Returns the {@link String} containing the calculation of the
++   * error code.
++   *
++   * @param groupName the group of exception to which the code belongs.
++   * @param code the minor code number representing the exception within the group.
++   * @return the unique error code.
++   */
++  private String getBase(String groupName, int code) {
++    if (groupName.equals("OMG"))
++      return "OMGVMCID.value + " + code;
++    else
++      return "SUNVMCID.value + " + (code + getSunBaseNumber(groupName));
++  }
++
++  /**
++   * Returns the base number for Sun-specific exceptions.
++   *
++   * @return the base number.
++   */
++  private int getSunBaseNumber(String groupName) {
++    return 200 * SUN_EXCEPTION_GROUPS.indexOf(groupName);
++  }
++
++  /**
++   * Writes out a resource file using the data from the given
++   * {@link Input} object.  The result is written to {@code outDir}.
++   *
++   * @param outDir the directory to write the Java class to.
++   * @param input the parsed input data.
++   * @throws FileNotFoundException if the output file can't be written.
++   */ 
++  private void writeResource(String outDir, Input input)
++    throws FileNotFoundException { 
++    FileOutputStream file = new FileOutputStream(outDir + File.separator +
++						 input.getClassName() + ".resource");
++    IndentingPrintWriter pw = new IndentingPrintWriter(file);
++    String groupName = input.getGroupName();
++    for (InputException e : input.getExceptions()) {
++      String exName = e.getName();
++      for (InputCode c : e.getCodes()) {
++	String ident = StringUtil.toMixedCase(c.getName());
++	pw.printMsg("@.@=\"@: (@) @\"", groupName, ident,
++		    getMessageID(groupName, exName, c.getCode()), exName, c.getMessage());
++      }
++      pw.flush();
++    }
++    pw.close();
++  }
++    
++  /**
++   * Returns the message ID corresponding to the given group name,
++   * exception name and error code.
++   *
++   * @param groupName the name of the group of exceptions.
++   * @param exception the name of the particular exception.
++   * @param code an error code from the given exception.
++   * @return the message ID.
++   */
++  private String getMessageID(String groupName, String exceptionName, int code) {
++    if (groupName.equals("OMG"))
++      return getStandardMessageID(exceptionName, code);
++    else
++      return getSunMessageID(groupName, exceptionName, code);
++  }
++
++  /**
++   * Returns the standard (OMG) message ID corresponding to the given
++   * exception name and error code.
++   *
++   * @param exceptionName the name of the particular exception.
++   * @param code an error code from the given exception.
++   * @return the message ID.
++   */
++  private String getStandardMessageID(String exceptionName, int code) {
++    return new Formatter().format("IOP%s0%04d", getExceptionID(exceptionName),
++				  code).toString();
++  }
++
++  /**
++   * Returns the Sun message ID corresponding to the given group name,
++   * exception name and error code.
++   *
++   * @param groupName the name of the group of exceptions.
++   * @param exceptionName the name of the particular exception.
++   * @param code an error code from the given exception.
++   * @return the message ID.
++   */
++  private String getSunMessageID(String groupName, String exceptionName, int code) {
++    return new Formatter().format("IOP%s1%04d", getExceptionID(exceptionName),
++				  getSunBaseNumber(groupName) + code).toString();
++  }
++
++  /**
++   * Returns the exception ID corresponding to the given exception name.
++   *
++   * @param exceptionName the name of the particular exception.
++   * @return the message ID.
++   */
++  private String getExceptionID(String exceptionName) {
++    return new Formatter().format("%03d", EXCEPTIONS.indexOf(exceptionName)).toString();
++  }
++      
++  /**
++   * Entry point for running the generator from the command
++   * line.  Users can specify either "make-class" or "make-resource"
++   * as the first argument to generate the specified type of file.
++   *
++   * @param args the command-line arguments.
++   * @throws FileNotFoundException if the input file can not be found.
++   * @throws IOException if an I/O error occurs.
++   */
++  public static void main(String[] args)
++    throws FileNotFoundException, IOException
++  {
++    if (args.length < 3)
++      {
++	System.err.println("(make-class|make-resource) <input file> <output dir>");
++	System.exit(-1);
++      }
++    if (args[0].equals("make-class"))
++      new MC().makeClass(args[1], args[2]);
++    else if (args[0].equals("make-resource"))
++      new MC().makeResource(args[1], args[2]);
++    else
++      System.err.println("Invalid command: " + args[0]);
++  }
++
++}
+diff -Nru openjdk.orig/jdk/make/THIRD_PARTY_README openjdk/jdk/make/THIRD_PARTY_README
+--- openjdk.orig/jdk/make/THIRD_PARTY_README	2008-06-09 02:20:21.000000000 +0100
++++ openjdk/jdk/make/THIRD_PARTY_README	2008-06-09 02:26:07.000000000 +0100
+@@ -138,16 +138,6 @@
+ ____________________________________
+ This formulation of W3C's notice and license became active on August 14 1998 so as to improve compatibility with GPL. This version ensures that W3C software licensing terms are no more restrictive than GPL and consequently W3C software may be distributed in GPL packages. See the older formulation for the policy prior to this date. Please see our Copyright FAQ for common questions about using materials from our site, including specific terms and conditions for packages like libwww, Amaya, and Jigsaw. Other questions about this notice can be directed to site-policy@w3.org.
+  
+-%% This notice is provided with respect to jscheme.jar, which may be included with this software: 
+-Software License Agreement
+-Copyright © 1998-2002 by Peter Norvig. 
+-Permission is granted to anyone to use this software, in source or object code form, on any computer system, and to modify, compile, decompile, run, and redistribute it to anyone else, subject to the following restrictions: 
+-1.The author makes no warranty of any kind, either expressed or implied, about the suitability of this software for any purpose.
+-2.The author accepts no liability of any kind for damages or other consequences of the use of this software, even if they arise from defects in the software.
+-3.The origin of this software must not be misrepresented, either by explicit claim or by omission.
+-4.Altered versions must be plainly marked as such, and must not be misrepresented as being the original software. Altered versions may be distributed in packages under other licenses (such as the GNU license). 
+-If you find this software useful, it would be nice if you let me (peter@norvig.com) know about it, and nicer still if you send me modifications that you are willing to share. However, you are not required to do so.
+-
+ 
+ %% This notice is provided with respect to PC/SC Lite for Suse Linux v. 1.1.1, which may be included with this software: 
+ 
+diff -Nru openjdk.orig/THIRD_PARTY_README openjdk/THIRD_PARTY_README
+--- openjdk.orig/THIRD_PARTY_README	2008-06-09 02:20:14.000000000 +0100
++++ openjdk/THIRD_PARTY_README	2008-06-09 02:25:57.000000000 +0100
+@@ -137,16 +137,6 @@
+ The name and trademarks of copyright holders may NOT be used in advertising or publicity pertaining to the software without specific, written prior permission. Title to copyright in this software and any associated documentation will at all times remain with copyright holders.
+ ____________________________________
+ This formulation of W3C's notice and license became active on August 14 1998 so as to improve compatibility with GPL. This version ensures that W3C software licensing terms are no more restrictive than GPL and consequently W3C software may be distributed in GPL packages. See the older formulation for the policy prior to this date. Please see our Copyright FAQ for common questions about using materials from our site, including specific terms and conditions for packages like libwww, Amaya, and Jigsaw. Other questions about this notice can be directed to site-policy@w3.org.
+- 
+-%% This notice is provided with respect to jscheme.jar, which may be included with this software: 
+-Software License Agreement
+-Copyright © 1998-2002 by Peter Norvig. 
+-Permission is granted to anyone to use this software, in source or object code form, on any computer system, and to modify, compile, decompile, run, and redistribute it to anyone else, subject to the following restrictions: 
+-1.The author makes no warranty of any kind, either expressed or implied, about the suitability of this software for any purpose.
+-2.The author accepts no liability of any kind for damages or other consequences of the use of this software, even if they arise from defects in the software.
+-3.The origin of this software must not be misrepresented, either by explicit claim or by omission.
+-4.Altered versions must be plainly marked as such, and must not be misrepresented as being the original software. Altered versions may be distributed in packages under other licenses (such as the GNU license). 
+-If you find this software useful, it would be nice if you let me (peter@norvig.com) know about it, and nicer still if you send me modifications that you are willing to share. However, you are not required to do so.
+ 
+ 
+ %% This notice is provided with respect to PC/SC Lite for Suse Linux v. 1.1.1, which may be included with this software: 

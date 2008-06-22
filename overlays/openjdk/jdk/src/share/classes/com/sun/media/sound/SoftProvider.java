@@ -22,7 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 import javax.sound.midi.MidiDevice;
@@ -30,27 +29,23 @@ import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.spi.MidiDeviceProvider;
 
 /**
- * 
  * Software synthesizer provider class.
- * 
- * @version %I%, %E%
+ *
  * @author Karl Helgason
  */
 public class SoftProvider extends MidiDeviceProvider {
 
-	protected static Info softinfo = SoftSynthesizer.info;
+    protected final static Info softinfo = SoftSynthesizer.info;
+    private static Info[] softinfos = {softinfo};
 
-	private static Info[] softinfos = { softinfo };
+    public MidiDevice.Info[] getDeviceInfo() {
+        return softinfos;
+    }
 
-	public MidiDevice.Info[] getDeviceInfo() {
-		return softinfos;
-	}
-
-	public MidiDevice getDevice(MidiDevice.Info info) {
-		if (info == softinfo) {
-			return new SoftSynthesizer();
-		}
-		return null;
-	}
-
+    public MidiDevice getDevice(MidiDevice.Info info) {
+        if (info == softinfo) {
+            return new SoftSynthesizer();
+        }
+        return null;
+    }
 }

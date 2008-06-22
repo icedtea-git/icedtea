@@ -33,6 +33,8 @@ package net.sourceforge.nanoxml;
 import java.io.*;
 import java.util.*;
 
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
+
 
 /**
  * XMLElement is a representation of an XML object. The object is able to parse
@@ -195,6 +197,10 @@ public class XMLElement
      */
     private char charReadTooMuch;
 
+    /**
+     * Character read too much for the comment remover.
+     */
+    private char sanitizeCharReadTooMuch;
 
     /**
      * The reader provided by the caller of the parse method.
@@ -532,7 +538,7 @@ public class XMLElement
             char ch = this.scanWhitespace();
 
             if (ch != '<') {
-                throw this.expectedInput("<");
+                throw this.expectedInput("<", ch);
             }
 
             ch = this.readChar();
@@ -815,10 +821,24 @@ public class XMLElement
             } else {
                 dashesToRead = 2;
             }
+
+            // Be more tolerant of extra -- (double dashes)
+            // in comments.
+            if (dashesToRead == 0) {
+                ch = this.readChar();
+                if (ch == '>') {
+                    return;
+                } else {
+                    dashesToRead = 2;
+                    this.unreadChar(ch);
+                }
+            }
         }
+        /*
         if (this.readChar() != '>') {
             throw this.expectedInput(">");
         }
+        */
     }
 
 
@@ -1185,6 +1205,23 @@ public class XMLElement
         return new XMLParseException(this.getName(), this.parserLineNr, msg);
     }
 
+    /**
+     * Creates a parse exception for when the next character read is not
+     * the character that was expected.
+     *
+     * @param charSet The set of characters (in human readable form) that was
+     *                expected.
+     * @param ch The character that was received instead.
+     * </dl><dl><dt><b>Preconditions:</b></dt><dd>
+     * <ul><li><code>charSet != null</code>
+     *     <li><code>charSet.length() &gt; 0</code>
+     * </ul></dd></dl>
+     */
+    protected XMLParseException expectedInput(String charSet, char ch)
+    {
+        String msg = "Expected: '" + charSet +"'" + " but got: '" + ch + "'";
+        return new XMLParseException(this.getName(), this.parserLineNr, msg);
+    }
 
     /**
      * Creates a parse exception for when an entity could not be resolved.
@@ -1201,5 +1238,82 @@ public class XMLElement
         String msg = "Unknown or invalid entity: &" + name + ";";
         return new XMLParseException(this.getName(), this.parserLineNr, msg);
     }
-    
+
+    /**
+     * Reads an xml file and removes the comments, leaving only relevant
+     * xml code.
+     *
+     * @param isr The reader of the InputStream containing the xml.
+     * @param pout The PipedOutputStream that will be receiving the filtered
+     *             xml file.
+     */
+    public void sanitizeInput(InputStreamReader isr, PipedOutputStream pout) {
+        try {
+            PrintStream out = new PrintStream(pout);
+
+            this.sanitizeCharReadTooMuch = '\0';
+            this.reader = isr;
+            this.parserLineNr = 0;
+            int newline = 2;
+
+            while(true) {
+                char ch;
+                if (this.sanitizeCharReadTooMuch != '\0') {
+                    ch = this.sanitizeCharReadTooMuch;
+                    this.sanitizeCharReadTooMuch = '\0';
+                } else {
+
+                    int i = this.reader.read();
+                    if (i == -1) {
+                        out.flush();
+                        break;
+                    } else if (i == 10) {
+                        ch = '\n';
+                    } else {
+                        ch = (char) i;
+                    }
+                }
+
+                char next;
+                int i = this.reader.read();
+                if (i == -1) {
+                    out.flush();
+                    break;
+                } else if (i == 10) {
+                    next = '\n';
+                } else {
+                    next = (char) i;
+                }
+
+                this.sanitizeCharReadTooMuch = next;
+
+                // If the next char is a ? or !, then we've hit a special tag,
+                // and should skip it.
+                if (next == '!' || next == '?') {
+                    this.skipSpecialTag(0);
+                    this.sanitizeCharReadTooMuch = '\0';
+                }
+                // Otherwise we haven't hit a comment, and we should write ch.
+                else {
+                    out.print(ch);
+                    if (JNLPRuntime.isDebug()) {
+                        if (ch == 10) {
+                            System.out.println();
+                            System.out.print("line: " + newline + " ");
+                            newline++;
+                        } else {
+                            System.out.print(ch);
+                        }
+                    }
+                }
+            }
+
+            out.close();
+            isr.close();
+        } catch (Exception e) {
+            // Print the stack trace here -- xml.parseFromReader() will
+            // throw the ParseException if something goes wrong.
+            e.printStackTrace();
+        }
+    }
 }

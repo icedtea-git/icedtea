@@ -104,10 +104,18 @@ diff -Nru openjdk.orig/hotspot/make/Makefile openjdk/hotspot/make/Makefile
  
  # Bin files (windows)
  ifeq ($(OSNAME),windows)
-diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-19 22:56:22.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-23 23:12:10.000000000 +0100
-@@ -94,8 +94,12 @@
+@@ -264,6 +292,7 @@ endif
+ 
+ # Xusage file
+ $(EXPORT_SERVER_DIR)/Xusage.txt $(EXPORT_CLIENT_DIR)/Xusage.txt: $(XUSAGE)
++$(EXPORT_SERVER_DIR)/Xusage.txt $(EXPORT_CLIENT_DIR)/Xusage.txt $(EXPORT_KERNEL_DIR)/Xusage.txt: $(XUSAGE)
+ 	$(prep-target)
+ 	$(RM) $@.temp
+ 	$(SED) 's/\(separated by \)[;:]/\1$(PATH_SEP)/g' $< > $@.temp
+diff -r 79d639c8a75f openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
+--- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-02-12 04:14:24.000000000 -0500
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-02-14 17:39:45.000000000 -0500
+@@ -89,8 +89,12 @@
  #ifdef TIERED
    #define VMTYPE "Server"
  #else

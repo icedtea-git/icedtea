@@ -22,7 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 import java.io.File;
@@ -33,345 +32,334 @@ import java.io.RandomAccessFile;
 
 /**
  * Resource Interchange File Format (RIFF) stream encoder.
- * 
- * @version %I%, %E%
+ *
  * @author Karl Helgason
  */
 public class RIFFWriter extends OutputStream {
-	
-	private interface RandomAccessWriter
-	{
-		public void seek(long chunksizepointer) throws IOException;
 
-		public long getPointer() throws IOException;
+    private interface RandomAccessWriter {
 
-		public void close() throws IOException;
+        public void seek(long chunksizepointer) throws IOException;
 
-		public void write(int b)throws IOException;
+        public long getPointer() throws IOException;
 
-		public void write(byte[] b, int off, int len)throws IOException;
+        public void close() throws IOException;
 
-		public void write(byte[] bytes) throws IOException;
+        public void write(int b) throws IOException;
 
-		public long length() throws IOException;
+        public void write(byte[] b, int off, int len) throws IOException;
 
-		public void setLength(long i) throws IOException;		
-	}
-	
-	private static class RandomAccessFileWriter implements RandomAccessWriter
-	{
-		RandomAccessFile raf;
-		
-		public RandomAccessFileWriter(File file) throws FileNotFoundException
-		{
-			this.raf = new RandomAccessFile(file, "rw");
-		}
+        public void write(byte[] bytes) throws IOException;
 
-		public RandomAccessFileWriter(String name) throws FileNotFoundException
-		{
-			this.raf = new RandomAccessFile(name, "rw");
-		}
-		
-		public void seek(long chunksizepointer) throws IOException {
-			raf.seek(chunksizepointer);
-		}
+        public long length() throws IOException;
 
-		public long getPointer() throws IOException {
-			return raf.getFilePointer();
-		}
+        public void setLength(long i) throws IOException;
+    }
 
-		public void close() throws IOException {
-			raf.close();
-		}
+    private static class RandomAccessFileWriter implements RandomAccessWriter {
 
-		public void write(int b) throws IOException {
-			raf.write(b);
-		}
+        RandomAccessFile raf;
 
-		public void write(byte[] b, int off, int len) throws IOException {
-			raf.write(b,off,len);
-		}
+        public RandomAccessFileWriter(File file) throws FileNotFoundException {
+            this.raf = new RandomAccessFile(file, "rw");
+        }
 
-		public void write(byte[] bytes) throws IOException {
-			raf.write(bytes);
-		}
+        public RandomAccessFileWriter(String name) throws FileNotFoundException {
+            this.raf = new RandomAccessFile(name, "rw");
+        }
 
-		public long length() throws IOException
-		{
-			return raf.length();
-		}
+        public void seek(long chunksizepointer) throws IOException {
+            raf.seek(chunksizepointer);
+        }
 
-		public void setLength(long i) throws IOException
-		{
-			raf.setLength(i);
-		}
-		
-	}
-	
-	private static class RandomAccessByteWriter implements RandomAccessWriter
-	{
-		
-		byte[] buff = new byte[32];
-		int length = 0;
-		int pos = 0;
-		byte[] s;
-		OutputStream stream;
-		
-		public RandomAccessByteWriter(OutputStream stream)
-		{
-			this.stream = stream;
-		}
-		
-		public void seek(long chunksizepointer) throws IOException {
-			pos = (int)chunksizepointer;
-		}
+        public long getPointer() throws IOException {
+            return raf.getFilePointer();
+        }
 
-		public long getPointer() throws IOException {
-			return pos;
-		}
+        public void close() throws IOException {
+            raf.close();
+        }
 
-		public void close() throws IOException {
-			stream.write(buff,0,length);
-			stream.close();
-		}
+        public void write(int b) throws IOException {
+            raf.write(b);
+        }
 
-		public void write(int b) throws IOException {
-			if(s == null) s = new byte[1];;
-			s[0] = (byte)b;			
-			write(s, 0, 1);
-		}
+        public void write(byte[] b, int off, int len) throws IOException {
+            raf.write(b, off, len);
+        }
 
-		public void write(byte[] b, int off, int len) throws IOException {
-			int newsize = pos + len;
-			if(newsize > length) setLength(newsize);
-			int end = off + len;
-			for (int i = off; i < end; i++) {
-				buff[pos++] = b[i];
-			}
-		}
+        public void write(byte[] bytes) throws IOException {
+            raf.write(bytes);
+        }
 
-		public void write(byte[] bytes) throws IOException {
-			write(bytes,0,bytes.length);
-		}
+        public long length() throws IOException {
+            return raf.length();
+        }
 
-		public long length() throws IOException {
-			return length;
-		}
+        public void setLength(long i) throws IOException {
+            raf.setLength(i);
+        }
+    }
 
-		public void setLength(long i) throws IOException {
-			length = (int)i;
-			if(length > buff.length)
-			{
-				int newlen = Math.max(buff.length << 1, length);
-				byte[] newbuff = new byte[newlen]; 				
-				System.arraycopy(buff, 0, newbuff, 0, buff.length);
-				buff = newbuff;
-			}
-		}
-		
-	}
+    private static class RandomAccessByteWriter implements RandomAccessWriter {
 
-	private int chunktype = 0; // 0=RIFF, 1=LIST; 2=CHUNK
+        byte[] buff = new byte[32];
+        int length = 0;
+        int pos = 0;
+        byte[] s;
+        OutputStream stream;
 
-	private RandomAccessWriter raf;
+        public RandomAccessByteWriter(OutputStream stream) {
+            this.stream = stream;
+        }
 
-	private long chunksizepointer;
+        public void seek(long chunksizepointer) throws IOException {
+            pos = (int) chunksizepointer;
+        }
 
-	private long startpointer;
+        public long getPointer() throws IOException {
+            return pos;
+        }
 
-	private RIFFWriter childchunk = null;
+        public void close() throws IOException {
+            stream.write(buff, 0, length);
+            stream.close();
+        }
 
-	private boolean open = true;
+        public void write(int b) throws IOException {
+            if (s == null)
+                s = new byte[1];
+            s[0] = (byte)b;
+            write(s, 0, 1);
+        }
 
-	private boolean writeoverride = false;
+        public void write(byte[] b, int off, int len) throws IOException {
+            int newsize = pos + len;
+            if (newsize > length)
+                setLength(newsize);
+            int end = off + len;
+            for (int i = off; i < end; i++) {
+                buff[pos++] = b[i];
+            }
+        }
 
-	public RIFFWriter(String name, String format) throws IOException {
-		this(new RandomAccessFileWriter(name), format, 0);
-	}
+        public void write(byte[] bytes) throws IOException {
+            write(bytes, 0, bytes.length);
+        }
 
-	public RIFFWriter(File file, String format) throws IOException {
-		this(new RandomAccessFileWriter(file), format, 0);
-	}
-	
-	public RIFFWriter(OutputStream stream, String format) throws IOException {
-		this(new RandomAccessByteWriter(stream), format, 0);
-	}
-	
-	private RIFFWriter(RandomAccessWriter raf, String format, int chunktype)
-			throws IOException {
-		if (chunktype == 0)
-			if (raf.length() != 0)
-				raf.setLength(0);
-		this.raf = raf;
-		if (raf.getPointer() % 2 != 0)
-			raf.write(0);
+        public long length() throws IOException {
+            return length;
+        }
 
-		if (chunktype == 0)
-			raf.write("RIFF".getBytes("ascii"));
-		else if (chunktype == 1)
-			raf.write("LIST".getBytes("ascii"));
-		else
-			raf.write((format + "    ").substring(0, 4).getBytes("ascii"));
-		chunksizepointer = raf.getPointer();
-		this.chunktype = 2;
-		writeUnsignedInt(0);
-		this.chunktype = chunktype;
-		startpointer = raf.getPointer();
-		if (chunktype != 2)
-			raf.write((format + "    ").substring(0, 4).getBytes("ascii"));
+        public void setLength(long i) throws IOException {
+            length = (int) i;
+            if (length > buff.length) {
+                int newlen = Math.max(buff.length << 1, length);
+                byte[] newbuff = new byte[newlen];
+                System.arraycopy(buff, 0, newbuff, 0, buff.length);
+                buff = newbuff;
+            }
+        }
+    }
+    private int chunktype = 0; // 0=RIFF, 1=LIST; 2=CHUNK
+    private RandomAccessWriter raf;
+    private long chunksizepointer;
+    private long startpointer;
+    private RIFFWriter childchunk = null;
+    private boolean open = true;
+    private boolean writeoverride = false;
 
-	}
+    public RIFFWriter(String name, String format) throws IOException {
+        this(new RandomAccessFileWriter(name), format, 0);
+    }
 
-	public void seek(long pos) throws IOException {
-		raf.seek(pos);
-	}
+    public RIFFWriter(File file, String format) throws IOException {
+        this(new RandomAccessFileWriter(file), format, 0);
+    }
 
-	public long getFilePointer() throws IOException {
-		return raf.getPointer();
-	}
+    public RIFFWriter(OutputStream stream, String format) throws IOException {
+        this(new RandomAccessByteWriter(stream), format, 0);
+    }
 
-	public void setWriteOverride(boolean writeoverride) {
-		this.writeoverride = writeoverride;
-	}
+    private RIFFWriter(RandomAccessWriter raf, String format, int chunktype)
+            throws IOException {
+        if (chunktype == 0)
+            if (raf.length() != 0)
+                raf.setLength(0);
+        this.raf = raf;
+        if (raf.getPointer() % 2 != 0)
+            raf.write(0);
 
-	public boolean getWriteOverride() {
-		return writeoverride;
-	}
+        if (chunktype == 0)
+            raf.write("RIFF".getBytes("ascii"));
+        else if (chunktype == 1)
+            raf.write("LIST".getBytes("ascii"));
+        else
+            raf.write((format + "    ").substring(0, 4).getBytes("ascii"));
 
-	public void close() throws IOException {
-		if (!open)
-			return;
-		if (childchunk != null) {
-			childchunk.close();
-			childchunk = null;
-		}
+        chunksizepointer = raf.getPointer();
+        this.chunktype = 2;
+        writeUnsignedInt(0);
+        this.chunktype = chunktype;
+        startpointer = raf.getPointer();
+        if (chunktype != 2)
+            raf.write((format + "    ").substring(0, 4).getBytes("ascii"));
 
-		int bakchunktype = chunktype;
-		long fpointer = raf.getPointer();
-		raf.seek(chunksizepointer);
-		chunktype = 2;
-		writeUnsignedInt(fpointer - startpointer);
+    }
 
-		if (bakchunktype == 0)
-			raf.close();
-		else
-			raf.seek(fpointer);
-		open = false;
-		raf = null;
-	}
+    public void seek(long pos) throws IOException {
+        raf.seek(pos);
+    }
 
-	public void write(int b) throws IOException {
-		if (!writeoverride) {
-			if (chunktype != 2)
-				throw new IllegalArgumentException(
-						"Only chunks can write bytes!");
-			if (childchunk != null) {
-				childchunk.close();
-				childchunk = null;
-			}
-		}
-		raf.write(b);
-	}
+    public long getFilePointer() throws IOException {
+        return raf.getPointer();
+    }
 
-	public void write(byte b[], int off, int len) throws IOException {
-		if (!writeoverride) {
-			if (chunktype != 2)
-				throw new IllegalArgumentException(
-						"Only chunks can write bytes!");
-			if (childchunk != null) {
-				childchunk.close();
-				childchunk = null;
-			}
-		}
-		raf.write(b, off, len);
-	}
+    public void setWriteOverride(boolean writeoverride) {
+        this.writeoverride = writeoverride;
+    }
 
-	public RIFFWriter writeList(String format) throws IOException {
-		if (chunktype == 2)
-			throw new IllegalArgumentException(
-					"Only LIST and RIFF can write lists!");
-		if (childchunk != null) {
-			childchunk.close();
-			childchunk = null;
-		}
-		childchunk = new RIFFWriter(this.raf, format, 1);
-		return childchunk;
-	}
+    public boolean getWriteOverride() {
+        return writeoverride;
+    }
 
-	public RIFFWriter writeChunk(String format) throws IOException {
-		if (chunktype == 2)
-			throw new IllegalArgumentException(
-					"Only LIST and RIFF can write chunks!");
-		if (childchunk != null) {
-			childchunk.close();
-			childchunk = null;
-		}
-		childchunk = new RIFFWriter(this.raf, format, 2);
-		return childchunk;
-	}
+    public void close() throws IOException {
+        if (!open)
+            return;
+        if (childchunk != null) {
+            childchunk.close();
+            childchunk = null;
+        }
 
-	// Write ASCII chars to stream
-	public void writeString(String string) throws IOException {
-		byte[] buff = string.getBytes();
-		write(buff);
-	}
+        int bakchunktype = chunktype;
+        long fpointer = raf.getPointer();
+        raf.seek(chunksizepointer);
+        chunktype = 2;
+        writeUnsignedInt(fpointer - startpointer);
 
-	// Write ASCII chars to stream
-	public void writeString(String string, int len) throws IOException {
-		byte[] buff = string.getBytes();
-		if (buff.length > len)
-			write(buff, 0, len);
-		else {
-			write(buff);
-			for (int i = buff.length; i < len; i++)
-				write(0);
-		}
-	}
+        if (bakchunktype == 0)
+            raf.close();
+        else
+            raf.seek(fpointer);
+        open = false;
+        raf = null;
+    }
 
-	// Write 8 bit signed integer to stream
-	public void writeByte(int b) throws IOException {
-		write(b);
-	}
+    public void write(int b) throws IOException {
+        if (!writeoverride) {
+            if (chunktype != 2) {
+                throw new IllegalArgumentException(
+                        "Only chunks can write bytes!");
+            }
+            if (childchunk != null) {
+                childchunk.close();
+                childchunk = null;
+            }
+        }
+        raf.write(b);
+    }
 
-	// Write 16 bit signed integer to stream
-	public void writeShort(short b) throws IOException {
-		write((b >>> 0) & 0xFF);
-		write((b >>> 8) & 0xFF);
-	}
+    public void write(byte b[], int off, int len) throws IOException {
+        if (!writeoverride) {
+            if (chunktype != 2) {
+                throw new IllegalArgumentException(
+                        "Only chunks can write bytes!");
+            }
+            if (childchunk != null) {
+                childchunk.close();
+                childchunk = null;
+            }
+        }
+        raf.write(b, off, len);
+    }
 
-	// Write 32 bit signed integer to stream
-	public void writeInt(int b) throws IOException {
-		write((b >>> 0) & 0xFF);
-		write((b >>> 8) & 0xFF);
-		write((b >>> 16) & 0xFF);
-		write((b >>> 24) & 0xFF);
-	}
+    public RIFFWriter writeList(String format) throws IOException {
+        if (chunktype == 2) {
+            throw new IllegalArgumentException(
+                    "Only LIST and RIFF can write lists!");
+        }
+        if (childchunk != null) {
+            childchunk.close();
+            childchunk = null;
+        }
+        childchunk = new RIFFWriter(this.raf, format, 1);
+        return childchunk;
+    }
 
-	// Write 64 bit signed integer to stream
-	public void writeLong(long b) throws IOException {
-		write((int) (b >>> 0) & 0xFF);
-		write((int) (b >>> 8) & 0xFF);
-		write((int) (b >>> 16) & 0xFF);
-		write((int) (b >>> 24) & 0xFF);
-		write((int) (b >>> 32) & 0xFF);
-		write((int) (b >>> 40) & 0xFF);
-		write((int) (b >>> 48) & 0xFF);
-		write((int) (b >>> 56) & 0xFF);
-	}
+    public RIFFWriter writeChunk(String format) throws IOException {
+        if (chunktype == 2) {
+            throw new IllegalArgumentException(
+                    "Only LIST and RIFF can write chunks!");
+        }
+        if (childchunk != null) {
+            childchunk.close();
+            childchunk = null;
+        }
+        childchunk = new RIFFWriter(this.raf, format, 2);
+        return childchunk;
+    }
 
-	// Write 8 bit unsigned integer to stream
-	public void writeUnsignedByte(int b) throws IOException {
-		writeByte((byte) b);
-	}
+    // Write ASCII chars to stream
+    public void writeString(String string) throws IOException {
+        byte[] buff = string.getBytes();
+        write(buff);
+    }
 
-	// Write 16 bit unsigned integer to stream
-	public void writeUnsignedShort(int b) throws IOException {
-		writeShort((short) b);
-	}
+    // Write ASCII chars to stream
+    public void writeString(String string, int len) throws IOException {
+        byte[] buff = string.getBytes();
+        if (buff.length > len)
+            write(buff, 0, len);
+        else {
+            write(buff);
+            for (int i = buff.length; i < len; i++)
+                write(0);
+        }
+    }
 
-	// Write 32 bit unsigned integer to stream
-	public void writeUnsignedInt(long b) throws IOException {
-		writeInt((int) b);
-	}
+    // Write 8 bit signed integer to stream
+    public void writeByte(int b) throws IOException {
+        write(b);
+    }
 
+    // Write 16 bit signed integer to stream
+    public void writeShort(short b) throws IOException {
+        write((b >>> 0) & 0xFF);
+        write((b >>> 8) & 0xFF);
+    }
+
+    // Write 32 bit signed integer to stream
+    public void writeInt(int b) throws IOException {
+        write((b >>> 0) & 0xFF);
+        write((b >>> 8) & 0xFF);
+        write((b >>> 16) & 0xFF);
+        write((b >>> 24) & 0xFF);
+    }
+
+    // Write 64 bit signed integer to stream
+    public void writeLong(long b) throws IOException {
+        write((int) (b >>> 0) & 0xFF);
+        write((int) (b >>> 8) & 0xFF);
+        write((int) (b >>> 16) & 0xFF);
+        write((int) (b >>> 24) & 0xFF);
+        write((int) (b >>> 32) & 0xFF);
+        write((int) (b >>> 40) & 0xFF);
+        write((int) (b >>> 48) & 0xFF);
+        write((int) (b >>> 56) & 0xFF);
+    }
+
+    // Write 8 bit unsigned integer to stream
+    public void writeUnsignedByte(int b) throws IOException {
+        writeByte((byte) b);
+    }
+
+    // Write 16 bit unsigned integer to stream
+    public void writeUnsignedShort(int b) throws IOException {
+        writeShort((short) b);
+    }
+
+    // Write 32 bit unsigned integer to stream
+    public void writeUnsignedInt(long b) throws IOException {
+        writeInt((int) b);
+    }
 }

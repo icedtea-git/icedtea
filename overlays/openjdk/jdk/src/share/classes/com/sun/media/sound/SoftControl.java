@@ -22,19 +22,15 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 /**
- * 
  * <code>SoftControl</code> are the basic controls
  * used for control-rate processing.
- * 
- * @version %I%, %E%
+ *
  * @author Karl Helgason
  */
 public interface SoftControl {
 
-	public double[] get(int instance, String name);
-
+    public double[] get(int instance, String name);
 }

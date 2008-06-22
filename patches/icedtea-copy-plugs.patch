@@ -35,7 +35,6 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
                  if (paramTypes.length != propertyNames.length) {
 --- openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk	2008-05-23 20:13:24.000000000 +0100
 +++ openjdk/jdk/make/common/internal/BinaryPlugs.gmk	2008-05-23 20:22:20.000000000 +0100
-@@ -51,28 +51,19 @@
  com/sun/jmx/snmp/SnmpDataTypeEnums.class \
  com/sun/jmx/snmp/SnmpDefinitions.class \
  com/sun/jmx/snmp/SnmpOid.class \
@@ -64,10 +63,6 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
 -com/sun/jmx/snmp/daemon/WaitQ.class
 +com/sun/jmx/snmp/daemon/SnmpSession.class
  
- PLUG_SOUND_CLASS_NAMES = \
- com/sun/media/sound/AbstractPlayer.class \
-@@ -128,8 +119,14 @@
- 
  # Class list temp files (used by both import and export of plugs)
  
 +PLUG_GNU_CLASS_NAMES = gnu
@@ -77,14 +72,14 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
 +PLUG_NETX_CLASS_NAMES = net
 +
  PLUG_TEMPDIR=$(ABS_TEMPDIR)/plugs
--PLUG_CLASS_AREAS = jmf sound
-+PLUG_CLASS_AREAS = jmf sound gnu javax netx
+-PLUG_CLASS_AREAS = jmf
++PLUG_CLASS_AREAS = jmf gnu javax netx
  PLUG_CLISTS = $(PLUG_CLASS_AREAS:%=$(PLUG_TEMPDIR)/%.clist)
  
  # Create jargs file command
-@@ -152,6 +149,21 @@
- 	@for i in $(PLUG_SOUND_CLASS_NAMES) ; do \
- 	  $(ECHO) "$$i" >> $@ ; \
+@@ -93,11 +90,32 @@
+ 	@for i in $(PLUG_JMF_CLASS_NAMES) ; do \
+ 	  $(ECHO) "$$i" >> $@; \
  	done
 +$(PLUG_TEMPDIR)/gnu.clist:
 +	@$(prep-target)
@@ -104,9 +99,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  $(PLUG_TEMPDIR)/all.clist: $(PLUG_CLISTS)
  	@$(prep-target)
  	$(CAT) $(PLUG_CLISTS) > $@
-@@ -159,6 +171,12 @@
- 	$(plug-create-jargs)
- $(PLUG_TEMPDIR)/sound.jargs: $(PLUG_TEMPDIR)/sound.clist
+ $(PLUG_TEMPDIR)/jmf.jargs: $(PLUG_TEMPDIR)/jmf.clist
  	$(plug-create-jargs)
 +$(PLUG_TEMPDIR)/gnu.jargs: $(PLUG_TEMPDIR)/gnu.clist
 +	$(plug-create-jargs)
@@ -131,8 +124,6 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  # Import specific area classes (the classes are always created)
 @@ -194,12 +212,21 @@
  	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/jmf.clist)
- import-binary-plug-sound-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/sound.clist
- 	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/sound.clist)
 +import-binary-plug-gnu-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/gnu.clist
 +	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/gnu.clist)
 +import-binary-plug-javax-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/javax.clist
@@ -143,12 +134,11 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  # Import all classes from the jar file
  
  import-binary-plug-jar: \
- 	     import-binary-plug-jmf-classes \
--	     import-binary-plug-sound-classes
-+	     import-binary-plug-sound-classes \
+-	     import-binary-plug-jmf-classes
++	     import-binary-plug-jmf-classes \
 +	     import-binary-plug-gnu-classes \
 +	     import-binary-plug-javax-classes \
-+	     import-binary-plug-netx-classes \
++	     import-binary-plug-netx-classes
  
- # Import native libraries
+ # Binary plug start/complete messages
  

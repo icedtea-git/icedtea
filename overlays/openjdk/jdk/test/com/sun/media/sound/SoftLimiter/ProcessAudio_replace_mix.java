@@ -71,8 +71,7 @@ public class ProcessAudio_replace_mix {
 		}
 		
 		SoftLimiter limiter = new SoftLimiter();
-		limiter.init(synth.getFormat().getSampleRate(),
-			     synth.getControlRate());
+		limiter.init(44100, 147);
 		limiter.setMixMode(true);
 		limiter.setInput(0, in1);
 		limiter.setInput(1, in2);

@@ -22,7 +22,6 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
-
 package com.sun.media.sound;
 
 import java.io.IOException;
@@ -32,71 +31,61 @@ import javax.sound.sampled.SourceDataLine;
 
 /**
  * This is a processor object that writes into SourceDataLine
- * 
- * @version %I%, %E%
+ *
  * @author Karl Helgason
  */
 public class SoftAudioPusher implements Runnable {
 
-	private volatile boolean active = false;
+    private volatile boolean active = false;
+    private SourceDataLine sourceDataLine = null;
+    private Thread audiothread;
+    private AudioInputStream ais;
+    private byte[] buffer;
 
-	private SourceDataLine sourceDataLine = null;
+    public SoftAudioPusher(SourceDataLine sourceDataLine, AudioInputStream ais,
+            int workbuffersizer) {
+        this.ais = ais;
+        this.buffer = new byte[workbuffersizer];
+        this.sourceDataLine = sourceDataLine;
+    }
 
-	private Thread audiothread;
+    public synchronized void start() {
+        if (active)
+            return;
+        active = true;
+        audiothread = new Thread(this);
+        audiothread.setPriority(Thread.MAX_PRIORITY);
+        audiothread.start();
+    }
 
-	private AudioInputStream ais;
+    public synchronized void stop() {
+        if (!active)
+            return;
+        active = false;
+        try {
+            audiothread.join();
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
+    }
 
-	private byte[] buffer;
+    public void run() {
+        byte[] buffer = SoftAudioPusher.this.buffer;
+        AudioInputStream ais = SoftAudioPusher.this.ais;
+        SourceDataLine sourceDataLine = SoftAudioPusher.this.sourceDataLine;
 
-	public SoftAudioPusher(SourceDataLine sourceDataLine, AudioInputStream ais,
-			int workbuffersizer) {
-		this.ais = ais;
-		this.buffer = new byte[workbuffersizer];
-		this.sourceDataLine = sourceDataLine;
-	}
+        try {
+            while (active) {
+                // Read from audio source
+                int count = ais.read(buffer);
+                if(count < 0) break;
+                // Write byte buffer to source output
+                sourceDataLine.write(buffer, 0, count);
+            }
+        } catch (IOException e) {
+            active = false;
+            //e.printStackTrace();
+        }
 
-	public synchronized void start() {
-		if (active)
-			return;
-		active = true;
-		audiothread = new Thread(this);
-		audiothread.setPriority(Thread.MAX_PRIORITY);
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		audiothread.start();
-	}
-
-	public synchronized void stop() {
-		if (!active)
-			return;
-		active = false;
-		try {
-			audiothread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void run() {
-		byte[] buffer = SoftAudioPusher.this.buffer;
-		AudioInputStream ais = SoftAudioPusher.this.ais;
-		SourceDataLine sourceDataLine = SoftAudioPusher.this.sourceDataLine;
-
-		try {
-			while (active) {
-				// Read from audio source
-				ais.read(buffer);
-				// Write byte buffer to source output
-				sourceDataLine.write(buffer, 0, buffer.length);
-			}
-		} catch (IOException e) {
-			active = false;
-			e.printStackTrace();
-		}
-
-	}
-
+    }
 }
