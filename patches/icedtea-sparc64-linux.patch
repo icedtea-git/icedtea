@@ -1,6 +1,35 @@
-diff -up openjdk/hotspot/build/linux/makefiles/sparcv9.make.BAD openjdk/hotspot/build/linux/makefiles/sparcv9.make
---- openjdk/hotspot/build/linux/makefiles/sparcv9.make.BAD	2008-05-29 15:48:44.000000000 -0400
-+++ openjdk/hotspot/build/linux/makefiles/sparcv9.make	2008-05-29 15:48:39.000000000 -0400
+diff -Nru openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
+--- openjdk.orig/hotspot/build/linux/makefiles/defs.make	2008-06-22 03:12:48.000000000 +0100
++++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-06-22 03:27:20.000000000 +0100
+@@ -58,8 +58,8 @@
+   HS_ARCH         = ia64
+ endif
+ 
+-# sparc
+-ifneq (,$(filter $(ARCH), sparc sparc64))
++# sparc64
++ifeq ($(ARCH), sparc64)
+   ifeq ($(ARCH_DATA_MODEL), 64)
+     ARCH_DATA_MODEL  = 64
+     MAKE_ARGS        += LP64=1
+@@ -73,6 +73,14 @@
+   HS_ARCH            = sparc
+ endif
+ 
++# sparc
++ifeq ($(ARCH), sparc)
++  ARCH_DATA_MODEL  = 32
++  PLATFORM         = linux-sparc
++  VM_PLATFORM      = linux_sparc
++  HS_ARCH          = sparc
++endif
++
+ # x86_64
+ ifeq ($(ARCH), x86_64) 
+   ifeq ($(ARCH_DATA_MODEL), 64)
+diff -Nru openjdk.orig/hotspot/build/linux/makefiles/sparcv9.make openjdk/hotspot/build/linux/makefiles/sparcv9.make
+--- openjdk.orig/hotspot/build/linux/makefiles/sparcv9.make	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/hotspot/build/linux/makefiles/sparcv9.make	2008-06-22 03:27:20.000000000 +0100
 @@ -0,0 +1,27 @@
 +#
 +# Copyright 1999-2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -29,24 +58,15 @@ diff -up openjdk/hotspot/build/linux/makefiles/sparcv9.make.BAD openjdk/hotspot/
 +# TLS helper, assembled from .s file
 +# Not included in includeDB because it has no dependencies
 +Obj_Files += linux_sparc.o
-diff -up openjdk/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp.BAD openjdk/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp
---- openjdk/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp.BAD	2008-05-29 16:25:10.000000000 -0400
-+++ openjdk/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp	2008-05-29 16:32:11.000000000 -0400
-@@ -225,7 +225,7 @@ LIR_Address* LIRGenerator::emit_array_ad
- 
- void LIRGenerator::increment_counter(address counter, int step) {
-   LIR_Opr pointer = new_register(T_INT);
--  __ move(LIR_OprFact::intConst((int)counter), pointer);
-+  __ move(LIR_OprFact::intConst((int)*counter), pointer);
-   LIR_Address* addr = new LIR_Address(pointer, 0, T_INT);
-   increment_counter(addr, step);
- }
-@@ -1106,20 +1106,12 @@ void LIRGenerator::trace_block_entry(Blo
+diff -Nru openjdk.orig/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp openjdk/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp
+--- openjdk.orig/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp	2008-05-27 22:28:29.000000000 +0100
++++ openjdk/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp	2008-06-22 03:31:17.000000000 +0100
+@@ -1112,20 +1112,12 @@
  
  void LIRGenerator::volatile_field_store(LIR_Opr value, LIR_Address* address,
                                          CodeEmitInfo* info) {
 -#ifdef _LP64
--  __ store_mem_reg(value, address, info);
+-  __ store(value, address, info);
 -#else
    __ volatile_store_mem_reg(value, address, info);
 -#endif
@@ -55,39 +75,10 @@ diff -up openjdk/hotspot/src/cpu/sparc/vm/c1_LIRGenerator_sparc.cpp.BAD openjdk/
  void LIRGenerator::volatile_field_load(LIR_Address* address, LIR_Opr result,
                                         CodeEmitInfo* info) {
 -#ifdef _LP64
--  __ load_mem_reg(address, result, info);
+-  __ load(address, result, info);
 -#else
    __ volatile_load_mem_reg(address, result, info);
 -#endif
  }
  
  
-diff -up openjdk/hotspot/build/linux/makefiles/defs.make.BAD openjdk/hotspot/build/linux/makefiles/defs.make
---- openjdk/hotspot/build/linux/makefiles/defs.make.BAD	2008-05-30 07:03:37.000000000 -0400
-+++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-05-30 07:03:45.000000000 -0400
-@@ -58,8 +58,8 @@ ifeq ($(ARCH), ia64)
-   HS_ARCH         = ia64
- endif
- 
--# sparc
--ifneq (,$(filter $(ARCH), sparc sparc64))
-+# sparc64
-+ifeq ($(ARCH), sparc64)
-   ifeq ($(ARCH_DATA_MODEL), 64)
-     ARCH_DATA_MODEL  = 64
-     MAKE_ARGS        += LP64=1
-@@ -73,6 +73,14 @@ ifneq (,$(filter $(ARCH), sparc sparc64)
-   HS_ARCH            = sparc
- endif
- 
-+# sparc
-+ifeq ($(ARCH), sparc)
-+  ARCH_DATA_MODEL  = 32
-+  PLATFORM         = linux-sparc
-+  VM_PLATFORM      = linux_sparc
-+  HS_ARCH          = sparc
-+endif
-+
- # x86_64
- ifeq ($(ARCH), x86_64) 
-   ifeq ($(ARCH_DATA_MODEL), 64)

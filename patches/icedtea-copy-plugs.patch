@@ -1,83 +1,7 @@
-diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java
---- openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2007-10-12 04:01:56.000000000 -0400
-+++ openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2007-10-12 17:17:28.000000000 -0400
-@@ -78,6 +78,9 @@
-      */
-     public long            timeStamp ;
- 
-+    // TODO: IcedTea: I am a stub.
-+    static public int trapAuthenticationFailure = 0;
-+
- 
- 
-     /**
---- openjdk.orig/jdk/src/share/classes/java/beans/MetaData.java	2008-02-14 16:23:01.000000000 -0500
-+++ openjdk/jdk/src/share/classes/java/beans/MetaData.java	2008-02-14 16:22:15.000000000 -0500
-@@ -1628,7 +1628,7 @@
-     }
- 
-     private static String[] getAnnotationValue(Constructor<?> constructor) {
--        ConstructorProperties annotation = constructor.getAnnotation(ConstructorProperties.class);
-+        ConstructorProperties annotation = ((ConstructorProperties) constructor.getAnnotation(ConstructorProperties.class));
-         return (annotation != null)
-                 ? annotation.value()
-                 : null;
---- penjdk6/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2008-02-12 04:05:12.000000000 -0500
-+++ openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2008-02-14 17:27:39.000000000 -0500
-@@ -1154,7 +1154,7 @@
-             Set<BitSet> getterIndexSets = newSet();
-             for (Constructor<?> constr : annotatedConstrList) {
-                 String[] propertyNames =
--                    constr.getAnnotation(propertyNamesClass).value();
-+		    ((ConstructorProperties)constr.getAnnotation(propertyNamesClass)).value();
- 
-                 Type[] paramTypes = constr.getGenericParameterTypes();
-                 if (paramTypes.length != propertyNames.length) {
---- openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk	2008-05-23 20:13:24.000000000 +0100
-+++ openjdk/jdk/make/common/internal/BinaryPlugs.gmk	2008-05-23 20:22:20.000000000 +0100
- com/sun/jmx/snmp/SnmpDataTypeEnums.class \
- com/sun/jmx/snmp/SnmpDefinitions.class \
- com/sun/jmx/snmp/SnmpOid.class \
--com/sun/jmx/snmp/SnmpOidDatabase.class \
--com/sun/jmx/snmp/SnmpOidDatabaseSupport.class \
- com/sun/jmx/snmp/SnmpOidRecord.class \
- com/sun/jmx/snmp/SnmpOidTable.class \
- com/sun/jmx/snmp/SnmpOidTableSupport.class \
- com/sun/jmx/snmp/SnmpParameters.class \
- com/sun/jmx/snmp/SnmpPduPacket.class \
- com/sun/jmx/snmp/SnmpPeer.class \
-+rt/com/sun/jmx/snmp/SnmpSession.class \
- com/sun/jmx/snmp/SnmpTimeticks.class \
- com/sun/jmx/snmp/SnmpVarBind.class \
- com/sun/jmx/snmp/SnmpVarBindList.class \
--com/sun/jmx/snmp/Timestamp.class \
- com/sun/jmx/snmp/daemon/SendQ.class \
- com/sun/jmx/snmp/daemon/SnmpInformRequest.class \
--com/sun/jmx/snmp/daemon/SnmpQManager.class \
--com/sun/jmx/snmp/daemon/SnmpRequestCounter.class \
--com/sun/jmx/snmp/daemon/SnmpResponseHandler.class \
--com/sun/jmx/snmp/daemon/SnmpSendServer.class \
--com/sun/jmx/snmp/daemon/SnmpSession.class \
--com/sun/jmx/snmp/daemon/SnmpSocket.class \
--com/sun/jmx/snmp/daemon/SnmpTimerServer.class \
--com/sun/jmx/snmp/daemon/WaitQ.class
-+com/sun/jmx/snmp/daemon/SnmpSession.class
- 
- # Class list temp files (used by both import and export of plugs)
- 
-+PLUG_GNU_CLASS_NAMES = gnu
-+
-+PLUG_JAVAX_CLASS_NAMES = javax/jnlp
-+
-+PLUG_NETX_CLASS_NAMES = net
-+
- PLUG_TEMPDIR=$(ABS_TEMPDIR)/plugs
--PLUG_CLASS_AREAS = jmf
-+PLUG_CLASS_AREAS = jmf gnu javax netx
- PLUG_CLISTS = $(PLUG_CLASS_AREAS:%=$(PLUG_TEMPDIR)/%.clist)
- 
- # Create jargs file command
-@@ -93,11 +90,32 @@
+diff -Nru openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk openjdk/jdk/make/common/internal/BinaryPlugs.gmk
+--- openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk	2008-06-22 02:47:03.000000000 +0100
++++ openjdk/jdk/make/common/internal/BinaryPlugs.gmk	2008-06-22 02:51:22.000000000 +0100
+@@ -147,6 +147,21 @@
  	@for i in $(PLUG_JMF_CLASS_NAMES) ; do \
  	  $(ECHO) "$$i" >> $@; \
  	done
@@ -96,10 +20,12 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
 +	@for i in $(PLUG_NETX_CLASS_NAMES) ; do \
 +	  $(ECHO) "$$i" >> $@ ; \
 +	done
- $(PLUG_TEMPDIR)/all.clist: $(PLUG_CLISTS)
+ $(PLUG_TEMPDIR)/sound.clist:
  	@$(prep-target)
- 	$(CAT) $(PLUG_CLISTS) > $@
- $(PLUG_TEMPDIR)/jmf.jargs: $(PLUG_TEMPDIR)/jmf.clist
+ 	@for i in $(PLUG_SOUND_CLASS_NAMES) ; do \
+@@ -159,6 +174,12 @@
+ 	$(plug-create-jargs)
+ $(PLUG_TEMPDIR)/sound.jargs: $(PLUG_TEMPDIR)/sound.clist
  	$(plug-create-jargs)
 +$(PLUG_TEMPDIR)/gnu.jargs: $(PLUG_TEMPDIR)/gnu.clist
 +	$(plug-create-jargs)
@@ -110,7 +36,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  $(PLUG_TEMPDIR)/all.jargs: $(PLUG_TEMPDIR)/all.clist
  	$(plug-create-jargs)
  
-@@ -183,9 +201,9 @@
+@@ -183,9 +204,9 @@
  # Import classes command
  
  define import-binary-plug-classes
@@ -122,23 +48,40 @@ diff -urN openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java o
  endef # import-binary-plug-classes
  
  # Import specific area classes (the classes are always created)
-@@ -194,12 +212,21 @@
- 	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/jmf.clist)
-+import-binary-plug-gnu-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/gnu.clist
-+	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/gnu.clist)
-+import-binary-plug-javax-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/javax.clist
-+	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/javax.clist)
-+import-binary-plug-netx-classes: $(PLUG_IMPORT_JARFILE) $(PLUG_TEMPDIR)/netx.clist
-+	$(call import-binary-plug-classes,$(PLUG_TEMPDIR)/netx.clist)
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2008-05-27 22:30:15.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2008-06-22 02:48:42.000000000 +0100
+@@ -1154,7 +1154,7 @@
+             Set<BitSet> getterIndexSets = newSet();
+             for (Constructor<?> constr : annotatedConstrList) {
+                 String[] propertyNames =
+-                    constr.getAnnotation(propertyNamesClass).value();
++		    ((ConstructorProperties)constr.getAnnotation(propertyNamesClass)).value();
  
- # Import all classes from the jar file
+                 Type[] paramTypes = constr.getGenericParameterTypes();
+                 if (paramTypes.length != propertyNames.length) {
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2008-05-27 22:30:15.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2008-06-22 02:48:42.000000000 +0100
+@@ -78,6 +78,9 @@
+      */
+     public long            timeStamp ;
  
- import-binary-plug-jar: \
--	     import-binary-plug-jmf-classes
-+	     import-binary-plug-jmf-classes \
-+	     import-binary-plug-gnu-classes \
-+	     import-binary-plug-javax-classes \
-+	     import-binary-plug-netx-classes
++    // TODO: IcedTea: I am a stub.
++    static public int trapAuthenticationFailure = 0;
++
  
- # Binary plug start/complete messages
  
+     /**
+diff -Nru openjdk.orig/jdk/src/share/classes/java/beans/MetaData.java openjdk/jdk/src/share/classes/java/beans/MetaData.java
+--- openjdk.orig/jdk/src/share/classes/java/beans/MetaData.java	2008-05-27 22:30:16.000000000 +0100
++++ openjdk/jdk/src/share/classes/java/beans/MetaData.java	2008-06-22 02:48:42.000000000 +0100
+@@ -1564,7 +1564,7 @@
+     }
+ 
+     private static String[] getAnnotationValue(Constructor<?> constructor) {
+-        ConstructorProperties annotation = constructor.getAnnotation(ConstructorProperties.class);
++        ConstructorProperties annotation = ((ConstructorProperties) constructor.getAnnotation(ConstructorProperties.class));
+         return (annotation != null)
+                 ? annotation.value()
+                 : null;
