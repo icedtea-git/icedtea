@@ -6,6 +6,12 @@
 	fix from S6624717 as found in OpenJDK7 b27.
 
 2008-06-23  Lillian Angel  <langel@redhat.com>
+	Pablo del Campo <pablogdc@gmail.com>
+
+	Fixes Bug #160
+	* patches/icedtea-fonts.patch: Updated for F9.
+
+2008-06-23  Lillian Angel  <langel@redhat.com>
 
 	* aclocal.m4: Regenerated.
 	* configure: Regenerated.
