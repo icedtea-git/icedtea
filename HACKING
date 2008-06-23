@@ -40,6 +40,7 @@ The following patches are currently applied to OpenJDK or OpenJDK6 by IcedTea:
 * icedtea-override-redirect-metacity.patch: Enable override redirect for Metacity window manager.
 * icedtea-lsb-release.patch: Generate Debian LSB file.
 * icedtea-rmi_amd64.patch: Build RMI binaries on all platforms not just 32-bit ones.
+* icedtea-sparc.patch: Add support for GNU/Linux on SPARC (version in IcedTea includes only minimal build changes).
 * icedtea-sparc64-linux.patch: Fixes needed to build the SPARC port on 32-bit SPARC as used by Fedora.
 * icedtea-sparc-ptracefix.patch: Avoid importing asm-sparc/ptrace.h by including pt_regs directly.
 * icedtea-sparc-trapsfix.patch: Include traps.h from correct directory.
@@ -60,7 +61,6 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 * icedtea-dnd-updatecursor.patch: Fix unexpected cursor returned by DragSourceContext (S6691328). Fixed in OpenJDK7 b29.
 * icedtea-eclipse-hotspot-6614100-6b06.patch: Fix Eclipse crash (S6614100). Fixed in OpenJDK7 b29/hs13.
 * icedtea-gtkplaf.patch: Fix corrupted combo box (S6624717). Fixed in OpenJDK7 b27.
-* icedtea-sparc.patch: Add support for GNU/Linux on SPARC.
 
 The following patches are only applied to OpenJDK in IcedTea:
 
