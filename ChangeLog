@@ -1,3 +1,8 @@
+2008-06-23  Lillian Angel  <langel@redhat.com>
+
+	* aclocal.m4: Regenerated.
+	* configure: Regenerated.
+
 2008-06-22  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-rhino.patch: New patch.
