@@ -107,7 +107,8 @@ ICEDTEA_ENV = \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
 	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
-	"JAVAC="
+	"JAVAC=" \
+	"RHINO_JAR=$(RHINO_JAR)"
 
 if WITH_CACAO
 ICEDTEA_ENV += \
@@ -172,7 +173,8 @@ ICEDTEA_ENV_ECJ = \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
 	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
-	"JAVAC="
+	"JAVAC=" \
+	"RHINO_JAR=$(RHINO_JAR)"
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
@@ -331,6 +333,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jscheme.patch \
 	patches/icedtea-dnd-updatecursor.patch \
 	patches/icedtea-component.patch \
+	patches/icedtea-rhino.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 

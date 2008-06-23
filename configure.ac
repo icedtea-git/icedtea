@@ -197,6 +197,7 @@ else
   FIND_XALAN2_JAR
   FIND_XALAN2_SERIALIZER_JAR
   FIND_XERCES2_JAR
+  FIND_RHINO_JAR
   AC_CONFIG_FILES([javac], [chmod +x javac])
   AC_CONFIG_FILES([javap], [chmod +x javap])
 fi

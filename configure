@@ -748,6 +748,7 @@ LIBGCJ_JAR
 XALAN2_JAR
 XALAN2_SERIALIZER_JAR
 XERCES2_JAR
+RHINO_JAR
 USE_ALT_OPENJDK_SRC_ZIP_TRUE
 USE_ALT_OPENJDK_SRC_ZIP_FALSE
 ALT_OPENJDK_SRC_ZIP
@@ -1456,6 +1457,7 @@ Optional Packages:
   --with-xalan2-serializer-jar
                           specify location of the xalan2-serializer jar
   --with-xerces2-jar      specify location of the xerces2 jar
+  --with-rhino-jar        specify location of the rhino jar
   --with-openjdk-src-zip  specify the location of the openjdk source zip
   --with-openjdk-src-dir  specify the location of the openjdk sources
   --with-cacao            use CACAO as VM
@@ -7869,6 +7871,48 @@ echo "$as_me: error: \"A xerces2 jar was not found.\"" >&2;}
   fi
 
 
+
+
+# Check whether --with-rhino-jar was given.
+if test "${with_rhino_jar+set}" = set; then
+  withval=$with_rhino_jar;
+    if test -f "${withval}"; then
+      { echo "$as_me:$LINENO: checking rhino jar" >&5
+echo $ECHO_N "checking rhino jar... $ECHO_C" >&6; }
+      RHINO_JAR="${withval}"
+      { echo "$as_me:$LINENO: result: ${withval}" >&5
+echo "${ECHO_T}${withval}" >&6; }
+    fi
+
+else
+
+    RHINO_JAR=
+
+fi
+
+  if test -z "${RHINO_JAR}"; then
+    { echo "$as_me:$LINENO: checking for rhino jar" >&5
+echo $ECHO_N "checking for rhino jar... $ECHO_C" >&6; }
+    if test -e "/usr/share/java/rhino.jar"; then
+      RHINO_JAR=/usr/share/java/rhino.jar
+      { echo "$as_me:$LINENO: result: ${RHINO_JAR}" >&5
+echo "${ECHO_T}${RHINO_JAR}" >&6; }
+    elif test -e "/usr/share/java/js.jar"; then
+      RHINO_JAR=/usr/share/java/js.jar
+      { echo "$as_me:$LINENO: result: ${RHINO_JAR}" >&5
+echo "${ECHO_T}${RHINO_JAR}" >&6; }
+    else
+      { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+    fi
+  fi
+  if test -z "${RHINO_JAR}"; then
+    { { echo "$as_me:$LINENO: error: \"A rhino jar was not found.\"" >&5
+echo "$as_me: error: \"A rhino jar was not found.\"" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+
+
   ac_config_files="$ac_config_files javac"
 
   ac_config_files="$ac_config_files javap"
@@ -13001,6 +13045,7 @@ LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim
 XALAN2_JAR!$XALAN2_JAR$ac_delim
 XALAN2_SERIALIZER_JAR!$XALAN2_SERIALIZER_JAR$ac_delim
 XERCES2_JAR!$XERCES2_JAR$ac_delim
+RHINO_JAR!$RHINO_JAR$ac_delim
 USE_ALT_OPENJDK_SRC_ZIP_TRUE!$USE_ALT_OPENJDK_SRC_ZIP_TRUE$ac_delim
 USE_ALT_OPENJDK_SRC_ZIP_FALSE!$USE_ALT_OPENJDK_SRC_ZIP_FALSE$ac_delim
 ALT_OPENJDK_SRC_ZIP!$ALT_OPENJDK_SRC_ZIP$ac_delim
@@ -13057,7 +13102,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 90; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 91; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

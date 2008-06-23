@@ -1,3 +1,13 @@
+2008-06-22  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-rhino.patch: New patch.
+	* Makefile.am: Add RHINO_JAR to environment variable lists.
+	(ICEDTEA_PATHCES): Add patches/icedtea-rhino.patch.
+	* Makefile.in: Regenerated.
+	* acinclude.m4 (FIND_RHINO_JAR): New.
+	* configure.ac: Use FIND_RHINO_JAR.
+	* configure: Regenerated.
+
 2008-06-20  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-zero-build.patch: Correctly set CPU.

@@ -166,6 +166,7 @@ PARALLEL_JOBS = @PARALLEL_JOBS@
 PATCH = @PATCH@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
+RHINO_JAR = @RHINO_JAR@
 RMIC = @RMIC@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -316,8 +317,9 @@ ICEDTEA_ENV = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
-	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" "JAVAC=" $(am__append_1) \
-	$(am__append_2) $(am__append_3)
+	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" "JAVAC=" \
+	"RHINO_JAR=$(RHINO_JAR)" $(am__append_1) $(am__append_2) \
+	$(am__append_3)
 
 # OpenJDK ecj build environment.
 ICEDTEA_BUILD_DIR_ECJ = \
@@ -357,8 +359,9 @@ ICEDTEA_ENV_ECJ = "ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
-	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" "JAVAC=" $(am__append_4) \
-	$(am__append_5) $(am__append_6)
+	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" "JAVAC=" \
+	"RHINO_JAR=$(RHINO_JAR)" $(am__append_4) $(am__append_5) \
+	$(am__append_6)
 
 # OpenJDK Source Preparation Targets
 # ==================================
@@ -433,8 +436,8 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-no-bcopy.patch patches/icedtea-jscheme.patch \
 	patches/icedtea-dnd-updatecursor.patch \
-	patches/icedtea-component.patch $(GCC_PATCH) \
-	$(DISTRIBUTION_PATCHES) $(am__append_7)
+	patches/icedtea-component.patch patches/icedtea-rhino.patch \
+	$(GCC_PATCH) $(DISTRIBUTION_PATCHES) $(am__append_7)
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch

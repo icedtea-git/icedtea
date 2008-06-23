@@ -501,6 +501,38 @@ AC_DEFUN([FIND_XERCES2_JAR],
   AC_SUBST(XERCES2_JAR)
 ])
 
+AC_DEFUN([FIND_RHINO_JAR],
+[
+  AC_ARG_WITH([rhino-jar],
+              [AS_HELP_STRING(--with-rhino-jar,specify location of the rhino jar)],
+  [
+    if test -f "${withval}"; then
+      AC_MSG_CHECKING(rhino jar)
+      RHINO_JAR="${withval}"
+      AC_MSG_RESULT(${withval})
+    fi
+  ],
+  [
+    RHINO_JAR=
+  ])
+  if test -z "${RHINO_JAR}"; then
+    AC_MSG_CHECKING(for rhino jar)
+    if test -e "/usr/share/java/rhino.jar"; then
+      RHINO_JAR=/usr/share/java/rhino.jar
+      AC_MSG_RESULT(${RHINO_JAR})
+    elif test -e "/usr/share/java/js.jar"; then
+      RHINO_JAR=/usr/share/java/js.jar
+      AC_MSG_RESULT(${RHINO_JAR})
+    else
+      AC_MSG_RESULT(no)
+    fi
+  fi
+  if test -z "${RHINO_JAR}"; then
+    AC_MSG_ERROR("A rhino jar was not found.")
+  fi
+  AC_SUBST(RHINO_JAR)
+])
+
 AC_DEFUN([ENABLE_OPTIMIZATIONS],
 [
   AC_MSG_CHECKING(whether to disable optimizations)
