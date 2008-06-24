@@ -26,6 +26,8 @@
 #include "incls/_precompiled.incl"
 #include "incls/_frame_zero.cpp.incl"
 
+intptr_t frame::shark_dummy_bcx = 0;
+
 #ifdef ASSERT
 void RegisterMap::check_location_valid()
 {
@@ -35,7 +37,8 @@ void RegisterMap::check_location_valid()
 
 bool frame::is_interpreted_frame() const
 {
-  return ((ZeroFrame *) sp())->is_interpreter_frame();
+  return zeroframe()->is_interpreter_frame() ||
+         zeroframe()->is_shark_frame();
 }
 
 frame frame::sender_for_entry_frame(RegisterMap *map) const

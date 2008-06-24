@@ -208,7 +208,7 @@ AC_CHECK_WITH_CACAO
 ENABLE_OPTIMIZATIONS
 ENABLE_ZERO_BUILD
 ENABLE_NETX_PLUGIN
-SET_CORE_BUILD
+SET_CORE_OR_SHARK_BUILD
 
 dnl pkgconfig cannot be used to finid these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
@@ -387,5 +387,17 @@ if test "x${ZERO_BUILD_TRUE}" = x; then
 fi
 AC_SUBST(LIBFFI_CFLAGS)
 AC_SUBST(LIBFFI_LIBS)
+
+if test "x${SHARK_BUILD_TRUE}" = x; then
+  FIND_TOOL([LLVM_CONFIG], [llvm-config])
+  llvm_components="engine bitwriter"
+  LLVM_CFLAGS=`$LLVM_CONFIG --cflags $llvm_components | \
+    sed -e 's/-O.//g' | sed -e 's/-fomit-frame-pointer//g'`
+  LLVM_LDFLAGS=`$LLVM_CONFIG --ldflags $llvm_components`
+  LLVM_LIBS=`$LLVM_CONFIG --libs $llvm_components`
+fi
+AC_SUBST(LLVM_CFLAGS)
+AC_SUBST(LLVM_LDFLAGS)
+AC_SUBST(LLVM_LIBS)
 
 AC_OUTPUT

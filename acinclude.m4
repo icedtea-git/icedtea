@@ -657,13 +657,31 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
   AC_CONFIG_FILES([ergo.c])
 ])
 
-AC_DEFUN([SET_CORE_BUILD],
+AC_DEFUN([SET_CORE_OR_SHARK_BUILD],
 [
+  AC_MSG_CHECKING(whether to use the Shark JIT)
+  use_shark=no
+  AC_ARG_ENABLE([shark], [AS_HELP_STRING(--enable-shark, use Shark JIT)],
+  [
+    case "${enableval}" in
+      no)
+        ;;
+      *)
+        if test "x${ZERO_BUILD_TRUE}" = x; then
+          use_shark=yes
+        fi
+        ;;
+    esac
+  ])
+  AC_MSG_RESULT($use_shark)
+
   if test "x${CACAO}" != "xno"; then
     AM_CONDITIONAL(CORE_BUILD, true)
+    AM_CONDITIONAL(SHARK_BUILD, false)
   else
-    AM_CONDITIONAL(CORE_BUILD, test "x${ZERO_BUILD_TRUE}" = x)
-  fi
+    AM_CONDITIONAL(CORE_BUILD, test "x${use_shark}" != xyes)
+    AM_CONDITIONAL(SHARK_BUILD, test "x${use_shark}" = xyes)
+  fi 
 ])
 
 AC_DEFUN([ENABLE_NETX_PLUGIN],

@@ -1,6 +1,6 @@
 /*
- * Copyright 2003-2005 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2007, 2008 Red Hat, Inc.
+ * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2008 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,33 +23,32 @@
  *
  */
 
-  // This file holds the platform specific parts of the StubRoutines
-  // definition. See stubRoutines.hpp for a description on how to
-  // extend it.
+#ifdef ASSERT
+  #ifdef assert
+    #undef assert
+  #endif
+#endif
 
- public:
-  static address call_stub_return_pc()
-  {
-    return (address) -1;
-  }
- 
-  static bool returns_to_call_stub(address return_pc)
-  {
-    return return_pc == call_stub_return_pc();
-  }
+#include <llvm/Argument.h>
+#include <llvm/Constants.h>
+#include <llvm/DerivedTypes.h>
+#include <llvm/ExecutionEngine/ExecutionEngine.h>
+#include <llvm/Instructions.h>
+#include <llvm/Module.h>
+#include <llvm/ModuleProvider.h>
+#include <llvm/Support/IRBuilder.h>
+#include <llvm/Type.h>
 
-  enum platform_dependent_constants
-  {
-    code_size1 = 0,      // The assembler will fail with a guarantee
-    code_size2 = 0       // if these are too small.  Simply increase
-  };                     // them if that happens.
+#ifdef ASSERT
+  #ifdef assert
+    #undef assert
+  #endif
 
-#ifdef IA32
-  class i486
-  {
-    friend class VMStructs;
-
-   private:
-    static address _call_stub_compiled_return;
-  };
-#endif // IA32
+  // copied verbatim from hotspot/src/share/vm/utilities/debug.hpp
+  #define assert(p,msg)                                          \
+    if (!(p)) {                                                  \
+      report_assertion_failure(__FILE__, __LINE__,               \
+                              "assert(" XSTR(p) ",\"" msg "\")");\
+      BREAKPOINT;                                                \
+    }
+#endif

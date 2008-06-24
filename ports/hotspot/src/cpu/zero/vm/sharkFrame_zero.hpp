@@ -1,6 +1,6 @@
 /*
- * Copyright 2003-2005 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2007, 2008 Red Hat, Inc.
+ * Copyright 2003-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2008 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,33 +23,42 @@
  *
  */
 
-  // This file holds the platform specific parts of the StubRoutines
-  // definition. See stubRoutines.hpp for a description on how to
-  // extend it.
+// |  ...               |
+// +--------------------+  ------------------
+// | stack slot n-1     |       low addresses
+// |  ...               |
+// | stack slot 0       |
+// | monitor 0 (maybe)  |
+// |  ...               |
+// | method             |
+// | frame_type         |
+// | next_frame         |      high addresses
+// +--------------------+  ------------------
+// |  ...               |
+
+class SharkFrame : public ZeroFrame {
+  friend class ZeroStackPrinter;
+  friend class SharkFunction;
+
+ private:
+  SharkFrame() : ZeroFrame()
+  {
+    ShouldNotCallThis();
+  }
+
+ protected:
+  enum Layout {
+    method_off = jf_header_words,
+    header_words
+  };
 
  public:
-  static address call_stub_return_pc()
+  methodOop* method_addr() const
   {
-    return (address) -1;
+    return (methodOop *) addr_of_word(method_off);
   }
- 
-  static bool returns_to_call_stub(address return_pc)
+  methodOop method() const
   {
-    return return_pc == call_stub_return_pc();
+    return *method_addr();
   }
-
-  enum platform_dependent_constants
-  {
-    code_size1 = 0,      // The assembler will fail with a guarantee
-    code_size2 = 0       // if these are too small.  Simply increase
-  };                     // them if that happens.
-
-#ifdef IA32
-  class i486
-  {
-    friend class VMStructs;
-
-   private:
-    static address _call_stub_compiled_return;
-  };
-#endif // IA32
+};

@@ -1,3 +1,88 @@
+2008-06-24  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4
+	(SET_CORE_BUILD): Removed.
+	(SET_CORE_OR_SHARK_BUILD): New macro.
+	* configure.ac
+	Replaced call to SET_CORE_BUILD with SET_CORE_OR_SHARK_BUILD.
+	(LLVM_CFLAGS): New substitution.
+	(LLVM_LDFLAGS): Likewise.
+	(LLVM_LIBS): Likewise.
+	* configure: Regenerated.
+
+	* Makefile.am
+	(ICEDTEA_ENV): Pass flags for Shark.
+	(ICEDTEA_ENV_ECJ): Likewise.
+	(stamps/ports.stamp): Link in Shark files.
+	(stamps/ports-ecj.stamp): Likewise.
+	(ICEDTEA_PATCHES): Apply Shark patches.
+	(hotspot): Fix libjvm.so location.
+	* Makefile.in: Regenerated.
+
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp
+	(code_fill_byte): Implement for Shark.
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp
+	(decode): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp
+	(zeroframe): New accessor method.
+	(zero_entryframe): Likewise.
+	(zero_interpreterframe): Likewise.
+	(zero_sharkframe): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp
+	(is_interpreted_frame): Use the above.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.inline.hpp
+	(frame): Set _pc to a dummy value for entry frames.
+	(sender_sp): Use new accessor methods.
+	(get_interpreterState): Likewise.
+	(entry_frame_call_wrapper): Likewise.
+	(interpreter_frame_locals_addr): Remove now-unnecessary assertion.
+	(interpreter_frame_cache_addr): Likewise.
+	(interpreter_frame_mdx_addr): Likewise.
+	(interpreter_frame_tos_address): Likewise.
+	(interpreter_frame_bcx_addr): Updated for Shark.
+	(interpreter_frame_method_addr): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.hpp
+	(check_verified_entry_alignment): Implement for Shark.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
+	(print_word): Add basic support for Shark frames.
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp
+	(base_offset): New method.
+	(top_offset): Likewise.
+	(sp_offset): Likewise.
+	(SHARK_FRAME): New enum entry.
+	(is_shark_frame): New method.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp
+	(call_stub_return_pc): New method.
+	(returns_to_call_stub): Updated for new semantics.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
+	(zero_stack_offset): New method.
+	(top_zero_frame_offset): Likewise.
+
+	* patches/icedtea-shark-build.patch: New file.
+	* patches/icedtea-shark.patch: Likewise.
+
+	* ports/hotspot/build/linux/makefiles/shark.make: New file.
+	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp: Likewise.
+	* ports/hotspot/src/share/vm/includeDB_shark: Likewise.
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/shark_globals.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp: Likewise.
+	
 2008-06-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* ChangeLog: Correct PATCHES typo.

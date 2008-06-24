@@ -34,7 +34,17 @@ void Disassembler::decode(CodeBlob *cb, outputStream *st)
 
 void Disassembler::decode(nmethod *nm, outputStream *st)
 {
+#ifdef SHARK
+  assert(st == NULL, "it's all going to stderr anyway");
+
+  intptr_t *method_entry_addr = (intptr_t *) nm->instructions_begin();
+  intptr_t *function_addr = method_entry_addr + 1;
+  llvm::Function *function = *(llvm::Function **) function_addr;
+
+  function->dump();
+#else
   Unimplemented();
+#endif // SHARK
 }
 
 void Disassembler::decode(u_char *begin, u_char *end, outputStream *st)

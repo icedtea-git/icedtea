@@ -55,6 +55,16 @@
   }
 
  public:
+  static ByteSize zero_stack_offset()
+  {
+    return byte_offset_of(JavaThread, _zero_stack);
+  }
+  static ByteSize top_zero_frame_offset()
+  {
+    return byte_offset_of(JavaThread, _top_zero_frame);
+  }
+
+ public:
   void record_base_of_stack_pointer()
   {
     assert(top_zero_frame() == NULL, "junk on stack prior to Java call");

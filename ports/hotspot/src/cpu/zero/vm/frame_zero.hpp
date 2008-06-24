@@ -49,3 +49,27 @@
   inline interpreterState get_interpreterState() const;
 #endif // CC_INTERP
 
+ public:
+  const ZeroFrame *zeroframe() const
+  {
+    return (ZeroFrame *) sp();
+  }
+
+  const EntryFrame *zero_entryframe() const
+  {
+    assert(zeroframe()->is_entry_frame(), "must be");
+    return (EntryFrame *) zeroframe();
+  }
+  const InterpreterFrame *zero_interpreterframe() const
+  {
+    assert(zeroframe()->is_interpreter_frame(), "must be");
+    return (InterpreterFrame *) zeroframe();
+  }
+  const SharkFrame *zero_sharkframe() const
+  {
+    assert(zeroframe()->is_shark_frame(), "must be");
+    return (SharkFrame *) zeroframe();
+  }
+
+ private:
+  static intptr_t shark_dummy_bcx;

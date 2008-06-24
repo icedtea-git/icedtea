@@ -75,6 +75,11 @@ if ZERO_BUILD
 else
   ICEDTEA_ZERO_BUILD =
 endif
+if SHARK_BUILD
+  ICEDTEA_SHARK_BUILD = yes
+else
+  ICEDTEA_SHARK_BUILD =
+endif
 ICEDTEA_ENV = \
 	"ALT_JDK_IMPORT_PATH=$(ICEDTEA_BOOT_DIR)" \
 	"ANT_HOME=$(SYSTEM_ANT_DIR)" \
@@ -96,6 +101,7 @@ ICEDTEA_ENV = \
 	"LD_LIBRARY_PATH=" \
 	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
 	"ICEDTEA_ZERO_BUILD=$(ICEDTEA_ZERO_BUILD)" \
+	"ICEDTEA_SHARK_BUILD=$(ICEDTEA_SHARK_BUILD)" \
 	"ZERO_LIBARCH=$(ZERO_LIBARCH)" \
 	"ZERO_BITSPERWORD=$(ZERO_BITSPERWORD)" \
 	"ZERO_ENDIANNESS=$(ZERO_ENDIANNESS)" \
@@ -103,6 +109,9 @@ ICEDTEA_ENV = \
 	"ZERO_ARCHFLAG=$(ZERO_ARCHFLAG)" \
 	"LIBFFI_CFLAGS=$(LIBFFI_CFLAGS)" \
 	"LIBFFI_LIBS=$(LIBFFI_LIBS)" \
+	"LLVM_CFLAGS=$(LLVM_CFLAGS)" \
+	"LLVM_LDFLAGS=$(LLVM_LDFLAGS)" \
+	"LLVM_LIBS=$(LLVM_LIBS)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
@@ -162,6 +171,7 @@ ICEDTEA_ENV_ECJ = \
 	"GENSRCDIR=$(abs_top_srcdir)/generated" \
 	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
 	"ICEDTEA_ZERO_BUILD=$(ICEDTEA_ZERO_BUILD)" \
+	"ICEDTEA_SHARK_BUILD=$(ICEDTEA_SHARK_BUILD)" \
 	"ZERO_LIBARCH=$(ZERO_LIBARCH)" \
 	"ZERO_BITSPERWORD=$(ZERO_BITSPERWORD)" \
 	"ZERO_ENDIANNESS=$(ZERO_ENDIANNESS)" \
@@ -169,6 +179,9 @@ ICEDTEA_ENV_ECJ = \
 	"ZERO_ARCHFLAG=$(ZERO_ARCHFLAG)" \
 	"LIBFFI_CFLAGS=$(LIBFFI_CFLAGS)" \
 	"LIBFFI_LIBS=$(LIBFFI_LIBS)" \
+	"LLVM_CFLAGS=$(LLVM_CFLAGS)" \
+	"LLVM_LDFLAGS=$(LLVM_LDFLAGS)" \
+	"LLVM_LIBS=$(LLVM_LIBS)" \
 	"FREETYPE2_HEADERS=$(FREETYPE2_CFLAGS)" \
 	"FT2_LIB=$(FREETYPE2_LIBS)" \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
@@ -235,12 +248,13 @@ clean-download:
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
 	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
-		      $(abs_top_srcdir)/ports/hotspot/src/*/*; do \
+		      $(abs_top_srcdir)/ports/hotspot/src/*cpu/* \
+		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'); \
 	  ln -sf $$target $$link; \
 	done
 	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/build/linux
-	if ! test "x$(ICEDTEA_CORE_BUILD)$(CACAO)" = "xno"; then \
+	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(CACAO)" = "xno"; then \
 	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
 	  ln -sf $(abs_top_builddir)/jvm.cfg openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
 	fi
@@ -279,6 +293,13 @@ if ZERO_BUILD
   ZERO_PATCHES_COND = $(ZERO_PATCHES)
 else
   ZERO_PATCHES_COND = $(NON_ZERO_PATCHES)
+endif
+
+# If Shark is required, apply shark patch
+if SHARK_BUILD
+  SHARK_PATCH = patches/icedtea-shark.patch
+else
+  SHARK_PATCH =
 endif
 
 ICEDTEA_PATCHES = \
@@ -334,6 +355,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-dnd-updatecursor.patch \
 	patches/icedtea-component.patch \
 	patches/icedtea-rhino.patch \
+	patches/icedtea-shark-build.patch \
+	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
 
@@ -419,12 +442,13 @@ clean-extract-ecj:
 # Link ports sources into tree
 stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
-		      $(abs_top_srcdir)/ports/hotspot/src/*/*; do \
+		      $(abs_top_srcdir)/ports/hotspot/src/*cpu/* \
+		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk-ecj/'); \
 	  ln -sf $$target $$link; \
 	done
 	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/build/linux
-	if ! test "x$(ICEDTEA_CORE_BUILD)$(CACAO)" = "xno"; then \
+	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(CACAO)" = "xno"; then \
 	  mkdir -p openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
 	  ln -sf $(abs_top_builddir)/jvm.cfg openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
 	fi
@@ -676,8 +700,8 @@ hotspot:
 	rm -f stamps/icedtea-ecj.stamp
 	rm -f stamps/icedtea-against-ecj.stamp
 	$(MAKE) hotspot-helper
-	cp openjdk-ecj/control/build/$(LINUX_DIR)/hotspot/import/jre/lib/$(BUILD_ARCH_DIR)/core/libjvm.so \
-	   openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/core
+	cp openjdk-ecj/control/build/$(LINUX_DIR)/hotspot/import/jre/lib/$(BUILD_ARCH_DIR)/server/libjvm.so \
+	   openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/server
 	@echo "Hotspot is served:" openjdk-ecj/control/build/$(LINUX_DIR)/j2sdk-image
 
 hotspot-helper: stamps/bootstrap-directory-symlink-ecj.stamp \

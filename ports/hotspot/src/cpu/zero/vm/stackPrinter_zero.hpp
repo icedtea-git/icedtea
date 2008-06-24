@@ -81,6 +81,9 @@ class ZeroStackPrinter {
       case ZeroFrame::INTERPRETER_FRAME:
         value = "INTERPRETER_FRAME";
         break;
+      case ZeroFrame::SHARK_FRAME:
+        value = "SHARK_FRAME";
+        break;
       }
       break;
     }
@@ -158,6 +161,14 @@ class ZeroStackPrinter {
                      istate->stack_base() - addr - 1);
             field = _buf;
           }
+        }
+      }
+      if (frame->is_shark_frame()) {
+        if (word == SharkFrame::method_off) {
+          field = "method";
+          methodOop method = ((SharkFrame *) frame)->method();
+          if (method->is_oop())
+            value = method->name_and_sig_as_C_string(_buf, _buflen);
         }
       }
     }

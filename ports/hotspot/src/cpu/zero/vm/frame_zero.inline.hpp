@@ -25,6 +25,7 @@
 
 #include <entryFrame_zero.hpp>
 #include <interpreterFrame_zero.hpp>
+#include <sharkFrame_zero.hpp>
 
 // Constructors
 
@@ -39,7 +40,10 @@ inline frame::frame()
 inline frame::frame(intptr_t* sp)
 {
   _sp = sp;
-  _pc = (address) sp;
+  if (zeroframe()->is_entry_frame())
+    _pc = StubRoutines::call_stub_return_pc();
+  else
+    _pc = NULL;
   _cb = NULL;
   _deopt_state = not_deoptimized;
 }
@@ -48,7 +52,7 @@ inline frame::frame(intptr_t* sp)
 
 inline intptr_t* frame::sender_sp() const
 {
-  return (intptr_t *) ((ZeroFrame *) sp())->next();
+  return (intptr_t *) zeroframe()->next();
 }
 
 inline intptr_t* frame::link() const
@@ -59,42 +63,42 @@ inline intptr_t* frame::link() const
 #ifdef CC_INTERP
 inline interpreterState frame::get_interpreterState() const
 {
-  return ((InterpreterFrame *) sp())->interpreter_state();
+  return zero_interpreterframe()->interpreter_state();
 }
 
 inline intptr_t** frame::interpreter_frame_locals_addr() const
 {
-  assert(is_interpreted_frame(), "must be interpreted");
   return &(get_interpreterState()->_locals);
 }
 
 inline intptr_t* frame::interpreter_frame_bcx_addr() const
 {
-  assert(is_interpreted_frame(), "must be interpreted");
-  return (intptr_t*) &(get_interpreterState()->_bcp);
+  if (zeroframe()->is_shark_frame())
+    return &shark_dummy_bcx;
+  else
+    return (intptr_t*) &(get_interpreterState()->_bcp);
 }
 
 inline constantPoolCacheOop* frame::interpreter_frame_cache_addr() const
 {
-  assert(is_interpreted_frame(), "must be interpreted");
   return &(get_interpreterState()->_constants);
 }
 
 inline methodOop* frame::interpreter_frame_method_addr() const
 {
-  assert(is_interpreted_frame(), "must be interpreted");
-  return &(get_interpreterState()->_method);
+  if (zeroframe()->is_shark_frame())
+    return zero_sharkframe()->method_addr();
+  else
+    return &(get_interpreterState()->_method);
 }
 
 inline intptr_t* frame::interpreter_frame_mdx_addr() const
 {
-  assert(is_interpreted_frame(), "must be interpreted");
   return (intptr_t*) &(get_interpreterState()->_mdx);
 }
 
 inline intptr_t* frame::interpreter_frame_tos_address() const
 {
-  assert(is_interpreted_frame(), "must be interpreted");
   return get_interpreterState()->_stack + 1;
 }
 #endif // CC_INTERP
@@ -125,7 +129,7 @@ inline intptr_t* frame::id() const
 
 inline JavaCallWrapper* frame::entry_frame_call_wrapper() const
 {
-  return ((EntryFrame *) sp())->call_wrapper();
+  return zero_entryframe()->call_wrapper();
 }
 
 inline void frame::set_saved_oop_result(RegisterMap* map, oop obj)
