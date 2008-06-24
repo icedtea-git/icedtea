@@ -1,3 +1,13 @@
+2008-06-24  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Likewise.
+	* configure: Likewise.
+	* configure.ac: Moved FIND_RHINO out of conditional so it is checked
+	for under all conditions.
+	* patches/icedtea-fonts.patch: Reverted. Dejavu-lgc-fonts are not
+	default on F9.
+
 2008-06-24  Gary Benson  <gbenson@redhat.com>
 
 	* acinclude.m4
