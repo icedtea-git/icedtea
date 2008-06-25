@@ -54,6 +54,7 @@ The following patches are currently applied to OpenJDK or OpenJDK6 by IcedTea:
 * icedtea-version.patch: Replace name and bug URL with IcedTea versions.
 * icedtea-webservices.patch: Add applet support.
 * icedtea-zero-build.patch: Add support for the zero assembler build.
+* icedtea-shark-build.patch: Add support for building the Shark JIT.
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
@@ -88,6 +89,10 @@ The following patches are only applied for IcedTea builds using the zero-assembl
 * icedtea-signed-types.patch: Make use of unsigned/signed types explicit.
 * icedtea-test-atomic-operations.patch: Add check to see if GCC's sync_lock_test works.
 * icedtea-zero.patch: Generalise architecture support, add ARM and #ifdef out non-zero applicable parts.
+
+The following patches are only applied for IcedTea builds using the Shark JIT:
+
+* icedtea-shark.patch: Add support for the Shark JIT.
 
 The following patches are only applied when building with experimental NetX plugin support:
 
