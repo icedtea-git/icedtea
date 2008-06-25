@@ -26,6 +26,7 @@ The following patches are currently applied to OpenJDK or OpenJDK6 by IcedTea:
 * icedtea-gervill.patch: Add support for Gervill from the overlay.
 * icedtea-graphics.patch: Fix word wrap in JTextArea (PR57/S6593649)
 * icedtea-ia64-fdlibm.patch: Fix name of ia64 architecture from _M_IA64 to ia64.
+* icedtea-idl.patch: Fix IDL licenses (PR141).
 * icedtea-javafiles.patch: Add missing Java files to list.
 * icedtea-jpegclasses.patch: Add com.sun.image.codec.jpeg support.
 * icedtea-jscheme.patch: Replace use of jscheme.jar with Java alternative (PR140).

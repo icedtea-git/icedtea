@@ -454,7 +454,7 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-no-bcopy.patch patches/icedtea-jscheme.patch \
 	patches/icedtea-dnd-updatecursor.patch \
-	patches/icedtea-component.patch \
+	patches/icedtea-component.patch patches/icedtea-idl.patch \
 	patches/icedtea-shark-build.patch $(SHARK_PATCH) $(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES) $(am__append_7) $(am__append_8)
 

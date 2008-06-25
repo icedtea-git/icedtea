@@ -348,6 +348,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jscheme.patch \
 	patches/icedtea-dnd-updatecursor.patch \
 	patches/icedtea-component.patch \
+	patches/icedtea-idl.patch \
 	patches/icedtea-shark-build.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
