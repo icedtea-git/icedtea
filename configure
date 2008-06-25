@@ -770,8 +770,6 @@ ZERO_BITSPERWORD
 ZERO_ENDIANNESS
 ZERO_ARCHDEF
 ZERO_ARCHFLAG
-NETX_PLUGIN_TRUE
-NETX_PLUGIN_FALSE
 CORE_BUILD_TRUE
 CORE_BUILD_FALSE
 SHARK_BUILD_TRUE
@@ -1434,8 +1432,6 @@ Optional Features:
   --disable-docs          Disable generation of documentation
   --disable-optimizations build with -O0 -g [default=no]
   --enable-zero           use zero-assembler port on non-zero platforms
-  --enable-netx-plugin    enable experimental caching and security support in
-                          applet plugin
   --enable-shark          use Shark JIT
 
 Optional Packages:
@@ -9440,37 +9436,6 @@ esac
 
 
 
-  # Check whether --enable-netx-plugin was given.
-if test "${enable_netx_plugin+set}" = set; then
-  enableval=$enable_netx_plugin;
-    { echo "$as_me:$LINENO: checking netx plugin" >&5
-echo $ECHO_N "checking netx plugin... $ECHO_C" >&6; }
-    { echo "$as_me:$LINENO: result: will enable netx plugin" >&5
-echo "${ECHO_T}will enable netx plugin" >&6; }
-     if test x = x; then
-  NETX_PLUGIN_TRUE=
-  NETX_PLUGIN_FALSE='#'
-else
-  NETX_PLUGIN_TRUE='#'
-  NETX_PLUGIN_FALSE=
-fi
-
-
-else
-
-     if test x != x; then
-  NETX_PLUGIN_TRUE=
-  NETX_PLUGIN_FALSE='#'
-else
-  NETX_PLUGIN_TRUE='#'
-  NETX_PLUGIN_FALSE=
-fi
-
-
-fi
-
-
-
   { echo "$as_me:$LINENO: checking whether to use the Shark JIT" >&5
 echo $ECHO_N "checking whether to use the Shark JIT... $ECHO_C" >&6; }
   use_shark=no
@@ -12411,20 +12376,6 @@ echo "$as_me: error: conditional \"ZERO_BUILD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
-if test -z "${NETX_PLUGIN_TRUE}" && test -z "${NETX_PLUGIN_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"NETX_PLUGIN\" was never defined.
-Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"NETX_PLUGIN\" was never defined.
-Usually this means the macro was only invoked conditionally." >&2;}
-   { (exit 1); exit 1; }; }
-fi
-if test -z "${NETX_PLUGIN_TRUE}" && test -z "${NETX_PLUGIN_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"NETX_PLUGIN\" was never defined.
-Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"NETX_PLUGIN\" was never defined.
-Usually this means the macro was only invoked conditionally." >&2;}
-   { (exit 1); exit 1; }; }
-fi
 if test -z "${CORE_BUILD_TRUE}" && test -z "${CORE_BUILD_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"CORE_BUILD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -13169,8 +13120,6 @@ ZERO_BITSPERWORD!$ZERO_BITSPERWORD$ac_delim
 ZERO_ENDIANNESS!$ZERO_ENDIANNESS$ac_delim
 ZERO_ARCHDEF!$ZERO_ARCHDEF$ac_delim
 ZERO_ARCHFLAG!$ZERO_ARCHFLAG$ac_delim
-NETX_PLUGIN_TRUE!$NETX_PLUGIN_TRUE$ac_delim
-NETX_PLUGIN_FALSE!$NETX_PLUGIN_FALSE$ac_delim
 CORE_BUILD_TRUE!$CORE_BUILD_TRUE$ac_delim
 CORE_BUILD_FALSE!$CORE_BUILD_FALSE$ac_delim
 SHARK_BUILD_TRUE!$SHARK_BUILD_TRUE$ac_delim
@@ -13210,7 +13159,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 95; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
@@ -13229,7 +13178,7 @@ fi
 
 cat >>$CONFIG_STATUS <<_ACEOF
 cat >"\$tmp/subs-2.sed" <<\CEOF$ac_eof
-/@[a-zA-Z_][a-zA-Z_0-9]*@/!b
+/@[a-zA-Z_][a-zA-Z_0-9]*@/!b end
 _ACEOF
 sed '
 s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g
@@ -13242,6 +13191,8 @@ N; s/^.*\n//; s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g; b n
 ' >>$CONFIG_STATUS <conf$$subs.sed
 rm -f conf$$subs.sed
 cat >>$CONFIG_STATUS <<_ACEOF
+:end
+s/|#_!!_#|//g
 CEOF$ac_eof
 _ACEOF
 
@@ -13495,7 +13446,7 @@ s&@abs_top_builddir@&$ac_abs_top_builddir&;t t
 s&@INSTALL@&$ac_INSTALL&;t t
 s&@MKDIR_P@&$ac_MKDIR_P&;t t
 $ac_datarootdir_hack
-" $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" | sed 's/|#_!!_#|//g' >$tmp/out
+" $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" >$tmp/out
 
 test -z "$ac_datarootdir_hack$ac_datarootdir_seen" &&
   { ac_out=`sed -n '/\${datarootdir}/p' "$tmp/out"`; test -n "$ac_out"; } &&

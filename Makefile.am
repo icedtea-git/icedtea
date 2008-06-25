@@ -4,12 +4,6 @@ OPENJDK_VERSION = b10
 
 JSCHEME_DIR = openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil
 
-if NETX_PLUGIN
-NETX_PATCH = patches/icedtea-netx-plugin.patch
-else
-NETX_PATCH =
-endif
-
 # Top-Level Targets
 # =================
 
@@ -312,7 +306,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-license-headers.patch \
 	patches/icedtea-webservices.patch \
-	$(NETX_PATCH) \
+	patches/icedtea-netx-plugin.patch \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-demos.patch \

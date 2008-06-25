@@ -259,8 +259,6 @@ OPENJDK_DATE = 30_may_2008
 OPENJDK_MD5SUM = 98e9eb16615605f76056135b0eb0b39f
 OPENJDK_VERSION = b10
 JSCHEME_DIR = openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil
-@NETX_PLUGIN_FALSE@NETX_PATCH = 
-@NETX_PLUGIN_TRUE@NETX_PATCH = patches/icedtea-netx-plugin.patch
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
 	gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
@@ -418,7 +416,8 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-graphics.patch patches/icedtea-debuginfo.patch \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-license-headers.patch \
-	patches/icedtea-webservices.patch $(NETX_PATCH) \
+	patches/icedtea-webservices.patch \
+	patches/icedtea-netx-plugin.patch \
 	patches/icedtea-rmi_amd64.patch patches/icedtea-tools.patch \
 	patches/icedtea-demos.patch \
 	patches/icedtea-use-system-tzdata.patch \

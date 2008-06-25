@@ -1,3 +1,15 @@
+2008-06-25  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* acinclude.m4: Remove ENABLE_NETX_PLUGIN.
+	* Makefile.am (NETX_PLUGIN): Remove conditional.
+	(ICEDTEA_PATCHES): Hard-code netx-plugin patch.
+	* Makefile.in: Regenerate.
+	* configure.ac: Remove ENABLE_NETX_PLUGIN.
+	* configure: Regenerate.
+	* rt/net/sourceforge/jnlp/NetxPanel.java (runLoader): Exit when a
+	LaunchException is caught.  Remove keyboard input FIXME comment.
+	* rt/net/sourceforge/jnlp/Launcher.java: Fix LCInit typos.
+
 2008-06-24  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.in: Regenerated.
@@ -92,7 +104,7 @@
 	* ports/hotspot/src/share/vm/shark/sharkValue.hpp: Likewise.
 	* ports/hotspot/src/share/vm/shark/shark_globals.cpp: Likewise.
 	* ports/hotspot/src/share/vm/shark/shark_globals.hpp: Likewise.
-	
+
 2008-06-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* ChangeLog: Correct PATCHES typo.
@@ -128,7 +140,7 @@
 2008-06-20  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-core-build.patch: Defuzz.
-	
+
 2008-06-19  Lillian Angel  <langel@redhat.com>
 
 	Fixes Bug #159
@@ -152,7 +164,7 @@
 	* patches/icedtea-ecj.patch: Updated for post-jscheme
 	tree.
 	* patches/icedtea-jscheme.patch: Added.
-	
+
 2008-06-11  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Added JDK_UPDATE_VERSION to environment. Some applets,
@@ -205,7 +217,7 @@
 	meant, so build works outside the source directory.
 	Also ensure JAVAC is unset during the OpenJDK build.
 	* Makefile.in: Regenerated.
-	
+
 2008-06-08  Mark Wielaard  <mark@klomp.org>
 
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound:
@@ -265,7 +277,7 @@
 	* configure: Regenerated.
 	* configure.ac: Use enableval
 	with --enable options.
-	
+
 2008-05-28  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Updated.
@@ -415,7 +427,7 @@
 
 	* rt/net/sourceforge/jnlp/Launcher.java: Check main jar for main class in
 	case main class isn't specified in the jnlp file.
-	* rt/net/sourceforge/jnlp/resources/Messages.properties: Add main class 
+	* rt/net/sourceforge/jnlp/resources/Messages.properties: Add main class
 	error messages.
 
 2008-05-07  Joshua Sumali  <jsumali@redhat.com>
@@ -628,7 +640,7 @@
 2008-04-16  Andrew Haley  <aph@littlepinkcloud.com>
 
 	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp
-	(arm_add_and_fetch, arm_lock_test_and_set, arm_compare_and_swap): 
+	(arm_add_and_fetch, arm_lock_test_and_set, arm_compare_and_swap):
 	Rewrite.
 
 2008-04-16  Gary Benson  <gbenson@redhat.com>
@@ -676,7 +688,7 @@
 	Updated.
 	* configure.ac:
 	Add --with-parallel-jobs=x option.
-	
+
 2008-04-12  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am: Updated to OpenJDK b09 release.
@@ -732,10 +744,10 @@
 	(Atomic::cmpxchg_ptr): Likewise.
 	(arm_add_and_fetch): New function.
 	(Atomic::add): Use the above on arm.
-	(Atomic::add_ptr): Likewise.	
+	(Atomic::add_ptr): Likewise.
 	(arm_lock_test_and_set): New function.
 	(Atomic::xchg): Use the above on arm.
-	(Atomic::xchg_ptr): Likewise.	
+	(Atomic::xchg_ptr): Likewise.
 
 2008-04-08  Matthias Klose  <doko@ubuntu.com>
 
@@ -794,7 +806,7 @@
 2008-04-07  Gary Benson  <gbenson@redhat.com>
 
 	* acinclude.m4 (ENABLE_ZERO_BUILD): Added sparc and sparc64.
-	* configure: Regenerated.	
+	* configure: Regenerated.
 
 2008-04-04  Joshua Sumali  <jsumali@redhat.com>
 
@@ -853,7 +865,7 @@
 2008-04-02  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-zero.patch: Workaround for arm.
-	
+
 2008-04-01  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-arm-uname.patch: New file.
@@ -894,7 +906,7 @@
 	* Makefile.in: Regenerated.
 
 2008-03-27  Lillian Angel  <langel@redhat.com>
-	
+
 	* Makefile.am
 	(clean-patch): Fixed so patches are actually reverted.
 	* Makefile.in: Regenerated.
@@ -1023,7 +1035,7 @@
 	* ports/hotspot/build/linux/platform_s390x: Likewise.
 
 	* .hgignore: Added platform_zero.
-	
+
 2008-03-14  Lillian Angel  <langel@redhat.com>
 
 	* .hgignore: Updated.
@@ -1094,7 +1106,7 @@
 
 	* Makefile.am: Added new 'extra' targets. These new targets build the
 	sources in the extra/ directory to build about.jar, which is the new
-	sample jnlp application for javaws. 
+	sample jnlp application for javaws.
 	* Makefile.in: Regenerated.
 	* generated/sun/awt/X11/generator/sizer.32: Regenerated.
 	* rt/net/sourceforge/jnlp/resources/Manifest.mf: Fix boot class typo.
@@ -1203,7 +1215,7 @@
 	* ports/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp: Likewise.
 	* ports/hotspot/src/cpu/ppc/vm/stubRoutines_ppc.cpp: Likewise.
 	* ports/hotspot/src/cpu/ppc/vm/stubRoutines_ppc.hpp: Likewise.
-	* ports/hotspot/src/cpu/ppc/vm/templateInterpreterGenerator_ppc.hpp: 
+	* ports/hotspot/src/cpu/ppc/vm/templateInterpreterGenerator_ppc.hpp:
 	Likewise.
 	* ports/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp: Likewise.
 	* ports/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.hpp: Likewise.
@@ -1353,7 +1365,7 @@
 	* patches/icedtea-tools.patch: Likewise.
 	* patches/icedtea-use-system-tzdata.patch: Likewise.
 	* patches/icedtea-zero.patch: Likewise.
-	* patches/icedtea-graphics.patch: Removed awt patches since new awt code 
+	* patches/icedtea-graphics.patch: Removed awt patches since new awt code
 	is included in b06.
 	* rt/java/awt/*: Removed files since they are newly opened in b06.
 
@@ -1368,7 +1380,7 @@
 
 	* Makefile.am:
 	(tools.stamp): Removed since NetX sources moved from tools/ to rt/
-	(tools): Likewise.	
+	(tools): Likewise.
 	(tools-source-files.txt): Likewise.
 	(tools-class-files.stamp): Likewise.
 	(clean-tools): Likewise.
@@ -1380,7 +1392,7 @@
 	* configure.ac: Add ENABLE_NETX_PLUGIN.
 	* README: Updated.
 	* patches/icedtea-copy-plugs.patch: Added importing of rt/net/* as binary
-	plugs to rt.jar.	
+	plugs to rt.jar.
 	* patches/icedtea-netx-plugin.patch: New file. This patch is used when
 	NETX_PLUGIN is true.
 	* patches/icedtea-webservices.patch: New file. This is
@@ -1456,7 +1468,7 @@
 	(getRootInCacerts): Likewise.
 	(getCertPath): Likewise.
 	(allVerified): Method refactored to ...
-	(noSigningIssues): This. 
+	(noSigningIssues): This.
 	(checkTrustedCerts): New method.
 	(getPublisher): Likewise.
 	(getRoot): Likewise.
@@ -1645,7 +1657,7 @@
 	* Makefile.in: Regenerate.
 	* acinclude.m4: Removed FIND_FREETYPE2 and CHECK_HEADERS block.
 	* configure: Regenerate.
-	* configure.ac: Added pkg-config check for all packages using 
+	* configure.ac: Added pkg-config check for all packages using
 	pkg-config.
 
 2008-02-07  Joshua Sumali  <jsumali@redhat.com>
@@ -1811,14 +1823,14 @@
 	* ports/hotspot/src/cpu/zero/vm/assembler_zero.inline.hpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.cpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp: Likewise.
-	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp: 
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp:
 	Likewise.
 	* ports/hotspot/src/cpu/zero/vm/bytecodes_zero.cpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/bytecodes_zero.hpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/bytes_zero.hpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/codeBuffer_zero.hpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/copy_zero.hpp: Likewise.
-	* ports/hotspot/src/cpu/zero/vm/cppInterpreterGenerator_zero.hpp: 
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreterGenerator_zero.hpp:
 	Likewise.
 	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp: Likewise.
@@ -1880,29 +1892,29 @@
 	* ports/hotspot/src/cpu/zero/vm/vtableStubs_zero.cpp: Likewise.
 	* ports/hotspot/src/os_cpu/linux_zero/vm/assembler_linux_zero.cpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/bytes_linux_zero.inline.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/bytes_linux_zero.inline.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp:
 	Likewise.
 	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp: Likewise.
 	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp: Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/prefetch_linux_zero.inline.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/prefetch_linux_zero.inline.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/threadLS_linux_zero.cpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/threadLS_linux_zero.cpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/threadLS_linux_zero.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/threadLS_linux_zero.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.cpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.cpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/vmStructs_linux_zero.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/vmStructs_linux_zero.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/vm_version_linux_zero.cpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/vm_version_linux_zero.cpp:
 	Likewise.
 
 	* patches/icedtea-core-build.patch: Change how architecture-specific
@@ -1921,7 +1933,7 @@
 
 2008-01-18  Lillian Angel  <langel@redhat.com>
 
-	* Makefile.am: Added new env var ICEDTEA_BOOT_DIR. 
+	* Makefile.am: Added new env var ICEDTEA_BOOT_DIR.
 	(env): Updated to use ICEDTEA_BOOT_DIR.
 	(env-ecj): Likewise.
 	(stamps/hotspot-tools-class-files.stamp): Added check. If
@@ -2010,8 +2022,8 @@
 	javaws. Since upstream NetX is dormant, we will be hosting and modifying
 	the NetX source in this repository, particularly in the new tools
 	directory. The old tools directory which was used in building the
-	bootstrap/jdk1.7.0 tools.jar during the build has been renamed to 
-	hotspot-tools.  
+	bootstrap/jdk1.7.0 tools.jar during the build has been renamed to
+	hotspot-tools.
 	* Makefile.in: Regenerated.
 	* configure.ac: Added check for fastjar, required for NetX when building
 	with ecj.
@@ -2111,7 +2123,7 @@
 2008-01-07  Dalibor Topic  <robilad@kaffe.org>
 
 	Fixes Bug #95
-	* acinclude.m4: Added additional check for libgcj-4.1.jar, if 
+	* acinclude.m4: Added additional check for libgcj-4.1.jar, if
 	libgcj-4.1.2.jar is not found.
 	* configure: Regenerate.
 
@@ -2124,13 +2136,13 @@
 	* Makefile.in: Regenerate.
 
 2008-01-07  Lillian Angel  <langel@redhat.com>
-	
+
 	Fixes Bug #92
 	* Makefile.am
 	(gcjwebplugin.so): Added check for ENABLE_PLUGIN.
 	* Makefile.in: Regenerate.
 	* configure: Regenerate.
-	* configure.ac: Added option --disable-gcjwebplugin to disable 
+	* configure.ac: Added option --disable-gcjwebplugin to disable
 	compilation of gcjwebplugin.
 
 2008-01-04  Matthias Klose  <doko@ubuntu.com>
@@ -2321,13 +2333,13 @@
 
 2007-12-11  Lillian Angel  <langel@redhat.com>
 
-	* Makefile.am 
+	* Makefile.am
 	(stamps/clone-ecj.stamp): Added -z to test, instead of -n.
 	(stamps/clone.stamp): Likewise.
 	* Makefile.in: Regenerate.
 
 2007-12-11  Lillian Angel  <langel@redhat.com>
-	
+
 	* Makefile.am (stamps/clone-ecj.stamp): Fixed typo.
 	* Makefile.in: Regenerate.
 
@@ -2337,7 +2349,7 @@
 	* Makefile.am (dist-openjdk): Changed to create zip, not tarball.
 	* Makefile.in: Regenerate.
 	* configure.ac: Added check for zip and unzip tools
-	* configure: Regenerate. 
+	* configure: Regenerate.
 
 2007-12-10  Lillian Angel  <langel@redhat.com>
 
@@ -2375,12 +2387,12 @@
 	* Makefile.in: Regenerate.
 
 2007-12-10  Lillian Angel  <langel@redhat.com>
-	
+
 	* INSTALL: Updated requirements.
 	* Makefile.am: Update to b24- use hg to clone/update openjdk.
 	* Makefile.in: Regenerate.
 	* acinclude.m4: Removed unneeded option (--with-openjdk-src-zip).
-	* configure.ac: Likewise. 
+	* configure.ac: Likewise.
 	* configure: Regenerate.
 	* generated/*: Regenerated all files for b24.
 	* patches/icedtea-core-build.patch: Updated for b24.
@@ -2521,7 +2533,7 @@
 	(MacroAssembler::needs_explicit_null_check): Fix broken definition.
 
 2007-11-23  Lillian Angel  <langel@redhat.com>
-	
+
 	Fixes Bug #80
 	* README: Updated
 
@@ -5274,7 +5286,7 @@
 	* Makefile.in: Regenerate.
 	* acinclude.m4: Removed FIND_FREETYPE2 and CHECK_HEADERS block.
 	* configure: Regenerate.
-	* configure.ac: Added pkg-config check for all packages using 
+	* configure.ac: Added pkg-config check for all packages using
 	pkg-config.
 
 2008-02-07  Joshua Sumali  <jsumali@redhat.com>
@@ -5440,14 +5452,14 @@
 	* ports/hotspot/src/cpu/zero/vm/assembler_zero.inline.hpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.cpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp: Likewise.
-	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp: 
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp:
 	Likewise.
 	* ports/hotspot/src/cpu/zero/vm/bytecodes_zero.cpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/bytecodes_zero.hpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/bytes_zero.hpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/codeBuffer_zero.hpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/copy_zero.hpp: Likewise.
-	* ports/hotspot/src/cpu/zero/vm/cppInterpreterGenerator_zero.hpp: 
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreterGenerator_zero.hpp:
 	Likewise.
 	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
 	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp: Likewise.
@@ -5509,29 +5521,29 @@
 	* ports/hotspot/src/cpu/zero/vm/vtableStubs_zero.cpp: Likewise.
 	* ports/hotspot/src/os_cpu/linux_zero/vm/assembler_linux_zero.cpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/bytes_linux_zero.inline.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/bytes_linux_zero.inline.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp:
 	Likewise.
 	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp: Likewise.
 	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp: Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/prefetch_linux_zero.inline.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/prefetch_linux_zero.inline.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/threadLS_linux_zero.cpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/threadLS_linux_zero.cpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/threadLS_linux_zero.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/threadLS_linux_zero.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.cpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.cpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/vmStructs_linux_zero.hpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/vmStructs_linux_zero.hpp:
 	Likewise.
-	* ports/hotspot/src/os_cpu/linux_zero/vm/vm_version_linux_zero.cpp: 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/vm_version_linux_zero.cpp:
 	Likewise.
 
 	* patches/icedtea-core-build.patch: Change how architecture-specific
@@ -5550,7 +5562,7 @@
 
 2008-01-18  Lillian Angel  <langel@redhat.com>
 
-	* Makefile.am: Added new env var ICEDTEA_BOOT_DIR. 
+	* Makefile.am: Added new env var ICEDTEA_BOOT_DIR.
 	(env): Updated to use ICEDTEA_BOOT_DIR.
 	(env-ecj): Likewise.
 	(stamps/hotspot-tools-class-files.stamp): Added check. If
@@ -5639,8 +5651,8 @@
 	javaws. Since upstream NetX is dormant, we will be hosting and modifying
 	the NetX source in this repository, particularly in the new tools
 	directory. The old tools directory which was used in building the
-	bootstrap/jdk1.7.0 tools.jar during the build has been renamed to 
-	hotspot-tools.  
+	bootstrap/jdk1.7.0 tools.jar during the build has been renamed to
+	hotspot-tools.
 	* Makefile.in: Regenerated.
 	* configure.ac: Added check for fastjar, required for NetX when building
 	with ecj.
@@ -5740,7 +5752,7 @@
 2008-01-07  Dalibor Topic  <robilad@kaffe.org>
 
 	Fixes Bug #95
-	* acinclude.m4: Added additional check for libgcj-4.1.jar, if 
+	* acinclude.m4: Added additional check for libgcj-4.1.jar, if
 	libgcj-4.1.2.jar is not found.
 	* configure: Regenerate.
 
@@ -5753,13 +5765,13 @@
 	* Makefile.in: Regenerate.
 
 2008-01-07  Lillian Angel  <langel@redhat.com>
-	
+
 	Fixes Bug #92
 	* Makefile.am
 	(gcjwebplugin.so): Added check for ENABLE_PLUGIN.
 	* Makefile.in: Regenerate.
 	* configure: Regenerate.
-	* configure.ac: Added option --disable-gcjwebplugin to disable 
+	* configure.ac: Added option --disable-gcjwebplugin to disable
 	compilation of gcjwebplugin.
 
 2008-01-04  Matthias Klose  <doko@ubuntu.com>
@@ -5950,13 +5962,13 @@
 
 2007-12-11  Lillian Angel  <langel@redhat.com>
 
-	* Makefile.am 
+	* Makefile.am
 	(stamps/clone-ecj.stamp): Added -z to test, instead of -n.
 	(stamps/clone.stamp): Likewise.
 	* Makefile.in: Regenerate.
 
 2007-12-11  Lillian Angel  <langel@redhat.com>
-	
+
 	* Makefile.am (stamps/clone-ecj.stamp): Fixed typo.
 	* Makefile.in: Regenerate.
 
@@ -5966,7 +5978,7 @@
 	* Makefile.am (dist-openjdk): Changed to create zip, not tarball.
 	* Makefile.in: Regenerate.
 	* configure.ac: Added check for zip and unzip tools
-	* configure: Regenerate. 
+	* configure: Regenerate.
 
 2007-12-10  Lillian Angel  <langel@redhat.com>
 
@@ -6004,12 +6016,12 @@
 	* Makefile.in: Regenerate.
 
 2007-12-10  Lillian Angel  <langel@redhat.com>
-	
+
 	* INSTALL: Updated requirements.
 	* Makefile.am: Update to b24- use hg to clone/update openjdk.
 	* Makefile.in: Regenerate.
 	* acinclude.m4: Removed unneeded option (--with-openjdk-src-zip).
-	* configure.ac: Likewise. 
+	* configure.ac: Likewise.
 	* configure: Regenerate.
 	* generated/*: Regenerated all files for b24.
 	* patches/icedtea-core-build.patch: Updated for b24.
@@ -6150,7 +6162,7 @@
 	(MacroAssembler::needs_explicit_null_check): Fix broken definition.
 
 2007-11-23  Lillian Angel  <langel@redhat.com>
-	
+
 	Fixes Bug #80
 	* README: Updated
 
