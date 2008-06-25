@@ -348,11 +348,15 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jscheme.patch \
 	patches/icedtea-dnd-updatecursor.patch \
 	patches/icedtea-component.patch \
-	patches/icedtea-rhino.patch \
 	patches/icedtea-shark-build.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
+
+if WITH_RHINO
+ICEDTEA_PATCHES += \
+	patches/icedtea-rhino.patch 
+endif
 
 if WITH_CACAO
 ICEDTEA_PATCHES += \

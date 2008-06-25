@@ -51,7 +51,10 @@ host_triplet = @host@
 @ENABLE_DOCS_FALSE@am__append_6 = \
 @ENABLE_DOCS_FALSE@	"NO_DOCS=true"
 
-@WITH_CACAO_TRUE@am__append_7 = \
+@WITH_RHINO_TRUE@am__append_7 = \
+@WITH_RHINO_TRUE@	patches/icedtea-rhino.patch 
+
+@WITH_CACAO_TRUE@am__append_8 = \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao.patch
 
 subdir = .
@@ -451,9 +454,9 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-no-bcopy.patch patches/icedtea-jscheme.patch \
 	patches/icedtea-dnd-updatecursor.patch \
-	patches/icedtea-component.patch patches/icedtea-rhino.patch \
+	patches/icedtea-component.patch \
 	patches/icedtea-shark-build.patch $(SHARK_PATCH) $(GCC_PATCH) \
-	$(DISTRIBUTION_PATCHES) $(am__append_7)
+	$(DISTRIBUTION_PATCHES) $(am__append_7) $(am__append_8)
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch

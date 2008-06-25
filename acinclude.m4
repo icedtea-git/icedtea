@@ -503,33 +503,43 @@ AC_DEFUN([FIND_XERCES2_JAR],
 
 AC_DEFUN([FIND_RHINO_JAR],
 [
-  AC_ARG_WITH([rhino-jar],
-              [AS_HELP_STRING(--with-rhino-jar,specify location of the rhino jar)],
+  AC_MSG_CHECKING(whether to include Javascript support via Rhino)
+  AC_ARG_WITH([rhino],
+              [AS_HELP_STRING(--with-rhino,specify location of the rhino jar)],
   [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(rhino jar)
-      RHINO_JAR="${withval}"
-      AC_MSG_RESULT(${withval})
-    fi
+    case "${withval}" in
+      yes)
+	RHINO_JAR=yes
+        ;;
+      no)
+        RHINO_JAR=no
+        ;;
+      *)
+    	if test -f "${withval}"; then
+          RHINO_JAR="${withval}"
+        else
+	  AC_MSG_RESULT([not found])
+          AC_MSG_ERROR("The rhino jar ${withval} was not found.")
+        fi
+	;;
+     esac
   ],
   [
-    RHINO_JAR=
+    RHINO_JAR=yes
   ])
-  if test -z "${RHINO_JAR}"; then
-    AC_MSG_CHECKING(for rhino jar)
+  if test x"${RHINO_JAR}" = "xyes"; then
     if test -e "/usr/share/java/rhino.jar"; then
       RHINO_JAR=/usr/share/java/rhino.jar
-      AC_MSG_RESULT(${RHINO_JAR})
     elif test -e "/usr/share/java/js.jar"; then
       RHINO_JAR=/usr/share/java/js.jar
-      AC_MSG_RESULT(${RHINO_JAR})
-    else
-      AC_MSG_RESULT(no)
+    fi
+    if test x"${RHINO_JAR}" = "xyes"; then
+      AC_MSG_RESULT([not found])
+      AC_MSG_ERROR("A rhino jar was not found in /usr/share/java as either rhino.jar or js.jar.")
     fi
   fi
-  if test -z "${RHINO_JAR}"; then
-    AC_MSG_ERROR("A rhino jar was not found.")
-  fi
+  AC_MSG_RESULT(${RHINO_JAR})
+  AM_CONDITIONAL(WITH_RHINO, test x"${RHINO_JAR}" != "xno")
   AC_SUBST(RHINO_JAR)
 ])
 
