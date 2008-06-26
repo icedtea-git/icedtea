@@ -1397,7 +1397,7 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net ; \
 	fi
 
-stamps/cacao.stamp:
+stamps/cacao.stamp: stamps/extract.stamp
 @USE_SYSTEM_CACAO_FALSE@	cd cacao/cacao-$(CACAO_VERSION) ; \
 @USE_SYSTEM_CACAO_FALSE@	./configure \
 @USE_SYSTEM_CACAO_FALSE@	  --prefix=$(abs_top_srcdir)/cacao/install \

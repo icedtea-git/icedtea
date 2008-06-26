@@ -984,7 +984,7 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net ; \
 	fi
 
-stamps/cacao.stamp:
+stamps/cacao.stamp: stamps/extract.stamp
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao-$(CACAO_VERSION) ; \
 	./configure \
