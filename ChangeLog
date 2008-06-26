@@ -1,3 +1,10 @@
+2008-06-26  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added new patch to the list.
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Regenerated.
+	* patches/icedtea-toolkit.patch: New file.
+
 2008-06-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am: Don't bother with the

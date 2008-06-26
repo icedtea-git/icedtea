@@ -379,6 +379,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-component.patch \
 	patches/icedtea-idl.patch \
 	patches/icedtea-shark-build.patch \
+	patches/icedtea-toolkit.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)
