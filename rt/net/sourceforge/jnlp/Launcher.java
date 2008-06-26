@@ -575,6 +575,8 @@ public class Launcher {
                 	new Reflect().invokeStatic("sun.awt.SunToolkit", "createNewAppContext");
 
                 if (isPlugin) {
+                	// Do not display download indicators if we're using gcjwebplugin.
+                	JNLPRuntime.setDefaultDownloadIndicator(null);
                 	application = getApplet(file, true, cont);
                 } else {
                 	if (file.isApplication())

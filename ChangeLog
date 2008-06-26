@@ -1,3 +1,10 @@
+2008-06-26  Joshua Sumali  <jsumali@redhat.com>
+
+	* README: Removed documentation about --enable-netx-plugin. This feature
+	is enabled by default now.
+	* rt/net/sourceforge/jnlp/Launcher.java: Do not show the download
+	indicator if we are using gcjwebplugin.
+
 2008-06-26  Lillian Angel  <langel@redhat.com>
 
 	* configure: Regenerated.

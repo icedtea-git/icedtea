@@ -108,12 +108,6 @@ rt.jar and tools.jar to provide gcjwebplugin with an interface into
 the appletviewer code.  This support code is provided in
 patches/icedtea-plugin.patch.
 
-If the option --enable-netx-plugin is passed to configure, this will
-make all applets run through NetX security instead of the default
-security manager. This feature is experimental, and is not enabled by
-default. Note that if --disable-gcjwebplugin is used, --enable-netx-plugin
-will not work.
-
 NetX
 ====
 
@@ -126,7 +120,7 @@ The NetX sources are built into rt.jar
 
 IcedTea's NetX currently supports verification of signed jars, trusted
 certificate storing, system certificate store checking, and provides
-some services specified by the jnlp API.
+the services specified by the jnlp API.
 
 CACAO as VM
 ===========
