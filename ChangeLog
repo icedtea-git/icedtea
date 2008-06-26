@@ -1,3 +1,10 @@
+2008-06-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Don't bother with the
+	shared object files.  We don't need
+	them any more.
+	* Makefile.in: Regenerated.
+	
 2008-06-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* HACKING: Update with new patch.

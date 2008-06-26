@@ -725,8 +725,7 @@ stamps/icedtea-against-ecj.stamp: \
 # Binary Plugs and Tools Targets
 # ==============================
 
-stamps/plugs.stamp: $(SHARED_OBJECT_FILES) \
-	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
+stamps/plugs.stamp: bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 	mkdir -p stamps
 	touch stamps/plugs.stamp
 
@@ -743,23 +742,6 @@ clean-tools-jar: clean-hotspot-tools
 	rm -f stamps/hotspot-tools.stamp
 	rm -rf tools/
 	rm -f bootstrap/jdk1.7.0/jre/lib/tools.jar
-
-# Shared objects.
-SHARED_OBJECT_FILES = \
-	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libdcpr.so \
-	bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)/libjsoundhs.so
-
-$(SHARED_OBJECT_FILES):
-	mkdir -p bootstrap/jdk1.7.0/jre/lib/$(INSTALL_ARCH_DIR)
-	for shared_object in $(SHARED_OBJECT_FILES) ; \
-	do \
-	  echo | $(CC) $(CFLAGS) -fpic -shared \
-	    -o $$shared_object \
-	    -Wl,-soname,$$shared_object -xc - ; \
-	done
-
-clean-shared-objects:
-	rm -f $(SHARED_OBJECT_FILES)
 
 # Sources copied from OpenJDK.
 ICEDTEA_COPY_DIRS = \
