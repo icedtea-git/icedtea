@@ -1,5 +1,9 @@
 2008-06-26  Lillian Angel  <langel@redhat.com>
 
+	* configure: Regenerated.
+
+2008-06-26  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Added new patch to the list.
 	* Makefile.in: Regenerated.
 	* aclocal.m4: Regenerated.
