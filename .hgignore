@@ -3,6 +3,7 @@ syntax: glob
 
 syntax: regexp
 autom4te.cache
+cacao
 openjdk
 bootstrap
 debian

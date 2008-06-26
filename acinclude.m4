@@ -698,25 +698,57 @@ AC_DEFUN([AC_CHECK_WITH_CACAO],
 [
   AC_MSG_CHECKING(whether to use CACAO as VM)
   AC_ARG_WITH([cacao],
-	      [AS_HELP_STRING(--with-cacao,use CACAO as VM)],
+	      [AS_HELP_STRING(--with-cacao,use CACAO as VM [[default=no]])],
   [
-    case "${withval}" in
-      yes)
-        CACAO=/usr/local/cacao
-        ;;
-      no)
-        CACAO=no
-        ;;
-      *)
-        CACAO=${withval}
-        ;;
-    esac
+    WITH_CACAO=yes
   ],
   [
-    CACAO=no
+    WITH_CACAO=no
   ])
 
-  AC_MSG_RESULT(${CACAO})
-  AM_CONDITIONAL(WITH_CACAO, test x"${CACAO}" != "xno")
-  AC_SUBST(CACAO)
+  AC_MSG_RESULT(${WITH_CACAO})
+  AM_CONDITIONAL(WITH_CACAO, test x"${WITH_CACAO}" = "xyes")
+  AC_SUBST(WITH_CACAO)
+])
+
+AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
+[
+  AC_MSG_CHECKING(CACAO home directory)
+  AC_ARG_WITH([cacao-home],
+              [AS_HELP_STRING([--with-cacao-home],
+                              [CACAO home directory [[default=/usr/local/cacao]]])],
+              [
+                case "${withval}" in
+                yes)
+                  CACAO_IMPORT_PATH=/usr/local/cacao
+                  ;;
+                *)
+                  CACAO_IMPORT_PATH=${withval}
+                  ;;
+                esac
+                AM_CONDITIONAL(USE_SYSTEM_CACAO, true)
+              ],
+              [
+                CACAO_IMPORT_PATH="\$(abs_top_srcdir)/cacao/install"
+                AM_CONDITIONAL(USE_SYSTEM_CACAO, false)
+              ])
+  AC_MSG_RESULT(${CACAO_IMPORT_PATH})
+  AC_SUBST(CACAO_IMPORT_PATH)
+])
+
+AC_DEFUN([AC_CHECK_WITH_CACAO_SRC_ZIP],
+[
+  AC_MSG_CHECKING(CACAO source zip)
+  AC_ARG_WITH([cacao-src-zip],
+              [AS_HELP_STRING(--with-cacao-src-zip,specify the location of the CACAO source zip)],
+  [
+    ALT_CACAO_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_CACAO_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_CACAO_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_CACAO_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_CACAO_SRC_ZIP})
+  AC_SUBST(ALT_CACAO_SRC_ZIP)
 ])

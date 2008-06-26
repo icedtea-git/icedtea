@@ -2,6 +2,9 @@ OPENJDK_DATE = 30_may_2008
 OPENJDK_MD5SUM = 98e9eb16615605f76056135b0eb0b39f
 OPENJDK_VERSION = b10
 
+CACAO_VERSION = 0.99.1
+CACAO_MD5SUM = 2337754d0c165af556e97395e9a5e5af
+
 JSCHEME_DIR = openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil
 
 # Top-Level Targets
@@ -20,6 +23,7 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports
 	rm -rf openjdk-ecj
 	rm -rf openjdk
 	rm -rf hotspot-tools
+	rm -rf cacao
 	rm -f gcjwebplugin.so
 
 install:
@@ -115,7 +119,7 @@ ICEDTEA_ENV = \
 
 if WITH_CACAO
 ICEDTEA_ENV += \
-	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
+	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO_IMPORT_PATH)"
 endif
 
 if !ENABLE_OPTIMIZATIONS
@@ -185,7 +189,7 @@ ICEDTEA_ENV_ECJ = \
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
-	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO)"
+	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO_IMPORT_PATH)"
 endif
 
 if !ENABLE_OPTIMIZATIONS
@@ -219,6 +223,15 @@ else
   OPENJDK_SRC_ZIP = openjdk-6-src-$(OPENJDK_VERSION)_$(OPENJDK_DATE).tar.gz
 endif
 
+CACAO_URL = http://www.complang.tuwien.ac.at/cacaojvm/download/cacao-$(CACAO_VERSION)/
+
+if USE_ALT_CACAO_SRC_ZIP
+  CACAO_SRC_ZIP = $(ALT_CACAO_SRC_ZIP)
+else
+  CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.gz
+endif
+
+
 stamps/download.stamp:
 if USE_ALT_OPENJDK_SRC_ZIP
 else
@@ -232,12 +245,28 @@ else
 	 $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
 	fi
 endif
+if WITH_CACAO
+if !USE_SYSTEM_CACAO
+	if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
+	 | $(MD5SUM) --check ; \
+	then \
+	 if [ $(CACAO_SRC_ZIP) ] ; \
+	 then \
+	   mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
+	 fi ; \
+	 $(WGET) $(CACAO_URL)$(CACAO_SRC_ZIP) -O $(CACAO_SRC_ZIP); \
+	fi
+endif
+endif
 	mkdir -p stamps
 	touch stamps/download.stamp
 
 clean-download:
 	rm -f stamps/download.stamp
 	rm -f $(OPENJDK_SRC_ZIP)
+if WITH_CACAO
+	rm -f $(CACAO_SRC_ZIP)
+endif
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
@@ -248,11 +277,11 @@ stamps/ports.stamp: stamps/extract.stamp
 	  ln -sf $$target $$link; \
 	done
 	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/build/linux
-	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(CACAO)" = "xno"; then \
+	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" = "xno"; then \
 	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
 	  ln -sf $(abs_top_builddir)/jvm.cfg openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
 	fi
-	if ! test "x$(ICEDTEA_ZERO_BUILD)$(CACAO)" = "xno"; then \
+	if ! test "x$(ICEDTEA_ZERO_BUILD)$(WITH_CACAO)" = "xno"; then \
 	  ln -sf $(abs_top_builddir)/ergo.c openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
 	fi
 	mkdir -p stamps
@@ -373,6 +402,15 @@ stamps/extract.stamp: stamps/download.stamp
 	  rm -rf $(JSCHEME_DIR)/lib; \
 	  rm -rf $(JSCHEME_DIR)/scripts; \
 	fi
+if WITH_CACAO
+if !USE_SYSTEM_CACAO
+	if ! test -d cacao ; \
+	then \
+	  mkdir cacao ; \
+	  $(TAR) xzf $(CACAO_SRC_ZIP) -C cacao ; \
+	fi
+endif
+endif
 	mkdir -p stamps
 	touch stamps/extract.stamp
 
@@ -447,11 +485,11 @@ stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 	  ln -sf $$target $$link; \
 	done
 	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/build/linux
-	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(CACAO)" = "xno"; then \
+	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" = "xno"; then \
 	  mkdir -p openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
 	  ln -sf $(abs_top_builddir)/jvm.cfg openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
 	fi
-	if ! test "x$(ICEDTEA_ZERO_BUILD)$(CACAO)" = "xno"; then \
+	if ! test "x$(ICEDTEA_ZERO_BUILD)$(WITH_CACAO)" = "xno"; then \
 	  ln -sf $(abs_top_builddir)/ergo.c openjdk-ecj/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
 	fi
 	mkdir -p stamps
@@ -627,7 +665,7 @@ endif
 icedtea: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	gcjwebplugin.so extra-lib/about.jar
+	gcjwebplugin.so extra-lib/about.jar stamps/cacao.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/ \
@@ -650,7 +688,7 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	gcjwebplugin.so extra-lib/about.jar
+	gcjwebplugin.so extra-lib/about.jar stamps/cacao.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
@@ -945,6 +983,25 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net ; \
 	fi
+
+stamps/cacao.stamp:
+if !USE_SYSTEM_CACAO
+	cd cacao/cacao-$(CACAO_VERSION) ; \
+	./configure \
+	  --prefix=$(abs_top_srcdir)/cacao/install \
+	  --with-java-runtime-library=openjdk \
+	  --with-java-runtime-library-prefix=$(abs_top_srcdir)/openjdk \
+	  --with-java-runtime-library-classes=$(abs_top_srcdir)/lib/rt \
+	  --enable-jre-layout ; \
+	make install
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-cacao:
+	rm -rf cacao
+	rm -f stamps/cacao.stamp
+
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
 	if test "$(ENABLE_PLUGIN)" == "yes" ; \
@@ -1018,6 +1075,8 @@ bootstrap-directory: stamps/bootstrap-directory.stamp
 bootstrap-directory-symlink-ecj: stamps/bootstrap-directory-symlink-ecj.stamp
 
 bootstrap-directory-symlink: stamps/bootstrap-directory-symlink.stamp
+
+cacao: stamps/cacao.stamp
 
 copy-source-files: stamps/copy-source-files.stamp
 

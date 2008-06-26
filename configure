@@ -759,7 +759,13 @@ GNU_CLASSLIB_FOUND_TRUE
 GNU_CLASSLIB_FOUND_FALSE
 WITH_CACAO_TRUE
 WITH_CACAO_FALSE
-CACAO
+WITH_CACAO
+USE_SYSTEM_CACAO_TRUE
+USE_SYSTEM_CACAO_FALSE
+CACAO_IMPORT_PATH
+USE_ALT_CACAO_SRC_ZIP_TRUE
+USE_ALT_CACAO_SRC_ZIP_FALSE
+ALT_CACAO_SRC_ZIP
 ENABLE_OPTIMIZATIONS_TRUE
 ENABLE_OPTIMIZATIONS_FALSE
 ZERO_BUILD_TRUE
@@ -1465,7 +1471,9 @@ Optional Packages:
   --with-rhino            specify location of the rhino jar
   --with-openjdk-src-zip  specify the location of the openjdk source zip
   --with-openjdk-src-dir  specify the location of the openjdk sources
-  --with-cacao            use CACAO as VM
+  --with-cacao            use CACAO as VM [default=no]
+  --with-cacao-home       CACAO home directory [[default=/usr/local/cacao]]
+  --with-cacao-src-zip    specify the location of the CACAO source zip
 
 Some influential environment variables:
   CC          C compiler command
@@ -8014,28 +8022,18 @@ echo $ECHO_N "checking whether to use CACAO as VM... $ECHO_C" >&6; }
 # Check whether --with-cacao was given.
 if test "${with_cacao+set}" = set; then
   withval=$with_cacao;
-    case "${withval}" in
-      yes)
-        CACAO=/usr/local/cacao
-        ;;
-      no)
-        CACAO=no
-        ;;
-      *)
-        CACAO=${withval}
-        ;;
-    esac
+    WITH_CACAO=yes
 
 else
 
-    CACAO=no
+    WITH_CACAO=no
 
 fi
 
 
-  { echo "$as_me:$LINENO: result: ${CACAO}" >&5
-echo "${ECHO_T}${CACAO}" >&6; }
-   if test x"${CACAO}" != "xno"; then
+  { echo "$as_me:$LINENO: result: ${WITH_CACAO}" >&5
+echo "${ECHO_T}${WITH_CACAO}" >&6; }
+   if test x"${WITH_CACAO}" = "xyes"; then
   WITH_CACAO_TRUE=
   WITH_CACAO_FALSE='#'
 else
@@ -8043,6 +8041,83 @@ else
   WITH_CACAO_FALSE=
 fi
 
+
+
+
+  { echo "$as_me:$LINENO: checking CACAO home directory" >&5
+echo $ECHO_N "checking CACAO home directory... $ECHO_C" >&6; }
+
+# Check whether --with-cacao-home was given.
+if test "${with_cacao_home+set}" = set; then
+  withval=$with_cacao_home;
+                case "${withval}" in
+                yes)
+                  CACAO_IMPORT_PATH=/usr/local/cacao
+                  ;;
+                *)
+                  CACAO_IMPORT_PATH=${withval}
+                  ;;
+                esac
+                 if true; then
+  USE_SYSTEM_CACAO_TRUE=
+  USE_SYSTEM_CACAO_FALSE='#'
+else
+  USE_SYSTEM_CACAO_TRUE='#'
+  USE_SYSTEM_CACAO_FALSE=
+fi
+
+
+else
+
+                CACAO_IMPORT_PATH="\$(abs_top_srcdir)/cacao/install"
+                 if false; then
+  USE_SYSTEM_CACAO_TRUE=
+  USE_SYSTEM_CACAO_FALSE='#'
+else
+  USE_SYSTEM_CACAO_TRUE='#'
+  USE_SYSTEM_CACAO_FALSE=
+fi
+
+
+fi
+
+  { echo "$as_me:$LINENO: result: ${CACAO_IMPORT_PATH}" >&5
+echo "${ECHO_T}${CACAO_IMPORT_PATH}" >&6; }
+
+
+
+  { echo "$as_me:$LINENO: checking CACAO source zip" >&5
+echo $ECHO_N "checking CACAO source zip... $ECHO_C" >&6; }
+
+# Check whether --with-cacao-src-zip was given.
+if test "${with_cacao_src_zip+set}" = set; then
+  withval=$with_cacao_src_zip;
+    ALT_CACAO_SRC_ZIP=${withval}
+     if test x = x; then
+  USE_ALT_CACAO_SRC_ZIP_TRUE=
+  USE_ALT_CACAO_SRC_ZIP_FALSE='#'
+else
+  USE_ALT_CACAO_SRC_ZIP_TRUE='#'
+  USE_ALT_CACAO_SRC_ZIP_FALSE=
+fi
+
+
+else
+
+    ALT_CACAO_SRC_ZIP="not specified"
+     if test x != x; then
+  USE_ALT_CACAO_SRC_ZIP_TRUE=
+  USE_ALT_CACAO_SRC_ZIP_FALSE='#'
+else
+  USE_ALT_CACAO_SRC_ZIP_TRUE='#'
+  USE_ALT_CACAO_SRC_ZIP_FALSE=
+fi
+
+
+fi
+
+  { echo "$as_me:$LINENO: result: ${ALT_CACAO_SRC_ZIP}" >&5
+echo "${ECHO_T}${ALT_CACAO_SRC_ZIP}" >&6; }
 
 
 
@@ -11663,7 +11738,7 @@ Alternatively, you may set the environment variables GLIB_CFLAGS
 and GLIB_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&5
 echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
 is in your PATH or set the PKG_CONFIG environment variable to the full
@@ -11673,7 +11748,7 @@ Alternatively, you may set the environment variables GLIB_CFLAGS
 and GLIB_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&2;}
    { (exit 1); exit 1; }; }
 else
@@ -11774,7 +11849,7 @@ Alternatively, you may set the environment variables GTK_CFLAGS
 and GTK_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&5
 echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
 is in your PATH or set the PKG_CONFIG environment variable to the full
@@ -11784,7 +11859,7 @@ Alternatively, you may set the environment variables GTK_CFLAGS
 and GTK_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&2;}
    { (exit 1); exit 1; }; }
 else
@@ -12461,6 +12536,34 @@ if test -z "${WITH_CACAO_TRUE}" && test -z "${WITH_CACAO_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"WITH_CACAO\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"WITH_CACAO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_SYSTEM_CACAO_TRUE}" && test -z "${USE_SYSTEM_CACAO_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_SYSTEM_CACAO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_SYSTEM_CACAO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_SYSTEM_CACAO_TRUE}" && test -z "${USE_SYSTEM_CACAO_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_SYSTEM_CACAO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_SYSTEM_CACAO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_ALT_CACAO_SRC_ZIP_TRUE}" && test -z "${USE_ALT_CACAO_SRC_ZIP_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_CACAO_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_ALT_CACAO_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_ALT_CACAO_SRC_ZIP_TRUE}" && test -z "${USE_ALT_CACAO_SRC_ZIP_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_CACAO_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_ALT_CACAO_SRC_ZIP\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -13211,7 +13314,13 @@ GNU_CLASSLIB_FOUND_TRUE!$GNU_CLASSLIB_FOUND_TRUE$ac_delim
 GNU_CLASSLIB_FOUND_FALSE!$GNU_CLASSLIB_FOUND_FALSE$ac_delim
 WITH_CACAO_TRUE!$WITH_CACAO_TRUE$ac_delim
 WITH_CACAO_FALSE!$WITH_CACAO_FALSE$ac_delim
-CACAO!$CACAO$ac_delim
+WITH_CACAO!$WITH_CACAO$ac_delim
+USE_SYSTEM_CACAO_TRUE!$USE_SYSTEM_CACAO_TRUE$ac_delim
+USE_SYSTEM_CACAO_FALSE!$USE_SYSTEM_CACAO_FALSE$ac_delim
+CACAO_IMPORT_PATH!$CACAO_IMPORT_PATH$ac_delim
+USE_ALT_CACAO_SRC_ZIP_TRUE!$USE_ALT_CACAO_SRC_ZIP_TRUE$ac_delim
+USE_ALT_CACAO_SRC_ZIP_FALSE!$USE_ALT_CACAO_SRC_ZIP_FALSE$ac_delim
+ALT_CACAO_SRC_ZIP!$ALT_CACAO_SRC_ZIP$ac_delim
 ENABLE_OPTIMIZATIONS_TRUE!$ENABLE_OPTIMIZATIONS_TRUE$ac_delim
 ENABLE_OPTIMIZATIONS_FALSE!$ENABLE_OPTIMIZATIONS_FALSE$ac_delim
 ZERO_BUILD_TRUE!$ZERO_BUILD_TRUE$ac_delim
@@ -13255,12 +13364,6 @@ GTK_CFLAGS!$GTK_CFLAGS$ac_delim
 GTK_LIBS!$GTK_LIBS$ac_delim
 LIBFFI_CFLAGS!$LIBFFI_CFLAGS$ac_delim
 LIBFFI_LIBS!$LIBFFI_LIBS$ac_delim
-LLVM_CONFIG!$LLVM_CONFIG$ac_delim
-LLVM_CFLAGS!$LLVM_CFLAGS$ac_delim
-LLVM_LDFLAGS!$LLVM_LDFLAGS$ac_delim
-LLVM_LIBS!$LLVM_LIBS$ac_delim
-LIBOBJS!$LIBOBJS$ac_delim
-LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
@@ -13295,6 +13398,55 @@ N; s/^.*\n//; s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g; b n
 ' >>$CONFIG_STATUS <conf$$subs.sed
 rm -f conf$$subs.sed
 cat >>$CONFIG_STATUS <<_ACEOF
+CEOF$ac_eof
+_ACEOF
+
+
+ac_delim='%!_!# '
+for ac_last_try in false false false false false :; do
+  cat >conf$$subs.sed <<_ACEOF
+LLVM_CONFIG!$LLVM_CONFIG$ac_delim
+LLVM_CFLAGS!$LLVM_CFLAGS$ac_delim
+LLVM_LDFLAGS!$LLVM_LDFLAGS$ac_delim
+LLVM_LIBS!$LLVM_LIBS$ac_delim
+LIBOBJS!$LIBOBJS$ac_delim
+LTLIBOBJS!$LTLIBOBJS$ac_delim
+_ACEOF
+
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 6; then
+    break
+  elif $ac_last_try; then
+    { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
+echo "$as_me: error: could not make $CONFIG_STATUS" >&2;}
+   { (exit 1); exit 1; }; }
+  else
+    ac_delim="$ac_delim!$ac_delim _$ac_delim!! "
+  fi
+done
+
+ac_eof=`sed -n '/^CEOF[0-9]*$/s/CEOF/0/p' conf$$subs.sed`
+if test -n "$ac_eof"; then
+  ac_eof=`echo "$ac_eof" | sort -nru | sed 1q`
+  ac_eof=`expr $ac_eof + 1`
+fi
+
+cat >>$CONFIG_STATUS <<_ACEOF
+cat >"\$tmp/subs-3.sed" <<\CEOF$ac_eof
+/@[a-zA-Z_][a-zA-Z_0-9]*@/!b end
+_ACEOF
+sed '
+s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g
+s/^/s,@/; s/!/@,|#_!!_#|/
+:n
+t n
+s/'"$ac_delim"'$/,g/; t
+s/$/\\/; p
+N; s/^.*\n//; s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g; b n
+' >>$CONFIG_STATUS <conf$$subs.sed
+rm -f conf$$subs.sed
+cat >>$CONFIG_STATUS <<_ACEOF
+:end
+s/|#_!!_#|//g
 CEOF$ac_eof
 _ACEOF
 
@@ -13548,7 +13700,7 @@ s&@abs_top_builddir@&$ac_abs_top_builddir&;t t
 s&@INSTALL@&$ac_INSTALL&;t t
 s&@MKDIR_P@&$ac_MKDIR_P&;t t
 $ac_datarootdir_hack
-" $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" | sed 's/|#_!!_#|//g' >$tmp/out
+" $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" | sed -f "$tmp/subs-3.sed" >$tmp/out
 
 test -z "$ac_datarootdir_hack$ac_datarootdir_seen" &&
   { ac_out=`sed -n '/\${datarootdir}/p' "$tmp/out"`; test -n "$ac_out"; } &&
@@ -13583,7 +13735,7 @@ echo "$as_me: executing $ac_file commands" >&6;}
   # each Makefile.in and add a new line on top of each file to say so.
   # Grep'ing the whole file is not good either: AIX grep has a line
   # limit of 2048, but all sed's we know have understand at least 4000.
-  if sed -n 's,^#.*generated by automake.*,X,p' "$mf" | grep X >/dev/null 2>&1; then
+  if sed 10q "$mf" | grep '^#.*generated by automake' > /dev/null 2>&1; then
     dirpart=`$as_dirname -- "$mf" ||
 $as_expr X"$mf" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
 	 X"$mf" : 'X\(//\)[^/]' \| \
