@@ -1,3 +1,13 @@
+2008-06-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Separate out ICEDTEA_FSG_PATCHES and
+	add dist-openjdk-fsg target.
+	* Makefile.in,
+	* aclocal.m4,
+	* configure:
+	Regenerated.
+
 2008-06-26  Joshua Sumali  <jsumali@redhat.com>
 
 	* README: Removed documentation about --enable-netx-plugin. This feature
