@@ -1,5 +1,10 @@
 2008-06-27  Joshua Sumali  <jsumali@redhat.com>
 
+	* rt/net/sourceforge/jnlp/services/XPersistenceService.java: Throw a
+	FileNotFoundException if the persistence store does not exist.
+
+2008-06-27  Joshua Sumali  <jsumali@redhat.com>
+
 	* rt/net/sourceforge/jnlp/Launcher.java: Exit the application if there was
 	a LaunchException caught.
 
