@@ -1,3 +1,8 @@
+2008-06-27  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/Launcher.java: Exit the application if there was
+	a LaunchException caught.
+
 2008-06-26  Joshua Sumali  <jsumali@redhat.com>
 
 	* README: Removed documentation about --enable-netx-plugin. This feature
