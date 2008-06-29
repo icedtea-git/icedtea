@@ -1587,9 +1587,9 @@ hotspot-tools-copy-source-files: stamps/hotspot-tools-copy-source-files.stamp
 
 hotspot-tools: stamps/hotspot-tools.stamp
 
-ports: stamps/ports.stamp
+hotspot-ports: stamps/ports.stamp
 
-ports-ecj: stamps/ports-ecj.stamp
+hotspot-ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
 
