@@ -467,8 +467,9 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-dnd-updatecursor.patch \
 	patches/icedtea-component.patch \
 	patches/icedtea-shark-build.patch \
-	patches/icedtea-toolkit.patch $(SHARK_PATCH) $(GCC_PATCH) \
-	$(am__append_7) $(am__append_8)
+	patches/icedtea-toolkit.patch \
+	patches/icedtea-jdk-docs-target.patch $(SHARK_PATCH) \
+	$(GCC_PATCH) $(am__append_7) $(am__append_8)
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch

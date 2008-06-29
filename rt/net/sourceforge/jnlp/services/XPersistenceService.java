@@ -118,6 +118,9 @@ class XPersistenceService implements PersistenceService {
         checkLocation(location);
 
         File file = toCacheFile(location);
+        if (!file.exists())
+            throw new FileNotFoundException("Persistence store for "
+              + location.toString() + " is not found.");
         file.getParentFile().mkdirs();
 
         return (FileContents) ServiceUtil.createPrivilegedProxy(FileContents.class, new XFileContents(file));

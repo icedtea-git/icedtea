@@ -8,6 +8,22 @@
 	* configure:
 	Regenerated.
 
+2008-06-29  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-jdk-docs-target.patch: New.
+	* Makefile.am: Apply patch.
+	* Makefile.in: Regenerate.
+	
+2008-06-27  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/services/XPersistenceService.java: Throw a
+	FileNotFoundException if the persistence store does not exist.
+
+2008-06-27  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/Launcher.java: Exit the application if there was
+	a LaunchException caught.
+
 2008-06-26  Joshua Sumali  <jsumali@redhat.com>
 
 	* README: Removed documentation about --enable-netx-plugin. This feature

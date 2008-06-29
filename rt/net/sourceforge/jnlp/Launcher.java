@@ -593,6 +593,8 @@ public class Launcher {
             }
             catch (LaunchException ex) {
                 exception = ex;
+                // Exit if we can't launch the application.
+                System.exit(0);
             }
         }
 
