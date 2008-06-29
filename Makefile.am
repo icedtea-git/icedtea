@@ -166,7 +166,7 @@ ICEDTEA_ENV_ECJ = \
 	"BOOTCLASSPATH_RT_LIBGCJ=-bootclasspath $(ICEDTEA_RT):$(LIBGCJ_JAR)" \
 	"CLASSPATH=" \
 	"LD_LIBRARY_PATH=" \
-	"GENSRCDIR=$(abs_top_srcdir)/generated" \
+	"GENSRCDIR=$(abs_top_builddir)/generated" \
 	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
 	"ICEDTEA_ZERO_BUILD=$(ICEDTEA_ZERO_BUILD)" \
 	"ICEDTEA_SHARK_BUILD=$(ICEDTEA_SHARK_BUILD)" \
@@ -415,6 +415,11 @@ if !USE_SYSTEM_CACAO
 	fi
 endif
 endif
+	if [ ! -e $(abs_top_builddir)/generated ]; then \
+	  cp -a $(abs_top_srcdir)/generated $(abs_top_builddir); \
+	  find $(abs_top_builddir)/generated -type f -exec chmod 640 '{}' ';' \
+	    -o -type d -exec chmod 750 '{}' ';'; \
+	fi
 	mkdir -p stamps
 	touch stamps/extract.stamp
 
@@ -911,12 +916,12 @@ stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
             -source 1.5 \
-            -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
+            -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated:$(abs_top_srcdir)/rt' \
             -bootclasspath '' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
 	    -source 1.5 \
-	    -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated:$(abs_top_srcdir)/rt' \
+	    -sourcepath 'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated:$(abs_top_srcdir)/rt' \
 	    -bootclasspath '' @$< ; \
 	fi
 	mkdir -p stamps
@@ -958,12 +963,12 @@ stamps/rt-class-files.stamp: rt-source-files.txt
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt \
 	    -source 1.5 \
-	    -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
+	    -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
 	    -bootclasspath '' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
             -source 1.5 \
-            -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_srcdir)/generated' \
+            -sourcepath '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
             -bootclasspath '' @$< ; \
 	fi
 	cp -r $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources \

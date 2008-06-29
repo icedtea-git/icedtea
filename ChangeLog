@@ -7,6 +7,14 @@
 
 2008-06-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* Makefile.am: Use build directory for
+	generated directory, and copy there at
+	the start if we are doing an out-of-directory
+	build.
+	* Makefile.in: Regenerated.
+
+2008-06-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* Makefile.am: Add ICEDTEA_FSG_PATCHES
 	to EXTRA_DIST.
 	* Makefile.in: Regenerated.
