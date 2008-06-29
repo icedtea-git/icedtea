@@ -38,8 +38,8 @@ install:
 	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
 	hotspot hotspot-helper clean-extra clean-jtreg clean-jtreg-reports
 
-EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
-	gcjwebplugin.cc tools-copy contrib ports \
+EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
+	$(ICEDTEA_ECJ_PATCH) gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-cacao.patch javaws.png javaws.desktop \
 	patches/icedtea-netx-plugin.patch \
@@ -325,6 +325,12 @@ else
   SHARK_PATCH =
 endif
 
+ICEDTEA_FSG_PATCHES = \
+	patches/icedtea-license-headers.patch \
+	patches/icedtea-idl.patch \
+	patches/icedtea-jscheme.patch \
+	$(DISTRIBUTION_PATCHES)
+
 ICEDTEA_PATCHES = \
 	$(ZERO_PATCHES_COND) \
 	patches/icedtea-copy-plugs.patch \
@@ -333,7 +339,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-graphics.patch \
 	patches/icedtea-debuginfo.patch \
 	patches/icedtea-ssl.patch \
-	patches/icedtea-license-headers.patch \
 	patches/icedtea-webservices.patch \
 	patches/icedtea-netx-plugin.patch \
 	patches/icedtea-rmi_amd64.patch \
@@ -374,15 +379,13 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-no-bcopy.patch \
-	patches/icedtea-jscheme.patch \
 	patches/icedtea-dnd-updatecursor.patch \
 	patches/icedtea-component.patch \
-	patches/icedtea-idl.patch \
 	patches/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
+	patches/icedtea-jdk-docs-target.patch \
 	$(SHARK_PATCH) \
-	$(GCC_PATCH) \
-	$(DISTRIBUTION_PATCHES)
+	$(GCC_PATCH)
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -418,7 +421,7 @@ endif
 clean-extract:
 	rm -f stamps/extract.stamp
 
-stamps/patch.stamp: stamps/extract.stamp
+stamps/patch.stamp: stamps/patch-fsg.stamp
 	all_patches_ok=yes; \
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
@@ -445,6 +448,47 @@ clean-patch:
 	rm -f stamps/patch.stamp
 	all_patches_ok=yes; \
 	for p in $(ICEDTEA_PATCHES) ; \
+	do \
+	  echo Checking $$p ; \
+	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
+	  then \
+	    echo Reverting $$p ; \
+	    $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
+	  else \
+	    all_patches_ok=no ; \
+	  fi ; \
+	done ; \
+	if ! test x$${all_patches_ok} == "xyes" ; then \
+	  echo "WARNING Not all patches reverted cleanly" ; \
+	fi
+
+stamps/patch-fsg.stamp: stamps/extract.stamp
+	all_patches_ok=yes; \
+	for p in $(ICEDTEA_FSG_PATCHES) ; \
+	do \
+	  if test x$${all_patches_ok} == "xyes" \
+	     && echo Checking $$p \
+	     && $(PATCH) -l -p0 --dry-run -s -t -f -F 0 < $(abs_top_srcdir)/$$p ; \
+	  then \
+	    echo Applying $$p ; \
+	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
+	  else \
+	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
+	  fi ; \
+	done ; \
+	mkdir -p stamps ; \
+	touch stamps/patch-fsg.stamp ; \
+	if ! test x$${all_patches_ok} == "xyes"; then \
+	  echo ERROR patch $${all_patches_ok} FAILED! ; \
+	  echo WARNING make clean-patch before retrying a fix ; \
+	  false; \
+       fi
+
+
+clean-patch-fsg:
+	rm -f stamps/patch-fsg.stamp
+	all_patches_ok=yes; \
+	for p in $(ICEDTEA_FSG_PATCHES) ; \
 	do \
 	  echo Checking $$p ; \
 	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
@@ -1066,6 +1110,13 @@ jtregcheck: jtreg check-hotspot check-langtools check-jdk
 
 check-local: jtregcheck
 
+# fsg-tarball
+
+# Creates archive of openjdk that is compliant with Free Software guidelines.
+dist-openjdk-fsg: stamps/patch-fsg.stamp
+	$(ZIP) -r openjdk-fsg-$(OPENJDK_VERSION) openjdk/
+
+
 # Target Aliases
 # ===============
 
@@ -1094,6 +1145,8 @@ icedtea-ecj: stamps/icedtea-ecj.stamp
 patch-ecj: stamps/patch-ecj.stamp
 
 patch: stamps/patch.stamp
+
+patch-fsg: stamps/patch-fsg.stamp
 
 overlay: stamps/overlay.stamp
 

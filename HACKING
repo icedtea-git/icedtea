@@ -64,6 +64,7 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 * icedtea-eclipse-hotspot-6614100-6b06.patch: Fix Eclipse crash (S6614100). Fixed in OpenJDK7 b29/hs13.
 * icedtea-gtkplaf.patch: Fix corrupted combo box (S6624717). Fixed in OpenJDK7 b27.
 * icedtea-sparc.patch: Add support for GNU/Linux on SPARC.
+* icedtea-jdk-docs-target.patch: Always set DOCS_TARGET.
 
 The following patches are only applied to OpenJDK in IcedTea:
 
