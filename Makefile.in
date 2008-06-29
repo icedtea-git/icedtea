@@ -1179,6 +1179,8 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
+	mkdir -p stamps
+	touch stamps/icedtea.stamp
 
 icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
@@ -1203,15 +1205,18 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
+	mkdir -p stamps
+	touch stamps/icedtea.stamp
 
 clean-icedtea: stamps/extract.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make clobber
+	rm -f stamps/icedtea.stamp
 
 icedtea-against-icedtea: \
 	stamps/bootstrap-directory-symlink.stamp \
-	icedtea
+	stamps/icedtea.stamp
 
 # OpenJDK ecj Targets
 # ===================
@@ -1486,17 +1491,17 @@ clean-gcjwebplugin:
 
 # jtreg
 
-stamps/jtreg.stamp:
+stamps/jtreg.stamp: stamps/icedtea.stamp
 	rm -rf test/jtreg/classes
 	mkdir -p test/jtreg/classes
 	$(ICEDTEA_BOOT_DIR)/bin/javac -g -d test/jtreg/classes -source 1.5 \
-		 -encoding iso-8859-1 `find test/jtreg/com -name '*.java'`
-	(cd test/jtreg; \
-	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm ../jtreg.jar \
+		 -encoding iso-8859-1 `find $(srcdir)/test/jtreg/com -name '*.java'`
+	(cd $(srcdir)/test/jtreg; \
+	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm $(abs_top_builddir)/jtreg.jar \
 		META-INF/MANIFEST.MF \
 		legal  README JavaTest.cmdMgrs.lst JavaTest.toolMgrs.lst \
 		`find com -type f -a -not -name '*.java'` \
-		-C classes com)
+		-C $(abs_top_builddir)/test/jtreg/classes com)
 	mkdir -p stamps
 	touch $@
 
