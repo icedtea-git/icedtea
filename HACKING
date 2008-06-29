@@ -15,11 +15,10 @@ The following patches are currently applied to OpenJDK or OpenJDK6 by IcedTea:
 * icedtea-corba.patch: Adds additional files to org.omg.CORBA Makefile.
 * icedtea-core-build.patch: Add support for building IcedTea core VM.
 * icedtea-debuginfo.patch: Add -g option to build to generate debugging information.
-* icedtea-demo.patch: Fix building of JVMTI demo.
+* icedtea-demos.patch: Fix building of JVMTI demo.
 * icedtea-directaudio-close-trick.patch: Allow hardware sound device to be reopened.
 * icedtea-float-double-trailing-zeros.patch: Remove trailing zeros from Double/Float (PR29/30)
 * icedtea-fonts.patch: Add Fedora fontconfig.
-* icedtea-freetype.patch: Use detected freetype in $FT2_LIB and $FREETYPE_HEADERS_PATH.
 * icedtea-gcc-4.3.patch: Fix code to compile with GCC 4.3 and turn off -Werror.
 * icedtea-gcc-suffix.patch: Append $(GCC_SUFFIX) to end of 'gcc' binary name.
 * icedtea-generated.patch: Force use of /bin/bash.
@@ -39,7 +38,7 @@ The following patches are currently applied to OpenJDK or OpenJDK6 by IcedTea:
 * icedtea-memory-limits.patch: Increase default memory limits.
 * icedtea-no-bcopy.patch: Don't define local copies of bcopy, bzero and bcmp from BSD.
 * icedtea-override-redirect-metacity.patch: Enable override redirect for Metacity window manager.
-* icedtea-lsb-release.patch: Generate Debian LSB file.
+* icedtea-print-lsb-release.patch: Generate Debian LSB file.
 * icedtea-rhino.patch: Add support for Javascript.
 * icedtea-rmi_amd64.patch: Build RMI binaries on all platforms not just 32-bit ones.
 * icedtea-sparc64-linux.patch: Fixes needed to build the SPARC port on 32-bit SPARC as used by Fedora.
