@@ -32,6 +32,35 @@
 	shared object files.  We don't need
 	them any more.
 	* Makefile.in: Regenerated.
+
+2008-06-26 Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* Makefile.am (stamps/cacao.stamp): Depend on stamps/extract.stamp.
+	* Makefile.in: Regenerated.
+
+2008-06-26 Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* .hgignore: Added cacao.
+	* Makefile.am (CACAO_VERSION, CACAO_MD5SUM, CACAO_URL, CACAO_SRC_ZIP):
+	New variables.
+	(distclean-local): Removed cacao directory.
+	[WITH_CACAO] (ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Use WITH_CACAO instead of
+	CACAO.
+	(stamps/download.stamp) [WITH_CACAO && !USE_SYSTEM_CACAO]: Download
+	CACAO tarball.
+	(clean-download): Removed CACAO tarball.
+	(stamps/extract.stamp) [WITH_CACAO && !USE_SYSTEM_CACAO]: Extract
+	CACAO tarball.
+	(stamps/cacao.stamp): New target.
+	(cacao): Likewise.
+	* Makefile.in: Regenerated.
+	* acinclude.m4 (AC_CHECK_WITH_CACAO): Renamed CACAO to WITH_CACAO.
+	(AC_CHECK_WITH_CACAO_HOME): New function.
+	(AC_CHECK_WITH_CACAO_SRC_ZIP): Likewise.
+	* aclocal.m4: Regenerated.
+	* configure: Likewise.
+	* configure.ac (AC_CHECK_WITH_CACAO_HOME): Added.
+	(AC_CHECK_WITH_CACAO_SRC_ZIP): Likewise.
 	
 2008-06-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
