@@ -380,6 +380,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-idl.patch \
 	patches/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
+	patches/icedtea-jdk-docs-target.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES)

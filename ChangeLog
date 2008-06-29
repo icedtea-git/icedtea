@@ -1,3 +1,9 @@
+2008-06-29  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-jdk-docs-target.patch: New.
+	* Makefile.am: Apply patch.
+	* Makefile.in: Regenerate.
+	
 2008-06-27  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/services/XPersistenceService.java: Throw a
