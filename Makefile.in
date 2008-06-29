@@ -266,8 +266,8 @@ OPENJDK_VERSION = b10
 CACAO_VERSION = 0.99.1
 CACAO_MD5SUM = 2337754d0c165af556e97395e9a5e5af
 JSCHEME_DIR = openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil
-EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
-	gcjwebplugin.cc tools-copy contrib ports \
+EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
+	$(ICEDTEA_ECJ_PATCH) gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-cacao.patch javaws.png javaws.desktop \
 	patches/icedtea-netx-plugin.patch \

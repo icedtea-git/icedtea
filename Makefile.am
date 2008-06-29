@@ -38,8 +38,8 @@ install:
 	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
 	hotspot hotspot-helper clean-extra clean-jtreg clean-jtreg-reports
 
-EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_ECJ_PATCH) \
-	gcjwebplugin.cc tools-copy contrib ports \
+EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
+	$(ICEDTEA_ECJ_PATCH) gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-cacao.patch javaws.png javaws.desktop \
 	patches/icedtea-netx-plugin.patch \
