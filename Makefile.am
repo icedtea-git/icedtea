@@ -723,7 +723,7 @@ icedtea-against-icedtea: \
 # ===================
 
 stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
+	stamps/ports-ecj.stamp stamps/patch-ecj.stamp stamps/cacao.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj/control/make \
@@ -985,7 +985,7 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net ; \
 	fi
 
-stamps/cacao.stamp: stamps/extract.stamp
+stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao-$(CACAO_VERSION) ; \
 	./configure \

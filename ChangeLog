@@ -1,3 +1,10 @@
+2008-06-29  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (stamps/icedtea-ecj.stamp): Add dependency on
+	stamps/cacao.stamp.
+	(stamps/cacao.stamp): Add dependency on stamps/rt-class-files.stamp.
+	* Makefile.in: Regenerated.
+
 2008-06-27  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/services/XPersistenceService.java: Throw a
