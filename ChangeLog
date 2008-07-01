@@ -1,5 +1,12 @@
 2008-07-01  Matthias Klose  <doko@ubuntu.com>
 
+	* Makefile.am (stamps/icedtea.stamp, stamps/icedtea-debug.stamp): Re-
+	added, (icedtea-debug-against-icedtea): New target, (icedtea-clean):
+	Remove stamps/icedtea-debug.stamp.
+	* Makefile.in: Regenerate.
+
+2008-07-01  Matthias Klose  <doko@ubuntu.com>
+
 	* Makefile.am (ICEDTEA_PATCHES, ICEDTEA_FSG_PATCHES): Move
 	$(DISTRIBUTION_PATCHES) back to ICEDTEA_PATCHES as last item.
 	* Makefile.in: Regenerate.

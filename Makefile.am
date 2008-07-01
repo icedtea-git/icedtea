@@ -714,7 +714,8 @@ endif
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-icedtea: stamps/bootstrap-directory-symlink.stamp \
+icedtea: stamps/icedtea.stamp
+stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
 	gcjwebplugin.so extra-lib/about.jar stamps/cacao.stamp
@@ -739,7 +740,8 @@ icedtea: stamps/bootstrap-directory-symlink.stamp \
 	mkdir -p stamps
 	touch stamps/icedtea.stamp
 
-icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
+icedtea-debug: stamps/icedtea-debug.stamp
+stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
 	gcjwebplugin.so extra-lib/about.jar stamps/cacao.stamp
@@ -763,17 +765,21 @@ icedtea-debug: stamps/bootstrap-directory-symlink.stamp \
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
 	mkdir -p stamps
-	touch stamps/icedtea.stamp
+	touch stamps/icedtea-debug.stamp
 
 clean-icedtea: stamps/extract.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make clobber
-	rm -f stamps/icedtea.stamp
+	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
 
 icedtea-against-icedtea: \
 	stamps/bootstrap-directory-symlink.stamp \
 	stamps/icedtea.stamp
+
+icedtea-debug-against-icedtea: \
+	stamps/bootstrap-directory-symlink.stamp \
+	stamps/icedtea-debug.stamp
 
 # OpenJDK ecj Targets
 # ===================
