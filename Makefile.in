@@ -423,8 +423,7 @@ NON_ZERO_PATCHES = \
 ICEDTEA_FSG_PATCHES = \
 	patches/icedtea-license-headers.patch \
 	patches/icedtea-idl.patch \
-	patches/icedtea-jscheme.patch \
-	$(DISTRIBUTION_PATCHES)
+	patches/icedtea-jscheme.patch
 
 ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-copy-plugs.patch patches/icedtea-version.patch \
@@ -469,7 +468,8 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
 	patches/icedtea-jdk-docs-target.patch $(SHARK_PATCH) \
-	$(GCC_PATCH) $(am__append_7) $(am__append_8)
+	$(GCC_PATCH) $(DISTRIBUTION_PATCHES) $(am__append_7) \
+	$(am__append_8)
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch

@@ -328,8 +328,7 @@ endif
 ICEDTEA_FSG_PATCHES = \
 	patches/icedtea-license-headers.patch \
 	patches/icedtea-idl.patch \
-	patches/icedtea-jscheme.patch \
-	$(DISTRIBUTION_PATCHES)
+	patches/icedtea-jscheme.patch
 
 ICEDTEA_PATCHES = \
 	$(ZERO_PATCHES_COND) \
@@ -385,7 +384,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-toolkit.patch \
 	patches/icedtea-jdk-docs-target.patch \
 	$(SHARK_PATCH) \
-	$(GCC_PATCH)
+	$(GCC_PATCH) \
+	$(DISTRIBUTION_PATCHES)
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
