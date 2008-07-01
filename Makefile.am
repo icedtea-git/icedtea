@@ -714,7 +714,6 @@ endif
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-icedtea: stamps/icedtea.stamp
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
@@ -740,7 +739,6 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	mkdir -p stamps
 	touch stamps/icedtea.stamp
 
-icedtea-debug: stamps/icedtea-debug.stamp
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
@@ -1087,7 +1085,7 @@ stamps/jtreg.stamp: stamps/icedtea.stamp
 	$(ICEDTEA_BOOT_DIR)/bin/javac -g -d test/jtreg/classes -source 1.5 \
 		 -encoding iso-8859-1 `find $(srcdir)/test/jtreg/com -name '*.java'`
 	(cd $(srcdir)/test/jtreg; \
-	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm $(abs_top_builddir)/jtreg.jar \
+	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm $(abs_top_builddir)/test/jtreg.jar \
 		META-INF/MANIFEST.MF \
 		legal  README JavaTest.cmdMgrs.lst JavaTest.toolMgrs.lst \
 		`find com -type f -a -not -name '*.java'` \
@@ -1156,7 +1154,11 @@ extract: stamps/extract.stamp
 
 extract-ecj: stamps/extract-ecj.stamp
 
+icedtea: stamps/icedtea.stamp
+
 icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
+
+icedtea-debug: stamps/icedtea-debug.stamp
 
 icedtea-ecj: stamps/icedtea-ecj.stamp
 
