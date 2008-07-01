@@ -384,8 +384,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-toolkit.patch \
 	patches/icedtea-jdk-docs-target.patch \
 	$(SHARK_PATCH) \
-	$(GCC_PATCH) \
-	$(DISTRIBUTION_PATCHES)
+	$(GCC_PATCH)
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -396,6 +395,9 @@ if WITH_CACAO
 ICEDTEA_PATCHES += \
 	patches/icedtea-cacao.patch
 endif
+
+ICEDTEA_PATCHES += \
+	$(DISTRIBUTION_PATCHES)
 
 stamps/extract.stamp: stamps/download.stamp
 	if ! test -d openjdk ; \
