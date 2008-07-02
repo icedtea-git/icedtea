@@ -267,7 +267,6 @@ OPENJDK_MD5SUM = 98e9eb16615605f76056135b0eb0b39f
 OPENJDK_VERSION = b10
 CACAO_VERSION = 0.99.1
 CACAO_MD5SUM = 2337754d0c165af556e97395e9a5e5af
-JSCHEME_DIR = openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil
 @ENABLE_LIVECONNECT_FALSE@ICEDTEAPLUGIN_CLEAN = 
 @ENABLE_LIVECONNECT_TRUE@ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 @ENABLE_LIVECONNECT_FALSE@ICEDTEAPLUGIN_TARGET = 
@@ -906,8 +905,7 @@ stamps/extract.stamp: stamps/download.stamp
 	  mkdir openjdk ; \
 	  $(TAR) xzf $(OPENJDK_SRC_ZIP) -C openjdk; \
 	  chmod -R ug+w openjdk ; \
-	  rm -rf $(JSCHEME_DIR)/lib; \
-	  rm -rf $(JSCHEME_DIR)/scripts; \
+	  sh $(srcdir)/fsg.sh ; \
 	fi
 @USE_SYSTEM_CACAO_FALSE@@WITH_CACAO_TRUE@	if ! test -d cacao ; \
 @USE_SYSTEM_CACAO_FALSE@@WITH_CACAO_TRUE@	then \
