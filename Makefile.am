@@ -7,6 +7,23 @@ CACAO_MD5SUM = 2337754d0c165af556e97395e9a5e5af
 
 JSCHEME_DIR = openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil
 
+if ENABLE_LIVECONNECT
+ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
+ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
+PLUGIN_PATCH = patches/icedtea-liveconnect.patch
+else
+ICEDTEAPLUGIN_CLEAN =
+ICEDTEAPLUGIN_TARGET =
+PLUGIN_PATCH = patches/icedtea-plugin.patch
+if ENABLE_PLUGIN
+GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
+GCJWEBPLUGIN_TARGET = gcjwebplugin.so
+else
+GCJWEBPLUGIN_CLEAN =
+GCJWEBPLUGIN_TARGET =
+endif
+endif
+
 # Top-Level Targets
 # =================
 
@@ -23,6 +40,13 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports
 	rm -rf openjdk-ecj
 	rm -rf openjdk
 	rm -rf hotspot-tools
+if ENABLE_LIVECONNECT
+	rm -f IcedTeaPlugin.so
+else
+if ENABLE_PLUGIN
+	rm -f gcjwebplugin.so
+endif
+endif
 	rm -rf cacao
 	rm -f gcjwebplugin.so
 
@@ -35,16 +59,17 @@ install:
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
 	clean-tools-jar clean-shared-objects \
-	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
-	hotspot hotspot-helper clean-extra clean-jtreg clean-jtreg-reports
+	clean-copy clean-hotspot-tools clean-rt $(GCJWEBPLUGIN_CLEAN) \
+	$(ICEDTEAPLUGIN_CLEAN) hotspot hotspot-helper clean-extra \
+	clean-jtreg clean-jtreg-reports
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
 	$(ICEDTEA_ECJ_PATCH) gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-cacao.patch javaws.png javaws.desktop \
-	patches/icedtea-netx-plugin.patch \
 	overlays extra jconsole.desktop policytool.desktop \
-	test/jtreg
+	test/jtreg patches/icedtea-plugin.patch \
+	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -338,8 +363,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-graphics.patch \
 	patches/icedtea-debuginfo.patch \
 	patches/icedtea-ssl.patch \
-	patches/icedtea-webservices.patch \
-	patches/icedtea-netx-plugin.patch \
+	$(PLUGIN_PATCH) \
+	patches/icedtea-webstart.patch \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-demos.patch \
@@ -388,7 +413,7 @@ ICEDTEA_PATCHES = \
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
-	patches/icedtea-rhino.patch 
+	patches/icedtea-rhino.patch
 endif
 
 if WITH_CACAO
@@ -670,7 +695,7 @@ stamps/bootstrap-directory-ecj.stamp:
 	then \
 		cp $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
 			$(abs_top_builddir)/bootstrap/ecj/jre/lib/rt.jar; \
-	fi 
+	fi
 	mkdir -p stamps
 	touch stamps/bootstrap-directory-ecj.stamp
 
@@ -717,18 +742,25 @@ endif
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	gcjwebplugin.so extra-lib/about.jar stamps/cacao.stamp
+	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
+	extra-lib/about.jar stamps/cacao.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/ \
 	  $(ICEDTEA_BUILD_TARGET)
-	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-	  then \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
-	fi
+if ENABLE_LIVECONNECT
+	cp -pPRf IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+else
+if ENABLE_PLUGIN
+	cp -pPRf gcjwebplugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf gcjwebplugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+endif
+endif
 	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/about.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
@@ -742,18 +774,25 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	gcjwebplugin.so extra-lib/about.jar stamps/cacao.stamp
+	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
+	extra-lib/about.jar stamps/cacao.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
-	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-	  then \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
-	fi
+if ENABLE_LIVECONNECT
+	cp -pPRf IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+else
+if ENABLE_PLUGIN
+	cp -pPRf gcjwebplugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf gcjwebplugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+endif
+endif
 	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/default.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib
@@ -1063,19 +1102,53 @@ clean-cacao:
 	rm -rf cacao
 	rm -f stamps/cacao.stamp
 
+if ENABLE_LIVECONNECT
+# IcedTeaPlugin.so.
+# Mozilla is compiled with -fshort-wchar.
+# FIXME: How is this supposed to work?  ld doesn't include these
+# objects without the ar x hack.
+# Verbose ld output:
+# ...
+# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libmozjs.so succeeded
+# -lmozjs (/usr/lib/xulrunner-sdk-1.9/sdk/lib/libmozjs.so)
+# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxpcomglue_s.so failedicedtea6/
+# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxpcomglue_s.a succeeded
+# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxul.so succeeded
+# -lxul (/usr/lib/xulrunner-sdk-1.9/sdk/lib/libxul.so)
+# ...
+IcedTeaPlugin.so: IcedTeaPlugin.cc
+	rm -rf xpcomglueobjects
+	mkdir xpcomglueobjects
+	cd xpcomglueobjects ; \
+	ar x \
+	  /usr/lib/xulrunner-sdk-$(XULRUNNER_VERSION)/sdk/lib/libxpcomglue_s.a
+	pwd
+	$(CXX) $(CXXFLAGS) \
+	  -DXPCOM_GLUE \
+	  -DXPCOM_GLUE_USE_NSPR \
+	  $(XULRUNNER_CFLAGS) $(XULRUNNER_LIBS) \
+	  $(GTK_CFLAGS) $(GTK_LIBS) \
+	  xpcomglueobjects/*.o \
+	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	  -fpic -shared -o $@ $<
+	rm -rf xpcomglueobjects
+
+clean-IcedTeaPlugin:
+	rm -f IcedTeaPlugin.so
+else
+if ENABLE_PLUGIN
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
-	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-	then \
-	  $(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
-	    $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
-	    $(GTK_CFLAGS) $(GTK_LIBS) \
-	    -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	    -fpic -shared -o $@ $< ; \
-	fi
+	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
+	  $(GTK_CFLAGS) $(GTK_LIBS) \
+	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	  -fpic -shared -o $@ $<
 
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
+endif
+endif
 
 # jtreg
 

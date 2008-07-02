@@ -99,13 +99,19 @@ AC_ARG_WITH([ant-home],
 AC_SUBST(SYSTEM_ANT_DIR)
 
 AC_ARG_ENABLE([gcjwebplugin],
-	      [AS_HELP_STRING([--disable-gcjwebplugin], 
-	      		      [Disable compilation of browser plugin])],
-	      [ENABLE_PLUGIN="${enableval}"], [ENABLE_PLUGIN='yes'])
-AC_SUBST(ENABLE_PLUGIN)
+              [AS_HELP_STRING([--disable-gcjwebplugin],
+                              [Disable compilation of browser plugin])],
+              [enable_plugin="$val"], [enable_plugin="yes"])
+AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
+
+AC_ARG_ENABLE([liveconnect],
+              [AS_HELP_STRING([--enable-liveconnect],
+                              [Enable experimental LiveConnect plugin])],
+              [enable_liveconnect="yes"], [enable_liveconnect="no"])
+AM_CONDITIONAL(ENABLE_LIVECONNECT, test "x${enable_liveconnect}" = "xyes")
 
 AC_ARG_ENABLE([docs],
-	      [AS_HELP_STRING([--disable-docs], 
+	      [AS_HELP_STRING([--disable-docs],
 	      		      [Disable generation of documentation])],
 	      [ENABLE_DOCS="${enableval}"], [ENABLE_DOCS='yes'])
 AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
@@ -157,7 +163,7 @@ AC_ARG_WITH([parallel-jobs],
           PARALLEL_JOBS=2
         ])
 AC_SUBST(PARALLEL_JOBS)
-	
+
 SET_ARCH_DIRS
 if test "${with_openjdk}" == true
 then
@@ -213,13 +219,13 @@ SET_CORE_OR_SHARK_BUILD
 
 dnl pkgconfig cannot be used to finid these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
-	,[AC_MSG_ERROR("CUPS headers were not found - 
+	,[AC_MSG_ERROR("CUPS headers were not found -
 	try installing cups-devel.")])
 AC_CHECK_HEADERS([X11/X.h],[]
-	,[AC_MSG_ERROR("xorg headers were not found - 
+	,[AC_MSG_ERROR("xorg headers were not found -
 	try installing xorg-x11-proto-devel.")])
 AC_CHECK_HEADERS([Xm/Xm.h Xm/XmP.h Xm/Display.h],[]
-	,[AC_MSG_ERROR("motif headers were not found - 
+	,[AC_MSG_ERROR("motif headers were not found -
 	try installing lesstif-devel.")])
 AC_CHECK_LIB(jpeg, main,
         , [AC_MSG_ERROR("libjpeg not found - try installing libjpeg-devel")])
@@ -307,7 +313,7 @@ if test "x${FREETYPE2_FOUND}" = xno
 then
   AC_MSG_ERROR([Could not find freetype2 - \
   Try installing freetype2-devel.])
-fi 
+fi
 AC_SUBST(FREETYPE2_CFLAGS)
 AC_SUBST(FREETYPE2_LIBS)
 
@@ -322,53 +328,59 @@ AC_SUBST(ALSA_CFLAGS)
 AC_SUBST(ALSA_LIBS)
 
 dnl Check for plugin support headers and libraries.
-if test "$ENABLE_PLUGIN" = "yes"; then
-PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul-unstable, [MOZILLA_FOUND=yes], \
-  [MOZILLA_FOUND=no])
-if test "x${MOZILLA_FOUND}" = xno
+dnl FIXME: use unstable
+if test "x${enable_liveconnect}" = "xyes"
 then
-  PKG_CHECK_MODULES(MOZILLA, mozilla-plugin, \
-    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
-  PKG_CHECK_MODULES(MOZILLA, firefox-plugin firefox-xpcom, \
-    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
-  PKG_CHECK_MODULES(MOZILLA, xulrunner-plugin xulrunner-xpcom, \
-    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
-  PKG_CHECK_MODULES(MOZILLA, mozilla-firefox-plugin mozilla-firefox-xpcom, \
-    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
-  PKG_CHECK_MODULES(MOZILLA, seamonkey-plugin seamonkey-xpcom, \
-    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
-  PKG_CHECK_MODULES(MOZILLA, iceape-plugin iceape-xpcom, \
-    [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
-  AC_MSG_ERROR([Could not find plugin support headers and libraries.])
-fi
+  XULRUNNER_VERSION=`pkg-config --modversion libxul-unstable`
+  AC_SUBST(XULRUNNER_VERSION)
+  PKG_CHECK_MODULES(XULRUNNER, \
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9)
+  PKG_CHECK_MODULES(GTK, gtk+-2.0)
+else
+  if test "x${enable_plugin}" = "xyes"
+  then
+    PKG_CHECK_MODULES(MOZILLA, mozilla-plugin, [MOZILLA_FOUND=yes], \
+      [MOZILLA_FOUND=no])
+    if test "x${MOZILLA_FOUND}" = xno
+    then
+      PKG_CHECK_MODULES(MOZILLA, firefox-plugin firefox-xpcom, \
+        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
+      PKG_CHECK_MODULES(MOZILLA, xulrunner-plugin xulrunner-xpcom, \
+        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
+      PKG_CHECK_MODULES(MOZILLA, mozilla-firefox-plugin mozilla-firefox-xpcom, \
+        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
+      PKG_CHECK_MODULES(MOZILLA, seamonkey-plugin seamonkey-xpcom, \
+        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
+      PKG_CHECK_MODULES(MOZILLA, iceape-plugin iceape-xpcom, \
+        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find plugin support headers and libraries.])
+    fi
 
-PKG_CHECK_MODULES(GLIB, glib-2.0)
-PKG_CHECK_MODULES(GTK, gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0)
+    PKG_CHECK_MODULES(GLIB, glib-2.0)
+    PKG_CHECK_MODULES(GTK, gtk+-2.0 gthread-2.0 gdk-pixbuf-2.0)
 
-AC_SUBST(MOZILLA_CFLAGS)
-AC_SUBST(MOZILLA_LIBS)
-AC_SUBST(GLIB_CFLAGS)
-AC_SUBST(GLIB_LIBS)
-AC_SUBST(GTK_CFLAGS)
-AC_SUBST(GTK_LIBS)
+    AC_SUBST(MOZILLA_CFLAGS)
+    AC_SUBST(MOZILLA_LIBS)
+    AC_SUBST(GLIB_CFLAGS)
+    AC_SUBST(GLIB_LIBS)
+    AC_SUBST(GTK_CFLAGS)
+    AC_SUBST(GTK_LIBS)
+  fi
 fi
 
 if test "x${ZERO_BUILD_TRUE}" = x; then

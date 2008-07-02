@@ -52,7 +52,7 @@ host_triplet = @host@
 @ENABLE_DOCS_FALSE@	"NO_DOCS=true"
 
 @WITH_RHINO_TRUE@am__append_7 = \
-@WITH_RHINO_TRUE@	patches/icedtea-rhino.patch 
+@WITH_RHINO_TRUE@	patches/icedtea-rhino.patch
 
 @WITH_CACAO_TRUE@am__append_8 = \
 @WITH_CACAO_TRUE@	patches/icedtea-cacao.patch
@@ -118,7 +118,6 @@ ECHO_T = @ECHO_T@
 ECJ = @ECJ@
 ECJ_JAR = @ECJ_JAR@
 EGREP = @EGREP@
-ENABLE_PLUGIN = @ENABLE_PLUGIN@
 EXEEXT = @EXEEXT@
 FASTJAR = @FASTJAR@
 FILE = @FILE@
@@ -203,6 +202,9 @@ XTST_CFLAGS = @XTST_CFLAGS@
 XTST_LIBS = @XTST_LIBS@
 XT_CFLAGS = @XT_CFLAGS@
 XT_LIBS = @XT_LIBS@
+XULRUNNER_CFLAGS = @XULRUNNER_CFLAGS@
+XULRUNNER_LIBS = @XULRUNNER_LIBS@
+XULRUNNER_VERSION = @XULRUNNER_VERSION@
 ZERO_ARCHDEF = @ZERO_ARCHDEF@
 ZERO_ARCHFLAG = @ZERO_ARCHFLAG@
 ZERO_BITSPERWORD = @ZERO_BITSPERWORD@
@@ -266,13 +268,23 @@ OPENJDK_VERSION = b10
 CACAO_VERSION = 0.99.1
 CACAO_MD5SUM = 2337754d0c165af556e97395e9a5e5af
 JSCHEME_DIR = openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil
+@ENABLE_LIVECONNECT_FALSE@ICEDTEAPLUGIN_CLEAN = 
+@ENABLE_LIVECONNECT_TRUE@ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
+@ENABLE_LIVECONNECT_FALSE@ICEDTEAPLUGIN_TARGET = 
+@ENABLE_LIVECONNECT_TRUE@ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
+@ENABLE_LIVECONNECT_FALSE@PLUGIN_PATCH = patches/icedtea-plugin.patch
+@ENABLE_LIVECONNECT_TRUE@PLUGIN_PATCH = patches/icedtea-liveconnect.patch
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_FALSE@GCJWEBPLUGIN_CLEAN = 
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_FALSE@GCJWEBPLUGIN_TARGET = 
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@GCJWEBPLUGIN_TARGET = gcjwebplugin.so
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
 	$(ICEDTEA_ECJ_PATCH) gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-cacao.patch javaws.png javaws.desktop \
-	patches/icedtea-netx-plugin.patch \
 	overlays extra jconsole.desktop policytool.desktop \
-	test/jtreg
+	test/jtreg patches/icedtea-plugin.patch \
+	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc
 
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
@@ -429,10 +441,9 @@ ICEDTEA_PATCHES = $(ZERO_PATCHES_COND) \
 	patches/icedtea-copy-plugs.patch patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch patches/icedtea-debuginfo.patch \
-	patches/icedtea-ssl.patch patches/icedtea-webservices.patch \
-	patches/icedtea-netx-plugin.patch \
-	patches/icedtea-rmi_amd64.patch patches/icedtea-tools.patch \
-	patches/icedtea-demos.patch \
+	patches/icedtea-ssl.patch $(PLUGIN_PATCH) \
+	patches/icedtea-webstart.patch patches/icedtea-rmi_amd64.patch \
+	patches/icedtea-tools.patch patches/icedtea-demos.patch \
 	patches/icedtea-use-system-tzdata.patch \
 	patches/icedtea-headers.patch patches/icedtea-ant.patch \
 	patches/icedtea-gcc-suffix.patch \
@@ -813,6 +824,8 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports
 	rm -rf openjdk-ecj
 	rm -rf openjdk
 	rm -rf hotspot-tools
+@ENABLE_LIVECONNECT_TRUE@	rm -f IcedTeaPlugin.so
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	rm -f gcjwebplugin.so
 	rm -rf cacao
 	rm -f gcjwebplugin.so
 
@@ -825,8 +838,9 @@ install:
 	clean-bootstrap-directory-symlink-ecj icedtea icedtea-debug \
 	clean-icedtea icedtea-against-icedtea clean-icedtea-ecj clean-plugs \
 	clean-tools-jar clean-shared-objects \
-	clean-copy clean-hotspot-tools clean-rt clean-gcjwebplugin \
-	hotspot hotspot-helper clean-extra clean-jtreg clean-jtreg-reports
+	clean-copy clean-hotspot-tools clean-rt $(GCJWEBPLUGIN_CLEAN) \
+	$(ICEDTEAPLUGIN_CLEAN) hotspot hotspot-helper clean-extra \
+	clean-jtreg clean-jtreg-reports
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1135,7 +1149,7 @@ stamps/bootstrap-directory-ecj.stamp:
 	then \
 		cp $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
 			$(abs_top_builddir)/bootstrap/ecj/jre/lib/rt.jar; \
-	fi 
+	fi
 	mkdir -p stamps
 	touch stamps/bootstrap-directory-ecj.stamp
 
@@ -1160,18 +1174,20 @@ clean-bootstrap-directory-symlink-ecj:
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	gcjwebplugin.so extra-lib/about.jar stamps/cacao.stamp
+	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
+	extra-lib/about.jar stamps/cacao.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/ \
 	  $(ICEDTEA_BUILD_TARGET)
-	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-	  then \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
-	fi
+@ENABLE_LIVECONNECT_TRUE@	cp -pPRf IcedTeaPlugin.so \
+@ENABLE_LIVECONNECT_TRUE@	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+@ENABLE_LIVECONNECT_TRUE@	cp -pPRf IcedTeaPlugin.so \
+@ENABLE_LIVECONNECT_TRUE@	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	cp -pPRf gcjwebplugin.so \
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	cp -pPRf gcjwebplugin.so \
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/about.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
@@ -1185,18 +1201,20 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	gcjwebplugin.so extra-lib/about.jar stamps/cacao.stamp
+	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
+	extra-lib/about.jar stamps/cacao.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
-	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-	  then \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR) ; \
-	  cp -pPRf gcjwebplugin.so \
-	    $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR) ; \
-	fi
+@ENABLE_LIVECONNECT_TRUE@	cp -pPRf IcedTeaPlugin.so \
+@ENABLE_LIVECONNECT_TRUE@	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+@ENABLE_LIVECONNECT_TRUE@	cp -pPRf IcedTeaPlugin.so \
+@ENABLE_LIVECONNECT_TRUE@	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	cp -pPRf gcjwebplugin.so \
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	cp -pPRf gcjwebplugin.so \
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	cp $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources/default.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib
@@ -1479,19 +1497,48 @@ clean-cacao:
 	rm -rf cacao
 	rm -f stamps/cacao.stamp
 
-# gcjwebplugin.so.
-gcjwebplugin.so: gcjwebplugin.cc
-	if test "$(ENABLE_PLUGIN)" == "yes" ; \
-	then \
-	  $(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
-	    $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
-	    $(GTK_CFLAGS) $(GTK_LIBS) \
-	    -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	    -fpic -shared -o $@ $< ; \
-	fi
+# IcedTeaPlugin.so.
+# Mozilla is compiled with -fshort-wchar.
+# FIXME: How is this supposed to work?  ld doesn't include these
+# objects without the ar x hack.
+# Verbose ld output:
+# ...
+# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libmozjs.so succeeded
+# -lmozjs (/usr/lib/xulrunner-sdk-1.9/sdk/lib/libmozjs.so)
+# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxpcomglue_s.so failedicedtea6/
+# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxpcomglue_s.a succeeded
+# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxul.so succeeded
+# -lxul (/usr/lib/xulrunner-sdk-1.9/sdk/lib/libxul.so)
+# ...
+@ENABLE_LIVECONNECT_TRUE@IcedTeaPlugin.so: IcedTeaPlugin.cc
+@ENABLE_LIVECONNECT_TRUE@	rm -rf xpcomglueobjects
+@ENABLE_LIVECONNECT_TRUE@	mkdir xpcomglueobjects
+@ENABLE_LIVECONNECT_TRUE@	cd xpcomglueobjects ; \
+@ENABLE_LIVECONNECT_TRUE@	ar x \
+@ENABLE_LIVECONNECT_TRUE@	  /usr/lib/xulrunner-sdk-$(XULRUNNER_VERSION)/sdk/lib/libxpcomglue_s.a
+@ENABLE_LIVECONNECT_TRUE@	pwd
+@ENABLE_LIVECONNECT_TRUE@	$(CXX) $(CXXFLAGS) \
+@ENABLE_LIVECONNECT_TRUE@	  -DXPCOM_GLUE \
+@ENABLE_LIVECONNECT_TRUE@	  -DXPCOM_GLUE_USE_NSPR \
+@ENABLE_LIVECONNECT_TRUE@	  $(XULRUNNER_CFLAGS) $(XULRUNNER_LIBS) \
+@ENABLE_LIVECONNECT_TRUE@	  $(GTK_CFLAGS) $(GTK_LIBS) \
+@ENABLE_LIVECONNECT_TRUE@	  xpcomglueobjects/*.o \
+@ENABLE_LIVECONNECT_TRUE@	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+@ENABLE_LIVECONNECT_TRUE@	  -fpic -shared -o $@ $<
+@ENABLE_LIVECONNECT_TRUE@	rm -rf xpcomglueobjects
 
-clean-gcjwebplugin:
-	rm -f gcjwebplugin.so
+@ENABLE_LIVECONNECT_TRUE@clean-IcedTeaPlugin:
+@ENABLE_LIVECONNECT_TRUE@	rm -f IcedTeaPlugin.so
+# gcjwebplugin.so.
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@gcjwebplugin.so: gcjwebplugin.cc
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  $(GTK_CFLAGS) $(GTK_LIBS) \
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	  -fpic -shared -o $@ $<
+
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@clean-gcjwebplugin:
+@ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@	rm -f gcjwebplugin.so
 
 # jtreg
 
