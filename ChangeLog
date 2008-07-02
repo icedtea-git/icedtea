@@ -11,6 +11,10 @@
 	* configure: Regenerate.
 	* .hgignore: Add IcedTeaPlugin.so.
 	* patches/icedtea-liveconnect.patch: New file.
+	* patches/icedtea-plugin.patch: New file.
+	* patches/icedtea-webstart.patch: New file.
+	* patches/icedtea-netx-plugin.patch: Remove file.
+	* patches/icedtea-webservices.patch: Remove file.
 
 2008-07-02  Matthias Klose  <doko@ubuntu.com>
 
