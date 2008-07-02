@@ -339,8 +339,13 @@ then
 else
   if test "x${enable_plugin}" = "xyes"
   then
-    PKG_CHECK_MODULES(MOZILLA, mozilla-plugin, [MOZILLA_FOUND=yes], \
-      [MOZILLA_FOUND=no])
+    PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul-unstable, \
+      [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+    if test "x${MOZILLA_FOUND}" = xno
+    then
+      PKG_CHECK_MODULES(MOZILLA, mozilla-plugin, \
+        [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
+    fi
     if test "x${MOZILLA_FOUND}" = xno
     then
       PKG_CHECK_MODULES(MOZILLA, firefox-plugin firefox-xpcom, \
