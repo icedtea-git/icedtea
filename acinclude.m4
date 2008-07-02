@@ -597,7 +597,7 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
       sparc*-*-*) ;;
       x86_64-*-*) ;;
       *)
-        if test "x${CACAO}" != xno; then
+        if test "x${WITH_CACAO}" != xno; then
           use_zero=no
         else
           use_zero=yes
@@ -670,28 +670,33 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
 AC_DEFUN([SET_CORE_OR_SHARK_BUILD],
 [
   AC_MSG_CHECKING(whether to use the Shark JIT)
-  use_shark=no
+  shark_selected=no
   AC_ARG_ENABLE([shark], [AS_HELP_STRING(--enable-shark, use Shark JIT)],
   [
     case "${enableval}" in
       no)
         ;;
       *)
-        if test "x${ZERO_BUILD_TRUE}" = x; then
-          use_shark=yes
-        fi
+        shark_selected=yes
         ;;
     esac
   ])
+
+  use_core=no
+  use_shark=no
+  if test "x${WITH_CACAO}" != "xno"; then
+    use_core=yes
+  elif test "x${use_zero}" = "xyes"; then
+    if test "x${shark_selected}" = "xyes"; then
+      use_shark=yes
+    else
+      use_core=yes
+    fi
+  fi
   AC_MSG_RESULT($use_shark)
 
-  if test "x${CACAO}" != "xno"; then
-    AM_CONDITIONAL(CORE_BUILD, true)
-    AM_CONDITIONAL(SHARK_BUILD, false)
-  else
-    AM_CONDITIONAL(CORE_BUILD, test "x${use_shark}" != xyes)
-    AM_CONDITIONAL(SHARK_BUILD, test "x${use_shark}" = xyes)
-  fi 
+  AM_CONDITIONAL(CORE_BUILD, test "x${use_core}" = xyes)
+  AM_CONDITIONAL(SHARK_BUILD, test "x${use_shark}" = xyes)
 ])
 
 AC_DEFUN([AC_CHECK_WITH_CACAO],
