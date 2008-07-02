@@ -241,3 +241,14 @@ diff -r 63b67d07d5e9 openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.
          ARCH_DATA_MODEL=64
        endif
      endif
+--- openjdk/jdk/make/docs/Makefile~	2008-05-30 09:50:36.000000000 +0200
++++ openjdk/jdk/make/docs/Makefile	2008-07-02 14:26:54.306671792 +0200
+@@ -58,7 +58,7 @@
+ ifeq ($(ARCH_DATA_MODEL),64)
+   MAX_VM_MEMORY = 1024
+ else
+-  MAX_VM_MEMORY = 512
++  MAX_VM_MEMORY = 768
+ endif
+ 
+ #

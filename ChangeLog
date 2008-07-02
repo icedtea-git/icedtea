@@ -12,6 +12,17 @@
 	* .hgignore: Add IcedTeaPlugin.so.
 	* patches/icedtea-liveconnect.patch: New file.
 
+2008-07-02  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-cacao.patch: openjdk/jdk/make/docs/Makefile:
+	Set MAX_VM_MEMORY to 768 for 32bit builds.
+
+2008-07-02  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-hotspot-6b06-7b24.patch: Update copyright notice in
+	hotspot/src/share/vm/interpreter/bytecodeInterpreterWithChecks.x[ms]l
+	from 7b29.
+
 2008-07-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am: Move new aliases to end with others,
