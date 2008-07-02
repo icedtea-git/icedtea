@@ -926,6 +926,8 @@ clean-extract:
 	rm -f stamps/extract.stamp
 
 stamps/patch.stamp: stamps/patch-fsg.stamp
+	rm -f stamps/patch.stamp.tmp
+	mkdir -p stamps ; \
 	all_patches_ok=yes; \
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
@@ -935,12 +937,15 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  then \
 	    echo Applying $$p ; \
 	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
+	    if ! grep "^\* $$(basename $$p)" HACKING >> stamps/patch.stamp.tmp ; \
+	    then \
+	      echo "* $$(basename $$p): UNDOCUMENTED" >> stamps/patch.stamp.tmp ; \
+	    fi ; \
 	  else \
 	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
 	done ; \
-	mkdir -p stamps ; \
-	touch stamps/patch.stamp ; \
+	mv stamps/patch.stamp.tmp stamps/patch.stamp ; \
 	if ! test x$${all_patches_ok} == "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
@@ -966,6 +971,8 @@ clean-patch:
 	fi
 
 stamps/patch-fsg.stamp: stamps/extract.stamp
+	rm -f stamps/patch-fsg.stamp.tmp
+	mkdir -p stamps ; \
 	all_patches_ok=yes; \
 	for p in $(ICEDTEA_FSG_PATCHES) ; \
 	do \
@@ -975,12 +982,15 @@ stamps/patch-fsg.stamp: stamps/extract.stamp
 	  then \
 	    echo Applying $$p ; \
 	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
+	    if ! grep "^\* $$(basename $$p)" HACKING >> stamps/patch-fsg.stamp.tmp ; \
+	    then \
+	      echo "* $$(basename $$p): UNDOCUMENTED" >> stamps/patch-fsg.stamp.tmp ; \
+	    fi ; \
 	  else \
 	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
 	done ; \
-	mkdir -p stamps ; \
-	touch stamps/patch-fsg.stamp ; \
+	mv stamps/patch-fsg.stamp.tmp stamps/patch-fsg.stamp ; \
 	if ! test x$${all_patches_ok} == "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
