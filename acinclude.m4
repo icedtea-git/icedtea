@@ -734,7 +734,7 @@ AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
                 AM_CONDITIONAL(USE_SYSTEM_CACAO, true)
               ],
               [
-                CACAO_IMPORT_PATH="\$(abs_top_srcdir)/cacao/install"
+                CACAO_IMPORT_PATH="\$(abs_top_builddir)/cacao/install"
                 AM_CONDITIONAL(USE_SYSTEM_CACAO, false)
               ])
   AC_MSG_RESULT(${CACAO_IMPORT_PATH})

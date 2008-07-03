@@ -8105,7 +8105,7 @@ fi
 
 else
 
-                CACAO_IMPORT_PATH="\$(abs_top_srcdir)/cacao/install"
+                CACAO_IMPORT_PATH="\$(abs_top_builddir)/cacao/install"
                  if false; then
   USE_SYSTEM_CACAO_TRUE=
   USE_SYSTEM_CACAO_FALSE='#'

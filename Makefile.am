@@ -462,7 +462,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  then \
 	    echo Applying $$p ; \
 	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
-	    if ! grep "^\* $$(basename $$p)" HACKING >> stamps/patch.stamp.tmp ; \
+	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING >> stamps/patch.stamp.tmp ; \
 	    then \
 	      echo "* $$(basename $$p): UNDOCUMENTED" >> stamps/patch.stamp.tmp ; \
 	    fi ; \
@@ -508,7 +508,7 @@ stamps/patch-fsg.stamp: stamps/extract.stamp
 	  then \
 	    echo Applying $$p ; \
 	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
-	    if ! grep "^\* $$(basename $$p)" HACKING >> stamps/patch-fsg.stamp.tmp ; \
+	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING >> stamps/patch-fsg.stamp.tmp ; \
 	    then \
 	      echo "* $$(basename $$p): UNDOCUMENTED" >> stamps/patch-fsg.stamp.tmp ; \
 	    fi ; \
@@ -1095,10 +1095,10 @@ stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao-$(CACAO_VERSION) ; \
 	./configure \
-	  --prefix=$(abs_top_srcdir)/cacao/install \
+	  --prefix=$(abs_top_builddir)/cacao/install \
 	  --with-java-runtime-library=openjdk \
-	  --with-java-runtime-library-prefix=$(abs_top_srcdir)/openjdk \
-	  --with-java-runtime-library-classes=$(abs_top_srcdir)/lib/rt \
+	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
+	  --with-java-runtime-library-classes=$(abs_top_builddir)/lib/rt \
 	  --enable-jre-layout ; \
 	make install
 endif
