@@ -204,7 +204,6 @@ XT_CFLAGS = @XT_CFLAGS@
 XT_LIBS = @XT_LIBS@
 XULRUNNER_CFLAGS = @XULRUNNER_CFLAGS@
 XULRUNNER_LIBS = @XULRUNNER_LIBS@
-XULRUNNER_VERSION = @XULRUNNER_VERSION@
 ZERO_ARCHDEF = @ZERO_ARCHDEF@
 ZERO_ARCHFLAG = @ZERO_ARCHFLAG@
 ZERO_BITSPERWORD = @ZERO_BITSPERWORD@
@@ -935,7 +934,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  then \
 	    echo Applying $$p ; \
 	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
-	    if ! grep "^\* $$(basename $$p)" HACKING >> stamps/patch.stamp.tmp ; \
+	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING >> stamps/patch.stamp.tmp ; \
 	    then \
 	      echo "* $$(basename $$p): UNDOCUMENTED" >> stamps/patch.stamp.tmp ; \
 	    fi ; \
@@ -980,7 +979,7 @@ stamps/patch-fsg.stamp: stamps/extract.stamp
 	  then \
 	    echo Applying $$p ; \
 	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
-	    if ! grep "^\* $$(basename $$p)" HACKING >> stamps/patch-fsg.stamp.tmp ; \
+	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING >> stamps/patch-fsg.stamp.tmp ; \
 	    then \
 	      echo "* $$(basename $$p): UNDOCUMENTED" >> stamps/patch-fsg.stamp.tmp ; \
 	    fi ; \
@@ -1506,36 +1505,24 @@ clean-cacao:
 	rm -f stamps/cacao.stamp
 
 # IcedTeaPlugin.so.
-# Mozilla is compiled with -fshort-wchar.
-# FIXME: How is this supposed to work?  ld doesn't include these
-# objects without the ar x hack.
-# Verbose ld output:
-# ...
-# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libmozjs.so succeeded
-# -lmozjs (/usr/lib/xulrunner-sdk-1.9/sdk/lib/libmozjs.so)
-# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxpcomglue_s.so failedicedtea6/
-# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxpcomglue_s.a succeeded
-# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxul.so succeeded
-# -lxul (/usr/lib/xulrunner-sdk-1.9/sdk/lib/libxul.so)
-# ...
-@ENABLE_LIVECONNECT_TRUE@IcedTeaPlugin.so: IcedTeaPlugin.cc
-@ENABLE_LIVECONNECT_TRUE@	rm -rf xpcomglueobjects
-@ENABLE_LIVECONNECT_TRUE@	mkdir xpcomglueobjects
-@ENABLE_LIVECONNECT_TRUE@	cd xpcomglueobjects ; \
-@ENABLE_LIVECONNECT_TRUE@	ar x \
-@ENABLE_LIVECONNECT_TRUE@	  /usr/lib/xulrunner-sdk-$(XULRUNNER_VERSION)/sdk/lib/libxpcomglue_s.a
-@ENABLE_LIVECONNECT_TRUE@	pwd
+# Separate compile and link invocations to ensure intermediate object
+# is listed before -l options.  See:
+# http://developer.mozilla.org/en/docs/XPCOM_Glue
+@ENABLE_LIVECONNECT_TRUE@IcedTeaPlugin.o: IcedTeaPlugin.cc
 @ENABLE_LIVECONNECT_TRUE@	$(CXX) $(CXXFLAGS) \
-@ENABLE_LIVECONNECT_TRUE@	  -DXPCOM_GLUE \
-@ENABLE_LIVECONNECT_TRUE@	  -DXPCOM_GLUE_USE_NSPR \
-@ENABLE_LIVECONNECT_TRUE@	  $(XULRUNNER_CFLAGS) $(XULRUNNER_LIBS) \
-@ENABLE_LIVECONNECT_TRUE@	  $(GTK_CFLAGS) $(GTK_LIBS) \
-@ENABLE_LIVECONNECT_TRUE@	  xpcomglueobjects/*.o \
 @ENABLE_LIVECONNECT_TRUE@	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-@ENABLE_LIVECONNECT_TRUE@	  -fpic -shared -o $@ $<
-@ENABLE_LIVECONNECT_TRUE@	rm -rf xpcomglueobjects
+@ENABLE_LIVECONNECT_TRUE@	  $(GTK_CFLAGS) \
+@ENABLE_LIVECONNECT_TRUE@	  $(XULRUNNER_CFLAGS) \
+@ENABLE_LIVECONNECT_TRUE@	  -fPIC -c -o $@ $<
+@ENABLE_LIVECONNECT_TRUE@IcedTeaPlugin.so: IcedTeaPlugin.o
+@ENABLE_LIVECONNECT_TRUE@	$(CXX) $(CXXFLAGS) \
+@ENABLE_LIVECONNECT_TRUE@	  $< \
+@ENABLE_LIVECONNECT_TRUE@	  $(GTK_LIBS) \
+@ENABLE_LIVECONNECT_TRUE@	  $(XULRUNNER_LIBS) \
+@ENABLE_LIVECONNECT_TRUE@	  -shared -o $@
 
 @ENABLE_LIVECONNECT_TRUE@clean-IcedTeaPlugin:
+@ENABLE_LIVECONNECT_TRUE@	rm -f IcedTeaPlugin.o
 @ENABLE_LIVECONNECT_TRUE@	rm -f IcedTeaPlugin.so
 # gcjwebplugin.so.
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@gcjwebplugin.so: gcjwebplugin.cc

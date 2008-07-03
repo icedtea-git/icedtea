@@ -1111,36 +1111,24 @@ clean-cacao:
 
 if ENABLE_LIVECONNECT
 # IcedTeaPlugin.so.
-# Mozilla is compiled with -fshort-wchar.
-# FIXME: How is this supposed to work?  ld doesn't include these
-# objects without the ar x hack.
-# Verbose ld output:
-# ...
-# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libmozjs.so succeeded
-# -lmozjs (/usr/lib/xulrunner-sdk-1.9/sdk/lib/libmozjs.so)
-# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxpcomglue_s.so failedicedtea6/
-# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxpcomglue_s.a succeeded
-# attempt to open /usr/lib/xulrunner-sdk-1.9/sdk/lib/libxul.so succeeded
-# -lxul (/usr/lib/xulrunner-sdk-1.9/sdk/lib/libxul.so)
-# ...
-IcedTeaPlugin.so: IcedTeaPlugin.cc
-	rm -rf xpcomglueobjects
-	mkdir xpcomglueobjects
-	cd xpcomglueobjects ; \
-	ar x \
-	  /usr/lib/xulrunner-sdk-$(XULRUNNER_VERSION)/sdk/lib/libxpcomglue_s.a
-	pwd
+# Separate compile and link invocations to ensure intermediate object
+# is listed before -l options.  See:
+# http://developer.mozilla.org/en/docs/XPCOM_Glue
+IcedTeaPlugin.o: IcedTeaPlugin.cc
 	$(CXX) $(CXXFLAGS) \
-	  -DXPCOM_GLUE \
-	  -DXPCOM_GLUE_USE_NSPR \
-	  $(XULRUNNER_CFLAGS) $(XULRUNNER_LIBS) \
-	  $(GTK_CFLAGS) $(GTK_LIBS) \
-	  xpcomglueobjects/*.o \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -fpic -shared -o $@ $<
-	rm -rf xpcomglueobjects
+	  $(GTK_CFLAGS) \
+	  $(XULRUNNER_CFLAGS) \
+	  -fPIC -c -o $@ $<
+IcedTeaPlugin.so: IcedTeaPlugin.o
+	$(CXX) $(CXXFLAGS) \
+	  $< \
+	  $(GTK_LIBS) \
+	  $(XULRUNNER_LIBS) \
+	  -shared -o $@
 
 clean-IcedTeaPlugin:
+	rm -f IcedTeaPlugin.o
 	rm -f IcedTeaPlugin.so
 else
 if ENABLE_PLUGIN

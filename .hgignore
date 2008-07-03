@@ -16,6 +16,7 @@ config.status
 javac
 javap
 gcjwebplugin.so
+IcedTeaPlugin.o
 IcedTeaPlugin.so
 extra-source-files.txt
 rt-source-files.txt

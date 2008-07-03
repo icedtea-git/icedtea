@@ -331,8 +331,6 @@ dnl Check for plugin support headers and libraries.
 dnl FIXME: use unstable
 if test "x${enable_liveconnect}" = "xyes"
 then
-  XULRUNNER_VERSION=`pkg-config --modversion libxul-unstable`
-  AC_SUBST(XULRUNNER_VERSION)
   PKG_CHECK_MODULES(XULRUNNER, \
     nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9)
   PKG_CHECK_MODULES(GTK, gtk+-2.0)

@@ -94,13 +94,13 @@ public:
   {
     Trace::name = name;
     Trace::function = function;
-    printf ("ICEDTEA PLUGIN: thread %p: %s%s\n", current_thread (),
+    printf ("ICEDTEA PLUGIN: %s%s\n",
              name, function);
   }
 
   ~Trace ()
   {
-    printf ("ICEDTEA PLUGIN: thread %p: %s%s %s\n", current_thread (),
+    printf ("ICEDTEA PLUGIN: %s%s %s\n",
              name, function, "return");
   }
 private:
@@ -111,10 +111,10 @@ private:
 #if 1
 // Debugging macros.
 #define PLUGIN_DEBUG(message)                                           \
-  printf ("ICEDTEA PLUGIN: thread %p: %s\n", current_thread (), message)
+  printf ("ICEDTEA PLUGIN: %s\n", message)
 
 #define PLUGIN_DEBUG_TWO(first, second)                                 \
-  printf ("ICEDTEA PLUGIN: thread %p: %s %s\n", current_thread (),      \
+  printf ("ICEDTEA PLUGIN: %s %s\n",      \
            first, second)
 
 // Testing macro.
@@ -137,16 +137,16 @@ private:
 
 // Error reporting macros.
 #define PLUGIN_ERROR(message)                                       \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s\n", __FILE__, __LINE__,  \
-           current_thread (), message)
+  fprintf (stderr, "%s:%d: Error: %s\n", __FILE__, __LINE__,  \
+           message)
 
 #define PLUGIN_ERROR_TWO(first, second)                                 \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s: %s\n", __FILE__, __LINE__,  \
-           current_thread (), first, second)
+  fprintf (stderr, "%s:%d: Error: %s: %s\n", __FILE__, __LINE__,  \
+           first, second)
 
 #define PLUGIN_ERROR_THREE(first, second, third)                        \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s: %s: %s\n", __FILE__,        \
-           __LINE__, current_thread (), first, second, third)
+  fprintf (stderr, "%s:%d: Error: %s: %s: %s\n", __FILE__,        \
+           __LINE__, first, second, third)
 
 #define PLUGIN_CHECK_RETURN(message, result)           \
   if (NS_SUCCEEDED (result))                    \
@@ -180,16 +180,16 @@ private:
 
 // Error reporting macros.
 #define PLUGIN_ERROR(message)                                       \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s\n", __FILE__, __LINE__,  \
-           current_thread (), message)
+  fprintf (stderr, "%s:%d: Error: %s\n", __FILE__, __LINE__,  \
+           message)
 
 #define PLUGIN_ERROR_TWO(first, second)                                 \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s: %s\n", __FILE__, __LINE__,  \
-           current_thread (), first, second)
+  fprintf (stderr, "%s:%d: Error: %s: %s\n", __FILE__, __LINE__,  \
+           first, second)
 
 #define PLUGIN_ERROR_THREE(first, second, third)                        \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s: %s: %s\n", __FILE__,        \
-           __LINE__, current_thread (), first, second, third)
+  fprintf (stderr, "%s:%d: Error: %s: %s: %s\n", __FILE__,        \
+           __LINE__, first, second, third)
 #define PLUGIN_CHECK_RETURN(message, result)
 #define PLUGIN_CHECK(message, result)
 #endif
@@ -2032,7 +2032,7 @@ IcedTeaPluginFactory::OnInputStreamReady (nsIAsyncInputStream* aStream)
   PRUint32 readCount = 0;
   int index = 0;
 
-  printf ("ONINPUTSTREAMREADY 1 %p\n", current_thread());
+  printf ("ONINPUTSTREAMREADY 1 %p\n", current_thread ());
   // Omit return value checking for speed.
   input->Read (&byte, 1, &readCount);
   if (readCount != 1)
@@ -2600,7 +2600,7 @@ IcedTeaPluginInstance::GetWindow ()
   // so they can all safely be null.
   if (factory->proxyEnv != NULL)
     {
-      printf ("HERE 23: %d, %p\n", liveconnect_window, current_thread());
+      printf ("HERE 23: %d, %p\n", liveconnect_window, current_thread ());
       result = factory->liveconnect->GetWindow(factory->proxyEnv,
                                                this,
                                                NULL, 0, NULL,
