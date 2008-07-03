@@ -1028,22 +1028,13 @@ IcedTeaPluginFactory::IcedTeaPluginFactory ()
   string_identifier (0),
   slot_index (0),
   value_identifier (0),
-  connected (PR_FALSE)
+  connected (PR_FALSE),
+  liveconnect (0)
 {
   PLUGIN_TRACE_FACTORY ();
   instances.Init ();
   references.Init ();
-  printf ("CONSTRUCTING FACTORY");
-
-  nsCOMPtr<nsIComponentManager> manager;
-  nsresult result = NS_GetComponentManager (getter_AddRefs
-                                            (manager));
-  PLUGIN_CHECK ("get component manager", result);
-  result = manager->CreateInstance
-    (nsILiveconnect::GetCID (),
-     nsnull, NS_GET_IID (nsILiveconnect),
-     getter_AddRefs (liveconnect));
-  PLUGIN_CHECK ("liveconnect", result);
+  printf ("CONSTRUCTING FACTORY\n");
 }
 
 IcedTeaPluginFactory::~IcedTeaPluginFactory ()
@@ -1051,7 +1042,7 @@ IcedTeaPluginFactory::~IcedTeaPluginFactory ()
   // FIXME: why did this crash with threadManager == 0x0 on shutdown?
   PLUGIN_TRACE_FACTORY ();
   secureEnv = 0;
-  printf ("DECONSTRUCTING FACTORY");
+  printf ("DECONSTRUCTING FACTORY\n");
 }
 
 // nsIFactory functions.
@@ -1103,6 +1094,12 @@ IcedTeaPluginFactory::Initialize ()
   nsCOMPtr<nsIComponentManager> manager;
   result = NS_GetComponentManager (getter_AddRefs (manager));
   PLUGIN_CHECK_RETURN ("get component manager", result);
+
+  result = manager->CreateInstance
+    (nsILiveconnect::GetCID (),
+     nsnull, NS_GET_IID (nsILiveconnect),
+     getter_AddRefs (liveconnect));
+  PLUGIN_CHECK_RETURN ("liveconnect", result);
 
   nsCOMPtr<nsIServerSocket> socket;
   result = manager->CreateInstanceByContractID (NS_SERVERSOCKET_CONTRACTID,

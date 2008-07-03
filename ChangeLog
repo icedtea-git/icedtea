@@ -1,5 +1,11 @@
 2008-07-03  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
+	* IcedTeaPlugin.cc (IcedTeaPluginFactory::IcedTeaPluginFactory):
+	Move nsILiveconnect instance creation ...
+	(IcedTeaPluginFactory::Initialize): ... here.
+
+2008-07-03  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
 	* .hgignore: Add IcedTeaPlugin.o.
 	* IcedTeaPlugin.cc: Do not print current thread ID in output.
 	* Makefile.am: Fix IcedTeaPlugin.so linking.
