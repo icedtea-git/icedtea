@@ -272,6 +272,10 @@ CACAO_MD5SUM = 2337754d0c165af556e97395e9a5e5af
 @ENABLE_LIVECONNECT_TRUE@ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 @ENABLE_LIVECONNECT_FALSE@PLUGIN_PATCH = patches/icedtea-plugin.patch
 @ENABLE_LIVECONNECT_TRUE@PLUGIN_PATCH = patches/icedtea-liveconnect.patch
+@ENABLE_LIVECONNECT_FALSE@EXCLUDE_LIVECONNECT = | grep -v 'netscape/javascript'
+@ENABLE_LIVECONNECT_TRUE@EXCLUDE_LIVECONNECT = 
+@ENABLE_LIVECONNECT_FALSE@LIVECONNECT_DIR = 
+@ENABLE_LIVECONNECT_TRUE@LIVECONNECT_DIR = -C lib/rt netscape
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_FALSE@GCJWEBPLUGIN_CLEAN = 
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_TRUE@GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
 @ENABLE_LIVECONNECT_FALSE@@ENABLE_PLUGIN_FALSE@GCJWEBPLUGIN_TARGET = 
@@ -1438,6 +1442,7 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
 	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt -name '*.java' \
+	  $(EXCLUDE_LIVECONNECT) \
 	  | sort -u > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt
@@ -1472,10 +1477,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
+            -C lib/rt javax -C lib/rt net $(LIVECONNECT_DIR) -C lib/rt sun ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
+            -C lib/rt javax -C lib/rt net $(LIVECONNECT_DIR) -C lib/rt sun ; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \

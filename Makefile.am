@@ -9,10 +9,14 @@ if ENABLE_LIVECONNECT
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
+EXCLUDE_LIVECONNECT =
+LIVECONNECT_DIR = -C lib/rt netscape
 else
 ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
 PLUGIN_PATCH = patches/icedtea-plugin.patch
+EXCLUDE_LIVECONNECT = | grep -v 'netscape/javascript'
+LIVECONNECT_DIR =
 if ENABLE_PLUGIN
 GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
 GCJWEBPLUGIN_TARGET = gcjwebplugin.so
@@ -1041,6 +1045,7 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
 	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt -name '*.java' \
+	  $(EXCLUDE_LIVECONNECT) \
 	  | sort -u > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt
@@ -1075,10 +1080,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
+            -C lib/rt javax -C lib/rt net $(LIVECONNECT_DIR) -C lib/rt sun ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
+            -C lib/rt javax -C lib/rt net $(LIVECONNECT_DIR) -C lib/rt sun ; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \

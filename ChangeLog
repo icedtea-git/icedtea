@@ -1,5 +1,16 @@
 2008-07-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
+	* Makefile.am (EXCLUDE_LIVECONNECT): New variable.
+	(LIVECONNECT_DIR): Likewise.
+	* Makefile.in: Regenerate.
+	* rt/netscape/javascript/JSException.java: New file.
+	* rt/netscape/javascript/JSObject.java: Likewise.
+	* rt/netscape/javascript/JSProxy.java: Likewise.
+	* rt/netscape/javascript/JSRunnable.java: Likewise.
+	* rt/netscape/javascript/JSUtil.java: Likewise.
+
+2008-07-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
 	* Makefile.am: Fix typo.
 	* Makefile.in: Regenerate.
 
