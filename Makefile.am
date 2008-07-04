@@ -484,8 +484,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
-       fi
-
+	fi
 
 clean-patch:
 	rm -f stamps/patch.stamp
@@ -533,8 +532,7 @@ stamps/patch-fsg.stamp: stamps/extract.stamp
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
-       fi
-
+	fi
 
 clean-patch-fsg:
 	rm -f stamps/patch-fsg.stamp
