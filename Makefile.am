@@ -959,7 +959,7 @@ stamps/hotspot-tools-copy-source-files.stamp: stamps/patch.stamp \
 	    hotspot-tools/$$copy_dir ; \
 	done
 
-	for copy_dir in
+	for copy_dir in \
 	  `cat $(abs_top_srcdir)/tools-copy/tools-langtools-copy-files.txt` ; \
 	do \
 	  mkdir -p hotspot-tools/$$copy_dir ; \
