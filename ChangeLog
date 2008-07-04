@@ -1,3 +1,8 @@
+2008-07-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am: Formatting fixes.
+	* Makefile.in: Regenerate.
+
 2008-07-03  Thomas Fitzsimmons  <fitzsim@redhat.com>
 
 	* IcedTeaPlugin.cc (IcedTeaPluginFactory::IcedTeaPluginFactory):
