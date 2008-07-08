@@ -1136,7 +1136,7 @@ if !USE_SYSTEM_CACAO
 	  --with-java-runtime-library=openjdk \
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
 	  --with-java-runtime-library-classes=$(abs_top_builddir)/lib/rt \
-	  --enable-jre-layout ; \
+	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	make install
 endif
 	mkdir -p stamps

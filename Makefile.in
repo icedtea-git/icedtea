@@ -1532,7 +1532,7 @@ stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
 @USE_SYSTEM_CACAO_FALSE@	  --with-java-runtime-library=openjdk \
 @USE_SYSTEM_CACAO_FALSE@	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
 @USE_SYSTEM_CACAO_FALSE@	  --with-java-runtime-library-classes=$(abs_top_builddir)/lib/rt \
-@USE_SYSTEM_CACAO_FALSE@	  --enable-jre-layout ; \
+@USE_SYSTEM_CACAO_FALSE@	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 @USE_SYSTEM_CACAO_FALSE@	make install
 	mkdir -p stamps
 	touch $@

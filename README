@@ -143,3 +143,6 @@ HotSpot with the one from the CACAO VM.  This enables the usage of
 IcedTea on architectures which are not supported by the HotSpot VM,
 besides the HotSpot zero port.  In contrast to the HotSpot zero port,
 CACAO provides a Just-In-Time compiler for various architectures.
+
+The environment variable CACAO_CONFIGURE_ARGS can be used to pass
+additional arguments to the cacao configure.
