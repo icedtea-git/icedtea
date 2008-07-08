@@ -1,3 +1,10 @@
+2008-07-08  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-security-updates.patch: New patch containing OpenJDK
+	security patches released today.
+	* Makefile.am: Added patch to list.
+	* Makefile.in: Regenerated.
+
 2008-07-08  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (stamps/cacao.stamp): Pass CACAO_CONFIGURE_ARGS to
