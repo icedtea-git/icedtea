@@ -211,7 +211,7 @@ dist-openjdk:
 	  fi; \
 	fi
 	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-dist/openjdk
-	find -name \\.hg* | xargs rm -rf	
+	find openjdk-dist/ -name \\.hg* | xargs rm -rf	
 	cd openjdk-dist && $(ZIP) -r openjdk-$(OPENJDK_VERSION) openjdk/
 	mv openjdk-dist/openjdk-$(OPENJDK_VERSION).zip . 
 	rm -rf openjdk-dist
@@ -348,6 +348,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jscheme.patch \
 	$(GCC_PATCH) \
 	$(DISTRIBUTION_PATCHES) \
+	patches/icedtea-security-updates.patch \
 	patches/icedtea-override.patch
 
 if WITH_CACAO

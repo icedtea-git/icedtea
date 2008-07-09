@@ -427,8 +427,8 @@ ICEDTEA_PATCHES = patches/icedtea-copy-plugs.patch \
 	patches/icedtea-override-redirect-metacity.patch \
 	$(ZERO_PATCHES_COND) patches/icedtea-no-bcopy.patch \
 	patches/icedtea-jscheme.patch $(GCC_PATCH) \
-	$(DISTRIBUTION_PATCHES) patches/icedtea-override.patch \
-	$(am__append_7)
+	$(DISTRIBUTION_PATCHES) patches/icedtea-security-updates.patch \
+	patches/icedtea-override.patch $(am__append_7)
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch
@@ -819,7 +819,7 @@ dist-openjdk:
 	  fi; \
 	fi
 	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-dist/openjdk
-	find -name \\.hg* | xargs rm -rf	
+	find openjdk-dist/ -name \\.hg* | xargs rm -rf	
 	cd openjdk-dist && $(ZIP) -r openjdk-$(OPENJDK_VERSION) openjdk/
 	mv openjdk-dist/openjdk-$(OPENJDK_VERSION).zip . 
 	rm -rf openjdk-dist
