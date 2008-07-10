@@ -53,7 +53,7 @@ public final class Boot implements PrivilegedAction {
 
     /** the JNLP file to open to display the network-based about window */
     private static final String aboutFile = 
-    	System.getProperty("java.home") + "/lib/about.jnlp";
+        System.getProperty("java.home") + "/lib/about.jnlp";
 
     /** the text to display before launching the about link */
     private static final String aboutMessage = ""
@@ -115,13 +115,13 @@ public final class Boot implements PrivilegedAction {
         
         if (null != getOption("-viewer")) {
 
-        	try {
-        		CertificateViewer.main(null);
-        		System.exit(0);
-        	} catch (Exception e) {
-        		// TODO Auto-generated catch block
-        		e.printStackTrace();
-        	}
+            try {
+                CertificateViewer.main(null);
+                System.exit(0);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
         }
 
@@ -194,13 +194,13 @@ public final class Boot implements PrivilegedAction {
      * Returns the about.jnlp file in {java.home}/lib or null if this file
      * does not exist.
      */
-	private static String getAboutFile() {
+    private static String getAboutFile() {
 
-		if (new File(aboutFile).exists())
-			return aboutFile;
-		else
-			return null;
-	}
+        if (new File(aboutFile).exists())
+            return aboutFile;
+        else
+            return null;
+    }
 
     /**
      * Returns the file to open; does not return if no file was
@@ -212,11 +212,11 @@ public final class Boot implements PrivilegedAction {
         
         // override -jnlp with aboutFile
         if (getOption("-about") != null) {
-        	location = getAboutFile();
-        	if (location == null)
-        		fatalError("Unable to find about.jnlp in {java.home}/lib/");
+            location = getAboutFile();
+            if (location == null)
+                fatalError("Unable to find about.jnlp in {java.home}/lib/");
         } else {
-        	location = getJNLPFile();
+            location = getJNLPFile();
         }
 
         if (location == null) {
@@ -230,14 +230,14 @@ public final class Boot implements PrivilegedAction {
         URL url = null;
 
         try {
-        	if (new File(location).exists())
-        		url = new File(location).toURL(); // Why use file.getCanonicalFile?
-        	else 
-        		url = new URL(ServiceUtil.getBasicService().getCodeBase(), location);
+            if (new File(location).exists())
+                url = new File(location).toURL(); // Why use file.getCanonicalFile?
+            else 
+                url = new URL(ServiceUtil.getBasicService().getCodeBase(), location);
         } catch (Exception e) {
-        	fatalError("Invalid jnlp file " + location);
-        	if (JNLPRuntime.isDebug())
-        		e.printStackTrace();
+            fatalError("Invalid jnlp file " + location);
+            if (JNLPRuntime.isDebug())
+                e.printStackTrace();
         }
         
         boolean strict = (null != getOption("-strict"));
@@ -321,32 +321,27 @@ public final class Boot implements PrivilegedAction {
     }
 
     /**
-     * Gets the JNLP file from the command line arguments, or exists upon error.
+     * Gets the JNLP file from the command line arguments, or exits upon error.
      */
     private static String getJNLPFile() {
 
-    	if (args.length == 0) {
+        if (args.length == 0) {
             System.out.println(helpMessage);
             System.exit(0);
-    	} else if (args.length == 1) {
-    		
-    		String lastArg = args[args.length - 1];
-    		if (lastArg.endsWith(".jnlp")) {
-    			return args[args.length - 1];
-    		} else
-    			return null;
-    	} else {
-    		String lastArg = args[args.length - 1];
-    		String secondLastArg = args[args.length - 2];
+        } else if (args.length == 1) {
+            return args[args.length - 1];
+        } else {
+            String lastArg = args[args.length - 1];
+            String secondLastArg = args[args.length - 2];
 
-    		if (doubleArgs.indexOf(secondLastArg) == -1) {
-    			return lastArg;
-    		} else {
+            if (doubleArgs.indexOf(secondLastArg) == -1) {
+                return lastArg;
+            } else {
                 System.out.println(helpMessage);
                 System.exit(0);
-    		}
-    	}
-    	return null;
+            }
+        }
+        return null;
     }
     
     /**
