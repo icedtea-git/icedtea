@@ -159,3 +159,18 @@ diff -r 789c601c8ba9 openjdk/hotspot/src/os/linux/vm/os_linux.cpp
    #endif
  
    // Identify compatability class for VM's architecture and library's architecture
+diff -r 3e7fbd955f0b openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp
+--- openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp	Thu Jul 10 14:08:04 2008 -0400
++++ openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp	Thu Jul 10 14:11:25 2008 -0400
+@@ -3025,9 +3025,9 @@
+   tty->print_cr("&native_fresult: " INTPTR_FORMAT, (uintptr_t) &this->_native_fresult);
+   tty->print_cr("native_lresult: " INTPTR_FORMAT, (uintptr_t) this->_native_lresult);
+ #endif
+-#ifdef IA64
++#if defined(IA64) && !defined(ZERO)
+   tty->print_cr("last_Java_fp: " INTPTR_FORMAT, (uintptr_t) this->_last_Java_fp);
+-#endif // IA64
++#endif // IA64 && !ZERO
+   tty->print_cr("self_link: " INTPTR_FORMAT, (uintptr_t) this->_self_link);
+ }
+ 
