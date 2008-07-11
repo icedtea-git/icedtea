@@ -1,3 +1,11 @@
+2008-07-11  Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* Makefile.am (CACAO_VERSION): Updated to 0.99.2
+	(CACAO_MD5SUM): Likewise.
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Likewise.
+	* configure: Likewise.
+
 2008-07-10  Joshua Sumali  <jsumali@redhat.com>
 
 	* rt/net/sourceforge/jnlp/runtime/Boot.java: Remove restriction of only
