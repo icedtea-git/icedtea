@@ -48,18 +48,6 @@ diff -Nru openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk openjdk/jdk/make
  endef # import-binary-plug-classes
  
  # Import specific area classes (the classes are always created)
-diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java
---- openjdk.orig/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2008-05-27 22:30:15.000000000 +0100
-+++ openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/OpenConverter.java	2008-06-22 02:48:42.000000000 +0100
-@@ -1154,7 +1154,7 @@
-             Set<BitSet> getterIndexSets = newSet();
-             for (Constructor<?> constr : annotatedConstrList) {
-                 String[] propertyNames =
--                    constr.getAnnotation(propertyNamesClass).value();
-+		    ((ConstructorProperties)constr.getAnnotation(propertyNamesClass)).value();
- 
-                 Type[] paramTypes = constr.getGenericParameterTypes();
-                 if (paramTypes.length != propertyNames.length) {
 diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java
 --- openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2008-05-27 22:30:15.000000000 +0100
 +++ openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2008-06-22 02:48:42.000000000 +0100
