@@ -1,5 +1,5 @@
 AC_PREREQ([2.61])
-AC_INIT([icedtea], [1.8-pre], [fitzsim@redhat.com])
+AC_INIT([icedtea], [1.8-pre], [distro-pkg-dev@openjdk.java.net])
 AM_INIT_AUTOMAKE([tar-pax])
 AC_CONFIG_FILES([Makefile])
 AC_CANONICAL_HOST
@@ -216,6 +216,7 @@ AC_CHECK_WITH_CACAO_SRC_ZIP
 ENABLE_OPTIMIZATIONS
 ENABLE_ZERO_BUILD
 SET_CORE_OR_SHARK_BUILD
+ENABLE_HG
 
 if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
   FIND_TOOL([MERCURIAL],[hg])

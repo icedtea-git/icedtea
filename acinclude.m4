@@ -716,8 +716,6 @@ AC_DEFUN([AC_CHECK_WITH_CACAO],
   AC_SUBST(WITH_CACAO)
 ])
 
-<<<<<<< local
-=======
 AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
 [
   AC_MSG_CHECKING(CACAO home directory)
@@ -759,4 +757,25 @@ AC_DEFUN([AC_CHECK_WITH_CACAO_SRC_ZIP],
   AC_MSG_RESULT(${ALT_CACAO_SRC_ZIP})
   AC_SUBST(ALT_CACAO_SRC_ZIP)
 ])
->>>>>>> other
+
+AC_DEFUN([ENABLE_HG],
+[
+  AC_MSG_CHECKING(whether to retrieve the source code from Mercurial)
+  AC_ARG_ENABLE([hg],
+                [AS_HELP_STRING(--enable-hg,download source code from Mercurial [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+        enable_hg=yes
+        ;;
+      *)
+        enable_hg=no
+        ;;
+    esac
+  ],
+  [
+    enable_hg=no
+  ])
+  AC_MSG_RESULT([${enable_hg}])
+  AM_CONDITIONAL([USE_HG], test x"${enable_hg}" = "xyes")
+])

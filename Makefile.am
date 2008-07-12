@@ -1,4 +1,4 @@
-OPENJDK_VERSION = b29
+OPENJDK_VERSION = b30
 
 CACAO_VERSION = 0.99.2
 CACAO_MD5SUM = a2865f47535f6dc3def268c0055ff20a
@@ -240,52 +240,28 @@ snapshot: dist
 	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
 
 # Creates archive of openjdk.
-dist-openjdk:
-	if ! hg; \
-	then \
-	  echo "Mercurial cannot be found. Please install it and try again."; \
-	  exit 1; \
-	else \
-	  if ! hg fclone -h; \
-	  then \
-	    echo "No forest extension found. Please refer to" \
-              "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
-            exit 1; \
-	  fi; \
-	fi
-	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk-dist/openjdk
-	find openjdk-dist/ -name \\.hg* | xargs rm -rf	
-	cd openjdk-dist && $(ZIP) -r openjdk-$(OPENJDK_VERSION) openjdk/
-	mv openjdk-dist/openjdk-$(OPENJDK_VERSION).zip . 
-	rm -rf openjdk-dist
+dist-openjdk: stamps/extract-cacao.stamp
+	find openjdk/ -name \\.hg* | xargs rm -rf	
+	$(ZIP) -r openjdk-$(OPENJDK_VERSION) openjdk/
 
 # OpenJDK Source Preparation Targets
 # ==================================
 
 # Download OpenJDK sources.
 
-OPENJDK_URL = http://hg.openjdk.java.net/jdk7/jdk7
+OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
+
+OPENJDK_URL = http://www.java.net/download/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
 
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 else
+if USE_HG
   OPENJDK_SRC_ZIP = 
+else
+  OPENJDK_SRC_ZIP = openjdk-7-ea-src-b30-03_jul_2008.zip
 endif
-
-stamps/clone.stamp:
-	if ! test -d openjdk ; then \
-	  if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
-	    $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
-	  else \
-	    if ! hg fclone -h; \
-            then \
-              echo "No forest extension found. Please refer to" \
-              "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
-              exit 1; \
-            fi; \
-	    hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_URL) openjdk; \
-	fi;
-	chmod -R ug+w openjdk
+endif
 
 CACAO_BASE_URL = http://www.complang.tuwien.ac.at
 CACAO_URL = $(CACAO_BASE_URL)/cacaojvm/download/cacao-$(CACAO_VERSION)/
@@ -300,6 +276,15 @@ endif
 stamps/download.stamp:
 if USE_ALT_OPENJDK_SRC_ZIP
 else
+if USE_HG
+	if ! hg fclone -h; \
+          then \
+          echo "No forest extension found. Please refer to" \
+            "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
+          exit 1; \
+          fi; \
+	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk; \
+else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
 	then \
@@ -309,6 +294,7 @@ else
 	  fi ; \
 	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
 	fi
+endif
 endif
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
@@ -324,10 +310,10 @@ if !USE_SYSTEM_CACAO
 endif
 endif
 	mkdir -p stamps
-	touch stamps/clone.stamp
+	touch stamps/download.stamp
 
-clean-clone:
-	rm -f stamps/clone.stamp
+clean-extract:
+	rm -f stamps/extract.stamp
 	rm -rf openjdk
 
 clean-download:
@@ -336,7 +322,6 @@ clean-download:
 if WITH_CACAO
 	rm -f $(CACAO_SRC_ZIP)
 endif
->>>>>>> other
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
@@ -471,13 +456,20 @@ ICEDTEA_PATCHES += \
 	$(DISTRIBUTION_PATCHES)
 
 stamps/extract.stamp: stamps/download.stamp
-	if ! test -d openjdk ; \
-	then \
-	  mkdir openjdk ; \
-	  $(TAR) xzf $(OPENJDK_SRC_ZIP) -C openjdk; \
-	  chmod -R ug+w openjdk ; \
-	  sh $(srcdir)/fsg.sh ; \
-	fi
+	if ! test -d openjdk ; then \
+	  if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
+	    $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
+	  else \
+	    echo "ERROR: Couldn't extract OpenJDK"; \
+	    false; \
+	  fi; \
+	fi; 
+	chmod -R ug+w openjdk 
+	sh $(srcdir)/fsg.sh ; 
+	mkdir -p stamps 
+	touch stamps/extract.stamp
+
+stamps/extract-cacao.stamp: stamps/extract.stamp
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
 	if ! test -d cacao ; \
@@ -487,16 +479,15 @@ if !USE_SYSTEM_CACAO
 	fi
 endif
 endif
+	touch stamps/extract-cacao.stamp
+
+stamps/generated.stamp: stamps/extract-cacao.stamp
 	if [ ! -e $(abs_top_builddir)/generated ]; then \
 	  cp -a $(abs_top_srcdir)/generated $(abs_top_builddir); \
 	  find $(abs_top_builddir)/generated -type f -exec chmod 640 '{}' ';' \
 	    -o -type d -exec chmod 750 '{}' ';'; \
 	fi
-	mkdir -p stamps
-	touch stamps/extract.stamp
-
-clean-extract:
-	rm -f stamps/extract.stamp
+	touch stamps/generated.stamp
 
 stamps/patch.stamp: stamps/patch-fsg.stamp
 	rm -f stamps/patch.stamp.tmp
@@ -573,7 +564,7 @@ clean-patch:
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
-stamps/patch-fsg.stamp: stamps/extract.stamp
+stamps/patch-fsg.stamp: stamps/generated.stamp
 	rm -f stamps/patch-fsg.stamp.tmp
 	mkdir -p stamps ; \
 	all_patches_ok=yes; \
@@ -897,7 +888,7 @@ endif
 	mkdir -p stamps
 	touch stamps/icedtea-debug.stamp
 
-clean-icedtea: stamps/clone.stamp
+clean-icedtea: stamps/download.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/make clobber
@@ -1050,7 +1041,7 @@ stamps/hotspot-tools-copy-source-files.stamp: stamps/patch.stamp \
 	mkdir -p stamps
 	touch stamps/hotspot-tools-copy-source-files.stamp
 
-hotspot-tools-source-files.txt: stamps/clone.stamp \
+hotspot-tools-source-files.txt: stamps/generated.stamp \
 	stamps/hotspot-tools-copy-source-files.stamp
 	find hotspot-tools -name '*.java' | sort > $@
 	mkdir -p lib/hotspot-tools
@@ -1309,8 +1300,6 @@ bootstrap-directory-symlink-ecj: stamps/bootstrap-directory-symlink-ecj.stamp
 
 bootstrap-directory-symlink: stamps/bootstrap-directory-symlink.stamp
 
-clone: stamps/clone.stamp
-
 cacao: stamps/cacao.stamp
 
 clone-ecj: stamps/clone-ecj.stamp
@@ -1318,6 +1307,12 @@ clone-ecj: stamps/clone-ecj.stamp
 copy-source-files: stamps/copy-source-files.stamp
 
 download: stamps/download.stamp
+
+extract: stamps/extract.stamp
+
+extract-cacao: stamps/extract-cacao.stamp
+
+generated: stamps/generated.stamp
 
 icedtea: stamps/icedtea.stamp
 
