@@ -1,0 +1,119 @@
+diff -c openjdk.orig/jdk/make/launchers/Makefile openjdk/jdk/make/launchers/Makefile
+--- openjdk.orig/jdk/make/launchers/Makefile	2008-06-29 09:45:56.000000000 -0400
++++ openjdk/jdk/make/launchers/Makefile	2008-06-29 09:47:01.000000000 -0400
+@@ -67,6 +67,7 @@
+ $(call make-launcher, javadoc, com.sun.tools.javadoc.Main, , )
+ $(call make-launcher, javah, com.sun.tools.javah.Main, , )
+ $(call make-launcher, javap, sun.tools.javap.Main, , )
++$(call make-launcher, javaws, net.sourceforge.jnlp.runtime.Boot, , )
+ $(call make-launcher, jconsole, sun.tools.jconsole.JConsole, \
+   -J-Djconsole.showOutputViewer, )
+ $(call make-launcher, jdb, com.sun.tools.example.debug.tty.TTY, , )
+diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java
+--- openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2008-01-12 15:53:45.000000000 -0500
++++ openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2008-02-04 11:51:20.000000000 -0500
+@@ -42,25 +42,25 @@
+  *
+  * @author      Arthur van Hoff
+  */
+-class AppletViewerPanel extends AppletPanel {
++public class AppletViewerPanel extends AppletPanel {
+ 
+     /* Are we debugging? */
+-    static boolean debug = false;
++    protected static boolean debug = false;
+ 
+     /**
+      * The document url.
+      */
+-    URL documentURL;
++    protected URL documentURL;
+ 
+     /**
+      * The base url.
+      */
+-    URL baseURL;
++    protected URL baseURL;
+ 
+     /**
+      * The attributes of the applet.
+      */
+-    Hashtable atts;
++    protected Hashtable atts;
+ 
+     /*
+      * JDK 1.1 serialVersionUID
+@@ -70,7 +70,7 @@
+     /**
+      * Construct an applet viewer and start the applet.
+      */
+-    AppletViewerPanel(URL documentURL, Hashtable atts) {
++    protected AppletViewerPanel(URL documentURL, Hashtable atts) {
+         this.documentURL = documentURL;
+         this.atts = atts;
+ 
+@@ -202,12 +202,12 @@
+         return (AppletContext)getParent();
+     }
+ 
+-    static void debug(String s) {
++    protected static void debug(String s) {
+         if(debug)
+             System.err.println("AppletViewerPanel:::" + s);
+     }
+ 
+-    static void debug(String s, Throwable t) {
++    protected static void debug(String s, Throwable t) {
+         if(debug) {
+             t.printStackTrace();
+             debug(s);
+diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java
+--- openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java	2008-03-26 04:58:12.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java	2008-04-07 21:55:56.000000000 -0400
+@@ -68,7 +68,7 @@
+     /**
+      * The applet (if loaded).
+      */
+-    Applet applet;
++    protected Applet applet;
+ 
+     /**
+      * Applet will allow initialization.  Should be
+@@ -117,7 +117,7 @@
+     /**
+      * The thread for the applet.
+      */
+-    Thread handler;
++    protected Thread handler;
+ 
+ 
+     /**
+@@ -162,7 +162,8 @@
+      * Creates a thread to run the applet. This method is called
+      * each time an applet is loaded and reloaded.
+      */
+-    synchronized void createAppletThread() {
++	//Overridden by NetxPanel.
++    protected synchronized void createAppletThread() {
+         // Create a thread group for the applet, and start a new
+         // thread to load the applet.
+         String nm = "applet-" + getCode();
+@@ -306,7 +307,7 @@
+     /**
+      * Get an event from the queue.
+      */
+-    synchronized AppletEvent getNextEvent() throws InterruptedException {
++    protected synchronized AppletEvent getNextEvent() throws InterruptedException {
+         while (queue == null || queue.isEmpty()) {
+             wait();
+         }
+@@ -695,7 +696,8 @@
+      * applet event processing so that it can be gracefully interrupted from
+      * things like HotJava.
+      */
+-    private void runLoader() {
++	//Overridden by NetxPanel.
++    protected void runLoader() {
+         if (status != APPLET_DISPOSE) {
+             showAppletStatus("notdisposed");
+             return;

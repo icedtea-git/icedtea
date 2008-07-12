@@ -28,7 +28,11 @@
 
 int AbstractAssembler::code_fill_byte()
 {
+#ifdef SHARK
+  return 0;
+#else
   Unimplemented();
+#endif // SHARK
 }
 
 void Assembler::pd_patch_instruction(address branch, address target)

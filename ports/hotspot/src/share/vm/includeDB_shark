@@ -1,0 +1,173 @@
+//
+// Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
+// Copyright 2008 Red Hat, Inc.
+// DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+//
+// This code is free software; you can redistribute it and/or modify it
+// under the terms of the GNU General Public License version 2 only, as
+// published by the Free Software Foundation.
+//
+// This code is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+// version 2 for more details (a copy is included in the LICENSE file that
+// accompanied this code).
+//
+// You should have received a copy of the GNU General Public License version
+// 2 along with this work; if not, write to the Free Software Foundation,
+// Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+//
+// Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+// CA 95054 USA or visit www.sun.com if you need additional information or
+// have any questions.
+//  
+//
+
+// NOTE: DO NOT CHANGE THIS COPYRIGHT TO NEW STYLE - IT WILL BREAK makeDeps!
+
+ciMethod.cpp                            ciTypeFlow.hpp
+ciMethod.cpp                            methodOop.hpp
+
+ciTypeFlow.cpp                          allocation.inline.hpp
+ciTypeFlow.cpp                          bytecode.hpp
+ciTypeFlow.cpp                          bytecodes.hpp
+ciTypeFlow.cpp                          ciConstant.hpp
+ciTypeFlow.cpp                          ciField.hpp
+ciTypeFlow.cpp                          ciMethod.hpp
+ciTypeFlow.cpp                          ciMethodData.hpp
+ciTypeFlow.cpp                          ciObjArrayKlass.hpp
+ciTypeFlow.cpp                          ciStreams.hpp
+ciTypeFlow.cpp                          ciTypeArrayKlass.hpp
+ciTypeFlow.cpp                          ciTypeFlow.hpp
+ciTypeFlow.cpp                          compileLog.hpp
+ciTypeFlow.cpp                          deoptimization.hpp
+ciTypeFlow.cpp                          growableArray.hpp
+ciTypeFlow.cpp                          shark_globals.hpp
+
+ciTypeFlow.hpp                          ciEnv.hpp
+ciTypeFlow.hpp                          ciKlass.hpp
+ciTypeFlow.hpp                          ciMethodBlocks.hpp
+
+compileBroker.cpp                       sharkCompiler.hpp
+
+disassembler_<arch>.cpp                 llvmHeaders.hpp
+
+globals.hpp                             shark_globals_<arch>.hpp
+
+globals.cpp                             shark_globals.hpp
+
+shark_globals.cpp                       shark_globals.hpp
+
+shark_globals.hpp                       shark_globals_<arch>.hpp
+shark_globals.hpp                       globals.hpp
+
+sharkBlock.cpp                          allocation.hpp
+sharkBlock.cpp                          bytecodes.hpp
+sharkBlock.cpp                          ciField.hpp
+sharkBlock.cpp                          ciStreams.hpp
+sharkBlock.cpp                          ciType.hpp
+sharkBlock.cpp                          ciTypeFlow.hpp
+sharkBlock.cpp                          debug.hpp
+sharkBlock.cpp                          llvmHeaders.hpp
+sharkBlock.cpp                          shark_globals.hpp
+sharkBlock.cpp                          sharkBlock.hpp
+sharkBlock.cpp                          sharkBuilder.hpp
+sharkBlock.cpp                          sharkState.inline.hpp
+sharkBlock.cpp                          sharkValue.hpp
+
+sharkBlock.hpp                          allocation.hpp
+sharkBlock.hpp                          bytecodes.hpp
+sharkBlock.hpp                          ciStreams.hpp
+sharkBlock.hpp                          ciType.hpp
+sharkBlock.hpp                          ciTypeFlow.hpp
+sharkBlock.hpp                          llvmHeaders.hpp
+sharkBlock.hpp                          sharkFunction.hpp
+sharkBlock.hpp                          sharkBuilder.hpp
+sharkBlock.hpp                          sharkState.hpp
+sharkBlock.hpp                          sharkValue.hpp
+
+sharkBuilder.cpp                        ciMethod.hpp
+sharkBuilder.cpp                        debug.hpp
+sharkBuilder.cpp                        llvmHeaders.hpp
+sharkBuilder.cpp                        methodOop.hpp
+sharkBuilder.cpp                        os.hpp
+sharkBuilder.cpp                        resourceArea.hpp
+sharkBuilder.cpp                        llvmHeaders.hpp
+sharkBuilder.cpp                        sharkBuilder.hpp
+sharkBuilder.cpp                        thread.hpp
+sharkBuilder.cpp                        synchronizer.hpp
+
+sharkBuilder.hpp                        barrierSet.hpp
+sharkBuilder.hpp                        cardTableModRefBS.hpp
+sharkBuilder.hpp                        ciType.hpp
+sharkBuilder.hpp                        debug.hpp
+sharkBuilder.hpp                        llvmHeaders.hpp
+sharkBuilder.hpp                        sizes.hpp
+sharkBuilder.hpp                        sharkType.hpp
+sharkBuilder.hpp                        sharkValue.hpp
+
+sharkCompiler.cpp                       ciEnv.hpp
+sharkCompiler.cpp                       ciMethod.hpp
+sharkCompiler.cpp                       codeBuffer.hpp
+sharkCompiler.cpp                       debug.hpp
+sharkCompiler.cpp                       debugInfoRec.hpp
+sharkCompiler.cpp                       dependencies.hpp
+sharkCompiler.cpp                       exceptionHandlerTable.hpp
+sharkCompiler.cpp                       llvmHeaders.hpp
+sharkCompiler.cpp                       oopMap.hpp
+sharkCompiler.cpp                       oopRecorder.hpp
+sharkCompiler.cpp                       shark_globals.hpp
+sharkCompiler.cpp                       sharkCompiler.hpp
+sharkCompiler.cpp                       sharkFunction.hpp
+
+sharkCompiler.hpp                       abstractCompiler.hpp
+sharkCompiler.hpp                       ciEnv.hpp
+sharkCompiler.hpp                       ciMethod.hpp
+sharkCompiler.hpp                       llvmHeaders.hpp
+sharkCompiler.hpp                       sharkBuilder.hpp
+
+sharkFunction.cpp                       allocation.hpp
+sharkFunction.cpp                       ciTypeFlow.hpp
+sharkFunction.cpp                       debug.hpp
+sharkFunction.cpp                       llvmHeaders.hpp
+sharkFunction.cpp                       sharkBlock.hpp
+sharkFunction.cpp                       sharkBuilder.hpp
+sharkFunction.cpp                       sharkFunction.hpp
+sharkFunction.cpp                       sharkState.inline.hpp
+
+sharkFunction.hpp                       allocation.hpp
+sharkFunction.hpp                       ciEnv.hpp
+sharkFunction.hpp                       ciStreams.hpp
+sharkFunction.hpp                       ciTypeFlow.hpp
+sharkFunction.hpp                       llvmHeaders.hpp
+sharkFunction.hpp                       sharkBuilder.hpp
+
+sharkState.cpp                          allocation.hpp
+sharkState.cpp                          ciType.hpp
+sharkState.cpp                          sharkBlock.hpp
+sharkState.cpp                          sharkBuilder.hpp
+sharkState.cpp                          sharkState.inline.hpp
+sharkState.cpp                          sharkType.hpp
+sharkState.cpp                          sharkValue.hpp
+
+sharkState.hpp                          allocation.hpp
+sharkState.hpp                          sharkValue.hpp
+
+sharkState.inline.hpp                   sharkBlock.hpp
+sharkState.inline.hpp                   sharkState.hpp
+
+sharkType.cpp                           arrayOop.hpp
+sharkType.cpp                           globalDefinitions.hpp
+sharkType.cpp                           llvmHeaders.hpp
+sharkType.cpp                           oop.hpp
+sharkType.cpp                           sharkType.hpp
+
+sharkType.hpp                           allocation.hpp
+sharkType.hpp                           ciType.hpp
+sharkType.hpp                           globalDefinitions.hpp
+sharkType.hpp                           llvmHeaders.hpp
+
+sharkValue.hpp                          allocation.hpp
+sharkValue.hpp                          ciType.hpp
+sharkValue.hpp                          llvmHeaders.hpp
+sharkValue.hpp                          sharkType.hpp

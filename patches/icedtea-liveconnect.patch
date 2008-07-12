@@ -1,0 +1,2902 @@
+diff -urN openjdk.orig/jdk/make/sun/Makefile openjdk/jdk/make/sun/Makefile
+--- openjdk.orig/jdk/make/sun/Makefile	2007-10-12 03:54:06.000000000 -0400
++++ openjdk/jdk/make/sun/Makefile	2007-10-12 17:39:04.000000000 -0400
+@@ -63,6 +63,7 @@
+           $(HEADLESS_SUBDIR) $(DGA_SUBDIR) \
+ 	  font jpeg cmm applet rmi beans $(JDBC_SUBDIR) \
+ 	  jawt text nio launcher management $(ORG_SUBDIR) \
++	  plugin \
+           native2ascii serialver tools jconsole
+ 
+ all build clean clobber::
+diff -urN openjdk.orig/jdk/make/sun/plugin/Makefile openjdk/jdk/make/sun/plugin/Makefile
+--- openjdk.orig/jdk/make/sun/plugin/Makefile	1969-12-31 19:00:00.000000000 -0500
++++ openjdk/jdk/make/sun/plugin/Makefile	2007-10-12 17:37:54.000000000 -0400
+@@ -0,0 +1,53 @@
++#
++# Copyright 1995-2005 Sun Microsystems, Inc.  All Rights Reserved.
++# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++#
++# This code is free software; you can redistribute it and/or modify it
++# under the terms of the GNU General Public License version 2 only, as
++# published by the Free Software Foundation.  Sun designates this
++# particular file as subject to the "Classpath" exception as provided
++# by Sun in the LICENSE file that accompanied this code.
++#
++# This code is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++# version 2 for more details (a copy is included in the LICENSE file that
++# accompanied this code).
++#
++# You should have received a copy of the GNU General Public License version
++# 2 along with this work; if not, write to the Free Software Foundation,
++# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++# Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++# CA 95054 USA or visit www.sun.com if you need additional information or
++# have any questions.
++#
++
++#
++# Makefile for pluginappletviewer wrapper.
++#
++
++BUILDDIR = ../..
++PACKAGE = sun.applet
++PRODUCT = sun
++PROGRAM = pluginappletviewer
++include $(BUILDDIR)/common/Defs.gmk
++
++#
++# Files to compile.
++#
++AUTO_FILES_JAVA_DIRS = sun/applet
++
++ifneq ($(PLATFORM), windows)
++  #
++  # Anything with a GUI needs X11 to be linked in.
++  #
++  OTHER_LDLIBS += -L$(OPENWIN_LIB) -lX11 
++endif # PLATFORM
++
++#
++# Rules
++#
++JAVA_ARGS = "{ \"sun.applet.PluginMain\" }"
++include $(BUILDDIR)/common/Program.gmk
++
+diff -urN openjdk/jdk/src/share/classes/sun/applet.orig/PluginAppletSecurityContext.java openjdk/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java
+--- openjdk/jdk/src/share/classes/sun/applet.orig/PluginAppletSecurityContext.java	1969-12-31 19:00:00.000000000 -0500
++++ openjdk/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java	2008-02-23 05:36:30.000000000 -0500
+@@ -0,0 +1,789 @@
++/* PluginAppletSecurityContext -- execute plugin JNI messages
++   Copyright (C) 2008  Red Hat
++
++This file is part of IcedTea.
++
++IcedTea is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 2, or (at your option)
++any later version.
++
++IcedTea is distributed in the hope that it will be useful, but
++WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with IcedTea; see the file COPYING.  If not, write to the
++Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
++02110-1301 USA.
++
++Linking this library statically or dynamically with other modules is
++making a combined work based on this library.  Thus, the terms and
++conditions of the GNU General Public License cover the whole
++combination.
++
++As a special exception, the copyright holders of this library give you
++permission to link this library with independent modules to produce an
++executable, regardless of the license terms of these independent
++modules, and to copy and distribute the resulting executable under
++terms of your choice, provided that you also meet, for each linked
++independent module, the terms and conditions of the license of that
++module.  An independent module is a module which is not derived from
++or based on this library.  If you modify this library, you may extend
++this exception to your version of the library, but you are not
++obligated to do so.  If you do not wish to do so, delete this
++exception statement from your version. */
++
++package sun.applet;
++
++import java.util.*;
++import java.lang.reflect.*;
++import java.io.*;
++
++class Signature
++{
++    private String signature;
++    private int currentIndex;
++    private List<Class> typeList;
++    private static final char ARRAY              = '[';
++    private static final char OBJECT             = 'L';
++    private static final char SIGNATURE_ENDCLASS = ';';
++    private static final char SIGNATURE_FUNC     = '(';
++    private static final char SIGNATURE_ENDFUNC  = ')';
++    private static final char VOID               = 'V';
++    private static final char BOOLEAN            = 'Z';
++    private static final char BYTE               = 'B';
++    private static final char CHARACTER          = 'C';
++    private static final char SHORT              = 'S';
++    private static final char INTEGER            = 'I';
++    private static final char LONG               = 'J';
++    private static final char FLOAT              = 'F';
++    private static final char DOUBLE             = 'D';
++
++    private String nextTypeName() {
++        char key = signature.charAt(currentIndex++);
++
++        switch(key) {
++        case ARRAY:
++            return nextTypeName() + "[]";
++
++        case OBJECT:
++            int endClass = signature.indexOf(SIGNATURE_ENDCLASS,
++                                             currentIndex);
++            String retVal = signature.substring(currentIndex,
++                                                endClass);
++            retVal = retVal.replace('/','.');
++            currentIndex = endClass + 1;
++            return retVal;
++
++            // FIXME: generated bytecode with classes named after
++            // primitives will not work in this scheme -- those
++            // classes will be incorrectly treated as primitive
++            // types.
++        case VOID:
++            return "void";
++        case BOOLEAN:
++            return "boolean";
++        case BYTE:
++            return "byte";
++        case CHARACTER:
++            return "char";
++        case SHORT:
++            return "short";
++        case INTEGER:
++            return "int";
++        case LONG:
++            return "long";
++        case FLOAT:
++            return "float";
++        case DOUBLE:
++            return "double";
++
++        case SIGNATURE_ENDFUNC:
++        case SIGNATURE_FUNC:
++            return nextTypeName();
++
++        default:
++            throw new IllegalArgumentException(
++                                               "Invalid JNI signature character '" + key + "'");
++        }
++    }
++
++    public Signature(String signature) {
++        this.signature = signature;
++        currentIndex = 0;
++        typeList = new ArrayList<Class>(10);
++
++        String elem;
++        while(currentIndex < signature.length()) {
++            elem = nextTypeName();
++            //System.out.println ("NEXT TYPE: " + elem);
++            Class primitive = primitiveNameToType(elem);
++            try {
++                if (primitive != null)
++                    typeList.add(primitive);
++                else {
++                    //System.out.println ("HERE1");
++                    int dimsize = 0;
++                    int n = elem.indexOf('[');
++                    if (n != -1) {
++                        //System.out.println ("HERE2");
++                        String arrayType = elem.substring(0, n);
++                        dimsize++;
++                        n = elem.indexOf('[', n + 1);
++                        //System.out.println ("HERE2.5");
++                        while (n != -1)
++                            {
++                                dimsize++;
++                                n = elem.indexOf('[', n + 1);
++                                //System.out.println ("HERE2.8");
++                            }
++                        int[] dims = new int[dimsize];
++                        primitive = primitiveNameToType(arrayType);
++                        //System.out.println ("HERE3");
++                        if (primitive != null)
++                            {
++                                typeList.add(Array.newInstance(primitive, dims).getClass());
++                                //System.out.println ("HERE4");
++                            }
++                        else
++                            typeList.add(Array.newInstance(Class.forName(arrayType),
++                                                           dims).getClass());
++                    } else {
++                        typeList.add(Class.forName(elem));
++                    }
++                }
++            } catch (ClassNotFoundException e) {
++                throw new RuntimeException(e);
++            }
++        }
++        if (typeList.size() == 0) {
++            throw new IllegalArgumentException("Invalid JNI signature '" +
++                                               signature + "'");
++        }
++    }
++
++    public static Class primitiveNameToType(String name)
++    {
++        if (name.equals("void"))
++            return Void.TYPE;
++        else if (name.equals("boolean"))
++            return Boolean.TYPE;
++        else if (name.equals("byte"))
++            return Byte.TYPE;
++        else if (name.equals("char"))
++            return Character.TYPE;
++        else if (name.equals("short"))
++            return Short.TYPE;
++        else if (name.equals("int"))
++            return Integer.TYPE;
++        else if (name.equals("long"))
++            return Long.TYPE;
++        else if (name.equals("float"))
++            return Float.TYPE;
++        else if (name.equals("double"))
++            return Double.TYPE;
++        else
++            return null;
++    }
++
++    public Class[] getClassArray()
++    {
++        return typeList.subList(0, typeList.size() - 1)
++            .toArray(new Class[] {});
++    }
++}
++
++public class PluginAppletSecurityContext
++{
++    // Context identifier -> PluginAppletSecurityContext object.
++    // FIXME: make private
++    public static HashMap<Integer,
++        PluginAppletSecurityContext> contexts = new HashMap();
++
++    // FIXME: make private
++    public PluginObjectStore store = new PluginObjectStore();
++    private Throwable throwable = null;
++    private ClassLoader liveconnectLoader =
++        ClassLoader.getSystemClassLoader();
++    int identifier = 0;
++
++    static {
++        // FIXME: when should we add each new security context?
++        contexts.put(0, new PluginAppletSecurityContext(0));
++    }
++
++    public PluginAppletSecurityContext (int identifier)
++    {
++        this.identifier = identifier;
++    }
++
++    public static <V> V parseCall(String s, Class<V> c)
++    {
++        if (c == Integer.class)
++            return (V) new Integer(s);
++        else if (c == String.class)
++            return (V) new String(s);
++        else if (c == Signature.class)
++            return (V) new Signature(s);
++        else
++            throw new RuntimeException("Unexpected call value.");
++    }
++
++    public Object parseArgs(String s, Class c)
++    {
++        if (c == Boolean.TYPE
++            || c == Boolean.class)
++            return new Boolean(s);
++        else if (c == Byte.TYPE
++                 || c == Byte.class)
++            return new Byte(s);
++        else if (c == Character.TYPE
++                 || c == Character.class)
++            {
++                String[] bytes = s.split("_");
++                int low = Integer.parseInt(bytes[0]);
++                int high = Integer.parseInt(bytes[1]);
++                int full = ((high << 8) & 0x0ff00)
++                    | (low & 0x0ff);
++                return new Character((char) full);
++            }
++        else if (c == Short.TYPE
++                 || c == Short.class)
++            return new Short(s);
++        else if (c == Integer.TYPE
++                 || c == Integer.class)
++            return new Integer(s);
++        else if (c == Long.TYPE
++                 || c == Long.class)
++            return new Long(s);
++        else if (c == Float.TYPE
++                 || c == Float.class)
++            return new Float(s);
++        else if (c == Double.TYPE
++                 || c == Double.class)
++            return new Double(s);
++        else
++            return store.getObject(new Integer(s));
++    }
++
++    public static void handleMessage(int identifier, String message)
++    {
++        contexts.get(identifier).handleMessage(message);
++    }
++
++    public void handleMessage(String message)
++    {
++        try {
++            if (message.startsWith("FindClass")) {
++                ClassLoader cl = null;
++                Class c = null;
++                cl = liveconnectLoader;
++                String className
++                    = message.substring("FindClass".length()
++                                        + 1).replace('/', '.');
++                c = cl.loadClass(className);
++
++                store.reference(c);
++
++                write ("FindClass " + store.getIdentifier(c));
++            } else if (message.startsWith("GetStaticMethodID")
++                       || message.startsWith("GetMethodID")) {
++                String[] args = message.split(" ");
++                Integer classID = parseCall(args[1], Integer.class);
++                String methodName = parseCall(args[2], String.class);
++                Signature signature = parseCall(args[3], Signature.class);
++                Object[] a = signature.getClassArray();
++
++                Class c = (Class) store.getObject(classID);
++                Method m = null;
++                Constructor cs = null;
++                Object o = null;
++                if (methodName.equals("<init>")
++                    || methodName.equals("<clinit>")) {
++                    o = cs = c.getConstructor(signature.getClassArray());
++                    store.reference(cs);
++                } else {
++                    o = m = c.getMethod(methodName, signature.getClassArray());
++                    store.reference(m);
++                }
++                write (args[0] + " " + store.getIdentifier(o));
++            } else if (message.startsWith("GetStaticFieldID")
++                       || message.startsWith("GetFieldID")) {
++                String[] args = message.split(" ");
++                Integer classID = parseCall(args[1], Integer.class);
++                String fieldName = parseCall(args[2], String.class);
++                Signature signature = parseCall(args[3], Signature.class);
++
++                Class c = (Class) store.getObject(classID);
++                Field f = null;
++                f = c.getField(fieldName);
++
++                store.reference(f);
++
++                write ("GetStaticFieldID " + store.getIdentifier(f));
++            } else if (message.startsWith("GetStaticField")) {
++                String[] args = message.split(" ");
++                String type = parseCall(args[1], String.class);
++                Integer classID = parseCall(args[1], Integer.class);
++                Integer fieldID = parseCall(args[2], Integer.class);
++
++                Class c = (Class) store.getObject(classID);
++                Field f = (Field) store.getObject(fieldID);
++
++                Object ret = null;
++                ret = f.get (c);
++
++                //System.out.println ("FIELD VALUE: " + ret);
++                if (ret == null) {
++                    write ("GetStaticField 0");
++                } else if (f.getType() == Boolean.TYPE
++                           || f.getType() == Byte.TYPE
++                           || f.getType() == Character.TYPE
++                           || f.getType() == Short.TYPE
++                           || f.getType() == Integer.TYPE
++                           || f.getType() == Long.TYPE
++                           || f.getType() == Float.TYPE
++                           || f.getType() == Double.TYPE) {
++                    write ("GetStaticField " + ret);
++                } else {
++                    // Track returned object.
++                    store.reference(ret);
++                    write ("GetStaticField " + store.getIdentifier(ret));
++                }
++            } else if (message.startsWith("SetStaticField")) {
++                String[] args = message.split(" ");
++                String type = parseCall(args[1], String.class);
++                Integer classID = parseCall(args[2], Integer.class);
++                Integer fieldID = parseCall(args[3], Integer.class);
++
++                Object value = null;
++                if (Signature.primitiveNameToType(type) != null) {
++                    value = parseArgs(args[4], Signature.primitiveNameToType(type));
++                    //System.out.println ("HERE1: " + value);
++                } else {
++                    value = parseArgs(args[3], Object.class);
++                    //System.out.println ("HERE2: " + value);
++                }
++
++                Class c = (Class) store.getObject(classID);
++                Field f = (Field) store.getObject(fieldID);
++
++                f.set (c, value);
++
++                write("SetStaticField");
++            } else if (message.startsWith("SetField")) {
++                String[] args = message.split(" ");
++                String type = parseCall(args[1], String.class);
++                Integer objectID = parseCall(args[2], Integer.class);
++                Integer fieldID = parseCall(args[3], Integer.class);
++
++                Object value = null;
++                if (Signature.primitiveNameToType(type) != null) {
++                    value = parseArgs(args[4], Signature.primitiveNameToType(type));
++                    //System.out.println ("HERE1: " + value);
++                } else {
++                    value = parseArgs(args[3], Object.class);
++                    //System.out.println ("HERE2: " + value);
++                }
++
++                Object o = (Object) store.getObject(objectID);
++                Field f = (Field) store.getObject(fieldID);
++
++                f.set (o, value);
++
++                write("SetField");
++            } else if (message.startsWith("GetObjectArrayElement")) {
++                String[] args = message.split(" ");
++                Integer arrayID = parseCall(args[1], Integer.class);
++                Integer index = parseCall(args[2], Integer.class);
++
++                Object[] o = (Object[]) store.getObject(arrayID);
++                Object ret = null;
++
++                ret = o[index];
++
++                // Track returned object.
++                store.reference(ret);
++                //                System.out.println ("array element: " + index + " " + ret);
++                write("GetObjectArrayElement " + store.getIdentifier(ret));
++            } else if (message.startsWith("SetObjectArrayElement")) {
++                String[] args = message.split(" ");
++                Integer arrayID = parseCall(args[1], Integer.class);
++                Integer index = parseCall(args[2], Integer.class);
++                Integer objectID = parseCall(args[3], Integer.class);
++
++                Object[] o = (Object[]) store.getObject(arrayID);
++                Object toSet = (Object) store.getObject(objectID);
++
++                o[index] = toSet;
++
++                write("SetObjectArrayElement");
++            } else if (message.startsWith("GetArrayLength")) {
++                String[] args = message.split(" ");
++                Integer arrayID = parseCall(args[1], Integer.class);
++
++                System.out.println ("ARRAYID: " + arrayID);
++                Object o = (Object) store.getObject(arrayID);
++                int len = 0;
++                len = Array.getLength(o);
++                //System.out.println ("Returning array length: " + len);
++
++                //                System.out.println ("array length: " + o + " " + len);
++                write("GetArrayLength " + Array.getLength(o));
++            } else if (message.startsWith("GetField")) {
++                String[] args = message.split(" ");
++                String type = parseCall(args[1], String.class);
++                Integer objectID = parseCall(args[1], Integer.class);
++                Integer fieldID = parseCall(args[2], Integer.class);
++
++                Object o = (Object) store.getObject(objectID);
++                Field f = (Field) store.getObject(fieldID);
++
++                Object ret = null;
++                ret = f.get (o);
++
++                //System.out.println ("FIELD VALUE: " + ret);
++                if (ret == null) {
++                    write ("GetField 0");
++                } else if (f.getType() == Boolean.TYPE
++                           || f.getType() == Byte.TYPE
++                           || f.getType() == Character.TYPE
++                           || f.getType() == Short.TYPE
++                           || f.getType() == Integer.TYPE
++                           || f.getType() == Long.TYPE
++                           || f.getType() == Float.TYPE
++                           || f.getType() == Double.TYPE) {
++                    write ("GetField " + ret);
++                } else {
++                    // Track returned object.
++                    store.reference(ret);
++                    write ("GetField " + store.getIdentifier(ret));
++                }
++            } else if (message.startsWith("GetObjectClass")) {
++                int oid = Integer.parseInt
++                    (message.substring("GetObjectClass".length() + 1));
++                //System.out.println ("GETTING CLASS FOR: " + oid);
++                Class c = store.getObject(oid).getClass();
++                //System.out.println (" OBJ: " + store.getObject(oid));
++                //System.out.println (" CLS: " + c);
++                store.reference(c);
++
++                write ("GetObjectClass " + store.getIdentifier(c));
++            } else if (message.startsWith("CallStaticMethod")) {
++                String[] args = message.split(" ");
++                Integer classID = parseCall(args[1], Integer.class);
++                Integer methodID = parseCall(args[2], Integer.class);
++
++                System.out.println ("GETTING: " + methodID);
++                Method m = (Method) store.getObject(methodID);
++                System.out.println ("GOT: " + m);
++                Class[] argTypes = m.getParameterTypes();
++
++                Object[] arguments = new Object[argTypes.length];
++                for (int i = 0; i < argTypes.length; i++) {
++                    arguments[i] = parseArgs(args[3 + i], argTypes[i]);
++                    //System.out.println ("GOT ARG: " + argTypes[i] + " " + arguments[i]);
++                }
++
++                //System.out.println ("Calling " + m);
++                Object ret = null;
++                ret = m.invoke (null, arguments);
++
++                //                if (ret != null)
++                //System.out.println ("RETURN VALUE: " + ret + " " + ret.getClass());
++                //                else
++                //System.out.println ("RETURN VALUE: " + ret);
++                if (ret == null) {
++                    write ("CallStaticMethod void");
++                } else if (m.getReturnType() == Boolean.TYPE
++                           || m.getReturnType() == Byte.TYPE
++                           || m.getReturnType() == Short.TYPE
++                           || m.getReturnType() == Integer.TYPE
++                           || m.getReturnType() == Long.TYPE
++                           || m.getReturnType() == Float.TYPE
++                           || m.getReturnType() == Double.TYPE) {
++                    write ("CallStaticMethod " + ret);
++                } else if (m.getReturnType() == Character.TYPE) {
++                    char ch = (Character) ret;
++                    int high = (((int) ch) >> 8)  & 0x0ff;
++                    int low = ((int) ch) & 0x0ff;
++                    write ("CallStaticMethod " + low + "_" + high);
++                } else {
++                    // Track returned object.
++                    store.reference(ret);
++                    write ("CallStaticMethod " + store.getIdentifier(ret));
++                }
++            } else if (message.startsWith("CallMethod")) {
++                String[] args = message.split(" ");
++                Integer objectID = parseCall(args[1], Integer.class);
++                Integer methodID = parseCall(args[2], Integer.class);
++
++                Object o = (Object) store.getObject(objectID);
++                Method m = (Method) store.getObject(methodID);
++                Class[] argTypes = m.getParameterTypes();
++
++                Object[] arguments = new Object[argTypes.length];
++                for (int i = 0; i < argTypes.length; i++) {
++                    arguments[i] = parseArgs(args[3 + i], argTypes[i]);
++                    //System.out.println ("GOT ARG: " + argTypes[i] + " " + arguments[i]);
++                }
++
++                System.out.println ("Calling " + m);
++                Object ret = null;
++                ret = m.invoke (o, arguments);
++
++                if (ret == null) {
++                    write ("CallMethod void");
++                } else if (m.getReturnType() == Boolean.TYPE
++                           || m.getReturnType() == Byte.TYPE
++                           || m.getReturnType() == Short.TYPE
++                           || m.getReturnType() == Integer.TYPE
++                           || m.getReturnType() == Long.TYPE
++                           || m.getReturnType() == Float.TYPE
++                           || m.getReturnType() == Double.TYPE) {
++                    write ("CallMethod " + ret);
++                } else if (m.getReturnType() == Character.TYPE) {
++                    char ch = (Character) ret;
++                    int high = (((int) ch) >> 8)  & 0x0ff;
++                    int low = ((int) ch) & 0x0ff;
++                    write ("CallMethod " + low + "_" + high);
++                } else {
++                    // Track returned object.
++                    store.reference(ret);
++                    write ("CallMethod " + store.getIdentifier(ret));
++                }
++            } else if (message.startsWith("GetSuperclass")) {
++                String[] args = message.split(" ");
++                Integer classID = parseCall(args[1], Integer.class);
++                Class c = null;
++                Class ret = null;
++
++                c = (Class) store.getObject(classID);
++                ret = c.getSuperclass();
++                store.reference(ret);
++
++                write("GetSuperclass " + store.getIdentifier(ret));
++            } else if (message.startsWith("IsAssignableFrom")) {
++                String[] args = message.split(" ");
++                Integer classID = parseCall(args[1], Integer.class);
++                Integer superclassID = parseCall(args[2], Integer.class);
++
++                boolean result = false;
++                Class clz = (Class) store.getObject(classID);
++                Class sup = (Class) store.getObject(superclassID);
++
++                result = sup.isAssignableFrom(clz);
++
++                write("IsAssignableFrom " + (result ? "1" : "0"));
++            } else if (message.startsWith("IsInstanceOf")) {
++                String[] args = message.split(" ");
++                Integer objectID = parseCall(args[1], Integer.class);
++                Integer classID = parseCall(args[2], Integer.class);
++
++                boolean result = false;
++                Object o = (Object) store.getObject(objectID);
++                Class c = (Class) store.getObject(classID);
++
++                result = c.isInstance(o);
++
++                write("IsInstanceOf " + (result ? "1" : "0"));
++            } else if (message.startsWith("GetStringUTFLength")) {
++                String[] args = message.split(" ");
++                Integer stringID = parseCall(args[1], Integer.class);
++
++                String o = null;
++                byte[] b = null;
++                o = (String) store.getObject(stringID);
++                b = o.getBytes("UTF-8");
++                //System.out.println ("STRING UTF-8 LENGTH: " + o + " " + b.length);
++
++                write("GetStringUTFLength " + o.length());
++            } else if (message.startsWith("GetStringLength")) {
++                String[] args = message.split(" ");
++                Integer stringID = parseCall(args[1], Integer.class);
++
++                String o = null;
++                byte[] b = null;
++                o = (String) store.getObject(stringID);
++                b = o.getBytes("UTF-16LE");
++                //System.out.println ("STRING UTF-16 LENGTH: " + o + " " + b.length);
++
++                //System.out.println ("Java: GetStringLength " + b.length);
++                write("GetStringLength " + o.length());
++            } else if (message.startsWith("GetStringUTFChars")) {
++                String[] args = message.split(" ");
++                Integer stringID = parseCall(args[1], Integer.class);
++
++                String o = null;
++                byte[] b = null;
++                StringBuffer buf = null;
++                o = (String) store.getObject(stringID);
++                b = o.getBytes("UTF-8");
++                buf = new StringBuffer(b.length * 2);
++                buf.append (b.length);
++                for (int i = 0; i < b.length; i++)
++                    buf.append(" " + Integer.toString(((int)b[i]) & 0x0ff, 16));
++
++                //System.out.println ("Java: GetStringUTFChars: " + o);
++                //                //System.out.println ("String UTF BYTES: " + buf);
++                write("GetStringUTFChars " + buf);
++            } else if (message.startsWith("GetStringChars")) {
++                String[] args = message.split(" ");
++                Integer stringID = parseCall(args[1], Integer.class);
++
++                String o = null;
++                byte[] b = null;
++                StringBuffer buf = null;
++                o = (String) store.getObject(stringID);
++                // FIXME: LiveConnect uses UCS-2.
++                b = o.getBytes("UTF-16LE");
++                buf = new StringBuffer(b.length * 2);
++                buf.append (b.length);
++                for (int i = 0; i < b.length; i++)
++                    buf.append(" " + Integer.toString(((int)b[i]) & 0x0ff, 16));
++
++                //                 System.out.println ("Java: GetStringChars: " + o);
++                //                 System.out.println ("  String BYTES: " + buf);
++                write("GetStringChars " + buf);
++            } else if (message.startsWith("NewArray")) {
++                String[] args = message.split(" ");
++                String type = parseCall(args[1], String.class);
++                Integer length = parseCall(args[2], Integer.class);
++
++                //System.out.println ("CALLING: NewArray: " + type + " " + length + " "
++                //                    + Signature.primitiveNameToType(type));
++
++                Object newArray = null;
++                newArray = Array.newInstance(Signature.primitiveNameToType(type),
++                                             length);
++
++                store.reference(newArray);
++                write ("NewArray " + store.getIdentifier(newArray));
++            } else if (message.startsWith("NewObjectArray")) {
++                String[] args = message.split(" ");
++                Integer length = parseCall(args[1], Integer.class);
++                Integer classID = parseCall(args[2], Integer.class);
++                Integer objectID = parseCall(args[3], Integer.class);
++
++                //System.out.println ("CALLING: NewObjectArray: " +
++                //                    classID + " " + length + " "
++                //                                    + objectID);
++
++                Object newArray = null;
++                newArray = Array.newInstance((Class) store.getObject (classID),
++                                             length);
++
++                Object[] array = (Object[]) newArray;
++                for (int i = 0; i < array.length; i++)
++                    array[i] = store.getObject(objectID);
++                store.reference(newArray);
++                write ("NewObjectArray " + store.getIdentifier(newArray));
++            } else if (message.startsWith("NewObject")) {
++                String[] args = message.split(" ");
++                Integer classID = parseCall(args[1], Integer.class);
++                Integer methodID = parseCall(args[2], Integer.class);
++
++                Constructor m = (Constructor) store.getObject(methodID);
++                Class[] argTypes = m.getParameterTypes();
++
++                //System.out.println ("NEWOBJ: HERE1");
++                Object[] arguments = new Object[argTypes.length];
++                //System.out.println ("NEWOBJ: HERE2");
++                for (int i = 0; i < argTypes.length; i++) {
++                    arguments[i] = parseArgs(args[3 + i], argTypes[i]);
++                    //System.out.println ("NEWOBJ: GOT ARG: " + arguments[i]);
++                }
++
++                //System.out.println ("NEWOBJ: Calling " + m);
++                Object ret = null;
++                ret = m.newInstance (arguments);
++
++                //System.out.println ("NEWOBJ: CALLED: " + ret);
++                //System.out.println ("NEWOBJ: CALLED: " + store.getObject(ret));
++                store.reference(ret);
++                write ("NewObject " + store.getIdentifier(ret));
++            } else if (message.startsWith("NewString")) {
++                System.out.println ("MESSAGE: " + message);
++                String[] args = message.split(" ");
++                Integer strlength = parseCall(args[1], Integer.class);
++                int bytelength = 2 * strlength;
++                byte[] byteArray = new byte[bytelength];
++                String ret = null;
++                for (int i = 0; i < strlength; i++) {
++                    int c = parseCall(args[2 + i], Integer.class);
++                    System.out.println ("char " + i + " " + c);
++                    // Low.
++                    byteArray[2 * i] = (byte) (c & 0x0ff);
++                    // High.
++                    byteArray[2 * i + 1] = (byte) ((c >> 8) & 0x0ff);
++                }
++                ret = new String (byteArray, 0, bytelength, "UTF-16LE");
++                System.out.println ("NEWSTRING: " + ret);
++
++                //System.out.println ("NEWOBJ: CALLED: " + ret);
++                //System.out.println ("NEWOBJ: CALLED: " + store.getObject(ret));
++                store.reference(ret);
++                write ("NewString " + store.getIdentifier(ret));
++            } else if (message.startsWith("NewStringUTF")) {
++                System.out.println ("MESSAGE: " + message);
++                String[] args = message.split(" ");
++                byte[] byteArray = new byte[60];
++                String ret = null;
++                int i = 0;
++                int c = 0;
++                while (((byte) c) != 0) {
++                    c = parseCall(args[1 + i], Integer.class);
++                    byteArray[i] = (byte) c;
++                    i++;
++                    if (i == byteArray.length) {
++                        byte[] newByteArray = new byte[2 * byteArray.length];
++                        System.arraycopy (byteArray, 0,
++                                          newByteArray, 0,
++                                          byteArray.length);
++                        byteArray = newByteArray;
++                    }
++                }
++                byteArray[i] = (byte) 0;
++                ret = new String (byteArray, "UTF-8");
++                System.out.println ("NEWSTRINGUTF: " + ret);
++
++                store.reference(ret);
++                write ("NewStringUTF " + store.getIdentifier(ret));
++            } else if (message.startsWith("ExceptionOccurred")) {
++                System.out.println ("EXCEPTION: " + throwable);
++                if (throwable != null)
++                    store.reference(throwable);
++                write ("ExceptionOccurred " + store.getIdentifier(throwable));
++            } else if (message.startsWith("ExceptionClear")) {
++                if (throwable != null)
++                    store.unreference(store.getIdentifier(throwable));
++                throwable = null;
++                write("ExceptionClear");
++            } else if (message.startsWith("DeleteGlobalRef")) {
++                String[] args = message.split(" ");
++                Integer id = parseCall(args[1], Integer.class);
++                store.unreference(id);
++                write ("DeleteGlobalRef");
++            } else if (message.startsWith("DeleteLocalRef")) {
++                String[] args = message.split(" ");
++                Integer id = parseCall(args[1], Integer.class);
++                store.unreference(id);
++                write ("DeleteLocalRef");
++            } else if (message.startsWith("NewGlobalRef")) {
++                String[] args = message.split(" ");
++                Integer id = parseCall(args[1], Integer.class);
++                store.reference(store.getObject(id));
++                write ("NewGlobalRef " + id);
++            }
++        } catch (Throwable t) {
++            t.printStackTrace();
++            throwable = t;
++        }
++    }
++
++    public void write(String message) {
++        PluginMain.write("context " + identifier + " " + message);
++    }
++}
+diff -urN openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java
+--- openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java	2008-06-24 22:55:57.286013713 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java	2008-06-29 10:20:41.000000000 -0400
+@@ -0,0 +1,1349 @@
++ /*
++  * Copyright 1995-2004 Sun Microsystems, Inc.  All Rights Reserved.
++  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++  *
++  * This code is free software; you can redistribute it and/or modify it
++  * under the terms of the GNU General Public License version 2 only, as
++  * published by the Free Software Foundation.  Sun designates this
++  * particular file as subject to the "Classpath" exception as provided
++  * by Sun in the LICENSE file that accompanied this code.
++  *
++  * This code is distributed in the hope that it will be useful, but WITHOUT
++  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++  * version 2 for more details (a copy is included in the LICENSE file that
++  * accompanied this code).
++  *
++  * You should have received a copy of the GNU General Public License version
++  * 2 along with this work; if not, write to the Free Software Foundation,
++  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++  *
++  * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++  * CA 95054 USA or visit www.sun.com if you need additional information or
++  * have any questions.
++  */
++ 
++ package sun.applet;
++ 
++ import java.util.*;
++ import java.io.*;
++ import java.awt.*;
++ import java.awt.event.*;
++ import java.awt.print.*;
++ import javax.print.attribute.*;
++ import java.applet.*;
++ import java.net.URL;
++ import java.net.MalformedURLException;
++ import java.net.SocketPermission;
++ import sun.misc.Ref;
++ import java.security.AccessController;
++ import java.security.PrivilegedAction;
++ import java.lang.reflect.InvocationTargetException;
++ import java.lang.reflect.Method;
++ import sun.awt.SunToolkit;
++ import sun.awt.AppContext;
++ import sun.awt.X11.*;
++ import java.lang.ref.WeakReference;
++ import net.sourceforge.jnlp.NetxPanel;
++ 
++ /**
++  * Lets us construct one using unix-style one shot behaviors
++  */
++ 
++ class PluginAppletViewerFactory
++ {
++     public PluginAppletViewer createAppletViewer(int identifier,
++                                                  long handle, int x, int y,
++ 						 URL doc, Hashtable atts) {
++         PluginAppletViewer pluginappletviewer = new PluginAppletViewer(identifier, handle, x, y, doc, atts, System.out, this);
++         return pluginappletviewer;
++     }
++ 
++     public boolean isStandalone()
++     {
++         return false;
++     }
++ }
++ 
++ class PluginParseRequest
++ {
++     long handle;
++     String tag;
++     String documentbase;
++ }
++ 
++ /*
++  */
++ // FIXME: declare JSProxy implementation
++ public class PluginAppletViewer extends XEmbeddedFrame
++     implements AppletContext, Printable {
++     /**
++      * Some constants...
++      */
++     private static String defaultSaveFile = "Applet.ser";
++ 
++     /**
++      * The panel in which the applet is being displayed.
++      */
++     AppletViewerPanel panel;
++ 
++     /**
++      * The status line.
++      */
++     Label label;
++ 
++     /**
++      * output status messages to this stream
++      */
++ 
++     PrintStream statusMsgStream;
++ 
++     /**
++      * For cloning
++      */
++     PluginAppletViewerFactory factory;
++ 
++     int identifier;
++ 
++     private static HashMap<Integer, PluginParseRequest> requests = new HashMap();
++ 
++     // Instance identifier -> PluginAppletViewer object.
++     private static HashMap<Integer, PluginAppletViewer> applets = new HashMap();
++ 
++     /**
++      * Create the applet viewer
++      */
++     public PluginAppletViewer(int identifier, long handle, int x, int y, final URL doc,
++                               final Hashtable atts, PrintStream statusMsgStream,
++                               PluginAppletViewerFactory factory) {
++         super(handle, true);
++     	this.factory = factory;
++ 	this.statusMsgStream = statusMsgStream;
++         this.identifier = identifier;
++         // FIXME: when/where do we remove this?
++         System.out.println ("PARSING: PUTTING " + identifier + " " + this);
++         applets.put(identifier, this);
++ 
++ 	try {
++ 		panel = new NetxPanel(doc, atts);
++ 		AppletViewerPanel.debug("Using NetX panel");
++ 	} catch (Exception ex) {
++ 		AppletViewerPanel.debug("Unable to start NetX applet - defaulting to Sun applet", ex);
++ 		panel = new AppletViewerPanel(doc, atts);
++ 	}
++ 	add("Center", panel);
++ 	panel.init();
++ 	appletPanels.addElement(panel);
++ 
++ 	pack();
++ 	setVisible(true);
++ 
++ 	WindowListener windowEventListener = new WindowAdapter() {
++ 
++ 	    public void windowClosing(WindowEvent evt) {
++ 		appletClose();
++ 	    }
++ 
++ 	    public void windowIconified(WindowEvent evt) {
++ 		appletStop();
++ 	    }
++ 
++ 	    public void windowDeiconified(WindowEvent evt) {
++ 		appletStart();
++ 	    }
++ 	};
++ 
++ 	class AppletEventListener implements AppletListener  
++ 	{
++ 	    final Frame frame;
++ 
++ 	    public AppletEventListener(Frame frame)
++ 	    {
++ 		this.frame = frame;
++ 	    }
++ 
++ 	    public void appletStateChanged(AppletEvent evt) 
++ 	    {
++ 		AppletPanel src = (AppletPanel)evt.getSource();
++ 
++ 		switch (evt.getID()) {
++                     case AppletPanel.APPLET_RESIZE: {
++ 			if(src != null) {
++ 			    resize(preferredSize());
++ 			    validate();
++                         }
++ 			break;
++ 		    }
++ 		    case AppletPanel.APPLET_LOADING_COMPLETED: {
++ 			Applet a = src.getApplet(); // sun.applet.AppletPanel
++ 			
++ 			// Fixed #4754451: Applet can have methods running on main
++ 			// thread event queue. 
++ 			// 
++ 			// The cause of this bug is that the frame of the applet 
++ 			// is created in main thread group. Thus, when certain 
++ 			// AWT/Swing events are generated, the events will be
++ 			// dispatched through the wrong event dispatch thread.
++ 			//
++ 			// To fix this, we rearrange the AppContext with the frame,
++ 			// so the proper event queue will be looked up.
++ 			//
++ 			// Swing also maintains a Frame list for the AppContext,
++ 			// so we will have to rearrange it as well.
++ 			//
++ 			if (a != null)
++ 			    AppletPanel.changeFrameAppContext(frame, SunToolkit.targetToAppContext(a));
++ 			else
++ 			    AppletPanel.changeFrameAppContext(frame, AppContext.getAppContext());
++ 
++ 			break;
++ 		    }
++ 		}
++ 	    }
++ 	};
++ 
++ 	addWindowListener(windowEventListener);
++ 	panel.addAppletListener(new AppletEventListener(this));
++ 
++ 	// Start the applet
++         showStatus(amh.getMessage("status.start"));
++ 	initEventQueue();
++     }
++ 
++     /**
++      * Handle an incoming message from the plugin.
++      */
++     public static void handleMessage(int identifier, String message)
++     {
++         try {
++             if (message.startsWith("tag")) {
++                 PluginParseRequest request = requests.get(identifier);
++                 if (request == null) {
++                     request = new PluginParseRequest();
++                     requests.put(identifier, request);
++                 }
++                 int index = message.indexOf(' ', "tag".length() + 1);
++                 request.documentbase =
++                     message.substring("tag".length() + 1, index);
++                 request.tag = message.substring(index + 1);
++                 System.out.println ("REQUEST TAG: " + request.tag + " " +
++                                         Thread.currentThread());
++                 if (request.handle != 0) {
++                     System.out.println ("REQUEST TAG, PARSING " +
++                                         Thread.currentThread());
++                     PluginAppletViewer.parse
++                         (identifier, request.handle,
++                          new StringReader(request.tag),
++                          new URL(request.documentbase));
++                     requests.remove(identifier);
++                 }
++             } else if (message.startsWith("handle")) {
++                 PluginParseRequest request = requests.get(identifier);
++                 if (request == null) {
++                     request = new PluginParseRequest();
++                     requests.put(identifier, request);
++                 }
++                 request.handle = Long.parseLong
++                     (message.substring("handle".length() + 1));
++                 System.out.println ("REQUEST HANDLE: " + request.handle);
++                 if (request.tag != null) {
++                     System.out.println ("REQUEST HANDLE, PARSING " +
++                                         Thread.currentThread());
++                     PluginAppletViewer.parse
++                         (identifier, request.handle,
++                          new StringReader(request.tag),
++                          new URL(request.documentbase));
++                     requests.remove(identifier);
++                     System.out.println ("REQUEST HANDLE, DONE PARSING " +
++                                         Thread.currentThread());
++                 }
++             } else {
++                     System.out.println ("HANDLING MESSAGE " + message + " instance " + identifier + " " + Thread.currentThread());
++                 applets.get(identifier).handleMessage(message);
++             }
++         } catch (Exception e) {
++             throw new RuntimeException("Failed to handle message: " + message + " " +
++                                         Thread.currentThread(), e);
++         }
++     }
++ 
++     public void handleMessage(String message)
++     {
++         if (message.startsWith("width")) {
++             int width =
++                 Integer.parseInt(message.substring("width".length() + 1));
++             setSize(width, getHeight());
++         } else if (message.startsWith("height")) {
++             int height =
++                 Integer.parseInt(message.substring("height".length() + 1));
++             setSize(getWidth(), height);
++         } else if (message.startsWith("destroy")) {
++             dispose();
++         } else if (message.startsWith("GetJavaObject")) {
++             // FIXME: how do we determine what security context this
++             // object should belong to?
++             Object o = panel.getApplet();
++             PluginAppletSecurityContext.contexts.get(0).store.reference(o);
++             System.out.println ("WRITING 1: " + "context 0 GetJavaObject "
++                                 + PluginAppletSecurityContext.contexts.get(0).store.getIdentifier(o));
++             PluginMain.write("context 0 GetJavaObject "
++                              + PluginAppletSecurityContext.contexts.get(0).store.getIdentifier(o));
++             System.out.println ("WRITING 1 DONE");
++         }
++     }
++ 
++     /**
++      * Send the initial set of events to the appletviewer event queue.
++      * On start-up the current behaviour is to load the applet and call
++      * Applet.init() and Applet.start().
++      */
++     private void initEventQueue() {
++ 	// appletviewer.send.event is an undocumented and unsupported system
++ 	// property which is used exclusively for testing purposes.
++ 	String eventList = System.getProperty("appletviewer.send.event");
++ 
++ 	if (eventList == null) {
++ 	    // Add the standard events onto the event queue.
++ 	    panel.sendEvent(AppletPanel.APPLET_LOAD);
++ 	    panel.sendEvent(AppletPanel.APPLET_INIT);
++ 	    panel.sendEvent(AppletPanel.APPLET_START);
++ 	} else {
++ 	    // We're testing AppletViewer.  Force the specified set of events
++ 	    // onto the event queue, wait for the events to be processed, and
++ 	    // exit.
++ 
++ 	    // The list of events that will be executed is provided as a
++ 	    // ","-separated list.  No error-checking will be done on the list.
++   	    String [] events = splitSeparator(",", eventList);
++ 
++  	    for (int i = 0; i < events.length; i++) {
++  		System.out.println("Adding event to queue: " + events[i]);
++  		if (events[i].equals("dispose"))
++  		    panel.sendEvent(AppletPanel.APPLET_DISPOSE);
++  		else if (events[i].equals("load"))
++  		    panel.sendEvent(AppletPanel.APPLET_LOAD);
++  		else if (events[i].equals("init"))
++  		    panel.sendEvent(AppletPanel.APPLET_INIT);
++  		else if (events[i].equals("start"))
++  		    panel.sendEvent(AppletPanel.APPLET_START);
++  		else if (events[i].equals("stop"))
++  		    panel.sendEvent(AppletPanel.APPLET_STOP);
++  		else if (events[i].equals("destroy"))
++  		    panel.sendEvent(AppletPanel.APPLET_DESTROY);
++  		else if (events[i].equals("quit"))
++  		    panel.sendEvent(AppletPanel.APPLET_QUIT);
++  		else if (events[i].equals("error"))
++  		    panel.sendEvent(AppletPanel.APPLET_ERROR);
++  		else
++ 		    // non-fatal error if we get an unrecognized event
++  		    System.out.println("Unrecognized event name: " + events[i]);
++  	    }
++ 
++   	    while (!panel.emptyEventQueue()) ;
++  	    appletSystemExit();
++ 	}
++     }
++ 
++     /**
++      * Split a string based on the presence of a specified separator.  Returns
++      * an array of arbitrary length.  The end of each element in the array is
++      * indicated by the separator of the end of the string.  If there is a
++      * separator immediately before the end of the string, the final element
++      * will be empty.  None of the strings will contain the separator.  Useful
++      * when separating strings such as "foo/bar/bas" using separator "/".
++      *
++      * @param sep  The separator.
++      * @param s    The string to split.
++      * @return     An array of strings.  Each string in the array is determined
++      *             by the location of the provided sep in the original string,
++      *             s.  Whitespace not stripped.
++      */
++     private String [] splitSeparator(String sep, String s) {
++  	Vector v = new Vector();
++ 	int tokenStart = 0;
++ 	int tokenEnd   = 0;
++ 
++ 	while ((tokenEnd = s.indexOf(sep, tokenStart)) != -1) {
++ 	    v.addElement(s.substring(tokenStart, tokenEnd));
++ 	    tokenStart = tokenEnd+1;
++ 	}
++ 	// Add the final element.
++ 	v.addElement(s.substring(tokenStart));
++ 
++ 	String [] retVal = new String[v.size()];
++ 	v.copyInto(retVal);
++  	return retVal;
++     }
++ 
++     /*
++      * Methods for java.applet.AppletContext
++      */
++ 
++     private static Map audioClips = new HashMap();
++ 
++     /**
++      * Get an audio clip.
++      */
++     public AudioClip getAudioClip(URL url) {
++ 	checkConnect(url);
++ 	synchronized (audioClips) {
++ 	    AudioClip clip = (AudioClip)audioClips.get(url);
++ 	    if (clip == null) {
++ 		audioClips.put(url, clip = new AppletAudioClip(url));
++ 	    }
++ 	    return clip;
++ 	}
++     }
++ 
++     private static Map imageRefs = new HashMap();
++ 
++     /**
++      * Get an image.
++      */
++     public Image getImage(URL url) {
++ 	return getCachedImage(url);
++     }
++ 
++     static Image getCachedImage(URL url) {
++ 	// System.getSecurityManager().checkConnection(url.getHost(), url.getPort());
++ 	return (Image)getCachedImageRef(url).get();
++     }
++ 
++     /**
++      * Get an image ref.
++      */
++     static Ref getCachedImageRef(URL url) {
++ 	synchronized (imageRefs) {
++ 	    AppletImageRef ref = (AppletImageRef)imageRefs.get(url);
++ 	    if (ref == null) {
++ 		ref = new AppletImageRef(url);
++ 		imageRefs.put(url, ref);
++ 	    }
++ 	    return ref;
++ 	}
++     }
++ 
++     /**
++      * Flush the image cache.
++      */
++     static void flushImageCache() {
++ 	imageRefs.clear();
++     }
++ 
++     static Vector appletPanels = new Vector();
++ 
++     /**
++      * Get an applet by name.
++      */
++     public Applet getApplet(String name) {
++ 	AppletSecurity security = (AppletSecurity)System.getSecurityManager();
++ 	name = name.toLowerCase();
++ 	SocketPermission panelSp =
++ 	    new SocketPermission(panel.getCodeBase().getHost(), "connect");
++ 	for (Enumeration e = appletPanels.elements() ; e.hasMoreElements() ;) {
++ 	    AppletPanel p = (AppletPanel)e.nextElement();
++ 	    String param = p.getParameter("name");
++ 	    if (param != null) {
++ 		param = param.toLowerCase();
++ 	    }
++ 	    if (name.equals(param) &&
++ 		p.getDocumentBase().equals(panel.getDocumentBase())) {
++ 
++ 		SocketPermission sp =
++ 		    new SocketPermission(p.getCodeBase().getHost(), "connect");
++ 
++ 		if (panelSp.implies(sp)) {
++ 		    return p.applet;
++ 		}
++ 	    }
++ 	}
++ 	return null;
++     }
++ 
++     /**
++      * Return an enumeration of all the accessible
++      * applets on this page.
++      */
++     public Enumeration getApplets() {
++ 	AppletSecurity security = (AppletSecurity)System.getSecurityManager();
++ 	Vector v = new Vector();
++ 	SocketPermission panelSp =
++ 	    new SocketPermission(panel.getCodeBase().getHost(), "connect");
++ 
++ 	for (Enumeration e = appletPanels.elements() ; e.hasMoreElements() ;) {
++ 	    AppletPanel p = (AppletPanel)e.nextElement();
++ 	    if (p.getDocumentBase().equals(panel.getDocumentBase())) {
++ 
++ 		SocketPermission sp =
++ 		    new SocketPermission(p.getCodeBase().getHost(), "connect");
++ 		if (panelSp.implies(sp)) {
++ 		    v.addElement(p.applet);
++ 		}
++ 	    }
++ 	}
++ 	return v.elements();
++     }
++ 
++     /**
++      * Ignore.
++      */
++     public void showDocument(URL url) {
++ 	showDocument(url, "_self");
++     }
++ 
++     /**
++      * Ignore.
++      */
++     public void showDocument(URL url, String target) {
++ 	try {
++             // FIXME: change to postCallRequest
++ 	    write("url " + url + " " + target);
++ 	} catch (IOException exception) {
++ 	    // Deliberately ignore IOException.  showDocument may be
++ 	    // called from threads other than the main thread after
++ 	    // PluginMain.pluginOutputStream has been closed.
++ 	}
++     }
++ 
++     /**
++      * Show status.
++      */
++     public void showStatus(String status) {
++ 	try {
++             // FIXME: change to postCallRequest
++ 	    write("status " + status);
++ 	} catch (IOException exception) {
++ 	    // Deliberately ignore IOException.  showStatus may be
++ 	    // called from threads other than the main thread after
++ 	    // PluginMain.pluginOutputStream has been closed.
++ 	}
++     }
++ 
++     public int getWindow() {
++         System.out.println ("STARTING getWindow");
++         GetWindowPluginCallRequest request =
++             new GetWindowPluginCallRequest("instance " + identifier + " " +
++                                            "GetWindow", "JavaScriptGetWindow");
++         System.out.println ("STARTING postCallRequest");
++         PluginMain.postCallRequest(request);
++         System.out.println ("STARTING postCallRequest done");
++         PluginMain.write(request.message);
++         try {
++         System.out.println ("wait request 1");
++             synchronized(request) {
++         System.out.println ("wait request 2");
++                 while (request.internal == 0)
++                     request.wait();
++         System.out.println ("wait request 3");
++             }
++         } catch (InterruptedException e) {
++             throw new RuntimeException("Interrupted waiting for call request.",
++                                        e);
++         }
++         System.out.println ("STARTING getWindow DONE");
++         return request.internal;
++     }
++ 
++     // FIXME: make private, access via reflection.
++     public static Object getMember(int internal, String name)
++     {
++         PluginAppletSecurityContext.contexts.get(0).store.reference(name);
++         int nameID = PluginAppletSecurityContext.contexts.get(
++             0).store.getIdentifier(name);
++ 
++         // Prefix with dummy instance for convenience.
++         GetMemberPluginCallRequest request =
++             new GetMemberPluginCallRequest("instance " + 0 +
++                                            " GetMember " + internal +
++                                            " " + nameID, "JavaScriptGetMember");
++         PluginMain.postCallRequest(request);
++         PluginMain.write(request.message);
++         try {
++             System.out.println ("wait getMEM request 1");
++             synchronized(request) {
++                 System.out.println ("wait getMEM request 2");
++                 while (request.done == false)
++                     request.wait();
++                 System.out.println ("wait getMEM request 3");
++             }
++         } catch (InterruptedException e) {
++             throw new RuntimeException("Interrupted waiting for call request.",
++                                        e);
++         }
++         System.out.println (" getMember DONE");
++         return request.object;
++     }
++ 
++     public static void setMember(int internal, String name, Object value) {
++         PluginAppletSecurityContext.contexts.get(0).store.reference(name);
++         int nameID = PluginAppletSecurityContext.contexts.get(
++             0).store.getIdentifier(name);
++         PluginAppletSecurityContext.contexts.get(0).store.reference(value);
++         int valueID = PluginAppletSecurityContext.contexts.get(
++             0).store.getIdentifier(value);
++ 
++         // Prefix with dummy instance for convenience.
++         VoidPluginCallRequest request =
++             new VoidPluginCallRequest("instance " + 0 +
++                                            " SetMember " + internal +
++                                            " " + nameID + " " + valueID, "JavaScriptSetMember");
++         PluginMain.postCallRequest(request);
++         PluginMain.write(request.message);
++         try {
++             System.out.println ("wait setMem request: " + request.message);
++             System.out.println ("wait setMem request 1");
++             synchronized(request) {
++                 System.out.println ("wait setMem request 2");
++                 while (request.done == false)
++                     request.wait();
++                 System.out.println ("wait setMem request 3");
++             }
++         } catch (InterruptedException e) {
++             throw new RuntimeException("Interrupted waiting for call request.",
++                                        e);
++         }
++         System.out.println (" setMember DONE");
++     }
++ 
++     // FIXME: handle long index as well.
++     public static void setSlot(int internal, int index, Object value) {
++         PluginAppletSecurityContext.contexts.get(0).store.reference(value);
++         int valueID = PluginAppletSecurityContext.contexts.get(
++             0).store.getIdentifier(value);
++ 
++         // Prefix with dummy instance for convenience.
++         VoidPluginCallRequest request =
++             new VoidPluginCallRequest("instance " + 0 +
++                                       " SetSlot " + internal +
++                                       " " + index + " " + valueID, "JavaScriptSetSlot");
++         PluginMain.postCallRequest(request);
++         PluginMain.write(request.message);
++         try {
++             System.out.println ("wait setSlot request 1");
++             synchronized(request) {
++                 System.out.println ("wait setSlot request 2");
++                 while (request.done == false)
++                     request.wait();
++                 System.out.println ("wait setSlot request 3");
++             }
++         } catch (InterruptedException e) {
++             throw new RuntimeException("Interrupted waiting for call request.",
++                                        e);
++         }
++         System.out.println (" setSlot DONE");
++     }
++ 
++     public static Object getSlot(int internal, int index)
++     {
++         // Prefix with dummy instance for convenience.
++         GetMemberPluginCallRequest request =
++             new GetMemberPluginCallRequest("instance " + 0 +
++                                            " GetSlot " + internal +
++                                            " " + index, "JavaScriptGetSlot");
++         PluginMain.postCallRequest(request);
++         PluginMain.write(request.message);
++         try {
++             System.out.println ("wait getSlot request 1");
++             synchronized(request) {
++                 System.out.println ("wait getSlot request 2");
++                 while (request.done == false)
++                     request.wait();
++                 System.out.println ("wait getSlot request 3");
++             }
++         } catch (InterruptedException e) {
++             throw new RuntimeException("Interrupted waiting for call request.",
++                                        e);
++         }
++         System.out.println (" getSlot DONE");
++         return request.object;
++     }
++ 
++     public static Object eval(int internal, String s)
++     {
++         PluginAppletSecurityContext.contexts.get(0).store.reference(s);
++         int stringID = PluginAppletSecurityContext.contexts.get(
++             0).store.getIdentifier(s);
++         // Prefix with dummy instance for convenience.
++         // FIXME: rename GetMemberPluginCallRequest ObjectPluginCallRequest.
++         GetMemberPluginCallRequest request =
++             new GetMemberPluginCallRequest("instance " + 0 +
++                                            " Eval " + internal +
++                                            " " + stringID, "JavaScriptEval");
++         PluginMain.postCallRequest(request);
++         PluginMain.write(request.message);
++         try {
++             System.out.println ("wait eval request 1");
++             synchronized(request) {
++                 System.out.println ("wait eval request 2");
++                 while (request.done == false)
++                     request.wait();
++                 System.out.println ("wait eval request 3");
++             }
++         } catch (InterruptedException e) {
++             throw new RuntimeException("Interrupted waiting for call request.",
++                                        e);
++         }
++         System.out.println (" getSlot DONE");
++         return request.object;
++     }
++ 
++     public static void removeMember (int internal, String name) {
++         PluginAppletSecurityContext.contexts.get(0).store.reference(name);
++         int nameID = PluginAppletSecurityContext.contexts.get(
++             0).store.getIdentifier(name);
++ 
++         // Prefix with dummy instance for convenience.
++         VoidPluginCallRequest request =
++             new VoidPluginCallRequest("instance " + 0 +
++                                         " RemoveMember " + internal +
++                                         " " + nameID, "JavaScriptRemoveMember");
++         PluginMain.postCallRequest(request);
++         PluginMain.write(request.message);
++         try {
++             System.out.println ("wait removeMember request 1");
++             synchronized(request) {
++                 System.out.println ("wait removeMember request 2");
++                 while (request.done == false)
++                     request.wait();
++                 System.out.println ("wait removeMember request 3");
++             }
++         } catch (InterruptedException e) {
++             throw new RuntimeException("Interrupted waiting for call request.",
++                                        e);
++         }
++         System.out.println (" RemoveMember DONE");
++     }
++ 
++     public static Object call(int internal, String name, Object args[])
++     {
++         // FIXME: when is this removed from the object store?
++         // FIXME: reference should return the ID.
++         // FIXME: convenience method for this long line.
++         PluginAppletSecurityContext.contexts.get(0).store.reference(name);
++         int nameID = PluginAppletSecurityContext.contexts.get(
++             0).store.getIdentifier(name);
++         PluginAppletSecurityContext.contexts.get(0).store.reference(args);
++         int argsID = PluginAppletSecurityContext.contexts.get(
++             0).store.getIdentifier(args);
++ 
++         // Prefix with dummy instance for convenience.
++         GetMemberPluginCallRequest request =
++             new GetMemberPluginCallRequest("instance " + 0 +
++                                            " Call " + internal +
++                                            " " + nameID + " " + argsID, "JavaScriptCall");
++         PluginMain.postCallRequest(request);
++         PluginMain.write(request.message);
++         try {
++             System.out.println ("wait call request 1");
++             synchronized(request) {
++                 System.out.println ("wait call request 2");
++                 while (request.done == false)
++                     request.wait();
++                 System.out.println ("wait call request 3");
++             }
++         } catch (InterruptedException e) {
++             throw new RuntimeException("Interrupted waiting for call request.",
++                                        e);
++         }
++         System.out.println (" Call DONE");
++         return request.object;
++     }
++ 
++     public static void JavaScriptFinalize(int internal)
++     {
++         // Prefix with dummy instance for convenience.
++         VoidPluginCallRequest request =
++             new VoidPluginCallRequest("instance " + 0 +
++                                            " Finalize " + internal, "JavaScriptFinalize");
++         PluginMain.postCallRequest(request);
++         PluginMain.write(request.message);
++         try {
++             System.out.println ("wait finalize request 1");
++             synchronized(request) {
++                 System.out.println ("wait finalize request 2");
++                 while (request.done == false)
++                     request.wait();
++                 System.out.println ("wait finalize request 3");
++             }
++         } catch (InterruptedException e) {
++             throw new RuntimeException("Interrupted waiting for call request.",
++                                        e);
++         }
++         System.out.println (" finalize DONE");
++     }
++ 
++     public static String javascriptToString(int internal)
++     {
++         // Prefix with dummy instance for convenience.
++         GetMemberPluginCallRequest request =
++             new GetMemberPluginCallRequest("instance " + 0 +
++                                       " ToString " + internal, "JavaScriptToString");
++         PluginMain.postCallRequest(request);
++         PluginMain.write(request.message);
++         try {
++             System.out.println ("wait ToString request 1");
++             synchronized(request) {
++                 System.out.println ("wait ToString request 2");
++                 while (request.done == false)
++                     request.wait();
++                 System.out.println ("wait ToString request 3");
++             }
++         } catch (InterruptedException e) {
++             throw new RuntimeException("Interrupted waiting for call request.",
++                                        e);
++         }
++         System.out.println (" ToString DONE");
++         return (String) request.object;
++     }
++ 
++     // FIXME: make this private and access it from JSObject using
++     // reflection.
++     private void write(String message) throws IOException {
++         System.out.println ("WRITING 2: " + "instance " + identifier + " " + message);
++         PluginMain.write("instance " + identifier + " " + message);
++         System.out.println ("WRITING 2 DONE");
++     }
++ 
++     // FIXME: make this private and access it from JSObject using
++     // reflection.
++     private String read() throws IOException {
++         System.out.println ("READING 1");
++         String ret = PluginMain.read();
++         System.out.println ("READING 1 DONE");
++         return ret;
++     }
++ 
++     public void setStream(String key, InputStream stream)throws IOException{
++ 	// We do nothing.
++     }
++ 
++     public InputStream getStream(String key){
++ 	// We do nothing.
++ 	return null;
++     }
++ 
++     public Iterator getStreamKeys(){
++ 	// We do nothing.
++ 	return null;
++     }
++ 
++     /**
++      * System parameters.
++      */
++     static Hashtable systemParam = new Hashtable();
++ 
++     static {
++ 	systemParam.put("codebase", "codebase");
++ 	systemParam.put("code", "code");
++ 	systemParam.put("alt", "alt");
++ 	systemParam.put("width", "width");
++ 	systemParam.put("height", "height");
++ 	systemParam.put("align", "align");
++ 	systemParam.put("vspace", "vspace");
++ 	systemParam.put("hspace", "hspace");
++     }
++ 
++     /**
++      * Print the HTML tag.
++      */
++     public static void printTag(PrintStream out, Hashtable atts) {
++ 	out.print("<applet");
++ 
++ 	String v = (String)atts.get("codebase");
++ 	if (v != null) {
++ 	    out.print(" codebase=\"" + v + "\"");
++ 	}
++ 
++ 	v = (String)atts.get("code");
++ 	if (v == null) {
++ 	    v = "applet.class";
++ 	}
++ 	out.print(" code=\"" + v + "\"");
++ 	v = (String)atts.get("width");
++ 	if (v == null) {
++ 	    v = "150";
++ 	}
++ 	out.print(" width=" + v);
++ 
++ 	v = (String)atts.get("height");
++ 	if (v == null) {
++ 	    v = "100";
++ 	}
++ 	out.print(" height=" + v);
++ 
++ 	v = (String)atts.get("name");
++ 	if (v != null) {
++ 	    out.print(" name=\"" + v + "\"");
++ 	}
++ 	out.println(">");
++ 
++ 	// A very slow sorting algorithm
++ 	int len = atts.size();
++ 	String params[] = new String[len];
++ 	len = 0;
++ 	for (Enumeration e = atts.keys() ; e.hasMoreElements() ;) {
++ 	    String param = (String)e.nextElement();
++ 	    int i = 0;
++ 	    for (; i < len ; i++) {
++ 		if (params[i].compareTo(param) >= 0) {
++ 		    break;
++ 		}
++ 	    }
++ 	    System.arraycopy(params, i, params, i + 1, len - i);
++ 	    params[i] = param;
++ 	    len++;
++ 	}
++ 
++ 	for (int i = 0 ; i < len ; i++) {
++ 	    String param = params[i];
++ 	    if (systemParam.get(param) == null) {
++ 		out.println("<param name=" + param +
++ 			    " value=\"" + atts.get(param) + "\">");
++ 	    }
++ 	}
++ 	out.println("</applet>");
++     }
++ 
++     /**
++      * Make sure the atrributes are uptodate.
++      */
++     public void updateAtts() {
++ 	Dimension d = panel.size();
++ 	Insets in = panel.insets();
++ 	panel.atts.put("width",
++ 		       new Integer(d.width - (in.left + in.right)).toString());
++ 	panel.atts.put("height",
++ 		       new Integer(d.height - (in.top + in.bottom)).toString());
++     }
++ 
++     /**
++      * Restart the applet.
++      */
++     void appletRestart() {
++ 	panel.sendEvent(AppletPanel.APPLET_STOP);
++ 	panel.sendEvent(AppletPanel.APPLET_DESTROY);
++ 	panel.sendEvent(AppletPanel.APPLET_INIT);
++ 	panel.sendEvent(AppletPanel.APPLET_START);
++     }
++ 
++     /**
++      * Reload the applet.
++      */
++     void appletReload() {
++ 	panel.sendEvent(AppletPanel.APPLET_STOP);
++ 	panel.sendEvent(AppletPanel.APPLET_DESTROY);
++ 	panel.sendEvent(AppletPanel.APPLET_DISPOSE);
++ 
++ 	/**
++ 	 * Fixed #4501142: Classlaoder sharing policy doesn't 
++ 	 * take "archive" into account. This will be overridden
++ 	 * by Java Plug-in.			[stanleyh]
++ 	 */
++ 	AppletPanel.flushClassLoader(panel.getClassLoaderCacheKey());
++ 
++         /*
++          * Make sure we don't have two threads running through the event queue
++          * at the same time.
++          */
++         try {
++             panel.joinAppletThread();
++ 	    panel.release();
++         } catch (InterruptedException e) {
++             return;   // abort the reload
++         }
++ 
++         panel.createAppletThread();
++ 	panel.sendEvent(AppletPanel.APPLET_LOAD);
++ 	panel.sendEvent(AppletPanel.APPLET_INIT);
++ 	panel.sendEvent(AppletPanel.APPLET_START);
++     }
++ 
++     public int print(Graphics graphics, PageFormat pf, int pageIndex) {
++         return Printable.NO_SUCH_PAGE;
++     }
++ 
++     /**
++      * Start the applet.
++      */
++     void appletStart() {
++ 	panel.sendEvent(AppletPanel.APPLET_START);
++     }
++ 
++     /**
++      * Stop the applet.
++      */
++     void appletStop() {
++ 	panel.sendEvent(AppletPanel.APPLET_STOP);
++     }
++ 
++     /**
++      * Shutdown a viewer.
++      * Stop, Destroy, Dispose and Quit a viewer
++      */
++     private void appletShutdown(AppletPanel p) {
++ 	p.sendEvent(AppletPanel.APPLET_STOP);
++ 	p.sendEvent(AppletPanel.APPLET_DESTROY);
++ 	p.sendEvent(AppletPanel.APPLET_DISPOSE);
++ 	p.sendEvent(AppletPanel.APPLET_QUIT);
++     }
++ 
++     /**
++      * Close this viewer.
++      * Stop, Destroy, Dispose and Quit an AppletView, then
++      * reclaim resources and exit the program if this is
++      * the last applet.
++      */
++     void appletClose() {
++ 
++ 	// The caller thread is event dispatch thread, so
++ 	// spawn a new thread to avoid blocking the event queue
++ 	// when calling appletShutdown.
++ 	//
++ 	final AppletPanel p = panel;
++ 
++ 	new Thread(new Runnable()
++ 	{
++ 	    public void run()
++ 	    {
++     		appletShutdown(p);
++ 		appletPanels.removeElement(p);
++ 		dispose();
++ 
++ 		if (countApplets() == 0) {
++ 		    appletSystemExit();
++ 		}
++ 	    }
++ 	}).start();
++     }
++ 
++     /**
++      * Exit the program.
++      * Exit from the program (if not stand alone) - do no clean-up
++      */
++     private void appletSystemExit() {
++ 	if (factory.isStandalone())
++ 	    System.exit(0);
++     }
++ 
++     /**
++      * How many applets are running?
++      */
++ 
++     public static int countApplets() {
++ 	return appletPanels.size();
++     }
++ 
++ 
++     /**
++      * The current character.
++      */
++     static int c;
++ 
++     /**
++      * Scan spaces.
++      */
++     public static void skipSpace(Reader in) throws IOException {
++         while ((c >= 0) &&
++ 	       ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'))) {
++ 	    c = in.read();
++ 	}
++     }
++ 
++     /**
++      * Scan identifier
++      */
++     public static String scanIdentifier(Reader in) throws IOException {
++ 	StringBuffer buf = new StringBuffer();
++ 	while (true) {
++ 	    if (((c >= 'a') && (c <= 'z')) ||
++ 		((c >= 'A') && (c <= 'Z')) ||
++ 		((c >= '0') && (c <= '9')) || (c == '_')) {
++ 		buf.append((char)c);
++ 		c = in.read();
++ 	    } else {
++ 		return buf.toString();
++ 	    }
++ 	}
++     }
++ 
++     /**
++      * Scan tag
++      */
++     public static Hashtable scanTag(Reader in) throws IOException {
++ 	Hashtable atts = new Hashtable();
++ 	skipSpace(in);
++         while (c >= 0 && c != '>') {
++ 	    String att = scanIdentifier(in);
++ 	    String val = "";
++ 	    skipSpace(in);
++ 	    if (c == '=') {
++ 		int quote = -1;
++ 		c = in.read();
++ 		skipSpace(in);
++ 		if ((c == '\'') || (c == '\"')) {
++ 		    quote = c;
++ 		    c = in.read();
++ 		}
++ 		StringBuffer buf = new StringBuffer();
++                 while ((c > 0) &&
++ 		       (((quote < 0) && (c != ' ') && (c != '\t') &&
++                          (c != '\n') && (c != '\r') && (c != '>'))
++ 			|| ((quote >= 0) && (c != quote)))) {
++ 		    buf.append((char)c);
++ 		    c = in.read();
++ 		}
++ 		if (c == quote) {
++ 		    c = in.read();
++ 		}
++ 		skipSpace(in);
++ 		val = buf.toString();
++ 	    }
++ 	    //statusMsgStream.println("PUT " + att + " = '" + val + "'");
++ 	    if (! val.equals("")) {
++ 		atts.put(att.toLowerCase(java.util.Locale.ENGLISH), val);
++ 	    }
++             while (true) {
++                 if ((c == '>') || (c < 0) ||
++                     ((c >= 'a') && (c <= 'z')) ||
++                     ((c >= 'A') && (c <= 'Z')) ||
++                     ((c >= '0') && (c <= '9')) || (c == '_'))
++                     break;
++                 c = in.read();
++             }
++             //skipSpace(in);
++ 	}
++ 	return atts;
++     }
++ 
++     /* values used for placement of AppletViewer's frames */
++     private static int x = 0;
++     private static int y = 0;
++     private static final int XDELTA = 30;
++     private static final int YDELTA = XDELTA;
++ 
++     static String encoding = null;
++ 
++     static private Reader makeReader(InputStream is) {
++ 	if (encoding != null) {
++ 	    try {
++ 		return new BufferedReader(new InputStreamReader(is, encoding));
++ 	    } catch (IOException x) { }
++ 	}
++ 	InputStreamReader r = new InputStreamReader(is);
++ 	encoding = r.getEncoding();
++ 	return new BufferedReader(r);
++     }
++ 
++     /**
++      * Scan an html file for <applet> tags
++      */
++     public static void parse(int identifier, long handle, Reader in, URL url, String enc)
++         throws IOException {
++         encoding = enc;
++         parse(identifier, handle, in, url, System.out, new PluginAppletViewerFactory());
++     }
++ 
++     public static void parse(int identifier, long handle, Reader in, URL url)
++         throws IOException {
++         parse(identifier, handle, in, url, System.out, new PluginAppletViewerFactory());
++     }
++ 
++     public static void parse(int identifier, long handle, Reader in, URL url,
++                              PrintStream statusMsgStream,
++                              PluginAppletViewerFactory factory)
++         throws IOException
++     {
++         // <OBJECT> <EMBED> tag flags
++         boolean isAppletTag = false;
++         boolean isObjectTag = false;
++         boolean isEmbedTag = false;
++ 
++ 	// warning messages
++         String requiresNameWarning = amh.getMessage("parse.warning.requiresname");
++         String paramOutsideWarning = amh.getMessage("parse.warning.paramoutside");
++         String appletRequiresCodeWarning = amh.getMessage("parse.warning.applet.requirescode");
++         String appletRequiresHeightWarning = amh.getMessage("parse.warning.applet.requiresheight");
++         String appletRequiresWidthWarning = amh.getMessage("parse.warning.applet.requireswidth");
++         String objectRequiresCodeWarning = amh.getMessage("parse.warning.object.requirescode");
++         String objectRequiresHeightWarning = amh.getMessage("parse.warning.object.requiresheight");
++         String objectRequiresWidthWarning = amh.getMessage("parse.warning.object.requireswidth");
++         String embedRequiresCodeWarning = amh.getMessage("parse.warning.embed.requirescode");
++         String embedRequiresHeightWarning = amh.getMessage("parse.warning.embed.requiresheight");
++         String embedRequiresWidthWarning = amh.getMessage("parse.warning.embed.requireswidth");
++         String appNotLongerSupportedWarning = amh.getMessage("parse.warning.appnotLongersupported");
++ 
++ 	java.net.URLConnection conn = url.openConnection();
++ 	/* The original URL may have been redirected - this
++ 	 * sets it to whatever URL/codebase we ended up getting
++ 	 */
++ 	url = conn.getURL();
++ 
++ 	int ydisp = 1;
++ 	Hashtable atts = null;
++ 
++         while(true) {
++ 	    c = in.read();
++ 	    if (c == -1)
++ 		break;
++ 
++ 	    if (c == '<') {
++ 		c = in.read();
++ 		if (c == '/') {
++ 		    c = in.read();
++ 		    String nm = scanIdentifier(in);
++ 		    if (nm.equalsIgnoreCase("applet") ||
++                         nm.equalsIgnoreCase("object") ||
++                         nm.equalsIgnoreCase("embed")) {
++ 
++                         // We can't test for a code tag until </OBJECT>
++                         // because it is a parameter, not an attribute.
++                         if(isObjectTag) {
++                             if (atts.get("code") == null && atts.get("object") == null) {
++                                 statusMsgStream.println(objectRequiresCodeWarning);
++                                 atts = null;
++                             }
++                         }
++ 
++ 			if (atts != null) {
++ 			    // XXX 5/18 In general this code just simply
++ 			    // shouldn't be part of parsing.  It's presence
++ 			    // causes things to be a little too much of a
++ 			    // hack.
++ 			    factory.createAppletViewer(identifier, handle, x, y, url, atts);
++ 			    x += XDELTA;
++ 			    y += YDELTA;
++ 			    // make sure we don't go too far!
++ 			    Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
++ 			    if ((x > d.width - 300) || (y > d.height - 300)) {
++ 				x = 0;
++ 				y = 2 * ydisp * YDELTA;
++ 				ydisp++;
++ 			    }
++ 			}
++ 			atts = null;
++                         isAppletTag = false;
++                         isObjectTag = false;
++                         isEmbedTag = false;
++ 		    }
++ 		}
++ 		else {
++ 		    String nm = scanIdentifier(in);
++ 		    if (nm.equalsIgnoreCase("param")) {
++ 			Hashtable t = scanTag(in);
++ 			String att = (String)t.get("name");
++ 			if (att == null) {
++ 			    statusMsgStream.println(requiresNameWarning);
++ 			} else {
++ 			    String val = (String)t.get("value");
++ 			    if (val == null) {
++ 				statusMsgStream.println(requiresNameWarning);
++ 			    } else if (atts != null) {
++ 				atts.put(att.toLowerCase(), val);
++ 			    } else {
++ 				statusMsgStream.println(paramOutsideWarning);
++ 			    }
++ 			}
++ 		    }
++ 		    else if (nm.equalsIgnoreCase("applet")) {
++                         isAppletTag = true;
++ 			atts = scanTag(in);
++ 			if (atts.get("code") == null && atts.get("object") == null) {
++ 			    statusMsgStream.println(appletRequiresCodeWarning);
++ 			    atts = null;
++ 			} else if (atts.get("width") == null) {
++ 			    statusMsgStream.println(appletRequiresWidthWarning);
++ 			    atts = null;
++ 			} else if (atts.get("height") == null) {
++ 			    statusMsgStream.println(appletRequiresHeightWarning);
++ 			    atts = null;
++ 			}
++ 		    }
++ 		    else if (nm.equalsIgnoreCase("object")) {
++                         isObjectTag = true;
++ 			atts = scanTag(in);
++                         // The <OBJECT> attribute codebase isn't what
++                         // we want. If its defined, remove it.
++                         if(atts.get("codebase") != null) {
++                             atts.remove("codebase");
++                         }
++ 
++                         if (atts.get("width") == null) {
++ 			    statusMsgStream.println(objectRequiresWidthWarning);
++ 			    atts = null;
++ 			} else if (atts.get("height") == null) {
++ 			    statusMsgStream.println(objectRequiresHeightWarning);
++ 			    atts = null;
++ 			}
++ 		    }
++ 		    else if (nm.equalsIgnoreCase("embed")) {
++                         isEmbedTag = true;
++ 			atts = scanTag(in);
++ 
++ 			if (atts.get("code") == null && atts.get("object") == null) {
++ 			    statusMsgStream.println(embedRequiresCodeWarning);
++ 			    atts = null;
++ 			} else if (atts.get("width") == null) {
++ 			    statusMsgStream.println(embedRequiresWidthWarning);
++ 			    atts = null;
++ 			} else if (atts.get("height") == null) {
++ 			    statusMsgStream.println(embedRequiresHeightWarning);
++ 			    atts = null;
++ 			}
++ 		    }
++ 		    else if (nm.equalsIgnoreCase("app")) {
++ 			statusMsgStream.println(appNotLongerSupportedWarning);
++ 			Hashtable atts2 = scanTag(in);
++ 			nm = (String)atts2.get("class");
++ 			if (nm != null) {
++ 			    atts2.remove("class");
++ 			    atts2.put("code", nm + ".class");
++ 			}
++ 			nm = (String)atts2.get("src");
++ 			if (nm != null) {
++ 			    atts2.remove("src");
++ 			    atts2.put("codebase", nm);
++ 			}
++ 			if (atts2.get("width") == null) {
++ 			    atts2.put("width", "100");
++ 			}
++ 			if (atts2.get("height") == null) {
++ 			    atts2.put("height", "100");
++ 			}
++ 			printTag(statusMsgStream, atts2);
++ 			statusMsgStream.println();
++ 		    }
++ 		}
++ 	    }
++ 	}
++ 	in.close();
++     }
++ 
++     /**
++      * Old main entry point.
++      *
++      * @deprecated
++      */
++     @Deprecated
++     public static void main(String args[]) throws IOException {
++         PluginMain.main(args);
++     }
++ 
++     private static AppletMessageHandler amh = new AppletMessageHandler("appletviewer");
++ 
++     private static void checkConnect(URL url)
++     {
++ 	SecurityManager security = System.getSecurityManager();
++ 	if (security != null) {
++ 	    try {
++ 		java.security.Permission perm =
++ 		    url.openConnection().getPermission();
++ 		if (perm != null)
++ 		    security.checkPermission(perm);
++ 		else
++ 		    security.checkConnect(url.getHost(), url.getPort());
++ 	    } catch (java.io.IOException ioe) {
++ 		    security.checkConnect(url.getHost(), url.getPort());
++ 	    }
++ 	}
++     }
++ }
+diff -urN openjdk/jdk/src/share/classes/sun/applet.orig/PluginCallRequest.java openjdk/jdk/src/share/classes/sun/applet/PluginCallRequest.java
+--- openjdk/jdk/src/share/classes/sun/applet.orig/PluginCallRequest.java	1969-12-31 19:00:00.000000000 -0500
++++ openjdk/jdk/src/share/classes/sun/applet/PluginCallRequest.java	2008-02-23 05:26:59.000000000 -0500
+@@ -0,0 +1,101 @@
++/* PluginCallRequest -- represent Java-to-JavaScript requests
++   Copyright (C) 2008  Red Hat
++
++This file is part of IcedTea.
++
++IcedTea is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 2, or (at your option)
++any later version.
++
++IcedTea is distributed in the hope that it will be useful, but
++WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with IcedTea; see the file COPYING.  If not, write to the
++Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
++02110-1301 USA.
++
++Linking this library statically or dynamically with other modules is
++making a combined work based on this library.  Thus, the terms and
++conditions of the GNU General Public License cover the whole
++combination.
++
++As a special exception, the copyright holders of this library give you
++permission to link this library with independent modules to produce an
++executable, regardless of the license terms of these independent
++modules, and to copy and distribute the resulting executable under
++terms of your choice, provided that you also meet, for each linked
++independent module, the terms and conditions of the license of that
++module.  An independent module is a module which is not derived from
++or based on this library.  If you modify this library, you may extend
++this exception to your version of the library, but you are not
++obligated to do so.  If you do not wish to do so, delete this
++exception statement from your version. */
++
++package sun.applet;
++
++// FIXME: for each type of request extend a new (anonymous?)
++// PluginCallRequest.
++abstract class PluginCallRequest {
++    String message;
++    String returnString;
++    PluginCallRequest next;
++    boolean done = false;
++
++    public PluginCallRequest(String message, String returnString) {
++        this.message = message;
++        this.returnString = returnString;
++    }
++
++    public abstract void parseReturn(String message);
++}
++
++class GetWindowPluginCallRequest extends PluginCallRequest {
++    // FIXME: look into int vs long JavaScript internal values.
++    int internal;
++
++    public GetWindowPluginCallRequest(String message, String returnString) {
++        super(message, returnString);
++    }
++
++    public void parseReturn(String message) {
++        System.out.println ("GetWINDOWparseReturn GOT: " + message);
++        String[] args = message.split(" ");
++        // FIXME: add thread ID to messages to support multiple
++        // threads using the netscape.javascript package.
++        internal = Integer.parseInt(args[1]);
++        done = true;
++    }
++}
++
++class GetMemberPluginCallRequest extends PluginCallRequest {
++    Object object = null;
++
++    public GetMemberPluginCallRequest(String message, String returnString) {
++        super(message, returnString);
++        System.out.println ("GetMEMBerPLUGINCAlL " + message + " " + returnString);
++    }
++
++    public void parseReturn(String message) {
++        System.out.println ("GetMEMBerparseReturn GOT: " + message);
++        String[] args = message.split(" ");
++        // FIXME: add thread ID to messages to support multiple
++        // threads using the netscape.javascript package.
++        object = PluginAppletSecurityContext.contexts.get(
++            0).store.getObject(Integer.parseInt(args[1]));
++        done = true;
++    }
++}
++class VoidPluginCallRequest extends PluginCallRequest {
++    public VoidPluginCallRequest(String message, String returnString) {
++        super(message, returnString);
++        System.out.println ("VoidPLUGINCAlL " + message + " " + returnString);
++    }
++
++    public void parseReturn(String message) {
++        done = true;
++    }
++}
+diff -urN openjdk/jdk/src/share/classes/sun/applet.orig/PluginMain.java openjdk/jdk/src/share/classes/sun/applet/PluginMain.java
+--- openjdk/jdk/src/share/classes/sun/applet.orig/PluginMain.java	1969-12-31 19:00:00.000000000 -0500
++++ openjdk/jdk/src/share/classes/sun/applet/PluginMain.java	2008-02-22 20:48:32.000000000 -0500
+@@ -0,0 +1,282 @@
++/*
++ * Copyright 1999-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.  Sun designates this
++ * particular file as subject to the "Classpath" exception as provided
++ * by Sun in the LICENSE file that accompanied this code.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
++ */
++
++package sun.applet;
++
++import java.io.*;
++import java.lang.reflect.*;
++import java.net.*;
++import java.nio.charset.Charset;
++import java.util.*;
++import sun.net.www.ParseUtil;
++
++class RequestQueue {
++    PluginCallRequest head = null;
++    PluginCallRequest tail = null;
++
++    void post(PluginCallRequest request) {
++        if (head == null) {
++            head = tail = request;
++            tail.next = null;
++        } else {
++            tail.next = request;
++            tail = request;
++            tail.next = null;
++        }
++    }
++
++    PluginCallRequest pop() {
++        if (head == null)
++            return null;
++
++        PluginCallRequest ret = head;
++        head = head.next;
++        ret.next = null;
++        return ret;
++    }
++}
++
++/**
++ * The main entry point into PluginAppletViewer.
++ */
++public class PluginMain
++{
++    private static BufferedReader pluginInputReader;
++    private static StreamTokenizer pluginInputTokenizer;
++    private static BufferedWriter pluginOutputWriter;
++    // This is used in init().	Getting rid of this is desirable but depends
++    // on whether the property that uses it is necessary/standard.
++    public static final String theVersion = System.getProperty("java.version");
++
++    private static RequestQueue queue = new RequestQueue();
++
++    /**
++     * The main entry point into AppletViewer.
++     */
++    public static void main(String args[])
++	throws IOException
++    {
++	if (args.length != 1) {
++	    // Indicate to plugin that appletviewer is installed correctly.
++	    System.exit(0);
++	}
++	// INSTALL THE SECURITY MANAGER
++	init();
++        int port = 0;
++        try {
++            port = Integer.parseInt(args[0]);
++        } catch (NumberFormatException e) {
++            System.err.println("Failed to parse port number: " + e);
++            System.exit(1);
++        }
++        Socket socket = new Socket("localhost", port);
++	start(socket.getInputStream(), socket.getOutputStream());
++	System.exit(0);
++    }
++
++    private static void init() {
++	Properties avProps = new Properties();
++
++	// ADD OTHER RANDOM PROPERTIES
++	// XXX 5/18 need to revisit why these are here, is there some
++	// standard for what is available?
++
++	// Standard browser properties
++	avProps.put("browser", "sun.applet.AppletViewer");
++	avProps.put("browser.version", "1.06");
++	avProps.put("browser.vendor", "Sun Microsystems Inc.");
++	avProps.put("http.agent", "Java(tm) 2 SDK, Standard Edition v" + theVersion);
++
++	// Define which packages can be extended by applets
++	// XXX 5/19 probably not needed, not checked in AppletSecurity
++	avProps.put("package.restrict.definition.java", "true");
++	avProps.put("package.restrict.definition.sun", "true");
++
++	// Define which properties can be read by applets.
++	// A property named by "key" can be read only when its twin
++	// property "key.applet" is true.  The following ten properties
++	// are open by default.	 Any other property can be explicitly
++	// opened up by the browser user by calling appletviewer with
++	// -J-Dkey.applet=true
++	avProps.put("java.version.applet", "true");
++	avProps.put("java.vendor.applet", "true");
++	avProps.put("java.vendor.url.applet", "true");
++	avProps.put("java.class.version.applet", "true");
++	avProps.put("os.name.applet", "true");
++	avProps.put("os.version.applet", "true");
++	avProps.put("os.arch.applet", "true");
++	avProps.put("file.separator.applet", "true");
++	avProps.put("path.separator.applet", "true");
++	avProps.put("line.separator.applet", "true");
++
++	// Read in the System properties.  If something is going to be
++	// over-written, warn about it.
++	Properties sysProps = System.getProperties();
++	for (Enumeration e = sysProps.propertyNames(); e.hasMoreElements(); ) {
++	    String key = (String) e.nextElement();
++	    String val = (String) sysProps.getProperty(key);
++	    avProps.setProperty(key, val);
++	}
++
++	// INSTALL THE PROPERTY LIST
++	System.setProperties(avProps);
++
++	// Create and install the security manager
++	System.setSecurityManager(new AppletSecurity());
++
++	// REMIND: Create and install a socket factory!
++    }
++
++    private static void handleMessage(String message) {
++        int index = message.indexOf(' ');
++        String first = message.substring(0, index);
++        message = message.substring(index + 1);
++        index = message.indexOf(' ');
++        String second = message.substring(0, index);
++        int identifier = Integer.parseInt(second);
++        message = message.substring(index + 1);
++
++        if (message.contains("JavaScriptGetWindow")
++            || message.contains("JavaScriptGetMember")
++            || message.contains("JavaScriptSetMember")
++            || message.contains("JavaScriptGetSlot")
++            || message.contains("JavaScriptSetSlot")
++            || message.contains("JavaScriptEval")
++            || message.contains("JavaScriptRemoveMember")
++            || message.contains("JavaScriptCall")
++            || message.contains("JavaScriptFinalize")
++            || message.contains("JavaScriptToString")) {
++            finishCallRequest(message);
++            return;
++        }
++
++        if (first.equals("instance"))
++            PluginAppletViewer.handleMessage(identifier, message);
++        else if (first.equals("context"))
++            PluginAppletSecurityContext.handleMessage(identifier, message);
++    }
++
++    static void start(InputStream inputstream, OutputStream outputstream)
++	throws MalformedURLException, IOException
++    {
++	// Set up input and output pipes.  Use UTF-8 encoding.
++	pluginInputReader =
++	    new BufferedReader(new InputStreamReader(inputstream,
++						     Charset.forName("UTF-8")));
++        pluginInputTokenizer = new StreamTokenizer(pluginInputReader);
++        pluginInputTokenizer.resetSyntax();
++        pluginInputTokenizer.whitespaceChars('\u0000', '\u0000');
++        pluginInputTokenizer.wordChars('\u0001', '\u00FF');
++	pluginOutputWriter =
++	    new BufferedWriter(new OutputStreamWriter
++			       (outputstream, Charset.forName("UTF-8")));
++
++	while(true) {
++            String message = read();
++            handleMessage(message);
++            // TODO:
++            // write(queue.peek());
++	}
++    }
++
++    public static void postCallRequest(PluginCallRequest request) {
++        synchronized(queue) {
++            queue.post(request);
++        }
++    }
++
++    private static void finishCallRequest(String message) {
++        System.out.println ("DISPATCHCALLREQUESTS 1");
++        synchronized(queue) {
++        System.out.println ("DISPATCHCALLREQUESTS 2");
++            PluginCallRequest request = queue.pop();
++        System.out.println ("DISPATCHCALLREQUESTS 3");
++            if (request != null) {
++                System.out.println ("DISPATCHCALLREQUESTS 5");
++                synchronized(request) {
++                    request.parseReturn(message);
++                    request.notifyAll();
++                }
++        System.out.println ("DISPATCHCALLREQUESTS 6");
++        System.out.println ("DISPATCHCALLREQUESTS 7");
++            }
++        }
++        System.out.println ("DISPATCHCALLREQUESTS 8");
++    }
++
++    /**
++     * Write string to plugin.
++     * 
++     * @param message the message to write
++     *
++     * @exception IOException if an error occurs
++     */
++    static void write(String message)
++    {
++        synchronized(pluginOutputWriter) {
++            try {
++                pluginOutputWriter.write(message, 0, message.length());
++                pluginOutputWriter.write(0);
++                pluginOutputWriter.flush();
++            } catch (IOException e) {
++                throw new RuntimeException(e);
++            }
++
++            System.err.println("  PIPE: appletviewer wrote: " + message);
++        }
++    }
++
++    /**
++     * Read string from plugin.
++     *
++     * @return the read string
++     *
++     * @exception IOException if an error occurs
++     */
++    static String read()
++    {
++        try {
++            pluginInputTokenizer.nextToken();
++        } catch (IOException e) {
++            throw new RuntimeException(e);
++        }
++	String message = pluginInputTokenizer.sval;
++        System.err.println("  PIPE: appletviewer read: " + message);
++	if (message == null || message.equals("shutdown")) {
++	    try {
++		// Close input/output channels to plugin.
++		pluginInputReader.close();
++		pluginOutputWriter.close();
++	    } catch (IOException exception) {
++		// Deliberately ignore IOException caused by broken
++		// pipe since plugin may have already detached.
++	    }
++            PluginAppletSecurityContext.contexts.get(0).store.dump();
++	    System.err.println("APPLETVIEWER: exiting appletviewer");
++	    System.exit(0);
++	}
++	return message;
++    }
++}
+diff -urN openjdk/jdk/src/share/classes/sun/applet.orig/PluginObjectStore.java openjdk/jdk/src/share/classes/sun/applet/PluginObjectStore.java
+--- openjdk/jdk/src/share/classes/sun/applet.orig/PluginObjectStore.java	1969-12-31 19:00:00.000000000 -0500
++++ openjdk/jdk/src/share/classes/sun/applet/PluginObjectStore.java	2008-02-23 05:35:59.000000000 -0500
+@@ -0,0 +1,117 @@
++/* PluginObjectStore -- manage identifier-to-object mapping
++   Copyright (C) 2008  Red Hat
++
++This file is part of IcedTea.
++
++IcedTea is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 2, or (at your option)
++any later version.
++
++IcedTea is distributed in the hope that it will be useful, but
++WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with IcedTea; see the file COPYING.  If not, write to the
++Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
++02110-1301 USA.
++
++Linking this library statically or dynamically with other modules is
++making a combined work based on this library.  Thus, the terms and
++conditions of the GNU General Public License cover the whole
++combination.
++
++As a special exception, the copyright holders of this library give you
++permission to link this library with independent modules to produce an
++executable, regardless of the license terms of these independent
++modules, and to copy and distribute the resulting executable under
++terms of your choice, provided that you also meet, for each linked
++independent module, the terms and conditions of the license of that
++module.  An independent module is a module which is not derived from
++or based on this library.  If you modify this library, you may extend
++this exception to your version of the library, but you are not
++obligated to do so.  If you do not wish to do so, delete this
++exception statement from your version. */
++
++package sun.applet;
++
++import java.util.*;
++import java.lang.reflect.*;
++import java.io.*;
++
++public class PluginObjectStore
++{
++    private static HashMap<Integer, Object> objects = new HashMap();
++    private static HashMap<Integer, Integer> counts = new HashMap();
++    private static HashMap<Object, Integer> identifiers = new HashMap();
++    // FIXME:
++    //
++    // IF uniqueID == MAX_LONG, uniqueID =
++    // 0 && wrapped = true
++    //
++    // if (wrapped), check if
++    // objects.get(uniqueID) returns null
++    //
++    // if yes, use uniqueID, if no,
++    // uniqueID++ and keep checking
++    // or:
++    // stack of available ids:
++    // derefed id -> derefed id -> nextUniqueIdentifier
++    private static int nextUniqueIdentifier = 1;
++
++    public Object getObject(Integer identifier) {
++        return objects.get(identifier);
++    }
++
++    public Integer getIdentifier(Object object) {
++        if (object == null)
++            return 0;
++        return identifiers.get(object);
++    }
++
++    public void reference(Object object) {
++        Integer identifier = identifiers.get(object);
++        if (identifier == null) {
++            objects.put(nextUniqueIdentifier, object);
++            counts.put(nextUniqueIdentifier, 1);
++            identifiers.put(object, nextUniqueIdentifier);
++            System.out.println("JAVA ADDED: " + nextUniqueIdentifier);
++            System.out.println("JAVA REFERENCED: " + nextUniqueIdentifier
++                               + " to: 1");
++            nextUniqueIdentifier++;
++        } else {
++            counts.put(identifier, counts.get(identifier) + 1);
++            System.out.println("JAVA REFERENCED: " + identifier +
++                               " to: " + counts.get(identifier));
++        }
++    }
++
++    public void unreference(int identifier) {
++        Integer currentCount = counts.get(identifier);
++        if (currentCount == null)
++            System.out.println("ERROR UNREFERENCING: " + identifier);
++        if (currentCount == 1) {
++            System.out.println("JAVA DEREFERENCED: " + identifier
++                               + " to: 0");
++            Object object = objects.get(identifier);
++            objects.remove(identifier);
++            counts.remove(identifier);
++            identifiers.remove(object);
++            System.out.println("JAVA REMOVED: " + identifier);
++        } else {
++            counts.put(identifier, currentCount - 1);
++            System.out.println("JAVA DEREFERENCED: " +
++                               identifier + " to: " +
++                               counts.get(identifier));
++        }
++    }
++
++    public void dump() {
++        Iterator i = objects.keySet().iterator();
++        while (i.hasNext())
++            System.out.println(i.next());
++    }
++}
++
+diff -urN openjdk/jdk/src/share/classes/sun/applet.orig/TestEnv.java openjdk/jdk/src/share/classes/sun/applet/TestEnv.java
+--- openjdk/jdk/src/share/classes/sun/applet.orig/TestEnv.java	1969-12-31 19:00:00.000000000 -0500
++++ openjdk/jdk/src/share/classes/sun/applet/TestEnv.java	2008-02-23 05:28:05.000000000 -0500
+@@ -0,0 +1,172 @@
++/* TestEnv -- test JavaScript-to-Java calls
++   Copyright (C) 2008  Red Hat
++
++This file is part of IcedTea.
++
++IcedTea is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 2, or (at your option)
++any later version.
++
++IcedTea is distributed in the hope that it will be useful, but
++WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with IcedTea; see the file COPYING.  If not, write to the
++Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
++02110-1301 USA.
++
++Linking this library statically or dynamically with other modules is
++making a combined work based on this library.  Thus, the terms and
++conditions of the GNU General Public License cover the whole
++combination.
++
++As a special exception, the copyright holders of this library give you
++permission to link this library with independent modules to produce an
++executable, regardless of the license terms of these independent
++modules, and to copy and distribute the resulting executable under
++terms of your choice, provided that you also meet, for each linked
++independent module, the terms and conditions of the license of that
++module.  An independent module is a module which is not derived from
++or based on this library.  If you modify this library, you may extend
++this exception to your version of the library, but you are not
++obligated to do so.  If you do not wish to do so, delete this
++exception statement from your version. */
++
++package sun.applet;
++
++public class TestEnv
++{
++    public static int intField = 103;
++    public int intInstanceField = 7822;
++    public String stringField = "hello";
++    // z <musical G clef> <chinese water>
++    public String complexStringField = "z\uD834\uDD1E\u6C34";
++
++    public static void TestIt() {
++        System.out.println("TestIt");
++    }
++
++    public static void TestItBool(boolean arg) {
++        System.out.println("TestItBool: " + arg);
++    }
++
++    public static void TestItByte(byte arg) {
++        System.out.println("TestItByte: " + arg);
++    }
++
++    public static void TestItChar(char arg) {
++        System.out.println("TestItChar: " + arg);
++    }
++
++    public static void TestItShort(short arg) {
++        System.out.println("TestItShort: " + arg);
++    }
++
++    public static void TestItInt(int arg) {
++        System.out.println("TestItInt: " + arg);
++    }
++
++    public static void TestItLong(long arg) {
++        System.out.println("TestItLong: " + arg);
++    }
++
++    public static void TestItFloat(float arg) {
++        System.out.println("TestItFloat: " + arg);
++    }
++
++    public static void TestItDouble(double arg) {
++        System.out.println("TestItDouble: " + arg);
++    }
++
++    public static void TestItObject(TestEnv arg) {
++        System.out.println("TestItObject: " + arg);
++    }
++
++    public static void TestItObjectString(String arg) {
++        System.out.println("TestItObjectString: " + arg);
++    }
++
++    public static void TestItIntArray(int[] arg) {
++        System.out.println("TestItIntArray: " + arg);
++        for (int i = 0; i < arg.length; i++)
++            System.out.println ("ELEMENT: " + i + " " + arg[i]);
++    }
++
++    public static void TestItObjectArray(String[] arg) {
++        System.out.println("TestItObjectArray: " + arg);
++        for (int i = 0; i < arg.length; i++)
++            System.out.println ("ELEMENT: " + i + " " + arg[i]);
++    }
++
++    public static void TestItObjectArrayMulti(String[][] arg) {
++        System.out.println("TestItObjectArrayMulti: " + arg);
++        for (int i = 0; i < arg.length; i++)
++            for (int j = 0; j < arg[i].length; j++)
++                System.out.println ("ELEMENT: " + i + " " + j + " " + arg[i][j]);
++    }
++
++    public static boolean TestItBoolReturnTrue() {
++        return true;
++    }
++
++    public static boolean TestItBoolReturnFalse() {
++        return false;
++    }
++
++    public static byte TestItByteReturn() {
++        return (byte) 0xfe;
++    }
++
++    public static char TestItCharReturn() {
++        return 'K';
++    }
++
++    public static char TestItCharUnicodeReturn() {
++        return '\u6C34';
++    }
++
++    public static short TestItShortReturn() {
++        return 23;
++    }
++
++    public static int TestItIntReturn() {
++        return 3445;
++    }
++
++    public static long TestItLongReturn() {
++        return 3242883;
++    }
++
++    public static float TestItFloatReturn() {
++        return 9.21E4f;
++    }
++
++    public static double TestItDoubleReturn() {
++        return 8.33E88;
++    }
++
++    public static Object TestItObjectReturn() {
++        return new String("Thomas");
++    }
++
++    public static int[] TestItIntArrayReturn() {
++        return new int[] { 6, 7, 8 };
++    }
++
++    public static String[] TestItObjectArrayReturn() {
++        return new String[] { "Thomas", "Brigitte" };
++    }
++
++    public static String[][] TestItObjectArrayMultiReturn() {
++        return new String[][] { {"Thomas", "Brigitte"},
++                                {"Lindsay", "Michael"} };
++    }
++
++    public int TestItIntInstance(int arg) {
++        System.out.println("TestItIntInstance: " + this + " " + arg);
++        return 899;
++    }
++}

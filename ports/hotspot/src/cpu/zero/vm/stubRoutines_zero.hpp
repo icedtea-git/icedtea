@@ -28,9 +28,14 @@
   // extend it.
 
  public:
+  static address call_stub_return_pc()
+  {
+    return (address) -1;
+  }
+ 
   static bool returns_to_call_stub(address return_pc)
   {
-    return ((ZeroFrame *) return_pc)->is_entry_frame();
+    return return_pc == call_stub_return_pc();
   }
 
   enum platform_dependent_constants

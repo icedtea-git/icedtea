@@ -3,6 +3,7 @@ syntax: glob
 
 syntax: regexp
 autom4te.cache
+cacao
 openjdk
 bootstrap
 debian
@@ -14,6 +15,8 @@ config.status
 javac
 javap
 gcjwebplugin.so
+IcedTeaPlugin.o
+IcedTeaPlugin.so
 extra-source-files.txt
 rt-source-files.txt
 hotspot-tools-source-files.txt

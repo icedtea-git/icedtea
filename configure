@@ -724,7 +724,10 @@ SYSTEM_GCJ_DIR
 SYSTEM_OPENJDK_DIR
 SYSTEM_ICEDTEA_DIR
 SYSTEM_ANT_DIR
-ENABLE_PLUGIN
+ENABLE_PLUGIN_TRUE
+ENABLE_PLUGIN_FALSE
+ENABLE_LIVECONNECT_TRUE
+ENABLE_LIVECONNECT_FALSE
 ENABLE_DOCS_TRUE
 ENABLE_DOCS_FALSE
 WITH_ICEDTEA_TRUE
@@ -748,6 +751,9 @@ LIBGCJ_JAR
 XALAN2_JAR
 XALAN2_SERIALIZER_JAR
 XERCES2_JAR
+WITH_RHINO_TRUE
+WITH_RHINO_FALSE
+RHINO_JAR
 USE_ALT_OPENJDK_SRC_ZIP_TRUE
 USE_ALT_OPENJDK_SRC_ZIP_FALSE
 ALT_OPENJDK_SRC_ZIP
@@ -756,7 +762,13 @@ GNU_CLASSLIB_FOUND_TRUE
 GNU_CLASSLIB_FOUND_FALSE
 WITH_CACAO_TRUE
 WITH_CACAO_FALSE
-CACAO
+WITH_CACAO
+USE_SYSTEM_CACAO_TRUE
+USE_SYSTEM_CACAO_FALSE
+CACAO_IMPORT_PATH
+USE_ALT_CACAO_SRC_ZIP_TRUE
+USE_ALT_CACAO_SRC_ZIP_FALSE
+ALT_CACAO_SRC_ZIP
 ENABLE_OPTIMIZATIONS_TRUE
 ENABLE_OPTIMIZATIONS_FALSE
 ZERO_BUILD_TRUE
@@ -769,10 +781,10 @@ ZERO_BITSPERWORD
 ZERO_ENDIANNESS
 ZERO_ARCHDEF
 ZERO_ARCHFLAG
-NETX_PLUGIN_TRUE
-NETX_PLUGIN_FALSE
 CORE_BUILD_TRUE
 CORE_BUILD_FALSE
+SHARK_BUILD_TRUE
+SHARK_BUILD_FALSE
 MERCURIAL
 PKG_CONFIG
 XPROTO_CFLAGS
@@ -793,14 +805,20 @@ FREETYPE2_CFLAGS
 FREETYPE2_LIBS
 ALSA_CFLAGS
 ALSA_LIBS
+XULRUNNER_CFLAGS
+XULRUNNER_LIBS
+GTK_CFLAGS
+GTK_LIBS
 MOZILLA_CFLAGS
 MOZILLA_LIBS
 GLIB_CFLAGS
 GLIB_LIBS
-GTK_CFLAGS
-GTK_LIBS
 LIBFFI_CFLAGS
 LIBFFI_LIBS
+LLVM_CONFIG
+LLVM_CFLAGS
+LLVM_LDFLAGS
+LLVM_LIBS
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -835,12 +853,14 @@ FREETYPE2_CFLAGS
 FREETYPE2_LIBS
 ALSA_CFLAGS
 ALSA_LIBS
+XULRUNNER_CFLAGS
+XULRUNNER_LIBS
+GTK_CFLAGS
+GTK_LIBS
 MOZILLA_CFLAGS
 MOZILLA_LIBS
 GLIB_CFLAGS
 GLIB_LIBS
-GTK_CFLAGS
-GTK_LIBS
 LIBFFI_CFLAGS
 LIBFFI_LIBS'
 
@@ -1425,11 +1445,11 @@ Optional Features:
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
   --disable-gcjwebplugin  Disable compilation of browser plugin
+  --enable-liveconnect    Enable experimental LiveConnect plugin
   --disable-docs          Disable generation of documentation
   --disable-optimizations build with -O0 -g [default=no]
   --enable-zero           use zero-assembler port on non-zero platforms
-  --enable-netx-plugin    enable experimental caching and security support in
-                          applet plugin
+  --enable-shark          use Shark JIT
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1457,9 +1477,12 @@ Optional Packages:
   --with-xalan2-serializer-jar
                           specify location of the xalan2-serializer jar
   --with-xerces2-jar      specify location of the xerces2 jar
+  --with-rhino            specify location of the rhino jar
   --with-openjdk-src-zip  specify the location of the openjdk source zip
   --with-openjdk-src-dir  specify the location of the openjdk sources
-  --with-cacao            use CACAO as VM
+  --with-cacao            use CACAO as VM [default=no]
+  --with-cacao-home       CACAO home directory [[default=/usr/local/cacao]]
+  --with-cacao-src-zip    specify the location of the CACAO source zip
 
 Some influential environment variables:
   CC          C compiler command
@@ -1497,14 +1520,18 @@ Some influential environment variables:
               linker flags for FREETYPE2, overriding pkg-config
   ALSA_CFLAGS C compiler flags for ALSA, overriding pkg-config
   ALSA_LIBS   linker flags for ALSA, overriding pkg-config
+  XULRUNNER_CFLAGS
+              C compiler flags for XULRUNNER, overriding pkg-config
+  XULRUNNER_LIBS
+              linker flags for XULRUNNER, overriding pkg-config
+  GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
+  GTK_LIBS    linker flags for GTK, overriding pkg-config
   MOZILLA_CFLAGS
               C compiler flags for MOZILLA, overriding pkg-config
   MOZILLA_LIBS
               linker flags for MOZILLA, overriding pkg-config
   GLIB_CFLAGS C compiler flags for GLIB, overriding pkg-config
   GLIB_LIBS   linker flags for GLIB, overriding pkg-config
-  GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
-  GTK_LIBS    linker flags for GTK, overriding pkg-config
   LIBFFI_CFLAGS
               C compiler flags for LIBFFI, overriding pkg-config
   LIBFFI_LIBS linker flags for LIBFFI, overriding pkg-config
@@ -5869,11 +5896,34 @@ fi
 
 # Check whether --enable-gcjwebplugin was given.
 if test "${enable_gcjwebplugin+set}" = set; then
-  enableval=$enable_gcjwebplugin; ENABLE_PLUGIN="${enableval}"
+  enableval=$enable_gcjwebplugin; enable_plugin="$val"
 else
-  ENABLE_PLUGIN='yes'
+  enable_plugin="yes"
 fi
 
+ if test "x${enable_plugin}" = "xyes"; then
+  ENABLE_PLUGIN_TRUE=
+  ENABLE_PLUGIN_FALSE='#'
+else
+  ENABLE_PLUGIN_TRUE='#'
+  ENABLE_PLUGIN_FALSE=
+fi
+
+
+# Check whether --enable-liveconnect was given.
+if test "${enable_liveconnect+set}" = set; then
+  enableval=$enable_liveconnect; enable_liveconnect="yes"
+else
+  enable_liveconnect="no"
+fi
+
+ if test "x${enable_liveconnect}" = "xyes"; then
+  ENABLE_LIVECONNECT_TRUE=
+  ENABLE_LIVECONNECT_FALSE='#'
+else
+  ENABLE_LIVECONNECT_TRUE='#'
+  ENABLE_LIVECONNECT_FALSE=
+fi
 
 
 # Check whether --enable-docs was given.
@@ -7877,6 +7927,65 @@ echo "$as_me: error: \"A xerces2 jar was not found.\"" >&2;}
 fi
 fi
 
+  { echo "$as_me:$LINENO: checking whether to include Javascript support via Rhino" >&5
+echo $ECHO_N "checking whether to include Javascript support via Rhino... $ECHO_C" >&6; }
+
+# Check whether --with-rhino was given.
+if test "${with_rhino+set}" = set; then
+  withval=$with_rhino;
+    case "${withval}" in
+      yes)
+	RHINO_JAR=yes
+        ;;
+      no)
+        RHINO_JAR=no
+        ;;
+      *)
+    	if test -f "${withval}"; then
+          RHINO_JAR="${withval}"
+        else
+	  { echo "$as_me:$LINENO: result: not found" >&5
+echo "${ECHO_T}not found" >&6; }
+          { { echo "$as_me:$LINENO: error: \"The rhino jar ${withval} was not found.\"" >&5
+echo "$as_me: error: \"The rhino jar ${withval} was not found.\"" >&2;}
+   { (exit 1); exit 1; }; }
+        fi
+	;;
+     esac
+
+else
+
+    RHINO_JAR=yes
+
+fi
+
+  if test x"${RHINO_JAR}" = "xyes"; then
+    if test -e "/usr/share/java/rhino.jar"; then
+      RHINO_JAR=/usr/share/java/rhino.jar
+    elif test -e "/usr/share/java/js.jar"; then
+      RHINO_JAR=/usr/share/java/js.jar
+    fi
+    if test x"${RHINO_JAR}" = "xyes"; then
+      { echo "$as_me:$LINENO: result: not found" >&5
+echo "${ECHO_T}not found" >&6; }
+      { { echo "$as_me:$LINENO: error: \"A rhino jar was not found in /usr/share/java as either rhino.jar or js.jar.\"" >&5
+echo "$as_me: error: \"A rhino jar was not found in /usr/share/java as either rhino.jar or js.jar.\"" >&2;}
+   { (exit 1); exit 1; }; }
+    fi
+  fi
+  { echo "$as_me:$LINENO: result: ${RHINO_JAR}" >&5
+echo "${ECHO_T}${RHINO_JAR}" >&6; }
+   if test x"${RHINO_JAR}" != "xno"; then
+  WITH_RHINO_TRUE=
+  WITH_RHINO_FALSE='#'
+else
+  WITH_RHINO_TRUE='#'
+  WITH_RHINO_FALSE=
+fi
+
+
+
+
   { echo "$as_me:$LINENO: checking openjdk source zip" >&5
 echo $ECHO_N "checking openjdk source zip... $ECHO_C" >&6; }
 
@@ -7949,28 +8058,18 @@ echo $ECHO_N "checking whether to use CACAO as VM... $ECHO_C" >&6; }
 # Check whether --with-cacao was given.
 if test "${with_cacao+set}" = set; then
   withval=$with_cacao;
-    case "${withval}" in
-      yes)
-        CACAO=/usr/local/cacao
-        ;;
-      no)
-        CACAO=no
-        ;;
-      *)
-        CACAO=${withval}
-        ;;
-    esac
+    WITH_CACAO=yes
 
 else
 
-    CACAO=no
+    WITH_CACAO=no
 
 fi
 
 
-  { echo "$as_me:$LINENO: result: ${CACAO}" >&5
-echo "${ECHO_T}${CACAO}" >&6; }
-   if test x"${CACAO}" != "xno"; then
+  { echo "$as_me:$LINENO: result: ${WITH_CACAO}" >&5
+echo "${ECHO_T}${WITH_CACAO}" >&6; }
+   if test x"${WITH_CACAO}" = "xyes"; then
   WITH_CACAO_TRUE=
   WITH_CACAO_FALSE='#'
 else
@@ -7978,6 +8077,83 @@ else
   WITH_CACAO_FALSE=
 fi
 
+
+
+
+  { echo "$as_me:$LINENO: checking CACAO home directory" >&5
+echo $ECHO_N "checking CACAO home directory... $ECHO_C" >&6; }
+
+# Check whether --with-cacao-home was given.
+if test "${with_cacao_home+set}" = set; then
+  withval=$with_cacao_home;
+                case "${withval}" in
+                yes)
+                  CACAO_IMPORT_PATH=/usr/local/cacao
+                  ;;
+                *)
+                  CACAO_IMPORT_PATH=${withval}
+                  ;;
+                esac
+                 if true; then
+  USE_SYSTEM_CACAO_TRUE=
+  USE_SYSTEM_CACAO_FALSE='#'
+else
+  USE_SYSTEM_CACAO_TRUE='#'
+  USE_SYSTEM_CACAO_FALSE=
+fi
+
+
+else
+
+                CACAO_IMPORT_PATH="\$(abs_top_builddir)/cacao/install"
+                 if false; then
+  USE_SYSTEM_CACAO_TRUE=
+  USE_SYSTEM_CACAO_FALSE='#'
+else
+  USE_SYSTEM_CACAO_TRUE='#'
+  USE_SYSTEM_CACAO_FALSE=
+fi
+
+
+fi
+
+  { echo "$as_me:$LINENO: result: ${CACAO_IMPORT_PATH}" >&5
+echo "${ECHO_T}${CACAO_IMPORT_PATH}" >&6; }
+
+
+
+  { echo "$as_me:$LINENO: checking CACAO source zip" >&5
+echo $ECHO_N "checking CACAO source zip... $ECHO_C" >&6; }
+
+# Check whether --with-cacao-src-zip was given.
+if test "${with_cacao_src_zip+set}" = set; then
+  withval=$with_cacao_src_zip;
+    ALT_CACAO_SRC_ZIP=${withval}
+     if test x = x; then
+  USE_ALT_CACAO_SRC_ZIP_TRUE=
+  USE_ALT_CACAO_SRC_ZIP_FALSE='#'
+else
+  USE_ALT_CACAO_SRC_ZIP_TRUE='#'
+  USE_ALT_CACAO_SRC_ZIP_FALSE=
+fi
+
+
+else
+
+    ALT_CACAO_SRC_ZIP="not specified"
+     if test x != x; then
+  USE_ALT_CACAO_SRC_ZIP_TRUE=
+  USE_ALT_CACAO_SRC_ZIP_FALSE='#'
+else
+  USE_ALT_CACAO_SRC_ZIP_TRUE='#'
+  USE_ALT_CACAO_SRC_ZIP_FALSE=
+fi
+
+
+fi
+
+  { echo "$as_me:$LINENO: result: ${ALT_CACAO_SRC_ZIP}" >&5
+echo "${ECHO_T}${ALT_CACAO_SRC_ZIP}" >&6; }
 
 
 
@@ -8674,7 +8850,7 @@ else
       sparc*-*-*) ;;
       x86_64-*-*) ;;
       *)
-        if test "x${CACAO}" != xno; then
+        if test "x${WITH_CACAO}" != xno; then
           use_zero=no
         else
           use_zero=yes
@@ -9390,56 +9566,53 @@ esac
 
 
 
-  # Check whether --enable-netx-plugin was given.
-if test "${enable_netx_plugin+set}" = set; then
-  enableval=$enable_netx_plugin;
-    { echo "$as_me:$LINENO: checking netx plugin" >&5
-echo $ECHO_N "checking netx plugin... $ECHO_C" >&6; }
-    { echo "$as_me:$LINENO: result: will enable netx plugin" >&5
-echo "${ECHO_T}will enable netx plugin" >&6; }
-     if test x = x; then
-  NETX_PLUGIN_TRUE=
-  NETX_PLUGIN_FALSE='#'
-else
-  NETX_PLUGIN_TRUE='#'
-  NETX_PLUGIN_FALSE=
-fi
-
-
-else
-
-     if test x != x; then
-  NETX_PLUGIN_TRUE=
-  NETX_PLUGIN_FALSE='#'
-else
-  NETX_PLUGIN_TRUE='#'
-  NETX_PLUGIN_FALSE=
-fi
-
+  { echo "$as_me:$LINENO: checking whether to use the Shark JIT" >&5
+echo $ECHO_N "checking whether to use the Shark JIT... $ECHO_C" >&6; }
+  shark_selected=no
+  # Check whether --enable-shark was given.
+if test "${enable_shark+set}" = set; then
+  enableval=$enable_shark;
+    case "${enableval}" in
+      no)
+        ;;
+      *)
+        shark_selected=yes
+        ;;
+    esac
 
 fi
 
 
-
-  if test "x${CACAO}" != "xno"; then
-     if true; then
-  CORE_BUILD_TRUE=
-  CORE_BUILD_FALSE='#'
-else
-  CORE_BUILD_TRUE='#'
-  CORE_BUILD_FALSE=
-fi
-
-  else
-     if test "x${ZERO_BUILD_TRUE}" = x; then
-  CORE_BUILD_TRUE=
-  CORE_BUILD_FALSE='#'
-else
-  CORE_BUILD_TRUE='#'
-  CORE_BUILD_FALSE=
-fi
-
+  use_core=no
+  use_shark=no
+  if test "x${WITH_CACAO}" != "xno"; then
+    use_core=yes
+  elif test "x${use_zero}" = "xyes"; then
+    if test "x${shark_selected}" = "xyes"; then
+      use_shark=yes
+    else
+      use_core=yes
+    fi
   fi
+  { echo "$as_me:$LINENO: result: $use_shark" >&5
+echo "${ECHO_T}$use_shark" >&6; }
+
+   if test "x${use_core}" = xyes; then
+  CORE_BUILD_TRUE=
+  CORE_BUILD_FALSE='#'
+else
+  CORE_BUILD_TRUE='#'
+  CORE_BUILD_FALSE=
+fi
+
+   if test "x${use_shark}" = xyes; then
+  SHARK_BUILD_TRUE=
+  SHARK_BUILD_FALSE='#'
+else
+  SHARK_BUILD_TRUE='#'
+  SHARK_BUILD_FALSE=
+fi
+
 
 
 if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
@@ -11082,7 +11255,243 @@ fi
 
 
 
-if test "$ENABLE_PLUGIN" = "yes"; then
+if test "x${enable_liveconnect}" = "xyes"
+then
+
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for XULRUNNER" >&5
+echo $ECHO_N "checking for XULRUNNER... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$XULRUNNER_CFLAGS"; then
+        pkg_cv_XULRUNNER_CFLAGS="$XULRUNNER_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9\"") >&5
+  ($PKG_CONFIG --exists --print-errors "\
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_XULRUNNER_CFLAGS=`$PKG_CONFIG --cflags "\
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$XULRUNNER_LIBS"; then
+        pkg_cv_XULRUNNER_LIBS="$XULRUNNER_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"\\
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9\"") >&5
+  ($PKG_CONFIG --exists --print-errors "\
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_XULRUNNER_LIBS=`$PKG_CONFIG --libs "\
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        XULRUNNER_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "\
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9"`
+        else
+	        XULRUNNER_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "\
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$XULRUNNER_PKG_ERRORS" >&5
+
+	{ { echo "$as_me:$LINENO: error: Package requirements (\
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9) were not met:
+
+$XULRUNNER_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables XULRUNNER_CFLAGS
+and XULRUNNER_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&5
+echo "$as_me: error: Package requirements (\
+    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9) were not met:
+
+$XULRUNNER_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables XULRUNNER_CFLAGS
+and XULRUNNER_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&2;}
+   { (exit 1); exit 1; }; }
+elif test $pkg_failed = untried; then
+	{ { echo "$as_me:$LINENO: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables XULRUNNER_CFLAGS
+and XULRUNNER_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&5
+echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables XULRUNNER_CFLAGS
+and XULRUNNER_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+else
+	XULRUNNER_CFLAGS=$pkg_cv_XULRUNNER_CFLAGS
+	XULRUNNER_LIBS=$pkg_cv_XULRUNNER_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	:
+fi
+
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for GTK" >&5
+echo $ECHO_N "checking for GTK... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GTK_CFLAGS"; then
+        pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\"") >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GTK_LIBS"; then
+        pkg_cv_GTK_LIBS="$GTK_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\"") >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gtk+-2.0"`
+        else
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtk+-2.0"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GTK_PKG_ERRORS" >&5
+
+	{ { echo "$as_me:$LINENO: error: Package requirements (gtk+-2.0) were not met:
+
+$GTK_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&5
+echo "$as_me: error: Package requirements (gtk+-2.0) were not met:
+
+$GTK_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&2;}
+   { (exit 1); exit 1; }; }
+elif test $pkg_failed = untried; then
+	{ { echo "$as_me:$LINENO: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&5
+echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+else
+	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
+	GTK_LIBS=$pkg_cv_GTK_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	:
+fi
+else
+  if test "x${enable_plugin}" = "xyes"
+  then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -11144,20 +11553,19 @@ fi
 
 	{ echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
-                \
-  MOZILLA_FOUND=no
+                MOZILLA_FOUND=no
 elif test $pkg_failed = untried; then
-	\
-  MOZILLA_FOUND=no
+	MOZILLA_FOUND=no
 else
 	MOZILLA_CFLAGS=$pkg_cv_MOZILLA_CFLAGS
 	MOZILLA_LIBS=$pkg_cv_MOZILLA_LIBS
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
-	MOZILLA_FOUND=yes
+	\
+      MOZILLA_FOUND=yes
 fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -11228,11 +11636,11 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -11303,11 +11711,11 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -11378,11 +11786,11 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -11453,11 +11861,11 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -11528,11 +11936,11 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
 
 pkg_failed=no
 { echo "$as_me:$LINENO: checking for MOZILLA" >&5
@@ -11603,15 +12011,15 @@ else
         { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	\
-    MOZILLA_FOUND=yes
+        MOZILLA_FOUND=yes
 fi
-fi
-if test "x${MOZILLA_FOUND}" = xno
-then
-  { { echo "$as_me:$LINENO: error: Could not find plugin support headers and libraries." >&5
+    fi
+    if test "x${MOZILLA_FOUND}" = xno
+    then
+      { { echo "$as_me:$LINENO: error: Could not find plugin support headers and libraries." >&5
 echo "$as_me: error: Could not find plugin support headers and libraries." >&2;}
    { (exit 1); exit 1; }; }
-fi
+    fi
 
 
 pkg_failed=no
@@ -11842,6 +12250,7 @@ fi
 
 
 
+  fi
 fi
 
 if test "x${ZERO_BUILD_TRUE}" = x; then
@@ -12154,6 +12563,126 @@ fi
 
 
 
+if test "x${SHARK_BUILD_TRUE}" = x; then
+  if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}llvm-config", so it can be a program name with args.
+set dummy ${ac_tool_prefix}llvm-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_LLVM_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $LLVM_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_LLVM_CONFIG="$LLVM_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_LLVM_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+LLVM_CONFIG=$ac_cv_path_LLVM_CONFIG
+if test -n "$LLVM_CONFIG"; then
+  { echo "$as_me:$LINENO: result: $LLVM_CONFIG" >&5
+echo "${ECHO_T}$LLVM_CONFIG" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_LLVM_CONFIG"; then
+  ac_pt_LLVM_CONFIG=$LLVM_CONFIG
+  # Extract the first word of "llvm-config", so it can be a program name with args.
+set dummy llvm-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ac_pt_LLVM_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ac_pt_LLVM_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_LLVM_CONFIG="$ac_pt_LLVM_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ac_pt_LLVM_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_LLVM_CONFIG=$ac_cv_path_ac_pt_LLVM_CONFIG
+if test -n "$ac_pt_LLVM_CONFIG"; then
+  { echo "$as_me:$LINENO: result: $ac_pt_LLVM_CONFIG" >&5
+echo "${ECHO_T}$ac_pt_LLVM_CONFIG" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_pt_LLVM_CONFIG" = x; then
+    LLVM_CONFIG=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    LLVM_CONFIG=$ac_pt_LLVM_CONFIG
+  fi
+else
+  LLVM_CONFIG="$ac_cv_path_LLVM_CONFIG"
+fi
+
+ if test x"$LLVM_CONFIG" = x ; then
+   { { echo "$as_me:$LINENO: error: llvm-config program not found in PATH" >&5
+echo "$as_me: error: llvm-config program not found in PATH" >&2;}
+   { (exit 1); exit 1; }; }
+ fi
+
+
+  llvm_components="engine bitwriter"
+  LLVM_CFLAGS=`$LLVM_CONFIG --cflags $llvm_components | \
+    sed -e 's/-O.//g' | sed -e 's/-fomit-frame-pointer//g'`
+  LLVM_LDFLAGS=`$LLVM_CONFIG --ldflags $llvm_components`
+  LLVM_LIBS=`$LLVM_CONFIG --libs $llvm_components`
+fi
+
+
+
+
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -12301,6 +12830,20 @@ echo "$as_me: error: conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${ENABLE_PLUGIN_TRUE}" && test -z "${ENABLE_PLUGIN_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"ENABLE_PLUGIN\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"ENABLE_PLUGIN\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${ENABLE_LIVECONNECT_TRUE}" && test -z "${ENABLE_LIVECONNECT_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"ENABLE_LIVECONNECT\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"ENABLE_LIVECONNECT\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${ENABLE_DOCS_TRUE}" && test -z "${ENABLE_DOCS_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"ENABLE_DOCS\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -12350,6 +12893,13 @@ echo "$as_me: error: conditional \"GCC_OLD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${WITH_RHINO_TRUE}" && test -z "${WITH_RHINO_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"WITH_RHINO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"WITH_RHINO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${USE_ALT_OPENJDK_SRC_ZIP_TRUE}" && test -z "${USE_ALT_OPENJDK_SRC_ZIP_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_OPENJDK_SRC_ZIP\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -12378,6 +12928,34 @@ echo "$as_me: error: conditional \"WITH_CACAO\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
+if test -z "${USE_SYSTEM_CACAO_TRUE}" && test -z "${USE_SYSTEM_CACAO_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_SYSTEM_CACAO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_SYSTEM_CACAO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_SYSTEM_CACAO_TRUE}" && test -z "${USE_SYSTEM_CACAO_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_SYSTEM_CACAO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_SYSTEM_CACAO\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_ALT_CACAO_SRC_ZIP_TRUE}" && test -z "${USE_ALT_CACAO_SRC_ZIP_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_CACAO_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_ALT_CACAO_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${USE_ALT_CACAO_SRC_ZIP_TRUE}" && test -z "${USE_ALT_CACAO_SRC_ZIP_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"USE_ALT_CACAO_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"USE_ALT_CACAO_SRC_ZIP\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
 if test -z "${ENABLE_OPTIMIZATIONS_TRUE}" && test -z "${ENABLE_OPTIMIZATIONS_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"ENABLE_OPTIMIZATIONS\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -12392,20 +12970,6 @@ echo "$as_me: error: conditional \"ZERO_BUILD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
-if test -z "${NETX_PLUGIN_TRUE}" && test -z "${NETX_PLUGIN_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"NETX_PLUGIN\" was never defined.
-Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"NETX_PLUGIN\" was never defined.
-Usually this means the macro was only invoked conditionally." >&2;}
-   { (exit 1); exit 1; }; }
-fi
-if test -z "${NETX_PLUGIN_TRUE}" && test -z "${NETX_PLUGIN_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"NETX_PLUGIN\" was never defined.
-Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"NETX_PLUGIN\" was never defined.
-Usually this means the macro was only invoked conditionally." >&2;}
-   { (exit 1); exit 1; }; }
-fi
 if test -z "${CORE_BUILD_TRUE}" && test -z "${CORE_BUILD_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"CORE_BUILD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
@@ -12413,10 +12977,10 @@ echo "$as_me: error: conditional \"CORE_BUILD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
-if test -z "${CORE_BUILD_TRUE}" && test -z "${CORE_BUILD_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"CORE_BUILD\" was never defined.
+if test -z "${SHARK_BUILD_TRUE}" && test -z "${SHARK_BUILD_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"SHARK_BUILD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"CORE_BUILD\" was never defined.
+echo "$as_me: error: conditional \"SHARK_BUILD\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -13090,7 +13654,10 @@ SYSTEM_GCJ_DIR!$SYSTEM_GCJ_DIR$ac_delim
 SYSTEM_OPENJDK_DIR!$SYSTEM_OPENJDK_DIR$ac_delim
 SYSTEM_ICEDTEA_DIR!$SYSTEM_ICEDTEA_DIR$ac_delim
 SYSTEM_ANT_DIR!$SYSTEM_ANT_DIR$ac_delim
-ENABLE_PLUGIN!$ENABLE_PLUGIN$ac_delim
+ENABLE_PLUGIN_TRUE!$ENABLE_PLUGIN_TRUE$ac_delim
+ENABLE_PLUGIN_FALSE!$ENABLE_PLUGIN_FALSE$ac_delim
+ENABLE_LIVECONNECT_TRUE!$ENABLE_LIVECONNECT_TRUE$ac_delim
+ENABLE_LIVECONNECT_FALSE!$ENABLE_LIVECONNECT_FALSE$ac_delim
 ENABLE_DOCS_TRUE!$ENABLE_DOCS_TRUE$ac_delim
 ENABLE_DOCS_FALSE!$ENABLE_DOCS_FALSE$ac_delim
 WITH_ICEDTEA_TRUE!$WITH_ICEDTEA_TRUE$ac_delim
@@ -13114,6 +13681,9 @@ LIBGCJ_JAR!$LIBGCJ_JAR$ac_delim
 XALAN2_JAR!$XALAN2_JAR$ac_delim
 XALAN2_SERIALIZER_JAR!$XALAN2_SERIALIZER_JAR$ac_delim
 XERCES2_JAR!$XERCES2_JAR$ac_delim
+WITH_RHINO_TRUE!$WITH_RHINO_TRUE$ac_delim
+WITH_RHINO_FALSE!$WITH_RHINO_FALSE$ac_delim
+RHINO_JAR!$RHINO_JAR$ac_delim
 USE_ALT_OPENJDK_SRC_ZIP_TRUE!$USE_ALT_OPENJDK_SRC_ZIP_TRUE$ac_delim
 USE_ALT_OPENJDK_SRC_ZIP_FALSE!$USE_ALT_OPENJDK_SRC_ZIP_FALSE$ac_delim
 ALT_OPENJDK_SRC_ZIP!$ALT_OPENJDK_SRC_ZIP$ac_delim
@@ -13122,7 +13692,13 @@ GNU_CLASSLIB_FOUND_TRUE!$GNU_CLASSLIB_FOUND_TRUE$ac_delim
 GNU_CLASSLIB_FOUND_FALSE!$GNU_CLASSLIB_FOUND_FALSE$ac_delim
 WITH_CACAO_TRUE!$WITH_CACAO_TRUE$ac_delim
 WITH_CACAO_FALSE!$WITH_CACAO_FALSE$ac_delim
-CACAO!$CACAO$ac_delim
+WITH_CACAO!$WITH_CACAO$ac_delim
+USE_SYSTEM_CACAO_TRUE!$USE_SYSTEM_CACAO_TRUE$ac_delim
+USE_SYSTEM_CACAO_FALSE!$USE_SYSTEM_CACAO_FALSE$ac_delim
+CACAO_IMPORT_PATH!$CACAO_IMPORT_PATH$ac_delim
+USE_ALT_CACAO_SRC_ZIP_TRUE!$USE_ALT_CACAO_SRC_ZIP_TRUE$ac_delim
+USE_ALT_CACAO_SRC_ZIP_FALSE!$USE_ALT_CACAO_SRC_ZIP_FALSE$ac_delim
+ALT_CACAO_SRC_ZIP!$ALT_CACAO_SRC_ZIP$ac_delim
 ENABLE_OPTIMIZATIONS_TRUE!$ENABLE_OPTIMIZATIONS_TRUE$ac_delim
 ENABLE_OPTIMIZATIONS_FALSE!$ENABLE_OPTIMIZATIONS_FALSE$ac_delim
 ZERO_BUILD_TRUE!$ZERO_BUILD_TRUE$ac_delim
@@ -13135,10 +13711,10 @@ ZERO_BITSPERWORD!$ZERO_BITSPERWORD$ac_delim
 ZERO_ENDIANNESS!$ZERO_ENDIANNESS$ac_delim
 ZERO_ARCHDEF!$ZERO_ARCHDEF$ac_delim
 ZERO_ARCHFLAG!$ZERO_ARCHFLAG$ac_delim
-NETX_PLUGIN_TRUE!$NETX_PLUGIN_TRUE$ac_delim
-NETX_PLUGIN_FALSE!$NETX_PLUGIN_FALSE$ac_delim
 CORE_BUILD_TRUE!$CORE_BUILD_TRUE$ac_delim
 CORE_BUILD_FALSE!$CORE_BUILD_FALSE$ac_delim
+SHARK_BUILD_TRUE!$SHARK_BUILD_TRUE$ac_delim
+SHARK_BUILD_FALSE!$SHARK_BUILD_FALSE$ac_delim
 MERCURIAL!$MERCURIAL$ac_delim
 PKG_CONFIG!$PKG_CONFIG$ac_delim
 XPROTO_CFLAGS!$XPROTO_CFLAGS$ac_delim
@@ -13159,19 +13735,13 @@ FREETYPE2_CFLAGS!$FREETYPE2_CFLAGS$ac_delim
 FREETYPE2_LIBS!$FREETYPE2_LIBS$ac_delim
 ALSA_CFLAGS!$ALSA_CFLAGS$ac_delim
 ALSA_LIBS!$ALSA_LIBS$ac_delim
-MOZILLA_CFLAGS!$MOZILLA_CFLAGS$ac_delim
-MOZILLA_LIBS!$MOZILLA_LIBS$ac_delim
-GLIB_CFLAGS!$GLIB_CFLAGS$ac_delim
-GLIB_LIBS!$GLIB_LIBS$ac_delim
+XULRUNNER_CFLAGS!$XULRUNNER_CFLAGS$ac_delim
+XULRUNNER_LIBS!$XULRUNNER_LIBS$ac_delim
 GTK_CFLAGS!$GTK_CFLAGS$ac_delim
 GTK_LIBS!$GTK_LIBS$ac_delim
-LIBFFI_CFLAGS!$LIBFFI_CFLAGS$ac_delim
-LIBFFI_LIBS!$LIBFFI_LIBS$ac_delim
-LIBOBJS!$LIBOBJS$ac_delim
-LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 91; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
@@ -13190,6 +13760,59 @@ fi
 
 cat >>$CONFIG_STATUS <<_ACEOF
 cat >"\$tmp/subs-2.sed" <<\CEOF$ac_eof
+/@[a-zA-Z_][a-zA-Z_0-9]*@/!b
+_ACEOF
+sed '
+s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g
+s/^/s,@/; s/!/@,|#_!!_#|/
+:n
+t n
+s/'"$ac_delim"'$/,g/; t
+s/$/\\/; p
+N; s/^.*\n//; s/[,\\&]/\\&/g; s/@/@|#_!!_#|/g; b n
+' >>$CONFIG_STATUS <conf$$subs.sed
+rm -f conf$$subs.sed
+cat >>$CONFIG_STATUS <<_ACEOF
+CEOF$ac_eof
+_ACEOF
+
+
+ac_delim='%!_!# '
+for ac_last_try in false false false false false :; do
+  cat >conf$$subs.sed <<_ACEOF
+MOZILLA_CFLAGS!$MOZILLA_CFLAGS$ac_delim
+MOZILLA_LIBS!$MOZILLA_LIBS$ac_delim
+GLIB_CFLAGS!$GLIB_CFLAGS$ac_delim
+GLIB_LIBS!$GLIB_LIBS$ac_delim
+LIBFFI_CFLAGS!$LIBFFI_CFLAGS$ac_delim
+LIBFFI_LIBS!$LIBFFI_LIBS$ac_delim
+LLVM_CONFIG!$LLVM_CONFIG$ac_delim
+LLVM_CFLAGS!$LLVM_CFLAGS$ac_delim
+LLVM_LDFLAGS!$LLVM_LDFLAGS$ac_delim
+LLVM_LIBS!$LLVM_LIBS$ac_delim
+LIBOBJS!$LIBOBJS$ac_delim
+LTLIBOBJS!$LTLIBOBJS$ac_delim
+_ACEOF
+
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 12; then
+    break
+  elif $ac_last_try; then
+    { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
+echo "$as_me: error: could not make $CONFIG_STATUS" >&2;}
+   { (exit 1); exit 1; }; }
+  else
+    ac_delim="$ac_delim!$ac_delim _$ac_delim!! "
+  fi
+done
+
+ac_eof=`sed -n '/^CEOF[0-9]*$/s/CEOF/0/p' conf$$subs.sed`
+if test -n "$ac_eof"; then
+  ac_eof=`echo "$ac_eof" | sort -nru | sed 1q`
+  ac_eof=`expr $ac_eof + 1`
+fi
+
+cat >>$CONFIG_STATUS <<_ACEOF
+cat >"\$tmp/subs-3.sed" <<\CEOF$ac_eof
 /@[a-zA-Z_][a-zA-Z_0-9]*@/!b end
 _ACEOF
 sed '
@@ -13458,7 +14081,7 @@ s&@abs_top_builddir@&$ac_abs_top_builddir&;t t
 s&@INSTALL@&$ac_INSTALL&;t t
 s&@MKDIR_P@&$ac_MKDIR_P&;t t
 $ac_datarootdir_hack
-" $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" >$tmp/out
+" $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" | sed -f "$tmp/subs-3.sed" >$tmp/out
 
 test -z "$ac_datarootdir_hack$ac_datarootdir_seen" &&
   { ac_out=`sed -n '/\${datarootdir}/p' "$tmp/out"`; test -n "$ac_out"; } &&

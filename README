@@ -124,11 +124,18 @@ development headers are provided by the xulrunner-devel package.
 To run IcedTeaPlugin you'll need to add
 /usr/lib/xulrunner-sdk-1.9pre/sdk/lib/ to LD_LIBRARY_PATH.
 
-If the option --enable-netx-plugin is passed to configure, this will
-make all applets run through NetX security instead of the default
-security manager. This feature is experimental, and is not enabled by
-default. Note that if --disable-gcjwebplugin is used, --enable-netx-plugin
-will not work.
+Experimental LiveConnect support
+================================
+
+The configure option --enable-liveconnect enables experimental
+LiveConnect support, implemented by IcedTeaPlugin.cc and
+patches/icedtea-liveconnect.patch.  Currently IcedTeaPlugin.cc will
+only build against a very recent version of XULRunner, such as that
+available in Fedora Rawhide as of 2008-02-23.  The required
+development headers are provided by the xulrunner-devel package.
+
+To run IcedTeaPlugin you'll need to add
+/usr/lib/xulrunner-sdk-1.9pre/sdk/lib/ to LD_LIBRARY_PATH.
 
 NetX
 ====
@@ -141,8 +148,13 @@ directory.
 The NetX sources are built into rt.jar
 
 IcedTea's NetX currently supports verification of signed jars, trusted
+<<<<<<< local
 certificate storing, system certificate store checking, and provides 
 some services specified by the jnlp API.
+=======
+certificate storing, system certificate store checking, and provides
+the services specified by the jnlp API.
+>>>>>>> other
 
 CACAO as VM
 ===========
@@ -152,3 +164,6 @@ HotSpot with the one from the CACAO VM.  This enables the usage of
 IcedTea on architectures which are not supported by the HotSpot VM,
 besides the HotSpot zero port.  In contrast to the HotSpot zero port,
 CACAO provides a Just-In-Time compiler for various architectures.
+
+The environment variable CACAO_CONFIGURE_ARGS can be used to pass
+additional arguments to the cacao configure.

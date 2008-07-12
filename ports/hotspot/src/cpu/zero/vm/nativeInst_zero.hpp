@@ -182,7 +182,9 @@ class NativeJump : public NativeInstruction
 
   static void check_verified_entry_alignment(address entry,
                                              address verified_entry) {
+#ifndef SHARK
     Unimplemented();
+#endif // !SHARK
   }
 
   static void patch_verified_entry(address entry,

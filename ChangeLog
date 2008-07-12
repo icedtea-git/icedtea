@@ -1,3 +1,20 @@
+2008-07-11  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-zero.patch: Build non-product correctly on ia64.
+
+2008-07-11  Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* Makefile.am (CACAO_VERSION): Updated to 0.99.2
+	(CACAO_MD5SUM): Likewise.
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Likewise.
+	* configure: Likewise.
+
+2008-07-10  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/runtime/Boot.java: Remove restriction of only
+	files ending with .jnlp being loaded. Also refactored a bit.
+
 2008-07-08  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-security-updates.patch: New patch containing
@@ -11,6 +28,406 @@
 	Remove previously applied parts as spotted
 	by Lillian Angel.
 	
+2008-07-08  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/cacao.stamp): Pass CACAO_CONFIGURE_ARGS to
+	 configure.
+	* Makefile.in: Regenerate.
+	* README: Document CACAO_CONFIGURE_ARGS.
+
+2008-07-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am (EXCLUDE_LIVECONNECT): New variable.
+	(LIVECONNECT_DIR): Likewise.
+	* Makefile.in: Regenerate.
+	* rt/netscape/javascript/JSException.java: New file.
+	* rt/netscape/javascript/JSObject.java: Likewise.
+	* rt/netscape/javascript/JSProxy.java: Likewise.
+	* rt/netscape/javascript/JSRunnable.java: Likewise.
+	* rt/netscape/javascript/JSUtil.java: Likewise.
+
+2008-07-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am: Fix typo.
+	* Makefile.in: Regenerate.
+
+2008-07-04  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* Makefile.am: Formatting fixes.
+	* Makefile.in: Regenerate.
+
+2008-07-03  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* IcedTeaPlugin.cc (IcedTeaPluginFactory::IcedTeaPluginFactory):
+	Move nsILiveconnect instance creation ...
+	(IcedTeaPluginFactory::Initialize): ... here.
+
+2008-07-03  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* .hgignore: Add IcedTeaPlugin.o.
+	* IcedTeaPlugin.cc: Do not print current thread ID in output.
+	* Makefile.am: Fix IcedTeaPlugin.so linking.
+	* Makefile.in: Regenerate.
+	* configure.ac: Remove XULRUNNER_VERSION.
+
+2008-07-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* b/Makefile.am: Fix use of abs_top_srcdir
+	for CACAO and lack of path for HACKING.
+	* b/Makefile.in: Regenerated.
+	* b/acinclude.m4: Fix CACAO path as above.
+	* b/configure: Regenerated.
+
+2008-07-02  Matthias Klose  <doko@ubuntu.com>
+
+	* configure.ac: Restore check for libxul-unstable.
+	* configure: Regenerate.
+
+2008-07-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* HACKING: Update with FSG list
+	and further bug numbers.
+	* Makefile.am: Remove jscheme removal
+	and add in new fsg script.
+	* Makefile.in: Regenerated.
+	* fsg.sh: Script to sanitise OpenJDK before
+	building and for the fsg tarball.
+
+2008-07-02  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Write patch information from HACKING into
+	the patch stamp files.
+	* Makefile.in: Regenerate.
+
+2008-07-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* acinclude.m4:
+	Switch ${CACAO} for ${WITH_CACAO} in
+	Shark/core/zero rules and use ${use_zero}
+	instead of ${ZERO_BUILD_TRUE}.
+	* aclocal.m4,
+	* configure:
+	Regenerated.
+
+2008-07-02  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4:
+	Fix detection of Shark/core build.
+	* aclocal.m4,
+	* configure:
+	Regenerated.
+
+2008-07-02  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* IcedTeaPlugin.cc: New file.
+	* Makefile.am: Add ENABLE_LIVECONNECT and ENABLE_PLUGIN
+	conditionals.  Add IcedTeaPlugin.so target.
+	* Makefile.in: Regenerate.
+	* README: Document --enable-liveconnect.
+	* configure.ac: Define ENABLE_LIVECONNECT and ENABLE_PLUGIN
+	conditionals.  Add --enable-liveconnect option.  Add XULRunner
+	pkgconfig checks.
+	* configure: Regenerate.
+	* .hgignore: Add IcedTeaPlugin.so.
+	* patches/icedtea-liveconnect.patch: New file.
+	* patches/icedtea-plugin.patch: New file.
+	* patches/icedtea-webstart.patch: New file.
+	* patches/icedtea-netx-plugin.patch: Remove file.
+	* patches/icedtea-webservices.patch: Remove file.
+
+2008-07-02  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-cacao.patch: openjdk/jdk/make/docs/Makefile:
+	Set MAX_VM_MEMORY to 768 for 32bit builds.
+
+2008-07-02  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-hotspot-6b06-7b24.patch: Update copyright notice in
+	hotspot/src/share/vm/interpreter/bytecodeInterpreterWithChecks.x[ms]l
+	from 7b29.
+
+2008-07-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Move new aliases to end with others,
+	and fix path of jtreg.jar.
+	* Makefile.in: Regenerated.
+
+2008-07-01  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/icedtea.stamp, stamps/icedtea-debug.stamp): Re-
+	added, (icedtea-debug-against-icedtea): New target, (icedtea-clean):
+	Remove stamps/icedtea-debug.stamp.
+	* Makefile.in: Regenerate.
+
+2008-07-01  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ICEDTEA_PATCHES, ICEDTEA_FSG_PATCHES): Move
+	$(DISTRIBUTION_PATCHES) back to ICEDTEA_PATCHES as last item.
+	* Makefile.in: Regenerate.
+
+2008-06-30  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* HACKING:
+	Add icedtea-sparc.patch to general section.
+	* Makefile.am:
+	Add icedtea-sparc.patch again.
+	* Makefile.in:
+	Regenerated.
+	* patches/icedtea-sparc.patch:
+	New IcedTea minimal version.
+
+2008-06-30  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/icedtea-component.patch:
+	Removed.
+	
+2008-06-29  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (stamps/icedtea-ecj.stamp): Add dependency on
+	stamps/cacao.stamp.
+	(stamps/cacao.stamp): Add dependency on stamps/rt-class-files.stamp.
+	* Makefile.in: Regenerated.
+
+2008-06-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Use build directory for
+	generated directory, and copy there at
+	the start if we are doing an out-of-directory
+	build.
+	* Makefile.in: Regenerated.
+
+2008-06-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Add ICEDTEA_FSG_PATCHES
+	to EXTRA_DIST.
+	* Makefile.in: Regenerated.
+
+2008-06-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Separate out ICEDTEA_FSG_PATCHES and
+	add dist-openjdk-fsg target.
+	* Makefile.in,
+
+	* Makefile.am:
+	Make jtreg target work out of the source directory,
+	and use a stamp to mark a finished icedtea build
+	so we don't build it twice.
+	* Makefile.in: Regenerated.
+
+2008-06-29  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-jdk-docs-target.patch: New.
+	* Makefile.am: Apply patch.
+	* Makefile.in: Regenerate.
+
+2008-06-27  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/services/XPersistenceService.java: Throw a
+	FileNotFoundException if the persistence store does not exist.
+
+2008-06-27  Joshua Sumali  <jsumali@redhat.com>
+
+	* rt/net/sourceforge/jnlp/Launcher.java: Exit the application if there was
+	a LaunchException caught.
+
+2008-06-26  Joshua Sumali  <jsumali@redhat.com>
+
+	* README: Removed documentation about --enable-netx-plugin. This feature
+	is enabled by default now.
+	* rt/net/sourceforge/jnlp/Launcher.java: Do not show the download
+	indicator if we are using gcjwebplugin.
+
+2008-06-26  Lillian Angel  <langel@redhat.com>
+
+	* configure: Regenerated.
+
+2008-06-26  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added new patch to the list.
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Regenerated.
+	* patches/icedtea-toolkit.patch: New file.
+
+2008-06-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Don't bother with the
+	shared object files.  We don't need
+	them any more.
+	* Makefile.in: Regenerated.
+
+2008-06-26 Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* Makefile.am (stamps/cacao.stamp): Depend on stamps/extract.stamp.
+	* Makefile.in: Regenerated.
+
+2008-06-26 Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* .hgignore: Added cacao.
+	* Makefile.am (CACAO_VERSION, CACAO_MD5SUM, CACAO_URL, CACAO_SRC_ZIP):
+	New variables.
+	(distclean-local): Removed cacao directory.
+	[WITH_CACAO] (ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Use WITH_CACAO instead of
+	CACAO.
+	(stamps/download.stamp) [WITH_CACAO && !USE_SYSTEM_CACAO]: Download
+	CACAO tarball.
+	(clean-download): Removed CACAO tarball.
+	(stamps/extract.stamp) [WITH_CACAO && !USE_SYSTEM_CACAO]: Extract
+	CACAO tarball.
+	(stamps/cacao.stamp): New target.
+	(cacao): Likewise.
+	* Makefile.in: Regenerated.
+	* acinclude.m4 (AC_CHECK_WITH_CACAO): Renamed CACAO to WITH_CACAO.
+	(AC_CHECK_WITH_CACAO_HOME): New function.
+	(AC_CHECK_WITH_CACAO_SRC_ZIP): Likewise.
+	* aclocal.m4: Regenerated.
+	* configure: Likewise.
+	* configure.ac (AC_CHECK_WITH_CACAO_HOME): Added.
+	(AC_CHECK_WITH_CACAO_SRC_ZIP): Likewise.
+
+2008-06-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* HACKING: Update with new patch.
+	* Makefile.am: Add patch.
+	* Makefile.in,
+	* configure: Regenerated.
+	* patches/icedtea-idl.patch:
+	New patch to fix licensing on IDL files.
+	See PR141.
+
+2008-06-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am: Only add rhino patch when
+	WITH_RHINO is turned on.
+	* Makefile.in: Regenerated.
+	* acinclude.m4: Provide the option to turn off
+	rhino support.
+	* configure,
+	* aclocal.m4:
+	Regenerated.
+
+2008-06-25  Gary Benson  <gbenson@redhat.com>
+
+	* HACKING: Updated.
+
+2008-06-25  Thomas Fitzsimmons  <fitzsim@redhat.com>
+
+	* acinclude.m4: Remove ENABLE_NETX_PLUGIN.
+	* Makefile.am (NETX_PLUGIN): Remove conditional.
+	(ICEDTEA_PATCHES): Hard-code netx-plugin patch.
+	* Makefile.in: Regenerate.
+	* configure.ac: Remove ENABLE_NETX_PLUGIN.
+	* configure: Regenerate.
+	* rt/net/sourceforge/jnlp/NetxPanel.java (runLoader): Exit when a
+	LaunchException is caught.  Remove keyboard input FIXME comment.
+	* rt/net/sourceforge/jnlp/Launcher.java: Fix LCInit typos.
+
+2008-06-24  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.in: Regenerated.
+	* aclocal.m4: Likewise.
+	* configure: Likewise.
+	* configure.ac: Moved FIND_RHINO out of conditional so it is checked
+	for under all conditions.
+	* patches/icedtea-fonts.patch: Reverted. Dejavu-lgc-fonts are not
+	default on F9.
+
+2008-06-24  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4
+	(SET_CORE_BUILD): Removed.
+	(SET_CORE_OR_SHARK_BUILD): New macro.
+	* configure.ac
+	Replaced call to SET_CORE_BUILD with SET_CORE_OR_SHARK_BUILD.
+	(LLVM_CFLAGS): New substitution.
+	(LLVM_LDFLAGS): Likewise.
+	(LLVM_LIBS): Likewise.
+	* configure: Regenerated.
+
+	* Makefile.am
+	(ICEDTEA_ENV): Pass flags for Shark.
+	(ICEDTEA_ENV_ECJ): Likewise.
+	(stamps/ports.stamp): Link in Shark files.
+	(stamps/ports-ecj.stamp): Likewise.
+	(ICEDTEA_PATCHES): Apply Shark patches.
+	(hotspot): Fix libjvm.so location.
+	* Makefile.in: Regenerated.
+
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp
+	(code_fill_byte): Implement for Shark.
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp
+	(decode): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp
+	(zeroframe): New accessor method.
+	(zero_entryframe): Likewise.
+	(zero_interpreterframe): Likewise.
+	(zero_sharkframe): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp
+	(is_interpreted_frame): Use the above.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.inline.hpp
+	(frame): Set _pc to a dummy value for entry frames.
+	(sender_sp): Use new accessor methods.
+	(get_interpreterState): Likewise.
+	(entry_frame_call_wrapper): Likewise.
+	(interpreter_frame_locals_addr): Remove now-unnecessary assertion.
+	(interpreter_frame_cache_addr): Likewise.
+	(interpreter_frame_mdx_addr): Likewise.
+	(interpreter_frame_tos_address): Likewise.
+	(interpreter_frame_bcx_addr): Updated for Shark.
+	(interpreter_frame_method_addr): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.hpp
+	(check_verified_entry_alignment): Implement for Shark.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
+	(print_word): Add basic support for Shark frames.
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp
+	(base_offset): New method.
+	(top_offset): Likewise.
+	(sp_offset): Likewise.
+	(SHARK_FRAME): New enum entry.
+	(is_shark_frame): New method.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp
+	(call_stub_return_pc): New method.
+	(returns_to_call_stub): Updated for new semantics.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
+	(zero_stack_offset): New method.
+	(top_zero_frame_offset): Likewise.
+
+	* patches/icedtea-shark-build.patch: New file.
+	* patches/icedtea-shark.patch: Likewise.
+
+	* ports/hotspot/build/linux/makefiles/shark.make: New file.
+	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp: Likewise.
+	* ports/hotspot/src/share/vm/includeDB_shark: Likewise.
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/shark_globals.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp: Likewise.
+
+2008-06-23  Lillian Angel  <langel@redhat.com>
+	Pablo del Campo <pablogdc@gmail.com>
+
+	Fixes Bug #160
+	* patches/icedtea-fonts.patch: Updated for F9.
+
+2008-06-23  Lillian Angel  <langel@redhat.com>
+
+	* aclocal.m4: Regenerated.
+	* configure: Regenerated.
+
 2008-06-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* HACKING:
@@ -21,6 +438,16 @@
 	Regenerated.
 	* patches/icedtea-sparc.patch:
 	New IcedTea minimal version.
+
+2008-06-22  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-rhino.patch: New patch.
+	* Makefile.am: Add RHINO_JAR to environment variable lists.
+	(ICEDTEA_PATCHES): Add patches/icedtea-rhino.patch.
+	* Makefile.in: Regenerated.
+	* acinclude.m4 (FIND_RHINO_JAR): New.
+	* configure.ac: Use FIND_RHINO_JAR.
+	* configure: Regenerated.
 
 2008-06-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 

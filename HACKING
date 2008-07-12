@@ -4,7 +4,17 @@ Patches
 PRx denotes bug x in the IcedTea bug database (http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=x)
 Sx denotes bug x in the Sun bug database (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=x)
 
-The following patches are currently applied to OpenJDK or OpenJDK6 by IcedTea:
+The following patches are applied early in the build to meet the Free Software guidelines and are also
+included in the tarball resulting from the dist-openjdk-fsg target:
+
+* icedtea-idl.patch: Fix IDL licenses (PR141/S6695776).
+* icedtea-jscheme.patch: Replace use of jscheme.jar with Java alternative (PR140/S6695776).
+* icedtea-license-headers.patch: Generate GPL header from automulti tool (PR148/S6713083).
+
+The fsg.sh script is also run to delete certain files with dubious licensing and/or only occuring
+in binary format.
+
+The following patches are currently applied before the building of OpenJDK or OpenJDK6 by IcedTea:
 
 * icedtea-ant.patch: Remove use of $(ANT_HOME).
 * icedtea-arm-uname.patch: Handle output of uname on arm.
@@ -15,11 +25,10 @@ The following patches are currently applied to OpenJDK or OpenJDK6 by IcedTea:
 * icedtea-corba.patch: Adds additional files to org.omg.CORBA Makefile.
 * icedtea-core-build.patch: Add support for building IcedTea core VM.
 * icedtea-debuginfo.patch: Add -g option to build to generate debugging information.
-* icedtea-demo.patch: Fix building of JVMTI demo.
+* icedtea-demos.patch: Fix building of JVMTI demo.
 * icedtea-directaudio-close-trick.patch: Allow hardware sound device to be reopened.
 * icedtea-float-double-trailing-zeros.patch: Remove trailing zeros from Double/Float (PR29/30)
 * icedtea-fonts.patch: Add Fedora fontconfig.
-* icedtea-freetype.patch: Use detected freetype in $FT2_LIB and $FREETYPE_HEADERS_PATH.
 * icedtea-gcc-4.3.patch: Fix code to compile with GCC 4.3 and turn off -Werror.
 * icedtea-gcc-suffix.patch: Append $(GCC_SUFFIX) to end of 'gcc' binary name.
 * icedtea-generated.patch: Force use of /bin/bash.
@@ -28,17 +37,16 @@ The following patches are currently applied to OpenJDK or OpenJDK6 by IcedTea:
 * icedtea-ia64-fdlibm.patch: Fix name of ia64 architecture from _M_IA64 to ia64.
 * icedtea-javafiles.patch: Add missing Java files to list.
 * icedtea-jpegclasses.patch: Add com.sun.image.codec.jpeg support.
-* icedtea-jscheme.patch: Replace use of jscheme.jar with Java alternative (PR140).
 * icedtea-lcms-leak.patch: Fix LCMS memory leak.
 * icedtea-LCMS-setTagData.patch: Add support for setTagData to LCMS peer.
 * icedtea-lib64.patch: Add support for building on platforms with /usr/lib64.
 * icedtea-libraries.patch: Use system JPEG and zlib libraries.
-* icedtea-license-headers.patch: Generate GPL header from automulti tool.
 * icedtea-linker-options.patch: Add -Xlinker option when linking.
 * icedtea-memory-limits.patch: Increase default memory limits.
 * icedtea-no-bcopy.patch: Don't define local copies of bcopy, bzero and bcmp from BSD.
 * icedtea-override-redirect-metacity.patch: Enable override redirect for Metacity window manager.
-* icedtea-lsb-release.patch: Generate Debian LSB file.
+* icedtea-print-lsb-release.patch: Generate Debian LSB file.
+* icedtea-rhino.patch: Add support for Javascript.
 * icedtea-rmi_amd64.patch: Build RMI binaries on all platforms not just 32-bit ones.
 * icedtea-security-updates.patch: OpenJDK security patches from Sun.
 * icedtea-sparc.patch: Add support for GNU/Linux on SPARC (version in IcedTea includes only minimal build changes).
@@ -55,6 +63,7 @@ The following patches are currently applied to OpenJDK or OpenJDK6 by IcedTea:
 * icedtea-version.patch: Replace name and bug URL with IcedTea versions.
 * icedtea-webservices.patch: Add applet support.
 * icedtea-zero-build.patch: Add support for the zero assembler build.
+* icedtea-shark-build.patch: Add support for building the Shark JIT.
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
@@ -62,6 +71,7 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 * icedtea-dnd-updatecursor.patch: Fix unexpected cursor returned by DragSourceContext (S6691328). Fixed in OpenJDK7 b29.
 * icedtea-eclipse-hotspot-6614100-6b06.patch: Fix Eclipse crash (S6614100). Fixed in OpenJDK7 b29/hs13.
 * icedtea-gtkplaf.patch: Fix corrupted combo box (S6624717). Fixed in OpenJDK7 b27.
+* icedtea-jdk-docs-target.patch: Always set DOCS_TARGET.
 
 The following patches are only applied to OpenJDK in IcedTea:
 
@@ -88,6 +98,10 @@ The following patches are only applied for IcedTea builds using the zero-assembl
 * icedtea-signed-types.patch: Make use of unsigned/signed types explicit.
 * icedtea-test-atomic-operations.patch: Add check to see if GCC's sync_lock_test works.
 * icedtea-zero.patch: Generalise architecture support, add ARM and #ifdef out non-zero applicable parts.
+
+The following patches are only applied for IcedTea builds using the Shark JIT:
+
+* icedtea-shark.patch: Add support for the Shark JIT.
 
 The following patches are only applied when building with experimental NetX plugin support:
 

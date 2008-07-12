@@ -132,6 +132,20 @@ JVM_handle_linux_signal(int sig,
     }
   }
 
+#ifndef PRODUCT
+  if (sig == SIGSEGV) {
+    fatal("\n#"
+          "\n#    /--------------------\\"
+          "\n#    | segmentation fault |"
+          "\n#    \\---\\ /--------------/"
+          "\n#        /"
+          "\n#    [-]        |\\_/|    "
+          "\n#    (+)=C      |o o|__  "
+          "\n#    | |        =-*-=__\\ "
+          "\n#    OOO        c_c_(___)");
+  }
+#endif // !PRODUCT
+  
   const char *fmt = "caught unhandled signal %d";
   char buf[64];
 

@@ -92,6 +92,20 @@ class ZeroStack {
     assert(count <= available_words(), "stack overflow");
     return _sp -= count;
   }
+
+ public:
+  static ByteSize base_offset()
+  {
+    return byte_offset_of(ZeroStack, _base);
+  }
+  static ByteSize top_offset()
+  {
+    return byte_offset_of(ZeroStack, _top);
+  }
+  static ByteSize sp_offset()
+  {
+    return byte_offset_of(ZeroStack, _sp);
+  } 
 };
 
 // 
@@ -120,7 +134,8 @@ class ZeroFrame {
 
   enum FrameType {
     ENTRY_FRAME = 1,
-    INTERPRETER_FRAME
+    INTERPRETER_FRAME,
+    SHARK_FRAME
   };
 
  protected:
@@ -156,4 +171,13 @@ class ZeroFrame {
   {
     return type() == INTERPRETER_FRAME;
   }
+
+  bool is_shark_frame() const
+  {
+    return type() == SHARK_FRAME;
+  }
 };
+
+class EntryFrame;
+class InterpreterFrame;
+class SharkFrame;

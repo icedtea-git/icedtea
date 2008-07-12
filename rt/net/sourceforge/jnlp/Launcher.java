@@ -452,7 +452,7 @@ public class Launcher {
             return appletInstance;
         }
         catch (Exception ex) {
-            throw launchError(new LaunchException(file, ex, R("LSFatal"), R("CLInit"), R("LInitApplet"), R("LInitAppletInfo")));
+            throw launchError(new LaunchException(file, ex, R("LSFatal"), R("LCInit"), R("LInitApplet"), R("LInitAppletInfo")));
         }
     }
 
@@ -480,7 +480,7 @@ public class Launcher {
             return applet;
         }
         catch (Exception ex) {
-            throw launchError(new LaunchException(file, ex, R("LSFatal"), R("CLInit"), R("LInitApplet"), R("LInitAppletInfo")));
+            throw launchError(new LaunchException(file, ex, R("LSFatal"), R("LCInit"), R("LInitApplet"), R("LInitAppletInfo")));
         }
     }
     
@@ -499,7 +499,7 @@ public class Launcher {
             return app;
         }
         catch (Exception ex) {
-            throw new LaunchException(file, ex, R("LSFatal"), R("CLInit"), R("LInitApplet"), R("LInitAppletInfo"));
+            throw new LaunchException(file, ex, R("LSFatal"), R("LCInit"), R("LInitApplet"), R("LInitAppletInfo"));
         }
     }
 
@@ -575,6 +575,8 @@ public class Launcher {
                 	new Reflect().invokeStatic("sun.awt.SunToolkit", "createNewAppContext");
 
                 if (isPlugin) {
+                	// Do not display download indicators if we're using gcjwebplugin.
+                	JNLPRuntime.setDefaultDownloadIndicator(null);
                 	application = getApplet(file, true, cont);
                 } else {
                 	if (file.isApplication())
@@ -591,6 +593,8 @@ public class Launcher {
             }
             catch (LaunchException ex) {
                 exception = ex;
+                // Exit if we can't launch the application.
+                System.exit(0);
             }
         }
 

@@ -69,12 +69,16 @@ public class NetxPanel extends AppletViewerPanel
     		doInit = true;
     		dispatchAppletEvent(APPLET_LOADING, null);
     		status = APPLET_LOAD;
-    		
-    		//FIXME: For some reason, when this applet is loaded by NetX, 
-    		//keyboard input will not make it to the applet when displayed in
-    		//firefox, unless a mouse button is held down.
+
     		Launcher l = new Launcher();
-    		AppletInstance appInst = (AppletInstance) l.launch(bridge, this);
+    		AppletInstance appInst = null;
+                try {
+                    appInst = (AppletInstance) l.launch(bridge, this);
+                } catch (LaunchException e) {
+                    // Assume user has indicated he does not trust the
+                    // applet.
+                    System.exit(0);
+                }
     		applet = appInst.getApplet();
     		
     		//On the other hand, if you create an applet this way, it'll work

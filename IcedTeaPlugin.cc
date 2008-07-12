@@ -94,13 +94,13 @@ public:
   {
     Trace::name = name;
     Trace::function = function;
-    printf ("ICEDTEA PLUGIN: thread %p: %s%s\n", current_thread (),
+    printf ("ICEDTEA PLUGIN: %s%s\n",
              name, function);
   }
 
   ~Trace ()
   {
-    printf ("ICEDTEA PLUGIN: thread %p: %s%s %s\n", current_thread (),
+    printf ("ICEDTEA PLUGIN: %s%s %s\n",
              name, function, "return");
   }
 private:
@@ -108,13 +108,13 @@ private:
   char const* function;
 };
 
-#if 0
+#if 1
 // Debugging macros.
 #define PLUGIN_DEBUG(message)                                           \
-  printf ("ICEDTEA PLUGIN: thread %p: %s\n", current_thread (), message)
+  printf ("ICEDTEA PLUGIN: %s\n", message)
 
 #define PLUGIN_DEBUG_TWO(first, second)                                 \
-  printf ("ICEDTEA PLUGIN: thread %p: %s %s\n", current_thread (),      \
+  printf ("ICEDTEA PLUGIN: %s %s\n",      \
            first, second)
 
 // Testing macro.
@@ -137,16 +137,16 @@ private:
 
 // Error reporting macros.
 #define PLUGIN_ERROR(message)                                       \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s\n", __FILE__, __LINE__,  \
-           current_thread (), message)
+  fprintf (stderr, "%s:%d: Error: %s\n", __FILE__, __LINE__,  \
+           message)
 
 #define PLUGIN_ERROR_TWO(first, second)                                 \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s: %s\n", __FILE__, __LINE__,  \
-           current_thread (), first, second)
+  fprintf (stderr, "%s:%d: Error: %s: %s\n", __FILE__, __LINE__,  \
+           first, second)
 
 #define PLUGIN_ERROR_THREE(first, second, third)                        \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s: %s: %s\n", __FILE__,        \
-           __LINE__, current_thread (), first, second, third)
+  fprintf (stderr, "%s:%d: Error: %s: %s: %s\n", __FILE__,        \
+           __LINE__, first, second, third)
 
 #define PLUGIN_CHECK_RETURN(message, result)           \
   if (NS_SUCCEEDED (result))                    \
@@ -180,16 +180,16 @@ private:
 
 // Error reporting macros.
 #define PLUGIN_ERROR(message)                                       \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s\n", __FILE__, __LINE__,  \
-           current_thread (), message)
+  fprintf (stderr, "%s:%d: Error: %s\n", __FILE__, __LINE__,  \
+           message)
 
 #define PLUGIN_ERROR_TWO(first, second)                                 \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s: %s\n", __FILE__, __LINE__,  \
-           current_thread (), first, second)
+  fprintf (stderr, "%s:%d: Error: %s: %s\n", __FILE__, __LINE__,  \
+           first, second)
 
 #define PLUGIN_ERROR_THREE(first, second, third)                        \
-  fprintf (stderr, "%s:%d: thread %p: Error: %s: %s: %s\n", __FILE__,        \
-           __LINE__, current_thread (), first, second, third)
+  fprintf (stderr, "%s:%d: Error: %s: %s: %s\n", __FILE__,        \
+           __LINE__, first, second, third)
 #define PLUGIN_CHECK_RETURN(message, result)
 #define PLUGIN_CHECK(message, result)
 #endif
@@ -289,16 +289,16 @@ JNIID::~JNIID ()
   printf ("JNIID DECONSTRUCT: %d %p\n", identifier, this);
 }
 
-char* TYPES[10] = { "Object",
-                    "boolean",
-                    "byte",
-                    "char",
-                    "short",
-                    "int",
-                    "long",
-                    "float",
-                    "double",
-                    "void" };
+char const* TYPES[10] = { "Object",
+                          "boolean",
+                          "byte",
+                          "char",
+                          "short",
+                          "int",
+                          "long",
+                          "float",
+                          "double",
+                          "void" };
 
 // FIXME: create index from security context.
 #define MESSAGE_CREATE()                                     \
@@ -1028,22 +1028,13 @@ IcedTeaPluginFactory::IcedTeaPluginFactory ()
   string_identifier (0),
   slot_index (0),
   value_identifier (0),
-  connected (PR_FALSE)
+  connected (PR_FALSE),
+  liveconnect (0)
 {
   PLUGIN_TRACE_FACTORY ();
   instances.Init ();
   references.Init ();
-  printf ("CONSTRUCTING FACTORY");
-
-  nsCOMPtr<nsIComponentManager> manager;
-  nsresult result = NS_GetComponentManager (getter_AddRefs
-                                            (manager));
-  PLUGIN_CHECK ("get component manager", result);
-  result = manager->CreateInstance
-    (nsILiveconnect::GetCID (),
-     nsnull, NS_GET_IID (nsILiveconnect),
-     getter_AddRefs (liveconnect));
-  PLUGIN_CHECK ("liveconnect", result);
+  printf ("CONSTRUCTING FACTORY\n");
 }
 
 IcedTeaPluginFactory::~IcedTeaPluginFactory ()
@@ -1051,7 +1042,7 @@ IcedTeaPluginFactory::~IcedTeaPluginFactory ()
   // FIXME: why did this crash with threadManager == 0x0 on shutdown?
   PLUGIN_TRACE_FACTORY ();
   secureEnv = 0;
-  printf ("DECONSTRUCTING FACTORY");
+  printf ("DECONSTRUCTING FACTORY\n");
 }
 
 // nsIFactory functions.
@@ -1103,6 +1094,12 @@ IcedTeaPluginFactory::Initialize ()
   nsCOMPtr<nsIComponentManager> manager;
   result = NS_GetComponentManager (getter_AddRefs (manager));
   PLUGIN_CHECK_RETURN ("get component manager", result);
+
+  result = manager->CreateInstance
+    (nsILiveconnect::GetCID (),
+     nsnull, NS_GET_IID (nsILiveconnect),
+     getter_AddRefs (liveconnect));
+  PLUGIN_CHECK_RETURN ("liveconnect", result);
 
   nsCOMPtr<nsIServerSocket> socket;
   result = manager->CreateInstanceByContractID (NS_SERVERSOCKET_CONTRACTID,
@@ -2032,7 +2029,7 @@ IcedTeaPluginFactory::OnInputStreamReady (nsIAsyncInputStream* aStream)
   PRUint32 readCount = 0;
   int index = 0;
 
-  printf ("ONINPUTSTREAMREADY 1 %p\n", current_thread());
+  printf ("ONINPUTSTREAMREADY 1 %p\n", current_thread ());
   // Omit return value checking for speed.
   input->Read (&byte, 1, &readCount);
   if (readCount != 1)
@@ -2069,6 +2066,69 @@ IcedTeaPluginFactory::OnInputStreamReady (nsIAsyncInputStream* aStream)
 #include <nsPIPluginInstancePeer.h>
 #include <nsIPluginInstanceOwner.h>
 #include <nsIRunnable.h>
+
+class IcedTeaRunnable : public nsIRunnable
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIRUNNABLE
+
+  IcedTeaRunnable ();
+
+  ~IcedTeaRunnable ();
+};
+
+NS_IMPL_ISUPPORTS1 (IcedTeaRunnable, nsIRunnable)
+
+IcedTeaRunnable::IcedTeaRunnable ()
+{
+}
+
+IcedTeaRunnable::~IcedTeaRunnable ()
+{
+}
+
+NS_IMETHODIMP
+IcedTeaRunnable::Run ()
+{
+  return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+template <class T>
+class IcedTeaRunnableMethod : public IcedTeaRunnable
+{
+public:
+  typedef void (T::*Method) ();
+
+  IcedTeaRunnableMethod (T* object, Method method);
+  NS_IMETHOD Run ();
+
+  ~IcedTeaRunnableMethod ();
+
+  T* object;
+  Method method;
+};
+
+template <class T>
+IcedTeaRunnableMethod<T>::IcedTeaRunnableMethod (T* object, Method method)
+: object (object),
+  method (method)
+{
+  NS_ADDREF (object);
+}
+
+template <class T>
+IcedTeaRunnableMethod<T>::~IcedTeaRunnableMethod ()
+{
+  NS_RELEASE (object);
+}
+
+template <class T> NS_IMETHODIMP
+IcedTeaRunnableMethod<T>::Run ()
+{
+  (object->*method) ();
+  return NS_OK;
+}
 
 void
 IcedTeaPluginFactory::HandleMessage (nsCString const& message)
@@ -2108,7 +2168,6 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
               nsDependentCSubstring target = Substring (rest, space + 1);
               nsCOMPtr<nsPIPluginInstancePeer> ownerGetter =
                 do_QueryInterface (instance->peer);
-              PLUGIN_CHECK (owner, "get plugin owner");
               nsIPluginInstanceOwner* owner = nsnull;
               ownerGetter->GetOwner (&owner);
               owner->GetURL (nsCString (url).get (),
@@ -2123,8 +2182,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           if (instance != 0)
             {
               nsCOMPtr<nsIRunnable> event =
-                NS_NEW_RUNNABLE_METHOD(IcedTeaPluginInstance, instance,
-                                       IcedTeaPluginInstance::GetWindow);
+                new IcedTeaRunnableMethod<IcedTeaPluginInstance>
+                (instance,
+                 &IcedTeaPluginInstance::IcedTeaPluginInstance::GetWindow);
               NS_DispatchToMainThread (event);
             }
         }
@@ -2140,8 +2200,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_CHECK ("parse name id", conversionResult);
 
           nsCOMPtr<nsIRunnable> event =
-            NS_NEW_RUNNABLE_METHOD(IcedTeaPluginFactory, this,
-                                   IcedTeaPluginFactory::GetMember);
+            new IcedTeaRunnableMethod<IcedTeaPluginFactory>
+            (this,
+             &IcedTeaPluginFactory::IcedTeaPluginFactory::GetMember);
           NS_DispatchToMainThread (event);
           printf ("POSTING GetMember DONE\n");
         }
@@ -2163,8 +2224,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_CHECK ("parse value id", conversionResult);
 
           nsCOMPtr<nsIRunnable> event =
-            NS_NEW_RUNNABLE_METHOD(IcedTeaPluginFactory, this,
-                                   IcedTeaPluginFactory::SetMember);
+            new IcedTeaRunnableMethod<IcedTeaPluginFactory>
+            (this,
+             &IcedTeaPluginFactory::IcedTeaPluginFactory::SetMember);
           NS_DispatchToMainThread (event);
           printf ("POSTING SetMember DONE\n");
         }
@@ -2180,8 +2242,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_CHECK ("parse name id", conversionResult);
 
           nsCOMPtr<nsIRunnable> event =
-            NS_NEW_RUNNABLE_METHOD(IcedTeaPluginFactory, this,
-                                   IcedTeaPluginFactory::GetSlot);
+            new IcedTeaRunnableMethod<IcedTeaPluginFactory>
+            (this,
+             &IcedTeaPluginFactory::IcedTeaPluginFactory::GetSlot);
           NS_DispatchToMainThread (event);
           printf ("POSTING GetSlot DONE\n");
         }
@@ -2202,8 +2265,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_CHECK ("parse value id", conversionResult);
 
           nsCOMPtr<nsIRunnable> event =
-            NS_NEW_RUNNABLE_METHOD(IcedTeaPluginFactory, this,
-                                   IcedTeaPluginFactory::SetSlot);
+            new IcedTeaRunnableMethod<IcedTeaPluginFactory>
+            (this,
+             &IcedTeaPluginFactory::IcedTeaPluginFactory::SetSlot);
           NS_DispatchToMainThread (event);
           printf ("POSTING SetSlot DONE\n");
         }
@@ -2219,8 +2283,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_CHECK ("parse string id", conversionResult);
 
           nsCOMPtr<nsIRunnable> event =
-            NS_NEW_RUNNABLE_METHOD(IcedTeaPluginFactory, this,
-                                   IcedTeaPluginFactory::Eval);
+            new IcedTeaRunnableMethod<IcedTeaPluginFactory>
+            (this,
+             &IcedTeaPluginFactory::IcedTeaPluginFactory::Eval);
           NS_DispatchToMainThread (event);
           printf ("POSTING Eval DONE\n");
         }
@@ -2236,8 +2301,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_CHECK ("parse name id", conversionResult);
 
           nsCOMPtr<nsIRunnable> event =
-            NS_NEW_RUNNABLE_METHOD(IcedTeaPluginFactory, this,
-                                   IcedTeaPluginFactory::RemoveMember);
+            new IcedTeaRunnableMethod<IcedTeaPluginFactory>
+            (this,
+             &IcedTeaPluginFactory::IcedTeaPluginFactory::RemoveMember);
           NS_DispatchToMainThread (event);
           printf ("POSTING RemoveMember DONE\n");
         }
@@ -2258,8 +2324,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_CHECK ("parse args id", conversionResult);
 
           nsCOMPtr<nsIRunnable> event =
-            NS_NEW_RUNNABLE_METHOD(IcedTeaPluginFactory, this,
-                                   IcedTeaPluginFactory::Call);
+            new IcedTeaRunnableMethod<IcedTeaPluginFactory>
+            (this,
+             &IcedTeaPluginFactory::IcedTeaPluginFactory::Call);
           NS_DispatchToMainThread (event);
           printf ("POSTING Call DONE\n");
         }
@@ -2271,8 +2338,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_CHECK ("parse javascript id", conversionResult);
 
           nsCOMPtr<nsIRunnable> event =
-            NS_NEW_RUNNABLE_METHOD(IcedTeaPluginFactory, this,
-                                   IcedTeaPluginFactory::Finalize);
+            new IcedTeaRunnableMethod<IcedTeaPluginFactory>
+            (this,
+             &IcedTeaPluginFactory::IcedTeaPluginFactory::Finalize);
           NS_DispatchToMainThread (event);
           printf ("POSTING Finalize DONE\n");
         }
@@ -2283,8 +2351,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_CHECK ("parse javascript id", conversionResult);
 
           nsCOMPtr<nsIRunnable> event =
-            NS_NEW_RUNNABLE_METHOD(IcedTeaPluginFactory, this,
-                                   IcedTeaPluginFactory::ToString);
+            new IcedTeaRunnableMethod<IcedTeaPluginFactory>
+            (this,
+             &IcedTeaPluginFactory::IcedTeaPluginFactory::ToString);
           NS_DispatchToMainThread (event);
           printf ("POSTING ToString DONE\n");
         }
@@ -2528,7 +2597,7 @@ IcedTeaPluginInstance::GetWindow ()
   // so they can all safely be null.
   if (factory->proxyEnv != NULL)
     {
-      printf ("HERE 23: %d, %p\n", liveconnect_window, current_thread());
+      printf ("HERE 23: %d, %p\n", liveconnect_window, current_thread ());
       result = factory->liveconnect->GetWindow(factory->proxyEnv,
                                                this,
                                                NULL, 0, NULL,

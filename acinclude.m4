@@ -501,6 +501,48 @@ AC_DEFUN([FIND_XERCES2_JAR],
   AC_SUBST(XERCES2_JAR)
 ])
 
+AC_DEFUN([FIND_RHINO_JAR],
+[
+  AC_MSG_CHECKING(whether to include Javascript support via Rhino)
+  AC_ARG_WITH([rhino],
+              [AS_HELP_STRING(--with-rhino,specify location of the rhino jar)],
+  [
+    case "${withval}" in
+      yes)
+	RHINO_JAR=yes
+        ;;
+      no)
+        RHINO_JAR=no
+        ;;
+      *)
+    	if test -f "${withval}"; then
+          RHINO_JAR="${withval}"
+        else
+	  AC_MSG_RESULT([not found])
+          AC_MSG_ERROR("The rhino jar ${withval} was not found.")
+        fi
+	;;
+     esac
+  ],
+  [
+    RHINO_JAR=yes
+  ])
+  if test x"${RHINO_JAR}" = "xyes"; then
+    if test -e "/usr/share/java/rhino.jar"; then
+      RHINO_JAR=/usr/share/java/rhino.jar
+    elif test -e "/usr/share/java/js.jar"; then
+      RHINO_JAR=/usr/share/java/js.jar
+    fi
+    if test x"${RHINO_JAR}" = "xyes"; then
+      AC_MSG_RESULT([not found])
+      AC_MSG_ERROR("A rhino jar was not found in /usr/share/java as either rhino.jar or js.jar.")
+    fi
+  fi
+  AC_MSG_RESULT(${RHINO_JAR})
+  AM_CONDITIONAL(WITH_RHINO, test x"${RHINO_JAR}" != "xno")
+  AC_SUBST(RHINO_JAR)
+])
+
 AC_DEFUN([ENABLE_OPTIMIZATIONS],
 [
   AC_MSG_CHECKING(whether to disable optimizations)
@@ -555,7 +597,7 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
       sparc*-*-*) ;;
       x86_64-*-*) ;;
       *)
-        if test "x${CACAO}" != xno; then
+        if test "x${WITH_CACAO}" != xno; then
           use_zero=no
         else
           use_zero=yes
@@ -625,53 +667,96 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
   AC_CONFIG_FILES([ergo.c])
 ])
 
-AC_DEFUN([SET_CORE_BUILD],
+AC_DEFUN([SET_CORE_OR_SHARK_BUILD],
 [
-  if test "x${CACAO}" != "xno"; then
-    AM_CONDITIONAL(CORE_BUILD, true)
-  else
-    AM_CONDITIONAL(CORE_BUILD, test "x${ZERO_BUILD_TRUE}" = x)
-  fi
-])
-
-AC_DEFUN([ENABLE_NETX_PLUGIN],
-[
-  AC_ARG_ENABLE([netx-plugin],
-                [AS_HELP_STRING(--enable-netx-plugin,enable experimental caching and security support in applet plugin)],
+  AC_MSG_CHECKING(whether to use the Shark JIT)
+  shark_selected=no
+  AC_ARG_ENABLE([shark], [AS_HELP_STRING(--enable-shark, use Shark JIT)],
   [
-    AC_MSG_CHECKING(netx plugin)
-    AC_MSG_RESULT(will enable netx plugin)
-    AM_CONDITIONAL(NETX_PLUGIN, test x = x)
-  ],
-  [
-    AM_CONDITIONAL(NETX_PLUGIN, test x != x)
+    case "${enableval}" in
+      no)
+        ;;
+      *)
+        shark_selected=yes
+        ;;
+    esac
   ])
+
+  use_core=no
+  use_shark=no
+  if test "x${WITH_CACAO}" != "xno"; then
+    use_core=yes
+  elif test "x${use_zero}" = "xyes"; then
+    if test "x${shark_selected}" = "xyes"; then
+      use_shark=yes
+    else
+      use_core=yes
+    fi
+  fi
+  AC_MSG_RESULT($use_shark)
+
+  AM_CONDITIONAL(CORE_BUILD, test "x${use_core}" = xyes)
+  AM_CONDITIONAL(SHARK_BUILD, test "x${use_shark}" = xyes)
 ])
 
 AC_DEFUN([AC_CHECK_WITH_CACAO],
 [
   AC_MSG_CHECKING(whether to use CACAO as VM)
   AC_ARG_WITH([cacao],
-	      [AS_HELP_STRING(--with-cacao,use CACAO as VM)],
+	      [AS_HELP_STRING(--with-cacao,use CACAO as VM [[default=no]])],
   [
-    case "${withval}" in
-      yes)
-        CACAO=/usr/local/cacao
-        ;;
-      no)
-        CACAO=no
-        ;;
-      *)
-        CACAO=${withval}
-        ;;
-    esac
+    WITH_CACAO=yes
   ],
   [
-    CACAO=no
+    WITH_CACAO=no
   ])
 
-  AC_MSG_RESULT(${CACAO})
-  AM_CONDITIONAL(WITH_CACAO, test x"${CACAO}" != "xno")
-  AC_SUBST(CACAO)
+  AC_MSG_RESULT(${WITH_CACAO})
+  AM_CONDITIONAL(WITH_CACAO, test x"${WITH_CACAO}" = "xyes")
+  AC_SUBST(WITH_CACAO)
 ])
 
+<<<<<<< local
+=======
+AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
+[
+  AC_MSG_CHECKING(CACAO home directory)
+  AC_ARG_WITH([cacao-home],
+              [AS_HELP_STRING([--with-cacao-home],
+                              [CACAO home directory [[default=/usr/local/cacao]]])],
+              [
+                case "${withval}" in
+                yes)
+                  CACAO_IMPORT_PATH=/usr/local/cacao
+                  ;;
+                *)
+                  CACAO_IMPORT_PATH=${withval}
+                  ;;
+                esac
+                AM_CONDITIONAL(USE_SYSTEM_CACAO, true)
+              ],
+              [
+                CACAO_IMPORT_PATH="\$(abs_top_builddir)/cacao/install"
+                AM_CONDITIONAL(USE_SYSTEM_CACAO, false)
+              ])
+  AC_MSG_RESULT(${CACAO_IMPORT_PATH})
+  AC_SUBST(CACAO_IMPORT_PATH)
+])
+
+AC_DEFUN([AC_CHECK_WITH_CACAO_SRC_ZIP],
+[
+  AC_MSG_CHECKING(CACAO source zip)
+  AC_ARG_WITH([cacao-src-zip],
+              [AS_HELP_STRING(--with-cacao-src-zip,specify the location of the CACAO source zip)],
+  [
+    ALT_CACAO_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_CACAO_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_CACAO_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_CACAO_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_CACAO_SRC_ZIP})
+  AC_SUBST(ALT_CACAO_SRC_ZIP)
+])
+>>>>>>> other
