@@ -1,0 +1,53 @@
+diff -Nru openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk openjdk/jdk/make/common/internal/BinaryPlugs.gmk
+--- openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk	2008-07-13 03:42:22.000000000 +0100
++++ openjdk/jdk/make/common/internal/BinaryPlugs.gmk	2008-07-13 03:41:56.000000000 +0100
+@@ -27,16 +27,6 @@
+ 
+ # Definitions for openjdk plugs (used by both import and export)
+ 
+-# Names of native shared libraries
+-
+-PLUG_JSOUND_LIBRARY=$(LIB_PREFIX)jsoundhs.$(LIBRARY_SUFFIX)
+-PLUG_LIBRARY_NAMES = \
+-    $(PLUG_JSOUND_LIBRARY)
+-
+-# Sub-directory where native shared libraries are located (e.g. jre/bin or...)
+-
+-PLUG_LOCATION_SUBDIR=$(ARCH_VM_SUBDIR)
+-
+ # Explicit classfile lists
+ 
+ # WARNING: These classlists will not work with pattern rules, only used in 
+@@ -222,17 +212,6 @@
+ 	     import-binary-plug-jmf-classes \
+ 	     import-binary-plug-sound-classes
+ 
+-# Import native libraries
+-
+-$(LIB_LOCATION)/$(PLUG_JSOUND_LIBRARY): \
+-    $(PLUG_IMPORT_DIR)/$(PLUG_LOCATION_SUBDIR)/$(PLUG_JSOUND_LIBRARY)
+-	$(import-binary-plug-file)
+-
+-# Rules only used by lower level makefiles
+-
+-import-binary-plug-jsound-library: \
+-    $(LIB_LOCATION)/$(PLUG_JSOUND_LIBRARY)
+-
+ # Binary plug start/complete messages
+ 
+ import-binary-plugs-started:
+diff -Nru openjdk.orig/jdk/make/javax/sound/Makefile openjdk/jdk/make/javax/sound/Makefile
+--- openjdk.orig/jdk/make/javax/sound/Makefile	2008-07-13 03:42:40.000000000 +0100
++++ openjdk/jdk/make/javax/sound/Makefile	2008-07-13 03:41:22.000000000 +0100
+@@ -96,11 +96,6 @@
+ 
+ 
+ #
+-# add "closed" library
+-#
+-SUBDIRS += jsoundhs
+-
+-#
+ # system dependent flags
+ #
+ ifeq ($(PLATFORM), windows)

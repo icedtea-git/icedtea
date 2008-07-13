@@ -1,5 +1,21 @@
 2008-07-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* ports/hotspot/build/linux/makefiles/shark.make,
+	* ports/hotspot/build/linux/makefiles/zero.make:
+	Renamed to...
+	* HACKING: Add new patches.
+	* Makefile.am: Switch to b30 and add new patches.
+	* Makefile.in: Regenerated.
+	* patches/icedtea-constructor-properties.patch: New.
+	* patches/icedtea-ecj.patch: Updated.
+	* patches/icedtea-jsoundhs.patch: New.
+	* patches/icedtea-shark-build.patch: Updated.
+	* ports/hotspot/make/linux/makefiles/shark.make,
+	* ports/hotspot/make/linux/makefiles/zero.make:
+	...these files.
+
+2008-07-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* patches/icedtea-copy-plugs.patch:
 	Remove patch to OpenConverter as this no longer exists.
 	

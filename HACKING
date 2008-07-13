@@ -75,7 +75,11 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 
 The following patches are only applied to OpenJDK in IcedTea:
 
-* icedtea-override.patch: Remove @Override annotation in javax.management.AttributeValueExp (unsupported by ecj < 3.4).
+* icedtea-constructor-properties.patch: Explicitly cast to ConstructorProperties
+  as getAnnotation is broken in libgcj 4.3.
+* icedtea-jsoundhs.patch: Remove attempted build of proprietary jsoundhs library.
+* icedtea-override.patch: Remove @Override annotation in
+  javax.management.AttributeValueExp (unsupported by ecj < 3.4).
 
 The following patches are only applied to the icedtea-ecj bootstrap tree:
 

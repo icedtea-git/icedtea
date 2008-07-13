@@ -325,13 +325,13 @@ endif
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
+	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/*cpu/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'); \
 	  ln -sf $$target $$link; \
 	done
-	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/build/linux
+	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/make/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" \
 	  = "xno" ; then \
 	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR) ; \
@@ -432,13 +432,12 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-override-redirect-metacity.patch \
 	$(ZERO_PATCHES_COND) \
 	patches/icedtea-no-bcopy.patch \
-	patches/icedtea-dnd-updatecursor.patch \
-	patches/icedtea-component.patch \
 	patches/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
-	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-security-updates.patch \
-	patches/icedtea-override.patch
+	patches/icedtea-override.patch \
+	patches/icedtea-constructor-properties.patch \
+	patches/icedtea-jsoundhs.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH)
 
@@ -632,14 +631,14 @@ clean-clone-ecj:
 	rm -rf openjdk-ecj
 
 # Link ports sources into tree
-stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
+stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
+	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/*cpu/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk-ecj/'); \
 	  ln -sf $$target $$link; \
 	done
-	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/build/linux
+	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/make/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" \
 	  = "xno"; then \
 	  mkdir -p openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \

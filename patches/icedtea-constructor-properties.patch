@@ -1,0 +1,14 @@
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory.java openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory.java	2008-07-13 01:25:15.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/jmx/mbeanserver/DefaultMXBeanMappingFactory.java	2008-07-13 01:28:31.000000000 +0100
+@@ -1207,8 +1207,8 @@
+             // so we can test unambiguity.
+             Set<BitSet> getterIndexSets = newSet();
+             for (Constructor constr : annotatedConstrList) {
+-                String[] propertyNames =
+-                    constr.getAnnotation(propertyNamesClass).value();
++	        String[] propertyNames = ((ConstructorProperties)
++                    constr.getAnnotation(propertyNamesClass)).value();
+ 
+                 Type[] paramTypes = constr.getGenericParameterTypes();
+                 if (paramTypes.length != propertyNames.length) {
