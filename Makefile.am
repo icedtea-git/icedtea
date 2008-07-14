@@ -361,6 +361,7 @@ endif
 
 ICEDTEA_FSG_PATCHES = \
 	patches/icedtea-license-headers.patch \
+	patches/icedtea-idl.patch \
 	patches/icedtea-jscheme.patch
 
 ICEDTEA_PATCHES = \
