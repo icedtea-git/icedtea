@@ -278,6 +278,8 @@ else
 endif
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
+if USE_ALT_CACAO_SRC_ZIP
+else
 	if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
 	 | $(MD5SUM) --check ; \
 	then \
@@ -287,6 +289,7 @@ if !USE_SYSTEM_CACAO
 	 fi ; \
 	 $(WGET) $(CACAO_URL)$(CACAO_SRC_ZIP) -O $(CACAO_SRC_ZIP); \
 	fi
+endif
 endif
 endif
 	mkdir -p stamps
