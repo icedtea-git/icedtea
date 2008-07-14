@@ -307,7 +307,21 @@ AC_DEFUN([FIND_JAR],
   if test -z "${JAR}"; then
     AC_MSG_ERROR("jar was not found.")
   fi
+  AC_MSG_CHECKING([wether jar supports @<file> argument])
+  touch _config.txt
+  cat >_config.list <<EOF
+_config.txt
+EOF
+  if $JAR cf _config.jar @_config.list 2>/dev/null; then
+    JAR_KNOWS_ATFILE=1
+    AC_MSG_RESULT(yes)
+  else
+    JAR_KNOWS_ATFILE=
+    AC_MSG_RESULT(no)
+  fi
+  rm -f _config.txt _config.list _config.jar
   AC_SUBST(JAR)
+  AC_SUBST(JAR_KNOWS_ATFILE)
 ])
 
 AC_DEFUN([FIND_RMIC],

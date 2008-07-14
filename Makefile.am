@@ -214,7 +214,8 @@ ICEDTEA_ENV_ECJ = \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
 	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
 	"JAVAC=" \
-	"RHINO_JAR=$(RHINO_JAR)"
+	"RHINO_JAR=$(RHINO_JAR)" \
+	"JAR_KNOWS_ATFILE=$(JAR_KNOWS_ATFILE)"
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
@@ -360,7 +361,6 @@ endif
 
 ICEDTEA_FSG_PATCHES = \
 	patches/icedtea-license-headers.patch \
-	patches/icedtea-idl.patch \
 	patches/icedtea-jscheme.patch
 
 ICEDTEA_PATCHES = \

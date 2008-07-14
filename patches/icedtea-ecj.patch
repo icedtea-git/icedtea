@@ -430,33 +430,47 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
  # Override of what javac to use (see deploy workspace)
 --- oipenjdk/jdk/make/common/Release.gmk	2007-11-13 16:47:23.000000000 -0500
 +++ openjdk-ecj/jdk/make/common/Release.gmk	2007-11-13 16:48:08.000000000 -0500
-@@ -649,10 +649,11 @@
+@@ -655,10 +649,19 @@
  $(RES_JAR_ARGLIST): $(RES_JAR_FILELIST)
  	$(prep-target)
  	$(SED) -e "s@^@-C $(CLASSBINDIR) @" $< > $@
 -$(RESOURCES_JAR): $(RES_JAR_ARGLIST) $(JAR_MANIFEST_FILE)
-+$(RESOURCES_JAR): $(RES_JAR_FILELIST) $(JAR_MANIFEST_FILE)
- 	$(prep-target)
--	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
--	    @$(RES_JAR_ARGLIST) $(JAR_JFLAGS)
+-	$(prep-target)
++$(RESOURCES_JAR): \
++    $(if $(JAR_KNOWS_ATFILE),$(RES_JAR_FILELIST),$(RES_JAR_ARGLIST)) \
++    $(JAR_MANIFEST_FILE)
++	$(prep-target)
++ifneq (,$(JAR_KNOWS_ATFILE))
++	(cd $(CLASSBINDIR) && $(CAT) $(RES_JAR_FILELIST) | \
++	$(BOOT_JAR_CMD) c0mf@ $(JAR_MANIFEST_FILE) $@ \
++	    $(JAR_JFLAGS))
++else
 +	(cd $(CLASSBINDIR) && \
-+	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
+ 	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
+-	    @$(RES_JAR_ARGLIST) $(JAR_JFLAGS)
 +	    $(JAR_JFLAGS) `cat $(RES_JAR_FILELIST)`)
++endif
  	@$(java-vm-cleanup)
  
  # Create jsse.jar containing SunJSSE implementation classes
-@@ -708,10 +709,11 @@
+@@ -714,10 +717,18 @@
  $(RT_JAR_ARGLIST): $(RT_JAR_FILELIST)
  	$(prep-target)
  	$(SED) -e "s@^@-C $(CLASSBINDIR) @" $< > $@
 -$(RT_JAR): $(RT_JAR_ARGLIST) $(JAR_MANIFEST_FILE)
-+$(RT_JAR): $(RT_JAR_FILELIST) $(JAR_MANIFEST_FILE)
++$(RT_JAR): $(if $(JAR_KNOWS_ATFILE),$(RT_JAR_FILELIST),$(RT_JAR_ARGLIST)) \
++    $(JAR_MANIFEST_FILE)
  	$(prep-target)
--	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
--	    @$(RT_JAR_ARGLIST) $(JAR_JFLAGS)
++ifneq (,$(JAR_KNOWS_ATFILE))
++	(cd $(CLASSBINDIR) && $(CAT) $(RT_JAR_FILELIST) | \
++	$(BOOT_JAR_CMD) c0mf@ $(JAR_MANIFEST_FILE) $@ \
++	    $(JAR_JFLAGS))
++else
 +	(cd $(CLASSBINDIR) && \
-+	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
+ 	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
+-	    @$(RT_JAR_ARGLIST) $(JAR_JFLAGS)
 +	    $(JAR_JFLAGS) `$(CAT) $(RT_JAR_FILELIST)`)
++endif
  	@$(java-vm-cleanup)
  
  # Meta-index construction to make core class loaders lazier
