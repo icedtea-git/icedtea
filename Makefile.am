@@ -1134,6 +1134,7 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 	fi
 
 stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
+if WITH_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao-$(CACAO_VERSION) ; \
 	./configure \
@@ -1143,6 +1144,7 @@ if !USE_SYSTEM_CACAO
 	  --with-java-runtime-library-classes=$(abs_top_builddir)/lib/rt \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	make install
+endif
 endif
 	mkdir -p stamps
 	touch $@

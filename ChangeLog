@@ -1,3 +1,10 @@
+2008-07-14  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am (stamps/cacao.stamp): Only install if WITH_CACAO is used.
+	* patches/icedtea-liveconnect.patch: Split GetMemberPluginCallRequest,
+	GetWindowPluginCallRequest and VoidPluginCallRequest into separate files
+	to work around ecj compiling issues.
+
 2008-07-14  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (stamps/download.stamp): Disable checksum test and
