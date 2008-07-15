@@ -30,6 +30,7 @@ giflib-devel
 libpng-devel
 libjpeg-devel = 6b
 zlib-devel
+rhino
 
 For building the zero-assembler port (see below), you will need libffi.
 
