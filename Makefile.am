@@ -71,7 +71,8 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
 	patches/icedtea-cacao.patch javaws.png javaws.desktop \
 	overlays extra jconsole.desktop policytool.desktop \
 	test/jtreg patches/icedtea-plugin.patch \
-	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc
+	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc \
+	HACKING
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
