@@ -377,6 +377,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ssl.patch \
 	$(PLUGIN_PATCH) \
 	patches/icedtea-webstart.patch \
+	patches/icedtea-webstart-umask.patch \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-demos.patch \
