@@ -881,17 +881,6 @@ No differences encountered
 @@ -0,0 +1,2 @@
 +<?xml version="1.0"?>
 +<doc>this is a secret</doc>
---- old/src/share/vm/opto/parse3.cpp	Wed Apr  9 12:49:10 2008
-+++ openjdk/hotspot/src/share/vm/opto/parse3.cpp	Wed Apr  9 12:49:08 2008
-@@ -398,7 +398,7 @@
-   // fill the lowest dimensions with unknown sizes
-   for (int index = 0; index < mdimensions - ndimensions; index++) {
-     const TypeAry* arr0 = TypeAry::make(prev_type, TypeInt::POS);
--    prev_type = TypeAryPtr::make(TypePtr::BotPTR, arr0, prev_array, true, 0);
-+    prev_type = TypeAryPtr::make(TypePtr::BotPTR, arr0, prev_array, false, 0);
-     prev_array = NULL; // array klasses can be lazy, except the first
-   }
- 
 --- /dev/null	Mon Jun  2 09:19:39 2008
 +++ openjdk/jdk/test/sun/management/jmxremote/bootstrap/LocalOnlyTest.java	Mon Jun  2 09:19:39 2008
 @@ -0,0 +1,97 @@

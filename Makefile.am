@@ -348,7 +348,8 @@ ZERO_PATCHES = \
 
 # Patches needed when not using the newer OpenJDK 7 HotSpot for zero.
 NON_ZERO_PATCHES = \
-	patches/icedtea-eclipse-hotspot-6614100-6b06.patch
+	patches/icedtea-eclipse-hotspot-6614100-6b06.patch \
+	patches/icedtea-security-updates-nonzero.patch
 
 if ZERO_BUILD
   ZERO_PATCHES_COND = $(ZERO_PATCHES)
