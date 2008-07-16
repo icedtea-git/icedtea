@@ -1,3 +1,7 @@
+2008-07-16  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Fixed typos.
+
 2008-07-16  Matthias Klose  <doko@ubuntu.com>
 
 	* fsg.sh: Update for b11 code drop.

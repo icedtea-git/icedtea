@@ -1,6 +1,6 @@
 OPENJDK_DATE = 10_jul_2008
 OPENJDK_MD5SUM = 8e60cdac02ec1b2d8ddb9d7369be69df
-OPENJDK_VERSION = b10
+OPENJDK_VERSION = b11
 
 CACAO_VERSION = 0.99.2
 CACAO_MD5SUM = a2865f47535f6dc3def268c0055ff20a
@@ -251,7 +251,7 @@ OPENJDK_URL = http://download.java.net/openjdk/jdk6/promoted/$(OPENJDK_VERSION)/
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 else
-  OPENJDK_SRC_ZIP = openjdk-6-src-$(OPENJDK_VERSION)_$(OPENJDK_DATE).tar.gz
+  OPENJDK_SRC_ZIP = openjdk-6-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).tar.gz
 endif
 
 CACAO_BASE_URL = http://www.complang.tuwien.ac.at
