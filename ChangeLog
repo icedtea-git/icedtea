@@ -1,3 +1,7 @@
+2008-07-16  Matthias Klose  <doko@ubuntu.com>
+
+	* fsg.sh: Update for b11 code drop.
+
 2008-07-15  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Added new patch.

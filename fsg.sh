@@ -26,7 +26,6 @@ rm -f \
   openjdk/jdk/test/tools/launcher/lib/sparc/lib64/liblibrary.so
 
 rm -f \
-  openjdk/jdk/make/tools/winver/bin/winver.exe \
   openjdk/jdk/test/java/util/Locale/data/deflocale.exe \
   openjdk/jdk/test/java/util/Locale/data/deflocale.jds3 \
   openjdk/jdk/test/java/util/Locale/data/deflocale.rhel4 \
@@ -81,25 +80,12 @@ rm -rf \
 
 # binary files
 rm -f \
-  openjdk/jdk/test/sun/net/idn/nfscis.spp
+  openjdk/jdk/test/sun/net/idn/*.spp
 
 # has w3c copyright. license to be checked / needs checking after decoding
 rm -f \
   openjdk/jdk/test/javax/xml/crypto/dsig/data/xml-stylesheet \
   openjdk/jdk/test/javax/xml/crypto/dsig/data/xml-stylesheet.b64
-
-# TODO
-#$ find openjdk -name '*.jar' -o -name '*.class'|grep -v test
-
-# PR140, S6695776
-# Also see patches/icedtea-jscheme.patch
-rm -rf openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/lib
-rm -rf openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/scripts
-
-# PR139, S6710791
-rm -f \
-  openjdk/hotspot/agent/kk/src/share/lib/maf-1_0.jar \
-  openjdk/hotspot/agent/kk/src/share/lib/jlfgr-1_0.jar \
 
 # PR157, S6713083
 rm -f \
