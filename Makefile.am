@@ -1,5 +1,5 @@
-OPENJDK_DATE = 30_may_2008
-OPENJDK_MD5SUM = 98e9eb16615605f76056135b0eb0b39f
+OPENJDK_DATE = 10_jul_2008
+OPENJDK_MD5SUM = 8e60cdac02ec1b2d8ddb9d7369be69df
 OPENJDK_VERSION = b10
 
 CACAO_VERSION = 0.99.2
@@ -343,13 +343,10 @@ ZERO_PATCHES = \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-zero.patch \
-	patches/icedtea-ia64-bugfix.patch \
-	patches/icedtea-eclipse-hotspot-6614100-7b24.patch
+	patches/icedtea-ia64-bugfix.patch
 
 # Patches needed when not using the newer OpenJDK 7 HotSpot for zero.
-NON_ZERO_PATCHES = \
-	patches/icedtea-eclipse-hotspot-6614100-6b06.patch \
-	patches/icedtea-security-updates-nonzero.patch
+NON_ZERO_PATCHES =
 
 if ZERO_BUILD
   ZERO_PATCHES_COND = $(ZERO_PATCHES)
@@ -364,10 +361,7 @@ else
   SHARK_PATCH =
 endif
 
-ICEDTEA_FSG_PATCHES = \
-	patches/icedtea-license-headers.patch \
-	patches/icedtea-idl.patch \
-	patches/icedtea-jscheme.patch
+ICEDTEA_FSG_PATCHES =
 
 ICEDTEA_PATCHES = \
 	$(ZERO_PATCHES_COND) \
@@ -389,7 +383,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-gcc-suffix.patch \
 	patches/icedtea-bytebuffer-compact.patch \
 	patches/icedtea-float-double-trailing-zeros.patch \
-	patches/icedtea-gtkplaf.patch \
 	patches/icedtea-memory-limits.patch \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
@@ -418,12 +411,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-no-bcopy.patch \
-	patches/icedtea-dnd-updatecursor.patch \
-	patches/icedtea-component.patch \
 	patches/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
 	patches/icedtea-jdk-docs-target.patch \
-	patches/icedtea-security-updates.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH)
 
@@ -469,8 +459,9 @@ clean-extract:
 	rm -f stamps/extract.stamp
 
 stamps/patch.stamp: stamps/patch-fsg.stamp
-	rm -f stamps/patch.stamp.tmp
 	mkdir -p stamps ; \
+	rm -f stamps/patch.stamp.tmp ; \
+	touch stamps/patch.stamp.tmp ; \
 	all_patches_ok=yes; \
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
@@ -517,8 +508,9 @@ clean-patch:
 	fi
 
 stamps/patch-fsg.stamp: stamps/extract.stamp
-	rm -f stamps/patch-fsg.stamp.tmp
 	mkdir -p stamps ; \
+	rm -f stamps/patch-fsg.stamp.tmp ; \
+	touch stamps/patch-fsg.stamp.tmp ; \
 	all_patches_ok=yes; \
 	for p in $(ICEDTEA_FSG_PATCHES) ; \
 	do \

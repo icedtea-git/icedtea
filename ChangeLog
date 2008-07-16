@@ -1,6 +1,14 @@
 2008-07-16  Matthias Klose  <doko@ubuntu.com>
 
 	* fsg.sh: Update for b11 code drop.
+	* Makefile.am: Update for b11.
+	* patches/icedtea-license-headers.patch, patches/icedtea-idl.patch,
+	patches/icedtea-jscheme.patch, patches/icedtea-security-updates.patch,
+	patches/icedtea-eclipse-hotspot-6614100-6b06.patch,
+	patches/icedtea-gtkplaf.patch, patches/icedtea-dnd-updatecursor.patch,
+	patches/icedtea-component.patch: Remove, applied upstream.
+	* HACKING: Update patch descriptions.
+	* NEWS: Mention update to b11.
 
 2008-07-15  Lillian Angel  <langel@redhat.com>
 
