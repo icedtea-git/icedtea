@@ -2,6 +2,7 @@
 
 	* patches/icedtea-nomotif-6706121.patch, patches/icedtea-nomotif.patch:
 	New.
+	* Makefile.am (ICEDTEA_PATCHES): Add patches.
 	* configure.ac: Remove lesstif check.
 	* INSTALL: Remove lesstif from build requirements.
 
