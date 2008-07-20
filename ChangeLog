@@ -1,3 +1,7 @@
+2008-07-20  Matthias Klose  <doko@ubuntu.com>
+
+	* acinclude.m4 (SET_ARCH_DIRS): Add powerpc and powerpc64 configs.
+
 2008-07-16  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Fixed typos.

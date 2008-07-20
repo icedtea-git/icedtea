@@ -16,6 +16,16 @@ AC_DEFUN([SET_ARCH_DIRS],
       INSTALL_ARCH_DIR=arm
       JRE_ARCH_DIR=arm
       ;;
+    powerpc-*-*)
+      BUILD_ARCH_DIR=ppc
+      INSTALL_ARCH_DIR=ppc
+      JRE_ARCH_DIR=ppc
+       ;;
+    powerpc64-*-*)
+      BUILD_ARCH_DIR=ppc64
+      INSTALL_ARCH_DIR=ppc64
+      JRE_ARCH_DIR=ppc64
+       ;;
     sparc64-*-*)
       BUILD_ARCH_DIR=sparcv9
       INSTALL_ARCH_DIR=sparcv9
