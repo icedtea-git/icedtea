@@ -1,3 +1,76 @@
+2008-07-20  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-nomotif-6706121.patch, patches/icedtea-nomotif.patch:
+	New.
+	* Makefile.am (ICEDTEA_PATCHES): Add patches.
+	* configure.ac: Remove lesstif check.
+	* INSTALL: Remove lesstif from build requirements.
+
+2008-07-20  Matthias Klose  <doko@ubuntu.com>
+
+	* acinclude.m4 (SET_ARCH_DIRS): Add powerpc and powerpc64 configs.
+
+2008-07-16  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Fixed typos.
+
+2008-07-16  Matthias Klose  <doko@ubuntu.com>
+
+	* fsg.sh: Update for b11 code drop.
+	* Makefile.am: Update for b11.
+	* patches/icedtea-license-headers.patch, patches/icedtea-idl.patch,
+	patches/icedtea-jscheme.patch, patches/icedtea-security-updates.patch,
+	patches/icedtea-eclipse-hotspot-6614100-6b06.patch,
+	patches/icedtea-gtkplaf.patch, patches/icedtea-dnd-updatecursor.patch,
+	patches/icedtea-component.patch: Remove, applied upstream.
+	* HACKING: Update patch descriptions.
+	* NEWS: Mention update to b11.
+
+2008-07-15  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added new patch.
+	* patches/icedtea-security-updates.patch: Removed patch that cannot be
+	applied to ports.
+	* patches/icedtea-security-updates-nonzero.patch: Added removed patch
+	into this file.
+
+2008-07-15  Lillian Angel  <langel@redhat.com>
+
+	* INSTALL: Added rhino to the list.
+
+2008-07-15  Lillian Angel  <langel@redhat.com>
+
+	* .hgignore: Updated.
+	* Makefile.am: Added HACKING to EXTRA_DIST.
+
+2008-07-15  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Add icedtea-webstart-umask.patch.
+	* patches/icedtea-webstart-umask.patch: Set default umask to 077 for
+	javaws and pluginappletviewer, and also	provide the -umask argument to
+	manually override this setting.
+	* rt/net/sourceforge/jnlp/resources/Messages.properties: Update usage.
+	* rt/net/sourceforge/jnlp/runtime/Boot.java: Likewise.
+
+2008-07-14  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am (stamps/cacao.stamp): Only install if WITH_CACAO is used.
+	* patches/icedtea-liveconnect.patch: Split GetMemberPluginCallRequest,
+	GetWindowPluginCallRequest and VoidPluginCallRequest into separate files
+	to work around ecj compiling issues.
+
+2008-07-14  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/download.stamp): Disable checksum test and
+	download when configured --with-cacao-src-zip.
+
+2008-07-14  Matthias Klose  <doko@ubuntu.com>
+
+	* acinclude.m4 (FIND_JAR): Check if $JAR supports @<file>;
+	set JAR_KNOWS_ATFILE.
+	* Makefile.am (ICEDTEA_ENV_GCJ): Pass JAR_KNOWS_ATFILE.
+	* patches/icedtea-ecj.patch: Use jar @<file> if available.
+
 2008-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* rt/javax/jnlp/BasicService.java,
@@ -235,7 +308,7 @@
 
 	* patches/icedtea-copy-plugs.patch:
 	Remove patch to OpenConverter as this no longer exists.
-	
+
 2008-07-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:

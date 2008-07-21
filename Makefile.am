@@ -1,3 +1,5 @@
+OPENJDK_DATE = 03_jul_2008
+OPENJDK_MD5SUM = 95c2f20163e496f98fc2d6767d7ca7e5
 OPENJDK_VERSION = b30
 
 CACAO_VERSION = 0.99.2
@@ -70,7 +72,8 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
 	javaws.png javaws.desktop \
 	overlays extra jconsole.desktop policytool.desktop \
 	test/jtreg patches/icedtea-plugin.patch \
-	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc
+	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc \
+	HACKING
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -213,7 +216,8 @@ ICEDTEA_ENV_ECJ = \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
 	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
 	"JAVAC=" \
-	"RHINO_JAR=$(RHINO_JAR)"
+	"RHINO_JAR=$(RHINO_JAR)" \
+	"JAR_KNOWS_ATFILE=$(JAR_KNOWS_ATFILE)"
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
@@ -259,7 +263,7 @@ else
 if USE_HG
   OPENJDK_SRC_ZIP = 
 else
-  OPENJDK_SRC_ZIP = openjdk-7-ea-src-b30-03_jul_2008.zip
+  OPENJDK_SRC_ZIP = openjdk-7-ea-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).zip
 endif
 endif
 
@@ -298,6 +302,8 @@ endif
 endif
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
+if USE_ALT_CACAO_SRC_ZIP
+else
 	if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
 	 | $(MD5SUM) --check ; \
 	then \
@@ -307,6 +313,7 @@ if !USE_SYSTEM_CACAO
 	 fi ; \
 	 $(WGET) $(CACAO_URL)$(CACAO_SRC_ZIP) -O $(CACAO_SRC_ZIP); \
 	fi
+endif
 endif
 endif
 	mkdir -p stamps
@@ -356,8 +363,7 @@ endif
 # when in an official bxx release)
 OPENJDK_PATCHES = 
 
-# If ZERO_BUILD is set then we are building zero and need
-# to patch up to OpenJDK 7 HotSpot for the C++ interpreter.
+# If ZERO_BUILD is set then we are building zero.
 ZERO_PATCHES = \
 	patches/icedtea-hotspot7-build-fixes.patch \
 	patches/icedtea-bytecodeInterpreter.patch \
@@ -394,6 +400,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-ssl.patch \
 	$(PLUGIN_PATCH) \
 	patches/icedtea-webstart.patch \
+	patches/icedtea-webstart-umask.patch \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-demos.patch \
@@ -438,6 +445,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-override.patch \
 	patches/icedtea-constructor-properties.patch \
 	patches/icedtea-jsoundhs.patch \
+	patches/icedtea-jdk-docs-target.patch \
+	patches/icedtea-nomotif-6706121.patch \
+	patches/icedtea-nomotif.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH)
 
@@ -489,8 +499,9 @@ stamps/generated.stamp: stamps/extract-cacao.stamp
 	touch stamps/generated.stamp
 
 stamps/patch.stamp: stamps/patch-fsg.stamp
-	rm -f stamps/patch.stamp.tmp
 	mkdir -p stamps ; \
+	rm -f stamps/patch.stamp.tmp ; \
+	touch stamps/patch.stamp.tmp ; \
 	all_patches_ok=yes; \
 	cd $(abs_top_builddir)/openjdk/jdk; \
 	for p in $(OPENJDK_PATCHES) ; \
@@ -564,8 +575,9 @@ clean-patch:
 	fi
 
 stamps/patch-fsg.stamp: stamps/generated.stamp
-	rm -f stamps/patch-fsg.stamp.tmp
 	mkdir -p stamps ; \
+	rm -f stamps/patch-fsg.stamp.tmp ; \
+	touch stamps/patch-fsg.stamp.tmp ; \
 	all_patches_ok=yes; \
 	for p in $(ICEDTEA_FSG_PATCHES) ; \
 	do \
@@ -1179,6 +1191,7 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 	fi
 
 stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
+if WITH_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao-$(CACAO_VERSION) ; \
 	./configure \
@@ -1188,6 +1201,7 @@ if !USE_SYSTEM_CACAO
 	  --with-java-runtime-library-classes=$(abs_top_builddir)/lib/rt \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	make install
+endif
 endif
 	mkdir -p stamps
 	touch $@

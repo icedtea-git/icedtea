@@ -100,6 +100,7 @@ public final class Boot implements PrivilegedAction {
         + "  -noupdate             "+R("BONoupdate")+"\n"
         + "  -headless             "+R("BOHeadless")+"\n"
         + "  -strict               "+R("BOStrict")+"\n"
+        + "  -umask=value          "+R("BOUmask")+"\n"
         + "  -help                 "+R("BOHelp")+"\n";
 
     private static final String doubleArgs = "-basedir -jnlp -arg -param -property -update";

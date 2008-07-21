@@ -16,6 +16,16 @@ AC_DEFUN([SET_ARCH_DIRS],
       INSTALL_ARCH_DIR=arm
       JRE_ARCH_DIR=arm
       ;;
+    powerpc-*-*)
+      BUILD_ARCH_DIR=ppc
+      INSTALL_ARCH_DIR=ppc
+      JRE_ARCH_DIR=ppc
+       ;;
+    powerpc64-*-*)
+      BUILD_ARCH_DIR=ppc64
+      INSTALL_ARCH_DIR=ppc64
+      JRE_ARCH_DIR=ppc64
+       ;;
     sparc64-*-*)
       BUILD_ARCH_DIR=sparcv9
       INSTALL_ARCH_DIR=sparcv9
@@ -307,7 +317,21 @@ AC_DEFUN([FIND_JAR],
   if test -z "${JAR}"; then
     AC_MSG_ERROR("jar was not found.")
   fi
+  AC_MSG_CHECKING([wether jar supports @<file> argument])
+  touch _config.txt
+  cat >_config.list <<EOF
+_config.txt
+EOF
+  if $JAR cf _config.jar @_config.list 2>/dev/null; then
+    JAR_KNOWS_ATFILE=1
+    AC_MSG_RESULT(yes)
+  else
+    JAR_KNOWS_ATFILE=
+    AC_MSG_RESULT(no)
+  fi
+  rm -f _config.txt _config.list _config.jar
   AC_SUBST(JAR)
+  AC_SUBST(JAR_KNOWS_ATFILE)
 ])
 
 AC_DEFUN([FIND_RMIC],

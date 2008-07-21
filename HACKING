@@ -7,9 +7,7 @@ Sx denotes bug x in the Sun bug database (http://bugs.sun.com/bugdatabase/view_b
 The following patches are applied early in the build to meet the Free Software guidelines and are also
 included in the tarball resulting from the dist-openjdk-fsg target:
 
-* icedtea-idl.patch: Fix IDL licenses (PR141/S6695776).
-* icedtea-jscheme.patch: Replace use of jscheme.jar with Java alternative (PR140/S6695776).
-* icedtea-license-headers.patch: Generate GPL header from automulti tool (PR148/S6713083).
+[ currently no patches applied ]
 
 The fsg.sh script is also run to delete certain files with dubious licensing and/or only occuring
 in binary format.
@@ -45,7 +43,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-memory-limits.patch: Increase default memory limits.
 * icedtea-no-bcopy.patch: Don't define local copies of bcopy, bzero and bcmp from BSD.
 * icedtea-override-redirect-metacity.patch: Enable override redirect for Metacity window manager.
-* icedtea-print-lsb-release.patch: Generate Debian LSB file.
+* icedtea-print-lsb-release.patch: Use information from Debian LSB file for crash reports.
 * icedtea-rhino.patch: Add support for Javascript.
 * icedtea-rmi_amd64.patch: Build RMI binaries on all platforms not just 32-bit ones.
 * icedtea-security-updates.patch: OpenJDK security patches from Sun.
@@ -67,10 +65,6 @@ The following patches are currently applied before the building of OpenJDK or Op
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
-* icedtea-component.patch: Fix deadlock in AWT code (PR159/S6608764). Fixed in OpenJDK7 b25.
-* icedtea-dnd-updatecursor.patch: Fix unexpected cursor returned by DragSourceContext (S6691328). Fixed in OpenJDK7 b29.
-* icedtea-eclipse-hotspot-6614100-6b06.patch: Fix Eclipse crash (S6614100). Fixed in OpenJDK7 b29/hs13.
-* icedtea-gtkplaf.patch: Fix corrupted combo box (S6624717). Fixed in OpenJDK7 b27.
 * icedtea-jdk-docs-target.patch: Always set DOCS_TARGET.
 
 The following patches are only applied to OpenJDK in IcedTea:

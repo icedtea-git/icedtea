@@ -229,9 +229,6 @@ AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
 AC_CHECK_HEADERS([X11/X.h],[]
 	,[AC_MSG_ERROR("xorg headers were not found -
 	try installing xorg-x11-proto-devel.")])
-AC_CHECK_HEADERS([Xm/Xm.h Xm/XmP.h Xm/Display.h],[]
-	,[AC_MSG_ERROR("motif headers were not found -
-	try installing lesstif-devel.")])
 AC_CHECK_LIB(jpeg, main,
         , [AC_MSG_ERROR("libjpeg not found - try installing libjpeg-devel")])
 AC_CHECK_LIB(gif, main,

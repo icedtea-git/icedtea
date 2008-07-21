@@ -11,7 +11,6 @@ GNU libgcj 4.3.0 (or equivalent 1.5 class library, such as GNU Classpath >= 0.95
 Eclipse Java Compiler
 CUPS
 libX11 (libXp, libXtst, libXi, libXt)
-lesstif
 Freetype2
 patch
 sed
@@ -30,6 +29,7 @@ giflib-devel
 libpng-devel
 libjpeg-devel = 6b
 zlib-devel
+rhino
 
 For building the zero-assembler port (see below), you will need libffi.
 
