@@ -1,3 +1,8 @@
+2008-07-21  Gary Benson  <gbenson@redhat.com>
+
+	* HACKING: Added instructions for how to regenerate
+	icedtea-hotspot-6b06-7b24.patch.
+
 2008-07-20  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-nomotif-6706121.patch, patches/icedtea-nomotif.patch:
