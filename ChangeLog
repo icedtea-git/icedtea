@@ -1,5 +1,10 @@
 2008-07-21  Matthias Klose  <doko@ubuntu.com>
 
+	* Update patches/icedtea-hotspot-6b11-7b24.patch.
+	* HACKING: Adjust.
+
+2008-07-21  Matthias Klose  <doko@ubuntu.com>
+
 	* Makefile.am (ICEDTEA_ENV, ICEDTEA_ENV_GCJ): Add
 	$(abs_top_builddir)/bootstrap/jdk1.6.0/bin to PATH.
 

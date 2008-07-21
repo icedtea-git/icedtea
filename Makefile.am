@@ -335,7 +335,7 @@ endif
 # If ZERO_BUILD is set then we are building zero and need
 # to patch up to OpenJDK 7 HotSpot for the C++ interpreter.
 ZERO_PATCHES = \
-	patches/icedtea-hotspot-6b06-7b24.patch \
+	patches/icedtea-hotspot-6b11-7b24.patch \
 	patches/icedtea-hotspot7-build-fixes.patch \
 	patches/icedtea-bytecodeInterpreter.patch \
 	patches/icedtea-bytecodeInterpreterWithChecks.patch \
