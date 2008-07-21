@@ -1,5 +1,11 @@
 2008-07-21  Gary Benson  <gbenson@redhat.com>
 
+	PR icedtea/170:
+	* patches/icedtea-zero-build.patch: Build class library with
+	-D_LITTLE_ENDIAN where appropriate.
+
+2008-07-21  Gary Benson  <gbenson@redhat.com>
+
 	* HACKING: Added instructions for how to regenerate
 	icedtea-hotspot-6b06-7b24.patch.
 

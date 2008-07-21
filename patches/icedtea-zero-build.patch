@@ -133,7 +133,7 @@ diff -ru openjdk-ecj/hotspot/build/linux/makefiles/vm.make openjdk-ecj.new/hotsp
 diff -r c9fa8e3d5aa2 openjdk/jdk/make/common/Defs-linux.gmk
 --- openjdk/jdk/make/common/Defs-linux.gmk	Thu Mar 20 13:42:48 2008 +0000
 +++ openjdk/jdk/make/common/Defs-linux.gmk	Thu Mar 20 13:45:05 2008 +0000
-@@ -109,8 +109,13 @@ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+@@ -109,8 +109,16 @@ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
  LDFLAGS_COMMON_sparc    += -m32 -mcpu=v9
@@ -141,6 +141,9 @@ diff -r c9fa8e3d5aa2 openjdk/jdk/make/common/Defs-linux.gmk
 -LDFLAGS_COMMON          += $(LDFLAGS_COMMON_$(ARCH))
 +ifdef ICEDTEA_ZERO_BUILD
 +  CFLAGS_REQUIRED       =  $(ZERO_ARCHFLAG)
++  ifeq ($(ZERO_ENDIANNESS), little)
++    CFLAGS_REQUIRED     += -D_LITTLE_ENDIAN
++  endif
 +  LDFLAGS_COMMON        += $(ZERO_ARCHFLAG)
 +else
 +  CFLAGS_REQUIRED       =  $(CFLAGS_REQUIRED_$(ARCH))
@@ -242,7 +245,7 @@ diff -r c9fa8e3d5aa2 openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.
 diff -r c9fa8e3d5aa2 openjdk/corba/make/common/Defs-linux.gmk
 --- openjdk/corba/make/common/Defs-linux.gmk	Thu Mar 20 13:42:48 2008 +0000
 +++ openjdk/corba/make/common/Defs-linux.gmk	Thu Mar 20 13:57:50 2008 +0000
-@@ -99,8 +99,13 @@ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+@@ -99,8 +99,16 @@ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
  LDFLAGS_COMMON_sparc    += -m32 -mcpu=v9
@@ -250,6 +253,9 @@ diff -r c9fa8e3d5aa2 openjdk/corba/make/common/Defs-linux.gmk
 -LDFLAGS_COMMON          += $(LDFLAGS_COMMON_$(ARCH))
 +ifdef ICEDTEA_ZERO_BUILD
 +  CFLAGS_REQUIRED       =  $(ZERO_ARCHFLAG)
++  ifeq ($(ZERO_ENDIANNESS), little)
++    CFLAGS_REQUIRED     += -D_LITTLE_ENDIAN
++  endif
 +  LDFLAGS_COMMON        += $(ZERO_ARCHFLAG)
 +else
 +  CFLAGS_REQUIRED       =  $(CFLAGS_REQUIRED_$(ARCH))
