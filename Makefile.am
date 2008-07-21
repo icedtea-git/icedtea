@@ -446,8 +446,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-constructor-properties.patch \
 	patches/icedtea-jsoundhs.patch \
 	patches/icedtea-jdk-docs-target.patch \
-	patches/icedtea-nomotif-6706121.patch \
-	patches/icedtea-nomotif.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH)
 

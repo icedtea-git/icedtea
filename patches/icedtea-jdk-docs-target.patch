@@ -1,5 +1,5 @@
---- openjdk/control/make/make/jdk-rules.gmk	2008-06-29 10:09:47.002591764 +0000
-+++ openjdk/control/make/make/jdk-rules.gmk	2008-06-29 15:04:01.228901751 +0000
+--- openjdk/make/jdk-rules.gmk	2008-06-29 10:09:47.002591764 +0000
++++ openjdk/make/jdk-rules.gmk	2008-06-29 15:04:01.228901751 +0000
 @@ -36,12 +36,7 @@
    IMAGES_TARGET = images
  endif

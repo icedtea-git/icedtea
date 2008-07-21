@@ -1,3 +1,15 @@
+2008-07-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/icedtea-nomotif-6706121.patch,
+	* patches/icedtea-nomotif.patch:
+	Removed; already present in b30.
+	* HACKING: Updated.
+	* Makefile.am: Remove unneeded patches.
+	* patches/icedtea-ecj.patch,
+	* patches/icedtea-jdk-docs-target.patch,
+	* patches/icedtea-webstart-umask.patch:
+	Fixed to apply against b30.
+
 2008-07-20  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-nomotif-6706121.patch, patches/icedtea-nomotif.patch:

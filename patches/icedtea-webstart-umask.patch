@@ -1,6 +1,7 @@
---- openjdk/jdk/make/launchers/Makefile.launcher.orig	2008-07-09 12:49:00.000000000 -0400
-+++ openjdk/jdk/make/launchers/Makefile.launcher	2008-07-09 12:49:40.000000000 -0400
-@@ -148,6 +148,16 @@
+diff -Nru openjdk.orig/jdk/make/launchers/Makefile.launcher openjdk/jdk/make/launchers/Makefile.launcher
+--- openjdk.orig/jdk/make/launchers/Makefile.launcher	2008-07-03 08:42:32.000000000 +0100
++++ openjdk/jdk/make/launchers/Makefile.launcher	2008-07-21 02:49:53.000000000 +0100
+@@ -153,6 +153,16 @@
    endif
  endif
  
@@ -17,39 +18,32 @@
  # GUI tools
  ifeq ($(GUI_TOOL),true)
    ifneq ($(PLATFORM), windows)
---- openjdk/jdk/src/share/bin/java.c.orig	2008-07-09 12:48:35.000000000 -0400
-+++ openjdk/jdk/src/share/bin/java.c	2008-07-09 12:36:11.000000000 -0400
-@@ -56,6 +56,7 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <sys/stat.h>
- 
- #include <jni.h>
- #include <jvm.h>
-@@ -69,6 +70,8 @@
- #define FULL_VERSION JDK_MAJOR_VERSION "." JDK_MINOR_VERSION
- #endif
+diff -Nru openjdk.orig/jdk/src/share/bin/java.c openjdk/jdk/src/share/bin/java.c
+--- openjdk.orig/jdk/src/share/bin/java.c	2008-07-03 08:42:35.000000000 +0100
++++ openjdk/jdk/src/share/bin/java.c	2008-07-21 02:53:15.000000000 +0100
+@@ -76,6 +76,8 @@
+ static jboolean _wc_enabled = JNI_FALSE;
+ static jint _ergo_policy = DEFAULT_POLICY;
  
 +#define MAXMASK 4095 /* Same as octal 07777 */
 +
  /*
-  * The following environment variable is used to influence the behavior
-  * of the jre exec'd through the SelectVersion routine.  The command line
-@@ -184,6 +187,10 @@
+  * Entries for splash screen environment variables.
+  * putenv is performed in SelectVersion. We need
+@@ -162,6 +164,10 @@
  
  int JNICALL JavaMain(void * args); /* entry point                  */
  
 +/* umask things */
 +static int FindUMask(int *, char ***, int *);
 +static int VerifyMask(char *, int*);
-+
- struct JavaMainArgs {
++ 
+ typedef struct {
    int     argc;
    char ** argv;
-@@ -307,6 +314,26 @@
-     SetClassPath(s);
- #endif
+@@ -272,6 +278,26 @@
+         SetClassPath(cpath);
+     }
  
 +#ifdef USE_UMASK
 +	/* Set umask */
@@ -74,9 +68,9 @@
      /*
       *  Parse command line options; if the return value of
       *  ParseArguments is false, the program should exit.
-@@ -2011,3 +2038,87 @@
-     }
-     DoSplashSetFileJarName(file_name, jar_name);
+@@ -2027,3 +2053,87 @@
+     fprintf(stderr, "\n");
+     va_end(vl);
  }
 +
 +/**
@@ -162,3 +156,14 @@
 +    }
 +
 +}
+diff -Nru openjdk.orig/jdk/src/share/bin/java.h openjdk/jdk/src/share/bin/java.h
+--- openjdk.orig/jdk/src/share/bin/java.h	2008-07-21 02:51:54.000000000 +0100
++++ openjdk/jdk/src/share/bin/java.h	2008-07-21 02:53:18.000000000 +0100
+@@ -29,6 +29,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <sys/stat.h>
+ #include <limits.h>
+ 
+ #include <jni.h>
