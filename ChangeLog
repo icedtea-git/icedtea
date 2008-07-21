@@ -1,5 +1,9 @@
 2008-07-21  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-zero.patch: Added s390 and s390x to dlopen checks.
+
+2008-07-21  Gary Benson  <gbenson@redhat.com>
+
 	PR icedtea/170:
 	* patches/icedtea-zero-build.patch: Build class library with
 	-D_LITTLE_ENDIAN where appropriate.
