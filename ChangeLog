@@ -214,7 +214,7 @@
 	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/nanoxml/XMLElement.java,
 	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/nanoxml/XMLParseException.java:
 	Added.
-	
+
 2008-07-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* ports/hotspot/build/linux/makefiles/shark.make,
@@ -244,6 +244,14 @@
 	* acinclude.m4: Add USE_HG option.
 	* configure: Regenerated.
 	* configure.ac: Add ENABLE_HG macro and update e-mail address.
+
+2008-07-11  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* ChangeLog: Fix typos.
+	* Makefile.in,
+	* configure,
+	* aclocal.m4: Removed.
+	* INSTALL: Update.
 
 2008-07-11  Gary Benson  <gbenson@redhat.com>
 
@@ -319,11 +327,11 @@
 
 2008-07-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
-	* b/Makefile.am: Fix use of abs_top_srcdir
+	* Makefile.am: Fix use of abs_top_srcdir
 	for CACAO and lack of path for HACKING.
-	* b/Makefile.in: Regenerated.
-	* b/acinclude.m4: Fix CACAO path as above.
-	* b/configure: Regenerated.
+	* Makefile.in: Regenerated.
+	* acinclude.m4: Fix CACAO path as above.
+	* configure: Regenerated.
 
 2008-07-02  Matthias Klose  <doko@ubuntu.com>
 
