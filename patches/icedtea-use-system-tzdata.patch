@@ -52,7 +52,7 @@
 +  SystemProperty* sp = Arguments::system_properties();
 +  // Use the system zoneinfo files, if present
 +  Arguments::PropertyList_add (&sp,
-+                           "user.zoneinfo.dir", "/usr/share/javazi");
++                           new SystemProperty("user.zoneinfo.dir", "/usr/share/javazi", true));
 +
  #undef malloc
  #undef getenv

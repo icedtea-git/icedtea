@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common/Defs-linux.gmk
---- openjdk.orig/corba/make/common/Defs-linux.gmk	2008-05-23 23:42:18.000000000 +0100
-+++ openjdk/corba/make/common/Defs-linux.gmk	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/corba/make/common/Defs-linux.gmk	2008-07-21 23:18:56.000000000 +0100
++++ openjdk/corba/make/common/Defs-linux.gmk	2008-07-22 17:55:24.000000000 +0100
 @@ -99,8 +99,13 @@
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
@@ -18,8 +18,8 @@ diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/commo
  # Add in platform specific optimizations for all opt levels
  CC_HIGHEST_OPT += $(_OPT_$(ARCH))
 diff -Nru openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk openjdk/corba/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk	2008-05-23 23:42:18.000000000 +0100
-+++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk	2008-07-21 23:18:56.000000000 +0100
++++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	2008-07-22 17:55:24.000000000 +0100
 @@ -70,6 +70,11 @@
    else
      CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
@@ -41,8 +41,8 @@ diff -Nru openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk openjdk/corba/m
    SHARED_LIBRARY_FLAG = -shared -mimpure-text
    SUN_COMP_VER := $(shell $(CC) --verbose 2>&1 )
 diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/common/shared/Platform.gmk
---- openjdk.orig/corba/make/common/shared/Platform.gmk	2008-05-16 22:13:14.000000000 +0100
-+++ openjdk/corba/make/common/shared/Platform.gmk	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/corba/make/common/shared/Platform.gmk	2008-07-17 08:39:53.000000000 +0100
++++ openjdk/corba/make/common/shared/Platform.gmk	2008-07-22 17:55:24.000000000 +0100
 @@ -202,6 +202,11 @@
    ARCH_FAMILY := $(ARCH)
  
@@ -55,9 +55,39 @@ diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/
    ifeq ($(ARCH), sparc)
      # Linux sparc build can be either 32-bit or 64-bit.
      #   Default to 32, but allow explicit setting to 32 or 64.
+diff -Nru openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
+--- openjdk.orig/hotspot/make/defs.make	2008-07-17 08:40:27.000000000 +0100
++++ openjdk/hotspot/make/defs.make	2008-07-22 17:55:24.000000000 +0100
+@@ -192,13 +192,14 @@
+ 
+   # Use uname output for SRCARCH, but deal with platform differences. If ARCH
+   # is not explicitly listed below, it is treated as x86. 
+-  SRCARCH     = $(ARCH/$(filter sparc sparc64 ia64 amd64 x86_64,$(ARCH)))
++  SRCARCH     = $(ARCH/$(filter sparc sparc64 ia64 amd64 x86_64 zero,$(ARCH)))
+   ARCH/       = x86
+   ARCH/sparc  = sparc
+   ARCH/sparc64= sparc
+   ARCH/ia64   = ia64
+   ARCH/amd64  = x86
+   ARCH/x86_64 = x86
++  ARCH/zero   = zero
+ 
+   # BUILDARCH is usually the same as SRCARCH, except for sparcv9
+   BUILDARCH = $(SRCARCH)
+@@ -222,8 +223,9 @@
+   LIBARCH/sparc   = sparc
+   LIBARCH/sparcv9 = sparcv9
+   LIBARCH/ia64    = ia64
++  LIBARCH/zero    = $(ZERO_LIBARCH)
+ 
+-  LP64_ARCH = sparcv9 amd64 ia64
++  LP64_ARCH = sparcv9 amd64 ia64 zero
+ endif
+ 
+ # Required make macro settings for all platforms
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/buildtree.make openjdk/hotspot/make/linux/makefiles/buildtree.make
---- openjdk.orig/hotspot/make/linux/makefiles/buildtree.make	2008-05-19 22:56:21.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/buildtree.make	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/hotspot/make/linux/makefiles/buildtree.make	2008-07-17 08:40:27.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/buildtree.make	2008-07-22 17:55:24.000000000 +0100
 @@ -321,6 +321,7 @@
  DATA_MODE/sparcv9 = 64
  DATA_MODE/amd64   = 64
@@ -67,8 +97,8 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/buildtree.make openjdk/hotsp
  JAVA_FLAG/32 = -d32
  JAVA_FLAG/64 = -d64
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/defs.make openjdk/hotspot/make/linux/makefiles/defs.make
---- openjdk.orig/hotspot/make/linux/makefiles/defs.make	2008-05-23 23:42:18.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/defs.make	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/hotspot/make/linux/makefiles/defs.make	2008-07-21 23:18:56.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/defs.make	2008-07-22 17:55:24.000000000 +0100
 @@ -37,6 +37,18 @@
    ARCH_DATA_MODEL ?= 32
  endif
@@ -89,10 +119,10 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/defs.make openjdk/hotspot/ma
  ifeq ($(ARCH), ia64)
    ARCH_DATA_MODEL = 64
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
---- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2008-05-23 23:42:18.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-05-24 00:01:14.000000000 +0100
-@@ -57,6 +57,9 @@
- 
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2008-07-21 23:18:56.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-07-22 17:55:24.000000000 +0100
+@@ -56,6 +56,9 @@
+ VM_PICFLAG/AOUT   =
  VM_PICFLAG        = $(VM_PICFLAG/$(LINK_INTO))
  
 +ifdef ICEDTEA_ZERO_BUILD
@@ -101,7 +131,7 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  CFLAGS += $(VM_PICFLAG)
  CFLAGS += -fno-rtti
  CFLAGS += -fno-exceptions
-@@ -73,6 +76,7 @@
+@@ -72,6 +75,7 @@
  ARCHFLAG/ia64    =
  ARCHFLAG/sparc   = -m32 -mcpu=v9
  ARCHFLAG/sparcv9 = -m64 -mcpu=v9
@@ -110,8 +140,8 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  CFLAGS     += $(ARCHFLAG)
  AOUT_FLAGS += $(ARCHFLAG)
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/sa.make openjdk/hotspot/make/linux/makefiles/sa.make
---- openjdk.orig/hotspot/make/linux/makefiles/sa.make	2008-05-16 22:13:31.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/sa.make	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/hotspot/make/linux/makefiles/sa.make	2008-07-17 08:40:27.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/sa.make	2008-07-22 17:55:24.000000000 +0100
 @@ -51,10 +51,10 @@
  SA_PROPERTIES = $(SA_CLASSDIR)/sa.properties
  
@@ -126,8 +156,8 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/sa.make openjdk/hotspot/make
  	fi
  
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/saproc.make openjdk/hotspot/make/linux/makefiles/saproc.make
---- openjdk.orig/hotspot/make/linux/makefiles/saproc.make	2008-05-16 22:13:31.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/saproc.make	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/hotspot/make/linux/makefiles/saproc.make	2008-07-17 08:40:27.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/saproc.make	2008-07-22 17:55:24.000000000 +0100
 @@ -44,10 +44,10 @@
  DEST_SAPROC = $(JDK_LIBDIR)/$(LIBSAPROC)
  
@@ -142,9 +172,9 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/saproc.make openjdk/hotspot/
  	fi
  
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
---- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2008-05-23 23:42:18.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/vm.make	2008-05-24 00:01:14.000000000 +0100
-@@ -152,6 +152,9 @@
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2008-07-21 23:18:56.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/vm.make	2008-07-22 17:55:24.000000000 +0100
+@@ -154,6 +154,9 @@
  
    LIBS_VM                  += $(LIBS)
  endif
@@ -154,39 +184,27 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make
  
  LINK_VM = $(LINK_LIB.c)
  
-diff -Nru openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
---- openjdk.orig/hotspot/make/defs.make	2008-05-16 22:13:31.000000000 +0100
-+++ openjdk/hotspot/make/defs.make	2008-05-24 00:03:27.000000000 +0100
-@@ -191,13 +191,14 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2008-07-21 23:18:56.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-07-22 17:55:24.000000000 +0100
+@@ -146,10 +146,14 @@
+                  WINDOWS_ONLY("windows")         \
+                  SOLARIS_ONLY("solaris")
  
-   # Use uname output for SRCARCH, but deal with platform differences. If ARCH
-   # is not explicitly listed below, it is treated as x86. 
--  SRCARCH     = $(ARCH/$(filter sparc sparc64 ia64 amd64 x86_64,$(ARCH)))
-+  SRCARCH     = $(ARCH/$(filter sparc sparc64 ia64 amd64 x86_64 zero,$(ARCH)))
-   ARCH/       = x86
-   ARCH/sparc  = sparc
-   ARCH/sparc64= sparc
-   ARCH/ia64   = ia64
-   ARCH/amd64  = x86
-   ARCH/x86_64 = x86
-+  ARCH/zero   = zero
++#ifdef ZERO_LIBARCH
++#define CPU      ZERO_LIBARCH
++#else
+ #define CPU      IA32_ONLY("x86")                \
+                  IA64_ONLY("ia64")               \
+                  AMD64_ONLY("amd64")             \
+                  SPARC_ONLY("sparc")
++#endif // ZERO_LIBARCH
  
-   # BUILDARCH is usually the same as SRCARCH, except for sparcv9
-   BUILDARCH = $(SRCARCH)
-@@ -221,8 +222,9 @@
-   LIBARCH/sparc   = sparc
-   LIBARCH/sparcv9 = sparcv9
-   LIBARCH/ia64    = ia64
-+  LIBARCH/zero    = $(ZERO_LIBARCH)
- 
--  LP64_ARCH = sparcv9 amd64 ia64
-+  LP64_ARCH = sparcv9 amd64 ia64 zero
- endif
- 
- # Required make macro settings for all platforms
+ const char *Abstract_VM_Version::vm_platform_string() {
+   return OS "-" CPU;
 diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
---- openjdk.orig/jdk/make/common/Defs-linux.gmk	2008-05-23 23:42:18.000000000 +0100
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2008-07-21 23:18:56.000000000 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2008-07-22 17:55:24.000000000 +0100
 @@ -109,8 +109,13 @@
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
@@ -204,8 +222,8 @@ diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/De
  # Add in platform specific optimizations for all opt levels
  CC_HIGHEST_OPT += $(_OPT_$(ARCH))
 diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2008-05-23 23:42:18.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2008-07-21 23:18:56.000000000 +0100
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2008-07-22 17:55:24.000000000 +0100
 @@ -68,6 +68,11 @@
    else
      CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
@@ -227,9 +245,9 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/
    SHARED_LIBRARY_FLAG = -shared -mimpure-text
    SUN_COMP_VER := $(shell $(CC) --verbose 2>&1 )
 diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/common/shared/Platform.gmk
---- openjdk.orig/jdk/make/common/shared/Platform.gmk	2008-05-19 22:56:22.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Platform.gmk	2008-05-24 00:01:14.000000000 +0100
-@@ -209,6 +209,11 @@
+--- openjdk.orig/jdk/make/common/shared/Platform.gmk	2008-07-17 08:43:08.000000000 +0100
++++ openjdk/jdk/make/common/shared/Platform.gmk	2008-07-22 17:55:24.000000000 +0100
+@@ -208,6 +208,11 @@
    ARCH_FAMILY := $(ARCH)
  
    # Linux builds may be 32-bit or 64-bit data model.
@@ -242,8 +260,8 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/comm
      # Linux sparc build can be either 32-bit or 64-bit.
      #   Default to 32, but allow explicit setting to 32 or 64.
 diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax/sound/SoundDefs.gmk
---- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2008-05-16 22:15:15.000000000 +0100
-+++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2008-07-17 08:43:08.000000000 +0100
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2008-07-22 17:55:24.000000000 +0100
 @@ -55,21 +55,25 @@
  
  endif # PLATFORM solaris
@@ -286,8 +304,8 @@ diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax
  
  # files needed for MIDI i/o
 diff -Nru openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
---- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2008-05-16 22:15:22.000000000 +0100
-+++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2008-05-24 00:01:14.000000000 +0100
+--- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2008-07-17 08:43:42.000000000 +0100
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2008-07-22 17:55:24.000000000 +0100
 @@ -38,6 +38,7 @@
  #define X_SPARCV9       3
  #define X_IA64          4
@@ -296,21 +314,3 @@ diff -Nru openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h open
  
  // **********************************
  // Make sure you set X_PLATFORM and X_ARCH defines correctly.
-diff -r b5e5d2ef906a openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
---- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	Thu Jun 19 17:05:23 2008 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	Fri Jun 20 10:29:14 2008 +0100
-@@ -143,10 +143,14 @@ const char* Abstract_VM_Version::vm_rele
-                  WINDOWS_ONLY("windows")         \
-                  SOLARIS_ONLY("solaris")
- 
-+#ifdef ZERO_LIBARCH
-+#define CPU      ZERO_LIBARCH
-+#else
- #define CPU      IA32_ONLY("x86")                \
-                  IA64_ONLY("ia64")               \
-                  AMD64_ONLY("amd64")             \
-                  SPARC_ONLY("sparc")
-+#endif // ZERO_LIBARCH
- 
- const char *Abstract_VM_Version::vm_platform_string() {
-   return OS "-" CPU;

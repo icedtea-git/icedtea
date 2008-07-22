@@ -177,7 +177,6 @@ then
   AC_SUBST(JAR)
   RMIC=${SYSTEM_OPENJDK_DIR}/bin/rmic
   AC_SUBST(RMIC)
-  AM_CONDITIONAL(GCC_OLD, test x != x)
 else
 if test "${with_icedtea}" == true
 then
@@ -191,7 +190,6 @@ then
   AC_SUBST(JAR)
   RMIC=${SYSTEM_ICEDTEA_DIR}/bin/rmic
   AC_SUBST(RMIC)
-  AM_CONDITIONAL(GCC_OLD, test x != x)
 else
   FIND_JAVA
   FIND_JAVAC

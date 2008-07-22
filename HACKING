@@ -27,7 +27,6 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-directaudio-close-trick.patch: Allow hardware sound device to be reopened.
 * icedtea-float-double-trailing-zeros.patch: Remove trailing zeros from Double/Float (PR29/30)
 * icedtea-fonts.patch: Add Fedora fontconfig.
-* icedtea-gcc-4.3.patch: Fix code to compile with GCC 4.3 and turn off -Werror.
 * icedtea-gcc-suffix.patch: Append $(GCC_SUFFIX) to end of 'gcc' binary name.
 * icedtea-generated.patch: Force use of /bin/bash.
 * icedtea-gervill.patch: Add support for Gervill from the overlay.
@@ -48,7 +47,6 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-rhino.patch: Add support for Javascript.
 * icedtea-rmi_amd64.patch: Build RMI binaries on all platforms not just 32-bit ones.
 * icedtea-security-updates.patch: OpenJDK security patches from Sun.
-* icedtea-sparc.patch: Add support for GNU/Linux on SPARC (version in IcedTea includes only minimal build changes).
 * icedtea-sparc64-linux.patch: Fixes needed to build the SPARC port on 32-bit SPARC as used by Fedora.
 * icedtea-sparc-ptracefix.patch: Avoid importing asm-sparc/ptrace.h by including pt_regs directly.
 * icedtea-sparc-trapsfix.patch: Include traps.h from correct directory.
@@ -66,8 +64,10 @@ The following patches are currently applied before the building of OpenJDK or Op
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
+* icedtea-gcc-4.3.patch: Fix code to compile with GCC 4.3 and turn off -Werror.
 * icedtea-nomotif.patch: Remove sanity and GrabShell.h dependency on Motif/Lesstif library.
 * icedtea-nomotif-6706121.patch: Remove Motif AWT peers (S6706121).
+* icedtea-sparc.patch: Add support for GNU/Linux on SPARC (version in IcedTea includes only minimal build changes).
 
 The following patches are only applied to OpenJDK in IcedTea:
 

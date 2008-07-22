@@ -1,3 +1,18 @@
+2008-07-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/icedtea-gcc-4.3.patch,
+	* patches/icedtea-sparc.patch: Removed.
+	* HACKING: Updated.
+	* Makefile.am: Move to b31, remove patches listed above
+	and fix escaping on hg clone line.
+	* acinclude.m4: Only set ALT_OPENJDK_SRC_ZIP when
+	needed.
+	* configure.ac: Don't bother with GCC_OLD.
+	* patches/icedtea-text-relocations.patch: Reapplied to b31.
+	* patches/icedtea-use-system-tzdata.patch: Make solution
+	work on g++ 4.3.
+	* patches/icedtea-zero-build.patch: Reapplied.
+
 2008-07-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* patches/icedtea-nomotif-6706121.patch,

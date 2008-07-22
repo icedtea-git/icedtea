@@ -26,7 +26,6 @@ rm -f \
   openjdk/jdk/test/tools/launcher/lib/sparc/lib64/liblibrary.so
 
 rm -f \
-  openjdk/jdk/make/tools/winver/bin/winver.exe \
   openjdk/jdk/test/java/util/Locale/data/deflocale.exe \
   openjdk/jdk/test/java/util/Locale/data/deflocale.jds3 \
   openjdk/jdk/test/java/util/Locale/data/deflocale.rhel4 \

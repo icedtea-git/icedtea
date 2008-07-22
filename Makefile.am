@@ -1,6 +1,6 @@
-OPENJDK_DATE = 03_jul_2008
-OPENJDK_MD5SUM = 95c2f20163e496f98fc2d6767d7ca7e5
-OPENJDK_VERSION = b30
+OPENJDK_DATE = 17_jul_2008
+OPENJDK_MD5SUM = 42f251c593fdf0edfc59524f5eb7df12
+OPENJDK_VERSION = b31
 
 CACAO_VERSION = 0.99.2
 CACAO_MD5SUM = a2865f47535f6dc3def268c0055ff20a
@@ -287,7 +287,7 @@ if USE_HG
             "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
           exit 1; \
           fi; \
-	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk; \
+	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk; 
 else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -351,13 +351,6 @@ stamps/ports.stamp: stamps/extract.stamp
 	fi
 	mkdir -p stamps
 	touch stamps/ports.stamp
-
-# If new gcc is installed, apply 4.3 patch
-if GCC_OLD
-  GCC_PATCH =
-else
-  GCC_PATCH = patches/icedtea-gcc-4.3.patch
-endif
 
 # Patches from the other OpenJDK trees (should be removed
 # when in an official bxx release)
@@ -432,7 +425,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-fonts.patch \
 	patches/icedtea-gervill.patch \
 	patches/icedtea-directaudio-close-trick.patch \
-	patches/icedtea-sparc.patch \
 	patches/icedtea-sparc64-linux.patch \
 	patches/icedtea-sparc-ptracefix.patch \
 	patches/icedtea-sparc-trapsfix.patch \
@@ -446,8 +438,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-constructor-properties.patch \
 	patches/icedtea-jsoundhs.patch \
 	patches/icedtea-jdk-docs-target.patch \
-	$(SHARK_PATCH) \
-	$(GCC_PATCH)
+	$(SHARK_PATCH) 
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
