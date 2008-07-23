@@ -436,7 +436,7 @@ stamps/extract.stamp: stamps/download.stamp
 	if ! test -d openjdk ; \
 	then \
 	  mkdir openjdk ; \
-	  $(TAR) xzf $(OPENJDK_SRC_ZIP) -C openjdk; \
+	  $(TAR) xf $(OPENJDK_SRC_ZIP) -C openjdk; \
 	  chmod -R ug+w openjdk ; \
 	  sh $(srcdir)/fsg.sh ; \
 	fi
@@ -445,7 +445,7 @@ if !USE_SYSTEM_CACAO
 	if ! test -d cacao ; \
 	then \
 	  mkdir cacao ; \
-	  $(TAR) xzf $(CACAO_SRC_ZIP) -C cacao ; \
+	  $(TAR) xf $(CACAO_SRC_ZIP) -C cacao ; \
 	fi
 endif
 endif
