@@ -125,9 +125,9 @@ void CppInterpreter::normal_entry(methodOop method, TRAPS)
     }
     else if (istate->msg() == BytecodeInterpreter::return_from_method) {
       // Copy the result into the caller's frame
-      result = istate->stack_base() - 1;
-      result_slots = result - istate->stack();
+      result_slots = type2size[method->result_type()];
       assert(result_slots >= 0 && result_slots <= 2, "what?");
+      result = istate->stack() + result_slots;
       break;
     }
     else if (istate->msg() == BytecodeInterpreter::throwing_exception) {

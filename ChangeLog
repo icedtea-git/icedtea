@@ -1,3 +1,10 @@
+2008-07-23  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/167:
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+	(normal_entry): Don't use stack depth at method exit to
+	calculate the result to return.
+
 2008-07-21  Matthias Klose  <doko@ubuntu.com>
 
 	* Update patches/icedtea-hotspot-6b11-7b24.patch.
