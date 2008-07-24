@@ -1,6 +1,7 @@
 2008-07-24  Matthias Klose  <doko@ubuntu.com>
 
 	* configure.ac: Fix bashisms.
+	* Makefile.am: Likewise.
 
 2008-07-24  Matthias Klose  <doko@ubuntu.com>
 

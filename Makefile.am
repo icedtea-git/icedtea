@@ -468,7 +468,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	all_patches_ok=yes; \
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
-	  if test x$${all_patches_ok} == "xyes" \
+	  if test x$${all_patches_ok} = "xyes" \
 	    && echo Checking $$p \
 	    && $(PATCH) -l -p0 --dry-run -s -t -f \
 	      -F 0 < $(abs_top_srcdir)/$$p ; \
@@ -482,11 +482,11 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	        >> stamps/patch.stamp.tmp ; \
 	    fi ; \
 	  else \
-	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
+	    test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
 	done ; \
 	mv stamps/patch.stamp.tmp stamps/patch.stamp ; \
-	if ! test x$${all_patches_ok} == "xyes"; then \
+	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
@@ -506,7 +506,7 @@ clean-patch:
 	    all_patches_ok=no ; \
 	  fi ; \
 	done ; \
-	if ! test x$${all_patches_ok} == "xyes" ; then \
+	if ! test x$${all_patches_ok} = "xyes" ; then \
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
@@ -517,7 +517,7 @@ stamps/patch-fsg.stamp: stamps/extract.stamp
 	all_patches_ok=yes; \
 	for p in $(ICEDTEA_FSG_PATCHES) ; \
 	do \
-	  if test x$${all_patches_ok} == "xyes" \
+	  if test x$${all_patches_ok} = "xyes" \
 	    && echo Checking $$p \
 	    && $(PATCH) -l -p0 --dry-run -s -t -f \
 	      -F 0 < $(abs_top_srcdir)/$$p ; \
@@ -531,11 +531,11 @@ stamps/patch-fsg.stamp: stamps/extract.stamp
 	        >> stamps/patch-fsg.stamp.tmp ; \
 	    fi ; \
 	  else \
-	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
+	    test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
 	done ; \
 	mv stamps/patch-fsg.stamp.tmp stamps/patch-fsg.stamp ; \
-	if ! test x$${all_patches_ok} == "xyes"; then \
+	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
@@ -555,7 +555,7 @@ clean-patch-fsg:
 	    all_patches_ok=no ; \
 	  fi ; \
 	done ; \
-	if ! test x$${all_patches_ok} == "xyes" ; then \
+	if ! test x$${all_patches_ok} = "xyes" ; then \
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
