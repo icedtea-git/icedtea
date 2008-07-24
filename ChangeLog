@@ -1,5 +1,9 @@
 2008-07-24  Matthias Klose  <doko@ubuntu.com>
 
+	* configure.ac: Fix bashisms.
+
+2008-07-24  Matthias Klose  <doko@ubuntu.com>
+
 	* Makefile.am (stamps/bootstrap-directory-ecj.stamp): Fix typo.
 
 2008-07-24  Matthias Klose  <doko@ubuntu.com>
