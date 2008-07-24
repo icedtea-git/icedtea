@@ -698,7 +698,7 @@ stamps/bootstrap-directory-ecj.stamp:
 	  mkdir -p bootstrap/ecj/jre/lib; \
 	  ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR) \
 	    bootstrap/ecj/jre/lib/; \
-	  if ! test -d /jre/lib/$(INSTALL_ARCH_DIR); \
+	  if ! test -d bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
 	  then \
 	    ln -sf ./$(JRE_ARCH_DIR) \
 	      bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
