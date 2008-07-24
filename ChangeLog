@@ -1,3 +1,8 @@
+2008-07-24  Matthias Klose  <doko@ubuntu.com>
+
+	* generated/sun/tools/jconsole/Version.java: Regenerated.
+	* generated/sun/misc/Version.java: Likewise.
+
 2008-07-23  Lillian Angel  <langel@redhat.com>
 
 	* jconsole.desktop: Updated category.

@@ -33,13 +33,13 @@ public class Version {
         "java";
 
     private static final String java_version =
-        "1.6.0";
+        "1.6.0_0";
 
     private static final String java_runtime_name =
         "OpenJDK  Runtime Environment";
 
     private static final String java_runtime_version =
-        "1.6.0-b10";
+        "1.6.0_0-b11";
 
     static {
         init();
