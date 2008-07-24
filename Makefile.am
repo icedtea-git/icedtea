@@ -416,6 +416,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-nomotif-6706121.patch \
 	patches/icedtea-nomotif.patch \
+	patches/icedtea-hotspot-gcc-pr36917.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH)
 

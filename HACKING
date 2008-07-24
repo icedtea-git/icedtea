@@ -60,6 +60,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-webservices.patch: Add applet support.
 * icedtea-zero-build.patch: Add support for the zero assembler build.
 * icedtea-shark-build.patch: Add support for building the Shark JIT.
+* icedtea-hotspot-gcc-pr36917.patch: Work around miscompilation with GCC 4.3 (PR 36917).
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 

@@ -1,5 +1,11 @@
 2008-07-24  Matthias Klose  <doko@ubuntu.com>
 
+	* patches/icedtea-hotspot-gcc-pr36917.patch: New.
+	* Makefile.am: Apply.
+	* HACKING: Document.
+
+2008-07-24  Matthias Klose  <doko@ubuntu.com>
+
 	* generated/sun/tools/jconsole/Version.java: Regenerated.
 	* generated/sun/misc/Version.java: Likewise.
 
