@@ -398,7 +398,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
-	patches/icedtea-arm-uname.patch \
+	patches/icedtea-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-LCMS-setTagData.patch \
 	patches/icedtea-color-createcontext.patch \
@@ -417,6 +417,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-nomotif-6706121.patch \
 	patches/icedtea-nomotif.patch \
 	patches/icedtea-hotspot-gcc-pr36917.patch \
+	patches/icedtea-alpha-fixes.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH)
 

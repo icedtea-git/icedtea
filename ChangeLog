@@ -1,3 +1,11 @@
+2008-07-26  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-arm-uname.patch: Rename to ...
+	* patches/icedtea-uname.patch: Fix architecture string for mipsel.
+	* patches/icedtea-zero.patch: Add support for alpha, m68k, mips{,el}.
+	* patches/icedtea-alpha-fixes.patch: New, fixes for alpha-linux.
+	* Makefile.am (ICEDTEA_PATCHES): Rename patch, add patch.
+
 2008-07-24  Matthias Klose  <doko@ubuntu.com>
 
 	* configure.ac: Fix bashisms.
