@@ -417,6 +417,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-nomotif-6706121.patch \
 	patches/icedtea-nomotif.patch \
 	patches/icedtea-hotspot-gcc-pr36917.patch \
+	patches/icedtea-hotspot-citypeflow.patch \
 	patches/icedtea-alpha-fixes.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH)

@@ -1,5 +1,11 @@
 2008-07-26  Matthias Klose  <doko@ubuntu.com>
 
+	* patches/icedtea-hotspot-citypeflow.patch: New.
+	* Makefile.am (ICEDTEA_PATCHES): Add patch.
+	* HACKING: Document.
+
+2008-07-26  Matthias Klose  <doko@ubuntu.com>
+
 	* patches/icedtea-arm-uname.patch: Rename to ...
 	* patches/icedtea-uname.patch: Fix architecture string for mipsel.
 	* patches/icedtea-zero.patch: Add support for alpha, m68k, mips{,el}.

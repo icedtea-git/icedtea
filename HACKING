@@ -15,7 +15,7 @@ in binary format.
 The following patches are currently applied before the building of OpenJDK or OpenJDK6 by IcedTea:
 
 * icedtea-ant.patch: Remove use of $(ANT_HOME).
-* icedtea-arm-uname.patch: Handle output of uname on arm.
+* icedtea-uname.patch: Handle output of uname on arm and mips{,el}.
 * icedtea-bytebuffer-compact.patch: Add clearMark() method to java.nio.Buffer (PR60).
 * icedtea-color-createcontext.patch: Add support for a PaintContext to java.awt.Color.
 * icedtea-copy-plugs.patch: Add IcedTea's 'plugs' for Java WebStart support, add
@@ -61,6 +61,9 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-zero-build.patch: Add support for the zero assembler build.
 * icedtea-shark-build.patch: Add support for building the Shark JIT.
 * icedtea-hotspot-gcc-pr36917.patch: Work around miscompilation with GCC 4.3 (PR 36917).
+* icedtea-hotspot-citypeflow.patch: Fix hotspot miscompilation with GCC 4.3 on x86.
+* icedtea-alpha-fixes.patch: Fix build issues on alpha-linux.
+* 
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
