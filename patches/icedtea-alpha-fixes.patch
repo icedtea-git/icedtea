@@ -1,36 +1,5 @@
---- openjdk/jaxp/make/build.properties~	2008-07-10 22:05:59.000000000 +0200
-+++ openjdk/jaxp/make/build.properties	2008-07-26 17:42:48.660773430 +0200
-@@ -41,6 +41,6 @@
- 
- # JVM memory size
- javac.memoryInitialSize = 128m
--javac.memoryMaximumSize = 256m
-+javac.memoryMaximumSize = 512m
- 
- #------------------------------------------------------------
---- openjdk/jaxws/make/build.properties~	2008-07-10 22:07:18.000000000 +0200
-+++ openjdk/jaxws/make/build.properties	2008-07-26 17:42:54.970868617 +0200
-@@ -41,6 +41,6 @@
- 
- # JVM memory size
- javac.memoryInitialSize = 128m
--javac.memoryMaximumSize = 256m
-+javac.memoryMaximumSize = 512m
- 
- #------------------------------------------------------------
---- openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp.orig	2008-07-25 23:55:37.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp	2008-07-26 12:59:43.000000000 +0000
-@@ -2125,7 +2125,7 @@
-   // We do not distinguish between different types of errors for verification
-   // errors.  Let the verifier give a better message.
-   const char *msg = "Illegal class file encountered. Try running with -Xverify:all";
--  error_work(msg, NULL);
-+  report_error(msg, NULL);
- }
- 
- //
---- openjdk/corba/make/common/Defs-linux.gmk~	2008-07-26 16:12:24.868956765 +0200
-+++ openjdk/corba/make/common/Defs-linux.gmk	2008-07-26 18:05:40.781471559 +0200
+--- openjdk/corba/make/common/Defs-linux.gmk.orig	2008-07-26 23:29:45.534791238 +0200
++++ openjdk/corba/make/common/Defs-linux.gmk	2008-07-26 23:38:26.632651880 +0200
 @@ -176,7 +176,8 @@
    CXXFLAGS_DBG	+= $(CC_LOWER_OPT)
  endif
@@ -41,8 +10,8 @@
  		  -D_LARGEFILE64_SOURCE -D_GNU_SOURCE -D_REENTRANT
  
  ifeq ($(ARCH_DATA_MODEL), 64)
---- openjdk/hotspot/agent/src/os/linux/Makefile~	2008-07-26 16:12:24.868956765 +0200
-+++ openjdk/hotspot/agent/src/os/linux/Makefile	2008-07-26 18:07:06.052757857 +0200
+--- openjdk/hotspot/agent/src/os/linux/Makefile.orig	2008-07-26 23:29:45.244786863 +0200
++++ openjdk/hotspot/agent/src/os/linux/Makefile	2008-07-26 23:38:26.632651880 +0200
 @@ -40,7 +40,7 @@
  
  LIBS     = -lthread_db
@@ -53,7 +22,7 @@
  LIBSA = $(ARCH)/libsaproc.so
  
 @@ -65,7 +65,7 @@
- 	$(GCC) -shared -Wl,-Bsymbolic-functions $(LFLAGS_LIBSA) -o $(LIBSA) $(OBJS) $(LIBS)
+ 	$(GCC) -shared $(LFLAGS_LIBSA) -o $(LIBSA) $(OBJS) $(LIBS)
  
  test.o: test.c
 -	$(GCC) -c -o test.o -g -D_GNU_SOURCE -D$(ARCH) $(INCLUDES) test.c
@@ -61,9 +30,40 @@
  
  test: test.o
  	$(GCC) -o test test.o -L$(ARCH) -lsaproc $(LIBS)
---- openjdk/jdk/make/common/Defs-linux.gmk~	2008-07-26 16:12:24.868956765 +0200
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2008-07-26 18:04:30.210407010 +0200
-@@ -186,7 +186,8 @@
+--- openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp.orig	2008-07-10 22:04:33.000000000 +0200
++++ openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp	2008-07-26 23:38:26.632651880 +0200
+@@ -2128,7 +2128,7 @@
+   // We do not distinguish between different types of errors for verification
+   // errors.  Let the verifier give a better message.
+   const char *msg = "Illegal class file encountered. Try running with -Xverify:all";
+-  error_work(msg, NULL);
++  report_error(msg, NULL);
+ }
+ 
+ //
+--- openjdk/jaxp/make/build.properties.orig	2008-07-10 22:05:59.000000000 +0200
++++ openjdk/jaxp/make/build.properties	2008-07-26 23:38:26.632651880 +0200
+@@ -41,6 +41,6 @@
+ 
+ # JVM memory size
+ javac.memoryInitialSize = 128m
+-javac.memoryMaximumSize = 256m
++javac.memoryMaximumSize = 512m
+ 
+ #------------------------------------------------------------
+--- openjdk/jaxws/make/build.properties.orig	2008-07-10 22:07:18.000000000 +0200
++++ openjdk/jaxws/make/build.properties	2008-07-26 23:38:26.632651880 +0200
+@@ -41,6 +41,6 @@
+ 
+ # JVM memory size
+ javac.memoryInitialSize = 128m
+-javac.memoryMaximumSize = 256m
++javac.memoryMaximumSize = 512m
+ 
+ #------------------------------------------------------------
+--- openjdk/jdk/make/common/Defs-linux.gmk.orig	2008-07-26 23:29:45.524791087 +0200
++++ openjdk/jdk/make/common/Defs-linux.gmk	2008-07-26 23:38:26.632651880 +0200
+@@ -184,7 +184,8 @@
    CXXFLAGS_DBG	+= $(CC_LOWER_OPT)
  endif
  
