@@ -215,8 +215,9 @@ ENABLE_OPTIMIZATIONS
 ENABLE_ZERO_BUILD
 SET_CORE_OR_SHARK_BUILD
 ENABLE_HG
+ENABLE_EXTRA_PROJECTS
 
-if test "$ALT_OPENJDK_SRC_ZIP" = "not specified"; then
+if test "x${enable_hg}" = "xyes"; then
   FIND_TOOL([MERCURIAL],[hg])
 fi
 

@@ -790,10 +790,10 @@ AC_DEFUN([ENABLE_HG],
   [
     case "${enableval}" in
       no)
-        enable_hg=yes
+	enable_hg=no
         ;;
       *)
-        enable_hg=no
+        enable_hg=yes
         ;;
     esac
   ],
@@ -802,4 +802,44 @@ AC_DEFUN([ENABLE_HG],
   ])
   AC_MSG_RESULT([${enable_hg}])
   AM_CONDITIONAL([USE_HG], test x"${enable_hg}" = "xyes")
+])
+
+AC_DEFUN([ENABLE_EXTRA_PROJECTS],
+[
+  AC_MSG_CHECKING(whether to use code from the Closures project)
+  AC_ARG_ENABLE([closures],
+                [AS_HELP_STRING(--enable-closures,use Closures source code [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+	enable_closures=no
+        ;;
+      *)
+        enable_closures=yes
+        ;;
+    esac
+  ],
+  [
+    enable_closures=no
+  ])
+  AC_MSG_RESULT([${enable_closures}])
+  AM_CONDITIONAL([USE_CLOSURES], test x"${enable_closures}" = "xyes")
+  AC_MSG_CHECKING(whether to use code from the CVMI project)
+  AC_ARG_ENABLE([cvmi],
+                [AS_HELP_STRING(--enable-cvmi,use CVMI source code [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+	enable_cvmi=no
+        ;;
+      *)
+        enable_cvmi=yes
+        ;;
+    esac
+  ],
+  [
+    enable_cvmi=no
+  ])
+  AC_MSG_RESULT([${enable_cvmi}])
+  AM_CONDITIONAL([USE_CVMI], test x"${enable_cvmi}" = "xyes")
 ])

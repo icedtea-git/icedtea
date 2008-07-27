@@ -254,6 +254,8 @@ dist-openjdk: stamps/extract-cacao.stamp
 # Download OpenJDK sources.
 
 OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
+CVMI_HG_URL = http://hg.openjdk.java.net/cvmi/cvmi/
+CLOSURES_HG_URL = http://hg.openjdk.java.net/closures/closures/
 
 OPENJDK_URL = http://www.java.net/download/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
 
@@ -286,8 +288,16 @@ if USE_HG
           echo "No forest extension found. Please refer to" \
             "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
           exit 1; \
-          fi; \
-	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk; 
+          fi;
+if USE_CLOSURES
+	hg fclone $(CLOSURES_HG_URL) openjdk; 
+else
+if USE_CVMI
+	hg fclone $(CVMI_HG_URL) openjdk; 
+else
+	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk;
+endif
+endif
 else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \

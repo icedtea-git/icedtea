@@ -1,3 +1,14 @@
+2008-07-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Add closures and cvmi URL and support
+	using them when downloading from Mercurial.
+	* acinclude.m4:
+	(ENABLE_EXTRA_PROJECTS): Added.
+	* configure.ac:
+	Enable tests for extra projects and
+	correct Mercurial test.
+
 2008-07-23  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-rhino.patch: Updated.
