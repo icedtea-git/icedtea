@@ -1,5 +1,5 @@
---- openjdk/hotspot/src/os/linux/vm/os_linux.cpp.orig	2008-07-26 12:31:44.000000000 +0000
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2008-07-26 12:41:38.000000000 +0000
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp.orig	2008-07-27 08:37:02.000000000 +0000
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2008-07-27 08:43:41.000000000 +0000
 @@ -159,7 +159,9 @@
  #endif
  
@@ -11,7 +11,7 @@
  static char cpu_arch[] = "ia64";
  #elif defined(IA32)
  static char cpu_arch[] = "i386";
-@@ -1665,7 +1667,13 @@
+@@ -1665,7 +1667,14 @@
      {EM_SPARC32PLUS, EM_SPARC,   ELFCLASS32, ELFDATA2MSB, (char*)"Sparc 32"},
      {EM_SPARCV9,     EM_SPARCV9, ELFCLASS64, ELFDATA2MSB, (char*)"Sparc v9 64"},
      {EM_PPC,         EM_PPC,     ELFCLASS32, ELFDATA2MSB, (char*)"Power PC 32"},
@@ -22,11 +22,12 @@
 +    {EM_ALPHA,       EM_ALPHA,   ELFCLASS64, ELFDATA2LSB, (char*)"Alpha"},
 +    {EM_MIPS_RS3_LE, EM_MIPSEL_RS3_LE, ELFCLASS32, ELFDATA2LSB, (char*)"MIPSel"},
 +    {EM_MIPS,        EM_MIPS,    ELFCLASS32, ELFDATA2MSB, (char*)"MIPS"},
++    {EM_PARISC,      EM_PARISC,  ELFCLASS32, ELFDATA2MSB, (char*)"HPPA"},
 +    {EM_68K,         EM_68K,     ELFCLASS32, ELFDATA2MSB, (char*)"M68k"}
    };
  
    #if  (defined IA32)
-@@ -1682,9 +1690,21 @@
+@@ -1682,9 +1691,23 @@
      static  Elf32_Half running_arch_code=EM_PPC64; 
    #elif  (defined __powerpc__)  
      static  Elf32_Half running_arch_code=EM_PPC; 
@@ -38,6 +39,8 @@
 +    static  Elf32_Half running_arch_code=EM_ALPHA;
 +  #elif  (defined MIPSEL)
 +    static  Elf32_Half running_arch_code=EM_MIPS_RS3_EL;
++  #elif  (defined HPPA)
++    static  Elf32_Half running_arch_code=EM_PARISC;
 +  #elif  (defined MIPS)
 +    static  Elf32_Half running_arch_code=EM_MIPS;
 +  #elif  (defined M68K)
@@ -45,11 +48,11 @@
    #else
      #error Method os::dll_load requires that one of following is defined:\
 -         IA32, AMD64, IA64, __sparc, __powerpc__
-+         IA32, AMD64, IA64, __sparc, __powerpc__, ARM, S390, ALPHA, MIPS, MIPSEL, M68K
++         IA32, AMD64, IA64, __sparc, __powerpc__, ARM, S390, ALPHA, MIPS, MIPSEL, HPPA, M68K
    #endif
  
    // Identify compatability class for VM's architecture and library's architecture
-@@ -1716,10 +1736,12 @@
+@@ -1716,10 +1739,12 @@
      return NULL; 
    }
  
@@ -62,7 +65,7 @@
  
    if (lib_arch.compat_class != arch_array[running_arch_index].compat_class) {
      if ( lib_arch.name!=NULL ) {
-@@ -2354,7 +2376,9 @@
+@@ -2354,7 +2379,9 @@
      // format has been changed), we'll use the largest page size supported by
      // the processor.
  
@@ -72,8 +75,8 @@
  
      FILE *fp = fopen("/proc/meminfo", "r");
      if (fp) {
---- openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp.orig	2008-07-26 12:31:46.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp	2008-07-26 12:35:42.000000000 +0000
+--- openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp.orig	2008-07-27 08:37:03.000000000 +0000
++++ openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp	2008-07-27 08:38:13.000000000 +0000
 @@ -3030,9 +3030,9 @@
    tty->print_cr("&native_fresult: " INTPTR_FORMAT, (uintptr_t) &this->_native_fresult);
    tty->print_cr("native_lresult: " INTPTR_FORMAT, (uintptr_t) this->_native_lresult);
@@ -86,8 +89,8 @@
    tty->print_cr("self_link: " INTPTR_FORMAT, (uintptr_t) this->_self_link);
  }
  
---- openjdk/hotspot/src/share/vm/runtime/icache.cpp.orig	2008-07-26 12:31:42.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/icache.cpp	2008-07-26 12:35:42.000000000 +0000
+--- openjdk/hotspot/src/share/vm/runtime/icache.cpp.orig	2008-07-27 08:37:02.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/icache.cpp	2008-07-27 08:38:13.000000000 +0000
 @@ -78,6 +78,7 @@
  }
  
@@ -104,8 +107,8 @@
  }
  
  // For init.cpp
---- openjdk/hotspot/src/share/vm/runtime/mutex.hpp.orig	2008-07-26 12:31:43.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/mutex.hpp	2008-07-26 12:35:42.000000000 +0000
+--- openjdk/hotspot/src/share/vm/runtime/mutex.hpp.orig	2008-07-27 08:37:02.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/mutex.hpp	2008-07-27 08:38:13.000000000 +0000
 @@ -61,18 +61,10 @@
  } ;
  
@@ -126,8 +129,8 @@
  #endif
  
  class ParkEvent ;
---- openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp.orig	2008-07-26 12:31:43.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp	2008-07-26 12:35:42.000000000 +0000
+--- openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp.orig	2008-07-27 08:37:02.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp	2008-07-27 08:38:13.000000000 +0000
 @@ -126,9 +126,17 @@
    // Fill block with bad_handle values
    void zap();
@@ -146,8 +149,8 @@
    // Free list computation
    void rebuild_free_list();
  
---- openjdk/hotspot/src/share/vm/utilities/vmError.cpp.orig	2008-07-26 12:31:44.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-07-26 12:35:42.000000000 +0000
+--- openjdk/hotspot/src/share/vm/utilities/vmError.cpp.orig	2008-07-27 08:37:02.000000000 +0000
++++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-07-27 08:38:13.000000000 +0000
 @@ -25,6 +25,11 @@
  # include "incls/_precompiled.incl"
  # include "incls/_vmError.cpp.incl"

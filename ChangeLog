@@ -1,3 +1,7 @@
+2008-07-27  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-zero.patch: Add support for hppa.
+
 2008-07-26  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-hotspot-citypeflow.patch: New.
