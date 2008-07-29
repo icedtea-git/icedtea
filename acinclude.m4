@@ -417,6 +417,57 @@ AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
   AC_SUBST(ALT_OPENJDK_SRC_ZIP)
 ])
 
+AC_DEFUN([WITH_VISUALVM_SRC_ZIP],
+[
+  AC_MSG_CHECKING(visualvm source zip)
+  AC_ARG_WITH([visualvm-src-zip],
+              [AS_HELP_STRING(--with-visualvm-src-zip, specify the location of the visualvm source zip)],
+  [
+    ALT_VISUALVM_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_VISUALVM_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_VISUALVM_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_VISUALVM_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_VISUALVM_SRC_ZIP})
+  AC_SUBST(ALT_VISUALVM_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_NETBEANS_PLATFORM_SRC_ZIP],
+[
+  AC_MSG_CHECKING(netbeans platform source zip)
+  AC_ARG_WITH([netbeans-platform-src-zip],
+              [AS_HELP_STRING(--with-netbeans-platform-src-zip, specify the location of the netbeans platform source zip)],
+  [
+    ALT_NETBEANS_PLATFORM_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_NETBEANS_PLATFORM_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_NETBEANS_PLATFORM_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_NETBEANS_PLATFORM_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_NETBEANS_PLATFORM_SRC_ZIP})
+  AC_SUBST(ALT_NETBEANS_PLATFORM_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_NETBEANS_PROFILER_SRC_ZIP],
+[
+  AC_MSG_CHECKING(netbeans profiler source zip)
+  AC_ARG_WITH([netbeans-profiler-src-zip],
+              [AS_HELP_STRING(--with-netbeans-src-zip, specify the location of the netbeans profiler source zip)],
+  [
+    ALT_NETBEANS_PROFILER_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_NETBEANS_PROFILER_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_NETBEANS_PROFILER_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_NETBEANS_PROFILER_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_NETBEANS_PROFILER_SRC_ZIP})
+  AC_SUBST(ALT_NETBEANS_PROFILER_SRC_ZIP)
+])
+
 AC_DEFUN([FIND_XALAN2_JAR],
 [
   AC_ARG_WITH([xalan2-jar],

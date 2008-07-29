@@ -1,3 +1,24 @@
+2008-07-29  Joshua Sumali  <jsumali@redhat.com>
+
+	* .hgignore: Updated.
+	* Makefile.am (stamps/visualvm.stamp): New target.
+	(stamps/nbplatform.stamp): Likewise.
+	(clean-visualvm): Likewise.
+	(clean-nbplatform): Likewise.
+	(visualvm): Likewise.
+	(nbplatform): Likewise.
+	(stamps/download.stamp): Download visualvm and netbeans sources.
+	(stamps/extract.stamp): Extract visualvm and netbeans sources.
+	(distclean-local): Add visualvm and netbeans.
+	(.PHONY): Add clean-visualvm and clean-nbplatform.
+	* README: Added VisualVM section.
+	* acinclude.m4	(WITH_VISUALVM_SRC_ZIP)i: New.
+	(WITH_NETBEANS_PLATFORM_SRC_ZIP): Likewise.
+	(WITH_NETBEANS_PROFILER_SRC_ZIP): Likewise.
+	* configure.ac: Use WITH_VISUALVM_SRC_ZIP,
+	WITH_NETBEANS_PLATFORM_SRC_ZIP, and	WITH_NETBEANS_PROFILER_SRC_ZIP. 
+	Also add --enable-visualvm option.
+
 2008-07-27  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-zero.patch: Add support for hppa.
