@@ -101,7 +101,7 @@ AC_SUBST(SYSTEM_ANT_DIR)
 AC_ARG_ENABLE([gcjwebplugin],
               [AS_HELP_STRING([--disable-gcjwebplugin],
                               [Disable compilation of browser plugin])],
-              [enable_plugin="$val"], [enable_plugin="yes"])
+              [enable_plugin="${enableval}"], [enable_plugin="yes"])
 AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
 
 AC_ARG_ENABLE([liveconnect],
