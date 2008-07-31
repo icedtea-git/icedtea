@@ -11,11 +11,26 @@ AC_DEFUN([SET_ARCH_DIRS],
       INSTALL_ARCH_DIR=i386
       JRE_ARCH_DIR=i386
       ;;
+    alpha*-*-*)
+      BUILD_ARCH_DIR=alpha
+      INSTALL_ARCH_DIR=alpha
+      JRE_ARCH_DIR=alpha
+      ;;
     arm*-*-*)
       BUILD_ARCH_DIR=arm
       INSTALL_ARCH_DIR=arm
       JRE_ARCH_DIR=arm
       ;;
+    mips-*-*)
+      BUILD_ARCH_DIR=mips
+      INSTALL_ARCH_DIR=mips
+      JRE_ARCH_DIR=mips
+       ;;
+    mipsel-*-*)
+      BUILD_ARCH_DIR=mipsel
+      INSTALL_ARCH_DIR=mipsel
+      JRE_ARCH_DIR=mipsel
+       ;;
     powerpc-*-*)
       BUILD_ARCH_DIR=ppc
       INSTALL_ARCH_DIR=ppc
@@ -30,6 +45,11 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=sparcv9
       INSTALL_ARCH_DIR=sparcv9
       JRE_ARCH_DIR=sparc64
+       ;;
+    s390-*-*)
+      BUILD_ARCH_DIR=s390
+      INSTALL_ARCH_DIR=s390
+      JRE_ARCH_DIR=s390
        ;;
     *)
       BUILD_ARCH_DIR=`uname -m`
