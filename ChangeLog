@@ -1,3 +1,7 @@
+2008-08-01  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-zero.patch (os::dll_load): Fix typo for mipsel.
+
 2008-07-31  Matthias Klose  <doko@ubuntu.com>
 
 	* acinclude.m4 (SET_ARCH_DIRS): Avoid calling uname for alpha,
