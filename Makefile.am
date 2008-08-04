@@ -280,6 +280,7 @@ endif
 
 
 stamps/download.stamp:
+if !OPENJDK_SRC_DIR_FOUND
 if USE_ALT_OPENJDK_SRC_ZIP
 else
 if USE_HG
@@ -308,6 +309,7 @@ else
 	  fi ; \
 	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
 	fi
+endif
 endif
 endif
 if WITH_CACAO
@@ -464,6 +466,9 @@ ICEDTEA_PATCHES += \
 	$(DISTRIBUTION_PATCHES)
 
 stamps/extract.stamp: stamps/download.stamp
+if OPENJDK_SRC_DIR_FOUND
+	cp -a $(OPENJDK_SRC_DIR) openjdk
+else
 	if ! test -d openjdk ; then \
 	  if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
 	    $(UNZIP) -q $(OPENJDK_SRC_ZIP) ; \
@@ -472,6 +477,7 @@ stamps/extract.stamp: stamps/download.stamp
 	    false; \
 	  fi; \
 	fi; 
+endif
 	chmod -R ug+w openjdk 
 	sh $(srcdir)/fsg.sh ; 
 	mkdir -p stamps 

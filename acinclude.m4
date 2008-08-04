@@ -174,7 +174,7 @@ AC_DEFUN([WITH_OPENJDK_SRC_DIR],
     AC_MSG_RESULT(${OPENJDK_SRC_DIR})
   ])
   AC_SUBST(OPENJDK_SRC_DIR)
-  AM_CONDITIONAL(GNU_CLASSLIB_FOUND, test "x${conditional_with_openjdk_sources}" = xtrue)
+  AM_CONDITIONAL(OPENJDK_SRC_DIR_FOUND, test "x${conditional_with_openjdk_sources}" = xtrue)
 ])
 
 AC_DEFUN([FIND_ECJ_JAR],
