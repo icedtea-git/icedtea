@@ -1,3 +1,7 @@
+2008-08-05  Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* autogen.sh: New file.
+
 2008-08-01  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-zero.patch (os::dll_load): Fix typo for mipsel.
