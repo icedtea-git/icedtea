@@ -63,7 +63,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-hotspot-gcc-pr36917.patch: Work around miscompilation with GCC 4.3 (PR 36917).
 * icedtea-hotspot-citypeflow.patch: Fix hotspot miscompilation with GCC 4.3 on x86.
 * icedtea-alpha-fixes.patch: Fix build issues on alpha-linux.
-* 
+* icedtea-arch.patch: Add support for additional architectures.
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
@@ -111,7 +111,7 @@ The following patches are only applied when building with experimental NetX plug
 
 The following patches are only applied when building with the CACAO virtual machine:
 
-* icedtea-cacao.patch: Add support for additional architectures and don't run 'java' in a new thread.
+* icedtea-cacao.patch: Don't run 'java' in a new thread.
 
 Obsolete Patches
 ================

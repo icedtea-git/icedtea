@@ -74,7 +74,8 @@ install:
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
 	$(ICEDTEA_ECJ_PATCH) gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
-	patches/icedtea-cacao.patch javaws.png javaws.desktop \
+	patches/icedtea-arch.patch patches/icedtea-cacao.patch \
+	javaws.png javaws.desktop \
 	overlays extra jconsole.desktop policytool.desktop \
 	test/jtreg patches/icedtea-plugin.patch \
 	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc \
@@ -494,7 +495,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-hotspot-citypeflow.patch \
 	patches/icedtea-alpha-fixes.patch \
 	$(SHARK_PATCH) \
-	$(GCC_PATCH)
+	$(GCC_PATCH) \
+	patches/icedtea-arch.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \

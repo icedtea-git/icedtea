@@ -1,3 +1,11 @@
+2008-08-06  Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* patches/icedtea-cacao.patch: Moved architecture stuff into...
+	* patches/icedtea-arch.patch: New file.
+	* Makefile.am (EXTRA_DIST): Added patches/icedtea-arch.patch.
+	(ICEDTEA_PATCHES): Likewise.
+	* HACKING: Likewise.
+
 2008-08-05  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* autogen.sh: New file.
