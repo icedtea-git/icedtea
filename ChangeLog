@@ -1,5 +1,12 @@
 2008-08-08  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	(current_frame): Remove some rubbish.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
+	(set_last_Java_frame): Likewise.
+
+2008-08-08  Gary Benson  <gbenson@redhat.com>
+
 	* patches/icedtea-zero.patch: Include the calling thread's
 	stack in crash dumps.
 

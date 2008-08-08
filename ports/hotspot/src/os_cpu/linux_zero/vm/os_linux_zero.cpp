@@ -39,8 +39,7 @@ frame os::get_sender_for_C_frame(frame* fr)
 
 frame os::current_frame()
 {
-  frame myframe((intptr_t*) os::current_stack_pointer());
-  return os::get_sender_for_C_frame(&myframe);
+  Unimplemented();
 }
 
 char* os::non_memory_address_word()
