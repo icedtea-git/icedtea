@@ -418,7 +418,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-memory-limits.patch \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
-	patches/icedtea-javafiles.patch \
 	patches/icedtea-corba.patch \
 	patches/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
@@ -460,6 +459,11 @@ endif
 if WITH_CACAO
 ICEDTEA_PATCHES += \
 	patches/icedtea-cacao.patch
+endif
+
+if !USE_CVMI
+ICEDTEA_PATCHES += \
+	patches/icedtea-javafiles.patch
 endif
 
 ICEDTEA_PATCHES += \
@@ -1169,12 +1173,12 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
 	    -source 1.5 \
-	    -sourcepath extra -cp $(ECJ_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/rt.jar \
+	    -sourcepath extra -cp $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar \
 	    -bootclasspath '' @extra-source-files.txt ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
             -source 1.5 \
-            -sourcepath extra -cp $(ECJ_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/rt.jar \
+            -sourcepath extra -cp $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar \
             -bootclasspath '' @extra-source-files.txt ; \
 	fi
 	cp -r $(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources \
