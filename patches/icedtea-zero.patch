@@ -196,3 +196,18 @@
       }
  
    STEP(140, "(printing VM operation)" )
+@@ -472,6 +484,14 @@ void VMError::report(outputStream* st) {
+           op->print_on_error(st);
+           st->cr();
+           st->cr();
++#ifdef ZERO
++          if (op->calling_thread()->is_Java_thread()) {
++            st->print_cr("Calling thread's Java stack:");
++            ZeroStackPrinter(st, buf, sizeof(buf)).print(
++              (JavaThread *) op->calling_thread());
++            st->cr();
++          }
++#endif // ZERO
+         }
+      }
+ 

@@ -1,5 +1,10 @@
 2008-08-08  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-zero.patch: Include the calling thread's
+	stack in crash dumps.
+
+2008-08-08  Gary Benson  <gbenson@redhat.com>
+
 	* patches/icedtea-signed-types.patch: Signedness fix.
 
 2008-08-08  Gary Benson  <gbenson@redhat.com>
