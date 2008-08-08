@@ -488,6 +488,23 @@ AC_DEFUN([WITH_NETBEANS_PROFILER_SRC_ZIP],
   AC_SUBST(ALT_NETBEANS_PROFILER_SRC_ZIP)
 ])
 
+AC_DEFUN([WITH_ALT_JAR_BINARY],
+[
+  AC_MSG_CHECKING(alternate jar command)
+  AC_ARG_WITH([alt-jar],
+              [AS_HELP_STRING(--with-alt-jar, specify the location of an alternate jar binary to use for building)],
+  [
+    ALT_JAR_CMD=${withval}
+    AM_CONDITIONAL(USE_ALT_JAR, test x = x)
+  ],
+  [ 
+    ALT_JAR_CMD="not specified"
+    AM_CONDITIONAL(USE_ALT_JAR, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_JAR_CMD})
+  AC_SUBST(ALT_JAR_CMD)
+])
+
 AC_DEFUN([FIND_XALAN2_JAR],
 [
   AC_ARG_WITH([xalan2-jar],

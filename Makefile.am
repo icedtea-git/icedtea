@@ -170,6 +170,11 @@ ICEDTEA_ENV += \
 	"NO_DOCS=true"
 endif
 
+if USE_ALT_JAR
+ICEDTEA_ENV += \
+	"ALT_JAR_CMD=$(ALT_JAR_CMD)"
+endif
+
 env:
 	@echo 'unset JAVA_HOME'
 	@echo 'export $(ICEDTEA_ENV)'
@@ -494,6 +499,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-hotspot-gcc-pr36917.patch \
 	patches/icedtea-hotspot-citypeflow.patch \
 	patches/icedtea-alpha-fixes.patch \
+	patches/icedtea-alt-jar.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	patches/icedtea-arch.patch

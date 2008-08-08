@@ -64,6 +64,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-hotspot-citypeflow.patch: Fix hotspot miscompilation with GCC 4.3 on x86.
 * icedtea-alpha-fixes.patch: Fix build issues on alpha-linux.
 * icedtea-arch.patch: Add support for additional architectures.
+* icedtea-alt-jar.patch: Add support for using an alternate jar tool in JDK building. 
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 

@@ -1,3 +1,12 @@
+2008-08-08  Joshua Sumali  <jsumali@redhat.com>
+
+	* Makefile.am: Add ALT_JAR_CMD to ICEDTEA_ENV if --with-alt-jar is used.
+	Added patches/icedtea-alt-jar.patch.
+	* acinclude.m4: Define --with-alt-jar.
+	* configure.ac: Add --with-alt-jar.
+	* patches/icedtea-alt-jar.patch: New file.
+	* HACKING: Updated.
+
 2008-08-08  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
