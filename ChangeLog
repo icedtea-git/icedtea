@@ -1,3 +1,7 @@
+2008-08-08  Gary Benson  <gbenson@redhat.com>
+
+	* configure.ac (LLVM_CFLAGS): Fix for PRODUCT builds.
+
 2008-08-06  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* patches/icedtea-cacao.patch: Moved architecture stuff into...
