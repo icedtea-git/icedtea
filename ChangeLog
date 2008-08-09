@@ -1,5 +1,17 @@
 2008-08-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* HACKING: Updated.
+	* Makefile.am: Move to b32 and add new patch for
+	MBeanIntrospector.
+	* patches/icedtea-debuginfo.patch,
+	* patches/icedtea-libraries.patch: Updated.
+	* patches/icedtea-mbeanintrospector.patch:
+	New patch (getAnnotation cast for ecj builds).
+	* patches/icedtea-sparc-trapsfix.patch,
+	* patches/icedtea-version.patch: Updated.
+
+2008-08-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* Makefile.am:
 	Don't install icedtea-javafiles.patch on CVMI builds.
 	Use ICEDTEA_BOOT_DIR and not ECJ_BUILD_OUTPUT_DIR for

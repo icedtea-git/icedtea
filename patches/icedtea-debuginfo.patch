@@ -1,7 +1,7 @@
-diff -urN openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
---- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2007-10-12 18:11:59.000000000 -0400
-+++ openjdk/hotspot/make/linux/makefiles/gcc.make	2007-10-12 18:12:22.000000000 -0400
-@@ -63,6 +63,10 @@
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2008-08-09 01:15:40.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-08-09 01:17:12.000000000 +0100
+@@ -62,6 +62,10 @@
  CFLAGS += -D_REENTRANT
  CFLAGS += -fcheck-new
  
@@ -12,11 +12,11 @@ diff -urN openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  ARCHFLAG = $(ARCHFLAG/$(BUILDARCH))
  ARCHFLAG/i486    = -m32 -march=i586
  ARCHFLAG/amd64   = -m64
-diff -urN openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
---- openjdk.orig/jdk/make/common/Defs-linux.gmk	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2007-10-12 18:12:22.000000000 -0400
-@@ -155,13 +155,11 @@
-    CFLAGS_COMMON   += $(GLOBAL_KPIC) $(GCC_WARNINGS)
+diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2008-08-04 08:43:01.000000000 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2008-08-09 01:17:12.000000000 +0100
+@@ -154,13 +154,11 @@
+  CFLAGS_COMMON += -pipe
  endif
  
 -# Linux 64bit machines use Dwarf2, which can be HUGE, have fastdebug use -g1
@@ -33,7 +33,7 @@ diff -urN openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/De
  
  CFLAGS_OPT      = $(POPT)
  CFLAGS_DBG      = $(DEBUG_FLAG)
-@@ -236,7 +234,7 @@
+@@ -235,7 +233,7 @@
  ifeq ($(VARIANT), OPT)
    ifneq ($(NO_STRIP), true)
      # Debug 'strip -g' leaves local function Elf symbols (better stack traces)
@@ -42,9 +42,9 @@ diff -urN openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/De
    endif
  endif
  
-diff -urN openjdk.orig/jdk/make/common/shared/Defs-java.gmk openjdk/jdk/make/common/shared/Defs-java.gmk
---- openjdk.orig/jdk/make/common/shared/Defs-java.gmk	2007-10-12 03:54:05.000000000 -0400
-+++ openjdk/jdk/make/common/shared/Defs-java.gmk	2007-10-12 18:12:22.000000000 -0400
+diff -Nru openjdk.orig/jdk/make/common/shared/Defs-java.gmk openjdk/jdk/make/common/shared/Defs-java.gmk
+--- openjdk.orig/jdk/make/common/shared/Defs-java.gmk	2008-08-04 08:43:01.000000000 +0100
++++ openjdk/jdk/make/common/shared/Defs-java.gmk	2008-08-09 01:20:09.000000000 +0100
 @@ -98,15 +98,9 @@
  #  -- Use JAVAC_CMD if you want to take the defaults given to you.
  #
@@ -61,12 +61,12 @@ diff -urN openjdk.orig/jdk/make/common/shared/Defs-java.gmk openjdk/jdk/make/com
 +DEBUG_CLASSFILES = true
 +JAVACFLAGS += -g
 +
- ifeq ($(COMPILER_WARNINGS_FATAL), true)
-   JAVACFLAGS  += -Werror
+ ifeq ($(JAVAC_MAX_WARNINGS), true)
+   JAVACFLAGS  += -Xlint:all
  endif
-diff -urN openjdk.orig/jdk/make/sun/awt/mawt.gmk openjdk/jdk/make/sun/awt/mawt.gmk
---- openjdk.orig/jdk/make/sun/awt/mawt.gmk	2007-10-12 03:54:07.000000000 -0400
-+++ openjdk/jdk/make/sun/awt/mawt.gmk	2007-10-12 18:12:22.000000000 -0400
+diff -Nru openjdk.orig/jdk/make/sun/awt/mawt.gmk openjdk/jdk/make/sun/awt/mawt.gmk
+--- openjdk.orig/jdk/make/sun/awt/mawt.gmk	2008-08-04 08:43:02.000000000 +0100
++++ openjdk/jdk/make/sun/awt/mawt.gmk	2008-08-09 01:17:12.000000000 +0100
 @@ -129,7 +129,7 @@
  #
  

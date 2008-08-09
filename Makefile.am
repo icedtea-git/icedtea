@@ -1,6 +1,6 @@
-OPENJDK_DATE = 17_jul_2008
-OPENJDK_MD5SUM = 42f251c593fdf0edfc59524f5eb7df12
-OPENJDK_VERSION = b31
+OPENJDK_DATE = 04_aug_2008
+OPENJDK_MD5SUM = 87553b776e93eaa4ce43a6bc9be87964
+OPENJDK_VERSION = b32
 
 CACAO_VERSION = 0.99.2
 CACAO_MD5SUM = a2865f47535f6dc3def268c0055ff20a
@@ -449,6 +449,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-constructor-properties.patch \
 	patches/icedtea-jsoundhs.patch \
 	patches/icedtea-jdk-docs-target.patch \
+	patches/icedtea-mbeanintrospector.patch \
 	$(SHARK_PATCH) 
 
 if WITH_RHINO
