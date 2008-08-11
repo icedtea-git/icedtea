@@ -1,3 +1,9 @@
+2008-08-11  Lillian Angel  <langel@redhat.com>
+
+	Fixes Bug #181
+	* Makefile.am: Added new patch to the list.
+	* patches/icedtea-enum-bug-181.patch: New patch.
+
 2008-08-08  Joshua Sumali  <jsumali@redhat.com>
 
 	* Makefile.am: Add ALT_JAR_CMD to ICEDTEA_ENV if --with-alt-jar is used.

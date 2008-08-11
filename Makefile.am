@@ -500,6 +500,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-hotspot-citypeflow.patch \
 	patches/icedtea-alpha-fixes.patch \
 	patches/icedtea-alt-jar.patch \
+	patches/icedtea-enum-bu-181.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	patches/icedtea-arch.patch
