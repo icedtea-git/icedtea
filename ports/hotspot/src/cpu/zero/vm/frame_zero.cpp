@@ -26,8 +26,6 @@
 #include "incls/_precompiled.incl"
 #include "incls/_frame_zero.cpp.incl"
 
-intptr_t frame::shark_dummy_bcx = 0;
-
 #ifdef ASSERT
 void RegisterMap::check_location_valid()
 {
@@ -37,8 +35,7 @@ void RegisterMap::check_location_valid()
 
 bool frame::is_interpreted_frame() const
 {
-  return zeroframe()->is_interpreter_frame() ||
-         zeroframe()->is_shark_frame();
+  return zeroframe()->is_interpreter_frame();
 }
 
 frame frame::sender_for_entry_frame(RegisterMap *map) const
@@ -57,6 +54,11 @@ frame frame::sender_for_interpreter_frame(RegisterMap *map) const
   return frame(sender_sp());
 }
 
+frame frame::sender_for_compiled_frame(RegisterMap *map) const
+{
+  return frame(sender_sp());
+}
+
 frame frame::sender(RegisterMap* map) const
 {
   // Default is not to follow arguments; the various
@@ -68,6 +70,11 @@ frame frame::sender(RegisterMap* map) const
 
   if (is_interpreted_frame())
     return sender_for_interpreter_frame(map);
+
+  assert(_cb == CodeCache::find_blob(pc()),"Must be the same");
+  if (_cb != NULL) {
+    return sender_for_compiled_frame(map);
+  }
 
   Unimplemented();
 }

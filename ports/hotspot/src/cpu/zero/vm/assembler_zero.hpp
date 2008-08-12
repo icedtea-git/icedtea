@@ -51,6 +51,18 @@ class MacroAssembler : public Assembler {
 
   void align(int modulus);
   void bang_stack_with_offset(int offset);
+
+#ifdef SHARK
+ public:
+  void emit_zero_byte()
+  {
+    emit_byte(0);
+  }
+  void emit_intptr(intptr_t x)
+  {
+    emit_address((address) x);
+  }
+#endif // SHARK
 };
 
 #ifdef ASSERT

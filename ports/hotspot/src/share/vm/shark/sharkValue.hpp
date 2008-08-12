@@ -33,6 +33,10 @@ class LLVMValue : public AllStatic {
   {
     return llvm::ConstantInt::get(SharkType::jint_type(), value, true);
   }
+  static llvm::ConstantInt* jlong_constant(jlong value)
+  {
+    return llvm::ConstantInt::get(SharkType::jlong_type(), value, true);
+  }
   static llvm::ConstantPointerNull* null()
   {
     return llvm::ConstantPointerNull::get(SharkType::jobject_type());
@@ -85,6 +89,10 @@ class SharkValue : public ResourceObj {
   {
     return llvm_value()->getType() == SharkType::jint_type();
   }
+  bool is_jlong() const
+  {
+    return llvm_value()->getType() == SharkType::jlong_type();
+  }
   bool is_jobject() const
   {
     return llvm_value()->getType() == SharkType::jobject_type();
@@ -99,12 +107,27 @@ class SharkValue : public ResourceObj {
   static SharkValue* create_jint(llvm::Value* value)
   {
     assert(value->getType() == SharkType::jint_type(), "should be");
-    return new SharkValue(ciType::make(T_INT), value);
+    return create_generic(ciType::make(T_INT), value);
   }
   llvm::Value* jint_value() const
   {
     assert(is_jint(), "should be");
     return llvm_value();
+  }
+  static SharkValue* create_jlong(llvm::Value* value)
+  {
+    assert(value->getType() == SharkType::jlong_type(), "should be");
+    return create_generic(ciType::make(T_LONG), value);
+  }
+  llvm::Value* jlong_value() const
+  {
+    assert(is_jlong(), "should be");
+    return llvm_value();
+  }
+  static SharkValue* create_jobject(llvm::Value* value)
+  {
+    assert(value->getType() == SharkType::jobject_type(), "should be");
+    return create_generic(ciType::make(T_OBJECT), value);
   }
   llvm::Value* jobject_value() const
   {
@@ -123,10 +146,22 @@ class SharkValue : public ResourceObj {
     switch (value.basic_type()) {
     case T_BOOLEAN:
       return SharkValue::jint_constant(value.as_boolean());
-      
+
+    case T_BYTE:
+      return SharkValue::jint_constant(value.as_byte());
+
+    case T_CHAR:
+      return SharkValue::jint_constant(value.as_char());
+
+    case T_SHORT:
+      return SharkValue::jint_constant(value.as_short());
+
     case T_INT:
       return SharkValue::jint_constant(value.as_int());
 
+    case T_LONG:
+      return SharkValue::jlong_constant(value.as_long());
+      
     case T_OBJECT:
     case T_ARRAY:
       return NULL;
@@ -158,6 +193,10 @@ class SharkValue : public ResourceObj {
   static SharkValue* jint_constant(jint value)
   {
     return create_jint(LLVMValue::jint_constant(value));
+  }
+  static SharkValue* jlong_constant(jlong value)
+  {
+    return create_jlong(LLVMValue::jlong_constant(value));
   }
   static SharkValue* null()
   {

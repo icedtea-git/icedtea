@@ -37,7 +37,6 @@
  public:
   // Constructors
   frame(intptr_t* sp);
-  frame(intptr_t* sp, address pc);
 
   // accessors for the instance variables
   intptr_t* fp() const
@@ -70,6 +69,3 @@
     assert(zeroframe()->is_shark_frame(), "must be");
     return (SharkFrame *) zeroframe();
   }
-
- private:
-  static intptr_t shark_dummy_bcx;

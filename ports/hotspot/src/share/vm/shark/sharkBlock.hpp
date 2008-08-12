@@ -61,16 +61,18 @@ class SharkBlock : public ResourceObj {
   {
     return function()->builder();
   }
+  SharkMonitor* monitor(int index) const
+  {
+    return function()->monitor(index);
+  }
+  ciMethod* target() const
+  {
+    return function()->target();
+  }
   llvm::Value* thread() const
   {
     return function()->thread();
   }
-#ifndef PRODUCT
-  bool debug() const
-  {
-    return function()->debug();
-  }
-#endif // PRODUCT
 
   // Typeflow properties
  public:
@@ -97,6 +99,10 @@ class SharkBlock : public ResourceObj {
   int stack_depth_at_entry() const
   {
     return ciblock()->stack_size();
+  }
+  int monitor_count() const
+  {
+    return ciblock()->monitor_count();
   }
   ciType* local_type_at_entry(int index) const
   {
@@ -192,7 +198,7 @@ class SharkBlock : public ResourceObj {
  private:
   SharkTrackingState* _current_state;
   
- private:
+ public:
   SharkTrackingState* current_state()
   {
     if (_current_state == NULL)
@@ -200,11 +206,12 @@ class SharkBlock : public ResourceObj {
     return _current_state;
   }
 
- private:
+ public:
   llvm::Value* method()
   {
     return current_state()->method();
   }
+ private:
   SharkValue* local(int index)
   {
     return current_state()->local(index);
@@ -230,26 +237,30 @@ class SharkBlock : public ResourceObj {
     return current_state()->stack(slot);
   }  
 
+  // VM calls
+ private:
+  llvm::CallInst* call_vm_base(llvm::Constant* callee,
+                               llvm::Value**   args_start,
+                               llvm::Value**   args_end);
+
+ public:
+  llvm::CallInst* call_vm(llvm::Constant* callee, llvm::Value* arg1)
+  {
+    llvm::Value *args[] = {thread(), arg1};
+    return call_vm_base(callee, args, args + 2);
+  }
+  llvm::CallInst* call_vm(llvm::Constant* callee,
+                          llvm::Value*    arg1,
+                          llvm::Value*    arg2,
+                          llvm::Value*    arg3)
+  {
+    llvm::Value *args[] = {thread(), arg1, arg2, arg3};
+    return call_vm_base(callee, args, args + 4);
+  }
+
   // Code generation
  public:
   void parse();
-
-  // Constant pool
- private:
-  llvm::Value* _constant_pool_check;
-  llvm::Value* _constant_pool_value;
-  llvm::Value* _constant_pool_tags_check;
-  llvm::Value* _constant_pool_tags_value;
-  llvm::Value* _constant_pool_cache_check;
-  llvm::Value* _constant_pool_cache_value;
-  
- private:
-  llvm::Value* constant_pool();
-  llvm::Value* constant_pool_tags();
-  llvm::Value* constant_pool_cache();
-  llvm::Value* constant_pool_tag_at(int which);
-  llvm::Value* constant_pool_object_at(int which);
-  llvm::Value* constant_pool_cache_entry_at(int which);
 
   // Error checking
  private:
@@ -264,6 +275,10 @@ class SharkBlock : public ResourceObj {
   // _ldc* bytecodes
  private:
   void do_ldc();
+
+  // _arraylength bytecode
+ private:
+  void do_arraylength();
 
   // _*aload and *astore bytecodes
  private:
@@ -309,4 +324,13 @@ class SharkBlock : public ResourceObj {
   // _checkcast and _instanceof
  private:
   void do_instance_check();
+
+  // _new
+ private:
+  void do_new();
+
+  // _monitorenter and monitorexit
+ private:
+  void do_monitorenter();
+  void do_monitorexit();
 };

@@ -40,11 +40,25 @@ inline frame::frame()
 inline frame::frame(intptr_t* sp)
 {
   _sp = sp;
-  if (zeroframe()->is_entry_frame())
+  switch (zeroframe()->type()) {
+  case ZeroFrame::ENTRY_FRAME:
     _pc = StubRoutines::call_stub_return_pc();
-  else
+    _cb = NULL;
+    break;
+
+  case ZeroFrame::INTERPRETER_FRAME:
     _pc = NULL;
-  _cb = NULL;
+    _cb = NULL;
+    break;
+
+  case ZeroFrame::SHARK_FRAME:
+    _pc = zero_sharkframe()->pc();
+    _cb = CodeCache::find_blob(pc());
+    break;
+
+  default:
+    ShouldNotReachHere();
+  }
   _deopt_state = not_deoptimized;
 }
 
@@ -73,10 +87,7 @@ inline intptr_t** frame::interpreter_frame_locals_addr() const
 
 inline intptr_t* frame::interpreter_frame_bcx_addr() const
 {
-  if (zeroframe()->is_shark_frame())
-    return &shark_dummy_bcx;
-  else
-    return (intptr_t*) &(get_interpreterState()->_bcp);
+  return (intptr_t*) &(get_interpreterState()->_bcp);
 }
 
 inline constantPoolCacheOop* frame::interpreter_frame_cache_addr() const
@@ -86,10 +97,7 @@ inline constantPoolCacheOop* frame::interpreter_frame_cache_addr() const
 
 inline methodOop* frame::interpreter_frame_method_addr() const
 {
-  if (zeroframe()->is_shark_frame())
-    return zero_sharkframe()->method_addr();
-  else
-    return &(get_interpreterState()->_method);
+  return &(get_interpreterState()->_method);
 }
 
 inline intptr_t* frame::interpreter_frame_mdx_addr() const
@@ -154,5 +162,5 @@ inline intptr_t* frame::entry_frame_argument_at(int offset) const
 
 inline intptr_t* frame::unextended_sp() const
 {
-  Unimplemented();
+  return zero_sharkframe()->unextended_sp();
 }

@@ -23,10 +23,8 @@
  *
  */
 
-#ifdef ASSERT
-  #ifdef assert
-    #undef assert
-  #endif
+#ifdef assert
+  #undef assert
 #endif
 
 #include <llvm/Argument.h>
@@ -39,16 +37,18 @@
 #include <llvm/Support/IRBuilder.h>
 #include <llvm/Type.h>
 
-#ifdef ASSERT
-  #ifdef assert
-    #undef assert
-  #endif
+#ifdef assert
+  #undef assert
+#endif
 
-  // copied verbatim from hotspot/src/share/vm/utilities/debug.hpp
-  #define assert(p,msg)                                          \
+// from hotspot/src/share/vm/utilities/debug.hpp
+#ifdef ASSERT
+  #define assert(p, msg)                                          \
     if (!(p)) {                                                  \
       report_assertion_failure(__FILE__, __LINE__,               \
                               "assert(" XSTR(p) ",\"" msg "\")");\
       BREAKPOINT;                                                \
     }
+#else
+  #define assert(p, msg)
 #endif

@@ -85,8 +85,7 @@ void CppInterpreter::normal_entry(methodOop method, TRAPS)
       stack->set_sp(istate->stack() + 1);
     
       // Make the call
-      address entry_point = istate->callee_entry_point();
-      ((Interpreter::method_entry_t) entry_point) (method, THREAD);
+      Interpreter::invoke_method(method, istate->callee_entry_point(), THREAD);
       fixup_after_potential_safepoint();
 
       // Convert the result
@@ -623,11 +622,13 @@ address InterpreterGenerator::generate_accessor_entry()
 
 address InterpreterGenerator::generate_native_entry(bool synchronized)
 {
+  assert (synchronized == false, "should be");
   return (address) CppInterpreter::native_entry;
 }
 
 address InterpreterGenerator::generate_normal_entry(bool synchronized)
 {
+  assert (synchronized == false, "should be");
   return (address) CppInterpreter::normal_entry;
 }
 
@@ -635,14 +636,10 @@ address AbstractInterpreterGenerator::generate_method_entry(
     AbstractInterpreter::MethodKind kind) {
 
   address entry_point = NULL;
-  bool synchronized = false;
 
   switch (kind) {
   case Interpreter::zerolocals:
-    break;
-
   case Interpreter::zerolocals_synchronized:
-    synchronized = true;
     break;
 
   case Interpreter::native:
@@ -679,10 +676,14 @@ address AbstractInterpreterGenerator::generate_method_entry(
     ShouldNotReachHere();
   }
 
-  if (entry_point)
-    return entry_point;
+  if (entry_point == NULL)
+    entry_point = ((InterpreterGenerator*)this)->generate_normal_entry(false);
 
-  return ((InterpreterGenerator*)this)->generate_normal_entry(false);
+#ifdef SHARK
+  assert(!SharkMethod::is_shark_method(entry_point), "shouldn't be");
+#endif // SHARK
+  
+  return entry_point;
 }
 
 InterpreterGenerator::InterpreterGenerator(StubQueue* code)

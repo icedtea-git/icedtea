@@ -38,9 +38,13 @@ class SharkType : public AllStatic {
   // VM types
  private:
   static const llvm::PointerType*  _cpCacheEntry_type;
-  static const llvm::FunctionType* _method_entry_type;
+  static const llvm::FunctionType* _interpreter_entry_type;
+  static const llvm::PointerType*  _itableOffsetEntry_type;
+  static const llvm::PointerType*  _klass_type;
   static const llvm::PointerType*  _methodOop_type;
+  static const llvm::ArrayType*    _monitor_type;
   static const llvm::PointerType*  _oop_type;
+  static const llvm::FunctionType* _shark_entry_type;
   static const llvm::PointerType*  _thread_type;
   static const llvm::PointerType*  _zeroStack_type;
   
@@ -49,17 +53,33 @@ class SharkType : public AllStatic {
   {
     return _cpCacheEntry_type;
   }
-  static const llvm::FunctionType* method_entry_type()
+  static const llvm::FunctionType* interpreter_entry_type()
   {
-    return _method_entry_type;
+    return _interpreter_entry_type;
+  }
+  static const llvm::PointerType* itableOffsetEntry_type()
+  {
+    return _itableOffsetEntry_type;
+  }
+  static const llvm::PointerType* klass_type()
+  {
+    return _klass_type;
   }
   static const llvm::PointerType* methodOop_type()
   {
     return _methodOop_type;
   }
+  static const llvm::ArrayType* monitor_type()
+  {
+    return _monitor_type;
+  }
   static const llvm::PointerType* oop_type()
   {
     return _oop_type;
+  }
+  static const llvm::FunctionType* shark_entry_type()
+  {
+    return _shark_entry_type;
   }
   static const llvm::PointerType* thread_type()
   {
@@ -72,6 +92,10 @@ class SharkType : public AllStatic {
 
   // Java types
  public:
+  static const llvm::IntegerType* jboolean_type()
+  {
+    return llvm::Type::Int8Ty;
+  }
   static const llvm::IntegerType* jbyte_type()
   {
     return llvm::Type::Int8Ty;

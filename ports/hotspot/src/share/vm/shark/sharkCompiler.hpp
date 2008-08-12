@@ -47,34 +47,30 @@ class SharkCompiler : public AbstractCompiler {
   // Compilation entry point for methods
   void compile_method(ciEnv* env, ciMethod* target, int entry_bci);
 
+  // The builder we'll use to compile our functions
  private:
-  // The module into which we'll place our functions
-  llvm::Module _module;
-
-  // The builder we'll use to create our functions
   SharkBuilder _builder;
 
-  // Wrapper to make our module look like a fully-fledged module provider
-  llvm::ExistingModuleProvider _module_provider;
-
-  // The execution engine we'll use to compile our functions
-  llvm::ExecutionEngine* _execution_engine;
-
  protected:
-  // Accessors
   SharkBuilder* builder()
   {
     return &_builder;
   }
-  llvm::ExecutionEngine* execution_engine() const
-  {
-    return _execution_engine;
-  }
 
- private:
   // Method installation helper
+ private:
   void install_method(ciEnv*          env,
                       ciMethod*       target,
                       int             entry_bci,
-                      llvm::Function* function);
+                      CodeBuffer*     cb,
+                      OopMapSet*      oopmaps);
+
+  // Debug helpers
+ private:
+  static const char *klassname (const ciMethod* target) PRODUCT_RETURN0;
+  static const char *methodname(const ciMethod* target) PRODUCT_RETURN0;
+
+  static bool method_matches(const char* pattern,
+                             const char* klassname,
+                             const char* methodname) PRODUCT_RETURN0;
 };

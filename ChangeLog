@@ -1,3 +1,40 @@
+2008-08-12  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-shark.patch: Updated to latest Shark.
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubGenerator_zero.cpp: Likewise.
+	* ports/hotspot/src/share/vm/includeDB_shark: Likewise.
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMethod.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp: Likewise.
+
 2008-08-12  Christian Thalinger  <twisti@complang.tuwien.ac.at>
 
 	* Makefile.am (ICEDTEA_PATCHES): Fixed typo.

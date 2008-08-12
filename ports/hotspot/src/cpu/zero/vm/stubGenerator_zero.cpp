@@ -66,7 +66,7 @@ class StubGenerator: public StubCodeGenerator
       EntryFrame::build(stack, parameters, parameter_words, call_wrapper));
 
     // Make the call
-    ((Interpreter::method_entry_t) entry_point) (method, THREAD);
+    Interpreter::invoke_method(method, entry_point, THREAD);
 
     // Store result depending on type
     if (!HAS_PENDING_EXCEPTION) {

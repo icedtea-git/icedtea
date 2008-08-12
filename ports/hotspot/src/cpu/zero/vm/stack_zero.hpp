@@ -98,10 +98,12 @@ class ZeroStack {
   {
     return byte_offset_of(ZeroStack, _base);
   }
+
   static ByteSize top_offset()
   {
     return byte_offset_of(ZeroStack, _top);
   }
+
   static ByteSize sp_offset()
   {
     return byte_offset_of(ZeroStack, _sp);
@@ -118,6 +120,7 @@ class ZeroStack {
 // |  ...               |
 
 class ZeroFrame {
+  friend class frame;
   friend class ZeroStackPrinter;
 
  protected:
