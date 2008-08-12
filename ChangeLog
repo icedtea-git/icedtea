@@ -1,3 +1,7 @@
+2008-08-12  Christian Thalinger  <twisti@complang.tuwien.ac.at>
+
+	* Makefile.am (ICEDTEA_PATCHES): Fixed typo.
+
 2008-08-11  Lillian Angel  <langel@redhat.com>
 
 	Fixes Bug #181
