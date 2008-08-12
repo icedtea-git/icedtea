@@ -25,6 +25,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-debuginfo.patch: Add -g option to build to generate debugging information.
 * icedtea-demos.patch: Fix building of JVMTI demo.
 * icedtea-directaudio-close-trick.patch: Allow hardware sound device to be reopened.
+* icedtea-enum-bug-181.patch: Fixes class type check (PR181/S6736248)
 * icedtea-float-double-trailing-zeros.patch: Remove trailing zeros from Double/Float (PR29/30)
 * icedtea-fonts.patch: Add Fedora fontconfig.
 * icedtea-gcc-4.3.patch: Fix code to compile with GCC 4.3 and turn off -Werror.
