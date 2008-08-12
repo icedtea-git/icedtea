@@ -1,73 +1,6 @@
-diff -r 63b67d07d5e9 openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- ../openjdk/jdk/make/common/shared/Compiler-gcc.gmk	Tue Mar 25 16:27:33 2008 +0000
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	Wed Mar 26 08:24:35 2008 +0000
-@@ -75,28 +75,51 @@ ifeq ($(PLATFORM), linux)
-     REQUIRED_CC_VER = 3.2
-     REQUIRED_GCC_VER = 3.2.*
-   else
--  ifneq ("$(findstring sparc,$(ARCH))", "")
--    # sparc or sparcv9
--    REQUIRED_CC_VER = 4.0
--    REQUIRED_GCC_VER = 4.0.*
--  else
--  ifeq ($(ARCH_DATA_MODEL), 32)
-+  ifeq ($(ARCH), alpha)
-+    # alpha
-+    REQUIRED_CC_VER = 3.2
-+    REQUIRED_GCC_VER = 3.2.*
-+  endif
-+  ifeq ($(ARCH), amd64)
-+    # amd64
-+    REQUIRED_CC_VER = 3.2
-+    REQUIRED_GCC_VER = 3.2.*
-+  endif
-+  ifeq ($(ARCH), arm)
-+    # arm
-+    REQUIRED_CC_VER = 3.2
-+    REQUIRED_GCC_VER = 3.2.*
-+  endif
-+  ifeq ($(ARCH), i586)
-     # i586
-     REQUIRED_CC_VER = 3.2
-     REQUIRED_GCC_VER = 3.2.1*
-     REQUIRED_GCC_VER_INT = 3.2.1-7a
--  else
--  ifeq ($(ARCH), amd64)
--    # amd64
--    REQUIRED_CC_VER = 3.2
--    REQUIRED_GCC_VER = 3.2.*
-   endif
-   ifeq ($(ARCH), ia64)
-     # ia64
-     REQUIRED_CC_VER = 3.2
-     REQUIRED_GCC_VER = 2.9[56789].*
-   endif
-+  ifeq ($(ARCH), mips)
-+    # mips
-+    REQUIRED_CC_VER = 3.2
-+    REQUIRED_GCC_VER = 3.2.*
-   endif
-+  ifneq ("$(findstring ppc,$(ARCH))", "")
-+    # ppc or ppc64
-+    REQUIRED_CC_VER = 3.2
-+    REQUIRED_GCC_VER = 3.2.*
-+  endif
-+  ifneq ("$(findstring s390,$(ARCH))", "")
-+    # s390 or s390x
-+    REQUIRED_CC_VER = 3.2
-+    REQUIRED_GCC_VER = 3.2.*
-+  endif
-+  ifneq ("$(findstring sparc,$(ARCH))", "")
-+    # sparc or sparcv9
-+    REQUIRED_CC_VER = 4.0
-+    REQUIRED_GCC_VER = 4.0.*
-   endif
-   endif
-   # Option used to create a shared library
-diff -r 63b67d07d5e9 openjdk/jdk/make/javax/sound/SoundDefs.gmk
---- ../openjdk/jdk/make/javax/sound/SoundDefs.gmk	Tue Mar 25 16:27:33 2008 +0000
-+++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	Wed Mar 26 08:29:28 2008 +0000
-@@ -58,9 +58,45 @@ ifdef ICEDTEA_ZERO_BUILD
+--- openjdk/jdk/make/javax/sound/SoundDefs.gmk.orig	2008-08-12 18:09:03.000000000 +0000
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2008-08-12 18:12:15.000000000 +0000
+@@ -58,10 +58,50 @@
  ifdef ICEDTEA_ZERO_BUILD
    CPPFLAGS += -DX_ARCH=X_ZERO
  else
@@ -86,7 +19,7 @@ diff -r 63b67d07d5e9 openjdk/jdk/make/javax/sound/SoundDefs.gmk
    ifeq ($(ARCH), i586)
      CPPFLAGS += -DX_ARCH=X_I586
    endif # ARCH i586
-+
+ 
 +  ifeq ($(ARCH), ia64)
 +    CPPFLAGS += -DX_ARCH=X_IA64
 +  endif # ARCH ia64
@@ -94,6 +27,10 @@ diff -r 63b67d07d5e9 openjdk/jdk/make/javax/sound/SoundDefs.gmk
 +  ifeq ($(ARCH), mips)
 +    CPPFLAGS += -DX_ARCH=X_MIPS
 +  endif # ARCH mips
++
++  ifeq ($(ARCH), mipsel)
++    CPPFLAGS += -DX_ARCH=X_MIPSEL
++  endif # ARCH mipsel
 +
 +  ifeq ($(ARCH), ppc)
 +    CPPFLAGS += -DX_ARCH=X_PPC
@@ -110,10 +47,11 @@ diff -r 63b67d07d5e9 openjdk/jdk/make/javax/sound/SoundDefs.gmk
 +  ifeq ($(ARCH), s390x)
 +    CPPFLAGS += -DX_ARCH=X_S390X
 +  endif # ARCH s390x
- 
++
    ifeq ($(ARCH), sparc)
      CPPFLAGS += -DX_ARCH=X_SPARC
-@@ -69,10 +105,6 @@ else
+   endif # ARCH sparc
+@@ -69,10 +109,6 @@
    ifeq ($(ARCH), sparcv9)
      CPPFLAGS += -DX_ARCH=X_SPARCV9
    endif # ARCH sparcv9
@@ -124,10 +62,136 @@ diff -r 63b67d07d5e9 openjdk/jdk/make/javax/sound/SoundDefs.gmk
  endif
  
  
-diff -r 63b67d07d5e9 openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
---- ../openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	Tue Mar 25 16:27:33 2008 +0000
-+++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	Wed Mar 26 08:38:14 2008 +0000
-@@ -33,12 +33,19 @@
+--- openjdk/jdk/make/common/Defs-linux.gmk.orig	2008-08-12 18:09:03.000000000 +0000
++++ openjdk/jdk/make/common/Defs-linux.gmk	2008-08-12 18:15:54.000000000 +0000
+@@ -102,9 +102,19 @@
+ #    We need this frame pointer to make it easy to walk the stacks.
+ #    This should be the default on X86, but ia64 and amd64 may not have this
+ #    as the default.
++CFLAGS_REQUIRED_alpha   += -mieee -D_LITTLE_ENDIAN
+ CFLAGS_REQUIRED_amd64   += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
++CFLAGS_REQUIRED_arm     += -D_LITTLE_ENDIAN
++CFLAGS_REQUIRED_hppa    +=
+ CFLAGS_REQUIRED_i586    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
+ CFLAGS_REQUIRED_ia64    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
++CFLAGS_REQUIRED_m68k    +=
++CFLAGS_REQUIRED_mips    +=
++CFLAGS_REQUIRED_mipsel  += -D_LITTLE_ENDIAN
++CFLAGS_REQUIRED_ppc     += -m32
++CFLAGS_REQUIRED_ppc64   += -m64
++CFLAGS_REQUIRED_s390    +=
++CFLAGS_REQUIRED_s390x   += -m64
+ CFLAGS_REQUIRED_sparcv9 += -m64 -mcpu=v9
+ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+ CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
+--- openjdk/jdk/make/common/shared/Compiler-gcc.gmk.orig	2008-08-12 18:09:03.000000000 +0000
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2008-08-12 18:10:45.000000000 +0000
+@@ -75,28 +75,51 @@
+     REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 3.2.*
+   else
+-  ifneq ("$(findstring sparc,$(ARCH))", "")
+-    # sparc or sparcv9
+-    REQUIRED_CC_VER = 4.0
+-    REQUIRED_GCC_VER = 4.0.*
+-  else
+-  ifeq ($(ARCH_DATA_MODEL), 32)
+-    # i586
++  ifeq ($(ARCH), alpha)
++    # alpha
+     REQUIRED_CC_VER = 3.2
+-    REQUIRED_GCC_VER = 3.2.1*
+-    REQUIRED_GCC_VER_INT = 3.2.1-7a
+-  else
++    REQUIRED_GCC_VER = 3.2.*
++  endif
+   ifeq ($(ARCH), amd64)
+     # amd64
+     REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 3.2.*
+   endif
++  ifeq ($(ARCH), arm)
++    # arm
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
++  endif
++  ifeq ($(ARCH), i586)
++    # i586
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.1*
++    REQUIRED_GCC_VER_INT = 3.2.1-7a
++  endif
+   ifeq ($(ARCH), ia64)
+     # ia64
+     REQUIRED_CC_VER = 3.2
+     REQUIRED_GCC_VER = 2.9[56789].*
+   endif
++  ifneq ("$(findstring mips,$(ARCH))", "")
++    # mips
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
++  endif
++  ifneq ("$(findstring ppc,$(ARCH))", "")
++    # ppc or ppc64
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
++  endif
++  ifneq ("$(findstring s390,$(ARCH))", "")
++    # s390 or s390x
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
+   endif
++  ifneq ("$(findstring sparc,$(ARCH))", "")
++    # sparc or sparcv9
++    REQUIRED_CC_VER = 4.0
++    REQUIRED_GCC_VER = 4.0.*
+   endif
+   endif
+   # Option used to create a shared library
+--- openjdk/jdk/make/common/shared/Platform.gmk.orig	2008-08-12 18:09:03.000000000 +0000
++++ openjdk/jdk/make/common/shared/Platform.gmk	2008-08-12 18:14:37.000000000 +0000
+@@ -237,9 +237,37 @@
+   else
+     # i586 is 32-bit, amd64 is 64-bit
+     ifndef ARCH_DATA_MODEL
++      ifeq ($(ARCH), alpha)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), amd64)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), arm)
++        ARCH_DATA_MODEL=32
++      endif
+       ifeq ($(ARCH), i586)
+         ARCH_DATA_MODEL=32
+-      else
++      endif
++      ifeq ($(ARCH), ia64)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), mips)
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), mipsel)
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), ppc)
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), ppc64)
++        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), s390)
++        ARCH_DATA_MODEL=32
++      endif
++      ifeq ($(ARCH), s390x)
+         ARCH_DATA_MODEL=64
+       endif
+     endif
+--- openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h.orig	2008-08-12 18:09:03.000000000 +0000
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2008-08-12 18:13:17.000000000 +0000
+@@ -33,12 +33,20 @@
  #define X_LINUX         3
  
  // types for X_ARCH
@@ -143,19 +207,42 @@ diff -r 63b67d07d5e9 openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.
 +#define X_I586          4
 +#define X_IA64          5
 +#define X_MIPS          6
-+#define X_PPC           7
-+#define X_PPC64         8
-+#define X_S390          9
-+#define X_S390X         10
-+#define X_SPARC         11
-+#define X_SPARCV9       12
-+#define X_ZERO          13
++#define X_MIPSEL        7
++#define X_PPC           8
++#define X_PPC64         9
++#define X_S390          10
++#define X_S390X         11
++#define X_SPARC         12
++#define X_SPARCV9       13
++#define X_ZERO          14
  
  // **********************************
  // Make sure you set X_PLATFORM and X_ARCH defines correctly.
---- openjdk/corba/make/common/shared/Platform.gmk~	2008-04-21 09:54:27.000000000 +0200
-+++ openjdk/corba/make/common/shared/Platform.gmk	2008-04-21 16:14:54.000000000 +0200
-@@ -224,9 +224,34 @@
+--- openjdk/corba/make/common/Defs-linux.gmk.orig	2008-08-12 18:09:03.000000000 +0000
++++ openjdk/corba/make/common/Defs-linux.gmk	2008-08-12 18:15:12.000000000 +0000
+@@ -92,9 +92,19 @@
+ #    We need this frame pointer to make it easy to walk the stacks.
+ #    This should be the default on X86, but ia64 and amd64 may not have this
+ #    as the default.
++CFLAGS_REQUIRED_alpha   += -mieee -D_LITTLE_ENDIAN
+ CFLAGS_REQUIRED_amd64   += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
++CFLAGS_REQUIRED_arm     += -D_LITTLE_ENDIAN
++CFLAGS_REQUIRED_hppa    +=
+ CFLAGS_REQUIRED_i586    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
+ CFLAGS_REQUIRED_ia64    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
++CFLAGS_REQUIRED_m68k    +=
++CFLAGS_REQUIRED_mips    +=
++CFLAGS_REQUIRED_mipsel  += -D_LITTLE_ENDIAN
++CFLAGS_REQUIRED_ppc     += -m32
++CFLAGS_REQUIRED_ppc64   += -m64
++CFLAGS_REQUIRED_s390    +=
++CFLAGS_REQUIRED_s390x   += -m64
+ CFLAGS_REQUIRED_sparcv9 += -m64 -mcpu=v9
+ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+ CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
+--- openjdk/corba/make/common/shared/Platform.gmk.orig	2008-08-12 18:09:03.000000000 +0000
++++ openjdk/corba/make/common/shared/Platform.gmk	2008-08-12 18:14:03.000000000 +0000
+@@ -227,9 +227,37 @@
    else
      # i586 is 32-bit, amd64 is 64-bit
      ifndef ARCH_DATA_MODEL
@@ -178,42 +265,7 @@ diff -r 63b67d07d5e9 openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.
 +      ifeq ($(ARCH), mips)
 +        ARCH_DATA_MODEL=32
 +      endif
-+      ifeq ($(ARCH), ppc)
-+        ARCH_DATA_MODEL=32
-+      endif
-+      ifeq ($(ARCH), ppc64)
-+        ARCH_DATA_MODEL=64
-+      endif
-+      ifeq ($(ARCH), s390)
-+        ARCH_DATA_MODEL=32
-+      endif
-+      ifeq ($(ARCH), s390x)
-         ARCH_DATA_MODEL=64
-       endif
-     endif
---- openjdk/jdk/make/common/shared/Platform.gmk~	2008-04-21 09:54:27.000000000 +0200
-+++ openjdk/jdk/make/common/shared/Platform.gmk	2008-04-21 16:15:00.000000000 +0200
-@@ -235,9 +235,34 @@
-   else
-     # i586 is 32-bit, amd64 is 64-bit
-     ifndef ARCH_DATA_MODEL
-+      ifeq ($(ARCH), alpha)
-+        ARCH_DATA_MODEL=64
-+      endif
-+      ifeq ($(ARCH), amd64)
-+        ARCH_DATA_MODEL=64
-+      endif
-+      ifeq ($(ARCH), arm)
-+        ARCH_DATA_MODEL=32
-+      endif
-       ifeq ($(ARCH), i586)
-         ARCH_DATA_MODEL=32
--      else
-+      endif
-+      ifeq ($(ARCH), ia64)
-+        ARCH_DATA_MODEL=64
-+      endif
-+      ifeq ($(ARCH), mips)
++      ifeq ($(ARCH), mipsel)
 +        ARCH_DATA_MODEL=32
 +      endif
 +      ifeq ($(ARCH), ppc)
@@ -229,47 +281,3 @@ diff -r 63b67d07d5e9 openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.
          ARCH_DATA_MODEL=64
        endif
      endif
-diff -r f07251088084 make/common/Defs-linux.gmk
---- a/corba/make/common/Defs-linux.gmk	Mon Aug 04 13:44:45 2008 -0700
-+++ openjdk/corba/make/common/Defs-linux.gmk	Wed Aug 06 18:58:18 2008 -0400
-@@ -92,9 +92,18 @@
- #    We need this frame pointer to make it easy to walk the stacks.
- #    This should be the default on X86, but ia64 and amd64 may not have this
- #    as the default.
-+CFLAGS_REQUIRED_alpha   += -mieee -D_LITTLE_ENDIAN
- CFLAGS_REQUIRED_amd64   += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
-+CFLAGS_REQUIRED_arm     += -D_LITTLE_ENDIAN
-+CFLAGS_REQUIRED_hppa    +=
- CFLAGS_REQUIRED_i586    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
- CFLAGS_REQUIRED_ia64    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
-+CFLAGS_REQUIRED_m68k    +=
-+CFLAGS_REQUIRED_mips    +=
-+CFLAGS_REQUIRED_ppc     += -m32
-+CFLAGS_REQUIRED_ppc64   += -m64
-+CFLAGS_REQUIRED_s390    +=
-+CFLAGS_REQUIRED_s390x   += -m64
- CFLAGS_REQUIRED_sparcv9 += -m64 -mcpu=v9
- LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
- CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
-diff -r 12a0d0a1bb65 make/common/Defs-linux.gmk
---- a/jdk/make/common/Defs-linux.gmk	Mon Aug 04 13:45:00 2008 -0700
-+++ openjdk/jdk/make/common/Defs-linux.gmk	Wed Aug 06 18:58:22 2008 -0400
-@@ -102,9 +102,18 @@
- #    We need this frame pointer to make it easy to walk the stacks.
- #    This should be the default on X86, but ia64 and amd64 may not have this
- #    as the default.
-+CFLAGS_REQUIRED_alpha   += -mieee -D_LITTLE_ENDIAN
- CFLAGS_REQUIRED_amd64   += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
-+CFLAGS_REQUIRED_arm     += -D_LITTLE_ENDIAN
-+CFLAGS_REQUIRED_hppa    +=
- CFLAGS_REQUIRED_i586    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
- CFLAGS_REQUIRED_ia64    += -fno-omit-frame-pointer -D_LITTLE_ENDIAN
-+CFLAGS_REQUIRED_m68k    +=
-+CFLAGS_REQUIRED_mips    +=
-+CFLAGS_REQUIRED_ppc     += -m32
-+CFLAGS_REQUIRED_ppc64   += -m64
-+CFLAGS_REQUIRED_s390    +=
-+CFLAGS_REQUIRED_s390x   += -m64
- CFLAGS_REQUIRED_sparcv9 += -m64 -mcpu=v9
- LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
- CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
