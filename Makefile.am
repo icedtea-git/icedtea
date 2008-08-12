@@ -2,7 +2,7 @@ OPENJDK_DATE = 10_jul_2008
 OPENJDK_MD5SUM = 8e60cdac02ec1b2d8ddb9d7369be69df
 OPENJDK_VERSION = b11
 
-CACAO_VERSION = 0.99.2
+CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = a2865f47535f6dc3def268c0055ff20a
 
 NETBEANS_PLATFORM_MD5SUM = 77c79b3a7d3dbe6a8858639f8d564a38
@@ -1250,7 +1250,7 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
-	cd cacao/cacao-$(CACAO_VERSION) ; \
+	cd cacao/cacao-$(CACAO_VERSION) && \
 	./configure \
 	  --prefix=$(abs_top_builddir)/cacao/install \
 	  --with-java-runtime-library=openjdk \

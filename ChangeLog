@@ -1,3 +1,7 @@
+2008-08-12  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/cacao.stamp): Robustify.
+
 2008-08-12  Lillian Angel  <langel@redhat.com>
 
 	* HACKING: Added icedtea-enum-bug-181.patch.
