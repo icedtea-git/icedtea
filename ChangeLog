@@ -1,5 +1,10 @@
 2008-08-13  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
+	(print_word): Recognise non-header parts of Shark frames.
+
+2008-08-13  Gary Benson  <gbenson@redhat.com>
+
 	PR icedtea/184:
 	* ports/hotspot/src/cpu/zero/vm/stubGenerator_zero.cpp
 	(call_stub): Add support for returning floats and doubles.

@@ -195,6 +195,37 @@ class ZeroStackPrinter {
           if (method->is_oop())
             value = method->name_and_sig_as_C_string(_buf, _buflen);
         }
+        else {
+          SharkFrame *sf = (SharkFrame *) frame;
+          intptr_t *monitor_base =
+            (intptr_t *) frame - SharkFrame::header_words + 1;
+          intptr_t *stack_base =
+            sf->unextended_sp() + sf->method()->max_stack();
+
+          if (addr >= stack_base && addr < monitor_base) {
+            int monitor_size = frame::interpreter_frame_monitor_size();
+            int last_index = (monitor_base - stack_base) / monitor_size - 1;
+            int index = last_index - (addr - stack_base) / monitor_size;
+            intptr_t monitor =
+              (intptr_t) ((BasicObjectLock *) monitor_base - 1 - index);
+            intptr_t offset = (intptr_t) addr - monitor;
+
+            if (offset == BasicObjectLock::obj_offset_in_bytes()) {
+              snprintf(_buf, _buflen, "monitor[%d]->_obj", index);
+              field = _buf;
+            }
+            else if (offset ==  BasicObjectLock::lock_offset_in_bytes()) {
+              snprintf(_buf, _buflen, "monitor[%d]->_lock", index);
+              field = _buf;
+            }
+          }
+          else {
+            snprintf(_buf, _buflen, "%s[%d]",
+                     top_frame ? "stack_word" : "local",
+                     stack_base - addr - 1);
+            field = _buf;
+          }
+        }
       }
     }
       
