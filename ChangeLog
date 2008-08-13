@@ -1,3 +1,9 @@
+2008-08-13  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/184:
+	* ports/hotspot/src/cpu/zero/vm/stubGenerator_zero.cpp
+	(call_stub): Add support for returning floats and doubles.
+
 2008-08-12  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-arch.patch: Add support for mipsel-linux.

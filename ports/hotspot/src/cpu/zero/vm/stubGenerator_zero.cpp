@@ -77,6 +77,12 @@ class StubGenerator: public StubCodeGenerator
       case T_LONG:
         *(jlong *) result = *(jlong *) stack->sp();
         break;
+      case T_FLOAT:
+        *(jfloat *) result = *(jfloat *) stack->sp();
+        break;
+      case T_DOUBLE:
+        *(jdouble *) result = *(jdouble *) stack->sp();
+        break;
       case T_OBJECT:
         *(oop *) result = *(oop *) stack->sp();
         break;
