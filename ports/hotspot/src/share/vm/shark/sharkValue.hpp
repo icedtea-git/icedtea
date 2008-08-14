@@ -182,7 +182,7 @@ class SharkValue : public ResourceObj {
   {
     return llvm_value();
   }
-  llvm::Value* intptr_value(llvm::IRBuilder* builder) const
+  llvm::Value* intptr_value(llvm::IRBuilder<>* builder) const
   {
     assert(is_jobject(), "should be");
     return builder->CreatePtrToInt(llvm_value(), SharkType::intptr_type());

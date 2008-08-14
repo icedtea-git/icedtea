@@ -101,9 +101,11 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
       function.function()->dump();
   }
   if (SharkTraceInstalls) {
+    uint32_t *start = NULL;
+    uint32_t *limit = NULL;
 #ifdef PPC
-    uint32_t *start = *(uint32_t **) bb->instructions_begin();
-    uint32_t *limit = start;
+    start = *(uint32_t **) bb->instructions_begin();
+    limit = start;
     while (*limit)
       limit++;
 #else

@@ -1,3 +1,16 @@
+2008-08-14  Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::SharkBuilder): Fix syntax error on template class
+	name.	
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp (class
+	SharkBuilder): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp (class
+	SharkValue): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::compile_method): Properly declare temporaries.
+
 2008-08-14  Lillian Angel  <langel@redhat.com>
 
 	* acinclude.m4: Changed LIBGCJ_JAR check to be less stringent with 
