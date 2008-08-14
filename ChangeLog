@@ -1,3 +1,8 @@
+2008-08-14  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-signed-types-hot6.patch: New patch.
+	* Makefile.am (NON_ZERO_PATCHES): Add icedtea-signed-types-hot6.patch.
+
 2008-08-13  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
