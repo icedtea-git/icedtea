@@ -501,6 +501,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-alpha-fixes.patch \
 	patches/icedtea-alt-jar.patch \
 	patches/icedtea-enum-bug-181.patch \
+	patches/icedtea-jdk-use-ssize_t.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	patches/icedtea-arch.patch
