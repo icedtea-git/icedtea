@@ -1,3 +1,8 @@
+2008-08-13  Lillian Angel  <langel@redhat.com>
+
+	* acinclude.m4: Changed LIBGCJ_JAR check to be less stringent with
+	minor versions.
+
 2008-08-13  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
