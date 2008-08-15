@@ -1,3 +1,8 @@
+2008-08-15  Matthias Klose  <doko@ubuntu.com>
+
+	* openjdk/hotspot/build/linux/makefiles/gcc.make: Build hotspot
+	with -fPIC on s390/s390x.
+
 2008-08-14  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-jdk-use-ssize_t.patch: New.
