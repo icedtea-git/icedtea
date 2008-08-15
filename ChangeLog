@@ -1,5 +1,9 @@
 2008-08-15  Xerxes Ranby <xerxes@zafena.se>
 
+	* acinclude.m4: Fixed LIBGCJ_JAR check.
+
+2008-08-15  Xerxes Ranby <xerxes@zafena.se>
+
 	* Makefile.am (CACAO_MD5SUM): Update for 0.99.3.
 
 2008-08-15  Matthias Klose  <doko@ubuntu.com>
