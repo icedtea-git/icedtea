@@ -1,3 +1,7 @@
+2008-08-15  Matthias Klose  <doko@ubuntu.com>
+
+	* acinclude.m4 (FIND_LIBGCJ_JAR): Extend check for libgcj-4.2.*.jar.
+
 2008-08-15  Xerxes Ranby <xerxes@zafena.se>
 
 	* acinclude.m4: Fixed LIBGCJ_JAR check.
