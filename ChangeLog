@@ -1,5 +1,11 @@
 2008-08-15  Matthias Klose  <doko@ubuntu.com>
 
+	* patches/icedtea-hotspot-use-idx_t.patch: New.
+	* patches/icedtea-hotspot-params-cast-size_t.patch: Likewise.
+	* Makefile.am (ICEDTEA_PATCHES): Add patches.
+
+2008-08-15  Matthias Klose  <doko@ubuntu.com>
+
 	* openjdk/hotspot/build/linux/makefiles/gcc.make: Build hotspot
 	with -fPIC on s390/s390x.
 

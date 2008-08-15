@@ -502,6 +502,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-alt-jar.patch \
 	patches/icedtea-enum-bug-181.patch \
 	patches/icedtea-jdk-use-ssize_t.patch \
+	patches/icedtea-hotspot-use-idx_t.patch \
+	patches/icedtea-hotspot-params-cast-size_t.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	patches/icedtea-arch.patch
