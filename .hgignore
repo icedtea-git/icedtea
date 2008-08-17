@@ -16,7 +16,10 @@ tools
 stamps
 Makefile
 config.log
+config.guess
+config.sub
 config.status
+install-sh
 javac
 javap
 gcjwebplugin.so

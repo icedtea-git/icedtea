@@ -44,6 +44,15 @@
 	* acinclude.m4: Changed LIBGCJ_JAR check to be less stringent with 
 	minor versions.
 
+2008-08-17  Mark Wielaard  <mark@klomp.org>
+
+	* configure.ac (AM_INIT): Set contact to mailinglist.
+	(AM_INIT_AUTOMAKE): Require 1.10, set as foreign (non-gnu).
+	* config.guess: Removed generated file (autogen.sh).
+	* config.sub: Likewise.
+	* install-sh: Likewise.
+	* .hgignore: Add generated files.
+
 2008-08-14  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-signed-types-hot6.patch: New patch.

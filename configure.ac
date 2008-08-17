@@ -1,6 +1,6 @@
 AC_PREREQ([2.61])
-AC_INIT([icedtea6], [1.3], [fitzsim@redhat.com])
-AM_INIT_AUTOMAKE([tar-pax])
+AC_INIT([icedtea6], [1.3], [distro-pkg-dev@openjdk.java.net])
+AM_INIT_AUTOMAKE([1.10 tar-pax foreign])
 AC_CONFIG_FILES([Makefile])
 AC_CANONICAL_HOST
 
