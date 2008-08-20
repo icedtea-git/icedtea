@@ -1,3 +1,10 @@
+2008-08-20  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp
+	(VMlongDiv): Handle the special case of division of the most
+	negative value possible by -1.
+	(VMlongRem): Likewise.
+
 2008-08-15  Matthias Klose  <doko@ubuntu.com>
 
 	* acinclude.m4 (FIND_LIBGCJ_JAR): Extend check for libgcj-4.2.*.jar.

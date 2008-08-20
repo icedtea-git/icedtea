@@ -54,8 +54,9 @@ inline jlong BytecodeInterpreter::VMlongAnd(jlong op1, jlong op2) {
 }
 
 inline jlong BytecodeInterpreter::VMlongDiv(jlong op1, jlong op2) {
-  // QQQ what about check and throw...
-  return op1 / op2;
+  /* it's possible we could catch this special case implicitly */
+  if (op1 == (jlong) 0x8000000000000000LL && op2 == -1) return op1;
+  else return op1 / op2;
 }
 
 inline jlong BytecodeInterpreter::VMlongMul(jlong op1, jlong op2) {
@@ -75,7 +76,9 @@ inline jlong BytecodeInterpreter::VMlongXor(jlong op1, jlong op2) {
 }
 
 inline jlong BytecodeInterpreter::VMlongRem(jlong op1, jlong op2) {
-  return op1 % op2;
+  /* it's possible we could catch this special case implicitly */
+  if (op1 == (jlong) 0x8000000000000000LL && op2 == -1) return 0;
+  else return op1 % op2;
 }
 
 inline jlong BytecodeInterpreter::VMlongUshr(jlong op1, jint op2) {
