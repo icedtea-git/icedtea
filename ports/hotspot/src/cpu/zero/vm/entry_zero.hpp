@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2003-2007 Sun Microsystems, Inc.  All Rights Reserved.
  * Copyright 2008 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -23,69 +23,38 @@
  *
  */
 
-class SharkMethod {
+class ZeroEntry {
  public:
-  SharkMethod()
+  ZeroEntry()
   {
     ShouldNotCallThis();
   }
 
  public:
-  typedef void (*method_entry_t)(methodOop method, intptr_t base_pc, TRAPS);  
+  typedef void (*method_entry_t)(methodOop method, intptr_t base_pc, TRAPS);
 
  private:
-  method_entry_t  _entry_point;
-  llvm::Function* _llvm_function;
+  method_entry_t _entry_point;
 
  public:
   method_entry_t entry_point() const
   {
     return _entry_point;
   }
-  llvm::Function* llvm_function() const
+  void set_entry_point(method_entry_t entry_point)
   {
-    return _llvm_function;
+    _entry_point = entry_point;
   }
-
-  // Identifying and manipulating Shark entry points
- private:
-  const static intptr_t _marker = 1;
 
  public:
-  static bool is_shark_method(address entry_point)
-  {
-    return (intptr_t) entry_point & _marker;
-  }
-  static address mark(address entry_point)
-  {
-    assert(!is_shark_method(entry_point), "shouldn't be");
-    return (address) ((intptr_t) entry_point | _marker);
-  }
-  static SharkMethod* get(address entry_point)
-  {
-    assert(is_shark_method(entry_point), "should be");
-    return (SharkMethod *) ((intptr_t) entry_point & ~_marker);
-  }
-
-  // Method invocation
- public:
-  void invoke(methodOop method, TRAPS)
+  void invoke(methodOop method, TRAPS) const
   {
     entry_point()(method, (intptr_t) this, THREAD);
   }
 
-  // Assembly language support
  public:
-  static intptr_t marker()
-  {
-    return _marker;
-  }
   static ByteSize entry_point_offset()
   {
-    return byte_offset_of(SharkMethod, _entry_point);
-  }
-  static ByteSize llvm_function_offset()
-  {
-    return byte_offset_of(SharkMethod, _llvm_function);
+    return byte_offset_of(ZeroEntry, _entry_point);
   }
 };

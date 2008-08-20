@@ -38,13 +38,12 @@ class SharkType : public AllStatic {
   // VM types
  private:
   static const llvm::PointerType*  _cpCacheEntry_type;
-  static const llvm::FunctionType* _interpreter_entry_type;
+  static const llvm::FunctionType* _entry_point_type;
   static const llvm::PointerType*  _itableOffsetEntry_type;
   static const llvm::PointerType*  _klass_type;
   static const llvm::PointerType*  _methodOop_type;
   static const llvm::ArrayType*    _monitor_type;
   static const llvm::PointerType*  _oop_type;
-  static const llvm::FunctionType* _shark_entry_type;
   static const llvm::PointerType*  _thread_type;
   static const llvm::PointerType*  _zeroStack_type;
   
@@ -53,9 +52,9 @@ class SharkType : public AllStatic {
   {
     return _cpCacheEntry_type;
   }
-  static const llvm::FunctionType* interpreter_entry_type()
+  static const llvm::FunctionType* entry_point_type()
   {
-    return _interpreter_entry_type;
+    return _entry_point_type;
   }
   static const llvm::PointerType* itableOffsetEntry_type()
   {
@@ -76,10 +75,6 @@ class SharkType : public AllStatic {
   static const llvm::PointerType* oop_type()
   {
     return _oop_type;
-  }
-  static const llvm::FunctionType* shark_entry_type()
-  {
-    return _shark_entry_type;
   }
   static const llvm::PointerType* thread_type()
   {

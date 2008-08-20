@@ -29,13 +29,12 @@
 using namespace llvm;
 
 const PointerType*  SharkType::_cpCacheEntry_type;
-const FunctionType* SharkType::_interpreter_entry_type;
+const FunctionType* SharkType::_entry_point_type;
 const PointerType*  SharkType::_itableOffsetEntry_type;
 const PointerType*  SharkType::_klass_type;
 const PointerType*  SharkType::_methodOop_type;
 const ArrayType*    SharkType::_monitor_type;
 const PointerType*  SharkType::_oop_type;
-const FunctionType* SharkType::_shark_entry_type;
 const PointerType*  SharkType::_thread_type;
 const PointerType*  SharkType::_zeroStack_type;
 
@@ -72,14 +71,9 @@ void SharkType::initialize()
 
   std::vector<const Type*> params;
   params.push_back(methodOop_type());
-  params.push_back(thread_type());
-  _interpreter_entry_type = FunctionType::get(Type::VoidTy, params, false);
-
-  params.clear();
-  params.push_back(methodOop_type());
   params.push_back(intptr_type());
   params.push_back(thread_type());
-  _shark_entry_type = FunctionType::get(Type::VoidTy, params, false);
+  _entry_point_type = FunctionType::get(Type::VoidTy, params, false);
 
   // Java types a) on the stack and in fields, and b) in arrays
   for (int i = 0; i < T_CONFLICT + 1; i++) {

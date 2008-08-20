@@ -28,6 +28,7 @@
 
 using namespace llvm;
 
+Constant* SharkRuntime::_newarray;
 Constant* SharkRuntime::_new_instance;
 Constant* SharkRuntime::_resolve_get_put;
 Constant* SharkRuntime::_resolve_invoke;
@@ -41,6 +42,15 @@ void SharkRuntime::initialize(SharkBuilder* builder)
 {
   // VM calls
   std::vector<const Type*> params;
+  params.push_back(SharkType::thread_type());
+  params.push_back(SharkType::jint_type());
+  params.push_back(SharkType::jint_type());
+  _newarray = builder->make_function(
+    (intptr_t) newarray_C,
+    FunctionType::get(Type::VoidTy, params, false),
+    "SharkRuntime__newarray");
+
+  params.clear();
   params.push_back(SharkType::thread_type());
   params.push_back(SharkType::jobject_type());
   _new_instance = builder->make_function(
@@ -92,6 +102,15 @@ void SharkRuntime::initialize(SharkBuilder* builder)
     FunctionType::get(Type::VoidTy, params, false),
     "report_unimplemented");
 }
+
+JRT_ENTRY(void, SharkRuntime::newarray_C(JavaThread* thread,
+                                         BasicType type,
+                                         int size))
+{
+  oop obj = oopFactory::new_typeArray(type, size, CHECK);
+  thread->set_vm_result(obj);
+}
+JRT_END
 
 JRT_ENTRY(void, SharkRuntime::new_instance_C(JavaThread* thread,
                                              klassOop klass))

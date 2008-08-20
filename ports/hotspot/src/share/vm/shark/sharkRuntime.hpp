@@ -29,11 +29,16 @@ class SharkRuntime : public AllStatic {
 
   // VM calls
  private:
+  static llvm::Constant* _newarray;
   static llvm::Constant* _new_instance;
   static llvm::Constant* _resolve_get_put;
   static llvm::Constant* _resolve_invoke;
 
  public:
+  static llvm::Constant* newarray()
+  {
+    return _newarray;
+  }
   static llvm::Constant* new_instance()
   {
     return _new_instance;
@@ -48,6 +53,7 @@ class SharkRuntime : public AllStatic {
   }
 
  private:
+  static void newarray_C(JavaThread* thread, BasicType type, int size);
   static void new_instance_C(JavaThread* thread, klassOop klass);
   static void resolve_get_put_C(JavaThread*             thread,
                                 ConstantPoolCacheEntry* entry,

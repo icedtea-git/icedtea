@@ -67,7 +67,8 @@ void SharkEntryState::initialize(Value* method)
           builder()->CreateLoad(
             builder()->CreateBitCast(
               builder()->CreateStructGEP(
-                function()->locals_slots(), max_locals() - 1 - i),
+                function()->locals_slots(),
+                max_locals() - type->size() - i),
               PointerType::getUnqual(SharkType::to_stackType(type))),
             name));
       }
@@ -121,28 +122,31 @@ void SharkPHIState::initialize()
   }
 
   // Expression stack
+  _sp = _stack;
   for (int i = 0; i < max_stack(); i++) {
-    SharkValue *value = NULL;
     if (i < block()->stack_depth_at_entry()) {
       ciType *type = block()->stack_type_at_entry(i);
       switch (type->basic_type()) {
       case ciTypeFlow::StateVector::T_TOP:
       case ciTypeFlow::StateVector::T_BOTTOM:
-      case ciTypeFlow::StateVector::T_LONG2:
-      case ciTypeFlow::StateVector::T_DOUBLE2:
       case ciTypeFlow::StateVector::T_NULL:
         Unimplemented();
         break;
 
+      case ciTypeFlow::StateVector::T_LONG2:
+      case ciTypeFlow::StateVector::T_DOUBLE2:
+        break;
+
       default:
         snprintf(name, sizeof(name), "stack_%d_", i);
-        value = SharkValue::create_generic(
+        *(_sp++) = SharkValue::create_generic(
           type, builder()->CreatePHI(SharkType::to_stackType(type), name));
       }
     }
-    _stack[i] = value;
   }
-  _sp = _stack + block()->stack_depth_at_entry();
+#ifdef ASSERT
+  _stack_depth_at_entry = stack_depth();
+#endif // ASSERT
 
   builder()->SetInsertPoint(saved_insert_point);
 }
@@ -163,9 +167,8 @@ void SharkPHIState::add_incoming(SharkState* incoming_state)
   }
 
   // Expression stack
-  assert(block()->stack_depth_at_entry() == incoming_state->stack_depth(),
-         "should be");
-  for (int i = 0; i < block()->stack_depth_at_entry(); i++) {
+  assert(_stack_depth_at_entry == incoming_state->stack_depth(), "should be");
+  for (int i = 0; i < incoming_state->stack_depth(); i++) {
     ((PHINode *) stack(i)->generic_value())->addIncoming(
       incoming_state->stack(i)->generic_value(),
       predecessor);

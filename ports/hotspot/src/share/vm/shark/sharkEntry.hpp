@@ -1,6 +1,6 @@
 /*
- * Copyright 1997-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2007, 2008 Red Hat, Inc.
+ * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2008 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,14 +23,33 @@
  *
  */
 
-
- protected:
-  // Size of interpreter code
-  const static int InterpreterCodeSize = 6 * K;
-
+class SharkEntry : public ZeroEntry {
  private:
-  // Method entries
-  static void normal_entry(methodOop method, intptr_t UNUSED, TRAPS);
-  static void native_entry(methodOop method, intptr_t UNUSED, TRAPS);
-  static void accessor_entry(methodOop method, intptr_t UNUSED, TRAPS);
-  static void empty_entry(methodOop method, intptr_t UNUSED, TRAPS);
+  llvm::Function* _llvm_function;
+
+ public:
+  llvm::Function* llvm_function() const
+  {
+    return _llvm_function;
+  }
+  void set_llvm_function(llvm::Function* llvm_function)
+  {
+    _llvm_function = llvm_function;
+  }
+
+ public:
+  static ByteSize llvm_function_offset()
+  {
+    return byte_offset_of(SharkEntry, _llvm_function);
+  }
+
+ public:
+  void print_statistics(const char* name) const PRODUCT_RETURN;
+
+#ifndef PRODUCT
+ private:
+  address code_start() const;
+  address code_limit() const;
+  void print_pd_statistics(address start, address limit) const;
+#endif // !PRODUCT
+};

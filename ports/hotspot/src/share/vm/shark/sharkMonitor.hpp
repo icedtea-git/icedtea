@@ -25,7 +25,7 @@
 
 class SharkMonitor : public ResourceObj {
  public:
-  SharkMonitor(SharkFunction* function, llvm::Value* monitor)
+  SharkMonitor(const SharkFunction* function, llvm::Value* monitor)
     : _function(function), _monitor(monitor)
   { initialize(); }
 
@@ -33,13 +33,13 @@ class SharkMonitor : public ResourceObj {
   void initialize();
 
  private:
-  SharkFunction* _function;
-  llvm::Value*   _monitor;
-  llvm::Value*   _object_addr;
-  llvm::Value*   _displaced_header_addr;
+  const SharkFunction* _function;
+  llvm::Value*         _monitor;
+  llvm::Value*         _object_addr;
+  llvm::Value*         _displaced_header_addr;
 
  private:
-  SharkFunction* function() const
+  const SharkFunction* function() const
   {
     return _function;
   }

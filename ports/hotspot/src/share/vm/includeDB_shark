@@ -56,9 +56,7 @@ globals.hpp                             shark_globals_<arch>.hpp
 
 globals.cpp                             shark_globals.hpp
 
-interpreter.hpp                         sharkMethod.hpp
-
-methodOop.cpp                           sharkMethod.hpp
+methodOop.cpp                           sharkEntry.hpp
 
 shark_globals.cpp                       shark_globals.hpp
 
@@ -126,6 +124,7 @@ sharkCompiler.cpp                       oopMap.hpp
 sharkCompiler.cpp                       oopRecorder.hpp
 sharkCompiler.cpp                       shark_globals.hpp
 sharkCompiler.cpp                       sharkCompiler.hpp
+sharkCompiler.cpp                       sharkEntry.hpp
 sharkCompiler.cpp                       sharkFunction.hpp
 sharkCompiler.cpp                       sharkRuntime.hpp
 
@@ -153,12 +152,18 @@ sharkConstantPool.hpp                   llvmHeaders.hpp
 sharkConstantPool.hpp                   sharkBlock.hpp
 sharkConstantPool.hpp                   sharkBuilder.hpp
 
+sharkEntry.cpp                          sharkEntry.hpp
+
+sharkEntry.hpp                          llvmHeaders.hpp
+
 sharkFunction.cpp                       allocation.hpp
 sharkFunction.cpp                       ciTypeFlow.hpp
 sharkFunction.cpp                       debug.hpp
 sharkFunction.cpp                       llvmHeaders.hpp
+sharkFunction.cpp                       shark_globals.hpp
 sharkFunction.cpp                       sharkBlock.hpp
 sharkFunction.cpp                       sharkBuilder.hpp
+sharkFunction.cpp                       sharkEntry.hpp
 sharkFunction.cpp                       sharkFunction.hpp
 sharkFunction.cpp                       sharkMonitor.hpp
 sharkFunction.cpp                       sharkState.inline.hpp
@@ -169,8 +174,6 @@ sharkFunction.hpp                       ciStreams.hpp
 sharkFunction.hpp                       ciTypeFlow.hpp
 sharkFunction.hpp                       llvmHeaders.hpp
 sharkFunction.hpp                       sharkBuilder.hpp
-
-sharkMethod.hpp                         llvmHeaders.hpp
 
 sharkMonitor.cpp                        sharkMonitor.hpp
 sharkMonitor.cpp                        llvmHeaders.hpp
@@ -213,7 +216,7 @@ sharkType.cpp                           arrayOop.hpp
 sharkType.cpp                           globalDefinitions.hpp
 sharkType.cpp                           llvmHeaders.hpp
 sharkType.cpp                           oop.hpp
-sharkType.cpp                           sharkMethod.hpp
+sharkType.cpp                           sharkEntry.hpp
 sharkType.cpp                           sharkType.hpp
 
 sharkType.hpp                           allocation.hpp

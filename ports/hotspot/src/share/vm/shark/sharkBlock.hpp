@@ -61,9 +61,13 @@ class SharkBlock : public ResourceObj {
   {
     return function()->builder();
   }
-  SharkMonitor* monitor(int index) const
+  bool failing() const
   {
-    return function()->monitor(index);
+    return function()->failing();
+  }
+  void record_method_not_compilable(const char* reason) const
+  {
+    function()->record_method_not_compilable(reason);
   }
   ciMethod* target() const
   {
@@ -99,10 +103,6 @@ class SharkBlock : public ResourceObj {
   int stack_depth_at_entry() const
   {
     return ciblock()->stack_size();
-  }
-  int monitor_count() const
-  {
-    return ciblock()->monitor_count();
   }
   ciType* local_type_at_entry(int index) const
   {
@@ -237,6 +237,21 @@ class SharkBlock : public ResourceObj {
     return current_state()->stack(slot);
   }  
 
+  // Handy macros for the various pop, swap and dup bytecodes
+ private:
+  SharkValue* pop_and_assert_one_word()
+  {
+    SharkValue* result = pop();
+    assert(result->is_one_word(), "should be");
+    return result;
+  }
+  SharkValue* pop_and_assert_two_word()
+  {
+    SharkValue* result = pop();
+    assert(result->is_two_word(), "should be");
+    return result;
+  }
+
   // VM calls
  private:
   llvm::CallInst* call_vm_base(llvm::Constant* callee,
@@ -244,10 +259,18 @@ class SharkBlock : public ResourceObj {
                                llvm::Value**   args_end);
 
  public:
-  llvm::CallInst* call_vm(llvm::Constant* callee, llvm::Value* arg1)
+  llvm::CallInst* call_vm(llvm::Constant* callee,
+                          llvm::Value*    arg1)
   {
     llvm::Value *args[] = {thread(), arg1};
     return call_vm_base(callee, args, args + 2);
+  }
+  llvm::CallInst* call_vm(llvm::Constant* callee,
+                          llvm::Value*    arg1,
+                          llvm::Value*    arg2)
+  {
+    llvm::Value *args[] = {thread(), arg1, arg2};
+    return call_vm_base(callee, args, args + 3);
   }
   llvm::CallInst* call_vm(llvm::Constant* callee,
                           llvm::Value*    arg1,
@@ -264,7 +287,15 @@ class SharkBlock : public ResourceObj {
 
   // Error checking
  private:
-  void check_null(SharkValue* value);
+  void check_null(SharkValue* object)
+  {
+    check_zero(object);
+  }
+  void check_divide_by_zero(SharkValue* value)
+  {
+    check_zero(value);
+  }
+  void check_zero(SharkValue* value);
   void check_bounds(SharkValue* array, SharkValue* index);
   void check_pending_exception();
   
@@ -272,20 +303,40 @@ class SharkBlock : public ResourceObj {
  private:
   void add_safepoint();
 
-  // _ldc* bytecodes
+  // ldc*
  private:
   void do_ldc();
 
-  // _arraylength bytecode
+  // arraylength
  private:
   void do_arraylength();
 
-  // _*aload and *astore bytecodes
+  // *aload and *astore
  private:
   void do_aload(BasicType basic_type);
   void do_astore(BasicType basic_type);
 
-  // _get* and _put* bytecodes
+  // *div and *rem
+ private:
+  void do_idiv()
+  {
+    do_div_or_rem(false, false);
+  }
+  void do_irem()
+  {
+    do_div_or_rem(false, true);
+  }
+  void do_ldiv()
+  {
+    do_div_or_rem(true, false);
+  }
+  void do_lrem()
+  {
+    do_div_or_rem(true, true);
+  }
+  void do_div_or_rem(bool is_long, bool is_rem);
+  
+  // get* and put*
  private:
   void do_getstatic()
   {
@@ -305,31 +356,36 @@ class SharkBlock : public ResourceObj {
   }
   void do_field_access(bool is_get, bool is_field);
 
-  // _*return bytecodes
+  // lcmp
+ private:
+  void do_lcmp();
+
+  // *return
  private:
   void do_return(BasicType basic_type);
 
-  // _if* bytecodes
+  // if*
  private:
   void do_if(llvm::ICmpInst::Predicate p, SharkValue* b, SharkValue* a);
 
-  // _*switch bytecodes
+  // *switch
  private:
   void do_tableswitch();
 
-  // _invoke* bytecodes
+  // invoke*
  private:
   void do_call();
 
-  // _checkcast and _instanceof
+  // checkcast and instanceof
  private:
   void do_instance_check();
 
-  // _new
+  // new and newarray
  private:
   void do_new();
+  void do_newarray();
 
-  // _monitorenter and monitorexit
+  // monitorenter and monitorexit
  private:
   void do_monitorenter();
   void do_monitorexit();

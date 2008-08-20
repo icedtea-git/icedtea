@@ -71,6 +71,10 @@ void SharkBlock::parse()
     if(UseLoopSafepoints) {
       int len;
 
+      // XXX if a lcmp is followed by an if_?? then C2 maybe-inserts
+      // the safepoint before the lcmp rather than before the if.
+      // Maybe we should do this too.  See parse2.cpp for details.
+
       switch (bc()) {
       case Bytecodes::_goto:
       case Bytecodes::_goto_w:
@@ -112,6 +116,10 @@ void SharkBlock::parse()
     case Bytecodes::_nop:
       break;
 
+    case Bytecodes::_aconst_null:
+      push(SharkValue::null());
+      break;
+
     case Bytecodes::_iconst_m1:
       push(SharkValue::jint_constant(-1));
       break;
@@ -134,15 +142,35 @@ void SharkBlock::parse()
       push(SharkValue::jint_constant(5));
       break;
 
+    case Bytecodes::_lconst_0:
+      push(SharkValue::jlong_constant(0));
+      break;
+    case Bytecodes::_lconst_1:
+      push(SharkValue::jlong_constant(1));
+      break;
+
+    case Bytecodes::_fconst_0:
+      push(SharkValue::jfloat_constant(0));
+      break;
+    case Bytecodes::_fconst_1:
+      push(SharkValue::jfloat_constant(1));
+      break;
+    case Bytecodes::_fconst_2:
+      push(SharkValue::jfloat_constant(2));
+      break;
+
+    case Bytecodes::_dconst_0:
+      push(SharkValue::jdouble_constant(0));
+      break;
+    case Bytecodes::_dconst_1:
+      push(SharkValue::jdouble_constant(1));
+      break;
+
     case Bytecodes::_bipush:
       push(SharkValue::jint_constant(iter()->get_byte()));
       break;
     case Bytecodes::_sipush:
       push(SharkValue::jint_constant(iter()->get_short()));
-      break;
-
-    case Bytecodes::_aconst_null:
-      push(SharkValue::null());
       break;
 
     case Bytecodes::_ldc:
@@ -152,70 +180,39 @@ void SharkBlock::parse()
       break;
 
     case Bytecodes::_iload_0:
+    case Bytecodes::_lload_0:
     case Bytecodes::_fload_0:
+    case Bytecodes::_dload_0:
     case Bytecodes::_aload_0:
       push(local(0));
       break;
     case Bytecodes::_iload_1:
+    case Bytecodes::_lload_1:
     case Bytecodes::_fload_1:
+    case Bytecodes::_dload_1:
     case Bytecodes::_aload_1:
       push(local(1));
       break;
     case Bytecodes::_iload_2:
+    case Bytecodes::_lload_2:
     case Bytecodes::_fload_2:
+    case Bytecodes::_dload_2:
     case Bytecodes::_aload_2:
       push(local(2));
       break;
     case Bytecodes::_iload_3:
+    case Bytecodes::_lload_3:
     case Bytecodes::_fload_3:
+    case Bytecodes::_dload_3:
     case Bytecodes::_aload_3:
       push(local(3));
       break;
     case Bytecodes::_iload:
+    case Bytecodes::_lload:
     case Bytecodes::_fload:
+    case Bytecodes::_dload:
     case Bytecodes::_aload:
       push(local(iter()->get_index()));
-      break;
-
-    case Bytecodes::_istore_0:
-    case Bytecodes::_fstore_0:
-    case Bytecodes::_astore_0:
-      set_local(0, pop());
-      break;
-    case Bytecodes::_istore_1:
-    case Bytecodes::_fstore_1:
-    case Bytecodes::_astore_1:
-      set_local(1, pop());
-      break;
-    case Bytecodes::_istore_2:
-    case Bytecodes::_fstore_2:
-    case Bytecodes::_astore_2:
-      set_local(2, pop());
-      break;
-    case Bytecodes::_istore_3:
-    case Bytecodes::_fstore_3:
-    case Bytecodes::_astore_3:
-      set_local(3, pop());
-      break;
-    case Bytecodes::_istore:
-    case Bytecodes::_fstore:
-    case Bytecodes::_astore:
-      set_local(iter()->get_index(), pop());
-      break;
-
-    case Bytecodes::_pop:
-      assert(stack(0)->is_one_word(), "should be");
-      pop();
-      break;
-    case Bytecodes::_dup:
-      assert(stack(0)->is_one_word(), "should be");
-      a = pop();
-      push(a);
-      push(a);
-      break;
-
-    case Bytecodes::_arraylength:
-      do_arraylength();
       break;
 
     case Bytecodes::_baload:
@@ -243,6 +240,42 @@ void SharkBlock::parse()
       do_aload(T_OBJECT);
       break;
 
+    case Bytecodes::_istore_0:
+    case Bytecodes::_lstore_0:
+    case Bytecodes::_fstore_0:
+    case Bytecodes::_dstore_0:
+    case Bytecodes::_astore_0:
+      set_local(0, pop());
+      break;
+    case Bytecodes::_istore_1:
+    case Bytecodes::_lstore_1:
+    case Bytecodes::_fstore_1:
+    case Bytecodes::_dstore_1:
+    case Bytecodes::_astore_1:
+      set_local(1, pop());
+      break;
+    case Bytecodes::_istore_2:
+    case Bytecodes::_lstore_2:
+    case Bytecodes::_fstore_2:
+    case Bytecodes::_dstore_2:
+    case Bytecodes::_astore_2:
+      set_local(2, pop());
+      break;
+    case Bytecodes::_istore_3:
+    case Bytecodes::_lstore_3:
+    case Bytecodes::_fstore_3:
+    case Bytecodes::_dstore_3:
+    case Bytecodes::_astore_3:
+      set_local(3, pop());
+      break;
+    case Bytecodes::_istore:
+    case Bytecodes::_lstore:
+    case Bytecodes::_fstore:
+    case Bytecodes::_dstore:
+    case Bytecodes::_astore:
+      set_local(iter()->get_index(), pop());
+      break;
+
     case Bytecodes::_bastore:
       do_astore(T_BYTE);
       break;
@@ -268,6 +301,137 @@ void SharkBlock::parse()
       do_astore(T_OBJECT);
       break;
 
+    case Bytecodes::_pop:
+      pop_and_assert_one_word();
+      break;
+    case Bytecodes::_pop2:
+      if (stack(0)->is_two_word()) {
+        pop_and_assert_two_word();
+      }
+      else {
+        pop_and_assert_one_word();
+        pop_and_assert_one_word();
+      }
+      break;
+    case Bytecodes::_swap: 
+      a = pop_and_assert_one_word();
+      b = pop_and_assert_one_word();
+      push(a);
+      push(b);
+      break;  
+    case Bytecodes::_dup:
+      a = pop_and_assert_one_word();
+      push(a);
+      push(a);
+      break;
+    case Bytecodes::_dup_x1: 
+      a = pop_and_assert_one_word();
+      b = pop_and_assert_one_word();
+      push(a);
+      push(b);
+      push(a);
+      break;
+    case Bytecodes::_dup_x2: 
+      if (stack(1)->is_two_word()) {
+        a = pop_and_assert_one_word();
+        b = pop_and_assert_two_word();
+        push(a);
+        push(b);
+        push(a);
+      }
+      else {
+        a = pop_and_assert_one_word();
+        b = pop_and_assert_one_word();
+        c = pop_and_assert_one_word();
+        push(a);
+        push(c);
+        push(b);
+        push(a);
+      }
+      break;
+    case Bytecodes::_dup2: 
+      if (stack(0)->is_two_word()) {
+        a = pop_and_assert_two_word();
+        push(a);
+        push(a);
+      }
+      else {
+        a = pop_and_assert_one_word();
+        b = pop_and_assert_one_word();
+        push(b);
+        push(a);
+        push(b);
+        push(a);
+      }
+      break;
+    case Bytecodes::_dup2_x1:
+      if (stack(0)->is_two_word()) {
+        a = pop_and_assert_two_word();
+        b = pop_and_assert_one_word();
+        push(a);
+        push(b);
+        push(a);
+      }
+      else {
+        a = pop_and_assert_one_word();
+        b = pop_and_assert_one_word();
+        c = pop_and_assert_one_word();
+        push(b);
+        push(a);
+        push(c);
+        push(b);
+        push(a);
+      }
+      break;
+    case Bytecodes::_dup2_x2:
+      if (stack(0)->is_one_word()) {
+        if (stack(2)->is_one_word()) {
+          a = pop_and_assert_one_word();
+          b = pop_and_assert_one_word();
+          c = pop_and_assert_one_word();
+          d = pop_and_assert_one_word();
+          push(b);
+          push(a);
+          push(d);
+          push(c);
+          push(b);
+          push(a);
+        }
+        else {
+          a = pop_and_assert_one_word();
+          b = pop_and_assert_one_word();
+          c = pop_and_assert_two_word();
+          push(b);
+          push(a);
+          push(c);
+          push(b);
+          push(a);
+        }
+      }
+      else {
+        if (stack(1)->is_one_word()) {
+          a = pop_and_assert_two_word();
+          b = pop_and_assert_one_word();
+          c = pop_and_assert_one_word();
+          push(a);
+          push(c);
+          push(b);
+          push(a);
+        }
+        else {
+          a = pop_and_assert_two_word();
+          b = pop_and_assert_two_word();
+          push(a);
+          push(b);
+          push(a);
+        }
+      }
+      break;
+
+    case Bytecodes::_arraylength:
+      do_arraylength();
+      break;
+
     case Bytecodes::_getfield:
       do_getfield();
       break;
@@ -281,22 +445,11 @@ void SharkBlock::parse()
       do_putstatic();
       break;
 
-    case Bytecodes::_imul:
-      b = pop();
-      a = pop();
-      push(SharkValue::create_jint(
-        builder()->CreateMul(a->jint_value(), b->jint_value())));
-      break;
     case Bytecodes::_iadd:
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
         builder()->CreateAdd(a->jint_value(), b->jint_value())));
-      break;
-    case Bytecodes::_ineg:
-      a = pop();      
-      push(SharkValue::create_jint(
-        builder()->CreateNeg(a->jint_value())));
       break;
     case Bytecodes::_isub:
       b = pop();
@@ -304,23 +457,22 @@ void SharkBlock::parse()
       push(SharkValue::create_jint(
         builder()->CreateSub(a->jint_value(), b->jint_value())));
       break;
-    case Bytecodes::_iand:
+    case Bytecodes::_imul:
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateAnd(a->jint_value(), b->jint_value())));
+        builder()->CreateMul(a->jint_value(), b->jint_value())));
       break;
-    case Bytecodes::_ior:
-      b = pop();
-      a = pop();
-      push(SharkValue::create_jint(
-        builder()->CreateOr(a->jint_value(), b->jint_value())));
+    case Bytecodes::_idiv:
+      do_idiv();
       break;
-    case Bytecodes::_ixor:
-      b = pop();
-      a = pop();
+    case Bytecodes::_irem:
+      do_irem();
+      break;
+    case Bytecodes::_ineg:
+      a = pop();      
       push(SharkValue::create_jint(
-        builder()->CreateXor(a->jint_value(), b->jint_value())));
+        builder()->CreateNeg(a->jint_value())));
       break;
     case Bytecodes::_ishl:
       b = pop();
@@ -340,21 +492,170 @@ void SharkBlock::parse()
       push(SharkValue::create_jint(
         builder()->CreateLShr(a->jint_value(), b->jint_value())));
       break;
-
-    case Bytecodes::_i2b:
+    case Bytecodes::_iand:
+      b = pop();
+      a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateAShr(
-          builder()->CreateShl(
-            pop()->jint_value(),
-            LLVMValue::jint_constant(24)),
-          LLVMValue::jint_constant(24))));
+        builder()->CreateAnd(a->jint_value(), b->jint_value())));
+      break;
+    case Bytecodes::_ior:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jint(
+        builder()->CreateOr(a->jint_value(), b->jint_value())));
+      break;
+    case Bytecodes::_ixor:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jint(
+        builder()->CreateXor(a->jint_value(), b->jint_value())));
       break;
 
-    case Bytecodes::_i2c:
-      push(SharkValue::create_jint(
-        builder()->CreateAnd(
-            pop()->jint_value(),
-            LLVMValue::jint_constant(0xffff))));
+    case Bytecodes::_ladd:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jlong(
+        builder()->CreateAdd(a->jlong_value(), b->jlong_value())));
+      break;
+    case Bytecodes::_lsub:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jlong(
+        builder()->CreateSub(a->jlong_value(), b->jlong_value())));
+      break;
+    case Bytecodes::_lmul:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jlong(
+        builder()->CreateMul(a->jlong_value(), b->jlong_value())));
+      break;
+    case Bytecodes::_ldiv:
+      do_ldiv();
+      break;
+    case Bytecodes::_lrem:
+      do_lrem();
+      break;
+    case Bytecodes::_lneg:
+      a = pop();      
+      push(SharkValue::create_jlong(
+        builder()->CreateNeg(a->jlong_value())));
+      break;
+    case Bytecodes::_lshl:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jlong(
+        builder()->CreateShl(
+          a->jlong_value(),
+          builder()->CreateIntCast(
+            b->jint_value(), SharkType::jlong_type(), true))));
+      break;
+    case Bytecodes::_lshr:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jlong(
+        builder()->CreateAShr(
+          a->jlong_value(),
+          builder()->CreateIntCast(
+            b->jint_value(), SharkType::jlong_type(), true))));
+      break;
+    case Bytecodes::_lushr:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jlong(
+        builder()->CreateLShr(
+          a->jlong_value(),
+          builder()->CreateIntCast(
+            b->jint_value(), SharkType::jlong_type(), true))));
+      break;
+    case Bytecodes::_land:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jlong(
+        builder()->CreateAnd(a->jlong_value(), b->jlong_value())));
+      break;
+    case Bytecodes::_lor:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jlong(
+        builder()->CreateOr(a->jlong_value(), b->jlong_value())));
+      break;
+    case Bytecodes::_lxor:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jlong(
+        builder()->CreateXor(a->jlong_value(), b->jlong_value())));
+      break;
+
+    case Bytecodes::_fadd:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jfloat(
+        builder()->CreateAdd(a->jfloat_value(), b->jfloat_value())));
+      break;
+    case Bytecodes::_fsub:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jfloat(
+        builder()->CreateSub(a->jfloat_value(), b->jfloat_value())));
+      break;
+    case Bytecodes::_fmul:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jfloat(
+        builder()->CreateMul(a->jfloat_value(), b->jfloat_value())));
+      break;
+    case Bytecodes::_fdiv:
+      b = pop();
+      a = pop();      
+      push(SharkValue::create_jfloat(
+        builder()->CreateFDiv(a->jfloat_value(), b->jfloat_value())));
+      break;
+    case Bytecodes::_frem:
+      b = pop();
+      a = pop();      
+      push(SharkValue::create_jfloat(
+        builder()->CreateFRem(a->jfloat_value(), b->jfloat_value())));
+      break;
+    case Bytecodes::_fneg:
+      a = pop();      
+      push(SharkValue::create_jfloat(
+        builder()->CreateNeg(a->jfloat_value())));
+      break;
+
+    case Bytecodes::_dadd:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jdouble(
+        builder()->CreateAdd(a->jdouble_value(), b->jdouble_value())));
+      break;
+    case Bytecodes::_dsub:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jdouble(
+        builder()->CreateSub(a->jdouble_value(), b->jdouble_value())));
+      break;
+    case Bytecodes::_dmul:
+      b = pop();
+      a = pop();
+      push(SharkValue::create_jdouble(
+        builder()->CreateMul(a->jdouble_value(), b->jdouble_value())));
+      break;
+    case Bytecodes::_ddiv:
+      b = pop();
+      a = pop();      
+      push(SharkValue::create_jdouble(
+        builder()->CreateFDiv(a->jdouble_value(), b->jdouble_value())));
+      break;
+    case Bytecodes::_drem:
+      b = pop();
+      a = pop();      
+      push(SharkValue::create_jdouble(
+        builder()->CreateFRem(a->jdouble_value(), b->jdouble_value())));
+      break;
+    case Bytecodes::_dneg:
+      a = pop();      
+      push(SharkValue::create_jdouble(
+        builder()->CreateNeg(a->jdouble_value())));
       break;
 
     case Bytecodes::_iinc:
@@ -366,18 +667,120 @@ void SharkBlock::parse()
             LLVMValue::jint_constant(iter()->get_iinc_con()),
             local(i)->jint_value())));
       break;
-      
+
+    case Bytecodes::_lcmp:
+      do_lcmp();
+      break;
+
+    case Bytecodes::_i2l:
+      push(SharkValue::create_jlong(
+        builder()->CreateIntCast(
+          pop()->jint_value(), SharkType::jlong_type(), true)));
+      break;
+    case Bytecodes::_i2f:
+      push(SharkValue::create_jfloat(
+        builder()->CreateSIToFP(
+          pop()->jint_value(), SharkType::jfloat_type())));
+      break;
+    case Bytecodes::_i2d:
+      push(SharkValue::create_jdouble(
+        builder()->CreateSIToFP(
+          pop()->jint_value(), SharkType::jdouble_type())));
+      break;
+
+    case Bytecodes::_l2i:
+      push(SharkValue::create_jint(
+        builder()->CreateIntCast(
+          pop()->jlong_value(), SharkType::jint_type(), true)));
+      break;
+    case Bytecodes::_l2f:
+      push(SharkValue::create_jfloat(
+        builder()->CreateSIToFP(
+          pop()->jlong_value(), SharkType::jfloat_type())));
+      break;
+    case Bytecodes::_l2d:
+      push(SharkValue::create_jdouble(
+        builder()->CreateSIToFP(
+          pop()->jlong_value(), SharkType::jdouble_type())));
+      break;
+
+    case Bytecodes::_f2i:
+      push(SharkValue::create_jint(
+        builder()->CreateFPToSI(
+          pop()->jfloat_value(), SharkType::jint_type())));
+      break;
+    case Bytecodes::_f2l:
+      push(SharkValue::create_jint(
+        builder()->CreateFPToSI(
+          pop()->jfloat_value(), SharkType::jlong_type())));
+      break;
+    case Bytecodes::_f2d:
+      push(SharkValue::create_jdouble(
+        builder()->CreateFPExt(
+          pop()->jfloat_value(), SharkType::jdouble_type())));
+      break;
+
+    case Bytecodes::_d2i:
+      push(SharkValue::create_jint(
+        builder()->CreateFPToSI(
+          pop()->jdouble_value(), SharkType::jint_type())));
+      break;
+    case Bytecodes::_d2l:
+      push(SharkValue::create_jlong(
+        builder()->CreateFPToSI(
+          pop()->jdouble_value(), SharkType::jlong_type())));
+      break;
+    case Bytecodes::_d2f:
+      push(SharkValue::create_jfloat(
+        builder()->CreateFPTrunc(
+          pop()->jdouble_value(), SharkType::jfloat_type())));
+      break;
+
+    case Bytecodes::_i2b:
+      push(SharkValue::create_jint(
+        builder()->CreateAShr(
+          builder()->CreateShl(
+            pop()->jint_value(),
+            LLVMValue::jint_constant(24)),
+          LLVMValue::jint_constant(24))));
+      break;
+    case Bytecodes::_i2c:
+      push(SharkValue::create_jint(
+        builder()->CreateAnd(
+            pop()->jint_value(),
+            LLVMValue::jint_constant(0xffff))));
+      break;
+    case Bytecodes::_i2s:
+      push(SharkValue::create_jint(
+        builder()->CreateAShr(
+          builder()->CreateShl(
+            pop()->jint_value(),
+            LLVMValue::jint_constant(16)),
+          LLVMValue::jint_constant(16))));
+      break;
+
     case Bytecodes::_return:
       do_return(T_VOID);
       break;
     case Bytecodes::_ireturn:
       do_return(T_INT);
       break;
+    case Bytecodes::_lreturn:
+      do_return(T_LONG);
+      break;
     case Bytecodes::_freturn:
       do_return(T_FLOAT);
       break;
+    case Bytecodes::_dreturn:
+      do_return(T_DOUBLE);
+      break;
     case Bytecodes::_areturn:
       do_return(T_OBJECT);
+      break;
+
+    case Bytecodes::_athrow:
+      builder()->CreateUnimplemented(__FILE__, __LINE__);
+      builder()->CreateUnreachable();
       break;
 
     case Bytecodes::_goto:
@@ -453,6 +856,9 @@ void SharkBlock::parse()
     case Bytecodes::_new:
       do_new();
       break;
+    case Bytecodes::_newarray:
+      do_newarray();
+      break;
 
     case Bytecodes::_monitorenter:
       do_monitorenter();
@@ -467,10 +873,12 @@ void SharkBlock::parse()
         int buflen = 19 + strlen(code) + 1;
         char *buf = (char *) function()->env()->arena()->Amalloc(buflen);
         snprintf(buf, buflen, "Unhandled bytecode %s", code);
-        function()->record_method_not_compilable(buf);
-        return;
+        record_method_not_compilable(buf);
       }
     }
+
+    if (failing())
+      return;
   }
 
   if (falls_through()) {
@@ -492,25 +900,42 @@ SharkBlock* SharkBlock::bci_successor(int bci) const
   ShouldNotReachHere();
 }
 
-void SharkBlock::check_null(SharkValue *object)
+void SharkBlock::check_zero(SharkValue *value)
 {
-  if (object->null_checked())
+  if (value->zero_checked())
     return;
 
-  BasicBlock *null     = function()->CreateBlock("null");
-  BasicBlock *not_null = function()->CreateBlock("not_null");
+  BasicBlock *zero     = function()->CreateBlock("zero");
+  BasicBlock *not_zero = function()->CreateBlock("not_zero");
 
-  builder()->CreateCondBr(
-    builder()->CreateICmpEQ(object->jobject_value(), LLVMValue::null()),
-    null, not_null);
+  Value *a, *b;
+  switch (value->basic_type()) {
+  case T_INT:
+    a = value->jint_value();
+    b = LLVMValue::jint_constant(0);
+    break;
+  case T_LONG:
+    a = value->jlong_value();
+    b = LLVMValue::jlong_constant(0);
+    break;
+  case T_OBJECT:
+  case T_ARRAY:
+    a = value->jobject_value();
+    b = LLVMValue::LLVMValue::null();
+    break;
+  default:
+    ShouldNotReachHere();
+  }
 
-  builder()->SetInsertPoint(null);
+  builder()->CreateCondBr(builder()->CreateICmpNE(a, b), not_zero, zero);
+
+  builder()->SetInsertPoint(zero);
   builder()->CreateUnimplemented(__FILE__, __LINE__);
   builder()->CreateUnreachable();
 
-  builder()->SetInsertPoint(not_null);
+  builder()->SetInsertPoint(not_zero);
 
-  object->set_null_checked(true);
+  value->set_zero_checked(true);
 }
 
 void SharkBlock::check_bounds(SharkValue* array, SharkValue* index)
@@ -683,8 +1108,9 @@ void SharkBlock::do_aload(BasicType basic_type)
   check_null(array);
   check_bounds(array, index);
 
-  Value *value = builder()->CreateArrayLoad(
-    array->jarray_value(), basic_type, index->jint_value());
+  Value *value = builder()->CreateLoad(
+    builder()->CreateArrayAddress(
+      array->jarray_value(), basic_type, index->jint_value()));
 
   const Type *stack_type = SharkType::to_stackType(basic_type);
   if (value->getType() != stack_type)
@@ -699,6 +1125,18 @@ void SharkBlock::do_aload(BasicType basic_type)
     push(SharkValue::create_jint(value));
     break;
 
+  case T_LONG:
+    push(SharkValue::create_jlong(value));
+    break;
+
+  case T_FLOAT:
+    push(SharkValue::create_jfloat(value));
+    break;
+
+  case T_DOUBLE:
+    push(SharkValue::create_jdouble(value));
+    break;
+    
   case T_OBJECT:
     push(SharkValue::create_jobject(value));
     break;
@@ -735,8 +1173,17 @@ void SharkBlock::do_astore(BasicType basic_type)
     value = svalue->jlong_value();
     break;
 
+  case T_FLOAT:
+    value = svalue->jfloat_value();
+    break;
+
+  case T_DOUBLE:
+    value = svalue->jdouble_value();
+    break;
+
   case T_OBJECT:
     value = svalue->jobject_value();
+    // XXX assignability check
     break;
 
   default:
@@ -748,9 +1195,80 @@ void SharkBlock::do_astore(BasicType basic_type)
   if (value->getType() != array_type)
     value = builder()->CreateIntCast(value, array_type, basic_type != T_CHAR);
 
-  builder()->CreateArrayStore(
-    array->jarray_value(), basic_type,
-    index->jint_value(), value);
+  Value *addr = builder()->CreateArrayAddress(
+    array->jarray_value(), basic_type, index->jint_value(), "addr");
+
+  builder()->CreateStore(value, addr);
+
+  if (!element_type->is_primitive_type())
+    builder()->CreateUpdateBarrierSet(oopDesc::bs(), addr);
+}
+
+void SharkBlock::do_div_or_rem(bool is_long, bool is_rem)
+{
+  SharkValue *sb = pop();
+  SharkValue *sa = pop();
+
+  check_divide_by_zero(sb);
+
+  Value *a, *b, *p, *q;
+  if (is_long) {
+    a = sa->jlong_value();
+    b = sb->jlong_value();
+    p = LLVMValue::jlong_constant(0x8000000000000000LL);
+    q = LLVMValue::jlong_constant(-1);
+  }
+  else {
+    a = sa->jint_value();
+    b = sb->jint_value();
+    p = LLVMValue::jint_constant(0x80000000);
+    q = LLVMValue::jint_constant(-1);
+  }
+
+  BasicBlock *special_case = function()->CreateBlock("special_case");
+  BasicBlock *general_case = function()->CreateBlock("general_case");
+  BasicBlock *done         = function()->CreateBlock("done");
+
+  builder()->CreateCondBr(
+    builder()->CreateAnd(
+      builder()->CreateICmpEQ(a, p),
+      builder()->CreateICmpEQ(b, q)),
+    special_case, general_case);
+  
+  builder()->SetInsertPoint(special_case);
+  Value *special_result;
+  if (is_rem) {
+    if (is_long)
+      special_result = LLVMValue::jlong_constant(0);
+    else
+      special_result = LLVMValue::jint_constant(0);
+  }
+  else {
+    special_result = a;
+  }
+  builder()->CreateBr(done);
+
+  builder()->SetInsertPoint(general_case);
+  Value *general_result;
+  if (is_rem)
+    general_result = builder()->CreateSRem(a, b);
+  else
+    general_result = builder()->CreateSDiv(a, b);
+  builder()->CreateBr(done);
+
+  builder()->SetInsertPoint(done);
+  PHINode *result;
+  if (is_long)
+    result = builder()->CreatePHI(SharkType::jlong_type(), "result");
+  else
+    result = builder()->CreatePHI(SharkType::jint_type(), "result");
+  result->addIncoming(special_result, special_case);
+  result->addIncoming(general_result, general_case);
+
+  if (is_long)
+    push(SharkValue::create_jlong(result));
+  else
+    push(SharkValue::create_jint(result));
 }
 
 void SharkBlock::do_field_access(bool is_get, bool is_field)
@@ -796,7 +1314,7 @@ void SharkBlock::do_field_access(bool is_get, bool is_field)
     Value *addr = builder()->CreateAddressOfStructEntry(
       object, in_ByteSize(field->offset_in_bytes()),
       PointerType::getUnqual(field_type),
-      "field");
+      "addr");
   
     // Do the access
     if (is_get) {
@@ -820,8 +1338,12 @@ void SharkBlock::do_field_access(bool is_get, bool is_field)
       if (!field->type()->is_primitive_type())
         builder()->CreateUpdateBarrierSet(oopDesc::bs(), addr);
 
-      if (field->is_volatile())
+      if (field->is_volatile()) {
         builder()->CreateMemoryBarrier(SharkBuilder::BARRIER_STORELOAD);
+#ifdef PPC
+        record_method_not_compilable("Missing memory barrier");
+#endif // PPC
+      }
     }
   }
 
@@ -830,12 +1352,43 @@ void SharkBlock::do_field_access(bool is_get, bool is_field)
     push(value);
 }
 
+void SharkBlock::do_lcmp()
+{
+  Value *b = pop()->jlong_value();
+  Value *a = pop()->jlong_value();
+
+  BasicBlock *ne   = function()->CreateBlock("lcmp_ne");
+  BasicBlock *lt   = function()->CreateBlock("lcmp_lt");
+  BasicBlock *gt   = function()->CreateBlock("lcmp_gt");
+  BasicBlock *done = function()->CreateBlock("done");
+
+  BasicBlock *eq = builder()->GetInsertBlock();
+  builder()->CreateCondBr(builder()->CreateICmpEQ(a, b), done, ne);
+
+  builder()->SetInsertPoint(ne);
+  builder()->CreateCondBr(builder()->CreateICmpSLT(a, b), lt, gt);
+
+  builder()->SetInsertPoint(lt);
+  builder()->CreateBr(done);
+
+  builder()->SetInsertPoint(gt);
+  builder()->CreateBr(done);
+
+  builder()->SetInsertPoint(done);
+  PHINode *result = builder()->CreatePHI(SharkType::jint_type(), "result");
+  result->addIncoming(LLVMValue::jint_constant(-1), lt);
+  result->addIncoming(LLVMValue::jint_constant(0),  eq);
+  result->addIncoming(LLVMValue::jint_constant(1),  gt);
+
+  push(SharkValue::create_jint(result));
+}
+
 void SharkBlock::do_return(BasicType basic_type)
 {
   add_safepoint();
 
   if (target()->is_synchronized())
-    monitor(0)->release();
+    function()->monitor(0)->release();
 
   Value *result_addr = function()->CreatePopFrame(type2size[basic_type]);
   if (basic_type != T_VOID) {
@@ -964,12 +1517,13 @@ void SharkBlock::do_call()
       SharkType::intptr_type(),
       "index");
 
-    Value *nonfinal_callee = builder()->CreateArrayLoad(
-      klass,
-      SharkType::methodOop_type(),
-      vtableEntry::size() * wordSize,
-      in_ByteSize(instanceKlass::vtable_start_offset() * wordSize),
-      index,
+    Value *nonfinal_callee = builder()->CreateLoad(
+      builder()->CreateArrayAddress(
+        klass,
+        SharkType::methodOop_type(),
+        vtableEntry::size() * wordSize,
+        in_ByteSize(instanceKlass::vtable_start_offset() * wordSize),
+        index),
       "nonfinal_callee");
     builder()->CreateBr(invoke);
 
@@ -1131,66 +1685,23 @@ void SharkBlock::do_call()
       "callee");
   }
 
-  Value *entry_point = builder()->CreateValueOfStructEntry(
-    callee, methodOopDesc::from_interpreted_offset(), // XXX hacky
-    PointerType::getUnqual(SharkType::interpreter_entry_type()),
-    "entry_point");
-
-  // Decache for the call
-  current_state()->decache(method);
-
-  // Make the call
-  BasicBlock *interpreter_call = function()->CreateBlock("interpreter_call");
-  BasicBlock *shark_call       = function()->CreateBlock("shark_call");
-  BasicBlock *post_call        = function()->CreateBlock("post_call");
-
-  Value *entry_point_or_sharkmethod = builder()->CreateValueOfStructEntry(
+  Value *base_pc = builder()->CreateValueOfStructEntry(
     callee, methodOopDesc::from_interpreted_offset(),
     SharkType::intptr_type(),
-    "entry_point_or_sharkmethod");
-
-  builder()->CreateCondBr(
-    builder()->CreateICmpEQ(
-      builder()->CreateAnd(
-        entry_point_or_sharkmethod,
-        LLVMValue::intptr_constant(SharkMethod::marker())),
-      LLVMValue::intptr_constant(0)),
-    interpreter_call, shark_call);
-
-  // Interpreter calls
-  builder()->SetInsertPoint(interpreter_call);
-
-  Value *interpreter_entry_point = builder()->CreateIntToPtr(
-    entry_point_or_sharkmethod,
-    PointerType::getUnqual(SharkType::interpreter_entry_type()),
-    "interpreter_entry_point");
-
-  builder()->CreateCall2(interpreter_entry_point, callee, thread());
-  builder()->CreateBr(post_call);
-
-  // Shark calls
-  builder()->SetInsertPoint(shark_call);
-
-  Value *base_pc = builder()->CreateAnd(
-    entry_point_or_sharkmethod,
-    LLVMValue::intptr_constant(~SharkMethod::marker()),
     "base_pc");
 
-  Value *shark_entry_point = builder()->CreateLoad(
+  Value *entry_point = builder()->CreateLoad(
     builder()->CreateIntToPtr(
       builder()->CreateAdd(
         base_pc,
-        LLVMValue::intptr_constant(
-          in_bytes(SharkMethod::entry_point_offset()))),
+        LLVMValue::intptr_constant(in_bytes(ZeroEntry::entry_point_offset()))),
       PointerType::getUnqual(
-        PointerType::getUnqual(SharkType::shark_entry_type()))),
-    "shark_entry_point");
+        PointerType::getUnqual(SharkType::entry_point_type()))),
+    "entry_point");
 
-  builder()->CreateCall3(shark_entry_point, callee, base_pc, thread());
-  builder()->CreateBr(post_call);
-
-  // Recache state
-  builder()->SetInsertPoint(post_call); 
+  // Make the call
+  current_state()->decache(method);
+  builder()->CreateCall3(entry_point, callee, base_pc, thread());
   current_state()->cache(method);
 
   // Check for pending exceptions
@@ -1438,7 +1949,7 @@ void SharkBlock::do_new()
   call_vm(
     SharkRuntime::new_instance(),
     constants.object_at(iter()->get_klass_index()));
-  slow_object = function()->CreateLoadVMResult();
+  slow_object = function()->CreateGetVMResult();
   got_slow = builder()->GetInsertBlock();
 
   // Push the object
@@ -1457,17 +1968,115 @@ void SharkBlock::do_new()
     object = slow_object;
   }
 
-  push(SharkValue::create_jobject(object));
+  SharkValue *result = SharkValue::create_jobject(object);
+  result->set_zero_checked(true);
+  push(result);
+}
+
+void SharkBlock::do_newarray()
+{
+  BasicType type = (BasicType) iter()->get_index();
+
+  call_vm(
+    SharkRuntime::newarray(),
+    LLVMValue::jint_constant(type),
+    pop()->jint_value());
+
+  SharkValue *result = SharkValue::create_generic(
+    ciArrayKlass::make(ciType::make(type)),
+    function()->CreateGetVMResult());
+  result->set_zero_checked(true);
+  push(result);
 }
 
 void SharkBlock::do_monitorenter()
 {
   SharkValue *lockee = pop();
-  builder()->CreateUnimplemented(__FILE__, __LINE__);
+  check_null(lockee);
+  Value *object = lockee->jobject_value();
+
+  // Find a free monitor, or one already allocated for this object
+  BasicBlock *loop_top    = function()->CreateBlock("loop_top");
+  BasicBlock *loop_iter   = function()->CreateBlock("loop_iter");
+  BasicBlock *loop_check  = function()->CreateBlock("loop_check");
+  BasicBlock *no_monitor  = function()->CreateBlock("no_monitor");
+  BasicBlock *got_monitor = function()->CreateBlock("got_monitor");
+
+  BasicBlock *entry_block = builder()->GetInsertBlock();
+  builder()->CreateBr(loop_check);
+
+  builder()->SetInsertPoint(loop_check);
+  PHINode *index = builder()->CreatePHI(SharkType::jint_type(), "index");
+  index->addIncoming(
+    LLVMValue::jint_constant(function()->monitor_count() - 1), entry_block);
+  builder()->CreateCondBr(
+    builder()->CreateICmpUGE(index, LLVMValue::jint_constant(0)),
+    loop_top, no_monitor);
+
+  builder()->SetInsertPoint(loop_top);
+  SharkMonitor* monitor = function()->monitor(index);
+  Value *smo = monitor->object();
+  builder()->CreateCondBr(
+    builder()->CreateOr(
+      builder()->CreateICmpEQ(smo, LLVMValue::null()),
+      builder()->CreateICmpEQ(smo, object)),
+    got_monitor, loop_iter);
+
+  builder()->SetInsertPoint(loop_iter);
+  index->addIncoming(
+    builder()->CreateSub(index, LLVMValue::jint_constant(1)), loop_iter);
+  builder()->CreateBr(loop_check);
+
+  builder()->SetInsertPoint(no_monitor);
+  builder()->CreateShouldNotReachHere(__FILE__, __LINE__);
+  builder()->CreateUnreachable();
+
+  // Acquire the lock
+  builder()->SetInsertPoint(got_monitor);
+  monitor->acquire(object);
 }
 
 void SharkBlock::do_monitorexit()
 {
   SharkValue *lockee = pop();
-  builder()->CreateUnimplemented(__FILE__, __LINE__);
+  check_null(lockee);
+  Value *object = lockee->jobject_value();
+
+  // Find the monitor associated with this object
+  BasicBlock *loop_top    = function()->CreateBlock("loop_top");
+  BasicBlock *loop_iter   = function()->CreateBlock("loop_iter");
+  BasicBlock *loop_check  = function()->CreateBlock("loop_check");
+  BasicBlock *no_monitor  = function()->CreateBlock("no_monitor");
+  BasicBlock *got_monitor = function()->CreateBlock("got_monitor");
+
+  BasicBlock *entry_block = builder()->GetInsertBlock();
+  builder()->CreateBr(loop_check);
+
+  builder()->SetInsertPoint(loop_check);
+  PHINode *index = builder()->CreatePHI(SharkType::jint_type(), "index");
+  index->addIncoming(
+    LLVMValue::jint_constant(function()->monitor_count() - 1), entry_block);
+  builder()->CreateCondBr(
+    builder()->CreateICmpUGE(index, LLVMValue::jint_constant(0)),
+    loop_top, no_monitor);
+
+  builder()->SetInsertPoint(loop_top);
+  SharkMonitor* monitor = function()->monitor(index);
+  Value *smo = monitor->object();
+  builder()->CreateCondBr(
+    builder()->CreateICmpEQ(smo, object),
+    got_monitor, loop_iter);
+
+  builder()->SetInsertPoint(loop_iter);
+  index->addIncoming(
+    builder()->CreateSub(index, LLVMValue::jint_constant(1)), loop_iter);
+  builder()->CreateBr(loop_check);
+
+  builder()->SetInsertPoint(no_monitor);
+  builder()->CreateShouldNotReachHere(__FILE__, __LINE__);
+  builder()->CreateUnreachable();
+
+  // Release the lock
+  builder()->SetInsertPoint(got_monitor);
+  monitor->release();
 }

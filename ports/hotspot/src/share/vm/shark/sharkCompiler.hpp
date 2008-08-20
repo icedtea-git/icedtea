@@ -57,7 +57,7 @@ class SharkCompiler : public AbstractCompiler {
     return &_builder;
   }
 
-  // Method installation helper
+  // Helpers
  private:
   void install_method(ciEnv*          env,
                       ciMethod*       target,
@@ -65,12 +65,5 @@ class SharkCompiler : public AbstractCompiler {
                       CodeBuffer*     cb,
                       OopMapSet*      oopmaps);
 
-  // Debug helpers
- private:
-  static const char *klassname (const ciMethod* target) PRODUCT_RETURN0;
-  static const char *methodname(const ciMethod* target) PRODUCT_RETURN0;
-
-  static bool method_matches(const char* pattern,
-                             const char* klassname,
-                             const char* methodname) PRODUCT_RETURN0;
+  static const char *methodname(const ciMethod* target);
 };

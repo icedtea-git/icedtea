@@ -1,5 +1,39 @@
 2008-08-20  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-shark.patch: Updated to latest Shark.
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreterGenerator_zero.hpp: 
+	Likewise.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.hpp: Likewise.
+	* ports/hotspot/src/share/vm/includeDB_shark: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/entry_zero.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMethod.hpp: Removed.
+
+2008-08-20  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp
 	(VMlongDiv): Handle the special case of division of the most
 	negative value possible by -1.

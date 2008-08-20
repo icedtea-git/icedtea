@@ -37,7 +37,7 @@
   thread->reset_last_Java_frame();              \
   fixup_after_potential_safepoint()
 
-void CppInterpreter::normal_entry(methodOop method, TRAPS)
+void CppInterpreter::normal_entry(methodOop method, intptr_t UNUSED, TRAPS)
 {
   JavaThread *thread = (JavaThread *) THREAD;
   ZeroStack *stack = thread->zero_stack();
@@ -146,7 +146,7 @@ void CppInterpreter::normal_entry(methodOop method, TRAPS)
     stack->push(result[-i]);
 }
 
-void CppInterpreter::native_entry(methodOop method, TRAPS)
+void CppInterpreter::native_entry(methodOop method, intptr_t UNUSED, TRAPS)
 {
   JavaThread *thread = (JavaThread *) THREAD;
   ZeroStack *stack = thread->zero_stack();
@@ -374,7 +374,7 @@ void CppInterpreter::native_entry(methodOop method, TRAPS)
   }
 }
 
-void CppInterpreter::accessor_entry(methodOop method, TRAPS)
+void CppInterpreter::accessor_entry(methodOop method, intptr_t UNUSED, TRAPS)
 {
   JavaThread *thread = (JavaThread *) THREAD;
   ZeroStack *stack = thread->zero_stack();
@@ -382,7 +382,7 @@ void CppInterpreter::accessor_entry(methodOop method, TRAPS)
 
   // Drop into the slow path if we need a safepoint check
   if (SafepointSynchronize::do_call_back()) {
-    normal_entry(method, THREAD);
+    normal_entry(method, 0, THREAD);
     return;
   }
 
@@ -390,7 +390,7 @@ void CppInterpreter::accessor_entry(methodOop method, TRAPS)
   // if we have a NullPointerException
   oop object = LOCALS_OBJECT(0);
   if (object == NULL) {
-    normal_entry(method, THREAD);
+    normal_entry(method, 0, THREAD);
     return;
   }
 
@@ -413,7 +413,7 @@ void CppInterpreter::accessor_entry(methodOop method, TRAPS)
   constantPoolCacheOop cache = method->constants()->cache();
   ConstantPoolCacheEntry* entry = cache->entry_at(index);
   if (!entry->is_resolved(Bytecodes::_getfield)) {
-    normal_entry(method, THREAD);
+    normal_entry(method, 0, THREAD);
     return;
   }
 
@@ -505,14 +505,14 @@ void CppInterpreter::accessor_entry(methodOop method, TRAPS)
   }
 }
 
-void CppInterpreter::empty_entry(methodOop method, TRAPS)
+void CppInterpreter::empty_entry(methodOop method, intptr_t UNUSED, TRAPS)
 {
   JavaThread *thread = (JavaThread *) THREAD;
   ZeroStack *stack = thread->zero_stack();
 
   // Drop into the slow path if we need a safepoint check
   if (SafepointSynchronize::do_call_back()) {
-    normal_entry(method, THREAD);
+    normal_entry(method, 0, THREAD);
     return;
   }
 
@@ -609,7 +609,7 @@ address InterpreterGenerator::generate_empty_entry()
   if (!UseFastEmptyMethods)
     return NULL;
 
-  return (address) CppInterpreter::empty_entry;
+  return generate_entry(CppInterpreter::empty_entry);
 }
 
 address InterpreterGenerator::generate_accessor_entry()
@@ -617,19 +617,21 @@ address InterpreterGenerator::generate_accessor_entry()
   if (!UseFastAccessorMethods)
     return NULL;
 
-  return (address) CppInterpreter::accessor_entry;
+  return generate_entry(CppInterpreter::accessor_entry);
 }
 
 address InterpreterGenerator::generate_native_entry(bool synchronized)
 {
   assert (synchronized == false, "should be");
-  return (address) CppInterpreter::native_entry;
+
+  return generate_entry(CppInterpreter::native_entry);
 }
 
 address InterpreterGenerator::generate_normal_entry(bool synchronized)
 {
   assert (synchronized == false, "should be");
-  return (address) CppInterpreter::normal_entry;
+
+  return generate_entry(CppInterpreter::normal_entry);
 }
 
 address AbstractInterpreterGenerator::generate_method_entry(
@@ -679,10 +681,6 @@ address AbstractInterpreterGenerator::generate_method_entry(
   if (entry_point == NULL)
     entry_point = ((InterpreterGenerator*)this)->generate_normal_entry(false);
 
-#ifdef SHARK
-  assert(!SharkMethod::is_shark_method(entry_point), "shouldn't be");
-#endif // SHARK
-  
   return entry_point;
 }
 
@@ -732,21 +730,25 @@ bool CppInterpreter::contains(address pc)
 
 address CppInterpreterGenerator::generate_result_handler_for(
     BasicType type) {
+  assembler()->advance(1);
   return ShouldNotReachHereStub();
 }
 
 address CppInterpreterGenerator::generate_tosca_to_stack_converter(
     BasicType type) {
+  assembler()->advance(1);
   return ShouldNotReachHereStub();
 }
 
 address CppInterpreterGenerator::generate_stack_to_stack_converter(
     BasicType type) {
+  assembler()->advance(1);
   return ShouldNotReachHereStub();
 }
 
 address CppInterpreterGenerator::generate_stack_to_native_abi_converter(
     BasicType type) {
+  assembler()->advance(1);
   return ShouldNotReachHereStub();
 }
 

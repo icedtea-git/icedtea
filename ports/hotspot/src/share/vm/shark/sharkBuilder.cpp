@@ -97,7 +97,7 @@ void SharkBuilder::init_external_functions()
 Function *SharkBuilder::CreateFunction()
 {
   Function *function = Function::Create(
-      SharkType::shark_entry_type(),
+      SharkType::entry_point_type(),
       GlobalVariable::InternalLinkage,
       "func");
   module()->getFunctionList().push_back(function);

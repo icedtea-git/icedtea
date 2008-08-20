@@ -111,6 +111,11 @@ class SharkPHIState : public SharkState {
  private:
   void initialize();
 
+#ifdef ASSERT
+ private:
+  int _stack_depth_at_entry;
+#endif // ASSERT
+
  public:
   void add_incoming(SharkState* incoming_state);
 };

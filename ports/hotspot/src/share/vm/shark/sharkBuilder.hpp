@@ -74,7 +74,7 @@ class SharkBuilder : public llvm::IRBuilder<> {
       SharkType::jint_type(), "length");
   }
 
-  llvm::LoadInst* CreateArrayLoad(llvm::Value*      arrayoop,
+  llvm::Value* CreateArrayAddress(llvm::Value*      arrayoop,
                                   const llvm::Type* element_type,
                                   int               element_bytes,
                                   ByteSize          base_offset,
@@ -82,75 +82,41 @@ class SharkBuilder : public llvm::IRBuilder<> {
                                   const char*       name = "")
   {
     llvm::Value* offset = index;
-
     if (element_bytes != 1)
       offset = CreateShl(
         offset,
         LLVMValue::jint_constant(exact_log2(element_bytes)));
-    offset = CreateAdd(LLVMValue::jint_constant(in_bytes(base_offset)),offset);
+    offset = CreateAdd(
+      LLVMValue::jint_constant(in_bytes(base_offset)), offset);
 
-    return CreateLoad(
-      CreateIntToPtr(
-        CreateAdd(CreatePtrToInt(arrayoop, SharkType::intptr_type()), offset),
-        llvm::PointerType::getUnqual(element_type)),
+    return CreateIntToPtr(
+      CreateAdd(CreatePtrToInt(arrayoop, SharkType::intptr_type()), offset),
+      llvm::PointerType::getUnqual(element_type),
       name);
   }
 
-  llvm::LoadInst* CreateArrayLoad(llvm::Value* arrayoop,
+  llvm::Value* CreateArrayAddress(llvm::Value* arrayoop,
                                   BasicType    basic_type,
                                   ByteSize     base_offset,
                                   llvm::Value* index,
                                   const char*  name = "")
   {
-    return CreateArrayLoad(
+    return CreateArrayAddress(
       arrayoop,
       SharkType::to_arrayType(basic_type),
       type2aelembytes[basic_type],
       base_offset, index, name);
   }
 
-  llvm::StoreInst* CreateArrayStore(llvm::Value* arrayoop,
-                                    BasicType    basic_type,
-                                    ByteSize     base_offset,
-                                    llvm::Value* index,
-                                    llvm::Value* value)
-  {
-    llvm::Value* offset = index;
-
-    if (type2aelembytes[basic_type] != 1)
-      offset = CreateShl(
-        offset,
-        LLVMValue::jint_constant(exact_log2(type2aelembytes[basic_type])));
-    offset = CreateAdd(LLVMValue::jint_constant(in_bytes(base_offset)),offset);
-
-    const llvm::Type *array_type = SharkType::to_arrayType(basic_type);
-    return CreateStore(
-      value,
-      CreateIntToPtr(
-        CreateAdd(CreatePtrToInt(arrayoop, SharkType::intptr_type()), offset),
-        llvm::PointerType::getUnqual(array_type)));
-  }
-
-  llvm::LoadInst* CreateArrayLoad(llvm::Value* arrayoop,
+  llvm::Value* CreateArrayAddress(llvm::Value* arrayoop,
                                   BasicType    basic_type,
                                   llvm::Value* index,
                                   const char*  name = "")
   {
-    return CreateArrayLoad(
+    return CreateArrayAddress(
       arrayoop, basic_type,
       in_ByteSize(arrayOopDesc::base_offset_in_bytes(basic_type)),
       index, name);
-  }
-
-  llvm::StoreInst* CreateArrayStore(llvm::Value* arrayoop,
-                                    BasicType    basic_type,
-                                    llvm::Value* index,
-                                    llvm::Value* value)
-  {
-    return CreateArrayStore(
-      arrayoop, basic_type,
-      in_ByteSize(arrayOopDesc::base_offset_in_bytes(basic_type)),
-      index, value);
   }
 
   // Helper for making function pointers

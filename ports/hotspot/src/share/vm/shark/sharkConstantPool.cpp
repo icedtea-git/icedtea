@@ -66,16 +66,18 @@ Value *SharkConstantPool::cache()
 
 Value *SharkConstantPool::object_at(int which)
 {
-  return builder()->CreateArrayLoad(
-    constants(),
-    T_OBJECT, in_ByteSize(sizeof(constantPoolOopDesc)),
-    LLVMValue::jint_constant(which));
+  return builder()->CreateLoad(
+    builder()->CreateArrayAddress(
+      constants(),
+      T_OBJECT, in_ByteSize(sizeof(constantPoolOopDesc)),
+      LLVMValue::jint_constant(which)));
 }
 
 Value *SharkConstantPool::tag_at(int which)
 {
-  return builder()->CreateArrayLoad(
-    tags(), T_BYTE, LLVMValue::jint_constant(which));
+  return builder()->CreateLoad(
+    builder()->CreateArrayAddress(
+      tags(), T_BYTE, LLVMValue::jint_constant(which)));
 }
 
 Value *SharkConstantPool::cache_entry_at(int which)

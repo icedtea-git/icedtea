@@ -30,24 +30,17 @@ using namespace llvm;
 
 void SharkFunction::initialize()
 {
+  // Create the assembler and emit the entry point
+  _assembler = new MacroAssembler(cb());
+  SharkEntry *entry = (SharkEntry *) assembler()->pc();
+  assembler()->advance(sizeof(SharkEntry));
+
   // Create the function
   _function = builder()->CreateFunction();
-  set_block_insertion_point(NULL);
-
-  // Create the assembler
-  _masm = new MacroAssembler(cb());
-
-  // Create the SharkMethod
-  assert(
-    masm()->offset() == in_bytes(SharkMethod::entry_point_offset()), "fix");
-  void **code = (void **) masm()->pc();
-  masm()->emit_intptr(0);
-  assert(
-    masm()->offset() == in_bytes(SharkMethod::llvm_function_offset()), "fix");
-  masm()->emit_intptr((intptr_t) function());
-  assert(masm()->offset() == sizeof(SharkMethod), "fix");
+  entry->set_llvm_function(function());
 
   // Initialize the blocks
+  set_block_insertion_point(NULL);
   _blocks = NEW_RESOURCE_ARRAY(SharkBlock*, flow()->block_count());
   for (int i = 0; i < block_count(); i++)
     _blocks[i] = new SharkBlock(this, flow()->pre_order_at(i));
@@ -66,10 +59,9 @@ void SharkFunction::initialize()
   _monitor_count = 0;  
   if (target()->is_synchronized() || target()->uses_monitors()) {
     for (int i = 0; i < block_count(); i++)
-      _monitor_count = MAX2(_monitor_count, block(i)->monitor_count());
+      _monitor_count = MAX2(
+        _monitor_count, block(i)->ciblock()->monitor_count());
   }
-  if (monitor_count())
-    _monitors = NEW_RESOURCE_ARRAY(SharkMonitor*, monitor_count());
   
   // Get our arguments
   Function::arg_iterator ai = function()->arg_begin();
@@ -91,8 +83,29 @@ void SharkFunction::initialize()
   if (target()->is_synchronized()) {
     Value *object;
     if (target()->is_static()) {
-      Unimplemented();
-      object = NULL;
+      Value *constants = builder()->CreateValueOfStructEntry(
+        method,
+        methodOopDesc::constants_offset(),
+        SharkType::oop_type(),
+        "constants");
+
+      Value *pool_holder = builder()->CreateValueOfStructEntry(
+        constants,
+        in_ByteSize(constantPoolOopDesc::pool_holder_offset_in_bytes()),
+        SharkType::oop_type(),
+        "pool_holder");
+
+      Value *klass_part = builder()->CreateAddressOfStructEntry(
+        pool_holder,
+        in_ByteSize(klassOopDesc::klass_part_offset_in_bytes()),
+        SharkType::klass_type(),
+        "klass_part");
+
+      object = builder()->CreateValueOfStructEntry(
+        klass_part,
+        in_ByteSize(Klass::java_mirror_offset_in_bytes()),
+        SharkType::oop_type(),
+        "java_mirror");
     }
     else {
       object = builder()->CreateLoad(
@@ -116,13 +129,25 @@ void SharkFunction::initialize()
 
     block(i)->parse();
     if (failing()) {
-      delete function();
+      // XXX should delete function() here, but that breaks
+      // -XX:SharkPrintBitcodeOf.  I guess some of the things
+      // we're sharing via SharkBuilder or SharkRuntime or
+      // SharkType are being freed
       return;
     }
   }
 
+  // Dump the bitcode, if requested
+  if (SharkPrintBitcodeOf != NULL) {
+    if (!strcmp(SharkPrintBitcodeOf, name()))
+      function()->dump();
+  }
+
   // Compile to native code
-  *code = builder()->execution_engine()->getPointerToFunction(function());
+  void *code = builder()->execution_engine()->getPointerToFunction(function());
+  entry->set_entry_point((ZeroEntry::method_entry_t) code);
+  if (SharkTraceInstalls)
+    entry->print_statistics(name());
 }
 
 void SharkFunction::CreateInitZeroStack()
@@ -234,20 +259,13 @@ Value* SharkFunction::CreateBuildFrame()
   if (monitor_count()) {
     _monitors_slots_offset = offset; 
 
-    Value *monitors = builder()->CreateBitCast(
+    _monitors_slots = builder()->CreateBitCast(
       builder()->CreateStructGEP(frame, monitors_slots_offset()),
       PointerType::getUnqual(
         ArrayType::get(SharkType::monitor_type(), monitor_count())),
       "monitors");
 
     for (int i = 0; i < monitor_count(); i++) {
-      char name[19];
-      snprintf(name, sizeof(name), "monitor_%d", i);
-
-      _monitors[i] = new SharkMonitor(
-        this,
-        builder()->CreateStructGEP(monitors, monitor_count() - 1 - i, name));
-
       if (i != 0 || !target()->is_synchronized())
         monitor(i)->mark_free();
     }
@@ -289,4 +307,16 @@ Value* SharkFunction::CreateBuildFrame()
 
   assert(offset == frame_words + locals_words, "should do");
   return fp;
+}
+
+SharkMonitor* SharkFunction::monitor(Value *index) const
+{
+  Value *indexes[] = {
+    LLVMValue::jint_constant(0),
+    builder()->CreateSub(
+      LLVMValue::jint_constant(monitor_count() - 1), index),
+  };
+  return new SharkMonitor(
+    this,
+    builder()->CreateGEP(monitors_slots(), indexes, indexes + 2));
 }

@@ -24,17 +24,9 @@
  */
 
  public:
-  typedef void (*method_entry_t)(methodOop method, TRAPS);
-
   static void invoke_method(methodOop method, address entry_point, TRAPS)
   {
-#ifdef SHARK
-    if (SharkMethod::is_shark_method(entry_point)) {
-      SharkMethod::get(entry_point)->invoke(method, THREAD);
-      return;
-    }
-#endif // SHARK
-    ((method_entry_t) entry_point) (method, THREAD);
+    ((ZeroEntry *) entry_point)->invoke(method, THREAD);
   }
 
  public:

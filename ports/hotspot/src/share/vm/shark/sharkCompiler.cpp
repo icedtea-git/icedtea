@@ -48,14 +48,9 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   assert(entry_bci == InvocationEntryBci, "OSR is not supported");
 
   ResourceMark rm;
+  const char *name = methodname(target);
 
-  const char *method_klass = NULL;
-  const char *method_name  = NULL;
-  
 #ifndef PRODUCT
-  method_klass = klassname(target);
-  method_name  = methodname(target);
-
   // Skip methods if requested
   static uintx methods_seen = 0;
   methods_seen++;
@@ -70,7 +65,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
 #endif // !PRODUCT
 
   if (SharkOnlyCompile != NULL) {
-    if (!method_matches(SharkOnlyCompile, method_klass, method_name)) {
+    if (strcmp(SharkOnlyCompile, name)) {
       env->record_method_not_compilable("does not match SharkOnlyCompile");
       return;
     }
@@ -81,43 +76,23 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   if (env->failing())
     return;
   if (SharkPrintTypeflowOf != NULL) {
-    if (method_matches(SharkPrintTypeflowOf, method_klass, method_name))
+    if (!strcmp(SharkPrintTypeflowOf, name))
       flow->print_on(tty);
   }
 
   // Create the CodeBuffer and OopMapSet
   BufferBlob *bb = BufferBlob::create(
-    "shark_temp", sizeof(SharkMethod) + target->code_size());
+    "shark_temp", sizeof(SharkEntry) + target->code_size());
   CodeBuffer cb(bb->instructions_begin(), bb->instructions_size());
   OopMapSet oopmaps;
 
-  // Compile the method
+  // Compile the method into the CodeBuffer
   ciBytecodeStream iter(target);
-  SharkFunction function(builder(), flow, &iter, &cb, &oopmaps);
+  SharkFunction function(builder(), name, flow, &iter, &cb, &oopmaps);
   if (env->failing())
     return;
-  if (SharkPrintBitcodeOf != NULL) {
-    if (method_matches(SharkPrintBitcodeOf, method_klass, method_name))
-      function.function()->dump();
-  }
-  if (SharkTraceInstalls) {
-    uint32_t *start = NULL;
-    uint32_t *limit = NULL;
-#ifdef PPC
-    start = *(uint32_t **) bb->instructions_begin();
-    limit = start;
-    while (*limit)
-      limit++;
-#else
-    Unimplemented();
-#endif // PPC
 
-    tty->print_cr(
-      "Installing method %s::%s at [%p-%p)",
-      method_klass, method_name, start, limit);
-  }
-
-  // Install the method
+  // Install the method into the VM
   install_method(env, target, entry_bci, &cb, &oopmaps);
 }
 
@@ -166,52 +141,26 @@ void SharkCompiler::install_method(ciEnv*      env,
                        false);
 }
 
-#ifndef PRODUCT
-const char* SharkCompiler::klassname(const ciMethod* target)
-{
-  const char *name = target->holder()->name()->as_utf8();
-  char *buf = NEW_RESOURCE_ARRAY(char, strlen(name) + 1);
-  strcpy(buf, name);
-  for (char *c = buf; *c; c++) {
-    if (*c == '/')
-      *c = '.';
-  }
-  return buf;
-}
-
 const char* SharkCompiler::methodname(const ciMethod* target)
 {
-  return target->name()->as_utf8();
+  const char *klassname = target->holder()->name()->as_utf8();
+  const char *methodname = target->name()->as_utf8();
+
+  char *buf = NEW_RESOURCE_ARRAY(
+    char, strlen(klassname) + 2 + strlen(methodname) + 1);
+
+  char *dst = buf;
+  for (const char *c = klassname; *c; c++) {
+    if (*c == '/')
+      *(dst++) = '.';
+    else
+      *(dst++) = *c;
+  }
+  *(dst++) = ':';
+  *(dst++) = ':';
+  for (const char *c = methodname; *c; c++) {
+    *(dst++) = *c;
+  }
+  *(dst++) = '\0';
+  return buf;
 }
-
-bool SharkCompiler::method_matches(const char* pattern,
-                                   const char* klassname,
-                                   const char* methodname)
-{
-  if (pattern[0] == '*') {
-    pattern++;
-  }
-  else {
-    int len = strlen(klassname);
-    if (strncmp(pattern, klassname, len))
-      return false;
-    pattern += len;
-  }
-
-  if (pattern[0] != ':' && pattern[1] != ':')
-    return false;
-  pattern += 2;
-
-  if (pattern[0] == '*') {
-    pattern++;
-  }
-  else {
-    int len = strlen(methodname);
-    if (strncmp(pattern, methodname, len))
-      return false;
-    pattern += len;
-  }
-
-  return pattern[0] == '\0';
-}
-#endif // !PRODUCT
