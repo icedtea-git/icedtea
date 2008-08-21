@@ -35,6 +35,7 @@ ergo.c
 test/hotspot
 test/jdk
 test/langtools
+test/jtreg.jar
 test/jtreg/classes
 rt/com/sun/jdi/AbsentInformationException.java
 rt/com/sun/jdi/Accessible.java
