@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
---- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2008-08-09 01:15:40.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-08-09 01:17:12.000000000 +0100
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2008-08-20 22:58:22.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-08-20 23:01:45.000000000 +0100
 @@ -62,6 +62,10 @@
  CFLAGS += -D_REENTRANT
  CFLAGS += -fcheck-new
@@ -13,9 +13,9 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  ARCHFLAG/i486    = -m32 -march=i586
  ARCHFLAG/amd64   = -m64
 diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
---- openjdk.orig/jdk/make/common/Defs-linux.gmk	2008-08-04 08:43:01.000000000 +0100
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2008-08-09 01:17:12.000000000 +0100
-@@ -154,13 +154,11 @@
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2008-08-14 08:42:49.000000000 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2008-08-20 23:01:45.000000000 +0100
+@@ -146,13 +146,11 @@
   CFLAGS_COMMON += -pipe
  endif
  
@@ -31,9 +31,9 @@ diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/De
 +# debuginfo package when building RPMs.
 +CFLAGS_REQUIRED += -g
  
- CFLAGS_OPT      = $(POPT)
+ CFLAGS_OPT      = $(CC_OPT)
  CFLAGS_DBG      = $(DEBUG_FLAG)
-@@ -235,7 +233,7 @@
+@@ -230,7 +228,7 @@
  ifeq ($(VARIANT), OPT)
    ifneq ($(NO_STRIP), true)
      # Debug 'strip -g' leaves local function Elf symbols (better stack traces)
@@ -43,8 +43,8 @@ diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/De
  endif
  
 diff -Nru openjdk.orig/jdk/make/common/shared/Defs-java.gmk openjdk/jdk/make/common/shared/Defs-java.gmk
---- openjdk.orig/jdk/make/common/shared/Defs-java.gmk	2008-08-04 08:43:01.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Defs-java.gmk	2008-08-09 01:20:09.000000000 +0100
+--- openjdk.orig/jdk/make/common/shared/Defs-java.gmk	2008-08-14 08:42:49.000000000 +0100
++++ openjdk/jdk/make/common/shared/Defs-java.gmk	2008-08-20 23:01:45.000000000 +0100
 @@ -98,15 +98,9 @@
  #  -- Use JAVAC_CMD if you want to take the defaults given to you.
  #
@@ -65,8 +65,8 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs-java.gmk openjdk/jdk/make/com
    JAVACFLAGS  += -Xlint:all
  endif
 diff -Nru openjdk.orig/jdk/make/sun/awt/mawt.gmk openjdk/jdk/make/sun/awt/mawt.gmk
---- openjdk.orig/jdk/make/sun/awt/mawt.gmk	2008-08-04 08:43:02.000000000 +0100
-+++ openjdk/jdk/make/sun/awt/mawt.gmk	2008-08-09 01:17:12.000000000 +0100
+--- openjdk.orig/jdk/make/sun/awt/mawt.gmk	2008-08-14 08:42:50.000000000 +0100
++++ openjdk/jdk/make/sun/awt/mawt.gmk	2008-08-20 23:01:45.000000000 +0100
 @@ -129,7 +129,7 @@
  #
  

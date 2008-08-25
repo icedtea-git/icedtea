@@ -7,7 +7,9 @@ Sx denotes bug x in the Sun bug database (http://bugs.sun.com/bugdatabase/view_b
 The following patches are applied early in the build to meet the Free Software guidelines and are also
 included in the tarball resulting from the dist-openjdk-fsg target:
 
-[ currently no patches applied ]
+* icedtea-idl.patch: Fix IDL licenses (PR141/S6695776).
+* icedtea-jscheme.patch: Replace use of jscheme.jar with Java alternative (PR140/S6695776).
+* icedtea-license-headers.patch: Generate GPL header from automulti tool (PR148/S6713083).
 
 The fsg.sh script is also run to delete certain files with dubious licensing and/or only occuring
 in binary format.
@@ -20,7 +22,6 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-color-createcontext.patch: Add support for a PaintContext to java.awt.Color.
 * icedtea-copy-plugs.patch: Add IcedTea's 'plugs' for Java WebStart support, add
   cast to getAnnotation and trapAuthenticationFailure variable to com.sun.jmx.snmp.SnmpPduTrap.
-* icedtea-corba.patch: Adds additional files to org.omg.CORBA Makefile.
 * icedtea-core-build.patch: Add support for building IcedTea core VM.
 * icedtea-debuginfo.patch: Add -g option to build to generate debugging information.
 * icedtea-demos.patch: Fix building of JVMTI demo.
@@ -28,7 +29,6 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-float-double-trailing-zeros.patch: Remove trailing zeros from Double/Float (PR29/30)
 * icedtea-fonts.patch: Add Fedora fontconfig.
 * icedtea-gcc-suffix.patch: Append $(GCC_SUFFIX) to end of 'gcc' binary name.
-* icedtea-generated.patch: Force use of /bin/bash.
 * icedtea-gervill.patch: Add support for Gervill from the overlay.
 * icedtea-graphics.patch: Fix word wrap in JTextArea (PR57/S6593649)
 * icedtea-ia64-fdlibm.patch: Fix name of ia64 architecture from _M_IA64 to ia64.
@@ -64,7 +64,9 @@ The following patches are currently applied before the building of OpenJDK or Op
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
+* icedtea-corba.patch: Adds additional files to org.omg.CORBA Makefile.
 * icedtea-gcc-4.3.patch: Fix code to compile with GCC 4.3 and turn off -Werror.
+* icedtea-generated.patch: Force use of /bin/bash.
 * icedtea-nomotif.patch: Remove sanity and GrabShell.h dependency on Motif/Lesstif library.
 * icedtea-nomotif-6706121.patch: Remove Motif AWT peers (S6706121).
 * icedtea-sparc.patch: Add support for GNU/Linux on SPARC (version in IcedTea includes only minimal build changes).
@@ -119,12 +121,23 @@ Obsolete Patches
 The following patches were previously applied, but have been made obsolete by
 changes to the OpenJDK code base and/or changes within IcedTea:
 
-* icedtea-certbundle.patch: Add support for certificates packaged by Fedora in /etc/pki: Methodology for certificates changed.
-* icedtea-color-profiles.patch: Add missing color profiles (S6523403): Included upstream in OpenJDK6 b10 and OpenJDK7 b28. 
-* icedtea-hat-spl-gpl.patch: JHat has conflicting GPL/SPL licensing terms (PR143/S6695553): Included upstream in OpenJDK6 b10 and OpenJDK7 b29.
-* icedtea-freetype.patch: Use detected freetype in $FT2_LIB and $FREETYPE_HEADERS_PATH: Obsoleted by icedtea-headers.patch.
-* icedtea-liveconnect.patch: Add LiveConnect support to plugin: No longer developed.
-* icedtea-netx-applet-visibility.patch: Make applet classes package-private for the plugin: Obsoleted by icedtea-webservices.patch.
-* icedtea-xinerama.patch: Fix crash talking to second X screen (S6604044): Included upstream in OpenJDK6 b10 and OpenJDK7 b28.
-* icedtea-xslfix.patch: Fix malformed bytecodeInterpreterWithChecks XSL file (S6707485): Included upstream in OpenJDK7 b29/hs13.
-* openjdk-color.patch: Include Free java.awt.color and java.awt.image (S6662775): Included upstream in OpenJDK6 b06 and OpenJDK7 b28.
+* icedtea-certbundle.patch: Add support for certificates packaged by
+Fedora in /etc/pki: Methodology for certificates changed.
+* icedtea-color-profiles.patch: Add missing color profiles (S6523403):
+Included upstream in OpenJDK6 b10 and OpenJDK7 b28.
+* icedtea-hat-spl-gpl.patch: JHat has conflicting GPL/SPL licensing
+terms (PR143/S6695553): Included upstream in OpenJDK6 b10 and OpenJDK7
+b29.
+* icedtea-freetype.patch: Use detected freetype in $FT2_LIB and
+$FREETYPE_HEADERS_PATH: Obsoleted by icedtea-headers.patch.
+* icedtea-liveconnect.patch: Add LiveConnect support to plugin: No
+longer developed.
+* icedtea-netx-applet-visibility.patch: Make applet classes
+package-private for the plugin: Obsoleted by
+icedtea-webservices.patch.
+* icedtea-xinerama.patch: Fix crash talking to second X screen
+(S6604044): Included upstream in OpenJDK6 b10 and OpenJDK7 b28.
+* icedtea-xslfix.patch: Fix malformed bytecodeInterpreterWithChecks
+XSL file (S6707485): Included upstream in OpenJDK7 b29/hs13.
+* openjdk-color.patch: Include Free java.awt.color and java.awt.image
+(S6662775): Included upstream in OpenJDK6 b06 and OpenJDK7 b28.

@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/corba/make/com/sun/corba/se/sources/Makefile openjdk/corba/make/com/sun/corba/se/sources/Makefile
---- openjdk.orig/corba/make/com/sun/corba/se/sources/Makefile	2008-06-09 02:21:48.000000000 +0100
-+++ openjdk/corba/make/com/sun/corba/se/sources/Makefile	2008-06-09 02:27:44.000000000 +0100
-@@ -78,11 +78,11 @@
+--- openjdk.orig/corba/make/com/sun/corba/se/sources/Makefile	2008-08-14 08:39:29.000000000 +0100
++++ openjdk/corba/make/com/sun/corba/se/sources/Makefile	2008-08-20 22:48:47.000000000 +0100
+@@ -80,11 +80,11 @@
  POA.MC          = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/POA.mc
  UTIL.MC         = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Util.mc
  
@@ -18,8 +18,8 @@ diff -Nru openjdk.orig/corba/make/com/sun/corba/se/sources/Makefile openjdk/corb
  
  #
 diff -Nru openjdk.orig/corba/make/sun/rmi/corbalogsources/Makefile openjdk/corba/make/sun/rmi/corbalogsources/Makefile
---- openjdk.orig/corba/make/sun/rmi/corbalogsources/Makefile	2008-06-09 02:20:57.000000000 +0100
-+++ openjdk/corba/make/sun/rmi/corbalogsources/Makefile	2008-06-10 01:16:32.000000000 +0100
+--- openjdk.orig/corba/make/sun/rmi/corbalogsources/Makefile	2008-08-14 08:39:29.000000000 +0100
++++ openjdk/corba/make/sun/rmi/corbalogsources/Makefile	2008-08-20 22:48:47.000000000 +0100
 @@ -75,15 +75,14 @@
  POA.MC          = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/POA.mc
  UTIL.MC         = $(SRC_DIR)/com/sun/corba/se/spi/logging/data/Util.mc
@@ -119,7 +119,7 @@ diff -Nru openjdk.orig/corba/make/sun/rmi/corbalogsources/Makefile openjdk/corba
  #
 diff -Nru openjdk.orig/corba/make/tools/logutil/Makefile openjdk/corba/make/tools/logutil/Makefile
 --- openjdk.orig/corba/make/tools/logutil/Makefile	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/corba/make/tools/logutil/Makefile	2008-06-10 01:32:00.000000000 +0100
++++ openjdk/corba/make/tools/logutil/Makefile	2008-08-20 22:48:47.000000000 +0100
 @@ -0,0 +1,43 @@
 +#
 +# Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
@@ -165,8 +165,8 @@ diff -Nru openjdk.orig/corba/make/tools/logutil/Makefile openjdk/corba/make/tool
 +include $(BUILDDIR)/common/BuildToolJar.gmk
 +
 diff -Nru openjdk.orig/corba/make/tools/Makefile openjdk/corba/make/tools/Makefile
---- openjdk.orig/corba/make/tools/Makefile	2008-06-10 01:11:36.000000000 +0100
-+++ openjdk/corba/make/tools/Makefile	2008-06-10 01:10:10.000000000 +0100
+--- openjdk.orig/corba/make/tools/Makefile	2008-08-14 08:39:29.000000000 +0100
++++ openjdk/corba/make/tools/Makefile	2008-08-20 22:48:47.000000000 +0100
 @@ -33,6 +33,7 @@
  SUBDIRS =                   \
    strip_properties          \
@@ -176,8 +176,8 @@ diff -Nru openjdk.orig/corba/make/tools/Makefile openjdk/corba/make/tools/Makefi
  all build clean clobber::
  	$(SUBDIRS-loop)
 diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/IndentingPrintWriter.java openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/IndentingPrintWriter.java
---- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/IndentingPrintWriter.java	2008-06-09 02:33:37.000000000 +0100
-+++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/IndentingPrintWriter.java	2008-06-09 02:33:56.000000000 +0100
+--- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/IndentingPrintWriter.java	2008-08-14 08:39:32.000000000 +0100
++++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/IndentingPrintWriter.java	2008-08-20 22:48:47.000000000 +0100
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2003 Sun Microsystems, Inc.  All Rights Reserved.
@@ -223,7 +223,7 @@ diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/In
                  }
 diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputCode.java openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputCode.java
 --- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputCode.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputCode.java	2008-06-09 02:33:56.000000000 +0100
++++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputCode.java	2008-08-20 22:48:47.000000000 +0100
 @@ -0,0 +1,116 @@
 +/*
 + * Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
@@ -343,7 +343,7 @@ diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/In
 +}
 diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputException.java openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputException.java
 --- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputException.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputException.java	2008-06-09 02:33:56.000000000 +0100
++++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/InputException.java	2008-08-20 22:48:47.000000000 +0100
 @@ -0,0 +1,95 @@
 +/*
 + * Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
@@ -442,7 +442,7 @@ diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/In
 +
 diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/Input.java openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/Input.java
 --- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/Input.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/Input.java	2008-06-09 02:33:56.000000000 +0100
++++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/Input.java	2008-08-20 22:48:47.000000000 +0100
 @@ -0,0 +1,211 @@
 +/*
 + * Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
@@ -657,7 +657,7 @@ diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/In
 +}
 diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/MC.java openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/MC.java
 --- openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/MC.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/MC.java	2008-06-09 02:33:56.000000000 +0100
++++ openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/MC.java	2008-08-20 22:48:47.000000000 +0100
 @@ -0,0 +1,559 @@
 +/*
 + * Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
@@ -1218,10 +1218,10 @@ diff -Nru openjdk.orig/corba/src/share/classes/com/sun/tools/corba/se/logutil/MC
 +  }
 +
 +}
-diff -Nru openjdk.orig/jdk/make/THIRD_PARTY_README openjdk/jdk/make/THIRD_PARTY_README
---- openjdk.orig/jdk/make/THIRD_PARTY_README	2008-06-09 02:20:21.000000000 +0100
-+++ openjdk/jdk/make/THIRD_PARTY_README	2008-06-09 02:26:07.000000000 +0100
-@@ -138,16 +138,6 @@
+diff -Nru openjdk.orig/jdk/THIRD_PARTY_README openjdk/jdk/THIRD_PARTY_README
+--- openjdk.orig/jdk/THIRD_PARTY_README	2008-08-14 08:42:48.000000000 +0100
++++ openjdk/jdk/THIRD_PARTY_README	2008-08-20 22:49:23.000000000 +0100
+@@ -116,17 +116,6 @@
  ____________________________________
  This formulation of W3C's notice and license became active on August 14 1998 so as to improve compatibility with GPL. This version ensures that W3C software licensing terms are no more restrictive than GPL and consequently W3C software may be distributed in GPL packages. See the older formulation for the policy prior to this date. Please see our Copyright FAQ for common questions about using materials from our site, including specific terms and conditions for packages like libwww, Amaya, and Jigsaw. Other questions about this notice can be directed to site-policy@w3.org.
   
@@ -1235,17 +1235,17 @@ diff -Nru openjdk.orig/jdk/make/THIRD_PARTY_README openjdk/jdk/make/THIRD_PARTY_
 -4.Altered versions must be plainly marked as such, and must not be misrepresented as being the original software. Altered versions may be distributed in packages under other licenses (such as the GNU license). 
 -If you find this software useful, it would be nice if you let me (peter@norvig.com) know about it, and nicer still if you send me modifications that you are willing to share. However, you are not required to do so.
 -
- 
+-
  %% This notice is provided with respect to PC/SC Lite for Suse Linux v. 1.1.1, which may be included with this software: 
  
+ Copyright (c) 1999-2004 David Corcoran 
 diff -Nru openjdk.orig/THIRD_PARTY_README openjdk/THIRD_PARTY_README
---- openjdk.orig/THIRD_PARTY_README	2008-06-09 02:20:14.000000000 +0100
-+++ openjdk/THIRD_PARTY_README	2008-06-09 02:25:57.000000000 +0100
-@@ -137,16 +137,6 @@
- The name and trademarks of copyright holders may NOT be used in advertising or publicity pertaining to the software without specific, written prior permission. Title to copyright in this software and any associated documentation will at all times remain with copyright holders.
+--- openjdk.orig/THIRD_PARTY_README	2008-08-14 08:39:21.000000000 +0100
++++ openjdk/THIRD_PARTY_README	2008-08-20 22:49:32.000000000 +0100
+@@ -116,17 +116,6 @@
  ____________________________________
  This formulation of W3C's notice and license became active on August 14 1998 so as to improve compatibility with GPL. This version ensures that W3C software licensing terms are no more restrictive than GPL and consequently W3C software may be distributed in GPL packages. See the older formulation for the policy prior to this date. Please see our Copyright FAQ for common questions about using materials from our site, including specific terms and conditions for packages like libwww, Amaya, and Jigsaw. Other questions about this notice can be directed to site-policy@w3.org.
-- 
+  
 -%% This notice is provided with respect to jscheme.jar, which may be included with this software: 
 -Software License Agreement
 -Copyright © 1998-2002 by Peter Norvig. 
@@ -1255,6 +1255,8 @@ diff -Nru openjdk.orig/THIRD_PARTY_README openjdk/THIRD_PARTY_README
 -3.The origin of this software must not be misrepresented, either by explicit claim or by omission.
 -4.Altered versions must be plainly marked as such, and must not be misrepresented as being the original software. Altered versions may be distributed in packages under other licenses (such as the GNU license). 
 -If you find this software useful, it would be nice if you let me (peter@norvig.com) know about it, and nicer still if you send me modifications that you are willing to share. However, you are not required to do so.
- 
- 
+-
+-
  %% This notice is provided with respect to PC/SC Lite for Suse Linux v. 1.1.1, which may be included with this software: 
+ 
+ Copyright (c) 1999-2004 David Corcoran 

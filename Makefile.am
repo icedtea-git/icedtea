@@ -1,6 +1,6 @@
-OPENJDK_DATE = 04_aug_2008
-OPENJDK_MD5SUM = 87553b776e93eaa4ce43a6bc9be87964
-OPENJDK_VERSION = b32
+OPENJDK_DATE = 14_aug_2008
+OPENJDK_MD5SUM = 536c8f7b35bfb2640bdda31482d2693f
+OPENJDK_VERSION = b33
 
 CACAO_VERSION = 0.99.2
 CACAO_MD5SUM = a2865f47535f6dc3def268c0055ff20a
@@ -418,13 +418,11 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-memory-limits.patch \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
-	patches/icedtea-corba.patch \
 	patches/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
 	patches/icedtea-static-libstdc++.patch \
 	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-timerqueue.patch \
-	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \

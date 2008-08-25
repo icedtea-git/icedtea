@@ -1,3 +1,20 @@
+2008-08-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/icedtea-corba.patch,
+	* patches/icedtea-generated.patch:
+	Removed.
+	* HACKING: Updated.
+	* Makefile.am: Move to b33 and remove
+	unneeded patches.
+	* patches/icedtea-copy-plugs.patch,
+	* patches/icedtea-debuginfo.patch: Updated.
+	* patches/icedtea-ecj.patch: Updated and added
+	fix for new Java version of NIO generator.
+	* patches/icedtea-javafiles.patch,
+	* patches/icedtea-jscheme.patch: Updated.
+	* patches/icedtea-override.patch: Added new cases.
+	* patches/icedtea-zero-build.patch: Updated.
+
 2008-08-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* HACKING: Updated.
