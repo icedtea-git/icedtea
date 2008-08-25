@@ -491,7 +491,7 @@ diff -Nru openjdk-ecj.orig/jdk/make/common/Release.gmk openjdk-ecj/jdk/make/comm
  endif # !windows
 diff -Nru openjdk-ecj.orig/jdk/make/common/Rules.gmk openjdk-ecj/jdk/make/common/Rules.gmk
 --- openjdk-ecj.orig/jdk/make/common/Rules.gmk	2008-08-14 08:42:49.000000000 +0100
-+++ openjdk-ecj/jdk/make/common/Rules.gmk	2008-08-21 01:49:52.000000000 +0100
++++ openjdk-ecj/jdk/make/common/Rules.gmk	2008-08-26 00:30:58.000000000 +0100
 @@ -237,8 +237,9 @@
  	  $(ECHO) "# Java sources to be compiled: (listed in file $<)"; \
  	  $(CAT) $<.filtered; \
@@ -504,15 +504,19 @@ diff -Nru openjdk-ecj.orig/jdk/make/common/Rules.gmk openjdk-ecj/jdk/make/common
  	fi
  	@$(java-vm-cleanup)
  
-@@ -304,6 +305,8 @@
+@@ -302,7 +303,11 @@
+ 	$(prep-target)
+ 	@$(ECHO) "# Running javah:"
  	$(JAVAH_CMD) -d $(CLASSHDRDIR)/ \
- 		$(CLASSES.export) $(subst $$,\$$,$(EXPORTED_inner))
+-		$(CLASSES.export) $(subst $$,\$$,$(EXPORTED_inner))
++		$(CLASSES.export) 
++	$(foreach innerclass,$(subst $$,\$$,$(EXPORTED_inner)), \
++	  $(JAVAH_CMD) \
++	    -o $(CLASSHDRDIR)/$(subst .,_,$(subst \$$,_,$(innerclass))).h \
++	    $(innerclass))
  	@$(java-vm-cleanup)
-+	-mv $(CLASSHDRDIR)/java_lang_ClassLoader\$$NativeLibrary.h \
-+	  $(CLASSHDRDIR)/java_lang_ClassLoader_NativeLibrary.h
  	@$(TOUCH) $@
  
- classheaders.clean:
 diff -Nru openjdk-ecj.orig/jdk/make/common/shared/Defs-java.gmk openjdk-ecj/jdk/make/common/shared/Defs-java.gmk
 --- openjdk-ecj.orig/jdk/make/common/shared/Defs-java.gmk	2008-08-21 01:28:48.000000000 +0100
 +++ openjdk-ecj/jdk/make/common/shared/Defs-java.gmk	2008-08-21 01:49:52.000000000 +0100
@@ -586,6 +590,15 @@ diff -Nru openjdk-ecj.orig/jdk/make/Makefile openjdk-ecj/jdk/make/Makefile
  all build::
  	$(SUBDIRS-loop)
  
+diff -Nru openjdk-ecj.orig/jdk/make/sun/awt/FILES_export_unix.gmk openjdk-ecj/jdk/make/sun/awt/FILES_export_unix.gmk
+--- openjdk-ecj.orig/jdk/make/sun/awt/FILES_export_unix.gmk	2008-08-25 23:11:34.000000000 +0100
++++ openjdk-ecj/jdk/make/sun/awt/FILES_export_unix.gmk	2008-08-25 23:13:37.000000000 +0100
+@@ -223,3 +223,5 @@
+ 	sun/awt/CausedFocusEvent.java \
+ 	sun/awt/motif/MEmbedCanvasPeer.java
+ 
++EXPORTED_inner = \
++    sun.java2d.opengl.OGLContext$$OGLContextCaps
 diff -Nru openjdk-ecj.orig/jdk/make/sun/awt/Makefile openjdk-ecj/jdk/make/sun/awt/Makefile
 --- openjdk-ecj.orig/jdk/make/sun/awt/Makefile	2008-08-14 08:42:50.000000000 +0100
 +++ openjdk-ecj/jdk/make/sun/awt/Makefile	2008-08-21 01:49:52.000000000 +0100
