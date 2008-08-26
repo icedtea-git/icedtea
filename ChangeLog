@@ -1,3 +1,9 @@
+2008-08-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* HACKING: Add icedtea-signed-types-hot6.patch.
+	* Makefile.am: Correct use of srcdir for ICEDTEA_HOME,
+	should be builddir.
+
 2008-08-21  Mark Wielaard  <mark@klomp.org>
 
 	* .hgignore: Add test/jtreg.jar.

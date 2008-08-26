@@ -103,6 +103,10 @@ The following patches are only applied for IcedTea builds using the zero-assembl
 * icedtea-test-atomic-operations.patch: Add check to see if GCC's sync_lock_test works.
 * icedtea-zero.patch: Generalise architecture support, add ARM and #ifdef out non-zero applicable parts.
 
+The following patches are only applied for IcedTea builds not using the zero-assembler:
+
+* icedtea-signed-types-hot6.patch: Make use of unsigned/signed types explicit.
+
 The following patches are only applied for IcedTea builds using the Shark JIT:
 
 * icedtea-shark.patch: Add support for the Shark JIT.

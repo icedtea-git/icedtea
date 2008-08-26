@@ -754,7 +754,7 @@ if WITH_ICEDTEA
   ICEDTEA_HOME = $(SYSTEM_ICEDTEA_DIR)
 else
   BOOTSTRAP_DIRECTORY_STAMP = stamps/bootstrap-directory.stamp
-  ICEDTEA_HOME = $(abs_top_srcdir)/bootstrap/icedtea
+  ICEDTEA_HOME = $(abs_top_builddir)/bootstrap/icedtea
 endif
 endif
 
