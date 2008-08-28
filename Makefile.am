@@ -504,6 +504,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jdk-use-ssize_t.patch \
 	patches/icedtea-hotspot-use-idx_t.patch \
 	patches/icedtea-hotspot-params-cast-size_t.patch \
+	patches/icedtea-clean-crypto.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	patches/icedtea-arch.patch

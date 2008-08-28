@@ -1,3 +1,8 @@
+2008-08-28  Mark Wielaard  <mjw@redhat.com>
+
+	* patches/icedtea-clean-crypto.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-clean-crypto.patch.
+
 2008-08-26  Deepak Bhole  <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Added JNI communication bridge, updated processing
