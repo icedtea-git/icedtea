@@ -256,9 +256,10 @@ dist-openjdk: stamps/extract-cacao.stamp
 OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
 CVMI_HG_URL = http://hg.openjdk.java.net/cvmi/cvmi/
 CLOSURES_HG_URL = http://hg.openjdk.java.net/closures/closures/
+CACIOCAVALLO_HG_URL = http://hg.openjdk.java.net/caciocavallo/jdk7/
+BSD_HG_URL = http://hg.openjdk.java.net/bsd-port/bsd-port
 
 OPENJDK_URL = http://www.java.net/download/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
-
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 else
@@ -296,7 +297,15 @@ else
 if USE_CVMI
 	hg fclone $(CVMI_HG_URL) openjdk; 
 else
+if USE_CACIOCAVALLO
+	hg fclone $(CACIOCAVALLO_HG_URL) openjdk;
+else
+if USE_BSD
+	hg fclone $(BSD_HG_URL) openjdk;
+else
 	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk;
+endif
+endif
 endif
 endif
 else
