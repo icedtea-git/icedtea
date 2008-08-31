@@ -1,3 +1,9 @@
+2008-08-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Make enabling hg-only projects sufficient for
+	downloading from hg.
+	
 2008-08-30  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am: Add BSD and Caciocavallo URLs.

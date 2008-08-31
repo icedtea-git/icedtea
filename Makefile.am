@@ -280,17 +280,10 @@ else
 endif
 
 
-stamps/download.stamp:
+stamps/download.stamp: stamps/hgforest.stamp
 if !OPENJDK_SRC_DIR_FOUND
 if USE_ALT_OPENJDK_SRC_ZIP
 else
-if USE_HG
-	if ! hg fclone -h; \
-          then \
-          echo "No forest extension found. Please refer to" \
-            "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
-          exit 1; \
-          fi;
 if USE_CLOSURES
 	hg fclone $(CLOSURES_HG_URL) openjdk; 
 else
@@ -303,11 +296,8 @@ else
 if USE_BSD
 	hg fclone $(BSD_HG_URL) openjdk;
 else
+if USE_HG
 	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk;
-endif
-endif
-endif
-endif
 else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -318,6 +308,10 @@ else
 	  fi ; \
 	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
 	fi
+endif
+endif
+endif
+endif
 endif
 endif
 endif
@@ -339,6 +333,36 @@ endif
 endif
 	mkdir -p stamps
 	touch stamps/download.stamp
+
+stamps/hgforest.stamp:
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_ALT_OPENJDK_SRC_ZIP
+else
+if !USE_HG
+else
+if !USE_CLOSURES
+else
+if !USE_CVMI
+else
+if !USE_CACIOCAVALLO
+else
+if !USE_BSD
+else
+	if ! hg fclone -h; \
+          then \
+          echo "No forest extension found. Please refer to" \
+            "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
+          exit 1; \
+          fi;
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+	touch stamps/hgforest.stamp
 
 clean-extract:
 	rm -f stamps/extract.stamp
