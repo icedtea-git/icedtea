@@ -28,6 +28,7 @@
 
 address AbstractInterpreterGenerator::generate_slow_signature_handler()
 {
+  _masm->advance(1);
   return (address) InterpreterRuntime::slow_signature_handler;
 }
 

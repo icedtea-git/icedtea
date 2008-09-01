@@ -28,101 +28,76 @@
 
 using namespace llvm;
 
-SharkBuilder::SharkBuilder(Module* module)
-    : IRBuilder(),
-      _module(module)
+SharkBuilder::SharkBuilder()
+  : IRBuilder<>(),
+      _module("shark"),
+      _module_provider(module()),
+      _execution_engine(ExecutionEngine::create(&_module_provider))
 {
   init_external_functions();
+}
+
+Constant* SharkBuilder::make_function(intptr_t            addr,
+                                      const FunctionType* sig,
+                                      const char*         name)
+{
+  Constant *func = make_pointer(addr, sig);
+
+#ifndef PRODUCT
+  ResourceMark rm;
+
+  // Use a trampoline to make dumped code more readable
+  Function *trampoline = (Function *) module()->getOrInsertFunction(name, sig);
+  SetInsertPoint(BasicBlock::Create("", trampoline));
+
+  Value **args = NEW_RESOURCE_ARRAY(Value*, trampoline->arg_size());
+  Function::arg_iterator ai = trampoline->arg_begin();
+  for (unsigned i = 0; i < trampoline->arg_size(); i++)
+    args[i] = ai++;
+
+  Value *result = CreateCall(func, args, args + trampoline->arg_size());
+  if (sig->getReturnType() == Type::VoidTy)
+    CreateRetVoid();
+  else
+    CreateRet(result);
+
+  func = trampoline;
+#endif // !PRODUCT
+
+  return func;
 }
 
 void SharkBuilder::init_external_functions()
 {
   std::vector<const Type*> params;
-  params.push_back(SharkType::intptr_type());
-  params.push_back(SharkType::jint_type());
-  FunctionType *type = FunctionType::get(Type::VoidTy, params, false);
-  Constant *func = make_pointer((intptr_t) report_should_not_reach_here, type);
-#ifndef PRODUCT
-  // Use a trampoline to make dumped code more readable
-  Function *trampoline =
-    (Function *) module()->getOrInsertFunction("should_not_reach_here", type);
-  Function::arg_iterator ai = trampoline->arg_begin();
-  Value *file = ai++;
-  Value *line = ai++;
-  SetInsertPoint(BasicBlock::Create("", trampoline));
-  CreateCall2(func, file, line);
-  CreateRetVoid();
-  func = trampoline;
-#endif // !PRODUCT
-  set_report_should_not_reach_here_fn(func);
-
-  // XXX copy and paste -- refactor this!
-  func = make_pointer((intptr_t) report_unimplemented, type);
-#ifndef PRODUCT
-  // Use a trampoline to make dumped code more readable
-  trampoline =
-    (Function *) module()->getOrInsertFunction("unimplemented", type);
-  ai = trampoline->arg_begin();
-  file = ai++;
-  line = ai++;
-  SetInsertPoint(BasicBlock::Create("", trampoline));
-  CreateCall2(func, file, line);
-  CreateRetVoid();
-  func = trampoline;
-#endif // !PRODUCT
-  set_report_unimplemented_fn(func);
-
-  // XXX copy and paste -- refactor this!
-  params.clear();
-  params.push_back(SharkType::jint_type());
-  params.push_back(SharkType::intptr_type());
-  func = make_pointer((intptr_t) trace_bytecode, type);
-#ifndef PRODUCT
-  // Use a trampoline to make dumped code more readable
-  trampoline =
-    (Function *) module()->getOrInsertFunction("trace_bytecode", type);
-  ai = trampoline->arg_begin();
-  file = ai++;
-  line = ai++;
-  SetInsertPoint(BasicBlock::Create("", trampoline));
-  CreateCall2(func, file, line);
-  CreateRetVoid();
-  func = trampoline;
-#endif // !PRODUCT
-  set_trace_bytecode_fn(func);
-
-  params.clear();
-  params.push_back(SharkType::intptr_type());
+  params.push_back(PointerType::getUnqual(SharkType::jbyte_type()));
   params.push_back(SharkType::jbyte_type());
   params.push_back(SharkType::jint_type());
   params.push_back(SharkType::jint_type());
-  type = FunctionType::get(Type::VoidTy, params, false);
+  FunctionType *type = FunctionType::get(Type::VoidTy, params, false);
   set_llvm_memset_fn(module()->getOrInsertFunction("llvm.memset.i32", type));
 
   params.clear();
+  params.push_back(PointerType::getUnqual(SharkType::intptr_type()));
   params.push_back(SharkType::intptr_type());
   params.push_back(SharkType::intptr_type());
+  type = FunctionType::get(SharkType::intptr_type(), params, false);
+  set_llvm_cmpxchg_ptr_fn(
+    module()->getOrInsertFunction(
+      "llvm.atomic.cmp.swap.i" LP64_ONLY("64") NOT_LP64("32"), type));
+
+  params.clear();
+  for (int i = 0; i < 5; i++)
+    params.push_back(Type::Int1Ty);
   type = FunctionType::get(Type::VoidTy, params, false);
-  func = make_pointer((intptr_t) dump, type);
-#ifndef PRODUCT
-  // Use a trampoline to make dumped code more readable
-  trampoline =
-    (Function *) module()->getOrInsertFunction("print_value", type);
-  ai = trampoline->arg_begin();
-  file = ai++;
-  line = ai++;
-  SetInsertPoint(BasicBlock::Create("", trampoline));
-  CreateCall2(func, file, line);
-  CreateRetVoid();
-  func = trampoline;
-#endif // !PRODUCT
-  set_dump_fn(func);
+  set_llvm_memory_barrier_fn(
+    module()->getOrInsertFunction("llvm.memory.barrier", type));
 }
 
 Function *SharkBuilder::CreateFunction()
 {
   Function *function = Function::Create(
-      SharkType::method_entry_type(),
+      SharkType::entry_point_type(),
       GlobalVariable::InternalLinkage,
       "func");
   module()->getFunctionList().push_back(function);
@@ -154,20 +129,15 @@ CallInst* SharkBuilder::CreateDump(llvm::Value* value)
     Unimplemented();
 
   Value *args[] = {name, value};
-  return CreateCall2(dump_fn(), name, value);
+  return CreateCall2(SharkRuntime::dump(), name, value);
 }
 
-void SharkBuilder::dump(const char *name, intptr_t value)
+CallInst* SharkBuilder::CreateCmpxchgPtr(Value* exchange_value,
+                                         Value* dst,
+                                         Value* compare_value)
 {
-  oop valueOop = (oop) value;
-  tty->print("%s = ", name);
-  if (valueOop->is_oop(true))
-    valueOop->print_on(tty);
-  else if (value >= ' ' && value <= '~')
-    tty->print("'%c' (%d)", value, value);
-  else
-    tty->print("%d", value);
-  tty->print_cr("");
+  return CreateCall3(
+    llvm_cmpxchg_ptr_fn(), dst, compare_value, exchange_value);
 }
 
 CallInst* SharkBuilder::CreateMemset(Value* dst,
@@ -181,7 +151,7 @@ CallInst* SharkBuilder::CreateMemset(Value* dst,
 CallInst* SharkBuilder::CreateUnimplemented(const char* file, int line)
 {
   return CreateCall2(
-    report_unimplemented_fn(), 
+    SharkRuntime::unimplemented(),
     LLVMValue::intptr_constant((intptr_t) file),
     LLVMValue::jint_constant(line));
 }
@@ -189,20 +159,18 @@ CallInst* SharkBuilder::CreateUnimplemented(const char* file, int line)
 CallInst* SharkBuilder::CreateShouldNotReachHere(const char* file, int line)
 {
   return CreateCall2(
-    report_should_not_reach_here_fn(),
+    SharkRuntime::should_not_reach_here(),
     LLVMValue::intptr_constant((intptr_t) file),
     LLVMValue::jint_constant(line));
 }
 
-void SharkBuilder::trace_bytecode(int bci, const char* bc)
+CallInst *SharkBuilder::CreateMemoryBarrier(BarrierFlags flags)
 {
-  tty->print_cr("%3d: %s", bci, bc);  
-}
-
-CallInst* SharkBuilder::CreateTraceBytecode(int bci, Bytecodes::Code bc)
-{
-  return CreateCall2(
-    trace_bytecode_fn(),
-    LLVMValue::jint_constant(bci),
-    LLVMValue::intptr_constant((intptr_t) Bytecodes::name(bc)));
+  Value *args[] = {
+    ConstantInt::get(Type::Int1Ty, (flags & BARRIER_LOADLOAD) ? 1 : 0),
+    ConstantInt::get(Type::Int1Ty, (flags & BARRIER_LOADSTORE) ? 1 : 0),
+    ConstantInt::get(Type::Int1Ty, (flags & BARRIER_STORELOAD) ? 1 : 0),
+    ConstantInt::get(Type::Int1Ty, (flags & BARRIER_STORESTORE) ? 1 : 0),
+    ConstantInt::get(Type::Int1Ty, 0)};
+  return CreateCall(llvm_memory_barrier_fn(), args, args + 5);
 }

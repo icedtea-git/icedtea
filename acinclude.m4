@@ -11,11 +11,26 @@ AC_DEFUN([SET_ARCH_DIRS],
       INSTALL_ARCH_DIR=i386
       JRE_ARCH_DIR=i386
       ;;
+    alpha*-*-*)
+      BUILD_ARCH_DIR=alpha
+      INSTALL_ARCH_DIR=alpha
+      JRE_ARCH_DIR=alpha
+      ;;
     arm*-*-*)
       BUILD_ARCH_DIR=arm
       INSTALL_ARCH_DIR=arm
       JRE_ARCH_DIR=arm
       ;;
+    mips-*-*)
+      BUILD_ARCH_DIR=mips
+      INSTALL_ARCH_DIR=mips
+      JRE_ARCH_DIR=mips
+       ;;
+    mipsel-*-*)
+      BUILD_ARCH_DIR=mipsel
+      INSTALL_ARCH_DIR=mipsel
+      JRE_ARCH_DIR=mipsel
+       ;;
     powerpc-*-*)
       BUILD_ARCH_DIR=ppc
       INSTALL_ARCH_DIR=ppc
@@ -30,6 +45,11 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=sparcv9
       INSTALL_ARCH_DIR=sparcv9
       JRE_ARCH_DIR=sparc64
+       ;;
+    s390-*-*)
+      BUILD_ARCH_DIR=s390
+      INSTALL_ARCH_DIR=s390
+      JRE_ARCH_DIR=s390
        ;;
     *)
       BUILD_ARCH_DIR=`uname -m`
@@ -221,7 +241,7 @@ AC_DEFUN([FIND_ECJ_JAR],
 AC_DEFUN([FIND_LIBGCJ_JAR],
 [
   AC_ARG_WITH([libgcj-jar],
-              [AS_HELP_STRING(--with-libgcj-jar,specify location of the libgcj 4.3.0 jar)],
+              [AS_HELP_STRING(--with-libgcj-jar,specify location of the libgcj 4.3.x jar)],
   [
     if test -f "${withval}"; then
       AC_MSG_CHECKING(libgcj jar)
@@ -233,27 +253,20 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
     LIBGCJ_JAR=
   ])
   if test -z "${LIBGCJ_JAR}"; then
-    AC_MSG_CHECKING(for libgcj-4.3.0.jar or libgcj-4.1.2.jar)
-    if test -e "/usr/share/java/libgcj-4.3.0.jar"; then
-      LIBGCJ_JAR=/usr/share/java/libgcj-4.3.0.jar
+    AC_MSG_CHECKING(for libgcj-4.3.*.jar, libgcj-4.2.*.jar or libgcj-4.1.*.jar)
+    if test -e /usr/share/java/libgcj-4.3.*.jar; then
+      LIBGCJ_JAR=/usr/share/java/libgcj-4.3.*.jar
       AC_MSG_RESULT(${LIBGCJ_JAR})
     else
-      if test -e "/usr/share/java/libgcj-4.3.jar"; then
-        LIBGCJ_JAR=/usr/share/java/libgcj-4.3.jar
-	AC_MSG_RESULT(${LIBGCJ_JAR})
-      else
-        if test -e "/usr/share/java/libgcj-4.1.2.jar"; then
-          LIBGCJ_JAR=/usr/share/java/libgcj-4.1.2.jar
-          AC_MSG_RESULT(${LIBGCJ_JAR})
-	else
-	  if test -e "/usr/share/java/libgcj-4.1.jar"; then
-            LIBGCJ_JAR=/usr/share/java/libgcj-4.1.jar
-            AC_MSG_RESULT(${LIBGCJ_JAR})
-	  else
-	    AC_MSG_RESULT(no)
-	  fi
-	fi
-      fi
+       if test -e /usr/share/java/libgcj-4.2.*.jar; then
+         LIBGCJ_JAR=/usr/share/java/libgcj-4.2.*.jar
+         AC_MSG_RESULT(${LIBGCJ_JAR})
+       elif test -e /usr/share/java/libgcj-4.1.*.jar; then
+         LIBGCJ_JAR=/usr/share/java/libgcj-4.1.*.jar
+         AC_MSG_RESULT(${LIBGCJ_JAR})
+       else
+ 	AC_MSG_RESULT(no)
+       fi
     fi
   fi
   if test -z "${LIBGCJ_JAR}"; then
@@ -413,6 +426,75 @@ AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
     AM_CONDITIONAL(USE_ALT_OPENJDK_SRC_ZIP, test x != x)
   ])
   AC_MSG_RESULT(${ALT_OPENJDK_SRC_ZIP})
+  AC_SUBST(ALT_OPENJDK_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_VISUALVM_SRC_ZIP],
+[
+  AC_MSG_CHECKING(visualvm source zip)
+  AC_ARG_WITH([visualvm-src-zip],
+              [AS_HELP_STRING(--with-visualvm-src-zip, specify the location of the visualvm source zip)],
+  [
+    ALT_VISUALVM_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_VISUALVM_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_VISUALVM_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_VISUALVM_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_VISUALVM_SRC_ZIP})
+  AC_SUBST(ALT_VISUALVM_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_NETBEANS_PLATFORM_SRC_ZIP],
+[
+  AC_MSG_CHECKING(netbeans platform source zip)
+  AC_ARG_WITH([netbeans-platform-src-zip],
+              [AS_HELP_STRING(--with-netbeans-platform-src-zip, specify the location of the netbeans platform source zip)],
+  [
+    ALT_NETBEANS_PLATFORM_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_NETBEANS_PLATFORM_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_NETBEANS_PLATFORM_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_NETBEANS_PLATFORM_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_NETBEANS_PLATFORM_SRC_ZIP})
+  AC_SUBST(ALT_NETBEANS_PLATFORM_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_NETBEANS_PROFILER_SRC_ZIP],
+[
+  AC_MSG_CHECKING(netbeans profiler source zip)
+  AC_ARG_WITH([netbeans-profiler-src-zip],
+              [AS_HELP_STRING(--with-netbeans-src-zip, specify the location of the netbeans profiler source zip)],
+  [
+    ALT_NETBEANS_PROFILER_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_NETBEANS_PROFILER_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_NETBEANS_PROFILER_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_NETBEANS_PROFILER_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_NETBEANS_PROFILER_SRC_ZIP})
+  AC_SUBST(ALT_NETBEANS_PROFILER_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_ALT_JAR_BINARY],
+[
+  AC_MSG_CHECKING(alternate jar command)
+  AC_ARG_WITH([alt-jar],
+              [AS_HELP_STRING(--with-alt-jar, specify the location of an alternate jar binary to use for building)],
+  [
+    ALT_JAR_CMD=${withval}
+    AM_CONDITIONAL(USE_ALT_JAR, test x = x)
+  ],
+  [ 
+    ALT_JAR_CMD="not specified"
+    AM_CONDITIONAL(USE_ALT_JAR, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_JAR_CMD})
+  AC_SUBST(ALT_JAR_CMD)
 ])
 
 AC_DEFUN([FIND_XALAN2_JAR],

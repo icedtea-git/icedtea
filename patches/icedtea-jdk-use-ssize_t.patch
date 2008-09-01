@@ -1,0 +1,33 @@
+--- openjdk/jdk/src/solaris/hpi/native_threads/src/sys_api_td.c.old	2008-07-10 21:58:39.000000000 +0200
++++ openjdk/jdk/src/solaris/hpi/native_threads/src/sys_api_td.c	2008-08-03 16:26:16.000000000 +0200
+@@ -380,12 +380,12 @@
+     return socket(domain, type, protocol);
+ }
+ 
+-ssize_t
++SSIZE_T
+ sysRecv(int fd, char *buf, int nBytes, int flags) {
+     INTERRUPT_IO(recv(fd, buf, nBytes, flags))
+ }
+ 
+-ssize_t
++SSIZE_T
+ sysSend(int fd, char *buf, int nBytes, int flags) {
+     INTERRUPT_IO(send(fd, buf, nBytes, flags))
+ }
+@@ -595,13 +595,13 @@
+ /*
+  * Routines to do datagrams
+  */
+-ssize_t
++SSIZE_T
+ sysSendTo(int fd, char *buf, int len,
+           int flags, struct sockaddr *to, int tolen) {
+     INTERRUPT_IO(sendto(fd, buf, len, flags, to, tolen))
+ }
+ 
+-ssize_t
++SSIZE_T
+ sysRecvFrom(int fd, char *buf, int nBytes,
+             int flags, struct sockaddr *from, int *fromlen) {
+     INTERRUPT_IO(recvfrom(fd, buf, nBytes, flags, from, (uint *)fromlen))

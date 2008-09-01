@@ -28,9 +28,12 @@
 // | stack slot n-1     |       low addresses
 // |  ...               |
 // | stack slot 0       |
-// | monitor 0 (maybe)  |
+// | monitor m-1        |
 // |  ...               |
+// | monitor 0          |
 // | method             |
+// | unextended_sp      |
+// | pc                 |
 // | frame_type         |
 // | next_frame         |      high addresses
 // +--------------------+  ------------------
@@ -48,17 +51,25 @@ class SharkFrame : public ZeroFrame {
 
  protected:
   enum Layout {
-    method_off = jf_header_words,
+    pc_off = jf_header_words,
+    unextended_sp_off,
+    method_off,
     header_words
   };
 
  public:
-  methodOop* method_addr() const
+  address pc() const
   {
-    return (methodOop *) addr_of_word(method_off);
+    return (address) value_of_word(pc_off);
   }
+
+  intptr_t* unextended_sp() const
+  {
+    return (intptr_t *) value_of_word(unextended_sp_off);
+  }
+
   methodOop method() const
   {
-    return *method_addr();
+    return (methodOop) value_of_word(method_off);
   }
 };

@@ -24,7 +24,10 @@
  */
 
  public:
-  typedef void (*method_entry_t)(methodOop method, TRAPS);
+  static void invoke_method(methodOop method, address entry_point, TRAPS)
+  {
+    ((ZeroEntry *) entry_point)->invoke(method, THREAD);
+  }
 
  public:
   static int expr_index_at(int i)

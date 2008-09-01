@@ -66,7 +66,7 @@ class StubGenerator: public StubCodeGenerator
       EntryFrame::build(stack, parameters, parameter_words, call_wrapper));
 
     // Make the call
-    ((Interpreter::method_entry_t) entry_point) (method, THREAD);
+    Interpreter::invoke_method(method, entry_point, THREAD);
 
     // Store result depending on type
     if (!HAS_PENDING_EXCEPTION) {
@@ -76,6 +76,12 @@ class StubGenerator: public StubCodeGenerator
         break;
       case T_LONG:
         *(jlong *) result = *(jlong *) stack->sp();
+        break;
+      case T_FLOAT:
+        *(jfloat *) result = *(jfloat *) stack->sp();
+        break;
+      case T_DOUBLE:
+        *(jdouble *) result = *(jdouble *) stack->sp();
         break;
       case T_OBJECT:
         *(oop *) result = *(oop *) stack->sp();

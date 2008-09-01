@@ -22,3 +22,15 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/ostream.cpp openjdk/hotspo
  #ifdef _WINDOWS
      struct hostent* host = hpi::get_host_by_name((char*)ip);
  #else
+diff -r ca98ea212429 openjdk/hotspot/src/share/vm/ci/ciTypeFlow.cpp
+--- openjdk/hotspot/src/share/vm/ci/ciTypeFlow.cpp	Fri Aug 08 16:06:52 2008 +0100
++++ openjdk/hotspot/src/share/vm/ci/ciTypeFlow.cpp	Fri Aug 08 16:15:45 2008 +0100
+@@ -388,7 +388,7 @@ const ciTypeFlow::StateVector* ciTypeFlo
+   // Set the rest of the locals to bottom.
+   Cell cell = state->next_cell(state->tos());
+   state->set_stack_size(0);
+-  int limit = state->limit_cell();
++  Cell limit = state->limit_cell();
+   for (; cell < limit; cell = state->next_cell(cell)) {
+     state->set_type_at(cell, state->bottom_type());
+   }

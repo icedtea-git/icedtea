@@ -1,0 +1,610 @@
+diff -ur openjdk.orig/jdk/make/javax/crypto/Makefile openjdk/jdk/make/javax/crypto/Makefile
+--- openjdk.orig/jdk/make/javax/crypto/Makefile	2008-08-28 13:10:20.000000000 +0200
++++ openjdk/jdk/make/javax/crypto/Makefile	2008-08-28 15:17:56.000000000 +0200
+@@ -155,7 +155,8 @@
+ #
+ 
+ ifdef OPENJDK
+-all: build-jar install-jar build-policy install-limited
++# We don't need any policy files.
++all: build-jar install-jar
+ else  # OPENJDK
+ ifeq ($(strip $(FILES_java)),)
+ all:
+diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk/src/share/classes/javax/crypto/Cipher.java
+--- openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java	2008-08-28 12:06:23.000000000 +0200
++++ openjdk/jdk/src/share/classes/javax/crypto/Cipher.java	2008-08-28 15:23:41.000000000 +0200
+@@ -144,12 +144,6 @@
+     // The transformation
+     private String transformation;
+ 
+-    // Crypto permission representing the maximum allowable cryptographic
+-    // strength that this Cipher object can be used for. (The cryptographic
+-    // strength is a function of the keysize and algorithm parameters encoded
+-    // in the crypto permission.)
+-    private CryptoPermission cryptoPerm;
+-
+     // The exemption mechanism that needs to be enforced
+     private ExemptionMechanism exmech;
+ 
+@@ -190,16 +184,9 @@
+     protected Cipher(CipherSpi cipherSpi,
+                      Provider provider,
+                      String transformation) {
+-        // See bug 4341369 & 4334690 for more info.
+-        // If the caller is trusted, then okey.
+-        // Otherwise throw a NullPointerException.
+-        if (!JceSecurityManager.INSTANCE.isCallerTrusted()) {
+-            throw new NullPointerException();
+-        }
+         this.spi = cipherSpi;
+         this.provider = provider;
+         this.transformation = transformation;
+-        this.cryptoPerm = CryptoAllPermission.INSTANCE;
+         this.lock = null;
+     }
+ 
+@@ -212,7 +199,6 @@
+     Cipher(CipherSpi cipherSpi, String transformation) {
+         this.spi = cipherSpi;
+         this.transformation = transformation;
+-        this.cryptoPerm = CryptoAllPermission.INSTANCE;
+         this.lock = null;
+     }
+ 
+@@ -603,7 +589,6 @@
+                 tr.setModePadding(spi);
+                 Cipher cipher = new Cipher(spi, transformation);
+                 cipher.provider = s.getProvider();
+-                cipher.initCryptoPermission();
+                 return cipher;
+             } catch (Exception e) {
+                 failure = e;
+@@ -622,22 +607,6 @@
+                 ("No such algorithm: " + transformation, failure);
+     }
+ 
+-    // If the requested crypto service is export-controlled,
+-    // determine the maximum allowable keysize.
+-    private void initCryptoPermission() throws NoSuchAlgorithmException {
+-        if (JceSecurity.isRestricted() == false) {
+-            cryptoPerm = CryptoAllPermission.INSTANCE;
+-            exmech = null;
+-            return;
+-        }
+-        cryptoPerm = getConfiguredPermission(transformation);
+-        // Instantiate the exemption mechanism (if required)
+-        String exmechName = cryptoPerm.getExemptionMechanism();
+-        if (exmechName != null) {
+-            exmech = ExemptionMechanism.getInstance(exmechName);
+-        }
+-    }
+-
+     // max number of debug warnings to print from chooseFirstProvider()
+     private static int warnCount = 10;
+ 
+@@ -699,7 +668,6 @@
+                         thisSpi = (CipherSpi)obj;
+                     }
+                     tr.setModePadding(thisSpi);
+-                    initCryptoPermission();
+                     spi = thisSpi;
+                     provider = s.getProvider();
+                     // not needed any more
+@@ -731,19 +699,15 @@
+             InvalidAlgorithmParameterException {
+         switch (type) {
+         case I_KEY:
+-            checkCryptoPerm(thisSpi, key);
+             thisSpi.engineInit(opmode, key, random);
+             break;
+         case I_PARAMSPEC:
+-            checkCryptoPerm(thisSpi, key, paramSpec);
+             thisSpi.engineInit(opmode, key, paramSpec, random);
+             break;
+         case I_PARAMS:
+-            checkCryptoPerm(thisSpi, key, params);
+             thisSpi.engineInit(opmode, key, params, random);
+             break;
+         case I_CERT:
+-            checkCryptoPerm(thisSpi, key);
+             thisSpi.engineInit(opmode, key, random);
+             break;
+         default:
+@@ -793,7 +757,6 @@
+                         thisSpi = (CipherSpi)s.newInstance(null);
+                     }
+                     tr.setModePadding(thisSpi);
+-                    initCryptoPermission();
+                     implInit(thisSpi, initType, opmode, key, paramSpec,
+                                                         params, random);
+                     provider = s.getProvider();
+@@ -939,107 +902,6 @@
+         return exmech;
+     }
+ 
+-    //
+-    // Crypto permission check code below
+-    //
+-    private void checkCryptoPerm(CipherSpi checkSpi, Key key)
+-            throws InvalidKeyException {
+-        if (cryptoPerm == CryptoAllPermission.INSTANCE) {
+-            return;
+-        }
+-        // Check if key size and default parameters are within legal limits
+-        AlgorithmParameterSpec params;
+-        try {
+-            params = getAlgorithmParameterSpec(checkSpi.engineGetParameters());
+-        } catch (InvalidParameterSpecException ipse) {
+-            throw new InvalidKeyException
+-                ("Unsupported default algorithm parameters");
+-        }
+-        if (!passCryptoPermCheck(checkSpi, key, params)) {
+-            throw new InvalidKeyException(
+-                "Illegal key size or default parameters");
+-        }
+-    }
+-
+-    private void checkCryptoPerm(CipherSpi checkSpi, Key key,
+-            AlgorithmParameterSpec params) throws InvalidKeyException,
+-            InvalidAlgorithmParameterException {
+-        if (cryptoPerm == CryptoAllPermission.INSTANCE) {
+-            return;
+-        }
+-        // Determine keysize and check if it is within legal limits
+-        if (!passCryptoPermCheck(checkSpi, key, null)) {
+-            throw new InvalidKeyException("Illegal key size");
+-        }
+-        if ((params != null) && (!passCryptoPermCheck(checkSpi, key, params))) {
+-            throw new InvalidAlgorithmParameterException("Illegal parameters");
+-        }
+-    }
+-
+-    private void checkCryptoPerm(CipherSpi checkSpi, Key key,
+-            AlgorithmParameters params)
+-            throws InvalidKeyException, InvalidAlgorithmParameterException {
+-        if (cryptoPerm == CryptoAllPermission.INSTANCE) {
+-            return;
+-        }
+-        // Convert the specified parameters into specs and then delegate.
+-        AlgorithmParameterSpec pSpec;
+-        try {
+-            pSpec = getAlgorithmParameterSpec(params);
+-        } catch (InvalidParameterSpecException ipse) {
+-            throw new InvalidAlgorithmParameterException
+-                ("Failed to retrieve algorithm parameter specification");
+-        }
+-        checkCryptoPerm(checkSpi, key, pSpec);
+-    }
+-
+-    private boolean passCryptoPermCheck(CipherSpi checkSpi, Key key,
+-                                        AlgorithmParameterSpec params)
+-            throws InvalidKeyException {
+-        String em = cryptoPerm.getExemptionMechanism();
+-        int keySize = checkSpi.engineGetKeySize(key);
+-        // Use the "algorithm" component of the cipher
+-        // transformation so that the perm check would
+-        // work when the key has the "aliased" algo.
+-        String algComponent;
+-        int index = transformation.indexOf('/');
+-        if (index != -1) {
+-            algComponent = transformation.substring(0, index);
+-        } else {
+-            algComponent = transformation;
+-        }
+-        CryptoPermission checkPerm =
+-            new CryptoPermission(algComponent, keySize, params, em);
+-
+-        if (!cryptoPerm.implies(checkPerm)) {
+-            if (debug != null) {
+-                debug.println("Crypto Permission check failed");
+-                debug.println("granted: " + cryptoPerm);
+-                debug.println("requesting: " + checkPerm);
+-            }
+-            return false;
+-        }
+-        if (exmech == null) {
+-            return true;
+-        }
+-        try {
+-            if (!exmech.isCryptoAllowed(key)) {
+-                if (debug != null) {
+-                    debug.println(exmech.getName() + " isn't enforced");
+-                }
+-                return false;
+-            }
+-        } catch (ExemptionMechanismException eme) {
+-            if (debug != null) {
+-                debug.println("Cannot determine whether "+
+-                              exmech.getName() + " has been enforced");
+-                eme.printStackTrace();
+-            }
+-            return false;
+-        }
+-        return true;
+-    }
+-
+     // check if opmode is one of the defined constants
+     // throw InvalidParameterExeption if not
+     private static void checkOpmode(int opmode) {
+@@ -1144,7 +1006,6 @@
+         checkOpmode(opmode);
+ 
+         if (spi != null) {
+-            checkCryptoPerm(spi, key);
+             spi.engineInit(opmode, key, random);
+         } else {
+             try {
+@@ -1270,7 +1131,6 @@
+         checkOpmode(opmode);
+ 
+         if (spi != null) {
+-            checkCryptoPerm(spi, key, params);
+             spi.engineInit(opmode, key, params, random);
+         } else {
+             chooseProvider(I_PARAMSPEC, opmode, key, params, null, random);
+@@ -1391,7 +1251,6 @@
+         checkOpmode(opmode);
+ 
+         if (spi != null) {
+-            checkCryptoPerm(spi, key, params);
+             spi.engineInit(opmode, key, params, random);
+         } else {
+             chooseProvider(I_PARAMS, opmode, key, null, params, random);
+@@ -1555,7 +1414,6 @@
+             (certificate==null? null:certificate.getPublicKey());
+ 
+         if (spi != null) {
+-            checkCryptoPerm(spi, publicKey);
+             spi.engineInit(opmode, publicKey, random);
+         } else {
+             try {
+diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java openjdk/jdk/src/share/classes/javax/crypto/JceSecurity.java
+--- openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java	2008-08-28 12:06:23.000000000 +0200
++++ openjdk/jdk/src/share/classes/javax/crypto/JceSecurity.java	2008-08-28 15:17:56.000000000 +0200
+@@ -63,8 +63,8 @@
+     // Map<Provider,?> of the providers currently being verified
+     private final static Map verifyingProviders = new IdentityHashMap();
+ 
+-    // Set the default value. May be changed in the static initializer.
+-    private static boolean isRestricted = true;
++    // Set the default value.
++    private static final boolean isRestricted = false;
+ 
+     /*
+      * Don't let anyone instantiate this.
+@@ -72,26 +72,6 @@
+     private JceSecurity() {
+     }
+ 
+-    static {
+-        try {
+-            AccessController.doPrivileged(new PrivilegedExceptionAction() {
+-                public Object run() throws Exception {
+-                    setupJurisdictionPolicies();
+-                    return null;
+-                }
+-            });
+-
+-            isRestricted = defaultPolicy.implies(
+-                CryptoAllPermission.INSTANCE) ? false : true;
+-        } catch (Exception e) {
+-            SecurityException se =
+-                new SecurityException(
+-                    "Can not initialize cryptographic mechanism");
+-            se.initCause(e);
+-            throw se;
+-        }
+-    }
+-
+     static Instance getInstance(String type, Class clazz, String algorithm,
+             String provider) throws NoSuchAlgorithmException,
+             NoSuchProviderException {
+@@ -239,93 +219,6 @@
+         return (url == NULL_URL) ? null : url;
+     }
+ 
+-    private static void setupJurisdictionPolicies() throws Exception {
+-        String javaHomeDir = System.getProperty("java.home");
+-        String sep = File.separator;
+-        String pathToPolicyJar = javaHomeDir + sep + "lib" + sep +
+-            "security" + sep;
+-
+-        File exportJar = new File(pathToPolicyJar, "US_export_policy.jar");
+-        File importJar = new File(pathToPolicyJar, "local_policy.jar");
+-        URL jceCipherURL = ClassLoader.getSystemResource
+-                ("javax/crypto/Cipher.class");
+-
+-        if ((jceCipherURL == null) ||
+-                !exportJar.exists() || !importJar.exists()) {
+-            throw new SecurityException
+-                                ("Cannot locate policy or framework files!");
+-        }
+-
+-        // Enforce the signer restraint, i.e. signer of JCE framework
+-        // jar should also be the signer of the two jurisdiction policy
+-        // jar files.
+-        JarVerifier.verifyFrameworkSigned(jceCipherURL);
+-
+-        // Read jurisdiction policies.
+-        CryptoPermissions defaultExport = new CryptoPermissions();
+-        CryptoPermissions exemptExport = new CryptoPermissions();
+-        loadPolicies(exportJar, defaultExport, exemptExport);
+-
+-        CryptoPermissions defaultImport = new CryptoPermissions();
+-        CryptoPermissions exemptImport = new CryptoPermissions();
+-        loadPolicies(importJar, defaultImport, exemptImport);
+-
+-        // Merge the export and import policies for default applications.
+-        if (defaultExport.isEmpty() || defaultImport.isEmpty()) {
+-            throw new SecurityException("Missing mandatory jurisdiction " +
+-                                        "policy files");
+-        }
+-        defaultPolicy = defaultExport.getMinimum(defaultImport);
+-
+-        // Merge the export and import policies for exempt applications.
+-        if (exemptExport.isEmpty())  {
+-            exemptPolicy = exemptImport.isEmpty() ? null : exemptImport;
+-        } else {
+-            exemptPolicy = exemptExport.getMinimum(exemptImport);
+-        }
+-    }
+-
+-    /**
+-     * Load the policies from the specified file. Also checks that the
+-     * policies are correctly signed.
+-     */
+-    private static void loadPolicies(File jarPathName,
+-                                     CryptoPermissions defaultPolicy,
+-                                     CryptoPermissions exemptPolicy)
+-        throws Exception {
+-
+-        JarFile jf = new JarFile(jarPathName);
+-
+-        Enumeration entries = jf.entries();
+-        while (entries.hasMoreElements()) {
+-            JarEntry je = (JarEntry)entries.nextElement();
+-            InputStream is = null;
+-            try {
+-                if (je.getName().startsWith("default_")) {
+-                    is = jf.getInputStream(je);
+-                    defaultPolicy.load(is);
+-                } else if (je.getName().startsWith("exempt_")) {
+-                    is = jf.getInputStream(je);
+-                    exemptPolicy.load(is);
+-                } else {
+-                    continue;
+-                }
+-            } finally {
+-                if (is != null) {
+-                    is.close();
+-                }
+-            }
+-
+-            // Enforce the signer restraint, i.e. signer of JCE framework
+-            // jar should also be the signer of the two jurisdiction policy
+-            // jar files.
+-            JarVerifier.verifyPolicySigned(je.getCertificates());
+-        }
+-        // Close and nullify the JarFile reference to help GC.
+-        jf.close();
+-        jf = null;
+-    }
+-
+     static CryptoPermissions getDefaultPolicy() {
+         return defaultPolicy;
+     }
+diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurityManager.java openjdk/jdk/src/share/classes/javax/crypto/JceSecurityManager.java
+--- openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurityManager.java	2008-08-28 12:06:23.000000000 +0200
++++ openjdk/jdk/src/share/classes/javax/crypto/JceSecurityManager.java	2008-08-28 15:17:56.000000000 +0200
+@@ -50,8 +50,6 @@
+     private static final CryptoPermissions defaultPolicy;
+     private static final CryptoPermissions exemptPolicy;
+     private static final CryptoAllPermission allPerm;
+-    private static final Vector TrustedCallersCache = new Vector(2);
+-    private static final Map exemptCache = new HashMap();
+ 
+     // singleton instance
+     static final JceSecurityManager INSTANCE;
+@@ -77,176 +75,6 @@
+      * applet/application, for the given algorithm.
+      */
+     CryptoPermission getCryptoPermission(String alg) {
+-        // Need to convert to uppercase since the crypto perm
+-        // lookup is case sensitive.
+-        alg = alg.toUpperCase(Locale.ENGLISH);
+-
+-        // If CryptoAllPermission is granted by default, we return that.
+-        // Otherwise, this will be the permission we return if anything goes
+-        // wrong.
+-        CryptoPermission defaultPerm = getDefaultPermission(alg);
+-        if (defaultPerm == CryptoAllPermission.INSTANCE) {
+-            return defaultPerm;
+-        }
+-
+-        // Determine the codebase of the caller of the JCE API.
+-        // This is the codebase of the first class which is not in
+-        // javax.crypto.* packages.
+-        // NOTE: javax.crypto.* package maybe subject to package
+-        // insertion, so need to check its classloader as well.
+-        Class[] context = getClassContext();
+-        URL callerCodeBase = null;
+-        int i;
+-        for (i=0; i<context.length; i++) {
+-            Class cls = context[i];
+-            callerCodeBase = JceSecurity.getCodeBase(cls);
+-            if (callerCodeBase != null) {
+-                break;
+-            } else {
+-                if (cls.getName().startsWith("javax.crypto.")) {
+-                    // skip jce classes since they aren't the callers
+-                    continue;
+-                }
+-                // use default permission when the caller is system classes
+-                return defaultPerm;
+-            }
+-        }
+-
+-        if (i == context.length) {
+-            return defaultPerm;
+-        }
+-
+-        CryptoPermissions appPerms;
+-        synchronized (this.getClass()) {
+-            if (exemptCache.containsKey(callerCodeBase)) {
+-                appPerms = (CryptoPermissions)exemptCache.get(callerCodeBase);
+-            } else {
+-                appPerms = getAppPermissions(callerCodeBase);
+-                exemptCache.put(callerCodeBase, appPerms);
+-            }
+-        }
+-
+-        if (appPerms == null) {
+-            return defaultPerm;
+-        }
+-
+-        // If the app was granted the special CryptoAllPermission, return that.
+-        if (appPerms.implies(allPerm)) {
+-            return allPerm;
+-        }
+-
+-        // Check if the crypto permissions granted to the app contain a
+-        // crypto permission for the requested algorithm that does not require
+-        // any exemption mechanism to be enforced.
+-        // Return that permission, if present.
+-        PermissionCollection appPc = appPerms.getPermissionCollection(alg);
+-        if (appPc == null) {
+-            return defaultPerm;
+-        }
+-        Enumeration enum_ = appPc.elements();
+-        while (enum_.hasMoreElements()) {
+-            CryptoPermission cp = (CryptoPermission)enum_.nextElement();
+-            if (cp.getExemptionMechanism() == null) {
+-                return cp;
+-            }
+-        }
+-
+-        // Check if the jurisdiction file for exempt applications contains
+-        // any entries for the requested algorithm.
+-        // If not, return the default permission.
+-        PermissionCollection exemptPc =
+-            exemptPolicy.getPermissionCollection(alg);
+-        if (exemptPc == null) {
+-            return defaultPerm;
+-        }
+-
+-        // In the jurisdiction file for exempt applications, go through the
+-        // list of CryptoPermission entries for the requested algorithm, and
+-        // stop at the first entry:
+-        //  - that is implied by the collection of crypto permissions granted
+-        //    to the app, and
+-        //  - whose exemption mechanism is available from one of the
+-        //    registered CSPs
+-        enum_ = exemptPc.elements();
+-        while (enum_.hasMoreElements()) {
+-            CryptoPermission cp = (CryptoPermission)enum_.nextElement();
+-            try {
+-                ExemptionMechanism.getInstance(cp.getExemptionMechanism());
+-                if (cp.getAlgorithm().equals(
+-                                      CryptoPermission.ALG_NAME_WILDCARD)) {
+-                    CryptoPermission newCp;
+-                    if (cp.getCheckParam()) {
+-                        newCp = new CryptoPermission(
+-                                alg, cp.getMaxKeySize(),
+-                                cp.getAlgorithmParameterSpec(),
+-                                cp.getExemptionMechanism());
+-                    } else {
+-                        newCp = new CryptoPermission(
+-                                alg, cp.getMaxKeySize(),
+-                                cp.getExemptionMechanism());
+-                    }
+-                    if (appPerms.implies(newCp)) {
+-                        return newCp;
+-                    }
+-                }
+-
+-                if (appPerms.implies(cp)) {
+-                    return cp;
+-                }
+-            } catch (Exception e) {
+-                continue;
+-            }
+-        }
+-        return defaultPerm;
+-    }
+-
+-    private static CryptoPermissions getAppPermissions(URL callerCodeBase) {
+-        // Check if app is exempt, and retrieve the permissions bundled with it
+-        try {
+-            return JceSecurity.verifyExemptJar(callerCodeBase);
+-        } catch (Exception e) {
+-            // Jar verification fails
+-            return null;
+-        }
+-
+-    }
+-
+-    /**
+-     * Returns the default permission for the given algorithm.
+-     */
+-    private CryptoPermission getDefaultPermission(String alg) {
+-        Enumeration enum_ =
+-            defaultPolicy.getPermissionCollection(alg).elements();
+-        return (CryptoPermission)enum_.nextElement();
+-    }
+-
+-    // See  bug 4341369 & 4334690 for more info.
+-    boolean isCallerTrusted() {
+-        // Get the caller and its codebase.
+-        Class[] context = getClassContext();
+-        URL callerCodeBase = null;
+-        int i;
+-        for (i=0; i<context.length; i++) {
+-            callerCodeBase = JceSecurity.getCodeBase(context[i]);
+-            if (callerCodeBase != null) {
+-                break;
+-            }
+-        }
+-        // The caller is in the JCE framework.
+-        if (i == context.length) {
+-            return true;
+-        }
+-        //The caller has been verified.
+-        if (TrustedCallersCache.contains(context[i])) {
+-            return true;
+-        }
+-        // Check whether the caller is a trusted provider.
+-        try {
+-            JceSecurity.verifyProviderJar(callerCodeBase);
+-        } catch (Exception e2) {
+-            return false;
+-        }
+-        TrustedCallersCache.addElement(context[i]);
+-        return true;
++        return CryptoAllPermission.INSTANCE;
+     }
+ }
+diff -ur openjdk.orig/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java openjdk/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java
+--- openjdk.orig/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java	2008-08-28 13:08:52.000000000 +0200
++++ openjdk/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java	2008-08-28 15:17:56.000000000 +0200
+@@ -44,18 +44,9 @@
+         }
+     }
+ 
+-    private static boolean isUnlimitedPolicy() throws IOException {
++    private static boolean isUnlimitedPolicy() {
+         if (instance == null) {
+-            String jreDir = System.getProperty("java.home");
+-            String localPolicyPath = jreDir + File.separator + "lib" +
+-                File.separator + "security" + File.separator +
+-                "local_policy.jar";
+-            JarFile localPolicy = new JarFile(localPolicyPath);
+-            if (localPolicy.getEntry("exempt_local.policy") == null) {
+-                return true;
+-            } else {
+-                return false;
+-            }
++            return true;
+         } else {
+             return instance.isUnlimited;
+         }

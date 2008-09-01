@@ -25,13 +25,12 @@
 
 
  protected:
-  // Size of interpreter code.  We don't have generated code so
-  // this should be zero, but that hits all kinds of assertions
+  // Size of interpreter code
   const static int InterpreterCodeSize = 6 * K;
 
  private:
   // Method entries
-  static void normal_entry(methodOop method, TRAPS);
-  static void native_entry(methodOop method, TRAPS);
-  static void accessor_entry(methodOop method, TRAPS);
-  static void empty_entry(methodOop method, TRAPS);
+  static void normal_entry(methodOop method, intptr_t UNUSED, TRAPS);
+  static void native_entry(methodOop method, intptr_t UNUSED, TRAPS);
+  static void accessor_entry(methodOop method, intptr_t UNUSED, TRAPS);
+  static void empty_entry(methodOop method, intptr_t UNUSED, TRAPS);

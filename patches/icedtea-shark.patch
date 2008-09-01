@@ -176,13 +176,16 @@ diff -ru openjdk/hotspot/src/share/vm/memory/cardTableModRefBS.hpp openjdk/hotsp
 diff -ru openjdk/hotspot/src/share/vm/oops/methodOop.cpp openjdk/hotspot/src/share/vm/oops/methodOop.cpp
 --- openjdk/hotspot/src/share/vm/oops/methodOop.cpp	2008-06-20 10:22:11.000000000 +0100
 +++ openjdk/hotspot/src/share/vm/oops/methodOop.cpp	2008-04-15 10:52:44.000000000 +0100
-@@ -733,7 +733,11 @@
+@@ -730,10 +730,14 @@ void methodOopDesc::set_code(methodHandl
+   }
+ 
+   OrderAccess::storestore();
++#ifdef SHARK
++  mh->_from_interpreted_entry = code->instructions_begin();
++#else
    mh->_from_compiled_entry = code->verified_entry_point();
    OrderAccess::storestore();
    // Instantly compiled code can execute.
-+#ifdef SHARK
-+  mh->_from_interpreted_entry = *(address *) code->instructions_begin();
-+#else
    mh->_from_interpreted_entry = mh->get_i2c_entry();
 +#endif // SHARK
  
@@ -281,3 +284,22 @@ diff -ru openjdk/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src
  #endif // TIERED
  
  #ifndef HOTSPOT_VM_DISTRO
+diff -r ef3bb05d21d5 openjdk/hotspot/src/share/vm/code/nmethod.cpp
+--- openjdk/hotspot/src/share/vm/code/nmethod.cpp	Fri Aug 08 11:17:59 2008 +0100
++++ openjdk/hotspot/src/share/vm/code/nmethod.cpp	Fri Aug 08 11:35:04 2008 +0100
+@@ -1453,6 +1453,7 @@ void nmethod::oops_do(OopClosure* f) {
+ // Method that knows how to preserve outgoing arguments at call. This method must be
+ // called with a frame corresponding to a Java invoke
+ void nmethod::preserve_callee_argument_oops(frame fr, const RegisterMap *reg_map, OopClosure* f) {
++#ifndef SHARK
+   if (!method()->is_native()) {
+     SimpleScopeDesc ssd(this, fr.pc());
+     Bytecode_invoke* call = Bytecode_invoke_at(ssd.method(), ssd.bci());
+@@ -1460,6 +1461,7 @@ void nmethod::preserve_callee_argument_o
+     symbolOop signature = call->signature();
+     fr.oops_compiled_arguments_do(signature, is_static, reg_map, f);
+   }
++#endif // !SHARK
+ }
+ 
+ 

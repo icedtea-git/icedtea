@@ -29,8 +29,11 @@
 using namespace llvm;
 
 const PointerType*  SharkType::_cpCacheEntry_type;
-const FunctionType* SharkType::_method_entry_type;
+const FunctionType* SharkType::_entry_point_type;
+const PointerType*  SharkType::_itableOffsetEntry_type;
+const PointerType*  SharkType::_klass_type;
 const PointerType*  SharkType::_methodOop_type;
+const ArrayType*    SharkType::_monitor_type;
 const PointerType*  SharkType::_oop_type;
 const PointerType*  SharkType::_thread_type;
 const PointerType*  SharkType::_zeroStack_type;
@@ -44,8 +47,18 @@ void SharkType::initialize()
   _cpCacheEntry_type = PointerType::getUnqual(
     ArrayType::get(Type::Int8Ty, sizeof(ConstantPoolCacheEntry)));
   
+  _itableOffsetEntry_type = PointerType::getUnqual(
+    ArrayType::get(Type::Int8Ty, itableOffsetEntry::size() * wordSize));
+  
+  _klass_type = PointerType::getUnqual(
+    ArrayType::get(Type::Int8Ty, sizeof(Klass)));
+  
   _methodOop_type = PointerType::getUnqual(
     ArrayType::get(Type::Int8Ty, sizeof(methodOopDesc)));
+  
+  _monitor_type = ArrayType::get(
+      Type::Int8Ty,
+      frame::interpreter_frame_monitor_size() * wordSize);
   
   _oop_type = PointerType::getUnqual(
     ArrayType::get(Type::Int8Ty, sizeof(oopDesc)));
@@ -58,15 +71,16 @@ void SharkType::initialize()
 
   std::vector<const Type*> params;
   params.push_back(methodOop_type());
+  params.push_back(intptr_type());
   params.push_back(thread_type());
-  _method_entry_type = FunctionType::get(Type::VoidTy, params, false);
+  _entry_point_type = FunctionType::get(Type::VoidTy, params, false);
 
   // Java types a) on the stack and in fields, and b) in arrays
   for (int i = 0; i < T_CONFLICT + 1; i++) {
     switch (i) {
     case T_BOOLEAN:
       _to_stackType_tab[i] = jint_type();
-      //_to_arrayType_tab[i] = jboolean_type();
+      _to_arrayType_tab[i] = jboolean_type();
       break;
       
     case T_BYTE:
@@ -79,14 +93,29 @@ void SharkType::initialize()
       _to_arrayType_tab[i] = jchar_type();
       break;
 
+    case T_SHORT:
+      _to_stackType_tab[i] = jint_type();
+      _to_arrayType_tab[i] = jshort_type();
+      break;
+
     case T_INT:
       _to_stackType_tab[i] = jint_type();
       _to_arrayType_tab[i] = jint_type();
       break;
 
+    case T_LONG:
+      _to_stackType_tab[i] = jlong_type();
+      _to_arrayType_tab[i] = jlong_type();
+      break;
+
     case T_FLOAT:
       _to_stackType_tab[i] = jfloat_type();
       _to_arrayType_tab[i] = jfloat_type();
+      break;
+
+    case T_DOUBLE:
+      _to_stackType_tab[i] = jdouble_type();
+      _to_arrayType_tab[i] = jdouble_type();
       break;
 
     case T_OBJECT:

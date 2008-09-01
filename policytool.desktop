@@ -6,5 +6,5 @@ Icon=java
 Terminal=false
 Type=Application
 StartupWMClass=sun-security-tools-PolicyTool
-Categories=Java;
+Categories=Development;Java;
 Version=1.0

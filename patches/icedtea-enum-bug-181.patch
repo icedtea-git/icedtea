@@ -1,0 +1,11 @@
+--- openjdkold/jdk/src/share/classes/sun/beans/editors/EnumEditor.java	2008-07-10 15:57:13.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/beans/editors/EnumEditor.java	2008-08-11 15:07:05.000000000 -0400
+@@ -67,7 +67,7 @@
+     }
+ 
+     public void setValue( Object value ) {
+-        if ( ( value != null ) && ( this.type != value.getClass() ) ) {
++	if ( ( value != null ) && ! ( this.type.isInstance( value ) ) ) {
+             throw new IllegalArgumentException( "Unsupported value: " + value );
+         }
+         Object oldValue;

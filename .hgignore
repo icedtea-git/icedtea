@@ -6,6 +6,8 @@ configure
 aclocal.m4
 autom4te.cache
 cacao
+netbeans
+visualvm
 openjdk
 bootstrap
 debian
@@ -13,7 +15,10 @@ lib
 stamps
 Makefile
 config.log
+config.guess
+config.sub
 config.status
+install-sh
 javac
 javap
 gcjwebplugin.so
@@ -30,6 +35,7 @@ hotspot-tools/
 test/hotspot
 test/jdk
 test/langtools
+test/jtreg.jar
 test/jtreg/classes
 rt/com/sun/jdi/AbsentInformationException.java
 rt/com/sun/jdi/Accessible.java

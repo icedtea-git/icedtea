@@ -79,7 +79,6 @@
   void set_last_Java_frame()
   {
     JavaFrameAnchor *jfa = frame_anchor();
-    jfa->set_last_Java_pc(NULL);
     jfa->set_last_Java_sp((intptr_t *) top_zero_frame());
   }
   void reset_last_Java_frame()

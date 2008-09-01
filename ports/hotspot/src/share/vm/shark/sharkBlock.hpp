@@ -61,16 +61,22 @@ class SharkBlock : public ResourceObj {
   {
     return function()->builder();
   }
+  bool failing() const
+  {
+    return function()->failing();
+  }
+  void record_method_not_compilable(const char* reason) const
+  {
+    function()->record_method_not_compilable(reason);
+  }
+  ciMethod* target() const
+  {
+    return function()->target();
+  }
   llvm::Value* thread() const
   {
     return function()->thread();
   }
-#ifndef PRODUCT
-  bool debug() const
-  {
-    return function()->debug();
-  }
-#endif // PRODUCT
 
   // Typeflow properties
  public:
@@ -192,7 +198,7 @@ class SharkBlock : public ResourceObj {
  private:
   SharkTrackingState* _current_state;
   
- private:
+ public:
   SharkTrackingState* current_state()
   {
     if (_current_state == NULL)
@@ -200,11 +206,12 @@ class SharkBlock : public ResourceObj {
     return _current_state;
   }
 
- private:
+ public:
   llvm::Value* method()
   {
     return current_state()->method();
   }
+ private:
   SharkValue* local(int index)
   {
     return current_state()->local(index);
@@ -230,30 +237,65 @@ class SharkBlock : public ResourceObj {
     return current_state()->stack(slot);
   }  
 
+  // Handy macros for the various pop, swap and dup bytecodes
+ private:
+  SharkValue* pop_and_assert_one_word()
+  {
+    SharkValue* result = pop();
+    assert(result->is_one_word(), "should be");
+    return result;
+  }
+  SharkValue* pop_and_assert_two_word()
+  {
+    SharkValue* result = pop();
+    assert(result->is_two_word(), "should be");
+    return result;
+  }
+
+  // VM calls
+ private:
+  llvm::CallInst* call_vm_base(llvm::Constant* callee,
+                               llvm::Value**   args_start,
+                               llvm::Value**   args_end);
+
+ public:
+  llvm::CallInst* call_vm(llvm::Constant* callee,
+                          llvm::Value*    arg1)
+  {
+    llvm::Value *args[] = {thread(), arg1};
+    return call_vm_base(callee, args, args + 2);
+  }
+  llvm::CallInst* call_vm(llvm::Constant* callee,
+                          llvm::Value*    arg1,
+                          llvm::Value*    arg2)
+  {
+    llvm::Value *args[] = {thread(), arg1, arg2};
+    return call_vm_base(callee, args, args + 3);
+  }
+  llvm::CallInst* call_vm(llvm::Constant* callee,
+                          llvm::Value*    arg1,
+                          llvm::Value*    arg2,
+                          llvm::Value*    arg3)
+  {
+    llvm::Value *args[] = {thread(), arg1, arg2, arg3};
+    return call_vm_base(callee, args, args + 4);
+  }
+
   // Code generation
  public:
   void parse();
 
-  // Constant pool
- private:
-  llvm::Value* _constant_pool_check;
-  llvm::Value* _constant_pool_value;
-  llvm::Value* _constant_pool_tags_check;
-  llvm::Value* _constant_pool_tags_value;
-  llvm::Value* _constant_pool_cache_check;
-  llvm::Value* _constant_pool_cache_value;
-  
- private:
-  llvm::Value* constant_pool();
-  llvm::Value* constant_pool_tags();
-  llvm::Value* constant_pool_cache();
-  llvm::Value* constant_pool_tag_at(int which);
-  llvm::Value* constant_pool_object_at(int which);
-  llvm::Value* constant_pool_cache_entry_at(int which);
-
   // Error checking
  private:
-  void check_null(SharkValue* value);
+  void check_null(SharkValue* object)
+  {
+    check_zero(object);
+  }
+  void check_divide_by_zero(SharkValue* value)
+  {
+    check_zero(value);
+  }
+  void check_zero(SharkValue* value);
   void check_bounds(SharkValue* array, SharkValue* index);
   void check_pending_exception();
   
@@ -261,16 +303,40 @@ class SharkBlock : public ResourceObj {
  private:
   void add_safepoint();
 
-  // _ldc* bytecodes
+  // ldc*
  private:
   void do_ldc();
 
-  // _*aload and *astore bytecodes
+  // arraylength
+ private:
+  void do_arraylength();
+
+  // *aload and *astore
  private:
   void do_aload(BasicType basic_type);
   void do_astore(BasicType basic_type);
 
-  // _get* and _put* bytecodes
+  // *div and *rem
+ private:
+  void do_idiv()
+  {
+    do_div_or_rem(false, false);
+  }
+  void do_irem()
+  {
+    do_div_or_rem(false, true);
+  }
+  void do_ldiv()
+  {
+    do_div_or_rem(true, false);
+  }
+  void do_lrem()
+  {
+    do_div_or_rem(true, true);
+  }
+  void do_div_or_rem(bool is_long, bool is_rem);
+  
+  // get* and put*
  private:
   void do_getstatic()
   {
@@ -290,23 +356,37 @@ class SharkBlock : public ResourceObj {
   }
   void do_field_access(bool is_get, bool is_field);
 
-  // _*return bytecodes
+  // lcmp
+ private:
+  void do_lcmp();
+
+  // *return
  private:
   void do_return(BasicType basic_type);
 
-  // _if* bytecodes
+  // if*
  private:
   void do_if(llvm::ICmpInst::Predicate p, SharkValue* b, SharkValue* a);
 
-  // _*switch bytecodes
+  // *switch
  private:
   void do_tableswitch();
 
-  // _invoke* bytecodes
+  // invoke*
  private:
   void do_call();
 
-  // _checkcast and _instanceof
+  // checkcast and instanceof
  private:
   void do_instance_check();
+
+  // new and newarray
+ private:
+  void do_new();
+  void do_newarray();
+
+  // monitorenter and monitorexit
+ private:
+  void do_monitorenter();
+  void do_monitorexit();
 };

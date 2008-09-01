@@ -23,27 +23,20 @@
  *
  */
 
-// The definitions needed for zero assembly code generation.
-
-// The zero Assembler: Pure assembler doing NO optimizations on
-// the instruction level; i.e., what you write is what you get.
-// The Assembler is generating code into a CodeBuffer.
+// In normal, CPU-specific ports of HotSpot these two classes are used
+// for generating assembly language.  We don't do any of this in zero,
+// of course, but we do sneak entry points around in CodeBuffers so we
+// generate those here.
 
 class Assembler : public AbstractAssembler {
  public:
   Assembler(CodeBuffer* code) : AbstractAssembler(code) {}
 
-  // Function to fix up forward branches
   void pd_patch_instruction(address branch, address target);
 #ifndef PRODUCT
   static void pd_print_patched_instruction(address branch);
 #endif // PRODUCT
 };
-
-// MacroAssembler extends Assembler by frequently used macros.
-//
-// Instructions for which a 'better' code sequence exists depending
-// on arguments should also go in here.
 
 class MacroAssembler : public Assembler {
  public:
@@ -51,6 +44,9 @@ class MacroAssembler : public Assembler {
 
   void align(int modulus);
   void bang_stack_with_offset(int offset);
+
+ public:
+  void advance(int bytes);
 };
 
 #ifdef ASSERT
@@ -67,4 +63,5 @@ address ShouldNotReachHereStub();
 // Nothing to do with the assembler (or lack of),
 // just a real convenient place to include these.
 #include <ffi.h>
+#include <entry_zero.hpp>
 #include <stack_zero.hpp>

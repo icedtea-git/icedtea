@@ -5,7 +5,7 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  # Compiler flags
  
  # position-independent code
-+ifneq ($(filter ppc ppc64 sparc sparc64 sparcv9,$(ZERO_LIBARCH)),)
++ifneq ($(filter ppc ppc64 s390 s390x sparc sparc64 sparcv9,$(ZERO_LIBARCH)),)
  PICFLAG = -fPIC
 +else
 +PICFLAG = -fpic

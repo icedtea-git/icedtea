@@ -1,0 +1,9 @@
+--- openjdk/hotspot/make/linux/makefiles/i486.make~	2008-07-10 22:04:18.000000000 +0200
++++ openjdk/hotspot/make/linux/makefiles/i486.make	2008-07-24 12:23:11.344839305 +0200
+@@ -34,3 +34,6 @@
+ CFLAGS += -DVM_LITTLE_ENDIAN
+ 
+ OPT_CFLAGS/compactingPermGenGen.o = -O1
++
++# GCC PR tree-optimization/36917
++OPT_CFLAGS/ciTypeFlow.o += $(OPT_CFLAGS) -fno-ivopts

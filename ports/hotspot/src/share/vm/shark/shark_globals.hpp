@@ -33,19 +33,25 @@
           "Maximum number of nodes")                                          \
                                                                               \
   /* compiler debugging */                                                    \
-  notproduct(uintx, SharkStartAt, 0,                                          \
-             "First method to consider when using Shark")                     \
+  develop(uintx, SharkStartAt, 0,                                             \
+          "First method to consider when using Shark")                        \
                                                                               \
-  notproduct(uintx, SharkStopAfter, max_uintx,                                \
-             "Last method to consider when using Shark")                      \
+  develop(uintx, SharkStopAfter, max_uintx,                                   \
+          "Last method to consider when using Shark")                         \
                                                                               \
-  notproduct(uintx, SharkDumpModuleAfter, max_uintx,                          \
-             "Dump the LLVM bitcode after compiling this number of methods")  \
+  develop(ccstr, SharkOnlyCompile, NULL,                                      \
+          "Only compile the specified method")                                \
                                                                               \
-  notproduct(uintx, SharkPrintTypeflowAfter, max_uintx,                       \
-             "Print the typeflow after compiling this number of methods")     \
+  develop(ccstr, SharkPrintTypeflowOf, NULL,                                  \
+          "Print the typeflow of the specified method")                       \
                                                                               \
-  notproduct(bool, SharkTraceBytecodes, false,                                \
-             "Trace bytecode compilation")                                    \
+  develop(ccstr, SharkPrintBitcodeOf, NULL,                                   \
+          "Print the LLVM bitcode of the specified method")                   \
+                                                                              \
+  develop(bool, SharkTraceBytecodes, false,                                   \
+          "Trace bytecode compilation")                                       \
+                                                                              \
+  develop(bool, SharkTraceInstalls, false,                                    \
+          "Trace method installation")                                        \
 
 SHARK_FLAGS(DECLARE_DEVELOPER_FLAG, DECLARE_PD_DEVELOPER_FLAG, DECLARE_PRODUCT_FLAG, DECLARE_PD_PRODUCT_FLAG, DECLARE_DIAGNOSTIC_FLAG, DECLARE_NOTPRODUCT_FLAG)

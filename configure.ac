@@ -1,6 +1,6 @@
 AC_PREREQ([2.61])
 AC_INIT([icedtea], [1.8-pre], [distro-pkg-dev@openjdk.java.net])
-AM_INIT_AUTOMAKE([tar-pax])
+AM_INIT_AUTOMAKE([1.10 tar-pax foreign])
 AC_CONFIG_FILES([Makefile])
 AC_CANONICAL_HOST
 
@@ -36,7 +36,7 @@ AC_ARG_WITH([gcj-home],
                             [gcj home directory \
                              (default is /usr/lib/jvm/java-gcj)])],
             [
-              if test "x${withval}" == x
+              if test "x${withval}" = x
               then
                 SYSTEM_GCJ_DIR=/usr/lib/jvm/java-gcj
               else
@@ -53,7 +53,7 @@ AC_ARG_WITH([openjdk-home],
                             [OpenJDK home directory \
                              (default is /usr/lib/jvm/java-openjdk)])],
             [
-              if test "x${withval}" == x
+              if test "x${withval}" = x
               then
                 SYSTEM_OPENJDK_DIR=/usr/lib/jvm/java-openjdk
               else
@@ -70,7 +70,7 @@ AC_ARG_WITH([icedtea-home],
                             [IcedTea home directory \
                              (default is /usr/lib/jvm/java-icedtea)])],
             [
-              if test "x${withval}" == x
+              if test "x${withval}" = x
               then
                 SYSTEM_ICEDTEA_DIR=/usr/lib/jvm/java-icedtea
               else
@@ -86,7 +86,7 @@ AC_ARG_WITH([ant-home],
             [AS_HELP_STRING([--with-ant-home],
                             [Ant home directory (default is /usr/share/ant)])],
             [
-              if test "x${withval}" == x
+              if test "x${withval}" = x
               then
                 SYSTEM_ANT_DIR=/usr/share/ant
               else
@@ -101,7 +101,7 @@ AC_SUBST(SYSTEM_ANT_DIR)
 AC_ARG_ENABLE([gcjwebplugin],
               [AS_HELP_STRING([--disable-gcjwebplugin],
                               [Disable compilation of browser plugin])],
-              [enable_plugin="$val"], [enable_plugin="yes"])
+              [enable_plugin="${enableval}"], [enable_plugin="yes"])
 AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
 
 AC_ARG_ENABLE([liveconnect],
@@ -115,6 +115,13 @@ AC_ARG_ENABLE([docs],
 	      		      [Disable generation of documentation])],
 	      [ENABLE_DOCS="${enableval}"], [ENABLE_DOCS='yes'])
 AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
+
+AC_ARG_ENABLE([visualvm],
+              [AS_HELP_STRING([--enable-visualvm],
+			                  [Enable compilation of visualvm. Requires that \
+							  --with-netbeans-dir=DIR is specified.])],
+              [enable_visualvm="yes"], [enable_visualvm="no"])
+AM_CONDITIONAL(WITH_VISUALVM, test "x${enable_visualvm}" = "xyes")
 
 AC_ARG_WITH([icedtea],
         [AS_HELP_STRING([--with-icedtea],
@@ -130,7 +137,7 @@ AC_ARG_WITH([icedtea],
         [
           with_icedtea=false
         ])
-AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" == true)
+AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" = true)
 
 AC_ARG_WITH([openjdk],
         [AS_HELP_STRING([--with-openjdk],
@@ -146,13 +153,13 @@ AC_ARG_WITH([openjdk],
         [
           with_openjdk=false
         ])
-AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" == true)
+AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" = true)
 
 AC_ARG_WITH([parallel-jobs],
 	[AS_HELP_STRING([--with-parallel-jobs],
 			[build IcedTea using the specified number of parallel jobs])],
 	[
-          if test "x${withval}" == x
+          if test "x${withval}" = x
           then
             PARALLEL_JOBS=2
           else
@@ -165,7 +172,7 @@ AC_ARG_WITH([parallel-jobs],
 AC_SUBST(PARALLEL_JOBS)
 
 SET_ARCH_DIRS
-if test "${with_openjdk}" == true
+if test "${with_openjdk}" = true
 then
   JAVA=$SYSTEM_OPENJDK_DIR/bin/java
   AC_SUBST(JAVA)
@@ -178,7 +185,7 @@ then
   RMIC=${SYSTEM_OPENJDK_DIR}/bin/rmic
   AC_SUBST(RMIC)
 else
-if test "${with_icedtea}" == true
+if test "${with_icedtea}" = true
 then
   JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
   AC_SUBST(JAVA)
@@ -208,6 +215,10 @@ fi
 FIND_RHINO_JAR
 WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
+WITH_VISUALVM_SRC_ZIP
+WITH_NETBEANS_PLATFORM_SRC_ZIP
+WITH_NETBEANS_PROFILER_SRC_ZIP
+WITH_ALT_JAR_BINARY
 AC_CHECK_WITH_CACAO
 AC_CHECK_WITH_CACAO_HOME
 AC_CHECK_WITH_CACAO_SRC_ZIP
@@ -407,9 +418,10 @@ AC_SUBST(LIBFFI_LIBS)
 
 if test "x${SHARK_BUILD_TRUE}" = x; then
   FIND_TOOL([LLVM_CONFIG], [llvm-config])
-  llvm_components="engine bitwriter"
+  llvm_components=engine
   LLVM_CFLAGS=`$LLVM_CONFIG --cflags $llvm_components | \
-    sed -e 's/-O.//g' | sed -e 's/-fomit-frame-pointer//g'`
+    sed -e 's/-O.//g' | sed -e 's/-fomit-frame-pointer//g' | \
+    sed -e 's/-D_DEBUG//g'`
   LLVM_LDFLAGS=`$LLVM_CONFIG --ldflags $llvm_components`
   LLVM_LIBS=`$LLVM_CONFIG --libs $llvm_components`
 fi

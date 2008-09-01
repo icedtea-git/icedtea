@@ -2,8 +2,12 @@ OPENJDK_DATE = 14_aug_2008
 OPENJDK_MD5SUM = 536c8f7b35bfb2640bdda31482d2693f
 OPENJDK_VERSION = b33
 
-CACAO_VERSION = 0.99.2
-CACAO_MD5SUM = a2865f47535f6dc3def268c0055ff20a
+CACAO_VERSION = 0.99.3
+CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
+
+NETBEANS_PLATFORM_MD5SUM = 77c79b3a7d3dbe6a8858639f8d564a38
+NETBEANS_PROFILER_MD5SUM = ff8e8abc42df6c6749e6b02bcf7bb0a5
+VISUALVM_MD5SUM = 4b55bc623418818793392bb233da2927
 
 if ENABLE_LIVECONNECT
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
@@ -50,6 +54,8 @@ if ENABLE_PLUGIN
 endif
 endif
 	rm -rf cacao
+	rm -rf visualvm
+	rm -rf netbeans
 	rm -f gcjwebplugin.so
 
 install:
@@ -63,17 +69,17 @@ install:
 	clean-tools-jar clean-shared-objects \
 	clean-copy clean-hotspot-tools clean-rt $(GCJWEBPLUGIN_CLEAN) \
 	$(ICEDTEAPLUGIN_CLEAN) hotspot hotspot-helper clean-extra \
-	clean-jtreg clean-jtreg-reports
+	clean-jtreg clean-jtreg-reports clean-visualvm clean-nbplatform
 
 EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
 	$(ICEDTEA_ECJ_PATCH) gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
-	patches/icedtea-cacao.patch $(OPENJDK_PATCHES) \
+	patches/icedtea-arch.patch patches/icedtea-cacao.patch \
 	javaws.png javaws.desktop \
 	overlays extra jconsole.desktop policytool.desktop \
 	test/jtreg patches/icedtea-plugin.patch \
 	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc \
-	HACKING
+	HACKING $(OPENJDK_PATCHES)
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -117,7 +123,7 @@ ICEDTEA_ENV = \
         "JRE_RELEASE_VERSION=1.7.0_$(COMBINED_VERSION)" \
         "HOTSPOT_RELEASE_VERSION=1.7.0_$(COMBINED_VERSION)" \
 	"LANG=C" \
-	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
+	"PATH=$(abs_top_builddir)/bootstrap/jdk1.6.0/bin:/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
 	"ALT_BINARY_PLUGS_PATH=$(abs_top_builddir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
@@ -164,6 +170,11 @@ ICEDTEA_ENV += \
 	"NO_DOCS=true"
 endif
 
+if USE_ALT_JAR
+ICEDTEA_ENV += \
+	"ALT_JAR_CMD=$(ALT_JAR_CMD)"
+endif
+
 env:
 	@echo 'unset JAVA_HOME'
 	@echo 'export $(ICEDTEA_ENV)'
@@ -181,7 +192,7 @@ ICEDTEA_ENV_ECJ = \
         "JRE_RELEASE_VERSION=1.7.0_$(COMBINED_VERSION)" \
         "HOTSPOT_RELEASE_VERSION=1.7.0_$(COMBINED_VERSION)" \
 	"LANG=C" \
-	"PATH=/usr/bin:/bin:/usr/sbin:/sbin" \
+	"PATH=$(abs_top_builddir)/bootstrap/jdk1.6.0/bin:/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
 	"ALT_BINARY_PLUGS_PATH=$(abs_top_builddir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
@@ -279,6 +290,29 @@ else
   CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.gz
 endif
 
+NETBEANS_PLATFORM_URL = http://download.netbeans.org/netbeans/6.0/final/zip/
+
+if USE_ALT_NETBEANS_PLATFORM_SRC_ZIP
+  NETBEANS_PLATFORM_SRC_ZIP = $(ALT_NETBEANS_PLATFORM_SRC_ZIP)
+else
+  NETBEANS_PLATFORM_SRC_ZIP = netbeans-6.0.1-200801291616-platform-src.zip
+endif
+
+NETBEANS_PROFILER_URL = http://icedtea.classpath.org/visualvm/
+
+if USE_ALT_NETBEANS_PROFILER_SRC_ZIP
+  NETBEANS_PROFILER_SRC_ZIP = $(ALT_NETBEANS_PROFILER_SRC_ZIP)
+else
+  NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_preview2.tar.gz
+endif
+
+VISUALVM_URL = http://icedtea.classpath.org/visualvm/
+
+if USE_ALT_VISUALVM_SRC_ZIP
+  VISUALVM_SRC_ZIP = $(ALT_VISUALVM_SRC_ZIP)
+else
+  VISUALVM_SRC_ZIP = visualvm-20080728-src.tar.gz
+endif
 
 stamps/download.stamp: stamps/hgforest.stamp
 if !OPENJDK_SRC_DIR_FOUND
@@ -331,6 +365,46 @@ else
 endif
 endif
 endif
+if WITH_VISUALVM
+if USE_ALT_NETBEANS_PLATFORM_SRC_ZIP
+else
+	if ! echo "$(NETBEANS_PLATFORM_MD5SUM) $(NETBEANS_PLATFORM_SRC_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ $(NETBEANS_PLATFORM_SRC_ZIP) ] ; \
+	  then \
+	    mv $(NETBEANS_PLATFORM_SRC_ZIP) $(NETBEANS_PLATFORM_SRC_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(NETBEANS_PLATFORM_URL)$(NETBEANS_PLATFORM_SRC_ZIP) \
+	    -O $(NETBEANS_PLATFORM_SRC_ZIP) ; \
+	fi
+endif
+if USE_ALT_NETBEANS_PROFILER_SRC_ZIP
+else
+	if ! echo "$(NETBEANS_PROFILER_MD5SUM) $(NETBEANS_PROFILER_SRC_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ $(NETBEANS_PROFILER_SRC_ZIP) ] ; \
+	  then \
+	    mv $(NETBEANS_PROFILER_SRC_ZIP) $(NETBEANS_PROFILER_SRC_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(NETBEANS_PROFILER_URL)$(NETBEANS_PROFILER_SRC_ZIP) \
+	    -O $(NETBEANS_PROFILER_SRC_ZIP) ; \
+	fi
+endif
+if USE_ALT_VISUALVM_SRC_ZIP
+else
+	if ! echo "$(VISUALVM_MD5SUM) $(VISUALVM_SRC_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ $(VISUALVM_SRC_ZIP) ] ; \
+	  then \
+	    mv $(VISUALVM_SRC_ZIP) $(VISUALVM_SRC_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(VISUALVM_URL)$(VISUALVM_SRC_ZIP) -O $(VISUALVM_SRC_ZIP) ; \
+	fi
+endif
+endif
 	mkdir -p stamps
 	touch stamps/download.stamp
 
@@ -374,6 +448,11 @@ clean-download:
 if WITH_CACAO
 	rm -f $(CACAO_SRC_ZIP)
 endif
+if WITH_VISUALVM
+	rm -f $(VISUALVM_SRC_ZIP) 
+	rm -f $(NETBEANS_PLATFORM_SRC_ZIP) 
+	rm -f $(NETBEANS_PROFILER_SRC_ZIP)
+endif
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
@@ -406,10 +485,12 @@ ZERO_PATCHES = \
 	patches/icedtea-hotspot7-build-fixes.patch \
 	patches/icedtea-bytecodeInterpreter.patch \
 	patches/icedtea-signature-iterator.patch \
-	patches/icedtea-signed-types.patch \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-zero.patch \
 	patches/icedtea-ia64-bugfix.patch
+
+# Patches needed when not using the newer OpenJDK 7 HotSpot for zero.
+NON_ZERO_PATCHES = 
 
 if ZERO_BUILD
   ZERO_PATCHES_COND = $(ZERO_PATCHES)
@@ -460,7 +541,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
-	patches/icedtea-arm-uname.patch \
+	patches/icedtea-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-LCMS-setTagData.patch \
 	patches/icedtea-color-createcontext.patch \
@@ -481,7 +562,19 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jsoundhs.patch \
 	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-mbeanintrospector.patch \
-	$(SHARK_PATCH) 
+	patches/icedtea-hotspot-gcc-pr36917.patch \
+	patches/icedtea-hotspot-citypeflow.patch \
+	patches/icedtea-alpha-fixes.patch \
+	patches/icedtea-alt-jar.patch \
+	patches/icedtea-enum-bug-181.patch \
+	patches/icedtea-jdk-use-ssize_t.patch \
+	patches/icedtea-hotspot-use-idx_t.patch \
+	patches/icedtea-hotspot-params-cast-size_t.patch \
+	patches/icedtea-clean-crypto.patch \
+	$(SHARK_PATCH) \
+	$(GCC_PATCH) \
+	patches/icedtea-arch.patch \
+	patches/icedtea-signed-types.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -525,9 +618,21 @@ if !USE_SYSTEM_CACAO
 	if ! test -d cacao ; \
 	then \
 	  mkdir cacao ; \
-	  $(TAR) xzf $(CACAO_SRC_ZIP) -C cacao ; \
+	  $(TAR) xf $(CACAO_SRC_ZIP) -C cacao ; \
 	fi
 endif
+endif
+if WITH_VISUALVM
+	if ! test -d visualvm ; \
+	then \
+	  $(TAR) xf $(VISUALVM_SRC_ZIP) ; \
+	fi
+	if ! test -d netbeans ; \
+	then \
+	  mkdir netbeans ; \
+	  $(UNZIP) -q $(NETBEANS_PLATFORM_SRC_ZIP) -d netbeans ; \
+	  $(TAR) xf $(NETBEANS_PROFILER_SRC_ZIP) -C netbeans ; \
+	fi
 endif
 	touch stamps/extract-cacao.stamp
 
@@ -560,7 +665,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	cd $(abs_top_builddir) ; \
 	for p in $(ICEDTEA_PATCHES) ; \
 	do \
-	  if test x$${all_patches_ok} == "xyes" \
+	  if test x$${all_patches_ok} = "xyes" \
 	    && echo Checking $$p \
 	    && $(PATCH) -l -p0 --dry-run -s -t -f \
 	      -F 0 < $(abs_top_srcdir)/$$p ; \
@@ -574,11 +679,11 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	        >> stamps/patch.stamp.tmp ; \
 	    fi ; \
 	  else \
-	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
+	    test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
 	done ; \
 	mv stamps/patch.stamp.tmp stamps/patch.stamp ; \
-	if ! test x$${all_patches_ok} == "xyes"; then \
+	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
@@ -611,7 +716,7 @@ clean-patch:
 	  fi ; \
 	done ; \
 	cd $(abs_top_builddir) ; \
-	if ! test x$${all_patches_ok} == "xyes" ; then \
+	if ! test x$${all_patches_ok} = "xyes" ; then \
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
@@ -622,7 +727,7 @@ stamps/patch-fsg.stamp: stamps/generated.stamp
 	all_patches_ok=yes; \
 	for p in $(ICEDTEA_FSG_PATCHES) ; \
 	do \
-	  if test x$${all_patches_ok} == "xyes" \
+	  if test x$${all_patches_ok} = "xyes" \
 	    && echo Checking $$p \
 	    && $(PATCH) -l -p0 --dry-run -s -t -f \
 	      -F 0 < $(abs_top_srcdir)/$$p ; \
@@ -636,11 +741,11 @@ stamps/patch-fsg.stamp: stamps/generated.stamp
 	        >> stamps/patch-fsg.stamp.tmp ; \
 	    fi ; \
 	  else \
-	    test x$${all_patches_ok} == "xyes" && all_patches_ok=$$p ; \
+	    test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
 	done ; \
 	mv stamps/patch-fsg.stamp.tmp stamps/patch-fsg.stamp ; \
-	if ! test x$${all_patches_ok} == "xyes"; then \
+	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
@@ -660,7 +765,7 @@ clean-patch-fsg:
 	    all_patches_ok=no ; \
 	  fi ; \
 	done ; \
-	if ! test x$${all_patches_ok} == "xyes" ; then \
+	if ! test x$${all_patches_ok} = "xyes" ; then \
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
@@ -759,7 +864,7 @@ if WITH_ICEDTEA
   ICEDTEA_HOME = $(SYSTEM_ICEDTEA_DIR)
 else
   BOOTSTRAP_DIRECTORY_STAMP = stamps/bootstrap-directory.stamp
-  ICEDTEA_HOME = icedtea
+  ICEDTEA_HOME = $(abs_top_builddir)/bootstrap/icedtea
 endif
 endif
 
@@ -803,7 +908,7 @@ stamps/bootstrap-directory-ecj.stamp:
 	  mkdir -p bootstrap/ecj/jre/lib; \
 	  ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR) \
 	    bootstrap/ecj/jre/lib/; \
-	  if ! test -d /jre/lib/$(INSTALL_ARCH_DIR); \
+	  if ! test -d bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
 	  then \
 	    ln -sf ./$(JRE_ARCH_DIR) \
 	      bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
@@ -881,7 +986,7 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
 	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
-	extra-lib/about.jar stamps/cacao.stamp
+	extra-lib/about.jar stamps/cacao.stamp stamps/visualvm.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -898,6 +1003,25 @@ if ENABLE_PLUGIN
 	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
+endif
+if WITH_VISUALVM
+	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc ; \
+	sed "s/APPNAME=\`basename.*\`/APPNAME=visualvm/" \
+	  visualvm/visualvm/launcher/visualvm >> \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/jvisualvm ; \
+	chmod a+x $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/jvisualvm ; \
+	cp visualvm/visualvm/launcher/visualvm.conf \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc ; \
+	echo visualvm >> \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc/visualvm.clusters ; \
+	echo profiler2 >> \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc/visualvm.clusters ; \
+	cp -r visualvm/visualvm/build/cluster \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/visualvm ; \
+	cp -r netbeans/nbbuild/netbeans/platform7 \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm ; \
+	cp -r netbeans/nbbuild/netbeans/profiler2 \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm
 endif
 	cp $(NETX_RESOURCE_DIR)/about.jnlp \
 	  extra-lib/about.jar \
@@ -1234,7 +1358,7 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
-	cd cacao/cacao-$(CACAO_VERSION) ; \
+	cd cacao/cacao-$(CACAO_VERSION) && \
 	./configure \
 	  --prefix=$(abs_top_builddir)/cacao/install \
 	  --with-java-runtime-library=openjdk \
@@ -1342,6 +1466,52 @@ check-local: jtregcheck
 dist-openjdk-fsg: stamps/patch-fsg.stamp
 	$(ZIP) -r openjdk-fsg-$(OPENJDK_VERSION) openjdk/
 
+# VisualVM
+
+stamps/visualvm.stamp: $(BOOTSTRAP_DIRECTORY_STAMP) stamps/download.stamp \
+	stamps/extract.stamp stamps/nbplatform.stamp
+if WITH_VISUALVM
+	cd visualvm/visualvm ; \
+	ln -s $(abs_top_srcdir)/netbeans/nbbuild/netbeans netbeans ; \
+	JAVA_HOME=$(ICEDTEA_HOME) $(ANT) build
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-visualvm:
+	rm -rf visualvm
+	rm -f stamps/visualvm.stamp
+
+# Netbeans platform and profiler
+
+stamps/nbplatform.stamp: $(BOOTSTRAP_DIRECTORY_STAMP) stamps/extract.stamp \
+	stamps/download.stamp
+if WITH_VISUALVM
+	cd netbeans/nbbuild && JAVA_HOME=$(ICEDTEA_HOME) $(ANT) \
+	  -Dpermit.jdk6.builds=true build-platform ; \
+	cd ../profiler && find . -iname '*.so' | xargs rm ; \
+	cd libs/jfluid/native/build ; \
+	if ! (uname -a | grep x86_64) ; then \
+	  buildscript=./buildnative-linux-15.sh ; \
+	else \
+	  buildscript=./buildnative-linux64-15.sh ; \
+	fi ; \
+	JAVA_HOME_15=$(ICEDTEA_HOME) JAVA_HOME_16=$(ICEDTEA_HOME) \
+	  $$buildscript ; \
+	cd ../../../.. ; \
+	for dir in jfluid jfluid-ui common ; do \
+	  JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true \
+	    -f libs/$$dir/build.xml ; \
+	done ; \
+	JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true \
+	  -f modules/main/build.xml ;
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-nbplatform:
+	rm -rf netbeans
+	rm -f stamps/nbplatform.stamp
 
 # Target Aliases
 # ===============
@@ -1355,6 +1525,10 @@ bootstrap-directory-symlink-ecj: stamps/bootstrap-directory-symlink-ecj.stamp
 bootstrap-directory-symlink: stamps/bootstrap-directory-symlink.stamp
 
 cacao: stamps/cacao.stamp
+
+visualvm: stamps/visualvm.stamp
+
+nbplatform: stamps/nbplatform.stamp
 
 clone-ecj: stamps/clone-ecj.stamp
 

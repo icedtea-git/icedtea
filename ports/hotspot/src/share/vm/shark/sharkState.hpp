@@ -83,6 +83,11 @@ class SharkState : public ResourceObj {
     assert(slot >= 0 && slot < stack_depth(), "bad stack slot");
     return _sp[-(slot + 1)];
   }
+  void set_stack(int slot, SharkValue* value)
+  {
+    assert(slot >= 0 && slot < stack_depth(), "bad stack slot");
+    _sp[-(slot + 1)] = value;
+  }
   int stack_depth() const
   {
     return _sp - _stack;
@@ -91,11 +96,11 @@ class SharkState : public ResourceObj {
 
 class SharkEntryState : public SharkState {
  public:
-  SharkEntryState(SharkBlock* start_block)
-    : SharkState(start_block) { initialize(); }
+  SharkEntryState(llvm::Value* method, SharkBlock* start_block)
+    : SharkState(start_block) { initialize(method); }
 
  private:
-  void initialize();
+  void initialize(llvm::Value* method);
 };
 
 class SharkPHIState : public SharkState {
@@ -105,6 +110,11 @@ class SharkPHIState : public SharkState {
 
  private:
   void initialize();
+
+#ifdef ASSERT
+ private:
+  int _stack_depth_at_entry;
+#endif // ASSERT
 
  public:
   void add_incoming(SharkState* incoming_state);
@@ -156,4 +166,25 @@ class SharkTrackingState : public SharkState {
  public:
   void cache(ciMethod *callee = NULL);
   void decache(ciMethod *callee = NULL);
+
+  // Decache helpers
+ private:
+  static int oopmap_slot_munge(int x)
+  {
+    return x << (LogBytesPerWord - LogBytesPerInt);
+  }
+  static VMReg slot2reg(int offset)
+  {
+    return VMRegImpl::stack2reg(oopmap_slot_munge(offset));
+  }
+
+  // Copy and merge
+ public:
+  SharkTrackingState* copy() const
+  {
+    return new SharkTrackingState(this);
+  }
+  void merge(SharkState*       other,
+             llvm::BasicBlock* other_block,
+             llvm::BasicBlock* this_block);
 };

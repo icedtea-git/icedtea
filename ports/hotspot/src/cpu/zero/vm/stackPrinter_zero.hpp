@@ -101,6 +101,7 @@ class ZeroStackPrinter {
       if (frame->is_interpreter_frame()) {
         interpreterState istate =
           ((InterpreterFrame *) frame)->interpreter_state();
+        intptr_t *monitor_base = (intptr_t *) istate->monitor_base();
         if (addr >= (intptr_t *) istate) {
           field = istate->name_of_field_at_address((address) addr);
           if (field) {
@@ -116,6 +117,24 @@ class ZeroStackPrinter {
           }
           else if (addr == (intptr_t *) istate) {
             field = "(vtable for istate)";
+          }
+        }
+        else if (addr >= istate->stack_base() && addr < monitor_base) {
+          int monitor_size = frame::interpreter_frame_monitor_size();
+          int last_index =
+            (monitor_base - istate->stack_base()) / monitor_size - 1;
+          int index =
+            last_index - (addr - istate->stack_base()) / monitor_size;
+          intptr_t monitor = (intptr_t) (istate->monitor_base() - 1 - index);
+          intptr_t offset = (intptr_t) addr - monitor;
+          
+          if (offset == BasicObjectLock::obj_offset_in_bytes()) {
+            snprintf(_buf, _buflen, "monitor[%d]->_obj", index);
+            field = _buf;
+          }
+          else if (offset ==  BasicObjectLock::lock_offset_in_bytes()) {
+            snprintf(_buf, _buflen, "monitor[%d]->_lock", index);
+            field = _buf;
           }
         }
         else if (addr < istate->stack_base()) {
@@ -164,11 +183,48 @@ class ZeroStackPrinter {
         }
       }
       if (frame->is_shark_frame()) {
-        if (word == SharkFrame::method_off) {
+        if (word == SharkFrame::pc_off) {
+          field = "pc";
+        }
+        else if (word == SharkFrame::unextended_sp_off) {
+          field = "unextended_sp";
+        }
+        else if (word == SharkFrame::method_off) {
           field = "method";
           methodOop method = ((SharkFrame *) frame)->method();
           if (method->is_oop())
             value = method->name_and_sig_as_C_string(_buf, _buflen);
+        }
+        else {
+          SharkFrame *sf = (SharkFrame *) frame;
+          intptr_t *monitor_base =
+            (intptr_t *) frame - SharkFrame::header_words + 1;
+          intptr_t *stack_base =
+            sf->unextended_sp() + sf->method()->max_stack();
+
+          if (addr >= stack_base && addr < monitor_base) {
+            int monitor_size = frame::interpreter_frame_monitor_size();
+            int last_index = (monitor_base - stack_base) / monitor_size - 1;
+            int index = last_index - (addr - stack_base) / monitor_size;
+            intptr_t monitor =
+              (intptr_t) ((BasicObjectLock *) monitor_base - 1 - index);
+            intptr_t offset = (intptr_t) addr - monitor;
+
+            if (offset == BasicObjectLock::obj_offset_in_bytes()) {
+              snprintf(_buf, _buflen, "monitor[%d]->_obj", index);
+              field = _buf;
+            }
+            else if (offset ==  BasicObjectLock::lock_offset_in_bytes()) {
+              snprintf(_buf, _buflen, "monitor[%d]->_lock", index);
+              field = _buf;
+            }
+          }
+          else {
+            snprintf(_buf, _buflen, "%s[%d]",
+                     top_frame ? "stack_word" : "local",
+                     stack_base - addr - 1);
+            field = _buf;
+          }
         }
       }
     }

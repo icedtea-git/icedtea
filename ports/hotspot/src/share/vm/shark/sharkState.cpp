@@ -34,18 +34,32 @@ void SharkState::initialize()
   _stack  = NEW_RESOURCE_ARRAY(SharkValue*, max_stack());
 }
 
-void SharkEntryState::initialize()
+void SharkEntryState::initialize(Value* method)
 {
   char name[18];
 
   // Method
-  _method = function()->function()->arg_begin();
+  _method = method;
 
   // Local variables
   for (int i = 0; i < max_locals(); i++) {
     SharkValue *value = NULL;
     ciType *type = block()->local_type_at_entry(i);
-    if (type->basic_type() != T_CONFLICT) {
+    switch (type->basic_type()) {
+    case ciTypeFlow::StateVector::T_BOTTOM:
+    case ciTypeFlow::StateVector::T_LONG2:
+    case ciTypeFlow::StateVector::T_DOUBLE2:
+      break;
+
+    case ciTypeFlow::StateVector::T_TOP:
+      Unimplemented();
+      break;
+
+    case ciTypeFlow::StateVector::T_NULL:
+      ShouldNotReachHere();
+      break;
+      
+    default:
       if (i < function()->arg_size()) {
         snprintf(name, sizeof(name), "local_%d_", i);
         value = SharkValue::create_generic(
@@ -53,7 +67,8 @@ void SharkEntryState::initialize()
           builder()->CreateLoad(
             builder()->CreateBitCast(
               builder()->CreateStructGEP(
-                function()->locals_slots(), max_locals() - 1 - i),
+                function()->locals_slots(),
+                max_locals() - type->size() - i),
               PointerType::getUnqual(SharkType::to_stackType(type))),
             name));
       }
@@ -83,7 +98,22 @@ void SharkPHIState::initialize()
   for (int i = 0; i < max_locals(); i++) {
     SharkValue *value = NULL;
     ciType *type = block()->local_type_at_entry(i);
-    if (type->basic_type() != T_CONFLICT) {
+    switch (type->basic_type()) {
+    case ciTypeFlow::StateVector::T_BOTTOM:
+    case ciTypeFlow::StateVector::T_LONG2:
+    case ciTypeFlow::StateVector::T_DOUBLE2:
+      break;
+
+    case ciTypeFlow::StateVector::T_TOP:
+      Unimplemented();
+      break;
+
+    case ciTypeFlow::StateVector::T_NULL:
+      // XXX we could do all kinds of clever stuff here
+      type = ciType::make(T_OBJECT); // XXX what about T_ARRAY?
+      // fall through
+
+    default:
       snprintf(name, sizeof(name), "local_%d_", i);
       value = SharkValue::create_generic(
         type, builder()->CreatePHI(SharkType::to_stackType(type), name));
@@ -92,17 +122,31 @@ void SharkPHIState::initialize()
   }
 
   // Expression stack
+  _sp = _stack;
   for (int i = 0; i < max_stack(); i++) {
-    SharkValue *value = NULL;
     if (i < block()->stack_depth_at_entry()) {
       ciType *type = block()->stack_type_at_entry(i);
-      snprintf(name, sizeof(name), "stack_%d_", i);
-      value = SharkValue::create_generic(
-        type, builder()->CreatePHI(SharkType::to_stackType(type), name));
+      switch (type->basic_type()) {
+      case ciTypeFlow::StateVector::T_TOP:
+      case ciTypeFlow::StateVector::T_BOTTOM:
+      case ciTypeFlow::StateVector::T_NULL:
+        Unimplemented();
+        break;
+
+      case ciTypeFlow::StateVector::T_LONG2:
+      case ciTypeFlow::StateVector::T_DOUBLE2:
+        break;
+
+      default:
+        snprintf(name, sizeof(name), "stack_%d_", i);
+        *(_sp++) = SharkValue::create_generic(
+          type, builder()->CreatePHI(SharkType::to_stackType(type), name));
+      }
     }
-    _stack[i] = value;
   }
-  _sp = _stack + block()->stack_depth_at_entry();
+#ifdef ASSERT
+  _stack_depth_at_entry = stack_depth();
+#endif // ASSERT
 
   builder()->SetInsertPoint(saved_insert_point);
 }
@@ -123,9 +167,8 @@ void SharkPHIState::add_incoming(SharkState* incoming_state)
   }
 
   // Expression stack
-  assert(block()->stack_depth_at_entry() == incoming_state->stack_depth(),
-         "should be");
-  for (int i = 0; i < block()->stack_depth_at_entry(); i++) {
+  assert(_stack_depth_at_entry == incoming_state->stack_depth(), "should be");
+  for (int i = 0; i < incoming_state->stack_depth(); i++) {
     ((PHINode *) stack(i)->generic_value())->addIncoming(
       incoming_state->stack(i)->generic_value(),
       predecessor);
@@ -150,61 +193,93 @@ int SharkTrackingState::stack_depth_in_slots() const
 
 void SharkTrackingState::decache(ciMethod *callee)
 {
+  // Create the OopMap
+  OopMap *oopmap = new OopMap(
+    oopmap_slot_munge(function()->oopmap_frame_size()),
+    oopmap_slot_munge(function()->arg_size()));
+
   // Decache expression stack slots as necessary
   int stack_slots = stack_depth_in_slots();
   for (int i = 0, j = 0; i < stack_slots; i++) {
     SharkValue *value;
     bool write;
+    bool record;
+    int dst;
 
     if (callee && i < callee->arg_size()) {
       value = pop();
       write = true;
+      record = false;
     }
     else {
       value = stack(j++);
-      write = value->is_jobject();
+      write = record = value->is_jobject();
     }
 
     if (write) {
+      dst = i + max_stack() - stack_slots;
       builder()->CreateStore(
         value->generic_value(),
         builder()->CreateBitCast(
-          builder()->CreateStructGEP(
-            function()->stack_slots(),
-            i + max_stack() - stack_slots),
+          builder()->CreateStructGEP(function()->stack_slots(), dst),
           PointerType::getUnqual(SharkType::to_stackType(value->type()))));
     }
+
+    if (record)
+      oopmap->set_oop(slot2reg(function()->stack_slots_offset() + dst));
 
     if (value->is_two_word())
       i++;
   }
 
+  // Record any monitors
+  for (int i = 0; i < function()->monitor_count(); i++) {
+    oopmap->set_oop(
+      slot2reg(
+        function()->monitors_slots_offset() +
+        i * frame::interpreter_frame_monitor_size() +
+        (BasicObjectLock::obj_offset_in_bytes() >> LogBytesPerWord)));
+  }
+
   // Decache the method pointer
   builder()->CreateStore(method(), function()->method_slot());
+  oopmap->set_oop(slot2reg(function()->method_slot_offset()));
+
+  // Decache the PC
+  int offset = function()->code_offset();
+  builder()->CreateStore(
+    builder()->CreateAdd(
+      function()->base_pc(), LLVMValue::intptr_constant(offset)),
+    function()->pc_slot());
 
   // Decache local variables as necesary
   for (int i = max_locals() - 1; i >= 0; i--) {
     SharkValue *value = local(i);
     if (value && value->is_jobject()) {
+      int dst = max_locals() - 1 - i;
+      
       builder()->CreateStore(
         value->generic_value(),
         builder()->CreateBitCast(
-          builder()->CreateStructGEP(
-            function()->locals_slots(),
-            max_locals() - 1 - i),
+          builder()->CreateStructGEP(function()->locals_slots(), dst),
           PointerType::getUnqual(
             SharkType::to_stackType(value->type()))));
+
+      oopmap->set_oop(slot2reg(function()->locals_slots_offset() + dst));
     }
   }
 
-  // If we're decaching for a call then trim back the stack
-  if (callee && stack_slots != max_stack()) {
+  // Trim back the stack if necessary
+  if (stack_slots != max_stack()) {
     function()->CreateStoreZeroStackPointer(
       builder()->CreatePtrToInt(
         builder()->CreateStructGEP(
           function()->stack_slots(), max_stack() - stack_slots),
         SharkType::intptr_type()));
   }
+
+  // Install the OopMap
+  function()->add_gc_map(offset, oopmap);
 }
 
 void SharkTrackingState::cache(ciMethod *callee)
@@ -212,7 +287,19 @@ void SharkTrackingState::cache(ciMethod *callee)
   // If we're caching after a call then push a dummy result to set up the stack
   int result_size = callee ? callee->return_type()->size() : 0;
   if (result_size) {
-    push(SharkValue::create_generic(callee->return_type(), NULL));
+    ciType *result_type;
+    switch (callee->return_type()->basic_type()) {
+    case T_BOOLEAN:
+    case T_BYTE:
+    case T_CHAR:
+    case T_SHORT:
+      result_type = ciType::make(T_INT);
+      break;
+
+    default:
+      result_type = callee->return_type();
+    }
+    push(SharkValue::create_generic(result_type, NULL));
   }
 
   // Cache expression stack slots as necessary
@@ -229,15 +316,14 @@ void SharkTrackingState::cache(ciMethod *callee)
     }
 
     if (read) {
+      int src = i + max_stack() - stack_slots;
       set_stack(
         j,
         SharkValue::create_generic(
           value->type(),
           builder()->CreateLoad(
             builder()->CreateBitCast(
-              builder()->CreateStructGEP(
-                function()->stack_slots(),
-                i + max_stack() - stack_slots),
+              builder()->CreateStructGEP(function()->stack_slots(), src),
               PointerType::getUnqual(
                 SharkType::to_stackType(value->basic_type()))))));
     }
@@ -253,25 +339,80 @@ void SharkTrackingState::cache(ciMethod *callee)
   for (int i = max_locals() - 1; i >= 0; i--) {
     SharkValue *value = local(i);
     if (value && value->is_jobject()) {
+      int src = max_locals() - 1 - i;
       set_local(
         i,
         SharkValue::create_generic(
           value->type(),
           builder()->CreateLoad(
             builder()->CreateBitCast(
-              builder()->CreateStructGEP(
-                function()->locals_slots(),
-                max_locals() - 1 - i),
+              builder()->CreateStructGEP(function()->locals_slots(), src),
               PointerType::getUnqual(
                 SharkType::to_stackType(value->type()))))));
     }
   }
 
-  // If we're caching after a call then restore the stack pointer
-  if (callee && stack_slots != max_stack()) {
+  // Restore the stack pointer if necessary
+  if (stack_slots != max_stack()) {
     function()->CreateStoreZeroStackPointer(
       builder()->CreatePtrToInt(
         builder()->CreateStructGEP(function()->stack_slots(), 0),
         SharkType::intptr_type()));
+  }
+}
+
+void SharkTrackingState::merge(SharkState* other,
+                               BasicBlock* other_block,
+                               BasicBlock* this_block)
+{
+  PHINode *phi;
+  char name[18];
+
+  // Method
+  Value *this_method = this->method();
+  Value *other_method = other->method();
+  if (this_method != other_method) {
+    phi = builder()->CreatePHI(SharkType::methodOop_type(), "method");
+    phi->addIncoming(this_method, this_block);
+    phi->addIncoming(other_method, other_block);
+    _method = phi;
+  }
+
+  // Local variables
+  assert(this->max_locals() == other->max_locals(), "should be");
+  for (int i = 0; i < max_locals(); i++) {
+    SharkValue *this_value = this->local(i);
+    SharkValue *other_value = other->local(i);
+    if (this_value == other_value)
+      continue;
+    assert(this_value != NULL && other_value != NULL, "shouldn't be");
+
+    ciType *this_type = this_value->type();
+    assert(this_type == other_value->type(), "should be");
+
+    snprintf(name, sizeof(name), "local_%d_", i);
+    phi = builder()->CreatePHI(SharkType::to_stackType(this_type), name);
+    phi->addIncoming(this_value->generic_value(), this_block);
+    phi->addIncoming(other_value->generic_value(), other_block);
+    _locals[i] = SharkValue::create_generic(this_type, phi);
+  }
+
+  // Expression stack
+  assert(this->stack_depth() == other->stack_depth(), "should be");
+  for (int i = 0; i < stack_depth(); i++) {
+    SharkValue *this_value = this->stack(i);
+    SharkValue *other_value = other->stack(i);
+    assert(this_value != NULL && other_value != NULL, "shouldn't be");
+    if (this_value == other_value)
+      continue;
+
+    ciType *this_type = this_value->type();
+    assert(this_type == other_value->type(), "should be");
+
+    snprintf(name, sizeof(name), "stack_%d_", i);
+    phi = builder()->CreatePHI(SharkType::to_stackType(this_type), name);
+    phi->addIncoming(this_value->generic_value(), this_block);
+    phi->addIncoming(other_value->generic_value(), other_block);
+    set_stack(i, SharkValue::create_generic(this_type, phi));
   }
 }

@@ -1,7 +1,115 @@
-diff -ru openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp openjdk/hotspot/src/share/vm/runtime/mutex.hpp
---- openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp	2007-11-08 11:34:54.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/mutex.hpp	2007-11-08 11:36:15.000000000 +0000
-@@ -61,18 +61,10 @@ union SplitWord {   // full-word with se
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp.orig	2008-07-27 08:37:02.000000000 +0000
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2008-07-27 08:43:41.000000000 +0000
+@@ -159,7 +159,9 @@
+ #endif
+ 
+ // Cpu architecture string
+-#if   defined(IA64)
++#if   defined(ZERO)
++static char cpu_arch[] = ZERO_LIBARCH;
++#elif defined(IA64)
+ static char cpu_arch[] = "ia64";
+ #elif defined(IA32)
+ static char cpu_arch[] = "i386";
+@@ -1665,7 +1667,14 @@
+     {EM_SPARC32PLUS, EM_SPARC,   ELFCLASS32, ELFDATA2MSB, (char*)"Sparc 32"},
+     {EM_SPARCV9,     EM_SPARCV9, ELFCLASS64, ELFDATA2MSB, (char*)"Sparc v9 64"},
+     {EM_PPC,         EM_PPC,     ELFCLASS32, ELFDATA2MSB, (char*)"Power PC 32"},
+-    {EM_PPC64,       EM_PPC64,   ELFCLASS64, ELFDATA2MSB, (char*)"Power PC 64"}
++    {EM_PPC64,       EM_PPC64,   ELFCLASS64, ELFDATA2MSB, (char*)"Power PC 64"},
++    {EM_ARM,         EM_ARM,     ELFCLASS32,   ELFDATA2LSB, (char*)"ARM"},
++    {EM_S390,        EM_S390,    ELFCLASSNONE, ELFDATA2MSB, (char*)"IBM System/390"},
++    {EM_ALPHA,       EM_ALPHA,   ELFCLASS64, ELFDATA2LSB, (char*)"Alpha"},
++    {EM_MIPS_RS3_LE, EM_MIPS_RS3_LE, ELFCLASS32, ELFDATA2LSB, (char*)"MIPSel"},
++    {EM_MIPS,        EM_MIPS,    ELFCLASS32, ELFDATA2MSB, (char*)"MIPS"},
++    {EM_PARISC,      EM_PARISC,  ELFCLASS32, ELFDATA2MSB, (char*)"HPPA"},
++    {EM_68K,         EM_68K,     ELFCLASS32, ELFDATA2MSB, (char*)"M68k"}
+   };
+ 
+   #if  (defined IA32)
+@@ -1682,9 +1691,23 @@
+     static  Elf32_Half running_arch_code=EM_PPC64; 
+   #elif  (defined __powerpc__)  
+     static  Elf32_Half running_arch_code=EM_PPC; 
++  #elif  (defined ARM)
++    static  Elf32_Half running_arch_code=EM_ARM;
++  #elif  (defined S390)
++    static  Elf32_Half running_arch_code=EM_S390;
++  #elif  (defined ALPHA)
++    static  Elf32_Half running_arch_code=EM_ALPHA;
++  #elif  (defined MIPSEL)
++    static  Elf32_Half running_arch_code=EM_MIPS_RS3_LE;
++  #elif  (defined HPPA)
++    static  Elf32_Half running_arch_code=EM_PARISC;
++  #elif  (defined MIPS)
++    static  Elf32_Half running_arch_code=EM_MIPS;
++  #elif  (defined M68K)
++    static  Elf32_Half running_arch_code=EM_68K;
+   #else
+     #error Method os::dll_load requires that one of following is defined:\
+-         IA32, AMD64, IA64, __sparc, __powerpc__
++         IA32, AMD64, IA64, __sparc, __powerpc__, ARM, S390, ALPHA, MIPS, MIPSEL, HPPA, M68K
+   #endif
+ 
+   // Identify compatability class for VM's architecture and library's architecture
+@@ -1716,10 +1739,12 @@
+     return NULL; 
+   }
+ 
++#ifndef S390
+   if (lib_arch.elf_class != arch_array[running_arch_index].elf_class) {
+     ::snprintf(diag_msg_buf, diag_msg_max_length-1," (Possible cause: architecture word width mismatch)");
+     return NULL; 
+   }
++#endif // !S390
+ 
+   if (lib_arch.compat_class != arch_array[running_arch_index].compat_class) {
+     if ( lib_arch.name!=NULL ) {
+@@ -2354,7 +2379,9 @@
+     // format has been changed), we'll use the largest page size supported by
+     // the processor.
+ 
++#ifndef ZERO
+     _large_page_size = IA32_ONLY(4 * M) AMD64_ONLY(2 * M) IA64_ONLY(256 * M) SPARC_ONLY(4 * M);
++#endif
+ 
+     FILE *fp = fopen("/proc/meminfo", "r");
+     if (fp) {
+--- openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp.orig	2008-07-27 08:37:03.000000000 +0000
++++ openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp	2008-07-27 08:38:13.000000000 +0000
+@@ -3030,9 +3030,9 @@
+   tty->print_cr("&native_fresult: " INTPTR_FORMAT, (uintptr_t) &this->_native_fresult);
+   tty->print_cr("native_lresult: " INTPTR_FORMAT, (uintptr_t) this->_native_lresult);
+ #endif
+-#ifdef IA64
++#if defined(IA64) && !defined(ZERO)
+   tty->print_cr("last_Java_fp: " INTPTR_FORMAT, (uintptr_t) this->_last_Java_fp);
+-#endif // IA64
++#endif // IA64 && !ZERO
+   tty->print_cr("self_link: " INTPTR_FORMAT, (uintptr_t) this->_self_link);
+ }
+ 
+--- openjdk/hotspot/src/share/vm/runtime/icache.cpp.orig	2008-07-27 08:37:02.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/icache.cpp	2008-07-27 08:38:13.000000000 +0000
+@@ -78,6 +78,7 @@
+ }
+ 
+ void AbstractICache::invalidate_range(address start, int nbytes) {
++#ifndef ZERO
+   static bool firstTime = true;
+   if (firstTime) {
+     guarantee(start == CAST_FROM_FN_PTR(address, _flush_icache_stub),
+@@ -97,6 +98,7 @@
+   }
+   call_flush_stub(start, round_to(nbytes, ICache::line_size) >>
+ 		         ICache::log2_line_size);
++#endif
+ }
+ 
+ // For init.cpp
+--- openjdk/hotspot/src/share/vm/runtime/mutex.hpp.orig	2008-07-27 08:37:02.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/mutex.hpp	2008-07-27 08:38:13.000000000 +0000
+@@ -61,18 +61,10 @@
  } ;
  
  // Endian-ness ... index of least-significant byte in SplitWord.Bytes[]
@@ -21,52 +129,8 @@ diff -ru openjdk.orig/hotspot/src/share/vm/runtime/mutex.hpp openjdk/hotspot/src
  #endif
  
  class ParkEvent ;
-diff -ru openjdk/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
---- openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2008-03-13 13:57:48.000000000 +0000
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2008-03-13 13:37:14.000000000 +0000
-@@ -159,7 +159,9 @@
- #endif
- 
- // Cpu architecture string
--#if   defined(IA64)
-+#if   defined(ZERO)
-+static char cpu_arch[] = ZERO_LIBARCH;
-+#elif defined(IA64)
- static char cpu_arch[] = "ia64";
- #elif defined(IA32)
- static char cpu_arch[] = "i386";
-@@ -2354,7 +2356,9 @@
-     // format has been changed), we'll use the largest page size supported by
-     // the processor.
- 
-+#ifndef ZERO
-     _large_page_size = IA32_ONLY(4 * M) AMD64_ONLY(2 * M) IA64_ONLY(256 * M) SPARC_ONLY(4 * M);
-+#endif // ZERO
- 
-     FILE *fp = fopen("/proc/meminfo", "r");
-     if (fp) {
-diff -ru openjdk/hotspot/src/share/vm/runtime/icache.cpp openjdk/hotspot/src/share/vm/runtime/icache.cpp
---- openjdk/hotspot/src/share/vm/runtime/icache.cpp	2007-10-30 08:46:35.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/icache.cpp	2008-01-21 15:18:48.000000000 +0000
-@@ -78,6 +78,7 @@
- }
- 
- void AbstractICache::invalidate_range(address start, int nbytes) {
-+#ifndef ZERO
-   static bool firstTime = true;
-   if (firstTime) {
-     guarantee(start == CAST_FROM_FN_PTR(address, _flush_icache_stub),
-@@ -97,6 +98,7 @@
-   }
-   call_flush_stub(start, round_to(nbytes, ICache::line_size) >>
-                          ICache::log2_line_size);
-+#endif // ZERO
- }
- 
- // For init.cpp
-diff -ru openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp
---- openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp	2007-10-30 08:46:35.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp	2008-01-24 13:26:36.000000000 +0000
+--- openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp.orig	2008-07-27 08:37:02.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp	2008-07-27 08:38:13.000000000 +0000
 @@ -126,9 +126,17 @@
    // Fill block with bad_handle values
    void zap();
@@ -85,9 +149,8 @@ diff -ru openjdk/hotspot/src/share/vm/runtime/jniHandles.hpp openjdk/hotspot/src
    // Free list computation
    void rebuild_free_list();
  
-diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/share/vm/utilities/vmError.cpp
---- openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-01-24 13:17:27.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-01-24 13:21:20.000000000 +0000
+--- openjdk/hotspot/src/share/vm/utilities/vmError.cpp.orig	2008-07-27 08:37:02.000000000 +0000
++++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-07-27 08:38:13.000000000 +0000
 @@ -25,6 +25,11 @@
  # include "incls/_precompiled.incl"
  # include "incls/_vmError.cpp.incl"
@@ -133,44 +196,18 @@ diff -ru openjdk/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/
       }
  
    STEP(140, "(printing VM operation)" )
-diff -r 789c601c8ba9 openjdk/hotspot/src/os/linux/vm/os_linux.cpp
---- openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Tue Apr 01 14:49:28 2008 +0100
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Wed Apr 02 09:51:37 2008 +0100
-@@ -1690,7 +1690,8 @@ void * os::dll_load(const char *filename
-     {EM_SPARC32PLUS, EM_SPARC,   ELFCLASS32, ELFDATA2MSB, (char*)"Sparc 32"},
-     {EM_SPARCV9,     EM_SPARCV9, ELFCLASS64, ELFDATA2MSB, (char*)"Sparc v9 64"},
-     {EM_PPC,         EM_PPC,     ELFCLASS32, ELFDATA2MSB, (char*)"Power PC 32"},
--    {EM_PPC64,       EM_PPC64,   ELFCLASS64, ELFDATA2MSB, (char*)"Power PC 64"}
-+    {EM_PPC64,       EM_PPC64,   ELFCLASS64, ELFDATA2MSB, (char*)"Power PC 64"},
-+    {EM_ARM,         EM_ARM,     ELFCLASS32, ELFDATA2LSB, (char*)"ARM"}
-   };
- 
-   #if  (defined IA32)
-@@ -1707,9 +1708,11 @@ void * os::dll_load(const char *filename
-     static  Elf32_Half running_arch_code=EM_PPC64;
-   #elif  (defined __powerpc__)
-     static  Elf32_Half running_arch_code=EM_PPC;
-+  #elif  (defined ARM)
-+    static  Elf32_Half running_arch_code=EM_ARM;    
-   #else
-     #error Method os::dll_load requires that one of following is defined:\
--         IA32, AMD64, IA64, __sparc, __powerpc__
-+         IA32, AMD64, IA64, __sparc, __powerpc__, ARM
-   #endif
- 
-   // Identify compatability class for VM's architecture and library's architecture
-diff -r 3e7fbd955f0b openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp
---- openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp	Thu Jul 10 14:08:04 2008 -0400
-+++ openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp	Thu Jul 10 14:11:25 2008 -0400
-@@ -3025,9 +3025,9 @@
-   tty->print_cr("&native_fresult: " INTPTR_FORMAT, (uintptr_t) &this->_native_fresult);
-   tty->print_cr("native_lresult: " INTPTR_FORMAT, (uintptr_t) this->_native_lresult);
- #endif
--#ifdef IA64
-+#if defined(IA64) && !defined(ZERO)
-   tty->print_cr("last_Java_fp: " INTPTR_FORMAT, (uintptr_t) this->_last_Java_fp);
--#endif // IA64
-+#endif // IA64 && !ZERO
-   tty->print_cr("self_link: " INTPTR_FORMAT, (uintptr_t) this->_self_link);
- }
+@@ -472,6 +484,14 @@ void VMError::report(outputStream* st) {
+           op->print_on_error(st);
+           st->cr();
+           st->cr();
++#ifdef ZERO
++          if (op->calling_thread()->is_Java_thread()) {
++            st->print_cr("Calling thread's Java stack:");
++            ZeroStackPrinter(st, buf, sizeof(buf)).print(
++              (JavaThread *) op->calling_thread());
++            st->cr();
++          }
++#endif // ZERO
+         }
+      }
  

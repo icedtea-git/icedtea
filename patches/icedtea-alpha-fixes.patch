@@ -1,0 +1,81 @@
+diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common/Defs-linux.gmk
+--- openjdk.orig/corba/make/common/Defs-linux.gmk	2008-09-01 01:43:43.000000000 +0100
++++ openjdk/corba/make/common/Defs-linux.gmk	2008-09-01 01:45:15.000000000 +0100
+@@ -176,7 +176,8 @@
+   CXXFLAGS_DBG	+= $(CC_LOWER_OPT)
+ endif
+ 
+-CPPFLAGS_COMMON = -D$(ARCH) -DARCH='"$(ARCH)"' -DLINUX $(VERSION_DEFINES) \
++CPPFLAGS_COMMON = -D_$(ARCH)_ $(if $(filter $(ARCH),alpha),,-D$(ARCH)) \
++		  -DARCH='"$(ARCH)"' -DLINUX $(VERSION_DEFINES) \
+ 		  -D_LARGEFILE64_SOURCE -D_GNU_SOURCE -D_REENTRANT
+ 
+ ifeq ($(ARCH_DATA_MODEL), 64)
+diff -Nru openjdk.orig/hotspot/agent/src/os/linux/Makefile openjdk/hotspot/agent/src/os/linux/Makefile
+--- openjdk.orig/hotspot/agent/src/os/linux/Makefile	2008-09-01 01:43:43.000000000 +0100
++++ openjdk/hotspot/agent/src/os/linux/Makefile	2008-09-01 01:45:15.000000000 +0100
+@@ -40,7 +40,7 @@
+ 
+ LIBS     = -lthread_db
+ 
+-CFLAGS   = -c -fPIC -g -D_GNU_SOURCE -D$(ARCH) $(INCLUDES)
++CFLAGS   = -c -fPIC -g -D_GNU_SOURCE -D_$(ARCH)_ $(if $(filter $(ARCH),alpha),,-D$(ARCH)) $(INCLUDES)
+ 
+ LIBSA = $(ARCH)/libsaproc.so
+ 
+@@ -65,7 +65,7 @@
+ 	$(GCC) -shared $(LFLAGS_LIBSA) -o $(LIBSA) $(OBJS) $(LIBS)
+ 
+ test.o: test.c
+-	$(GCC) -c -o test.o -g -D_GNU_SOURCE -D$(ARCH) $(INCLUDES) test.c
++	$(GCC) -c -o test.o -g -D_GNU_SOURCE -D_$(ARCH)_ $(if $(filter $(ARCH),alpha),,-D$(ARCH)) $(INCLUDES) test.c
+ 
+ test: test.o
+ 	$(GCC) -o test test.o -L$(ARCH) -lsaproc $(LIBS)
+diff -Nru openjdk.orig/hotspot/src/share/vm/oops/generateOopMap.cpp openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp
+--- openjdk.orig/hotspot/src/share/vm/oops/generateOopMap.cpp	2008-08-14 08:40:11.000000000 +0100
++++ openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp	2008-09-01 01:45:15.000000000 +0100
+@@ -2125,7 +2125,7 @@
+   // We do not distinguish between different types of errors for verification
+   // errors.  Let the verifier give a better message.
+   const char *msg = "Illegal class file encountered. Try running with -Xverify:all";
+-  error_work(msg, NULL);
++  report_error(msg, NULL);
+ }
+ 
+ //
+diff -Nru openjdk.orig/jaxp/make/build.properties openjdk/jaxp/make/build.properties
+--- openjdk.orig/jaxp/make/build.properties	2008-08-14 08:40:25.000000000 +0100
++++ openjdk/jaxp/make/build.properties	2008-09-01 01:45:15.000000000 +0100
+@@ -41,6 +41,6 @@
+ 
+ # JVM memory size
+ javac.memoryInitialSize = 128m
+-javac.memoryMaximumSize = 256m
++javac.memoryMaximumSize = 512m
+ 
+ #------------------------------------------------------------
+diff -Nru openjdk.orig/jaxws/make/build.properties openjdk/jaxws/make/build.properties
+--- openjdk.orig/jaxws/make/build.properties	2008-08-14 08:40:44.000000000 +0100
++++ openjdk/jaxws/make/build.properties	2008-09-01 01:45:15.000000000 +0100
+@@ -41,6 +41,6 @@
+ 
+ # JVM memory size
+ javac.memoryInitialSize = 128m
+-javac.memoryMaximumSize = 256m
++javac.memoryMaximumSize = 512m
+ 
+ #------------------------------------------------------------
+diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2008-09-01 01:43:43.000000000 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2008-09-01 01:45:15.000000000 +0100
+@@ -175,7 +175,8 @@
+   CXXFLAGS_DBG	+= $(CC_OPT/LOWER)
+ endif
+ 
+-CPPFLAGS_COMMON = -D$(ARCH) -DARCH='"$(ARCH)"' -DLINUX $(VERSION_DEFINES) \
++CPPFLAGS_COMMON = -D_$(ARCH)_ $(if $(filter $(ARCH),alpha),,-D$(ARCH)) \
++		  -DARCH='"$(ARCH)"' -DLINUX $(VERSION_DEFINES) \
+ 		  -D_LARGEFILE64_SOURCE -D_GNU_SOURCE -D_REENTRANT
+ 
+ ifeq ($(ARCH_DATA_MODEL), 64)

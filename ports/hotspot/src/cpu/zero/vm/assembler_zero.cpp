@@ -28,11 +28,7 @@
 
 int AbstractAssembler::code_fill_byte()
 {
-#ifdef SHARK
   return 0;
-#else
-  Unimplemented();
-#endif // SHARK
 }
 
 void Assembler::pd_patch_instruction(address branch, address target)
@@ -47,27 +43,26 @@ void Assembler::pd_print_patched_instruction(address branch)
 }
 #endif // PRODUCT
 
+void MacroAssembler::align(int modulus)
+{
+  while (offset() % modulus != 0)
+    emit_byte(AbstractAssembler::code_fill_byte());
+}
+
 void MacroAssembler::bang_stack_with_offset(int offset)
 {
   Unimplemented();
 }
 
-void MacroAssembler::align(int modulus)
+void MacroAssembler::advance(int bytes)
 {
-  // Loads of places assert that code is generated,
-  // and I'm guessing plenty of places assume that
-  // *something* was generated.  This is a sneaky
-  // place to emit such a something.
-  emit_byte(0x23);
-
-  // Probably ought to align it too, while we're here.
-  while (offset() % modulus != 0)
-    emit_byte(0x23);
+  _code_pos += bytes;
+  sync();
 }
 
 static void _UnimplementedStub()
 {
-  report_unimplemented("fake-generated-code", 23);
+  report_unimplemented(__FILE__, __LINE__);
 }
 
 address UnimplementedStub()
