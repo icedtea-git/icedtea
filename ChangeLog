@@ -12,6 +12,99 @@
 
 2008-08-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Merge from IcedTea6.
+	* config.guess,
+	* config.sub,
+	* install-sh,
+	* patches/icedtea-arm-uname.patch: Removed.
+	* .hgignore,
+	* ChangeLog,
+	* HACKING,
+	* IcedTeaPlugin.cc,
+	* Makefile.am,
+	* README,
+	* acinclude.m4: Merged.
+	* autogen.sh: Added.
+	* configure.ac: Merged.
+	* generated/sun/misc/Version.java,
+	* generated/sun/tools/jconsole/Version.java:
+	Merged and updated for 1.7.
+	* jconsole.desktop,
+	* patches/icedtea-alpha-fixes.patch,
+	* patches/icedtea-alt-jar.patch: Merged.
+	* patches/icedtea-arch.patch: Merged and
+	recreated against jdk7.
+	* patches/icedtea-cacao.patch,
+	* patches/icedtea-clean-crypto.patch,
+	* patches/icedtea-enum-bug-181.patch,
+	* patches/icedtea-hotspot-6b11-7b24.patch:
+	Merged.
+	* patches/icedtea-hotspot-citypeflow.patch:
+	Merged and regenerated against jdk7.
+	* patches/icedtea-hotspot-gcc-pr36917.patch:
+	Merged.
+	* patches/icedtea-hotspot-params-cast-size_t.patch:
+	Merged and regenerated against jdk7.
+	* patches/icedtea-hotspot-use-idx_t.patch,
+	* patches/icedtea-jdk-use-ssize_t.patch,
+	* patches/icedtea-liveconnect.patch,
+	* patches/icedtea-shark.patch,
+	* patches/icedtea-signed-types-hot6.patch: Merged.
+	* patches/icedtea-signed-types.patch: Merged
+	and applied to standard build for JDK7 HotSpot.
+	* patches/icedtea-text-relocations.patch: Merged
+	and regenerated against jdk7.
+	* patches/icedtea-uname.patch: Merged.
+	* patches/icedtea-zero-build.patch:
+	Merged and regenerated against jdk7.
+	* patches/icedtea-zero.patch,
+	* policytool.desktop,
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreterGenerator_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/entry_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.inline.hpp,
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/stubGenerator_zero.cpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp,
+	* ports/hotspot/src/share/vm/includeDB_shark,
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkEntry.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp,
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp:
+	Merged.
+	
+2008-08-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* Makefile.am:
 	Make enabling hg-only projects sufficient for
 	downloading from hg.
