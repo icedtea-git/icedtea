@@ -878,7 +878,14 @@ AC_DEFUN([ENABLE_HG],
     esac
   ],
   [
-    enable_hg=no
+    case "${project}" in
+      jdk7)
+        enable_hg=no
+        ;;
+      *)
+        enable_hg=yes
+        ;;
+    esac
   ])
   AC_MSG_RESULT([${enable_hg}])
   AM_CONDITIONAL([USE_HG], test x"${enable_hg}" = "xyes")
