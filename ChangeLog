@@ -1,3 +1,15 @@
+2008-08-26  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Support for multiple simultaneous applet load.
+	* patches/icedtea-liveconnect.patch: Support for multiple simultaneous
+	applet load. Improved shutdown.
+	* patches/icedtea-webstart.patch: Added support for applets that specify
+	height/width as factor of window size.
+	* rt/net/sourceforge/jnlp/NetxPanel.java: Added synchronization for
+	JNLPRuntime initialization.
+	* rt/net/sourceforge/jnlp/runtime/JNLPRuntime.java: Added mutex object
+	around which initialization can be synchronized.
+
 2008-08-28  Mark Wielaard  <mjw@redhat.com>
 
 	* patches/icedtea-clean-crypto.patch: New patch.

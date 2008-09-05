@@ -246,6 +246,11 @@ static GError* channel_error = NULL;
 static char* appletviewer_executable = NULL;
 static char* libjvm_so = NULL;
 
+class IcedTeaPluginFactory;
+
+static PRBool factory_created = PR_FALSE;
+static IcedTeaPluginFactory* factory = NULL;
+
 #include <nspr.h>
 
 #include <prtypes.h>
@@ -375,6 +380,26 @@ char const* TYPES[10] = { "Object",
 #define MESSAGE_SEND()                          \
   factory->SendMessageToAppletViewer (message);
 
+// FIXME: Right now, the macro below will exit only 
+// if error occured and we are in the middle of a 
+// shutdown (so that the permanent loop does not block 
+// proper exit). We need better error handling
+
+#define PROCESS_PENDING_EVENTS_REF(reference) \
+    if (factory->shutting_down == PR_TRUE && \
+		factory->resultMap[reference]->errorOccured == PR_TRUE) \
+	{                                                           \
+		printf("Error occured. Exiting function\n");            \
+		return NS_ERROR_FAILURE; \
+	} \
+	PRBool hasPending;  \
+	factory->current->HasPendingEvents(&hasPending); \
+	if (hasPending == PR_TRUE) { \
+		PRBool processed = PR_FALSE; \
+		factory->current->ProcessNextEvent(PR_TRUE, &processed); \
+	} else { \
+		PR_Sleep(PR_INTERVAL_NO_WAIT); \
+	}
 
 #define PROCESS_PENDING_EVENTS \
 	PRBool hasPending;  \
@@ -391,7 +416,7 @@ char const* TYPES[10] = { "Object",
   printf ("RECEIVE 1\n");                                               \
   while (factory->resultMap[reference]->returnIdentifier == -1)     \
     {                                                                   \
-      PROCESS_PENDING_EVENTS;                                           \
+      PROCESS_PENDING_EVENTS_REF (reference);                                \
     }                                                                   \
   printf ("RECEIVE 3\n"); \
   if (factory->resultMap[reference]->returnIdentifier == 0) \
@@ -412,7 +437,7 @@ char const* TYPES[10] = { "Object",
   printf("RECEIVE ID 1\n");                                             \
   while (factory->resultMap[reference]->returnIdentifier == -1)     \
     {                                                                   \
-      PROCESS_PENDING_EVENTS;                                           \
+      PROCESS_PENDING_EVENTS_REF (reference);                                \
     }                                                                   \
                                                                         \
   *id = reinterpret_cast<cast>                                  \
@@ -426,7 +451,7 @@ char const* TYPES[10] = { "Object",
   printf("RECEIVE VALUE 1\n");                                             \
   while (factory->resultMap[reference]->returnValue == "")            \
     {                                                                      \
-      PROCESS_PENDING_EVENTS;                                              \
+      PROCESS_PENDING_EVENTS_REF (reference);                                   \
     }                                                                      \
   *result = ParseValue (type, factory->resultMap[reference]->returnValue);            
 // \
@@ -442,7 +467,7 @@ char const* TYPES[10] = { "Object",
   printf("RECEIVE SIZE 1\n");                                 \
   while (factory->resultMap[reference]->returnValue == "")                        \
     {                                                           \
-      PROCESS_PENDING_EVENTS;                                                      \
+      PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
   nsresult conversionResult;                                    \
   *result = factory->resultMap[reference]->returnValue.ToInteger (&conversionResult); \
@@ -458,7 +483,7 @@ char const* TYPES[10] = { "Object",
   printf("RECEIVE STRING 1\n");                                 \
   while (factory->resultMap[reference]->returnValue == "")                            \
     {                                                           \
-      PROCESS_PENDING_EVENTS;                                                      \
+      PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
 	printf("Setting result to: %s\n", strdup (factory->resultMap[reference]->returnValue.get ())); \
   *result = reinterpret_cast<char_type const*>                  \
@@ -474,7 +499,7 @@ char const* TYPES[10] = { "Object",
   printf("RECEIVE STRING UCS 1\n");                                 \
   while (factory->resultMap[reference]->returnValueUCS.IsEmpty())                        \
     {                                                           \
-      PROCESS_PENDING_EVENTS;                                                      \
+      PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
   int length = factory->resultMap[reference]->returnValueUCS.Length ();               \
   jchar* newstring = static_cast<jchar*> (PR_Malloc (length));  \
@@ -493,7 +518,7 @@ char const* TYPES[10] = { "Object",
   printf("RECEIVE BOOLEAN 1\n");                             \
   while (factory->resultMap[reference]->returnIdentifier == -1)               \
     {                                                           \
-      PROCESS_PENDING_EVENTS;                                                      \
+      PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
   *result = factory->resultMap[reference]->returnIdentifier;
 //      res = factory->current->ProcessNextEvent (PR_TRUE,        \
@@ -651,6 +676,7 @@ class ResultContainer
   		PRUint32 returnIdentifier;
 		nsCString returnValue;
 		nsString returnValueUCS;
+		PRBool errorOccured;
 
 };
 
@@ -661,6 +687,7 @@ ResultContainer::ResultContainer ()
 	returnIdentifier = -1;
 	returnValue.Truncate();
 	returnValueUCS.Truncate();
+	errorOccured = PR_FALSE;
 }
 
 ResultContainer::~ResultContainer ()
@@ -680,6 +707,7 @@ ResultContainer::Clear()
 	returnIdentifier = -1;
 	returnValue.Truncate();
 	returnValueUCS.Truncate();
+	errorOccured = PR_FALSE;
 }
 
 #include <nsTArray.h>
@@ -732,7 +760,10 @@ public:
   PRBool IsConnected ();
   nsCOMPtr<nsIAsyncInputStream> async;
   nsCOMPtr<nsIThread> current;
+  nsCOMPtr<nsIInputStream> input;
+  nsCOMPtr<nsIOutputStream> output;
   ReferenceHashtable references;
+  PRBool shutting_down;
   // FIXME: make private?
   JNIEnv* proxyEnv;
   nsISecureEnv* secureEnv;
@@ -755,11 +786,10 @@ private:
   nsresult StartAppletviewer ();
   void ProcessMessage();
   void ConsumeMsgFromJVM();
+  void CreateSocket();
   nsCOMPtr<nsIThread> processThread;
   nsCOMPtr<IcedTeaEventSink> sink;
   nsCOMPtr<nsISocketTransport> transport;
-  nsCOMPtr<nsIInputStream> input;
-  nsCOMPtr<nsIOutputStream> output;
   nsCOMPtr<nsIProcess> applet_viewer_process;
   PRBool connected;
   PRUint32 next_instance_identifier;
@@ -774,7 +804,6 @@ private:
   int string_identifier;
   int slot_index;
   int value_identifier;
-  PRBool shutting_down;
 
 /**
  * JNI I/O related code
@@ -1113,6 +1142,77 @@ private:
   int contextCounter;
 };
 
+
+#include <nsIServerSocket.h>
+#include <nsNetError.h>
+#include <nsPIPluginInstancePeer.h>
+#include <nsIPluginInstanceOwner.h>
+#include <nsIRunnable.h>
+#include <iostream>
+
+class IcedTeaRunnable : public nsIRunnable
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIRUNNABLE
+
+  IcedTeaRunnable ();
+
+  ~IcedTeaRunnable ();
+};
+
+NS_IMPL_ISUPPORTS1 (IcedTeaRunnable, nsIRunnable)
+
+IcedTeaRunnable::IcedTeaRunnable ()
+{
+}
+
+IcedTeaRunnable::~IcedTeaRunnable ()
+{
+}
+
+NS_IMETHODIMP
+IcedTeaRunnable::Run ()
+{
+  return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+template <class T>
+class IcedTeaRunnableMethod : public IcedTeaRunnable
+{
+public:
+  typedef void (T::*Method) ();
+
+  IcedTeaRunnableMethod (T* object, Method method);
+  NS_IMETHOD Run ();
+
+  ~IcedTeaRunnableMethod ();
+
+  T* object;
+  Method method;
+};
+
+template <class T>
+IcedTeaRunnableMethod<T>::IcedTeaRunnableMethod (T* object, Method method)
+: object (object),
+  method (method)
+{
+  NS_ADDREF (object);
+}
+
+template <class T>
+IcedTeaRunnableMethod<T>::~IcedTeaRunnableMethod ()
+{
+  NS_RELEASE (object);
+}
+
+template <class T> NS_IMETHODIMP
+IcedTeaRunnableMethod<T>::Run ()
+{
+  (object->*method) ();
+  return NS_OK;
+}
+
 NS_IMPL_ISUPPORTS6 (IcedTeaPluginFactory, nsIFactory, nsIPlugin, nsIJVMManager,
                     nsIJVMPrefsWindow, nsIJVMPlugin, nsIInputStreamCallback)
 
@@ -1141,6 +1241,8 @@ IcedTeaPluginFactory::~IcedTeaPluginFactory ()
   // FIXME: why did this crash with threadManager == 0x0 on shutdown?
   PLUGIN_TRACE_FACTORY ();
   secureEnv = 0;
+  factory_created = PR_FALSE;
+  factory = NULL;
   printf ("DECONSTRUCTING FACTORY\n");
 }
 
@@ -1189,38 +1291,8 @@ IcedTeaPluginFactory::Initialize ()
 
   PLUGIN_DEBUG_TWO ("Factory::Initialize: using", appletviewer_executable);
 
-  // Start appletviewer process for this plugin instance.
   nsCOMPtr<nsIComponentManager> manager;
   result = NS_GetComponentManager (getter_AddRefs (manager));
-  PLUGIN_CHECK_RETURN ("get component manager", result);
-
-  result = manager->CreateInstance
-    (nsILiveconnect::GetCID (),
-     nsnull, NS_GET_IID (nsILiveconnect),
-     getter_AddRefs (liveconnect));
-  PLUGIN_CHECK_RETURN ("liveconnect", result);
-
-/*
- * Socket initialization code for TCP/IP communication
- *
- */
- 
-  nsCOMPtr<nsIServerSocket> socket;
-  result = manager->CreateInstanceByContractID (NS_SERVERSOCKET_CONTRACTID,
-                                                nsnull,
-                                                NS_GET_IID (nsIServerSocket),
-                                                getter_AddRefs (socket));
-  PLUGIN_CHECK_RETURN ("create server socket", result);
-
-  // FIXME: hard-coded port
-  result = socket->Init (50007, PR_TRUE, -1);
-
-
-  PLUGIN_CHECK_RETURN ("socket init", result);
-
-  nsCOMPtr<IcedTeaSocketListener> listener = new IcedTeaSocketListener (this);
-  result = socket->AsyncListen (listener);
-  PLUGIN_CHECK_RETURN ("add socket listener", result);
 
 /**
  * JNI I/O code
@@ -1229,9 +1301,6 @@ IcedTeaPluginFactory::Initialize ()
   jvmPRMonitor = PR_NewMonitor();
 */
   jvmMsgQueuePRMonitor = PR_NewMonitor();
-
-  result = StartAppletviewer ();
-  PLUGIN_CHECK_RETURN ("started appletviewer", result);
 
   nsCOMPtr<nsIThreadManager> threadManager;
   result = manager->CreateInstanceByContractID
@@ -1248,35 +1317,89 @@ IcedTeaPluginFactory::Initialize ()
  *
  */
  
+  nsCOMPtr<nsIThread> socketCreationThread;
+  nsCOMPtr<nsIRunnable> socketCreationEvent =
+							new IcedTeaRunnableMethod<IcedTeaPluginFactory>
+							(this, &IcedTeaPluginFactory::IcedTeaPluginFactory::CreateSocket);
+
+  NS_NewThread(getter_AddRefs(socketCreationThread), socketCreationEvent);
+
   PLUGIN_DEBUG ("Instance::Initialize: awaiting connection from appletviewer");
   PRBool processed;
+
   // FIXME: move this somewhere applet-window specific so it doesn't block page
   // display.
   // FIXME: this doesn't work with thisiscool.com.
   while (!IsConnected ())
     {
-      result = current->ProcessNextEvent (PR_TRUE, &processed);
-      PLUGIN_CHECK_RETURN ("wait for connection: process next event", result);
+//      result = socketCreationThread->ProcessNextEvent (PR_TRUE, &processed);
+//      PLUGIN_CHECK_RETURN ("wait for connection: process next event", result);
     }
   PLUGIN_DEBUG ("Instance::Initialize:"
                 " got confirmation that appletviewer is running.");
 
-  result = transport->OpenOutputStream (nsITransport::OPEN_BLOCKING,
-                                        nsnull, nsnull,
-                                        getter_AddRefs (output));
-  PLUGIN_CHECK_RETURN ("output stream", result);
-
-  result = transport->OpenInputStream (0, nsnull, nsnull,
-                                       getter_AddRefs (input));
-  PLUGIN_CHECK_RETURN ("input stream", result);
-
-  async = do_QueryInterface (input, &result);
-  PLUGIN_CHECK_RETURN ("async input stream", result);
-
-  result = async->AsyncWait (this, 0, 0, current);
-  PLUGIN_CHECK_RETURN ("add async wait", result);
-
   return NS_OK;
+}
+
+void
+IcedTeaPluginFactory::CreateSocket ()
+{
+
+  PRBool processed;
+  nsresult result;
+
+  // Start appletviewer process for this plugin instance.
+  nsCOMPtr<nsIComponentManager> manager;
+  result = NS_GetComponentManager (getter_AddRefs (manager));
+  PLUGIN_CHECK ("get component manager", result);
+
+  result = manager->CreateInstance
+    (nsILiveconnect::GetCID (),
+     nsnull, NS_GET_IID (nsILiveconnect),
+     getter_AddRefs (liveconnect));
+  PLUGIN_CHECK ("liveconnect", result);
+
+  nsCOMPtr<nsIThreadManager> threadManager;
+  nsCOMPtr<nsIThread> curr_thread;
+  result = manager->CreateInstanceByContractID
+    (NS_THREADMANAGER_CONTRACTID, nsnull, NS_GET_IID (nsIThreadManager),
+     getter_AddRefs (threadManager));
+  PLUGIN_CHECK ("thread manager", result);
+
+  result = threadManager->GetCurrentThread (getter_AddRefs (curr_thread));
+
+
+/*
+ * Socket initialization code for TCP/IP communication
+ *
+ */
+ 
+  nsCOMPtr<nsIServerSocket> socket;
+  result = manager->CreateInstanceByContractID (NS_SERVERSOCKET_CONTRACTID,
+                                                nsnull,
+                                                NS_GET_IID (nsIServerSocket),
+                                                getter_AddRefs (socket));
+  PLUGIN_CHECK ("create server socket", result);
+
+  // FIXME: hard-coded port
+  result = socket->Init (50007, PR_TRUE, -1);
+
+
+  PLUGIN_CHECK ("socket init", result);
+
+  nsCOMPtr<IcedTeaSocketListener> listener = new IcedTeaSocketListener (this);
+  result = socket->AsyncListen (listener);
+  PLUGIN_CHECK ("add socket listener", result);
+
+  result = StartAppletviewer ();
+  PLUGIN_CHECK ("started appletviewer", result);
+
+  while (!IsConnected()) 
+  {
+      result = curr_thread->ProcessNextEvent (PR_TRUE, &processed);
+      PLUGIN_CHECK ("wait for connection: process next event", result);
+  }
+
 }
 
 NS_IMETHODIMP
@@ -1297,6 +1420,7 @@ IcedTeaPluginFactory::Shutdown ()
   PRInt32 exitVal;
   applet_viewer_process->GetExitValue(&exitVal);
 
+/*
   PRUint32 max_sleep_time = 2000;
   PRUint32 sleep_time = 0;
   while ((sleep_time < max_sleep_time) && (exitVal == -1)) {
@@ -1312,6 +1436,7 @@ IcedTeaPluginFactory::Shutdown ()
 	  printf("Appletviewer still appears to be running. Trying to kill it...\n");
 	  applet_viewer_process->Kill();
   }
+*/
 
   return NS_OK;
 }
@@ -1949,6 +2074,15 @@ IcedTeaPluginInstance::Initialize (nsIPluginInstancePeer* aPeer)
 NS_IMETHODIMP
 IcedTeaPluginInstance::GetPeer (nsIPluginInstancePeer** aPeer)
 {
+
+  PRBool processed;
+  nsresult result;
+  while (!peer)
+    {
+      result = factory->current->ProcessNextEvent(PR_TRUE, &processed);
+      PLUGIN_CHECK_RETURN ("wait for peer: process next event", result);
+    }
+
   printf ("GETTING PEER!!!: %p\n", peer);
   *aPeer = peer;
   // FIXME: where is this unref'd?
@@ -2261,76 +2395,6 @@ IcedTeaPluginFactory::OnInputStreamReady (nsIAsyncInputStream* aStream)
   return NS_OK;
 }
 
-#include <nsIServerSocket.h>
-#include <nsNetError.h>
-#include <nsPIPluginInstancePeer.h>
-#include <nsIPluginInstanceOwner.h>
-#include <nsIRunnable.h>
-#include <iostream>
-
-class IcedTeaRunnable : public nsIRunnable
-{
-public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSIRUNNABLE
-
-  IcedTeaRunnable ();
-
-  ~IcedTeaRunnable ();
-};
-
-NS_IMPL_ISUPPORTS1 (IcedTeaRunnable, nsIRunnable)
-
-IcedTeaRunnable::IcedTeaRunnable ()
-{
-}
-
-IcedTeaRunnable::~IcedTeaRunnable ()
-{
-}
-
-NS_IMETHODIMP
-IcedTeaRunnable::Run ()
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-template <class T>
-class IcedTeaRunnableMethod : public IcedTeaRunnable
-{
-public:
-  typedef void (T::*Method) ();
-
-  IcedTeaRunnableMethod (T* object, Method method);
-  NS_IMETHOD Run ();
-
-  ~IcedTeaRunnableMethod ();
-
-  T* object;
-  Method method;
-};
-
-template <class T>
-IcedTeaRunnableMethod<T>::IcedTeaRunnableMethod (T* object, Method method)
-: object (object),
-  method (method)
-{
-  NS_ADDREF (object);
-}
-
-template <class T>
-IcedTeaRunnableMethod<T>::~IcedTeaRunnableMethod ()
-{
-  NS_RELEASE (object);
-}
-
-template <class T> NS_IMETHODIMP
-IcedTeaRunnableMethod<T>::Run ()
-{
-  (object->*method) ();
-  return NS_OK;
-}
-
 void
 IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 {
@@ -2401,6 +2465,7 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
                 do_QueryInterface (instance->peer);
               nsIPluginInstanceOwner* owner = nsnull;
               ownerGetter->GetOwner (&owner);
+			  printf("Calling GetURL with %s and %s\n", nsCString (url).get (), nsCString (target).get ());
               owner->GetURL (nsCString (url).get (),
                              nsCString (target).get (),
                              nsnull, 0, nsnull, 0);
@@ -2592,7 +2657,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
         }
       else if (command == "Error")
         {
-			// FIXME: Not yet implemented
+			printf("Error occured. Setting error flag for container @ %d to true\n", reference);
+			resultMap[reference]->errorOccured = PR_TRUE;
 		}
     }
   else if (prefix == "context")
@@ -3106,7 +3172,17 @@ IcedTeaPluginFactory::SendMessageToAppletViewer (nsCString& message)
 {
   PLUGIN_TRACE_INSTANCE ();
 
-  printf("Getting ready... %s %d\n", message.get(), message.Length() + 1);
+  nsresult result;
+  PRBool processed;
+
+  // while outputstream is not yet ready, process next event
+  while (!output)
+    {
+      result = current->ProcessNextEvent(PR_TRUE, &processed);
+      PLUGIN_CHECK_RETURN ("wait for output stream initialization: process next event", result);
+    }
+
+  printf("Writing to JVM: %s\n", message.get());
 
 /*
  * JNI I/O code
@@ -3125,7 +3201,7 @@ IcedTeaPluginFactory::SendMessageToAppletViewer (nsCString& message)
   // FIXME: check that message is a valid UTF-8 string.
   //  printf ("MESSAGE: %s\n", message.get ());
   message.Insert('-',0);
-  nsresult result = output->Write (message.get (),
+  result = output->Write (message.get (),
                                    message.Length () + 1,
                                    &writeCount);
   PLUGIN_CHECK_RETURN ("wrote bytes", result);
@@ -3515,7 +3591,7 @@ IcedTeaPluginFactory::Disconnected ()
 PRBool
 IcedTeaPluginFactory::IsConnected ()
 {
-  PLUGIN_TRACE_INSTANCE ();
+//  PLUGIN_TRACE_INSTANCE ();
   return connected;
 }
 
@@ -3543,6 +3619,22 @@ IcedTeaSocketListener::OnSocketAccepted (nsIServerSocket* aServ,
   PLUGIN_CHECK_RETURN ("set transport", result);
   factory->Connected ();
 
+  result = aTransport->OpenOutputStream (nsITransport::OPEN_BLOCKING,
+                                        nsnull, nsnull,
+                                        getter_AddRefs (factory->output));
+  PLUGIN_CHECK_RETURN ("output stream", result);
+
+  result = aTransport->OpenInputStream (0, nsnull, nsnull,
+                                       getter_AddRefs (factory->input));
+  PLUGIN_CHECK_RETURN ("input stream", result);
+
+  factory->async = do_QueryInterface (factory->input, &result);
+  PLUGIN_CHECK_RETURN ("async input stream", result);
+
+  result = factory->async->AsyncWait (factory, 0, 0, factory->current);
+  PLUGIN_CHECK_RETURN ("add async wait", result);
+
+
   return NS_OK;
 }
 
@@ -3553,11 +3645,15 @@ IcedTeaSocketListener::OnStopListening (nsIServerSocket *aServ,
 {
   PLUGIN_TRACE_LISTENER ();
 
+  nsCString shutdownStr("shutdown");
+  printf("stop listening: %uld\n", aStatus);
+
   nsresult result = NS_OK;
 
   switch (aStatus)
   {
   case NS_ERROR_ABORT:
+    factory->SendMessageToAppletViewer(shutdownStr);
     PLUGIN_DEBUG ("appletviewer stopped");
     // FIXME: privatize?
     result = factory->async->AsyncWait (nsnull, 0, 0, factory->current);
@@ -4660,13 +4756,6 @@ NSGetFactory (nsISupports* aServMgr, nsCID const& aClass,
   if (!aClass.Equals (PluginCID))
     return NS_ERROR_FACTORY_NOT_LOADED;
 
-  IcedTeaPluginFactory* factory = new IcedTeaPluginFactory ();
-  if (!factory)
-    return NS_ERROR_OUT_OF_MEMORY;
-
-  NS_ADDREF (factory);
-  *aFactory = factory;
-
   // Set appletviewer_executable.
   Dl_info info;
   char* filename = NULL;
@@ -4700,6 +4789,29 @@ NSGetFactory (nsISupports* aServMgr, nsCID const& aClass,
       PLUGIN_ERROR ("Failed to create java executable name.");
       return NS_ERROR_OUT_OF_MEMORY;
     }
+
+  if (factory_created == PR_TRUE)
+  {
+	  // wait for factory to initialize
+	  while (!factory)
+	  {
+		  PR_Sleep(200);
+		  PLUGIN_DEBUG("Waiting for factory to be created...");
+	  }
+
+	  *aFactory = factory;
+	  NS_ADDREF (factory);
+  } else
+  {
+    factory_created = PR_TRUE;
+    PLUGIN_DEBUG("Creating factory");
+    factory = new IcedTeaPluginFactory ();
+    if (!factory)
+      return NS_ERROR_OUT_OF_MEMORY;
+
+    NS_ADDREF (factory);
+    *aFactory = factory;
+  }
 
   return NS_OK;
 }

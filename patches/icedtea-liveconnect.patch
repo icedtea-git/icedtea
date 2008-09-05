@@ -1,6 +1,6 @@
 diff -urN openjdk.orig/jdk/make/sun/Makefile openjdk/jdk/make/sun/Makefile
 --- openjdk.orig/jdk/make/sun/Makefile	2008-07-10 15:54:44.000000000 -0400
-+++ openjdk/jdk/make/sun/Makefile	2008-08-19 16:15:28.000000000 -0400
++++ openjdk/jdk/make/sun/Makefile	2008-08-26 17:23:07.000000000 -0400
 @@ -66,6 +66,7 @@
            $(HEADLESS_SUBDIR) $(DGA_SUBDIR) \
  	  font jpeg cmm applet rmi beans $(JDBC_SUBDIR) \
@@ -11,7 +11,7 @@ diff -urN openjdk.orig/jdk/make/sun/Makefile openjdk/jdk/make/sun/Makefile
  all build clean clobber::
 diff -urN openjdk.orig/jdk/make/sun/Makefile.orig openjdk/jdk/make/sun/Makefile.orig
 --- openjdk.orig/jdk/make/sun/Makefile.orig	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/make/sun/Makefile.orig	2008-08-19 16:15:28.000000000 -0400
++++ openjdk/jdk/make/sun/Makefile.orig	2008-08-26 17:23:07.000000000 -0400
 @@ -0,0 +1,73 @@
 +#
 +# Copyright 1995-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -88,7 +88,7 @@ diff -urN openjdk.orig/jdk/make/sun/Makefile.orig openjdk/jdk/make/sun/Makefile.
 +
 diff -urN openjdk.orig/jdk/make/sun/plugin/Makefile openjdk/jdk/make/sun/plugin/Makefile
 --- openjdk.orig/jdk/make/sun/plugin/Makefile	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/make/sun/plugin/Makefile	2008-08-19 16:15:28.000000000 -0400
++++ openjdk/jdk/make/sun/plugin/Makefile	2008-08-26 17:23:07.000000000 -0400
 @@ -0,0 +1,53 @@
 +#
 +# Copyright 1995-2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -145,7 +145,7 @@ diff -urN openjdk.orig/jdk/make/sun/plugin/Makefile openjdk/jdk/make/sun/plugin/
 +
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/GetMemberPluginCallRequest.java openjdk/jdk/src/share/classes/sun/applet/GetMemberPluginCallRequest.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/GetMemberPluginCallRequest.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/GetMemberPluginCallRequest.java	2008-08-21 13:23:32.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/GetMemberPluginCallRequest.java	2008-07-20 22:33:37.000000000 -0400
 @@ -0,0 +1,58 @@
 +/* GetMemberPluginCallRequest -- represent Java-to-JavaScript requests
 +   Copyright (C) 2008  Red Hat
@@ -207,7 +207,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/GetMemberPluginCallReque
 +
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/GetWindowPluginCallRequest.java openjdk/jdk/src/share/classes/sun/applet/GetWindowPluginCallRequest.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/GetWindowPluginCallRequest.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/GetWindowPluginCallRequest.java	2008-08-21 13:23:32.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/GetWindowPluginCallRequest.java	2008-07-20 22:33:34.000000000 -0400
 @@ -0,0 +1,56 @@
 +/* GetWindowPluginCallRequest -- represent Java-to-JavaScript requests
 +   Copyright (C) 2008  Red Hat
@@ -267,7 +267,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/GetWindowPluginCallReque
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java openjdk/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java	2008-08-21 13:23:33.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java	2008-09-04 17:01:37.000000000 -0400
 @@ -0,0 +1,807 @@
 +/* PluginAppletSecurityContext -- execute plugin JNI messages
 +   Copyright (C) 2008  Red Hat
@@ -1066,7 +1066,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +		} catch (Throwable t) {
 +			t.printStackTrace();
 +			throwable = t;
-+			PluginException p = new PluginException(reference, t);
++			PluginException p = new PluginException(identifier, reference, t);
 +		}
 +	}
 +
@@ -1078,8 +1078,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java	2008-08-21 13:23:33.000000000 -0400
-@@ -0,0 +1,1384 @@
++++ openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java	2008-09-04 17:01:38.000000000 -0400
+@@ -0,0 +1,1416 @@
 + /*
 +  * Copyright 1995-2004 Sun Microsystems, Inc.  All Rights Reserved.
 +  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -1213,6 +1213,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 + 		AppletViewerPanel.debug("Unable to start NetX applet - defaulting to Sun applet", ex);
 + 		panel = new AppletViewerPanel(doc, atts);
 + 	}
++
 + 	add("Center", panel);
 + 	panel.init();
 + 	appletPanels.addElement(panel);
@@ -1307,6 +1308,11 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 +
 +         try {
 +        	 if (message.startsWith("tag")) {
++        		 
++        		 // tag and handle must both be set before parsing, so we need
++        		 // synchronization here, as the setting of these variables
++        		 // may happen in independent threads
++        		 
 +        		 synchronized(requests) {
 +        			 PluginParseRequest request = requests.get(identifier);
 +        			 if (request == null) {
@@ -1369,12 +1375,14 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 +     public void handleMessage(int reference, String message)
 +     {
 +         if (message.startsWith("width")) {
-+             int width =
-+                 Integer.parseInt(message.substring("width".length() + 1));
++        	 int width =
++        		 Integer.parseInt(message.substring("width".length() + 1));
++             panel.setAppletSizeIfNeeded(width, -1);
 +             setSize(width, getHeight());
 +         } else if (message.startsWith("height")) {
-+             int height =
-+                 Integer.parseInt(message.substring("height".length() + 1));
++             int height = 
++            	 Integer.parseInt(message.substring("height".length() + 1));
++             panel.setAppletSizeIfNeeded(-1, height);
 +             setSize(getWidth(), height);
 +         } else if (message.startsWith("destroy")) {
 +             dispose();
@@ -2215,7 +2223,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 + 		skipSpace(in);
 + 		val = buf.toString();
 + 	    }
-+ 	    //statusMsgStream.println("PUT " + att + " = '" + val + "'");
++ 	    System.err.println("PUT " + att + " = '" + val + "'");
 + 	    if (! val.equals("")) {
 + 		atts.put(att.toLowerCase(java.util.Locale.ENGLISH), val);
 + 	    }
@@ -2364,6 +2372,14 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 + 		    else if (nm.equalsIgnoreCase("applet")) {
 +                         isAppletTag = true;
 + 			atts = scanTag(in);
++ 			
++ 			// If there is a classid present, transform it to code tag
++            if (atts.get("code") == null && atts.get("classid") != null && 
++            		((String) atts.get("classid")).startsWith("java:")) {
++              	 //skip "java:"
++              	 atts.put("code", ((String) atts.get("classid")).substring(5));
++               }
++
 + 			if (atts.get("code") == null && atts.get("object") == null) {
 + 			    statusMsgStream.println(appletRequiresCodeWarning);
 + 			    atts = null;
@@ -2378,12 +2394,21 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 + 		    else if (nm.equalsIgnoreCase("object")) {
 +                         isObjectTag = true;
 + 			atts = scanTag(in);
-+                         // The <OBJECT> attribute codebase isn't what
-+                         // we want. If its defined, remove it.
-+                         if(atts.get("codebase") != null) {
-+                             atts.remove("codebase");
++                         
++ 						// If there is a classid present, transform it to code tag
++                         if (atts.get("code") == null && atts.get("classid") != null && 
++                        		 ((String) atts.get("classid")).startsWith("java:")) {
++                        	 //skip "java:"
++                        	 atts.put("code", ((String) atts.get("classid")).substring(5));
 +                         }
-+ 
++
++                         // The <OBJECT> attribute codebase isn't what
++                         // we want when not dealing with jars. If its 
++                         // defined, remove it in that case.
++                         if(atts.get("archive") == null && atts.get("codebase") != null) {
++                       		atts.remove("codebase");
++                         }
++
 +                         if (atts.get("width") == null) {
 + 			    statusMsgStream.println(objectRequiresWidthWarning);
 + 			    atts = null;
@@ -2396,6 +2421,13 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 +                         isEmbedTag = true;
 + 			atts = scanTag(in);
 + 
++ 			// If there is a classid present, transform it to code tag
++            if (atts.get("code") == null && atts.get("classid") != null && 
++            		((String) atts.get("classid")).startsWith("java:")) {
++           	 //skip "java:"
++           	 atts.put("code", ((String) atts.get("classid")).substring(5));
++            }
++
 + 			if (atts.get("code") == null && atts.get("object") == null) {
 + 			    statusMsgStream.println(embedRequiresCodeWarning);
 + 			    atts = null;
@@ -2466,7 +2498,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 + }
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginCallRequest.java openjdk/jdk/src/share/classes/sun/applet/PluginCallRequest.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginCallRequest.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginCallRequest.java	2008-08-21 13:23:33.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginCallRequest.java	2008-07-20 22:33:36.000000000 -0400
 @@ -0,0 +1,54 @@
 +/* PluginCallRequest -- represent Java-to-JavaScript requests
 +   Copyright (C) 2008  Red Hat
@@ -2524,7 +2556,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginCallRequest.java o
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginDebug.java openjdk/jdk/src/share/classes/sun/applet/PluginDebug.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginDebug.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginDebug.java	2008-08-21 13:23:34.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginDebug.java	2008-08-15 15:19:49.000000000 -0400
 @@ -0,0 +1,13 @@
 +package sun.applet;
 +
@@ -2541,24 +2573,24 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginDebug.java openjdk
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginException.java openjdk/jdk/src/share/classes/sun/applet/PluginException.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginException.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginException.java	2008-08-21 13:23:34.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginException.java	2008-09-04 17:01:38.000000000 -0400
 @@ -0,0 +1,12 @@
 +package sun.applet;
 +
 +public class PluginException extends Exception {
 +
-+	public PluginException (int instance, Throwable t) {
++	public PluginException (int instance, int reference, Throwable t) {
 +		t.printStackTrace();
 +		this.setStackTrace(t.getStackTrace());
 +		
-+		String message = "instance " + instance + " Error " + t.getMessage();
++		String message = "instance " + instance + " reference " + reference + " Error " + t.getMessage();
 +		PluginMain.write(message);
 +	}
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/jdk/src/share/classes/sun/applet/PluginMain.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginMain.java	2008-08-21 13:49:53.000000000 -0400
-@@ -0,0 +1,474 @@
++++ openjdk/jdk/src/share/classes/sun/applet/PluginMain.java	2008-09-04 17:01:38.000000000 -0400
+@@ -0,0 +1,485 @@
 +/*
 + * Copyright 1999-2006 Sun Microsystems, Inc.  All Rights Reserved.
 + * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -2638,7 +2670,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +	static LinkedList<String> writeQueue = new LinkedList<String>();
 +
 +	static PluginMessageConsumer consumer;
-+	static boolean shuttingDown = false;
++	static Boolean shuttingDown = false;
++	
++	static final boolean redirectStreams = false;
 +
 +    /**
 +     * The main entry point into AppletViewer.
@@ -2660,19 +2694,19 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +    		System.exit(1);
 +    	}
 +
-+/*
-+    	try {
-+    		File errFile = new File("/tmp/java.stderr");
-+    		File outFile = new File("/tmp/java.stdout");
++    	if (redirectStreams) {
++    		try {
++    			File errFile = new File("/tmp/java.stderr");
++    			File outFile = new File("/tmp/java.stdout");
 +
-+    		System.setErr(new PrintStream(new FileOutputStream(errFile)));
-+    		System.setOut(new PrintStream(new FileOutputStream(outFile)));
++    			System.setErr(new PrintStream(new FileOutputStream(errFile)));
++    			System.setOut(new PrintStream(new FileOutputStream(outFile)));
 +
-+    	} catch (Exception e) {
-+    		System.err.println("Unable to redirect streams");
-+    		e.printStackTrace();
++    		} catch (Exception e) {
++    			System.err.println("Unable to redirect streams");
++    			e.printStackTrace();
++    		}
 +    	}
-+*/
 +
 +    	// INSTALL THE SECURITY MANAGER
 +    	init();
@@ -2859,7 +2893,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +    			PluginAppletSecurityContext.handleMessage(identifier, reference, rest);
 +    		}
 +    	} catch (Exception e) {
-+    		throw new PluginException(identifier, e);
++    		throw new PluginException(identifier, reference, e);
 +    	}
 +    }
 +
@@ -2973,9 +3007,16 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +        	} catch (IOException e) {
 +        		// if we are shutting down, ignore write failures as 
 +        		// pipe may have closed
-+        		if (!shuttingDown) {
-+        			throw new RuntimeException(e);
++        		synchronized(shuttingDown) {
++        			if (!shuttingDown) {
++        				e.printStackTrace();
++        			}
 +        		}
++
++        		// either ways, if the pipe is broken, there is nothing 
++        		// we can do anymore. Don't hang around.
++        		System.err.println("Unable to write to PIPE. APPLETVIEWER exiting");        		
++        		System.exit(1);
 +        	}
 +		}
 +
@@ -3017,7 +3058,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +    	String message = pluginInputTokenizer.sval;
 +    	PluginDebug.debug("  PIPE: appletviewer read: " + message);
 +    	if (message == null || message.equals("shutdown")) {
-+    		shuttingDown = true;
++    		synchronized(shuttingDown) {
++    			shuttingDown = true;
++    		}
 +    		try {
 +    			// Close input/output channels to plugin.
 +    			pluginInputReader.close();
@@ -3035,8 +3078,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageConsumer.java openjdk/jdk/src/share/classes/sun/applet/PluginMessageConsumer.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageConsumer.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginMessageConsumer.java	2008-08-21 13:23:35.000000000 -0400
-@@ -0,0 +1,46 @@
++++ openjdk/jdk/src/share/classes/sun/applet/PluginMessageConsumer.java	2008-09-04 17:01:39.000000000 -0400
+@@ -0,0 +1,49 @@
 +package sun.applet;
 +
 +import java.util.ArrayList;
@@ -3072,20 +3115,23 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageConsumer.ja
 +		
 +		// FIXME: Can be made more efficient by having an idle worker pool
 +		
-+		for (PluginMessageHandlerWorker worker: workers) {
-+			if (worker.isFree()) {
-+				PluginDebug.debug("Found free worker with id " + worker.getWorkerId());
-+				return worker;
++		while (true) {
++			for (PluginMessageHandlerWorker worker: workers) {
++				if (worker.isFree()) {
++					PluginDebug.debug("Found free worker with id " + worker.getWorkerId());
++					return worker;
++				}
 +			}
++			Thread.yield();
 +		}
-+		
-+		throw new RuntimeException("Out of message handler workers");
++
++		//throw new RuntimeException("Out of message handler workers");
 +	}
 +	
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageHandlerWorker.java openjdk/jdk/src/share/classes/sun/applet/PluginMessageHandlerWorker.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageHandlerWorker.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginMessageHandlerWorker.java	2008-08-21 13:23:35.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginMessageHandlerWorker.java	2008-08-19 15:47:52.000000000 -0400
 @@ -0,0 +1,59 @@
 +package sun.applet;
 +
@@ -3148,7 +3194,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageHandlerWork
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginObjectStore.java openjdk/jdk/src/share/classes/sun/applet/PluginObjectStore.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginObjectStore.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginObjectStore.java	2008-08-21 13:23:35.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginObjectStore.java	2008-08-13 16:37:22.000000000 -0400
 @@ -0,0 +1,119 @@
 +/* PluginObjectStore -- manage identifier-to-object mapping
 +   Copyright (C) 2008  Red Hat
@@ -3271,7 +3317,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginObjectStore.java o
 +
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/TestEnv.java openjdk/jdk/src/share/classes/sun/applet/TestEnv.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/TestEnv.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/TestEnv.java	2008-08-21 13:23:36.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/TestEnv.java	2008-07-20 22:33:36.000000000 -0400
 @@ -0,0 +1,172 @@
 +/* TestEnv -- test JavaScript-to-Java calls
 +   Copyright (C) 2008  Red Hat
@@ -3447,7 +3493,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/TestEnv.java openjdk/jdk
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.java openjdk/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.java	2008-08-21 13:23:36.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.java	2008-07-20 22:33:36.000000000 -0400
 @@ -0,0 +1,49 @@
 +/* VoidPluginCallRequest -- represent Java-to-JavaScript requests
 +   Copyright (C) 2008  Red Hat

@@ -90,7 +90,9 @@ public class JNLPRuntime {
 
     /** whether debug mode is on */
     private static boolean debug = false; // package access by Boot
-
+    
+    /** mutex to wait on, for initialization */
+    public static Object initMutex = new Object();
 
     /**
      * Returns whether the JNLP runtime environment has been
@@ -114,7 +116,6 @@ public class JNLPRuntime {
      */
     public static void initialize() throws IllegalStateException {
         checkInitialized();
-        initialized = true;
 
         if (headless == false)
             checkHeadless();
@@ -143,6 +144,8 @@ public class JNLPRuntime {
         }
 
         ServiceManager.setServiceManagerStub(new XServiceManagerStub()); // ignored if we're running under Web Start
+
+        initialized = true;
     }
 
     /**
