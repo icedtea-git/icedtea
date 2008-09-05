@@ -424,6 +424,7 @@ else
 endif
 endif
 endif
+	mkdir -p stamps 
 	touch stamps/hgforest.stamp
 
 clean-hgforest:
