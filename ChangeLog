@@ -1,3 +1,9 @@
+2008-09-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Reported by: Lillian Angel
+	* Makefile.am: Make sure we create
+	the stamps directory for hgforest.stamp.
+	
 2008-08-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
