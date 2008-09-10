@@ -507,7 +507,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-clean-crypto.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
-	patches/icedtea-arch.patch
+	patches/icedtea-arch.patch \
+	patches/icedtea-lc_ctype.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
