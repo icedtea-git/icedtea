@@ -15,6 +15,7 @@
 	* patches/icedtea-ecj.patch: Update.
 	* patches/icedtea-javafiles.patch: Regenerate.
 	* HACKING: Update for b12.
+	* generated/com/sun/corba/se/impl/logging/*: Regenerate.
 
 2008-09-12  Gary Benson  <gbenson@redhat.com>
 	    Xerxes Rånby <xerxes@zafena.se>
