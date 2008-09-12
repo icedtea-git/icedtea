@@ -1,3 +1,13 @@
+2008-09-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Turn ICEDTEA_ECJ_PATCH into
+	ICEDTEA_ECJ_PATCHES and add an equivalent
+	rule to that for PATCHES and FSG_PATCHES.
+	* patches/icedtea-ecj-spp.patch:
+	New patch to fix the use of java.util.Scanner
+	and avoid the use of reset() in Spp.java.
+
 2008-09-12  Matthias Klose  <doko@ubuntu.com>
 
 	* fsg.sh: Update for b12 code drop.

@@ -694,29 +694,56 @@ stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 	touch stamps/ports-ecj.stamp
 
 # Patch OpenJDK for plug replacements and ecj.
-ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch
+ICEDTEA_ECJ_PATCHES = patches/icedtea-ecj.patch \
+	patches/icedtea-ecj-spp.patch
 
 stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
-	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
-	if $(PATCH) -p0 -l --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
-	then \
-	  echo Applying $(ICEDTEA_ECJ_PATCH) ; \
-	  $(PATCH) -p0 -l < $(ICEDTEA_ECJ_PATCH) ; \
-	  mkdir -p stamps; \
-	  touch stamps/patch-ecj.stamp; \
-	else \
+	mkdir -p stamps; \
+	rm -f stamps/patch-ecj.stamp.tmp ; \
+	touch stamps/patch-ecj.stamp.tmp ; \
+	all_patches_ok=yes; \
+	for p in $(ICEDTEA_ECJ_PATCHES) ; \
+	do \
+	  if test x$${all_patches_ok} = "xyes" \
+	    && echo Checking $$p \
+	    && $(PATCH) -l -p0 --dry-run -s -t -f \
+	      -F 0 < $(abs_top_srcdir)/$$p ; \
+	  then \
+	    echo Applying $$p ; \
+	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
+	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING \
+	      >> stamps/patch-ecj.stamp.tmp ; \
+	    then \
+	      echo "* $$(basename $$p): UNDOCUMENTED" \
+	        >> stamps/patch-ecj.stamp.tmp ; \
+	    fi ; \
+	  else \
+	    test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
+	  fi ; \
+	done ; \
+	mv stamps/patch-ecj.stamp.tmp stamps/patch-ecj.stamp ; \
+	if ! test x$${all_patches_ok} = "xyes"; then \
+	  echo ERROR patch $${all_patches_ok} FAILED! ; \
+	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
 	fi
 
 clean-patch-ecj:
 	rm -f stamps/patch-ecj.stamp
-	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
-	if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
-	then \
-	  echo Reverting $(ICEDTEA_ECJ_PATCH) ; \
-	  $(PATCH) -p0 -l -R < $(ICEDTEA_ECJ_PATCH) ; \
-	else \
-	  false; \
+	all_patches_ok=yes; \
+	for p in $(ICEDTEA_ECJ_PATCHES) ; \
+	do \
+	  echo Checking $$p ; \
+	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
+	  then \
+	    echo Reverting $$p ; \
+	    $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
+	  else \
+	    all_patches_ok=no ; \
+	  fi ; \
+	done ; \
+	if ! test x$${all_patches_ok} = "xyes" ; then \
+	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
 # Bootstrap Directory Targets
