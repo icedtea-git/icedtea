@@ -87,9 +87,5 @@ rm -f \
   openjdk/jdk/test/javax/xml/crypto/dsig/data/xml-stylesheet \
   openjdk/jdk/test/javax/xml/crypto/dsig/data/xml-stylesheet.b64
 
-# PR157, S6713083
-rm -f \
-  openjdk/jdk/src/share/classes/java/lang/instrument/package.html
-
 # END Debian/Ubuntu additions
 

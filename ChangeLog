@@ -1,3 +1,21 @@
+2008-09-12  Matthias Klose  <doko@ubuntu.com>
+
+	* fsg.sh: Update for b12 code drop.
+	* Makefile.am, NEWS: Update for b12.
+	* patches/icedtea-LCMS-setTagData.patch: Remove, applied upstream.
+	* patches/icedtea-color-createcontext.patch: Likewise.
+	* patches/icedtea-hotspot-citypeflow.patch: Likewise.
+	* patches/icedtea-hotspot-gcc-pr36917.patch: Likewise.
+	* patches/icedtea-lcms-leak.patch: Likewise.
+	* patches/icedtea-corba.patch: Likewise.
+	* patches/icedtea-gervill.patch: Likewise.
+	* patches/icedtea-directaudio-close-trick.patch: Likewise.
+	* patches/icedtea-generated.patch: Remove, obsolete.
+	* patches/icedtea-version.patch: Update.
+	* patches/icedtea-ecj.patch: Update.
+	* patches/icedtea-javafiles.patch: Regenerate.
+	* HACKING: Update for b12.
+
 2008-09-12  Gary Benson  <gbenson@redhat.com>
 	    Xerxes Rånby <xerxes@zafena.se>
 

@@ -1,23 +1,15 @@
---- openjdk.old/jdk/make/common/shared/Defs.gmk	2007-09-13 03:52:42.000000000 -0400
-+++ openjdk/jdk/make/common/shared/Defs.gmk	2007-09-18 16:24:59.000000000 -0400
-@@ -194,13 +194,13 @@
+--- openjdk/jdk/make/common/shared/Defs.gmk.orig	2008-09-12 21:05:40.000000000 +0200
++++ openjdk/jdk/make/common/shared/Defs.gmk	2008-09-12 21:07:14.000000000 +0200
+@@ -194,7 +194,7 @@
  
  # Default names
- LAUNCHER_NAME = java
--PRODUCT_NAME = Java(TM)
-+PRODUCT_NAME = OpenJDK
- PRODUCT_SUFFIX = SE Runtime Environment
- COMPANY_NAME = Sun Microsystems, Inc.
- 
  ifdef OPENJDK
 -  LAUNCHER_NAME = openjdk
--  PRODUCT_NAME = OpenJDK
 +  LAUNCHER_NAME = java
-+  PRODUCT_NAME = OpenJDK 
+   PRODUCT_NAME = OpenJDK
    PRODUCT_SUFFIX = Runtime Environment
-   COMPANY_NAME =
- endif
-@@ -258,12 +258,7 @@
+   JDK_RC_PLATFORM_NAME = Platform
+@@ -260,12 +260,7 @@
  JDK_UNDERSCORE_VERSION =  $(subst .,_,$(JDK_VERSION))
  JDK_MKTG_UNDERSCORE_VERSION =  $(subst .,_,$(JDK_MKTG_VERSION))
  
@@ -31,14 +23,3 @@
  
  # FULL_VERSION is RELEASE and -BUILD_NUMBER if BUILD_NUMBER is set
  ifdef BUILD_NUMBER
---- openjdk.old/hotspot/src/share/vm/runtime/arguments.cpp	2007-12-10 15:46:40.000000000 -0500
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2007-12-19 09:41:41.000000000 -0500
-@@ -28,7 +28,7 @@
- #include "incls/_precompiled.incl"
- #include "incls/_arguments.cpp.incl"
- 
--#define DEFAULT_VENDOR_URL_BUG "http://java.sun.com/webapps/bugreport/crash.jsp"
-+#define DEFAULT_VENDOR_URL_BUG "http://icedtea.classpath.org/bugzilla"
- #define DEFAULT_JAVA_LAUNCHER  "generic"
- 
- char**  Arguments::_jvm_flags_array             = NULL;

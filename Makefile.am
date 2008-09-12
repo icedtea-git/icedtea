@@ -1,6 +1,6 @@
-OPENJDK_DATE = 10_jul_2008
-OPENJDK_MD5SUM = 8e60cdac02ec1b2d8ddb9d7369be69df
-OPENJDK_VERSION = b11
+OPENJDK_DATE = 28_aug_2008
+OPENJDK_MD5SUM = b53e1ef643909ce82721ee4c970d958b
+OPENJDK_VERSION = b12
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -467,24 +467,17 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
 	patches/icedtea-javafiles.patch \
-	patches/icedtea-corba.patch \
 	patches/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
 	patches/icedtea-static-libstdc++.patch \
-	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-timerqueue.patch \
-	patches/icedtea-generated.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
 	patches/icedtea-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
-	patches/icedtea-LCMS-setTagData.patch \
-	patches/icedtea-color-createcontext.patch \
 	patches/icedtea-fonts.patch \
-	patches/icedtea-gervill.patch \
-	patches/icedtea-directaudio-close-trick.patch \
 	patches/icedtea-sparc.patch \
 	patches/icedtea-sparc64-linux.patch \
 	patches/icedtea-sparc-ptracefix.patch \
@@ -496,8 +489,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-nomotif-6706121.patch \
 	patches/icedtea-nomotif.patch \
-	patches/icedtea-hotspot-gcc-pr36917.patch \
-	patches/icedtea-hotspot-citypeflow.patch \
 	patches/icedtea-alpha-fixes.patch \
 	patches/icedtea-alt-jar.patch \
 	patches/icedtea-enum-bug-181.patch \

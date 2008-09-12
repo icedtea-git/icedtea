@@ -803,7 +803,7 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
  # We want to privatize JVM symbols on Solaris. This is so the user can
 --- openjdk-ecj/corba/make/com/sun/corba/se/sources/Makefile	2008-06-09 03:12:48.000000000 +0100
 +++ /dev/null	2008-05-17 00:35:13.224001676 +0100
-@@ -1,222 +0,0 @@
+@@ -1,224 +0,0 @@
 -#
 -# Copyright 2000-2006 Sun Microsystems, Inc.  All Rights Reserved.
 -# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -851,6 +851,8 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
 -CORBA_JMK_DIRECTORY=$(TOPDIR)/make/com/sun/corba/minclude/
 -include $(CORBA_JMK_DIRECTORY)com_sun_corba_se_PortableActivationIDL.jmk
 -include $(CORBA_JMK_DIRECTORY)com_sun_corba_se_impl_logging.jmk
+-
+-FILES_java += com/sun/corba/se/org/omg/CORBA/ORB.java
 -
 -#
 -# Dirs
@@ -1026,3 +1028,4 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
 -# Include
 -#
 -include $(BUILDDIR)/common/Rules.gmk
+
