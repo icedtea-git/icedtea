@@ -1,3 +1,11 @@
+2008-09-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/icedtea-hotspot-citypeflow.patch:
+	Removed, fixed upstream.
+	* Makefile.am: Bump to b35, remove citypeflow patch.
+	* patches/icedtea-ecj.patch: Recreated against b35.
+	* tools-copy/tools-jdk-copy-files.txt: Add javax.script.
+
 2008-09-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Reported by: Lillian Angel

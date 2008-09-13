@@ -37,3 +37,4 @@ sun/tools/native2ascii/
 sun/tools/serialver/
 sun/tools/tree/
 sun/tools/util/
+javax/script/

@@ -1,6 +1,6 @@
-OPENJDK_DATE = 14_aug_2008
-OPENJDK_MD5SUM = 536c8f7b35bfb2640bdda31482d2693f
-OPENJDK_VERSION = b33
+OPENJDK_DATE = 11_sep_2008
+OPENJDK_MD5SUM = 324ee7ead3c2e548a129730685815da4
+OPENJDK_VERSION = b35
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -555,7 +555,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-mbeanintrospector.patch \
 	patches/icedtea-hotspot-gcc-pr36917.patch \
-	patches/icedtea-hotspot-citypeflow.patch \
 	patches/icedtea-alpha-fixes.patch \
 	patches/icedtea-alt-jar.patch \
 	patches/icedtea-enum-bug-181.patch \
