@@ -252,7 +252,7 @@ env-ecj:
 
 # Mercurial snapshot.
 snapshot: dist
-	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
+	mv $(DIST_ARCHIVES) $(distdir)-`$(HG) tip --template '{node}'`.tar.gz
 
 # Creates archive of openjdk.
 dist-openjdk: stamps/extract-cacao.stamp
@@ -319,19 +319,19 @@ if !OPENJDK_SRC_DIR_FOUND
 if USE_ALT_OPENJDK_SRC_ZIP
 else
 if USE_CLOSURES
-	hg fclone $(CLOSURES_HG_URL) openjdk; 
+	$(HG) fclone $(CLOSURES_HG_URL) openjdk; 
 else
 if USE_CVMI
-	hg fclone $(CVMI_HG_URL) openjdk; 
+	$(HG) fclone $(CVMI_HG_URL) openjdk; 
 else
 if USE_CACIOCAVALLO
-	hg fclone $(CACIOCAVALLO_HG_URL) openjdk;
+	$(HG) fclone $(CACIOCAVALLO_HG_URL) openjdk;
 else
 if USE_BSD
-	hg fclone $(BSD_HG_URL) openjdk;
+	$(HG) fclone $(BSD_HG_URL) openjdk;
 else
 if USE_HG
-	hg fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk;
+	$(HG) fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk;
 else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -415,7 +415,7 @@ if USE_ALT_OPENJDK_SRC_ZIP
 else
 if !USE_HG
 else
-	if ! hg fclone -h; \
+	if ! $(HG) fclone -h; \
           then \
           echo "No forest extension found. Please refer to" \
             "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
@@ -678,7 +678,12 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
-	fi
+	fi ; \
+	if [ -e $(abs_top_srcdir)/.hg ]; then \
+	  revision="-r`(cd $(srcdir); $(HG) tip|grep changeset|cut -d':' -f2|sed -r 's#\W+##')`" ; \
+	fi ; \
+	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
+	sed -i "s#IcedTea#IcedTea $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk
 
 clean-patch:
 	rm -f stamps/patch.stamp

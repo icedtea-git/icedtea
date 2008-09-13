@@ -228,9 +228,13 @@ SET_CORE_OR_SHARK_BUILD
 WITH_PROJECT
 ENABLE_HG
 
+AC_PATH_TOOL([HG],[hg])
 if test "x${enable_hg}" = "xyes"; then
-  FIND_TOOL([MERCURIAL],[hg])
+  if test "x${HG}" = x; then
+    AC_MSG_ERROR([Mercurial not found; this is required for a hg build])
+  fi
 fi
+AC_SUBST([HG])
 
 dnl pkgconfig cannot be used to find these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
