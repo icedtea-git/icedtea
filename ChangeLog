@@ -1,3 +1,9 @@
+2008-09-12  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am, HACKING: Update for b12 zero patch.
+	* patches/icedtea-hotspot-6b11-7b24.patch: Remove.
+	* patches/icedtea-hotspot-6b12-7b24.patch: New.
+
 2008-09-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
