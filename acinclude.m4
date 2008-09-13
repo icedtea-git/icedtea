@@ -891,6 +891,34 @@ AC_DEFUN([ENABLE_HG],
   AM_CONDITIONAL([USE_HG], test x"${enable_hg}" = "xyes")
 ])
 
+AC_DEFUN([WITH_VERSION_SUFFIX],
+[
+  AC_MSG_CHECKING(if a version suffix has been specified)
+  AC_ARG_WITH([version-suffix],
+              [AS_HELP_STRING(--with-version-suffix,appends the given text to the JDK version)],
+  [
+    case "${withval}" in
+      yes)
+	version_suffix=
+	AC_MSG_RESULT([no])
+        ;;
+      no)
+	version_suffix=
+	AC_MSG_RESULT([no])
+	;;
+      *)
+        version_suffix=${withval}
+	AC_MSG_RESULT([${version_suffix}])
+        ;;
+    esac
+  ],
+  [
+    version_suffix=
+    AC_MSG_RESULT([no])
+  ])
+  AC_SUBST(VERSION_SUFFIX, $version_suffix)
+])
+
 AC_DEFUN([WITH_PROJECT],
 [
   AC_MSG_CHECKING(which OpenJDK project is being used)
@@ -913,6 +941,7 @@ AC_DEFUN([WITH_PROJECT],
     project=jdk7
   ])
   AC_MSG_RESULT([${project}])
+  AC_SUBST(PROJECT_NAME, $project)
   AM_CONDITIONAL([USE_CLOSURES], test x"${project}" = "xclosures")
   AM_CONDITIONAL([USE_CVMI], test x"${project}" = "xcvmi")
   AM_CONDITIONAL([USE_CACIOCAVALLO], test x"${project}" = "xcaciocavallo")

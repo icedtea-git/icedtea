@@ -683,7 +683,15 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  revision="-r`(cd $(srcdir); $(HG) tip|grep changeset|cut -d':' -f2|sed -r 's#\W+##')`" ; \
 	fi ; \
 	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
-	sed -i "s#IcedTea#IcedTea $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk
+	if test x"$(PROJECT_NAME)" != "xjdk7"; then \
+	  proj_suffix="-$(PROJECT_NAME)"; \
+	fi ; \
+	if test x"$(VERSION_SUFFIX)" != "x"; then \
+	  ver_suffix="-$(VERSION_SUFFIX)"; \
+	fi ; \
+	sed -i "s#IcedTea#IcedTea $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk ; \
+	sed -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
+	  openjdk/jdk/make/common/shared/Defs.gmk
 
 clean-patch:
 	rm -f stamps/patch.stamp
