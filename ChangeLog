@@ -2,7 +2,7 @@
 
 	* IcedTeaPlugin.cc: Allow access to applet classloader from JS on that
 	site. Fix right-click lag by temporarily disabling status messages.
-    * patches/icedtea-liveconnect.patch: Allow access to applet classloader
+	* patches/icedtea-liveconnect.patch: Allow access to applet classloader
 	from JS on that site. Fix it so that applets with no height/width
 	specifications can load.
 
