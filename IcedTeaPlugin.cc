@@ -308,20 +308,30 @@ char const* TYPES[10] = { "Object",
                           "double",
                           "void" };
 
+#include <nsIThread.h>
+
 // FIXME: create index from security context.
 #define MESSAGE_CREATE(reference)                            \
+  const char* addr; \
+  GetCurrentPageAddress(&addr); \
+\
   nsCString message ("context ");                            \
   message.AppendInt (0);                                     \
   message += " reference ";                                  \
   message.AppendInt (reference);                             \
+  if (factory->codebase_map.find(nsCString(addr)) != factory->codebase_map.end()) \
+  { \
+	  message += " src "; \
+	  message += factory->codebase_map[nsCString(addr)];\
+  } \
   message += " ";											 \
   message += __func__;                                       \
-  if (factory->resultMap[reference] == NULL) {                \
-	   factory->resultMap[reference] = new ResultContainer();  \
-	   printf("ResultMap created -- %p %d\n", factory->resultMap[reference], factory->resultMap[reference]->returnIdentifier); \
+  if (factory->result_map[reference] == NULL) {                \
+	   factory->result_map[reference] = new ResultContainer();  \
+	   printf("ResultMap created -- %p %d\n", factory->result_map[reference], factory->result_map[reference]->returnIdentifier); \
   } \
   else                                                      \
-	   factory->resultMap[reference]->Clear(); 
+	   factory->result_map[reference]->Clear(); 
 
 
 #define MESSAGE_ADD_STRING(name)                \
@@ -387,7 +397,7 @@ char const* TYPES[10] = { "Object",
 
 #define PROCESS_PENDING_EVENTS_REF(reference) \
     if (factory->shutting_down == PR_TRUE && \
-		factory->resultMap[reference]->errorOccured == PR_TRUE) \
+		factory->result_map[reference]->errorOccured == PR_TRUE) \
 	{                                                           \
 		printf("Error occured. Exiting function\n");            \
 		return NS_ERROR_FAILURE; \
@@ -414,46 +424,46 @@ char const* TYPES[10] = { "Object",
 #define MESSAGE_RECEIVE_REFERENCE(reference, cast, name)                \
   nsresult res = NS_OK;                                                 \
   printf ("RECEIVE 1\n");                                               \
-  while (factory->resultMap[reference]->returnIdentifier == -1)     \
+  while (factory->result_map[reference]->returnIdentifier == -1)     \
     {                                                                   \
       PROCESS_PENDING_EVENTS_REF (reference);                                \
     }                                                                   \
   printf ("RECEIVE 3\n"); \
-  if (factory->resultMap[reference]->returnIdentifier == 0) \
+  if (factory->result_map[reference]->returnIdentifier == 0) \
   {  \
 	  *name = NULL;                                                     \
   } else {                                                              \
   *name =                                                               \
     reinterpret_cast<cast>                                              \
-    (factory->references.ReferenceObject (factory->resultMap[reference]->returnIdentifier)); \
+    (factory->references.ReferenceObject (factory->result_map[reference]->returnIdentifier)); \
   } \
   printf ("RECEIVE_REFERENCE: %s result: %x = %d\n",                    \
-          __func__, *name, factory->resultMap[reference]->returnIdentifier);
+          __func__, *name, factory->result_map[reference]->returnIdentifier);
 
 // FIXME: track and free JNIIDs.
 #define MESSAGE_RECEIVE_ID(reference, cast, id, signature)              \
   PRBool processed = PR_FALSE;                                          \
   nsresult res = NS_OK;                                                 \
   printf("RECEIVE ID 1\n");                                             \
-  while (factory->resultMap[reference]->returnIdentifier == -1)     \
+  while (factory->result_map[reference]->returnIdentifier == -1)     \
     {                                                                   \
       PROCESS_PENDING_EVENTS_REF (reference);                                \
     }                                                                   \
                                                                         \
   *id = reinterpret_cast<cast>                                  \
-    (new JNIID (factory->resultMap[reference]->returnIdentifier, signature));         \
+    (new JNIID (factory->result_map[reference]->returnIdentifier, signature));         \
    printf ("RECEIVE_ID: %s result: %x = %d, %s\n",               \
-           __func__, *id, factory->resultMap[reference]->returnIdentifier,             \
+           __func__, *id, factory->result_map[reference]->returnIdentifier,             \
            signature);
 
 #define MESSAGE_RECEIVE_VALUE(reference, ctype, result)                    \
   nsresult res = NS_OK;                                                    \
   printf("RECEIVE VALUE 1\n");                                             \
-  while (factory->resultMap[reference]->returnValue == "")            \
+  while (factory->result_map[reference]->returnValue == "")            \
     {                                                                      \
       PROCESS_PENDING_EVENTS_REF (reference);                                   \
     }                                                                      \
-  *result = ParseValue (type, factory->resultMap[reference]->returnValue);            
+  *result = ParseValue (type, factory->result_map[reference]->returnValue);            
 // \
 //   char* valueString = ValueString (type, *result);              \
 //   printf ("RECEIVE_VALUE: %s result: %x = %s\n",                \
@@ -465,12 +475,12 @@ char const* TYPES[10] = { "Object",
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
   printf("RECEIVE SIZE 1\n");                                 \
-  while (factory->resultMap[reference]->returnValue == "")                        \
+  while (factory->result_map[reference]->returnValue == "")                        \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
   nsresult conversionResult;                                    \
-  *result = factory->resultMap[reference]->returnValue.ToInteger (&conversionResult); \
+  *result = factory->result_map[reference]->returnValue.ToInteger (&conversionResult); \
   PLUGIN_CHECK ("parse integer", conversionResult);             
 // \
 //   printf ("RECEIVE_SIZE: %s result: %x = %d\n",                 \
@@ -481,13 +491,13 @@ char const* TYPES[10] = { "Object",
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
   printf("RECEIVE STRING 1\n");                                 \
-  while (factory->resultMap[reference]->returnValue == "")                            \
+  while (factory->result_map[reference]->returnValue == "")                            \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-	printf("Setting result to: %s\n", strdup (factory->resultMap[reference]->returnValue.get ())); \
+	printf("Setting result to: %s\n", strdup (factory->result_map[reference]->returnValue.get ())); \
   *result = reinterpret_cast<char_type const*>                  \
-    (strdup (factory->resultMap[reference]->returnValue.get ()));                     
+    (strdup (factory->result_map[reference]->returnValue.get ()));                     
 // \
 //   printf ("RECEIVE_STRING: %s result: %x = %s\n",               \
 //           __func__, result, *result);
@@ -497,15 +507,15 @@ char const* TYPES[10] = { "Object",
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
   printf("RECEIVE STRING UCS 1\n");                                 \
-  while (factory->resultMap[reference]->returnValueUCS.IsEmpty())                        \
+  while (factory->result_map[reference]->returnValueUCS.IsEmpty())                        \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-  int length = factory->resultMap[reference]->returnValueUCS.Length ();               \
+  int length = factory->result_map[reference]->returnValueUCS.Length ();               \
   jchar* newstring = static_cast<jchar*> (PR_Malloc (length));  \
   memset (newstring, 0, length);                                \
-  memcpy (newstring, factory->resultMap[reference]->returnValueUCS.get (), length);   \
-  std::cout << "Setting result to: " << factory->resultMap[reference]->returnValueUCS.get() << std::endl; \
+  memcpy (newstring, factory->result_map[reference]->returnValueUCS.get (), length);   \
+  std::cout << "Setting result to: " << factory->result_map[reference]->returnValueUCS.get() << std::endl; \
   *result = static_cast<jchar const*> (newstring);
 
 // \
@@ -516,11 +526,11 @@ char const* TYPES[10] = { "Object",
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
   printf("RECEIVE BOOLEAN 1\n");                             \
-  while (factory->resultMap[reference]->returnIdentifier == -1)               \
+  while (factory->result_map[reference]->returnIdentifier == -1)               \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-  *result = factory->resultMap[reference]->returnIdentifier;
+  *result = factory->result_map[reference]->returnIdentifier;
 //      res = factory->current->ProcessNextEvent (PR_TRUE,        \
 //                                                &processed);    \
 //      PLUGIN_CHECK_RETURN (__func__, res);                      \
@@ -767,7 +777,7 @@ public:
   // FIXME: make private?
   JNIEnv* proxyEnv;
   nsISecureEnv* secureEnv;
-  std::map<PRUint32,ResultContainer*> resultMap;
+  std::map<PRUint32,ResultContainer*> result_map;
   void GetMember ();
   void SetMember ();
   void GetSlot ();
@@ -778,6 +788,7 @@ public:
   void Finalize ();
   void ToString ();
   nsCOMPtr<nsILiveconnect> liveconnect;
+  std::map<nsCString, nsCString> codebase_map;
 
 private:
   ~IcedTeaPluginFactory();
@@ -827,7 +838,6 @@ private:
 };
 
 class IcedTeaEventSink;
-
 
 class IcedTeaPluginInstance : public nsIPluginInstance,
                               public nsIJVMPluginInstance
@@ -1139,6 +1149,7 @@ private:
 
   int IncrementContextCounter();
   void DecrementContextCounter();
+  void GetCurrentPageAddress(const char **addr);
   int contextCounter;
 };
 
@@ -2068,6 +2079,29 @@ IcedTeaPluginInstance::Initialize (nsIPluginInstancePeer* aPeer)
   NS_ADDREF (aPeer);
   printf ("DONE SETTING PEER!!!: %p\n", aPeer);
 
+//  if (factory->codebase_map[nsCString(documentbase)] != NULL)
+//  {
+//	  printf("Found %s in map and it is %s\n", nsCString(documentbase), factory->codebase_map[nsCString(documentbase)].get());
+//
+//  }
+
+  nsCString dbase(documentbase);
+  if (factory->codebase_map.find(dbase) != factory->codebase_map.end())
+  {
+	factory->codebase_map[dbase] += ",";
+    factory->codebase_map[dbase].AppendInt(instance_identifier);
+
+    printf("Appended: %s to %s\n", factory->codebase_map[dbase].get(), documentbase);
+
+  } else 
+  {
+	nsCString str;
+	str.AppendInt(instance_identifier);
+    factory->codebase_map[dbase] = str;
+
+	printf("Creating and adding %s to %s and we now have: %s\n", str.get(), documentbase, factory->codebase_map.find(dbase)->second.get());
+  }
+
   return NS_OK;
 }
 
@@ -2138,9 +2172,8 @@ IcedTeaPluginInstance::SetWindow (nsPluginWindow* aWindow)
 
             printf("IcedTeaPluginInstance::SetWindow: Instance %p waiting for initialization...\n", this);
 
-            while (initialized == PR_FALSE) {
+           while (initialized == PR_FALSE) {
               PROCESS_PENDING_EVENTS;
-//            printf("waiting for java object\n");
             }
 
             printf("Instance %p initialization complete...\n", this);
@@ -2308,7 +2341,7 @@ IcedTeaPluginFactory::GetJavaObject (PRUint32 instance_identifier,
   objectMessage.AppendInt (reference);
   objectMessage += " GetJavaObject";
   printf ("Sending object message: %s\n", objectMessage.get());
-  resultMap[reference] = new ResultContainer();
+  result_map[reference] = new ResultContainer();
   SendMessageToAppletViewer (objectMessage);
 
   PRBool processed = PR_FALSE;
@@ -2439,8 +2472,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
         {
           IcedTeaPluginInstance* instance = NULL;
           instances.Get (identifier, &instance);
-          if (instance != 0)
-            instance->peer->ShowStatus (nsCString (rest).get ());
+//          if (instance != 0)
+//            instance->peer->ShowStatus (nsCString (rest).get ());
         }
       else if (command == "initialized")
         {
@@ -2658,7 +2691,7 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
       else if (command == "Error")
         {
 			printf("Error occured. Setting error flag for container @ %d to true\n", reference);
-			resultMap[reference]->errorOccured = PR_TRUE;
+			result_map[reference]->errorOccured = PR_TRUE;
 		}
     }
   else if (prefix == "context")
@@ -2694,9 +2727,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
                || command == "NewGlobalRef"
                || command == "NewArray")
         {
-		  resultMap[reference]->returnIdentifier = rest.ToInteger (&conversionResult);
+		  result_map[reference]->returnIdentifier = rest.ToInteger (&conversionResult);
           PLUGIN_CHECK ("parse integer", conversionResult);
-          printf ("GOT RETURN IDENTIFIER %d\n", resultMap[reference]->returnIdentifier);
+          printf ("GOT RETURN IDENTIFIER %d\n", result_map[reference]->returnIdentifier);
 
         }
       else if (command == "GetField"
@@ -2710,8 +2743,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 //          if (returnValue != "")
 //            PLUGIN_ERROR ("Return value already defined.");
           
-		   resultMap[reference]->returnValue = rest; 
-           printf ("PLUGIN GOT RETURN VALUE: %s\n", resultMap[reference]->returnValue.get());
+		   result_map[reference]->returnValue = rest; 
+           printf ("PLUGIN GOT RETURN VALUE: %s\n", result_map[reference]->returnValue.get());
         }
       else if (command == "GetStringUTFChars")
         {
@@ -2739,8 +2772,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
                             offset - previousOffset).ToInteger (&conversionResult, 16));
               PLUGIN_CHECK ("parse integer", conversionResult);
             }
-		  resultMap[reference]->returnValue = returnValue;
-          printf ("PLUGIN GOT RETURN UTF-8 STRING: %s\n", resultMap[reference]->returnValue.get ());
+		  result_map[reference]->returnValue = returnValue;
+          printf ("PLUGIN GOT RETURN UTF-8 STRING: %s\n", result_map[reference]->returnValue.get ());
         }
       else if (command == "GetStringChars")
         {
@@ -2792,7 +2825,7 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
                 printf ("?");
             }
           printf ("\n");
-		  resultMap[reference]->returnValueUCS = returnValueUCS;
+		  result_map[reference]->returnValueUCS = returnValueUCS;
 
         }
       // Do nothing for: SetStaticField, SetField, ExceptionClear,
@@ -3726,6 +3759,10 @@ NS_IMPL_ISUPPORTS1 (IcedTeaJNIEnv, nsISecureEnv)
 #include <nsNetCID.h>
 #include <nsServiceManagerUtils.h>
 #include <iostream>
+#include <jvmmgr.h>
+#include <nsIPrincipal.h>
+#include <nsIScriptSecurityManager.h>
+#include <nsIURI.h>
 
 IcedTeaJNIEnv::IcedTeaJNIEnv (IcedTeaPluginFactory* factory)
 : factory (factory)
@@ -3764,6 +3801,29 @@ IcedTeaJNIEnv::DecrementContextCounter ()
     PR_ExitMonitor(contextCounterPRMonitor);
 }
 
+void
+IcedTeaJNIEnv::GetCurrentPageAddress(const char **addr)
+{
+    nsIPrincipal *prin;
+	nsCOMPtr<nsIScriptSecurityManager> sec_man(do_GetService("@mozilla.org/scriptsecuritymanager;1"));
+
+    sec_man->GetSubjectPrincipal(&prin);
+
+   if (prin)
+   {
+
+       nsIURI *uri;
+       prin->GetURI(&uri);
+
+	   if (uri)
+	   {
+           nsCAutoString str;
+           uri->GetSpec(str);
+           NS_CStringGetData(str, addr);
+	   }
+   }
+}
+
 NS_IMETHODIMP
 IcedTeaJNIEnv::NewObject (jclass clazz,
                           jmethodID methodID,
@@ -3781,6 +3841,7 @@ IcedTeaJNIEnv::NewObject (jclass clazz,
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE (reference, jobject, result);
   DecrementContextCounter ();
+
   return NS_OK;
 }
 
@@ -3803,6 +3864,7 @@ IcedTeaJNIEnv::CallMethod (jni_type type,
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_VALUE (reference, type, result);
   DecrementContextCounter ();
+
   return NS_OK;
 }
 
@@ -3816,6 +3878,7 @@ IcedTeaJNIEnv::CallNonvirtualMethod (jni_type type,
                                      jvalue* result,
                                      nsISecurityContext* ctx)
 {
+
   NOT_IMPLEMENTED ();
   return NS_ERROR_NOT_IMPLEMENTED;
 }
@@ -3975,7 +4038,7 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
       i = 1;
       stopchar = ')';
     }
-      
+ 
   // Method.
   int arg = 0;
   char* fl;
@@ -3999,9 +4062,11 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
           retstr.AppendInt (args[arg].s);
           break;
         case 'I':
+	   	  printf("Appending (I @ %d) %d\n", arg, args[arg].i);
           retstr.AppendInt (args[arg].i);
           break;
         case 'J':
+	   	  printf("Appending (J @ %d) %d\n", arg, args[arg].i);
           retstr.AppendInt (args[arg].j);
           break;
         case 'F':
@@ -4011,6 +4076,7 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
           retstr += IcedTeaPrintfCString ("%g", args[arg].d);
           break;
         case 'L':
+          std::cout << "Appending for L: arg=" << arg << " args[arg].l=" << args[arg].l << std::endl;
           retstr.AppendInt (ID (args[arg].l));
           i++;
           while (id->signature[i] != ';')
@@ -4044,7 +4110,10 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
           printf ("FAILED ID: %d\n", id->identifier);
           break;
         }
+	
+	  retstr += " ";
       i++;
+	  arg++;
     }
 
   // Freed by calling function.
@@ -4067,6 +4136,7 @@ IcedTeaJNIEnv::GetField (jni_type type,
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_VALUE (reference, type, result);
   DecrementContextCounter ();
+
   return NS_OK;
 }
 
@@ -4084,7 +4154,7 @@ IcedTeaJNIEnv::SetField (jni_type type,
   MESSAGE_ADD_ID (fieldID);
   MESSAGE_ADD_VALUE (fieldID, val);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
+
   return NS_OK;
 }
 
@@ -4106,6 +4176,7 @@ IcedTeaJNIEnv::CallStaticMethod (jni_type type,
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_VALUE (reference, type, result);
   DecrementContextCounter ();
+
   return NS_OK;
 }
 
@@ -4125,6 +4196,7 @@ IcedTeaJNIEnv::GetStaticField (jni_type type,
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_VALUE (reference, type, result);
   DecrementContextCounter ();
+
   return NS_OK;
 }
 
@@ -4142,7 +4214,7 @@ IcedTeaJNIEnv::SetStaticField (jni_type type,
   MESSAGE_ADD_ID (fieldID);
   MESSAGE_ADD_VALUE (fieldID, val);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
+
   return NS_OK;
 }
 
@@ -4799,12 +4871,15 @@ NSGetFactory (nsISupports* aServMgr, nsCID const& aClass,
 		  PLUGIN_DEBUG("Waiting for factory to be created...");
 	  }
 
+
+      PLUGIN_DEBUG("NSGetFactory: Returning existing factory");
+
 	  *aFactory = factory;
 	  NS_ADDREF (factory);
   } else
   {
     factory_created = PR_TRUE;
-    PLUGIN_DEBUG("Creating factory");
+    PLUGIN_DEBUG("NSGetFactory: Creating factory");
     factory = new IcedTeaPluginFactory ();
     if (!factory)
       return NS_ERROR_OUT_OF_MEMORY;

@@ -1,6 +1,6 @@
 diff -urN openjdk.orig/jdk/make/sun/Makefile openjdk/jdk/make/sun/Makefile
 --- openjdk.orig/jdk/make/sun/Makefile	2008-07-10 15:54:44.000000000 -0400
-+++ openjdk/jdk/make/sun/Makefile	2008-08-26 17:23:07.000000000 -0400
++++ openjdk/jdk/make/sun/Makefile	2008-09-15 16:21:47.000000000 -0400
 @@ -66,6 +66,7 @@
            $(HEADLESS_SUBDIR) $(DGA_SUBDIR) \
  	  font jpeg cmm applet rmi beans $(JDBC_SUBDIR) \
@@ -11,7 +11,7 @@ diff -urN openjdk.orig/jdk/make/sun/Makefile openjdk/jdk/make/sun/Makefile
  all build clean clobber::
 diff -urN openjdk.orig/jdk/make/sun/Makefile.orig openjdk/jdk/make/sun/Makefile.orig
 --- openjdk.orig/jdk/make/sun/Makefile.orig	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/make/sun/Makefile.orig	2008-08-26 17:23:07.000000000 -0400
++++ openjdk/jdk/make/sun/Makefile.orig	2008-09-15 16:21:47.000000000 -0400
 @@ -0,0 +1,73 @@
 +#
 +# Copyright 1995-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -88,7 +88,7 @@ diff -urN openjdk.orig/jdk/make/sun/Makefile.orig openjdk/jdk/make/sun/Makefile.
 +
 diff -urN openjdk.orig/jdk/make/sun/plugin/Makefile openjdk/jdk/make/sun/plugin/Makefile
 --- openjdk.orig/jdk/make/sun/plugin/Makefile	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/make/sun/plugin/Makefile	2008-08-26 17:23:07.000000000 -0400
++++ openjdk/jdk/make/sun/plugin/Makefile	2008-09-15 16:21:47.000000000 -0400
 @@ -0,0 +1,53 @@
 +#
 +# Copyright 1995-2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -145,8 +145,8 @@ diff -urN openjdk.orig/jdk/make/sun/plugin/Makefile openjdk/jdk/make/sun/plugin/
 +
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/GetMemberPluginCallRequest.java openjdk/jdk/src/share/classes/sun/applet/GetMemberPluginCallRequest.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/GetMemberPluginCallRequest.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/GetMemberPluginCallRequest.java	2008-07-20 22:33:37.000000000 -0400
-@@ -0,0 +1,58 @@
++++ openjdk/jdk/src/share/classes/sun/applet/GetMemberPluginCallRequest.java	2008-09-15 16:22:06.000000000 -0400
+@@ -0,0 +1,72 @@
 +/* GetMemberPluginCallRequest -- represent Java-to-JavaScript requests
 +   Copyright (C) 2008  Red Hat
 +
@@ -203,12 +203,26 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/GetMemberPluginCallReque
 +            0).store.getObject(Integer.parseInt(args[1]));
 +        done = true;
 +    }
++    
++    /**
++     * Returns whether the given message is serviceable by this object
++     * 
++     * @param message The message to service
++     * @return boolean indicating if message is serviceable
++     */
++    public boolean serviceable(String message) {
++    	return message.contains("JavaScriptCall") ||
++    			message.contains("JavaScriptEval") ||
++    			message.contains("JavaScriptGetMember") ||
++    			message.contains("JavaScriptGetSlot") ||
++    			message.contains("JavaScriptToString");
++    }
 +}
 +
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/GetWindowPluginCallRequest.java openjdk/jdk/src/share/classes/sun/applet/GetWindowPluginCallRequest.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/GetWindowPluginCallRequest.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/GetWindowPluginCallRequest.java	2008-07-20 22:33:34.000000000 -0400
-@@ -0,0 +1,56 @@
++++ openjdk/jdk/src/share/classes/sun/applet/GetWindowPluginCallRequest.java	2008-09-15 16:22:06.000000000 -0400
+@@ -0,0 +1,66 @@
 +/* GetWindowPluginCallRequest -- represent Java-to-JavaScript requests
 +   Copyright (C) 2008  Red Hat
 +
@@ -264,11 +278,21 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/GetWindowPluginCallReque
 +        internal = Integer.parseInt(args[1]);
 +        done = true;
 +    }
++    
++    /**
++     * Returns whether the given message is serviceable by this object
++     * 
++     * @param message The message to service
++     * @return boolean indicating if message is serviceable
++     */
++    public boolean serviceable(String message) {
++    	return message.contains("JavaScriptGetWindow");
++    }
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java openjdk/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java	2008-09-04 17:01:37.000000000 -0400
-@@ -0,0 +1,807 @@
++++ openjdk/jdk/src/share/classes/sun/applet/PluginAppletSecurityContext.java	2008-09-15 16:22:07.000000000 -0400
+@@ -0,0 +1,847 @@
 +/* PluginAppletSecurityContext -- execute plugin JNI messages
 +   Copyright (C) 2008  Red Hat
 +
@@ -308,9 +332,14 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +
 +package sun.applet;
 +
-+import java.util.*;
-+import java.lang.reflect.*;
-+import java.io.*;
++import java.lang.reflect.Array;
++import java.lang.reflect.Constructor;
++import java.lang.reflect.Field;
++import java.lang.reflect.Method;
++import java.util.ArrayList;
++import java.util.HashMap;
++import java.util.List;
++import java.util.StringTokenizer;
 +
 +class Signature {
 +	private String signature;
@@ -378,7 +407,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +		}
 +	}
 +
-+	public Signature(String signature) {
++	public Signature(String signature, String src) {
 +		this.signature = signature;
 +		currentIndex = 0;
 +		typeList = new ArrayList<Class>(10);
@@ -388,40 +417,36 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +			elem = nextTypeName();
 +			// System.out.println ("NEXT TYPE: " + elem);
 +			Class primitive = primitiveNameToType(elem);
-+			try {
-+				if (primitive != null)
-+					typeList.add(primitive);
-+				else {
-+					// System.out.println ("HERE1");
-+					int dimsize = 0;
-+					int n = elem.indexOf('[');
-+					if (n != -1) {
-+						// System.out.println ("HERE2");
-+						String arrayType = elem.substring(0, n);
++			if (primitive != null)
++				typeList.add(primitive);
++			else {
++				// System.out.println ("HERE1");
++				int dimsize = 0;
++				int n = elem.indexOf('[');
++				if (n != -1) {
++					// System.out.println ("HERE2");
++					String arrayType = elem.substring(0, n);
++					dimsize++;
++					n = elem.indexOf('[', n + 1);
++					// System.out.println ("HERE2.5");
++					while (n != -1) {
 +						dimsize++;
 +						n = elem.indexOf('[', n + 1);
-+						// System.out.println ("HERE2.5");
-+						while (n != -1) {
-+							dimsize++;
-+							n = elem.indexOf('[', n + 1);
-+							// System.out.println ("HERE2.8");
-+						}
-+						int[] dims = new int[dimsize];
-+						primitive = primitiveNameToType(arrayType);
-+						// System.out.println ("HERE3");
-+						if (primitive != null) {
-+							typeList.add(Array.newInstance(primitive, dims)
-+									.getClass());
-+							// System.out.println ("HERE4");
-+						} else
-+							typeList.add(Array.newInstance(
-+									Class.forName(arrayType), dims).getClass());
-+					} else {
-+						typeList.add(Class.forName(elem));
++						// System.out.println ("HERE2.8");
 +					}
++					int[] dims = new int[dimsize];
++					primitive = primitiveNameToType(arrayType);
++					// System.out.println ("HERE3");
++					if (primitive != null) {
++						typeList.add(Array.newInstance(primitive, dims)
++								.getClass());
++						// System.out.println ("HERE4");
++					} else
++						typeList.add(Array.newInstance(
++								getClass(arrayType, src), dims).getClass());
++				} else {
++					typeList.add(getClass(elem, src));
 +				}
-+			} catch (ClassNotFoundException e) {
-+				throw new RuntimeException(e);
 +			}
 +		}
 +		if (typeList.size() == 0) {
@@ -430,6 +455,39 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +		}
 +	}
 +
++	public static Class getClass(String name, String src) {
++
++		Class c = null;
++		
++		try {
++			c = Class.forName(name);
++		} catch (ClassNotFoundException cnfe) {
++
++			StringTokenizer st = new StringTokenizer(src, ",");
++
++			while (st.hasMoreTokens()) {
++
++				String tok = st.nextToken();
++				System.err.println("Searching for " + name  + " at key " + tok);
++
++				try {
++					c = PluginAppletSecurityContext.classLoaders.get(tok).loadClass(name);
++				} catch (ClassNotFoundException e) {
++					// do nothing .. thrown below
++				}
++				
++				if (c != null)
++					break;
++			}
++		}
++
++		if (c == null) {
++			throw (new RuntimeException(new ClassNotFoundException("Unable to find class " + name)));
++		}
++
++		return c;
++	}
++	
 +	public static Class primitiveNameToType(String name) {
 +		if (name.equals("void"))
 +			return Void.TYPE;
@@ -462,6 +520,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +	// Context identifier -> PluginAppletSecurityContext object.
 +	// FIXME: make private
 +	public static HashMap<Integer, PluginAppletSecurityContext> contexts = new HashMap();
++	
++	public static HashMap<String, ClassLoader> classLoaders = new HashMap<String, ClassLoader>();
 +
 +	// FIXME: make private
 +	public PluginObjectStore store = new PluginObjectStore();
@@ -470,7 +530,10 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +	int identifier = 0;
 +
 +	static {
-+		// FIXME: when should we add each new security context?
++		// FIXME: when should we add each new security context? but how would 
++		// we be able to know which context applies to which request from nspr? 
++		// the nspr jni functions do not know what applet they are being called
++		// in reference to
 +		contexts.put(0, new PluginAppletSecurityContext(0));
 +	}
 +
@@ -478,13 +541,13 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +		this.identifier = identifier;
 +	}
 +
-+	public static <V> V parseCall(String s, Class<V> c) {
++	public static <V> V parseCall(String s, String src, Class<V> c) {
 +		if (c == Integer.class)
 +			return (V) new Integer(s);
 +		else if (c == String.class)
 +			return (V) new String(s);
 +		else if (c == Signature.class)
-+			return (V) new Signature(s);
++			return (V) new Signature(s, src);
 +		else
 +			throw new RuntimeException("Unexpected call value.");
 +	}
@@ -514,12 +577,13 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +			return store.getObject(new Integer(s));
 +	}
 +
-+	public static void handleMessage(int identifier, int reference,
++	public static void handleMessage(int identifier, String src, int reference,
 +			String message) {
-+		contexts.get(identifier).handleMessage(reference, message);
++		contexts.get(identifier).handleMessage(reference, src, message);
 +	}
 +
-+	public void handleMessage(int reference, String message) {
++	public void handleMessage(int reference, String src, String message) {
++
 +		try {
 +			if (message.startsWith("FindClass")) {
 +				ClassLoader cl = null;
@@ -539,9 +603,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +			} else if (message.startsWith("GetStaticMethodID")
 +					|| message.startsWith("GetMethodID")) {
 +				String[] args = message.split(" ");
-+				Integer classID = parseCall(args[1], Integer.class);
-+				String methodName = parseCall(args[2], String.class);
-+				Signature signature = parseCall(args[3], Signature.class);
++				Integer classID = parseCall(args[1], src, Integer.class);
++				String methodName = parseCall(args[2], src, String.class);
++				Signature signature = parseCall(args[3], src, Signature.class);
 +				Object[] a = signature.getClassArray();
 +
 +				Class c = (Class) store.getObject(classID);
@@ -561,9 +625,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +			} else if (message.startsWith("GetStaticFieldID")
 +					|| message.startsWith("GetFieldID")) {
 +				String[] args = message.split(" ");
-+				Integer classID = parseCall(args[1], Integer.class);
-+				String fieldName = parseCall(args[2], String.class);
-+				Signature signature = parseCall(args[3], Signature.class);
++				Integer classID = parseCall(args[1], src, Integer.class);
++				String fieldName = parseCall(args[2], src, String.class);
++				Signature signature = parseCall(args[3], src, Signature.class);
 +
 +				Class c = (Class) store.getObject(classID);
 +				Field f = null;
@@ -574,9 +638,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "GetStaticFieldID " + store.getIdentifier(f));
 +			} else if (message.startsWith("GetStaticField")) {
 +				String[] args = message.split(" ");
-+				String type = parseCall(args[1], String.class);
-+				Integer classID = parseCall(args[1], Integer.class);
-+				Integer fieldID = parseCall(args[2], Integer.class);
++				String type = parseCall(args[1], src, String.class);
++				Integer classID = parseCall(args[1], src, Integer.class);
++				Integer fieldID = parseCall(args[2], src, Integer.class);
 +
 +				Class c = (Class) store.getObject(classID);
 +				Field f = (Field) store.getObject(fieldID);
@@ -604,9 +668,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				}
 +			} else if (message.startsWith("SetStaticField")) {
 +				String[] args = message.split(" ");
-+				String type = parseCall(args[1], String.class);
-+				Integer classID = parseCall(args[2], Integer.class);
-+				Integer fieldID = parseCall(args[3], Integer.class);
++				String type = parseCall(args[1], src, String.class);
++				Integer classID = parseCall(args[2], src, Integer.class);
++				Integer fieldID = parseCall(args[3], src, Integer.class);
 +
 +				Object value = null;
 +				if (Signature.primitiveNameToType(type) != null) {
@@ -626,9 +690,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "SetStaticField");
 +			} else if (message.startsWith("SetField")) {
 +				String[] args = message.split(" ");
-+				String type = parseCall(args[1], String.class);
-+				Integer objectID = parseCall(args[2], Integer.class);
-+				Integer fieldID = parseCall(args[3], Integer.class);
++				String type = parseCall(args[1], src, String.class);
++				Integer objectID = parseCall(args[2], src, Integer.class);
++				Integer fieldID = parseCall(args[3], src, Integer.class);
 +
 +				Object value = null;
 +				if (Signature.primitiveNameToType(type) != null) {
@@ -648,8 +712,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "SetField");
 +			} else if (message.startsWith("GetObjectArrayElement")) {
 +				String[] args = message.split(" ");
-+				Integer arrayID = parseCall(args[1], Integer.class);
-+				Integer index = parseCall(args[2], Integer.class);
++				Integer arrayID = parseCall(args[1], src, Integer.class);
++				Integer index = parseCall(args[2], src, Integer.class);
 +
 +				Object[] o = (Object[]) store.getObject(arrayID);
 +				Object ret = null;
@@ -663,9 +727,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +						+ store.getIdentifier(ret));
 +			} else if (message.startsWith("SetObjectArrayElement")) {
 +				String[] args = message.split(" ");
-+				Integer arrayID = parseCall(args[1], Integer.class);
-+				Integer index = parseCall(args[2], Integer.class);
-+				Integer objectID = parseCall(args[3], Integer.class);
++				Integer arrayID = parseCall(args[1], src, Integer.class);
++				Integer index = parseCall(args[2], src, Integer.class);
++				Integer objectID = parseCall(args[3], src, Integer.class);
 +
 +				Object[] o = (Object[]) store.getObject(arrayID);
 +				Object toSet = (Object) store.getObject(objectID);
@@ -675,7 +739,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "SetObjectArrayElement");
 +			} else if (message.startsWith("GetArrayLength")) {
 +				String[] args = message.split(" ");
-+				Integer arrayID = parseCall(args[1], Integer.class);
++				Integer arrayID = parseCall(args[1], src, Integer.class);
 +
 +				System.out.println("ARRAYID: " + arrayID);
 +				Object o = (Object) store.getObject(arrayID);
@@ -687,9 +751,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "GetArrayLength " + Array.getLength(o));
 +			} else if (message.startsWith("GetField")) {
 +				String[] args = message.split(" ");
-+				String type = parseCall(args[1], String.class);
-+				Integer objectID = parseCall(args[1], Integer.class);
-+				Integer fieldID = parseCall(args[2], Integer.class);
++				String type = parseCall(args[1], src, String.class);
++				Integer objectID = parseCall(args[1], src, Integer.class);
++				Integer fieldID = parseCall(args[2], src, Integer.class);
 +
 +				Object o = (Object) store.getObject(objectID);
 +				Field f = (Field) store.getObject(fieldID);
@@ -726,8 +790,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "GetObjectClass " + store.getIdentifier(c));
 +			} else if (message.startsWith("CallStaticMethod")) {
 +				String[] args = message.split(" ");
-+				Integer classID = parseCall(args[1], Integer.class);
-+				Integer methodID = parseCall(args[2], Integer.class);
++				Integer classID = parseCall(args[1], src, Integer.class);
++				Integer methodID = parseCall(args[2], src, Integer.class);
 +
 +				System.out.println("GETTING: " + methodID);
 +				Method m = (Method) store.getObject(methodID);
@@ -773,8 +837,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				}
 +			} else if (message.startsWith("CallMethod")) {
 +				String[] args = message.split(" ");
-+				Integer objectID = parseCall(args[1], Integer.class);
-+				Integer methodID = parseCall(args[2], Integer.class);
++				Integer objectID = parseCall(args[1], src, Integer.class);
++				Integer methodID = parseCall(args[2], src, Integer.class);
 +
 +				Object o = (Object) store.getObject(objectID);
 +				Method m = (Method) store.getObject(methodID);
@@ -830,7 +894,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				}
 +			} else if (message.startsWith("GetSuperclass")) {
 +				String[] args = message.split(" ");
-+				Integer classID = parseCall(args[1], Integer.class);
++				Integer classID = parseCall(args[1], src, Integer.class);
 +				Class c = null;
 +				Class ret = null;
 +
@@ -841,8 +905,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "GetSuperclass " + store.getIdentifier(ret));
 +			} else if (message.startsWith("IsAssignableFrom")) {
 +				String[] args = message.split(" ");
-+				Integer classID = parseCall(args[1], Integer.class);
-+				Integer superclassID = parseCall(args[2], Integer.class);
++				Integer classID = parseCall(args[1], src, Integer.class);
++				Integer superclassID = parseCall(args[2], src, Integer.class);
 +
 +				boolean result = false;
 +				Class clz = (Class) store.getObject(classID);
@@ -853,8 +917,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "IsAssignableFrom " + (result ? "1" : "0"));
 +			} else if (message.startsWith("IsInstanceOf")) {
 +				String[] args = message.split(" ");
-+				Integer objectID = parseCall(args[1], Integer.class);
-+				Integer classID = parseCall(args[2], Integer.class);
++				Integer objectID = parseCall(args[1], src, Integer.class);
++				Integer classID = parseCall(args[2], src, Integer.class);
 +
 +				boolean result = false;
 +				Object o = (Object) store.getObject(objectID);
@@ -865,7 +929,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "IsInstanceOf " + (result ? "1" : "0"));
 +			} else if (message.startsWith("GetStringUTFLength")) {
 +				String[] args = message.split(" ");
-+				Integer stringID = parseCall(args[1], Integer.class);
++				Integer stringID = parseCall(args[1], src, Integer.class);
 +
 +				String o = null;
 +				byte[] b = null;
@@ -877,7 +941,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "GetStringUTFLength " + o.length());
 +			} else if (message.startsWith("GetStringLength")) {
 +				String[] args = message.split(" ");
-+				Integer stringID = parseCall(args[1], Integer.class);
++				Integer stringID = parseCall(args[1], src, Integer.class);
 +
 +				String o = null;
 +				byte[] b = null;
@@ -890,7 +954,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "GetStringLength " + o.length());
 +			} else if (message.startsWith("GetStringUTFChars")) {
 +				String[] args = message.split(" ");
-+				Integer stringID = parseCall(args[1], Integer.class);
++				Integer stringID = parseCall(args[1], src, Integer.class);
 +
 +				String o = null;
 +				byte[] b = null;
@@ -910,7 +974,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "GetStringUTFChars " + buf);
 +			} else if (message.startsWith("GetStringChars")) {
 +				String[] args = message.split(" ");
-+				Integer stringID = parseCall(args[1], Integer.class);
++				Integer stringID = parseCall(args[1], src, Integer.class);
 +
 +				String o = null;
 +				byte[] b = null;
@@ -931,8 +995,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "GetStringChars " + buf);
 +			} else if (message.startsWith("NewArray")) {
 +				String[] args = message.split(" ");
-+				String type = parseCall(args[1], String.class);
-+				Integer length = parseCall(args[2], Integer.class);
++				String type = parseCall(args[1], src, String.class);
++				Integer length = parseCall(args[2], src, Integer.class);
 +
 +				// System.out.println ("CALLING: NewArray: " + type + " " +
 +				// length + " "
@@ -946,9 +1010,9 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "NewArray " + store.getIdentifier(newArray));
 +			} else if (message.startsWith("NewObjectArray")) {
 +				String[] args = message.split(" ");
-+				Integer length = parseCall(args[1], Integer.class);
-+				Integer classID = parseCall(args[2], Integer.class);
-+				Integer objectID = parseCall(args[3], Integer.class);
++				Integer length = parseCall(args[1], src, Integer.class);
++				Integer classID = parseCall(args[2], src, Integer.class);
++				Integer objectID = parseCall(args[3], src, Integer.class);
 +
 +				// System.out.println ("CALLING: NewObjectArray: " +
 +				// classID + " " + length + " "
@@ -966,8 +1030,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +						+ store.getIdentifier(newArray));
 +			} else if (message.startsWith("NewObject")) {
 +				String[] args = message.split(" ");
-+				Integer classID = parseCall(args[1], Integer.class);
-+				Integer methodID = parseCall(args[2], Integer.class);
++				Integer classID = parseCall(args[1], src, Integer.class);
++				Integer methodID = parseCall(args[2], src, Integer.class);
 +
 +				Constructor m = (Constructor) store.getObject(methodID);
 +				Class[] argTypes = m.getParameterTypes();
@@ -992,12 +1056,12 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +			} else if (message.startsWith("NewString")) {
 +				System.out.println("MESSAGE: " + message);
 +				String[] args = message.split(" ");
-+				Integer strlength = parseCall(args[1], Integer.class);
++				Integer strlength = parseCall(args[1], src, Integer.class);
 +				int bytelength = 2 * strlength;
 +				byte[] byteArray = new byte[bytelength];
 +				String ret = null;
 +				for (int i = 0; i < strlength; i++) {
-+					int c = parseCall(args[2 + i], Integer.class);
++					int c = parseCall(args[2 + i], src, Integer.class);
 +					System.out.println("char " + i + " " + c);
 +					// Low.
 +					byteArray[2 * i] = (byte) (c & 0x0ff);
@@ -1020,7 +1084,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				int i = 0;
 +				int c = 0;
 +				while (((byte) c) != 0) {
-+					c = parseCall(args[1 + i], Integer.class);
++					c = parseCall(args[1 + i], src, Integer.class);
 +					byteArray[i] = (byte) c;
 +					i++;
 +					if (i == byteArray.length) {
@@ -1049,17 +1113,17 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +				write(reference, "ExceptionClear");
 +			} else if (message.startsWith("DeleteGlobalRef")) {
 +				String[] args = message.split(" ");
-+				Integer id = parseCall(args[1], Integer.class);
++				Integer id = parseCall(args[1], src, Integer.class);
 +				store.unreference(id);
 +				write(reference, "DeleteGlobalRef");
 +			} else if (message.startsWith("DeleteLocalRef")) {
 +				String[] args = message.split(" ");
-+				Integer id = parseCall(args[1], Integer.class);
++				Integer id = parseCall(args[1], src, Integer.class);
 +				store.unreference(id);
 +				write(reference, "DeleteLocalRef");
 +			} else if (message.startsWith("NewGlobalRef")) {
 +				String[] args = message.split(" ");
-+				Integer id = parseCall(args[1], Integer.class);
++				Integer id = parseCall(args[1], src, Integer.class);
 +				store.reference(store.getObject(id));
 +				write(reference, "NewGlobalRef " + id);
 +			}
@@ -1078,8 +1142,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletSecurityCont
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java	2008-09-04 17:01:38.000000000 -0400
-@@ -0,0 +1,1416 @@
++++ openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java	2008-09-15 16:22:07.000000000 -0400
+@@ -0,0 +1,1439 @@
 + /*
 +  * Copyright 1995-2004 Sun Microsystems, Inc.  All Rights Reserved.
 +  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -1297,6 +1361,25 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 + 	} catch (IOException ioe) {
 + 		ioe.printStackTrace();
 + 	}
++ 	
++    // Wait for a maximum of 10 seconds for the panel to initialize
++    // (happens in a separate thread)
++ 	Applet a;
++    int maxSleepTime = 10000;
++    int sleepTime = 0;
++    while ((a = panel.getApplet()) == null && sleepTime < maxSleepTime) {
++   	 try {
++   		 Thread.sleep(100);
++   		 sleepTime += 100;
++   		 PluginDebug.debug("Waiting for applet to initialize... ");
++   	 } catch (InterruptedException ie) {
++   		 // ignore
++   	 }
++    }
++
++    // Applet initialized. Find out it's classloader and add it to the list
++    PluginAppletSecurityContext.classLoaders.put(Integer.toString(identifier), a.getClass().getClassLoader());
++    
 +     }
 + 
 +     /**
@@ -1405,13 +1488,13 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 +            	 }
 +             }
 +
-+             PluginDebug.debug ("Looking for object " + o + " panel is " + panel.getClass());
++             System.err.println ("Looking for object " + o + " panel is " + panel.getClass());
 +             PluginAppletSecurityContext.contexts.get(0).store.reference(o);
-+             PluginDebug.debug ("WRITING 1: " + "context 0 reference " + reference + " GetJavaObject "
++             System.err.println ("WRITING 1: " + "context 0 reference " + reference + " GetJavaObject "
 +                                 + PluginAppletSecurityContext.contexts.get(0).store.getIdentifier(o));
 +             PluginMain.write("context 0 reference " + reference + " GetJavaObject "
 +                              + PluginAppletSecurityContext.contexts.get(0).store.getIdentifier(o));
-+             PluginDebug.debug ("WRITING 1 DONE");
++             System.err.println ("WRITING 1 DONE");
 +         }
 +     }
 + 
@@ -2278,193 +2361,197 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 +                              PluginAppletViewerFactory factory)
 +         throws IOException
 +     {
-+         // <OBJECT> <EMBED> tag flags
-+         boolean isAppletTag = false;
-+         boolean isObjectTag = false;
-+         boolean isEmbedTag = false;
-+ 
-+ 	// warning messages
-+         String requiresNameWarning = amh.getMessage("parse.warning.requiresname");
-+         String paramOutsideWarning = amh.getMessage("parse.warning.paramoutside");
-+         String appletRequiresCodeWarning = amh.getMessage("parse.warning.applet.requirescode");
-+         String appletRequiresHeightWarning = amh.getMessage("parse.warning.applet.requiresheight");
-+         String appletRequiresWidthWarning = amh.getMessage("parse.warning.applet.requireswidth");
-+         String objectRequiresCodeWarning = amh.getMessage("parse.warning.object.requirescode");
-+         String objectRequiresHeightWarning = amh.getMessage("parse.warning.object.requiresheight");
-+         String objectRequiresWidthWarning = amh.getMessage("parse.warning.object.requireswidth");
-+         String embedRequiresCodeWarning = amh.getMessage("parse.warning.embed.requirescode");
-+         String embedRequiresHeightWarning = amh.getMessage("parse.warning.embed.requiresheight");
-+         String embedRequiresWidthWarning = amh.getMessage("parse.warning.embed.requireswidth");
-+         String appNotLongerSupportedWarning = amh.getMessage("parse.warning.appnotLongersupported");
-+ 
-+ 	java.net.URLConnection conn = url.openConnection();
-+ 	/* The original URL may have been redirected - this
-+ 	 * sets it to whatever URL/codebase we ended up getting
-+ 	 */
-+ 	url = conn.getURL();
-+ 
-+ 	int ydisp = 1;
-+ 	Hashtable atts = null;
-+ 
-+         while(true) {
-+ 	    c = in.read();
-+ 	    if (c == -1)
-+ 		break;
-+ 
-+ 	    if (c == '<') {
-+ 		c = in.read();
-+ 		if (c == '/') {
-+ 		    c = in.read();
-+ 		    String nm = scanIdentifier(in);
-+ 		    if (nm.equalsIgnoreCase("applet") ||
-+                         nm.equalsIgnoreCase("object") ||
-+                         nm.equalsIgnoreCase("embed")) {
-+ 
-+                         // We can't test for a code tag until </OBJECT>
-+                         // because it is a parameter, not an attribute.
-+                         if(isObjectTag) {
-+                             if (atts.get("code") == null && atts.get("object") == null) {
-+                                 statusMsgStream.println(objectRequiresCodeWarning);
-+                                 atts = null;
-+                             }
-+                         }
-+ 
-+ 			if (atts != null) {
-+ 			    // XXX 5/18 In general this code just simply
-+ 			    // shouldn't be part of parsing.  It's presence
-+ 			    // causes things to be a little too much of a
-+ 			    // hack.
-+ 			    factory.createAppletViewer(identifier, handle, x, y, url, atts);
-+ 			    x += XDELTA;
-+ 			    y += YDELTA;
-+ 			    // make sure we don't go too far!
-+ 			    Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-+ 			    if ((x > d.width - 300) || (y > d.height - 300)) {
-+ 				x = 0;
-+ 				y = 2 * ydisp * YDELTA;
-+ 				ydisp++;
-+ 			    }
-+ 			}
-+ 			atts = null;
-+                         isAppletTag = false;
-+                         isObjectTag = false;
-+                         isEmbedTag = false;
-+ 		    }
-+ 		}
-+ 		else {
-+ 		    String nm = scanIdentifier(in);
-+ 		    if (nm.equalsIgnoreCase("param")) {
-+ 			Hashtable t = scanTag(in);
-+ 			String att = (String)t.get("name");
-+ 			if (att == null) {
-+ 			    statusMsgStream.println(requiresNameWarning);
-+ 			} else {
-+ 			    String val = (String)t.get("value");
-+ 			    if (val == null) {
-+ 				statusMsgStream.println(requiresNameWarning);
-+ 			    } else if (atts != null) {
-+ 				atts.put(att.toLowerCase(), val);
-+ 			    } else {
-+ 				statusMsgStream.println(paramOutsideWarning);
-+ 			    }
-+ 			}
-+ 		    }
-+ 		    else if (nm.equalsIgnoreCase("applet")) {
-+                         isAppletTag = true;
-+ 			atts = scanTag(in);
-+ 			
-+ 			// If there is a classid present, transform it to code tag
-+            if (atts.get("code") == null && atts.get("classid") != null && 
-+            		((String) atts.get("classid")).startsWith("java:")) {
-+              	 //skip "java:"
-+              	 atts.put("code", ((String) atts.get("classid")).substring(5));
-+               }
++    	 // <OBJECT> <EMBED> tag flags
++    	 boolean isAppletTag = false;
++    	 boolean isObjectTag = false;
++    	 boolean isEmbedTag = false;
 +
-+ 			if (atts.get("code") == null && atts.get("object") == null) {
-+ 			    statusMsgStream.println(appletRequiresCodeWarning);
-+ 			    atts = null;
-+ 			} else if (atts.get("width") == null) {
-+ 			    statusMsgStream.println(appletRequiresWidthWarning);
-+ 			    atts = null;
-+ 			} else if (atts.get("height") == null) {
-+ 			    statusMsgStream.println(appletRequiresHeightWarning);
-+ 			    atts = null;
-+ 			}
-+ 		    }
-+ 		    else if (nm.equalsIgnoreCase("object")) {
-+                         isObjectTag = true;
-+ 			atts = scanTag(in);
-+                         
-+ 						// If there is a classid present, transform it to code tag
-+                         if (atts.get("code") == null && atts.get("classid") != null && 
-+                        		 ((String) atts.get("classid")).startsWith("java:")) {
-+                        	 //skip "java:"
-+                        	 atts.put("code", ((String) atts.get("classid")).substring(5));
-+                         }
++    	 // warning messages
++    	 String requiresNameWarning = amh.getMessage("parse.warning.requiresname");
++    	 String paramOutsideWarning = amh.getMessage("parse.warning.paramoutside");
++    	 String appletRequiresCodeWarning = amh.getMessage("parse.warning.applet.requirescode");
++    	 String appletRequiresHeightWarning = amh.getMessage("parse.warning.applet.requiresheight");
++    	 String appletRequiresWidthWarning = amh.getMessage("parse.warning.applet.requireswidth");
++    	 String objectRequiresCodeWarning = amh.getMessage("parse.warning.object.requirescode");
++    	 String objectRequiresHeightWarning = amh.getMessage("parse.warning.object.requiresheight");
++    	 String objectRequiresWidthWarning = amh.getMessage("parse.warning.object.requireswidth");
++    	 String embedRequiresCodeWarning = amh.getMessage("parse.warning.embed.requirescode");
++    	 String embedRequiresHeightWarning = amh.getMessage("parse.warning.embed.requiresheight");
++    	 String embedRequiresWidthWarning = amh.getMessage("parse.warning.embed.requireswidth");
++    	 String appNotLongerSupportedWarning = amh.getMessage("parse.warning.appnotLongersupported");
 +
-+                         // The <OBJECT> attribute codebase isn't what
-+                         // we want when not dealing with jars. If its 
-+                         // defined, remove it in that case.
-+                         if(atts.get("archive") == null && atts.get("codebase") != null) {
-+                       		atts.remove("codebase");
-+                         }
++    	 java.net.URLConnection conn = url.openConnection();
++    	 /* The original URL may have been redirected - this
++    	  * sets it to whatever URL/codebase we ended up getting
++    	  */
++    	 url = conn.getURL();
 +
-+                         if (atts.get("width") == null) {
-+ 			    statusMsgStream.println(objectRequiresWidthWarning);
-+ 			    atts = null;
-+ 			} else if (atts.get("height") == null) {
-+ 			    statusMsgStream.println(objectRequiresHeightWarning);
-+ 			    atts = null;
-+ 			}
-+ 		    }
-+ 		    else if (nm.equalsIgnoreCase("embed")) {
-+                         isEmbedTag = true;
-+ 			atts = scanTag(in);
-+ 
-+ 			// If there is a classid present, transform it to code tag
-+            if (atts.get("code") == null && atts.get("classid") != null && 
-+            		((String) atts.get("classid")).startsWith("java:")) {
-+           	 //skip "java:"
-+           	 atts.put("code", ((String) atts.get("classid")).substring(5));
-+            }
++    	 int ydisp = 1;
++    	 Hashtable atts = null;
 +
-+ 			if (atts.get("code") == null && atts.get("object") == null) {
-+ 			    statusMsgStream.println(embedRequiresCodeWarning);
-+ 			    atts = null;
-+ 			} else if (atts.get("width") == null) {
-+ 			    statusMsgStream.println(embedRequiresWidthWarning);
-+ 			    atts = null;
-+ 			} else if (atts.get("height") == null) {
-+ 			    statusMsgStream.println(embedRequiresHeightWarning);
-+ 			    atts = null;
-+ 			}
-+ 		    }
-+ 		    else if (nm.equalsIgnoreCase("app")) {
-+ 			statusMsgStream.println(appNotLongerSupportedWarning);
-+ 			Hashtable atts2 = scanTag(in);
-+ 			nm = (String)atts2.get("class");
-+ 			if (nm != null) {
-+ 			    atts2.remove("class");
-+ 			    atts2.put("code", nm + ".class");
-+ 			}
-+ 			nm = (String)atts2.get("src");
-+ 			if (nm != null) {
-+ 			    atts2.remove("src");
-+ 			    atts2.put("codebase", nm);
-+ 			}
-+ 			if (atts2.get("width") == null) {
-+ 			    atts2.put("width", "100");
-+ 			}
-+ 			if (atts2.get("height") == null) {
-+ 			    atts2.put("height", "100");
-+ 			}
-+ 			printTag(statusMsgStream, atts2);
-+ 			statusMsgStream.println();
-+ 		    }
-+ 		}
-+ 	    }
-+ 	}
-+ 	in.close();
++    	 while(true) {
++    		 c = in.read();
++    		 if (c == -1)
++    			 break;
++
++    		 if (c == '<') {
++    			 c = in.read();
++    			 if (c == '/') {
++    				 c = in.read();
++    				 String nm = scanIdentifier(in);
++    				 if (nm.equalsIgnoreCase("applet") ||
++    						 nm.equalsIgnoreCase("object") ||
++    						 nm.equalsIgnoreCase("embed")) {
++
++    					 // We can't test for a code tag until </OBJECT>
++    					 // because it is a parameter, not an attribute.
++    					 if(isObjectTag) {
++    						 if (atts.get("code") == null && atts.get("object") == null) {
++    							 statusMsgStream.println(objectRequiresCodeWarning);
++    							 atts = null;
++    						 }
++    					 }
++
++    					 if (atts != null) {
++    						 // XXX 5/18 In general this code just simply
++    						 // shouldn't be part of parsing.  It's presence
++    						 // causes things to be a little too much of a
++    						 // hack.
++    						 factory.createAppletViewer(identifier, handle, x, y, url, atts);
++    						 x += XDELTA;
++    						 y += YDELTA;
++    						 // make sure we don't go too far!
++    						 Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
++    						 if ((x > d.width - 300) || (y > d.height - 300)) {
++    							 x = 0;
++    							 y = 2 * ydisp * YDELTA;
++    							 ydisp++;
++    						 }
++    					 }
++    					 atts = null;
++    					 isAppletTag = false;
++    					 isObjectTag = false;
++    					 isEmbedTag = false;
++    				 }
++    			 }
++    			 else {
++    				 String nm = scanIdentifier(in);
++    				 if (nm.equalsIgnoreCase("param")) {
++    					 Hashtable t = scanTag(in);
++    					 String att = (String)t.get("name");
++    					 if (att == null) {
++    						 statusMsgStream.println(requiresNameWarning);
++    					 } else {
++    						 String val = (String)t.get("value");
++    						 if (val == null) {
++    							 statusMsgStream.println(requiresNameWarning);
++    						 } else if (atts != null) {
++    							 atts.put(att.toLowerCase(), val);
++    						 } else {
++    							 statusMsgStream.println(paramOutsideWarning);
++    						 }
++    					 }
++    				 }
++    				 else if (nm.equalsIgnoreCase("applet")) {
++    					 isAppletTag = true;
++    					 atts = scanTag(in);
++
++    					 // If there is a classid present, transform it to code tag
++    					 if (atts.get("code") == null && atts.get("classid") != null && 
++    							 ((String) atts.get("classid")).startsWith("java:")) {
++    						 //skip "java:"
++    						 atts.put("code", ((String) atts.get("classid")).substring(5));
++    					 }
++
++    					 if (atts.get("code") == null && atts.get("object") == null) {
++    						 statusMsgStream.println(appletRequiresCodeWarning);
++    						 atts = null;
++    					 }
++
++    					 if (atts.get("width") == null) {
++    						 atts.put("width", "100%");
++    					 } 
++
++    					 if (atts.get("height") == null) {
++    						 atts.put("height", "100%");
++    					 }
++    				 }
++    				 else if (nm.equalsIgnoreCase("object")) {
++    					 isObjectTag = true;
++    					 atts = scanTag(in);
++
++    					 // If there is a classid present, transform it to code tag
++    					 if (atts.get("code") == null && atts.get("classid") != null && 
++    							 ((String) atts.get("classid")).startsWith("java:")) {
++    						 //skip "java:"
++    						 atts.put("code", ((String) atts.get("classid")).substring(5));
++    					 }
++
++    					 // The <OBJECT> attribute codebase isn't what
++    					 // we want when not dealing with jars. If its 
++    					 // defined, remove it in that case.
++    					 if(atts.get("archive") == null && atts.get("codebase") != null) {
++    						 atts.remove("codebase");
++    					 }
++
++    					 if (atts.get("width") == null) {
++    						 atts.put("width", "100%");
++    					 } 
++
++    					 if (atts.get("height") == null) {
++    						 atts.put("height", "100%");
++    					 }
++    				 }
++    				 else if (nm.equalsIgnoreCase("embed")) {
++    					 isEmbedTag = true;
++    					 atts = scanTag(in);
++
++    					 // If there is a classid present, transform it to code tag
++    					 if (atts.get("code") == null && atts.get("classid") != null && 
++    							 ((String) atts.get("classid")).startsWith("java:")) {
++    						 //skip "java:"
++    						 atts.put("code", ((String) atts.get("classid")).substring(5));
++    					 }
++
++    					 if (atts.get("code") == null && atts.get("object") == null) {
++    						 statusMsgStream.println(embedRequiresCodeWarning);
++    						 atts = null;
++    					 }
++    					 
++    					 if (atts.get("width") == null) {
++    						 atts.put("width", "100%");
++    					 } 
++
++    					 if (atts.get("height") == null) {
++    						 atts.put("height", "100%");
++    					 }
++    				 }
++    				 else if (nm.equalsIgnoreCase("app")) {
++    					 statusMsgStream.println(appNotLongerSupportedWarning);
++    					 Hashtable atts2 = scanTag(in);
++    					 nm = (String)atts2.get("class");
++    					 if (nm != null) {
++    						 atts2.remove("class");
++    						 atts2.put("code", nm + ".class");
++    					 }
++    					 nm = (String)atts2.get("src");
++    					 if (nm != null) {
++    						 atts2.remove("src");
++    						 atts2.put("codebase", nm);
++    					 }
++    					 if (atts2.get("width") == null) {
++    						 atts2.put("width", "100%");
++    					 }
++    					 if (atts2.get("height") == null) {
++    						 atts2.put("height", "100%");
++    					 }
++    					 printTag(statusMsgStream, atts2);
++    					 statusMsgStream.println();
++    				 }
++    			 }
++    		 }
++    	 }
++    	 in.close();
 +     }
 + 
 +     /**
@@ -2498,8 +2585,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginAppletViewer.java 
 + }
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginCallRequest.java openjdk/jdk/src/share/classes/sun/applet/PluginCallRequest.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginCallRequest.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginCallRequest.java	2008-07-20 22:33:36.000000000 -0400
-@@ -0,0 +1,54 @@
++++ openjdk/jdk/src/share/classes/sun/applet/PluginCallRequest.java	2008-09-15 16:22:07.000000000 -0400
+@@ -0,0 +1,56 @@
 +/* PluginCallRequest -- represent Java-to-JavaScript requests
 +   Copyright (C) 2008  Red Hat
 +
@@ -2553,10 +2640,12 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginCallRequest.java o
 +    }
 +
 +    public abstract void parseReturn(String message);
++    
++    public abstract boolean serviceable(String message);
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginDebug.java openjdk/jdk/src/share/classes/sun/applet/PluginDebug.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginDebug.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginDebug.java	2008-08-15 15:19:49.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginDebug.java	2008-09-15 16:21:47.000000000 -0400
 @@ -0,0 +1,13 @@
 +package sun.applet;
 +
@@ -2573,8 +2662,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginDebug.java openjdk
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginException.java openjdk/jdk/src/share/classes/sun/applet/PluginException.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginException.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginException.java	2008-09-04 17:01:38.000000000 -0400
-@@ -0,0 +1,12 @@
++++ openjdk/jdk/src/share/classes/sun/applet/PluginException.java	2008-09-15 16:22:08.000000000 -0400
+@@ -0,0 +1,14 @@
 +package sun.applet;
 +
 +public class PluginException extends Exception {
@@ -2583,14 +2672,16 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginException.java ope
 +		t.printStackTrace();
 +		this.setStackTrace(t.getStackTrace());
 +		
++		PluginAppletSecurityContext.contexts.get(0).store.dump();
++
 +		String message = "instance " + instance + " reference " + reference + " Error " + t.getMessage();
 +		PluginMain.write(message);
 +	}
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/jdk/src/share/classes/sun/applet/PluginMain.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginMain.java	2008-09-04 17:01:38.000000000 -0400
-@@ -0,0 +1,485 @@
++++ openjdk/jdk/src/share/classes/sun/applet/PluginMain.java	2008-09-15 16:22:08.000000000 -0400
+@@ -0,0 +1,533 @@
 +/*
 + * Copyright 1999-2006 Sun Microsystems, Inc.  All Rights Reserved.
 + * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -2629,6 +2720,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +class RequestQueue {
 +    PluginCallRequest head = null;
 +    PluginCallRequest tail = null;
++    private int size = 0;
 +
 +    void post(PluginCallRequest request) {
 +        if (head == null) {
@@ -2639,6 +2731,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +            tail = request;
 +            tail.next = null;
 +        }
++        
++        size++;
 +    }
 +
 +    PluginCallRequest pop() {
@@ -2648,7 +2742,14 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +        PluginCallRequest ret = head;
 +        head = head.next;
 +        ret.next = null;
++        
++        size--;
++        
 +        return ret;
++    }
++    
++    int size() {
++    	return size;
 +    }
 +}
 +
@@ -2850,15 +2951,23 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +
 +    	String rest = "";
 +    	int reference = -1;
++    	String src = null;
 +
-+    	rest = st.nextToken();
++    	String potentialReference = st.hasMoreTokens() ? st.nextToken() : "";
 +
 +    	// if the next token is reference, read it, else reset "rest"
-+    	if (rest.equals("reference")) {
++    	if (potentialReference.equals("reference")) {
 +    		reference = Integer.parseInt(st.nextToken());
-+    		rest = "";
 +    	} else {
-+    		rest += " ";
++    		rest += potentialReference + " ";
++    	}
++
++    	String potentialSrc = st.hasMoreTokens() ? st.nextToken() : "";
++
++    	if (potentialSrc.equals("src")) {
++    		src = st.nextToken();
++    	} else {
++    		rest += potentialSrc + " ";
 +    	}
 +
 +    	while (st.hasMoreElements()) {
@@ -2870,7 +2979,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +
 +    	try {
 +
-+    		System.err.println("Breakdown -- type: " + type + " identifier: " + identifier + " reference: " + reference + " rest: " + rest);
++    		System.err.println("Breakdown -- type: " + type + " identifier: " + identifier + " reference: " + reference + " src: " + src + " rest: " + rest);
 +
 +    		if (rest.contains("JavaScriptGetWindow")
 +    				|| rest.contains("JavaScriptGetMember")
@@ -2890,7 +2999,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +    			PluginAppletViewer.handleMessage(identifier, reference, rest);
 +    		else if (type.equals("context")) {
 +    			PluginDebug.debug("Sending to PASC: " + identifier + "/" + reference + " and " + rest);
-+    			PluginAppletSecurityContext.handleMessage(identifier, reference, rest);
++    			PluginAppletSecurityContext.handleMessage(identifier, src, reference, rest);
 +    		}
 +    	} catch (Exception e) {
 +    		throw new PluginException(identifier, reference, e);
@@ -2974,6 +3083,36 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +        synchronized(queue) {
 +        PluginDebug.debug ("DISPATCHCALLREQUESTS 2");
 +            PluginCallRequest request = queue.pop();
++            
++            // make sure we give the message to the right request 
++            // in the queue.. for the love of God, MAKE SURE!
++            
++            // first let's be efficient.. if there was only one 
++            // request in queue, we're already set
++            if (queue.size() != 0) {
++
++            	int size = queue.size();
++            	int count = 0;
++
++            	while (!request.serviceable(message)) {
++            		
++            		// something is very wrong.. we have a message to 
++            		// process, but no one to service it
++            		if (count >= size) {
++            			throw new RuntimeException("Unable to find processor for message " + message);
++            		}
++            		
++        			// post request at the end of the queue
++        			queue.post(request);
++
++        			// Look at the next request
++        			request = queue.pop();
++        			
++        			count++;
++            	}
++            	
++            }
++            
 +        PluginDebug.debug ("DISPATCHCALLREQUESTS 3");
 +            if (request != null) {
 +                PluginDebug.debug ("DISPATCHCALLREQUESTS 5");
@@ -3078,7 +3217,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMain.java openjdk/
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageConsumer.java openjdk/jdk/src/share/classes/sun/applet/PluginMessageConsumer.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageConsumer.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginMessageConsumer.java	2008-09-04 17:01:39.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginMessageConsumer.java	2008-09-15 16:21:47.000000000 -0400
 @@ -0,0 +1,49 @@
 +package sun.applet;
 +
@@ -3131,7 +3270,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageConsumer.ja
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageHandlerWorker.java openjdk/jdk/src/share/classes/sun/applet/PluginMessageHandlerWorker.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageHandlerWorker.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginMessageHandlerWorker.java	2008-08-19 15:47:52.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginMessageHandlerWorker.java	2008-09-15 16:21:47.000000000 -0400
 @@ -0,0 +1,59 @@
 +package sun.applet;
 +
@@ -3194,7 +3333,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginMessageHandlerWork
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginObjectStore.java openjdk/jdk/src/share/classes/sun/applet/PluginObjectStore.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/PluginObjectStore.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/PluginObjectStore.java	2008-08-13 16:37:22.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/PluginObjectStore.java	2008-09-15 16:21:47.000000000 -0400
 @@ -0,0 +1,119 @@
 +/* PluginObjectStore -- manage identifier-to-object mapping
 +   Copyright (C) 2008  Red Hat
@@ -3317,7 +3456,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/PluginObjectStore.java o
 +
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/TestEnv.java openjdk/jdk/src/share/classes/sun/applet/TestEnv.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/TestEnv.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/TestEnv.java	2008-07-20 22:33:36.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/TestEnv.java	2008-09-15 16:21:47.000000000 -0400
 @@ -0,0 +1,172 @@
 +/* TestEnv -- test JavaScript-to-Java calls
 +   Copyright (C) 2008  Red Hat
@@ -3493,8 +3632,8 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/TestEnv.java openjdk/jdk
 +}
 diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.java openjdk/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.java
 --- openjdk.orig/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.java	1969-12-31 19:00:00.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.java	2008-07-20 22:33:36.000000000 -0400
-@@ -0,0 +1,49 @@
++++ openjdk/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.java	2008-09-15 16:22:09.000000000 -0400
+@@ -0,0 +1,62 @@
 +/* VoidPluginCallRequest -- represent Java-to-JavaScript requests
 +   Copyright (C) 2008  Red Hat
 +
@@ -3542,5 +3681,18 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/VoidPluginCallRequest.ja
 +
 +    public void parseReturn(String message) {
 +        done = true;
++    }
++    
++    /**
++     * Returns whether the given message is serviceable by this object
++     * 
++     * @param message The message to service
++     * @return boolean indicating if message is serviceable
++     */
++    public boolean serviceable(String message) {
++    	return message.contains("JavaScriptFinalize") ||
++    			message.contains("JavaScriptRemoveMember") ||
++    			message.contains("JavaScriptSetMember") ||
++    			message.contains("JavaScriptSetSlot");
 +    }
 +}
