@@ -499,7 +499,8 @@ ICEDTEA_PATCHES = \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	patches/icedtea-arch.patch \
-	patches/icedtea-lc_ctype.patch
+	patches/icedtea-lc_ctype.patch \
+	patches/icedtea-messageutils.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \

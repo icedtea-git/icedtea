@@ -1,4 +1,16 @@
-2008-08-26  Deepak Bhole  <dbhole@redhat.com>
+2008-09-18  Lillian Angel  <langel@redhat.com>
+
+	* AUTHORS: Added Marc Schoenefeld.
+
+2008-09-18  Marc Schoenefeld  <mschoene@redhat.com>
+	
+	* patches/icedtea-messageutils.patch: New patch fixes JVM crashes 
+	when calling on sun.misc.MessageUtils.toStderr(null) and
+	sun.misc.MessageUtils.toStdout(null) . It now prompts
+	the string "null" to the console. 
+	* Makefile.am: Added patch above.
+
+2008-09-16  Deepak Bhole  <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Allow access to applet classloader from JS on that
 	site. Fix right-click lag by temporarily disabling status messages.
