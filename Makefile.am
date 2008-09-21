@@ -9,20 +9,18 @@ NETBEANS_PLATFORM_MD5SUM = 77c79b3a7d3dbe6a8858639f8d564a38
 NETBEANS_PROFILER_MD5SUM = ff8e8abc42df6c6749e6b02bcf7bb0a5
 VISUALVM_MD5SUM = 4b55bc623418818793392bb233da2927
 
+EXCLUDE_LIVECONNECT = | grep -vE "netscape/javascript|org/classpath/icedtea/plugin"
+
 if ENABLE_LIVECONNECT
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 ICEDTEAPLUGIN_JAR = IcedTeaPlugin.jar
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
-EXCLUDE_LIVECONNECT =
-LIVECONNECT_DIR = -C lib/rt netscape
 else
 ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
 ICEDTEAPLUGIN_JAR =
 PLUGIN_PATCH = patches/icedtea-plugin.patch
-EXCLUDE_LIVECONNECT = | grep -v 'netscape/javascript'
-LIVECONNECT_DIR =
 if ENABLE_PLUGIN
 GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
 GCJWEBPLUGIN_TARGET = gcjwebplugin.so
@@ -580,7 +578,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  else \
 	    test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
-	done ; \
+	done ;
 	mv stamps/patch.stamp.tmp stamps/patch.stamp ; \
 	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
@@ -911,6 +909,12 @@ if ENABLE_LIVECONNECT
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/
 	cp -pPRf IcedTeaPlugin.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/
+
+	$(JAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/rt.jar \
+	  -C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes sun
+
+	$(JAR) uf $(BUILD_OUTPUT_DIR)/j2re-image/lib/rt.jar \
+	  -C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes sun
 else
 if ENABLE_PLUGIN
 	cp -pPRf gcjwebplugin.so \
@@ -966,6 +970,12 @@ if ENABLE_LIVECONNECT
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/
 	cp -pPRf IcedTeaPlugin.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/
+
+	$(JAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/rt.jar \
+	  -C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes sun
+
+	$(JAR) uf $(BUILD_OUTPUT_DIR)/j2re-image/lib/rt.jar \
+	  -C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes sun
 else
 if ENABLE_PLUGIN
 	cp -pPRf gcjwebplugin.so \
@@ -1233,10 +1243,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-            -C lib/rt javax -C lib/rt net $(LIVECONNECT_DIR) -C lib/rt sun ; \
+            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-            -C lib/rt javax -C lib/rt net $(LIVECONNECT_DIR) -C lib/rt sun ; \
+            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
@@ -1312,6 +1322,7 @@ IcedTeaPlugin.o: IcedTeaPlugin.cc
 	  $(GTK_CFLAGS) \
 	  $(XULRUNNER_CFLAGS) \
 	  -fPIC -c -o $@ $<
+
 IcedTeaPlugin.so: IcedTeaPlugin.o
 	$(CXX) $(CXXFLAGS) \
 	  $< \
@@ -1324,11 +1335,14 @@ IcedTeaPlugin.jar:
 	mkdir -p $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes
 	(cd plugin/icedtea/java/src/main/; \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac -g \
-	  -d $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes \
+	  -d ../../../../../$(BUILD_OUTPUT_DIR)/plugin/icedtea/classes \
 	  -bootclasspath $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar \
-	  sun/applet/*.java \
+	  sun/applet/*.java netscape/javascript/*.java org/classpath/icedtea/plugin/*.java \
 	)
-	$(JAR) cf $@ -C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes sun
+
+	$(JAR) cf $@ \
+	-C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes org/classpath/icedtea/plugin \
+	-C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes netscape/javascript
 
 clean-IcedTeaPlugin:
 	rm -f IcedTeaPlugin.o
