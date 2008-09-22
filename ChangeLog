@@ -1,3 +1,12 @@
+2008-09-22  Lillian Angel  <langel@redhat.com>
+	    DJ Lucas  <dj@linuxfromscratch.org>
+
+	* Makefile.am: Added new env var JAR_ACCEPTS_STDIN_LIST.
+	* acinclude.m4: Added check to determine whether jar supports
+	stdin file args.
+	* patches/icedtea-ecj.patch: Updated patch.
+	* AUTHORS: Added DJ Lucas.
+
 2008-09-18  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Added Marc Schoenefeld.

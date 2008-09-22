@@ -428,32 +428,35 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
  endif
  
  # Override of what javac to use (see deploy workspace)
---- oipenjdk/jdk/make/common/Release.gmk	2007-11-13 16:47:23.000000000 -0500
-+++ openjdk-ecj/jdk/make/common/Release.gmk	2007-11-13 16:48:08.000000000 -0500
-@@ -655,10 +649,19 @@
+--- oipenjdk/jdk/make/common/Release.gmk	2008-08-28 03:10:47.000000000 -0500
++++ openjdk-ecj/jdk/make/common/Release.gmk	2008-09-16 17:53:16.000000000 -0500
+@@ -655,10 +655,23 @@
  $(RES_JAR_ARGLIST): $(RES_JAR_FILELIST)
  	$(prep-target)
  	$(SED) -e "s@^@-C $(CLASSBINDIR) @" $< > $@
 -$(RESOURCES_JAR): $(RES_JAR_ARGLIST) $(JAR_MANIFEST_FILE)
--	$(prep-target)
 +$(RESOURCES_JAR): \
 +    $(if $(JAR_KNOWS_ATFILE),$(RES_JAR_FILELIST),$(RES_JAR_ARGLIST)) \
 +    $(JAR_MANIFEST_FILE)
-+	$(prep-target)
+ 	$(prep-target)
 +ifneq (,$(JAR_KNOWS_ATFILE))
++	(cd $(CLASSBINDIR) && \
+ 	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
+-	    @$(RES_JAR_ARGLIST) $(JAR_JFLAGS)
++	    $(JAR_JFLAGS) @$(RES_JAR_FILELIST))
++else ifneq (,$(JAR_ACCEPTS_STDIN_LIST))
 +	(cd $(CLASSBINDIR) && $(CAT) $(RES_JAR_FILELIST) | \
 +	$(BOOT_JAR_CMD) c0mf@ $(JAR_MANIFEST_FILE) $@ \
 +	    $(JAR_JFLAGS))
 +else
 +	(cd $(CLASSBINDIR) && \
- 	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
--	    @$(RES_JAR_ARGLIST) $(JAR_JFLAGS)
++	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
 +	    $(JAR_JFLAGS) `cat $(RES_JAR_FILELIST)`)
 +endif
  	@$(java-vm-cleanup)
  
  # Create jsse.jar containing SunJSSE implementation classes
-@@ -714,10 +717,18 @@
+@@ -714,10 +727,22 @@
  $(RT_JAR_ARGLIST): $(RT_JAR_FILELIST)
  	$(prep-target)
  	$(SED) -e "s@^@-C $(CLASSBINDIR) @" $< > $@
@@ -462,13 +465,17 @@ diff -ru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/
 +    $(JAR_MANIFEST_FILE)
  	$(prep-target)
 +ifneq (,$(JAR_KNOWS_ATFILE))
++	(cd $(CLASSBINDIR) && \
+ 	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
+-	    @$(RT_JAR_ARGLIST) $(JAR_JFLAGS)
++	    $(JAR_JFLAGS) @$(RT_JAR_FILELIST))
++else ifneq (,$(JAR_ACCEPTS_STDIN_LIST))
 +	(cd $(CLASSBINDIR) && $(CAT) $(RT_JAR_FILELIST) | \
 +	$(BOOT_JAR_CMD) c0mf@ $(JAR_MANIFEST_FILE) $@ \
 +	    $(JAR_JFLAGS))
 +else
 +	(cd $(CLASSBINDIR) && \
- 	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
--	    @$(RT_JAR_ARGLIST) $(JAR_JFLAGS)
++	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
 +	    $(JAR_JFLAGS) `$(CAT) $(RT_JAR_FILELIST)`)
 +endif
  	@$(java-vm-cleanup)
