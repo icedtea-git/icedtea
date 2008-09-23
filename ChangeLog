@@ -1,3 +1,53 @@
+2008-09-23  Deepak Bhole  <dbhole@redhat.com>
+	* Makefile.am: Update to create new IcedTeaPlugin.jar
+	* patches/icedtea-liveconnect.patch: Update patch and remove all new .java
+	files
+	* plugin/icedtea/java/src/main/netscape/javascript/JSException.java: Moved
+	out of rt/ overlay.
+	* plugin/icedtea/java/src/main/netscape/javascript/JSObject.java: Same.
+	* plugin/icedtea/java/src/main/netscape/javascript/JSProxy.java: Same.
+	* plugin/icedtea/java/src/main/netscape/javascript/JSRunnable.java: Same.
+	* plugin/icedtea/java/src/main/netscape/javascript/JSUtil.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/GetMemberPluginCallRequest.java:
+	Moved out of icedtea-liveconnect.patch and refactored.
+	* plugin/icedtea/org/classpath/icedtea/plugin/GetWindowPluginCallRequest.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginAppletSecurityContext.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginCallRequestFactoryImpl.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMain.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMessageConsumer.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMessageHandlerWorker.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginObjectStore.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginStreamHandlerImpl.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/RequestQueue.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/TestEnv.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/VoidPluginCallRequest.java:
+	Same.
+	* plugin/icedtea/sun/applet/AppletSecurityContext.java: Same.
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: Same.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Same.
+	* plugin/icedtea/sun/applet/PluginCallRequest.java: Same.
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java: Same.
+	* plugin/icedtea/sun/applet/PluginClassLoader.java: Same.
+	* plugin/icedtea/sun/applet/PluginDebug.java: Same.
+	* plugin/icedtea/sun/applet/PluginException.java: Same.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Same.
+	* rt/net/sourceforge/jnlp/Launcher.java: Print exception trace if launch
+	fails.
+	* rt/net/sourceforge/jnlp/runtime/JNLPRuntime.java: Set ServiceManagerStub
+	before SecurityManager is set.
+	* rt/netscape/javascript/JSException.java: Move to plugin/icedtea dir.
+	* rt/netscape/javascript/JSObject.java: Same.
+	* rt/netscape/javascript/JSProxy.java: Same.
+	* rt/netscape/javascript/JSRunnable.java: Same.
+	* rt/netscape/javascript/JSUtil.java: Same.
+
 2008-09-18  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Added Marc Schoenefeld.

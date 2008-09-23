@@ -16,7 +16,7 @@ ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 ICEDTEAPLUGIN_JAR = IcedTeaPlugin.jar
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
-LIVECONNECT = $(abs_top_srcdir)/plugin/icedtea/java/src/main
+LIVECONNECT = $(abs_top_srcdir)/plugin/icedtea/
 else
 ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
@@ -1323,7 +1323,7 @@ IcedTeaPlugin.so: IcedTeaPlugin.o
 # icedtea plugin jar for java-side classes
 IcedTeaPlugin.jar:
 	mkdir -p $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes
-	(cd plugin/icedtea/java/src/main/; \
+	(cd plugin/icedtea/; \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac -g \
 	  -d ../../../../../$(BUILD_OUTPUT_DIR)/plugin/icedtea/classes \
 	  -bootclasspath $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar \
