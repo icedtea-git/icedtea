@@ -25,26 +25,45 @@
  
  package sun.applet;
  
- import java.util.*;
- import java.io.*;
- import java.awt.*;
- import java.awt.event.*;
- import java.awt.print.*;
- import javax.print.attribute.*;
- import java.applet.*;
- import java.net.URL;
- import java.net.MalformedURLException;
- import java.net.SocketPermission;
- import sun.misc.Ref;
- import java.security.AccessController;
- import java.security.PrivilegedAction;
- import java.lang.reflect.InvocationTargetException;
- import java.lang.reflect.Method;
- import sun.awt.SunToolkit;
- import sun.awt.AppContext;
- import sun.awt.X11.*;
- import java.lang.ref.WeakReference;
- import net.sourceforge.jnlp.NetxPanel;
+ import java.applet.Applet;
+import java.applet.AppletContext;
+import java.applet.AudioClip;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Label;
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.net.SocketPermission;
+import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
+
+import net.sourceforge.jnlp.NetxPanel;
+
+import sun.awt.AppContext;
+import sun.awt.SunToolkit;
+import sun.awt.X11.XEmbeddedFrame;
+import sun.misc.Ref;
  
  /**
   * Lets us construct one using unix-style one shot behaviors
@@ -109,7 +128,17 @@
  
      // Instance identifier -> PluginAppletViewer object.
      private static HashMap<Integer, PluginAppletViewer> applets = new HashMap();
- 
+     
+     private static PluginStreamHandler streamhandler;
+     
+     private static PluginCallRequestFactory requestFactory;
+
+     /**
+      * Null constructor to allow instantiation via newInstance()
+      */
+     public PluginAppletViewer() {
+     }
+     
      /**
       * Create the applet viewer
       */
@@ -117,20 +146,25 @@
                                final Hashtable atts, PrintStream statusMsgStream,
                                PluginAppletViewerFactory factory) {
          super(handle, true);
-     	this.factory = factory;
+    	this.factory = factory;
  	this.statusMsgStream = statusMsgStream;
          this.identifier = identifier;
          // FIXME: when/where do we remove this?
          PluginDebug.debug ("PARSING: PUTTING " + identifier + " " + this);
          applets.put(identifier, this);
  
- 	try {
- 		panel = new NetxPanel(doc, atts);
- 		AppletViewerPanel.debug("Using NetX panel");
- 	} catch (Exception ex) {
- 		AppletViewerPanel.debug("Unable to start NetX applet - defaulting to Sun applet", ex);
- 		panel = new AppletViewerPanel(doc, atts);
- 	}
+         AccessController.doPrivileged(new PrivilegedAction() {
+             public Object run() {
+            	 	try {
+            	 		panel = new NetxPanel(doc, atts);
+            	 		AppletViewerPanel.debug("Using NetX panel");
+            	 	} catch (Exception ex) {
+            	 		AppletViewerPanel.debug("Unable to start NetX applet - defaulting to Sun applet", ex);
+            	 		panel = new AppletViewerPanel(doc, atts);
+            	 	}
+                 return null;
+             }
+         });  
 
  	add("Center", panel);
  	panel.init();
@@ -227,21 +261,32 @@
    		 sleepTime += 100;
    		 PluginDebug.debug("Waiting for applet to initialize... ");
    	 } catch (InterruptedException ie) {
-   		 // ignore
+   		 ie.printStackTrace();
    	 }
     }
 
-    // Applet initialized. Find out it's classloader and add it to the list
-    PluginAppletSecurityContext.classLoaders.put(Integer.toString(identifier), a.getClass().getClassLoader());
+    PluginDebug.debug("Applet initialized");
     
+    // Applet initialized. Find out it's classloader and add it to the list
+    AppletSecurityContextManager.getSecurityContext(0).addClassLoader(Integer.toString(identifier), a.getClass().getClassLoader());
+
      }
  
+ 	public static void setStreamhandler(PluginStreamHandler sh) {
+		streamhandler = sh;
+	}
+     
+ 	public static void setPluginCallRequestFactory(PluginCallRequestFactory rf) {
+		requestFactory = rf;
+	}
+ 	
      /**
       * Handle an incoming message from the plugin.
       */
      public static void handleMessage(int identifier, int reference, String message)
      {
-         PluginDebug.debug("PAV handling: " + message);
+
+		 PluginDebug.debug("PAV handling: " + message);
 
          try {
         	 if (message.startsWith("tag")) {
@@ -296,7 +341,7 @@
             			 PluginDebug.debug ("REQUEST HANDLE, DONE PARSING " +
             					 Thread.currentThread());
             		 } else {
-            			 PluginDebug.debug ("REQUEST HANDLE NOT SET: " + request.tag + ". BYPASSING");
+            			 PluginDebug.debug ("REQUEST TAG NOT SET: " + request.tag + ". BYPASSING");
             		 }
             	 }
              } else {
@@ -314,12 +359,12 @@
          if (message.startsWith("width")) {
         	 int width =
         		 Integer.parseInt(message.substring("width".length() + 1));
-             panel.setAppletSizeIfNeeded(width, -1);
+             //panel.setAppletSizeIfNeeded(width, -1);
              setSize(width, getHeight());
          } else if (message.startsWith("height")) {
              int height = 
             	 Integer.parseInt(message.substring("height".length() + 1));
-             panel.setAppletSizeIfNeeded(-1, height);
+             //panel.setAppletSizeIfNeeded(-1, height);
              setSize(getWidth(), height);
          } else if (message.startsWith("destroy")) {
              dispose();
@@ -338,16 +383,16 @@
             		 sleepTime += 100;
             		 PluginDebug.debug("Waiting for applet to initialize...");
             	 } catch (InterruptedException ie) {
-            		 // ignore
+            		 ie.printStackTrace();
             	 }
              }
 
              System.err.println ("Looking for object " + o + " panel is " + panel.getClass());
-             PluginAppletSecurityContext.contexts.get(0).store.reference(o);
+             AppletSecurityContextManager.getSecurityContext(0).store(o);
              System.err.println ("WRITING 1: " + "context 0 reference " + reference + " GetJavaObject "
-                                 + PluginAppletSecurityContext.contexts.get(0).store.getIdentifier(o));
-             PluginMain.write("context 0 reference " + reference + " GetJavaObject "
-                              + PluginAppletSecurityContext.contexts.get(0).store.getIdentifier(o));
+                                 + AppletSecurityContextManager.getSecurityContext(0).getIdentifier(o));
+             streamhandler.write("context 0 reference " + reference + " GetJavaObject "
+                              + AppletSecurityContextManager.getSecurityContext(0).getIdentifier(o));
              System.err.println ("WRITING 1 DONE");
          }
      }
@@ -360,7 +405,12 @@
      private void initEventQueue() {
  	// appletviewer.send.event is an undocumented and unsupported system
  	// property which is used exclusively for testing purposes.
- 	String eventList = System.getProperty("appletviewer.send.event");
+    	 PrivilegedAction pa = new PrivilegedAction() {
+    		 public Object run() {
+    			 return System.getProperty("appletviewer.send.event");
+    		 }
+    	 };
+ 	String eventList = (String) AccessController.doPrivileged(pa); 
  
  	if (eventList == null) {
  	    // Add the standard events onto the event queue.
@@ -562,7 +612,7 @@
  	} catch (IOException exception) {
  	    // Deliberately ignore IOException.  showDocument may be
  	    // called from threads other than the main thread after
- 	    // PluginMain.pluginOutputStream has been closed.
+ 	    // streamhandler.pluginOutputStream has been closed.
  	}
      }
  
@@ -576,24 +626,24 @@
  	} catch (IOException exception) {
  	    // Deliberately ignore IOException.  showStatus may be
  	    // called from threads other than the main thread after
- 	    // PluginMain.pluginOutputStream has been closed.
+ 	    // streamhandler.pluginOutputStream has been closed.
  	}
      }
  
      public int getWindow() {
     	 System.out.println ("STARTING getWindow");
-    	 GetWindowPluginCallRequest request =
-    		 new GetWindowPluginCallRequest("instance " + identifier + " " +
-    				 "GetWindow", "JavaScriptGetWindow");
+    	 PluginCallRequest request = requestFactory.getPluginCallRequest("window",
+    			 							"instance " + identifier + " " + "GetWindow", 
+    			 							"JavaScriptGetWindow");
     	 System.out.println ("STARTING postCallRequest");
-    	 PluginMain.postCallRequest(request);
+		 streamhandler.postCallRequest(request);
     	 System.out.println ("STARTING postCallRequest done");
-    	 PluginMain.write(request.message);
+    	 streamhandler.write(request.getMessage());
     	 try {
     		 System.out.println ("wait request 1");
     		 synchronized(request) {
     			 System.out.println ("wait request 2");
-    			 while (request.internal == 0)
+    			 while ((Integer) request.getObject() == 0)
     				 request.wait();
     			 System.out.println ("wait request 3");
     		 }
@@ -603,60 +653,55 @@
     	 }
 
     	 System.out.println ("STARTING getWindow DONE");
-    	 return request.internal;
+    	 return (Integer) request.getObject();
      }
  
      // FIXME: make private, access via reflection.
      public static Object getMember(int internal, String name)
      {
-         PluginAppletSecurityContext.contexts.get(0).store.reference(name);
-         int nameID = PluginAppletSecurityContext.contexts.get(
-             0).store.getIdentifier(name);
+    	 AppletSecurityContextManager.getSecurityContext(0).store(name);
+         int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
  
          // Prefix with dummy instance for convenience.
-         GetMemberPluginCallRequest request =
-             new GetMemberPluginCallRequest("instance " + 0 +
-                                            " GetMember " + internal +
-                                            " " + nameID, "JavaScriptGetMember");
-         PluginMain.postCallRequest(request);
-         PluginMain.write(request.message);
+         PluginCallRequest request = requestFactory.getPluginCallRequest("member", 
+        		 							"instance " + 0 + " GetMember " + internal + " " + nameID, 
+        		 							"JavaScriptGetMember");
+         streamhandler.postCallRequest(request);
+         streamhandler.write(request.getMessage());
          try {
-             System.out.println ("wait getMEM request 1");
+             System.err.println ("wait getMEM request 1");
              synchronized(request) {
-                 System.out.println ("wait getMEM request 2");
-                 while (request.done == false)
+                 System.err.println ("wait getMEM request 2");
+                 while (request.isDone() == false)
                      request.wait();
-                 System.out.println ("wait getMEM request 3");
+                 System.err.println ("wait getMEM request 3 GOT: " + request.getObject().getClass());
              }
          } catch (InterruptedException e) {
              throw new RuntimeException("Interrupted waiting for call request.",
                                         e);
          }
-         System.out.println (" getMember DONE");
-         return request.object;
+         System.err.println (" getMember DONE");
+         return request.getObject();
      }
  
      public static void setMember(int internal, String name, Object value) {
-         PluginAppletSecurityContext.contexts.get(0).store.reference(name);
-         int nameID = PluginAppletSecurityContext.contexts.get(
-             0).store.getIdentifier(name);
-         PluginAppletSecurityContext.contexts.get(0).store.reference(value);
-         int valueID = PluginAppletSecurityContext.contexts.get(
-             0).store.getIdentifier(value);
+    	 AppletSecurityContextManager.getSecurityContext(0).store(name);
+         int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
+         AppletSecurityContextManager.getSecurityContext(0).store(value);
+         int valueID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(value);
  
          // Prefix with dummy instance for convenience.
-         VoidPluginCallRequest request =
-             new VoidPluginCallRequest("instance " + 0 +
-                                            " SetMember " + internal +
-                                            " " + nameID + " " + valueID, "JavaScriptSetMember");
-         PluginMain.postCallRequest(request);
-         PluginMain.write(request.message);
+         PluginCallRequest request = requestFactory.getPluginCallRequest("void",
+        		 							"instance " + 0 + " SetMember " + internal + " " + nameID + " " + valueID, 
+        		 							"JavaScriptSetMember");
+         streamhandler.postCallRequest(request);
+         streamhandler.write(request.getMessage());
          try {
-             System.out.println ("wait setMem request: " + request.message);
+             System.out.println ("wait setMem request: " + request.getMessage());
              System.out.println ("wait setMem request 1");
              synchronized(request) {
                  System.out.println ("wait setMem request 2");
-                 while (request.done == false)
+                 while (request.isDone() == false)
                      request.wait();
                  System.out.println ("wait setMem request 3");
              }
@@ -669,22 +714,20 @@
  
      // FIXME: handle long index as well.
      public static void setSlot(int internal, int index, Object value) {
-         PluginAppletSecurityContext.contexts.get(0).store.reference(value);
-         int valueID = PluginAppletSecurityContext.contexts.get(
-             0).store.getIdentifier(value);
+    	 AppletSecurityContextManager.getSecurityContext(0).store(value);
+         int valueID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(value);
  
          // Prefix with dummy instance for convenience.
-         VoidPluginCallRequest request =
-             new VoidPluginCallRequest("instance " + 0 +
-                                       " SetSlot " + internal +
-                                       " " + index + " " + valueID, "JavaScriptSetSlot");
-         PluginMain.postCallRequest(request);
-         PluginMain.write(request.message);
+         PluginCallRequest request = requestFactory.getPluginCallRequest("void",
+        		 						"instance " + 0 + " SetSlot " + internal + " " + index + " " + valueID, 
+        		 						"JavaScriptSetSlot");
+         streamhandler.postCallRequest(request);
+         streamhandler.write(request.getMessage());
          try {
              System.out.println ("wait setSlot request 1");
              synchronized(request) {
                  System.out.println ("wait setSlot request 2");
-                 while (request.done == false)
+                 while (request.isDone() == false)
                      request.wait();
                  System.out.println ("wait setSlot request 3");
              }
@@ -698,17 +741,16 @@
      public static Object getSlot(int internal, int index)
      {
          // Prefix with dummy instance for convenience.
-         GetMemberPluginCallRequest request =
-             new GetMemberPluginCallRequest("instance " + 0 +
-                                            " GetSlot " + internal +
-                                            " " + index, "JavaScriptGetSlot");
-         PluginMain.postCallRequest(request);
-         PluginMain.write(request.message);
+         PluginCallRequest request = requestFactory.getPluginCallRequest("member", 
+        		 								"instance " + 0 + " GetSlot " + internal + " " + index, 
+        		 								"JavaScriptGetSlot");
+         streamhandler.postCallRequest(request);
+         streamhandler.write(request.getMessage());
          try {
              System.out.println ("wait getSlot request 1");
              synchronized(request) {
                  System.out.println ("wait getSlot request 2");
-                 while (request.done == false)
+                 while (request.isDone() == false)
                      request.wait();
                  System.out.println ("wait getSlot request 3");
              }
@@ -717,27 +759,25 @@
                                         e);
          }
          System.out.println (" getSlot DONE");
-         return request.object;
+         return request.getObject();
      }
  
      public static Object eval(int internal, String s)
      {
-         PluginAppletSecurityContext.contexts.get(0).store.reference(s);
-         int stringID = PluginAppletSecurityContext.contexts.get(
-             0).store.getIdentifier(s);
+    	 AppletSecurityContextManager.getSecurityContext(0).store(s);
+         int stringID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(s);
          // Prefix with dummy instance for convenience.
          // FIXME: rename GetMemberPluginCallRequest ObjectPluginCallRequest.
-         GetMemberPluginCallRequest request =
-             new GetMemberPluginCallRequest("instance " + 0 +
-                                            " Eval " + internal +
-                                            " " + stringID, "JavaScriptEval");
-         PluginMain.postCallRequest(request);
-         PluginMain.write(request.message);
+         PluginCallRequest request = requestFactory.getPluginCallRequest("member",	
+        		 								"instance " + 0 + " Eval " + internal + " " + stringID, 
+        		 								"JavaScriptEval");
+         streamhandler.postCallRequest(request);
+         streamhandler.write(request.getMessage());
          try {
              System.out.println ("wait eval request 1");
              synchronized(request) {
                  System.out.println ("wait eval request 2");
-                 while (request.done == false)
+                 while (request.isDone() == false)
                      request.wait();
                  System.out.println ("wait eval request 3");
              }
@@ -746,26 +786,24 @@
                                         e);
          }
          System.out.println (" getSlot DONE");
-         return request.object;
+         return request.getObject();
      }
  
      public static void removeMember (int internal, String name) {
-         PluginAppletSecurityContext.contexts.get(0).store.reference(name);
-         int nameID = PluginAppletSecurityContext.contexts.get(
-             0).store.getIdentifier(name);
+    	 AppletSecurityContextManager.getSecurityContext(0).store(name);
+         int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
  
          // Prefix with dummy instance for convenience.
-         VoidPluginCallRequest request =
-             new VoidPluginCallRequest("instance " + 0 +
-                                         " RemoveMember " + internal +
-                                         " " + nameID, "JavaScriptRemoveMember");
-         PluginMain.postCallRequest(request);
-         PluginMain.write(request.message);
+         PluginCallRequest request = requestFactory.getPluginCallRequest("void",
+        		 						"instance " + 0 + " RemoveMember " + internal + " " + nameID, 
+        		 						"JavaScriptRemoveMember");
+         streamhandler.postCallRequest(request);
+         streamhandler.write(request.getMessage());
          try {
              System.out.println ("wait removeMember request 1");
              synchronized(request) {
                  System.out.println ("wait removeMember request 2");
-                 while (request.done == false)
+                 while (request.isDone() == false)
                      request.wait();
                  System.out.println ("wait removeMember request 3");
              }
@@ -781,25 +819,22 @@
          // FIXME: when is this removed from the object store?
          // FIXME: reference should return the ID.
          // FIXME: convenience method for this long line.
-         PluginAppletSecurityContext.contexts.get(0).store.reference(name);
-         int nameID = PluginAppletSecurityContext.contexts.get(
-             0).store.getIdentifier(name);
-         PluginAppletSecurityContext.contexts.get(0).store.reference(args);
-         int argsID = PluginAppletSecurityContext.contexts.get(
-             0).store.getIdentifier(args);
+    	 AppletSecurityContextManager.getSecurityContext(0).store(name);
+         int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
+         AppletSecurityContextManager.getSecurityContext(0).store(args);
+         int argsID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(args);
  
          // Prefix with dummy instance for convenience.
-         GetMemberPluginCallRequest request =
-             new GetMemberPluginCallRequest("instance " + 0 +
-                                            " Call " + internal +
-                                            " " + nameID + " " + argsID, "JavaScriptCall");
-         PluginMain.postCallRequest(request);
-         PluginMain.write(request.message);
+         PluginCallRequest request = requestFactory.getPluginCallRequest("member",
+        		 							"instance " + 0 + " Call " + internal + " " + nameID + " " + argsID, 
+        		 							"JavaScriptCall");
+         streamhandler.postCallRequest(request);
+         streamhandler.write(request.getMessage());
          try {
              System.out.println ("wait call request 1");
              synchronized(request) {
                  System.out.println ("wait call request 2");
-                 while (request.done == false)
+                 while (request.isDone() == false)
                      request.wait();
                  System.out.println ("wait call request 3");
              }
@@ -808,22 +843,22 @@
                                         e);
          }
          System.out.println (" Call DONE");
-         return request.object;
+         return request.getObject();
      }
  
      public static void JavaScriptFinalize(int internal)
      {
          // Prefix with dummy instance for convenience.
-         VoidPluginCallRequest request =
-             new VoidPluginCallRequest("instance " + 0 +
-                                            " Finalize " + internal, "JavaScriptFinalize");
-         PluginMain.postCallRequest(request);
-         PluginMain.write(request.message);
+         PluginCallRequest request = requestFactory.getPluginCallRequest("void",
+        		 						"instance " + 0 + " Finalize " + internal, 
+        		 						"JavaScriptFinalize");
+         streamhandler.postCallRequest(request);
+         streamhandler.write(request.getMessage());
          try {
              System.out.println ("wait finalize request 1");
              synchronized(request) {
                  System.out.println ("wait finalize request 2");
-                 while (request.done == false)
+                 while (request.isDone() == false)
                      request.wait();
                  System.out.println ("wait finalize request 3");
              }
@@ -837,16 +872,16 @@
      public static String javascriptToString(int internal)
      {
          // Prefix with dummy instance for convenience.
-         GetMemberPluginCallRequest request =
-             new GetMemberPluginCallRequest("instance " + 0 +
-                                       " ToString " + internal, "JavaScriptToString");
-         PluginMain.postCallRequest(request);
-         PluginMain.write(request.message);
+         PluginCallRequest request = requestFactory.getPluginCallRequest("member",
+        		 								"instance " + 0 + " ToString " + internal, 
+        		 								"JavaScriptToString");
+         streamhandler.postCallRequest(request);
+         streamhandler.write(request.getMessage());
          try {
              System.out.println ("wait ToString request 1");
              synchronized(request) {
                  System.out.println ("wait ToString request 2");
-                 while (request.done == false)
+                 while (request.isDone() == false)
                      request.wait();
                  System.out.println ("wait ToString request 3");
              }
@@ -855,26 +890,17 @@
                                         e);
          }
          System.out.println (" ToString DONE");
-         return (String) request.object;
+         return (String) request.getObject();
      }
  
      // FIXME: make this private and access it from JSObject using
      // reflection.
      private void write(String message) throws IOException {
          System.err.println ("WRITING 2: " + "instance " + identifier + " " + message);
-         PluginMain.write("instance " + identifier + " " + message);
+         streamhandler.write("instance " + identifier + " " + message);
          System.err.println ("WRITING 2 DONE");
      }
- 
-     // FIXME: make this private and access it from JSObject using
-     // reflection.
-     private String read() throws IOException {
-         System.out.println ("READING 1");
-         String ret = PluginMain.read();
-         System.out.println ("READING 1 DONE");
-         return ret;
-     }
- 
+
      public void setStream(String key, InputStream stream)throws IOException{
  	// We do nothing.
      }
@@ -1014,7 +1040,13 @@
              return;   // abort the reload
          }
  
-         panel.createAppletThread();
+         AccessController.doPrivileged(new PrivilegedAction() {
+             public Object run() {
+            	 panel.createAppletThread();
+                 return null;
+             }
+         });     
+    
  	panel.sendEvent(AppletPanel.APPLET_LOAD);
  	panel.sendEvent(AppletPanel.APPLET_INIT);
  	panel.sendEvent(AppletPanel.APPLET_START);
@@ -1207,7 +1239,26 @@
  
      public static void parse(int identifier, long handle, Reader in, URL url)
          throws IOException {
-         parse(identifier, handle, in, url, System.out, new PluginAppletViewerFactory());
+    	 final int fIdentifier = identifier;
+    	 final long fHandle = handle;
+    	 final Reader fIn = in;
+    	 final URL fUrl = url;
+    	 PrivilegedAction pa = new PrivilegedAction() {
+    		 public Object run() {
+    			 try {
+    				 parse(fIdentifier, fHandle, fIn, fUrl, System.out, new PluginAppletViewerFactory());
+    			 } catch (IOException ioe) {
+    				 return ioe;
+    			 }
+    	         
+    			 return null;
+    		 }
+    	 };
+
+    	 Object ret = AccessController.doPrivileged(pa);
+    	 if (ret instanceof IOException) {
+    		 throw (IOException) ret;
+    	 }
      }
  
      public static void parse(int identifier, long handle, Reader in, URL url,
@@ -1408,16 +1459,7 @@
     	 in.close();
      }
  
-     /**
-      * Old main entry point.
-      *
-      * @deprecated
-      */
-     @Deprecated
-     public static void main(String args[]) throws IOException {
-         PluginMain.main(args);
-     }
- 
+
      private static AppletMessageHandler amh = new AppletMessageHandler("appletviewer");
  
      private static void checkConnect(URL url)

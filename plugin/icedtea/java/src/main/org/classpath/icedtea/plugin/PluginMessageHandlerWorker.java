@@ -1,30 +1,36 @@
-package sun.applet;
+package org.classpath.icedtea.plugin;
+
+import sun.applet.PluginException;
+import sun.applet.PluginStreamHandler;
 
 class PluginMessageHandlerWorker extends Thread {
 
 	private boolean free = true;
 	private int id;
+	private String message = null;
+	PluginStreamHandler streamHandler = null;
 	
-	public PluginMessageHandlerWorker(int id) {
+	public PluginMessageHandlerWorker(PluginStreamHandler streamHandler, int id) {
 		this.id = id;
+		this.streamHandler = streamHandler;
 	}
-	
+
+	public void setmessage(String message) {
+		this.message = message;
+	}
+
 	public void run() {
 		while (true) {
 
-			String msg = null;
-			synchronized(PluginMain.readQueue) {
-				if (PluginMain.readQueue.size() > 0) {
-					msg = PluginMain.readQueue.poll();
-				}
-			}
-			
-			if (msg != null) {
-				free = false;
-				System.err.println("Thread " + id + " picking up " + msg + " from queue...");
+			if (message != null) {
+				
+				// ideally, whoever returns things object should mark it 
+				// busy first, but just in case..
+				busy();
+				System.err.println("Thread " + id + " picking up " + message + " from queue...");
 
 				try {
-					PluginMain.handleMessage(msg);
+					streamHandler.handleMessage(message);
 				} catch (PluginException pe) {
 					/*
 					   catch the exception and DO NOTHING. The plugin should take over after 
@@ -33,9 +39,9 @@ class PluginMessageHandlerWorker extends Thread {
 					 */ 
 				}
 
-				free = true;
+				this.message = null;
 			} else {
-
+				
 				// Sleep when there is nothing to do
 				try {
 					Thread.sleep(Integer.MAX_VALUE);
@@ -46,11 +52,25 @@ class PluginMessageHandlerWorker extends Thread {
 					// is work to do
 				}
 			}
+			
+			// mark ourselves free again
+			free();
 		}
 	}
 	
+	
+	
 	public int getWorkerId() {
 		return id;
+	}
+
+	public void busy() {
+		this.free = false;
+	}
+
+	
+	public void free() {
+		this.free = true;
 	}
 	
 	public boolean isFree() {

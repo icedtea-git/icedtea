@@ -37,9 +37,12 @@ exception statement from your version. */
 
 package sun.applet;
 
+import java.security.AccessControlContext;
+import java.security.ProtectionDomain;
+
 // FIXME: for each type of request extend a new (anonymous?)
 // PluginCallRequest.
-abstract class PluginCallRequest {
+public abstract class PluginCallRequest {
     String message;
     String returnString;
     PluginCallRequest next;
@@ -50,7 +53,33 @@ abstract class PluginCallRequest {
         this.returnString = returnString;
     }
 
+    public String getMessage() {
+    	return this.message;
+    }
+    
+    public String getReturnString() {
+    	return this.returnString;
+    }
+    
+    public boolean isDone() {
+    	return this.done;
+    }
+    
+    public boolean setDone(boolean done) {
+    	return this.done = done;
+    }
+    
+    public void setNext(PluginCallRequest next) {
+    	this.next = next;
+    }
+    
+    public PluginCallRequest getNext() {
+    	return this.next;
+    }
+
     public abstract void parseReturn(String message);
     
     public abstract boolean serviceable(String message);
+    
+    public abstract Object getObject();
 }

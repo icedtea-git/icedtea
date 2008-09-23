@@ -16,11 +16,13 @@ ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 ICEDTEAPLUGIN_JAR = IcedTeaPlugin.jar
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
+LIVECONNECT = $(abs_top_srcdir)/plugin/icedtea/java/src/main
 else
 ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
 ICEDTEAPLUGIN_JAR =
 PLUGIN_PATCH = patches/icedtea-plugin.patch
+LIVECONNECT = 
 if ENABLE_PLUGIN
 GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
 GCJWEBPLUGIN_TARGET = gcjwebplugin.so
@@ -578,7 +580,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  else \
 	    test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
 	  fi ; \
-	done ;
+	done ; \
 	mv stamps/patch.stamp.tmp stamps/patch.stamp ; \
 	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
@@ -909,12 +911,6 @@ if ENABLE_LIVECONNECT
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/
 	cp -pPRf IcedTeaPlugin.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/
-
-	$(JAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/rt.jar \
-	  -C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes sun
-
-	$(JAR) uf $(BUILD_OUTPUT_DIR)/j2re-image/lib/rt.jar \
-	  -C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes sun
 else
 if ENABLE_PLUGIN
 	cp -pPRf gcjwebplugin.so \
@@ -970,12 +966,6 @@ if ENABLE_LIVECONNECT
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/
 	cp -pPRf IcedTeaPlugin.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/
-
-	$(JAR) uf $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/rt.jar \
-	  -C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes sun
-
-	$(JAR) uf $(BUILD_OUTPUT_DIR)/j2re-image/lib/rt.jar \
-	  -C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes sun
 else
 if ENABLE_PLUGIN
 	cp -pPRf gcjwebplugin.so \
@@ -1207,8 +1197,8 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
-	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt -name '*.java' \
-	  $(EXCLUDE_LIVECONNECT) \
+	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt $(LIVECONNECT) -name '*.java' \
+	$(EXCLUDE_LIVECONNECT) \
 	  | sort -u > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt
@@ -1337,7 +1327,7 @@ IcedTeaPlugin.jar:
 	  $(ICEDTEA_BOOT_DIR)/bin/javac -g \
 	  -d ../../../../../$(BUILD_OUTPUT_DIR)/plugin/icedtea/classes \
 	  -bootclasspath $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar \
-	  sun/applet/*.java netscape/javascript/*.java org/classpath/icedtea/plugin/*.java \
+	  netscape/javascript/*.java org/classpath/icedtea/plugin/*.java \
 	)
 
 	$(JAR) cf $@ \

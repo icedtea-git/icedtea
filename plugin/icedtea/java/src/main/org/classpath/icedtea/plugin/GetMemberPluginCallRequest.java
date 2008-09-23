@@ -35,9 +35,12 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-package sun.applet;
+package org.classpath.icedtea.plugin;
 
-class GetMemberPluginCallRequest extends PluginCallRequest {
+import sun.applet.AppletSecurityContextManager;
+import sun.applet.PluginCallRequest;
+
+public class GetMemberPluginCallRequest extends PluginCallRequest {
     Object object = null;
 
     public GetMemberPluginCallRequest(String message, String returnString) {
@@ -50,11 +53,10 @@ class GetMemberPluginCallRequest extends PluginCallRequest {
         String[] args = message.split(" ");
         // FIXME: add thread ID to messages to support multiple
         // threads using the netscape.javascript package.
-        object = PluginAppletSecurityContext.contexts.get(
-            0).store.getObject(Integer.parseInt(args[1]));
-        done = true;
+        object = AppletSecurityContextManager.getSecurityContext(0).getObject(Integer.parseInt(args[1]));
+        setDone(true);
     }
-    
+
     /**
      * Returns whether the given message is serviceable by this object
      * 
@@ -67,6 +69,10 @@ class GetMemberPluginCallRequest extends PluginCallRequest {
     			message.contains("JavaScriptGetMember") ||
     			message.contains("JavaScriptGetSlot") ||
     			message.contains("JavaScriptToString");
+    }
+    
+    public Object getObject() {
+    	return this.object;
     }
 }
 

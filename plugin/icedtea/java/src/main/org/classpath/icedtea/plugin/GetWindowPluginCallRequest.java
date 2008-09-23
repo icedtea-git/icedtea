@@ -35,9 +35,15 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-package sun.applet;
+package org.classpath.icedtea.plugin;
 
-class GetWindowPluginCallRequest extends PluginCallRequest {
+import java.security.AccessControlContext;
+import java.security.ProtectionDomain;
+
+import sun.applet.PluginCallRequest;
+
+
+public class GetWindowPluginCallRequest extends PluginCallRequest {
     // FIXME: look into int vs long JavaScript internal values.
     int internal;
 
@@ -51,7 +57,7 @@ class GetWindowPluginCallRequest extends PluginCallRequest {
         // FIXME: add thread ID to messages to support multiple
         // threads using the netscape.javascript package.
         internal = Integer.parseInt(args[1]);
-        done = true;
+        setDone(true);
     }
     
     /**
@@ -62,5 +68,9 @@ class GetWindowPluginCallRequest extends PluginCallRequest {
      */
     public boolean serviceable(String message) {
     	return message.contains("JavaScriptGetWindow");
+    }
+
+    public Integer getObject() {
+    	return this.internal;
     }
 }

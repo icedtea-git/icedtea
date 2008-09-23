@@ -35,16 +35,24 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-package sun.applet;
+package org.classpath.icedtea.plugin;
 
+import java.io.FilePermission;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import sun.applet.AppletSecurityContext;
+import sun.applet.PluginDebug;
+import sun.applet.PluginException;
+
 
 class Signature {
 	private String signature;
@@ -180,7 +188,7 @@ class Signature {
 				} catch (ClassNotFoundException e) {
 					// do nothing .. thrown below
 				}
-				
+
 				if (c != null)
 					break;
 			}
@@ -221,10 +229,7 @@ class Signature {
 	}
 }
 
-public class PluginAppletSecurityContext {
-	// Context identifier -> PluginAppletSecurityContext object.
-	// FIXME: make private
-	public static HashMap<Integer, PluginAppletSecurityContext> contexts = new HashMap();
+public class PluginAppletSecurityContext extends AppletSecurityContext {
 	
 	public static HashMap<String, ClassLoader> classLoaders = new HashMap<String, ClassLoader>();
 
@@ -234,19 +239,11 @@ public class PluginAppletSecurityContext {
 	private ClassLoader liveconnectLoader = ClassLoader.getSystemClassLoader();
 	int identifier = 0;
 
-	static {
-		// FIXME: when should we add each new security context? but how would 
-		// we be able to know which context applies to which request from nspr? 
-		// the nspr jni functions do not know what applet they are being called
-		// in reference to
-		contexts.put(0, new PluginAppletSecurityContext(0));
-	}
-
 	public PluginAppletSecurityContext(int identifier) {
 		this.identifier = identifier;
 	}
 
-	public static <V> V parseCall(String s, String src, Class<V> c) {
+	private static <V> V parseCall(String s, String src, Class<V> c) {
 		if (c == Integer.class)
 			return (V) new Integer(s);
 		else if (c == String.class)
@@ -257,7 +254,7 @@ public class PluginAppletSecurityContext {
 			throw new RuntimeException("Unexpected call value.");
 	}
 
-	public Object parseArgs(String s, Class c) {
+	private Object parseArgs(String s, Class c) {
 		if (c == Boolean.TYPE || c == Boolean.class)
 			return new Boolean(s);
 		else if (c == Byte.TYPE || c == Byte.class)
@@ -282,12 +279,11 @@ public class PluginAppletSecurityContext {
 			return store.getObject(new Integer(s));
 	}
 
-	public static void handleMessage(int identifier, String src, int reference,
-			String message) {
-		contexts.get(identifier).handleMessage(reference, src, message);
+	public void addClassLoader(String id, ClassLoader cl) {
+		this.classLoaders.put(id, cl);
 	}
-
-	public void handleMessage(int reference, String src, String message) {
+	
+	public void handleMessage(String src, int reference, String message) {
 
 		try {
 			if (message.startsWith("FindClass")) {
@@ -738,26 +734,22 @@ public class PluginAppletSecurityContext {
 				Integer classID = parseCall(args[1], src, Integer.class);
 				Integer methodID = parseCall(args[2], src, Integer.class);
 
-				Constructor m = (Constructor) store.getObject(methodID);
+				final Constructor m = (Constructor) store.getObject(methodID);
 				Class[] argTypes = m.getParameterTypes();
 
 				// System.out.println ("NEWOBJ: HERE1");
-				Object[] arguments = new Object[argTypes.length];
+				final Object[] arguments = new Object[argTypes.length];
 				// System.out.println ("NEWOBJ: HERE2");
 				for (int i = 0; i < argTypes.length; i++) {
 					arguments[i] = parseArgs(args[3 + i], argTypes[i]);
 					// System.out.println ("NEWOBJ: GOT ARG: " + arguments[i]);
 				}
-
-				// System.out.println ("NEWOBJ: Calling " + m);
-				Object ret = null;
-				ret = m.newInstance(arguments);
-
-				// System.out.println ("NEWOBJ: CALLED: " + ret);
-				// System.out.println ("NEWOBJ: CALLED: " +
-				// store.getObject(ret));
+				
+				Object ret = m.newInstance(arguments);
 				store.reference(ret);
+
 				write(reference, "NewObject " + store.getIdentifier(ret));
+				
 			} else if (message.startsWith("NewString")) {
 				System.out.println("MESSAGE: " + message);
 				String[] args = message.split(" ");
@@ -835,13 +827,29 @@ public class PluginAppletSecurityContext {
 		} catch (Throwable t) {
 			t.printStackTrace();
 			throwable = t;
-			PluginException p = new PluginException(identifier, reference, t);
+			PluginException p = new PluginException(this.streamhandler, identifier, reference, t);
 		}
 	}
 
-	public void write(int reference, String message) {
+	private void write(int reference, String message) {
 		PluginDebug.debug("appletviewer writing " + message);
-		PluginMain.write("context " + identifier + " reference " + reference
+		streamhandler.write("context " + identifier + " reference " + reference
 				+ " " + message);
+	}
+	
+	public void dumpStore() {
+		store.dump();
+	}
+
+	public Object getObject(int identifier) {
+		return store.getObject(identifier);		
+	}
+
+	public int getIdentifier(Object o) {
+		return store.getIdentifier(o);
+	}
+
+	public void store(Object o) {
+		store.reference(o);
 	}
 }

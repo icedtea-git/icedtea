@@ -1,14 +1,15 @@
 package sun.applet;
 
+
 public class PluginException extends Exception {
 
-	public PluginException (int instance, int reference, Throwable t) {
+	public PluginException (PluginStreamHandler sh, int instance, int reference, Throwable t) {
 		t.printStackTrace();
 		this.setStackTrace(t.getStackTrace());
 		
-		PluginAppletSecurityContext.contexts.get(0).store.dump();
+		AppletSecurityContextManager.dumpStore(0);
 
 		String message = "instance " + instance + " reference " + reference + " Error " + t.getMessage();
-		PluginMain.write(message);
+		sh.write(message);
 	}
 }

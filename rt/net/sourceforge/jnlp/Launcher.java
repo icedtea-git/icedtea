@@ -592,6 +592,7 @@ public class Launcher {
                 }
             }
             catch (LaunchException ex) {
+                ex.printStackTrace();
                 exception = ex;
                 // Exit if we can't launch the application.
                 System.exit(0);

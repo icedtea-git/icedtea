@@ -135,6 +135,8 @@ public class JNLPRuntime {
         if (baseDir == null)
             throw new IllegalStateException(JNLPRuntime.getMessage("BNoBase"));
 
+        ServiceManager.setServiceManagerStub(new XServiceManagerStub()); // ignored if we're running under Web Start
+	
         policy = new JNLPPolicy();
         security = new JNLPSecurityManager(); // side effect: create JWindow
 
@@ -142,8 +144,6 @@ public class JNLPRuntime {
             Policy.setPolicy(policy); // do first b/c our SM blocks setPolicy
             System.setSecurityManager(security);
         }
-
-        ServiceManager.setServiceManagerStub(new XServiceManagerStub()); // ignored if we're running under Web Start
 
         initialized = true;
     }

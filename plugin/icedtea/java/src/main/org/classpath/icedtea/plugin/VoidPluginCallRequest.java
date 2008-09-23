@@ -35,17 +35,20 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-package sun.applet;
+package org.classpath.icedtea.plugin;
 
-class VoidPluginCallRequest extends PluginCallRequest {
+import sun.applet.PluginCallRequest;
+
+public class VoidPluginCallRequest extends PluginCallRequest {
     public VoidPluginCallRequest(String message, String returnString) {
         super(message, returnString);
         System.out.println ("VoidPLUGINCAlL " + message + " " + returnString);
     }
 
     public void parseReturn(String message) {
-        done = true;
+    	setDone(true);
     }
+    
     
     /**
      * Returns whether the given message is serviceable by this object
@@ -58,5 +61,9 @@ class VoidPluginCallRequest extends PluginCallRequest {
     			message.contains("JavaScriptRemoveMember") ||
     			message.contains("JavaScriptSetMember") ||
     			message.contains("JavaScriptSetSlot");
+    }
+    
+    public Object getObject() {
+    	return null;
     }
 }
