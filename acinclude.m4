@@ -342,9 +342,18 @@ EOF
     JAR_KNOWS_ATFILE=
     AC_MSG_RESULT(no)
   fi
+  AC_MSG_CHECKING([whether jar supports stdin file arguments])
+  if cat _config.list | $JAR cf@ _config.jar 2>/dev/null; then
+    JAR_ACCEPTS_STDIN_LIST=1
+    AC_MSG_RESULT(yes)
+  else
+    JAR_ACCEPTS_STDIN_LIST=
+    AC_MSG_RESULT(no)
+  fi
   rm -f _config.txt _config.list _config.jar
   AC_SUBST(JAR)
   AC_SUBST(JAR_KNOWS_ATFILE)
+  AC_SUBST(JAR_ACCEPTS_STDIN_LIST)
 ])
 
 AC_DEFUN([FIND_RMIC],
