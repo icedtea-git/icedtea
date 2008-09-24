@@ -9,8 +9,6 @@ NETBEANS_PLATFORM_MD5SUM = 77c79b3a7d3dbe6a8858639f8d564a38
 NETBEANS_PROFILER_MD5SUM = ff8e8abc42df6c6749e6b02bcf7bb0a5
 VISUALVM_MD5SUM = 4b55bc623418818793392bb233da2927
 
-EXCLUDE_LIVECONNECT = | grep -vE "netscape/javascript|org/classpath/icedtea/plugin"
-
 if ENABLE_LIVECONNECT
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
@@ -587,6 +585,9 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
 	fi
+if ENABLE_LIVECONNECT
+	cp -a plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
+endif
 
 clean-patch:
 	rm -f stamps/patch.stamp
@@ -605,6 +606,10 @@ clean-patch:
 	if ! test x$${all_patches_ok} = "xyes" ; then \
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
+	for file in plugin/icedtea/sun/applet/*java ; \
+	do \
+		rm -f openjdk/jdk/src/share/classes/sun/applet/`basename $file` ; \
+	done ;
 
 stamps/patch-fsg.stamp: stamps/extract.stamp
 	mkdir -p stamps ; \
@@ -1198,7 +1203,6 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
 	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt $(LIVECONNECT) -name '*.java' \
-	$(EXCLUDE_LIVECONNECT) \
 	  | sort -u > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt
@@ -1325,7 +1329,7 @@ IcedTeaPlugin.jar:
 	mkdir -p $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes
 	(cd plugin/icedtea/; \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac -g \
-	  -d ../../../../../$(BUILD_OUTPUT_DIR)/plugin/icedtea/classes \
+	  -d ../../$(BUILD_OUTPUT_DIR)/plugin/icedtea/classes \
 	  -bootclasspath $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar \
 	  netscape/javascript/*.java org/classpath/icedtea/plugin/*.java \
 	)

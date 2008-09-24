@@ -1,4 +1,6 @@
 2008-09-23  Deepak Bhole  <dbhole@redhat.com>
+	* IcedTeaPlugin.cc: Updated to call new plugin main class. Add function to
+	correctly recognize JS context.
 	* Makefile.am: Update to create new IcedTeaPlugin.jar
 	* patches/icedtea-liveconnect.patch: Update patch and remove all new .java
 	files

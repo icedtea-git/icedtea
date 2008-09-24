@@ -244,6 +244,7 @@ private:
 static GError* channel_error = NULL;
 // Fully-qualified appletviewer executable.
 static char* appletviewer_executable = NULL;
+static char* extra_jars = NULL;
 static char* libjvm_so = NULL;
 
 class IcedTeaPluginFactory;
@@ -313,7 +314,10 @@ char const* TYPES[10] = { "Object",
 // FIXME: create index from security context.
 #define MESSAGE_CREATE(reference)                            \
   const char* addr; \
+  char context[16]; \
   GetCurrentPageAddress(&addr); \
+  GetCurrentContextAddr(context); \
+  printf("Addr: %s , Context: %s\n", addr, context);\
 \
   nsCString message ("context ");                            \
   message.AppendInt (0);                                     \
@@ -1149,7 +1153,8 @@ private:
 
   int IncrementContextCounter();
   void DecrementContextCounter();
-  void GetCurrentPageAddress(const char **addr);
+  nsresult GetCurrentContextAddr(char *addr);
+  nsresult GetCurrentPageAddress(const char **addr);
   int contextCounter;
 };
 
@@ -3184,9 +3189,9 @@ IcedTeaPluginFactory::StartAppletviewer ()
   PLUGIN_CHECK_RETURN ("init process", result);
 
   // FIXME: hard-coded port number.
-  char const* args[5] = { "-Xdebug", "-Xnoagent", "-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n", "sun.applet.PluginMain", "50007" };
+  char const* args[8] = { "-classpath", extra_jars, "-Xdebug", "-Xnoagent", "-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n", "org.classpath.icedtea.plugin.PluginMain", "50007" };
 //  char const* args[2] = { "sun.applet.PluginMain", "50007" };
-  result = applet_viewer_process->Run (PR_FALSE, args, 5, nsnull);
+  result = applet_viewer_process->Run (PR_FALSE, args, 8, nsnull);
   PLUGIN_CHECK_RETURN ("run process", result);
 
   // start processing thread
@@ -3763,6 +3768,7 @@ NS_IMPL_ISUPPORTS1 (IcedTeaJNIEnv, nsISecureEnv)
 #include <nsIPrincipal.h>
 #include <nsIScriptSecurityManager.h>
 #include <nsIURI.h>
+#include <xpcjsid.h>
 
 IcedTeaJNIEnv::IcedTeaJNIEnv (IcedTeaPluginFactory* factory)
 : factory (factory)
@@ -3801,17 +3807,69 @@ IcedTeaJNIEnv::DecrementContextCounter ()
     PR_ExitMonitor(contextCounterPRMonitor);
 }
 
-void
+#include <nsIJSContextStack.h>
+
+nsresult
+IcedTeaJNIEnv::GetCurrentContextAddr(char *addr)
+{
+    PLUGIN_TRACE_JNIENV ();
+
+    // Get JSContext from stack.
+    nsCOMPtr<nsIJSContextStack> mJSContextStack(do_GetService("@mozilla.org/js/xpc/ContextStack;1"));
+    if (mJSContextStack) {
+        JSContext *cx;
+        if (NS_FAILED(mJSContextStack->Peek(&cx)))
+            return NS_ERROR_FAILURE;
+
+        printf("Context1: %p\n", cx);
+
+        // address cannot be more than 8 bytes (8 bytes = 64 bits)
+		sprintf(addr, "%p", cx);
+
+        printf("Context2: %s\n", addr);
+	}
+
+	return NS_OK;
+}
+
+nsresult
 IcedTeaJNIEnv::GetCurrentPageAddress(const char **addr)
 {
+
+    PLUGIN_TRACE_JNIENV ();
+
     nsIPrincipal *prin;
 	nsCOMPtr<nsIScriptSecurityManager> sec_man(do_GetService("@mozilla.org/scriptsecuritymanager;1"));
 
-    sec_man->GetSubjectPrincipal(&prin);
+    if (sec_man) {
+    
+		PRBool isEnabled = PR_FALSE;
+    	sec_man->IsCapabilityEnabled("UniversalBrowserRead", &isEnabled);
+
+		if (isEnabled == PR_FALSE) {
+			printf("UniversalBrowserRead is NOT enabled\n");
+		} else {
+			printf("UniversalBrowserRead IS enabled\n");
+		}
+
+    	sec_man->IsCapabilityEnabled("UniversalBrowserWrite", &isEnabled);
+
+		if (isEnabled == PR_FALSE) {
+			printf("UniversalBrowserWrite is NOT enabled\n");
+		} else {
+			printf("UniversalBrowserWrite IS enabled\n");
+		}
+	}
+
+    if (sec_man)
+	{
+    	sec_man->GetSubjectPrincipal(&prin);
+	} else {
+		return NS_ERROR_FAILURE;
+	}
 
    if (prin)
    {
-
        nsIURI *uri;
        prin->GetURI(&uri);
 
@@ -3820,8 +3878,19 @@ IcedTeaJNIEnv::GetCurrentPageAddress(const char **addr)
            nsCAutoString str;
            uri->GetSpec(str);
            NS_CStringGetData(str, addr);
+	   } else {
+		   return NS_ERROR_FAILURE;
 	   }
+   } else {
+	   return NS_ERROR_FAILURE;
    }
+
+
+	nsCOMPtr<nsIJSID> js_id(do_GetService("@mozilla.org/js/xpc/ID;1"));
+	printf("JS ID is: %s\n", js_id->GetID()->ToString());
+
+    return NS_OK;
+
 }
 
 NS_IMETHODIMP
@@ -4846,19 +4915,34 @@ NSGetFactory (nsISupports* aServMgr, nsCID const& aClass,
       return NS_ERROR_OUT_OF_MEMORY;
     }
   nsCString executable (dirname (filename));
+  nsCString jar(dirname (filename));
+  nsCString extrajars("");
   free (filename);
   filename = NULL;
 
   //executableString += nsCString ("/../../bin/pluginappletviewer");
   executable += nsCString ("/../../bin/java");
+  extrajars += jar;
+  extrajars += nsCString("/IcedTeaPlugin.jar");
+  extrajars += ":";
+  extrajars += jar;
+  extrajars += nsCString("/rt.jar");
+
   //executable += nsCString ("/client/libjvm.so");
 
   // Never freed.
   appletviewer_executable = strdup (executable.get ());
+  extra_jars = strdup (extrajars.get ());
   //libjvm_so = strdup (executable.get ());
   if (!appletviewer_executable)
     {
       PLUGIN_ERROR ("Failed to create java executable name.");
+      return NS_ERROR_OUT_OF_MEMORY;
+    }
+
+  if (!extra_jars)
+    {
+      PLUGIN_ERROR ("Failed to create plugin jar name.");
       return NS_ERROR_OUT_OF_MEMORY;
     }
 
