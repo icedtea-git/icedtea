@@ -1,3 +1,9 @@
+2008-09-23  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Fixed help string for enable-visualvm.
+	* rt/net/sourceforge/nanoxml/XMLElement.java: Fixed check for special
+	tags.
+
 2008-09-23  Deepak Bhole  <dbhole@redhat.com>
 	* IcedTeaPlugin.cc: Updated to call new plugin main class. Add function to
 	correctly recognize JS context.

@@ -1255,6 +1255,7 @@ public class XMLElement
             this.reader = isr;
             this.parserLineNr = 0;
             int newline = 2;
+	    char prev = ' ';
 
             while(true) {
                 char ch;
@@ -1289,7 +1290,7 @@ public class XMLElement
 
                 // If the next char is a ? or !, then we've hit a special tag,
                 // and should skip it.
-                if (next == '!' || next == '?') {
+                if (prev == '<' && (next == '!' || next == '?')) {
                     this.skipSpecialTag(0);
                     this.sanitizeCharReadTooMuch = '\0';
                 }
@@ -1306,6 +1307,7 @@ public class XMLElement
                         }
                     }
                 }
+		prev = next;
             }
 
             out.close();

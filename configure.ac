@@ -118,8 +118,7 @@ AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
 
 AC_ARG_ENABLE([visualvm],
               [AS_HELP_STRING([--enable-visualvm],
-			                  [Enable compilation of visualvm. Requires that \
-							  --with-netbeans-dir=DIR is specified.])],
+			                  [Enable compilation of visualvm.])],
               [enable_visualvm="yes"], [enable_visualvm="no"])
 AM_CONDITIONAL(WITH_VISUALVM, test "x${enable_visualvm}" = "xyes")
 
