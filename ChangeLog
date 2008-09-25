@@ -1,3 +1,9 @@
+2008-08-28  Mark Wielaard  <mjw@redhat.com>
+
+	* patches/icedtea-clean-crypto.patch: Cleaned up.
+	Remove unneeded classes JarVerifier and JceSecurityManager
+	and remove unneeded methods in JceSecurity class.
+
 2008-09-23  Lillian Angel  <langel@redhat.com>
 
 	* configure.ac: Fixed help string for enable-visualvm.
