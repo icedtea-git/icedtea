@@ -1,4 +1,10 @@
-2008-08-28  Mark Wielaard  <mjw@redhat.com>
+2008-09-25  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-lucene-crash.patch: New patch.
+	* Makefile.am (NON_ZERO_PATCHES): Add icedtea-lucene-crash.patch.
+	* HACKING: Document icedtea-lucene-crash.patch.
+
+2008-09-25  Mark Wielaard  <mjw@redhat.com>
 
 	* patches/icedtea-clean-crypto.patch: Cleaned up.
 	Remove unneeded classes JarVerifier and JceSecurityManager

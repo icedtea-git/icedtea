@@ -427,7 +427,9 @@ ZERO_PATCHES = \
 	patches/icedtea-ia64-bugfix.patch
 
 # Patches needed when not using the newer OpenJDK 7 HotSpot for zero.
-NON_ZERO_PATCHES = patches/icedtea-signed-types-hot6.patch
+NON_ZERO_PATCHES = \
+	patches/icedtea-signed-types-hot6.patch \
+	patches/icedtea-lucene-crash.patch
 
 if ZERO_BUILD
   ZERO_PATCHES_COND = $(ZERO_PATCHES)

@@ -64,6 +64,7 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 
 * icedtea-sparc.patch: Add support for GNU/Linux on SPARC.
 * icedtea-jdk-docs-target.patch: Always set DOCS_TARGET.
+* icedtea-lucene-crash.patch: Fix lucene bad code generation bug #6707044.
 
 The following patches are only applied to OpenJDK in IcedTea:
 
