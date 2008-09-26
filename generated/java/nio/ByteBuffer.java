@@ -1061,7 +1061,7 @@ public abstract class ByteBuffer
 
 
 
-    
+
 
     /**
      * Returns the current hash code of this buffer.

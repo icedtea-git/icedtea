@@ -159,6 +159,13 @@ class DirectDoubleBufferRS
 
 
 
+
+
+
+
+
+
+
     // For duplicates and slices
     //
     DirectDoubleBufferRS(DirectBuffer db,         // package-private
@@ -208,6 +215,8 @@ class DirectDoubleBufferRS
         return duplicate();
 
     }
+
+
 
 
 
@@ -318,6 +327,8 @@ class DirectDoubleBufferRS
     }
 
     public DoubleBuffer put(double[] src, int offset, int length) {
+
+
 
 
 

@@ -1,18 +1,6 @@
-diff -Nru openjdk.orig/corba/make/common/shared/Defs-utils.gmk openjdk/corba/make/common/shared/Defs-utils.gmk
---- openjdk.orig/corba/make/common/shared/Defs-utils.gmk	2008-05-23 22:16:25.000000000 +0100
-+++ openjdk/corba/make/common/shared/Defs-utils.gmk	2008-05-23 22:09:43.000000000 +0100
-@@ -71,7 +71,7 @@
- ifndef ANT_HOME
-   ANT_HOME = $(JDK_DEVTOOLS_DIR)/share/ant/latest
- endif
--ANT = $(ANT_HOME)/bin/ant
-+ANT = ant
- ifndef FINDBUGS_HOME
-   FINDBUGS_HOME = $(JDK_DEVTOOLS_DIR)/share/findbugs/latest
- endif
 diff -Nru openjdk.orig/jaxp/make/Makefile openjdk/jaxp/make/Makefile
---- openjdk.orig/jaxp/make/Makefile	2008-05-23 22:16:25.000000000 +0100
-+++ openjdk/jaxp/make/Makefile	2008-05-23 22:14:29.000000000 +0100
+--- openjdk.orig/jaxp/make/Makefile	2008-09-25 08:40:52.000000000 +0100
++++ openjdk/jaxp/make/Makefile	2008-09-26 20:58:44.000000000 +0100
 @@ -99,16 +99,9 @@
    ANT_OPTIONS += -Dfindbugs.home=$(FINDBUGS_HOME)
  endif
@@ -33,9 +21,20 @@ diff -Nru openjdk.orig/jaxp/make/Makefile openjdk/jaxp/make/Makefile
  endif
  
  # Default target and expected 'do everything' target
+diff -Nru openjdk.orig/jaxws/make/build.xml openjdk/jaxws/make/build.xml
+--- openjdk.orig/jaxws/make/build.xml	2008-09-25 08:41:11.000000000 +0100
++++ openjdk/jaxws/make/build.xml	2008-09-26 20:58:44.000000000 +0100
+@@ -100,6 +100,7 @@
+              memoryMaximumSize="${javac.memoryMaximumSize}"
+              target="${javac.target}"
+              excludes="com/sun/tools/internal/txw2/**">
++	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${plugs}/jre/lib/tools.jar:${plugs}/jre/lib/rt-closed.jar"/>
+          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
+          <compilerarg line="${javac.version.opt}"/>
+          <compilerarg line="${javac.no.jdk.warnings}"/>
 diff -Nru openjdk.orig/jaxws/make/Makefile openjdk/jaxws/make/Makefile
---- openjdk.orig/jaxws/make/Makefile	2008-05-23 22:16:25.000000000 +0100
-+++ openjdk/jaxws/make/Makefile	2008-05-23 22:13:11.000000000 +0100
+--- openjdk.orig/jaxws/make/Makefile	2008-09-25 08:41:11.000000000 +0100
++++ openjdk/jaxws/make/Makefile	2008-09-26 20:58:44.000000000 +0100
 @@ -80,6 +80,7 @@
  endif
  
@@ -64,20 +63,9 @@ diff -Nru openjdk.orig/jaxws/make/Makefile openjdk/jaxws/make/Makefile
  endif
  
  # Default target and expected 'do everything' target
-diff -Nru openjdk.orig/jaxws/make/build.xml openjdk/jaxws/make/build.xml
---- openjdk.orig/jaxws/make/build.xml	2008-05-23 22:16:25.000000000 +0100
-+++ openjdk/jaxws/make/build.xml	2008-05-23 22:13:44.000000000 +0100
-@@ -100,6 +100,7 @@
-              memoryMaximumSize="${javac.memoryMaximumSize}"
-              target="${javac.target}"
-              excludes="com/sun/tools/internal/txw2/**">
-+	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${plugs}/jre/lib/tools.jar:${plugs}/jre/lib/rt-closed.jar"/>
-          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
-          <compilerarg line="${javac.version.opt}"/>
-          <compilerarg line="${javac.no.jdk.warnings}"/>
 diff -Nru openjdk.orig/langtools/make/Makefile openjdk/langtools/make/Makefile
---- openjdk.orig/langtools/make/Makefile	2008-05-23 22:16:25.000000000 +0100
-+++ openjdk/langtools/make/Makefile	2008-05-23 22:10:35.000000000 +0100
+--- openjdk.orig/langtools/make/Makefile	2008-09-25 08:45:02.000000000 +0100
++++ openjdk/langtools/make/Makefile	2008-09-26 20:58:44.000000000 +0100
 @@ -133,16 +133,9 @@
    ANT_OPTIONS += -Dfindbugs.home=$(FINDBUGS_HOME)
  endif

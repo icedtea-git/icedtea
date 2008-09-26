@@ -159,6 +159,13 @@ class DirectLongBufferRS
 
 
 
+
+
+
+
+
+
+
     // For duplicates and slices
     //
     DirectLongBufferRS(DirectBuffer db,         // package-private
@@ -208,6 +215,8 @@ class DirectLongBufferRS
         return duplicate();
 
     }
+
+
 
 
 
@@ -318,6 +327,8 @@ class DirectLongBufferRS
     }
 
     public LongBuffer put(long[] src, int offset, int length) {
+
+
 
 
 

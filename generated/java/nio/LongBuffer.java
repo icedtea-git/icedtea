@@ -1061,7 +1061,7 @@ public abstract class LongBuffer
 
 
 
-    
+
 
     /**
      * Returns the current hash code of this buffer.

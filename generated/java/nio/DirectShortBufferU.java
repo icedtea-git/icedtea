@@ -47,6 +47,9 @@ class DirectShortBufferU
     // Cached unsafe-access object
     protected static final Unsafe unsafe = Bits.unsafe();
 
+    // Cached array base offset
+    private static final long arrayBaseOffset = (long)unsafe.arrayBaseOffset(short[].class);
+
     // Cached unaligned-access capability
     protected static final boolean unaligned = Bits.unaligned();
 
@@ -97,7 +100,11 @@ class DirectShortBufferU
 
 
 
+
+
     public Cleaner cleaner() { return null; }
+
+
 
 
 
@@ -238,14 +245,16 @@ class DirectShortBufferU
             if (length > rem)
                 throw new BufferUnderflowException();
 
+
             if (order() != ByteOrder.nativeOrder())
                 Bits.copyToShortArray(ix(pos), dst,
                                           offset << 1,
                                           length << 1);
             else
-                Bits.copyToByteArray(ix(pos), dst,
-                                     offset << 1,
-                                     length << 1);
+
+                Bits.copyToArray(ix(pos), dst, arrayBaseOffset,
+                                 offset << 1,
+                                 length << 1);
             position(pos + length);
         } else {
             super.get(dst, offset, length);
@@ -328,12 +337,14 @@ class DirectShortBufferU
             if (length > rem)
                 throw new BufferOverflowException();
 
+
             if (order() != ByteOrder.nativeOrder())
                 Bits.copyFromShortArray(src, offset << 1,
                                             ix(pos), length << 1);
             else
-                Bits.copyFromByteArray(src, offset << 1,
-                                       ix(pos), length << 1);
+
+                Bits.copyFromArray(src, arrayBaseOffset, offset << 1,
+                                   ix(pos), length << 1);
             position(pos + length);
         } else {
             super.put(src, offset, length);

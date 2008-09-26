@@ -47,6 +47,9 @@ class DirectByteBuffer
     // Cached unsafe-access object
     protected static final Unsafe unsafe = Bits.unsafe();
 
+    // Cached array base offset
+    private static final long arrayBaseOffset = (long)unsafe.arrayBaseOffset(byte[].class);
+
     // Cached unaligned-access capability
     protected static final boolean unaligned = Bits.unaligned();
 
@@ -71,11 +74,13 @@ class DirectByteBuffer
         private static Unsafe unsafe = Unsafe.getUnsafe();
 
         private long address;
+        private long size;
         private int capacity;
 
-        private Deallocator(long address, int capacity) {
+        private Deallocator(long address, long size, int capacity) {
             assert (address != 0);
             this.address = address;
+            this.size = size;
             this.capacity = capacity;
         }
 
@@ -86,7 +91,7 @@ class DirectByteBuffer
             }
             unsafe.freeMemory(address);
             address = 0;
-            Bits.unreserveMemory(capacity);
+            Bits.unreserveMemory(size, capacity);
         }
 
     }
@@ -110,23 +115,25 @@ class DirectByteBuffer
     DirectByteBuffer(int cap) {                   // package-private
 
         super(-1, 0, cap, cap, false);
-        Bits.reserveMemory(cap);
         int ps = Bits.pageSize();
+        int size = cap + ps;
+        Bits.reserveMemory(size, cap);
+
         long base = 0;
         try {
-            base = unsafe.allocateMemory(cap + ps);
+            base = unsafe.allocateMemory(size);
         } catch (OutOfMemoryError x) {
-            Bits.unreserveMemory(cap);
+            Bits.unreserveMemory(size, cap);
             throw x;
         }
-        unsafe.setMemory(base, cap + ps, (byte) 0);
+        unsafe.setMemory(base, size, (byte) 0);
         if (base % ps != 0) {
             // Round up to page boundary
             address = base + ps - (base & (ps - 1));
         } else {
             address = base;
         }
-        cleaner = Cleaner.create(this, new Deallocator(base, cap));
+        cleaner = Cleaner.create(this, new Deallocator(base, size, cap));
 
 
 
@@ -238,14 +245,16 @@ class DirectByteBuffer
             if (length > rem)
                 throw new BufferUnderflowException();
 
-            if (order() != ByteOrder.nativeOrder())
-                Bits.copyToByteArray(ix(pos), dst,
-                                          offset << 0,
-                                          length << 0);
-            else
-                Bits.copyToByteArray(ix(pos), dst,
-                                     offset << 0,
-                                     length << 0);
+
+
+
+
+
+
+
+                Bits.copyToArray(ix(pos), dst, arrayBaseOffset,
+                                 offset << 0,
+                                 length << 0);
             position(pos + length);
         } else {
             super.get(dst, offset, length);
@@ -328,12 +337,14 @@ class DirectByteBuffer
             if (length > rem)
                 throw new BufferOverflowException();
 
-            if (order() != ByteOrder.nativeOrder())
-                Bits.copyFromByteArray(src, offset << 0,
-                                            ix(pos), length << 0);
-            else
-                Bits.copyFromByteArray(src, offset << 0,
-                                       ix(pos), length << 0);
+
+
+
+
+
+
+                Bits.copyFromArray(src, arrayBaseOffset, offset << 0,
+                                   ix(pos), length << 0);
             position(pos + length);
         } else {
             super.put(src, offset, length);

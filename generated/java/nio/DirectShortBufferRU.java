@@ -159,6 +159,13 @@ class DirectShortBufferRU
 
 
 
+
+
+
+
+
+
+
     // For duplicates and slices
     //
     DirectShortBufferRU(DirectBuffer db,         // package-private
@@ -208,6 +215,8 @@ class DirectShortBufferRU
         return duplicate();
 
     }
+
+
 
 
 
@@ -318,6 +327,8 @@ class DirectShortBufferRU
     }
 
     public ShortBuffer put(short[] src, int offset, int length) {
+
+
 
 
 

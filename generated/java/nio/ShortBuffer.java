@@ -1061,7 +1061,7 @@ public abstract class ShortBuffer
 
 
 
-    
+
 
     /**
      * Returns the current hash code of this buffer.

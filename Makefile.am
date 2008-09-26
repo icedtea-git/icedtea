@@ -1,6 +1,6 @@
-OPENJDK_DATE = 11_sep_2008
-OPENJDK_MD5SUM = 324ee7ead3c2e548a129730685815da4
-OPENJDK_VERSION = b35
+OPENJDK_DATE = 25_sep_2008
+OPENJDK_MD5SUM = 6432f04891bc0e61142a73bb8500314c
+OPENJDK_VERSION = b36
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -549,7 +549,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
 	patches/icedtea-security-updates.patch \
-	patches/icedtea-override.patch \
 	patches/icedtea-constructor-properties.patch \
 	patches/icedtea-jsoundhs.patch \
 	patches/icedtea-jdk-docs-target.patch \
@@ -678,20 +677,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
-	fi ; \
-	if [ -e $(abs_top_srcdir)/.hg ]; then \
-	  revision="-r`(cd $(srcdir); $(HG) tip|grep changeset|cut -d':' -f2|sed -r 's#\W+##')`" ; \
-	fi ; \
-	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
-	if test x"$(PROJECT_NAME)" != "xjdk7"; then \
-	  proj_suffix="-$(PROJECT_NAME)"; \
-	fi ; \
-	if test x"$(VERSION_SUFFIX)" != "x"; then \
-	  ver_suffix="-$(VERSION_SUFFIX)"; \
-	fi ; \
-	sed -i "s#IcedTea#IcedTea $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk ; \
-	sed -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
-	  openjdk/jdk/make/common/shared/Defs.gmk
+	fi ; 
 
 clean-patch:
 	rm -f stamps/patch.stamp
@@ -774,6 +760,20 @@ clean-patch-fsg:
 	fi
 
 stamps/overlay.stamp: stamps/patch.stamp
+	if [ -e $(abs_top_srcdir)/.hg ]; then \
+	  revision="-r`(cd $(srcdir); $(HG) tip|grep changeset|cut -d':' -f2|sed -r 's#\W+##')`" ; \
+	fi ; \
+	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
+	if test x"$(PROJECT_NAME)" != "xjdk7"; then \
+	  proj_suffix="-$(PROJECT_NAME)"; \
+	fi ; \
+	if test x"$(VERSION_SUFFIX)" != "x"; then \
+	  ver_suffix="-$(VERSION_SUFFIX)"; \
+	fi ; \
+	sed -i "s#IcedTea#IcedTea $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk ; \
+	sed -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
+	  openjdk/jdk/make/common/shared/Defs.gmk; \
+	find openjdk -name '*.java' -exec sed -i 's/^[[:space:]]*@Override//' {} + ; \
 	cp -r $(abs_top_srcdir)/overlays/openjdk/* openjdk/ \
 	  && touch stamps/overlay.stamp
 

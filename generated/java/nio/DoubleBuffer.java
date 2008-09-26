@@ -1061,7 +1061,7 @@ public abstract class DoubleBuffer
 
 
 
-    
+
 
     /**
      * Returns the current hash code of this buffer.

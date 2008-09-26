@@ -1061,7 +1061,7 @@ public abstract class IntBuffer
 
 
 
-    
+
 
     /**
      * Returns the current hash code of this buffer.

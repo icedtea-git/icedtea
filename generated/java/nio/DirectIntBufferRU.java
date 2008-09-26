@@ -159,6 +159,13 @@ class DirectIntBufferRU
 
 
 
+
+
+
+
+
+
+
     // For duplicates and slices
     //
     DirectIntBufferRU(DirectBuffer db,         // package-private
@@ -208,6 +215,8 @@ class DirectIntBufferRU
         return duplicate();
 
     }
+
+
 
 
 
@@ -318,6 +327,8 @@ class DirectIntBufferRU
     }
 
     public IntBuffer put(int[] src, int offset, int length) {
+
+
 
 
 

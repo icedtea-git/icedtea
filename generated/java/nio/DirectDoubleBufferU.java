@@ -47,6 +47,9 @@ class DirectDoubleBufferU
     // Cached unsafe-access object
     protected static final Unsafe unsafe = Bits.unsafe();
 
+    // Cached array base offset
+    private static final long arrayBaseOffset = (long)unsafe.arrayBaseOffset(double[].class);
+
     // Cached unaligned-access capability
     protected static final boolean unaligned = Bits.unaligned();
 
@@ -97,7 +100,11 @@ class DirectDoubleBufferU
 
 
 
+
+
     public Cleaner cleaner() { return null; }
+
+
 
 
 
@@ -238,14 +245,16 @@ class DirectDoubleBufferU
             if (length > rem)
                 throw new BufferUnderflowException();
 
+
             if (order() != ByteOrder.nativeOrder())
                 Bits.copyToLongArray(ix(pos), dst,
                                           offset << 3,
                                           length << 3);
             else
-                Bits.copyToByteArray(ix(pos), dst,
-                                     offset << 3,
-                                     length << 3);
+
+                Bits.copyToArray(ix(pos), dst, arrayBaseOffset,
+                                 offset << 3,
+                                 length << 3);
             position(pos + length);
         } else {
             super.get(dst, offset, length);
@@ -328,12 +337,14 @@ class DirectDoubleBufferU
             if (length > rem)
                 throw new BufferOverflowException();
 
+
             if (order() != ByteOrder.nativeOrder())
                 Bits.copyFromLongArray(src, offset << 3,
                                             ix(pos), length << 3);
             else
-                Bits.copyFromByteArray(src, offset << 3,
-                                       ix(pos), length << 3);
+
+                Bits.copyFromArray(src, arrayBaseOffset, offset << 3,
+                                   ix(pos), length << 3);
             position(pos + length);
         } else {
             super.put(src, offset, length);

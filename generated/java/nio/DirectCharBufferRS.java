@@ -159,6 +159,13 @@ class DirectCharBufferRS
 
 
 
+
+
+
+
+
+
+
     // For duplicates and slices
     //
     DirectCharBufferRS(DirectBuffer db,         // package-private
@@ -208,6 +215,8 @@ class DirectCharBufferRS
         return duplicate();
 
     }
+
+
 
 
 
@@ -318,6 +327,8 @@ class DirectCharBufferRS
     }
 
     public CharBuffer put(char[] src, int offset, int length) {
+
+
 
 
 

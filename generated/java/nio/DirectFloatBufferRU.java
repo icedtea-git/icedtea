@@ -159,6 +159,13 @@ class DirectFloatBufferRU
 
 
 
+
+
+
+
+
+
+
     // For duplicates and slices
     //
     DirectFloatBufferRU(DirectBuffer db,         // package-private
@@ -208,6 +215,8 @@ class DirectFloatBufferRU
         return duplicate();
 
     }
+
+
 
 
 
@@ -318,6 +327,8 @@ class DirectFloatBufferRU
     }
 
     public FloatBuffer put(float[] src, int offset, int length) {
+
+
 
 
 

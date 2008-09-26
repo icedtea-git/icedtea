@@ -105,9 +105,16 @@ class DirectByteBufferR
 
 
 
+
+
+
+
+
     // Primary constructor
     //
     DirectByteBufferR(int cap) {                   // package-private
+
+
 
 
 
@@ -258,6 +265,8 @@ class DirectByteBufferR
 
 
 
+
+
     public ByteBuffer put(byte x) {
 
 
@@ -318,6 +327,8 @@ class DirectByteBufferR
     }
 
     public ByteBuffer put(byte[] src, int offset, int length) {
+
+
 
 
 
