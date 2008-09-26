@@ -67,6 +67,7 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 * icedtea-jdk-docs-target.patch: Always set DOCS_TARGET.
 * icedtea-lucene-crash.patch: Fix lucene bad code generation bug #6707044.
 * icedtea-6700047-loopopts.patch: Fix partial peeling issue, bug #6700047.
+* icedtea-6712835-ifnode.patch: Fix infinite loop in PhaseIterGVN::transform.
 
 The following patches are only applied to OpenJDK in IcedTea:
 

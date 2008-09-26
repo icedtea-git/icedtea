@@ -430,7 +430,8 @@ ZERO_PATCHES = \
 NON_ZERO_PATCHES = \
 	patches/icedtea-signed-types-hot6.patch \
 	patches/icedtea-lucene-crash.patch \
-	patches/icedtea-6700047-loopopts.patch
+	patches/icedtea-6700047-loopopts.patch \
+	patches/icedtea-6712835-ifnode.patch
 
 if ZERO_BUILD
   ZERO_PATCHES_COND = $(ZERO_PATCHES)

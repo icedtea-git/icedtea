@@ -1,5 +1,11 @@
 2008-09-26  Mark Wielaard  <mark@klomp.org>
 
+	* patches/icedtea-6712835-ifnode.patch: New patch.
+	* Makefile.am (NON_ZERO_PATCHES): Add icedtea-6712835-ifnode.patch
+	* HACKING: Document patches/icedtea-6712835-ifnode.patch.
+
+2008-09-26  Mark Wielaard  <mark@klomp.org>
+
 	* patches/icedtea-6700047-loopopts.patch: New patch.
 	* Makefile.am (NON_ZERO_PATCHES): Add icedtea-6700047-loopopts.patch.
 	* HACKING: Document patches/icedtea-6700047-loopopts.patch.
