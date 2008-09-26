@@ -1,5 +1,11 @@
 2008-09-25  Mark Wielaard  <mark@klomp.org>
 
+	* patches/icedtea-hotspot7-tests.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-hotspot7-tests.patch.
+	* HACKING: Document icedtea-hotspot7-tests.patch.
+
+2008-09-25  Mark Wielaard  <mark@klomp.org>
+
 	* patches/icedtea-lucene-crash.patch: New patch.
 	* Makefile.am (NON_ZERO_PATCHES): Add icedtea-lucene-crash.patch.
 	* HACKING: Document icedtea-lucene-crash.patch.

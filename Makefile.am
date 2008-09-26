@@ -448,6 +448,7 @@ ICEDTEA_FSG_PATCHES =
 
 ICEDTEA_PATCHES = \
 	$(ZERO_PATCHES_COND) \
+	patches/icedtea-hotspot7-tests.patch \
 	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
