@@ -1,4 +1,10 @@
-2008-09-25  Mark Wielaard  <mark@klomp.org>
+2008-09-26  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-6700047-loopopts.patch: New patch.
+	* Makefile.am (NON_ZERO_PATCHES): Add icedtea-6700047-loopopts.patch.
+	* HACKING: Document patches/icedtea-6700047-loopopts.patch.
+
+2008-09-26  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-hotspot7-tests.patch: New patch.
 	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-hotspot7-tests.patch.
