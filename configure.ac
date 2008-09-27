@@ -31,6 +31,7 @@ dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
 
+AC_MSG_CHECKING(for JDK home directory)
 AC_ARG_WITH([gcj-home],
 	    [AS_HELP_STRING([--with-gcj-home],
                             [gcj home directory \
@@ -46,8 +47,10 @@ AC_ARG_WITH([gcj-home],
             [
               SYSTEM_GCJ_DIR=/usr/lib/jvm/java-gcj
             ])
+AC_MSG_RESULT(${SYSTEM_GCJ_DIR})
 AC_SUBST(SYSTEM_GCJ_DIR)
 
+AC_MSG_CHECKING(for existing OpenJDK installation)
 AC_ARG_WITH([openjdk-home],
             [AS_HELP_STRING([--with-openjdk-home],
                             [OpenJDK home directory \
@@ -63,8 +66,10 @@ AC_ARG_WITH([openjdk-home],
             [
               SYSTEM_OPENJDK_DIR=/usr/lib/jvm/java-openjdk
             ])
+AC_MSG_RESULT(${SYSTEM_OPENJDK_DIR})
 AC_SUBST(SYSTEM_OPENJDK_DIR)
 
+AC_MSG_CHECKING(for existing IcedTea installation)
 AC_ARG_WITH([icedtea-home],
             [AS_HELP_STRING([--with-icedtea-home],
                             [IcedTea home directory \
@@ -80,8 +85,10 @@ AC_ARG_WITH([icedtea-home],
             [
               SYSTEM_ICEDTEA_DIR=/usr/lib/jvm/java-icedtea
             ])
+AC_MSG_RESULT(${SYSTEM_ICEDTEA_DIR})
 AC_SUBST(SYSTEM_ICEDTEA_DIR)
 
+AC_MSG_CHECKING(for Ant home directory)
 AC_ARG_WITH([ant-home],
             [AS_HELP_STRING([--with-ant-home],
                             [Ant home directory (default is /usr/share/ant)])],
@@ -96,33 +103,43 @@ AC_ARG_WITH([ant-home],
             [
               SYSTEM_ANT_DIR=/usr/share/ant
             ])
+AC_MSG_RESULT(${SYSTEM_ANT_DIR})
 AC_SUBST(SYSTEM_ANT_DIR)
 
+AC_MSG_CHECKING(whether to build gcjwebplugin)
 AC_ARG_ENABLE([gcjwebplugin],
               [AS_HELP_STRING([--disable-gcjwebplugin],
                               [Disable compilation of browser plugin])],
               [enable_plugin="${enableval}"], [enable_plugin="yes"])
 AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
+AC_MSG_RESULT(${enable_plugin})
 
+AC_MSG_CHECKING(whether to build the LiveConnect plugin)
 AC_ARG_ENABLE([liveconnect],
               [AS_HELP_STRING([--enable-liveconnect],
                               [Enable experimental LiveConnect plugin])],
               [enable_liveconnect="yes"], [enable_liveconnect="no"])
 AM_CONDITIONAL(ENABLE_LIVECONNECT, test "x${enable_liveconnect}" = "xyes")
+AC_MSG_RESULT(${enable_liveconnect})
 
+AC_MSG_CHECKING(whether to build documentation)
 AC_ARG_ENABLE([docs],
 	      [AS_HELP_STRING([--disable-docs],
 	      		      [Disable generation of documentation])],
 	      [ENABLE_DOCS="${enableval}"], [ENABLE_DOCS='yes'])
 AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
+AC_MSG_RESULT(${ENABLE_DOCS})
 
+AC_MSG_CHECKING(whether to build VisualVM)
 AC_ARG_ENABLE([visualvm],
               [AS_HELP_STRING([--enable-visualvm],
 			                  [Enable compilation of visualvm. Requires that \
 							  --with-netbeans-dir=DIR is specified.])],
               [enable_visualvm="yes"], [enable_visualvm="no"])
 AM_CONDITIONAL(WITH_VISUALVM, test "x${enable_visualvm}" = "xyes")
+AC_MSG_RESULT(${enable_visualvm})
 
+AC_MSG_CHECKING(whether to build using an existing installation of IcedTea)
 AC_ARG_WITH([icedtea],
         [AS_HELP_STRING([--with-icedtea],
                         [build IcedTea with system-installed IcedTea])],
@@ -138,7 +155,9 @@ AC_ARG_WITH([icedtea],
           with_icedtea=false
         ])
 AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" = true)
+AC_MSG_RESULT(${with_icedtea})
 
+AC_MSG_CHECKING(whether to build using an existing installation of OpenJDK)
 AC_ARG_WITH([openjdk],
         [AS_HELP_STRING([--with-openjdk],
                         [build IcedTea with system-installed OpenJDK])],
@@ -154,7 +173,9 @@ AC_ARG_WITH([openjdk],
           with_openjdk=false
         ])
 AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" = true)
+AC_MSG_RESULT(${with_openjdk})
 
+AC_MSG_CHECKING(how many parallel build jobs to execute)
 AC_ARG_WITH([parallel-jobs],
 	[AS_HELP_STRING([--with-parallel-jobs],
 			[build IcedTea using the specified number of parallel jobs])],
@@ -169,6 +190,7 @@ AC_ARG_WITH([parallel-jobs],
         [
           PARALLEL_JOBS=2
         ])
+AC_MSG_RESULT(${PARALLEL_JOBS})
 AC_SUBST(PARALLEL_JOBS)
 
 SET_ARCH_DIRS
@@ -236,6 +258,9 @@ if test "x${enable_hg}" = "xyes"; then
   fi
 fi
 AC_SUBST([HG])
+
+AC_PATH_TOOL([GCJ],[gcj])
+AC_SUBST([GCJ])
 
 dnl pkgconfig cannot be used to find these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]

@@ -180,7 +180,7 @@ AC_DEFUN([FIND_JAVA],
 
 AC_DEFUN([WITH_OPENJDK_SRC_DIR],
 [
-  AC_MSG_CHECKING(openjdk sources)
+  AC_MSG_CHECKING(for an OpenJDK source directory)
   AC_ARG_WITH([openjdk-src-dir],
               [AS_HELP_STRING(--with-openjdk-src-dir,specify the location of the openjdk sources)],
   [
@@ -203,7 +203,7 @@ AC_DEFUN([FIND_ECJ_JAR],
               [AS_HELP_STRING(--with-ecj-jar,specify location of the ECJ jar)],
   [
     if test -f "${withval}"; then
-      AC_MSG_CHECKING(ecj jar)
+      AC_MSG_CHECKING(for an ecj jar)
       ECJ_JAR="${withval}"
       AC_MSG_RESULT(${withval})
     fi
@@ -244,7 +244,7 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
               [AS_HELP_STRING(--with-libgcj-jar,specify location of the libgcj 4.3.x jar)],
   [
     if test -f "${withval}"; then
-      AC_MSG_CHECKING(libgcj jar)
+      AC_MSG_CHECKING(for libgcj jar)
       LIBGCJ_JAR="${withval}"
       AC_MSG_RESULT(${withval})
     fi
@@ -281,7 +281,7 @@ AC_DEFUN([FIND_JAVAH],
               [AS_HELP_STRING(--with-javah,specify location of the javah)],
   [
     if test -f "${withval}"; then
-      AC_MSG_CHECKING(javah)
+      AC_MSG_CHECKING(for javah)
       JAVAH="${withval}"
       AC_MSG_RESULT(${withval})
     else
@@ -309,7 +309,7 @@ AC_DEFUN([FIND_JAR],
               [AS_HELP_STRING(--with-jar,specify location of the jar)],
   [
     if test -f "${withval}"; then
-      AC_MSG_CHECKING(jar)
+      AC_MSG_CHECKING(for jar)
       JAR="${withval}"
       AC_MSG_RESULT(${withval})
     else
@@ -328,7 +328,7 @@ AC_DEFUN([FIND_JAR],
   if test -z "${JAR}"; then
     AC_MSG_ERROR("jar was not found.")
   fi
-  AC_MSG_CHECKING([wether jar supports @<file> argument])
+  AC_MSG_CHECKING([whether jar supports @<file> argument])
   touch _config.txt
   cat >_config.list <<EOF
 _config.txt
@@ -351,7 +351,7 @@ AC_DEFUN([FIND_RMIC],
               [AS_HELP_STRING(--with-rmic,specify location of the rmic)],
   [
     if test -f "${withval}"; then
-      AC_MSG_CHECKING(rmic)
+      AC_MSG_CHECKING(for rmic)
       RMIC="${withval}"
       AC_MSG_RESULT(${withval})
     else
@@ -375,13 +375,16 @@ AC_DEFUN([FIND_RMIC],
 
 AC_DEFUN([FIND_ENDORSED_JARS],
 [
+  AC_MSG_CHECKING(for endorsed jars dir)
   AC_ARG_WITH([endorsed-dir],
               [AS_HELP_STRING(--with-endorsed-dir,specify directory of endorsed jars (xalan-j2.jar, xalan-j2-serializer.jar, xerces-j2.jar))],
   [
-    if test -f "${withval}/xalan-j2.jar"; then
+    if test "x${withval}" = "xno"; then
+        ENDORSED_JARS="${withval}"
+        AC_MSG_RESULT(${withval})
+    else if test -f "${withval}/xalan-j2.jar"; then
       if test -f "${withval}/xalan-j2-serializer.jar"; then
         if test -f "${withval}/xerces-j2.jar"; then
-          AC_MSG_CHECKING(endorsed jars dir)
           ENDORSED_JARS="${withval}"
           AC_MSG_RESULT(${withval})
         fi
@@ -392,7 +395,6 @@ AC_DEFUN([FIND_ENDORSED_JARS],
     ENDORSED_JARS=
   ])
   if test -z "${ENDORSED_JARS}"; then
-    AC_MSG_CHECKING(for endorsed jars dir)
     if test -f "/usr/share/java/xalan-j2.jar"; then
       if test -f "/usr/share/java/xalan-j2-serializer.jar"; then
         if test -f "/usr/share/java/xerces-j2.jar"; then
@@ -413,7 +415,7 @@ AC_DEFUN([FIND_ENDORSED_JARS],
 
 AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
 [
-  AC_MSG_CHECKING(openjdk source zip)
+  AC_MSG_CHECKING(for an OpenJDK source zip)
   AC_ARG_WITH([openjdk-src-zip],
               [AS_HELP_STRING(--with-openjdk-src-zip,specify the location of the openjdk source zip)],
   [
@@ -431,7 +433,7 @@ AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
 
 AC_DEFUN([WITH_VISUALVM_SRC_ZIP],
 [
-  AC_MSG_CHECKING(visualvm source zip)
+  AC_MSG_CHECKING(for a VisualVM source zip)
   AC_ARG_WITH([visualvm-src-zip],
               [AS_HELP_STRING(--with-visualvm-src-zip, specify the location of the visualvm source zip)],
   [
@@ -448,7 +450,7 @@ AC_DEFUN([WITH_VISUALVM_SRC_ZIP],
 
 AC_DEFUN([WITH_NETBEANS_PLATFORM_SRC_ZIP],
 [
-  AC_MSG_CHECKING(netbeans platform source zip)
+  AC_MSG_CHECKING(for a NetBeans platform source zip)
   AC_ARG_WITH([netbeans-platform-src-zip],
               [AS_HELP_STRING(--with-netbeans-platform-src-zip, specify the location of the netbeans platform source zip)],
   [
@@ -465,7 +467,7 @@ AC_DEFUN([WITH_NETBEANS_PLATFORM_SRC_ZIP],
 
 AC_DEFUN([WITH_NETBEANS_PROFILER_SRC_ZIP],
 [
-  AC_MSG_CHECKING(netbeans profiler source zip)
+  AC_MSG_CHECKING(for a NetBeans profiler source zip)
   AC_ARG_WITH([netbeans-profiler-src-zip],
               [AS_HELP_STRING(--with-netbeans-src-zip, specify the location of the netbeans profiler source zip)],
   [
@@ -482,7 +484,7 @@ AC_DEFUN([WITH_NETBEANS_PROFILER_SRC_ZIP],
 
 AC_DEFUN([WITH_ALT_JAR_BINARY],
 [
-  AC_MSG_CHECKING(alternate jar command)
+  AC_MSG_CHECKING(for an alternate jar command)
   AC_ARG_WITH([alt-jar],
               [AS_HELP_STRING(--with-alt-jar, specify the location of an alternate jar binary to use for building)],
   [
@@ -499,29 +501,24 @@ AC_DEFUN([WITH_ALT_JAR_BINARY],
 
 AC_DEFUN([FIND_XALAN2_JAR],
 [
+  AC_MSG_CHECKING(xalan2 jar)
   AC_ARG_WITH([xalan2-jar],
               [AS_HELP_STRING(--with-xalan2-jar,specify location of the xalan2 jar)],
   [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(xalan2 jar)
+    if test -f "${withval}" ; then
       XALAN2_JAR="${withval}"
-      AC_MSG_RESULT(${withval})
     fi
   ],
   [
     XALAN2_JAR=
   ])
   if test -z "${XALAN2_JAR}"; then
-    AC_MSG_CHECKING(for xalan2 jar)
     if test -e "/usr/share/java/xalan-j2.jar"; then
       XALAN2_JAR=/usr/share/java/xalan-j2.jar
-      AC_MSG_RESULT(${XALAN2_JAR})
     elif test -e "/usr/share/java/xalan2.jar"; then
       XALAN2_JAR=/usr/share/java/xalan2.jar
-      AC_MSG_RESULT(${XALAN2_JAR})
     elif test -e "/usr/share/xalan/lib/xalan.jar"; then
       XALAN2_JAR=/usr/share/xalan/lib/xalan.jar
-      AC_MSG_RESULT(${XALAN2_JAR})
     else
       AC_MSG_RESULT(no)
     fi
@@ -529,34 +526,30 @@ AC_DEFUN([FIND_XALAN2_JAR],
   if test -z "${XALAN2_JAR}"; then
     AC_MSG_ERROR("A xalan2 jar was not found.")
   fi
+  AC_MSG_RESULT(${XALAN2_JAR})
   AC_SUBST(XALAN2_JAR)
 ])
 
 AC_DEFUN([FIND_XALAN2_SERIALIZER_JAR],
 [
+  AC_MSG_CHECKING(for xalan2 serializer jar)
   AC_ARG_WITH([xalan2-serializer-jar],
               [AS_HELP_STRING(--with-xalan2-serializer-jar,specify location of the xalan2-serializer jar)],
   [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(xalan2 serializer jar)
+    if test -f "${withval}" ; then
       XALAN2_SERIALIZER_JAR="${withval}"
-      AC_MSG_RESULT(${withval})
     fi
   ],
   [
     XALAN2_SERIALIZER_JAR=
   ])
   if test -z "${XALAN2_SERIALIZER_JAR}"; then
-    AC_MSG_CHECKING(for xalan2-serializer jar)
     if test -e "/usr/share/java/xalan-j2-serializer.jar"; then
       XALAN2_SERIALIZER_JAR=/usr/share/java/xalan-j2-serializer.jar
-      AC_MSG_RESULT(${XALAN2_SERIALIZER_JAR})
     elif test -e "/usr/share/xalan-serializer/lib/serializer.jar"; then
       XALAN2_SERIALIZER_JAR=/usr/share/xalan-serializer/lib/serializer.jar
-      AC_MSG_RESULT(${XALAN2_SERIALIZER_JAR})
     elif test -e "/usr/share/java/serializer.jar"; then
       XALAN2_SERIALIZER_JAR=/usr/share/java/serializer.jar
-      AC_MSG_RESULT(${XALAN2_SERIALIZER_JAR})
     else
       AC_MSG_RESULT(no)
     fi
@@ -564,37 +557,32 @@ AC_DEFUN([FIND_XALAN2_SERIALIZER_JAR],
   if test -z "${XALAN2_SERIALIZER_JAR}"; then
     AC_MSG_ERROR("A xalan2-serializer jar was not found.")
   fi
+  AC_MSG_RESULT(${XALAN2_SERIALIZER_JAR})
   AC_SUBST(XALAN2_SERIALIZER_JAR)
 ])
 
 AC_DEFUN([FIND_XERCES2_JAR],
 [
+  AC_MSG_CHECKING(for xerces2 jar)
   AC_ARG_WITH([xerces2-jar],
               [AS_HELP_STRING(--with-xerces2-jar,specify location of the xerces2 jar)],
   [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(xerces2 jar)
+    if test -f "${withval}" ; then
       XERCES2_JAR="${withval}"
-      AC_MSG_RESULT(${withval})
     fi
   ],
   [
     XERCES2_JAR=
   ])
   if test -z "${XERCES2_JAR}"; then
-    AC_MSG_CHECKING(for xerces2 jar)
     if test -e "/usr/share/java/xerces-j2.jar"; then
       XERCES2_JAR=/usr/share/java/xerces-j2.jar
-      AC_MSG_RESULT(${XERCES2_JAR})
     elif test -e "/usr/share/java/xerces2.jar"; then
       XERCES2_JAR=/usr/share/java/xerces2.jar
-      AC_MSG_RESULT(${XERCES2_JAR})
     elif test -e "/usr/share/xerces-2/lib/xercesImpl.jar"; then
       XERCES2_JAR=/usr/share/xerces-2/lib/xercesImpl.jar
-      AC_MSG_RESULT(${XERCES2_JAR})
     elif test -e "/usr/share/java/xercesImpl.jar"; then
       XERCES2_JAR=/usr/share/java/xercesImpl.jar
-      AC_MSG_RESULT(${XERCES2_JAR})
     else
       AC_MSG_RESULT(no)
     fi
@@ -602,6 +590,7 @@ AC_DEFUN([FIND_XERCES2_JAR],
   if test -z "${XERCES2_JAR}"; then
     AC_MSG_ERROR("A xerces2 jar was not found.")
   fi
+  AC_MSG_RESULT(${XERCES2_JAR})
   AC_SUBST(XERCES2_JAR)
 ])
 
@@ -822,7 +811,7 @@ AC_DEFUN([AC_CHECK_WITH_CACAO],
 
 AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
 [
-  AC_MSG_CHECKING(CACAO home directory)
+  AC_MSG_CHECKING(for CACAO home directory)
   AC_ARG_WITH([cacao-home],
               [AS_HELP_STRING([--with-cacao-home],
                               [CACAO home directory [[default=/usr/local/cacao]]])],
@@ -847,7 +836,7 @@ AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
 
 AC_DEFUN([AC_CHECK_WITH_CACAO_SRC_ZIP],
 [
-  AC_MSG_CHECKING(CACAO source zip)
+  AC_MSG_CHECKING(for a CACAO source zip)
   AC_ARG_WITH([cacao-src-zip],
               [AS_HELP_STRING(--with-cacao-src-zip,specify the location of the CACAO source zip)],
   [

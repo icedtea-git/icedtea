@@ -1,3 +1,14 @@
+2008-09-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Build native ecj if GCJ is available.
+	* acinclude.m4:
+	Cleanup macros.
+	* configure.ac:
+	Cleanup macros and check for GCJ.
+	* javac.in:
+	Use native-ecj binary when available.
+	
 2008-09-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* patches/icedtea-override.patch:

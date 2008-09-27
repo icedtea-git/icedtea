@@ -759,7 +759,15 @@ clean-patch-fsg:
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
-stamps/overlay.stamp: stamps/patch.stamp
+stamps/native-ecj.stamp: stamps/patch.stamp
+	mkdir -p stamps ; \
+	if test "x${GCJ}" != x; then \
+	  ${GCJ} ${CFLAGS} -Wl,-Bsymbolic -o native-ecj \
+	    --main=org.eclipse.jdt.internal.compiler.batch.Main ${ECJ_JAR} ; \
+	fi ; \
+	touch stamps/native-ecj.stamp
+
+stamps/overlay.stamp: stamps/native-ecj.stamp
 	if [ -e $(abs_top_srcdir)/.hg ]; then \
 	  revision="-r`(cd $(srcdir); $(HG) tip|grep changeset|cut -d':' -f2|sed -r 's#\W+##')`" ; \
 	fi ; \
@@ -1553,6 +1561,8 @@ icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
 icedtea-debug: stamps/icedtea-debug.stamp
 
 icedtea-ecj: stamps/icedtea-ecj.stamp
+
+native-ecj: stamps/native-ecj.stamp
 
 patch-ecj: stamps/patch-ecj.stamp
 
