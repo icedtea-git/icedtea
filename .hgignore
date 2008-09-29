@@ -25,6 +25,7 @@ javap
 gcjwebplugin.so
 IcedTeaPlugin.o
 IcedTeaPlugin.so
+IcedTeaPlugin.jar
 extra-source-files.txt
 rt-source-files.txt
 hotspot-tools-source-files.txt
