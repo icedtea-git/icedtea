@@ -79,7 +79,7 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
 	$(ICEDTEA_ECJ_PATCH) gcjwebplugin.cc tools-copy contrib ports \
 	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
 	patches/icedtea-arch.patch patches/icedtea-cacao.patch \
-	javaws.png javaws.desktop \
+	javaws.png javaws.desktop visualvm.desktop \
 	overlays extra jconsole.desktop policytool.desktop \
 	test/jtreg patches/icedtea-plugin.patch \
 	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc \
