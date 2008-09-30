@@ -48,15 +48,19 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports
 	rm -rf hotspot-tools
 if ENABLE_LIVECONNECT
 	rm -f IcedTeaPlugin.so
+	rm -rf IcedTeaPlugin.jar
 else
 if ENABLE_PLUGIN
 	rm -f gcjwebplugin.so
 endif
 endif
-	rm -rf cacao
+if WITH_VISUALVM
 	rm -rf visualvm
 	rm -rf netbeans
-	rm -f gcjwebplugin.so
+endif
+if WITH_CACAO
+	rm -rf cacao
+endif
 
 install:
 
