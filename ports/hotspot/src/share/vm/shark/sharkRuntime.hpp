@@ -29,19 +29,49 @@ class SharkRuntime : public AllStatic {
 
   // VM calls
  private:
-  static llvm::Constant* _newarray;
+  static llvm::Constant* _find_exception_handler;
+  static llvm::Constant* _monitorenter;
+  static llvm::Constant* _monitorexit;
   static llvm::Constant* _new_instance;
+  static llvm::Constant* _newarray;
+  static llvm::Constant* _anewarray;
+  static llvm::Constant* _multianewarray;
   static llvm::Constant* _resolve_get_put;
   static llvm::Constant* _resolve_invoke;
+  static llvm::Constant* _resolve_klass;
+  static llvm::Constant* _safepoint;
+  static llvm::Constant* _throw_ArrayIndexOutOfBoundsException;
+  static llvm::Constant* _throw_NullPointerException;
+  static llvm::Constant* _trace_bytecode;
 
  public:
-  static llvm::Constant* newarray()
+  static llvm::Constant* find_exception_handler()
   {
-    return _newarray;
+    return _find_exception_handler;
+  }
+  static llvm::Constant* monitorenter()
+  {
+    return _monitorenter;
+  }
+  static llvm::Constant* monitorexit()
+  {
+    return _monitorexit;
   }
   static llvm::Constant* new_instance()
   {
     return _new_instance;
+  }
+  static llvm::Constant* newarray()
+  {
+    return _newarray;
+  }
+  static llvm::Constant* anewarray()
+  {
+    return _anewarray;
+  }
+  static llvm::Constant* multianewarray()
+  {
+    return _multianewarray;
   }
   static llvm::Constant* resolve_get_put()
   {
@@ -51,10 +81,43 @@ class SharkRuntime : public AllStatic {
   {
     return _resolve_invoke;
   }
+  static llvm::Constant* resolve_klass()
+  {
+    return _resolve_klass;
+  }
+  static llvm::Constant* safepoint()
+  {
+    return _safepoint;
+  }
+  static llvm::Constant* throw_ArrayIndexOutOfBoundsException()
+  {
+    return _throw_ArrayIndexOutOfBoundsException;
+  }
+  static llvm::Constant* throw_NullPointerException()
+  {
+    return _throw_NullPointerException;
+  }  
+  static llvm::Constant* trace_bytecode()
+  {
+    return _trace_bytecode;
+  }
 
  private:
+  static int find_exception_handler_C(JavaThread* thread,
+                                      int*        indexes,
+                                      int         num_indexes);
+
+  static void monitorenter_C(JavaThread* thread, BasicObjectLock* lock);
+  static void monitorexit_C(JavaThread* thread, BasicObjectLock* lock);
+
+  static void new_instance_C(JavaThread* thread, int index);
   static void newarray_C(JavaThread* thread, BasicType type, int size);
-  static void new_instance_C(JavaThread* thread, klassOop klass);
+  static void anewarray_C(JavaThread* thread, int index, int size);
+  static void multianewarray_C(JavaThread* thread,
+                               int         index,
+                               int         ndims,
+                               int*        dims);
+
   static void resolve_get_put_C(JavaThread*             thread,
                                 ConstantPoolCacheEntry* entry,
                                 int                     bci,
@@ -63,6 +126,18 @@ class SharkRuntime : public AllStatic {
                                ConstantPoolCacheEntry* entry,
                                int                     bci,
                                Bytecodes::Code         bytecode);
+  static void resolve_klass_C(JavaThread* thread, int index);
+  static void throw_ArrayIndexOutOfBoundsException_C(JavaThread* thread,
+                                                     const char* file,
+                                                     int         line,
+                                                     int         index);
+  static void throw_NullPointerException_C(JavaThread* thread,
+                                           const char* file,
+                                           int         line);
+  static void trace_bytecode_C(JavaThread* thread,
+                               int         bci,
+                               intptr_t    tos,
+                               intptr_t    tos2);
 
   // Helpers for VM calls
  private:
@@ -93,6 +168,7 @@ class SharkRuntime : public AllStatic {
   static llvm::Constant* _is_subtype_of;
   static llvm::Constant* _should_not_reach_here;
   static llvm::Constant* _unimplemented;
+  static llvm::Constant* _uncommon_trap;
 
  public:
   static llvm::Constant* dump()
@@ -111,8 +187,13 @@ class SharkRuntime : public AllStatic {
   {
     return _unimplemented;
   }
+  static llvm::Constant* uncommon_trap()
+  {
+    return _uncommon_trap;
+  }
 
  private:
   static void dump_C(const char *name, intptr_t value);
   static bool is_subtype_of_C(klassOop check_klass, klassOop object_klass); 
+  static void uncommon_trap_C(JavaThread* thread, int index);
 };

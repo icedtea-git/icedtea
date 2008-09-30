@@ -84,6 +84,9 @@ class ZeroStackPrinter {
       case ZeroFrame::SHARK_FRAME:
         value = "SHARK_FRAME";
         break;
+      case ZeroFrame::DEOPTIMIZER_FRAME:
+        value = "DEOPTIMIZER_FRAME";
+        break;
       }
       break;
     }
@@ -101,11 +104,12 @@ class ZeroStackPrinter {
       if (frame->is_interpreter_frame()) {
         interpreterState istate =
           ((InterpreterFrame *) frame)->interpreter_state();
-        intptr_t *monitor_base = (intptr_t *) istate->monitor_base();
+        bool is_valid = istate->self_link() == istate;
+        
         if (addr >= (intptr_t *) istate) {
           field = istate->name_of_field_at_address((address) addr);
           if (field) {
-            if (!strcmp(field, "_method")) {
+            if (is_valid && !strcmp(field, "_method")) {
               value = istate->method()->name_and_sig_as_C_string(_buf,_buflen);
               field = "istate->_method";
             }
@@ -119,66 +123,69 @@ class ZeroStackPrinter {
             field = "(vtable for istate)";
           }
         }
-        else if (addr >= istate->stack_base() && addr < monitor_base) {
-          int monitor_size = frame::interpreter_frame_monitor_size();
-          int last_index =
-            (monitor_base - istate->stack_base()) / monitor_size - 1;
-          int index =
-            last_index - (addr - istate->stack_base()) / monitor_size;
-          intptr_t monitor = (intptr_t) (istate->monitor_base() - 1 - index);
-          intptr_t offset = (intptr_t) addr - monitor;
-          
-          if (offset == BasicObjectLock::obj_offset_in_bytes()) {
-            snprintf(_buf, _buflen, "monitor[%d]->_obj", index);
-            field = _buf;
+        else if (is_valid) {
+          intptr_t *monitor_base = (intptr_t *) istate->monitor_base();
+          if (addr >= istate->stack_base() && addr < monitor_base) {
+            int monitor_size = frame::interpreter_frame_monitor_size();
+            int last_index =
+              (monitor_base - istate->stack_base()) / monitor_size - 1;
+            int index =
+              last_index - (addr - istate->stack_base()) / monitor_size;
+            intptr_t monitor = (intptr_t) (istate->monitor_base() - 1 - index);
+            intptr_t offset = (intptr_t) addr - monitor;
+            
+            if (offset == BasicObjectLock::obj_offset_in_bytes()) {
+              snprintf(_buf, _buflen, "monitor[%d]->_obj", index);
+              field = _buf;
+            }
+            else if (offset ==  BasicObjectLock::lock_offset_in_bytes()) {
+              snprintf(_buf, _buflen, "monitor[%d]->_lock", index);
+              field = _buf;
+            }
           }
-          else if (offset ==  BasicObjectLock::lock_offset_in_bytes()) {
-            snprintf(_buf, _buflen, "monitor[%d]->_lock", index);
-            field = _buf;
-          }
-        }
-        else if (addr < istate->stack_base()) {
-          if (istate->method()->is_native()) {
-            address hA = istate->method()->signature_handler();
-            if (hA != NULL) {
-              if (hA != (address) InterpreterRuntime::slow_signature_handler) {
-                InterpreterRuntime::SignatureHandler *handler =
-                  InterpreterRuntime::SignatureHandler::from_handlerAddr(hA);
-
-                intptr_t *params =
-                  istate->stack_base() - handler->argument_count();
-
-                if (addr >= params) {
-                  int param = addr - params;
-                  const char *desc = "";
-                  if (param == 0)
-                    desc = " (JNIEnv)";
-                  else if (param == 1) {
-                    if (istate->method()->is_static())
-                      desc = " (mirror)";
-                    else
-                      desc = " (this)";
-                  }
-                  snprintf(_buf, _buflen, "parameter[%d]%s", param, desc);
-                  field = _buf;
-                }
-                else {
-                  for (int i = 0; i < handler->argument_count(); i++) {
-                    if (params[i] == (intptr_t) addr) {
-                      snprintf(_buf, _buflen, "unboxed parameter[%d]", i);
-                      field = _buf;
-                      break;
+          else if (addr < istate->stack_base()) {
+            if (istate->method()->is_native()) {
+              address hA = istate->method()->signature_handler();
+              if (hA != NULL) {
+                if (hA != (address)InterpreterRuntime::slow_signature_handler){
+                  InterpreterRuntime::SignatureHandler *handler =
+                    InterpreterRuntime::SignatureHandler::from_handlerAddr(hA);
+  
+                  intptr_t *params =
+                    istate->stack_base() - handler->argument_count();
+  
+                  if (addr >= params) {
+                    int param = addr - params;
+                    const char *desc = "";
+                    if (param == 0)
+                      desc = " (JNIEnv)";
+                    else if (param == 1) {
+                      if (istate->method()->is_static())
+                        desc = " (mirror)";
+                      else
+                        desc = " (this)";
                     }
-                  } 
+                    snprintf(_buf, _buflen, "parameter[%d]%s", param, desc);
+                    field = _buf;
+                  }
+                  else {
+                    for (int i = 0; i < handler->argument_count(); i++) {
+                      if (params[i] == (intptr_t) addr) {
+                        snprintf(_buf, _buflen, "unboxed parameter[%d]", i);
+                        field = _buf;
+                        break;
+                      }
+                    } 
+                  }
                 }
               }
             }
-          }
-          else {
-            snprintf(_buf, _buflen, "%s[%d]",
-                     top_frame ? "stack_word" : "local",
-                     istate->stack_base() - addr - 1);
-            field = _buf;
+            else {
+              snprintf(_buf, _buflen, "%s[%d]",
+                       top_frame ? "stack_word" : "local",
+                       istate->stack_base() - addr - 1);
+              field = _buf;
+            }
           }
         }
       }
@@ -194,6 +201,9 @@ class ZeroStackPrinter {
           methodOop method = ((SharkFrame *) frame)->method();
           if (method->is_oop())
             value = method->name_and_sig_as_C_string(_buf, _buflen);
+        }
+        else if (word == SharkFrame::exception_off) {
+          field = "exception";
         }
         else {
           SharkFrame *sf = (SharkFrame *) frame;

@@ -1,6 +1,6 @@
 /*
- * Copyright 1997-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2007, 2008 Red Hat, Inc.
+ * Copyright 2003-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2008 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,18 +23,27 @@
  *
  */
 
+// |  ...               |
+// +--------------------+  ------------------
+// | frame_type         |       low addresses
+// | next_frame         |      high addresses
+// +--------------------+  ------------------
+// |  ...               |
+
+class DeoptimizerFrame : public ZeroFrame {
+  friend class ZeroStackPrinter;
+
+ private:
+  DeoptimizerFrame() : ZeroFrame()
+  {
+    ShouldNotCallThis();
+  }
 
  protected:
-  // Size of interpreter code
-  const static int InterpreterCodeSize = 6 * K;
+  enum Layout {
+    header_words = jf_header_words
+  };
 
  public:
-  // Method entries
-  static void normal_entry(methodOop method, intptr_t UNUSED, TRAPS);
-  static void native_entry(methodOop method, intptr_t UNUSED, TRAPS);
-  static void accessor_entry(methodOop method, intptr_t UNUSED, TRAPS);
-  static void empty_entry(methodOop method, intptr_t UNUSED, TRAPS);
-
- public:
-  // Main loop of normal_entry
-  static void main_loop(int recurse, TRAPS);
+  static DeoptimizerFrame *build(ZeroStack* stack);
+};

@@ -110,6 +110,12 @@ class ZeroStack {
   } 
 };
 
+
+class EntryFrame;
+class InterpreterFrame;
+class SharkFrame;
+class DeoptimizerFrame;
+
 // 
 // |  ...               |
 // +--------------------+  ------------------
@@ -138,7 +144,8 @@ class ZeroFrame {
   enum FrameType {
     ENTRY_FRAME = 1,
     INTERPRETER_FRAME,
-    SHARK_FRAME
+    SHARK_FRAME,
+    DEOPTIMIZER_FRAME
   };
 
  protected:
@@ -179,8 +186,34 @@ class ZeroFrame {
   {
     return type() == SHARK_FRAME;
   }
-};
 
-class EntryFrame;
-class InterpreterFrame;
-class SharkFrame;
+  bool is_deoptimizer_frame() const
+  {
+    return type() == DEOPTIMIZER_FRAME;
+  }
+
+ public:
+  EntryFrame *as_entry_frame() const
+  {
+    assert(is_entry_frame(), "should be");
+    return (EntryFrame *) this;
+  }
+
+  InterpreterFrame *as_interpreter_frame() const
+  {
+    assert(is_interpreter_frame(), "should be");
+    return (InterpreterFrame *) this;
+  }
+
+  SharkFrame *as_shark_frame() const
+  {
+    assert(is_shark_frame(), "should be");
+    return (SharkFrame *) this;
+  }
+
+  DeoptimizerFrame *as_deoptimizer_frame() const
+  {
+    assert(is_deoptimizer_frame(), "should be");
+    return (DeoptimizerFrame *) this;
+  }
+};

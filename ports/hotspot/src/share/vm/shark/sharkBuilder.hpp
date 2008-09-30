@@ -23,7 +23,7 @@
  *
  */
 
-class SharkBuilder : public llvm::IRBuilder<> {
+class SharkBuilder : public llvm::IRBuilder {
  public:
   SharkBuilder();
 

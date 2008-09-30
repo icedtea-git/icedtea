@@ -43,11 +43,12 @@ void SharkMonitor::initialize()
     "displaced_header_addr");
 }
 
-void SharkMonitor::acquire(Value *lockee) const
+void SharkMonitor::acquire(SharkBlock* block, Value *lockee) const
 {
   BasicBlock *try_recursive = function()->CreateBlock("try_recursive");
   BasicBlock *got_recursive = function()->CreateBlock("got_recursive");
   BasicBlock *not_recursive = function()->CreateBlock("not_recursive");
+  BasicBlock *acquired_fast = function()->CreateBlock("acquired_fast");
   BasicBlock *lock_acquired = function()->CreateBlock("lock_acquired");
 
   set_object(lockee);
@@ -69,7 +70,7 @@ void SharkMonitor::acquire(Value *lockee) const
   Value *check = builder()->CreateCmpxchgPtr(lock, mark_addr, disp);
   builder()->CreateCondBr(
     builder()->CreateICmpEQ(disp, check),
-    lock_acquired, try_recursive);
+    acquired_fast, try_recursive);
 
   // Locking failed, but maybe this thread already owns it
   builder()->SetInsertPoint(try_recursive);
@@ -101,21 +102,29 @@ void SharkMonitor::acquire(Value *lockee) const
                          
   builder()->SetInsertPoint(got_recursive);
   set_displaced_header(LLVMValue::intptr_constant(0));
+  builder()->CreateBr(acquired_fast);
+
+  // Create an edge for the state merge
+  builder()->SetInsertPoint(acquired_fast);
+  SharkState *fast_state = block->current_state()->copy();
   builder()->CreateBr(lock_acquired);
 
   // It's not a recursive case so we need to drop into the runtime
   builder()->SetInsertPoint(not_recursive);
-  builder()->CreateUnimplemented(__FILE__, __LINE__);
-  builder()->CreateUnreachable();
+  block->call_vm_nocheck(SharkRuntime::monitorenter(), monitor());
+  BasicBlock *acquired_slow = builder()->GetInsertBlock();
+  builder()->CreateBr(lock_acquired);  
 
   // All done
-  builder()->SetInsertPoint(lock_acquired);  
+  builder()->SetInsertPoint(lock_acquired);
+  block->current_state()->merge(fast_state, acquired_fast, acquired_slow);
 }
 
-void SharkMonitor::release() const
+void SharkMonitor::release(SharkBlock* block) const
 {
   BasicBlock *not_recursive = function()->CreateBlock("not_recursive");
-  BasicBlock *call_runtime  = function()->CreateBlock("call_runtime");
+  BasicBlock *released_fast = function()->CreateBlock("released_fast");
+  BasicBlock *slow_path     = function()->CreateBlock("slow_path");
   BasicBlock *lock_released = function()->CreateBlock("lock_released");
 
   Value *disp = displaced_header();
@@ -125,7 +134,7 @@ void SharkMonitor::release() const
   // If it is recursive then we're already done
   builder()->CreateCondBr(
     builder()->CreateICmpEQ(disp, LLVMValue::intptr_constant(0)),
-    lock_released, not_recursive);
+    released_fast, not_recursive);
 
   // Try a simple unlock
   builder()->SetInsertPoint(not_recursive);
@@ -141,14 +150,21 @@ void SharkMonitor::release() const
   Value *check = builder()->CreateCmpxchgPtr(disp, mark_addr, lock);
   builder()->CreateCondBr(
     builder()->CreateICmpEQ(lock, check),
-    lock_released, call_runtime);
+    released_fast, slow_path);
+
+  // Create an edge for the state merge
+  builder()->SetInsertPoint(released_fast);
+  SharkState *fast_state = block->current_state()->copy();
+  builder()->CreateBr(lock_released);  
 
   // Need to drop into the runtime to release this one
-  builder()->SetInsertPoint(call_runtime);
+  builder()->SetInsertPoint(slow_path);
   set_object(lockee);
-  builder()->CreateUnimplemented(__FILE__, __LINE__);
-  builder()->CreateUnreachable();
+  block->call_vm_nocheck(SharkRuntime::monitorexit(), monitor());
+  BasicBlock *released_slow = builder()->GetInsertBlock();
+  builder()->CreateBr(lock_released);  
 
   // All done
   builder()->SetInsertPoint(lock_released);
+  block->current_state()->merge(fast_state, released_fast, released_slow);
 }

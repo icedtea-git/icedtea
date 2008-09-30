@@ -38,6 +38,11 @@ bool frame::is_interpreted_frame() const
   return zeroframe()->is_interpreter_frame();
 }
 
+bool frame::is_deoptimizer_frame() const
+{
+  return zeroframe()->is_deoptimizer_frame();
+}
+
 frame frame::sender_for_entry_frame(RegisterMap *map) const
 {
   assert(map != NULL, "map must be set");
@@ -59,6 +64,11 @@ frame frame::sender_for_compiled_frame(RegisterMap *map) const
   return frame(sender_sp());
 }
 
+frame frame::sender_for_deoptimizer_frame(RegisterMap *map) const
+{
+  return frame(sender_sp());
+}
+
 frame frame::sender(RegisterMap* map) const
 {
   // Default is not to follow arguments; the various
@@ -75,6 +85,9 @@ frame frame::sender(RegisterMap* map) const
   if (_cb != NULL) {
     return sender_for_compiled_frame(map);
   }
+
+  if (is_deoptimizer_frame())
+    return sender_for_deoptimizer_frame(map);
 
   Unimplemented();
 }
@@ -93,7 +106,14 @@ BasicObjectLock* frame::interpreter_frame_monitor_end() const
 
 void frame::patch_pc(Thread* thread, address pc)
 {
+#ifdef SHARK
+  // We borrow this call to set the thread pointer in the interpreter
+  // state; the hook to set up deoptimized frames isn't supplied it.
+  assert(pc == NULL, "should be");
+  get_interpreterState()->set_thread((JavaThread *) thread);
+#else
   Unimplemented();
+#endif // SHARK
 }
 
 bool frame::safe_for_sender(JavaThread *thread)
@@ -118,7 +138,11 @@ BasicType frame::interpreter_frame_result(oop* oop_result,
 
 int frame::frame_size() const
 {
-  Unimplemented();
+#ifdef PRODUCT
+  ShouldNotCallThis();
+#else
+  return 0; // make javaVFrame::print_value work
+#endif // PRODUCT
 }
 
 intptr_t* frame::interpreter_frame_tos_at(jint offset) const

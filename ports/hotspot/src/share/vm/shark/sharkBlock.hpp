@@ -28,19 +28,15 @@ class SharkBlock : public ResourceObj {
   SharkBlock(SharkFunction* function, ciTypeFlow::Block* ciblock)
     : _function(function),
       _ciblock(ciblock),
-      _num_predecessors(0),
-      _entered_backwards(false),
+      _entered(false),
+      _needs_phis(false),
       _entry_state(NULL),
-      _current_state(NULL)
-  { initialize(); }
-
- private:
-  void initialize();
+      _entry_block(NULL),
+      _current_state(NULL) {}
 
  private:
   SharkFunction*     _function;
   ciTypeFlow::Block* _ciblock;
-  llvm::BasicBlock*  _entry_block;
 
  public:
   SharkFunction* function() const
@@ -51,23 +47,11 @@ class SharkBlock : public ResourceObj {
   {
     return _ciblock;
   }
-  llvm::BasicBlock* entry_block() const
-  {
-    return _entry_block;
-  }
 
  public:
   SharkBuilder* builder() const
   {
     return function()->builder();
-  }
-  bool failing() const
-  {
-    return function()->failing();
-  }
-  void record_method_not_compilable(const char* reason) const
-  {
-    function()->record_method_not_compilable(reason);
   }
   ciMethod* target() const
   {
@@ -87,6 +71,10 @@ class SharkBlock : public ResourceObj {
   bool has_trap() const
   {
     return ciblock()->has_trap();
+  }
+  int trap_index() const
+  {
+    return ciblock()->trap_index();
   }
   bool is_private_copy() const
   {
@@ -124,6 +112,14 @@ class SharkBlock : public ResourceObj {
   {
     return ciblock()->control() == ciBlock::fall_through_bci;
   }
+  int num_exceptions() const
+  {
+    return ciblock()->exceptions()->length();
+  }
+  SharkBlock* exception(int index) const
+  {
+    return function()->block(ciblock()->exceptions()->at(index)->pre_order());
+  }
   int num_successors() const
   {
     return ciblock()->successors()->length();
@@ -131,6 +127,12 @@ class SharkBlock : public ResourceObj {
   SharkBlock* successor(int index) const
   {
     return function()->block(ciblock()->successors()->at(index)->pre_order());
+  }
+  int jsr_ret_bci() const
+  {
+    int jsr_level = ciblock()->jsrset()->size();
+    assert(jsr_level > 0, "should be");
+    return ciblock()->jsrset()->record_at(jsr_level - 1)->return_address();
   }
   SharkBlock* bci_successor(int bci) const;
 
@@ -151,28 +153,32 @@ class SharkBlock : public ResourceObj {
 
   // Entry state
  private:
-  int         _num_predecessors;
-  bool        _entered_backwards;
-  SharkState* _entry_state;
+  bool _entered;
+  bool _needs_phis;
 
  public:
-  void add_predecessor(SharkBlock* predecessor)
+  bool entered() const
   {
-    _num_predecessors++;
-    if (predecessor && !_entered_backwards) {
-      if (predecessor->index() >= this->index())
-        _entered_backwards = true;
-    }
-  }
- private:
-  bool never_entered() const
-  {
-    return _num_predecessors == 0;
+    return _entered;
   }
   bool needs_phis() const
   {
-    return _entered_backwards || (_num_predecessors > 1);
+    return _needs_phis;
   }
+
+ private:
+  void enter(SharkBlock* predecessor, bool is_exception);
+
+ public:
+  void enter()
+  {
+    enter(NULL, false);
+  }
+
+ private:
+  SharkState* _entry_state;
+
+ private:
   SharkState* entry_state()
   {
     if (_entry_state == NULL) {
@@ -182,13 +188,25 @@ class SharkBlock : public ResourceObj {
     return _entry_state;
   }
 
+ private:
+  llvm::BasicBlock* _entry_block;
+
+ public:
+  llvm::BasicBlock* entry_block() const
+  {
+    return _entry_block;
+  }
+
+ public:
+  void initialize();
+
  public:
   void add_incoming(SharkState* incoming_state)
   {
     if (needs_phis()) {
       ((SharkPHIState *) entry_state())->add_incoming(incoming_state);
     }
-    else {
+    else if (_entry_state != incoming_state) {
       assert(_entry_state == NULL, "should be");
       _entry_state = incoming_state;
     }
@@ -197,80 +215,131 @@ class SharkBlock : public ResourceObj {
   // Current state
  private:
   SharkTrackingState* _current_state;
-  
+
+ private:
+  void set_current_state(SharkTrackingState* current_state)
+  {
+    _current_state = current_state;
+  }
+
  public:
   SharkTrackingState* current_state()
   {
     if (_current_state == NULL)
-      _current_state = new SharkTrackingState(entry_state());
+      set_current_state(new SharkTrackingState(entry_state()));
     return _current_state;
   }
 
+  // Method
  public:
   llvm::Value* method()
   {
     return current_state()->method();
   }
+
+  // Local variables  
  private:
   SharkValue* local(int index)
   {
-    return current_state()->local(index);
+    SharkValue *value = current_state()->local(index);
+    assert(value != NULL, "shouldn't be");
+    assert(value->is_one_word() ||
+           (index + 1 < max_locals() &&
+            current_state()->local(index + 1) == NULL), "should be");
+    return value;
   }
   void set_local(int index, SharkValue* value)
   {
+    assert(value != NULL, "shouldn't be");
     current_state()->set_local(index, value);
+    if (value->is_two_word())
+      current_state()->set_local(index + 1, NULL);
   }
-  void push(SharkValue* value)
+
+  // Expression stack (raw)
+ private:
+  void xpush(SharkValue* value)
   {
     current_state()->push(value);
   }
-  SharkValue* pop()
+  SharkValue* xpop()
   {
     return current_state()->pop();
   }
-  int stack_depth()
+  SharkValue* xstack(int slot)
+  {
+    SharkValue *value = current_state()->stack(slot);
+    assert(value != NULL, "shouldn't be");
+    assert(value->is_one_word() ||
+           (slot > 0 &&
+            current_state()->stack(slot - 1) == NULL), "should be");
+    return value;
+  }
+  int xstack_depth()
   {
     return current_state()->stack_depth();
   }
-  SharkValue* stack(int slot)
-  {
-    return current_state()->stack(slot);
-  }  
 
-  // Handy macros for the various pop, swap and dup bytecodes
+  // Expression stack (cooked)
  private:
-  SharkValue* pop_and_assert_one_word()
+  void push(SharkValue* value)
   {
-    SharkValue* result = pop();
-    assert(result->is_one_word(), "should be");
-    return result;
+    assert(value != NULL, "shouldn't be");
+    xpush(value);
+    if (value->is_two_word())
+      xpush(NULL);
   }
-  SharkValue* pop_and_assert_two_word()
+  SharkValue* pop()
   {
-    SharkValue* result = pop();
-    assert(result->is_two_word(), "should be");
-    return result;
+    int size = current_state()->stack(0) == NULL ? 2 : 1;
+    if (size == 2)
+      xpop();
+    SharkValue *value = xpop();
+    assert(value && value->size() == size, "should be");
+    return value;
   }
 
   // VM calls
  private:
-  llvm::CallInst* call_vm_base(llvm::Constant* callee,
-                               llvm::Value**   args_start,
-                               llvm::Value**   args_end);
+  llvm::CallInst* call_vm_nocheck(llvm::Constant* callee,
+                                  llvm::Value**   args_start,
+                                  llvm::Value**   args_end)
+  {
+    current_state()->decache_for_VM_call();
+    function()->set_last_Java_frame();
+    llvm::CallInst *res = builder()->CreateCall(callee, args_start, args_end);
+    function()->reset_last_Java_frame();
+    current_state()->cache_after_VM_call();
+    return res;
+  }
+
+  llvm::CallInst* call_vm(llvm::Constant* callee,
+                          llvm::Value**   args_start,
+                          llvm::Value**   args_end)
+  {
+    llvm::CallInst* res = call_vm_nocheck(callee, args_start, args_end);
+    check_pending_exception();
+    return res;
+  }
 
  public:
+  llvm::CallInst* call_vm(llvm::Constant* callee)
+  {
+    llvm::Value *args[] = {thread()};
+    return call_vm(callee, args, args + 1);
+  }
   llvm::CallInst* call_vm(llvm::Constant* callee,
                           llvm::Value*    arg1)
   {
     llvm::Value *args[] = {thread(), arg1};
-    return call_vm_base(callee, args, args + 2);
+    return call_vm(callee, args, args + 2);
   }
   llvm::CallInst* call_vm(llvm::Constant* callee,
                           llvm::Value*    arg1,
                           llvm::Value*    arg2)
   {
     llvm::Value *args[] = {thread(), arg1, arg2};
-    return call_vm_base(callee, args, args + 3);
+    return call_vm(callee, args, args + 3);
   }
   llvm::CallInst* call_vm(llvm::Constant* callee,
                           llvm::Value*    arg1,
@@ -278,12 +347,40 @@ class SharkBlock : public ResourceObj {
                           llvm::Value*    arg3)
   {
     llvm::Value *args[] = {thread(), arg1, arg2, arg3};
-    return call_vm_base(callee, args, args + 4);
+    return call_vm(callee, args, args + 4);
   }
 
-  // Code generation
+  llvm::CallInst* call_vm_nocheck(llvm::Constant* callee)
+  {
+    llvm::Value *args[] = {thread()};
+    return call_vm_nocheck(callee, args, args + 1);
+  }
+  llvm::CallInst* call_vm_nocheck(llvm::Constant* callee,
+                                  llvm::Value*    arg1)
+  {
+    llvm::Value *args[] = {thread(), arg1};
+    return call_vm_nocheck(callee, args, args + 2);
+  }
+  llvm::CallInst* call_vm_nocheck(llvm::Constant* callee,
+                                  llvm::Value*    arg1,
+                                  llvm::Value*    arg2)
+  {
+    llvm::Value *args[] = {thread(), arg1, arg2};
+    return call_vm_nocheck(callee, args, args + 3);
+  }
+  llvm::CallInst* call_vm_nocheck(llvm::Constant* callee,
+                                  llvm::Value*    arg1,
+                                  llvm::Value*    arg2,
+                                  llvm::Value*    arg3)
+  {
+    llvm::Value *args[] = {thread(), arg1, arg2, arg3};
+    return call_vm_nocheck(callee, args, args + 4);
+  }
+
+  // Whole-method synchronization
  public:
-  void parse();
+  void acquire_method_lock();  
+  void release_method_lock();  
 
   // Error checking
  private:
@@ -297,11 +394,17 @@ class SharkBlock : public ResourceObj {
   }
   void check_zero(SharkValue* value);
   void check_bounds(SharkValue* array, SharkValue* index);
-  void check_pending_exception();
-  
+  void check_pending_exception(bool attempt_catch = true);
+  void handle_exception(llvm::Value* exception, bool attempt_catch = true);
+
   // Safepoints
  private:
   void add_safepoint();
+
+  // Returns
+ private:
+  void handle_return(BasicType type, llvm::Value* exception);
+  void release_locked_monitors();
 
   // ldc*
  private:
@@ -356,37 +459,65 @@ class SharkBlock : public ResourceObj {
   }
   void do_field_access(bool is_get, bool is_field);
 
-  // lcmp
+  // lcmp and [fd]cmp[lg]
  private:
   void do_lcmp();
+  void do_fcmp(bool is_double, bool unordered_is_greater);
 
-  // *return
+  // *return and athrow
  private:
-  void do_return(BasicType basic_type);
+  void do_return(BasicType type)
+  {
+    add_safepoint();
+    handle_return(type, NULL);
+  }
+  void do_athrow()
+  {
+    SharkValue *exception = pop();
+    check_null(exception);
+    handle_exception(exception->jobject_value());
+  }
 
   // if*
  private:
   void do_if(llvm::ICmpInst::Predicate p, SharkValue* b, SharkValue* a);
 
-  // *switch
+  // tableswitch and lookupswitch
  private:
-  void do_tableswitch();
+  int switch_default_dest();
+  int switch_table_length();
+  int switch_key(int i);
+  int switch_dest(int i);
+
+  void do_switch();
 
   // invoke*
  private:
+  llvm::Value* get_basic_callee(llvm::Value* cache);
+  llvm::Value* get_virtual_callee(llvm::Value* cache, SharkValue* receiver);
+  llvm::Value* get_interface_callee(llvm::Value* cache, SharkValue* receiver);
+
+  llvm::Value* get_callee(llvm::Value* cache, SharkValue* receiver);
+
   void do_call();
 
   // checkcast and instanceof
  private:
   void do_instance_check();
 
-  // new and newarray
+  // new and *newarray
  private:
   void do_new();
   void do_newarray();
+  void do_anewarray();
+  void do_multianewarray();
 
   // monitorenter and monitorexit
  private:
   void do_monitorenter();
   void do_monitorexit();
+
+  // The big one
+ public:
+  void parse();
 };

@@ -56,7 +56,24 @@ void CppInterpreter::normal_entry(methodOop method, intptr_t UNUSED, TRAPS)
   // Allocate and initialize our frame.
   InterpreterFrame *frame = InterpreterFrame::build(stack, method, thread);
   thread->push_zero_frame(frame);
+
+  // Execute those bytecodes!
+  main_loop(0, THREAD);
+}
+
+void CppInterpreter::main_loop(int recurse, TRAPS)
+{
+  JavaThread *thread = (JavaThread *) THREAD;
+  ZeroStack *stack = thread->zero_stack();
+
+  // If we are entering from a deopt we may need to call
+  // ourself a few times in order to get to our frame.
+  if (recurse)
+    main_loop(recurse - 1, THREAD);
+
+  InterpreterFrame *frame = thread->top_zero_frame()->as_interpreter_frame();
   interpreterState istate = frame->interpreter_state();
+  methodOop method = istate->method();
 
   intptr_t *result = NULL;
   int result_slots = 0;
@@ -79,13 +96,13 @@ void CppInterpreter::normal_entry(methodOop method, intptr_t UNUSED, TRAPS)
 
     // Examine the message from the interpreter to decide what to do
     if (istate->msg() == BytecodeInterpreter::call_method) {
-      method = istate->callee();
+      methodOop callee = istate->callee();
 
       // Trim back the stack to put the parameters at the top
       stack->set_sp(istate->stack() + 1);
     
       // Make the call
-      Interpreter::invoke_method(method, istate->callee_entry_point(), THREAD);
+      Interpreter::invoke_method(callee, istate->callee_entry_point(), THREAD);
       fixup_after_potential_safepoint();
 
       // Convert the result
@@ -95,7 +112,6 @@ void CppInterpreter::normal_entry(methodOop method, intptr_t UNUSED, TRAPS)
       stack->set_sp(istate->stack_limit() + 1);    
 
       // Resume the interpreter
-      method = istate->method();
       istate->set_msg(BytecodeInterpreter::method_resume);
     }
     else if (istate->msg() == BytecodeInterpreter::more_monitors) {
@@ -689,26 +705,123 @@ InterpreterGenerator::InterpreterGenerator(StubQueue* code)
    generate_all();
 }
 
-// Helper for (runtime) stack overflow checks
+// Deoptimization helpers
 
-int AbstractInterpreter::size_top_interpreter_activation(methodOop method)
+InterpreterFrame *InterpreterFrame::build(ZeroStack* stack, int size)
 {
-  return 0;
+  int size_in_words = size >> LogBytesPerWord;
+  assert(size_in_words * wordSize == size, "unaligned");
+  assert(size_in_words >= header_words, "too small");
+
+  if (size_in_words > stack->available_words()) {
+    Unimplemented();
+  }
+
+  stack->push(0); // next_frame, filled in later
+  intptr_t *fp = stack->sp();
+  assert(fp - stack->sp() == next_frame_off, "should be");
+
+  stack->push(INTERPRETER_FRAME);
+  assert(fp - stack->sp() == frame_type_off, "should be");
+
+  interpreterState istate =
+    (interpreterState) stack->alloc(sizeof(BytecodeInterpreter));
+  assert(fp - stack->sp() == istate_off, "should be");
+  istate->set_self_link(NULL); // mark invalid
+
+  stack->alloc((size_in_words - header_words) * wordSize);
+
+  return (InterpreterFrame *) fp;
 }
 
-// Deoptimization helpers for C++ interpreter
-
 int AbstractInterpreter::layout_activation(methodOop method,
-                                           int tempcount,
-                                           int popframe_extra_args,
-                                           int moncount,
-                                           int callee_param_count,
-                                           int callee_locals,
-                                           frame* caller,
-                                           frame* interpreter_frame,
-                                           bool is_top_frame)
+                                           int       tempcount,
+                                           int       popframe_extra_args,
+                                           int       moncount,
+                                           int       callee_param_count,
+                                           int       callee_locals,
+                                           frame*    caller,
+                                           frame*    interpreter_frame,
+                                           bool      is_top_frame)
 {
-  Unimplemented();
+  assert(popframe_extra_args == 0, "what to do?");
+  assert(!is_top_frame || (!callee_locals && !callee_param_count),
+         "top frame should have no caller")
+
+  // This code must exactly match what InterpreterFrame::build
+  // does (the full InterpreterFrame::build, that is, not the
+  // one that creates empty frames for the deoptimizer).
+  //
+  // If interpreter_frame is not NULL then it will be filled in.
+  // It's size is determined by a previous call to this method,
+  // so it should be correct.
+  //
+  // Note that tempcount is the current size of the expression
+  // stack.  For top most frames we will allocate a full sized
+  // expression stack and not the trimmed version that non-top
+  // frames have.
+
+  int header_words        = InterpreterFrame::header_words;
+  int monitor_words       = moncount * frame::interpreter_frame_monitor_size();
+  int stack_words         = is_top_frame ? method->max_stack() : tempcount;
+  int callee_extra_locals = callee_locals - callee_param_count;
+
+  if (interpreter_frame) {
+    intptr_t *locals        = interpreter_frame->sp() + method->max_locals();
+    interpreterState istate = interpreter_frame->get_interpreterState();
+    intptr_t *monitor_base  = (intptr_t*) istate;
+    intptr_t *stack_base    = monitor_base - monitor_words;
+    intptr_t *stack         = stack_base - tempcount - 1;
+
+    BytecodeInterpreter::layout_interpreterState(istate, 
+                                                 caller,
+                                                 NULL,
+                                                 method, 
+                                                 locals, 
+                                                 stack, 
+                                                 stack_base, 
+                                                 monitor_base, 
+                                                 NULL,
+                                                 is_top_frame);
+  }
+  return header_words + monitor_words + stack_words + callee_extra_locals;
+}
+
+void BytecodeInterpreter::layout_interpreterState(interpreterState istate,
+                                                  frame*    caller,
+                                                  frame*    current,
+                                                  methodOop method,
+                                                  intptr_t* locals,
+                                                  intptr_t* stack,
+                                                  intptr_t* stack_base,
+                                                  intptr_t* monitor_base,
+                                                  intptr_t* frame_bottom,
+                                                  bool      is_top_frame)
+{
+  istate->set_locals(locals);
+  istate->set_method(method);
+  istate->set_self_link(istate);
+  istate->set_prev_link(NULL);
+  // thread will be set by a hacky repurposing of frame::patch_pc()
+  // bcp will be set by vframeArrayElement::unpack_on_stack()
+  istate->set_constants(method->constants()->cache());
+  istate->set_msg(BytecodeInterpreter::method_resume);
+  istate->set_bcp_advance(0);
+  istate->set_oop_temp(NULL);
+  istate->set_mdx(NULL);
+  if (caller->is_interpreted_frame()) {
+    interpreterState prev = caller->get_interpreterState();
+    prev->set_callee(method);
+    if (*prev->bcp() == Bytecodes::_invokeinterface)
+      prev->set_bcp_advance(5);
+    else
+      prev->set_bcp_advance(3);
+  }
+  istate->set_callee(NULL);
+  istate->set_monitor_base((BasicObjectLock *) monitor_base);
+  istate->set_stack_base(stack_base);
+  istate->set_stack(stack);
+  istate->set_stack_limit(stack_base - method->max_stack() - 1);
 }
 
 address CppInterpreter::return_entry(TosState state, int length)
@@ -718,12 +831,29 @@ address CppInterpreter::return_entry(TosState state, int length)
 
 address CppInterpreter::deopt_entry(TosState state, int length)
 {
+#ifdef SHARK
+  return NULL;
+#else
   Unimplemented();
+#endif // SHARK
 }
+
+// Helper for (runtime) stack overflow checks
+
+int AbstractInterpreter::size_top_interpreter_activation(methodOop method)
+{
+  return 0;
+}
+
+// Helper for figuring out if frames are interpreter frames
 
 bool CppInterpreter::contains(address pc)
 {
+#ifdef PRODUCT
   ShouldNotCallThis();
+#else
+  return false; // make frame::print_value_on work
+#endif // !PRODUCT  
 }
 
 // Result handlers and convertors

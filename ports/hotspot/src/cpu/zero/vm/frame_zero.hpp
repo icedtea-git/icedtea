@@ -41,7 +41,11 @@
   // accessors for the instance variables
   intptr_t* fp() const
   {
-    Unimplemented();
+#ifdef PRODUCT
+    ShouldNotCallThis();
+#else
+    return (intptr_t *) -1; // make frame::print_value_on work
+#endif // !PRODUCT
   }
 
 #ifdef CC_INTERP
@@ -56,16 +60,19 @@
 
   const EntryFrame *zero_entryframe() const
   {
-    assert(zeroframe()->is_entry_frame(), "must be");
-    return (EntryFrame *) zeroframe();
+    return zeroframe()->as_entry_frame();
   }
   const InterpreterFrame *zero_interpreterframe() const
   {
-    assert(zeroframe()->is_interpreter_frame(), "must be");
-    return (InterpreterFrame *) zeroframe();
+    return zeroframe()->as_interpreter_frame();
   }
   const SharkFrame *zero_sharkframe() const
   {
-    assert(zeroframe()->is_shark_frame(), "must be");
-    return (SharkFrame *) zeroframe();
+    return zeroframe()->as_shark_frame();
   }
+
+ public:
+  bool is_deoptimizer_frame() const;
+
+ public:
+  frame sender_for_deoptimizer_frame(RegisterMap* map) const;  

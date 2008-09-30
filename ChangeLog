@@ -1,3 +1,52 @@
+2008-09-30  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-shark.patch: Updated to latest Shark.
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreterFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/sharedRuntime_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp: Likewise.
+	* ports/hotspot/src/share/vm/includeDB_shark: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/deoptimizerFrame_zero.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.inline.hpp: Likewise.
+
 2008-09-26  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-6712835-ifnode.patch: New patch.

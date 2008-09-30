@@ -40,6 +40,7 @@
 
 class InterpreterFrame : public ZeroFrame {
   friend class ZeroStackPrinter;
+  friend class AbstractInterpreter;
 
  private:
   InterpreterFrame() : ZeroFrame()
@@ -56,9 +57,11 @@ class InterpreterFrame : public ZeroFrame {
   };
 
  public:
-  static InterpreterFrame *build(ZeroStack*       stack,
-                                 const methodOop  method,
-                                 JavaThread*      thread);
+  static InterpreterFrame *build(ZeroStack*      stack,
+                                 const methodOop method,
+                                 JavaThread*     thread);
+  static InterpreterFrame *build(ZeroStack* stack, int size);
+
  public:
   interpreterState interpreter_state() const
   {

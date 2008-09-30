@@ -30,29 +30,30 @@ using namespace llvm;
 
 void SharkFunction::initialize()
 {
-  // Create the assembler and emit the entry point
-  _assembler = new MacroAssembler(cb());
-  SharkEntry *entry = (SharkEntry *) assembler()->pc();
-  assembler()->advance(sizeof(SharkEntry));
+  // Emit the entry point
+  SharkEntry *entry = (SharkEntry *) masm()->pc();
+  masm()->advance(sizeof(SharkEntry));
 
   // Create the function
   _function = builder()->CreateFunction();
   entry->set_llvm_function(function());
 
-  // Initialize the blocks
+  // Create the list of blocks
   set_block_insertion_point(NULL);
   _blocks = NEW_RESOURCE_ARRAY(SharkBlock*, flow()->block_count());
   for (int i = 0; i < block_count(); i++)
     _blocks[i] = new SharkBlock(this, flow()->pre_order_at(i));
 
-  assert(block(0)->start() == 0, "blocks out of order");
+  // Walk the tree from the start block to determine which
+  // blocks are entered and which blocks require phis
   SharkBlock *start_block = block(0);
+  assert(start_block->start() == 0, "blocks out of order");
+  start_block->enter();
 
-  start_block->add_predecessor(NULL);
+  // Initialize all entered blocks
   for (int i = 0; i < block_count(); i++) {
-    for (int j = 0; j < block(i)->num_successors(); j++) {
-      block(i)->successor(j)->add_predecessor(block(i));
-    }
+    if (block(i)->entered())
+      block(i)->initialize();
   }
 
   // Initialize the monitors
@@ -77,64 +78,40 @@ void SharkFunction::initialize()
   builder()->SetInsertPoint(CreateBlock());
   CreateInitZeroStack();
   CreatePushFrame(CreateBuildFrame());
-  NOT_PRODUCT(builder()->CreateStore(method, method_slot()));
+  NOT_PRODUCT(builder()->CreateStore(
+    method,
+    CreateAddressOfFrameEntry(
+      method_slot_offset(),
+      SharkType::methodOop_type(),
+      "method_slot")));
 
   // Lock if necessary
+  SharkState *entry_state = new SharkEntryState(method, start_block);
   if (target()->is_synchronized()) {
-    Value *object;
-    if (target()->is_static()) {
-      Value *constants = builder()->CreateValueOfStructEntry(
-        method,
-        methodOopDesc::constants_offset(),
-        SharkType::oop_type(),
-        "constants");
+    SharkBlock *locker = new SharkBlock(this, start_block->ciblock());
+    locker->add_incoming(entry_state);
 
-      Value *pool_holder = builder()->CreateValueOfStructEntry(
-        constants,
-        in_ByteSize(constantPoolOopDesc::pool_holder_offset_in_bytes()),
-        SharkType::oop_type(),
-        "pool_holder");
+    set_block_insertion_point(start_block->entry_block());
+    locker->acquire_method_lock();
 
-      Value *klass_part = builder()->CreateAddressOfStructEntry(
-        pool_holder,
-        in_ByteSize(klassOopDesc::klass_part_offset_in_bytes()),
-        SharkType::klass_type(),
-        "klass_part");
-
-      object = builder()->CreateValueOfStructEntry(
-        klass_part,
-        in_ByteSize(Klass::java_mirror_offset_in_bytes()),
-        SharkType::oop_type(),
-        "java_mirror");
-    }
-    else {
-      object = builder()->CreateLoad(
-        builder()->CreateBitCast(
-          builder()->CreateStructGEP(locals_slots(), max_locals() - 1),
-          PointerType::getUnqual(SharkType::oop_type())));
-    }
-    monitor(0)->acquire(object);
+    entry_state = locker->current_state();
   }
 
   // Transition into the method proper
-  start_block->add_incoming(new SharkEntryState(method, start_block));
+  start_block->add_incoming(entry_state);
   builder()->CreateBr(start_block->entry_block());
 
   // Parse the blocks
   for (int i = 0; i < block_count(); i++) {
+    if (!block(i)->entered())
+      continue;
+
     if (i + 1 < block_count())
       set_block_insertion_point(block(i + 1)->entry_block());
     else
       set_block_insertion_point(NULL);
 
     block(i)->parse();
-    if (failing()) {
-      // XXX should delete function() here, but that breaks
-      // -XX:SharkPrintBitcodeOf.  I guess some of the things
-      // we're sharing via SharkBuilder or SharkRuntime or
-      // SharkType are being freed
-      return;
-    }
   }
 
   // Dump the bitcode, if requested
@@ -239,31 +216,20 @@ Value* SharkFunction::CreateBuildFrame()
   CreateStoreZeroStackPointer(zero_stack_pointer);
 
   // Create the frame
-  Value *frame = builder()->CreateIntToPtr(
+  _frame = builder()->CreateIntToPtr(
     zero_stack_pointer,
     PointerType::getUnqual(
       ArrayType::get(SharkType::intptr_type(), frame_words + locals_words)),
     "frame");
   int offset = 0;
 
-  // Java stack
+  // Expression stack
   _stack_slots_offset = offset;
-  _stack_slots = builder()->CreateBitCast(
-    builder()->CreateStructGEP(frame, stack_slots_offset()),
-    PointerType::getUnqual(
-      ArrayType::get(SharkType::intptr_type(), stack_words)),
-    "stack_slots");
   offset += stack_words;
 
   // Monitors
   if (monitor_count()) {
     _monitors_slots_offset = offset; 
-
-    _monitors_slots = builder()->CreateBitCast(
-      builder()->CreateStructGEP(frame, monitors_slots_offset()),
-      PointerType::getUnqual(
-        ArrayType::get(SharkType::monitor_type(), monitor_count())),
-      "monitors");
 
     for (int i = 0; i < monitor_count(); i++) {
       if (i != 0 || !target()->is_synchronized())
@@ -272,41 +238,49 @@ Value* SharkFunction::CreateBuildFrame()
   }
   offset += monitor_words;
 
+  // Exception pointer
+  _exception_slot_offset = offset++;
+  builder()->CreateStore(LLVMValue::null(), exception_slot());
+
   // Method pointer
   _method_slot_offset = offset++;
-  _method_slot = builder()->CreateBitCast(
-    builder()->CreateStructGEP(frame, method_slot_offset()),
-    PointerType::getUnqual(SharkType::methodOop_type()),
-    "method_slot");
 
   // Unextended SP
   builder()->CreateStore(
     zero_stack_pointer,
-    builder()->CreateStructGEP(frame, offset++));
+    CreateAddressOfFrameEntry(offset++));
 
   // PC
-  _pc_slot = builder()->CreateBitCast(
-    builder()->CreateStructGEP(frame, offset++),
-    PointerType::getUnqual(SharkType::intptr_type()),
-    "pc_slot");
+  _pc_slot_offset = offset++;
 
   // Frame header
   builder()->CreateStore(
     LLVMValue::intptr_constant(ZeroFrame::SHARK_FRAME),
-    builder()->CreateStructGEP(frame, offset++));
-  Value *fp = builder()->CreateStructGEP(frame, offset++, "fp");
+    CreateAddressOfFrameEntry(offset++));
+  Value *fp = CreateAddressOfFrameEntry(offset++);
 
   // Local variables
   _locals_slots_offset = offset;  
-  _locals_slots = builder()->CreateBitCast(
-    builder()->CreateStructGEP(frame, locals_slots_offset()),
-    PointerType::getUnqual(
-      ArrayType::get(SharkType::intptr_type(), locals_words)),
-    "locals_slots");
   offset += locals_words;
 
   assert(offset == frame_words + locals_words, "should do");
   return fp;
+}
+
+Value* SharkFunction::CreateAddressOfFrameEntry(int               offset,
+                                                const llvm::Type* type,
+                                                const char*       name) const
+{
+  bool needs_cast = type && type != SharkType::intptr_type();
+
+  Value* result = builder()->CreateStructGEP(
+    _frame, offset, needs_cast ? "" : name);
+
+  if (needs_cast) {
+    result = builder()->CreateBitCast(
+      result, PointerType::getUnqual(type), name);
+  }
+  return result;
 }
 
 SharkMonitor* SharkFunction::monitor(Value *index) const

@@ -23,41 +23,27 @@
  *
  */
 
-class SharkCompiler : public AbstractCompiler {
-  friend class SharkCompilation;
-
+class SharkBytecodeTracer : public AllStatic {
  public:
-  // Creation
-  SharkCompiler();
+  static void decode(SharkBuilder*     builder,
+                     const SharkState* state,
+                     llvm::Value**     tos,
+                     llvm::Value**     tos2);
+ public:
+  static const intptr_t EMPTY_SLOT =
+    NOT_LP64(0x23232323) LP64_ONLY(0x2323232323232323);
 
-  // Name of this compiler
-  const char *name()     { return "shark"; }
+  static const intptr_t UNDECODABLE_SLOT =
+    NOT_LP64(0xdeadbabe) LP64_ONLY(0xdeadbabedeadbabe);
 
-  // Missing feature tests
-  bool supports_native() { return false; }
-  bool supports_osr()    { return false; }
-
-  // Customization
-  bool needs_adapters()  { return false; }
-  bool needs_stubs()     { return false; }
-
-  // Initialization
-  void initialize();
-
-  // Compilation entry point for methods
-  void compile_method(ciEnv* env, ciMethod* target, int entry_bci);
-
-  // The builder we'll use to compile our functions
  private:
-  SharkBuilder _builder;
-
- protected:
-  SharkBuilder* builder()
-  {
-    return &_builder;
-  }
-
-  // Helper
- private:
-  static const char *methodname(const ciMethod* target);
+  static void decode_one_word(SharkBuilder*     builder,
+                              const SharkState* state,
+                              int               index,
+                              llvm::Value**     dst);
+  static void decode_two_word(SharkBuilder*     builder,
+                              const SharkState* state,
+                              int               index,
+                              llvm::Value**     dst,
+                              llvm::Value**     dst2);
 };

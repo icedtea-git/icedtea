@@ -69,7 +69,11 @@ nmethod *SharedRuntime::generate_native_wrapper(MacroAssembler *masm,
 
 int Deoptimization::last_frame_adjust(int callee_parameters, int callee_locals)
 {
+#ifdef SHARK
+  return 0;
+#else
   Unimplemented();
+#endif // SHARK
 }
 
 uint SharedRuntime::out_preserve_stack_slots()

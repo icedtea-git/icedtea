@@ -29,7 +29,7 @@
 using namespace llvm;
 
 SharkBuilder::SharkBuilder()
-  : IRBuilder<>(),
+  : IRBuilder(),
       _module("shark"),
       _module_provider(module()),
       _execution_engine(ExecutionEngine::create(&_module_provider))
