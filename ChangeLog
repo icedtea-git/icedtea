@@ -1,3 +1,8 @@
+2008-10-01  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Remove a
+	section of old code that had been #ifdef'd out.
+
 2008-09-30  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am
