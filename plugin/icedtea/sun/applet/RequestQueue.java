@@ -1,6 +1,5 @@
-package org.classpath.icedtea.plugin;
+package sun.applet;
 
-import sun.applet.PluginCallRequest;
 
 public class RequestQueue {
     PluginCallRequest head = null;

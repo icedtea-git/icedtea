@@ -1,4 +1,4 @@
-/* GetWindowPluginCallRequest -- represent Java-to-JavaScript requests
+/* GetMemberPluginCallRequest -- represent Java-to-JavaScript requests
    Copyright (C) 2008  Red Hat
 
 This file is part of IcedTea.
@@ -35,31 +35,26 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-package org.classpath.icedtea.plugin;
-
-import java.security.AccessControlContext;
-import java.security.ProtectionDomain;
-
-import sun.applet.PluginCallRequest;
+package sun.applet;
 
 
-public class GetWindowPluginCallRequest extends PluginCallRequest {
-    // FIXME: look into int vs long JavaScript internal values.
-    int internal;
+public class GetMemberPluginCallRequest extends PluginCallRequest {
+    Object object = null;
 
-    public GetWindowPluginCallRequest(String message, String returnString) {
+    public GetMemberPluginCallRequest(String message, String returnString) {
         super(message, returnString);
+        System.out.println ("GetMEMBerPLUGINCAlL " + message + " " + returnString);
     }
 
     public void parseReturn(String message) {
-        System.out.println ("GetWINDOWparseReturn GOT: " + message);
+        System.out.println ("GetMEMBerparseReturn GOT: " + message);
         String[] args = message.split(" ");
         // FIXME: add thread ID to messages to support multiple
         // threads using the netscape.javascript package.
-        internal = Integer.parseInt(args[1]);
+        object = AppletSecurityContextManager.getSecurityContext(0).getObject(Integer.parseInt(args[1]));
         setDone(true);
     }
-    
+
     /**
      * Returns whether the given message is serviceable by this object
      * 
@@ -67,10 +62,15 @@ public class GetWindowPluginCallRequest extends PluginCallRequest {
      * @return boolean indicating if message is serviceable
      */
     public boolean serviceable(String message) {
-    	return message.contains("JavaScriptGetWindow");
+    	return message.contains("JavaScriptCall") ||
+    			message.contains("JavaScriptEval") ||
+    			message.contains("JavaScriptGetMember") ||
+    			message.contains("JavaScriptGetSlot") ||
+    			message.contains("JavaScriptToString");
     }
-
-    public Integer getObject() {
-    	return this.internal;
+    
+    public Object getObject() {
+    	return this.object;
     }
 }
+

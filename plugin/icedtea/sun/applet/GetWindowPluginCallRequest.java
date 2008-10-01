@@ -1,4 +1,4 @@
-/* VoidPluginCallRequest -- represent Java-to-JavaScript requests
+/* GetWindowPluginCallRequest -- represent Java-to-JavaScript requests
    Copyright (C) 2008  Red Hat
 
 This file is part of IcedTea.
@@ -35,20 +35,29 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-package org.classpath.icedtea.plugin;
+package sun.applet;
 
-import sun.applet.PluginCallRequest;
+import java.security.AccessControlContext;
+import java.security.ProtectionDomain;
 
-public class VoidPluginCallRequest extends PluginCallRequest {
-    public VoidPluginCallRequest(String message, String returnString) {
+
+
+public class GetWindowPluginCallRequest extends PluginCallRequest {
+    // FIXME: look into int vs long JavaScript internal values.
+    int internal;
+
+    public GetWindowPluginCallRequest(String message, String returnString) {
         super(message, returnString);
-        System.out.println ("VoidPLUGINCAlL " + message + " " + returnString);
     }
 
     public void parseReturn(String message) {
-    	setDone(true);
+        System.out.println ("GetWINDOWparseReturn GOT: " + message);
+        String[] args = message.split(" ");
+        // FIXME: add thread ID to messages to support multiple
+        // threads using the netscape.javascript package.
+        internal = Integer.parseInt(args[1]);
+        setDone(true);
     }
-    
     
     /**
      * Returns whether the given message is serviceable by this object
@@ -57,13 +66,10 @@ public class VoidPluginCallRequest extends PluginCallRequest {
      * @return boolean indicating if message is serviceable
      */
     public boolean serviceable(String message) {
-    	return message.contains("JavaScriptFinalize") ||
-    			message.contains("JavaScriptRemoveMember") ||
-    			message.contains("JavaScriptSetMember") ||
-    			message.contains("JavaScriptSetSlot");
+    	return message.contains("JavaScriptGetWindow");
     }
-    
-    public Object getObject() {
-    	return null;
+
+    public Integer getObject() {
+    	return this.internal;
     }
 }

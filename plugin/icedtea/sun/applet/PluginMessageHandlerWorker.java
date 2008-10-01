@@ -1,18 +1,18 @@
-package org.classpath.icedtea.plugin;
+package sun.applet;
 
-import sun.applet.PluginException;
-import sun.applet.PluginStreamHandler;
 
 class PluginMessageHandlerWorker extends Thread {
 
 	private boolean free = true;
 	private int id;
 	private String message = null;
+	private SecurityManager sm;
 	PluginStreamHandler streamHandler = null;
-	
-	public PluginMessageHandlerWorker(PluginStreamHandler streamHandler, int id) {
+
+	public PluginMessageHandlerWorker(PluginStreamHandler streamHandler, int id, SecurityManager sm) {
 		this.id = id;
 		this.streamHandler = streamHandler;
+		this.sm = sm;
 	}
 
 	public void setmessage(String message) {
@@ -27,7 +27,6 @@ class PluginMessageHandlerWorker extends Thread {
 				// ideally, whoever returns things object should mark it 
 				// busy first, but just in case..
 				busy();
-				System.err.println("Thread " + id + " picking up " + message + " from queue...");
 
 				try {
 					streamHandler.handleMessage(message);

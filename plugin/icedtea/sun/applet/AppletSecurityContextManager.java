@@ -6,13 +6,13 @@ public class AppletSecurityContextManager {
 
 	// Context identifier -> PluginAppletSecurityContext object.
 	// FIXME: make private
-	private static HashMap<Integer, AppletSecurityContext> contexts = new HashMap();
+	private static HashMap<Integer, PluginAppletSecurityContext> contexts = new HashMap();
 	
-	public static void addContext(int identifier, AppletSecurityContext context) {
+	public static void addContext(int identifier, PluginAppletSecurityContext context) {
 		contexts.put(identifier, context);
 	}
 	
-	public static AppletSecurityContext getSecurityContext(int identifier) {
+	public static PluginAppletSecurityContext getSecurityContext(int identifier) {
 		return contexts.get(identifier);
 	}
 

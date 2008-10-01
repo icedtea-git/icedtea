@@ -35,7 +35,7 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-package org.classpath.icedtea.plugin;
+package sun.applet;
 
 import java.util.*;
 import java.lang.reflect.*;
@@ -90,8 +90,10 @@ public class PluginObjectStore
 
     public void unreference(int identifier) {
         Integer currentCount = counts.get(identifier);
-        if (currentCount == null)
+        if (currentCount == null) {
             System.out.println("ERROR UNREFERENCING: " + identifier);
+            return;
+        }
         if (currentCount == 1) {
             System.out.println("JAVA DEREFERENCED: " + identifier
                                + " to: 0");
