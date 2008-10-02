@@ -1,3 +1,46 @@
+2008-10-01     Deepak Bhole <dbhole@redhat.com>
+	* .hgignore: Removed IcedTeaPlugin.jar
+	* IcedTeaPlugin.cc: Updated classpath when launching Java. added
+	checks to detect error on Java side.
+	* Makefile.am: Updated to fit new refactored files.
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: New
+	file, moved out of org/classpath/icedtea/plugin/, as a result of
+	refactoring.
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java: Same.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Same.
+	* plugin/icedtea/sun/applet/GetMemberPluginCallRequest.java: Same.
+	* plugin/icedtea/sun/applet/GetWindowPluginCallRequest.java: Same.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Same.
+	* plugin/icedtea/sun/applet/PluginMain.java: Same.
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java: Same.
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java: Same.
+	* plugin/icedtea/sun/applet/PluginObjectStore.java: Same.
+	* plugin/icedtea/sun/applet/RequestQueue.java: Same.
+	* plugin/icedtea/sun/applet/TestEnv.java: Same.
+	* plugin/icedtea/sun/applet/VoidPluginCallRequest.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/GetMemberPluginCallRequest.java: 
+	Removed, as a result of refactoring.
+	* plugin/icedtea/org/classpath/icedtea/plugin/GetWindowPluginCallRequest.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginAppletSecurityContext.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginCallRequestFactoryImpl.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMain.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMessageConsumer.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMessageHandlerWorker.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginObjectStore.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginStreamHandlerImpl.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/RequestQueue.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/TestEnv.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/VoidPluginCallRequest.java:
+	Same.
+	* plugin/icedtea/sun/applet/AppletSecurityContext.java: Same.
+
 2008-10-02  Lillian Angel  <langel@redhat.com>
 
 	* HACKING: Updated with new visualvm patch.
