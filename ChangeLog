@@ -1,3 +1,18 @@
+2008-10-02  Lillian Angel  <langel@redhat.com>
+
+	* HACKING: Updated with new visualvm patch.
+	* INSTALL: Updated to include netbeans in requirements.
+	* Makefile.am: Updated to build and install visualvm with
+	system-installed NetBeans 6.1 (currently in Fedora rawhide). Added new
+	visualvm patch to the list and removed need for NetBeans platform
+	sources.
+	* README: Updated visualvm notes.
+	* acinclude.m4: Updated to find netbeans and removed
+	WITH_NETBEANS_PLATFORM_SRC_ZIP check.
+	* configure.ac: Updated to check for netbeans and added
+	--with-netbeans-home option.
+	* patches/icedtea-visualvm.patch: Visualvm patch.
+
 2008-10-01  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Remove a

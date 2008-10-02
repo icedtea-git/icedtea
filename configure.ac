@@ -82,6 +82,22 @@ AC_ARG_WITH([icedtea-home],
             ])
 AC_SUBST(SYSTEM_ICEDTEA_DIR)
 
+AC_ARG_WITH([netbeans-home],
+	    [AS_HELP_STRING([--with-netbeans-home],
+                            [NetBeans home directory (default is /usr/share/netbeans)])],
+            [
+              if test "x${withval}" = x
+              then
+                SYSTEM_NETBEANS_DIR=/usr/share/netbeans
+              else
+                SYSTEM_NETBEANS_DIR=${withval}
+              fi
+            ],
+            [
+              SYSTEM_NETBEANS_DIR=/usr/share/netbeans
+            ])
+AC_SUBST(SYSTEM_NETBEANS_DIR)
+
 AC_ARG_WITH([ant-home],
             [AS_HELP_STRING([--with-ant-home],
                             [Ant home directory (default is /usr/share/ant)])],
@@ -121,6 +137,11 @@ AC_ARG_ENABLE([visualvm],
 			                  [Enable compilation of visualvm.])],
               [enable_visualvm="yes"], [enable_visualvm="no"])
 AM_CONDITIONAL(WITH_VISUALVM, test "x${enable_visualvm}" = "xyes")
+
+if test "x${enable_visualvm}" = "xyes"
+then
+  FIND_NETBEANS
+fi
 
 AC_ARG_WITH([icedtea],
         [AS_HELP_STRING([--with-icedtea],
@@ -214,10 +235,10 @@ else
 fi
 fi
 FIND_RHINO_JAR
+FIND_NETBEANS
 WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
 WITH_VISUALVM_SRC_ZIP
-WITH_NETBEANS_PLATFORM_SRC_ZIP
 WITH_NETBEANS_PROFILER_SRC_ZIP
 WITH_ALT_JAR_BINARY
 AC_CHECK_WITH_CACAO

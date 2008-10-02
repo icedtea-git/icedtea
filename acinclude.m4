@@ -456,23 +456,6 @@ AC_DEFUN([WITH_VISUALVM_SRC_ZIP],
   AC_SUBST(ALT_VISUALVM_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_NETBEANS_PLATFORM_SRC_ZIP],
-[
-  AC_MSG_CHECKING(netbeans platform source zip)
-  AC_ARG_WITH([netbeans-platform-src-zip],
-              [AS_HELP_STRING(--with-netbeans-platform-src-zip, specify the location of the netbeans platform source zip)],
-  [
-    ALT_NETBEANS_PLATFORM_SRC_ZIP=${withval}
-    AM_CONDITIONAL(USE_ALT_NETBEANS_PLATFORM_SRC_ZIP, test x = x)
-  ],
-  [ 
-    ALT_NETBEANS_PLATFORM_SRC_ZIP="not specified"
-    AM_CONDITIONAL(USE_ALT_NETBEANS_PLATFORM_SRC_ZIP, test x != x)
-  ])
-  AC_MSG_RESULT(${ALT_NETBEANS_PLATFORM_SRC_ZIP})
-  AC_SUBST(ALT_NETBEANS_PLATFORM_SRC_ZIP)
-])
-
 AC_DEFUN([WITH_NETBEANS_PROFILER_SRC_ZIP],
 [
   AC_MSG_CHECKING(netbeans profiler source zip)
@@ -613,6 +596,31 @@ AC_DEFUN([FIND_XERCES2_JAR],
     AC_MSG_ERROR("A xerces2 jar was not found.")
   fi
   AC_SUBST(XERCES2_JAR)
+])
+
+AC_DEFUN([FIND_NETBEANS],
+[
+  AC_ARG_WITH([netbeans],
+              [AS_HELP_STRING(--with-netbeans,specify location of netbeans)],
+  [
+    if test -f "${withval}"; then
+      AC_MSG_CHECKING(netbeans)
+      NETBEANS="${withval}"
+      AC_MSG_RESULT(${withval})
+    else
+      AC_PATH_PROG(NETBEANS, "${withval}")
+    fi
+  ],
+  [
+    NETBEANS=
+  ])
+  if test -z "${NETBEANS}"; then
+    AC_PATH_PROG(NETBEANS, "netbeans")
+  fi
+  if test -z "${NETBEANS}"; then
+    AC_MSG_ERROR("NetBeans was not found.")
+  fi
+  AC_SUBST(NETBEANS)
 ])
 
 AC_DEFUN([FIND_RHINO_JAR],

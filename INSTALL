@@ -30,6 +30,7 @@ libpng-devel
 libjpeg-devel = 6b
 zlib-devel
 rhino
+netbeans (harness, platform8, apisupport1, java2, ide9) - for visualvm
 
 For building the zero-assembler port (see below), you will need libffi.
 
