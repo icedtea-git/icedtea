@@ -1,4 +1,4 @@
-/* GetMemberPluginCallRequest -- represent Java-to-JavaScript requests
+/* VoidPluginCallRequest -- represent Java-to-JavaScript requests
    Copyright (C) 2008  Red Hat
 
 This file is part of IcedTea.
@@ -35,28 +35,20 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-package org.classpath.icedtea.plugin;
+package sun.applet;
 
-import sun.applet.AppletSecurityContextManager;
-import sun.applet.PluginCallRequest;
 
-public class GetMemberPluginCallRequest extends PluginCallRequest {
-    Object object = null;
-
-    public GetMemberPluginCallRequest(String message, String returnString) {
+public class VoidPluginCallRequest extends PluginCallRequest {
+    public VoidPluginCallRequest(String message, String returnString) {
         super(message, returnString);
-        System.out.println ("GetMEMBerPLUGINCAlL " + message + " " + returnString);
+        System.out.println ("VoidPLUGINCAlL " + message + " " + returnString);
     }
 
     public void parseReturn(String message) {
-        System.out.println ("GetMEMBerparseReturn GOT: " + message);
-        String[] args = message.split(" ");
-        // FIXME: add thread ID to messages to support multiple
-        // threads using the netscape.javascript package.
-        object = AppletSecurityContextManager.getSecurityContext(0).getObject(Integer.parseInt(args[1]));
-        setDone(true);
+    	setDone(true);
     }
-
+    
+    
     /**
      * Returns whether the given message is serviceable by this object
      * 
@@ -64,15 +56,13 @@ public class GetMemberPluginCallRequest extends PluginCallRequest {
      * @return boolean indicating if message is serviceable
      */
     public boolean serviceable(String message) {
-    	return message.contains("JavaScriptCall") ||
-    			message.contains("JavaScriptEval") ||
-    			message.contains("JavaScriptGetMember") ||
-    			message.contains("JavaScriptGetSlot") ||
-    			message.contains("JavaScriptToString");
+    	return message.contains("JavaScriptFinalize") ||
+    			message.contains("JavaScriptRemoveMember") ||
+    			message.contains("JavaScriptSetMember") ||
+    			message.contains("JavaScriptSetSlot");
     }
     
     public Object getObject() {
-    	return this.object;
+    	return null;
     }
 }
-

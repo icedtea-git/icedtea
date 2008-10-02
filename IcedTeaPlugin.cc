@@ -244,7 +244,6 @@ private:
 static GError* channel_error = NULL;
 // Fully-qualified appletviewer executable.
 static char* appletviewer_executable = NULL;
-static char* extra_jars = NULL;
 static char* libjvm_so = NULL;
 
 class IcedTeaPluginFactory;
@@ -317,8 +316,6 @@ char const* TYPES[10] = { "Object",
   char context[16]; \
   GetCurrentPageAddress(&addr); \
   GetCurrentContextAddr(context); \
-  printf("Addr: %s , Context: %s\n", addr, context);\
-\
   nsCString message ("context ");                            \
   message.AppendInt (0);                                     \
   message += " reference ";                                  \
@@ -428,12 +425,14 @@ char const* TYPES[10] = { "Object",
 #define MESSAGE_RECEIVE_REFERENCE(reference, cast, name)                \
   nsresult res = NS_OK;                                                 \
   printf ("RECEIVE 1\n");                                               \
-  while (factory->result_map[reference]->returnIdentifier == -1)     \
+  while (factory->result_map[reference]->returnIdentifier == -1 &&\
+	     factory->result_map[reference]->errorOccured == PR_FALSE)     \
     {                                                                   \
       PROCESS_PENDING_EVENTS_REF (reference);                                \
     }                                                                   \
   printf ("RECEIVE 3\n"); \
-  if (factory->result_map[reference]->returnIdentifier == 0) \
+  if (factory->result_map[reference]->returnIdentifier == 0 || \
+	  factory->result_map[reference]->errorOccured == PR_TRUE) \
   {  \
 	  *name = NULL;                                                     \
   } else {                                                              \
@@ -449,25 +448,33 @@ char const* TYPES[10] = { "Object",
   PRBool processed = PR_FALSE;                                          \
   nsresult res = NS_OK;                                                 \
   printf("RECEIVE ID 1\n");                                             \
-  while (factory->result_map[reference]->returnIdentifier == -1)     \
+  while (factory->result_map[reference]->returnIdentifier == -1 &&\
+	     factory->result_map[reference]->errorOccured == PR_FALSE)     \
     {                                                                   \
       PROCESS_PENDING_EVENTS_REF (reference);                                \
     }                                                                   \
                                                                         \
+  if (factory->result_map[reference]->errorOccured == PR_TRUE)	 	    \
+  { \
+	  *id = NULL; \
+  } else \
+  { \
   *id = reinterpret_cast<cast>                                  \
     (new JNIID (factory->result_map[reference]->returnIdentifier, signature));         \
    printf ("RECEIVE_ID: %s result: %x = %d, %s\n",               \
            __func__, *id, factory->result_map[reference]->returnIdentifier,             \
-           signature);
+           signature); \
+  }
 
 #define MESSAGE_RECEIVE_VALUE(reference, ctype, result)                    \
   nsresult res = NS_OK;                                                    \
   printf("RECEIVE VALUE 1\n");                                             \
-  while (factory->result_map[reference]->returnValue == "")            \
+  while (factory->result_map[reference]->returnValue == "" && \
+	     factory->result_map[reference]->errorOccured == PR_FALSE)            \
     {                                                                      \
       PROCESS_PENDING_EVENTS_REF (reference);                                   \
     }                                                                      \
-  *result = ParseValue (type, factory->result_map[reference]->returnValue);            
+    *result = ParseValue (type, factory->result_map[reference]->returnValue);            
 // \
 //   char* valueString = ValueString (type, *result);              \
 //   printf ("RECEIVE_VALUE: %s result: %x = %s\n",                \
@@ -479,13 +486,19 @@ char const* TYPES[10] = { "Object",
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
   printf("RECEIVE SIZE 1\n");                                 \
-  while (factory->result_map[reference]->returnValue == "")                        \
+  while (factory->result_map[reference]->returnValue == "" && \
+	     factory->result_map[reference]->errorOccured == PR_FALSE) \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
   nsresult conversionResult;                                    \
-  *result = factory->result_map[reference]->returnValue.ToInteger (&conversionResult); \
-  PLUGIN_CHECK ("parse integer", conversionResult);             
+  if (factory->result_map[reference]->errorOccured == PR_TRUE) \
+	*result = NULL; \
+  else \
+  { \
+    *result = factory->result_map[reference]->returnValue.ToInteger (&conversionResult); \
+    PLUGIN_CHECK ("parse integer", conversionResult);             \
+  }
 // \
 //   printf ("RECEIVE_SIZE: %s result: %x = %d\n",                 \
 //           __func__, result, *result);
@@ -495,13 +508,19 @@ char const* TYPES[10] = { "Object",
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
   printf("RECEIVE STRING 1\n");                                 \
-  while (factory->result_map[reference]->returnValue == "")                            \
+  while (factory->result_map[reference]->returnValue == "" && \
+	     factory->result_map[reference]->errorOccured == PR_FALSE)  \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-	printf("Setting result to: %s\n", strdup (factory->result_map[reference]->returnValue.get ())); \
-  *result = reinterpret_cast<char_type const*>                  \
-    (strdup (factory->result_map[reference]->returnValue.get ()));                     
+	if (factory->result_map[reference]->errorOccured == PR_TRUE) \
+		*result = NULL; \
+	else \
+	{\
+	  printf("Setting result to: %s\n", strdup (factory->result_map[reference]->returnValue.get ())); \
+      *result = reinterpret_cast<char_type const*>                  \
+                (strdup (factory->result_map[reference]->returnValue.get ()));\
+	}
 // \
 //   printf ("RECEIVE_STRING: %s result: %x = %s\n",               \
 //           __func__, result, *result);
@@ -511,16 +530,22 @@ char const* TYPES[10] = { "Object",
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
   printf("RECEIVE STRING UCS 1\n");                                 \
-  while (factory->result_map[reference]->returnValueUCS.IsEmpty())                        \
+  while (factory->result_map[reference]->returnValueUCS.IsEmpty() && \
+	     factory->result_map[reference]->errorOccured == PR_FALSE) \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-  int length = factory->result_map[reference]->returnValueUCS.Length ();               \
-  jchar* newstring = static_cast<jchar*> (PR_Malloc (length));  \
-  memset (newstring, 0, length);                                \
-  memcpy (newstring, factory->result_map[reference]->returnValueUCS.get (), length);   \
-  std::cout << "Setting result to: " << factory->result_map[reference]->returnValueUCS.get() << std::endl; \
-  *result = static_cast<jchar const*> (newstring);
+	if (factory->result_map[reference]->errorOccured == PR_TRUE) \
+		*result = NULL; \
+	else \
+	{ \
+	  int length = factory->result_map[reference]->returnValueUCS.Length ();               \
+	  jchar* newstring = static_cast<jchar*> (PR_Malloc (length));  \
+	  memset (newstring, 0, length);                                \
+	  memcpy (newstring, factory->result_map[reference]->returnValueUCS.get (), length);   \
+	  std::cout << "Setting result to: " << factory->result_map[reference]->returnValueUCS.get() << std::endl; \
+	  *result = static_cast<jchar const*> (newstring); \
+	}
 
 // \
 //   printf ("RECEIVE_STRING: %s result: %x = %s\n",               \
@@ -530,11 +555,15 @@ char const* TYPES[10] = { "Object",
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
   printf("RECEIVE BOOLEAN 1\n");                             \
-  while (factory->result_map[reference]->returnIdentifier == -1)               \
+  while (factory->result_map[reference]->returnIdentifier == -1 && \
+	     factory->result_map[reference]->errorOccured == PR_FALSE)               \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-  *result = factory->result_map[reference]->returnIdentifier;
+	if (factory->result_map[reference]->errorOccured == PR_TRUE) \
+		*result = NULL; \
+	else \
+	  *result = factory->result_map[reference]->returnIdentifier;
 //      res = factory->current->ProcessNextEvent (PR_TRUE,        \
 //                                                &processed);    \
 //      PLUGIN_CHECK_RETURN (__func__, res);                      \
@@ -1225,9 +1254,57 @@ IcedTeaRunnableMethod<T>::~IcedTeaRunnableMethod ()
 template <class T> NS_IMETHODIMP
 IcedTeaRunnableMethod<T>::Run ()
 {
-  (object->*method) ();
-  return NS_OK;
+    (object->*method) ();
+    return NS_OK;
 }
+
+
+// FIXME: Special class just for dispatching GetURL to another 
+// thread.. seriously, a class just for that? there has to be a better way!
+
+class GetURLRunnable : public nsIRunnable
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIRUNNABLE
+
+  GetURLRunnable (nsIPluginInstancePeer* peer, const char* url, const char* target);
+
+  ~GetURLRunnable ();
+
+private:
+  nsIPluginInstancePeer* peer;
+  const char* url;
+  const char* target;
+};
+
+NS_IMPL_ISUPPORTS1 (GetURLRunnable, nsIRunnable)
+
+GetURLRunnable::GetURLRunnable (nsIPluginInstancePeer* peer, const char* url, const char* target)
+: peer(peer),
+  url(url),
+  target(target)
+{
+    NS_ADDREF (peer);
+}
+
+GetURLRunnable::~GetURLRunnable ()
+{
+  NS_RELEASE(peer);
+}
+
+NS_IMETHODIMP
+GetURLRunnable::Run ()
+{
+   nsCOMPtr<nsPIPluginInstancePeer> ownerGetter =
+                do_QueryInterface (peer);
+   nsIPluginInstanceOwner* owner = nsnull;
+   ownerGetter->GetOwner (&owner);
+
+   return owner->GetURL ((const char*) url, (const char*) target,
+                         nsnull, 0, nsnull, 0);
+}
+
 
 NS_IMPL_ISUPPORTS6 (IcedTeaPluginFactory, nsIFactory, nsIPlugin, nsIJVMManager,
                     nsIJVMPrefsWindow, nsIJVMPlugin, nsIInputStreamCallback)
@@ -2433,6 +2510,11 @@ IcedTeaPluginFactory::OnInputStreamReady (nsIAsyncInputStream* aStream)
   return NS_OK;
 }
 
+#include <nsIWebNavigation.h>
+#include <nsServiceManagerUtils.h>
+#include <nsIExternalProtocolService.h>
+#include <nsNetUtil.h>
+
 void
 IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 {
@@ -2477,8 +2559,11 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
         {
           IcedTeaPluginInstance* instance = NULL;
           instances.Get (identifier, &instance);
-//          if (instance != 0)
-//            instance->peer->ShowStatus (nsCString (rest).get ());
+          if (instance != 0)
+		  {
+            instance->peer->ShowStatus (nsCString (rest).get ());
+
+          }
         }
       else if (command == "initialized")
         {
@@ -2504,9 +2589,10 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
               nsIPluginInstanceOwner* owner = nsnull;
               ownerGetter->GetOwner (&owner);
 			  printf("Calling GetURL with %s and %s\n", nsCString (url).get (), nsCString (target).get ());
-              owner->GetURL (nsCString (url).get (),
-                             nsCString (target).get (),
-                             nsnull, 0, nsnull, 0);
+              nsCOMPtr<nsIRunnable> event = new GetURLRunnable (instance->peer,
+													 nsCString (url).get (),
+													 nsCString (target).get ());
+              current->Dispatch(event, nsIEventTarget::DISPATCH_NORMAL);
             }
         }
       else if (command == "GetWindow")
@@ -2841,20 +2927,47 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 void IcedTeaPluginFactory::ProcessMessage ()
 {
 	while (true) {
-		printf("Process thread sleeping...\n");
-		PR_Sleep(PR_INTERVAL_NO_TIMEOUT);
+		PR_Sleep(1000);
+
+		// If there was an interrupt, clear it
 		PR_ClearInterrupt();
-
-		printf("Process thread interrupted...\n");
-
 
 		// Was I interrupted for shutting down?
 		if (shutting_down == PR_TRUE) {
 			break;
 		}
 
-		ConsumeMsgFromJVM();
+		// Nope. Ok, is there work to do?
+		if (!jvmMsgQueue.empty())
+		    ConsumeMsgFromJVM();
+
+		// All done. Now let's process pending events
+
+		// Were there new events dispatched?
+		
+		PRBool this_has_pending, curr_has_pending, processed = PR_FALSE;
+		PRBool continue_processing = PR_TRUE;
+
+		while (continue_processing == PR_TRUE) {
+
+		  processThread->HasPendingEvents(&this_has_pending);
+		  if (this_has_pending == PR_TRUE) {
+			  processThread->ProcessNextEvent(PR_TRUE, &processed);
+			  printf("Pending event processed (this) ... %d\n", processed);
+		  }
+
+		  current->HasPendingEvents(&curr_has_pending);
+		  if (curr_has_pending == PR_TRUE) {
+			  current->ProcessNextEvent(PR_TRUE, &processed);
+			  printf("Pending event processed (current) ... %d\n", processed);
+		  }
+
+		  if (this_has_pending != PR_TRUE && curr_has_pending != PR_TRUE) {
+			  continue_processing = PR_FALSE;
+		  }
+		}
 	}
+
 }
 
 void IcedTeaPluginFactory::ConsumeMsgFromJVM ()
@@ -2872,9 +2985,7 @@ void IcedTeaPluginFactory::ConsumeMsgFromJVM ()
 		HandleMessage (message);
 		printf("Processing complete\n");
 	}
-
 }
-
 
 /**
  *
@@ -3189,9 +3300,9 @@ IcedTeaPluginFactory::StartAppletviewer ()
   PLUGIN_CHECK_RETURN ("init process", result);
 
   // FIXME: hard-coded port number.
-  char const* args[8] = { "-classpath", extra_jars, "-Xdebug", "-Xnoagent", "-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n", "org.classpath.icedtea.plugin.PluginMain", "50007" };
+  char const* args[5] = { "-Xdebug", "-Xnoagent", "-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n", "sun.applet.PluginMain", "50007" };
 //  char const* args[2] = { "sun.applet.PluginMain", "50007" };
-  result = applet_viewer_process->Run (PR_FALSE, args, 8, nsnull);
+  result = applet_viewer_process->Run (PR_FALSE, args, 5, nsnull);
   PLUGIN_CHECK_RETURN ("run process", result);
 
   // start processing thread
@@ -3812,6 +3923,7 @@ IcedTeaJNIEnv::DecrementContextCounter ()
 nsresult
 IcedTeaJNIEnv::GetCurrentContextAddr(char *addr)
 {
+	return NS_OK;
     PLUGIN_TRACE_JNIENV ();
 
     // Get JSContext from stack.
@@ -3835,7 +3947,7 @@ IcedTeaJNIEnv::GetCurrentContextAddr(char *addr)
 nsresult
 IcedTeaJNIEnv::GetCurrentPageAddress(const char **addr)
 {
-
+	return NS_OK;
     PLUGIN_TRACE_JNIENV ();
 
     nsIPrincipal *prin;
@@ -4922,27 +5034,15 @@ NSGetFactory (nsISupports* aServMgr, nsCID const& aClass,
 
   //executableString += nsCString ("/../../bin/pluginappletviewer");
   executable += nsCString ("/../../bin/java");
-  extrajars += jar;
-  extrajars += nsCString("/IcedTeaPlugin.jar");
-  extrajars += ":";
-  extrajars += jar;
-  extrajars += nsCString("/rt.jar");
 
   //executable += nsCString ("/client/libjvm.so");
 
   // Never freed.
   appletviewer_executable = strdup (executable.get ());
-  extra_jars = strdup (extrajars.get ());
   //libjvm_so = strdup (executable.get ());
   if (!appletviewer_executable)
     {
       PLUGIN_ERROR ("Failed to create java executable name.");
-      return NS_ERROR_OUT_OF_MEMORY;
-    }
-
-  if (!extra_jars)
-    {
-      PLUGIN_ERROR ("Failed to create plugin jar name.");
       return NS_ERROR_OUT_OF_MEMORY;
     }
 

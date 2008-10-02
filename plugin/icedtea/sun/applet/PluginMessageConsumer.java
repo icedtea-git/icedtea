@@ -1,14 +1,9 @@
-package org.classpath.icedtea.plugin;
+package sun.applet;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import sun.applet.PluginDebug;
-import sun.applet.PluginStreamHandler;
-
-
+import sun.applet.AppletSecurity;
 
 class PluginMessageConsumer {
 
@@ -19,11 +14,12 @@ class PluginMessageConsumer {
 
 	public PluginMessageConsumer(PluginStreamHandler streamHandler) {
 		
+		AppletSecurity as = new AppletSecurity();
 		this.streamHandler = streamHandler;
 
 		for (int i=0; i < MAX_WORKERS; i++) {
 			System.err.println("Creating worker " + i);
-			PluginMessageHandlerWorker worker = new PluginMessageHandlerWorker(streamHandler, i);
+			PluginMessageHandlerWorker worker = new PluginMessageHandlerWorker(streamHandler, i, as);
 			worker.start();
 			workers.add(worker);
 		}
@@ -46,12 +42,7 @@ class PluginMessageConsumer {
 			}
 		}
 
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run () {
-				worker.interrupt();
-				return null;
-			}
-		});
+		worker.interrupt();
 	}
 
 	private PluginMessageHandlerWorker getFreeWorker() {

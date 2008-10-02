@@ -23,20 +23,19 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.plugin;
+package sun.applet;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.security.Policy;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import sun.applet.AppletSecurityContext;
-import sun.applet.AppletSecurityContextManager;
-import sun.applet.PluginAppletViewer;
-import sun.applet.PluginStreamHandler;
+
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 /**
  * The main entry point into PluginAppletViewer.
@@ -50,7 +49,7 @@ public class PluginMain
     // on whether the property that uses it is necessary/standard.
     public static final String theVersion = System.getProperty("java.version");
     
-    private AppletSecurityContext securityContext;
+    private PluginAppletSecurityContext securityContext;
 
     /**
      * The main entry point into AppletViewer.
@@ -92,17 +91,16 @@ public class PluginMain
     		}
     	}
 
-    	// INSTALL THE SECURITY MANAGER
-    	init();
-
     	connect(50007);
-    	
+
     	securityContext = new PluginAppletSecurityContext(0);
     	securityContext.setStreamhandler(streamHandler);
     	AppletSecurityContextManager.addContext(0, securityContext);
-		
+
 		PluginAppletViewer.setStreamhandler(streamHandler);
-		PluginAppletViewer.setPluginCallRequestFactory(new PluginCallRequestFactoryImpl());
+		PluginAppletViewer.setPluginCallRequestFactory(new PluginCallRequestFactory());
+
+    	init();
 
 		// Streams set. Start processing.
 		streamHandler.startProcessing();
@@ -123,7 +121,7 @@ public class PluginMain
     	System.err.println("Socket initialized. Proceeding with start()");
 
 		try {
-			streamHandler = new PluginStreamHandlerImpl(socket.getInputStream(), socket.getOutputStream());
+			streamHandler = new PluginStreamHandler(socket.getInputStream(), socket.getOutputStream());
 	    	System.err.println("Streams initialized");
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -176,9 +174,6 @@ public class PluginMain
 
 		// INSTALL THE PROPERTY LIST
 		System.setProperties(avProps);
-
-		// Create and install the security manager
-		//System.setSecurityManager(new AppletSecurity());
 
 		// REMIND: Create and install a socket factory!
 	}

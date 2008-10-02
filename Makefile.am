@@ -12,15 +12,13 @@ VISUALVM_MD5SUM = 4b55bc623418818793392bb233da2927
 if ENABLE_LIVECONNECT
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
-ICEDTEAPLUGIN_JAR = IcedTeaPlugin.jar
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
-LIVECONNECT = $(abs_top_srcdir)/plugin/icedtea/
+LIVECONNECT_DIR = -C lib/rt netscape
 else
 ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
-ICEDTEAPLUGIN_JAR =
-LIVECONNECT =
 PLUGIN_PATCH = patches/icedtea-plugin.patch
+LIVECONNECT_DIR =
 if ENABLE_PLUGIN
 GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
 GCJWEBPLUGIN_TARGET = gcjwebplugin.so
@@ -52,9 +50,9 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports
 	rm -rf openjdk-ecj
 	rm -rf openjdk
 	rm -rf hotspot-tools
+	rm -rf rt/netscape
 if ENABLE_LIVECONNECT
 	rm -f IcedTeaPlugin.so
-	rm -f IcedTeaPlugin.jar
 else
 if ENABLE_PLUGIN
 	rm -f gcjwebplugin.so
@@ -600,9 +598,9 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
 	fi
-
 if ENABLE_LIVECONNECT
 	cp -a plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
+	cp -a plugin/icedtea/netscape rt/
 endif
 
 clean-patch:
@@ -622,6 +620,7 @@ clean-patch:
 	if ! test x$${all_patches_ok} = "xyes" ; then \
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
+	rm -rf rt/netscape
 	for file in plugin/icedtea/sun/applet/*java ; \
 	do \
 		rm -f openjdk/jdk/src/share/classes/sun/applet/`basename $file` ; \
@@ -917,7 +916,7 @@ endif
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) $(ICEDTEAPLUGIN_JAR) \
+	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
 	extra-lib/about.jar stamps/cacao.stamp stamps/visualvm.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
@@ -928,10 +927,6 @@ if ENABLE_LIVECONNECT
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf IcedTeaPlugin.jar \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/
-	cp -pPRf IcedTeaPlugin.jar \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/
 else
 if ENABLE_PLUGIN
 	cp -pPRf gcjwebplugin.so \
@@ -973,7 +968,7 @@ endif
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) $(ICEDTEAPLUGIN_JAR) \
+	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
 	extra-lib/about.jar stamps/cacao.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
@@ -984,10 +979,6 @@ if ENABLE_LIVECONNECT
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf IcedTeaPlugin.jar \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/
-	cp -pPRf IcedTeaPlugin.jar \
-	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/
 else
 if ENABLE_PLUGIN
 	cp -pPRf gcjwebplugin.so \
@@ -1239,7 +1230,7 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
-	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt $(LIVECONNECT) -name '*.java' \
+	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt -name '*.java' \
 	  | sort -u > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt
@@ -1274,10 +1265,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-	    -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
+	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt net -C lib/rt sun ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-	    -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
+	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt net -C lib/rt sun ; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
@@ -1359,20 +1350,6 @@ IcedTeaPlugin.so: IcedTeaPlugin.o
 	  $(GTK_LIBS) \
 	  $(XULRUNNER_LIBS) \
 	  -shared -o $@
-
-# icedtea plugin jar for java-side classes
-IcedTeaPlugin.jar:
-	mkdir -p $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes
-	(cd plugin/icedtea/; \
-	  $(ICEDTEA_BOOT_DIR)/bin/javac -g \
-	  -d ../../$(BUILD_OUTPUT_DIR)/plugin/icedtea/classes \
-	  -bootclasspath $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar \
-	  netscape/javascript/*.java org/classpath/icedtea/plugin/*.java \
-	)
-
-	$(JAR) cf $@ \
-	-C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes org/classpath/icedtea/plugin \
-	-C $(BUILD_OUTPUT_DIR)/plugin/icedtea/classes netscape/javascript
 
 clean-IcedTeaPlugin:
 	rm -f IcedTeaPlugin.o

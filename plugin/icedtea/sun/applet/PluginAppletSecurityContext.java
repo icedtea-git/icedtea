@@ -35,23 +35,26 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-package org.classpath.icedtea.plugin;
+package sun.applet;
 
-import java.io.FilePermission;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.security.AccessControlContext;
 import java.security.AccessController;
+import java.security.Permission;
+import java.security.PermissionCollection;
 import java.security.PrivilegedAction;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import sun.applet.AppletSecurityContext;
-import sun.applet.PluginDebug;
-import sun.applet.PluginException;
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
+
 
 
 class Signature {
@@ -229,7 +232,7 @@ class Signature {
 	}
 }
 
-public class PluginAppletSecurityContext extends AppletSecurityContext {
+public class PluginAppletSecurityContext {
 	
 	public static HashMap<String, ClassLoader> classLoaders = new HashMap<String, ClassLoader>();
 
@@ -238,6 +241,8 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 	private Throwable throwable = null;
 	private ClassLoader liveconnectLoader = ClassLoader.getSystemClassLoader();
 	int identifier = 0;
+	
+	public static PluginStreamHandler streamhandler;
 
 	public PluginAppletSecurityContext(int identifier) {
 		this.identifier = identifier;
@@ -282,9 +287,22 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 	public void addClassLoader(String id, ClassLoader cl) {
 		this.classLoaders.put(id, cl);
 	}
-	
+
+	public static void setStreamhandler(PluginStreamHandler sh) {
+		streamhandler = sh;
+	}
+
 	public void handleMessage(String src, int reference, String message) {
 
+		// We need a security manager.. and since there is a good chance that 
+		// an applet will be loaded at some point, we should make it the SM 
+		// that JNLPRuntime will try to install
+		if (System.getSecurityManager() == null) {
+			JNLPRuntime.initialize();
+		}
+
+		System.out.println("in handleMessage(), SecurityManager=" + System.getSecurityManager());
+		
 		try {
 			if (message.startsWith("FindClass")) {
 				ClassLoader cl = null;
@@ -343,11 +361,23 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 				Integer classID = parseCall(args[1], src, Integer.class);
 				Integer fieldID = parseCall(args[2], src, Integer.class);
 
-				Class c = (Class) store.getObject(classID);
-				Field f = (Field) store.getObject(fieldID);
+				final Class c = (Class) store.getObject(classID);
+				final Field f = (Field) store.getObject(fieldID);
 
-				Object ret = null;
-				ret = f.get(c);
+				AccessControlContext acc = getAccessControlContext(identifier);
+
+				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
+					public Object run() {
+						try {
+							return f.get(c);
+						} catch (Throwable t) {
+							return t;
+						}
+					}
+				}, acc);
+
+				if (ret instanceof Throwable)
+					throw (Throwable) ret;
 
 				// System.out.println ("FIELD VALUE: " + ret);
 				if (ret == null) {
@@ -383,10 +413,26 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 					// System.out.println ("HERE2: " + value);
 				}
 
-				Class c = (Class) store.getObject(classID);
-				Field f = (Field) store.getObject(fieldID);
+				final Class c = (Class) store.getObject(classID);
+				final Field f = (Field) store.getObject(fieldID);
 
-				f.set(c, value);
+				final Object fValue = value;
+				AccessControlContext acc = getAccessControlContext(identifier);
+
+				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
+					public Object run() {
+						try {
+							f.set(c, fValue);
+						} catch (Throwable t) {
+							return t;
+						}
+						
+						return null;
+					}
+				}, acc);
+
+				if (ret instanceof Throwable)
+					throw (Throwable) ret;
 
 				write(reference, "SetStaticField");
 			} else if (message.startsWith("SetField")) {
@@ -405,10 +451,26 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 					// System.out.println ("HERE2: " + value);
 				}
 
-				Object o = (Object) store.getObject(objectID);
-				Field f = (Field) store.getObject(fieldID);
+				final Object o = (Object) store.getObject(objectID);
+				final Field f = (Field) store.getObject(fieldID);
 
-				f.set(o, value);
+				final Object fValue = value;
+				AccessControlContext acc = getAccessControlContext(identifier);
+
+				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
+					public Object run() {
+						try {
+							f.set(o, fValue);
+						} catch (Throwable t) {
+							return t;
+						}
+						
+						return null;
+					}
+				}, acc);
+
+				if (ret instanceof Throwable)
+					throw (Throwable) ret;
 
 				write(reference, "SetField");
 			} else if (message.startsWith("GetObjectArrayElement")) {
@@ -456,11 +518,23 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 				Integer objectID = parseCall(args[1], src, Integer.class);
 				Integer fieldID = parseCall(args[2], src, Integer.class);
 
-				Object o = (Object) store.getObject(objectID);
-				Field f = (Field) store.getObject(fieldID);
+				final Object o = (Object) store.getObject(objectID);
+				final Field f = (Field) store.getObject(fieldID);
 
-				Object ret = null;
-				ret = f.get(o);
+				AccessControlContext acc = getAccessControlContext(identifier);
+
+				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
+					public Object run() {
+						try {
+							return f.get(o);
+						} catch (Throwable t) {
+							return t;
+						}
+					}
+				}, acc);
+
+				if (ret instanceof Throwable)
+					throw (Throwable) ret;
 
 				// System.out.println ("FIELD VALUE: " + ret);
 				if (ret == null) {
@@ -495,7 +569,7 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 				Integer methodID = parseCall(args[2], src, Integer.class);
 
 				System.out.println("GETTING: " + methodID);
-				Method m = (Method) store.getObject(methodID);
+				final Method m = (Method) store.getObject(methodID);
 				System.out.println("GOT: " + m);
 				Class[] argTypes = m.getParameterTypes();
 
@@ -507,8 +581,22 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 				}
 
 				// System.out.println ("Calling " + m);
-				Object ret = null;
-				ret = m.invoke(null, arguments);
+
+				final Object[] fArguments = arguments;
+				AccessControlContext acc = getAccessControlContext(identifier);
+
+				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
+					public Object run() {
+						try {
+							return m.invoke(null, fArguments);
+						} catch (Throwable t) {
+							return t;
+						}
+					}
+				}, acc);
+
+				if (ret instanceof Throwable)
+					throw (Throwable) ret;
 
 				// if (ret != null)
 				// System.out.println ("RETURN VALUE: " + ret + " " +
@@ -541,8 +629,8 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 				Integer objectID = parseCall(args[1], src, Integer.class);
 				Integer methodID = parseCall(args[2], src, Integer.class);
 
-				Object o = (Object) store.getObject(objectID);
-				Method m = (Method) store.getObject(methodID);
+				final Object o = (Object) store.getObject(objectID);
+				final Method m = (Method) store.getObject(methodID);
 				Class[] argTypes = m.getParameterTypes();
 
 				Object[] arguments = new Object[argTypes.length];
@@ -559,8 +647,22 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 
 				PluginDebug.debug("Calling method " + m + " on object " + o
 						+ " with " + arguments);
-				Object ret = null;
-				ret = m.invoke(o, arguments);
+
+				AccessControlContext acc = getAccessControlContext(identifier);
+
+				final Object[] fArguments = arguments;
+				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
+					public Object run() {
+						try {
+							return m.invoke(o, fArguments);
+						} catch (Throwable t) {
+							return t;
+						}
+					}
+				}, acc);
+
+				if (ret instanceof Throwable)
+					throw (Throwable) ret;
 
 				String retO;
 				if (ret == null) {
@@ -738,18 +840,33 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 				Class[] argTypes = m.getParameterTypes();
 
 				// System.out.println ("NEWOBJ: HERE1");
-				final Object[] arguments = new Object[argTypes.length];
+				Object[] arguments = new Object[argTypes.length];
 				// System.out.println ("NEWOBJ: HERE2");
 				for (int i = 0; i < argTypes.length; i++) {
 					arguments[i] = parseArgs(args[3 + i], argTypes[i]);
 					// System.out.println ("NEWOBJ: GOT ARG: " + arguments[i]);
 				}
-				
-				Object ret = m.newInstance(arguments);
+
+				final Object[] fArguments = arguments;
+				AccessControlContext acc = getAccessControlContext(identifier);
+
+				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
+					public Object run() {
+						try {
+							return m.newInstance(fArguments);
+						} catch (Throwable t) {
+							return t;
+						}
+					}
+				}, acc);
+
+				if (ret instanceof Throwable)
+					throw (Throwable) ret;
+
 				store.reference(ret);
 
 				write(reference, "NewObject " + store.getIdentifier(ret));
-				
+
 			} else if (message.startsWith("NewString")) {
 				System.out.println("MESSAGE: " + message);
 				String[] args = message.split(" ");
@@ -826,8 +943,20 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();
-			throwable = t;
-			PluginException p = new PluginException(this.streamhandler, identifier, reference, t);
+			String msg = t.getCause() != null ? t.getCause().getMessage() : t.getMessage();
+			this.streamhandler.write("instance " + identifier + " reference " + reference + " Error " + msg);
+
+			// ExceptionOccured is only called after Callmethod() by mozilla. So
+			// for exceptions that are not related to CallMethod, we need a way
+			// to log them. This is how we do it.. send an error message to the
+			// c++ side to let it know that something went wrong, and it will do
+			// the right thing to let mozilla know
+
+			// Store the cause as the actual exception. This is needed because 
+			// the exception we get here will always be an 
+			// "InvocationTargetException" due to the use of reflection above
+			if (message.startsWith("CallMethod") || message.startsWith("CallStaticMethod"))
+				throwable = t.getCause();
 		}
 	}
 
@@ -851,5 +980,42 @@ public class PluginAppletSecurityContext extends AppletSecurityContext {
 
 	public void store(Object o) {
 		store.reference(o);
+	}
+
+	/**
+	 * Returns an 
+	 * 
+	 * @param identifier The unique instance identity of the applet for which the context is needed
+	 * @return The context associated with the given applet
+	 */
+	public AccessControlContext getAccessControlContext(int identifier) {
+		
+		// TODO: 
+		// 1. Find applet URL
+		// 2. If startsWith file://, some permissions are lax
+		// 3. If not, find out associated permissions
+
+		// Deny everything for now
+		PermissionCollection pc = new PermissionCollection(){
+			@Override
+			public boolean implies(Permission permission) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		
+			@Override
+			public Enumeration<Permission> elements() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		
+			@Override
+			public void add(Permission permission) {
+				// TODO Auto-generated method stub
+			}
+		};
+
+		ProtectionDomain pd = new ProtectionDomain(PluginAppletSecurityContext.class.getProtectionDomain().getCodeSource(), pc);
+		return new AccessControlContext(new ProtectionDomain[] {pd});
 	}
 }
