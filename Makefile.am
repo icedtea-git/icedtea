@@ -13,12 +13,12 @@ if ENABLE_LIVECONNECT
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
-LIVECONNECT = $(abs_top_srcdir)/plugin/icedtea/
+LIVECONNECT_DIR = -C lib/rt netscape
 else
 ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
 PLUGIN_PATCH = patches/icedtea-plugin.patch
-LIVECONNECT = 
+LIVECONNECT_DIR =
 if ENABLE_PLUGIN
 GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
 GCJWEBPLUGIN_TARGET = gcjwebplugin.so
@@ -44,6 +44,7 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports
 	rm -rf openjdk-ecj
 	rm -rf openjdk
 	rm -rf hotspot-tools
+	rm -rf rt/netscape
 if ENABLE_LIVECONNECT
 	rm -f IcedTeaPlugin.so
 else
@@ -594,7 +595,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	fi
 if ENABLE_LIVECONNECT
 	cp -a plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
-	cp -a plugin/icedtea/netscape openjdk/jdk/src/share/classes/
+	cp -a plugin/icedtea/netscape rt/
 endif
 
 clean-patch:
@@ -614,7 +615,7 @@ clean-patch:
 	if ! test x$${all_patches_ok} = "xyes" ; then \
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
-	rm -rf openjdk/jdk/src/share/classes/netscape
+	rm -rf rt/netscape
 	for file in plugin/icedtea/sun/applet/*java ; \
 	do \
 		rm -f openjdk/jdk/src/share/classes/sun/applet/`basename $file` ; \
@@ -1203,7 +1204,7 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
-	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt $(LIVECONNECT) -name '*.java' \
+	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt -name '*.java' \
 	  | sort -u > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt
@@ -1238,10 +1239,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
+            -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt net -C lib/rt sun ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-            -C lib/rt javax -C lib/rt net -C lib/rt sun ; \
+            -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt net -C lib/rt sun ; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
