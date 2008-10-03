@@ -1,5 +1,6 @@
 #
 # Copyright 1999-2005 Sun Microsystems, Inc.  All Rights Reserved.
+# Copyright 2008 Red Hat, Inc.
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 # This code is free software; you can redistribute it and/or modify it
@@ -29,3 +30,16 @@ TYPE = SHARK
 VM_SUBDIR = server
 
 CFLAGS += -DSHARK
+
+# Something these files fail with GCC at higher optimization levels.
+# An llvm::Value ends up NULL, causing segfaults in LLVM when it is
+# used.  Observed with 4.1.2 20070925 (Red Hat 4.1.2-33) and 4.3.2.
+OPT_CFLAGS/sharkBlock.o = -O0
+OPT_CFLAGS/sharkMonitor.o = -O0
+
+# Something in this file fails with GCC at higher optimization levels.
+# The part of ciTypeFlow::StateVector::meet_exception() that fills in
+# local variables stops part way through leaving the rest set to T_TOP
+# (ie uninitialized).  The VM then aborts with a ShouldNotReachHere()
+# in SharkPHIState::initialize().  Observed with 4.3.2.
+OPT_CFLAGS/ciTypeFlow.o = -O1

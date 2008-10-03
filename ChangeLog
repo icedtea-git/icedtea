@@ -1,3 +1,8 @@
+2008-10-03  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/build/linux/makefiles/shark.make:
+	Work around some GCC optimizer failures.
+
 2008-10-01     Deepak Bhole <dbhole@redhat.com>
 	* .hgignore: Removed IcedTeaPlugin.jar
 	* IcedTeaPlugin.cc: Updated classpath when launching Java. added
