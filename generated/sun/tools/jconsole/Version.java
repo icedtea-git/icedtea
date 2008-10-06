@@ -29,7 +29,7 @@ import java.io.PrintStream;
 
 public class Version {
     private static final String jconsole_version =
-        "1.6.0_0-b11";
+        "1.6.0_0-b12";
 
     public static void print(PrintStream ps) {
         printFullVersion(ps);

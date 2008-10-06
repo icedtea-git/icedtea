@@ -36,10 +36,10 @@ public class Version {
         "1.6.0_0";
 
     private static final String java_runtime_name =
-        "OpenJDK  Runtime Environment";
+        "OpenJDK Runtime Environment";
 
     private static final String java_runtime_version =
-        "1.6.0_0-b11";
+        "1.6.0_0-b12";
 
     static {
         init();
