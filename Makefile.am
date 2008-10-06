@@ -52,7 +52,7 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports
 	rm -rf hotspot-tools
 	rm -rf rt/netscape
 if ENABLE_LIVECONNECT
-	rm -f IcedTeaPlugin.so
+	rm -f IcedTeaPlugin.o IcedTeaPlugin.so
 else
 if ENABLE_PLUGIN
 	rm -f gcjwebplugin.so
