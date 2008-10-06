@@ -1,3 +1,7 @@
+2008-10-06  Matthias Klose  <doko@ubuntu.com>
+
+	* IcedTeaPlugin.cc (PLUGIN_MIME_DESC): Remove 1.7 specs.
+
 2008-10-05  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (distclean-local): Remove IcedTeaPlugin object file.

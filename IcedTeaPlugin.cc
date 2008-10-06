@@ -215,8 +215,7 @@ private:
   "application/x-java-applet;version=1.4.2:class,jar:IcedTea;"         \
   "application/x-java-applet;version=1.5:class,jar:IcedTea;"           \
   "application/x-java-applet;version=1.6:class,jar:IcedTea;"           \
-  "application/x-java-applet;version=1.7:class,jar:IcedTea;"           \
-  "application/x-java-applet;jpi-version=1.7.0_00:class,jar:IcedTea;"  \
+  "application/x-java-applet;jpi-version=1.6.0_00:class,jar:IcedTea;"  \
   "application/x-java-bean:class,jar:IcedTea;"                         \
   "application/x-java-bean;version=1.1:class,jar:IcedTea;"             \
   "application/x-java-bean;version=1.1.1:class,jar:IcedTea;"           \
@@ -232,8 +231,7 @@ private:
   "application/x-java-bean;version=1.4.2:class,jar:IcedTea;"           \
   "application/x-java-bean;version=1.5:class,jar:IcedTea;"             \
   "application/x-java-bean;version=1.6:class,jar:IcedTea;"             \
-  "application/x-java-bean;version=1.7:class,jar:IcedTea;"             \
-  "application/x-java-bean;jpi-version=1.7.0_00:class,jar:IcedTea;"
+  "application/x-java-bean;jpi-version=1.6.0_00:class,jar:IcedTea;"
 
 #define FAILURE_MESSAGE "IcedTeaPluginFactory error: Failed to run %s." \
   "  For more detail rerun \"firefox -g\" in a terminal window."
