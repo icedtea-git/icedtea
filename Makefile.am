@@ -533,6 +533,8 @@ if !USE_SYSTEM_CACAO
 	then \
 	  mkdir cacao ; \
 	  $(TAR) xf $(CACAO_SRC_ZIP) -C cacao ; \
+	  dir=$$(basename cacao/cacao-*) ; \
+	  ln -s $$dir cacao/cacao ; \
 	fi
 endif
 endif
@@ -1316,7 +1318,7 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
-	cd cacao/cacao-$(CACAO_VERSION) && \
+	cd cacao/cacao && \
 	./configure \
 	  --prefix=$(abs_top_builddir)/cacao/install \
 	  --with-java-runtime-library=openjdk \

@@ -1,3 +1,7 @@
+2008-10-07  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Don't rely on versioned cacao source directory.
+
 2008-10-06  Matthias Klose  <doko@ubuntu.com>
 
 	* generated/sun/misc/Version.java: Regenerate for 6b12.
