@@ -1,3 +1,13 @@
+2008-10-07  Gary Benson  <gbenson@redhat.com>
+	    Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.hpp
+	(object): Add missing return statement.
+	(displaced_header): Likewise.
+
+	* ports/hotspot/build/linux/makefiles/shark.make:
+	Remove workaround for the above.
+
 2008-10-07  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am: Don't rely on versioned cacao source directory.

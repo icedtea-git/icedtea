@@ -67,7 +67,7 @@ class SharkMonitor : public ResourceObj {
  public:
   llvm::Value* object() const
   {
-    builder()->CreateLoad(object_addr());
+    return builder()->CreateLoad(object_addr());
   }
   void set_object(llvm::Value* object) const
   {
@@ -75,7 +75,7 @@ class SharkMonitor : public ResourceObj {
   }
   llvm::Value* displaced_header() const
   {
-    builder()->CreateLoad(displaced_header_addr());
+    return builder()->CreateLoad(displaced_header_addr());
   }
   void set_displaced_header(llvm::Value* displaced_header) const
   {

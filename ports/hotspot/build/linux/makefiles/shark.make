@@ -31,12 +31,6 @@ VM_SUBDIR = server
 
 CFLAGS += -DSHARK
 
-# Something these files fail with GCC at higher optimization levels.
-# An llvm::Value ends up NULL, causing segfaults in LLVM when it is
-# used.  Observed with 4.1.2 20070925 (Red Hat 4.1.2-33) and 4.3.2.
-OPT_CFLAGS/sharkBlock.o = -O0
-OPT_CFLAGS/sharkMonitor.o = -O0
-
 # Something in this file fails with GCC at higher optimization levels.
 # The part of ciTypeFlow::StateVector::meet_exception() that fills in
 # local variables stops part way through leaving the rest set to T_TOP
