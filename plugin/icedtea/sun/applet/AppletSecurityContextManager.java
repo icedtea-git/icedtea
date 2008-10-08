@@ -1,5 +1,6 @@
 package sun.applet;
 
+import java.security.AccessControlContext;
 import java.util.HashMap;
 
 public class AppletSecurityContextManager {
@@ -20,8 +21,13 @@ public class AppletSecurityContextManager {
 		contexts.get(identifier).dumpStore();
 	}
 	
-	public static void handleMessage(int identifier, String src, int reference,	String message) {
+	public static void handleMessage(int identifier, int reference,	String src, String[] privileges, String message) {
 		System.err.println(identifier + " -- " + src + " -- " + reference + " -- " + message + " CONTEXT= " + contexts.get(identifier));
-		contexts.get(identifier).handleMessage(src, reference, message);
+		AccessControlContext callContext = null;
+
+		privileges = privileges != null ? privileges : new String[0];
+		callContext = contexts.get(identifier).getAccessControlContext(privileges, src); 
+
+		contexts.get(identifier).handleMessage(reference, src, callContext, message);
 	}
 }

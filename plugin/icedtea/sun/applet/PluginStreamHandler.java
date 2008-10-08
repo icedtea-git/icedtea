@@ -146,34 +146,44 @@ public class PluginStreamHandler {
     
     public void handleMessage(String message) throws PluginException {
 
-    	StringTokenizer st = new StringTokenizer(message, " ");
-
-    	String type = st.nextToken();
-    	final int identifier = Integer.parseInt(st.nextToken());
-
-    	String rest = "";
+    	int nextIndex = 0;
     	int reference = -1;
     	String src = null;
+    	String[] privileges = null;
+    	String rest = "";
 
-    	String potentialReference = st.hasMoreTokens() ? st.nextToken() : "";
+    	String[] msgComponents = message.split(" ");
+    	
+    	// type and identifier are guaranteed to be there
+    	String type = msgComponents[0];
+    	final int identifier = Integer.parseInt(msgComponents[1]);
+    	nextIndex = 2;
+    	
+    	// reference, src and privileges are optional components, 
+    	// and are guaranteed to be in that order, if they occur
 
-    	// if the next token is reference, read it, else reset "rest"
-    	if (potentialReference.equals("reference")) {
-    		reference = Integer.parseInt(st.nextToken());
-    	} else {
-    		rest += potentialReference + " ";
+    	// is there a reference ?
+    	if (msgComponents[nextIndex].equals("reference")) {
+    		reference = Integer.parseInt(msgComponents[nextIndex+1]);
+    		nextIndex += 2;
     	}
 
-    	String potentialSrc = st.hasMoreTokens() ? st.nextToken() : "";
-
-    	if (potentialSrc.equals("src")) {
-    		src = st.nextToken();
-    	} else {
-    		rest += potentialSrc + " ";
+    	// is there a src?
+    	if (msgComponents[nextIndex].equals("src")) {
+    		src = msgComponents[nextIndex+1];
+    		nextIndex += 2;
     	}
 
-    	while (st.hasMoreElements()) {
-    		rest += st.nextToken();
+    	// is there a privileges?
+    	if (msgComponents[nextIndex].equals("privileges")) {
+    		String privs = msgComponents[nextIndex+1];
+    		privileges = privs.split(",");
+    		nextIndex += 2;
+    	}
+    	
+    	// rest
+    	for (int i=nextIndex; i < msgComponents.length; i++) {
+    		rest += msgComponents[i];
     		rest += " ";
     	}
 
@@ -181,7 +191,7 @@ public class PluginStreamHandler {
 
     	try {
 
-    		System.err.println("Breakdown -- type: " + type + " identifier: " + identifier + " reference: " + reference + " src: " + src + " rest: " + rest);
+    		System.err.println("Breakdown -- type: " + type + " identifier: " + identifier + " reference: " + reference + " src: " + src + " privileges: " + privileges + " rest: \"" + rest + "\"");
 
     		if (rest.contains("JavaScriptGetWindow")
     				|| rest.contains("JavaScriptGetMember")
@@ -205,7 +215,7 @@ public class PluginStreamHandler {
     			PluginAppletViewer.handleMessage(identifier, freference,frest);
     		} else if (type.equals("context")) {
     			PluginDebug.debug("Sending to PASC: " + identifier + "/" + reference + " and " + rest);
-    			AppletSecurityContextManager.handleMessage(identifier, src, reference, rest);
+    			AppletSecurityContextManager.handleMessage(identifier, reference, src, privileges, rest);
     		}
     	} catch (Exception e) {
     		throw new PluginException(this, identifier, reference, e);

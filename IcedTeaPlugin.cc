@@ -309,29 +309,36 @@ char const* TYPES[10] = { "Object",
 #include <nsIThread.h>
 
 // FIXME: create index from security context.
-#define MESSAGE_CREATE(reference)                            \
-  const char* addr; \
-  char context[16]; \
-  GetCurrentPageAddress(&addr); \
-  GetCurrentContextAddr(context); \
+#define MESSAGE_CREATE()                                     \
   nsCString message ("context ");                            \
   message.AppendInt (0);                                     \
+
+#define MESSAGE_ADD_STACK_REFERENCE(reference) \
   message += " reference ";                                  \
   message.AppendInt (reference);                             \
-  if (factory->codebase_map.find(nsCString(addr)) != factory->codebase_map.end()) \
-  { \
-	  message += " src "; \
-	  message += factory->codebase_map[nsCString(addr)];\
-  } \
-  message += " ";											 \
-  message += __func__;                                       \
   if (factory->result_map[reference] == NULL) {                \
 	   factory->result_map[reference] = new ResultContainer();  \
 	   printf("ResultMap created -- %p %d\n", factory->result_map[reference], factory->result_map[reference]->returnIdentifier); \
   } \
   else                                                      \
-	   factory->result_map[reference]->Clear(); 
+	   factory->result_map[reference]->Clear();
 
+#define MESSAGE_ADD_SRC(src) \
+	message += " src "; \
+	message += src;
+
+#define MESSAGE_ADD_PRIVILEGES()                \
+  nsCString privileges("");                     \
+  GetEnabledPrivileges(&privileges);            \
+  if (privileges.Length() > 0)                  \
+  {                                             \
+    message += " privileges ";                  \
+    message += privileges;                      \
+  }
+
+#define MESSAGE_ADD_FUNC() \
+  message += " ";											 \
+  message += __func__;
 
 #define MESSAGE_ADD_STRING(name)                \
   message += " ";                               \
@@ -396,7 +403,7 @@ char const* TYPES[10] = { "Object",
 
 #define PROCESS_PENDING_EVENTS_REF(reference) \
     if (factory->shutting_down == PR_TRUE && \
-		factory->result_map[reference]->errorOccured == PR_TRUE) \
+		factory->result_map[reference]->errorOccurred == PR_TRUE) \
 	{                                                           \
 		printf("Error occured. Exiting function\n");            \
 		return NS_ERROR_FAILURE; \
@@ -424,13 +431,13 @@ char const* TYPES[10] = { "Object",
   nsresult res = NS_OK;                                                 \
   printf ("RECEIVE 1\n");                                               \
   while (factory->result_map[reference]->returnIdentifier == -1 &&\
-	     factory->result_map[reference]->errorOccured == PR_FALSE)     \
+	     factory->result_map[reference]->errorOccurred == PR_FALSE)     \
     {                                                                   \
       PROCESS_PENDING_EVENTS_REF (reference);                                \
     }                                                                   \
   printf ("RECEIVE 3\n"); \
   if (factory->result_map[reference]->returnIdentifier == 0 || \
-	  factory->result_map[reference]->errorOccured == PR_TRUE) \
+	  factory->result_map[reference]->errorOccurred == PR_TRUE) \
   {  \
 	  *name = NULL;                                                     \
   } else {                                                              \
@@ -447,12 +454,12 @@ char const* TYPES[10] = { "Object",
   nsresult res = NS_OK;                                                 \
   printf("RECEIVE ID 1\n");                                             \
   while (factory->result_map[reference]->returnIdentifier == -1 &&\
-	     factory->result_map[reference]->errorOccured == PR_FALSE)     \
+	     factory->result_map[reference]->errorOccurred == PR_FALSE)     \
     {                                                                   \
       PROCESS_PENDING_EVENTS_REF (reference);                                \
     }                                                                   \
                                                                         \
-  if (factory->result_map[reference]->errorOccured == PR_TRUE)	 	    \
+  if (factory->result_map[reference]->errorOccurred == PR_TRUE)	 	    \
   { \
 	  *id = NULL; \
   } else \
@@ -468,7 +475,7 @@ char const* TYPES[10] = { "Object",
   nsresult res = NS_OK;                                                    \
   printf("RECEIVE VALUE 1\n");                                             \
   while (factory->result_map[reference]->returnValue == "" && \
-	     factory->result_map[reference]->errorOccured == PR_FALSE)            \
+	     factory->result_map[reference]->errorOccurred == PR_FALSE)            \
     {                                                                      \
       PROCESS_PENDING_EVENTS_REF (reference);                                   \
     }                                                                      \
@@ -485,12 +492,12 @@ char const* TYPES[10] = { "Object",
   nsresult res = NS_OK;                                         \
   printf("RECEIVE SIZE 1\n");                                 \
   while (factory->result_map[reference]->returnValue == "" && \
-	     factory->result_map[reference]->errorOccured == PR_FALSE) \
+	     factory->result_map[reference]->errorOccurred == PR_FALSE) \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
   nsresult conversionResult;                                    \
-  if (factory->result_map[reference]->errorOccured == PR_TRUE) \
+  if (factory->result_map[reference]->errorOccurred == PR_TRUE) \
 	*result = NULL; \
   else \
   { \
@@ -507,11 +514,11 @@ char const* TYPES[10] = { "Object",
   nsresult res = NS_OK;                                         \
   printf("RECEIVE STRING 1\n");                                 \
   while (factory->result_map[reference]->returnValue == "" && \
-	     factory->result_map[reference]->errorOccured == PR_FALSE)  \
+	     factory->result_map[reference]->errorOccurred == PR_FALSE)  \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-	if (factory->result_map[reference]->errorOccured == PR_TRUE) \
+	if (factory->result_map[reference]->errorOccurred == PR_TRUE) \
 		*result = NULL; \
 	else \
 	{\
@@ -529,11 +536,11 @@ char const* TYPES[10] = { "Object",
   nsresult res = NS_OK;                                         \
   printf("RECEIVE STRING UCS 1\n");                                 \
   while (factory->result_map[reference]->returnValueUCS.IsEmpty() && \
-	     factory->result_map[reference]->errorOccured == PR_FALSE) \
+	     factory->result_map[reference]->errorOccurred == PR_FALSE) \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-	if (factory->result_map[reference]->errorOccured == PR_TRUE) \
+	if (factory->result_map[reference]->errorOccurred == PR_TRUE) \
 		*result = NULL; \
 	else \
 	{ \
@@ -554,11 +561,11 @@ char const* TYPES[10] = { "Object",
   nsresult res = NS_OK;                                         \
   printf("RECEIVE BOOLEAN 1\n");                             \
   while (factory->result_map[reference]->returnIdentifier == -1 && \
-	     factory->result_map[reference]->errorOccured == PR_FALSE)               \
+	     factory->result_map[reference]->errorOccurred == PR_FALSE)               \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-	if (factory->result_map[reference]->errorOccured == PR_TRUE) \
+	if (factory->result_map[reference]->errorOccurred == PR_TRUE) \
 		*result = NULL; \
 	else \
 	  *result = factory->result_map[reference]->returnIdentifier;
@@ -717,8 +724,8 @@ class ResultContainer
   		PRUint32 returnIdentifier;
 		nsCString returnValue;
 		nsString returnValueUCS;
-		PRBool errorOccured;
-
+		nsCString errorMessage;
+		PRBool errorOccurred;
 };
 
 ResultContainer::ResultContainer () 
@@ -728,7 +735,8 @@ ResultContainer::ResultContainer ()
 	returnIdentifier = -1;
 	returnValue.Truncate();
 	returnValueUCS.Truncate();
-	errorOccured = PR_FALSE;
+	errorMessage.Truncate();
+	errorOccurred = PR_FALSE;
 }
 
 ResultContainer::~ResultContainer ()
@@ -738,6 +746,7 @@ ResultContainer::~ResultContainer ()
     returnIdentifier = -1;
 	returnValue.Truncate();
 	returnValueUCS.Truncate();
+	errorMessage.Truncate();
 }
 
 void
@@ -748,7 +757,8 @@ ResultContainer::Clear()
 	returnIdentifier = -1;
 	returnValue.Truncate();
 	returnValueUCS.Truncate();
-	errorOccured = PR_FALSE;
+	errorMessage.Truncate();
+	errorOccurred = PR_FALSE;
 }
 
 #include <nsTArray.h>
@@ -1182,6 +1192,7 @@ private:
   void DecrementContextCounter();
   nsresult GetCurrentContextAddr(char *addr);
   nsresult GetCurrentPageAddress(const char **addr);
+  nsresult GetEnabledPrivileges(nsCString *privileges);
   int contextCounter;
 };
 
@@ -2780,7 +2791,16 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
       else if (command == "Error")
         {
 			printf("Error occured. Setting error flag for container @ %d to true\n", reference);
-			result_map[reference]->errorOccured = PR_TRUE;
+			result_map[reference]->errorOccurred = PR_TRUE;
+			result_map[reference]->errorMessage = (nsCString) rest;
+
+			rest += "ERROR: ";
+			IcedTeaPluginInstance* instance = NULL;
+			instances.Get (identifier, &instance);
+			if (instance != 0)
+			{
+				instance->peer->ShowStatus (nsCString (rest).get ());
+			}
 		}
     }
   else if (prefix == "context")
@@ -3916,91 +3936,72 @@ IcedTeaJNIEnv::DecrementContextCounter ()
     PR_ExitMonitor(contextCounterPRMonitor);
 }
 
-#include <nsIJSContextStack.h>
-
 nsresult
-IcedTeaJNIEnv::GetCurrentContextAddr(char *addr)
+IcedTeaJNIEnv::GetEnabledPrivileges(nsCString *privileges)
 {
-	return NS_OK;
-    PLUGIN_TRACE_JNIENV ();
+	nsresult rv;
+	nsCOMPtr<nsIScriptSecurityManager> sec_man = 
+		do_GetService(NS_SCRIPTSECURITYMANAGER_CONTRACTID, &rv);
 
-    // Get JSContext from stack.
-    nsCOMPtr<nsIJSContextStack> mJSContextStack(do_GetService("@mozilla.org/js/xpc/ContextStack;1"));
-    if (mJSContextStack) {
-        JSContext *cx;
-        if (NS_FAILED(mJSContextStack->Peek(&cx)))
-            return NS_ERROR_FAILURE;
-
-        printf("Context1: %p\n", cx);
-
-        // address cannot be more than 8 bytes (8 bytes = 64 bits)
-		sprintf(addr, "%p", cx);
-
-        printf("Context2: %s\n", addr);
-	}
-
-	return NS_OK;
-}
-
-nsresult
-IcedTeaJNIEnv::GetCurrentPageAddress(const char **addr)
-{
-	return NS_OK;
-    PLUGIN_TRACE_JNIENV ();
-
-    nsIPrincipal *prin;
-	nsCOMPtr<nsIScriptSecurityManager> sec_man(do_GetService("@mozilla.org/scriptsecuritymanager;1"));
-
-    if (sec_man) {
-    
-		PRBool isEnabled = PR_FALSE;
-    	sec_man->IsCapabilityEnabled("UniversalBrowserRead", &isEnabled);
-
-		if (isEnabled == PR_FALSE) {
-			printf("UniversalBrowserRead is NOT enabled\n");
-		} else {
-			printf("UniversalBrowserRead IS enabled\n");
-		}
-
-    	sec_man->IsCapabilityEnabled("UniversalBrowserWrite", &isEnabled);
-
-		if (isEnabled == PR_FALSE) {
-			printf("UniversalBrowserWrite is NOT enabled\n");
-		} else {
-			printf("UniversalBrowserWrite IS enabled\n");
-		}
-	}
-
-    if (sec_man)
-	{
-    	sec_man->GetSubjectPrincipal(&prin);
-	} else {
+	if (NS_FAILED(rv) || !sec_man) {
 		return NS_ERROR_FAILURE;
 	}
 
-   if (prin)
-   {
-       nsIURI *uri;
-       prin->GetURI(&uri);
+	PRBool isEnabled = PR_FALSE;
 
-	   if (uri)
-	   {
-           nsCAutoString str;
-           uri->GetSpec(str);
-           NS_CStringGetData(str, addr);
-	   } else {
-		   return NS_ERROR_FAILURE;
-	   }
-   } else {
-	   return NS_ERROR_FAILURE;
-   }
+	// check privileges one by one
+
+	privileges->Truncate();
+	char available_privileges[1024];
+
+	// see: http://docs.sun.com/source/816-6170-10/index.htm
+	
+	// Should these other privileges be supported? According to 
+	// http://java.sun.com/j2se/1.3/docs/guide/plugin/security.html it is
+	// either UniversalBrowserRead/UniversalJavaPermissions or the highway...
+
+/*
+	// broken down to make it clean...
+	sprintf(available_privileges, "%s %s %s %s %s %s %s %s %s %s %s %s", 
+								"LimitedInstall FullInstall SilentInstall",
+								"UniversalAccept UniversalAwtEventQueueAccess UniversalConnect",
+								"UniversalConnectWithRedirect UniversalDialogModality",
+								"UniversalExecAccess UniversalExitAccess UniversalFdRead",
+								"UniversalFileDelete UniversalFileRead UniversalFileWrite",
+								"UniversalLinkAccess UniversalListen UniversalMulticast", 
+								"UniversalJavaPermissions UniversalPackageAccess",
+								"UniversalPackageDefinition UniversalPrintJobAccess", 
+								"UniversalPropertyRead UniversalPropertyWrite",
+								"UniversalSendMail UniversalSetFactory UniversalSystemClipboardAccess",
+								"UniversalThreadAccess UniversalThreadGroupAccess",
+								"UniversalTopLevelWindow");
+*/
+
+	sprintf(available_privileges, "%s", 
+							"UniversalBrowserRead UniversalJavaPermissions");
 
 
-	nsCOMPtr<nsIJSID> js_id(do_GetService("@mozilla.org/js/xpc/ID;1"));
-	printf("JS ID is: %s\n", js_id->GetID()->ToString());
+	char *token = strtok(available_privileges, " ");
+	while (token != NULL) 
+	{
+		isEnabled = PR_FALSE;
+		sec_man->IsCapabilityEnabled(token, &isEnabled);
 
-    return NS_OK;
+		if (isEnabled == PR_TRUE)
+		{
+			printf("GetEnabledPrivileges : %s is enabled\n", token);
+			*privileges += token;
+			*privileges += ",";
+		} else {
+			printf("GetEnabledPrivileges : %s is _NOT_ enabled\n", token);
+		}
 
+		token = strtok (NULL, " ");
+	}
+
+	privileges->Trim(",");
+
+	return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -4011,14 +4012,41 @@ IcedTeaJNIEnv::NewObject (jclass clazz,
                           nsISecurityContext* ctx)
 {
   PLUGIN_TRACE_JNIENV ();
+
+  char origin[1024];
+  sprintf(origin, "");
+
+  if (ctx)
+	  ctx->GetOrigin(origin, 1024);
+
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_ID (methodID);
   MESSAGE_ADD_ARGS (methodID, args);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE (reference, jobject, result);
+
+  if (factory->result_map[reference]->errorOccurred == PR_TRUE &&
+	  factory->result_map[reference]->errorMessage.Find("LiveConnectPermissionNeeded") == 0)
+  {
+	// Permission error. Try again. This time, send permissions over the wire
+	MESSAGE_CREATE ();
+    MESSAGE_ADD_STACK_REFERENCE(reference);
+    MESSAGE_ADD_SRC(origin);
+	MESSAGE_ADD_PRIVILEGES();
+    MESSAGE_ADD_FUNC();
+	MESSAGE_ADD_REFERENCE (clazz);
+    MESSAGE_ADD_ID (methodID);
+    MESSAGE_ADD_ARGS (methodID, args);
+	MESSAGE_SEND ();
+	MESSAGE_RECEIVE_REFERENCE (reference, jobject, result);
+  }
+
+  
   DecrementContextCounter ();
 
   return NS_OK;
@@ -4033,15 +4061,43 @@ IcedTeaJNIEnv::CallMethod (jni_type type,
                            nsISecurityContext* ctx)
 {
   PLUGIN_TRACE_JNIENV ();
+
+  char origin[1024];
+  sprintf(origin, "");
+
+  if (ctx)
+	  ctx->GetOrigin(origin, 1024);
+
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_ADD_ID (methodID);
   MESSAGE_ADD_ARGS (methodID, args);
-  std::cout << "CALLMETHOD -- OBJ: " << obj << " METHOD: " << methodID << " ARGS: " << args << std::endl;
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_VALUE (reference, type, result);
+
+  if (factory->result_map[reference]->errorOccurred == PR_TRUE &&
+	  factory->result_map[reference]->errorMessage.Find("LiveConnectPermissionNeeded") == 0)
+  {
+    MESSAGE_CREATE ();
+    MESSAGE_ADD_STACK_REFERENCE(reference);
+    MESSAGE_ADD_SRC(origin);
+	MESSAGE_ADD_PRIVILEGES();
+    MESSAGE_ADD_FUNC();
+    MESSAGE_ADD_REFERENCE (obj);
+    MESSAGE_ADD_ID (methodID);
+    MESSAGE_ADD_ARGS (methodID, args);
+    MESSAGE_SEND ();
+    MESSAGE_RECEIVE_VALUE (reference, type, result);
+
+    // if everything was OK, clear exception from previous access exception
+	if (factory->result_map[reference]->errorOccurred == PR_FALSE)
+		ExceptionClear();
+  }
+
   DecrementContextCounter ();
 
   return NS_OK;
@@ -4307,13 +4363,37 @@ IcedTeaJNIEnv::GetField (jni_type type,
                          nsISecurityContext* ctx)
 {
   PLUGIN_TRACE_JNIENV ();
+
+  char origin[1024];
+  sprintf(origin, "");
+
+  if (ctx)
+	  ctx->GetOrigin(origin, 1024);
+
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_ADD_ID (fieldID);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_VALUE (reference, type, result);
+
+  if (factory->result_map[reference]->errorOccurred == PR_TRUE &&
+	  factory->result_map[reference]->errorMessage.Find("LiveConnectPermissionNeeded") == 0)
+  {
+    MESSAGE_CREATE ();
+    MESSAGE_ADD_STACK_REFERENCE(reference);
+    MESSAGE_ADD_SRC(origin);
+	MESSAGE_ADD_PRIVILEGES();
+    MESSAGE_ADD_FUNC();
+    MESSAGE_ADD_REFERENCE (obj);
+    MESSAGE_ADD_ID (fieldID);
+    MESSAGE_SEND ();
+    MESSAGE_RECEIVE_VALUE (reference, type, result);
+  }
+
   DecrementContextCounter ();
 
   return NS_OK;
@@ -4327,7 +4407,17 @@ IcedTeaJNIEnv::SetField (jni_type type,
                          nsISecurityContext* ctx)
 {
   PLUGIN_TRACE_JNIENV ();
-  MESSAGE_CREATE (-1);
+
+  char origin[1024];
+  sprintf(origin, "");
+
+  if (ctx)
+	  ctx->GetOrigin(origin, 1024);
+
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(-1);
+  MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_TYPE (type);
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_ADD_ID (fieldID);
@@ -4346,14 +4436,43 @@ IcedTeaJNIEnv::CallStaticMethod (jni_type type,
                                  nsISecurityContext* ctx)
 {
   PLUGIN_TRACE_JNIENV ();
+
+  char origin[1024];
+  sprintf(origin, "");
+
+  if (ctx)
+	  ctx->GetOrigin(origin, 1024);
+
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_ID (methodID);
   MESSAGE_ADD_ARGS (methodID, args);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_VALUE (reference, type, result);
+  
+  if (factory->result_map[reference]->errorOccurred == PR_TRUE &&
+	  factory->result_map[reference]->errorMessage.Find("LiveConnectPermissionNeeded") == 0)
+  {
+    MESSAGE_CREATE ();
+    MESSAGE_ADD_STACK_REFERENCE(reference);
+    MESSAGE_ADD_SRC(origin);
+	MESSAGE_ADD_PRIVILEGES();
+    MESSAGE_ADD_FUNC();
+    MESSAGE_ADD_REFERENCE (clazz);
+    MESSAGE_ADD_ID (methodID);
+    MESSAGE_ADD_ARGS (methodID, args);
+    MESSAGE_SEND ();
+    MESSAGE_RECEIVE_VALUE (reference, type, result);
+
+    // if everything was OK, clear exception from previous access exception
+	if (factory->result_map[reference]->errorOccurred == PR_FALSE)
+		ExceptionClear();
+  }
+
   DecrementContextCounter ();
 
   return NS_OK;
@@ -4367,13 +4486,37 @@ IcedTeaJNIEnv::GetStaticField (jni_type type,
                                nsISecurityContext* ctx)
 {
   PLUGIN_TRACE_JNIENV ();
+
+  char origin[1024];
+  sprintf(origin, "");
+
+  if (ctx)
+	  ctx->GetOrigin(origin, 1024);
+
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_ID (fieldID);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_VALUE (reference, type, result);
+
+  if (factory->result_map[reference]->errorOccurred == PR_TRUE &&
+	  factory->result_map[reference]->errorMessage.Find("LiveConnectPermissionNeeded") == 0)
+  {
+    MESSAGE_CREATE ();
+    MESSAGE_ADD_STACK_REFERENCE(reference);
+    MESSAGE_ADD_SRC(origin);
+	MESSAGE_ADD_PRIVILEGES();
+    MESSAGE_ADD_FUNC();
+    MESSAGE_ADD_REFERENCE (clazz);
+    MESSAGE_ADD_ID (fieldID);
+    MESSAGE_SEND ();
+    MESSAGE_RECEIVE_VALUE (reference, type, result);
+  }
+
   DecrementContextCounter ();
 
   return NS_OK;
@@ -4387,7 +4530,17 @@ IcedTeaJNIEnv::SetStaticField (jni_type type,
                                nsISecurityContext* ctx)
 {
   PLUGIN_TRACE_JNIENV ();
-  MESSAGE_CREATE (-1);
+
+  char origin[1024];
+  sprintf(origin, "");
+
+  if (ctx)
+	  ctx->GetOrigin(origin, 1024);
+
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(-1);
+  MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_TYPE (type);
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_ID (fieldID);
@@ -4423,7 +4576,9 @@ IcedTeaJNIEnv::FindClass (char const* name,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_STRING (name);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4438,7 +4593,9 @@ IcedTeaJNIEnv::GetSuperclass (jclass sub,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (sub);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4454,7 +4611,9 @@ IcedTeaJNIEnv::IsAssignableFrom (jclass sub,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (sub);
   MESSAGE_ADD_REFERENCE (super);
   MESSAGE_SEND ();
@@ -4488,7 +4647,9 @@ IcedTeaJNIEnv::ExceptionOccurred (jthrowable* result)
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   // FIXME: potential leak here: when is result free'd?
@@ -4510,9 +4671,10 @@ NS_IMETHODIMP
 IcedTeaJNIEnv::ExceptionClear (void)
 {
   PLUGIN_TRACE_JNIENV ();
-  MESSAGE_CREATE (-1);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(-1);
+  MESSAGE_ADD_FUNC();
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   return NS_OK;
 }
 
@@ -4530,7 +4692,9 @@ IcedTeaJNIEnv::NewGlobalRef (jobject lobj,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (lobj);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4543,7 +4707,9 @@ NS_IMETHODIMP
 IcedTeaJNIEnv::DeleteGlobalRef (jobject gref)
 {
   PLUGIN_TRACE_JNIENV ();
-  MESSAGE_CREATE (-1);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(-1);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (gref);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4555,7 +4721,9 @@ NS_IMETHODIMP
 IcedTeaJNIEnv::DeleteLocalRef (jobject obj)
 {
   PLUGIN_TRACE_JNIENV ();
-  MESSAGE_CREATE (-1);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(-1);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4590,7 +4758,9 @@ IcedTeaJNIEnv::GetObjectClass (jobject obj,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4606,7 +4776,9 @@ IcedTeaJNIEnv::IsInstanceOf (jobject obj,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_SEND ();
@@ -4624,7 +4796,9 @@ IcedTeaJNIEnv::GetMethodID (jclass clazz,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_STRING (name);
   std::cout << "Args: " << clazz << " " << name << " " << sig << " " << *id << "@" << id << std::endl;
@@ -4647,7 +4821,9 @@ IcedTeaJNIEnv::GetFieldID (jclass clazz,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_STRING (name);
   printf ("SIGNATURE: %s %s %s\n", __func__, name, sig);
@@ -4667,7 +4843,9 @@ IcedTeaJNIEnv::GetStaticMethodID (jclass clazz,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_STRING (name);
   printf ("SIGNATURE: %s %s\n", __func__, sig);
@@ -4687,7 +4865,9 @@ IcedTeaJNIEnv::GetStaticFieldID (jclass clazz,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_STRING (name);
   printf ("SIGNATURE: %s %s\n", __func__, sig);
@@ -4706,7 +4886,9 @@ IcedTeaJNIEnv::NewString (jchar const* unicode,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_SIZE (len);
   MESSAGE_ADD_STRING_UCS (unicode, len);
   MESSAGE_SEND ();
@@ -4722,7 +4904,9 @@ IcedTeaJNIEnv::GetStringLength (jstring str,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (str);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4741,7 +4925,9 @@ IcedTeaJNIEnv::GetStringChars (jstring str,
     *isCopy = JNI_TRUE;
 
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (str);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4765,7 +4951,9 @@ IcedTeaJNIEnv::NewStringUTF (char const* utf,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_STRING_UTF (utf);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4780,7 +4968,9 @@ IcedTeaJNIEnv::GetStringUTFLength (jstring str,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (str);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4799,7 +4989,9 @@ IcedTeaJNIEnv::GetStringUTFChars (jstring str,
     *isCopy = JNI_TRUE;
 
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (str);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4823,7 +5015,9 @@ IcedTeaJNIEnv::GetArrayLength (jarray array,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (array);
   MESSAGE_SEND ();
   printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
@@ -4840,7 +5034,9 @@ IcedTeaJNIEnv::NewObjectArray (jsize len,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_SIZE (len);
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_REFERENCE (init);
@@ -4858,7 +5054,9 @@ IcedTeaJNIEnv::GetObjectArrayElement (jobjectArray array,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (array);
   MESSAGE_ADD_SIZE (index);
   MESSAGE_SEND ();
@@ -4874,7 +5072,9 @@ IcedTeaJNIEnv::SetObjectArrayElement (jobjectArray array,
                                       jobject val)
 {
   PLUGIN_TRACE_JNIENV ();
-  MESSAGE_CREATE (-1);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(-1);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (array);
   MESSAGE_ADD_SIZE (index);
   MESSAGE_ADD_REFERENCE (val);
@@ -4891,7 +5091,9 @@ IcedTeaJNIEnv::NewArray (jni_type element_type,
 {
   PLUGIN_TRACE_JNIENV ();
   int reference = IncrementContextCounter ();
-  MESSAGE_CREATE (reference);
+  MESSAGE_CREATE ();
+  MESSAGE_ADD_STACK_REFERENCE(reference);
+  MESSAGE_ADD_FUNC();
   MESSAGE_ADD_TYPE (element_type);
   MESSAGE_ADD_SIZE (len);
   MESSAGE_SEND ();

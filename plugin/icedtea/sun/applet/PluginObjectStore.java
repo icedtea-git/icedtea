@@ -70,6 +70,17 @@ public class PluginObjectStore
             return 0;
         return identifiers.get(object);
     }
+    
+    public boolean contains(Object object) {
+    	if (object == null)
+    		return identifiers.containsKey(object);
+
+    	return false;
+    }
+    
+    public boolean contains(int identifier) {
+   		return objects.containsKey(identifier);
+    }
 
     public void reference(Object object) {
         Integer identifier = identifiers.get(object);

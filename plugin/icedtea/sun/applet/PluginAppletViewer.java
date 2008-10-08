@@ -47,9 +47,11 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.net.SocketPermission;
 import java.net.URL;
 import java.security.AccessController;
+import java.security.Policy;
 import java.security.PrivilegedAction;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -59,7 +61,6 @@ import java.util.Map;
 import java.util.Vector;
 
 import net.sourceforge.jnlp.NetxPanel;
-
 import sun.awt.AppContext;
 import sun.awt.SunToolkit;
 import sun.awt.X11.XEmbeddedFrame;
@@ -266,20 +267,31 @@ import sun.misc.Ref;
     }
 
     PluginDebug.debug("Applet initialized");
-    
+
     // Applet initialized. Find out it's classloader and add it to the list
-    AppletSecurityContextManager.getSecurityContext(0).addClassLoader(Integer.toString(identifier), a.getClass().getClassLoader());
+    String codeBase = doc.getProtocol() + "://" + doc.getHost();
+
+    if (atts.get("codebase") != null) {
+    	try {
+    		URL appletSrcURL = new URL((String) atts.get("codebase"));
+    		codeBase = appletSrcURL.getProtocol() + "://" + appletSrcURL.getHost();
+    	} catch (MalformedURLException mfue) {
+    		// do nothing
+    	}
+    }
+
+    AppletSecurityContextManager.getSecurityContext(0).associateSrc(a.getClass().getClassLoader(), codeBase);
 
      }
- 
+
  	public static void setStreamhandler(PluginStreamHandler sh) {
 		streamhandler = sh;
 	}
-     
+
  	public static void setPluginCallRequestFactory(PluginCallRequestFactory rf) {
 		requestFactory = rf;
 	}
- 	
+
      /**
       * Handle an incoming message from the plugin.
       */
@@ -287,7 +299,7 @@ import sun.misc.Ref;
      {
 
 		 PluginDebug.debug("PAV handling: " + message);
-
+		 
          try {
         	 if (message.startsWith("tag")) {
         		 
@@ -320,6 +332,7 @@ import sun.misc.Ref;
         				 PluginDebug.debug ("REQUEST HANDLE NOT SET: " + request.handle + ". BYPASSING");
         			 }
         		 }
+        		 
              } else if (message.startsWith("handle")) {
             	 synchronized(requests) {
             		 PluginParseRequest request = requests.get(identifier);
@@ -360,11 +373,13 @@ import sun.misc.Ref;
         	 int width =
         		 Integer.parseInt(message.substring("width".length() + 1));
              //panel.setAppletSizeIfNeeded(width, -1);
+        	 panel.setSize(width, getHeight());
              setSize(width, getHeight());
          } else if (message.startsWith("height")) {
              int height = 
             	 Integer.parseInt(message.substring("height".length() + 1));
              //panel.setAppletSizeIfNeeded(-1, height);
+             panel.setSize(getWidth(), height);
              setSize(getWidth(), height);
          } else if (message.startsWith("destroy")) {
              dispose();

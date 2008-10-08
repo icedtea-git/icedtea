@@ -37,21 +37,30 @@ exception statement from your version. */
 
 package sun.applet;
 
+import java.awt.AWTPermission;
+import java.io.FilePermission;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.SocketPermission;
+import java.net.URL;
 import java.security.AccessControlContext;
+import java.security.AccessControlException;
 import java.security.AccessController;
-import java.security.Permission;
+import java.security.AllPermission;
+import java.security.BasicPermission;
+import java.security.CodeSource;
 import java.security.PermissionCollection;
+import java.security.Permissions;
+import java.security.Policy;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.PropertyPermission;
 
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
@@ -123,7 +132,7 @@ class Signature {
 		}
 	}
 
-	public Signature(String signature, String src) {
+	public Signature(String signature, ClassLoader cl) {
 		this.signature = signature;
 		currentIndex = 0;
 		typeList = new ArrayList<Class>(10);
@@ -159,9 +168,9 @@ class Signature {
 						// System.out.println ("HERE4");
 					} else
 						typeList.add(Array.newInstance(
-								getClass(arrayType, src), dims).getClass());
+								getClass(arrayType, cl), dims).getClass());
 				} else {
-					typeList.add(getClass(elem, src));
+					typeList.add(getClass(elem, cl));
 				}
 			}
 		}
@@ -171,34 +180,20 @@ class Signature {
 		}
 	}
 
-	public static Class getClass(String name, String src) {
+	public static Class getClass(String name, ClassLoader cl) {
 
 		Class c = null;
 		
 		try {
 			c = Class.forName(name);
 		} catch (ClassNotFoundException cnfe) {
-
-			StringTokenizer st = new StringTokenizer(src, ",");
-
-			while (st.hasMoreTokens()) {
-
-				String tok = st.nextToken();
-				System.err.println("Searching for " + name  + " at key " + tok);
-
-				try {
-					c = PluginAppletSecurityContext.classLoaders.get(tok).loadClass(name);
-				} catch (ClassNotFoundException e) {
-					// do nothing .. thrown below
-				}
-
-				if (c != null)
-					break;
+			
+			System.err.println("Class " + name + " not found in primordial loader. Looking in " + cl);
+			try {
+				c = cl.loadClass(name);
+			} catch (ClassNotFoundException e) {
+				throw (new RuntimeException(new ClassNotFoundException("Unable to find class " + name)));
 			}
-		}
-
-		if (c == null) {
-			throw (new RuntimeException(new ClassNotFoundException("Unable to find class " + name)));
 		}
 
 		return c;
@@ -234,7 +229,7 @@ class Signature {
 
 public class PluginAppletSecurityContext {
 	
-	public static HashMap<String, ClassLoader> classLoaders = new HashMap<String, ClassLoader>();
+	public static HashMap<ClassLoader, String> classLoaders = new HashMap<ClassLoader, String>();
 
 	// FIXME: make private
 	public PluginObjectStore store = new PluginObjectStore();
@@ -246,15 +241,24 @@ public class PluginAppletSecurityContext {
 
 	public PluginAppletSecurityContext(int identifier) {
 		this.identifier = identifier;
+		
+		// We need a security manager.. and since there is a good chance that 
+		// an applet will be loaded at some point, we should make it the SM 
+		// that JNLPRuntime will try to install
+		if (System.getSecurityManager() == null) {
+			JNLPRuntime.initialize();
+		}
+
+		this.classLoaders.put(liveconnectLoader, "file://");
 	}
 
-	private static <V> V parseCall(String s, String src, Class<V> c) {
+	private static <V> V parseCall(String s, ClassLoader cl, Class<V> c) {
 		if (c == Integer.class)
 			return (V) new Integer(s);
 		else if (c == String.class)
 			return (V) new String(s);
 		else if (c == Signature.class)
-			return (V) new Signature(s, src);
+			return (V) new Signature(s, cl);
 		else
 			throw new RuntimeException("Unexpected call value.");
 	}
@@ -284,25 +288,17 @@ public class PluginAppletSecurityContext {
 			return store.getObject(new Integer(s));
 	}
 
-	public void addClassLoader(String id, ClassLoader cl) {
-		this.classLoaders.put(id, cl);
+	public void associateSrc(ClassLoader cl, String src) {
+		System.err.println("Associating " + cl + " with " + src);
+		this.classLoaders.put(cl, src);
 	}
 
 	public static void setStreamhandler(PluginStreamHandler sh) {
 		streamhandler = sh;
 	}
 
-	public void handleMessage(String src, int reference, String message) {
+	public void handleMessage(int reference, String src, AccessControlContext callContext, String message) {
 
-		// We need a security manager.. and since there is a good chance that 
-		// an applet will be loaded at some point, we should make it the SM 
-		// that JNLPRuntime will try to install
-		if (System.getSecurityManager() == null) {
-			JNLPRuntime.initialize();
-		}
-
-		System.out.println("in handleMessage(), SecurityManager=" + System.getSecurityManager());
-		
 		try {
 			if (message.startsWith("FindClass")) {
 				ClassLoader cl = null;
@@ -322,9 +318,9 @@ public class PluginAppletSecurityContext {
 			} else if (message.startsWith("GetStaticMethodID")
 					|| message.startsWith("GetMethodID")) {
 				String[] args = message.split(" ");
-				Integer classID = parseCall(args[1], src, Integer.class);
-				String methodName = parseCall(args[2], src, String.class);
-				Signature signature = parseCall(args[3], src, Signature.class);
+				Integer classID = parseCall(args[1], null, Integer.class);
+				String methodName = parseCall(args[2], null, String.class);
+				Signature signature = parseCall(args[3], ((Class) store.getObject(classID)).getClassLoader(), Signature.class);
 				Object[] a = signature.getClassArray();
 
 				Class c = (Class) store.getObject(classID);
@@ -344,9 +340,9 @@ public class PluginAppletSecurityContext {
 			} else if (message.startsWith("GetStaticFieldID")
 					|| message.startsWith("GetFieldID")) {
 				String[] args = message.split(" ");
-				Integer classID = parseCall(args[1], src, Integer.class);
-				String fieldName = parseCall(args[2], src, String.class);
-				Signature signature = parseCall(args[3], src, Signature.class);
+				Integer classID = parseCall(args[1], null, Integer.class);
+				String fieldName = parseCall(args[2], null, String.class);
+				Signature signature = parseCall(args[3], ((Class) store.getObject(classID)).getClassLoader(), Signature.class);
 
 				Class c = (Class) store.getObject(classID);
 				Field f = null;
@@ -357,14 +353,15 @@ public class PluginAppletSecurityContext {
 				write(reference, "GetStaticFieldID " + store.getIdentifier(f));
 			} else if (message.startsWith("GetStaticField")) {
 				String[] args = message.split(" ");
-				String type = parseCall(args[1], src, String.class);
-				Integer classID = parseCall(args[1], src, Integer.class);
-				Integer fieldID = parseCall(args[2], src, Integer.class);
+				String type = parseCall(args[1], null, String.class);
+				Integer classID = parseCall(args[1], null, Integer.class);
+				Integer fieldID = parseCall(args[2], null, Integer.class);
 
 				final Class c = (Class) store.getObject(classID);
 				final Field f = (Field) store.getObject(fieldID);
 
-				AccessControlContext acc = getAccessControlContext(identifier);
+				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
+				checkPermission(src, c, acc);
 
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
 					public Object run() {
@@ -399,9 +396,9 @@ public class PluginAppletSecurityContext {
 				}
 			} else if (message.startsWith("SetStaticField")) {
 				String[] args = message.split(" ");
-				String type = parseCall(args[1], src, String.class);
-				Integer classID = parseCall(args[2], src, Integer.class);
-				Integer fieldID = parseCall(args[3], src, Integer.class);
+				String type = parseCall(args[1], null, String.class);
+				Integer classID = parseCall(args[2], null, Integer.class);
+				Integer fieldID = parseCall(args[3], null, Integer.class);
 
 				Object value = null;
 				if (Signature.primitiveNameToType(type) != null) {
@@ -417,7 +414,8 @@ public class PluginAppletSecurityContext {
 				final Field f = (Field) store.getObject(fieldID);
 
 				final Object fValue = value;
-				AccessControlContext acc = getAccessControlContext(identifier);
+				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
+				checkPermission(src, c, acc);
 
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
 					public Object run() {
@@ -437,9 +435,9 @@ public class PluginAppletSecurityContext {
 				write(reference, "SetStaticField");
 			} else if (message.startsWith("SetField")) {
 				String[] args = message.split(" ");
-				String type = parseCall(args[1], src, String.class);
-				Integer objectID = parseCall(args[2], src, Integer.class);
-				Integer fieldID = parseCall(args[3], src, Integer.class);
+				String type = parseCall(args[1], null, String.class);
+				Integer objectID = parseCall(args[2], null, Integer.class);
+				Integer fieldID = parseCall(args[3], null, Integer.class);
 
 				Object value = null;
 				if (Signature.primitiveNameToType(type) != null) {
@@ -455,7 +453,8 @@ public class PluginAppletSecurityContext {
 				final Field f = (Field) store.getObject(fieldID);
 
 				final Object fValue = value;
-				AccessControlContext acc = getAccessControlContext(identifier);
+				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
+				checkPermission(src, o.getClass(), acc);
 
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
 					public Object run() {
@@ -475,8 +474,8 @@ public class PluginAppletSecurityContext {
 				write(reference, "SetField");
 			} else if (message.startsWith("GetObjectArrayElement")) {
 				String[] args = message.split(" ");
-				Integer arrayID = parseCall(args[1], src, Integer.class);
-				Integer index = parseCall(args[2], src, Integer.class);
+				Integer arrayID = parseCall(args[1], null, Integer.class);
+				Integer index = parseCall(args[2], null, Integer.class);
 
 				Object[] o = (Object[]) store.getObject(arrayID);
 				Object ret = null;
@@ -490,9 +489,9 @@ public class PluginAppletSecurityContext {
 						+ store.getIdentifier(ret));
 			} else if (message.startsWith("SetObjectArrayElement")) {
 				String[] args = message.split(" ");
-				Integer arrayID = parseCall(args[1], src, Integer.class);
-				Integer index = parseCall(args[2], src, Integer.class);
-				Integer objectID = parseCall(args[3], src, Integer.class);
+				Integer arrayID = parseCall(args[1], null, Integer.class);
+				Integer index = parseCall(args[2], null, Integer.class);
+				Integer objectID = parseCall(args[3], null, Integer.class);
 
 				Object[] o = (Object[]) store.getObject(arrayID);
 				Object toSet = (Object) store.getObject(objectID);
@@ -502,7 +501,7 @@ public class PluginAppletSecurityContext {
 				write(reference, "SetObjectArrayElement");
 			} else if (message.startsWith("GetArrayLength")) {
 				String[] args = message.split(" ");
-				Integer arrayID = parseCall(args[1], src, Integer.class);
+				Integer arrayID = parseCall(args[1], null, Integer.class);
 
 				System.out.println("ARRAYID: " + arrayID);
 				Object o = (Object) store.getObject(arrayID);
@@ -514,14 +513,15 @@ public class PluginAppletSecurityContext {
 				write(reference, "GetArrayLength " + Array.getLength(o));
 			} else if (message.startsWith("GetField")) {
 				String[] args = message.split(" ");
-				String type = parseCall(args[1], src, String.class);
-				Integer objectID = parseCall(args[1], src, Integer.class);
-				Integer fieldID = parseCall(args[2], src, Integer.class);
+				String type = parseCall(args[1], null, String.class);
+				Integer objectID = parseCall(args[1], null, Integer.class);
+				Integer fieldID = parseCall(args[2], null, Integer.class);
 
 				final Object o = (Object) store.getObject(objectID);
 				final Field f = (Field) store.getObject(fieldID);
 
-				AccessControlContext acc = getAccessControlContext(identifier);
+				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
+				checkPermission(src, o.getClass(), acc);
 
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
 					public Object run() {
@@ -565,8 +565,8 @@ public class PluginAppletSecurityContext {
 				write(reference, "GetObjectClass " + store.getIdentifier(c));
 			} else if (message.startsWith("CallStaticMethod")) {
 				String[] args = message.split(" ");
-				Integer classID = parseCall(args[1], src, Integer.class);
-				Integer methodID = parseCall(args[2], src, Integer.class);
+				Integer classID = parseCall(args[1], null, Integer.class);
+				Integer methodID = parseCall(args[2], null, Integer.class);
 
 				System.out.println("GETTING: " + methodID);
 				final Method m = (Method) store.getObject(methodID);
@@ -583,7 +583,9 @@ public class PluginAppletSecurityContext {
 				// System.out.println ("Calling " + m);
 
 				final Object[] fArguments = arguments;
-				AccessControlContext acc = getAccessControlContext(identifier);
+				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
+				Class c = (Class) store.getObject(classID);
+				checkPermission(src, c, acc);
 
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
 					public Object run() {
@@ -626,8 +628,8 @@ public class PluginAppletSecurityContext {
 				}
 			} else if (message.startsWith("CallMethod")) {
 				String[] args = message.split(" ");
-				Integer objectID = parseCall(args[1], src, Integer.class);
-				Integer methodID = parseCall(args[2], src, Integer.class);
+				Integer objectID = parseCall(args[1], null, Integer.class);
+				Integer methodID = parseCall(args[2], null, Integer.class);
 
 				final Object o = (Object) store.getObject(objectID);
 				final Method m = (Method) store.getObject(methodID);
@@ -648,7 +650,8 @@ public class PluginAppletSecurityContext {
 				PluginDebug.debug("Calling method " + m + " on object " + o
 						+ " with " + arguments);
 
-				AccessControlContext acc = getAccessControlContext(identifier);
+				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
+				checkPermission(src, o.getClass(), acc);
 
 				final Object[] fArguments = arguments;
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
@@ -697,7 +700,7 @@ public class PluginAppletSecurityContext {
 				}
 			} else if (message.startsWith("GetSuperclass")) {
 				String[] args = message.split(" ");
-				Integer classID = parseCall(args[1], src, Integer.class);
+				Integer classID = parseCall(args[1], null, Integer.class);
 				Class c = null;
 				Class ret = null;
 
@@ -708,8 +711,8 @@ public class PluginAppletSecurityContext {
 				write(reference, "GetSuperclass " + store.getIdentifier(ret));
 			} else if (message.startsWith("IsAssignableFrom")) {
 				String[] args = message.split(" ");
-				Integer classID = parseCall(args[1], src, Integer.class);
-				Integer superclassID = parseCall(args[2], src, Integer.class);
+				Integer classID = parseCall(args[1], null, Integer.class);
+				Integer superclassID = parseCall(args[2], null, Integer.class);
 
 				boolean result = false;
 				Class clz = (Class) store.getObject(classID);
@@ -720,8 +723,8 @@ public class PluginAppletSecurityContext {
 				write(reference, "IsAssignableFrom " + (result ? "1" : "0"));
 			} else if (message.startsWith("IsInstanceOf")) {
 				String[] args = message.split(" ");
-				Integer objectID = parseCall(args[1], src, Integer.class);
-				Integer classID = parseCall(args[2], src, Integer.class);
+				Integer objectID = parseCall(args[1], null, Integer.class);
+				Integer classID = parseCall(args[2], null, Integer.class);
 
 				boolean result = false;
 				Object o = (Object) store.getObject(objectID);
@@ -732,7 +735,7 @@ public class PluginAppletSecurityContext {
 				write(reference, "IsInstanceOf " + (result ? "1" : "0"));
 			} else if (message.startsWith("GetStringUTFLength")) {
 				String[] args = message.split(" ");
-				Integer stringID = parseCall(args[1], src, Integer.class);
+				Integer stringID = parseCall(args[1], null, Integer.class);
 
 				String o = null;
 				byte[] b = null;
@@ -744,7 +747,7 @@ public class PluginAppletSecurityContext {
 				write(reference, "GetStringUTFLength " + o.length());
 			} else if (message.startsWith("GetStringLength")) {
 				String[] args = message.split(" ");
-				Integer stringID = parseCall(args[1], src, Integer.class);
+				Integer stringID = parseCall(args[1], null, Integer.class);
 
 				String o = null;
 				byte[] b = null;
@@ -757,7 +760,7 @@ public class PluginAppletSecurityContext {
 				write(reference, "GetStringLength " + o.length());
 			} else if (message.startsWith("GetStringUTFChars")) {
 				String[] args = message.split(" ");
-				Integer stringID = parseCall(args[1], src, Integer.class);
+				Integer stringID = parseCall(args[1], null, Integer.class);
 
 				String o = null;
 				byte[] b = null;
@@ -777,7 +780,7 @@ public class PluginAppletSecurityContext {
 				write(reference, "GetStringUTFChars " + buf);
 			} else if (message.startsWith("GetStringChars")) {
 				String[] args = message.split(" ");
-				Integer stringID = parseCall(args[1], src, Integer.class);
+				Integer stringID = parseCall(args[1], null, Integer.class);
 
 				String o = null;
 				byte[] b = null;
@@ -798,8 +801,8 @@ public class PluginAppletSecurityContext {
 				write(reference, "GetStringChars " + buf);
 			} else if (message.startsWith("NewArray")) {
 				String[] args = message.split(" ");
-				String type = parseCall(args[1], src, String.class);
-				Integer length = parseCall(args[2], src, Integer.class);
+				String type = parseCall(args[1], null, String.class);
+				Integer length = parseCall(args[2], null, Integer.class);
 
 				// System.out.println ("CALLING: NewArray: " + type + " " +
 				// length + " "
@@ -813,9 +816,9 @@ public class PluginAppletSecurityContext {
 				write(reference, "NewArray " + store.getIdentifier(newArray));
 			} else if (message.startsWith("NewObjectArray")) {
 				String[] args = message.split(" ");
-				Integer length = parseCall(args[1], src, Integer.class);
-				Integer classID = parseCall(args[2], src, Integer.class);
-				Integer objectID = parseCall(args[3], src, Integer.class);
+				Integer length = parseCall(args[1], null, Integer.class);
+				Integer classID = parseCall(args[2], null, Integer.class);
+				Integer objectID = parseCall(args[3], null, Integer.class);
 
 				// System.out.println ("CALLING: NewObjectArray: " +
 				// classID + " " + length + " "
@@ -833,8 +836,8 @@ public class PluginAppletSecurityContext {
 						+ store.getIdentifier(newArray));
 			} else if (message.startsWith("NewObject")) {
 				String[] args = message.split(" ");
-				Integer classID = parseCall(args[1], src, Integer.class);
-				Integer methodID = parseCall(args[2], src, Integer.class);
+				Integer classID = parseCall(args[1], null, Integer.class);
+				Integer methodID = parseCall(args[2], null, Integer.class);
 
 				final Constructor m = (Constructor) store.getObject(methodID);
 				Class[] argTypes = m.getParameterTypes();
@@ -848,7 +851,10 @@ public class PluginAppletSecurityContext {
 				}
 
 				final Object[] fArguments = arguments;
-				AccessControlContext acc = getAccessControlContext(identifier);
+				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
+
+				Class c = (Class) store.getObject(classID);
+				checkPermission(src, c, acc);
 
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
 					public Object run() {
@@ -870,12 +876,12 @@ public class PluginAppletSecurityContext {
 			} else if (message.startsWith("NewString")) {
 				System.out.println("MESSAGE: " + message);
 				String[] args = message.split(" ");
-				Integer strlength = parseCall(args[1], src, Integer.class);
+				Integer strlength = parseCall(args[1], null, Integer.class);
 				int bytelength = 2 * strlength;
 				byte[] byteArray = new byte[bytelength];
 				String ret = null;
 				for (int i = 0; i < strlength; i++) {
-					int c = parseCall(args[2 + i], src, Integer.class);
+					int c = parseCall(args[2 + i], null, Integer.class);
 					System.out.println("char " + i + " " + c);
 					// Low.
 					byteArray[2 * i] = (byte) (c & 0x0ff);
@@ -898,7 +904,7 @@ public class PluginAppletSecurityContext {
 				int i = 0;
 				int c = 0;
 				while (((byte) c) != 0) {
-					c = parseCall(args[1 + i], src, Integer.class);
+					c = parseCall(args[1 + i], null, Integer.class);
 					byteArray[i] = (byte) c;
 					i++;
 					if (i == byteArray.length) {
@@ -921,29 +927,36 @@ public class PluginAppletSecurityContext {
 				write(reference, "ExceptionOccurred "
 						+ store.getIdentifier(throwable));
 			} else if (message.startsWith("ExceptionClear")) {
-				if (throwable != null)
+				if (throwable != null && store.contains(throwable))
 					store.unreference(store.getIdentifier(throwable));
 				throwable = null;
 				write(reference, "ExceptionClear");
 			} else if (message.startsWith("DeleteGlobalRef")) {
 				String[] args = message.split(" ");
-				Integer id = parseCall(args[1], src, Integer.class);
+				Integer id = parseCall(args[1], null, Integer.class);
 				store.unreference(id);
 				write(reference, "DeleteGlobalRef");
 			} else if (message.startsWith("DeleteLocalRef")) {
 				String[] args = message.split(" ");
-				Integer id = parseCall(args[1], src, Integer.class);
+				Integer id = parseCall(args[1], null, Integer.class);
 				store.unreference(id);
 				write(reference, "DeleteLocalRef");
 			} else if (message.startsWith("NewGlobalRef")) {
 				String[] args = message.split(" ");
-				Integer id = parseCall(args[1], src, Integer.class);
+				Integer id = parseCall(args[1], null, Integer.class);
 				store.reference(store.getObject(id));
 				write(reference, "NewGlobalRef " + id);
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();
 			String msg = t.getCause() != null ? t.getCause().getMessage() : t.getMessage();
+
+			// add an identifier string to let javaside know of the type of error
+			// check for cause as well, since the top level exception will be InvocationTargetException in most cases
+			if (t instanceof AccessControlException || t.getCause() instanceof AccessControlException) {
+				msg = "LiveConnectPermissionNeeded " + msg;
+			}
+
 			this.streamhandler.write("instance " + identifier + " reference " + reference + " Error " + msg);
 
 			// ExceptionOccured is only called after Callmethod() by mozilla. So
@@ -957,6 +970,32 @@ public class PluginAppletSecurityContext {
 			// "InvocationTargetException" due to the use of reflection above
 			if (message.startsWith("CallMethod") || message.startsWith("CallStaticMethod"))
 				throwable = t.getCause();
+		}
+	}
+
+	/**
+	 * Checks if the calling script is allowed to access the specified class
+	 *  
+	 * See http://java.sun.com/j2se/1.3/docs/guide/plugin/security.html#liveconnect for details
+	 *  
+	 * @param jsSrc The source of the script
+	 * @param target The target class that the script is trying to access
+	 * @param acc AccessControlContext for this execution
+	 * @throws AccessControlException If the script has insufficient permissions
+	 */
+	public void checkPermission(String jsSrc, Class target, AccessControlContext acc) throws AccessControlException {
+
+		// target classloader == null => primordial loader. Allow this.
+		if (target.getClassLoader() == null)
+			return;
+
+		String classSrc = this.classLoaders.get(target.getClassLoader());
+
+		System.err.println("jsSrc=" + jsSrc + " classSrc=" + classSrc);
+		
+		// if src is not a file and class loader does not map to the same base, UniversalBrowserRead (BrowserReadPermission) must be set
+		if (jsSrc != "file://" && !classSrc.equals(jsSrc)) {
+			acc.checkPermission(new BrowserReadPermission());
 		}
 	}
 
@@ -983,39 +1022,150 @@ public class PluginAppletSecurityContext {
 	}
 
 	/**
-	 * Returns an 
-	 * 
-	 * @param identifier The unique instance identity of the applet for which the context is needed
-	 * @return The context associated with the given applet
+	 * Returns a "closed" AccessControlContext i.e. no permissions to get out of sandbox.
 	 */
-	public AccessControlContext getAccessControlContext(int identifier) {
-		
-		// TODO: 
-		// 1. Find applet URL
-		// 2. If startsWith file://, some permissions are lax
-		// 3. If not, find out associated permissions
-
-		// Deny everything for now
-		PermissionCollection pc = new PermissionCollection(){
-			@Override
-			public boolean implies(Permission permission) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		
-			@Override
-			public Enumeration<Permission> elements() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		
-			@Override
-			public void add(Permission permission) {
-				// TODO Auto-generated method stub
-			}
-		};
-
-		ProtectionDomain pd = new ProtectionDomain(PluginAppletSecurityContext.class.getProtectionDomain().getCodeSource(), pc);
+	public AccessControlContext getClosedAccessControlContext() {
+		// Deny everything
+		Permissions p = new Permissions();
+		ProtectionDomain pd = new ProtectionDomain(PluginAppletSecurityContext.class.getProtectionDomain().getCodeSource(), p);
 		return new AccessControlContext(new ProtectionDomain[] {pd});
+	}
+	
+	public AccessControlContext getAccessControlContext(String[] nsPrivilegeList, String src) {
+
+/*
+		for (int i=0; i < nsPrivilegeList.length; i++) {
+			String privilege = nsPrivilegeList[i];
+
+			if (privilege.equals("UniversalAccept")) {
+				SocketPermission sp = new SocketPermission("*", "accept,resolve");
+				grantedPermissions.add(sp);
+			} else if (privilege.equals("UniversalAwtEventQueueAccess")) {
+				AWTPermission awtp = new AWTPermission("accessEventQueue");
+				grantedPermissions.add(awtp);
+			} else if (privilege.equals("UniversalConnect")) {
+				SocketPermission sp = new SocketPermission("*", "connect,resolve");
+				grantedPermissions.add(sp);
+			} else if (privilege.equals("UniversalListen")) {
+				SocketPermission sp = new SocketPermission("*", "listen,resolve");
+				grantedPermissions.add(sp);
+			} else if (privilege.equals("UniversalExecAccess")) {
+				FilePermission fp = new FilePermission("<<ALL FILES>>", "execute");
+				RuntimePermission rtp = new RuntimePermission("setIO");
+				grantedPermissions.add(fp);
+				grantedPermissions.add(rtp);
+			} else if (privilege.equals("UniversalExitAccess")) {
+				// Doesn't matter what the permissions are. Do not allow VM to exit.. we 
+				// use a single VM for the entire browser lifecycle once invoked, we 
+				// cannot let it exit
+
+				//RuntimePermission rtp = new RuntimePermission("exitVM.*");
+				//grantedPermissions.add(rtp);
+			} else if (privilege.equals("UniversalFileDelete")) {
+				FilePermission fp = new FilePermission("<<ALL FILES>>", "delete");
+				grantedPermissions.add(fp);
+			} else if (privilege.equals("UniversalFileRead")) {
+				FilePermission fp = new FilePermission("<<ALL FILES>>", "read");
+				grantedPermissions.add(fp);
+			} else if (privilege.equals("UniversalFileWrite")) {
+				FilePermission fp = new FilePermission("<<ALL FILES>>", "write");
+				grantedPermissions.add(fp);
+			}  else if (privilege.equals("UniversalFdRead")) {
+				RuntimePermission rtp = new RuntimePermission("readFileDescriptor");
+				grantedPermissions.add(rtp);
+			} else if (privilege.equals("UniversalFdWrite")) {
+				RuntimePermission rtp = new RuntimePermission("writeFileDescriptor");
+				grantedPermissions.add(rtp);
+			} else if (privilege.equals("UniversalLinkAccess")) {
+				RuntimePermission rtp = new RuntimePermission("loadLibrary.*");
+				grantedPermissions.add(rtp);
+			} else if (privilege.equals("UniversalListen")) {
+				SocketPermission sp = new SocketPermission("*", "listen");
+				grantedPermissions.add(sp);
+			} else if (privilege.equals("UniversalMulticast")) {
+				SocketPermission sp = new SocketPermission("*", "accept,connect,resolve");
+				grantedPermissions.add(sp);
+			} else if (privilege.equals("UniversalPackageAccess")) {
+				RuntimePermission rtp = new RuntimePermission("defineClassInPackage.*");
+				grantedPermissions.add(rtp);
+			} else if (privilege.equals("UniversalPackageDefinition")) {
+				RuntimePermission rtp = new RuntimePermission("accessClassInPackage.*");
+				grantedPermissions.add(rtp);
+			} else if (privilege.equals("UniversalPrintJobAccess")) {
+				RuntimePermission rtp = new RuntimePermission("queuePrintJob");
+				grantedPermissions.add(rtp);
+			} else if (privilege.equals("UniversalPropertyRead")) {
+				PropertyPermission pp = new PropertyPermission("*", "read");
+				grantedPermissions.add(pp);
+			} else if (privilege.equals("UniversalPropertyWrite")) {
+				PropertyPermission pp = new PropertyPermission("*", "write");
+				grantedPermissions.add(pp);
+			} else if (privilege.equals("UniversalSetFactory")) {
+				RuntimePermission rtp = new RuntimePermission("setFactory");
+				grantedPermissions.add(rtp);
+			} else if (privilege.equals("UniversalSystemClipboardAccess")) {
+				AWTPermission awtp = new AWTPermission("accessClipboard");
+				grantedPermissions.add(awtp);
+			} else if (privilege.equals("UniversalThreadAccess")) {
+				RuntimePermission rtp1 = new RuntimePermission("modifyThread");
+				RuntimePermission rtp2 = new RuntimePermission("stopThread");
+				grantedPermissions.add(rtp1);
+				grantedPermissions.add(rtp2);
+			} else if (privilege.equals("UniversalThreadGroupAccess")) {
+				RuntimePermission rtp1 = new RuntimePermission("modifyThreadGroup");
+				RuntimePermission rtp2 = new RuntimePermission("modifyThread");
+				RuntimePermission rtp3 = new RuntimePermission("stopThread");
+				grantedPermissions.add(rtp1);
+				grantedPermissions.add(rtp2);
+				grantedPermissions.add(rtp3);
+			} else if (privilege.equals("UniversalTopLevelWindow")) {
+				AWTPermission awtp = new AWTPermission("topLevelWindow");
+				grantedPermissions.add(awtp);
+			} else if (privilege.equals("UniversalBrowserRead")) {
+				BrowserReadPermission bp = new BrowserReadPermission();
+				grantedPermissions.add(bp);
+			} else if (privilege.equals("UniversalJavaPermissions")) {
+				AllPermission ap = new AllPermission();
+				grantedPermissions.add(ap);
+			}
+		}
+		
+		// what to do with these is unknown: UniversalConnectWithRedirect, UniversalDialogModality, UniversalSendMail, LimitedInstall, FullInstall, SilentInstall
+*/
+
+		Permissions grantedPermissions = new Permissions();
+
+		for (int i=0; i < nsPrivilegeList.length; i++) {
+			String privilege = nsPrivilegeList[i];
+
+			if (privilege.equals("UniversalBrowserRead")) {
+				BrowserReadPermission bp = new BrowserReadPermission();
+				grantedPermissions.add(bp);
+			} else if (privilege.equals("UniversalJavaPermissions")) {
+				AllPermission ap = new AllPermission();
+				grantedPermissions.add(ap);
+			}
+		}
+
+		CodeSource cs = new CodeSource((URL) null, (java.security.cert.Certificate  [])null);
+		
+		if (src != null) {
+			try {
+				cs = new CodeSource(new URL(src + "/"), (java.security.cert.Certificate[]) null);
+			} catch (MalformedURLException mfue) {
+				// do nothing
+			}
+		}
+
+		ProtectionDomain pd = new ProtectionDomain(cs, grantedPermissions, null, null);
+
+		// Add to hashmap
+		return new AccessControlContext(new ProtectionDomain[] {pd});
+	}
+
+	class BrowserReadPermission extends BasicPermission {
+		public BrowserReadPermission() {
+			super("browserRead");
+		}
 	}
 }

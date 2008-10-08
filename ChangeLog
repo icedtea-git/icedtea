@@ -1,3 +1,16 @@
+2008-10-08  Deepak Bhole <dbhole@redhat.com>
+	* IcedTeaPlugin.cc: Implemented JS->Java security.
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: Same.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Same. Also,
+	remove ambiguity from class finding mechanism for cases where JS needs a
+	signature involving an applet specific class.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Implemented JS->Java
+	security.
+	* plugin/icedtea/sun/applet/PluginObjectStore.java: Same.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Rewrote code that
+	parsed messages from C++ side -- now it can handle any number of optional
+	components.
+
 2008-10-07  Gary Benson  <gbenson@redhat.com>
 	    Andrew Haley  <aph@redhat.com>
 
