@@ -1,3 +1,10 @@
+2008-10-09  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-6open-6616825.patch: New.
+	* patches/icedtea-6open-6651382.patch: New.
+	* patches/icedtea-6open-6756202.patch: New.
+	* Makefile.am: Apply patches.
+
 2008-10-08  Deepak Bhole <dbhole@redhat.com>
 	* IcedTeaPlugin.cc: Implemented JS->Java security.
 	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: Same.
