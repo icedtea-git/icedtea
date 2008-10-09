@@ -30,10 +30,3 @@ TYPE = SHARK
 VM_SUBDIR = server
 
 CFLAGS += -DSHARK
-
-# Something in this file fails with GCC at higher optimization levels.
-# The part of ciTypeFlow::StateVector::meet_exception() that fills in
-# local variables stops part way through leaving the rest set to T_TOP
-# (ie uninitialized).  The VM then aborts with a ShouldNotReachHere()
-# in SharkPHIState::initialize().  Observed with 4.3.2.
-OPT_CFLAGS/ciTypeFlow.o = -O1

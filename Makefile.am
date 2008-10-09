@@ -421,7 +421,8 @@ ZERO_PATCHES = \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-zero.patch \
-	patches/icedtea-ia64-bugfix.patch
+	patches/icedtea-ia64-bugfix.patch \
+	patches/icedtea-hotspot-citypeflow.patch
 
 # Patches needed when not using the newer OpenJDK 7 HotSpot for zero.
 NON_ZERO_PATCHES = \
