@@ -271,10 +271,6 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 			throw new IllegalArgumentException("Line unsupported: " + info);
 		}
 
-		if (!isOpen) {
-			throw new LineUnavailableException("The mixer isnt open");
-		}
-
 		AudioFormat[] formats = null;
 		AudioFormat defaultFormat = null;
 
@@ -410,7 +406,7 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		AudioPermission perm = new AudioPermission("record", null);
 		perm.checkGuard(null);
 
-		return (Line[]) targetLines.toArray(new TargetDataLine[0]);
+		return (Line[]) targetLines.toArray(new Line[0]);
 	}
 
 	@Override

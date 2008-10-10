@@ -398,6 +398,11 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 	public void open(AudioFormat format, byte[] data, int offset, int bufferSize)
 			throws LineUnavailableException {
 
+		if(!PulseAudioMixer.getInstance().isOpen()) {
+			throw new LineUnavailableException("The mixer needs to be opened before opening a line");
+		}
+
+
 		/* check for permission to play audio */
 		AudioPermission perm = new AudioPermission("play", null);
 		perm.checkGuard(null);

@@ -1,4 +1,21 @@
 2008-10-10 Ioana Ivan <iivan@redhat.com>
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(getLine): LineUnavailablException is no longer thrown if the mixer is 
+	not open
+	(getTargetLines) : returns a Line[] array instead of a
+	TargetDataLine[] array
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine
+	(open(AudioFormat format, int bufferSize)): throws
+	LineUnavailableException if the mixer is not open
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip
+	(open()): throws LineUnavailableException if the mixer is not open
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort
+	(PulseAudioPort): calls open()
+
+2008-10-10 Ioana Ivan <iivan@redhat.com>
 	    Omair Majid <omajid@redhat.com>
 
 	* INSTALL: Updated to reflect requirements for pulse-java.

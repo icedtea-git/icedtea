@@ -51,7 +51,6 @@ public class PulseAudioTargetPort extends PulseAudioPort {
 	public PulseAudioTargetPort(String name, EventLoop eventLoop) {
 
 		super(name, eventLoop);
-
 	}
 
 	public void open() {

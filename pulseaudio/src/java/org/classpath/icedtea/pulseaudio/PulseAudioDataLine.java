@@ -84,6 +84,10 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 		if (isOpen) {
 			throw new IllegalStateException("Line is already open");
 		}
+		if(!PulseAudioMixer.getInstance().isOpen()) {
+			throw new LineUnavailableException("The mixer needs to be opened before opening a line");
+		}
+
 
 		createStream(format);
 		addStreamListeners();
@@ -277,7 +281,6 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 
 	public void open() throws LineUnavailableException {
 		assert (defaultFormat != null);
-
 		open(defaultFormat, DEFAULT_BUFFER_SIZE);
 	}
 

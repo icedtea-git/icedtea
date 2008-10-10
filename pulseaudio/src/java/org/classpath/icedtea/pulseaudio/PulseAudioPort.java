@@ -76,8 +76,8 @@ public abstract class PulseAudioPort extends PulseAudioLine implements Port,
 		controls.add(volumeControl);
 		muteControl = new PulseAudioMuteControl(this, volumeControl);
 		controls.add(muteControl);
-		isOpen = true;
-
+		//isOpen = true;
+		open();
 		/*
 		 * unlike other lines, Ports must either be open or close
 		 * 
@@ -141,7 +141,9 @@ public abstract class PulseAudioPort extends PulseAudioLine implements Port,
 
 	@Override
 	public void open() {
-
+		if(isOpen) {
+			return;
+		}
 		native_setVolume(volume);
 		isOpen = true;
 		fireLineEvent(new LineEvent(this, LineEvent.Type.OPEN,
