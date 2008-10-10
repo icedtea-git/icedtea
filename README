@@ -159,3 +159,11 @@ Other useful VisualVM configure options include --with-visualvm-src-zip,
 and --with-netbeans-profiler-src-zip which can be used to prevent 
 re-downloading of the source zips. --with-netbeans-home can be used to specify
 where the Netbeans tools are installed (default /usr/share/netbeans).
+
+
+
+PulseAudio Mixer
+================
+
+Passing --enable-pulse-java to configure will build the PulseAudio Mixer for 
+java. This allows java programs to use PulseAudio as the sound backend.

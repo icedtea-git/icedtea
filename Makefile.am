@@ -28,6 +28,19 @@ GCJWEBPLUGIN_TARGET =
 endif
 endif
 
+if ENABLE_PULSE_JAVA
+# include the makefile in pulseaudio subdir
+PULSE_JAVA_DIR = pulseaudio
+PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
+PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
+PULSE_JAVA_CLASS_DIR = $(PULSE_JAVA_DIR)/bin
+else 
+PULSE_JAVA_DIR =
+PULSE_JAVA_NATIVE_SRCDIR =
+PULSE_JAVA_JAVA_SRCDIR =
+PULSE_JAVA_CLASS_DIR =
+endif
+
 if WITH_VISUALVM
 VISUALVM_PATCH = patches/icedtea-visualvm.patch
 else
@@ -39,7 +52,7 @@ endif
 
 all-local: icedtea-against-icedtea
 
-distclean-local: clean-copy clean-jtreg clean-jtreg-reports
+distclean-local: clean-copy clean-jtreg clean-jtreg-reports clean-pulse-java
 	rm -rf stamps
 	rm -f rt-source-files.txt \
 	  hotspot-tools-source-files.txt \
@@ -83,7 +96,7 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
 	overlays extra jconsole.desktop policytool.desktop \
 	test/jtreg patches/icedtea-plugin.patch \
 	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc \
-	HACKING patches/icedtea-visualvm.patch
+	HACKING patches/icedtea-visualvm.patch pulseaudio
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -520,6 +533,11 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-cacao.patch
 endif
 
+if ENABLE_PULSE_JAVA
+ICEDTEA_PATCHES += \
+	patches/icedtea-pulse-soundproperties.patch
+endif
+
 ICEDTEA_PATCHES += \
 	$(DISTRIBUTION_PATCHES)
 
@@ -923,7 +941,8 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
 	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
-	extra-lib/about.jar stamps/cacao.stamp stamps/visualvm.stamp
+	extra-lib/about.jar stamps/cacao.stamp stamps/visualvm.stamp \
+	stamps/pulse-java.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/ \
@@ -940,6 +959,16 @@ if ENABLE_PLUGIN
 	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
+endif
+if ENABLE_PULSE_JAVA
+	cp -pPRf libpulse-java.so \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf libpulse-java.so \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf pulse-java.jar \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
+	cp -pPRf pulse-java.jar \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext
 endif
 if WITH_VISUALVM
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc ; \
@@ -975,7 +1004,8 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
 	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
-	extra-lib/about.jar stamps/cacao.stamp
+	extra-lib/about.jar stamps/cacao.stamp \
+	stamps/pulse-java.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
@@ -992,6 +1022,16 @@ if ENABLE_PLUGIN
 	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
+endif
+if ENABLE_PULSE_JAVA
+	cp -pPRf libpulse-java.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf libpulse-java.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf pulse-java.jar \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/ext
+	cp -pPRf pulse-java.jar \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/ext
 endif
 if WITH_VISUALVM
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc ; \
@@ -1374,6 +1414,92 @@ clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
 endif
 endif
+
+
+# PulseAudio based mixer
+# (pulse-java)
+
+stamps/pulse-java.stamp: stamps/pulse-java-jar.stamp stamps/pulse-java-headers.stamp
+if ENABLE_PULSE_JAVA
+	$(CC) $(CFLAGS) -c $(PULSE_JAVA_NATIVE_SRCDIR)/jni-common.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fpic -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_EventLoop.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fpic -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Operation.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fpic -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Stream.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fpic -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c 
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fpic -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c
+	$(CC) $(LDFLAGS) -shared $(LIBPULSE_LIBS) -o libpulse-java.so org_*pulseaudio*.o jni-common.o
+	mv org_classpath_icedtea_pulseaudio_*.o $(PULSE_JAVA_CLASS_DIR)
+endif
+	mkdir -p stamps
+	touch stamps/pulse-java.stamp
+
+stamps/pulse-java-jar.stamp: stamps/pulse-java-class.stamp
+if ENABLE_PULSE_JAVA
+	mkdir -p $(PULSE_JAVA_CLASS_DIR);
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAR) cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .; \
+	fi
+endif
+	mkdir -p stamps
+	touch stamps/pulse-java-jar.stamp
+	
+stamps/pulse-java-class.stamp: 
+if ENABLE_PULSE_JAVA
+	mkdir -p $(PULSE_JAVA_CLASS_DIR)
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
+		 $(JAVAC) -d ../../../$(PULSE_JAVA_CLASS_DIR) \
+          	-bootclasspath  \
+	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
+          	org/classpath/icedtea/pulseaudio/*.java\
+          	) \
+        else \
+        	(cd $(PULSE_JAVA_JAVA_SRCDIR); \
+        	$(ICEDTEA_BOOT_DIR)/bin/javac -d ../../../$(PULSE_JAVA_CLASS_DIR)\
+        	-bootclasspath \
+	        '$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar' \
+        	org/classpath/icedtea/pulseaudio/*.java\
+        	) \
+        fi
+	cp  -r $(PULSE_JAVA_JAVA_SRCDIR)/META-INF $(PULSE_JAVA_CLASS_DIR)
+endif
+	mkdir -p stamps
+	touch stamps/pulse-java-class.stamp
+
+
+stamps/pulse-java-headers.stamp: stamps/pulse-java-class.stamp
+if ENABLE_PULSE_JAVA
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAVAH) -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.EventLoop ; \
+	  $(JAVAH) -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.Stream ; \
+	  $(JAVAH) -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.Operation; \
+	  $(JAVAH) -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.PulseAudioSourcePort ; \
+	  $(JAVAH) -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.PulseAudioTargetPort ; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.EventLoop ; \
+	  $(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.Stream ; \
+	  $(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.Operation; \
+	  $(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.PulseAudioSourcePort ; \
+	  $(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.PulseAudioTargetPort ; \
+	fi
+endif
+	mkdir -p stamps
+	touch stamps/pulse-java-headers.stamp
+
+
+clean-pulse-java:
+	rm -rf $(PULSE_JAVA_CLASS_DIR)/*
+	rm -f $(PULSE_JAVA_NATIVE_SRCDIR)/org_*.h
+	rm -f stamps/pulse-java*.stamp
+	rm -f pulse-java.jar
+	rm -f libpulse-java.so
+
+# end of pulse-java
 
 # jtreg
 

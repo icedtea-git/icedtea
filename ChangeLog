@@ -1,3 +1,27 @@
+2008-10-10 Ioana Ivan <iivan@redhat.com>
+	    Omair Majid <omajid@redhat.com>
+
+	* INSTALL: Updated to reflect requirements for pulse-java.
+	* Makefile.am 
+	(distclean-local): Clean up pulse-java. 
+	(EXTRA_DIST): Add pulseaudio folder.
+	(stamps/icedtea.stamp): Added dependency on stamps/pulse-java.stamp. Also
+	copy generated .jar and .so files to the jre images.
+	(stamps/icedtea-debug.stamp): Likewise.
+	(stamps/pulse-java.stamp): New target.
+	(stamps/pulse-java-jar.stamp): Likewise.
+	(stamps/pulse-java-class.stamp): Likewise.
+	(stamps/pulse-java-headers.stamp): Likewise.
+	(clean-pulse-java): Likewise.
+	* README: Added note for PulseAudio based mixer.
+	* acinclude.m4 
+	(FIND_PULSEAUDIO): Find the pulseaudio binary.
+	* configure.ac: Check for pulseaudio server and header files being
+	installed.
+	* patches/icedtea-pulse-soundproperties.patch: Dont use pulse-java as the
+	default Mixer.
+	* pulseaudio/: Copied over sources from pulseaudio repository.
+
 2008-10-09  Gary Benson  <gbenson@redhat.com>
 	    Andrew Haley  <aph@redhat.com>
 

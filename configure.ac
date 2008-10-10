@@ -126,6 +126,12 @@ AC_ARG_ENABLE([liveconnect],
               [enable_liveconnect="yes"], [enable_liveconnect="no"])
 AM_CONDITIONAL(ENABLE_LIVECONNECT, test "x${enable_liveconnect}" = "xyes")
 
+AC_ARG_ENABLE([pulse-java],
+              [AS_HELP_STRING([--enable-pulse-java],
+                              [Enable pulse-java - an audio mixer spi that uses PulseAudio])],
+              [enable_pulse_java="yes"], [enable_pulse_java="no"])
+AM_CONDITIONAL(ENABLE_PULSE_JAVA, test "x${enable_pulse_java}" = "xyes")
+
 AC_ARG_ENABLE([docs],
 	      [AS_HELP_STRING([--disable-docs],
 	      		      [Disable generation of documentation])],
@@ -247,6 +253,11 @@ ENABLE_OPTIMIZATIONS
 ENABLE_ZERO_BUILD
 SET_CORE_OR_SHARK_BUILD
 
+if test "x${enable_pulse_java}" = "xyes"
+then
+  FIND_PULSEAUDIO
+fi
+
 dnl pkgconfig cannot be used to finid these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
 	,[AC_MSG_ERROR("CUPS headers were not found -
@@ -353,6 +364,20 @@ then
 fi
 AC_SUBST(ALSA_CFLAGS)
 AC_SUBST(ALSA_LIBS)
+
+if test "x${enable_pulse_java}" = "xyes"
+then
+  dnl Check for pulseaudio libraries.
+  PKG_CHECK_MODULES(LIBPULSE,[libpulse >= 0.9.11],[LIBPULSE_FOUND=yes]
+    ,[LIBPULSE_FOUND=no])
+  if test "x${LIBPULSE_FOUND}" = xno
+  then
+    AC_MSG_ERROR([Could not find pulseaudio>=0.9.11 libraries - \
+    Try installing pulseaudio-libs-devel>=0.9.11.])
+  fi
+  AC_SUBST(LIBPULSE_CFLAGS)
+  AC_SUBST(LIBPULSE_LIBS)
+fi
 
 dnl Check for plugin support headers and libraries.
 dnl FIXME: use unstable

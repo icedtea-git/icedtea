@@ -1,0 +1,3 @@
+# Providers of sound mixers
+
+org.classpath.icedtea.pulseaudio.PulseAudioMixerProvider
