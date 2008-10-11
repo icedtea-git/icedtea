@@ -1493,11 +1493,13 @@ endif
 
 
 clean-pulse-java:
+if ENABLE_PULSE_JAVA
 	rm -rf $(PULSE_JAVA_CLASS_DIR)/*
 	rm -f $(PULSE_JAVA_NATIVE_SRCDIR)/org_*.h
 	rm -f stamps/pulse-java*.stamp
 	rm -f pulse-java.jar
 	rm -f libpulse-java.so
+endif
 
 # end of pulse-java
 

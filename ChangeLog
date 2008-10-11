@@ -1,3 +1,8 @@
+2008-10-11  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (clean-pulse-java): Don't rm -rf / if configuring
+	without pulseaudio.
+
 2008-10-10 Ioana Ivan <iivan@redhat.com>
 	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
 	(getLine): LineUnavailablException is no longer thrown if the mixer is 
