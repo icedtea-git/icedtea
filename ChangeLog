@@ -3,6 +3,9 @@
 	* Makefile.am (clean-pulse-java): Don't rm -rf / if configuring
 	without pulseaudio, remove jni-common.o.
 
+	* Makefile.am (stamps/pulse-java.stamp): Remove -fpic flag, add
+	-fPIC to build jni-common.c. (gcjwebplugin.so): Use -fPIC.
+
 2008-10-10 Ioana Ivan <iivan@redhat.com>
 	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
 	(getLine): LineUnavailablException is no longer thrown if the mixer is 

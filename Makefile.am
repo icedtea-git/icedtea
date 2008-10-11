@@ -1408,7 +1408,7 @@ gcjwebplugin.so: gcjwebplugin.cc
 	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
 	  $(GTK_CFLAGS) $(GTK_LIBS) \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -fpic -shared -o $@ $<
+	  -fPIC -shared -o $@ $<
 
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
@@ -1421,12 +1421,12 @@ endif
 
 stamps/pulse-java.stamp: stamps/pulse-java-jar.stamp stamps/pulse-java-headers.stamp
 if ENABLE_PULSE_JAVA
-	$(CC) $(CFLAGS) -c $(PULSE_JAVA_NATIVE_SRCDIR)/jni-common.c
-	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fpic -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_EventLoop.c
-	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fpic -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Operation.c
-	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fpic -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Stream.c
-	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fpic -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c 
-	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fpic -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c
+	$(CC) $(CFLAGS) -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/jni-common.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_EventLoop.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Operation.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Stream.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c 
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c
 	$(CC) $(LDFLAGS) -shared $(LIBPULSE_LIBS) -o libpulse-java.so org_*pulseaudio*.o jni-common.o
 	mv org_classpath_icedtea_pulseaudio_*.o $(PULSE_JAVA_CLASS_DIR)
 endif
