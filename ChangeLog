@@ -1,3 +1,8 @@
+2008-10-12  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/pulse-java.stamp): Add -I$(ICEDTEA_BOOT_DIR)/include
+	to build jni-common.c.
+
 2008-10-11  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (clean-pulse-java): Don't rm -rf / if configuring

@@ -1421,7 +1421,7 @@ endif
 
 stamps/pulse-java.stamp: stamps/pulse-java-jar.stamp stamps/pulse-java-headers.stamp
 if ENABLE_PULSE_JAVA
-	$(CC) $(CFLAGS) -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/jni-common.c
+	$(CC) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/jni-common.c
 	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_EventLoop.c
 	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Operation.c
 	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Stream.c
