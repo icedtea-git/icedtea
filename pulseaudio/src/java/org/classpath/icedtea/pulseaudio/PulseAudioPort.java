@@ -66,25 +66,25 @@ public abstract class PulseAudioPort extends PulseAudioLine implements Port,
 		System.loadLibrary("pulse-java");
 	}
 
-	public PulseAudioPort(String name, EventLoop eventLoop) {
+	public PulseAudioPort(String name) {
 		this.name = name;
+		this.eventLoop = EventLoop.getEventLoop();
 		this.contextPointer = eventLoop.getContextPointer();
-		this.eventLoop = eventLoop;
+
 		updateVolumeInfo();
 
 		volumeControl = new PulseAudioVolumeControl(this, eventLoop);
 		controls.add(volumeControl);
 		muteControl = new PulseAudioMuteControl(this, volumeControl);
 		controls.add(muteControl);
-		//isOpen = true;
-		open();
+
 		/*
 		 * unlike other lines, Ports must either be open or close
 		 * 
 		 * close = no sound. open = sound
 		 * 
 		 */
-		// FIXME open();
+		open();
 
 		// System.out.println("Opened Target Port " + name);
 	}
@@ -141,7 +141,7 @@ public abstract class PulseAudioPort extends PulseAudioLine implements Port,
 
 	@Override
 	public void open() {
-		if(isOpen) {
+		if (isOpen) {
 			return;
 		}
 		native_setVolume(volume);

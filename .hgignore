@@ -441,3 +441,7 @@ rt/javax/net/ssl/X509TrustManager.java
 rt/java/io/
 rt/sun/awt
 generated/sun/awt/X11/generator/sizer.32.orig
+pulseaudio/bin
+pulseaudio/.*\.o
+pulseaudio/src/native/org_.*.h
+pulseaudio/.*jar

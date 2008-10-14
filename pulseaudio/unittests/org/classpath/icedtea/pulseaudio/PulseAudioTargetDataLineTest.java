@@ -536,11 +536,11 @@ public class PulseAudioTargetDataLineTest {
 		targetDataLine = (TargetDataLine) mixer.getLine(new Line.Info(
 				TargetDataLine.class));
 
-		Assert.assertEquals(0, mixer.getTargetLines().length);
+		int initiallyOpen = mixer.getTargetLines().length;
 		targetDataLine.open();
-		Assert.assertEquals(1, mixer.getTargetLines().length);
+		Assert.assertEquals(initiallyOpen+1, mixer.getTargetLines().length);
 		targetDataLine.close();
-		Assert.assertEquals(0, mixer.getTargetLines().length);
+		Assert.assertEquals(initiallyOpen, mixer.getTargetLines().length);
 
 	}
 

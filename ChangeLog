@@ -1,3 +1,39 @@
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* .hgignore: Added generated files to ignore list.
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	(EventLoop): Initialize eventLoop object on construction.
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(PulseAudioClip): Removed the parameter eventLoop.
+	(getMicrosecondLength): Return time in microseconds.
+	(getMicrosecondPosition): Likewise.
+	(open): Dont throw an exception if Mixer is not open. Let super handle it.
+	(setFramePosition): Check frame position for being positive.
+	(setLoopPoints): Check that the starting frame is valid.
+	(setMicrosecondPosition): Deal with negative value and values over the 
+	maximum.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(open): Open the mixer if it isnt open.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(getLine): Dont pass eventLoop as a paramter.
+	(close): Close all open lines on exit.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java
+	(PulseAudioPort): Modified to not take an EventLoop paramter.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(PulseAudioSourceDataLine): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java
+	(PulseAudioSourcePort): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(PulseAudioTargetDataLine): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java
+	(PulseAudioTargetPort): Likewise.
+
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLineTest.java
+	(testMixerKnowsAboutOpenLines): Work even if mixer has some lines
+	initially open.
+
 2008-10-12  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (stamps/pulse-java.stamp): Add -I$(ICEDTEA_BOOT_DIR)/include

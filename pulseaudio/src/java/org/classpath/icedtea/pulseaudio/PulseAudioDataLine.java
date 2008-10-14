@@ -84,10 +84,13 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 		if (isOpen) {
 			throw new IllegalStateException("Line is already open");
 		}
-		if(!PulseAudioMixer.getInstance().isOpen()) {
-			throw new LineUnavailableException("The mixer needs to be opened before opening a line");
+		
+		PulseAudioMixer mixer = PulseAudioMixer.getInstance();
+		if(!mixer.isOpen()) {
+			mixer.open();
 		}
 
+		eventLoop = EventLoop.getEventLoop();
 
 		createStream(format);
 		addStreamListeners();

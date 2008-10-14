@@ -61,10 +61,9 @@ public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 	boolean flushed = false;
 	boolean drained = false;
 
-	public PulseAudioTargetDataLine(EventLoop eventLoop, AudioFormat[] formats,
+	public PulseAudioTargetDataLine(AudioFormat[] formats,
 			AudioFormat defaultFormat) {
 		supportedFormats = formats;
-		this.eventLoop = eventLoop;
 		this.defaultFormat = defaultFormat;
 		this.currentFormat = defaultFormat;
 
@@ -363,7 +362,7 @@ public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 
 		fireLineEvent(new LineEvent(this, LineEvent.Type.STOP, framesSinceOpen));
 	}
-	
+
 	public javax.sound.sampled.Line.Info getLineInfo() {
 		return new DataLine.Info(TargetDataLine.class, supportedFormats,
 				StreamBufferAttributes.MIN_VALUE,

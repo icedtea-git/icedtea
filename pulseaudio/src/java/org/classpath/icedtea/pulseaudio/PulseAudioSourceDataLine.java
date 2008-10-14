@@ -54,11 +54,10 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 	private boolean muted;
 	private float volume;
 
-	public PulseAudioSourceDataLine(EventLoop eventLoop, AudioFormat[] formats,
+	public PulseAudioSourceDataLine(AudioFormat[] formats,
 			AudioFormat defaultFormat) {
 
 		this.supportedFormats = formats;
-		this.eventLoop = eventLoop;
 		this.lineListeners = new ArrayList<LineListener>();
 		this.defaultFormat = defaultFormat;
 		this.currentFormat = defaultFormat;
@@ -69,7 +68,7 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 	synchronized public void open(AudioFormat format, int bufferSize)
 			throws LineUnavailableException {
 
-		/* check for permmission to play audio */
+		/* check for permission to play audio */
 		AudioPermission perm = new AudioPermission("play", null);
 		perm.checkGuard(null);
 

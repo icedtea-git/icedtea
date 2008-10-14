@@ -43,43 +43,43 @@ import javax.sound.sampled.Port;
 public class PulseAudioSourcePort extends PulseAudioPort {
 
 	/* aka mic */
-	
+
 	static {
 		System.loadLibrary("pulse-java");
 	}
 
-	public PulseAudioSourcePort(String name, EventLoop eventLoop) {
-		super(name, eventLoop);
+	public PulseAudioSourcePort(String name) {
+		super(name);
 	}
 
 	public void open() {
-		
+
 		/* check for permission to record audio */
 		AudioPermission perm = new AudioPermission("record", null);
 		perm.checkGuard(null);
-		
+
 		super.open();
-		
+
 		PulseAudioMixer parent = PulseAudioMixer.getInstance();
 		parent.addSourceLine(this);
 	}
-	
+
 	public void close() {
-		
+
 		/* check for permission to record audio */
 		AudioPermission perm = new AudioPermission("record", null);
 		perm.checkGuard(null);
-		
+
 		if (!isOpen) {
 			throw new IllegalStateException("Port is not open; so cant close");
 		}
-		
+
 		PulseAudioMixer parent = PulseAudioMixer.getInstance();
 		parent.removeSourceLine(this);
-		
-		super.close();		
+
+		super.close();
 	}
-	
+
 	public native byte[] native_setVolume(float newValue);
 
 	public synchronized native byte[] native_updateVolumeInfo();
@@ -88,7 +88,5 @@ public class PulseAudioSourcePort extends PulseAudioPort {
 	public javax.sound.sampled.Line.Info getLineInfo() {
 		return new Port.Info(Port.class, getName(), false);
 	}
-	
-	
 
 }

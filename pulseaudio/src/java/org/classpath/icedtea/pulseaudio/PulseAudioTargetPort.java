@@ -48,9 +48,9 @@ public class PulseAudioTargetPort extends PulseAudioPort {
 		System.loadLibrary("pulse-java");
 	}
 
-	public PulseAudioTargetPort(String name, EventLoop eventLoop) {
+	public PulseAudioTargetPort(String name) {
 
-		super(name, eventLoop);
+		super(name);
 	}
 
 	public void open() {
@@ -70,11 +70,11 @@ public class PulseAudioTargetPort extends PulseAudioPort {
 		/* check for permission to play audio */
 		AudioPermission perm = new AudioPermission("play", null);
 		perm.checkGuard(null);
-		
+
 		if (!isOpen) {
 			throw new IllegalStateException("not open, so cant close Port");
 		}
-		
+
 		PulseAudioMixer parent = PulseAudioMixer.getInstance();
 		parent.removeTargetLine(this);
 

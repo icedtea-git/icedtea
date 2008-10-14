@@ -43,6 +43,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
@@ -301,8 +302,7 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 			AudioPermission perm = new AudioPermission("play", null);
 			perm.checkGuard(null);
 
-			return new PulseAudioSourceDataLine(eventLoop, formats,
-					defaultFormat);
+			return new PulseAudioSourceDataLine(formats, defaultFormat);
 		}
 
 		if ((info.getLineClass() == TargetDataLine.class)) {
@@ -310,8 +310,7 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 			AudioPermission perm = new AudioPermission("record", null);
 			perm.checkGuard(null);
 
-			return new PulseAudioTargetDataLine(eventLoop, formats,
-					defaultFormat);
+			return new PulseAudioTargetDataLine(formats, defaultFormat);
 		}
 
 		if ((info.getLineClass() == Clip.class)) {
@@ -319,15 +318,15 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 			AudioPermission perm = new AudioPermission("play", null);
 			perm.checkGuard(null);
 
-			return new PulseAudioClip(eventLoop, formats, defaultFormat);
+			return new PulseAudioClip(formats, defaultFormat);
 		}
 
 		if (Port.Info.class.isInstance(info)) {
 			Port.Info portInfo = (Port.Info) info;
 			if (portInfo.isSource()) {
-				return new PulseAudioSourcePort(portInfo.getName(), eventLoop);
+				return new PulseAudioSourcePort(portInfo.getName());
 			} else {
-				return new PulseAudioTargetPort(portInfo.getName(), eventLoop);
+				return new PulseAudioTargetPort(portInfo.getName());
 			}
 		}
 
@@ -507,6 +506,35 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 			throw new IllegalStateException("Mixer is not open; cant close");
 		}
 
+		List<Line> linesToClose = new LinkedList<Line>();
+		linesToClose.addAll(sourceLines);
+		if (sourceLines.size() > 0) {
+			linesToClose.addAll(sourceLines);
+			for (Line line : linesToClose) {
+				if (line.isOpen()) {
+					System.out
+							.println("PulseAudioMixer: DEBUG: some source lines have not been closed");
+					line.close();
+				}
+			}
+		}
+		linesToClose.clear();
+
+		if (targetLines.size() > 0) {
+			linesToClose.addAll(targetLines);
+			for (Line line : linesToClose) {
+				if (line.isOpen()) {
+					System.out
+							.println("PulseAudioMixer: DEBUG: some target lines have not been closed");
+					line.close();
+				}
+			}
+		}
+
+		synchronized (lineListeners) {
+			lineListeners.clear();
+		}
+
 		eventLoopThread.interrupt();
 
 		try {
@@ -519,19 +547,6 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		// System.out.println(this.getClass().getName() + ": closed");
 
 		isOpen = false;
-
-		if (sourceLines.size() > 0) {
-			System.out.println("DEBUG: some source lines have not been closed");
-			assert (sourceLines.size() < 0); // always fail
-		}
-		if (targetLines.size() > 0) {
-			System.out.println("DEBUG: some target lines have not been closed");
-			assert (targetLines.size() < 0); // always fail
-		}
-
-		synchronized (lineListeners) {
-			lineListeners.clear();
-		}
 
 		refreshSourceAndTargetLines();
 

@@ -110,7 +110,7 @@ public class EventLoop implements Runnable {
 
 	private EventLoop() {
 		contextListeners = new ArrayList<ContextListener>();
-
+		threadLock = new Object();
 	}
 
 	synchronized public static EventLoop getEventLoop() {

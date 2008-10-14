@@ -194,10 +194,8 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		stream.removeWriteListener(writeListener);
 	}
 
-	public PulseAudioClip(EventLoop eventLoop, AudioFormat[] formats,
-			AudioFormat defaultFormat) {
+	public PulseAudioClip(AudioFormat[] formats, AudioFormat defaultFormat) {
 		supportedFormats = formats;
-		this.eventLoop = eventLoop;
 		this.defaultFormat = defaultFormat;
 		this.currentFormat = defaultFormat;
 		this.volume = PulseAudioVolumeControl.MAX_VOLUME;
@@ -342,7 +340,7 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 			return AudioSystem.NOT_SPECIFIED;
 		}
 		synchronized (clipLock) {
-			return frameCount / currentFormat.getFrameSize();
+			return (long) (frameCount / currentFormat.getFrameRate() * 1000);
 		}
 	}
 
@@ -353,7 +351,7 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		}
 
 		synchronized (clipLock) {
-			return framesSinceOpen / currentFormat.getFrameSize();
+			return (long) (framesSinceOpen / currentFormat.getFrameRate() * 1000);
 		}
 	}
 
@@ -397,11 +395,6 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 	@Override
 	public void open(AudioFormat format, byte[] data, int offset, int bufferSize)
 			throws LineUnavailableException {
-
-		if(!PulseAudioMixer.getInstance().isOpen()) {
-			throw new LineUnavailableException("The mixer needs to be opened before opening a line");
-		}
-
 
 		/* check for permission to play audio */
 		AudioPermission perm = new AudioPermission("play", null);
@@ -472,7 +465,7 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 			throw new IllegalStateException("Line not open");
 		}
 
-		if (frames > frameCount) {
+		if (frames < 0 || frames > frameCount) {
 			throw new IllegalArgumentException("incorreft frame value");
 		}
 
@@ -497,6 +490,11 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 					"ending point must be greater than or equal to the starting point");
 		}
 
+		if (start < 0) {
+			throw new IllegalArgumentException(
+					"starting point must be greater than or equal to 0");
+		}
+
 		synchronized (clipLock) {
 			startFrame = start;
 			endFrame = end;
@@ -510,7 +508,16 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 			throw new IllegalStateException("Line not open");
 		}
 
-		float frameIndex = microseconds * currentFormat.getFrameRate();
+		float frameIndex = microseconds * currentFormat.getFrameRate() / 1000;
+
+		/* make frameIndex positive */
+		while (frameIndex < 0) {
+			frameIndex += frameCount;
+		}
+
+		/* frameIndex is in the range [0, frameCount-1], inclusive */
+		frameIndex = frameIndex % frameCount;
+
 		synchronized (clipLock) {
 			currentFrame = (int) frameIndex;
 		}
@@ -563,7 +570,7 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		super.stop();
 
 	}
-	
+
 	public javax.sound.sampled.Line.Info getLineInfo() {
 		return new DataLine.Info(Clip.class, supportedFormats,
 				StreamBufferAttributes.MIN_VALUE,
