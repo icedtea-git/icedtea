@@ -1,5 +1,10 @@
 2008-10-14 Omair Majid <omajid@redhat.com>
 
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(connect): Removed debug output.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
 	(read): Commented out debug output.
 

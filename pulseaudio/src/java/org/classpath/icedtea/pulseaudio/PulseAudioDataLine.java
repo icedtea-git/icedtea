@@ -265,7 +265,6 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 			semaphore.acquire();
 			synchronized (eventLoop.threadLock) {
 				if (stream.getState() != Stream.State.READY) {
-					System.out.println(stream.getState());
 					stream.disconnect();
 					stream.free();
 					throw new LineUnavailableException(
