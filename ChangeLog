@@ -1,8 +1,11 @@
+2008-10-14  Lillian Angel  <langel@redhat.com>
+
+	* INSTALL: Updated requirements.
+
 2008-10-14 Omair Majid <omajid@redhat.com>
 
 	* Makefile.am (stamps/pulse-java.stamp): Added
 	-I$(ICEDTEA_BOOT_DIR)/include/linux.
-
 
 2008-10-14 Omair Majid <omajid@redhat.com>
 
