@@ -207,7 +207,8 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 	protected void connectLine(int bufferSize, Stream masterStream)
 			throws LineUnavailableException {
 		StreamBufferAttributes bufferAttributes = new StreamBufferAttributes(
-				bufferSize, bufferSize / 2, bufferSize / 2, bufferSize / 2, 0);
+				bufferSize, bufferSize / 4, bufferSize / 8,
+				((bufferSize / 10) > 100 ? bufferSize / 10 : 100), 0);
 
 		if (masterStream != null) {
 			synchronized (eventLoop.threadLock) {
