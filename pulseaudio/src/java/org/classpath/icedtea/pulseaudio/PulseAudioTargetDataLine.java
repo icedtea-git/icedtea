@@ -230,8 +230,9 @@ public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 
 					stream.drop();
 					if (currentFragment == null) {
-						System.out
-								.println("DEBUG: PulseAudioTargetDataLine:read(): error in stream.peek()");
+						// System.out
+						// .println("DEBUG: PulseAudioTargetDataLine:read():
+						// error in stream.peek()");
 						continue;
 					}
 
