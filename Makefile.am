@@ -1500,7 +1500,6 @@ if ENABLE_PULSE_JAVA
 	rm -f stamps/pulse-java*.stamp
 	rm -f pulse-java.jar
 	rm -f libpulse-java.so
-	rm -f jni-common.o
 endif
 
 # end of pulse-java
