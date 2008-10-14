@@ -445,3 +445,4 @@ pulseaudio/bin
 pulseaudio/.*\.o
 pulseaudio/src/native/org_.*.h
 pulseaudio/.*jar
+pulse-java.jar

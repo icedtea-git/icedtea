@@ -1,4 +1,9 @@
 2008-10-14 Omair Majid <omajid@redhat.com>
+	
+	* .hgignore: Added pulse-java.jar to ignore list.
+	* Makefile.am: Move jni-common.o out of the way when done.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
 
 	* Makefile.am (stamps/pulse-java.stamp): Added
 	-I$(ICEDTEA_BOOT_DIR)/include/linux.
