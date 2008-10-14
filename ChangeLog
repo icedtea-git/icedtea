@@ -3,6 +3,10 @@
 	* .hgignore: Added pulse-java.jar to ignore list.
 	* Makefile.am: Move jni-common.o out of the way when done.
 
+2008-10-14  Lillian Angel  <langel@redhat.com>
+
+	* INSTALL: Updated requirements.
+
 2008-10-14 Omair Majid <omajid@redhat.com>
 
 	* Makefile.am (stamps/pulse-java.stamp): Added

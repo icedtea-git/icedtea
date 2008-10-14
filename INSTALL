@@ -31,6 +31,7 @@ libjpeg-devel = 6b
 zlib-devel
 rhino
 netbeans (harness, platform8, apisupport1, java2, ide9) - for visualvm
+jakarta-commons-logging - for visualvm
 
 For builing the PulseAudio based mixer, you will need
 pulseaudio-libs-devel >= 0.9.11
