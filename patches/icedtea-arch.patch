@@ -1,6 +1,6 @@
---- openjdk/jdk/make/javax/sound/SoundDefs.gmk.orig	2008-08-12 18:09:03.000000000 +0000
-+++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2008-08-12 18:12:15.000000000 +0000
-@@ -58,10 +58,50 @@
+--- openjdk/jdk/make/javax/sound/SoundDefs.gmk.orig	2008-10-15 17:04:19.000000000 +0200
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2008-10-15 17:09:56.000000000 +0200
+@@ -58,10 +58,54 @@
  ifdef ICEDTEA_ZERO_BUILD
    CPPFLAGS += -DX_ARCH=X_ZERO
  else
@@ -23,6 +23,10 @@
 +  ifeq ($(ARCH), ia64)
 +    CPPFLAGS += -DX_ARCH=X_IA64
 +  endif # ARCH ia64
++
++  ifeq ($(ARCH), m68k)
++    CPPFLAGS += -DX_ARCH=X_M68K
++  endif # ARCH m68k
 +
 +  ifeq ($(ARCH), mips)
 +    CPPFLAGS += -DX_ARCH=X_MIPS
@@ -51,7 +55,7 @@
    ifeq ($(ARCH), sparc)
      CPPFLAGS += -DX_ARCH=X_SPARC
    endif # ARCH sparc
-@@ -69,10 +109,6 @@
+@@ -69,10 +113,6 @@
    ifeq ($(ARCH), sparcv9)
      CPPFLAGS += -DX_ARCH=X_SPARCV9
    endif # ARCH sparcv9
@@ -62,8 +66,8 @@
  endif
  
  
---- openjdk/jdk/make/common/Defs-linux.gmk.orig	2008-08-12 18:09:03.000000000 +0000
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2008-08-12 18:15:54.000000000 +0000
+--- openjdk/jdk/make/common/Defs-linux.gmk.orig	2008-10-15 17:04:21.000000000 +0200
++++ openjdk/jdk/make/common/Defs-linux.gmk	2008-10-15 17:08:37.000000000 +0200
 @@ -102,9 +102,19 @@
  #    We need this frame pointer to make it easy to walk the stacks.
  #    This should be the default on X86, but ia64 and amd64 may not have this
@@ -84,9 +88,9 @@
  CFLAGS_REQUIRED_sparcv9 += -m64 -mcpu=v9
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
---- openjdk/jdk/make/common/shared/Compiler-gcc.gmk.orig	2008-08-12 18:09:03.000000000 +0000
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2008-08-12 18:10:45.000000000 +0000
-@@ -75,28 +75,51 @@
+--- openjdk/jdk/make/common/shared/Compiler-gcc.gmk.orig	2008-10-15 17:04:19.000000000 +0200
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2008-10-15 17:11:28.000000000 +0200
+@@ -75,28 +75,56 @@
      REQUIRED_CC_VER = 3.2
      REQUIRED_GCC_VER = 3.2.*
    else
@@ -126,6 +130,11 @@
      REQUIRED_CC_VER = 3.2
      REQUIRED_GCC_VER = 2.9[56789].*
    endif
++  ifneq ("$(findstring m68k,$(ARCH))", "")
++    # m68k
++    REQUIRED_CC_VER = 3.2
++    REQUIRED_GCC_VER = 3.2.*
+   endif
 +  ifneq ("$(findstring mips,$(ARCH))", "")
 +    # mips
 +    REQUIRED_CC_VER = 3.2
@@ -140,7 +149,7 @@
 +    # s390 or s390x
 +    REQUIRED_CC_VER = 3.2
 +    REQUIRED_GCC_VER = 3.2.*
-   endif
++  endif
 +  ifneq ("$(findstring sparc,$(ARCH))", "")
 +    # sparc or sparcv9
 +    REQUIRED_CC_VER = 4.0
@@ -148,9 +157,9 @@
    endif
    endif
    # Option used to create a shared library
---- openjdk/jdk/make/common/shared/Platform.gmk.orig	2008-08-12 18:09:03.000000000 +0000
-+++ openjdk/jdk/make/common/shared/Platform.gmk	2008-08-12 18:14:37.000000000 +0000
-@@ -237,9 +237,37 @@
+--- openjdk/jdk/make/common/shared/Platform.gmk.orig	2008-10-15 17:04:19.000000000 +0200
++++ openjdk/jdk/make/common/shared/Platform.gmk	2008-10-15 17:13:49.000000000 +0200
+@@ -237,9 +237,40 @@
    else
      # i586 is 32-bit, amd64 is 64-bit
      ifndef ARCH_DATA_MODEL
@@ -169,6 +178,9 @@
 +      endif
 +      ifeq ($(ARCH), ia64)
 +        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), m68k)
++        ARCH_DATA_MODEL=32
 +      endif
 +      ifeq ($(ARCH), mips)
 +        ARCH_DATA_MODEL=32
@@ -189,9 +201,9 @@
          ARCH_DATA_MODEL=64
        endif
      endif
---- openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h.orig	2008-08-12 18:09:03.000000000 +0000
-+++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2008-08-12 18:13:17.000000000 +0000
-@@ -33,12 +33,20 @@
+--- openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h.orig	2008-10-15 17:04:19.000000000 +0200
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2008-10-15 17:13:01.000000000 +0200
+@@ -33,12 +33,21 @@
  #define X_LINUX         3
  
  // types for X_ARCH
@@ -206,20 +218,21 @@
 +#define X_ARM           3
 +#define X_I586          4
 +#define X_IA64          5
-+#define X_MIPS          6
-+#define X_MIPSEL        7
-+#define X_PPC           8
-+#define X_PPC64         9
-+#define X_S390          10
-+#define X_S390X         11
-+#define X_SPARC         12
-+#define X_SPARCV9       13
-+#define X_ZERO          14
++#define X_M68K          6
++#define X_MIPS          7
++#define X_MIPSEL        8
++#define X_PPC           9
++#define X_PPC64         10
++#define X_S390          11
++#define X_S390X         12
++#define X_SPARC         13
++#define X_SPARCV9       14
++#define X_ZERO          15
  
  // **********************************
  // Make sure you set X_PLATFORM and X_ARCH defines correctly.
---- openjdk/corba/make/common/Defs-linux.gmk.orig	2008-08-12 18:09:03.000000000 +0000
-+++ openjdk/corba/make/common/Defs-linux.gmk	2008-08-12 18:15:12.000000000 +0000
+--- openjdk/corba/make/common/Defs-linux.gmk.orig	2008-10-15 17:04:20.000000000 +0200
++++ openjdk/corba/make/common/Defs-linux.gmk	2008-10-15 17:08:37.000000000 +0200
 @@ -92,9 +92,19 @@
  #    We need this frame pointer to make it easy to walk the stacks.
  #    This should be the default on X86, but ia64 and amd64 may not have this
@@ -240,9 +253,9 @@
  CFLAGS_REQUIRED_sparcv9 += -m64 -mcpu=v9
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
---- openjdk/corba/make/common/shared/Platform.gmk.orig	2008-08-12 18:09:03.000000000 +0000
-+++ openjdk/corba/make/common/shared/Platform.gmk	2008-08-12 18:14:03.000000000 +0000
-@@ -227,9 +227,37 @@
+--- openjdk/corba/make/common/shared/Platform.gmk.orig	2008-10-15 17:04:19.000000000 +0200
++++ openjdk/corba/make/common/shared/Platform.gmk	2008-10-15 17:12:19.000000000 +0200
+@@ -227,9 +227,40 @@
    else
      # i586 is 32-bit, amd64 is 64-bit
      ifndef ARCH_DATA_MODEL
@@ -261,6 +274,9 @@
 +      endif
 +      ifeq ($(ARCH), ia64)
 +        ARCH_DATA_MODEL=64
++      endif
++      ifeq ($(ARCH), m68k)
++        ARCH_DATA_MODEL=32
 +      endif
 +      ifeq ($(ARCH), mips)
 +        ARCH_DATA_MODEL=32

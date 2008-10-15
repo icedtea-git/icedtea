@@ -1,3 +1,7 @@
+2008-10-15  Xerxes Rånby <xerxes@zafena.se
+
+	* patches/icedtea-arch.patch: Update for m68k.
+
 2008-10-15  Mark Wielaard  <mark@klomp.org>
 
 	* NEWS: Add hint about using different rhino versions.
