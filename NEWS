@@ -13,6 +13,7 @@ New in release 1.3 (2008-10-15)
   supported now without any (regional) restrictions. No more need for
   separate crypto policy jars.
 - Integration of Mozilla Rhino javascript support for javax.script.
+- Add support for Zero builds on alpha, arm, mips, mipsel, m68k, s390.
 - Various build fixes.
 - Several bug and security fixes.
 
