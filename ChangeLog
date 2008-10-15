@@ -1,4 +1,17 @@
-2008-10-15  Xerxes Rånby <xerxes@zafena.se
+2008-10-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* ChangeLog: Fix typo.
+	* INSTALL: Fix typos and make installation
+	requirements clearer.
+	* Makefile.am:
+	Patch the OpenJDK build with the version
+	of IcedTea being used. Use $(HG) instead of 'hg'.
+	* configure.ac:
+	Check for Mercurial.
+	* patches/icedtea-version.patch:
+	Fix to use IcedTea6.
+
+2008-10-15  Xerxes Rånby <xerxes@zafena.se>
 
 	* patches/icedtea-arch.patch: Update for m68k.
 

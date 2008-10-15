@@ -270,7 +270,7 @@ env-ecj:
 
 # Mercurial snapshot.
 snapshot: dist
-	mv $(DIST_ARCHIVES) $(distdir)-`hg tip --template '{node}'`.tar.gz
+	mv $(DIST_ARCHIVES) $(distdir)-`$(HG) tip --template '{node}'`.tar.gz
 
 # OpenJDK Source Preparation Targets
 # ==================================
@@ -621,7 +621,13 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
-	fi
+	fi ; \
+	if [ -e $(abs_top_srcdir)/.hg ]; then \
+	  revision="-r`(cd $(srcdir); $(HG) tip --template '{rev}')`" ; \
+	fi ; \
+	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
+	sed -i "s#IcedTea6#IcedTea6 $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk
+
 if ENABLE_LIVECONNECT
 	cp -a plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
 	cp -a plugin/icedtea/netscape rt/
@@ -679,7 +685,7 @@ stamps/patch-fsg.stamp: stamps/extract.stamp
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
-	fi
+	fi ; 
 
 clean-patch-fsg:
 	rm -f stamps/patch-fsg.stamp
@@ -1446,7 +1452,7 @@ if ENABLE_PULSE_JAVA
 endif
 	mkdir -p stamps
 	touch stamps/pulse-java-jar.stamp
-	
+
 stamps/pulse-java-class.stamp: 
 if ENABLE_PULSE_JAVA
 	mkdir -p $(PULSE_JAVA_CLASS_DIR)
@@ -1454,17 +1460,17 @@ if ENABLE_PULSE_JAVA
 	then \
 		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
 		 $(JAVAC) -d ../../../$(PULSE_JAVA_CLASS_DIR) \
-          	-bootclasspath  \
+		-bootclasspath  \
 	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
-          	org/classpath/icedtea/pulseaudio/*.java\
-          	) \
+		org/classpath/icedtea/pulseaudio/*.java\
+		) \
         else \
-        	(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-        	$(ICEDTEA_BOOT_DIR)/bin/javac -d ../../../$(PULSE_JAVA_CLASS_DIR)\
-        	-bootclasspath \
+		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
+		$(ICEDTEA_BOOT_DIR)/bin/javac -d ../../../$(PULSE_JAVA_CLASS_DIR)\
+		-bootclasspath \
 	        '$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar' \
-        	org/classpath/icedtea/pulseaudio/*.java\
-        	) \
+		org/classpath/icedtea/pulseaudio/*.java\
+		) \
         fi
 	cp  -r $(PULSE_JAVA_JAVA_SRCDIR)/META-INF $(PULSE_JAVA_CLASS_DIR)
 endif
