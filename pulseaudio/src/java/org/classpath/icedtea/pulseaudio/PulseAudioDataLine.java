@@ -84,9 +84,9 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 		if (isOpen) {
 			throw new IllegalStateException("Line is already open");
 		}
-		
+
 		PulseAudioMixer mixer = PulseAudioMixer.getInstance();
-		if(!mixer.isOpen()) {
+		if (!mixer.isOpen()) {
 			mixer.open();
 		}
 
@@ -205,13 +205,14 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 		Stream.PlaybackStartedListener startedListener = new Stream.PlaybackStartedListener() {
 			@Override
 			public void update() {
-				fireLineEvent(new LineEvent(PulseAudioDataLine.this,
-						LineEvent.Type.START, framesSinceOpen));
-
-				dataWritten = true;
-				synchronized (this) {
-					this.notifyAll();
+				if (!dataWritten) {
+					fireLineEvent(new LineEvent(PulseAudioDataLine.this,
+							LineEvent.Type.START, framesSinceOpen));
+					synchronized (this) {
+						this.notifyAll();
+					}
 				}
+				dataWritten = true;
 
 			}
 		};
@@ -343,6 +344,10 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 			return;
 
 		}
+		if (dataWritten && (!isStarted)) {
+			fireLineEvent(new LineEvent(PulseAudioDataLine.this,
+					LineEvent.Type.START, framesSinceOpen));
+		}
 
 		Operation op;
 		synchronized (eventLoop.threadLock) {
@@ -351,6 +356,9 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 
 		op.waitForCompletion();
 		op.releaseReference();
+		synchronized (this) {
+			this.notifyAll();
+		}
 		isStarted = true;
 
 	}

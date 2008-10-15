@@ -1,3 +1,10 @@
+2008-10-14 Ioana Ivan <iivand@redhat.com>
+
+        * pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	  (open): startedListener only sends a START event when playback first
+	  starts and after an underflow
+	  (start): sends a START event if there's data on the line
+
 2008-10-14 Ioana Ivan <iivan@redhat.com>
 
         * pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
@@ -6,7 +13,7 @@
 
 2008-10-14 Omair Majid <omajid@redhat.com>
 
-	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	* pulseaudio/src/java/org/classpat/icedtea/pulseaudio/PulseAudioDataLine.java
 	(connect): Removed debug output.
 
 2008-10-14 Omair Majid <omajid@redhat.com>
