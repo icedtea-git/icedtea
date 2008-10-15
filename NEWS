@@ -9,6 +9,10 @@ New in release 1.3 (2008-10-15)
 - VisualVM tool integrated (--enable-visualvm).
 - Added out-of-the-box CACAO support (--with-cacao).
 - Added the experimental Shark JIT for Zero.
+- Cleaned up crypto support, all algorithms and key sizes are fully
+  supported now without any (regional) restrictions. No more need for
+  separate crypto policy jars.
+- Integration of Mozilla Rhino javascript support for javax.script.
 - Various build fixes.
 - Several bug and security fixes.
 
