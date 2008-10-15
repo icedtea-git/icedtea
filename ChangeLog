@@ -1,3 +1,7 @@
+2008-10-15  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-hotspot-6b11-7b24.patch: Remove.
+
 2008-10-14 Ioana Ivan <iivand@redhat.com>
 
         * pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
