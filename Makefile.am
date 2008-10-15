@@ -74,6 +74,7 @@ endif
 	rm -rf cacao
 	rm -rf visualvm
 	rm -rf netbeans
+	rm -f jni-common.o
 
 install:
 
@@ -96,7 +97,7 @@ EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
 	overlays extra jconsole.desktop policytool.desktop \
 	test/jtreg patches/icedtea-plugin.patch \
 	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc \
-	HACKING patches/icedtea-visualvm.patch pulseaudio
+	HACKING patches/icedtea-visualvm.patch pulseaudio fsg.sh
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
