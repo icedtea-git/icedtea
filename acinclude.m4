@@ -847,13 +847,13 @@ AC_DEFUN([SET_CORE_OR_SHARK_BUILD],
   AM_CONDITIONAL(SHARK_BUILD, test "x${use_shark}" = xyes)
 ])
 
-AC_DEFUN([AC_CHECK_WITH_CACAO],
+AC_DEFUN([AC_CHECK_ENABLE_CACAO],
 [
   AC_MSG_CHECKING(whether to use CACAO as VM)
-  AC_ARG_WITH([cacao],
-	      [AS_HELP_STRING(--with-cacao,use CACAO as VM [[default=no]])],
+  AC_ARG_ENABLE([cacao],
+	      [AS_HELP_STRING(--enable-cacao,use CACAO as VM [[default=no]])],
   [
-    WITH_CACAO=yes
+    WITH_CACAO="${enableval}"
   ],
   [
     WITH_CACAO=no
