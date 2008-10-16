@@ -255,20 +255,21 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
   ])
   if test -z "${LIBGCJ_JAR}"; then
     AC_MSG_CHECKING(for libgcj-4.3.*.jar, libgcj-4.2.*.jar or libgcj-4.1.*.jar)
-    if test -e /usr/share/java/libgcj-4.3.*.jar; then
-      LIBGCJ_JAR=/usr/share/java/libgcj-4.3.*.jar
+    for jar in /usr/share/java/libgcj-4.3*.jar; do
+      test -e $jar && LIBGCJ_JAR=$jar
+    done
+    if test -n ${LIBGCJ_JAR}; then
       AC_MSG_RESULT(${LIBGCJ_JAR})
     else
-       AM_CONDITIONAL(GCC_OLD, test x = x)
-       if test -e /usr/share/java/libgcj-4.2.*.jar; then
-         LIBGCJ_JAR=/usr/share/java/libgcj-4.2.*.jar
-         AC_MSG_RESULT(${LIBGCJ_JAR})
-       elif test -e /usr/share/java/libgcj-4.1.*.jar; then
-         LIBGCJ_JAR=/usr/share/java/libgcj-4.1.*.jar
-         AC_MSG_RESULT(${LIBGCJ_JAR})
-       else
+      AM_CONDITIONAL(GCC_OLD, test x = x)
+      for jar in /usr/share/java/libgcj-4.1*.jar /usr/share/java/libgcj-4.2*.jar; do
+	test -e $jar && LIBGCJ_JAR=$jar
+      done
+      if test -n ${LIBGCJ_JAR}; then
+	AC_MSG_RESULT(${LIBGCJ_JAR})
+      else
  	AC_MSG_RESULT(no)
-       fi
+      fi
     fi
   fi
   if test -z "${LIBGCJ_JAR}"; then
