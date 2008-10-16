@@ -473,6 +473,23 @@ AC_DEFUN([WITH_NETBEANS_PROFILER_SRC_ZIP],
   AC_SUBST(ALT_NETBEANS_PROFILER_SRC_ZIP)
 ])
 
+AC_DEFUN([WITH_NETBEANS_BASIC_CLUSTER_SRC_ZIP],
+[
+  AC_MSG_CHECKING(netbeans basic cluster zip)
+  AC_ARG_WITH([netbeans-basic-cluster-src-zip],
+              [AS_HELP_STRING(--with-netbeans-basic-cluster-src-zip, specify the location of the netbeans basic cluster source zip)],
+  [
+    ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP})
+  AC_SUBST(ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP)
+])
+
 AC_DEFUN([WITH_ALT_JAR_BINARY],
 [
   AC_MSG_CHECKING(alternate jar command)
