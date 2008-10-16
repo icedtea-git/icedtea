@@ -932,13 +932,13 @@ clean-bootstrap-directory-symlink-ecj:
 # ===============
 
 if WITH_ICEDTEA
-if WITH_CACAO
   MEMORY_LIMIT = -J-Xmx1024m
 else
+if WITH_OPENJDK
   MEMORY_LIMIT = -J-Xmx512m
-endif
 else
   MEMORY_LIMIT =
+endif
 endif
 
 if WITH_CACAO
