@@ -586,9 +586,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-lc_ctype.patch \
 	patches/icedtea-messageutils.patch \
-	patches/icedtea-6open-6616825.patch \
-	patches/icedtea-6open-6651382.patch \
-	patches/icedtea-6open-6756202.patch \
 	$(VISUALVM_PATCH)
 
 if WITH_RHINO
