@@ -186,6 +186,9 @@ public final class JSObject {
      */
     public Object	call(String methodName, Object args[])
     {
+    	if (args == null)
+    		args = new Object[0];
+
         System.err.print ("JSObject.call " + methodName);
         for (int i = 0; i < args.length; i++)
             System.err.print (" " + args[i]);
