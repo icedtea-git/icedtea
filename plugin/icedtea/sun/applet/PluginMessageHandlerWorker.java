@@ -44,9 +44,9 @@ class PluginMessageHandlerWorker extends Thread {
 				// Sleep when there is nothing to do
 				try {
 					Thread.sleep(Integer.MAX_VALUE);
-					System.err.println("Consumer thread " + id + " sleeping...");
+					PluginDebug.debug("Consumer thread " + id + " sleeping...");
 				} catch (InterruptedException ie) {
-					System.err.println("Consumer thread " + id + " woken...");
+					PluginDebug.debug("Consumer thread " + id + " woken...");
 					// nothing.. someone woke us up, see if there 
 					// is work to do
 				}

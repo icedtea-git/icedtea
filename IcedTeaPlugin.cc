@@ -60,6 +60,10 @@ PRThread* current_thread ();
 #include <sys/types.h>
 #include <unistd.h>
 
+// GLib includes.
+#include <glib.h>
+#include <glib/gstdio.h>
+
 // GTK includes.
 #include <gtk/gtk.h>
 
@@ -86,6 +90,46 @@ PRThread* current_thread ();
 #define ID(object) \
   (object == NULL ? (PRUint32) 0 : reinterpret_cast<JNIReference*> (object)->identifier)
 
+#if 1
+// Debugging macros.
+
+#define PLUGIN_DEBUG_0ARG(str) \
+  if (getenv ("ICEDTEAPLUGIN_DEBUG")) \
+  {                                   \
+    printf (str);                     \
+  }
+
+#define PLUGIN_DEBUG_1ARG(str, arg1) \
+  if (getenv ("ICEDTEAPLUGIN_DEBUG")) \
+  {                                   \
+    printf (str, arg1);                     \
+  }
+
+#define PLUGIN_DEBUG_2ARG(str, arg1, arg2) \
+  if (getenv ("ICEDTEAPLUGIN_DEBUG")) \
+  {                                   \
+    printf (str, arg1, arg2);                     \
+  }
+
+#define PLUGIN_DEBUG_3ARG(str, arg1, arg2, arg3) \
+  if (getenv ("ICEDTEAPLUGIN_DEBUG")) \
+  {                                   \
+    printf (str, arg1, arg2, arg3);                     \
+  }
+
+#define PLUGIN_DEBUG_4ARG(str, arg1, arg2, arg3, arg4) \
+  if (getenv ("ICEDTEAPLUGIN_DEBUG")) \
+  {                                   \
+    printf (str, arg1, arg2, arg3, arg4);                     \
+  }
+
+#define PLUGIN_DEBUG(message)                                           \
+  PLUGIN_DEBUG_1ARG ("ICEDTEA PLUGIN: %s\n", message)
+
+#define PLUGIN_DEBUG_TWO(first, second)                                 \
+  PLUGIN_DEBUG_2ARG ("ICEDTEA PLUGIN: %s %s\n",      \
+           first, second)
+
 // Tracing.
 class Trace
 {
@@ -94,28 +138,19 @@ public:
   {
     Trace::name = name;
     Trace::function = function;
-    printf ("ICEDTEA PLUGIN: %s%s\n",
+    PLUGIN_DEBUG_2ARG ("ICEDTEA PLUGIN: %s%s\n",
              name, function);
   }
 
   ~Trace ()
   {
-    printf ("ICEDTEA PLUGIN: %s%s %s\n",
+    PLUGIN_DEBUG_3ARG ("ICEDTEA PLUGIN: %s%s %s\n",
              name, function, "return");
   }
 private:
   char const* name;
   char const* function;
 };
-
-#if 1
-// Debugging macros.
-#define PLUGIN_DEBUG(message)                                           \
-  printf ("ICEDTEA PLUGIN: %s\n", message)
-
-#define PLUGIN_DEBUG_TWO(first, second)                                 \
-  printf ("ICEDTEA PLUGIN: %s %s\n",      \
-           first, second)
 
 // Testing macro.
 #define PLUGIN_TEST(expression, message)  \
@@ -126,6 +161,18 @@ private:
                 message);                       \
     }                                           \
   while (0);
+
+#include <sys/time.h>
+#include <unistd.h>
+
+inline suseconds_t get_time_in_ms()
+{
+	struct timeval tv;
+	struct timezone tz;
+	gettimeofday(&tv, &tz);
+
+	return tv.tv_usec;
+}
 
 // __func__ is a variable, not a string literal, so it cannot be
 // concatenated by the preprocessor.
@@ -152,7 +199,9 @@ private:
 
 #define PLUGIN_CHECK_RETURN(message, result)           \
   if (NS_SUCCEEDED (result))                    \
+  {                                             \
     PLUGIN_DEBUG (message);                     \
+  }                                             \
   else                                          \
     {                                           \
       PLUGIN_ERROR (message);                   \
@@ -161,9 +210,12 @@ private:
 
 #define PLUGIN_CHECK(message, result)           \
   if (NS_SUCCEEDED (result))                    \
+  {                                             \
     PLUGIN_DEBUG (message);                     \
-  else                                          \
-    PLUGIN_ERROR (message);
+  } else                                        \
+  {                                             \
+    PLUGIN_ERROR (message);                     \
+  }
 
 #else
 
@@ -241,6 +293,7 @@ private:
 // and set to NULL after each use.
 static GError* channel_error = NULL;
 // Fully-qualified appletviewer executable.
+gchar* data_directory = NULL;
 static char* appletviewer_executable = NULL;
 static char* libjvm_so = NULL;
 
@@ -248,6 +301,23 @@ class IcedTeaPluginFactory;
 
 static PRBool factory_created = PR_FALSE;
 static IcedTeaPluginFactory* factory = NULL;
+
+// Applet viewer input channel (needs to be static because it is used in plugin_in_pipe_callback)
+GIOChannel* in_from_appletviewer = NULL;
+
+// Callback used to monitor input pipe status.
+static gboolean plugin_in_pipe_callback (GIOChannel* source,
+                                         GIOCondition condition,
+                                         gpointer plugin_data);
+
+#include <prmon.h>
+#include <queue>
+#include <nsCOMPtr.h>
+#include <nsIThread.h>
+
+PRMonitor *jvmMsgQueuePRMonitor;
+std::queue<nsCString> jvmMsgQueue;
+nsCOMPtr<nsIThread> processThread;
 
 #include <nspr.h>
 
@@ -267,12 +337,12 @@ JNIReference::JNIReference (PRUint32 identifier)
   : identifier (identifier),
     count (0)
 {
-  printf ("JNIReference CONSTRUCT: %d %p\n", identifier, this);
+  PLUGIN_DEBUG_2ARG ("JNIReference CONSTRUCT: %d %p\n", identifier, this);
 }
 
 JNIReference::~JNIReference ()
 {
-  printf ("JNIReference DECONSTRUCT: %d %p\n", identifier, this);
+  PLUGIN_DEBUG_2ARG ("JNIReference DECONSTRUCT: %d %p\n", identifier, this);
 }
 
 class JNIID : public JNIReference
@@ -287,12 +357,12 @@ JNIID::JNIID (PRUint32 identifier, char const* signature)
   : JNIReference (identifier),
     signature (strdup (signature))
 {
-  printf ("JNIID CONSTRUCT: %d %p\n", identifier, this);
+  PLUGIN_DEBUG_2ARG ("JNIID CONSTRUCT: %d %p\n", identifier, this);
 }
 
 JNIID::~JNIID ()
 {
-  printf ("JNIID DECONSTRUCT: %d %p\n", identifier, this);
+  PLUGIN_DEBUG_2ARG ("JNIID DECONSTRUCT: %d %p\n", identifier, this);
 }
 
 char const* TYPES[10] = { "Object",
@@ -306,7 +376,6 @@ char const* TYPES[10] = { "Object",
                           "double",
                           "void" };
 
-#include <nsIThread.h>
 
 // FIXME: create index from security context.
 #define MESSAGE_CREATE()                                     \
@@ -316,20 +385,28 @@ char const* TYPES[10] = { "Object",
 #define MESSAGE_ADD_STACK_REFERENCE(reference) \
   message += " reference ";                                  \
   message.AppendInt (reference);                             \
-  if (factory->result_map[reference] == NULL) {                \
-	   factory->result_map[reference] = new ResultContainer();  \
-	   printf("ResultMap created -- %p %d\n", factory->result_map[reference], factory->result_map[reference]->returnIdentifier); \
+  if (!factory->result_map.Get(reference, NULL)) {           \
+	   ResultContainer *resultC = new ResultContainer();      \
+	   factory->result_map.Put(reference, resultC);  \
+	   PLUGIN_DEBUG_3ARG ("ResultMap %p created for reference %d found = %d\n", resultC, reference, factory->result_map.Get(reference, NULL)); \
+	   ResultContainer *searched; \
+	   factory->result_map.Get(reference, &searched); \
+	   PLUGIN_DEBUG_1ARG ("Searched returned %d\n", searched->returnIdentifier); \
   } \
   else                                                      \
-	   factory->result_map[reference]->Clear();
+  {                                                         \
+       ResultContainer *resultC;                          \
+	   factory->result_map.Get(reference, &resultC);     \
+	   resultC->Clear();                                  \
+  }
 
 #define MESSAGE_ADD_SRC(src) \
 	message += " src "; \
 	message += src;
 
-#define MESSAGE_ADD_PRIVILEGES()                \
+#define MESSAGE_ADD_PRIVILEGES(ctx)             \
   nsCString privileges("");                     \
-  GetEnabledPrivileges(&privileges);            \
+  GetEnabledPrivileges(&privileges, ctx);       \
   if (privileges.Length() > 0)                  \
   {                                             \
     message += " privileges ";                  \
@@ -401,11 +478,13 @@ char const* TYPES[10] = { "Object",
 // shutdown (so that the permanent loop does not block 
 // proper exit). We need better error handling
 
-#define PROCESS_PENDING_EVENTS_REF(reference) \
+#define PROCESS_PENDING_EVENTS_REF2(reference)  \
+    ResultContainer *resultC;                    \
+	factory->result_map.Get(reference, &resultC); \
     if (factory->shutting_down == PR_TRUE && \
-		factory->result_map[reference]->errorOccurred == PR_TRUE) \
+		resultC->errorOccurred == PR_TRUE) \
 	{                                                           \
-		printf("Error occured. Exiting function\n");            \
+		PLUGIN_DEBUG_0ARG("Error occured. Exiting function\n");            \
 		return NS_ERROR_FAILURE; \
 	} \
 	PRBool hasPending;  \
@@ -413,8 +492,16 @@ char const* TYPES[10] = { "Object",
 	if (hasPending == PR_TRUE) { \
 		PRBool processed = PR_FALSE; \
 		factory->current->ProcessNextEvent(PR_TRUE, &processed); \
+	} else if (g_main_context_pending (NULL)) { \
+	   g_main_context_iteration(NULL, false); \
 	} else { \
 		PR_Sleep(PR_INTERVAL_NO_WAIT); \
+	}
+
+
+#define PROCESS_PENDING_EVENTS_REF(reference) \
+	if (g_main_context_pending (NULL)) { \
+	   g_main_context_iteration(NULL, false); \
 	}
 
 #define PROCESS_PENDING_EVENTS \
@@ -429,57 +516,63 @@ char const* TYPES[10] = { "Object",
 
 #define MESSAGE_RECEIVE_REFERENCE(reference, cast, name)                \
   nsresult res = NS_OK;                                                 \
-  printf ("RECEIVE 1\n");                                               \
-  while (factory->result_map[reference]->returnIdentifier == -1 &&\
-	     factory->result_map[reference]->errorOccurred == PR_FALSE)     \
+  PLUGIN_DEBUG_0ARG ("RECEIVE 1\n");                                    \
+  ResultContainer *resultC;                                              \
+  factory->result_map.Get(reference, &resultC);                         \
+  while (resultC->returnIdentifier == -1 &&\
+	     resultC->errorOccurred == PR_FALSE)     \
     {                                                                   \
       PROCESS_PENDING_EVENTS_REF (reference);                                \
     }                                                                   \
-  printf ("RECEIVE 3\n"); \
-  if (factory->result_map[reference]->returnIdentifier == 0 || \
-	  factory->result_map[reference]->errorOccurred == PR_TRUE) \
+  PLUGIN_DEBUG_0ARG ("RECEIVE 3\n"); \
+  if (resultC->returnIdentifier == 0 || \
+	  resultC->errorOccurred == PR_TRUE) \
   {  \
 	  *name = NULL;                                                     \
   } else {                                                              \
   *name =                                                               \
     reinterpret_cast<cast>                                              \
-    (factory->references.ReferenceObject (factory->result_map[reference]->returnIdentifier)); \
+    (factory->references.ReferenceObject (resultC->returnIdentifier)); \
   } \
-  printf ("RECEIVE_REFERENCE: %s result: %x = %d\n",                    \
-          __func__, *name, factory->result_map[reference]->returnIdentifier);
+  PLUGIN_DEBUG_3ARG ("RECEIVE_REFERENCE: %s result: %x = %d\n",                    \
+          __func__, *name, resultC->returnIdentifier);
 
 // FIXME: track and free JNIIDs.
 #define MESSAGE_RECEIVE_ID(reference, cast, id, signature)              \
   PRBool processed = PR_FALSE;                                          \
   nsresult res = NS_OK;                                                 \
-  printf("RECEIVE ID 1\n");                                             \
-  while (factory->result_map[reference]->returnIdentifier == -1 &&\
-	     factory->result_map[reference]->errorOccurred == PR_FALSE)     \
+  PLUGIN_DEBUG_0ARG ("RECEIVE ID 1\n");                                             \
+  ResultContainer *resultC;                                              \
+  factory->result_map.Get(reference, &resultC);                         \
+  while (resultC->returnIdentifier == -1 &&\
+	     resultC->errorOccurred == PR_FALSE)     \
     {                                                                   \
       PROCESS_PENDING_EVENTS_REF (reference);                                \
     }                                                                   \
                                                                         \
-  if (factory->result_map[reference]->errorOccurred == PR_TRUE)	 	    \
+  if (resultC->errorOccurred == PR_TRUE)	 	    \
   { \
 	  *id = NULL; \
   } else \
   { \
   *id = reinterpret_cast<cast>                                  \
-    (new JNIID (factory->result_map[reference]->returnIdentifier, signature));         \
-   printf ("RECEIVE_ID: %s result: %x = %d, %s\n",               \
-           __func__, *id, factory->result_map[reference]->returnIdentifier,             \
+    (new JNIID (resultC->returnIdentifier, signature));         \
+   PLUGIN_DEBUG_4ARG ("RECEIVE_ID: %s result: %x = %d, %s\n",               \
+           __func__, *id, resultC->returnIdentifier,             \
            signature); \
   }
 
 #define MESSAGE_RECEIVE_VALUE(reference, ctype, result)                    \
   nsresult res = NS_OK;                                                    \
-  printf("RECEIVE VALUE 1\n");                                             \
-  while (factory->result_map[reference]->returnValue == "" && \
-	     factory->result_map[reference]->errorOccurred == PR_FALSE)            \
+  PLUGIN_DEBUG_0ARG ("RECEIVE VALUE 1\n");                                             \
+  ResultContainer *resultC;                                              \
+  factory->result_map.Get(reference, &resultC);                         \
+  while (resultC->returnValue == "" && \
+	     resultC->errorOccurred == PR_FALSE)            \
     {                                                                      \
       PROCESS_PENDING_EVENTS_REF (reference);                                   \
     }                                                                      \
-    *result = ParseValue (type, factory->result_map[reference]->returnValue);            
+    *result = ParseValue (type, resultC->returnValue);            
 // \
 //   char* valueString = ValueString (type, *result);              \
 //   printf ("RECEIVE_VALUE: %s result: %x = %s\n",                \
@@ -490,18 +583,20 @@ char const* TYPES[10] = { "Object",
 #define MESSAGE_RECEIVE_SIZE(reference, result)                   \
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
-  printf("RECEIVE SIZE 1\n");                                 \
-  while (factory->result_map[reference]->returnValue == "" && \
-	     factory->result_map[reference]->errorOccurred == PR_FALSE) \
+  PLUGIN_DEBUG_0ARG("RECEIVE SIZE 1\n");                                 \
+  ResultContainer *resultC;                                              \
+  factory->result_map.Get(reference, &resultC);                         \
+  while (resultC->returnValue == "" && \
+	     resultC->errorOccurred == PR_FALSE) \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
   nsresult conversionResult;                                    \
-  if (factory->result_map[reference]->errorOccurred == PR_TRUE) \
+  if (resultC->errorOccurred == PR_TRUE) \
 	*result = NULL; \
   else \
   { \
-    *result = factory->result_map[reference]->returnValue.ToInteger (&conversionResult); \
+    *result = resultC->returnValue.ToInteger (&conversionResult); \
     PLUGIN_CHECK ("parse integer", conversionResult);             \
   }
 // \
@@ -512,19 +607,21 @@ char const* TYPES[10] = { "Object",
 #define MESSAGE_RECEIVE_STRING(reference, char_type, result)      \
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
-  printf("RECEIVE STRING 1\n");                                 \
-  while (factory->result_map[reference]->returnValue == "" && \
-	     factory->result_map[reference]->errorOccurred == PR_FALSE)  \
+  PLUGIN_DEBUG_0ARG("RECEIVE STRING 1\n");                                 \
+  ResultContainer *resultC;                                              \
+  factory->result_map.Get(reference, &resultC);                         \
+  while (resultC->returnValue == "" && \
+	     resultC->errorOccurred == PR_FALSE)  \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-	if (factory->result_map[reference]->errorOccurred == PR_TRUE) \
+	if (resultC->errorOccurred == PR_TRUE) \
 		*result = NULL; \
 	else \
 	{\
-	  printf("Setting result to: %s\n", strdup (factory->result_map[reference]->returnValue.get ())); \
+	  PLUGIN_DEBUG_1ARG("Setting result to: %s\n", strdup (resultC->returnValue.get ())); \
       *result = reinterpret_cast<char_type const*>                  \
-                (strdup (factory->result_map[reference]->returnValue.get ()));\
+                (strdup (resultC->returnValue.get ()));\
 	}
 // \
 //   printf ("RECEIVE_STRING: %s result: %x = %s\n",               \
@@ -534,21 +631,22 @@ char const* TYPES[10] = { "Object",
 #define MESSAGE_RECEIVE_STRING_UCS(reference, result)             \
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
-  printf("RECEIVE STRING UCS 1\n");                                 \
-  while (factory->result_map[reference]->returnValueUCS.IsEmpty() && \
-	     factory->result_map[reference]->errorOccurred == PR_FALSE) \
+  PLUGIN_DEBUG_0ARG("RECEIVE STRING UCS 1\n");                                 \
+  ResultContainer *resultC;                                              \
+  factory->result_map.Get(reference, &resultC);                         \
+  while (resultC->returnValueUCS.IsEmpty() && \
+	     resultC->errorOccurred == PR_FALSE) \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-	if (factory->result_map[reference]->errorOccurred == PR_TRUE) \
+	if (resultC->errorOccurred == PR_TRUE) \
 		*result = NULL; \
 	else \
 	{ \
-	  int length = factory->result_map[reference]->returnValueUCS.Length ();               \
+	  int length = resultC->returnValueUCS.Length ();               \
 	  jchar* newstring = static_cast<jchar*> (PR_Malloc (length));  \
 	  memset (newstring, 0, length);                                \
-	  memcpy (newstring, factory->result_map[reference]->returnValueUCS.get (), length);   \
-	  std::cout << "Setting result to: " << factory->result_map[reference]->returnValueUCS.get() << std::endl; \
+	  memcpy (newstring, resultC->returnValueUCS.get (), length);   \
 	  *result = static_cast<jchar const*> (newstring); \
 	}
 
@@ -559,16 +657,18 @@ char const* TYPES[10] = { "Object",
 #define MESSAGE_RECEIVE_BOOLEAN(reference, result)                \
   PRBool processed = PR_FALSE;                                  \
   nsresult res = NS_OK;                                         \
-  printf("RECEIVE BOOLEAN 1\n");                             \
-  while (factory->result_map[reference]->returnIdentifier == -1 && \
-	     factory->result_map[reference]->errorOccurred == PR_FALSE)               \
+  PLUGIN_DEBUG_0ARG("RECEIVE BOOLEAN 1\n");                             \
+  ResultContainer *resultC;                                              \
+  factory->result_map.Get(reference, &resultC);                         \
+  while (resultC->returnIdentifier == -1 && \
+	     resultC->errorOccurred == PR_FALSE)               \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
     }                                                           \
-	if (factory->result_map[reference]->errorOccurred == PR_TRUE) \
+	if (resultC->errorOccurred == PR_TRUE) \
 		*result = NULL; \
 	else \
-	  *result = factory->result_map[reference]->returnIdentifier;
+	  *result = resultC->returnIdentifier;
 //      res = factory->current->ProcessNextEvent (PR_TRUE,        \
 //                                                &processed);    \
 //      PLUGIN_CHECK_RETURN (__func__, res);                      \
@@ -603,16 +703,13 @@ extern "C" NS_EXPORT nsresult NSGetFactory (nsISupports* aServMgr,
 #include <prthread.h>
 #include <nsIThread.h>
 #include <nsILocalFile.h>
-#include <nsCOMPtr.h>
 #include <nsIPluginInstance.h>
 #include <nsIPluginInstancePeer.h>
 #include <nsIJVMPluginInstance.h>
 #include <nsIPluginTagInfo2.h>
 #include <nsComponentManagerUtils.h>
-#include <nsCOMPtr.h>
 #include <nsILocalFile.h>
 #include <prthread.h>
-#include <queue>
 #include <nsIEventTarget.h>
 // // FIXME: I had to hack dist/include/xpcom/xpcom-config.h to comment
 // // out this line: #define HAVE_CPP_2BYTE_WCHAR_T 1 so that
@@ -679,7 +776,7 @@ ReferenceHashtable::ReferenceObject (PRUint32 key)
       Put (key, reference);
     }
   reference->count++;
-  printf ("INCREMENTED: %d %p to: %d\n", key, reference, reference->count);
+  PLUGIN_DEBUG_3ARG ("INCREMENTED: %d %p to: %d\n", key, reference, reference->count);
   return reinterpret_cast<jobject> (reference);
 }
 
@@ -697,7 +794,7 @@ ReferenceHashtable::ReferenceObject (PRUint32 key, char const* signature)
       Put (key, reference);
     }
   reference->count++;
-  printf ("INCREMENTED: %d %p to: %d\n", key, reference, reference->count);
+  PLUGIN_DEBUG_3ARG ("INCREMENTED: %d %p to: %d\n", key, reference, reference->count);
   return reinterpret_cast<jobject> (reference);
 }
 
@@ -709,7 +806,7 @@ ReferenceHashtable::UnreferenceObject (PRUint32 key)
   if (reference != 0)
     {
       reference->count--;
-      printf ("DECREMENTED: %d %p to: %d\n", key, reference, reference->count);
+      PLUGIN_DEBUG_3ARG ("DECREMENTED: %d %p to: %d\n", key, reference, reference->count);
       if (reference->count == 0)
         Remove (key);
     }
@@ -721,48 +818,65 @@ class ResultContainer
 		ResultContainer();
 		~ResultContainer();
 		void Clear();
+		void start_timer();
+		void stop_timer();
   		PRUint32 returnIdentifier;
 		nsCString returnValue;
 		nsString returnValueUCS;
 		nsCString errorMessage;
 		PRBool errorOccurred;
+		suseconds_t time;
 };
 
 ResultContainer::ResultContainer () 
 {
-	PLUGIN_TRACE_RC();
-
 	returnIdentifier = -1;
 	returnValue.Truncate();
 	returnValueUCS.Truncate();
 	errorMessage.Truncate();
 	errorOccurred = PR_FALSE;
+
+	start_timer();
 }
 
 ResultContainer::~ResultContainer ()
 {
-	PLUGIN_TRACE_RC();
-
     returnIdentifier = -1;
 	returnValue.Truncate();
 	returnValueUCS.Truncate();
 	errorMessage.Truncate();
+
+	stop_timer();
 }
 
 void
 ResultContainer::Clear()
 {
-	PLUGIN_TRACE_RC();
-
 	returnIdentifier = -1;
 	returnValue.Truncate();
 	returnValueUCS.Truncate();
 	errorMessage.Truncate();
 	errorOccurred = PR_FALSE;
+
+	start_timer();
+}
+
+void
+ResultContainer::start_timer()
+{
+	time = get_time_in_ms();
+}
+
+
+void
+ResultContainer::stop_timer()
+{
+	PLUGIN_DEBUG_1ARG("Time elapsed = %ld\n", get_time_in_ms() - time);
 }
 
 #include <nsTArray.h>
 #include <nsILiveconnect.h>
+#include <nsICollection.h>
 #include <nsIProcess.h>
 #include <map>
 
@@ -805,9 +919,6 @@ public:
   nsresult SetTransport (nsISocketTransport* transport);
   void Connected ();
   void Disconnected ();
-//  PRUint32 returnIdentifier;
-//  nsCString returnValue;
-//  nsString returnValueUCS;
   PRBool IsConnected ();
   nsCOMPtr<nsIAsyncInputStream> async;
   nsCOMPtr<nsIThread> current;
@@ -818,7 +929,10 @@ public:
   // FIXME: make private?
   JNIEnv* proxyEnv;
   nsISecureEnv* secureEnv;
-  std::map<PRUint32,ResultContainer*> result_map;
+
+  // FIXME: Use something portable here
+  nsDataHashtable<nsUint32HashKey,ResultContainer*> result_map;
+
   void GetMember ();
   void SetMember ();
   void GetSlot ();
@@ -829,7 +943,13 @@ public:
   void Finalize ();
   void ToString ();
   nsCOMPtr<nsILiveconnect> liveconnect;
-  std::map<nsCString, nsCString> codebase_map;
+
+  // normally, we shouldn't have to track unref'd handles, but in some cases, 
+  // we may be in the middle of Eval() when finalize is called and completed. 
+  // At this point, calling liveconnect->Eval causes bad, bad, bad things 
+  // (first observed here after multiple refreshes: 
+  // http://www.jigzone.com/puzzles/daily-jigsaw
+  nsDataHashtable<nsUint32HashKey, PRBool> js_cleared_handles;
 
 private:
   ~IcedTeaPluginFactory();
@@ -838,8 +958,7 @@ private:
   nsresult StartAppletviewer ();
   void ProcessMessage();
   void ConsumeMsgFromJVM();
-  void CreateSocket();
-  nsCOMPtr<nsIThread> processThread;
+  void InitializeJava();
   nsCOMPtr<IcedTeaEventSink> sink;
   nsCOMPtr<nsISocketTransport> transport;
   nsCOMPtr<nsIProcess> applet_viewer_process;
@@ -848,8 +967,6 @@ private:
   // Does not do construction/deconstruction or reference counting.
   nsDataHashtable<nsUint32HashKey, IcedTeaPluginInstance*> instances;
   PRUint32 object_identifier_return;
-  PRMonitor *jvmMsgQueuePRMonitor;
-  std::queue<nsCString> jvmMsgQueue;
   int javascript_identifier;
   int name_identifier;
   int args_identifier;
@@ -857,25 +974,16 @@ private:
   int slot_index;
   int value_identifier;
 
-/**
- * JNI I/O related code
- *
- 
-  void WriteToJVM(nsCString& message);
-  void InitJVM();
-  void ReadFromJVM();
-
-  PRMonitor *jvmPRMonitor;
-  nsCOMPtr<nsIThread> readThread;
-  JavaVM *jvm;
-  JNIEnv *javaEnv;
-  jclass javaPluginClass;
-  jobject javaPluginObj;
-  jmethodID getMessageMID;
-  jmethodID postMessageMID;
-
-  */
-
+  // Applet viewer input pipe name.
+  gchar* in_pipe_name;
+  // Applet viewer input watch source.
+  gint in_watch_source;
+  // Applet viewer output pipe name.
+  gchar* out_pipe_name;
+  // Applet viewer output watch source.
+  gint out_watch_source;
+  // Applet viewer output channel.
+  GIOChannel* out_to_appletviewer;
 };
 
 class IcedTeaEventSink;
@@ -1192,7 +1300,7 @@ private:
   void DecrementContextCounter();
   nsresult GetCurrentContextAddr(char *addr);
   nsresult GetCurrentPageAddress(const char **addr);
-  nsresult GetEnabledPrivileges(nsCString *privileges);
+  nsresult GetEnabledPrivileges(nsCString *privileges, nsISecurityContext *ctx);
   int contextCounter;
 };
 
@@ -1315,6 +1423,64 @@ GetURLRunnable::Run ()
 }
 
 
+class IcedTeaSecurityContext : public nsISecurityContext
+{
+
+    NS_DECL_ISUPPORTS
+
+public:
+
+    IcedTeaSecurityContext();
+
+    NS_IMETHOD Implies(const char* target, const char* action, PRBool *bAllowedAccess);
+
+    NS_IMETHOD GetOrigin(char* buf, int len);
+
+    NS_IMETHOD GetCertificateID(char* buf, int len);
+
+    ~IcedTeaSecurityContext(void);
+
+private:
+    PRBool        universalJavaCapabilityEnabled;
+    PRBool        universalBrowserReadCapabilityEnabled;
+};
+
+NS_IMPL_ISUPPORTS1 (IcedTeaSecurityContext, nsISecurityContext)
+
+IcedTeaSecurityContext::IcedTeaSecurityContext ()
+: universalJavaCapabilityEnabled(PR_FALSE),
+  universalBrowserReadCapabilityEnabled(PR_FALSE)
+{
+	// nothing to do
+}
+
+IcedTeaSecurityContext::~IcedTeaSecurityContext ()
+{
+}
+
+NS_METHOD
+IcedTeaSecurityContext::Implies(const char* target, const char* action, PRBool *bAllowedAccess)
+{
+	PLUGIN_DEBUG_2ARG ("%s implies %s ?\n", target, action);
+	*bAllowedAccess = PR_TRUE;
+	return NS_OK;
+}
+
+NS_METHOD
+IcedTeaSecurityContext::GetOrigin(char* buf, int len)
+{
+	PLUGIN_DEBUG_0ARG ("Origin requested\n");
+	strncpy(buf, "http://www.redhat.com", len);
+	return NS_OK;
+}
+
+NS_METHOD
+IcedTeaSecurityContext::GetCertificateID(char* buf, int len)
+{
+	PLUGIN_DEBUG_0ARG ("CertificateID requested\n");
+	return NS_OK;
+}
+
 NS_IMPL_ISUPPORTS6 (IcedTeaPluginFactory, nsIFactory, nsIPlugin, nsIJVMManager,
                     nsIJVMPrefsWindow, nsIJVMPlugin, nsIInputStreamCallback)
 
@@ -1330,12 +1496,20 @@ IcedTeaPluginFactory::IcedTeaPluginFactory ()
   value_identifier (0),
   connected (PR_FALSE),
   liveconnect (0),
-  shutting_down(PR_FALSE)
+  shutting_down(PR_FALSE),
+  in_pipe_name(NULL),
+  in_watch_source(NULL),
+  out_pipe_name(NULL),
+  out_watch_source(NULL),
+  out_to_appletviewer(NULL)
 {
   PLUGIN_TRACE_FACTORY ();
   instances.Init ();
   references.Init ();
-  printf ("CONSTRUCTING FACTORY\n");
+  js_cleared_handles.Init();
+  result_map.Init();
+  PLUGIN_DEBUG_0ARG ("CONSTRUCTING FACTORY\n");
+  printf("ICEDTEAPLUGIN_DEBUG = %s\n", getenv ("ICEDTEAPLUGIN_DEBUG"));
 }
 
 IcedTeaPluginFactory::~IcedTeaPluginFactory ()
@@ -1345,7 +1519,48 @@ IcedTeaPluginFactory::~IcedTeaPluginFactory ()
   secureEnv = 0;
   factory_created = PR_FALSE;
   factory = NULL;
-  printf ("DECONSTRUCTING FACTORY\n");
+  PLUGIN_DEBUG_0ARG ("DECONSTRUCTING FACTORY\n");
+
+  // Removing a source is harmless if it fails since it just means the
+  // source has already been removed.
+  if (in_watch_source)
+    g_source_remove (in_watch_source);
+  in_watch_source = 0;
+
+  // free input channel
+  if (in_from_appletviewer)
+    g_io_channel_unref (in_from_appletviewer);
+  in_from_appletviewer = NULL;
+
+  // cleanup_out_watch_source:
+  if (out_watch_source)
+    g_source_remove (out_watch_source);
+  out_watch_source = 0;
+
+  // free output channel
+  if (out_to_appletviewer)
+    g_io_channel_unref (out_to_appletviewer);
+  out_to_appletviewer = NULL;
+
+  // free its memory
+  if (out_pipe_name)
+  {
+    // Delete output pipe.
+    unlink (out_pipe_name);
+
+    g_free (out_pipe_name);
+    out_pipe_name = NULL;
+  }
+
+  if (in_pipe_name)
+  {
+    // Delete input pipe.
+    unlink (in_pipe_name);
+
+    // free its memory
+    g_free (in_pipe_name);
+    in_pipe_name = NULL;
+  }
 }
 
 // nsIFactory functions.
@@ -1396,12 +1611,6 @@ IcedTeaPluginFactory::Initialize ()
   nsCOMPtr<nsIComponentManager> manager;
   result = NS_GetComponentManager (getter_AddRefs (manager));
 
-/**
- * JNI I/O code
- 
-  // Initialize mutex to control access to the jvm
-  jvmPRMonitor = PR_NewMonitor();
-*/
   jvmMsgQueuePRMonitor = PR_NewMonitor();
 
   nsCOMPtr<nsIThreadManager> threadManager;
@@ -1413,38 +1622,13 @@ IcedTeaPluginFactory::Initialize ()
   result = threadManager->GetCurrentThread (getter_AddRefs (current));
   PLUGIN_CHECK_RETURN ("current thread", result);
 
-/*
- *
- * Socket related code for TCP/IP communication
- *
- */
- 
-  nsCOMPtr<nsIThread> socketCreationThread;
-  nsCOMPtr<nsIRunnable> socketCreationEvent =
-							new IcedTeaRunnableMethod<IcedTeaPluginFactory>
-							(this, &IcedTeaPluginFactory::IcedTeaPluginFactory::CreateSocket);
-
-  NS_NewThread(getter_AddRefs(socketCreationThread), socketCreationEvent);
-
-  PLUGIN_DEBUG ("Instance::Initialize: awaiting connection from appletviewer");
-  PRBool processed;
-
-  // FIXME: move this somewhere applet-window specific so it doesn't block page
-  // display.
-  // FIXME: this doesn't work with thisiscool.com.
-  while (!IsConnected ())
-    {
-//      result = socketCreationThread->ProcessNextEvent (PR_TRUE, &processed);
-//      PLUGIN_CHECK_RETURN ("wait for connection: process next event", result);
-    }
-  PLUGIN_DEBUG ("Instance::Initialize:"
-                " got confirmation that appletviewer is running.");
+  InitializeJava();
 
   return NS_OK;
 }
 
 void
-IcedTeaPluginFactory::CreateSocket ()
+IcedTeaPluginFactory::InitializeJava ()
 {
 
   PRBool processed;
@@ -1470,37 +1654,8 @@ IcedTeaPluginFactory::CreateSocket ()
 
   result = threadManager->GetCurrentThread (getter_AddRefs (curr_thread));
 
-
-/*
- * Socket initialization code for TCP/IP communication
- *
- */
- 
-  nsCOMPtr<nsIServerSocket> socket;
-  result = manager->CreateInstanceByContractID (NS_SERVERSOCKET_CONTRACTID,
-                                                nsnull,
-                                                NS_GET_IID (nsIServerSocket),
-                                                getter_AddRefs (socket));
-  PLUGIN_CHECK ("create server socket", result);
-
-  // FIXME: hard-coded port
-  result = socket->Init (50007, PR_TRUE, -1);
-
-
-  PLUGIN_CHECK ("socket init", result);
-
-  nsCOMPtr<IcedTeaSocketListener> listener = new IcedTeaSocketListener (this);
-  result = socket->AsyncListen (listener);
-  PLUGIN_CHECK ("add socket listener", result);
-
   result = StartAppletviewer ();
   PLUGIN_CHECK ("started appletviewer", result);
-
-  while (!IsConnected()) 
-  {
-      result = curr_thread->ProcessNextEvent (PR_TRUE, &processed);
-      PLUGIN_CHECK ("wait for connection: process next event", result);
-  }
 
 }
 
@@ -1515,30 +1670,12 @@ IcedTeaPluginFactory::Shutdown ()
   // wake up process thread to tell it to shutdown
   PRThread *prThread;
   processThread->GetPRThread(&prThread);
-  printf("Interrupting process thread...");
+  PLUGIN_DEBUG_0ARG ("Interrupting process thread...");
   PRStatus res = PR_Interrupt(prThread);
-  printf(" done!\n");
+  PLUGIN_DEBUG_0ARG (" done!\n");
 
   PRInt32 exitVal;
   applet_viewer_process->GetExitValue(&exitVal);
-
-/*
-  PRUint32 max_sleep_time = 2000;
-  PRUint32 sleep_time = 0;
-  while ((sleep_time < max_sleep_time) && (exitVal == -1)) {
-	  printf("Appletviewer still appears to be running. Waiting...\n");
-	  PR_Sleep(200);
-	  sleep_time += 200;
-	  applet_viewer_process->GetExitValue(&exitVal);
-  }
-
-  // still running? kill it with extreme prejudice
-  applet_viewer_process->GetExitValue(&exitVal);
-  if (exitVal == -1) {
-	  printf("Appletviewer still appears to be running. Trying to kill it...\n");
-	  applet_viewer_process->Kill();
-  }
-*/
 
   return NS_OK;
 }
@@ -1715,7 +1852,7 @@ IcedTeaPluginFactory::CreateSecureEnv (JNIEnv* proxyEnv,
   jclass resultclazz;
   jboolean resultbool;
 
-  printf ("CREATESECUREENV\n");
+  PLUGIN_DEBUG_0ARG ("CREATESECUREENV\n");
 #if 0
 
   // IcedTeaJNIEnv::AllocObject
@@ -1832,9 +1969,9 @@ IcedTeaPluginFactory::CreateSecureEnv (JNIEnv* proxyEnv,
   PLUGIN_TEST (result.i == 0, "CallStaticMethod: static void (double)");
 
   (*outSecureEnv)->GetMethodID (clazz, "<init>", "()V", &method);
-  printf ("HERE1\n");
+  PLUGIN_DEBUG_0ARG ("HERE1\n");
   (*outSecureEnv)->NewObject (clazz, method, NULL, &newobject);
-  printf ("HERE2\n");
+  PLUGIN_DEBUG_0ARG ("HERE2\n");
   (*outSecureEnv)->IsSameObject (newobject, newobject, &resultbool);
   PLUGIN_TEST (resultbool, "IsSameObject: obj, obj");
   (*outSecureEnv)->IsSameObject (newobject, NULL, &resultbool);
@@ -1851,13 +1988,13 @@ IcedTeaPluginFactory::CreateSecureEnv (JNIEnv* proxyEnv,
   PLUGIN_TEST (result.i == 0, "CallStaticMethod: static void (object)");
 
   
-  printf ("HERE3\n");
+  PLUGIN_DEBUG_0ARG ("HERE3\n");
   (*outSecureEnv)->NewGlobalRef (newobject, &newglobalobject);
-  printf ("HERE4\n");
+  PLUGIN_DEBUG_0ARG ("HERE4\n");
   (*outSecureEnv)->DeleteLocalRef (newobject);
-  printf ("HERE5\n");
+  PLUGIN_DEBUG_0ARG ("HERE5\n");
   (*outSecureEnv)->DeleteGlobalRef (newglobalobject);
-  printf ("HERE6\n");
+  PLUGIN_DEBUG_0ARG ("HERE6\n");
 
   (*outSecureEnv)->NewArray (jint_type, 10, &array);
   (*outSecureEnv)->GetArrayLength (array, &length);
@@ -1956,7 +2093,7 @@ IcedTeaPluginFactory::CreateSecureEnv (JNIEnv* proxyEnv,
 
   (*outSecureEnv)->GetStaticMethodID (clazz, "TestItIntArrayReturn", "()[I",
                                       &method);
-  printf ("GOT METHOD: %d\n", reinterpret_cast<JNIID*> (method)->identifier);
+  PLUGIN_DEBUG_1ARG ("GOT METHOD: %d\n", reinterpret_cast<JNIID*> (method)->identifier);
   (*outSecureEnv)->CallStaticMethod (jobject_type, clazz, method, NULL,
                                      &result);
   // FIXME:
@@ -2162,36 +2299,17 @@ IcedTeaPluginInstance::Initialize (nsIPluginInstancePeer* aPeer)
   tagMessage += " ";
   tagMessage += appletTag;
   tagMessage += "</embed>";
+
+  // remove \n characters from the message
+  tagMessage.StripChars("\n");
+
   factory->SendMessageToAppletViewer (tagMessage);
 
   // Set back-pointer to peer instance.
-  printf ("SETTING PEER!!!: %p\n", aPeer);
+  PLUGIN_DEBUG_1ARG ("SETTING PEER!!!: %p\n", aPeer);
   peer = aPeer;
   NS_ADDREF (aPeer);
-  printf ("DONE SETTING PEER!!!: %p\n", aPeer);
-
-//  if (factory->codebase_map[nsCString(documentbase)] != NULL)
-//  {
-//	  printf("Found %s in map and it is %s\n", nsCString(documentbase), factory->codebase_map[nsCString(documentbase)].get());
-//
-//  }
-
-  nsCString dbase(documentbase);
-  if (factory->codebase_map.find(dbase) != factory->codebase_map.end())
-  {
-	factory->codebase_map[dbase] += ",";
-    factory->codebase_map[dbase].AppendInt(instance_identifier);
-
-    printf("Appended: %s to %s\n", factory->codebase_map[dbase].get(), documentbase);
-
-  } else 
-  {
-	nsCString str;
-	str.AppendInt(instance_identifier);
-    factory->codebase_map[dbase] = str;
-
-	printf("Creating and adding %s to %s and we now have: %s\n", str.get(), documentbase, factory->codebase_map.find(dbase)->second.get());
-  }
+  PLUGIN_DEBUG_1ARG ("DONE SETTING PEER!!!: %p\n", aPeer);
 
   return NS_OK;
 }
@@ -2208,11 +2326,11 @@ IcedTeaPluginInstance::GetPeer (nsIPluginInstancePeer** aPeer)
       PLUGIN_CHECK_RETURN ("wait for peer: process next event", result);
     }
 
-  printf ("GETTING PEER!!!: %p\n", peer);
+  PLUGIN_DEBUG_1ARG ("GETTING PEER!!!: %p\n", peer);
   *aPeer = peer;
   // FIXME: where is this unref'd?
   NS_ADDREF (peer);
-  printf ("DONE GETTING PEER!!!: %p, %p\n", peer, *aPeer);
+  PLUGIN_DEBUG_2ARG ("DONE GETTING PEER!!!: %p, %p\n", peer, *aPeer);
   return NS_OK;
 }
 
@@ -2261,13 +2379,13 @@ IcedTeaPluginInstance::SetWindow (nsPluginWindow* aWindow)
        if (initialized == PR_FALSE) 
 	     {
 
-            printf("IcedTeaPluginInstance::SetWindow: Instance %p waiting for initialization...\n", this);
+            PLUGIN_DEBUG_1ARG ("IcedTeaPluginInstance::SetWindow: Instance %p waiting for initialization...\n", this);
 
            while (initialized == PR_FALSE) {
               PROCESS_PENDING_EVENTS;
             }
 
-            printf("Instance %p initialization complete...\n", this);
+            PLUGIN_DEBUG_1ARG ("Instance %p initialization complete...\n", this);
        }
 
       // The window already exists.
@@ -2276,37 +2394,38 @@ IcedTeaPluginInstance::SetWindow (nsPluginWindow* aWindow)
           // The parent window is the same as in previous calls.
           PLUGIN_DEBUG ("Instance::SetWindow: window already exists.");
 
+		  nsCString message (instanceIdentifierPrefix);
+		  PRBool changed = PR_FALSE;
+
           // The window is the same as it was for the last
           // SetWindow call.
           if (aWindow->width != window_width)
             {
+			  // width has changed
               PLUGIN_DEBUG ("Instance::SetWindow: window width changed.");
-              // The width of the plugin window has changed.
 
-              // Send the new width to the appletviewer.
-              nsCString widthMessage (instanceIdentifierPrefix);
-              widthMessage += "width ";
-              widthMessage.AppendInt (aWindow->width);
-              factory->SendMessageToAppletViewer (widthMessage);
-
-              // Store the new width.
-              window_width = aWindow->width;
+			  window_width = aWindow->width;
+			  changed = PR_TRUE;
             }
 
           if (aWindow->height != window_height)
             {
+			  // width has changed
               PLUGIN_DEBUG ("Instance::SetWindow: window height changed.");
-              // The height of the plugin window has changed.
 
-              // Send the new height to the appletviewer.
-              nsCString heightMessage (instanceIdentifierPrefix);
-              heightMessage += "height ";
-              heightMessage.AppendInt (aWindow->height);
-              factory->SendMessageToAppletViewer (heightMessage);
-
-              // Store the new height.
-              window_height = aWindow->height;
+			  window_height = aWindow->height;
+			  changed = PR_TRUE;
             }
+
+           if (changed == PR_TRUE)
+		   {
+			  message += "width ";
+			  message.AppendInt (window_width);
+              message += " height ";
+              message.AppendInt (window_height);
+              factory->SendMessageToAppletViewer (message);
+		   }
+
 	}
       else
 	{
@@ -2399,14 +2518,14 @@ IcedTeaPluginInstance::GetJavaObject (jobject* object)
   if (initialized == PR_FALSE) 
     {
 
-      printf("IcedTeaPluginInstance::SetWindow: Instance %p waiting for initialization...\n", this);
+      PLUGIN_DEBUG_1ARG ("IcedTeaPluginInstance::SetWindow: Instance %p waiting for initialization...\n", this);
 
       while (initialized == PR_FALSE) {
         PROCESS_PENDING_EVENTS;
 //      printf("waiting for java object\n");
       }
 
-      printf("Instance %p initialization complete...\n", this);
+      PLUGIN_DEBUG_1ARG ("Instance %p initialization complete...\n", this);
     }
  
   return factory->GetJavaObject (instance_identifier, object);
@@ -2431,8 +2550,9 @@ IcedTeaPluginFactory::GetJavaObject (PRUint32 instance_identifier,
   objectMessage += " reference ";
   objectMessage.AppendInt (reference);
   objectMessage += " GetJavaObject";
-  printf ("Sending object message: %s\n", objectMessage.get());
-  result_map[reference] = new ResultContainer();
+  PLUGIN_DEBUG_1ARG ("Sending object message: %s\n", objectMessage.get());
+  ResultContainer *container = new ResultContainer();
+  result_map.Put(reference, container);
   SendMessageToAppletViewer (objectMessage);
 
   PRBool processed = PR_FALSE;
@@ -2443,7 +2563,7 @@ IcedTeaPluginFactory::GetJavaObject (PRUint32 instance_identifier,
 	  current->ProcessNextEvent(PR_TRUE, &processed);
   }
 
-  printf ("GOT JAVA OBJECT IDENTIFIER: %d\n", object_identifier_return);
+  PLUGIN_DEBUG_1ARG ("GOT JAVA OBJECT IDENTIFIER: %d\n", object_identifier_return);
   if (object_identifier_return == 0)
     printf ("WARNING: received object identifier 0\n");
 
@@ -2459,10 +2579,81 @@ IcedTeaPluginInstance::GetText (char const** result)
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
+// plugin_in_pipe_callback is called when data is available on the
+// input pipe, or when the appletviewer crashes or is killed.  It may
+// be called after data has been destroyed in which case it simply
+// returns FALSE to remove itself from the glib main loop.
+static gboolean
+plugin_in_pipe_callback (GIOChannel* source,
+                         GIOCondition condition,
+                         gpointer plugin_data)
+{
+  PLUGIN_DEBUG ("plugin_in_pipe_callback");
+
+  gchar* message = NULL;
+  gboolean keep_installed = TRUE;
+
+  // If data is NULL then GCJ_Destroy has already been called and
+  // plugin_in_pipe_callback is being called after plugin
+  // destruction.  In that case all we need to do is return FALSE so
+  // that the plugin_in_pipe_callback watch is removed.
+  if (condition & G_IO_IN)
+  {
+      if (g_io_channel_read_line (in_from_appletviewer,
+                                  &message, NULL, NULL,
+                                  &channel_error)
+          != G_IO_STATUS_NORMAL)
+       {
+           if (channel_error)
+           {
+               PLUGIN_ERROR_TWO ("Failed to read line from input channel",
+                                 channel_error->message);
+               g_error_free (channel_error);
+               channel_error = NULL;
+            }
+            else
+                PLUGIN_ERROR ("Failed to read line from input channel");
+        }
+        else
+        {
+
+             // Remove trailing newline from message.
+             //message[strlen (message) - 1] = '\0';
+             PLUGIN_DEBUG_1ARG ("Received message: %s\n", message);
+             PLUGIN_DEBUG_1ARG ("  PIPE: plugin read: %s\n", message);
+        }
+
+        keep_installed = TRUE;
+  }
+
+  if (condition & (G_IO_ERR | G_IO_HUP))
+  {
+      PLUGIN_DEBUG ("appletviewer has stopped.");
+      keep_installed = FALSE;
+  }
+
+  // push message to queue
+  PR_EnterMonitor(jvmMsgQueuePRMonitor);
+  jvmMsgQueue.push(nsCString(message));
+  PR_ExitMonitor(jvmMsgQueuePRMonitor);
+
+  // poke process thread
+  PRThread *prThread;
+  processThread->GetPRThread(&prThread);
+  PRStatus res = PR_Interrupt(prThread);
+
+  PLUGIN_DEBUG ("plugin_in_pipe_callback return");
+
+  return keep_installed;
+}
+
+
 NS_IMETHODIMP
 IcedTeaPluginFactory::OnInputStreamReady (nsIAsyncInputStream* aStream)
 {
   PLUGIN_TRACE_INSTANCE ();
+
+  return NS_OK;
 
   // FIXME: change to NSCString.  Why am I getting symbol lookup errors?
   // /home/fitzsim/sources/mozilla/dist/bin/firefox-bin: symbol lookup error:
@@ -2527,7 +2718,7 @@ IcedTeaPluginFactory::OnInputStreamReady (nsIAsyncInputStream* aStream)
 void
 IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 {
-  PLUGIN_DEBUG_TWO ("received message:", message.get());
+  PLUGIN_DEBUG_1ARG ("received message: %s\n", message.get());
 
   nsresult conversionResult;
   PRUint32 space;
@@ -2560,7 +2751,13 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 		rest += " ";
   }
 
-  printf("Parse results: prefix: %s, identifier: %d, reference: %d, command: %s, rest: %s\n", (nsCString (prefix)).get(), identifier, reference, (nsCString (command)).get(), (nsCString (rest)).get());
+  ResultContainer *resultC;
+  if (reference != -1 && result_map.Get(reference, &resultC))
+  {
+    resultC->stop_timer();
+  }
+
+//  printf ("Parse results: prefix: %s, identifier: %d, reference: %d, command: %s, rest: %s\n", (nsCString (prefix)).get(), identifier, reference, (nsCString (command)).get(), (nsCString (rest)).get());
 
   if (prefix == "instance")
     {
@@ -2579,9 +2776,9 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           IcedTeaPluginInstance* instance = NULL;
           instances.Get (identifier, &instance);
           if (instance != 0) {
-			printf("Setting instance.initialized for %p from %d ", instance, instance->initialized);
+			PLUGIN_DEBUG_2ARG ("Setting instance.initialized for %p from %d ", instance, instance->initialized);
             instance->initialized = PR_TRUE;
-			printf("to %d...\n", instance->initialized);
+			PLUGIN_DEBUG_1ARG ("to %d...\n", instance->initialized);
 		  }
 		}
       else if (command == "url")
@@ -2597,7 +2794,7 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
                 do_QueryInterface (instance->peer);
               nsIPluginInstanceOwner* owner = nsnull;
               ownerGetter->GetOwner (&owner);
-			  printf("Calling GetURL with %s and %s\n", nsCString (url).get (), nsCString (target).get ());
+			  PLUGIN_DEBUG_2ARG ("Calling GetURL with %s and %s\n", nsCString (url).get (), nsCString (target).get ());
               nsCOMPtr<nsIRunnable> event = new GetURLRunnable (instance->peer,
 													 nsCString (url).get (),
 													 nsCString (target).get ());
@@ -2609,7 +2806,7 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           IcedTeaPluginInstance* instance = NULL;
           instances.Get (identifier, &instance);
 
-		  printf("GetWindow instance: %d\n", instance);
+		  PLUGIN_DEBUG_1ARG ("GetWindow instance: %d\n", instance);
           if (instance != 0)
             {
               nsCOMPtr<nsIRunnable> event =
@@ -2621,7 +2818,7 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
         }
       else if (command == "GetMember")
         {
-          printf ("POSTING GetMember\n");
+          PLUGIN_DEBUG_0ARG ("POSTING GetMember\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
           javascript_identifier = javascriptID.ToInteger (&conversionResult);
@@ -2635,11 +2832,11 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
             (this,
              &IcedTeaPluginFactory::IcedTeaPluginFactory::GetMember);
           NS_DispatchToMainThread (event);
-          printf ("POSTING GetMember DONE\n");
+          PLUGIN_DEBUG_0ARG ("POSTING GetMember DONE\n");
         }
       else if (command == "SetMember")
         {
-          printf ("POSTING SetMember\n");
+          PLUGIN_DEBUG_0ARG ("POSTING SetMember\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
           javascript_identifier = javascriptID.ToInteger (&conversionResult);
@@ -2659,11 +2856,11 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
             (this,
              &IcedTeaPluginFactory::IcedTeaPluginFactory::SetMember);
           NS_DispatchToMainThread (event);
-          printf ("POSTING SetMember DONE\n");
+          PLUGIN_DEBUG_0ARG ("POSTING SetMember DONE\n");
         }
       else if (command == "GetSlot")
         {
-          printf ("POSTING GetSlot\n");
+          PLUGIN_DEBUG_0ARG ("POSTING GetSlot\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
           javascript_identifier = javascriptID.ToInteger (&conversionResult);
@@ -2677,11 +2874,11 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
             (this,
              &IcedTeaPluginFactory::IcedTeaPluginFactory::GetSlot);
           NS_DispatchToMainThread (event);
-          printf ("POSTING GetSlot DONE\n");
+          PLUGIN_DEBUG_0ARG ("POSTING GetSlot DONE\n");
         }
       else if (command == "SetSlot")
         {
-          printf ("POSTING SetSlot\n");
+          PLUGIN_DEBUG_0ARG ("POSTING SetSlot\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
           javascript_identifier = javascriptID.ToInteger (&conversionResult);
@@ -2700,11 +2897,11 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
             (this,
              &IcedTeaPluginFactory::IcedTeaPluginFactory::SetSlot);
           NS_DispatchToMainThread (event);
-          printf ("POSTING SetSlot DONE\n");
+          PLUGIN_DEBUG_0ARG ("POSTING SetSlot DONE\n");
         }
       else if (command == "Eval")
         {
-          printf ("POSTING Eval\n");
+          PLUGIN_DEBUG_0ARG ("POSTING Eval\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
           javascript_identifier = javascriptID.ToInteger (&conversionResult);
@@ -2718,11 +2915,11 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
             (this,
              &IcedTeaPluginFactory::IcedTeaPluginFactory::Eval);
           NS_DispatchToMainThread (event);
-          printf ("POSTING Eval DONE\n");
+          PLUGIN_DEBUG_0ARG ("POSTING Eval DONE\n");
         }
       else if (command == "RemoveMember")
         {
-          printf ("POSTING RemoveMember\n");
+          PLUGIN_DEBUG_0ARG ("POSTING RemoveMember\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
           javascript_identifier = javascriptID.ToInteger (&conversionResult);
@@ -2736,11 +2933,11 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
             (this,
              &IcedTeaPluginFactory::IcedTeaPluginFactory::RemoveMember);
           NS_DispatchToMainThread (event);
-          printf ("POSTING RemoveMember DONE\n");
+          PLUGIN_DEBUG_0ARG ("POSTING RemoveMember DONE\n");
         }
       else if (command == "Call")
         {
-          printf ("POSTING Call\n");
+          PLUGIN_DEBUG_0ARG ("POSTING Call\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
           javascript_identifier = javascriptID.ToInteger (&conversionResult);
@@ -2759,11 +2956,11 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
             (this,
              &IcedTeaPluginFactory::IcedTeaPluginFactory::Call);
           NS_DispatchToMainThread (event);
-          printf ("POSTING Call DONE\n");
+          PLUGIN_DEBUG_0ARG ("POSTING Call DONE\n");
         }
       else if (command == "Finalize")
         {
-          printf ("POSTING Finalize\n");
+          PLUGIN_DEBUG_0ARG ("POSTING Finalize\n");
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
           javascript_identifier = rest.ToInteger (&conversionResult);
           PLUGIN_CHECK ("parse javascript id", conversionResult);
@@ -2773,11 +2970,11 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
             (this,
              &IcedTeaPluginFactory::IcedTeaPluginFactory::Finalize);
           NS_DispatchToMainThread (event);
-          printf ("POSTING Finalize DONE\n");
+          PLUGIN_DEBUG_0ARG ("POSTING Finalize DONE\n");
         }
       else if (command == "ToString")
         {
-          printf ("POSTING ToString\n");
+          PLUGIN_DEBUG_0ARG ("POSTING ToString\n");
           javascript_identifier = rest.ToInteger (&conversionResult);
           PLUGIN_CHECK ("parse javascript id", conversionResult);
 
@@ -2786,13 +2983,19 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
             (this,
              &IcedTeaPluginFactory::IcedTeaPluginFactory::ToString);
           NS_DispatchToMainThread (event);
-          printf ("POSTING ToString DONE\n");
+          PLUGIN_DEBUG_0ARG ("POSTING ToString DONE\n");
         }
       else if (command == "Error")
         {
-			printf("Error occured. Setting error flag for container @ %d to true\n", reference);
-			result_map[reference]->errorOccurred = PR_TRUE;
-			result_map[reference]->errorMessage = (nsCString) rest;
+
+			ResultContainer *resultC;
+			if (reference != -1 && result_map.Get(reference, &resultC))
+			{
+				PLUGIN_DEBUG_1ARG ("Error occured. Setting error flag for container @ %d to true\n", reference);               
+
+				resultC->errorOccurred = PR_TRUE;
+				resultC->errorMessage = (nsCString) rest;
+			}
 
 			rest += "ERROR: ";
 			IcedTeaPluginInstance* instance = NULL;
@@ -2814,7 +3017,7 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           // object_identifier_return = rest.ToInteger (&result);
           // FIXME: replace with returnIdentifier ?
           object_identifier_return = rest.ToInteger (&conversionResult);
-          printf("Patrsed integer: %d\n", object_identifier_return);
+          PLUGIN_DEBUG_1ARG ("Patrsed integer: %d\n", object_identifier_return);
           PLUGIN_CHECK ("parse integer", conversionResult);
 
         }
@@ -2836,9 +3039,13 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
                || command == "NewGlobalRef"
                || command == "NewArray")
         {
-		  result_map[reference]->returnIdentifier = rest.ToInteger (&conversionResult);
+		  ResultContainer *resultC;
+		  result_map.Get(reference, &resultC);
+		  PLUGIN_DEBUG_2ARG("Looking in map for %d and found = %d\n", reference, resultC);
+		  PLUGIN_DEBUG_1ARG("Curr val = %p\n", resultC);
+		  resultC->returnIdentifier = rest.ToInteger (&conversionResult);
           PLUGIN_CHECK ("parse integer", conversionResult);
-          printf ("GOT RETURN IDENTIFIER %d\n", result_map[reference]->returnIdentifier);
+          PLUGIN_DEBUG_1ARG ("GOT RETURN IDENTIFIER %d\n", resultC->returnIdentifier);
 
         }
       else if (command == "GetField"
@@ -2852,8 +3059,10 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 //          if (returnValue != "")
 //            PLUGIN_ERROR ("Return value already defined.");
           
-		   result_map[reference]->returnValue = rest; 
-           printf ("PLUGIN GOT RETURN VALUE: %s\n", result_map[reference]->returnValue.get());
+		   ResultContainer *resultC;
+		   result_map.Get(reference, &resultC);
+		   resultC->returnValue = rest; 
+           PLUGIN_DEBUG_1ARG ("PLUGIN GOT RETURN VALUE: %s\n", resultC->returnValue.get());
         }
       else if (command == "GetStringUTFChars")
         {
@@ -2881,8 +3090,10 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
                             offset - previousOffset).ToInteger (&conversionResult, 16));
               PLUGIN_CHECK ("parse integer", conversionResult);
             }
-		  result_map[reference]->returnValue = returnValue;
-          printf ("PLUGIN GOT RETURN UTF-8 STRING: %s\n", result_map[reference]->returnValue.get ());
+		  ResultContainer *resultC;
+		  result_map.Get(reference, &resultC);
+		  resultC->returnValue = returnValue;
+          PLUGIN_DEBUG_1ARG ("PLUGIN GOT RETURN UTF-8 STRING: %s\n", resultC->returnValue.get ());
         }
       else if (command == "GetStringChars")
         {
@@ -2917,9 +3128,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
               PLUGIN_CHECK ("parse integer", conversionResult);
               // FIXME: swap on big-endian systems.
               returnValueUCS += static_cast<PRUnichar> ((high << 8) | low);
-	      std::cout << "High: " << high << " Low: " << low << " RVUCS: " << returnValueUCS.get() << std::endl;
             }
-          printf ("PLUGIN GOT RETURN UTF-16 STRING: %d: ",
+          PLUGIN_DEBUG_1ARG ("PLUGIN GOT RETURN UTF-16 STRING: %d: ",
                   returnValueUCS.Length());
           for (int i = 0; i < returnValueUCS.Length(); i++)
             {
@@ -2929,12 +3139,16 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
                       && returnValueUCS[i] <= 'z')
                   || (returnValueUCS[i] >= '0'
                       && returnValueUCS[i] <= '9'))
-                printf ("%c", returnValueUCS[i]);
+			  {
+                PLUGIN_DEBUG_1ARG ("%c", returnValueUCS[i]);
+			  }
               else
-                printf ("?");
+                PLUGIN_DEBUG_0ARG ("?");
             }
-          printf ("\n");
-		  result_map[reference]->returnValueUCS = returnValueUCS;
+          PLUGIN_DEBUG_0ARG ("\n");
+		  ResultContainer *resultC;
+		  result_map.Get(reference, &resultC);
+		  resultC->returnValueUCS = returnValueUCS;
 
         }
       // Do nothing for: SetStaticField, SetField, ExceptionClear,
@@ -2971,13 +3185,13 @@ void IcedTeaPluginFactory::ProcessMessage ()
 		  processThread->HasPendingEvents(&this_has_pending);
 		  if (this_has_pending == PR_TRUE) {
 			  processThread->ProcessNextEvent(PR_TRUE, &processed);
-			  printf("Pending event processed (this) ... %d\n", processed);
+			  PLUGIN_DEBUG_1ARG ("Pending event processed (this) ... %d\n", processed);
 		  }
 
 		  current->HasPendingEvents(&curr_has_pending);
 		  if (curr_has_pending == PR_TRUE) {
 			  current->ProcessNextEvent(PR_TRUE, &processed);
-			  printf("Pending event processed (current) ... %d\n", processed);
+			  PLUGIN_DEBUG_1ARG ("Pending event processed (current) ... %d\n", processed);
 		  }
 
 		  if (this_has_pending != PR_TRUE && curr_has_pending != PR_TRUE) {
@@ -2999,9 +3213,8 @@ void IcedTeaPluginFactory::ConsumeMsgFromJVM ()
 		jvmMsgQueue.pop();
     	PR_ExitMonitor(jvmMsgQueuePRMonitor);
 
-		printf("Processing %s from JVM\n", message.get());
 		HandleMessage (message);
-		printf("Processing complete\n");
+		PLUGIN_DEBUG_0ARG ("Processing complete\n");
 	}
 }
 
@@ -3281,16 +3494,6 @@ nsresult
 IcedTeaPluginFactory::StartAppletviewer ()
 {
 
-/**
- * JNI I/O code
- *
-  InitJVM();
-*/
-
-/*
- * Code to initialize separate appletviewer process that communicates over TCP/IP
- */
-
   PLUGIN_TRACE_INSTANCE ();
   nsresult result;
 
@@ -3318,10 +3521,20 @@ IcedTeaPluginFactory::StartAppletviewer ()
   PLUGIN_CHECK_RETURN ("init process", result);
 
   // FIXME: hard-coded port number.
-  char const* args[5] = { "-Xdebug", "-Xnoagent", "-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n", "sun.applet.PluginMain", "50007" };
-//  char const* args[2] = { "sun.applet.PluginMain", "50007" };
-  result = applet_viewer_process->Run (PR_FALSE, args, 5, nsnull);
-  PLUGIN_CHECK_RETURN ("run process", result);
+  int numArgs;
+  char const** args;
+  
+  if (getenv("ICEDTEAPLUGIN_DEBUG"))
+  {
+	  numArgs = 4;
+      char const* javaArgs[4] = { "-Xdebug", "-Xnoagent", "-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n", "sun.applet.PluginMain" };
+	  args = javaArgs;
+  } else
+  {
+	  numArgs = 1;
+	  char const* javaArgs[1] = { "sun.applet.PluginMain" };
+	  args = javaArgs;
+  }
 
   // start processing thread
   nsCOMPtr<nsIRunnable> processMessageEvent =
@@ -3330,8 +3543,155 @@ IcedTeaPluginFactory::StartAppletviewer ()
 
   NS_NewThread(getter_AddRefs(processThread), processMessageEvent);
 
-  return NS_OK;
+  // data->in_pipe_name
+  in_pipe_name = g_strdup_printf ("%s/icedtea-appletviewer-to-plugin",
+                                         data_directory);
+  if (!in_pipe_name)
+    {
+      PLUGIN_ERROR ("Failed to create input pipe name.");
+     // If data->in_pipe_name is NULL then the g_free at
+      // cleanup_in_pipe_name will simply return.
+      
+      result = NS_ERROR_OUT_OF_MEMORY;
+	  goto cleanup_in_pipe_name;
+    }
 
+  // clear the file first
+  PLUGIN_DEBUG_TWO ("clearing old input fifo (if any):", in_pipe_name);
+  g_remove(in_pipe_name);
+
+  PLUGIN_DEBUG_TWO ("GCJ_New: creating input fifo:", in_pipe_name);
+  if (mkfifo (in_pipe_name, 0700) == -1 && errno != EEXIST)
+    {
+      PLUGIN_ERROR_TWO ("Failed to create input pipe", strerror (errno));
+      result = NS_ERROR_OUT_OF_MEMORY;
+      goto cleanup_in_pipe_name;
+    }
+  PLUGIN_DEBUG_TWO ("GCJ_New: created input fifo:", in_pipe_name);
+
+  // Create plugin-to-appletviewer pipe which we refer to as the
+  // output pipe.
+
+  // data->out_pipe_name
+  out_pipe_name = g_strdup_printf ("%s/icedtea-plugin-to-appletviewer",
+                                         data_directory);
+
+  PLUGIN_DEBUG("got confirmation that appletviewer is running");
+
+  if (!out_pipe_name)
+    {
+      PLUGIN_ERROR ("Failed to create output pipe name.");
+      result = NS_ERROR_OUT_OF_MEMORY;
+      goto cleanup_out_pipe_name;
+    }
+
+  // clear the file first
+  PLUGIN_DEBUG_TWO ("clearing old output fifo (if any):", out_pipe_name);
+  
+  g_remove(out_pipe_name);
+  PLUGIN_DEBUG_TWO ("GCJ_New: creating output fifo:", out_pipe_name);
+  if (mkfifo (out_pipe_name, 0700) == -1 && errno != EEXIST)
+    {
+      PLUGIN_ERROR_TWO ("Failed to create output pipe", strerror (errno));
+      result = NS_ERROR_OUT_OF_MEMORY;
+      goto cleanup_out_pipe_name;
+    }
+  PLUGIN_DEBUG_TWO ("GCJ_New: created output fifo:", out_pipe_name);
+
+  result = applet_viewer_process->Run (PR_FALSE, args, numArgs, nsnull);
+  PLUGIN_CHECK_RETURN ("run process", result);
+
+  out_to_appletviewer = g_io_channel_new_file (out_pipe_name,
+                                                  "w", &channel_error);
+
+  if (!out_to_appletviewer)
+    {
+      if (channel_error)
+        {
+          PLUGIN_ERROR_TWO ("Failed to create output channel",
+                            channel_error->message);
+          g_error_free (channel_error);
+          channel_error = NULL;
+        }
+      else
+        PLUGIN_ERROR ("Failed to create output channel");
+
+      result = NS_ERROR_UNEXPECTED;
+      goto cleanup_out_to_appletviewer;
+    }
+
+  // Create appletviewer-to-plugin channel.  The default encoding for
+  // the file is UTF-8.
+  // data->in_from_appletviewer
+  in_from_appletviewer = g_io_channel_new_file (in_pipe_name,
+                                                  "r", &channel_error);
+  if (!in_from_appletviewer)
+    {
+      if (channel_error)
+        {
+          PLUGIN_ERROR_TWO ("Failed to create input channel",
+                            channel_error->message);
+          g_error_free (channel_error);
+          channel_error = NULL;
+        }
+      else
+        PLUGIN_ERROR ("Failed to create input channel");
+
+      result = NS_ERROR_UNEXPECTED;
+      goto cleanup_in_from_appletviewer;
+    }
+
+  // Watch for hangup and error signals on the input pipe.
+  in_watch_source =
+    g_io_add_watch (in_from_appletviewer,
+                    (GIOCondition) (G_IO_IN | G_IO_ERR | G_IO_HUP),
+                    plugin_in_pipe_callback, NULL);
+
+ goto cleanup_done;
+
+ cleanup_in_watch_source:
+  // Removing a source is harmless if it fails since it just means the
+  // source has already been removed.
+  g_source_remove (in_watch_source);
+  in_watch_source = 0;
+
+ cleanup_in_from_appletviewer:
+  if (in_from_appletviewer)
+    g_io_channel_unref (in_from_appletviewer);
+  in_from_appletviewer = NULL;
+
+  // cleanup_out_watch_source:
+  g_source_remove (out_watch_source);
+  out_watch_source = 0;
+
+ cleanup_out_to_appletviewer:
+  if (out_to_appletviewer)
+    g_io_channel_unref (out_to_appletviewer);
+  out_to_appletviewer = NULL;
+
+  // cleanup_out_pipe:
+  // Delete output pipe.
+  PLUGIN_DEBUG_TWO ("GCJ_New: deleting input fifo:", in_pipe_name);
+  unlink (out_pipe_name);
+  PLUGIN_DEBUG_TWO ("GCJ_New: deleted input fifo:", in_pipe_name);
+
+ cleanup_out_pipe_name:
+  g_free (out_pipe_name);
+  out_pipe_name = NULL;
+
+  // cleanup_in_pipe:
+  // Delete input pipe.
+  PLUGIN_DEBUG_TWO ("GCJ_New: deleting output fifo:", out_pipe_name);
+  unlink (in_pipe_name);
+  PLUGIN_DEBUG_TWO ("GCJ_New: deleted output fifo:", out_pipe_name);
+
+ cleanup_in_pipe_name:
+  g_free (in_pipe_name);
+  in_pipe_name = NULL;
+
+ cleanup_done:
+
+ return result;
 }
 
 nsresult
@@ -3342,49 +3702,48 @@ IcedTeaPluginFactory::SendMessageToAppletViewer (nsCString& message)
   nsresult result;
   PRBool processed;
 
-  // while outputstream is not yet ready, process next event
-  while (!output)
-    {
-      result = current->ProcessNextEvent(PR_TRUE, &processed);
-      PLUGIN_CHECK_RETURN ("wait for output stream initialization: process next event", result);
-    }
+  PLUGIN_DEBUG_1ARG ("Writing to JVM: %s\n", message.get());
 
-  printf("Writing to JVM: %s\n", message.get());
+  gsize bytes_written = 0;
 
-/*
- * JNI I/O code
- *
-   WriteToJVM(message);
-*/
+  message.Append('\n');
 
-/*
- *
- * Code to send message to separate appletviewer process over TCP/IP
- *
- */
+  // g_io_channel_write_chars will return something other than
+  // G_IO_STATUS_NORMAL if not all the data is written.  In that
+  // case we fail rather than retrying.
+  if (g_io_channel_write_chars (out_to_appletviewer,
+                                message.get(), -1, &bytes_written,
+                                &channel_error)
+      != G_IO_STATUS_NORMAL)
+  {
+        if (channel_error)
+        {
+            PLUGIN_ERROR_TWO ("Failed to write bytes to output channel",
+                                channel_error->message);
+            g_error_free (channel_error);
+            channel_error = NULL;
+         }
+          else
+            PLUGIN_ERROR ("Failed to write bytes to output channel");
+  }
 
-  PRUint32 writeCount = 0;
-  // Write trailing \0 as message termination character.
-  // FIXME: check that message is a valid UTF-8 string.
-  //  printf ("MESSAGE: %s\n", message.get ());
-  message.Insert('-',0);
-  result = output->Write (message.get (),
-                                   message.Length () + 1,
-                                   &writeCount);
-  PLUGIN_CHECK_RETURN ("wrote bytes", result);
-  if (writeCount != message.Length () + 1)
-    {
-      PLUGIN_ERROR ("Failed to write all bytes.");
-      return NS_ERROR_FAILURE;
-    }
+  if (g_io_channel_flush (out_to_appletviewer, &channel_error)
+      != G_IO_STATUS_NORMAL)
+  {
+      if (channel_error)
+      {
+          PLUGIN_ERROR_TWO ("Failed to flush bytes to output channel",
+                            channel_error->message);
+          g_error_free (channel_error);
+          channel_error = NULL;
+      }
+      else
+          PLUGIN_ERROR ("Failed to flush bytes to output channel");
+  }
 
-  result = output->Flush ();
-  PLUGIN_CHECK_RETURN ("flushed output", result);
-
-  printf ("  PIPE: plugin wrote: %s\n", message.get ());
+  PLUGIN_DEBUG_1ARG ("Wrote %d bytes to pipe\n", bytes_written);
 
   return NS_OK;
-
 }
 
 PRUint32
@@ -3422,12 +3781,14 @@ IcedTeaPluginInstance::IcedTeaPluginInstance (IcedTeaPluginFactory* factory)
   instanceIdentifierPrefix += " ";
 }
 
+#include <nsIScriptSecurityManager.h>
+
 void
 IcedTeaPluginInstance::GetWindow ()
 {
 
   nsresult result;
-  printf ("HERE 22: %d\n", liveconnect_window);
+  PLUGIN_DEBUG_1ARG ("HERE 22: %d\n", liveconnect_window);
   // principalsArray, numPrincipals and securitySupports
   // are ignored by GetWindow.  See:
   //
@@ -3437,16 +3798,16 @@ IcedTeaPluginInstance::GetWindow ()
   // so they can all safely be null.
   if (factory->proxyEnv != NULL)
     {
-      printf ("HERE 23: %d, %p\n", liveconnect_window, current_thread ());
+      PLUGIN_DEBUG_2ARG ("HERE 23: %d, %p\n", liveconnect_window, current_thread ());
       result = factory->liveconnect->GetWindow(factory->proxyEnv,
                                                this,
                                                NULL, 0, NULL,
                                                &liveconnect_window);
       PLUGIN_CHECK ("get window", result);
-      printf ("HERE 24: %d\n", liveconnect_window);
+      PLUGIN_DEBUG_1ARG ("HERE 24: %d\n", liveconnect_window);
     }
 
-  printf ("HERE 20: %d\n", liveconnect_window);
+  PLUGIN_DEBUG_1ARG ("HERE 20: %d\n", liveconnect_window);
 
   nsCString message ("context ");
   message.AppendInt (0);
@@ -3470,27 +3831,34 @@ void
 IcedTeaPluginFactory::GetMember ()
 {
   nsresult result;
-  printf ("BEFORE GETTING NAMESTRING\n");
+  PLUGIN_DEBUG_0ARG ("BEFORE GETTING NAMESTRING\n");
   jsize strSize = 0;
   jchar const* nameString;
   jstring name = static_cast<jstring> (references.ReferenceObject (name_identifier));
   ((IcedTeaJNIEnv*) secureEnv)->GetStringLength (name, &strSize);
   ((IcedTeaJNIEnv*) secureEnv)->GetStringChars (name, NULL, &nameString);
-  printf ("AFTER GETTING NAMESTRING\n");
+  PLUGIN_DEBUG_0ARG ("AFTER GETTING NAMESTRING\n");
 
   jobject liveconnect_member;
   if (proxyEnv != NULL)
     {
-      printf ("Calling GETMEMBER: %d, %d\n", javascript_identifier, strSize);
-      result = liveconnect->GetMember(proxyEnv,
-                                      javascript_identifier,
-                                      nameString, strSize,
-                                      NULL, 0, NULL,
-                                      &liveconnect_member);
-      PLUGIN_CHECK ("get member", result);
+      if (!factory->js_cleared_handles.Get(javascript_identifier, NULL))
+	  {
+        PLUGIN_DEBUG_2ARG ("Calling GETMEMBER: %d, %d\n", javascript_identifier, strSize);
+        result = liveconnect->GetMember(proxyEnv,
+                                        javascript_identifier,
+                                        nameString, strSize,
+                                        NULL, 0, NULL,
+                                        &liveconnect_member);
+        PLUGIN_CHECK ("get member", result);
+	  } else
+	  {
+		  PLUGIN_DEBUG_1ARG("%d has been cleared. GetMember call skipped\n", javascript_identifier);
+		  liveconnect_member = NULL;
+	  }
     }
 
-  printf ("GOT MEMBER: %d\n", ID (liveconnect_member));
+  PLUGIN_DEBUG_1ARG ("GOT MEMBER: %d\n", ID (liveconnect_member));
   nsCString message ("context ");
   message.AppendInt (0);
   message += " ";
@@ -3507,15 +3875,22 @@ IcedTeaPluginFactory::GetSlot ()
   jobject liveconnect_member;
   if (proxyEnv != NULL)
     {
-      result = liveconnect->GetSlot(proxyEnv,
+      if (!factory->js_cleared_handles.Get(javascript_identifier, NULL))
+	  {
+        result = liveconnect->GetSlot(proxyEnv,
                                       javascript_identifier,
                                       slot_index,
                                       NULL, 0, NULL,
                                       &liveconnect_member);
-      PLUGIN_CHECK ("get slot", result);
+        PLUGIN_CHECK ("get slot", result);
+	  } else
+	  {
+		  PLUGIN_DEBUG_1ARG("%d has been cleared. GetSlot call skipped\n", javascript_identifier);
+		  liveconnect_member = NULL;
+	  }
     }
 
-  printf ("GOT SLOT: %d\n", ID (liveconnect_member));
+  PLUGIN_DEBUG_1ARG ("GOT SLOT: %d\n", ID (liveconnect_member));
   nsCString message ("context ");
   message.AppendInt (0);
   message += " ";
@@ -3529,25 +3904,32 @@ void
 IcedTeaPluginFactory::SetMember ()
 {
   nsresult result;
-  printf ("BEFORE GETTING NAMESTRING\n");
+  PLUGIN_DEBUG_0ARG ("BEFORE GETTING NAMESTRING\n");
   jsize strSize = 0;
   jchar const* nameString;
   jstring name = static_cast<jstring> (references.ReferenceObject (name_identifier));
   ((IcedTeaJNIEnv*) secureEnv)->GetStringLength (name, &strSize);
   ((IcedTeaJNIEnv*) secureEnv)->GetStringChars (name, NULL, &nameString);
-  printf ("AFTER GETTING NAMESTRING\n");
+  PLUGIN_DEBUG_0ARG ("AFTER GETTING NAMESTRING\n");
 
   jobject value = references.ReferenceObject (value_identifier);
   jobject liveconnect_member;
   if (proxyEnv != NULL)
     {
-      printf ("Calling SETMEMBER: %d, %d\n", javascript_identifier, strSize);
-      result = liveconnect->SetMember(proxyEnv,
-                                      javascript_identifier,
-                                      nameString, strSize,
-                                      value,
-                                      NULL, 0, NULL);
-      PLUGIN_CHECK ("set member", result);
+      if (!factory->js_cleared_handles.Get(javascript_identifier, NULL))
+	  {
+        PLUGIN_DEBUG_2ARG ("Calling SETMEMBER: %d, %d\n", javascript_identifier, strSize);
+        result = liveconnect->SetMember(proxyEnv,
+                                        javascript_identifier,
+                                        nameString, strSize,
+                                        value,
+                                        NULL, 0, NULL);
+        PLUGIN_CHECK ("set member", result);
+	  } else
+	  {
+		  PLUGIN_DEBUG_1ARG("%d has been cleared. SetMember call skipped\n", javascript_identifier);
+		  liveconnect_member = NULL;
+	  }
     }
 
   nsCString message ("context ");
@@ -3565,12 +3947,19 @@ IcedTeaPluginFactory::SetSlot ()
   jobject liveconnect_member;
   if (proxyEnv != NULL)
     {
-      result = liveconnect->SetSlot(proxyEnv,
-                                    javascript_identifier,
-                                    slot_index,
-                                    value,
-                                    NULL, 0, NULL);
-      PLUGIN_CHECK ("set slot", result);
+      if (!factory->js_cleared_handles.Get(javascript_identifier, NULL))
+	  {
+        result = liveconnect->SetSlot(proxyEnv,
+                                      javascript_identifier,
+                                      slot_index,
+                                      value,
+                                      NULL, 0, NULL);
+        PLUGIN_CHECK ("set slot", result);
+	  } else
+	  {
+		  PLUGIN_DEBUG_1ARG("%d has been cleared. SetSlot call skipped\n", javascript_identifier);
+		  liveconnect_member = NULL;
+	  }
     }
 
   nsCString message ("context ");
@@ -3580,29 +3969,37 @@ IcedTeaPluginFactory::SetSlot ()
   SendMessageToAppletViewer (message);
 }
 
+#include <nsIJSContextStack.h>
+
 void
 IcedTeaPluginFactory::Eval ()
 {
   nsresult result;
-  printf ("BEFORE GETTING NAMESTRING\n");
+  PLUGIN_DEBUG_0ARG ("BEFORE GETTING NAMESTRING\n");
   jsize strSize = 0;
   jchar const* nameString;
   // FIXME: unreference after SendMessageToAppletViewer call.
   jstring name = static_cast<jstring> (references.ReferenceObject (string_identifier));
   ((IcedTeaJNIEnv*) secureEnv)->GetStringLength (name, &strSize);
   ((IcedTeaJNIEnv*) secureEnv)->GetStringChars (name, NULL, &nameString);
-  printf ("AFTER GETTING NAMESTRING\n");
 
   jobject liveconnect_member;
   if (proxyEnv != NULL)
     {
-      printf ("Calling Eval: %d, %d\n", javascript_identifier, strSize);
-      result = liveconnect->Eval(proxyEnv,
-                                 javascript_identifier,
-                                 nameString, strSize,
-                                 NULL, 0, NULL,
-                                 &liveconnect_member);
-      PLUGIN_CHECK ("eval", result);
+      if (!factory->js_cleared_handles.Get(javascript_identifier, NULL))
+	  {
+        PLUGIN_DEBUG_2ARG ("Calling Eval: %d, %d\n", javascript_identifier, strSize);
+        result = liveconnect->Eval(proxyEnv,
+                                   javascript_identifier,
+                                   nameString, strSize,
+                                   NULL, 0, NULL,
+                                   &liveconnect_member);
+        PLUGIN_CHECK ("eval", result);
+	  } else
+	  {
+		  PLUGIN_DEBUG_1ARG("%d has been cleared. Eval call skipped\n", javascript_identifier);
+		  liveconnect_member = NULL;
+	  }
     }
 
   nsCString message ("context ");
@@ -3618,23 +4015,30 @@ void
 IcedTeaPluginFactory::RemoveMember ()
 {
   nsresult result;
-  printf ("BEFORE GETTING NAMESTRING\n");
+  PLUGIN_DEBUG_0ARG ("BEFORE GETTING NAMESTRING\n");
   jsize strSize = 0;
   jchar const* nameString;
   jstring name = static_cast<jstring> (references.ReferenceObject (name_identifier));
   ((IcedTeaJNIEnv*) secureEnv)->GetStringLength (name, &strSize);
   ((IcedTeaJNIEnv*) secureEnv)->GetStringChars (name, NULL, &nameString);
-  printf ("AFTER GETTING NAMESTRING\n");
+  PLUGIN_DEBUG_0ARG ("AFTER GETTING NAMESTRING\n");
 
   jobject liveconnect_member;
   if (proxyEnv != NULL)
     {
-      printf ("Calling RemoveMember: %d, %d\n", javascript_identifier, strSize);
-      result = liveconnect->RemoveMember(proxyEnv,
-                                         javascript_identifier,
-                                         nameString, strSize,
-                                         NULL, 0, NULL);
-      PLUGIN_CHECK ("RemoveMember", result);
+      if (!factory->js_cleared_handles.Get(javascript_identifier, NULL))
+	  {
+        PLUGIN_DEBUG_2ARG ("Calling RemoveMember: %d, %d\n", javascript_identifier, strSize);
+        result = liveconnect->RemoveMember(proxyEnv,
+                                           javascript_identifier,
+                                           nameString, strSize,
+                                           NULL, 0, NULL);
+        PLUGIN_CHECK ("RemoveMember", result);
+	  } else
+	  {
+		  PLUGIN_DEBUG_1ARG("%d has been cleared. Eval call skipped", javascript_identifier);
+		  liveconnect_member = NULL;
+	  }
     }
 
   nsCString message ("context ");
@@ -3650,31 +4054,38 @@ void
 IcedTeaPluginFactory::Call ()
 {
   nsresult result;
-  printf ("BEFORE GETTING NAMESTRING\n");
+  PLUGIN_DEBUG_0ARG ("BEFORE GETTING NAMESTRING\n");
   jsize strSize = 0;
   jchar const* nameString;
   jstring name = static_cast<jstring> (
     references.ReferenceObject (name_identifier));
   ((IcedTeaJNIEnv*) secureEnv)->GetStringLength (name, &strSize);
   ((IcedTeaJNIEnv*) secureEnv)->GetStringChars (name, NULL, &nameString);
-  printf ("AFTER GETTING NAMESTRING\n");
+  PLUGIN_DEBUG_0ARG ("AFTER GETTING NAMESTRING\n");
   jobjectArray args = static_cast<jobjectArray> (
     references.ReferenceObject (args_identifier));
 
   jobject liveconnect_member;
   if (proxyEnv != NULL)
     {
-      printf ("CALL: %d, %d\n", javascript_identifier, strSize);
-      result = liveconnect->Call(proxyEnv,
-                                 javascript_identifier,
-                                 nameString, strSize,
-                                 args,
-                                 NULL, 0, NULL,
-                                 &liveconnect_member);
-      PLUGIN_CHECK ("call", result);
+      if (!factory->js_cleared_handles.Get(javascript_identifier, NULL))
+	  {
+        PLUGIN_DEBUG_2ARG ("CALL: %d, %d\n", javascript_identifier, strSize);
+        result = liveconnect->Call(proxyEnv,
+                                   javascript_identifier,
+                                   nameString, strSize,
+                                   args,
+                                   NULL, 0, NULL,
+                                   &liveconnect_member);
+        PLUGIN_CHECK ("call", result);
+	  } else
+	  {
+		  PLUGIN_DEBUG_1ARG("%d has been cleared. Call skipped", javascript_identifier);
+		  liveconnect_member = NULL;
+	  }
     }
 
-  printf ("GOT RETURN FROM CALL : %d\n", ID (liveconnect_member));
+  PLUGIN_DEBUG_1ARG ("GOT RETURN FROM CALL : %d\n", ID (liveconnect_member));
   nsCString message ("context ");
   message.AppendInt (0);
   message += " ";
@@ -3690,10 +4101,21 @@ IcedTeaPluginFactory::Finalize ()
   nsresult result;
   if (proxyEnv != NULL)
     {
-      printf ("FINALIZE: %d\n", javascript_identifier);
-      result = liveconnect->FinalizeJSObject(proxyEnv,
+      PLUGIN_DEBUG_1ARG ("FINALIZE: %d\n", javascript_identifier);
+
+      if (!factory->js_cleared_handles.Get(javascript_identifier, NULL))
+	  {
+        // remove reference -- set to PR_FALSE rather than removing from table, 
+        // because that allows us to guarantee to all functions using the table, 
+	    // that the entry exists
+        factory->js_cleared_handles.Put(javascript_identifier, PR_TRUE);
+        result = liveconnect->FinalizeJSObject(proxyEnv,
                                              javascript_identifier);
-      PLUGIN_CHECK ("finalize", result);
+        PLUGIN_CHECK ("finalize", result);
+	  } else
+	  {
+	    PLUGIN_DEBUG_1ARG("%d has no references. Finalization skipped.\n", javascript_identifier);
+	  }
     }
 
   nsCString message ("context ");
@@ -3711,14 +4133,14 @@ IcedTeaPluginFactory::ToString ()
   jstring liveconnect_member;
   if (proxyEnv != NULL)
     {
-      printf ("Calling ToString: %d\n", javascript_identifier);
+      PLUGIN_DEBUG_1ARG ("Calling ToString: %d\n", javascript_identifier);
       result = liveconnect->ToString(proxyEnv,
                                      javascript_identifier,
                                      &liveconnect_member);
       PLUGIN_CHECK ("ToString", result);
     }
 
-  printf ("ToString: %d\n", ID (liveconnect_member));
+  PLUGIN_DEBUG_1ARG ("ToString: %d\n", ID (liveconnect_member));
   nsCString message ("context ");
   message.AppendInt (0);
   message += " ";
@@ -3936,8 +4358,10 @@ IcedTeaJNIEnv::DecrementContextCounter ()
     PR_ExitMonitor(contextCounterPRMonitor);
 }
 
+#include "nsCRT.h"
+
 nsresult
-IcedTeaJNIEnv::GetEnabledPrivileges(nsCString *privileges)
+IcedTeaJNIEnv::GetEnabledPrivileges(nsCString *privileges, nsISecurityContext *ctx)
 {
 	nsresult rv;
 	nsCOMPtr<nsIScriptSecurityManager> sec_man = 
@@ -3952,56 +4376,30 @@ IcedTeaJNIEnv::GetEnabledPrivileges(nsCString *privileges)
 	// check privileges one by one
 
 	privileges->Truncate();
-	char available_privileges[1024];
 
 	// see: http://docs.sun.com/source/816-6170-10/index.htm
 	
-	// Should these other privileges be supported? According to 
-	// http://java.sun.com/j2se/1.3/docs/guide/plugin/security.html it is
-	// either UniversalBrowserRead/UniversalJavaPermissions or the highway...
+    if (ctx)
+    {
 
-/*
-	// broken down to make it clean...
-	sprintf(available_privileges, "%s %s %s %s %s %s %s %s %s %s %s %s", 
-								"LimitedInstall FullInstall SilentInstall",
-								"UniversalAccept UniversalAwtEventQueueAccess UniversalConnect",
-								"UniversalConnectWithRedirect UniversalDialogModality",
-								"UniversalExecAccess UniversalExitAccess UniversalFdRead",
-								"UniversalFileDelete UniversalFileRead UniversalFileWrite",
-								"UniversalLinkAccess UniversalListen UniversalMulticast", 
-								"UniversalJavaPermissions UniversalPackageAccess",
-								"UniversalPackageDefinition UniversalPrintJobAccess", 
-								"UniversalPropertyRead UniversalPropertyWrite",
-								"UniversalSendMail UniversalSetFactory UniversalSystemClipboardAccess",
-								"UniversalThreadAccess UniversalThreadGroupAccess",
-								"UniversalTopLevelWindow");
-*/
+       PRBool hasUniversalBrowserRead = PR_FALSE;
+       PRBool hasUniversalJavaPermission = PR_FALSE;
 
-	sprintf(available_privileges, "%s", 
-							"UniversalBrowserRead UniversalJavaPermissions");
+       ctx->Implies("UniversalBrowserRead", "UniversalBrowserRead", &hasUniversalBrowserRead);
+       if (hasUniversalBrowserRead == PR_TRUE)
+       {
+	       *privileges += "UniversalBrowserRead";
+	       *privileges += ",";
+       }
 
+       ctx->Implies("UniversalJavaPermission", "UniversalJavaPermission", &hasUniversalJavaPermission);
+       if (hasUniversalJavaPermission == PR_TRUE)
+       {
+  	     *privileges += "UniversalJavaPermission";
+       }
+    }
 
-	char *token = strtok(available_privileges, " ");
-	while (token != NULL) 
-	{
-		isEnabled = PR_FALSE;
-		sec_man->IsCapabilityEnabled(token, &isEnabled);
-
-		if (isEnabled == PR_TRUE)
-		{
-			printf("GetEnabledPrivileges : %s is enabled\n", token);
-			*privileges += token;
-			*privileges += ",";
-		} else {
-			printf("GetEnabledPrivileges : %s is _NOT_ enabled\n", token);
-		}
-
-		token = strtok (NULL, " ");
-	}
-
-	privileges->Trim(",");
-
-	return NS_OK;
+     return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -4023,30 +4421,13 @@ IcedTeaJNIEnv::NewObject (jclass clazz,
   MESSAGE_CREATE ();
   MESSAGE_ADD_STACK_REFERENCE(reference);
   MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_PRIVILEGES(ctx);
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_ID (methodID);
   MESSAGE_ADD_ARGS (methodID, args);
   MESSAGE_SEND ();
-  MESSAGE_RECEIVE_REFERENCE (reference, jobject, result);
-
-  if (factory->result_map[reference]->errorOccurred == PR_TRUE &&
-	  factory->result_map[reference]->errorMessage.Find("LiveConnectPermissionNeeded") == 0)
-  {
-	// Permission error. Try again. This time, send permissions over the wire
-	MESSAGE_CREATE ();
-    MESSAGE_ADD_STACK_REFERENCE(reference);
-    MESSAGE_ADD_SRC(origin);
-	MESSAGE_ADD_PRIVILEGES();
-    MESSAGE_ADD_FUNC();
-	MESSAGE_ADD_REFERENCE (clazz);
-    MESSAGE_ADD_ID (methodID);
-    MESSAGE_ADD_ARGS (methodID, args);
-	MESSAGE_SEND ();
-	MESSAGE_RECEIVE_REFERENCE (reference, jobject, result);
-  }
-
-  
+  MESSAGE_RECEIVE_REFERENCE (reference, jobject, result); 
   DecrementContextCounter ();
 
   return NS_OK;
@@ -4072,32 +4453,13 @@ IcedTeaJNIEnv::CallMethod (jni_type type,
   MESSAGE_CREATE ();
   MESSAGE_ADD_STACK_REFERENCE(reference);
   MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_PRIVILEGES(ctx);
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_ADD_ID (methodID);
   MESSAGE_ADD_ARGS (methodID, args);
   MESSAGE_SEND ();
   MESSAGE_RECEIVE_VALUE (reference, type, result);
-
-  if (factory->result_map[reference]->errorOccurred == PR_TRUE &&
-	  factory->result_map[reference]->errorMessage.Find("LiveConnectPermissionNeeded") == 0)
-  {
-    MESSAGE_CREATE ();
-    MESSAGE_ADD_STACK_REFERENCE(reference);
-    MESSAGE_ADD_SRC(origin);
-	MESSAGE_ADD_PRIVILEGES();
-    MESSAGE_ADD_FUNC();
-    MESSAGE_ADD_REFERENCE (obj);
-    MESSAGE_ADD_ID (methodID);
-    MESSAGE_ADD_ARGS (methodID, args);
-    MESSAGE_SEND ();
-    MESSAGE_RECEIVE_VALUE (reference, type, result);
-
-    // if everything was OK, clear exception from previous access exception
-	if (factory->result_map[reference]->errorOccurred == PR_FALSE)
-		ExceptionClear();
-  }
-
   DecrementContextCounter ();
 
   return NS_OK;
@@ -4297,11 +4659,9 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
           retstr.AppendInt (args[arg].s);
           break;
         case 'I':
-	   	  printf("Appending (I @ %d) %d\n", arg, args[arg].i);
           retstr.AppendInt (args[arg].i);
           break;
         case 'J':
-	   	  printf("Appending (J @ %d) %d\n", arg, args[arg].i);
           retstr.AppendInt (args[arg].j);
           break;
         case 'F':
@@ -4311,7 +4671,6 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
           retstr += IcedTeaPrintfCString ("%g", args[arg].d);
           break;
         case 'L':
-          std::cout << "Appending for L: arg=" << arg << " args[arg].l=" << args[arg].l << std::endl;
           retstr.AppendInt (ID (args[arg].l));
           i++;
           while (id->signature[i] != ';')
@@ -4374,26 +4733,12 @@ IcedTeaJNIEnv::GetField (jni_type type,
   MESSAGE_CREATE ();
   MESSAGE_ADD_STACK_REFERENCE(reference);
   MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_PRIVILEGES(ctx);
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_ADD_ID (fieldID);
   MESSAGE_SEND ();
   MESSAGE_RECEIVE_VALUE (reference, type, result);
-
-  if (factory->result_map[reference]->errorOccurred == PR_TRUE &&
-	  factory->result_map[reference]->errorMessage.Find("LiveConnectPermissionNeeded") == 0)
-  {
-    MESSAGE_CREATE ();
-    MESSAGE_ADD_STACK_REFERENCE(reference);
-    MESSAGE_ADD_SRC(origin);
-	MESSAGE_ADD_PRIVILEGES();
-    MESSAGE_ADD_FUNC();
-    MESSAGE_ADD_REFERENCE (obj);
-    MESSAGE_ADD_ID (fieldID);
-    MESSAGE_SEND ();
-    MESSAGE_RECEIVE_VALUE (reference, type, result);
-  }
-
   DecrementContextCounter ();
 
   return NS_OK;
@@ -4417,6 +4762,7 @@ IcedTeaJNIEnv::SetField (jni_type type,
   MESSAGE_CREATE ();
   MESSAGE_ADD_STACK_REFERENCE(-1);
   MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_PRIVILEGES(ctx);
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_TYPE (type);
   MESSAGE_ADD_REFERENCE (obj);
@@ -4447,32 +4793,13 @@ IcedTeaJNIEnv::CallStaticMethod (jni_type type,
   MESSAGE_CREATE ();
   MESSAGE_ADD_STACK_REFERENCE(reference);
   MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_PRIVILEGES(ctx);
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_ID (methodID);
   MESSAGE_ADD_ARGS (methodID, args);
   MESSAGE_SEND ();
   MESSAGE_RECEIVE_VALUE (reference, type, result);
-  
-  if (factory->result_map[reference]->errorOccurred == PR_TRUE &&
-	  factory->result_map[reference]->errorMessage.Find("LiveConnectPermissionNeeded") == 0)
-  {
-    MESSAGE_CREATE ();
-    MESSAGE_ADD_STACK_REFERENCE(reference);
-    MESSAGE_ADD_SRC(origin);
-	MESSAGE_ADD_PRIVILEGES();
-    MESSAGE_ADD_FUNC();
-    MESSAGE_ADD_REFERENCE (clazz);
-    MESSAGE_ADD_ID (methodID);
-    MESSAGE_ADD_ARGS (methodID, args);
-    MESSAGE_SEND ();
-    MESSAGE_RECEIVE_VALUE (reference, type, result);
-
-    // if everything was OK, clear exception from previous access exception
-	if (factory->result_map[reference]->errorOccurred == PR_FALSE)
-		ExceptionClear();
-  }
-
   DecrementContextCounter ();
 
   return NS_OK;
@@ -4497,26 +4824,12 @@ IcedTeaJNIEnv::GetStaticField (jni_type type,
   MESSAGE_CREATE ();
   MESSAGE_ADD_STACK_REFERENCE(reference);
   MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_PRIVILEGES(ctx);
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_ID (fieldID);
   MESSAGE_SEND ();
   MESSAGE_RECEIVE_VALUE (reference, type, result);
-
-  if (factory->result_map[reference]->errorOccurred == PR_TRUE &&
-	  factory->result_map[reference]->errorMessage.Find("LiveConnectPermissionNeeded") == 0)
-  {
-    MESSAGE_CREATE ();
-    MESSAGE_ADD_STACK_REFERENCE(reference);
-    MESSAGE_ADD_SRC(origin);
-	MESSAGE_ADD_PRIVILEGES();
-    MESSAGE_ADD_FUNC();
-    MESSAGE_ADD_REFERENCE (clazz);
-    MESSAGE_ADD_ID (fieldID);
-    MESSAGE_SEND ();
-    MESSAGE_RECEIVE_VALUE (reference, type, result);
-  }
-
   DecrementContextCounter ();
 
   return NS_OK;
@@ -4540,6 +4853,7 @@ IcedTeaJNIEnv::SetStaticField (jni_type type,
   MESSAGE_CREATE ();
   MESSAGE_ADD_STACK_REFERENCE(-1);
   MESSAGE_ADD_SRC(origin);
+  MESSAGE_ADD_PRIVILEGES(ctx);
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_TYPE (type);
   MESSAGE_ADD_REFERENCE (clazz);
@@ -4581,7 +4895,6 @@ IcedTeaJNIEnv::FindClass (char const* name,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_STRING (name);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE (reference, jclass, clazz);
   DecrementContextCounter ();
   return NS_OK;
@@ -4598,7 +4911,6 @@ IcedTeaJNIEnv::GetSuperclass (jclass sub,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (sub);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE (reference, jclass, super);
   DecrementContextCounter ();
   return NS_OK;
@@ -4617,7 +4929,6 @@ IcedTeaJNIEnv::IsAssignableFrom (jclass sub,
   MESSAGE_ADD_REFERENCE (sub);
   MESSAGE_ADD_REFERENCE (super);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_BOOLEAN (reference, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -4651,11 +4962,9 @@ IcedTeaJNIEnv::ExceptionOccurred (jthrowable* result)
   MESSAGE_ADD_STACK_REFERENCE(reference);
   MESSAGE_ADD_FUNC();
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   // FIXME: potential leak here: when is result free'd?
   MESSAGE_RECEIVE_REFERENCE (reference, jthrowable, result);
   DecrementContextCounter ();
-  printf ("GOT RESUlT: %x\n", *result);
   return NS_OK;
 }
 
@@ -4697,7 +5006,6 @@ IcedTeaJNIEnv::NewGlobalRef (jobject lobj,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (lobj);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE(reference, jobject, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -4712,7 +5020,6 @@ IcedTeaJNIEnv::DeleteGlobalRef (jobject gref)
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (gref);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   factory->references.UnreferenceObject (ID (gref));
   return NS_OK;
 }
@@ -4726,7 +5033,6 @@ IcedTeaJNIEnv::DeleteLocalRef (jobject obj)
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
 //  factory->references.UnreferenceObject (ID (obj));
   return NS_OK;
 }
@@ -4763,7 +5069,6 @@ IcedTeaJNIEnv::GetObjectClass (jobject obj,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE (reference, jclass, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -4782,7 +5087,6 @@ IcedTeaJNIEnv::IsInstanceOf (jobject obj,
   MESSAGE_ADD_REFERENCE (obj);
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_BOOLEAN (reference, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -4801,15 +5105,10 @@ IcedTeaJNIEnv::GetMethodID (jclass clazz,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_STRING (name);
-  std::cout << "Args: " << clazz << " " << name << " " << sig << " " << *id << "@" << id << std::endl;
-  printf ("SIGNATURE: %s %s %s\n", __func__, name, sig);
-  std::cout << "Storing it at: " << id << " Currently it is: " << *id << std::endl;
   MESSAGE_ADD_STRING (sig);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_ID (reference, jmethodID, id, sig);
   DecrementContextCounter ();
-  std::cout << "GETMETHODID -- Name: " << name << " SIG: " << sig << " METHOD: " << id << " METHODVAL: " << *id << std::endl;
   return NS_OK;
 }
 
@@ -4826,10 +5125,8 @@ IcedTeaJNIEnv::GetFieldID (jclass clazz,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_STRING (name);
-  printf ("SIGNATURE: %s %s %s\n", __func__, name, sig);
   MESSAGE_ADD_STRING (sig);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_ID (reference, jfieldID, id, sig);
   DecrementContextCounter ();
   return NS_OK;
@@ -4848,10 +5145,8 @@ IcedTeaJNIEnv::GetStaticMethodID (jclass clazz,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_STRING (name);
-  printf ("SIGNATURE: %s %s\n", __func__, sig);
   MESSAGE_ADD_STRING (sig);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_ID (reference, jmethodID, id, sig);
   DecrementContextCounter ();
   return NS_OK;
@@ -4870,10 +5165,8 @@ IcedTeaJNIEnv::GetStaticFieldID (jclass clazz,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_STRING (name);
-  printf ("SIGNATURE: %s %s\n", __func__, sig);
   MESSAGE_ADD_STRING (sig);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_ID (reference, jfieldID, id, sig);
   DecrementContextCounter ();
   return NS_OK;
@@ -4892,7 +5185,6 @@ IcedTeaJNIEnv::NewString (jchar const* unicode,
   MESSAGE_ADD_SIZE (len);
   MESSAGE_ADD_STRING_UCS (unicode, len);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE (reference, jstring, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -4909,7 +5201,6 @@ IcedTeaJNIEnv::GetStringLength (jstring str,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (str);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_SIZE (reference, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -4930,7 +5221,6 @@ IcedTeaJNIEnv::GetStringChars (jstring str,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (str);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_STRING_UCS (reference, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -4956,7 +5246,6 @@ IcedTeaJNIEnv::NewStringUTF (char const* utf,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_STRING_UTF (utf);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE (reference, jstring, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -4973,7 +5262,6 @@ IcedTeaJNIEnv::GetStringUTFLength (jstring str,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (str);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_SIZE (reference, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -4994,7 +5282,6 @@ IcedTeaJNIEnv::GetStringUTFChars (jstring str,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (str);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_STRING (reference, char, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -5020,7 +5307,6 @@ IcedTeaJNIEnv::GetArrayLength (jarray array,
   MESSAGE_ADD_FUNC();
   MESSAGE_ADD_REFERENCE (array);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_SIZE (reference, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -5041,7 +5327,6 @@ IcedTeaJNIEnv::NewObjectArray (jsize len,
   MESSAGE_ADD_REFERENCE (clazz);
   MESSAGE_ADD_REFERENCE (init);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE (reference, jobjectArray, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -5060,7 +5345,6 @@ IcedTeaJNIEnv::GetObjectArrayElement (jobjectArray array,
   MESSAGE_ADD_REFERENCE (array);
   MESSAGE_ADD_SIZE (index);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE (reference, jobject, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -5079,7 +5363,6 @@ IcedTeaJNIEnv::SetObjectArrayElement (jobjectArray array,
   MESSAGE_ADD_SIZE (index);
   MESSAGE_ADD_REFERENCE (val);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   return NS_OK;
 }
 
@@ -5097,7 +5380,6 @@ IcedTeaJNIEnv::NewArray (jni_type element_type,
   MESSAGE_ADD_TYPE (element_type);
   MESSAGE_ADD_SIZE (len);
   MESSAGE_SEND ();
-  printf("MSG SEND COMPLETE. NOW RECEIVING...\n");
   MESSAGE_RECEIVE_REFERENCE (reference, jarray, result);
   DecrementContextCounter ();
   return NS_OK;
@@ -5244,6 +5526,37 @@ NSGetFactory (nsISupports* aServMgr, nsCID const& aClass,
     {
       PLUGIN_ERROR ("Failed to create java executable name.");
       return NS_ERROR_OUT_OF_MEMORY;
+    }
+
+  // Make sure the plugin data directory exists, creating it if
+  // necessary.
+  data_directory = g_strconcat (getenv ("HOME"), "/.icedteaplugin", NULL);
+  if (!data_directory)
+    {
+      PLUGIN_ERROR ("Failed to create data directory name.");
+      return NS_ERROR_OUT_OF_MEMORY;
+    }
+
+  if (!g_file_test (data_directory,
+                    (GFileTest) (G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)))
+    {
+      int file_error = 0;
+
+      file_error = g_mkdir (data_directory, 0700);
+      if (file_error != 0)
+        {
+          PLUGIN_ERROR_THREE ("Failed to create data directory",
+                              data_directory,
+                              strerror (errno));
+         
+          if (data_directory)
+          {
+            g_free (data_directory);
+            data_directory = NULL;
+           };
+
+           return NS_ERROR_UNEXPECTED;
+        }
     }
 
   if (factory_created == PR_TRUE)

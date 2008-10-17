@@ -43,11 +43,11 @@ public class GetMemberPluginCallRequest extends PluginCallRequest {
 
     public GetMemberPluginCallRequest(String message, String returnString) {
         super(message, returnString);
-        System.out.println ("GetMEMBerPLUGINCAlL " + message + " " + returnString);
+        PluginDebug.debug ("GetMEMBerPLUGINCAlL " + message + " " + returnString);
     }
 
     public void parseReturn(String message) {
-        System.out.println ("GetMEMBerparseReturn GOT: " + message);
+    	PluginDebug.debug ("GetMEMBerparseReturn GOT: " + message);
         String[] args = message.split(" ");
         // FIXME: add thread ID to messages to support multiple
         // threads using the netscape.javascript package.

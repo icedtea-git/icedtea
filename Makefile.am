@@ -9,7 +9,13 @@ NETBEANS_BASIC_CLUSTER = a7ea855f475fa3a982f094a45c155ab4
 NETBEANS_PROFILER_MD5SUM = ff8e8abc42df6c6749e6b02bcf7bb0a5
 VISUALVM_MD5SUM = 4b55bc623418818793392bb233da2927
 
-if ENABLE_LIVECONNECT
+if ENABLE_GCJWEBPLUGIN
+GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
+GCJWEBPLUGIN_TARGET = gcjwebplugin.so
+else
+GCJWEBPLUGIN_CLEAN =
+GCJWEBPLUGIN_TARGET =
+if ENABLE_PLUGIN
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
@@ -19,12 +25,6 @@ ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
 PLUGIN_PATCH = patches/icedtea-plugin.patch
 LIVECONNECT_DIR =
-if ENABLE_PLUGIN
-GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
-GCJWEBPLUGIN_TARGET = gcjwebplugin.so
-else
-GCJWEBPLUGIN_CLEAN =
-GCJWEBPLUGIN_TARGET =
 endif
 endif
 
@@ -64,10 +64,10 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports clean-pulse-java
 	rm -rf openjdk
 	rm -rf hotspot-tools
 	rm -rf rt/netscape
-if ENABLE_LIVECONNECT
+if ENABLE_PLUGIN
 	rm -f IcedTeaPlugin.o IcedTeaPlugin.so
 else
-if ENABLE_PLUGIN
+if ENABLE_GCJWEBPLUGIN
 	rm -f gcjwebplugin.so
 endif
 endif
@@ -636,7 +636,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
 	sed -i "s#IcedTea6#IcedTea6 $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk
 
-if ENABLE_LIVECONNECT
+if ENABLE_PLUGIN
 	cp -a plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
 	cp -a plugin/icedtea/netscape rt/
 endif
@@ -961,13 +961,13 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/ \
 	  $(ICEDTEA_BUILD_TARGET)
-if ENABLE_LIVECONNECT
+if ENABLE_PLUGIN
 	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 else
-if ENABLE_PLUGIN
+if ENABLE_GCJWEBPLUGIN
 	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf gcjwebplugin.so \
@@ -1024,13 +1024,13 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
-if ENABLE_LIVECONNECT
+if ENABLE_PLUGIN
 	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 else
-if ENABLE_PLUGIN
+if ENABLE_GCJWEBPLUGIN
 	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf gcjwebplugin.so \
@@ -1393,7 +1393,7 @@ clean-cacao:
 	rm -rf cacao
 	rm -f stamps/cacao.stamp
 
-if ENABLE_LIVECONNECT
+if ENABLE_PLUGIN
 # IcedTeaPlugin.so.
 # Separate compile and link invocations to ensure intermediate object
 # is listed before -l options.  See:
@@ -1415,7 +1415,7 @@ clean-IcedTeaPlugin:
 	rm -f IcedTeaPlugin.o
 	rm -f IcedTeaPlugin.so
 else
-if ENABLE_PLUGIN
+if ENABLE_GCJWEBPLUGIN
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
 	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \

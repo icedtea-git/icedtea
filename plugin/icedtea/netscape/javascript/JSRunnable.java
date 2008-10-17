@@ -39,6 +39,8 @@
 
 package netscape.javascript;
 
+import sun.applet.PluginDebug;
+
 /**
  * Runs a JavaScript object with a run() method in a separate thread.
  */
@@ -63,7 +65,7 @@ public class JSRunnable implements Runnable {
 				notifyAll();
 			}
 		} catch (Throwable t) {
-			System.err.println(t);
+			PluginDebug.debug(t.toString());
 			t.printStackTrace(System.err);
 		}
 	}

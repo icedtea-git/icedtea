@@ -133,6 +133,9 @@ import sun.misc.Ref;
      private static PluginStreamHandler streamhandler;
      
      private static PluginCallRequestFactory requestFactory;
+     
+     private int proposedHeightFactor;
+     private int proposedWidthFactor;
 
      /**
       * Null constructor to allow instantiation via newInstance()
@@ -153,6 +156,19 @@ import sun.misc.Ref;
          // FIXME: when/where do we remove this?
          PluginDebug.debug ("PARSING: PUTTING " + identifier + " " + this);
          applets.put(identifier, this);
+         
+         
+         // we intercept height and width specifications here because 
+         proposedHeightFactor = 1;
+         proposedWidthFactor = 1;
+
+         if (atts.get("heightPercentage") != null) {
+        	 proposedHeightFactor = (Integer) atts.get("heightPercentage")/100;
+         }
+         
+         if (((String) atts.get("width")).endsWith("%")) {
+        	 proposedWidthFactor = (Integer) atts.get("widthPercentage")/100;
+         }
  
          AccessController.doPrivileged(new PrivilegedAction() {
              public Object run() {
@@ -370,17 +386,20 @@ import sun.misc.Ref;
      public void handleMessage(int reference, String message)
      {
          if (message.startsWith("width")) {
-        	 int width =
-        		 Integer.parseInt(message.substring("width".length() + 1));
-             //panel.setAppletSizeIfNeeded(width, -1);
-        	 panel.setSize(width, getHeight());
-             setSize(width, getHeight());
-         } else if (message.startsWith("height")) {
-             int height = 
-            	 Integer.parseInt(message.substring("height".length() + 1));
-             //panel.setAppletSizeIfNeeded(-1, height);
-             panel.setSize(getWidth(), height);
-             setSize(getWidth(), height);
+        	 
+        	 String[] dimMsg = message.split(" ");
+        	 // 0 => width, 1=> width_value, 2 => height, 3=> height_value
+        	 
+        	 int height = proposedHeightFactor*Integer.parseInt(dimMsg[3]);
+        	 int width = proposedWidthFactor*Integer.parseInt(dimMsg[1]);
+
+        	 if (panel instanceof NetxPanel)
+        		 ((NetxPanel) panel).updateSizeInAtts(height, width);
+
+        	 panel.setSize(width, height);
+        	 setSize(width, height);
+
+        	 panel.validate();
          } else if (message.startsWith("destroy")) {
              dispose();
          } else if (message.startsWith("GetJavaObject")) {
@@ -402,16 +421,21 @@ import sun.misc.Ref;
             	 }
              }
 
-             System.err.println ("Looking for object " + o + " panel is " + panel.getClass());
+             PluginDebug.debug ("Looking for object " + o + " panel is " + panel.getClass());
              AppletSecurityContextManager.getSecurityContext(0).store(o);
-             System.err.println ("WRITING 1: " + "context 0 reference " + reference + " GetJavaObject "
+             PluginDebug.debug ("WRITING 1: " + "context 0 reference " + reference + " GetJavaObject "
                                  + AppletSecurityContextManager.getSecurityContext(0).getIdentifier(o));
              streamhandler.write("context 0 reference " + reference + " GetJavaObject "
                               + AppletSecurityContextManager.getSecurityContext(0).getIdentifier(o));
-             System.err.println ("WRITING 1 DONE");
+             PluginDebug.debug ("WRITING 1 DONE");
          }
      }
- 
+
+     // FIXME: Kind of hackish way to ensure synchronized re-drawing 
+     private synchronized void forceredraw() {
+    	 doLayout();
+     }
+     
      /**
       * Send the initial set of events to the appletviewer event queue.
       * On start-up the current behaviour is to load the applet and call
@@ -442,7 +466,7 @@ import sun.misc.Ref;
    	    String [] events = splitSeparator(",", eventList);
  
   	    for (int i = 0; i < events.length; i++) {
-  		System.out.println("Adding event to queue: " + events[i]);
+  	    PluginDebug.debug("Adding event to queue: " + events[i]);
   		if (events[i].equals("dispose"))
   		    panel.sendEvent(AppletPanel.APPLET_DISPOSE);
   		else if (events[i].equals("load"))
@@ -461,7 +485,7 @@ import sun.misc.Ref;
   		    panel.sendEvent(AppletPanel.APPLET_ERROR);
   		else
  		    // non-fatal error if we get an unrecognized event
-  		    System.out.println("Unrecognized event name: " + events[i]);
+  		    PluginDebug.debug("Unrecognized event name: " + events[i]);
   	    }
  
    	    while (!panel.emptyEventQueue()) ;
@@ -646,28 +670,28 @@ import sun.misc.Ref;
      }
  
      public int getWindow() {
-    	 System.out.println ("STARTING getWindow");
+    	 PluginDebug.debug ("STARTING getWindow");
     	 PluginCallRequest request = requestFactory.getPluginCallRequest("window",
     			 							"instance " + identifier + " " + "GetWindow", 
     			 							"JavaScriptGetWindow");
-    	 System.out.println ("STARTING postCallRequest");
+    	 PluginDebug.debug ("STARTING postCallRequest");
 		 streamhandler.postCallRequest(request);
-    	 System.out.println ("STARTING postCallRequest done");
+    	 PluginDebug.debug ("STARTING postCallRequest done");
     	 streamhandler.write(request.getMessage());
     	 try {
-    		 System.out.println ("wait request 1");
+    		 PluginDebug.debug ("wait request 1");
     		 synchronized(request) {
-    			 System.out.println ("wait request 2");
+    			 PluginDebug.debug ("wait request 2");
     			 while ((Integer) request.getObject() == 0)
     				 request.wait();
-    			 System.out.println ("wait request 3");
+    			 PluginDebug.debug ("wait request 3");
     		 }
     	 } catch (InterruptedException e) {
     		 throw new RuntimeException("Interrupted waiting for call request.",
     				 e);
     	 }
 
-    	 System.out.println ("STARTING getWindow DONE");
+    	 PluginDebug.debug ("STARTING getWindow DONE");
     	 return (Integer) request.getObject();
      }
  
@@ -684,18 +708,18 @@ import sun.misc.Ref;
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
-             System.err.println ("wait getMEM request 1");
+             PluginDebug.debug ("wait getMEM request 1");
              synchronized(request) {
-                 System.err.println ("wait getMEM request 2");
+                 PluginDebug.debug ("wait getMEM request 2");
                  while (request.isDone() == false)
                      request.wait();
-                 System.err.println ("wait getMEM request 3 GOT: " + request.getObject().getClass());
+                 PluginDebug.debug ("wait getMEM request 3 GOT: " + request.getObject().getClass());
              }
          } catch (InterruptedException e) {
              throw new RuntimeException("Interrupted waiting for call request.",
                                         e);
          }
-         System.err.println (" getMember DONE");
+         PluginDebug.debug (" getMember DONE");
          return request.getObject();
      }
  
@@ -712,19 +736,19 @@ import sun.misc.Ref;
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
-             System.out.println ("wait setMem request: " + request.getMessage());
-             System.out.println ("wait setMem request 1");
+             PluginDebug.debug ("wait setMem request: " + request.getMessage());
+             PluginDebug.debug ("wait setMem request 1");
              synchronized(request) {
-                 System.out.println ("wait setMem request 2");
+                 PluginDebug.debug ("wait setMem request 2");
                  while (request.isDone() == false)
                      request.wait();
-                 System.out.println ("wait setMem request 3");
+                 PluginDebug.debug ("wait setMem request 3");
              }
          } catch (InterruptedException e) {
              throw new RuntimeException("Interrupted waiting for call request.",
                                         e);
          }
-         System.out.println (" setMember DONE");
+         PluginDebug.debug (" setMember DONE");
      }
  
      // FIXME: handle long index as well.
@@ -739,18 +763,18 @@ import sun.misc.Ref;
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
-             System.out.println ("wait setSlot request 1");
+             PluginDebug.debug ("wait setSlot request 1");
              synchronized(request) {
-                 System.out.println ("wait setSlot request 2");
+                 PluginDebug.debug ("wait setSlot request 2");
                  while (request.isDone() == false)
                      request.wait();
-                 System.out.println ("wait setSlot request 3");
+                 PluginDebug.debug ("wait setSlot request 3");
              }
          } catch (InterruptedException e) {
              throw new RuntimeException("Interrupted waiting for call request.",
                                         e);
          }
-         System.out.println (" setSlot DONE");
+         PluginDebug.debug (" setSlot DONE");
      }
  
      public static Object getSlot(int internal, int index)
@@ -762,18 +786,18 @@ import sun.misc.Ref;
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
-             System.out.println ("wait getSlot request 1");
+             PluginDebug.debug ("wait getSlot request 1");
              synchronized(request) {
-                 System.out.println ("wait getSlot request 2");
+                 PluginDebug.debug ("wait getSlot request 2");
                  while (request.isDone() == false)
                      request.wait();
-                 System.out.println ("wait getSlot request 3");
+                 PluginDebug.debug ("wait getSlot request 3");
              }
          } catch (InterruptedException e) {
              throw new RuntimeException("Interrupted waiting for call request.",
                                         e);
          }
-         System.out.println (" getSlot DONE");
+         PluginDebug.debug (" getSlot DONE");
          return request.getObject();
      }
  
@@ -789,18 +813,18 @@ import sun.misc.Ref;
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
-             System.out.println ("wait eval request 1");
+             PluginDebug.debug ("wait eval request 1");
              synchronized(request) {
-                 System.out.println ("wait eval request 2");
+                 PluginDebug.debug ("wait eval request 2");
                  while (request.isDone() == false)
                      request.wait();
-                 System.out.println ("wait eval request 3");
+                 PluginDebug.debug ("wait eval request 3");
              }
          } catch (InterruptedException e) {
              throw new RuntimeException("Interrupted waiting for call request.",
                                         e);
          }
-         System.out.println (" getSlot DONE");
+         PluginDebug.debug (" getSlot DONE");
          return request.getObject();
      }
  
@@ -815,18 +839,18 @@ import sun.misc.Ref;
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
-             System.out.println ("wait removeMember request 1");
+             PluginDebug.debug ("wait removeMember request 1");
              synchronized(request) {
-                 System.out.println ("wait removeMember request 2");
+                 PluginDebug.debug ("wait removeMember request 2");
                  while (request.isDone() == false)
                      request.wait();
-                 System.out.println ("wait removeMember request 3");
+                 PluginDebug.debug ("wait removeMember request 3");
              }
          } catch (InterruptedException e) {
              throw new RuntimeException("Interrupted waiting for call request.",
                                         e);
          }
-         System.out.println (" RemoveMember DONE");
+         PluginDebug.debug (" RemoveMember DONE");
      }
  
      public static Object call(int internal, String name, Object args[])
@@ -846,18 +870,18 @@ import sun.misc.Ref;
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
-             System.out.println ("wait call request 1");
+             PluginDebug.debug ("wait call request 1");
              synchronized(request) {
-                 System.out.println ("wait call request 2");
+                 PluginDebug.debug ("wait call request 2");
                  while (request.isDone() == false)
                      request.wait();
-                 System.out.println ("wait call request 3");
+                 PluginDebug.debug ("wait call request 3");
              }
          } catch (InterruptedException e) {
              throw new RuntimeException("Interrupted waiting for call request.",
                                         e);
          }
-         System.out.println (" Call DONE");
+         PluginDebug.debug (" Call DONE");
          return request.getObject();
      }
  
@@ -870,18 +894,18 @@ import sun.misc.Ref;
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
-             System.out.println ("wait finalize request 1");
+             PluginDebug.debug ("wait finalize request 1");
              synchronized(request) {
-                 System.out.println ("wait finalize request 2");
+                 PluginDebug.debug ("wait finalize request 2");
                  while (request.isDone() == false)
                      request.wait();
-                 System.out.println ("wait finalize request 3");
+                 PluginDebug.debug ("wait finalize request 3");
              }
          } catch (InterruptedException e) {
              throw new RuntimeException("Interrupted waiting for call request.",
                                         e);
          }
-         System.out.println (" finalize DONE");
+         PluginDebug.debug (" finalize DONE");
      }
  
      public static String javascriptToString(int internal)
@@ -893,27 +917,27 @@ import sun.misc.Ref;
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
-             System.out.println ("wait ToString request 1");
+             PluginDebug.debug ("wait ToString request 1");
              synchronized(request) {
-                 System.out.println ("wait ToString request 2");
+                 PluginDebug.debug ("wait ToString request 2");
                  while (request.isDone() == false)
                      request.wait();
-                 System.out.println ("wait ToString request 3");
+                 PluginDebug.debug ("wait ToString request 3");
              }
          } catch (InterruptedException e) {
              throw new RuntimeException("Interrupted waiting for call request.",
                                         e);
          }
-         System.out.println (" ToString DONE");
+         PluginDebug.debug (" ToString DONE");
          return (String) request.getObject();
      }
  
      // FIXME: make this private and access it from JSObject using
      // reflection.
      private void write(String message) throws IOException {
-         System.err.println ("WRITING 2: " + "instance " + identifier + " " + message);
+         PluginDebug.debug ("WRITING 2: " + "instance " + identifier + " " + message);
          streamhandler.write("instance " + identifier + " " + message);
-         System.err.println ("WRITING 2 DONE");
+         PluginDebug.debug ("WRITING 2 DONE");
      }
 
      public void setStream(String key, InputStream stream)throws IOException{
@@ -1207,7 +1231,7 @@ import sun.misc.Ref;
  		skipSpace(in);
  		val = buf.toString();
  	    }
- 	    System.err.println("PUT " + att + " = '" + val + "'");
+ 	    PluginDebug.debug("PUT " + att + " = '" + val + "'");
  	    if (! val.equals("")) {
  		atts.put(att.toLowerCase(java.util.Locale.ENGLISH), val);
  	    }
@@ -1389,11 +1413,21 @@ import sun.misc.Ref;
     					 }
 
     					 if (atts.get("width") == null) {
-    						 atts.put("width", "100%");
-    					 } 
+    						 atts.put("width", "1");
+    						 atts.put("widthPercentage", 100);
+    					 } else if (((String) atts.get("width")).endsWith("%")) {
+    						 String w = (String) atts.get("width");
+    						 atts.put("width", "1");
+    						 atts.put("widthPercentage", Integer.parseInt((w.substring(0,  w.length() -1))));
+    					  }
 
     					 if (atts.get("height") == null) {
-    						 atts.put("height", "100%");
+    						 atts.put("height", "1");
+    						 atts.put("heightPercentage", 100);
+    					 } else if (((String) atts.get("height")).endsWith("%")) {
+    						 String h = (String) atts.get("height");
+    						 atts.put("height", "1");
+    						 atts.put("heightPercentage", Integer.parseInt(h.substring(0,  h.length() -1)));
     					 }
     				 }
     				 else if (nm.equalsIgnoreCase("object")) {
@@ -1415,11 +1449,21 @@ import sun.misc.Ref;
     					 }
 
     					 if (atts.get("width") == null) {
-    						 atts.put("width", "100%");
-    					 } 
+    						 atts.put("width", "1");
+    						 atts.put("widthPercentage", 100);
+    					 } else if (((String) atts.get("width")).endsWith("%")) {
+    						 String w = (String) atts.get("width");
+    						 atts.put("width", "100");
+    						 atts.put("widthPercentage", Integer.parseInt(w.substring(0,  w.length() -1)));
+    					 }
 
     					 if (atts.get("height") == null) {
-    						 atts.put("height", "100%");
+    						 atts.put("height", "100");
+    						 atts.put("heightPercentage", 100);
+    					 } else if (((String) atts.get("height")).endsWith("%")) {
+    						 String h = (String) atts.get("height");
+    						 atts.put("height", "1");
+    						 atts.put("heightPercentage", Integer.parseInt(h.substring(0,  h.length() -1)));
     					 }
     				 }
     				 else if (nm.equalsIgnoreCase("embed")) {
@@ -1439,11 +1483,21 @@ import sun.misc.Ref;
     					 }
     					 
     					 if (atts.get("width") == null) {
-    						 atts.put("width", "100%");
-    					 } 
+    						 atts.put("width", "1");
+    						 atts.put("widthPercentage", 100);
+    					 } else if (((String) atts.get("width")).endsWith("%")) {
+    						 String w = (String) atts.get("width");
+    						 atts.put("width", "1");
+    						 atts.put("widthPercentage", Integer.parseInt(w.substring(0,  w.length() -1)));
+    					 }
 
     					 if (atts.get("height") == null) {
-    						 atts.put("height", "100%");
+    						 atts.put("height", "100");
+    						 atts.put("heightPercentage", 100);
+    					 } else if (((String) atts.get("height")).endsWith("%")) {
+    						 String h = (String) atts.get("height");
+    						 atts.put("height", "100");
+    						 atts.put("heightPercentage", Integer.parseInt(h.substring(0,  h.length() -1)));
     					 }
     				 }
     				 else if (nm.equalsIgnoreCase("app")) {
@@ -1460,11 +1514,23 @@ import sun.misc.Ref;
     						 atts2.put("codebase", nm);
     					 }
     					 if (atts2.get("width") == null) {
-    						 atts2.put("width", "100%");
+    						 atts2.put("width", "100");
+    						 atts2.put("widthPercentage", 100);
+    					 } else if (((String) atts.get("width")).endsWith("%")) {
+    						 String w = (String) atts.get("width");
+    						 atts2.put("width", "100");
+    						 atts2.put("widthPercentage", Integer.parseInt(w.substring(0,  w.length() -1)));
     					 }
+    					 
     					 if (atts2.get("height") == null) {
-    						 atts2.put("height", "100%");
+    						 atts2.put("height", "100");
+    						 atts2.put("heightPercentage", 100);
+    					 } else if (((String) atts.get("height")).endsWith("%")) {
+    						 String h = (String) atts.get("height");
+    						 atts2.put("height", "100");
+    						 atts2.put("heightPercentage", Integer.parseInt(h.substring(0,  h.length() -1)));
     					 }
+
     					 printTag(statusMsgStream, atts2);
     					 statusMsgStream.println();
     				 }

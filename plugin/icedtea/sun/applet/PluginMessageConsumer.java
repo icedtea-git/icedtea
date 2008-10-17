@@ -18,7 +18,7 @@ class PluginMessageConsumer {
 		this.streamHandler = streamHandler;
 
 		for (int i=0; i < MAX_WORKERS; i++) {
-			System.err.println("Creating worker " + i);
+			PluginDebug.debug("Creating worker " + i);
 			PluginMessageHandlerWorker worker = new PluginMessageHandlerWorker(streamHandler, i, as);
 			worker.start();
 			workers.add(worker);

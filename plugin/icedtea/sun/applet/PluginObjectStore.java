@@ -88,36 +88,36 @@ public class PluginObjectStore
             objects.put(nextUniqueIdentifier, object);
             counts.put(nextUniqueIdentifier, 1);
             identifiers.put(object, nextUniqueIdentifier);
-            System.out.println("JAVA ADDED: " + nextUniqueIdentifier);
-            System.out.println("JAVA REFERENCED: " + nextUniqueIdentifier
-                               + " to: 1");
+            //System.out.println("JAVA ADDED: " + nextUniqueIdentifier);
+            //System.out.println("JAVA REFERENCED: " + nextUniqueIdentifier
+            //                   + " to: 1");
             nextUniqueIdentifier++;
         } else {
             counts.put(identifier, counts.get(identifier) + 1);
-            System.out.println("JAVA REFERENCED: " + identifier +
-                               " to: " + counts.get(identifier));
+            //System.out.println("JAVA REFERENCED: " + identifier +
+            //                   " to: " + counts.get(identifier));
         }
     }
 
     public void unreference(int identifier) {
         Integer currentCount = counts.get(identifier);
         if (currentCount == null) {
-            System.out.println("ERROR UNREFERENCING: " + identifier);
+            //System.out.println("ERROR UNREFERENCING: " + identifier);
             return;
         }
         if (currentCount == 1) {
-            System.out.println("JAVA DEREFERENCED: " + identifier
-                               + " to: 0");
+            //System.out.println("JAVA DEREFERENCED: " + identifier
+            //                   + " to: 0");
             Object object = objects.get(identifier);
             objects.remove(identifier);
             counts.remove(identifier);
             identifiers.remove(object);
-            System.out.println("JAVA REMOVED: " + identifier);
+            //System.out.println("JAVA REMOVED: " + identifier);
         } else {
             counts.put(identifier, currentCount - 1);
-            System.out.println("JAVA DEREFERENCED: " +
-                               identifier + " to: " +
-                               counts.get(identifier));
+            //System.out.println("JAVA DEREFERENCED: " +
+            //                   identifier + " to: " +
+            //                   counts.get(identifier));
         }
     }
 
@@ -125,7 +125,7 @@ public class PluginObjectStore
    		Iterator i = objects.keySet().iterator();
    		while (i.hasNext()) {
    			Object key = i.next();
-   			System.err.println(key + "::" +  objects.get(key));
+   			PluginDebug.debug(key + "::" +  objects.get(key));
    		}
     }
 }

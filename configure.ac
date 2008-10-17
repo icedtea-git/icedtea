@@ -116,17 +116,17 @@ AC_ARG_WITH([ant-home],
             ])
 AC_SUBST(SYSTEM_ANT_DIR)
 
-AC_ARG_ENABLE([gcjwebplugin],
-              [AS_HELP_STRING([--disable-gcjwebplugin],
+AC_ARG_ENABLE([liveconnect],
+              [AS_HELP_STRING([--disable-liveconnect],
                               [Disable compilation of browser plugin])],
               [enable_plugin="${enableval}"], [enable_plugin="yes"])
 AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
 
-AC_ARG_ENABLE([liveconnect],
-              [AS_HELP_STRING([--enable-liveconnect],
-                              [Enable experimental LiveConnect plugin])],
-              [enable_liveconnect="yes"], [enable_liveconnect="no"])
-AM_CONDITIONAL(ENABLE_LIVECONNECT, test "x${enable_liveconnect}" = "xyes")
+AC_ARG_ENABLE([gcjwebplugin],
+              [AS_HELP_STRING([--enable-gcjwebplugin],
+                              [Build the GCJ Web Plugin plugin])],
+              [enable_gcjplugin="yes"], [enable_gcjplugin="no"])
+AM_CONDITIONAL(ENABLE_GCJWEBPLUGIN, test "x${enable_gcjwebplugin}" = "xyes")
 
 AC_ARG_ENABLE([pulse-java],
               [AS_HELP_STRING([--enable-pulse-java],
