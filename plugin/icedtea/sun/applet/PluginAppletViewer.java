@@ -1390,6 +1390,11 @@ import sun.misc.Ref;
     						 if (val == null) {
     							 statusMsgStream.println(requiresNameWarning);
     						 } else if (atts != null) {
+    							 // to prevent headaches, c++ side encodes &, < and >
+    							 // decode them back
+    							 val = val.replace("&gt;", ">");
+    							 val = val.replace("&lt;", "<");
+    							 val = val.replace("&amp;", "&");
     							 atts.put(att.toLowerCase(), val);
     						 } else {
     							 statusMsgStream.println(paramOutsideWarning);

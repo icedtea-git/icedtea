@@ -1,5 +1,10 @@
 2008-10-17  Deepak Bhole  <dbhole@redhat.com>
 
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Re-encode <, > and &
+	characters in applet params.
+
+2008-10-17  Deepak Bhole  <dbhole@redhat.com>
+
 	* plugin/icedtea/netscape/javascript/JSObject.java: Handle null args to
 	call() (bug# 217).
 
