@@ -389,15 +389,12 @@ char const* TYPES[10] = { "Object",
 	   ResultContainer *resultC = new ResultContainer();      \
 	   factory->result_map.Put(reference, resultC);  \
 	   PLUGIN_DEBUG_3ARG ("ResultMap %p created for reference %d found = %d\n", resultC, reference, factory->result_map.Get(reference, NULL)); \
-	   ResultContainer *searched; \
-	   factory->result_map.Get(reference, &searched); \
-	   PLUGIN_DEBUG_1ARG ("Searched returned %d\n", searched->returnIdentifier); \
   } \
   else                                                      \
   {                                                         \
        ResultContainer *resultC;                          \
-	   factory->result_map.Get(reference, &resultC);     \
-	   resultC->Clear();                                  \
+       factory->result_map.Get(reference, &resultC);     \
+       resultC->Clear();                                  \
   }
 
 #define MESSAGE_ADD_SRC(src) \
@@ -929,8 +926,6 @@ public:
   // FIXME: make private?
   JNIEnv* proxyEnv;
   nsISecureEnv* secureEnv;
-
-  // FIXME: Use something portable here
   nsDataHashtable<nsUint32HashKey,ResultContainer*> result_map;
 
   void GetMember ();
@@ -1420,65 +1415,6 @@ GetURLRunnable::Run ()
 
    return owner->GetURL ((const char*) url, (const char*) target,
                          nsnull, 0, nsnull, 0);
-}
-
-
-class IcedTeaSecurityContext : public nsISecurityContext
-{
-
-    NS_DECL_ISUPPORTS
-
-public:
-
-    IcedTeaSecurityContext();
-
-    NS_IMETHOD Implies(const char* target, const char* action, PRBool *bAllowedAccess);
-
-    NS_IMETHOD GetOrigin(char* buf, int len);
-
-    NS_IMETHOD GetCertificateID(char* buf, int len);
-
-    ~IcedTeaSecurityContext(void);
-
-private:
-    PRBool        universalJavaCapabilityEnabled;
-    PRBool        universalBrowserReadCapabilityEnabled;
-};
-
-NS_IMPL_ISUPPORTS1 (IcedTeaSecurityContext, nsISecurityContext)
-
-IcedTeaSecurityContext::IcedTeaSecurityContext ()
-: universalJavaCapabilityEnabled(PR_FALSE),
-  universalBrowserReadCapabilityEnabled(PR_FALSE)
-{
-	// nothing to do
-}
-
-IcedTeaSecurityContext::~IcedTeaSecurityContext ()
-{
-}
-
-NS_METHOD
-IcedTeaSecurityContext::Implies(const char* target, const char* action, PRBool *bAllowedAccess)
-{
-	PLUGIN_DEBUG_2ARG ("%s implies %s ?\n", target, action);
-	*bAllowedAccess = PR_TRUE;
-	return NS_OK;
-}
-
-NS_METHOD
-IcedTeaSecurityContext::GetOrigin(char* buf, int len)
-{
-	PLUGIN_DEBUG_0ARG ("Origin requested\n");
-	strncpy(buf, "http://www.redhat.com", len);
-	return NS_OK;
-}
-
-NS_METHOD
-IcedTeaSecurityContext::GetCertificateID(char* buf, int len)
-{
-	PLUGIN_DEBUG_0ARG ("CertificateID requested\n");
-	return NS_OK;
 }
 
 NS_IMPL_ISUPPORTS6 (IcedTeaPluginFactory, nsIFactory, nsIPlugin, nsIJVMManager,

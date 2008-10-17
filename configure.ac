@@ -384,13 +384,13 @@ fi
 
 dnl Check for plugin support headers and libraries.
 dnl FIXME: use unstable
-if test "x${enable_liveconnect}" = "xyes"
+if test "x${enable_plugin}" = "xyes"
 then
   PKG_CHECK_MODULES(XULRUNNER, \
     nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9)
   PKG_CHECK_MODULES(GTK, gtk+-2.0)
 else
-  if test "x${enable_plugin}" = "xyes"
+  if test "x${enable_gcjwebplugin}" = "xyes"
   then
     PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul-unstable, \
       [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])

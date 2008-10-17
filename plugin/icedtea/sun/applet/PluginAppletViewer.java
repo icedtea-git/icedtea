@@ -1413,20 +1413,20 @@ import sun.misc.Ref;
     					 }
 
     					 if (atts.get("width") == null) {
-    						 atts.put("width", "1");
+    						 atts.put("width", "100");
     						 atts.put("widthPercentage", 100);
     					 } else if (((String) atts.get("width")).endsWith("%")) {
     						 String w = (String) atts.get("width");
-    						 atts.put("width", "1");
+    						 atts.put("width", "100");
     						 atts.put("widthPercentage", Integer.parseInt((w.substring(0,  w.length() -1))));
     					  }
 
     					 if (atts.get("height") == null) {
-    						 atts.put("height", "1");
+    						 atts.put("height", "100");
     						 atts.put("heightPercentage", 100);
     					 } else if (((String) atts.get("height")).endsWith("%")) {
     						 String h = (String) atts.get("height");
-    						 atts.put("height", "1");
+    						 atts.put("height", "100");
     						 atts.put("heightPercentage", Integer.parseInt(h.substring(0,  h.length() -1)));
     					 }
     				 }
@@ -1449,7 +1449,7 @@ import sun.misc.Ref;
     					 }
 
     					 if (atts.get("width") == null) {
-    						 atts.put("width", "1");
+    						 atts.put("width", "100");
     						 atts.put("widthPercentage", 100);
     					 } else if (((String) atts.get("width")).endsWith("%")) {
     						 String w = (String) atts.get("width");
@@ -1462,7 +1462,7 @@ import sun.misc.Ref;
     						 atts.put("heightPercentage", 100);
     					 } else if (((String) atts.get("height")).endsWith("%")) {
     						 String h = (String) atts.get("height");
-    						 atts.put("height", "1");
+    						 atts.put("height", "100");
     						 atts.put("heightPercentage", Integer.parseInt(h.substring(0,  h.length() -1)));
     					 }
     				 }
@@ -1483,11 +1483,11 @@ import sun.misc.Ref;
     					 }
     					 
     					 if (atts.get("width") == null) {
-    						 atts.put("width", "1");
+    						 atts.put("width", "100");
     						 atts.put("widthPercentage", 100);
     					 } else if (((String) atts.get("width")).endsWith("%")) {
     						 String w = (String) atts.get("width");
-    						 atts.put("width", "1");
+    						 atts.put("width", "100");
     						 atts.put("widthPercentage", Integer.parseInt(w.substring(0,  w.length() -1)));
     					 }
 
