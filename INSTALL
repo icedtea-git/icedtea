@@ -1,5 +1,5 @@
-Building IcedTea 1.6.0
-======================
+Building IcedTea6
+=================
 
 For convenience we've provided make targets that automatically
 download, extract and patch the source code from openjdk.java.net, in
@@ -29,7 +29,15 @@ giflib-devel
 libpng-devel
 libjpeg-devel = 6b
 zlib-devel
-rhino
+rhino (can be disabled using --without-rhino)
+
+For building VisualVM, you will need:
+netbeans (harness, platform8, apisupport1, java2, ide9)
+jakarta-commons-logging
+
+For building the PulseAudio based mixer, you will need
+pulseaudio-libs-devel >= 0.9.11
+pulseaudio >= 0.9.11
 
 For building the zero-assembler port (see below), you will need libffi.
 
@@ -91,7 +99,7 @@ alternative to the HotSpot virtual machine. One advantage of this is
 that it already provides a JIT for many platforms to which HotSpot has
 not yet been ported, including ppc, ppc64, arm and mips.  To use CACAO
 as the VM, use the --with-cacao option.  This will download CACAO
-0.99.2 during the build.  To use a different version, use
+0.99.3 during the build.  To use a different version, use
 --with-cacao-home=<dir> to point to an existing installation which use
 the Sun VM interface.
 

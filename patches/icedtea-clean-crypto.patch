@@ -1,6 +1,6 @@
-diff -ur openjdk.orig/jdk/make/javax/crypto/Makefile openjdk/jdk/make/javax/crypto/Makefile
---- openjdk.orig/jdk/make/javax/crypto/Makefile	2008-08-28 13:10:20.000000000 +0200
-+++ openjdk/jdk/make/javax/crypto/Makefile	2008-08-28 15:17:56.000000000 +0200
+diff -r 4aebfff4f8a2 jdk/make/javax/crypto/Makefile
+--- openjdk.orig/jdk/make/javax/crypto/Makefile	Mon Sep 15 11:38:34 2008 +0200
++++ openjdk/jdk/make/javax/crypto/Makefile	Thu Sep 25 17:45:37 2008 +0200
 @@ -155,7 +155,8 @@
  #
  
@@ -11,9 +11,9 @@ diff -ur openjdk.orig/jdk/make/javax/crypto/Makefile openjdk/jdk/make/javax/cryp
  else  # OPENJDK
  ifeq ($(strip $(FILES_java)),)
  all:
-diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk/src/share/classes/javax/crypto/Cipher.java
---- openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java	2008-08-28 12:06:23.000000000 +0200
-+++ openjdk/jdk/src/share/classes/javax/crypto/Cipher.java	2008-08-28 15:23:41.000000000 +0200
+diff -r 4aebfff4f8a2 jdk/src/share/classes/javax/crypto/Cipher.java
+--- openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java	Mon Sep 15 11:38:34 2008 +0200
++++ openjdk/jdk/src/share/classes/javax/crypto/Cipher.java	Thu Sep 25 17:45:37 2008 +0200
 @@ -144,12 +144,6 @@
      // The transformation
      private String transformation;
@@ -52,7 +52,44 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
          this.lock = null;
      }
  
-@@ -603,7 +589,6 @@
+@@ -442,9 +428,6 @@
+         Exception failure = null;
+         while (t.hasNext()) {
+             Service s = (Service)t.next();
+-            if (JceSecurity.canUseProvider(s.getProvider()) == false) {
+-                continue;
+-            }
+             Transform tr = getTransform(s, transforms);
+             if (tr == null) {
+                 // should never happen
+@@ -570,26 +553,12 @@
+         }
+         Exception failure = null;
+         List transforms = getTransforms(transformation);
+-        boolean providerChecked = false;
+         String paddingError = null;
+         for (Iterator t = transforms.iterator(); t.hasNext();) {
+             Transform tr = (Transform)t.next();
+             Service s = provider.getService("Cipher", tr.transform);
+             if (s == null) {
+                 continue;
+-            }
+-            if (providerChecked == false) {
+-                // for compatibility, first do the lookup and then verify
+-                // the provider. this makes the difference between a NSAE
+-                // and a SecurityException if the
+-                // provider does not support the algorithm.
+-                Exception ve = JceSecurity.getVerificationResult(provider);
+-                if (ve != null) {
+-                    String msg = "JCE cannot authenticate the provider "
+-                        + provider.getName();
+-                    throw new SecurityException(msg, ve);
+-                }
+-                providerChecked = true;
+             }
+             if (tr.supportsMode(s) == S_NO) {
+                 continue;
+@@ -603,7 +572,6 @@
                  tr.setModePadding(spi);
                  Cipher cipher = new Cipher(spi, transformation);
                  cipher.provider = s.getProvider();
@@ -60,10 +97,12 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
                  return cipher;
              } catch (Exception e) {
                  failure = e;
-@@ -622,22 +607,6 @@
+@@ -620,22 +588,6 @@
+         }
+         throw new NoSuchAlgorithmException
                  ("No such algorithm: " + transformation, failure);
-     }
- 
+-    }
+-
 -    // If the requested crypto service is export-controlled,
 -    // determine the maximum allowable keysize.
 -    private void initCryptoPermission() throws NoSuchAlgorithmException {
@@ -78,12 +117,20 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
 -        if (exmechName != null) {
 -            exmech = ExemptionMechanism.getInstance(exmechName);
 -        }
--    }
--
-     // max number of debug warnings to print from chooseFirstProvider()
-     private static int warnCount = 10;
+     }
  
-@@ -699,7 +668,6 @@
+     // max number of debug warnings to print from chooseFirstProvider()
+@@ -679,9 +631,6 @@
+                     s = (Service)serviceIterator.next();
+                     thisSpi = null;
+                 }
+-                if (JceSecurity.canUseProvider(s.getProvider()) == false) {
+-                    continue;
+-                }
+                 Transform tr = getTransform(s, transforms);
+                 if (tr == null) {
+                     // should never happen
+@@ -699,7 +648,6 @@
                          thisSpi = (CipherSpi)obj;
                      }
                      tr.setModePadding(thisSpi);
@@ -91,7 +138,7 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
                      spi = thisSpi;
                      provider = s.getProvider();
                      // not needed any more
-@@ -731,19 +699,15 @@
+@@ -731,19 +679,15 @@
              InvalidAlgorithmParameterException {
          switch (type) {
          case I_KEY:
@@ -111,7 +158,17 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
              thisSpi.engineInit(opmode, key, random);
              break;
          default:
-@@ -793,7 +757,6 @@
+@@ -777,9 +721,6 @@
+                 if (s.supportsParameter(key) == false) {
+                     continue;
+                 }
+-                if (JceSecurity.canUseProvider(s.getProvider()) == false) {
+-                    continue;
+-                }
+                 Transform tr = getTransform(s, transforms);
+                 if (tr == null) {
+                     // should never happen
+@@ -793,7 +734,6 @@
                          thisSpi = (CipherSpi)s.newInstance(null);
                      }
                      tr.setModePadding(thisSpi);
@@ -119,7 +176,7 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
                      implInit(thisSpi, initType, opmode, key, paramSpec,
                                                          params, random);
                      provider = s.getProvider();
-@@ -939,107 +902,6 @@
+@@ -939,107 +879,6 @@
          return exmech;
      }
  
@@ -227,7 +284,7 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
      // check if opmode is one of the defined constants
      // throw InvalidParameterExeption if not
      private static void checkOpmode(int opmode) {
-@@ -1144,7 +1006,6 @@
+@@ -1144,7 +983,6 @@
          checkOpmode(opmode);
  
          if (spi != null) {
@@ -235,7 +292,7 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
              spi.engineInit(opmode, key, random);
          } else {
              try {
-@@ -1270,7 +1131,6 @@
+@@ -1270,7 +1108,6 @@
          checkOpmode(opmode);
  
          if (spi != null) {
@@ -243,7 +300,7 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
              spi.engineInit(opmode, key, params, random);
          } else {
              chooseProvider(I_PARAMSPEC, opmode, key, params, null, random);
-@@ -1391,7 +1251,6 @@
+@@ -1391,7 +1228,6 @@
          checkOpmode(opmode);
  
          if (spi != null) {
@@ -251,7 +308,7 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
              spi.engineInit(opmode, key, params, random);
          } else {
              chooseProvider(I_PARAMS, opmode, key, null, params, random);
-@@ -1555,7 +1414,6 @@
+@@ -1555,7 +1391,6 @@
              (certificate==null? null:certificate.getPublicKey());
  
          if (spi != null) {
@@ -259,21 +316,239 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk
              spi.engineInit(opmode, publicKey, random);
          } else {
              try {
-diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java openjdk/jdk/src/share/classes/javax/crypto/JceSecurity.java
---- openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java	2008-08-28 12:06:23.000000000 +0200
-+++ openjdk/jdk/src/share/classes/javax/crypto/JceSecurity.java	2008-08-28 15:17:56.000000000 +0200
-@@ -63,8 +63,8 @@
-     // Map<Provider,?> of the providers currently being verified
-     private final static Map verifyingProviders = new IdentityHashMap();
+@@ -2361,12 +2196,15 @@
+         return null;
+     }
  
++    // Used by getMaxAllowedKeyLength and getMaxAllowedParameterSpec
++    // always returns CryptoAllPermission. Old stuff from bad old days.
+     private static CryptoPermission getConfiguredPermission(
+             String transformation) throws NullPointerException,
+             NoSuchAlgorithmException {
+         if (transformation == null) throw new NullPointerException();
+-        String[] parts = tokenizeTransformation(transformation);
+-        return JceSecurityManager.INSTANCE.getCryptoPermission(parts[0]);
++	// Called to make sure it is a valid transformation.
++        tokenizeTransformation(transformation);
++        return CryptoAllPermission.INSTANCE;
+     }
+ 
+     /**
+diff -r 4aebfff4f8a2 jdk/src/share/classes/javax/crypto/JarVerifier.java
+--- openjdk/jdk/src/share/classes/javax/crypto/JarVerifier.java	Mon Sep 15 11:38:34 2008 +0200
++++ /dev/null	Thu Jan 01 00:00:00 1970 +0000
+@@ -1,170 +0,0 @@
+-/*
+- * Copyright 2007 Sun Microsystems, Inc.  All Rights Reserved.
+- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+- *
+- * This code is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 2 only, as
+- * published by the Free Software Foundation.  Sun designates this
+- * particular file as subject to the "Classpath" exception as provided
+- * by Sun in the LICENSE file that accompanied this code.
+- *
+- * This code is distributed in the hope that it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+- * version 2 for more details (a copy is included in the LICENSE file that
+- * accompanied this code).
+- *
+- * You should have received a copy of the GNU General Public License version
+- * 2 along with this work; if not, write to the Free Software Foundation,
+- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+- *
+- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+- * CA 95054 USA or visit www.sun.com if you need additional information or
+- * have any questions.
+- */
+-
+-package javax.crypto;
+-
+-import java.io.*;
+-import java.net.*;
+-import java.security.*;
+-import java.util.*;
+-import java.util.jar.*;
+-import javax.crypto.CryptoPolicyParser.ParsingException;
+-
+-/**
+- * This class verifies JAR files (and any supporting JAR files), and
+- * determines whether they may be used in this implementation.
+- *
+- * The JCE in OpenJDK has an open cryptographic interface, meaning it
+- * does not restrict which providers can be used.  Compliance with
+- * United States export controls and with local law governing the
+- * import/export of products incorporating the JCE in the OpenJDK is
+- * the responsibility of the licensee.
+- *
+- * @since 1.7
+- */
+-final class JarVerifier {
+-
+-    // The URL for the JAR file we want to verify.
+-    private URL jarURL;
+-    private boolean savePerms;
+-    private CryptoPermissions appPerms = null;
+-
+-    /**
+-     * Creates a JarVerifier object to verify the given URL.
+-     *
+-     * @param jarURL the JAR file to be verified.
+-     * @param savePerms if true, save the permissions allowed by the
+-     *          exemption mechanism
+-     */
+-    JarVerifier(URL jarURL, boolean savePerms) {
+-        this.jarURL = jarURL;
+-        this.savePerms = savePerms;
+-    }
+-
+-    /**
+-     * Verify the JAR file is signed by an entity which has a certificate
+-     * issued by a trusted CA.
+-     *
+-     * In OpenJDK, we just need to examine the "cryptoperms" file to see
+-     * if any permissions were bundled together with this jar file.
+-     */
+-    void verify() throws JarException, IOException {
+-
+-        // Short-circuit.  If we weren't asked to save any, we're done.
+-        if (!savePerms) {
+-            return;
+-        }
+-
+-        // If the protocol of jarURL isn't "jar", we should
+-        // construct a JAR URL so we can open a JarURLConnection
+-        // for verifying this provider.
+-        final URL url = jarURL.getProtocol().equalsIgnoreCase("jar")?
+-                        jarURL : new URL("jar:" + jarURL.toString() + "!/");
+-
+-        JarFile jf = null;
+-        try {
+-
+-            // Get a link to the Jarfile to search.
+-            try {
+-                jf = (JarFile)
+-                    AccessController.doPrivileged(
+-                        new PrivilegedExceptionAction() {
+-                            public Object run() throws Exception {
+-                                JarURLConnection conn =
+-                                    (JarURLConnection) url.openConnection();
+-                                // You could do some caching here as
+-                                // an optimization.
+-                                conn.setUseCaches(false);
+-                                return conn.getJarFile();
+-                            }
+-                        });
+-            } catch (java.security.PrivilegedActionException pae) {
+-                SecurityException se = new SecurityException(
+-                    "Cannot load " + url.toString());
+-                se.initCause(pae);
+-                throw se;
+-            }
+-
+-            if (jf != null) {
+-                JarEntry je = jf.getJarEntry("cryptoPerms");
+-                if (je == null) {
+-                    throw new JarException(
+-                        "Can not find cryptoPerms");
+-                }
+-                try {
+-                    appPerms = new CryptoPermissions();
+-                    appPerms.load(jf.getInputStream(je));
+-                } catch (Exception ex) {
+-                    JarException jex =
+-                        new JarException("Cannot load/parse" +
+-                            jarURL.toString());
+-                    jex.initCause(ex);
+-                    throw jex;
+-                }
+-            }
+-        } finally {
+-            // Only call close() when caching is not enabled.
+-            // Otherwise, exceptions will be thrown for all
+-            // subsequent accesses of this cached jar.
+-            if (jf != null) {
+-                jf.close();
+-            }
+-        }
+-    }
+-
+-    /**
+-     * Verify that the provided JarEntry was indeed signed by the
+-     * framework signing certificate.
+-     *
+-     * @param je the URL of the jar entry to be checked.
+-     * @throws Exception if the jar entry was not signed by
+-     *          the proper certificate
+-     */
+-    static void verifyFrameworkSigned(URL je) throws Exception {
+-    }
+-
+-    /**
+-     * Verify that the provided certs include the
+-     * framework signing certificate.
+-     *
+-     * @param certs the list of certs to be checked.
+-     * @throws Exception if the list of certs did not contain
+-     *          the framework signing certificate
+-     */
+-    static void verifyPolicySigned(java.security.cert.Certificate[] certs)
+-            throws Exception {
+-    }
+-
+-    /**
+-     * Returns the permissions which are bundled with the JAR file,
+-     * aka the "cryptoperms" file.
+-     *
+-     * NOTE: if this JarVerifier instance is constructed with "savePerms"
+-     * equal to false, then this method would always return null.
+-     */
+-    CryptoPermissions getPermissions() {
+-        return appPerms;
+-    }
+-}
+diff -r 4aebfff4f8a2 jdk/src/share/classes/javax/crypto/JceSecurity.java
+--- openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java	Mon Sep 15 11:38:34 2008 +0200
++++ openjdk/jdk/src/share/classes/javax/crypto/JceSecurity.java	Thu Sep 25 17:45:37 2008 +0200
+@@ -25,11 +25,7 @@
+ 
+ package javax.crypto;
+ 
+-import java.lang.ref.*;
+ import java.util.*;
+-import java.util.jar.*;
+-import java.io.*;
+-import java.net.URL;
+ import java.security.*;
+ 
+ import java.security.Provider.Service;
+@@ -48,23 +44,8 @@
+ 
+ final class JceSecurity {
+ 
++    // Used in KeyGenerator, Cipher and KeyAgreement.
+     static final SecureRandom RANDOM = new SecureRandom();
+-
+-    // The defaultPolicy and exemptPolicy will be set up
+-    // in the static initializer.
+-    private static CryptoPermissions defaultPolicy = null;
+-    private static CryptoPermissions exemptPolicy = null;
+-
+-    // Map<Provider,?> of the providers we already have verified
+-    // value == PROVIDER_VERIFIED is successfully verified
+-    // value is failure cause Exception in error case
+-    private final static Map verificationResults = new IdentityHashMap();
+-
+-    // Map<Provider,?> of the providers currently being verified
+-    private final static Map verifyingProviders = new IdentityHashMap();
+-
 -    // Set the default value. May be changed in the static initializer.
 -    private static boolean isRestricted = true;
-+    // Set the default value.
-+    private static final boolean isRestricted = false;
  
      /*
       * Don't let anyone instantiate this.
-@@ -72,26 +72,6 @@
+@@ -72,48 +53,16 @@
      private JceSecurity() {
      }
  
@@ -300,10 +575,147 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java openjd
      static Instance getInstance(String type, Class clazz, String algorithm,
              String provider) throws NoSuchAlgorithmException,
              NoSuchProviderException {
-@@ -239,93 +219,6 @@
-         return (url == NULL_URL) ? null : url;
+         Service s = GetInstance.getService(type, algorithm, provider);
+-        Exception ve = getVerificationResult(s.getProvider());
+-        if (ve != null) {
+-            String msg = "JCE cannot authenticate the provider " + provider;
+-            throw (NoSuchProviderException)
+-                                new NoSuchProviderException(msg).initCause(ve);
+-        }
+         return GetInstance.getInstance(s, clazz);
      }
  
+     static Instance getInstance(String type, Class clazz, String algorithm,
+             Provider provider) throws NoSuchAlgorithmException {
+         Service s = GetInstance.getService(type, algorithm, provider);
+-        Exception ve = JceSecurity.getVerificationResult(provider);
+-        if (ve != null) {
+-            String msg = "JCE cannot authenticate the provider "
+-                + provider.getName();
+-            throw new SecurityException(msg, ve);
+-        }
+         return GetInstance.getInstance(s, clazz);
+     }
+ 
+@@ -123,10 +72,6 @@
+         NoSuchAlgorithmException failure = null;
+         for (Iterator t = services.iterator(); t.hasNext(); ) {
+             Service s = (Service)t.next();
+-            if (canUseProvider(s.getProvider()) == false) {
+-                // allow only signed providers
+-                continue;
+-            }
+             try {
+                 Instance instance = GetInstance.getInstance(s, clazz);
+                 return instance;
+@@ -138,203 +83,10 @@
+                 + " not available", failure);
+     }
+ 
+-    /**
+-     * Verify if the JAR at URL codeBase is a signed exempt application
+-     * JAR file and returns the permissions bundled with the JAR.
+-     *
+-     * @throws Exception on error
+-     */
+-    static CryptoPermissions verifyExemptJar(URL codeBase) throws Exception {
+-        JarVerifier jv = new JarVerifier(codeBase, true);
+-        jv.verify();
+-        return jv.getPermissions();
+-    }
+-
+-    /**
+-     * Verify if the JAR at URL codeBase is a signed provider JAR file.
+-     *
+-     * @throws Exception on error
+-     */
+-    static void verifyProviderJar(URL codeBase) throws Exception {
+-        // Verify the provider JAR file and all
+-        // supporting JAR files if there are any.
+-        JarVerifier jv = new JarVerifier(codeBase, false);
+-        jv.verify();
+-    }
+-
+-    private final static Object PROVIDER_VERIFIED = Boolean.TRUE;
+-
+-    /*
+-     * Verify that the provider JAR files are signed properly, which
+-     * means the signer's certificate can be traced back to a
+-     * JCE trusted CA.
+-     * Return null if ok, failure Exception if verification failed.
+-     */
+-    static synchronized Exception getVerificationResult(Provider p) {
+-        Object o = verificationResults.get(p);
+-        if (o == PROVIDER_VERIFIED) {
+-            return null;
+-        } else if (o != null) {
+-            return (Exception)o;
+-        }
+-        if (verifyingProviders.get(p) != null) {
+-            // this method is static synchronized, must be recursion
+-            // return failure now but do not save the result
+-            return new NoSuchProviderException("Recursion during verification");
+-        }
+-        try {
+-            verifyingProviders.put(p, Boolean.FALSE);
+-            URL providerURL = getCodeBase(p.getClass());
+-            verifyProviderJar(providerURL);
+-            // Verified ok, cache result
+-            verificationResults.put(p, PROVIDER_VERIFIED);
+-            return null;
+-        } catch (Exception e) {
+-            verificationResults.put(p, e);
+-            return e;
+-        } finally {
+-            verifyingProviders.remove(p);
+-        }
+-    }
+-
+-    // return whether this provider is properly signed and can be used by JCE
++    // Used to return whether this provider is properly signed and
++    // can be used by JCE. These days just returns true. Still used
++    // in SecretKeyFactory, KeyGenerator, Mac and KeyAgreement.
+     static boolean canUseProvider(Provider p) {
+-        return getVerificationResult(p) == null;
+-    }
+-
+-    // dummy object to represent null
+-    private static final URL NULL_URL;
+-
+-    static {
+-        try {
+-            NULL_URL = new URL("http://null.sun.com/");
+-        } catch (Exception e) {
+-            throw new RuntimeException(e);
+-        }
+-    }
+-
+-    // reference to a Map we use as a cache for codebases
+-    private static final Map codeBaseCacheRef = new WeakHashMap();
+-
+-    /*
+-     * Retuns the CodeBase for the given class.
+-     */
+-    static URL getCodeBase(final Class clazz) {
+-        URL url = (URL)codeBaseCacheRef.get(clazz);
+-        if (url == null) {
+-            url = (URL)AccessController.doPrivileged(new PrivilegedAction() {
+-                public Object run() {
+-                    ProtectionDomain pd = clazz.getProtectionDomain();
+-                    if (pd != null) {
+-                        CodeSource cs = pd.getCodeSource();
+-                        if (cs != null) {
+-                            return cs.getLocation();
+-                        }
+-                    }
+-                    return NULL_URL;
+-                }
+-            });
+-            codeBaseCacheRef.put(clazz, url);
+-        }
+-        return (url == NULL_URL) ? null : url;
+-    }
+-
 -    private static void setupJurisdictionPolicies() throws Exception {
 -        String javaHomeDir = System.getProperty("java.home");
 -        String sep = File.separator;
@@ -391,25 +803,102 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java openjd
 -        jf = null;
 -    }
 -
-     static CryptoPermissions getDefaultPolicy() {
-         return defaultPolicy;
+-    static CryptoPermissions getDefaultPolicy() {
+-        return defaultPolicy;
+-    }
+-
+-    static CryptoPermissions getExemptPolicy() {
+-        return exemptPolicy;
+-    }
+-
+-    static boolean isRestricted() {
+-        return isRestricted;
++        return true;
      }
-diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurityManager.java openjdk/jdk/src/share/classes/javax/crypto/JceSecurityManager.java
---- openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurityManager.java	2008-08-28 12:06:23.000000000 +0200
-+++ openjdk/jdk/src/share/classes/javax/crypto/JceSecurityManager.java	2008-08-28 15:17:56.000000000 +0200
-@@ -50,8 +50,6 @@
-     private static final CryptoPermissions defaultPolicy;
-     private static final CryptoPermissions exemptPolicy;
-     private static final CryptoAllPermission allPerm;
+ }
+diff -r 4aebfff4f8a2 jdk/src/share/classes/javax/crypto/JceSecurityManager.java
+--- openjdk/jdk/src/share/classes/javax/crypto/JceSecurityManager.java	Mon Sep 15 11:38:34 2008 +0200
++++ /dev/null	Thu Jan 01 00:00:00 1970 +0000
+@@ -1,252 +0,0 @@
+-/*
+- * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
+- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+- *
+- * This code is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 2 only, as
+- * published by the Free Software Foundation.  Sun designates this
+- * particular file as subject to the "Classpath" exception as provided
+- * by Sun in the LICENSE file that accompanied this code.
+- *
+- * This code is distributed in the hope that it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+- * version 2 for more details (a copy is included in the LICENSE file that
+- * accompanied this code).
+- *
+- * You should have received a copy of the GNU General Public License version
+- * 2 along with this work; if not, write to the Free Software Foundation,
+- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+- *
+- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+- * CA 95054 USA or visit www.sun.com if you need additional information or
+- * have any questions.
+- */
+-
+-package javax.crypto;
+-
+-import java.security.*;
+-import java.net.*;
+-import java.util.*;
+-import java.util.jar.*;
+-
+-/**
+- * The JCE security manager.
+- *
+- * <p>The JCE security manager is responsible for determining the maximum
+- * allowable cryptographic strength for a given applet/application, for a given
+- * algorithm, by consulting the configured jurisdiction policy files and
+- * the cryptographic permissions bundled with the applet/application.
+- *
+- * <p>Note that this security manager is never installed, only instantiated.
+- *
+- * @author Jan Luehe
+- *
+- * @since 1.4
+- */
+-
+-final class JceSecurityManager extends SecurityManager {
+-
+-    private static final CryptoPermissions defaultPolicy;
+-    private static final CryptoPermissions exemptPolicy;
+-    private static final CryptoAllPermission allPerm;
 -    private static final Vector TrustedCallersCache = new Vector(2);
 -    private static final Map exemptCache = new HashMap();
- 
-     // singleton instance
-     static final JceSecurityManager INSTANCE;
-@@ -77,176 +75,6 @@
-      * applet/application, for the given algorithm.
-      */
-     CryptoPermission getCryptoPermission(String alg) {
+-
+-    // singleton instance
+-    static final JceSecurityManager INSTANCE;
+-
+-    static {
+-        defaultPolicy = JceSecurity.getDefaultPolicy();
+-        exemptPolicy = JceSecurity.getExemptPolicy();
+-        allPerm = CryptoAllPermission.INSTANCE;
+-        INSTANCE = (JceSecurityManager)
+-              AccessController.doPrivileged(new PrivilegedAction() {
+-                  public Object run() {
+-                      return new JceSecurityManager();
+-                  }
+-              });
+-    }
+-
+-    private JceSecurityManager() {
+-        // empty
+-    }
+-
+-    /**
+-     * Returns the maximum allowable crypto strength for the given
+-     * applet/application, for the given algorithm.
+-     */
+-    CryptoPermission getCryptoPermission(String alg) {
 -        // Need to convert to uppercase since the crypto perm
 -        // lookup is case sensitive.
 -        alg = alg.toUpperCase(Locale.ENGLISH);
@@ -581,12 +1070,11 @@ diff -ur openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurityManager.java
 -        }
 -        TrustedCallersCache.addElement(context[i]);
 -        return true;
-+        return CryptoAllPermission.INSTANCE;
-     }
- }
-diff -ur openjdk.orig/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java openjdk/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java
---- openjdk.orig/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java	2008-08-28 13:08:52.000000000 +0200
-+++ openjdk/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java	2008-08-28 15:17:56.000000000 +0200
+-    }
+-}
+diff -r 4aebfff4f8a2 jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java
+--- openjdk.orig/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java	Mon Sep 15 11:38:34 2008 +0200
++++ openjdk/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java	Thu Sep 25 17:45:37 2008 +0200
 @@ -44,18 +44,9 @@
          }
      }

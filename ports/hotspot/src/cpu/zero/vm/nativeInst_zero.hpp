@@ -189,9 +189,7 @@ class NativeJump : public NativeInstruction
 
   static void patch_verified_entry(address entry,
                                    address verified_entry,
-                                   address dest) {
-    Unimplemented();
-  }
+                                   address dest);
 };
 
 inline NativeJump* nativeJump_at(address address)

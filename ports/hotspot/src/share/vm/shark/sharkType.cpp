@@ -123,6 +123,10 @@ void SharkType::initialize()
       _to_stackType_tab[i] = jobject_type();
       _to_arrayType_tab[i] = jobject_type();
       break;
+
+    case T_ADDRESS:
+      _to_stackType_tab[i] = intptr_type();
+      break;
     }
   }
 }

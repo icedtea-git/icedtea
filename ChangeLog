@@ -1,3 +1,583 @@
+2008-10-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/icedtea-hotspot7-tests.patch: Removed.
+	* acinclude.m4: Fix naming of netbeans profiler zip option.
+	
+2008-10-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Merge from IcedTea6.
+	* .hgignore,
+	* .hgtags,
+	* AUTHORS,
+	* ChangeLog,
+	* HACKING,
+	* INSTALL,
+	* IcedTeaPlugin.cc,
+	* Makefile.am,
+	* NEWS,
+	* README,
+	* acinclude.m4,
+	* configure.ac,
+	* fsg.sh,
+	* generated/com/sun/corba/se/impl/logging/ActivationSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/IORSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/InterceptorsSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/LogStrings.properties,
+	* generated/com/sun/corba/se/impl/logging/NamingSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/OMGSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/ORBUtilSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/ORBUtilSystemException.resource,
+	* generated/com/sun/corba/se/impl/logging/POASystemException.java,
+	* generated/com/sun/corba/se/impl/logging/UtilSystemException.java,
+	* generated/sun/misc/Version.java,
+	* generated/sun/tools/jconsole/Version.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/CHANGES.txt,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/ModelByteBuffer.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/ModelInstrument.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftChannel.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftCubicResampler.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftMainMixer.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftMixingMixer.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftReverb.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftSynthesizer.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/Launcher.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/NetxPanel.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPRuntime.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/nanoxml/XMLElement.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/AudioFloatConverter/ToFloatArray.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftAudioSynthesizer/Open.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftSynthesizer/GetLatency.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftSynthesizer/GetReceiver.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftSynthesizer/GetReceiver2.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftSynthesizer/GetReceivers.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftSynthesizer/GetTransmitter.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftSynthesizer/GetTransmitters.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftSynthesizer/ImplicitOpenClose.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftSynthesizer/Open.java,
+	* patches/icedtea-6700047-loopopts.patch,
+	* patches/icedtea-6712835-ifnode.patch,
+	* patches/icedtea-6open-6616825.patch,
+	* patches/icedtea-6open-6651382.patch,
+	* patches/icedtea-6open-6756202.patch,
+	* patches/icedtea-arch.patch,
+	* patches/icedtea-clean-crypto.patch,
+	* patches/icedtea-ecj-spp.patch,
+	* patches/icedtea-ecj.patch,
+	* patches/icedtea-hotspot-6b12-7b24.patch,
+	* patches/icedtea-lc_ctype.patch,
+	* patches/icedtea-liveconnect.patch,
+	* patches/icedtea-lucene-crash.patch,
+	* patches/icedtea-messageutils.patch,
+	* patches/icedtea-pulse-soundproperties.patch,
+	* patches/icedtea-shark.patch,
+	* patches/icedtea-visualvm.patch,
+	* patches/icedtea-webstart.patch,
+	* plugin/icedtea/netscape/javascript/JSException.java,
+	* plugin/icedtea/netscape/javascript/JSObject.java,
+	* plugin/icedtea/netscape/javascript/JSProxy.java,
+	* plugin/icedtea/netscape/javascript/JSRunnable.java,
+	* plugin/icedtea/netscape/javascript/JSUtil.java,
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java,
+	* plugin/icedtea/sun/applet/GetMemberPluginCallRequest.java,
+	* plugin/icedtea/sun/applet/GetWindowPluginCallRequest.java,
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java,
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java,
+	* plugin/icedtea/sun/applet/PluginCallRequest.java,
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java,
+	* plugin/icedtea/sun/applet/PluginClassLoader.java,
+	* plugin/icedtea/sun/applet/PluginDebug.java,
+	* plugin/icedtea/sun/applet/PluginException.java,
+	* plugin/icedtea/sun/applet/PluginMain.java,
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java,
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java,
+	* plugin/icedtea/sun/applet/PluginObjectStore.java,
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java,
+	* plugin/icedtea/sun/applet/RequestQueue.java,
+	* plugin/icedtea/sun/applet/TestEnv.java,
+	* plugin/icedtea/sun/applet/VoidPluginCallRequest.java,
+	* ports/hotspot/make/linux/makefiles/shark.make,
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/deoptimizerFrame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.inline.hpp,
+	* ports/hotspot/src/cpu/zero/vm/interpreterFrame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/sharedRuntime_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp,
+	* ports/hotspot/src/share/vm/includeDB_shark,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkEntry.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkValue.inline.hpp,
+	* pulseaudio/AUTHORS,
+	* pulseaudio/COPYING,
+	* pulseaudio/README,
+	* pulseaudio/src/java/META-INF/services/javax.sound.sampled.spi.MixerProvider,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextEvent.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextListener.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerInfo.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerProvider.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMuteControl.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPlaybackLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamBufferAttributes.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java,
+	* pulseaudio/src/native/jni-common.c,
+	* pulseaudio/src/native/jni-common.h,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Operation.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioStreamVolumeControl.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c,
+	* pulseaudio/testsounds/README,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/OtherSoundProvidersAvailableTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioEventLoopOverhead.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioMixerProviderTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioMixerRawTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioMixerTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineRawTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourcePortTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLineTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java,
+	* visualvm.desktop: Updated.
+	
+2008-10-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Apply MEMORY_LIMIT setting to OpenJDK
+	builds too and make sure limit is high enough
+	on normal IcedTea builds to build with a CACAO IcedTea.
+	
+2008-10-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* acinclude.m4:
+	Change --with-cacao to be --enable-cacao
+	as it only accepts yes and no.
+	* configure.ac:
+	Rename cacao macro appropriately.
+
+2008-10-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Make use of ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP.
+	* acinclude.m4:
+	Add --with-netbeans-basic-cluster-src-zip option.
+	* configure.ac:
+	Enable WITH_NETBEANS_BASIC_CLUSTER_SRC_ZIP macro.
+
+2008-10-15  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (EXTRA_DIST): Always include all patches,
+	irrespective of any configure options.
+
+2008-10-15  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(EXTRA_DIST): Added fsg.sh.
+	(clean-distlocal): Added jni-common.o.
+	* .hgtags: Reverted.
+
+2008-10-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* ChangeLog: Fix typo.
+	* INSTALL: Fix typos and make installation
+	requirements clearer.
+	* Makefile.am:
+	Patch the OpenJDK build with the version
+	of IcedTea being used. Use $(HG) instead of 'hg'.
+	* configure.ac:
+	Check for Mercurial.
+	* patches/icedtea-version.patch:
+	Fix to use IcedTea6.
+
+2008-10-15  Xerxes Rånby <xerxes@zafena.se>
+
+	* patches/icedtea-arch.patch: Update for m68k.
+
+2008-10-15  Mark Wielaard  <mark@klomp.org>
+
+	* NEWS: Add hint about using different rhino versions.
+
+2008-10-15  Matthias Klose  <doko@ubuntu.com>
+
+	* NEWS: Add support for more ports for Zero builds.
+
+2008-10-15  Mark Wielaard  <mark@klomp.org>
+
+	* NEWS: Add Rhino javascript and cleaned up crypto support.
+
+2008-10-15  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated for 1.3 release.
+
+2008-10-15  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-hotspot-6b11-7b24.patch: Remove.
+
+2008-10-14 Ioana Ivan <iivand@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(open): startedListener only sends a START event when playback first
+	starts and after an underflow
+	(start): sends a START event if there's data on the line
+
+2008-10-14 Ioana Ivan <iivan@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(connectLine): changed bufferAttributes to fix crackling in the clip tests
+
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpat/icedtea/pulseaudio/PulseAudioDataLine.java
+	(connect): Removed debug output.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(read): Commented out debug output.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* Makefile.am (clean-pulse-java): Dont attempt to remove jni-common.o from
+	current directory.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+	
+	* .hgignore: Added pulse-java.jar to ignore list.
+	* Makefile.am: Move jni-common.o out of the way when done.
+
+2008-10-14  Lillian Angel  <langel@redhat.com>
+
+	* INSTALL: Updated requirements.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* Makefile.am (stamps/pulse-java.stamp): Added
+	-I$(ICEDTEA_BOOT_DIR)/include/linux.
+
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* .hgignore: Added generated files to ignore list.
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	(EventLoop): Initialize eventLoop object on construction.
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(PulseAudioClip): Removed the parameter eventLoop.
+	(getMicrosecondLength): Return time in microseconds.
+	(getMicrosecondPosition): Likewise.
+	(open): Dont throw an exception if Mixer is not open. Let super handle it.
+	(setFramePosition): Check frame position for being positive.
+	(setLoopPoints): Check that the starting frame is valid.
+	(setMicrosecondPosition): Deal with negative value and values over the 
+	maximum.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(open): Open the mixer if it isnt open.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(getLine): Dont pass eventLoop as a paramter.
+	(close): Close all open lines on exit.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java
+	(PulseAudioPort): Modified to not take an EventLoop paramter.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(PulseAudioSourceDataLine): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java
+	(PulseAudioSourcePort): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(PulseAudioTargetDataLine): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java
+	(PulseAudioTargetPort): Likewise.
+
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLineTest.java
+	(testMixerKnowsAboutOpenLines): Work even if mixer has some lines
+	initially open.
+
+2008-10-12  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/pulse-java.stamp): Add -I$(ICEDTEA_BOOT_DIR)/include
+	to build the source files.
+
+2008-10-11  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (clean-pulse-java): Don't rm -rf / if configuring
+	without pulseaudio, remove jni-common.o.
+
+	* Makefile.am (stamps/pulse-java.stamp): Remove -fpic flag, add
+	-fPIC to build jni-common.c. (gcjwebplugin.so): Use -fPIC.
+
+2008-10-10 Ioana Ivan <iivan@redhat.com>
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(getLine): LineUnavailablException is no longer thrown if the mixer is 
+	not open
+	(getTargetLines) : returns a Line[] array instead of a
+	TargetDataLine[] array
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine
+	(open(AudioFormat format, int bufferSize)): throws
+	LineUnavailableException if the mixer is not open
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip
+	(open()): throws LineUnavailableException if the mixer is not open
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort
+	(PulseAudioPort): calls open()
+
+2008-10-10 Ioana Ivan <iivan@redhat.com>
+	    Omair Majid <omajid@redhat.com>
+
+	* INSTALL: Updated to reflect requirements for pulse-java.
+	* Makefile.am 
+	(distclean-local): Clean up pulse-java. 
+	(EXTRA_DIST): Add pulseaudio folder.
+	(stamps/icedtea.stamp): Added dependency on stamps/pulse-java.stamp. Also
+	copy generated .jar and .so files to the jre images.
+	(stamps/icedtea-debug.stamp): Likewise.
+	(stamps/pulse-java.stamp): New target.
+	(stamps/pulse-java-jar.stamp): Likewise.
+	(stamps/pulse-java-class.stamp): Likewise.
+	(stamps/pulse-java-headers.stamp): Likewise.
+	(clean-pulse-java): Likewise.
+	* README: Added note for PulseAudio based mixer.
+	* acinclude.m4 
+	(FIND_PULSEAUDIO): Find the pulseaudio binary.
+	* configure.ac: Check for pulseaudio server and header files being
+	installed.
+	* patches/icedtea-pulse-soundproperties.patch: Dont use pulse-java as the
+	default Mixer.
+	* pulseaudio/: Copied over sources from pulseaudio repository.
+
+2008-10-09  Gary Benson  <gbenson@redhat.com>
+	    Andrew Haley  <aph@redhat.com>
+
+	* patches/icedtea-hotspot-citypeflow.patch: Reinstated.
+	* Makefile.am (ZERO_PATCHES): Apply the above for HotSpot 7 builds.
+
+	* ports/hotspot/build/linux/makefiles/shark.make:
+	Remove workaround for the above.
+
+2008-10-09  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-6open-6616825.patch: New.
+	* patches/icedtea-6open-6651382.patch: New.
+	* patches/icedtea-6open-6756202.patch: New.
+	* Makefile.am: Apply patches.
+
+2008-10-08  Deepak Bhole <dbhole@redhat.com>
+	* IcedTeaPlugin.cc: Implemented JS->Java security.
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: Same.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Same. Also,
+	remove ambiguity from class finding mechanism for cases where JS needs a
+	signature involving an applet specific class.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Implemented JS->Java
+	security.
+	* plugin/icedtea/sun/applet/PluginObjectStore.java: Same.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Rewrote code that
+	parsed messages from C++ side -- now it can handle any number of optional
+	components.
+
+2008-10-07  Gary Benson  <gbenson@redhat.com>
+	    Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.hpp
+	(object): Add missing return statement.
+	(displaced_header): Likewise.
+
+	* ports/hotspot/build/linux/makefiles/shark.make:
+	Remove workaround for the above.
+
+2008-10-07  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Don't rely on versioned cacao source directory.
+
+2008-10-06  Matthias Klose  <doko@ubuntu.com>
+
+	* generated/sun/misc/Version.java: Regenerate for 6b12.
+	* generated/sun/tools/jconsole/Version.java: Likewise.
+
+2008-10-06  Matthias Klose  <doko@ubuntu.com>
+
+	* IcedTeaPlugin.cc (PLUGIN_MIME_DESC): Remove 1.7 specs.
+
+2008-10-05  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (distclean-local): Remove IcedTeaPlugin object file.
+
+2008-10-03  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/build/linux/makefiles/shark.make:
+	Work around some GCC optimizer failures.
+
+2008-10-01     Deepak Bhole <dbhole@redhat.com>
+	* .hgignore: Removed IcedTeaPlugin.jar
+	* IcedTeaPlugin.cc: Updated classpath when launching Java. added
+	checks to detect error on Java side.
+	* Makefile.am: Updated to fit new refactored files.
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: New
+	file, moved out of org/classpath/icedtea/plugin/, as a result of
+	refactoring.
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java: Same.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Same.
+	* plugin/icedtea/sun/applet/GetMemberPluginCallRequest.java: Same.
+	* plugin/icedtea/sun/applet/GetWindowPluginCallRequest.java: Same.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Same.
+	* plugin/icedtea/sun/applet/PluginMain.java: Same.
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java: Same.
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java: Same.
+	* plugin/icedtea/sun/applet/PluginObjectStore.java: Same.
+	* plugin/icedtea/sun/applet/RequestQueue.java: Same.
+	* plugin/icedtea/sun/applet/TestEnv.java: Same.
+	* plugin/icedtea/sun/applet/VoidPluginCallRequest.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/GetMemberPluginCallRequest.java: 
+	Removed, as a result of refactoring.
+	* plugin/icedtea/org/classpath/icedtea/plugin/GetWindowPluginCallRequest.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginAppletSecurityContext.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginCallRequestFactoryImpl.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMain.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMessageConsumer.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMessageHandlerWorker.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginObjectStore.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginStreamHandlerImpl.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/RequestQueue.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/TestEnv.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/VoidPluginCallRequest.java:
+	Same.
+	* plugin/icedtea/sun/applet/AppletSecurityContext.java: Same.
+
+2008-10-02  Lillian Angel  <langel@redhat.com>
+
+	* HACKING: Updated with new visualvm patch.
+	* INSTALL: Updated to include netbeans in requirements.
+	* Makefile.am: Updated to build and install visualvm with
+	system-installed NetBeans 6.1 (currently in Fedora rawhide). Added new
+	visualvm patch to the list and removed need for NetBeans platform
+	sources.
+	* README: Updated visualvm notes.
+	* acinclude.m4: Updated to find netbeans and removed
+	WITH_NETBEANS_PLATFORM_SRC_ZIP check.
+	* configure.ac: Updated to check for netbeans and added
+	--with-netbeans-home option.
+	* patches/icedtea-visualvm.patch: Visualvm patch.
+
+2008-10-01  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Remove a
+	section of old code that had been #ifdef'd out.
+
+2008-09-30  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(EXTRA_DIST): Added visualvm.desktop.
+	* visualvm.desktop: New file.
+
+2008-09-30  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Updated cleanup.
+
+2008-09-30  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-shark.patch: Updated to latest Shark.
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.inline.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreterFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/sharedRuntime_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp: Likewise.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp: Likewise.
+	* ports/hotspot/src/share/vm/includeDB_shark: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/deoptimizerFrame_zero.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.inline.hpp: Likewise.
+
 2008-09-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
@@ -58,6 +638,128 @@
 	* patches/icedtea-override-redirect-metacity.patch:
 	Updated against b36; a chunk in each no longer applies.
 
+2008-09-26  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-6712835-ifnode.patch: New patch.
+	* Makefile.am (NON_ZERO_PATCHES): Add icedtea-6712835-ifnode.patch
+	* HACKING: Document patches/icedtea-6712835-ifnode.patch.
+
+2008-09-26  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-6700047-loopopts.patch: New patch.
+	* Makefile.am (NON_ZERO_PATCHES): Add icedtea-6700047-loopopts.patch.
+	* HACKING: Document patches/icedtea-6700047-loopopts.patch.
+
+2008-09-26  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-hotspot7-tests.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-hotspot7-tests.patch.
+	* HACKING: Document icedtea-hotspot7-tests.patch.
+
+2008-09-25  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-lucene-crash.patch: New patch.
+	* Makefile.am (NON_ZERO_PATCHES): Add icedtea-lucene-crash.patch.
+	* HACKING: Document icedtea-lucene-crash.patch.
+
+2008-09-25  Mark Wielaard  <mjw@redhat.com>
+
+	* patches/icedtea-clean-crypto.patch: Cleaned up.
+	Remove unneeded classes JarVerifier and JceSecurityManager
+	and remove unneeded methods in JceSecurity class.
+
+2008-09-23  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Fixed help string for enable-visualvm.
+	* rt/net/sourceforge/nanoxml/XMLElement.java: Fixed check for special
+	tags.
+
+2008-09-23  Deepak Bhole  <dbhole@redhat.com>
+	* IcedTeaPlugin.cc: Updated to call new plugin main class. Add function to
+	correctly recognize JS context.
+	* Makefile.am: Update to create new IcedTeaPlugin.jar
+	* patches/icedtea-liveconnect.patch: Update patch and remove all new .java
+	files
+	* plugin/icedtea/java/src/main/netscape/javascript/JSException.java: Moved
+	out of rt/ overlay.
+	* plugin/icedtea/java/src/main/netscape/javascript/JSObject.java: Same.
+	* plugin/icedtea/java/src/main/netscape/javascript/JSProxy.java: Same.
+	* plugin/icedtea/java/src/main/netscape/javascript/JSRunnable.java: Same.
+	* plugin/icedtea/java/src/main/netscape/javascript/JSUtil.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/GetMemberPluginCallRequest.java:
+	Moved out of icedtea-liveconnect.patch and refactored.
+	* plugin/icedtea/org/classpath/icedtea/plugin/GetWindowPluginCallRequest.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginAppletSecurityContext.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginCallRequestFactoryImpl.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMain.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMessageConsumer.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginMessageHandlerWorker.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginObjectStore.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/PluginStreamHandlerImpl.java:
+	Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/RequestQueue.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/TestEnv.java: Same.
+	* plugin/icedtea/org/classpath/icedtea/plugin/VoidPluginCallRequest.java:
+	Same.
+	* plugin/icedtea/sun/applet/AppletSecurityContext.java: Same.
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: Same.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Same.
+	* plugin/icedtea/sun/applet/PluginCallRequest.java: Same.
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java: Same.
+	* plugin/icedtea/sun/applet/PluginClassLoader.java: Same.
+	* plugin/icedtea/sun/applet/PluginDebug.java: Same.
+	* plugin/icedtea/sun/applet/PluginException.java: Same.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Same.
+	* rt/net/sourceforge/jnlp/Launcher.java: Print exception trace if launch
+	fails.
+	* rt/net/sourceforge/jnlp/runtime/JNLPRuntime.java: Set ServiceManagerStub
+	before SecurityManager is set.
+	* rt/netscape/javascript/JSException.java: Move to plugin/icedtea dir.
+	* rt/netscape/javascript/JSObject.java: Same.
+	* rt/netscape/javascript/JSProxy.java: Same.
+	* rt/netscape/javascript/JSRunnable.java: Same.
+	* rt/netscape/javascript/JSUtil.java: Same.
+
+2008-09-22  Lillian Angel  <langel@redhat.com>
+	    DJ Lucas  <dj@linuxfromscratch.org>
+
+	* Makefile.am: Added new env var JAR_ACCEPTS_STDIN_LIST.
+	* acinclude.m4: Added check to determine whether jar supports
+	stdin file args.
+	* patches/icedtea-ecj.patch: Updated patch.
+	* AUTHORS: Added DJ Lucas.
+
+2008-09-18  Lillian Angel  <langel@redhat.com>
+
+	* AUTHORS: Added Marc Schoenefeld.
+
+2008-09-18  Marc Schoenefeld  <mschoene@redhat.com>
+	
+	* patches/icedtea-messageutils.patch: New patch fixes JVM crashes 
+	when calling on sun.misc.MessageUtils.toStderr(null) and
+	sun.misc.MessageUtils.toStdout(null) . It now prompts
+	the string "null" to the console. 
+	* Makefile.am: Added patch above.
+
+2008-09-16  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Allow access to applet classloader from JS on that
+	site. Fix right-click lag by temporarily disabling status messages.
+	* patches/icedtea-liveconnect.patch: Allow access to applet classloader
+	from JS on that site. Fix it so that applets with no height/width
+	specifications can load.
+
+2008-09-15  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-lc_ctype.patch: Fixed array size and 
+	changed to use malloc/free.
+
 2008-09-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am: Add the project name
@@ -82,6 +784,68 @@
 	* Makefile.am: Bump to b35, remove citypeflow patch.
 	* patches/icedtea-ecj.patch: Recreated against b35.
 	* tools-copy/tools-jdk-copy-files.txt: Add javax.script.
+
+2008-09-12  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am, HACKING: Update for b12 zero patch.
+	* patches/icedtea-hotspot-6b11-7b24.patch: Remove.
+	* patches/icedtea-hotspot-6b12-7b24.patch: New.
+
+2008-09-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Turn ICEDTEA_ECJ_PATCH into
+	ICEDTEA_ECJ_PATCHES and add an equivalent
+	rule to that for PATCHES and FSG_PATCHES.
+	* patches/icedtea-ecj-spp.patch:
+	New patch to fix the use of java.util.Scanner
+	and avoid the use of reset() in Spp.java.
+
+2008-09-12  Matthias Klose  <doko@ubuntu.com>
+
+	* fsg.sh: Update for b12 code drop.
+	* Makefile.am, NEWS: Update for b12.
+	* patches/icedtea-LCMS-setTagData.patch: Remove, applied upstream.
+	* patches/icedtea-color-createcontext.patch: Likewise.
+	* patches/icedtea-hotspot-citypeflow.patch: Likewise.
+	* patches/icedtea-hotspot-gcc-pr36917.patch: Likewise.
+	* patches/icedtea-lcms-leak.patch: Likewise.
+	* patches/icedtea-corba.patch: Likewise.
+	* patches/icedtea-gervill.patch: Likewise.
+	* patches/icedtea-directaudio-close-trick.patch: Likewise.
+	* patches/icedtea-generated.patch: Remove, obsolete.
+	* patches/icedtea-version.patch: Update.
+	* patches/icedtea-ecj.patch: Update.
+	* patches/icedtea-javafiles.patch: Regenerate.
+	* HACKING: Update for b12.
+	* generated/com/sun/corba/se/impl/logging/*: Regenerate.
+
+2008-09-12  Gary Benson  <gbenson@redhat.com>
+	    Xerxes Rånby <xerxes@zafena.se>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp
+	(__m68k_cmpxchg): New function.
+	(m68k_compare_and_swap): Likewise.
+	(m68k_add_and_fetch): Likewise.
+	(m68k_lock_test_and_set): Likewise.
+	(Atomic::add): Use the above on m68k.
+	(Atomic::add_ptr): Likewise.
+	(Atomic::xchg): Likewise.
+	(Atomic::xchg_ptr): Likewise.
+	(Atomic::cmpxchg): Likewise.
+	(Atomic::cmpxchg_ptr): Likewise.
+
+2008-09-11  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-gervill.patch: Updated patch for old tests.
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/*:
+	New Gervill files (sept 1).
+
+2008-09-10  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-lc_ctype.patch: New patch to fix this issue:
+	http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=497666
+	* Makefile.am: Added patch to list.
 
 2008-09-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
@@ -194,8 +958,6 @@
 	* ports/hotspot/src/share/vm/shark/shark_globals.hpp:
 	Merged.
 	
-=======
->>>>>>> other
 2008-08-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:

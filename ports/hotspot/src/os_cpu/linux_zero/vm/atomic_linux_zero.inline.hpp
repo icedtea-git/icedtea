@@ -25,6 +25,81 @@
 
 // Implementation of class atomic
 
+#ifdef M68K
+
+/*
+ * __m68k_cmpxchg
+ *
+ * Atomically store newval in *ptr if *ptr is equal to oldval for user space.
+ * Returns newval on success and oldval if no exchange happened. 
+ * This implementation is processor specific and works on 
+ * 68020 68030 68040 and 68060.
+ *
+ * It will not work on ColdFire, 68000 and 68010 since they lack the CAS
+ * instruction. 
+ * Using a kernelhelper would be better for arch complete implementation.
+ *
+ */
+ 
+static inline int __m68k_cmpxchg(int oldval, int newval, volatile int *ptr)
+{ 
+  int ret;
+  __asm __volatile ("cas%.l %0,%2,%1"
+                   : "=d" (ret), "+m" (*(ptr))
+                   : "d" (newval), "0" (oldval));
+  return ret;
+}
+
+/* Perform an atomic compare and swap: if the current value of `*PTR'
+   is OLDVAL, then write NEWVAL into `*PTR'.  Return the contents of
+   `*PTR' before the operation.*/
+static inline int m68k_compare_and_swap(volatile int *ptr,
+                                        int oldval,
+                                        int newval) 
+{
+  for (;;)
+    {
+      int prev = *ptr;
+      if (prev != oldval)
+	return prev;
+
+      if (__m68k_cmpxchg (prev, newval, ptr) == newval)
+	// Success.
+	return prev;
+
+      // We failed even though prev == oldval.  Try again.
+    }
+}
+
+/* Atomically add an int to memory.  */
+static inline int m68k_add_and_fetch(volatile int *ptr, int add_value)
+{
+  for (;;)
+    {
+      // Loop until success.
+
+      int prev = *ptr;
+
+      if (__m68k_cmpxchg (prev, prev + add_value, ptr) == prev + add_value)
+	return prev + add_value;
+    }
+}
+
+/* Atomically write VALUE into `*PTR' and returns the previous
+   contents of `*PTR'.  */
+static inline int m68k_lock_test_and_set(volatile int *ptr, int newval)
+{
+  for (;;)
+    {
+      // Loop until success.
+      int prev = *ptr;
+
+      if (__m68k_cmpxchg (prev, newval, ptr) == prev)
+	return prev;
+    }
+}
+#endif // M68K
+
 #ifdef ARM
 
 /*
@@ -107,7 +182,11 @@ inline jint Atomic::add(jint add_value, volatile jint* dest)
 #ifdef ARM
   return arm_add_and_fetch(dest, add_value);
 #else
+#ifdef M68K
+  return m68k_add_and_fetch(dest, add_value);
+#else
   return __sync_add_and_fetch(dest, add_value);
+#endif // M68K
 #endif // ARM
 }
 
@@ -116,7 +195,11 @@ inline intptr_t Atomic::add_ptr(intptr_t add_value, volatile intptr_t* dest)
 #ifdef ARM
   return arm_add_and_fetch(dest, add_value);
 #else
+#ifdef M68K
+  return m68k_add_and_fetch(dest, add_value);
+#else
   return __sync_add_and_fetch(dest, add_value);
+#endif // M68K
 #endif // ARM
 }
 
@@ -160,11 +243,15 @@ inline jint Atomic::xchg(jint exchange_value, volatile jint* dest)
 #ifdef ARM
   return arm_lock_test_and_set(dest, exchange_value);
 #else
+#ifdef M68K
+  return m68k_lock_test_and_set(dest, exchange_value);
+#else
   // __sync_lock_test_and_set is a bizarrely named atomic exchange
   // operation.  Note that some platforms only support this with the
   // limitation that the only valid value to store is the immediate
   // constant 1.  There is a test for this in JNI_CreateJavaVM().
   return __sync_lock_test_and_set (dest, exchange_value);
+#endif // M68K
 #endif // ARM
 }
 
@@ -173,7 +260,11 @@ inline intptr_t Atomic::xchg_ptr(intptr_t exchange_value,
 #ifdef ARM
   return arm_lock_test_and_set(dest, exchange_value);
 #else
+#ifdef M68K
+  return m68k_lock_test_and_set(dest, exchange_value);
+#else
   return __sync_lock_test_and_set (dest, exchange_value);
+#endif // M68K
 #endif // ARM
 }
 
@@ -189,7 +280,11 @@ inline jint Atomic::cmpxchg(jint exchange_value,
 #ifdef ARM
   return arm_compare_and_swap(dest, compare_value, exchange_value);
 #else
+#ifdef M68K
+  return m68k_compare_and_swap(dest, compare_value, exchange_value);
+#else
   return __sync_val_compare_and_swap(dest, compare_value, exchange_value);
+#endif // M68K
 #endif // ARM
 }
 
@@ -206,7 +301,11 @@ inline intptr_t Atomic::cmpxchg_ptr(intptr_t exchange_value,
 #ifdef ARM
   return arm_compare_and_swap(dest, compare_value, exchange_value);
 #else
+#ifdef M68K
+  return m68k_compare_and_swap(dest, compare_value, exchange_value);
+#else
   return __sync_val_compare_and_swap(dest, compare_value, exchange_value);
+#endif // M68K
 #endif // ARM
 }
 

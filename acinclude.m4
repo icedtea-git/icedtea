@@ -254,19 +254,20 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
   ])
   if test -z "${LIBGCJ_JAR}"; then
     AC_MSG_CHECKING(for libgcj-4.3.*.jar, libgcj-4.2.*.jar or libgcj-4.1.*.jar)
-    if test -e /usr/share/java/libgcj-4.3.*.jar; then
-      LIBGCJ_JAR=/usr/share/java/libgcj-4.3.*.jar
+    for jar in /usr/share/java/libgcj-4.3*.jar; do
+      test -e $jar && LIBGCJ_JAR=$jar
+    done
+    if test -n ${LIBGCJ_JAR}; then
       AC_MSG_RESULT(${LIBGCJ_JAR})
     else
-       if test -e /usr/share/java/libgcj-4.2.*.jar; then
-         LIBGCJ_JAR=/usr/share/java/libgcj-4.2.*.jar
-         AC_MSG_RESULT(${LIBGCJ_JAR})
-       elif test -e /usr/share/java/libgcj-4.1.*.jar; then
-         LIBGCJ_JAR=/usr/share/java/libgcj-4.1.*.jar
-         AC_MSG_RESULT(${LIBGCJ_JAR})
-       else
+      for jar in /usr/share/java/libgcj-4.1*.jar /usr/share/java/libgcj-4.2*.jar; do
+	test -e $jar && LIBGCJ_JAR=$jar
+      done
+      if test -n ${LIBGCJ_JAR}; then
+	AC_MSG_RESULT(${LIBGCJ_JAR})
+      else
  	AC_MSG_RESULT(no)
-       fi
+      fi
     fi
   fi
   if test -z "${LIBGCJ_JAR}"; then
@@ -340,9 +341,18 @@ EOF
     JAR_KNOWS_ATFILE=
     AC_MSG_RESULT(no)
   fi
+  AC_MSG_CHECKING([whether jar supports stdin file arguments])
+  if cat _config.list | $JAR cf@ _config.jar 2>/dev/null; then
+    JAR_ACCEPTS_STDIN_LIST=1
+    AC_MSG_RESULT(yes)
+  else
+    JAR_ACCEPTS_STDIN_LIST=
+    AC_MSG_RESULT(no)
+  fi
   rm -f _config.txt _config.list _config.jar
   AC_SUBST(JAR)
   AC_SUBST(JAR_KNOWS_ATFILE)
+  AC_SUBST(JAR_ACCEPTS_STDIN_LIST)
 ])
 
 AC_DEFUN([FIND_RMIC],
@@ -448,28 +458,11 @@ AC_DEFUN([WITH_VISUALVM_SRC_ZIP],
   AC_SUBST(ALT_VISUALVM_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_NETBEANS_PLATFORM_SRC_ZIP],
-[
-  AC_MSG_CHECKING(for a NetBeans platform source zip)
-  AC_ARG_WITH([netbeans-platform-src-zip],
-              [AS_HELP_STRING(--with-netbeans-platform-src-zip, specify the location of the netbeans platform source zip)],
-  [
-    ALT_NETBEANS_PLATFORM_SRC_ZIP=${withval}
-    AM_CONDITIONAL(USE_ALT_NETBEANS_PLATFORM_SRC_ZIP, test x = x)
-  ],
-  [ 
-    ALT_NETBEANS_PLATFORM_SRC_ZIP="not specified"
-    AM_CONDITIONAL(USE_ALT_NETBEANS_PLATFORM_SRC_ZIP, test x != x)
-  ])
-  AC_MSG_RESULT(${ALT_NETBEANS_PLATFORM_SRC_ZIP})
-  AC_SUBST(ALT_NETBEANS_PLATFORM_SRC_ZIP)
-])
-
 AC_DEFUN([WITH_NETBEANS_PROFILER_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a NetBeans profiler source zip)
   AC_ARG_WITH([netbeans-profiler-src-zip],
-              [AS_HELP_STRING(--with-netbeans-src-zip, specify the location of the netbeans profiler source zip)],
+              [AS_HELP_STRING(--with-netbeans-profiler-src-zip, specify the location of the netbeans profiler source zip)],
   [
     ALT_NETBEANS_PROFILER_SRC_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_NETBEANS_PROFILER_SRC_ZIP, test x = x)
@@ -480,6 +473,23 @@ AC_DEFUN([WITH_NETBEANS_PROFILER_SRC_ZIP],
   ])
   AC_MSG_RESULT(${ALT_NETBEANS_PROFILER_SRC_ZIP})
   AC_SUBST(ALT_NETBEANS_PROFILER_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_NETBEANS_BASIC_CLUSTER_SRC_ZIP],
+[
+  AC_MSG_CHECKING(for a NetBeans basic cluster source zip)
+  AC_ARG_WITH([netbeans-basic-cluster-src-zip],
+              [AS_HELP_STRING(--with-netbeans-basic-cluster-src-zip, specify the location of the netbeans basic cluster source zip)],
+  [
+    ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP})
+  AC_SUBST(ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP)
 ])
 
 AC_DEFUN([WITH_ALT_JAR_BINARY],
@@ -594,6 +604,31 @@ AC_DEFUN([FIND_XERCES2_JAR],
   AC_SUBST(XERCES2_JAR)
 ])
 
+AC_DEFUN([FIND_NETBEANS],
+[
+  AC_ARG_WITH([netbeans],
+              [AS_HELP_STRING(--with-netbeans,specify location of netbeans)],
+  [
+    if test -f "${withval}"; then
+      AC_MSG_CHECKING(netbeans)
+      NETBEANS="${withval}"
+      AC_MSG_RESULT(${withval})
+    else
+      AC_PATH_PROG(NETBEANS, "${withval}")
+    fi
+  ],
+  [
+    NETBEANS=
+  ])
+  if test -z "${NETBEANS}"; then
+    AC_PATH_PROG(NETBEANS, "netbeans")
+  fi
+  if test -z "${NETBEANS}"; then
+    AC_MSG_ERROR("NetBeans was not found.")
+  fi
+  AC_SUBST(NETBEANS)
+])
+
 AC_DEFUN([FIND_RHINO_JAR],
 [
   AC_MSG_CHECKING(whether to include Javascript support via Rhino)
@@ -634,6 +669,15 @@ AC_DEFUN([FIND_RHINO_JAR],
   AC_MSG_RESULT(${RHINO_JAR})
   AM_CONDITIONAL(WITH_RHINO, test x"${RHINO_JAR}" != "xno")
   AC_SUBST(RHINO_JAR)
+])
+
+AC_DEFUN([FIND_PULSEAUDIO],
+[
+  AC_PATH_PROG(PULSEAUDIO_BIN, "pulseaudio")
+  if test -z "${PULSEAUDIO_BIN}"; then
+    AC_MSG_ERROR("pulseaudio was not found.")
+  fi
+  AC_SUBST(PULSEAUDIO_BIN)
 ])
 
 AC_DEFUN([ENABLE_OPTIMIZATIONS],
@@ -792,13 +836,13 @@ AC_DEFUN([SET_CORE_OR_SHARK_BUILD],
   AM_CONDITIONAL(SHARK_BUILD, test "x${use_shark}" = xyes)
 ])
 
-AC_DEFUN([AC_CHECK_WITH_CACAO],
+AC_DEFUN([AC_CHECK_ENABLE_CACAO],
 [
   AC_MSG_CHECKING(whether to use CACAO as VM)
-  AC_ARG_WITH([cacao],
-	      [AS_HELP_STRING(--with-cacao,use CACAO as VM [[default=no]])],
+  AC_ARG_ENABLE([cacao],
+	      [AS_HELP_STRING(--enable-cacao,use CACAO as VM [[default=no]])],
   [
-    WITH_CACAO=yes
+    WITH_CACAO="${enableval}"
   ],
   [
     WITH_CACAO=no

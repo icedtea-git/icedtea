@@ -36,12 +36,7 @@ void Disassembler::decode(nmethod *nm, outputStream *st)
 {
 #ifdef SHARK
   assert(st == NULL, "it's all going to stderr anyway");
-
-  intptr_t *method_entry_addr = (intptr_t *) nm->instructions_begin();
-  intptr_t *function_addr = method_entry_addr + 1;
-  llvm::Function *function = *(llvm::Function **) function_addr;
-
-  function->dump();
+  ((SharkEntry *) nm->instructions_begin())->llvm_function()->dump();
 #else
   Unimplemented();
 #endif // SHARK

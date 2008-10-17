@@ -1,5 +1,28 @@
 New in release 1.8 (XXXX-XX-XX)
 
+  IcedTea is based on the hard work of a lot of people that contributed to
+  IcedTea6 and OpenJDK. The following noteworthy changes were added in
+  this release:
+
+- Updated to b36 build.
+- Fixed to use new sound service, Gervill.
+- Many Netx fixes and now built by default.
+- LiveConnect support (--enable-liveconnect).
+- Implemented JavaScript->Java security.
+- PulseAudio integrated (--enable-pulse-java)
+- VisualVM tool integrated (--enable-visualvm).
+- Added out-of-the-box CACAO support (--with-cacao).
+- Added the experimental Shark JIT for Zero.
+- Cleaned up crypto support, all algorithms and key sizes are fully
+  supported now without any (regional) restrictions. No more need for
+  separate crypto policy jars.
+- Integration of Mozilla Rhino javascript support for javax.script.
+  (See http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=179 when
+   you want to enable non-system-installed versions of Rhino).
+- Add support for Zero builds on alpha, arm, mips, mipsel, m68k, s390.
+- Various build fixes.
+- Several bug and security fixes.
+
 New in release 1.7 (2008-06-02)
 
   IcedTea is based on the hard work of a lot of people that contributed to

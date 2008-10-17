@@ -32,14 +32,12 @@ class SharkFunction : public StackObj {
                 const char*       name,
                 ciTypeFlow*       flow,
                 ciBytecodeStream* iter,
-                CodeBuffer*       cb,
-                OopMapSet*        oopmaps)
+                MacroAssembler*   masm)
     : _builder(builder),
       _name(name),
       _flow(flow),
       _iter(iter),
-      _cb(cb),
-      _oopmaps(oopmaps)
+      _masm(masm)
   { initialize(); }
 
  private:
@@ -50,9 +48,7 @@ class SharkFunction : public StackObj {
   const char*       _name;
   ciTypeFlow*       _flow;
   ciBytecodeStream* _iter;
-  CodeBuffer*       _cb;
-  OopMapSet*        _oopmaps;
-  MacroAssembler*   _assembler;
+  MacroAssembler*   _masm;
   llvm::Function*   _function;
   SharkBlock**      _blocks;
   llvm::Value*      _base_pc;
@@ -76,17 +72,9 @@ class SharkFunction : public StackObj {
   {
     return _iter;
   }
-  CodeBuffer* cb() const
+  MacroAssembler* masm() const
   {
-    return _cb;
-  }
-  OopMapSet* oopmaps() const
-  {
-    return _oopmaps;
-  }
-  MacroAssembler* assembler() const
-  {
-    return _assembler;
+    return _masm;
   }
   llvm::Function* function() const
   {
@@ -118,6 +106,14 @@ class SharkFunction : public StackObj {
   {
     return flow()->block_count();
   }
+  DebugInformationRecorder *debug_info() const
+  {
+    return env()->debug_info();
+  }
+  ciEnv* env() const
+  {
+    return flow()->env();
+  }
   int max_locals() const
   {
     return flow()->max_locals();
@@ -129,20 +125,6 @@ class SharkFunction : public StackObj {
   ciMethod* target() const
   {
     return flow()->method();
-  }
-
- public:
-  ciEnv* env() const
-  {
-    return flow()->env();
-  }
-  bool failing() const
-  {
-    return env()->failing();
-  }
-  void record_method_not_compilable(const char* reason) const
-  {
-    env()->record_method_not_compilable(reason);
   }
 
   // Block management
@@ -216,32 +198,26 @@ class SharkFunction : public StackObj {
 
   // Frame management
  private:
-  llvm::Value*   _pc_slot;
-  llvm::Value*   _method_slot;
-  llvm::Value*   _locals_slots;
-  llvm::Value*   _monitors_slots;
-  llvm::Value*   _stack_slots;
+  llvm::Value* _frame;
 
  public:
-  llvm::Value* pc_slot() const
+  llvm::Value* CreateAddressOfFrameEntry(int               offset,
+                                         const llvm::Type* type = NULL,
+                                         const char*       name = "") const;
+ public:
+  llvm::Value* exception_slot() const
   {
-    return _pc_slot;
-  }  
-  llvm::Value* method_slot() const
-  {
-    return _method_slot;
-  }  
-  llvm::Value* locals_slots() const
-  {
-    return _locals_slots;
-  }  
+    return CreateAddressOfFrameEntry(
+      exception_slot_offset(),
+      SharkType::oop_type(),
+      "exception_slot");
+  }
   llvm::Value* monitors_slots() const
   {
-    return _monitors_slots;
-  }
-  llvm::Value* stack_slots() const
-  {
-    return _stack_slots;
+    return CreateAddressOfFrameEntry(
+      monitors_slots_offset(),
+      llvm::ArrayType::get(SharkType::monitor_type(), monitor_count()),
+      "monitors");
   }
 
  public:
@@ -258,20 +234,18 @@ class SharkFunction : public StackObj {
  public:
   int code_offset() const
   {
-    int offset = assembler()->offset();
-    assembler()->advance(1); // keeps PCs unique
+    int offset = masm()->offset();
+    masm()->advance(1); // keeps PCs unique
     return offset;
-  }
-  void add_gc_map(int offset, OopMap* oopmap)
-  {
-    oopmaps()->add_gc_map(offset, oopmap);
   }
 
  private:
   int _oopmap_frame_size;
   int _stack_slots_offset;
   int _monitors_slots_offset;
+  int _exception_slot_offset;
   int _method_slot_offset;
+  int _pc_slot_offset;
   int _locals_slots_offset;
 
  public:
@@ -287,9 +261,17 @@ class SharkFunction : public StackObj {
   {
     return _monitors_slots_offset;
   }
+  int exception_slot_offset() const
+  {
+    return _exception_slot_offset;
+  }
   int method_slot_offset() const
   {
     return _method_slot_offset;
+  }
+  int pc_slot_offset() const
+  {
+    return _pc_slot_offset;
   }
   int locals_slots_offset() const
   {
@@ -326,6 +308,22 @@ class SharkFunction : public StackObj {
       llvm::PointerType::getUnqual(SharkType::jobject_type()),
       "vm_result_addr");
     llvm::LoadInst *result = builder()->CreateLoad(addr, "vm_result");
+    builder()->CreateStore(LLVMValue::null(), addr);
+    return result;
+  }
+
+ public:
+  llvm::Value* pending_exception_address() const
+  {
+    return builder()->CreateAddressOfStructEntry(
+      thread(), Thread::pending_exception_offset(),
+      llvm::PointerType::getUnqual(SharkType::jobject_type()),
+      "pending_exception_addr");
+  }
+  llvm::LoadInst* CreateGetPendingException() const
+  {
+    llvm::Value *addr = pending_exception_address();
+    llvm::LoadInst *result = builder()->CreateLoad(addr, "pending_exception");
     builder()->CreateStore(LLVMValue::null(), addr);
     return result;
   }

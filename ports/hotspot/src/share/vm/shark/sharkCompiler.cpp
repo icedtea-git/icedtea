@@ -80,48 +80,30 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
       flow->print_on(tty);
   }
 
-  // Create the CodeBuffer and OopMapSet
-  BufferBlob *bb = BufferBlob::create(
-    "shark_temp", sizeof(SharkEntry) + target->code_size());
-  CodeBuffer cb(bb->instructions_begin(), bb->instructions_size());
+  // Create the recorders
+  Arena arena;
+  env->set_oop_recorder(new OopRecorder(&arena));
   OopMapSet oopmaps;
+  env->set_debug_info(new DebugInformationRecorder(env->oop_recorder()));
+  env->debug_info()->set_oopmaps(&oopmaps);
+  env->set_dependencies(new Dependencies(env));
+
+  // Create the CodeBuffer and MacroAssembler
+  BufferBlob *bb = BufferBlob::create("shark_temp", 256 * K);
+  CodeBuffer cb(bb->instructions_begin(), bb->instructions_size());
+  cb.initialize_oop_recorder(env->oop_recorder());
+  MacroAssembler *masm = new MacroAssembler(&cb);
 
   // Compile the method into the CodeBuffer
   ciBytecodeStream iter(target);
-  SharkFunction function(builder(), name, flow, &iter, &cb, &oopmaps);
-  if (env->failing())
-    return;
+  SharkFunction function(builder(), name, flow, &iter, masm);
 
   // Install the method into the VM
-  install_method(env, target, entry_bci, &cb, &oopmaps);
-}
-
-void SharkCompiler::install_method(ciEnv*      env,
-                                   ciMethod*   target,
-                                   int         entry_bci,
-                                   CodeBuffer* cb,
-                                   OopMapSet*  oopmaps)
-{
-  // Pretty much everything in this method is junk to stop
-  // ciEnv::register_method() from failing assertions.
-
-  OopRecorder oop_recorder(env->arena());
-  env->set_oop_recorder(&oop_recorder);
-
-  DebugInformationRecorder debug_info(&oop_recorder);
-  debug_info.set_oopmaps(oopmaps);
-  env->set_debug_info(&debug_info);
-
-  Dependencies deps(env);  
-  env->set_dependencies(&deps);
-
   CodeOffsets offsets;
   offsets.set_value(CodeOffsets::Deopt, 0);
   offsets.set_value(CodeOffsets::Exceptions, 0);
   offsets.set_value(CodeOffsets::Verified_Entry,
                     target->is_static() ? 0 : wordSize);
-
-  cb->initialize_oop_recorder(&oop_recorder);
 
   ExceptionHandlerTable handler_table;
   ImplicitExceptionTable inc_table;
@@ -130,15 +112,18 @@ void SharkCompiler::install_method(ciEnv*      env,
                        entry_bci,
                        &offsets,
                        0,
-                       cb,
+                       &cb,
                        0,
-                       oopmaps,
+                       &oopmaps,
                        &handler_table,
                        &inc_table,
                        this,
                        env->comp_level(),
                        false,
                        false);
+
+  // Free the BufferBlob
+  BufferBlob::free(bb);
 }
 
 const char* SharkCompiler::methodname(const ciMethod* target)

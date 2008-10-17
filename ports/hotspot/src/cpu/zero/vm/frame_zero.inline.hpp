@@ -26,6 +26,7 @@
 #include <entryFrame_zero.hpp>
 #include <interpreterFrame_zero.hpp>
 #include <sharkFrame_zero.hpp>
+#include <deoptimizerFrame_zero.hpp>
 
 // Constructors
 
@@ -54,6 +55,11 @@ inline frame::frame(intptr_t* sp)
   case ZeroFrame::SHARK_FRAME:
     _pc = zero_sharkframe()->pc();
     _cb = CodeCache::find_blob(pc());
+    break;
+
+  case ZeroFrame::DEOPTIMIZER_FRAME:
+    _pc = NULL;
+    _cb = NULL;
     break;
 
   default:
@@ -162,5 +168,8 @@ inline intptr_t* frame::entry_frame_argument_at(int offset) const
 
 inline intptr_t* frame::unextended_sp() const
 {
-  return zero_sharkframe()->unextended_sp();
+  if (zeroframe()->is_shark_frame())
+    return zero_sharkframe()->unextended_sp();
+  else
+    return (intptr_t *) -1;
 }

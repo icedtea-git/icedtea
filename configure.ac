@@ -30,6 +30,8 @@ AC_SUBST([FASTJAR])
 dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
+AC_PATH_TOOL([HG],[hg])
+AC_SUBST([HG])
 
 AC_MSG_CHECKING(for JDK home directory)
 AC_ARG_WITH([gcj-home],
@@ -88,6 +90,24 @@ AC_ARG_WITH([icedtea-home],
 AC_MSG_RESULT(${SYSTEM_ICEDTEA_DIR})
 AC_SUBST(SYSTEM_ICEDTEA_DIR)
 
+AC_MSG_CHECKING(for NetBeans home directory)
+AC_ARG_WITH([netbeans-home],
+	    [AS_HELP_STRING([--with-netbeans-home],
+                            [NetBeans home directory (default is /usr/share/netbeans)])],
+            [
+              if test "x${withval}" = x
+              then
+                SYSTEM_NETBEANS_DIR=/usr/share/netbeans
+              else
+                SYSTEM_NETBEANS_DIR=${withval}
+              fi
+            ],
+            [
+              SYSTEM_NETBEANS_DIR=/usr/share/netbeans
+            ])
+AC_MSG_RESULT(${SYSTEM_NETBEANS_DIR})
+AC_SUBST(SYSTEM_NETBEANS_DIR)
+
 AC_MSG_CHECKING(for Ant home directory)
 AC_ARG_WITH([ant-home],
             [AS_HELP_STRING([--with-ant-home],
@@ -122,6 +142,14 @@ AC_ARG_ENABLE([liveconnect],
 AM_CONDITIONAL(ENABLE_LIVECONNECT, test "x${enable_liveconnect}" = "xyes")
 AC_MSG_RESULT(${enable_liveconnect})
 
+AC_MSG_CHECKING([whether to include PulseAudio support])
+AC_ARG_ENABLE([pulse-java],
+              [AS_HELP_STRING([--enable-pulse-java],
+                              [Enable pulse-java - an audio mixer spi that uses PulseAudio])],
+              [enable_pulse_java="yes"], [enable_pulse_java="no"])
+AM_CONDITIONAL(ENABLE_PULSE_JAVA, test "x${enable_pulse_java}" = "xyes")
+AC_MSG_RESULT(${enable_pulse_java})
+
 AC_MSG_CHECKING(whether to build documentation)
 AC_ARG_ENABLE([docs],
 	      [AS_HELP_STRING([--disable-docs],
@@ -133,11 +161,15 @@ AC_MSG_RESULT(${ENABLE_DOCS})
 AC_MSG_CHECKING(whether to build VisualVM)
 AC_ARG_ENABLE([visualvm],
               [AS_HELP_STRING([--enable-visualvm],
-			                  [Enable compilation of visualvm. Requires that \
-							  --with-netbeans-dir=DIR is specified.])],
+			                  [Enable compilation of visualvm.])],
               [enable_visualvm="yes"], [enable_visualvm="no"])
 AM_CONDITIONAL(WITH_VISUALVM, test "x${enable_visualvm}" = "xyes")
 AC_MSG_RESULT(${enable_visualvm})
+
+if test "x${enable_visualvm}" = "xyes"
+then
+  FIND_NETBEANS
+fi
 
 AC_MSG_CHECKING(whether to build using an existing installation of IcedTea)
 AC_ARG_WITH([icedtea],
@@ -238,10 +270,10 @@ FIND_RHINO_JAR
 WITH_OPENJDK_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
 WITH_VISUALVM_SRC_ZIP
-WITH_NETBEANS_PLATFORM_SRC_ZIP
 WITH_NETBEANS_PROFILER_SRC_ZIP
+WITH_NETBEANS_BASIC_CLUSTER_SRC_ZIP
 WITH_ALT_JAR_BINARY
-AC_CHECK_WITH_CACAO
+AC_CHECK_ENABLE_CACAO
 AC_CHECK_WITH_CACAO_HOME
 AC_CHECK_WITH_CACAO_SRC_ZIP
 ENABLE_OPTIMIZATIONS
@@ -261,6 +293,11 @@ AC_SUBST([HG])
 
 AC_PATH_TOOL([GCJ],[gcj])
 AC_SUBST([GCJ])
+
+if test "x${enable_pulse_java}" = "xyes"
+then
+  FIND_PULSEAUDIO
+fi
 
 dnl pkgconfig cannot be used to find these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
@@ -368,6 +405,20 @@ then
 fi
 AC_SUBST(ALSA_CFLAGS)
 AC_SUBST(ALSA_LIBS)
+
+if test "x${enable_pulse_java}" = "xyes"
+then
+  dnl Check for pulseaudio libraries.
+  PKG_CHECK_MODULES(LIBPULSE,[libpulse >= 0.9.11],[LIBPULSE_FOUND=yes]
+    ,[LIBPULSE_FOUND=no])
+  if test "x${LIBPULSE_FOUND}" = xno
+  then
+    AC_MSG_ERROR([Could not find pulseaudio>=0.9.11 libraries - \
+    Try installing pulseaudio-libs-devel>=0.9.11.])
+  fi
+  AC_SUBST(LIBPULSE_CFLAGS)
+  AC_SUBST(LIBPULSE_LIBS)
+fi
 
 dnl Check for plugin support headers and libraries.
 dnl FIXME: use unstable

@@ -1,3 +1,47 @@
+  - Add: More JTreg tests added:
+           EmergencySoundbank
+           SoftFilter
+           AudioFloatConverter.ToFloatArray (improved)
+  - Change: SoftReverb optimized, about 2 times faster.
+  - Fix: ModelByteBuffer.skip called super.skip
+         instead to call to RandomAccessFile directly.
+         JTreg tests added: ModelByteBuffer/RandomFileInputStream/*.java
+  - Fix: ModelByteBuffer.len was being modified in inner
+         class RandomFileInputStream. The variable was made final
+         and RandomFileInputStream.read methods where fixed.
+  - Fix: ArrayOutOfException error in ModelInstrument.getKeys(),
+         Keys array was to small, it couldn't
+         hold all possible midi notes (0..127).
+
+Version 1.0.1
+  - Fix: Created dummy SourceDataline so that following 
+         jtreg test can be tested without using
+         a real Audio Device SourceDataLine.  
+            javax/sound/midi/Gervill/SoftAudioSynthesizer/Open.java
+            javax/sound/midi/Gervill/SoftSynthesizer/GetLatency.java
+            javax/sound/midi/Gervill/SoftSynthesizer/GetReceiver.java
+            javax/sound/midi/Gervill/SoftSynthesizer/GetReceiver2.java
+            javax/sound/midi/Gervill/SoftSynthesizer/GetReceivers.java
+            javax/sound/midi/Gervill/SoftSynthesizer/GetTransmitter.java
+            javax/sound/midi/Gervill/SoftSynthesizer/GetTransmitters.java
+            javax/sound/midi/Gervill/SoftSynthesizer/ImplicitOpenClose.java
+            javax/sound/midi/Gervill/SoftSynthesizer/Open.java
+  - Fix: Make open SoftSynthesizer garbage-collectable
+         when user don't have reference to it and it is not
+         producing any sound.
+  - Fix: SoftReverb silent detection improved.
+  - Added: SoftSynthesizer.getPropertyInfo returns
+           current properties values if it is open.        
+  - Fix: Restrict input values in SoftChannel to 7 and 14 bit in these methods:
+            noteOn 
+            noteOff
+            setPolyPressure
+            setChannelPressure
+            controlChange
+            programChange(program)
+            programChange(bank, program)
+            setPitchBend
+  - Fix: Store generated soundbank to disk for faster future use.         
   - Cleanup: Make inner classes static 
               AudioFloatFormatConverter.AudioFloatFormatConverterInputStream
               AudioFloatFormatConverter.AudioFloatInputStreamChannelMixer

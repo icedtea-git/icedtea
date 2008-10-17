@@ -22,6 +22,7 @@ install-sh
 javac
 javap
 gcjwebplugin.so
+jni-common.o
 IcedTeaPlugin.o
 IcedTeaPlugin.so
 extra-source-files.txt
@@ -440,4 +441,14 @@ rt/javax/net/ssl/X509KeyManager.java
 rt/javax/net/ssl/X509TrustManager.java
 rt/java/io/
 rt/sun/awt
+rt/netscape/javascript/JSException.java
+rt/netscape/javascript/JSObject.java
+rt/netscape/javascript/JSProxy.java
+rt/netscape/javascript/JSRunnable.java
+rt/netscape/javascript/JSUtil.java
 generated/sun/awt/X11/generator/sizer.32.orig
+pulseaudio/bin
+pulseaudio/.*\.o
+pulseaudio/src/native/org_.*.h
+pulseaudio/.*jar
+pulse-java.jar

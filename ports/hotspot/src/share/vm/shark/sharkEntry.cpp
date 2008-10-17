@@ -76,6 +76,19 @@ void SharkEntry::print_pd_statistics(address start, address limit) const
   assert (instr == 0x7c0802a6, "expecting 'mflr r0'");
 
   instr = *(pc++);
+  bool has_locals = (instr == NOT_LP64(0x93e1fffc) LP64_ONLY(0xf9e1fffc));
+  if (has_locals) {
+    // 0xd04f3a60:     mflr    r0
+    // 0xd04f3a64:     stw     r31,-4(r1)
+    // 0xd04f3a68:     stw     r0,4(r1)
+    // 0xd04f3a6c:     stwu    r1,-112(r1)
+    // 0xd04f3a70:     mr      r31,r1
+    // 0xd04f3a74:     stw     r14,104(r31)
+    //  ...
+    // 0xd04f3ab4:     stw     r30,40(r31)
+    return;
+  }
+
   assert (instr == NOT_LP64(0x90010004) LP64_ONLY(0xf8010004),
           "expecting st" NOT_LP64("w") LP64_ONLY("d") " r0,4(r1)");
 
@@ -128,8 +141,6 @@ void SharkEntry::print_pd_statistics(address start, address limit) const
       tty->print(", 1 register");
     else
       tty->print(", %d registers", num_registers);
-    if (num_registers >= 19)
-      tty->print("!");
   }
 #endif // PPC
 }

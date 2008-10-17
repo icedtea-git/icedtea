@@ -26,17 +26,75 @@
 #include "incls/_precompiled.incl"
 #include "incls/_sharkBlock.cpp.incl"
 #include "ciArrayKlass.hpp" // XXX fuck you makeDeps
+#include "ciObjArrayKlass.hpp" // XXX likewise
 
 using namespace llvm;
 
+void SharkBlock::enter(SharkBlock* predecessor, bool is_exception)
+{
+  // This block requires phis:
+  //  - if it is entered more than once
+  //  - if it is an exception handler, because in which
+  //    case we assume it's entered more than once.
+  //  - if the predecessor will be compiled after this
+  //    block, in which case we can't simple propagate
+  //    the state forward.
+  if (!needs_phis() &&
+      (entered() ||
+       is_exception ||
+       (predecessor && predecessor->index() >= index())))
+    _needs_phis = true;
+
+  // Recurse into the tree
+  if (!entered()) {
+    _entered = true;
+
+    if (!has_trap()) {
+      for (int i = 0; i < num_successors(); i++) {
+        successor(i)->enter(this, false);
+      }
+      for (int i = 0; i < num_exceptions(); i++) {
+        exception(i)->enter(this, true);
+      }
+    }
+  }
+}
+  
 void SharkBlock::initialize()
 {
   char name[28];
   snprintf(name, sizeof(name),
            "bci_%d%s",
-           ciblock()->start(),
-           ciblock()->is_private_copy() ? "_private_copy" : "");
+           start(), is_private_copy() ? "_private_copy" : "");
   _entry_block = function()->CreateBlock(name);
+}
+
+void SharkBlock::acquire_method_lock()
+{
+  Value *object;
+  if (target()->is_static()) {
+    SharkConstantPool constants(this);
+    object = constants.java_mirror();
+  }
+  else {
+    object = local(0)->jobject_value();
+  }
+  iter()->force_bci(start()); // for the decache
+  function()->monitor(0)->acquire(this, object);
+  check_pending_exception(false);
+}
+
+void SharkBlock::release_method_lock()
+{
+  function()->monitor(0)->release(this);
+
+  // We neither need nor want to check for pending exceptions here.
+  // This method is only called by handle_return, which copes with
+  // them implicitly:
+  //  - if a value is being returned then we just carry on as normal;
+  //    the caller will see the pending exception and handle it.
+  //  - if an exception is being thrown then that exception takes
+  //    priority and ours will be ignored.
 }
 
 void SharkBlock::parse()
@@ -46,25 +104,30 @@ void SharkBlock::parse()
 
   builder()->SetInsertPoint(entry_block());
 
-  if (never_entered()) {
-    NOT_PRODUCT(warning("skipping unentered block"));
-    builder()->CreateShouldNotReachHere(__FILE__, __LINE__);
-    builder()->CreateUnreachable();
-    return;
-  }
-
-  if (ciblock()->has_trap()) {
-    current_state()->decache();
-    builder()->CreateDump(LLVMValue::jint_constant(start()));
-    builder()->CreateUnimplemented(__FILE__, __LINE__);
-    builder()->CreateUnreachable();
+  if (has_trap()) {
+    current_state()->decache_for_trap();
+    builder()->CreateCall2(
+      SharkRuntime::uncommon_trap(),
+      thread(),
+      LLVMValue::jint_constant(trap_index()));
+    builder()->CreateRetVoid();
     return;
   }
 
   iter()->reset_to_bci(start());
+  bool successors_done = false;
   while (iter()->next() != ciBytecodeStream::EOBC() && bci() < limit()) {
     NOT_PRODUCT(a = b = c = d = NULL);    
 
+    if (TraceBytecodes) {
+      Value *tos, *tos2;
+      SharkBytecodeTracer::decode(builder(), current_state(), &tos, &tos2);
+      call_vm(
+        SharkRuntime::trace_bytecode(),
+        LLVMValue::jint_constant(bci()),
+        tos, tos2);
+    }
+    
     if (SharkTraceBytecodes)
       tty->print_cr("%4d: %s", bci(), Bytecodes::name(bc()));
     
@@ -99,13 +162,16 @@ void SharkBlock::parse()
         break;
 
       case Bytecodes::_tableswitch:
-        len = iter()->get_int_table(2) - iter()->get_int_table(1) + 1;
-        for (i = 0; i < len + 3; i++) {
-          if (i != 1 && i != 2) {
-            if (iter()->get_dest_table(i) <= bci()) {
-              add_safepoint();
-              break;
-            }
+      case Bytecodes::_lookupswitch:
+        if (switch_default_dest() <= bci()) {
+          add_safepoint();
+          break;
+        }
+        len = switch_table_length();
+        for (i = 0; i < len; i++) {
+          if (switch_dest(i) <= bci()) {
+            add_safepoint();
+            break;
           }
         }
         break;
@@ -302,130 +368,68 @@ void SharkBlock::parse()
       break;
 
     case Bytecodes::_pop:
-      pop_and_assert_one_word();
+      xpop();
       break;
     case Bytecodes::_pop2:
-      if (stack(0)->is_two_word()) {
-        pop_and_assert_two_word();
-      }
-      else {
-        pop_and_assert_one_word();
-        pop_and_assert_one_word();
-      }
+      xpop();
+      xpop();
       break;
     case Bytecodes::_swap: 
-      a = pop_and_assert_one_word();
-      b = pop_and_assert_one_word();
-      push(a);
-      push(b);
+      a = xpop();
+      b = xpop();
+      xpush(a);
+      xpush(b);
       break;  
     case Bytecodes::_dup:
-      a = pop_and_assert_one_word();
-      push(a);
-      push(a);
+      a = xpop();
+      xpush(a);
+      xpush(a);
       break;
     case Bytecodes::_dup_x1: 
-      a = pop_and_assert_one_word();
-      b = pop_and_assert_one_word();
-      push(a);
-      push(b);
-      push(a);
+      a = xpop();
+      b = xpop();
+      xpush(a);
+      xpush(b);
+      xpush(a);
       break;
     case Bytecodes::_dup_x2: 
-      if (stack(1)->is_two_word()) {
-        a = pop_and_assert_one_word();
-        b = pop_and_assert_two_word();
-        push(a);
-        push(b);
-        push(a);
-      }
-      else {
-        a = pop_and_assert_one_word();
-        b = pop_and_assert_one_word();
-        c = pop_and_assert_one_word();
-        push(a);
-        push(c);
-        push(b);
-        push(a);
-      }
+      a = xpop();
+      b = xpop();
+      c = xpop();
+      xpush(a);
+      xpush(c);
+      xpush(b);
+      xpush(a);
       break;
     case Bytecodes::_dup2: 
-      if (stack(0)->is_two_word()) {
-        a = pop_and_assert_two_word();
-        push(a);
-        push(a);
-      }
-      else {
-        a = pop_and_assert_one_word();
-        b = pop_and_assert_one_word();
-        push(b);
-        push(a);
-        push(b);
-        push(a);
-      }
+      a = xpop();
+      b = xpop();
+      xpush(b);
+      xpush(a);
+      xpush(b);
+      xpush(a);
       break;
     case Bytecodes::_dup2_x1:
-      if (stack(0)->is_two_word()) {
-        a = pop_and_assert_two_word();
-        b = pop_and_assert_one_word();
-        push(a);
-        push(b);
-        push(a);
-      }
-      else {
-        a = pop_and_assert_one_word();
-        b = pop_and_assert_one_word();
-        c = pop_and_assert_one_word();
-        push(b);
-        push(a);
-        push(c);
-        push(b);
-        push(a);
-      }
+      a = xpop();
+      b = xpop();
+      c = xpop();
+      xpush(b);
+      xpush(a);
+      xpush(c);
+      xpush(b);
+      xpush(a);
       break;
     case Bytecodes::_dup2_x2:
-      if (stack(0)->is_one_word()) {
-        if (stack(2)->is_one_word()) {
-          a = pop_and_assert_one_word();
-          b = pop_and_assert_one_word();
-          c = pop_and_assert_one_word();
-          d = pop_and_assert_one_word();
-          push(b);
-          push(a);
-          push(d);
-          push(c);
-          push(b);
-          push(a);
-        }
-        else {
-          a = pop_and_assert_one_word();
-          b = pop_and_assert_one_word();
-          c = pop_and_assert_two_word();
-          push(b);
-          push(a);
-          push(c);
-          push(b);
-          push(a);
-        }
-      }
-      else {
-        if (stack(1)->is_one_word()) {
-          a = pop_and_assert_two_word();
-          b = pop_and_assert_one_word();
-          c = pop_and_assert_one_word();
-          push(a);
-          push(c);
-          push(b);
-          push(a);
-        }
-        else {
-          a = pop_and_assert_two_word();
-          b = pop_and_assert_two_word();
-          push(a);
-          push(b);
-          push(a);
-        }
-      }
+      a = xpop();
+      b = xpop();
+      c = xpop();
+      d = xpop();
+      xpush(b);
+      xpush(a);
+      xpush(d);
+      xpush(c);
+      xpush(b);
+      xpush(a);
       break;
 
     case Bytecodes::_arraylength:
@@ -672,6 +676,19 @@ void SharkBlock::parse()
       do_lcmp();
       break;
 
+    case Bytecodes::_fcmpl:
+      do_fcmp(false, false);
+      break;
+    case Bytecodes::_fcmpg:
+      do_fcmp(false, true);
+      break;
+    case Bytecodes::_dcmpl:
+      do_fcmp(true, false);
+      break;
+    case Bytecodes::_dcmpg:
+      do_fcmp(true, true);
+      break;
+
     case Bytecodes::_i2l:
       push(SharkValue::create_jlong(
         builder()->CreateIntCast(
@@ -779,12 +796,23 @@ void SharkBlock::parse()
       break;
 
     case Bytecodes::_athrow:
-      builder()->CreateUnimplemented(__FILE__, __LINE__);
-      builder()->CreateUnreachable();
+      do_athrow();
       break;
 
     case Bytecodes::_goto:
     case Bytecodes::_goto_w:
+      builder()->CreateBr(successor(ciTypeFlow::GOTO_TARGET)->entry_block());
+      break;
+
+    case Bytecodes::_jsr:
+    case Bytecodes::_jsr_w:
+      push(SharkValue::create_returnAddress(iter()->next_bci()));
+      builder()->CreateBr(successor(ciTypeFlow::GOTO_TARGET)->entry_block());
+      break;
+
+    case Bytecodes::_ret:
+      assert(local(iter()->get_index())->returnAddress_value() ==
+             successor(ciTypeFlow::GOTO_TARGET)->start(), "should be");
       builder()->CreateBr(successor(ciTypeFlow::GOTO_TARGET)->entry_block());
       break;
 
@@ -838,7 +866,9 @@ void SharkBlock::parse()
       break;
 
     case Bytecodes::_tableswitch:
-      do_tableswitch();
+    case Bytecodes::_lookupswitch:
+      do_switch();
+      successors_done = true;
       break;
 
     case Bytecodes::_invokestatic:
@@ -859,6 +889,12 @@ void SharkBlock::parse()
     case Bytecodes::_newarray:
       do_newarray();
       break;
+    case Bytecodes::_anewarray:
+      do_anewarray();
+      break;
+    case Bytecodes::_multianewarray:
+      do_multianewarray();
+      break;
 
     case Bytecodes::_monitorenter:
       do_monitorenter();
@@ -868,25 +904,18 @@ void SharkBlock::parse()
       break;
 
     default:
-      {
-        const char *code = Bytecodes::name(bc());
-        int buflen = 19 + strlen(code) + 1;
-        char *buf = (char *) function()->env()->arena()->Amalloc(buflen);
-        snprintf(buf, buflen, "Unhandled bytecode %s", code);
-        record_method_not_compilable(buf);
-      }
+      ShouldNotReachHere();
     }
-
-    if (failing())
-      return;
   }
 
   if (falls_through()) {
     builder()->CreateBr(successor(ciTypeFlow::FALL_THROUGH)->entry_block());
   }
 
-  for (int i = 0; i < num_successors(); i++)
-    successor(i)->add_incoming(current_state());
+  if (!successors_done) {
+    for (int i = 0; i < num_successors(); i++)
+      successor(i)->add_incoming(current_state());
+  }
 }
 
 SharkBlock* SharkBlock::bci_successor(int bci) const
@@ -910,6 +939,9 @@ void SharkBlock::check_zero(SharkValue *value)
 
   Value *a, *b;
   switch (value->basic_type()) {
+  case T_BYTE:
+  case T_CHAR:
+  case T_SHORT:
   case T_INT:
     a = value->jint_value();
     b = LLVMValue::jint_constant(0);
@@ -924,14 +956,25 @@ void SharkBlock::check_zero(SharkValue *value)
     b = LLVMValue::LLVMValue::null();
     break;
   default:
+    tty->print_cr("Unhandled type %s", type2name(value->basic_type()));
     ShouldNotReachHere();
   }
 
   builder()->CreateCondBr(builder()->CreateICmpNE(a, b), not_zero, zero);
 
   builder()->SetInsertPoint(zero);
-  builder()->CreateUnimplemented(__FILE__, __LINE__);
-  builder()->CreateUnreachable();
+  SharkTrackingState *saved_state = current_state()->copy();
+  if (value->is_jobject()) {
+    call_vm_nocheck(
+      SharkRuntime::throw_NullPointerException(),
+      LLVMValue::intptr_constant((intptr_t) __FILE__),
+      LLVMValue::jint_constant(__LINE__));
+  }
+  else {
+    builder()->CreateUnimplemented(__FILE__, __LINE__);
+  } 
+  handle_exception(function()->CreateGetPendingException());
+  set_current_state(saved_state);  
 
   builder()->SetInsertPoint(not_zero);
 
@@ -944,39 +987,130 @@ void SharkBlock::check_bounds(SharkValue* array, SharkValue* index)
   BasicBlock *in_bounds     = function()->CreateBlock("in_bounds");
 
   Value *length = builder()->CreateArrayLength(array->jarray_value());
+  // we use an unsigned comparison to catch negative values
   builder()->CreateCondBr(
-    builder()->CreateICmpSLT(index->jint_value(), length),
+    builder()->CreateICmpULT(index->jint_value(), length),
     in_bounds, out_of_bounds);
 
   builder()->SetInsertPoint(out_of_bounds);
-  builder()->CreateUnimplemented(__FILE__, __LINE__);
-  builder()->CreateUnreachable();
+  SharkTrackingState *saved_state = current_state()->copy();
+  call_vm_nocheck(
+    SharkRuntime::throw_ArrayIndexOutOfBoundsException(),
+    LLVMValue::intptr_constant((intptr_t) __FILE__),
+    LLVMValue::jint_constant(__LINE__),
+    index->jint_value());
+  handle_exception(function()->CreateGetPendingException());
+  set_current_state(saved_state);  
 
   builder()->SetInsertPoint(in_bounds);
 }
 
-void SharkBlock::check_pending_exception()
+void SharkBlock::check_pending_exception(bool attempt_catch)
 {
   BasicBlock *exception    = function()->CreateBlock("exception");
   BasicBlock *no_exception = function()->CreateBlock("no_exception");
 
-  Value *pending_exception = builder()->CreateValueOfStructEntry(
-    thread(), Thread::pending_exception_offset(),
-    SharkType::jobject_type(), "pending_exception");
+  Value *pending_exception_addr = function()->pending_exception_address();
+  Value *pending_exception = builder()->CreateLoad(
+    pending_exception_addr, "pending_exception");
 
   builder()->CreateCondBr(
     builder()->CreateICmpEQ(pending_exception, LLVMValue::null()),
     no_exception, exception);
 
   builder()->SetInsertPoint(exception);
-  builder()->CreateUnimplemented(__FILE__, __LINE__);
-  builder()->CreateUnreachable();
+  builder()->CreateStore(LLVMValue::null(), pending_exception_addr);
+  SharkTrackingState *saved_state = current_state()->copy();
+  handle_exception(pending_exception, attempt_catch);
+  set_current_state(saved_state);
 
   builder()->SetInsertPoint(no_exception);
 }
 
+void SharkBlock::handle_exception(Value* exception, bool attempt_catch)
+{
+  if (attempt_catch && num_exceptions() != 0) {
+    // Clear the stack and push the exception onto it.
+    // We do this now to protect it across the VM call
+    // we may be about to make.
+    while (xstack_depth())
+      pop();
+    push(SharkValue::create_jobject(exception));
+
+    int *indexes = NEW_RESOURCE_ARRAY(int, num_exceptions());
+    bool has_catch_all = false;
+
+    ciExceptionHandlerStream eh_iter(target(), bci());
+    for (int i = 0; i < num_exceptions(); i++, eh_iter.next()) {
+      ciExceptionHandler* handler = eh_iter.handler();
+
+      if (handler->is_catch_all()) {
+        assert(i == num_exceptions() - 1, "catch-all should be last");
+        has_catch_all = true;
+      }
+      else {
+        indexes[i] = handler->catch_klass_index();
+      }
+    }
+
+    int num_options = num_exceptions();
+    if (has_catch_all)
+      num_options--;
+
+    // Drop into the runtime if there are non-catch-all options
+    if (num_options > 0) {
+      Value *options = builder()->CreateAlloca(
+        ArrayType::get(SharkType::jint_type(), num_options),
+        LLVMValue::jint_constant(1));
+
+      for (int i = 0; i < num_options; i++)
+        builder()->CreateStore(
+          LLVMValue::jint_constant(indexes[i]),
+          builder()->CreateStructGEP(options, i));
+
+      Value *index = call_vm_nocheck(
+        SharkRuntime::find_exception_handler(),
+        builder()->CreateStructGEP(options, 0),
+        LLVMValue::jint_constant(num_options));
+      check_pending_exception(false);
+
+      // Jump to the exception handler, if found
+      BasicBlock *no_handler = function()->CreateBlock("no_handler");
+      SwitchInst *switchinst = builder()->CreateSwitch(
+        index, no_handler, num_options);
+
+      for (int i = 0; i < num_options; i++) {
+        SharkBlock* handler = this->exception(i);
+
+        switchinst->addCase(
+          LLVMValue::jint_constant(i),
+          handler->entry_block());
+
+        handler->add_incoming(current_state());
+      }
+
+      builder()->SetInsertPoint(no_handler);
+    }
+
+    // No specific handler exists, but maybe there's a catch-all
+    if (has_catch_all) {
+      SharkBlock* handler = this->exception(num_options);
+
+      builder()->CreateBr(handler->entry_block());
+      handler->add_incoming(current_state());
+      return;
+    }
+  }
+
+  // No exception handler was found; unwind and return
+  handle_return(T_VOID, exception);
+}
+
 void SharkBlock::add_safepoint()
 {
+  BasicBlock *orig_block = builder()->GetInsertBlock();
+  SharkState *orig_state = current_state()->copy();
+
   BasicBlock *do_safepoint = function()->CreateBlock("do_safepoint");
   BasicBlock *safepointed  = function()->CreateBlock("safepointed");
 
@@ -994,42 +1128,80 @@ void SharkBlock::add_safepoint()
     do_safepoint, safepointed);
 
   builder()->SetInsertPoint(do_safepoint);
-  // XXX decache_state
-  // XXX call whatever
-  // XXX cache_state
-  // XXX  THEN MERGE (need phis...)
-  // XXX (if it's call_VM then call_VM should do the decache/cache)
-  // XXX shouldn't ever need a fixup_after_potential_safepoint
-  // XXX since anything that might safepoint needs a decache/cache
-  builder()->CreateUnimplemented(__FILE__, __LINE__);
-  builder()->CreateUnreachable();
+  call_vm(SharkRuntime::safepoint());
+  BasicBlock *safepointed_block = builder()->GetInsertBlock();  
+  builder()->CreateBr(safepointed);
 
   builder()->SetInsertPoint(safepointed);
+  current_state()->merge(orig_state, orig_block, safepointed_block);
 }
 
-CallInst* SharkBlock::call_vm_base(Constant* callee,
-                                   Value**   args_start,
-                                   Value**   args_end)
+void SharkBlock::handle_return(BasicType type, Value* exception)
 {
-  // Decache the state
-  current_state()->decache();
+  assert (exception == NULL || type == T_VOID, "exception OR result, please");
 
-  // Set up the Java frame anchor  
-  function()->set_last_Java_frame();
+  if (exception)
+    builder()->CreateStore(exception, function()->exception_slot());
 
-  // Make the call
-  CallInst *result = builder()->CreateCall(callee, args_start, args_end);
+  release_locked_monitors();
+  if (target()->is_synchronized())
+    release_method_lock();
+  
+  if (exception) {
+    exception = builder()->CreateLoad(function()->exception_slot());
+    builder()->CreateStore(exception, function()->pending_exception_address());
+  }
 
-  // Clear the frame anchor
-  function()->reset_last_Java_frame();
+  Value *result_addr = function()->CreatePopFrame(type2size[type]);
+  if (type != T_VOID) {
+    SharkValue *result = pop();
 
-  // Recache the state
-  current_state()->cache();
+#ifdef ASSERT
+    switch (result->basic_type()) {
+    case T_BOOLEAN:
+    case T_BYTE:
+    case T_CHAR:
+    case T_SHORT:
+      assert(type == T_INT, "type mismatch");
+      break;
 
-  // Check for pending exceptions  
-  check_pending_exception();
+    case T_ARRAY:
+      assert(type == T_OBJECT, "type mismatch");
+      break;
 
-  return result;
+    default:
+      assert(result->basic_type() == type, "type mismatch");
+    }
+#endif // ASSERT
+
+    builder()->CreateStore(
+      result->generic_value(),
+      builder()->CreateIntToPtr(
+        result_addr,
+        PointerType::getUnqual(SharkType::to_stackType(type))));
+  }
+
+  builder()->CreateRetVoid();
+}
+
+void SharkBlock::release_locked_monitors()
+{
+  int base = target()->is_synchronized();
+  for (int i = function()->monitor_count() - 1; i >= base; i--) {
+    BasicBlock *locked   = function()->CreateBlock("locked");
+    BasicBlock *unlocked = function()->CreateBlock("unlocked");
+
+    Value *object = function()->monitor(i)->object();
+    builder()->CreateCondBr(
+      builder()->CreateICmpNE(object, LLVMValue::null()),
+      locked, unlocked);
+    
+    builder()->SetInsertPoint(locked);
+    builder()->CreateUnimplemented(__FILE__, __LINE__);
+    builder()->CreateUnreachable();
+
+    builder()->SetInsertPoint(unlocked);
+  }
 }
 
 void SharkBlock::do_ldc()
@@ -1038,8 +1210,7 @@ void SharkBlock::do_ldc()
   if (value == NULL) {
     SharkConstantPool constants(this);
 
-    BasicBlock *string     = function()->CreateBlock("string");
-    BasicBlock *klass      = function()->CreateBlock("klass");
+    BasicBlock *resolved   = function()->CreateBlock("resolved");
     BasicBlock *unresolved = function()->CreateBlock("unresolved");
     BasicBlock *unknown    = function()->CreateBlock("unknown");
     BasicBlock *done       = function()->CreateBlock("done");
@@ -1049,9 +1220,9 @@ void SharkBlock::do_ldc()
       unknown, 5);
 
     switchinst->addCase(
-      LLVMValue::jbyte_constant(JVM_CONSTANT_String), string);
+      LLVMValue::jbyte_constant(JVM_CONSTANT_String), resolved);
     switchinst->addCase(
-      LLVMValue::jbyte_constant(JVM_CONSTANT_Class), klass);
+      LLVMValue::jbyte_constant(JVM_CONSTANT_Class), resolved);
     switchinst->addCase(
       LLVMValue::jbyte_constant(JVM_CONSTANT_UnresolvedString), unresolved);
     switchinst->addCase(
@@ -1060,13 +1231,8 @@ void SharkBlock::do_ldc()
       LLVMValue::jbyte_constant(JVM_CONSTANT_UnresolvedClassInError),
       unresolved);
 
-    builder()->SetInsertPoint(string);
-    Value *string_value = constants.object_at(iter()->get_constant_index());
-    builder()->CreateBr(done);
-
-    builder()->SetInsertPoint(klass);
-    builder()->CreateUnimplemented(__FILE__, __LINE__);
-    Value *klass_value = LLVMValue::null();
+    builder()->SetInsertPoint(resolved);
+    Value *resolved_value = constants.object_at(iter()->get_constant_index());
     builder()->CreateBr(done);
 
     builder()->SetInsertPoint(unresolved);
@@ -1080,8 +1246,7 @@ void SharkBlock::do_ldc()
 
     builder()->SetInsertPoint(done);
     PHINode *phi = builder()->CreatePHI(SharkType::jobject_type(), "constant");
-    phi->addIncoming(string_value, string);
-    phi->addIncoming(klass_value, klass);
+    phi->addIncoming(resolved_value, resolved);
     phi->addIncoming(unresolved_value, unresolved);
     value = SharkValue::create_jobject(phi);
   }
@@ -1103,7 +1268,9 @@ void SharkBlock::do_aload(BasicType basic_type)
 
   assert(array->type()->is_array_klass(), "should be");
   ciType *element_type = ((ciArrayKlass *) array->type())->element_type();
-  assert(element_type->basic_type() == basic_type, "type mismatch");
+  assert((element_type->basic_type() == T_BOOLEAN && basic_type == T_BYTE) ||
+         (element_type->basic_type() == T_ARRAY && basic_type == T_OBJECT) ||
+         (element_type->basic_type() == basic_type), "type mismatch");
 
   check_null(array);
   check_bounds(array, index);
@@ -1117,7 +1284,6 @@ void SharkBlock::do_aload(BasicType basic_type)
     value = builder()->CreateIntCast(value, stack_type, basic_type != T_CHAR);
 
   switch (basic_type) {
-  case T_BOOLEAN:
   case T_BYTE:
   case T_CHAR:
   case T_SHORT:
@@ -1138,7 +1304,7 @@ void SharkBlock::do_aload(BasicType basic_type)
     break;
     
   case T_OBJECT:
-    push(SharkValue::create_jobject(value));
+    push(SharkValue::create_generic(element_type, value));
     break;
 
   default:
@@ -1155,7 +1321,9 @@ void SharkBlock::do_astore(BasicType basic_type)
 
   assert(array->type()->is_array_klass(), "should be");
   ciType *element_type = ((ciArrayKlass *) array->type())->element_type();
-  assert(element_type->basic_type() == basic_type, "type mismatch");
+  assert((element_type->basic_type() == T_BOOLEAN && basic_type == T_BYTE) ||
+         (element_type->basic_type() == T_ARRAY && basic_type == T_OBJECT) ||
+         (element_type->basic_type() == basic_type), "type mismatch");
 
   check_null(array);
   check_bounds(array, index);
@@ -1338,12 +1506,8 @@ void SharkBlock::do_field_access(bool is_get, bool is_field)
       if (!field->type()->is_primitive_type())
         builder()->CreateUpdateBarrierSet(oopDesc::bs(), addr);
 
-      if (field->is_volatile()) {
+      if (field->is_volatile())
         builder()->CreateMemoryBarrier(SharkBuilder::BARRIER_STORELOAD);
-#ifdef PPC
-        record_method_not_compilable("Missing memory barrier");
-#endif // PPC
-      }
     }
   }
 
@@ -1383,43 +1547,51 @@ void SharkBlock::do_lcmp()
   push(SharkValue::create_jint(result));
 }
 
-void SharkBlock::do_return(BasicType basic_type)
+void SharkBlock::do_fcmp(bool is_double, bool unordered_is_greater)
 {
-  add_safepoint();
-
-  if (target()->is_synchronized())
-    function()->monitor(0)->release();
-
-  Value *result_addr = function()->CreatePopFrame(type2size[basic_type]);
-  if (basic_type != T_VOID) {
-    SharkValue *result = pop();
-
-#ifdef ASSERT
-    switch (result->basic_type()) {
-    case T_BOOLEAN:
-    case T_BYTE:
-    case T_CHAR:
-    case T_SHORT:
-      assert(basic_type == T_INT, "type mismatch");
-      break;
-
-    case T_ARRAY:
-      assert(basic_type == T_OBJECT, "type mismatch");
-      break;
-
-    default:
-      assert(result->basic_type() == basic_type, "type mismatch");
-    }
-#endif // ASSERT
-
-    builder()->CreateStore(
-      result->generic_value(),
-      builder()->CreateIntToPtr(
-        result_addr,
-        PointerType::getUnqual(SharkType::to_stackType(basic_type))));
+  Value *a, *b;
+  if (is_double) {
+    b = pop()->jdouble_value();
+    a = pop()->jdouble_value();
+  }
+  else {
+    b = pop()->jfloat_value();
+    a = pop()->jfloat_value();
   }
 
-  builder()->CreateRetVoid();
+  BasicBlock *ordered = function()->CreateBlock("ordered");
+  BasicBlock *ge      = function()->CreateBlock("fcmp_ge");
+  BasicBlock *lt      = function()->CreateBlock("fcmp_lt");
+  BasicBlock *eq      = function()->CreateBlock("fcmp_eq");
+  BasicBlock *gt      = function()->CreateBlock("fcmp_gt");
+  BasicBlock *done    = function()->CreateBlock("done");
+
+  builder()->CreateCondBr(
+    builder()->CreateFCmpUNO(a, b),
+    unordered_is_greater ? gt : lt, ordered);
+
+  builder()->SetInsertPoint(ordered);
+  builder()->CreateCondBr(builder()->CreateFCmpULT(a, b), lt, ge);
+
+  builder()->SetInsertPoint(ge);
+  builder()->CreateCondBr(builder()->CreateFCmpUGT(a, b), gt, eq);
+
+  builder()->SetInsertPoint(lt);
+  builder()->CreateBr(done);
+
+  builder()->SetInsertPoint(gt);
+  builder()->CreateBr(done);
+
+  builder()->SetInsertPoint(eq);
+  builder()->CreateBr(done);
+
+  builder()->SetInsertPoint(done);
+  PHINode *result = builder()->CreatePHI(SharkType::jint_type(), "result");
+  result->addIncoming(LLVMValue::jint_constant(-1), lt);
+  result->addIncoming(LLVMValue::jint_constant(0),  eq);
+  result->addIncoming(LLVMValue::jint_constant(1),  gt);
+
+  push(SharkValue::create_jint(result));
 }
 
 void SharkBlock::do_if(ICmpInst::Predicate p, SharkValue *b, SharkValue *a)
@@ -1440,21 +1612,306 @@ void SharkBlock::do_if(ICmpInst::Predicate p, SharkValue *b, SharkValue *a)
     successor(ciTypeFlow::IF_NOT_TAKEN)->entry_block());
 }
 
-void SharkBlock::do_tableswitch()
+int SharkBlock::switch_default_dest()
 {
-  int low  = iter()->get_int_table(1);
-  int high = iter()->get_int_table(2);
-  int len  = high - low + 1;
+  return iter()->get_dest_table(0);
+}
 
+int SharkBlock::switch_table_length()
+{
+  switch(bc()) {
+  case Bytecodes::_tableswitch:
+    return iter()->get_int_table(2) - iter()->get_int_table(1) + 1;
+
+  case Bytecodes::_lookupswitch:
+    return iter()->get_int_table(1);
+
+  default:
+    ShouldNotReachHere();
+  } 
+}
+
+int SharkBlock::switch_key(int i)
+{
+  switch(bc()) {
+  case Bytecodes::_tableswitch:
+    return iter()->get_int_table(1) + i;
+
+  case Bytecodes::_lookupswitch:
+    return iter()->get_int_table(2 + 2 * i);
+
+  default:
+    ShouldNotReachHere();
+  } 
+}
+
+int SharkBlock::switch_dest(int i)
+{
+  switch(bc()) {
+  case Bytecodes::_tableswitch:
+    return iter()->get_dest_table(i + 3);
+
+  case Bytecodes::_lookupswitch:
+    return iter()->get_dest_table(2 + 2 * i + 1);
+
+  default:
+    ShouldNotReachHere();
+  } 
+}
+
+void SharkBlock::do_switch()
+{
+  int len = switch_table_length();
+
+  SharkBlock *dest_block = successor(ciTypeFlow::SWITCH_DEFAULT);
   SwitchInst *switchinst = builder()->CreateSwitch(
-    pop()->jint_value(),
-    successor(ciTypeFlow::SWITCH_DEFAULT)->entry_block(),
-    len);
+    pop()->jint_value(), dest_block->entry_block(), len);
+  dest_block->add_incoming(current_state());
 
   for (int i = 0; i < len; i++) {
-    switchinst->addCase(
-      LLVMValue::jint_constant(i + low),
-      bci_successor(iter()->get_dest_table(i + 3))->entry_block());
+    int dest_bci = switch_dest(i);
+    if (dest_bci != switch_default_dest()) {
+      dest_block = bci_successor(dest_bci);
+      switchinst->addCase(
+        LLVMValue::jint_constant(switch_key(i)),
+        dest_block->entry_block());
+      dest_block->add_incoming(current_state());      
+    }
+  }
+}
+
+Value* SharkBlock::get_basic_callee(Value *cache)
+{
+  return builder()->CreateValueOfStructEntry(
+    cache, ConstantPoolCacheEntry::f1_offset(),
+    SharkType::methodOop_type(),
+    "callee");
+}
+
+Value* SharkBlock::get_virtual_callee(Value *cache, SharkValue *receiver)
+{
+  BasicBlock *final      = function()->CreateBlock("final");
+  BasicBlock *not_final  = function()->CreateBlock("not_final");
+  BasicBlock *got_callee = function()->CreateBlock("got_callee");
+
+  Value *flags = builder()->CreateValueOfStructEntry(
+    cache, ConstantPoolCacheEntry::flags_offset(),
+    SharkType::intptr_type(),
+    "flags");
+
+  const int mask = 1 << ConstantPoolCacheEntry::vfinalMethod;
+  builder()->CreateCondBr(
+    builder()->CreateICmpNE(
+      builder()->CreateAnd(flags, LLVMValue::intptr_constant(mask)),
+      LLVMValue::intptr_constant(0)),
+    final, not_final);
+
+  // For final methods f2 is the actual address of the method
+  builder()->SetInsertPoint(final);
+  Value *final_callee = builder()->CreateValueOfStructEntry(
+    cache, ConstantPoolCacheEntry::f2_offset(),
+    SharkType::methodOop_type(),
+    "final_callee");
+  builder()->CreateBr(got_callee);
+
+  // For non-final methods f2 is the index into the vtable
+  builder()->SetInsertPoint(not_final);
+  Value *klass = builder()->CreateValueOfStructEntry(
+    receiver->jobject_value(),
+    in_ByteSize(oopDesc::klass_offset_in_bytes()),
+    SharkType::jobject_type(),
+    "klass");
+
+  Value *index = builder()->CreateValueOfStructEntry(
+    cache, ConstantPoolCacheEntry::f2_offset(),
+    SharkType::intptr_type(),
+    "index");
+
+  Value *nonfinal_callee = builder()->CreateLoad(
+    builder()->CreateArrayAddress(
+      klass,
+      SharkType::methodOop_type(),
+      vtableEntry::size() * wordSize,
+      in_ByteSize(instanceKlass::vtable_start_offset() * wordSize),
+      index),
+    "nonfinal_callee");
+  builder()->CreateBr(got_callee);
+
+  builder()->SetInsertPoint(got_callee);
+  PHINode *callee = builder()->CreatePHI(
+    SharkType::methodOop_type(), "callee");
+  callee->addIncoming(final_callee, final);
+  callee->addIncoming(nonfinal_callee, not_final);
+
+  return callee;
+}
+
+Value* SharkBlock::get_interface_callee(Value *cache, SharkValue *receiver)
+{
+  BasicBlock *hacky      = function()->CreateBlock("hacky");
+  BasicBlock *normal     = function()->CreateBlock("normal");
+  BasicBlock *loop       = function()->CreateBlock("loop");
+  BasicBlock *got_null   = function()->CreateBlock("got_null");
+  BasicBlock *not_null   = function()->CreateBlock("not_null");
+  BasicBlock *next       = function()->CreateBlock("next");
+  BasicBlock *got_entry  = function()->CreateBlock("got_entry");
+  BasicBlock *got_callee = function()->CreateBlock("got_callee");
+
+  Value *flags = builder()->CreateValueOfStructEntry(
+    cache, ConstantPoolCacheEntry::flags_offset(),
+    SharkType::intptr_type(),
+    "flags");
+
+  const int mask = 1 << ConstantPoolCacheEntry::methodInterface;
+  builder()->CreateCondBr(
+    builder()->CreateICmpNE(
+      builder()->CreateAnd(flags, LLVMValue::intptr_constant(mask)),
+      LLVMValue::intptr_constant(0)),
+    hacky, normal);
+
+  // Workaround for the case where we encounter an invokeinterface,
+  // but should really have an invokevirtual since the resolved
+  // method is a virtual method in java.lang.Object. This is a
+  // corner case in the spec but is presumably legal, and while
+  // javac does not generate this code there's no reason it could
+  // not be produced by a compliant java compiler.  See
+  // cpCacheOop.cpp for more details.
+  builder()->SetInsertPoint(hacky);
+  Value *hacky_callee = get_virtual_callee(cache, receiver);
+  BasicBlock *got_hacky = builder()->GetInsertBlock();
+  builder()->CreateBr(got_callee);
+
+  // Locate the receiver's itable
+  builder()->SetInsertPoint(normal);
+  Value *object_klass = builder()->CreateValueOfStructEntry(
+    receiver->jobject_value(), in_ByteSize(oopDesc::klass_offset_in_bytes()),
+    SharkType::jobject_type(),
+    "object_klass");
+
+  Value *vtable_start = builder()->CreateAdd(
+    builder()->CreatePtrToInt(object_klass, SharkType::intptr_type()),
+    LLVMValue::intptr_constant(
+      instanceKlass::vtable_start_offset() * HeapWordSize),
+    "vtable_start");
+
+  Value *vtable_length = builder()->CreateValueOfStructEntry(
+    object_klass,
+    in_ByteSize(instanceKlass::vtable_length_offset() * HeapWordSize),
+    SharkType::jint_type(),
+    "vtable_length");
+
+  bool needs_aligning = HeapWordsPerLong > 1;
+  const char *itable_start_name = "itable_start";
+  Value *itable_start = builder()->CreateAdd(
+    vtable_start,
+    builder()->CreateShl(
+      vtable_length,
+      LLVMValue::jint_constant(exact_log2(vtableEntry::size() * wordSize))),
+    needs_aligning ? "" : itable_start_name);
+  if (needs_aligning)
+    itable_start = builder()->CreateAlign(
+      itable_start, BytesPerLong, itable_start_name);
+
+  // Locate this interface's entry in the table
+  Value *iklass = builder()->CreateValueOfStructEntry(
+    cache, ConstantPoolCacheEntry::f1_offset(),
+    SharkType::jobject_type(),
+    "iklass");
+
+  builder()->CreateBr(loop);
+  builder()->SetInsertPoint(loop);
+  PHINode *itable_entry_addr = builder()->CreatePHI(
+    SharkType::intptr_type(), "itable_entry_addr");
+  itable_entry_addr->addIncoming(itable_start, normal);
+
+  Value *itable_entry = builder()->CreateIntToPtr(
+    itable_entry_addr, SharkType::itableOffsetEntry_type(), "itable_entry");
+
+  Value *itable_iklass = builder()->CreateValueOfStructEntry(
+    itable_entry,
+    in_ByteSize(itableOffsetEntry::interface_offset_in_bytes()),
+    SharkType::jobject_type(),
+    "itable_iklass");
+
+  builder()->CreateCondBr(
+    builder()->CreateICmpEQ(itable_iklass, LLVMValue::null()),
+    got_null, not_null);
+
+  // A null entry means that the class doesn't implement the
+  // interface, and wasn't the same as the class checked when
+  // the interface was resolved.
+  builder()->SetInsertPoint(got_null);
+  builder()->CreateUnimplemented(__FILE__, __LINE__);
+  builder()->CreateUnreachable();
+                          
+  builder()->SetInsertPoint(not_null);
+  builder()->CreateCondBr(
+    builder()->CreateICmpEQ(itable_iklass, iklass),
+    got_entry, next);
+
+  builder()->SetInsertPoint(next);
+  Value *next_entry = builder()->CreateAdd(
+    itable_entry_addr,
+    LLVMValue::intptr_constant(itableOffsetEntry::size() * wordSize));
+  builder()->CreateBr(loop);
+  itable_entry_addr->addIncoming(next_entry, next);
+
+  // Locate the method pointer
+  builder()->SetInsertPoint(got_entry);
+  Value *offset = builder()->CreateValueOfStructEntry(
+    itable_entry,
+    in_ByteSize(itableOffsetEntry::offset_offset_in_bytes()),
+    SharkType::jint_type(),
+    "offset");
+
+  Value *index = builder()->CreateValueOfStructEntry(
+    cache, ConstantPoolCacheEntry::f2_offset(),
+    SharkType::intptr_type(),
+    "index");
+
+  Value *normal_callee = builder()->CreateLoad(
+    builder()->CreateIntToPtr(
+      builder()->CreateAdd(
+        builder()->CreateAdd(
+          builder()->CreateAdd(
+            builder()->CreatePtrToInt(
+              object_klass, SharkType::intptr_type()),
+            offset),
+          builder()->CreateShl(
+            index,
+            LLVMValue::jint_constant(
+              exact_log2(itableMethodEntry::size() * wordSize)))),
+        LLVMValue::intptr_constant(
+          itableMethodEntry::method_offset_in_bytes())),
+      PointerType::getUnqual(SharkType::methodOop_type())),
+    "normal_callee");
+  BasicBlock *got_normal = builder()->GetInsertBlock();
+  builder()->CreateBr(got_callee);
+
+  builder()->SetInsertPoint(got_callee);
+  PHINode *callee = builder()->CreatePHI(
+    SharkType::methodOop_type(), "callee");
+  callee->addIncoming(hacky_callee, got_hacky);
+  callee->addIncoming(normal_callee, got_normal);
+
+  return callee;
+} 
+
+Value* SharkBlock::get_callee(Value *cache, SharkValue *receiver)
+{
+  switch (bc()) {
+  case Bytecodes::_invokestatic:
+  case Bytecodes::_invokespecial:
+    return get_basic_callee(cache);
+
+  case Bytecodes::_invokevirtual:
+    return get_virtual_callee(cache, receiver);
+
+  case Bytecodes::_invokeinterface:
+    return get_interface_callee(cache, receiver);
+
+  default:
+    ShouldNotReachHere();
   }
 }
 
@@ -1467,223 +1924,14 @@ void SharkBlock::do_call()
   // Find the receiver in the stack
   SharkValue *receiver = NULL;
   if (bc() != Bytecodes::_invokestatic) {
-    int shark_slot = 0, java_slot = 0;
-    while (java_slot < method->arg_size() - 1)
-      java_slot += stack(shark_slot++)->type()->size();
-    receiver = stack(shark_slot);
+    receiver = xstack(method->arg_size() - 1);
     check_null(receiver);
   }
 
   // Find the method we are calling
-  Value *callee = NULL;
   SharkConstantPool constants(this);
   Value *cache = constants.cache_entry_at(iter()->get_method_index());
-
-  if (bc() == Bytecodes::_invokevirtual) {
-    BasicBlock *final     = function()->CreateBlock("final");
-    BasicBlock *not_final = function()->CreateBlock("not_final");
-    BasicBlock *invoke    = function()->CreateBlock("invoke");
-
-    Value *flags = builder()->CreateValueOfStructEntry(
-      cache, ConstantPoolCacheEntry::flags_offset(),
-      SharkType::intptr_type(),
-      "flags");
-
-    const int mask = 1 << ConstantPoolCacheEntry::vfinalMethod;
-    builder()->CreateCondBr(
-      builder()->CreateICmpNE(
-        builder()->CreateAnd(flags, LLVMValue::intptr_constant(mask)),
-        LLVMValue::intptr_constant(0)),
-      final, not_final);
-
-    // For final methods f2 is the actual address of the method
-    builder()->SetInsertPoint(final);
-    Value *final_callee = builder()->CreateValueOfStructEntry(
-      cache, ConstantPoolCacheEntry::f2_offset(),
-      SharkType::methodOop_type(),
-      "final_callee");
-    builder()->CreateBr(invoke);
-
-    // For non-final methods f2 is the index into the vtable
-    builder()->SetInsertPoint(not_final);
-    Value *klass = builder()->CreateValueOfStructEntry(
-      receiver->jobject_value(),
-      in_ByteSize(oopDesc::klass_offset_in_bytes()),
-      SharkType::jobject_type(),
-      "klass");
-
-    Value *index = builder()->CreateValueOfStructEntry(
-      cache, ConstantPoolCacheEntry::f2_offset(),
-      SharkType::intptr_type(),
-      "index");
-
-    Value *nonfinal_callee = builder()->CreateLoad(
-      builder()->CreateArrayAddress(
-        klass,
-        SharkType::methodOop_type(),
-        vtableEntry::size() * wordSize,
-        in_ByteSize(instanceKlass::vtable_start_offset() * wordSize),
-        index),
-      "nonfinal_callee");
-    builder()->CreateBr(invoke);
-
-    builder()->SetInsertPoint(invoke);
-    callee = builder()->CreatePHI(SharkType::methodOop_type(), "callee");
-    ((PHINode *) callee)->addIncoming(final_callee, final);
-    ((PHINode *) callee)->addIncoming(nonfinal_callee, not_final);
-  }
-  else if (bc() == Bytecodes::_invokeinterface) {
-    BasicBlock *hacky     = function()->CreateBlock("hacky");
-    BasicBlock *normal    = function()->CreateBlock("normal");
-    BasicBlock *loop      = function()->CreateBlock("loop");
-    BasicBlock *got_null  = function()->CreateBlock("got_null");
-    BasicBlock *not_null  = function()->CreateBlock("not_null");
-    BasicBlock *next      = function()->CreateBlock("next");
-    BasicBlock *got_entry = function()->CreateBlock("got_entry");
-    BasicBlock *invoke    = function()->CreateBlock("invoke");
-
-    Value *flags = builder()->CreateValueOfStructEntry(
-      cache, ConstantPoolCacheEntry::flags_offset(),
-      SharkType::intptr_type(),
-      "flags");
-
-    const int mask = 1 << ConstantPoolCacheEntry::methodInterface;
-    builder()->CreateCondBr(
-      builder()->CreateICmpNE(
-        builder()->CreateAnd(flags, LLVMValue::intptr_constant(mask)),
-        LLVMValue::intptr_constant(0)),
-      hacky, normal);
-
-    // Workaround for the case where we encounter an invokeinterface,
-    // but should really have an invokevirtual since the resolved
-    // method is a virtual method in java.lang.Object. This is a
-    // corner case in the spec but is presumably legal, and while
-    // javac does not generate this code there's no reason it could
-    // not be produced by a compliant java compiler.  See
-    // cpCacheOop.cpp for more details.
-    builder()->SetInsertPoint(hacky);
-    builder()->CreateUnimplemented(__FILE__, __LINE__);
-    Value *hacky_callee =
-      ConstantPointerNull::get(SharkType::methodOop_type());
-    builder()->CreateBr(invoke);
-
-    // Locate the receiver's itable
-    builder()->SetInsertPoint(normal);
-    Value *object_klass = builder()->CreateValueOfStructEntry(
-      receiver->jobject_value(), in_ByteSize(oopDesc::klass_offset_in_bytes()),
-      SharkType::jobject_type(),
-      "object_klass");
-
-    Value *vtable_start = builder()->CreateAdd(
-      builder()->CreatePtrToInt(object_klass, SharkType::intptr_type()),
-      LLVMValue::intptr_constant(
-        instanceKlass::vtable_start_offset() * HeapWordSize),
-      "vtable_start");
-
-    Value *vtable_length = builder()->CreateValueOfStructEntry(
-      object_klass,
-      in_ByteSize(instanceKlass::vtable_length_offset() * HeapWordSize),
-      SharkType::jint_type(),
-      "vtable_length");
-
-    bool needs_aligning = HeapWordsPerLong > 1;
-    const char *itable_start_name = "itable_start";
-    Value *itable_start = builder()->CreateAdd(
-      vtable_start,
-      builder()->CreateShl(
-        vtable_length,
-        LLVMValue::jint_constant(exact_log2(vtableEntry::size() * wordSize))),
-      needs_aligning ? "" : itable_start_name);
-    if (needs_aligning)
-      itable_start = builder()->CreateAlign(
-        itable_start, BytesPerLong, itable_start_name);
-
-    // Locate this interface's entry in the table
-    Value *iklass = builder()->CreateValueOfStructEntry(
-      cache, ConstantPoolCacheEntry::f1_offset(),
-      SharkType::jobject_type(),
-      "iklass");
-
-    builder()->CreateBr(loop);
-    builder()->SetInsertPoint(loop);
-    PHINode *itable_entry_addr = builder()->CreatePHI(
-      SharkType::intptr_type(), "itable_entry_addr");
-    itable_entry_addr->addIncoming(itable_start, normal);
-
-    Value *itable_entry = builder()->CreateIntToPtr(
-      itable_entry_addr, SharkType::itableOffsetEntry_type(), "itable_entry");
-
-    Value *itable_iklass = builder()->CreateValueOfStructEntry(
-      itable_entry,
-      in_ByteSize(itableOffsetEntry::interface_offset_in_bytes()),
-      SharkType::jobject_type(),
-      "itable_iklass");
-
-    builder()->CreateCondBr(
-      builder()->CreateICmpEQ(itable_iklass, LLVMValue::null()),
-      got_null, not_null);
-
-    // A null entry means that the class doesn't implement the
-    // interface, and wasn't the same as the class checked when
-    // the interface was resolved.
-    builder()->SetInsertPoint(got_null);
-    builder()->CreateUnimplemented(__FILE__, __LINE__);
-    builder()->CreateUnreachable();
-                            
-    builder()->SetInsertPoint(not_null);
-    builder()->CreateCondBr(
-      builder()->CreateICmpEQ(itable_iklass, iklass),
-      got_entry, next);
-
-    builder()->SetInsertPoint(next);
-    Value *next_entry = builder()->CreateAdd(
-      itable_entry_addr,
-      LLVMValue::intptr_constant(itableOffsetEntry::size() * wordSize));
-    builder()->CreateBr(loop);
-    itable_entry_addr->addIncoming(next_entry, next);
-
-    // Locate the method pointer
-    builder()->SetInsertPoint(got_entry);
-    Value *offset = builder()->CreateValueOfStructEntry(
-      itable_entry,
-      in_ByteSize(itableOffsetEntry::offset_offset_in_bytes()),
-      SharkType::jint_type(),
-      "offset");
-
-    Value *index = builder()->CreateValueOfStructEntry(
-      cache, ConstantPoolCacheEntry::f2_offset(),
-      SharkType::intptr_type(),
-      "index");
-
-    Value *normal_callee = builder()->CreateLoad(
-      builder()->CreateIntToPtr(
-        builder()->CreateAdd(
-          builder()->CreateAdd(
-            builder()->CreateAdd(
-              builder()->CreatePtrToInt(
-                object_klass, SharkType::intptr_type()),
-              offset),
-            builder()->CreateShl(
-              index,
-              LLVMValue::jint_constant(
-                exact_log2(itableMethodEntry::size() * wordSize)))),
-          LLVMValue::intptr_constant(
-            itableMethodEntry::method_offset_in_bytes())),
-        PointerType::getUnqual(SharkType::methodOop_type())),
-      "normal_callee");
-    builder()->CreateBr(invoke);
-
-    builder()->SetInsertPoint(invoke);
-    callee = builder()->CreatePHI(SharkType::methodOop_type(), "callee");
-    ((PHINode *) callee)->addIncoming(hacky_callee, hacky);
-    ((PHINode *) callee)->addIncoming(normal_callee, got_entry);    
-  }
-  else {
-    callee = builder()->CreateValueOfStructEntry(
-      cache, ConstantPoolCacheEntry::f1_offset(),
-      SharkType::methodOop_type(),
-      "callee");
-  }
+  Value *callee = get_callee(cache, receiver);
 
   Value *base_pc = builder()->CreateValueOfStructEntry(
     callee, methodOopDesc::from_interpreted_offset(),
@@ -1700,9 +1948,9 @@ void SharkBlock::do_call()
     "entry_point");
 
   // Make the call
-  current_state()->decache(method);
+  current_state()->decache_for_Java_call(method);
   builder()->CreateCall3(entry_point, callee, base_pc, thread());
-  current_state()->cache(method);
+  current_state()->cache_after_Java_call(method);
 
   // Check for pending exceptions
   check_pending_exception();
@@ -1710,23 +1958,45 @@ void SharkBlock::do_call()
 
 void SharkBlock::do_instance_check()
 {
-  BasicBlock *not_null      = function()->CreateBlock("not_null");
-  BasicBlock *resolve       = function()->CreateBlock("resolve");
-  BasicBlock *resolved      = function()->CreateBlock("resolved");
-  BasicBlock *subtype_check = function()->CreateBlock("subtype_check");
-  BasicBlock *failure       = function()->CreateBlock("failure");
-  BasicBlock *success       = function()->CreateBlock("success");
+  // Leave the object on the stack until after all the VM calls
+  assert(xstack(0)->is_jobject(), "should be");
+  
+  ciKlass *klass = NULL;
+  if (bc() == Bytecodes::_checkcast) {
+    bool will_link;
+    klass = iter()->get_klass(will_link);
+    if (!will_link) {
+      // XXX why is this not typeflow's responsibility?
+      NOT_PRODUCT(warning("unresolved checkcast in %s", function()->name()));
+      klass = (ciKlass *) xstack(0)->type();
+    }
+  }
 
-  SharkValue *sharkobject = pop();
-  Value *object = sharkobject->jobject_value();
+  BasicBlock *not_null      = function()->CreateBlock("not_null");
+  BasicBlock *fast_path     = function()->CreateBlock("fast_path");
+  BasicBlock *slow_path     = function()->CreateBlock("slow_path");
+  BasicBlock *got_klass     = function()->CreateBlock("got_klass");
+  BasicBlock *subtype_check = function()->CreateBlock("subtype_check");
+  BasicBlock *is_instance   = function()->CreateBlock("is_instance");
+  BasicBlock *not_instance  = function()->CreateBlock("not_instance");
+  BasicBlock *merge1        = function()->CreateBlock("merge1");
+  BasicBlock *merge2        = function()->CreateBlock("merge2");
+
+  enum InstanceCheckStates {
+    IC_IS_NULL,
+    IC_IS_INSTANCE,
+    IC_NOT_INSTANCE,
+  };
 
   // Null objects aren't instances of anything
   builder()->CreateCondBr(
-    builder()->CreateICmpEQ(object, LLVMValue::null()),
-    bc() == Bytecodes::_checkcast ? success : failure, not_null);
-  builder()->SetInsertPoint(not_null);
+    builder()->CreateICmpEQ(xstack(0)->jobject_value(), LLVMValue::null()),
+    merge2, not_null);
+  BasicBlock *null_block = builder()->GetInsertBlock();
+  SharkState *null_state = current_state()->copy();
 
   // Get the class we're checking against
+  builder()->SetInsertPoint(not_null);
   SharkConstantPool constants(this);
   Value *tag = constants.tag_at(iter()->get_klass_index());
   builder()->CreateCondBr(
@@ -1735,63 +2005,103 @@ void SharkBlock::do_instance_check()
         tag, LLVMValue::jbyte_constant(JVM_CONSTANT_UnresolvedClass)),
       builder()->CreateICmpEQ(
         tag, LLVMValue::jbyte_constant(JVM_CONSTANT_UnresolvedClassInError))),
-    resolve, resolved);
+    slow_path, fast_path);
 
-  // If the class is unresolved we must resolve it
-  builder()->SetInsertPoint(resolve);
-  builder()->CreateUnimplemented(__FILE__, __LINE__);
-  builder()->CreateUnreachable(); // XXX builder()->CreateBr(resolved);
+  // The fast path
+  builder()->SetInsertPoint(fast_path);
+  BasicBlock *fast_block = builder()->GetInsertBlock();
+  SharkState *fast_state = current_state()->copy();
+  Value *fast_klass = constants.object_at(iter()->get_klass_index());
+  builder()->CreateBr(got_klass);
 
-  builder()->SetInsertPoint(resolved);
-  Value *check_klass = constants.object_at(iter()->get_klass_index());
+  // The slow path
+  builder()->SetInsertPoint(slow_path);
+  call_vm(
+    SharkRuntime::resolve_klass(),
+    LLVMValue::jint_constant(iter()->get_klass_index()));
+  Value *slow_klass = function()->CreateGetVMResult();
+  BasicBlock *slow_block = builder()->GetInsertBlock();  
+  builder()->CreateBr(got_klass);
+
+  // We have the class to test against
+  builder()->SetInsertPoint(got_klass);
+  current_state()->merge(fast_state, fast_block, slow_block);
+  PHINode *check_klass = builder()->CreatePHI(
+    SharkType::jobject_type(), "check_klass");
+  check_klass->addIncoming(fast_klass, fast_block);
+  check_klass->addIncoming(slow_klass, slow_block);
 
   // Get the class of the object being tested
   Value *object_klass = builder()->CreateValueOfStructEntry(
-    object, in_ByteSize(oopDesc::klass_offset_in_bytes()),
+    xstack(0)->jobject_value(), in_ByteSize(oopDesc::klass_offset_in_bytes()),
     SharkType::jobject_type(),
     "object_klass");
 
   // Perform the check
   builder()->CreateCondBr(
     builder()->CreateICmpEQ(check_klass, object_klass),
-    success, subtype_check);
-  
+    is_instance, subtype_check);
+
   builder()->SetInsertPoint(subtype_check);
   builder()->CreateCondBr(
     builder()->CreateICmpNE(
       builder()->CreateCall2(
         SharkRuntime::is_subtype_of(), check_klass, object_klass),
       LLVMValue::jbyte_constant(0)),
-    success, failure);
+    is_instance, not_instance);
+
+  builder()->SetInsertPoint(is_instance);
+  builder()->CreateBr(merge1);
+
+  builder()->SetInsertPoint(not_instance);
+  builder()->CreateBr(merge1);
+
+  // First merge
+  builder()->SetInsertPoint(merge1);
+  PHINode *nonnull_result = builder()->CreatePHI(
+    SharkType::jint_type(), "nonnull_result");
+  nonnull_result->addIncoming(
+    LLVMValue::jint_constant(IC_IS_INSTANCE), is_instance);
+  nonnull_result->addIncoming(
+    LLVMValue::jint_constant(IC_NOT_INSTANCE), not_instance);
+  BasicBlock *nonnull_block = builder()->GetInsertBlock();
+  builder()->CreateBr(merge2);
+  
+  // Second merge
+  builder()->SetInsertPoint(merge2);
+  current_state()->merge(null_state, null_block, nonnull_block);
+  PHINode *result = builder()->CreatePHI(
+    SharkType::jint_type(), "result");
+  result->addIncoming(LLVMValue::jint_constant(IC_IS_NULL), null_block);
+  result->addIncoming(nonnull_result, nonnull_block);
+
+  // We can finally pop the object!
+  Value *object = pop()->jobject_value();
 
   // Handle the result
   if (bc() == Bytecodes::_checkcast) {
+    BasicBlock *failure = function()->CreateBlock("failure");
+    BasicBlock *success = function()->CreateBlock("success");
+
+    builder()->CreateCondBr(
+      builder()->CreateICmpNE(
+        result, LLVMValue::jint_constant(IC_NOT_INSTANCE)),
+      success, failure);
+
     builder()->SetInsertPoint(failure);
     builder()->CreateUnimplemented(__FILE__, __LINE__);
     builder()->CreateUnreachable();
 
     builder()->SetInsertPoint(success);
-    push(sharkobject);
-  }
-  else if (bc() == Bytecodes::_instanceof) {
-    BasicBlock *done = function()->CreateBlock("done");
-
-    builder()->SetInsertPoint(success);
-    builder()->CreateBr(done);
-
-    builder()->SetInsertPoint(failure);
-    builder()->CreateBr(done);
-
-    builder()->SetInsertPoint(done);
-    PHINode *result = builder()->CreatePHI(SharkType::jint_type(), "result");
-    result->addIncoming(LLVMValue::jint_constant(1), success);
-    result->addIncoming(LLVMValue::jint_constant(0), failure);
-
-    push(SharkValue::create_jint(result));
+    push(SharkValue::create_generic(klass, object));
   }
   else {
-    tty->print_cr("Unhandled bytecode %s", Bytecodes::name(bc()));
-    ShouldNotReachHere();
+    push(
+      SharkValue::create_jint(
+        builder()->CreateIntCast(
+          builder()->CreateICmpEQ(
+            result, LLVMValue::jint_constant(IC_IS_INSTANCE)),
+          SharkType::jint_type(), false)));
   }
 }
 
@@ -1801,11 +2111,13 @@ void SharkBlock::do_new()
   ciInstanceKlass* klass = iter()->get_klass(will_link)->as_instance_klass();
   assert(will_link, "typeflow responsibility");
 
+  BasicBlock *tlab_alloc          = NULL;
   BasicBlock *got_tlab            = NULL;
   BasicBlock *heap_alloc          = NULL;
   BasicBlock *retry               = NULL;
   BasicBlock *got_heap            = NULL;
   BasicBlock *initialize          = NULL;
+  BasicBlock *got_fast            = NULL;
   BasicBlock *slow_alloc_and_init = NULL;
   BasicBlock *got_slow            = NULL;
   BasicBlock *push_object         = NULL;
@@ -1818,22 +2130,33 @@ void SharkBlock::do_new()
   Value *slow_object = NULL;
   Value *object      = NULL;
 
+  SharkConstantPool constants(this);
+
   // The fast path
   if (!Klass::layout_helper_needs_slow_path(klass->layout_helper())) {
     if (UseTLAB) {
+      tlab_alloc        = function()->CreateBlock("tlab_alloc");
       got_tlab          = function()->CreateBlock("got_tlab");
-      heap_alloc        = function()->CreateBlock("heap_alloc");
     }
+    heap_alloc          = function()->CreateBlock("heap_alloc");
     retry               = function()->CreateBlock("retry");
     got_heap            = function()->CreateBlock("got_heap");
     initialize          = function()->CreateBlock("initialize");
     slow_alloc_and_init = function()->CreateBlock("slow_alloc_and_init");
     push_object         = function()->CreateBlock("push_object");
 
+    builder()->CreateCondBr(
+      builder()->CreateICmpEQ(
+        constants.tag_at(iter()->get_klass_index()),
+        LLVMValue::jbyte_constant(JVM_CONSTANT_Class)),
+      UseTLAB ? tlab_alloc : heap_alloc, slow_alloc_and_init);
+    
     size_t size_in_bytes = klass->size_helper() << LogHeapWordSize;
 
     // Thread local allocation
     if (UseTLAB) {
+      builder()->SetInsertPoint(tlab_alloc);
+
       Value *top_addr = builder()->CreateAddressOfStructEntry(
         thread(), Thread::tlab_top_offset(),
         PointerType::getUnqual(SharkType::intptr_type()),
@@ -1858,11 +2181,11 @@ void SharkBlock::do_new()
 
       builder()->CreateStore(new_top, top_addr);
       builder()->CreateBr(initialize);
-      
-      builder()->SetInsertPoint(heap_alloc);
     }
 
     // Heap allocation
+    builder()->SetInsertPoint(heap_alloc);
+
     Value *top_addr = builder()->CreateIntToPtr(
       LLVMValue::intptr_constant((intptr_t) Universe::heap()->top_addr()),
       PointerType::getUnqual(SharkType::intptr_type()),
@@ -1935,9 +2258,9 @@ void SharkBlock::do_new()
     builder()->CreateStore(LLVMValue::intptr_constant(mark), mark_addr);
 
     // Set the class
-    SharkConstantPool constants(this);
     Value *rtklass = constants.object_at(iter()->get_klass_index());
     builder()->CreateStore(rtklass, klass_addr);
+    got_fast = builder()->GetInsertBlock();
 
     builder()->CreateBr(push_object);
     builder()->SetInsertPoint(slow_alloc_and_init);
@@ -1945,10 +2268,9 @@ void SharkBlock::do_new()
   }
 
   // The slow path
-  SharkConstantPool constants(this);
   call_vm(
     SharkRuntime::new_instance(),
-    constants.object_at(iter()->get_klass_index()));
+    LLVMValue::jint_constant(iter()->get_klass_index()));
   slow_object = function()->CreateGetVMResult();
   got_slow = builder()->GetInsertBlock();
 
@@ -1959,10 +2281,10 @@ void SharkBlock::do_new()
   }
   if (fast_object) {
     PHINode *phi = builder()->CreatePHI(SharkType::jobject_type(), "object");
-    phi->addIncoming(fast_object, initialize);
+    phi->addIncoming(fast_object, got_fast);
     phi->addIncoming(slow_object, got_slow);
     object = phi;
-    current_state()->merge(fast_state, initialize, got_slow);
+    current_state()->merge(fast_state, got_fast, got_slow);
   }
   else {
     object = slow_object;
@@ -1985,6 +2307,66 @@ void SharkBlock::do_newarray()
   SharkValue *result = SharkValue::create_generic(
     ciArrayKlass::make(ciType::make(type)),
     function()->CreateGetVMResult());
+  result->set_zero_checked(true);
+  push(result);
+}
+
+void SharkBlock::do_anewarray()
+{
+  bool will_link;
+  ciKlass *klass = iter()->get_klass(will_link);
+  assert(will_link, "typeflow responsibility");
+
+  ciObjArrayKlass *array_klass = ciObjArrayKlass::make(klass);
+  if (!array_klass->is_loaded()) {
+    Unimplemented();
+  }
+
+  call_vm(
+    SharkRuntime::anewarray(),
+    LLVMValue::jint_constant(iter()->get_klass_index()),
+    pop()->jint_value());
+
+  SharkValue *result = SharkValue::create_generic(
+    array_klass, function()->CreateGetVMResult());
+  result->set_zero_checked(true);
+  push(result);
+}
+
+void SharkBlock::do_multianewarray()
+{
+  bool will_link;
+  ciArrayKlass *array_klass = iter()->get_klass(will_link)->as_array_klass();
+  assert(will_link, "typeflow responsibility");
+
+  // The dimensions are stack values, so we use their slots for the
+  // dimensions array.  Note that we are storing them in the reverse
+  // of normal stack order.
+  int ndims = iter()->get_dimensions();
+
+  Value *dimensions = function()->CreateAddressOfFrameEntry(
+    function()->stack_slots_offset() + max_stack() - xstack_depth(),
+    ArrayType::get(SharkType::jint_type(), ndims),
+    "dimensions");
+
+  for (int i = 0; i < ndims; i++) {
+    builder()->CreateStore(
+      xstack(ndims - 1 - i)->jint_value(),
+      builder()->CreateStructGEP(dimensions, i));
+  }
+
+  call_vm(
+    SharkRuntime::multianewarray(),
+    LLVMValue::jint_constant(iter()->get_klass_index()),
+    LLVMValue::jint_constant(ndims),
+    builder()->CreateStructGEP(dimensions, 0));
+
+  // Now we can pop the dimensions off the stack
+  for (int i = 0; i < ndims; i++)
+    pop();
+
+  SharkValue *result = SharkValue::create_generic(
+    array_klass, function()->CreateGetVMResult());
   result->set_zero_checked(true);
   push(result);
 }
@@ -2033,7 +2415,8 @@ void SharkBlock::do_monitorenter()
 
   // Acquire the lock
   builder()->SetInsertPoint(got_monitor);
-  monitor->acquire(object);
+  monitor->acquire(this, object);
+  check_pending_exception();
 }
 
 void SharkBlock::do_monitorexit()
@@ -2078,5 +2461,6 @@ void SharkBlock::do_monitorexit()
 
   // Release the lock
   builder()->SetInsertPoint(got_monitor);
-  monitor->release();
+  monitor->release(this);
+  check_pending_exception();
 }

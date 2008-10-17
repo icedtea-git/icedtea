@@ -5,7 +5,7 @@ OPENJDK_VERSION = b36
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
 
-NETBEANS_PLATFORM_MD5SUM = 77c79b3a7d3dbe6a8858639f8d564a38
+NETBEANS_BASIC_CLUSTER = a7ea855f475fa3a982f094a45c155ab4
 NETBEANS_PROFILER_MD5SUM = ff8e8abc42df6c6749e6b02bcf7bb0a5
 VISUALVM_MD5SUM = 4b55bc623418818793392bb233da2927
 
@@ -13,13 +13,11 @@ if ENABLE_LIVECONNECT
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
-EXCLUDE_LIVECONNECT =
 LIVECONNECT_DIR = -C lib/rt netscape
 else
 ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
 PLUGIN_PATCH = patches/icedtea-plugin.patch
-EXCLUDE_LIVECONNECT = | grep -v 'netscape/javascript'
 LIVECONNECT_DIR =
 if ENABLE_PLUGIN
 GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
@@ -30,12 +28,31 @@ GCJWEBPLUGIN_TARGET =
 endif
 endif
 
+if ENABLE_PULSE_JAVA
+# include the makefile in pulseaudio subdir
+PULSE_JAVA_DIR = pulseaudio
+PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
+PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
+PULSE_JAVA_CLASS_DIR = $(PULSE_JAVA_DIR)/bin
+else 
+PULSE_JAVA_DIR =
+PULSE_JAVA_NATIVE_SRCDIR =
+PULSE_JAVA_JAVA_SRCDIR =
+PULSE_JAVA_CLASS_DIR =
+endif
+
+if WITH_VISUALVM
+VISUALVM_PATCH = patches/icedtea-visualvm.patch
+else
+VISUALVM_PATCH = 
+endif
+
 # Top-Level Targets
 # =================
 
 all-local: icedtea-against-icedtea
 
-distclean-local: clean-copy clean-jtreg clean-jtreg-reports
+distclean-local: clean-copy clean-jtreg clean-jtreg-reports clean-pulse-java
 	rm -rf stamps
 	rm -f rt-source-files.txt \
 	  hotspot-tools-source-files.txt \
@@ -46,8 +63,9 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports
 	rm -rf openjdk-ecj
 	rm -rf openjdk
 	rm -rf hotspot-tools
+	rm -rf rt/netscape
 if ENABLE_LIVECONNECT
-	rm -f IcedTeaPlugin.so
+	rm -f IcedTeaPlugin.o IcedTeaPlugin.so
 else
 if ENABLE_PLUGIN
 	rm -f gcjwebplugin.so
@@ -56,7 +74,7 @@ endif
 	rm -rf cacao
 	rm -rf visualvm
 	rm -rf netbeans
-	rm -f gcjwebplugin.so
+	rm -f jni-common.o
 
 install:
 
@@ -71,15 +89,15 @@ install:
 	$(ICEDTEAPLUGIN_CLEAN) hotspot hotspot-helper clean-extra \
 	clean-jtreg clean-jtreg-reports clean-visualvm clean-nbplatform
 
-EXTRA_DIST = rt generated $(ICEDTEA_PATCHES) $(ICEDTEA_FSG_PATCHES) \
-	$(ICEDTEA_ECJ_PATCH) gcjwebplugin.cc tools-copy contrib ports \
-	patches/icedtea-gcc-4.3.patch extra $(ZERO_PATCHES) \
-	patches/icedtea-arch.patch patches/icedtea-cacao.patch \
-	javaws.png javaws.desktop \
-	overlays extra jconsole.desktop policytool.desktop \
-	test/jtreg patches/icedtea-plugin.patch \
-	patches/icedtea-liveconnect.patch IcedTeaPlugin.cc \
-	HACKING $(OPENJDK_PATCHES)
+EXTRA_DIST = rt generated patches/openjdk-*.patch \
+	patches/icedtea-*.patch \
+	gcjwebplugin.cc tools-copy contrib ports \
+	extra overlays \
+	javaws.png javaws.desktop visualvm.desktop \
+	jconsole.desktop policytool.desktop \
+	test/jtreg \
+	IcedTeaPlugin.cc \
+	HACKING pulseaudio fsg.sh
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -228,7 +246,8 @@ ICEDTEA_ENV_ECJ = \
 	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
 	"JAVAC=" \
 	"RHINO_JAR=$(RHINO_JAR)" \
-	"JAR_KNOWS_ATFILE=$(JAR_KNOWS_ATFILE)"
+	"JAR_KNOWS_ATFILE=$(JAR_KNOWS_ATFILE)" \
+	"JAR_ACCEPTS_STDIN_LIST=$(JAR_ACCEPTS_STDIN_LIST)"
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
@@ -290,12 +309,12 @@ else
   CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.gz
 endif
 
-NETBEANS_PLATFORM_URL = http://download.netbeans.org/netbeans/6.0/final/zip/
+NETBEANS_BASIC_CLUSTER_URL = http://nbi.netbeans.org/files/documents/210/2056/
 
-if USE_ALT_NETBEANS_PLATFORM_SRC_ZIP
-  NETBEANS_PLATFORM_SRC_ZIP = $(ALT_NETBEANS_PLATFORM_SRC_ZIP)
+if USE_ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP
+  NETBEANS_BASIC_CLUSTER_SRC_ZIP = $(ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP)
 else
-  NETBEANS_PLATFORM_SRC_ZIP = netbeans-6.0.1-200801291616-platform-src.zip
+  NETBEANS_BASIC_CLUSTER_SRC_ZIP = netbeans-6.1-200805300101-basic_cluster-src.zip 
 endif
 
 NETBEANS_PROFILER_URL = http://icedtea.classpath.org/visualvm/
@@ -366,17 +385,17 @@ endif
 endif
 endif
 if WITH_VISUALVM
-if USE_ALT_NETBEANS_PLATFORM_SRC_ZIP
+if USE_ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP
 else
-	if ! echo "$(NETBEANS_PLATFORM_MD5SUM) $(NETBEANS_PLATFORM_SRC_ZIP)" \
+	if ! echo "$(NETBEANS_BASIC_CLUSTER_MD5SUM) $(NETBEANS_BASIC_CLUSTER_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
 	then \
-	  if [ $(NETBEANS_PLATFORM_SRC_ZIP) ] ; \
+	  if [ $(NETBEANS_BASIC_CLUSTER_SRC_ZIP) ] ; \
 	  then \
-	    mv $(NETBEANS_PLATFORM_SRC_ZIP) $(NETBEANS_PLATFORM_SRC_ZIP).old ; \
+	    mv $(NETBEANS_BASIC_CLUSTER_SRC_ZIP) $(NETBEANS_BASIC_CLUSTER_SRC_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(NETBEANS_PLATFORM_URL)$(NETBEANS_PLATFORM_SRC_ZIP) \
-	    -O $(NETBEANS_PLATFORM_SRC_ZIP) ; \
+	$(WGET) $(NETBEANS_BASIC_CLUSTER_URL)$(NETBEANS_BASIC_CLUSTER_SRC_ZIP) \
+	  -O $(NETBEANS_BASIC_CLUSTER_SRC_ZIP) ; \
 	fi
 endif
 if USE_ALT_NETBEANS_PROFILER_SRC_ZIP
@@ -442,8 +461,8 @@ if WITH_CACAO
 endif
 if WITH_VISUALVM
 	rm -f $(VISUALVM_SRC_ZIP) 
-	rm -f $(NETBEANS_PLATFORM_SRC_ZIP) 
 	rm -f $(NETBEANS_PROFILER_SRC_ZIP)
+	rm -rf $(NETBEANS_BASIC_CLUSTER_SRC_ZIP)
 endif
 
 # Link ports sources into tree
@@ -479,7 +498,8 @@ ZERO_PATCHES = \
 	patches/icedtea-signature-iterator.patch \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-zero.patch \
-	patches/icedtea-ia64-bugfix.patch
+	patches/icedtea-ia64-bugfix.patch \
+	patches/icedtea-hotspot-citypeflow.patch
 
 # Patches needed when not using the newer OpenJDK 7 HotSpot for zero.
 NON_ZERO_PATCHES = 
@@ -503,6 +523,7 @@ ICEDTEA_FSG_PATCHES = \
 	patches/icedtea-jscheme.patch
 
 ICEDTEA_PATCHES = \
+	$(ZERO_PATCHES_COND) \
 	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
@@ -524,10 +545,10 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-memory-limits.patch \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
+	patches/icedtea-javafiles.patch \
 	patches/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
 	patches/icedtea-static-libstdc++.patch \
-	patches/icedtea-lcms-leak.patch \
 	patches/icedtea-timerqueue.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero-build.patch \
@@ -535,8 +556,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jpegclasses.patch \
 	patches/icedtea-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
-	patches/icedtea-LCMS-setTagData.patch \
-	patches/icedtea-color-createcontext.patch \
 	patches/icedtea-fonts.patch \
 	patches/icedtea-gervill.patch \
 	patches/icedtea-directaudio-close-trick.patch \
@@ -564,7 +583,13 @@ ICEDTEA_PATCHES = \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
 	patches/icedtea-arch.patch \
-	patches/icedtea-signed-types.patch
+	patches/icedtea-signed-types.patch \
+	patches/icedtea-lc_ctype.patch \
+	patches/icedtea-messageutils.patch \
+	patches/icedtea-6open-6616825.patch \
+	patches/icedtea-6open-6651382.patch \
+	patches/icedtea-6open-6756202.patch \
+	$(VISUALVM_PATCH)
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -574,6 +599,11 @@ endif
 if WITH_CACAO
 ICEDTEA_PATCHES += \
 	patches/icedtea-cacao.patch
+endif
+
+if ENABLE_PULSE_JAVA
+ICEDTEA_PATCHES += \
+	patches/icedtea-pulse-soundproperties.patch
 endif
 
 if !USE_CVMI
@@ -609,6 +639,8 @@ if !USE_SYSTEM_CACAO
 	then \
 	  mkdir cacao ; \
 	  $(TAR) xf $(CACAO_SRC_ZIP) -C cacao ; \
+	  dir=$$(basename cacao/cacao-*) ; \
+	  ln -s $$dir cacao/cacao ; \
 	fi
 endif
 endif
@@ -620,8 +652,17 @@ if WITH_VISUALVM
 	if ! test -d netbeans ; \
 	then \
 	  mkdir netbeans ; \
-	  $(UNZIP) -q $(NETBEANS_PLATFORM_SRC_ZIP) -d netbeans ; \
 	  $(TAR) xf $(NETBEANS_PROFILER_SRC_ZIP) -C netbeans ; \
+	  $(UNZIP) -q $(NETBEANS_BASIC_CLUSTER_SRC_ZIP) nbbuild/* -d netbeans/ ; \
+	  mv netbeans/profiler/ netbeans/profiler.cvs/ ; \
+	  $(UNZIP) -q $(NETBEANS_BASIC_CLUSTER_SRC_ZIP) \
+	  api.java/* api.progress/* apisupport.harness/* editor.mimelookup/* \
+	  o.jdesktop.layout/* openide.actions/* openide.awt/* \
+	  openide.dialogs/* openide.execution/* openide.explorer/* \
+	  openide.filesystems/* openide.io/* openide.loaders/* \
+	  openide.modules/* openide.nodes/* openide.text/* openide.util/* \
+	  openide.windows/* options.api/* projectapi/* queries/* java.platform/* \
+	  -d netbeans/ ; \
 	fi
 endif
 	touch stamps/extract-cacao.stamp
@@ -679,6 +720,11 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  false; \
 	fi ; 
 
+if ENABLE_LIVECONNECT
+	cp -a plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
+	cp -a plugin/icedtea/netscape rt/
+endif
+
 clean-patch:
 	rm -f stamps/patch.stamp
 	all_patches_ok=yes; \
@@ -709,6 +755,11 @@ clean-patch:
 	if ! test x$${all_patches_ok} = "xyes" ; then \
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
+	rm -rf rt/netscape
+	for file in plugin/icedtea/sun/applet/*java ; \
+	do \
+		rm -f openjdk/jdk/src/share/classes/sun/applet/`basename $file` ; \
+	done ;
 
 stamps/patch-fsg.stamp: stamps/generated.stamp
 	mkdir -p stamps ; \
@@ -739,7 +790,7 @@ stamps/patch-fsg.stamp: stamps/generated.stamp
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
-	fi
+	fi ; 
 
 clean-patch-fsg:
 	rm -f stamps/patch-fsg.stamp
@@ -823,29 +874,56 @@ stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
 	touch stamps/ports-ecj.stamp
 
 # Patch OpenJDK for plug replacements and ecj.
-ICEDTEA_ECJ_PATCH = $(srcdir)/patches/icedtea-ecj.patch
+ICEDTEA_ECJ_PATCHES = patches/icedtea-ecj.patch \
+	patches/icedtea-ecj-spp.patch
 
-stamps/patch-ecj.stamp: stamps/clone-ecj.stamp
-	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
-	if $(PATCH) -p0 -l --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
-	then \
-	  echo Applying $(ICEDTEA_ECJ_PATCH) ; \
-	  $(PATCH) -p0 -l < $(ICEDTEA_ECJ_PATCH) ; \
-	  mkdir -p stamps; \
-	  touch stamps/patch-ecj.stamp; \
-	else \
+stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
+	mkdir -p stamps; \
+	rm -f stamps/patch-ecj.stamp.tmp ; \
+	touch stamps/patch-ecj.stamp.tmp ; \
+	all_patches_ok=yes; \
+	for p in $(ICEDTEA_ECJ_PATCHES) ; \
+	do \
+	  if test x$${all_patches_ok} = "xyes" \
+	    && echo Checking $$p \
+	    && $(PATCH) -l -p0 --dry-run -s -t -f \
+	      -F 0 < $(abs_top_srcdir)/$$p ; \
+	  then \
+	    echo Applying $$p ; \
+	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
+	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING \
+	      >> stamps/patch-ecj.stamp.tmp ; \
+	    then \
+	      echo "* $$(basename $$p): UNDOCUMENTED" \
+	        >> stamps/patch-ecj.stamp.tmp ; \
+	    fi ; \
+	  else \
+	    test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
+	  fi ; \
+	done ; \
+	mv stamps/patch-ecj.stamp.tmp stamps/patch-ecj.stamp ; \
+	if ! test x$${all_patches_ok} = "xyes"; then \
+	  echo ERROR patch $${all_patches_ok} FAILED! ; \
+	  echo WARNING make clean-patch before retrying a fix ; \
 	  false; \
 	fi
 
 clean-patch-ecj:
 	rm -f stamps/patch-ecj.stamp
-	echo Checking $(ICEDTEA_ECJ_PATCH) ; \
-	if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(ICEDTEA_ECJ_PATCH) ; \
-	then \
-	  echo Reverting $(ICEDTEA_ECJ_PATCH) ; \
-	  $(PATCH) -p0 -l -R < $(ICEDTEA_ECJ_PATCH) ; \
-	else \
-          false; \
+	all_patches_ok=yes; \
+	for p in $(ICEDTEA_ECJ_PATCHES) ; \
+	do \
+	  echo Checking $$p ; \
+	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
+	  then \
+	    echo Reverting $$p ; \
+	    $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
+	  else \
+	    all_patches_ok=no ; \
+	  fi ; \
+	done ; \
+	if ! test x$${all_patches_ok} = "xyes" ; then \
+	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
 # Bootstrap Directory Targets
@@ -973,13 +1051,13 @@ clean-bootstrap-directory-symlink-ecj:
 # ===============
 
 if WITH_ICEDTEA
-if WITH_CACAO
   MEMORY_LIMIT = -J-Xmx1024m
 else
+if WITH_OPENJDK
   MEMORY_LIMIT = -J-Xmx512m
-endif
 else
   MEMORY_LIMIT =
+endif
 endif
 
 if WITH_CACAO
@@ -998,7 +1076,8 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
 	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
-	extra-lib/about.jar stamps/cacao.stamp stamps/visualvm.stamp
+	extra-lib/about.jar stamps/cacao.stamp stamps/visualvm.stamp \
+	stamps/pulse-java.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1016,8 +1095,19 @@ if ENABLE_PLUGIN
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 endif
+if ENABLE_PULSE_JAVA
+	cp -pPRf libpulse-java.so \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf libpulse-java.so \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf pulse-java.jar \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
+	cp -pPRf pulse-java.jar \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext
+endif
 if WITH_VISUALVM
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc ; \
+	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/visualvm ; \
 	sed "s/APPNAME=\`basename.*\`/APPNAME=visualvm/" \
 	  visualvm/visualvm/launcher/visualvm >> \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/jvisualvm ; \
@@ -1026,13 +1116,13 @@ if WITH_VISUALVM
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc ; \
 	echo visualvm >> \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc/visualvm.clusters ; \
-	echo profiler2 >> \
+	echo profiler3 >> \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc/visualvm.clusters ; \
-	cp -r visualvm/visualvm/build/cluster \
+	cp -r visualvm/visualvm/build/cluster/* \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/visualvm ; \
-	cp -r netbeans/nbbuild/netbeans/platform7 \
+	cp -r netbeans/nbbuild/netbeans/platform8 \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm ; \
-	cp -r netbeans/nbbuild/netbeans/profiler2 \
+	cp -r netbeans/nbbuild/netbeans/profiler3 \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm
 endif
 	cp $(NETX_RESOURCE_DIR)/about.jnlp \
@@ -1049,7 +1139,8 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
 	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
-	extra-lib/about.jar stamps/cacao.stamp
+	extra-lib/about.jar stamps/cacao.stamp \
+	stamps/pulse-java.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1066,6 +1157,36 @@ if ENABLE_PLUGIN
 	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
+endif
+if ENABLE_PULSE_JAVA
+	cp -pPRf libpulse-java.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf libpulse-java.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf pulse-java.jar \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/ext
+	cp -pPRf pulse-java.jar \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/ext
+endif
+if WITH_VISUALVM
+	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc ; \
+	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/visualvm ; \
+	sed "s/APPNAME=\`basename.*\`/APPNAME=visualvm/" \
+	  visualvm/visualvm/launcher/visualvm >> \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/jvisualvm ; \
+	chmod a+x $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/jvisualvm ; \
+	cp visualvm/visualvm/launcher/visualvm.conf \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc ; \
+	echo visualvm >> \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc/visualvm.clusters ; \
+	echo profiler3 >> \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc/visualvm.clusters ; \
+	cp -r visualvm/visualvm/build/cluster/* \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/visualvm ; \
+	cp -r netbeans/nbbuild/netbeans/platform8 \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm ; \
+	cp -r netbeans/nbbuild/netbeans/profiler3 \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm
 endif
 	cp $(NETX_RESOURCE_DIR)/default.jnlp \
 	  extra-lib/about.jar \
@@ -1286,7 +1407,6 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
 	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt -name '*.java' \
-	  $(EXCLUDE_LIVECONNECT) \
 	  | sort -u > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt
@@ -1319,10 +1439,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-            -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt sun ; \
+	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt net -C lib/rt sun ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-            -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt sun ; \
+	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt net -C lib/rt sun ; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
@@ -1370,7 +1490,7 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
-	cd cacao/cacao-$(CACAO_VERSION) && \
+	cd cacao/cacao && \
 	./configure \
 	  --prefix=$(abs_top_builddir)/cacao/install \
 	  --with-java-runtime-library=openjdk \
@@ -1416,12 +1536,101 @@ gcjwebplugin.so: gcjwebplugin.cc
 	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
 	  $(GTK_CFLAGS) $(GTK_LIBS) \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -fpic -shared -o $@ $<
+	  -fPIC -shared -o $@ $<
 
 clean-gcjwebplugin:
 	rm -f gcjwebplugin.so
 endif
 endif
+
+
+# PulseAudio based mixer
+# (pulse-java)
+
+stamps/pulse-java.stamp: stamps/pulse-java-jar.stamp stamps/pulse-java-headers.stamp
+if ENABLE_PULSE_JAVA
+	$(CC) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/jni-common.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_EventLoop.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Operation.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Stream.c
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c 
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c
+	$(CC) $(LDFLAGS) -shared $(LIBPULSE_LIBS) -o libpulse-java.so org_*pulseaudio*.o jni-common.o
+	mv org_classpath_icedtea_pulseaudio_*.o $(PULSE_JAVA_CLASS_DIR)
+	mv jni-common.o $(PULSE_JAVA_CLASS_DIR)
+endif
+	mkdir -p stamps
+	touch stamps/pulse-java.stamp
+
+stamps/pulse-java-jar.stamp: stamps/pulse-java-class.stamp
+if ENABLE_PULSE_JAVA
+	mkdir -p $(PULSE_JAVA_CLASS_DIR);
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAR) cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .; \
+	fi
+endif
+	mkdir -p stamps
+	touch stamps/pulse-java-jar.stamp
+
+stamps/pulse-java-class.stamp: 
+if ENABLE_PULSE_JAVA
+	mkdir -p $(PULSE_JAVA_CLASS_DIR)
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
+		 $(JAVAC) -d ../../../$(PULSE_JAVA_CLASS_DIR) \
+		-bootclasspath  \
+	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
+		org/classpath/icedtea/pulseaudio/*.java\
+		) \
+        else \
+		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
+		$(ICEDTEA_BOOT_DIR)/bin/javac -d ../../../$(PULSE_JAVA_CLASS_DIR)\
+		-bootclasspath \
+	        '$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar' \
+		org/classpath/icedtea/pulseaudio/*.java\
+		) \
+        fi
+	cp  -r $(PULSE_JAVA_JAVA_SRCDIR)/META-INF $(PULSE_JAVA_CLASS_DIR)
+endif
+	mkdir -p stamps
+	touch stamps/pulse-java-class.stamp
+
+
+stamps/pulse-java-headers.stamp: stamps/pulse-java-class.stamp
+if ENABLE_PULSE_JAVA
+	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
+	then \
+	  $(JAVAH) -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.EventLoop ; \
+	  $(JAVAH) -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.Stream ; \
+	  $(JAVAH) -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.Operation; \
+	  $(JAVAH) -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.PulseAudioSourcePort ; \
+	  $(JAVAH) -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.PulseAudioTargetPort ; \
+	else \
+	  $(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.EventLoop ; \
+	  $(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.Stream ; \
+	  $(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.Operation; \
+	  $(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.PulseAudioSourcePort ; \
+	  $(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_SRCDIR) -classpath $(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.PulseAudioTargetPort ; \
+	fi
+endif
+	mkdir -p stamps
+	touch stamps/pulse-java-headers.stamp
+
+
+clean-pulse-java:
+if ENABLE_PULSE_JAVA
+	rm -rf $(PULSE_JAVA_CLASS_DIR)/*
+	rm -f $(PULSE_JAVA_NATIVE_SRCDIR)/org_*.h
+	rm -f stamps/pulse-java*.stamp
+	rm -f pulse-java.jar
+	rm -f libpulse-java.so
+endif
+
+# end of pulse-java
 
 # jtreg
 
@@ -1484,7 +1693,8 @@ stamps/visualvm.stamp: $(BOOTSTRAP_DIRECTORY_STAMP) stamps/download.stamp \
 	stamps/extract.stamp stamps/nbplatform.stamp
 if WITH_VISUALVM
 	cd visualvm/visualvm ; \
-	ln -s $(abs_top_srcdir)/netbeans/nbbuild/netbeans netbeans ; \
+	ln -s $(abs_top_srcdir)/netbeans/nbbuild/netbeans . ; \
+	rm netbeans/profiler3 && mv netbeans/extra netbeans/profiler3 ; \
 	JAVA_HOME=$(ICEDTEA_HOME) $(ANT) build
 endif
 	mkdir -p stamps
@@ -1499,10 +1709,18 @@ clean-visualvm:
 stamps/nbplatform.stamp: $(BOOTSTRAP_DIRECTORY_STAMP) stamps/extract.stamp \
 	stamps/download.stamp
 if WITH_VISUALVM
-	cd netbeans/nbbuild && JAVA_HOME=$(ICEDTEA_HOME) $(ANT) \
-	  -Dpermit.jdk6.builds=true build-platform ; \
-	cd ../profiler && find . -iname '*.so' | xargs rm ; \
-	cd libs/jfluid/native/build ; \
+	cd netbeans ; \
+	ln -s $(abs_top_srcdir)/netbeans/profiler.cvs/libs/jfluid/ lib.profiler ; \
+	ln -s $(abs_top_srcdir)/netbeans/profiler.cvs/libs/common/ lib.profiler.common ; \
+	ln -s $(abs_top_srcdir)/netbeans/profiler.cvs/libs/jfluid-ui/ lib.profiler.ui ; \
+	ln -s $(abs_top_srcdir)/netbeans/profiler.cvs/modules/nbmodule/ profiler.nbmodule ; \
+	mkdir -p ./nbbuild/netbeans/ ; \
+	ln -s $(SYSTEM_NETBEANS_DIR)/platform8/ ./nbbuild/netbeans/platform8 ; \
+	ln -s $(SYSTEM_NETBEANS_DIR)/apisupport1/ ./nbbuild/netbeans/apisupport1 ; \
+	ln -s $(SYSTEM_NETBEANS_DIR)/harness/ ./nbbuild/netbeans/harness ; \
+	ln -s $(SYSTEM_NETBEANS_DIR)/java2/ ./nbbuild/netbeans/java2 ; \
+	ln -s $(SYSTEM_NETBEANS_DIR)/ide9/ ./nbbuild/netbeans/ide9 ; \
+	cd profiler.cvs/libs/jfluid/native/build ; \
 	if ! (uname -a | grep x86_64) ; then \
 	  buildscript=./buildnative-linux-15.sh ; \
 	else \
@@ -1510,13 +1728,15 @@ if WITH_VISUALVM
 	fi ; \
 	JAVA_HOME_15=$(ICEDTEA_HOME) JAVA_HOME_16=$(ICEDTEA_HOME) \
 	  $$buildscript ; \
-	cd ../../../.. ; \
+	cd ../../../../.. ; \
+	ln -s $(abs_top_srcdir)/netbeans/nbbuild/netbeans/extra nbbuild/netbeans/profiler3 ; \
+	ln -s $(abs_top_srcdir)/netbeans/profiler.cvs/modules/main/ profiler ; \
 	for dir in jfluid jfluid-ui common ; do \
 	  JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true \
-	    -f libs/$$dir/build.xml ; \
+	    -f profiler.cvs/libs/$$dir/build.xml ; \
 	done ; \
 	JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true \
-	  -f modules/main/build.xml ;
+	  -f profiler.cvs/modules/main/build.xml ;
 endif
 	mkdir -p stamps
 	touch $@

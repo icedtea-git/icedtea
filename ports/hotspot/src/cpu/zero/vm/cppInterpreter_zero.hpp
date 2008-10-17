@@ -28,9 +28,13 @@
   // Size of interpreter code
   const static int InterpreterCodeSize = 6 * K;
 
- private:
+ public:
   // Method entries
   static void normal_entry(methodOop method, intptr_t UNUSED, TRAPS);
   static void native_entry(methodOop method, intptr_t UNUSED, TRAPS);
   static void accessor_entry(methodOop method, intptr_t UNUSED, TRAPS);
   static void empty_entry(methodOop method, intptr_t UNUSED, TRAPS);
+
+ public:
+  // Main loop of normal_entry
+  static void main_loop(int recurse, TRAPS);

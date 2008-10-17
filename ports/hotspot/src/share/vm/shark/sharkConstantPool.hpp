@@ -67,4 +67,5 @@ class SharkConstantPool : public StackObj {
   llvm::Value* object_at(int which);
   llvm::Value* tag_at(int which);
   llvm::Value* cache_entry_at(int which);
+  llvm::Value* java_mirror();
 };

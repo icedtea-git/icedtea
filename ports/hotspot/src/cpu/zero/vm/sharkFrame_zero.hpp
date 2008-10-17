@@ -31,6 +31,7 @@
 // | monitor m-1        |
 // |  ...               |
 // | monitor 0          |
+// | exception          |
 // | method             |
 // | unextended_sp      |
 // | pc                 |
@@ -54,6 +55,7 @@ class SharkFrame : public ZeroFrame {
     pc_off = jf_header_words,
     unextended_sp_off,
     method_off,
+    exception_off,
     header_words
   };
 

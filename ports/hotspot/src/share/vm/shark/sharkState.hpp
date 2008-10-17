@@ -26,16 +26,14 @@
 class SharkBlock;
 
 class SharkState : public ResourceObj {
-  friend class SharkEntryState;
-  friend class SharkPHIState;
-  friend class SharkTrackingState;
-
  protected:
   SharkState(SharkBlock* block)
-    : _block(block) { initialize(); }
+    : _block(block)          { initialize(NULL); }
+  SharkState(const SharkState* state)
+    : _block(state->block()) { initialize(state); }
 
  private:
-  void initialize();
+  void initialize(const SharkState* state);
 
  private:
   SharkBlock* _block;
@@ -49,13 +47,13 @@ class SharkState : public ResourceObj {
  protected:
   inline SharkBuilder* builder() const;
   inline SharkFunction* function() const;
-  
+
  public:
   inline int max_locals() const;
   inline int max_stack() const;
 
   // The values we are tracking
- protected:
+ private:
   llvm::Value* _method;
   SharkValue** _locals;
   SharkValue** _stack;
@@ -63,35 +61,72 @@ class SharkState : public ResourceObj {
 
   // Method
  public:
+  llvm::Value** method_addr()
+  {
+    return &_method;
+  }
   llvm::Value* method() const
   {
     return _method;
   }
+  void set_method(llvm::Value* method)
+  {
+    _method = method;
+  }
 
   // Local variables
  public:
-  SharkValue* local(int index) const
+  SharkValue** local_addr(int index) const
   {
     assert(index >= 0 && index < max_locals(), "bad local variable index");
-    return _locals[index];
+    return &_locals[index];
+  }
+  SharkValue* local(int index) const
+  {
+    return *local_addr(index);
+  }
+  void set_local(int index, SharkValue* value)
+  {
+    *local_addr(index) = value;
   }
 
   // Expression stack
  public:
+  SharkValue** stack_addr(int slot) const
+  {
+    assert(slot >= 0 && slot < stack_depth(), "bad stack slot");
+    return &_sp[-(slot + 1)];
+  }
   SharkValue* stack(int slot) const
   {
-    assert(slot >= 0 && slot < stack_depth(), "bad stack slot");
-    return _sp[-(slot + 1)];
+    return *stack_addr(slot);
   }
+ protected:
   void set_stack(int slot, SharkValue* value)
   {
-    assert(slot >= 0 && slot < stack_depth(), "bad stack slot");
-    _sp[-(slot + 1)] = value;
+    *stack_addr(slot) = value;
   }
+ public:
   int stack_depth() const
   {
     return _sp - _stack;
   }
+  void push(SharkValue* value)
+  {
+    assert(stack_depth() < max_stack(), "stack overrun");
+    *(_sp++) = value;
+  }
+  SharkValue* pop()
+  {
+    assert(stack_depth() > 0, "stack underrun");
+    return *(--_sp);
+  }
+  void pop(int slots)
+  {
+    assert(stack_depth() >= slots, "stack underrun");
+    _sp -= slots;
+  }  
+  inline int stack_depth_at_entry() const;
 };
 
 class SharkEntryState : public SharkState {
@@ -111,72 +146,22 @@ class SharkPHIState : public SharkState {
  private:
   void initialize();
 
-#ifdef ASSERT
- private:
-  int _stack_depth_at_entry;
-#endif // ASSERT
-
  public:
   void add_incoming(SharkState* incoming_state);
 };
 
 class SharkTrackingState : public SharkState {
  public:
-  SharkTrackingState(const SharkState* initial_state)
-    : SharkState(initial_state->block()) { initialize(initial_state); }
-
- private:
-  void initialize(const SharkState* initial_state);
-
-  // Method
- public:
-  void set_method(llvm::Value* method)
-  {
-    _method = method;
-  }
-
-  // Local variables
- public:
-  void set_local(int index, SharkValue* value)
-  {
-    assert(index >= 0 && index < max_locals(), "bad local variable index");
-    _locals[index] = value;
-  }
-
-  // Expression stack
- public:
-  void push(SharkValue* value)
-  {
-    assert(stack_depth() < max_stack(), "stack overrun");
-    *(_sp++) = value;
-  }
-  SharkValue* pop()
-  {
-    assert(stack_depth() > 0, "stack underrun");
-    return *(--_sp);
-  }
-  void set_stack(int slot, SharkValue* value)
-  {
-    assert(slot >= 0 && slot < stack_depth(), "bad stack slot");
-    _sp[-(slot + 1)] = value;
-  }
-  int stack_depth_in_slots() const;
+  SharkTrackingState(const SharkState* state)
+    : SharkState(state) { set_method(state->method()); }
 
   // Cache and decache
  public:
-  void cache(ciMethod *callee = NULL);
-  void decache(ciMethod *callee = NULL);
-
-  // Decache helpers
- private:
-  static int oopmap_slot_munge(int x)
-  {
-    return x << (LogBytesPerWord - LogBytesPerInt);
-  }
-  static VMReg slot2reg(int offset)
-  {
-    return VMRegImpl::stack2reg(oopmap_slot_munge(offset));
-  }
+  inline void decache_for_Java_call(ciMethod* callee);
+  inline void cache_after_Java_call(ciMethod* callee);
+  inline void decache_for_VM_call();
+  inline void cache_after_VM_call();
+  inline void decache_for_trap();
 
   // Copy and merge
  public:

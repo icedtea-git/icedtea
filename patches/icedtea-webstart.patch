@@ -1,6 +1,6 @@
-diff -c openjdk.orig/jdk/make/launchers/Makefile openjdk/jdk/make/launchers/Makefile
---- openjdk.orig/jdk/make/launchers/Makefile	2008-06-29 09:45:56.000000000 -0400
-+++ openjdk/jdk/make/launchers/Makefile	2008-06-29 09:47:01.000000000 -0400
+diff -ur openjdk.orig/jdk/make/launchers/Makefile openjdk/jdk/make/launchers/Makefile
+--- openjdk.orig/jdk/make/launchers/Makefile	2008-07-10 15:54:41.000000000 -0400
++++ openjdk/jdk/make/launchers/Makefile	2008-09-04 17:50:22.000000000 -0400
 @@ -67,6 +67,7 @@
  $(call make-launcher, javadoc, com.sun.tools.javadoc.Main, , )
  $(call make-launcher, javah, com.sun.tools.javah.Main, , )
@@ -9,10 +9,125 @@ diff -c openjdk.orig/jdk/make/launchers/Makefile openjdk/jdk/make/launchers/Make
  $(call make-launcher, jconsole, sun.tools.jconsole.JConsole, \
    -J-Djconsole.showOutputViewer, )
  $(call make-launcher, jdb, com.sun.tools.example.debug.tty.TTY, , )
-diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java
---- openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2008-01-12 15:53:45.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2008-02-04 11:51:20.000000000 -0500
-@@ -42,25 +42,25 @@
+diff -ur openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java
+--- openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java	2008-07-10 15:57:10.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java	2008-09-04 17:54:34.000000000 -0400
+@@ -42,9 +42,6 @@
+ import java.net.UnknownHostException;
+ import java.security.*;
+ import java.util.*;
+-import java.util.Collections;
+-import java.util.Locale;
+-import java.util.WeakHashMap;
+ import javax.swing.SwingUtilities;
+ import sun.awt.AppContext;
+ import sun.awt.EmbeddedFrame;
+@@ -68,7 +65,7 @@
+     /**
+      * The applet (if loaded).
+      */
+-    Applet applet;
++    protected Applet applet;
+ 
+     /**
+      * Applet will allow initialization.  Should be
+@@ -117,7 +114,7 @@
+     /**
+      * The thread for the applet.
+      */
+-    Thread handler;
++    protected Thread handler;
+ 
+ 
+     /**
+@@ -162,7 +159,8 @@
+      * Creates a thread to run the applet. This method is called
+      * each time an applet is loaded and reloaded.
+      */
+-    synchronized void createAppletThread() {
++	//Overridden by NetxPanel.
++    protected synchronized void createAppletThread() {
+         // Create a thread group for the applet, and start a new
+         // thread to load the applet.
+         String nm = "applet-" + getCode();
+@@ -306,7 +304,7 @@
+     /**
+      * Get an event from the queue.
+      */
+-    synchronized AppletEvent getNextEvent() throws InterruptedException {
++    protected synchronized AppletEvent getNextEvent() throws InterruptedException {
+         while (queue == null || queue.isEmpty()) {
+             wait();
+         }
+@@ -499,9 +497,25 @@
+ 
+                       status = APPLET_START;
+                       showAppletStatus("started");
++
++                      // reset size to make up for applets that specify height in %
++                      try {
++                    	  javax.swing.SwingUtilities.invokeLater(new Runnable() {
++                    		  public void run() {
++                    			  int width = getWidth();
++                    			  int height = getHeight();
++
++                    			  appletResize(width, height);
++                    			  validate();
++                    		  }
++                    	  });
++                      } catch (Exception e) {
++                    	  System.err.println("Applet resize failed.");
++                    	  e.printStackTrace();
++                      }
++
+                       break;
+                   }
+-
+                 case APPLET_STOP:
+                     if (status != APPLET_START) {
+                         showAppletStatus("notstarted");
+@@ -695,7 +709,8 @@
+      * applet event processing so that it can be gracefully interrupted from
+      * things like HotJava.
+      */
+-    private void runLoader() {
++	//Overridden by NetxPanel.
++    protected void runLoader() {
+         if (status != APPLET_DISPOSE) {
+             showAppletStatus("notdisposed");
+             return;
+@@ -892,8 +907,8 @@
+         return status == APPLET_START;
+     }
+ 
+-
+     private EventQueue appEvtQ = null;
++
+     /**
+      * Is called when the applet wants to be resized.
+      */
+diff -ur openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java
+--- openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2008-07-10 15:57:10.000000000 -0400
++++ openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2008-09-04 17:54:42.000000000 -0400
+@@ -25,13 +25,11 @@
+ 
+ package sun.applet;
+ 
+-import java.util.*;
+-import java.io.*;
+-import java.net.URL;
++import java.applet.AppletContext;
++import java.awt.Dimension;
+ import java.net.MalformedURLException;
+-import java.awt.*;
+-import java.applet.*;
+-import sun.tools.jar.*;
++import java.net.URL;
++import java.util.Hashtable;
+ 
+ 
+ /**
+@@ -42,35 +40,37 @@
   *
   * @author      Arthur van Hoff
   */
@@ -21,7 +136,7 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java o
  
      /* Are we debugging? */
 -    static boolean debug = false;
-+    protected static boolean debug = false;
++    protected static boolean debug = true;
  
      /**
       * The document url.
@@ -43,7 +158,11 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java o
  
      /*
       * JDK 1.1 serialVersionUID
-@@ -70,7 +70,7 @@
+      */
+     private static final long serialVersionUID = 8890989370785545619L;
+ 
++    private Dimension windowSizeFactor = new Dimension(750, 350);
++    
      /**
       * Construct an applet viewer and start the applet.
       */
@@ -52,7 +171,75 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java o
          this.documentURL = documentURL;
          this.atts = atts;
  
-@@ -202,12 +202,12 @@
+@@ -102,6 +102,7 @@
+ 
+     }
+ 
++
+     /**
+      * Get an applet parameter.
+      */
+@@ -125,12 +126,42 @@
+     }
+ 
+     /**
++     * Set applet size (as proportion of window size) if needed
++     */
++    public synchronized void setAppletSizeIfNeeded(int width, int height) {
++
++    	Dimension newD = new Dimension(getWidth(), getHeight());
++
++    	String h = getParameter("height");
++    	String w = getParameter("width");
++
++    	if (width != -1 && w != null && w.endsWith("%")) {
++    		newD.width = (Integer.valueOf(w.substring(0, w.length() - 1)).intValue()/100)*width;
++    	}
++
++    	if (height != -1 && h != null && h.endsWith("%")) {
++    		newD.height = (Integer.valueOf(h.substring(0, h.length() - 1)).intValue()/100)*height;
++    	}
++    	
++    	synchronized(windowSizeFactor) {
++    		windowSizeFactor = newD;
++    	}
++    }
++
++    /**
+      * Get the width.
+      */
+     public int getWidth() {
+         String w = getParameter("width");
+         if (w != null) {
+-            return Integer.valueOf(w).intValue();
++        	try {
++        		return Integer.valueOf(w).intValue();
++        	} catch (NumberFormatException nfe) {
++        		synchronized(windowSizeFactor) {
++        			System.err.println("getWidth() returning " + windowSizeFactor.width);
++        			return windowSizeFactor.width;
++        		}
++        	}
+         }
+         return 0;
+     }
+@@ -142,7 +173,14 @@
+     public int getHeight() {
+         String h = getParameter("height");
+         if (h != null) {
+-            return Integer.valueOf(h).intValue();
++        	try {
++        		return Integer.valueOf(h).intValue();
++        	} catch (NumberFormatException nfe) {
++        		synchronized(windowSizeFactor) {
++        			System.err.println("getHeight() returning " + windowSizeFactor.height);
++        			return windowSizeFactor.height;
++        		}
++        	}
+         }
+         return 0;
+     }
+@@ -202,12 +240,12 @@
          return (AppletContext)getParent();
      }
  
@@ -67,53 +254,3 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java o
          if(debug) {
              t.printStackTrace();
              debug(s);
-diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java
---- openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java	2008-03-26 04:58:12.000000000 -0400
-+++ openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java	2008-04-07 21:55:56.000000000 -0400
-@@ -68,7 +68,7 @@
-     /**
-      * The applet (if loaded).
-      */
--    Applet applet;
-+    protected Applet applet;
- 
-     /**
-      * Applet will allow initialization.  Should be
-@@ -117,7 +117,7 @@
-     /**
-      * The thread for the applet.
-      */
--    Thread handler;
-+    protected Thread handler;
- 
- 
-     /**
-@@ -162,7 +162,8 @@
-      * Creates a thread to run the applet. This method is called
-      * each time an applet is loaded and reloaded.
-      */
--    synchronized void createAppletThread() {
-+	//Overridden by NetxPanel.
-+    protected synchronized void createAppletThread() {
-         // Create a thread group for the applet, and start a new
-         // thread to load the applet.
-         String nm = "applet-" + getCode();
-@@ -306,7 +307,7 @@
-     /**
-      * Get an event from the queue.
-      */
--    synchronized AppletEvent getNextEvent() throws InterruptedException {
-+    protected synchronized AppletEvent getNextEvent() throws InterruptedException {
-         while (queue == null || queue.isEmpty()) {
-             wait();
-         }
-@@ -695,7 +696,8 @@
-      * applet event processing so that it can be gracefully interrupted from
-      * things like HotJava.
-      */
--    private void runLoader() {
-+	//Overridden by NetxPanel.
-+    protected void runLoader() {
-         if (status != APPLET_DISPOSE) {
-             showAppletStatus("notdisposed");
-             return;

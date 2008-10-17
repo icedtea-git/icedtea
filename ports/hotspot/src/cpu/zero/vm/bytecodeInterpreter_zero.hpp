@@ -43,6 +43,10 @@
   {
     _method = new_method;
   }
+  inline interpreterState self_link()
+  {
+    return _self_link;
+  }
   inline void set_self_link(interpreterState new_self_link)
   {
     _self_link = new_self_link;

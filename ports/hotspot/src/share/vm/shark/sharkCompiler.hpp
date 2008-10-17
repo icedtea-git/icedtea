@@ -57,13 +57,7 @@ class SharkCompiler : public AbstractCompiler {
     return &_builder;
   }
 
-  // Helpers
+  // Helper
  private:
-  void install_method(ciEnv*          env,
-                      ciMethod*       target,
-                      int             entry_bci,
-                      CodeBuffer*     cb,
-                      OopMapSet*      oopmaps);
-
   static const char *methodname(const ciMethod* target);
 };

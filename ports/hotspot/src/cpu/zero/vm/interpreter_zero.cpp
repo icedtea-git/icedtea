@@ -54,11 +54,21 @@ int AbstractInterpreter::size_activation(methodOop method,
                                          int callee_locals,
                                          bool is_top_frame)
 {
-  Unimplemented();
+  return layout_activation(method, 
+                           tempcount,
+                           popframe_extra_args,
+                           moncount,
+                           callee_param_count,
+                           callee_locals,
+                           (frame*) NULL,
+                           (frame*) NULL,
+                           is_top_frame);
 }
 
 void Deoptimization::unwind_callee_save_values(frame* f,
                                                vframeArray* vframe_array)
 {
+#ifndef SHARK
   Unimplemented();
+#endif // !SHARK
 }

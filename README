@@ -172,10 +172,19 @@ VisualVM
 ========
 
 Passing --enable-visualvm to configure will build the VisualVM profiling
-and troubleshooting tool. NetBeans platform7 and a modified version of
-NetBeans profiler2 (visualvm_preview2) are built from source before building
-VisualVM. A binary launcher jvisualvm is placed in the
+and troubleshooting tool. NetBeans profiler3 (visualvm_preview2) is 
+built from source before building VisualVM. NetBeans 6.1 must be installed 
+on the system. A binary launcher jvisualvm is placed in the
 openjdk/control/build/arch/j2sdk-image/bin directory after the jdk is built.
 Other useful VisualVM configure options include --with-visualvm-src-zip,
---with-netbeans-platform-src-zip, and --with-netbeans-profiler-src-zip which
-can be used to prevent re-downloading of the source zips.
+and --with-netbeans-profiler-src-zip which can be used to prevent 
+re-downloading of the source zips. --with-netbeans-home can be used to specify
+where the Netbeans tools are installed (default /usr/share/netbeans).
+
+
+
+PulseAudio Mixer
+================
+
+Passing --enable-pulse-java to configure will build the PulseAudio Mixer for 
+java. This allows java programs to use PulseAudio as the sound backend.

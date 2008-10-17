@@ -1,0 +1,12 @@
+--- openjdk/jdk/src/share/native/sun/misc/MessageUtils.c.orig 2008-09-17 15:17:02.000000000 +0200
++++ openjdk/jdk/src/share/native/sun/misc/MessageUtils.c      2008-09-17 15:56:07.000000000 +0200
+@@ -39,6 +39,9 @@ printToFile(JNIEnv *env, jstring s, FILE
+    int i;
+     const jchar *sAsArray;
+
++    if (s == NULL) {
++       s = (*env)->NewStringUTF(env, "null\0");
++    }
+     sAsArray = (*env)->GetStringChars(env, s, NULL);
+     length = (*env)->GetStringLength(env, s);
+     sConverted = (char *) malloc(length + 1); 

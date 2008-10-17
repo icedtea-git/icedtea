@@ -156,3 +156,26 @@ Value *SharkConstantPool::cache_entry_at(int which)
 
   return entry;
 }
+
+Value *SharkConstantPool::java_mirror()
+{
+  Value *cp = constants();
+
+  Value *pool_holder = builder()->CreateValueOfStructEntry(
+    cp,
+    in_ByteSize(constantPoolOopDesc::pool_holder_offset_in_bytes()),
+    SharkType::oop_type(),
+    "pool_holder");
+
+  Value *klass_part = builder()->CreateAddressOfStructEntry(
+    pool_holder,
+    in_ByteSize(klassOopDesc::klass_part_offset_in_bytes()),
+    SharkType::klass_type(),
+    "klass_part");
+
+  return builder()->CreateValueOfStructEntry(
+    klass_part,
+    in_ByteSize(Klass::java_mirror_offset_in_bytes()),
+    SharkType::oop_type(),
+    "java_mirror");
+}

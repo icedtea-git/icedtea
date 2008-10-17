@@ -100,9 +100,5 @@ rm -f \
   openjdk/hotspot/agent/kk/src/share/lib/maf-1_0.jar \
   openjdk/hotspot/agent/kk/src/share/lib/jlfgr-1_0.jar \
 
-# PR157, S6713083
-rm -f \
-  openjdk/jdk/src/share/classes/java/lang/instrument/package.html
-
 # END Debian/Ubuntu additions
 
