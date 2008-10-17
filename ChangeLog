@@ -1,3 +1,7 @@
+2008-10-17  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4 (FIND_LIBGCJ_JAR): Fix quoting.
+
 2008-10-16  Deepak Bhole  <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Use fifo pipes instead of tcp/ip, make debug output

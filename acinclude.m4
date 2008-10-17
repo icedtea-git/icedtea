@@ -258,7 +258,7 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
     for jar in /usr/share/java/libgcj-4.3*.jar; do
       test -e $jar && LIBGCJ_JAR=$jar
     done
-    if test -n ${LIBGCJ_JAR}; then
+    if test -n "${LIBGCJ_JAR}"; then
       AC_MSG_RESULT(${LIBGCJ_JAR})
     else
       AM_CONDITIONAL(GCC_OLD, test x = x)
