@@ -545,7 +545,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-memory-limits.patch \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
-	patches/icedtea-javafiles.patch \
 	patches/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
 	patches/icedtea-static-libstdc++.patch \
@@ -874,7 +873,7 @@ stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
 ICEDTEA_ECJ_PATCHES = patches/icedtea-ecj.patch \
 	patches/icedtea-ecj-spp.patch
 
-stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
+stamps/patch-ecj.stamp: stamps/clone-ecj.stamp
 	mkdir -p stamps; \
 	rm -f stamps/patch-ecj.stamp.tmp ; \
 	touch stamps/patch-ecj.stamp.tmp ; \
@@ -1436,10 +1435,10 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt net -C lib/rt sun ; \
+	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt sun ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt net -C lib/rt sun ; \
+	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt sun ; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \

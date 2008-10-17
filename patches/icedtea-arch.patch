@@ -100,14 +100,6 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/
    ifneq ("$(findstring sparc,$(ARCH))", "")
      # sparc or sparcv9
      REQUIRED_CC_VER = 4.0
-@@ -92,6 +138,7 @@
-     endif
-   endif
-   endif
-+  endif
-   # Option used to create a shared library
-   SHARED_LIBRARY_FLAG = -shared -mimpure-text
-   SUN_COMP_VER := $(shell $(CC) --verbose 2>&1 )
 diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax/sound/SoundDefs.gmk
 --- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2008-10-17 02:24:36.000000000 +0100
 +++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2008-10-17 02:45:02.000000000 +0100

@@ -1,4 +1,16 @@
-2008-10-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-10-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* rt/netscape/javascript/JSException.java,
+	* rt/netscape/javascript/JSObject.java,
+	* rt/netscape/javascript/JSProxy.java,
+	* rt/netscape/javascript/JSRunnable.java,
+	* rt/netscape/javascript/JSUtil.java:
+	Removed as moved to plugin.
+	* Makefile.am: Fix errors introduced by merge.
+	* patches/icedtea-arch.patch,
+	* patches/icedtea-ecj.patch: Regenerated.
+
+2008-10-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* patches/icedtea-6open-6616825.patch,
 	* patches/icedtea-6open-6651382.patch,
