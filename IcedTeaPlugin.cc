@@ -90,38 +90,55 @@ PRThread* current_thread ();
 #define ID(object) \
   (object == NULL ? (PRUint32) 0 : reinterpret_cast<JNIReference*> (object)->identifier)
 
+static int plugin_debug = 0;
+
 #if 1
 // Debugging macros.
 
 #define PLUGIN_DEBUG_0ARG(str) \
-  if (getenv ("ICEDTEAPLUGIN_DEBUG")) \
-  {                                   \
-    printf (str);                     \
-  }
+  do                                        \
+  {                                         \
+    if (plugin_debug)                       \
+    {                                       \
+      printf (str);                         \
+    }                                       \
+  } while (0)
 
 #define PLUGIN_DEBUG_1ARG(str, arg1) \
-  if (getenv ("ICEDTEAPLUGIN_DEBUG")) \
-  {                                   \
-    printf (str, arg1);                     \
-  }
+  do                                        \
+  {                                         \
+    if (plugin_debug)                       \
+    {                                       \
+      printf (str, arg1);                   \
+    }                                       \
+  } while (0)
 
 #define PLUGIN_DEBUG_2ARG(str, arg1, arg2) \
-  if (getenv ("ICEDTEAPLUGIN_DEBUG")) \
-  {                                   \
-    printf (str, arg1, arg2);                     \
-  }
+  do                                        \
+  {                                         \
+    if (plugin_debug)                       \
+    {                                       \
+      printf (str, arg1, arg2);             \
+    }                                       \
+  } while (0)
 
 #define PLUGIN_DEBUG_3ARG(str, arg1, arg2, arg3) \
-  if (getenv ("ICEDTEAPLUGIN_DEBUG")) \
-  {                                   \
-    printf (str, arg1, arg2, arg3);                     \
-  }
+  do                                        \
+  {                                         \
+    if (plugin_debug)                       \
+    {                                       \
+      printf (str, arg1, arg2, arg3);       \
+    }                                       \
+  } while (0)
 
 #define PLUGIN_DEBUG_4ARG(str, arg1, arg2, arg3, arg4) \
-  if (getenv ("ICEDTEAPLUGIN_DEBUG")) \
-  {                                   \
-    printf (str, arg1, arg2, arg3, arg4);                     \
-  }
+  do                                        \
+  {                                         \
+    if (plugin_debug)                       \
+    {                                       \
+      printf (str, arg1, arg2, arg3, arg4); \
+    }                                       \
+  } while (0)
 
 #define PLUGIN_DEBUG(message)                                           \
   PLUGIN_DEBUG_1ARG ("ICEDTEA PLUGIN: %s\n", message)
@@ -1439,6 +1456,7 @@ IcedTeaPluginFactory::IcedTeaPluginFactory ()
   out_watch_source(NULL),
   out_to_appletviewer(NULL)
 {
+  plugin_debug = getenv ("ICEDTEAPLUGIN_DEBUG") != NULL;
   PLUGIN_TRACE_FACTORY ();
   instances.Init ();
   references.Init ();
