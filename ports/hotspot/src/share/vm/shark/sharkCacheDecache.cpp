@@ -43,14 +43,12 @@ void SharkDecacher::start_stack(int num_slots, int max_slots)
   // Create the array we'll record our stack slots in
   _exparray = new GrowableArray<ScopeValue*>(num_slots);
 
-  // Trim back the stack if necessary
-  if (num_slots != max_slots) {
-    function()->CreateStoreZeroStackPointer(
-      builder()->CreatePtrToInt(
-        function()->CreateAddressOfFrameEntry(
-          function()->stack_slots_offset() + max_slots - num_slots),
-        SharkType::intptr_type()));
-  }
+  // Set the stack pointer
+  function()->CreateStoreZeroStackPointer(
+    builder()->CreatePtrToInt(
+      function()->CreateAddressOfFrameEntry(
+        function()->stack_slots_offset() + max_slots - num_slots),
+      SharkType::intptr_type()));
 }
 
 void SharkDecacher::process_stack_slot(int          index,
@@ -167,18 +165,6 @@ void SharkDecacher::end_frame()
 
   // Finish recording the debug information
   debug_info()->end_safepoint(pc_offset());
-}
-
-void SharkCacher::start_stack(int num_slots, int max_slots)
-{
-  // Restore the stack if necessary
-  if (num_slots != max_slots) {
-    function()->CreateStoreZeroStackPointer(
-      builder()->CreatePtrToInt(
-        function()->CreateAddressOfFrameEntry(
-          function()->stack_slots_offset()),
-        SharkType::intptr_type()));
-  }
 }
 
 void SharkCacher::process_stack_slot(int          index,

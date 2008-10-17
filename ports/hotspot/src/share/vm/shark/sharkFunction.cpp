@@ -213,7 +213,7 @@ Value* SharkFunction::CreateBuildFrame()
     CreateLoadZeroStackPointer(),
     LLVMValue::intptr_constant((frame_words + extra_locals) * wordSize));
   CreateStackOverflowCheck(zero_stack_pointer);
-  CreateStoreZeroStackPointer(zero_stack_pointer);
+  NOT_PRODUCT(CreateStoreZeroStackPointer(zero_stack_pointer));
 
   // Create the frame
   _frame = builder()->CreateIntToPtr(

@@ -1,5 +1,17 @@
 2008-10-17  Gary Benson  <gbenson@redhat.com>
 
+	PR icedtea/203:
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::start_stack): Always set the stack pointer.
+	(SharkCacher::start_stack): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp
+	(SharkCacher::start_stack): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::CreateBuildFrame): Only set the stack pointer
+	for non-product builds.
+
+2008-10-17  Gary Benson  <gbenson@redhat.com>
+
 	* acinclude.m4 (FIND_LIBGCJ_JAR): Fix quoting.
 
 2008-10-16  Deepak Bhole  <dbhole@redhat.com>

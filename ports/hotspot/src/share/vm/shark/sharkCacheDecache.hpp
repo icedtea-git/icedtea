@@ -297,7 +297,6 @@ class SharkCacher : public SharkCacherDecacher {
 
   // Callbacks
  protected:
-  void start_stack(int num_slots, int max_slots);
   void process_stack_slot(int index, SharkValue** value, int offset);
 
   void process_method_slot(llvm::Value** value, int offset);
