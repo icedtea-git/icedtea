@@ -124,8 +124,8 @@ AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
 
 AC_ARG_ENABLE([gcjwebplugin],
               [AS_HELP_STRING([--enable-gcjwebplugin],
-                              [Build the GCJ Web Plugin plugin])],
-              [enable_gcjplugin="yes"], [enable_gcjplugin="no"])
+                              [Build the GCJ Web Plugin plugin (deprecated)])],
+              [enable_gcjwebplugin="yes"], [enable_gcjwebplugin="no"])
 AM_CONDITIONAL(ENABLE_GCJWEBPLUGIN, test "x${enable_gcjwebplugin}" = "xyes")
 
 AC_ARG_ENABLE([pulse-java],
@@ -384,14 +384,8 @@ fi
 
 dnl Check for plugin support headers and libraries.
 dnl FIXME: use unstable
-if test "x${enable_plugin}" = "xyes"
+if test "x${enable_gcjwebplugin}" = "xyes"
 then
-  PKG_CHECK_MODULES(XULRUNNER, \
-    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9)
-  PKG_CHECK_MODULES(GTK, gtk+-2.0)
-else
-  if test "x${enable_gcjwebplugin}" = "xyes"
-  then
     PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul-unstable, \
       [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
     if test "x${MOZILLA_FOUND}" = xno
@@ -438,6 +432,12 @@ else
     AC_SUBST(GLIB_LIBS)
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
+else
+  if test "x${enable_plugin}" = "xyes"
+  then
+    PKG_CHECK_MODULES(XULRUNNER, \
+      nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9)
+    PKG_CHECK_MODULES(GTK, gtk+-2.0)
   fi
 fi
 

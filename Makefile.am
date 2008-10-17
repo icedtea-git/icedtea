@@ -961,16 +961,16 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/ \
 	  $(ICEDTEA_BUILD_TARGET)
-if ENABLE_PLUGIN
-	cp -pPRf IcedTeaPlugin.so \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf IcedTeaPlugin.so \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-else
 if ENABLE_GCJWEBPLUGIN
 	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf gcjwebplugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+else
+if ENABLE_PLUGIN
+	cp -pPRf IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 endif
@@ -1024,16 +1024,16 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
-if ENABLE_PLUGIN
-	cp -pPRf IcedTeaPlugin.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf IcedTeaPlugin.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
-else
 if ENABLE_GCJWEBPLUGIN
 	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf gcjwebplugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+else
+if ENABLE_PLUGIN
+	cp -pPRf IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 endif
@@ -1393,6 +1393,18 @@ clean-cacao:
 	rm -rf cacao
 	rm -f stamps/cacao.stamp
 
+if ENABLE_GCJWEBPLUGIN
+# gcjwebplugin.so.
+gcjwebplugin.so: gcjwebplugin.cc
+	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
+	  $(GTK_CFLAGS) $(GTK_LIBS) \
+	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	  -fPIC -shared -o $@ $<
+
+clean-gcjwebplugin:
+	rm -f gcjwebplugin.so
+else
 if ENABLE_PLUGIN
 # IcedTeaPlugin.so.
 # Separate compile and link invocations to ensure intermediate object
@@ -1414,18 +1426,6 @@ IcedTeaPlugin.so: IcedTeaPlugin.o
 clean-IcedTeaPlugin:
 	rm -f IcedTeaPlugin.o
 	rm -f IcedTeaPlugin.so
-else
-if ENABLE_GCJWEBPLUGIN
-# gcjwebplugin.so.
-gcjwebplugin.so: gcjwebplugin.cc
-	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
-	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
-	  $(GTK_CFLAGS) $(GTK_LIBS) \
-	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -fPIC -shared -o $@ $<
-
-clean-gcjwebplugin:
-	rm -f gcjwebplugin.so
 endif
 endif
 

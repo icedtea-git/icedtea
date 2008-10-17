@@ -2566,20 +2566,23 @@ plugin_in_pipe_callback (GIOChannel* source,
   {
       PLUGIN_DEBUG ("appletviewer has stopped.");
       keep_installed = FALSE;
+  } else
+  {
+  
+
+    // push message to queue
+    PR_EnterMonitor(jvmMsgQueuePRMonitor);
+    jvmMsgQueue.push(nsCString(message));
+    PR_ExitMonitor(jvmMsgQueuePRMonitor);
+
+    // poke process thread
+    PRThread *prThread;
+    processThread->GetPRThread(&prThread);
+    PRStatus res = PR_Interrupt(prThread);
+
   }
 
-  // push message to queue
-  PR_EnterMonitor(jvmMsgQueuePRMonitor);
-  jvmMsgQueue.push(nsCString(message));
-  PR_ExitMonitor(jvmMsgQueuePRMonitor);
-
-  // poke process thread
-  PRThread *prThread;
-  processThread->GetPRThread(&prThread);
-  PRStatus res = PR_Interrupt(prThread);
-
   PLUGIN_DEBUG ("plugin_in_pipe_callback return");
-
   return keep_installed;
 }
 
@@ -4325,13 +4328,13 @@ IcedTeaJNIEnv::GetEnabledPrivileges(nsCString *privileges, nsISecurityContext *c
        if (hasUniversalBrowserRead == PR_TRUE)
        {
 	       *privileges += "UniversalBrowserRead";
-	       *privileges += ",";
        }
 
        ctx->Implies("UniversalJavaPermission", "UniversalJavaPermission", &hasUniversalJavaPermission);
        if (hasUniversalJavaPermission == PR_TRUE)
        {
-  	     *privileges += "UniversalJavaPermission";
+	       *privileges += ",";
+  	       *privileges += "UniversalJavaPermission";
        }
     }
 
