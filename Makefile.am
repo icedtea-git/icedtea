@@ -692,7 +692,7 @@ stamps/patch-fsg.stamp: stamps/extract.stamp
 	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
-	  false; \
+	  exit 2; \
 	fi ; 
 
 clean-patch-fsg:
@@ -786,7 +786,7 @@ stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
-	  false; \
+	  exit 2; \
 	fi
 
 clean-patch-ecj:
