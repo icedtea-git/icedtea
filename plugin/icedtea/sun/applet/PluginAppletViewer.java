@@ -134,8 +134,8 @@ import sun.misc.Ref;
      
      private static PluginCallRequestFactory requestFactory;
      
-     private int proposedHeightFactor;
-     private int proposedWidthFactor;
+     private double proposedHeightFactor;
+     private double proposedWidthFactor;
 
      /**
       * Null constructor to allow instantiation via newInstance()
@@ -159,15 +159,15 @@ import sun.misc.Ref;
          
          
          // we intercept height and width specifications here because 
-         proposedHeightFactor = 1;
-         proposedWidthFactor = 1;
+         proposedHeightFactor = 1.0;
+         proposedWidthFactor = 1.0;
 
          if (atts.get("heightPercentage") != null) {
-        	 proposedHeightFactor = (Integer) atts.get("heightPercentage")/100;
+        	 proposedHeightFactor = (Integer) atts.get("heightPercentage")/100.0;
          }
          
          if (((String) atts.get("width")).endsWith("%")) {
-        	 proposedWidthFactor = (Integer) atts.get("widthPercentage")/100;
+        	 proposedWidthFactor = (Integer) atts.get("widthPercentage")/100.0;
          }
  
          AccessController.doPrivileged(new PrivilegedAction() {
@@ -390,8 +390,8 @@ import sun.misc.Ref;
         	 String[] dimMsg = message.split(" ");
         	 // 0 => width, 1=> width_value, 2 => height, 3=> height_value
         	 
-        	 int height = proposedHeightFactor*Integer.parseInt(dimMsg[3]);
-        	 int width = proposedWidthFactor*Integer.parseInt(dimMsg[1]);
+        	 int height = (int) (proposedHeightFactor*Integer.parseInt(dimMsg[3]));
+        	 int width = (int) (proposedWidthFactor*Integer.parseInt(dimMsg[1]));
 
         	 if (panel instanceof NetxPanel)
         		 ((NetxPanel) panel).updateSizeInAtts(height, width);
