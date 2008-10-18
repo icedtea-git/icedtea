@@ -1539,31 +1539,39 @@ clean-jtreg:
 	rm -f test/jtreg.jar
 	rm -f stamps/jtreg.stamp
 
-check-hotspot: jtreg
+check-hotspot: stamps/jtreg.stamp
 	mkdir -p test/hotspot/JTwork test/hotspot/JTreport
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/hotspot/JTwork -r:test/hotspot/JTreport \
 		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
-		`pwd`/openjdk/hotspot/test
+		`pwd`/openjdk/hotspot/test \
+	    | tee test/$@.log
 
-check-langtools: jtreg
+check-langtools: stamps/jtreg.stamp
 	mkdir -p test/langtools/JTwork test/langtools/JTreport
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/langtools/JTwork -r:test/langtools/JTreport \
 		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
-		`pwd`/openjdk/langtools/test
+		`pwd`/openjdk/langtools/test \
+	    | tee test/$@.log
 
-check-jdk: jtreg
+check-jdk: stamps/jtreg.stamp
 	mkdir -p test/jdk/JTwork test/jdk/JTreport
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
 		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
-		`pwd`/openjdk/jdk/test
+		`pwd`/openjdk/jdk/test \
+	    | tee test/$@.log
 
 clean-jtreg-reports:
 	rm -rf test/hotspot test/langtools test/jdk
+	rm -f test/check-*.log test/jtreg-summary.log
 
 jtregcheck: jtreg check-hotspot check-langtools check-jdk
+	for i in hotspot langtools jdk; do \
+	  echo "--------------- jtreg console summary for $$i ---------------"; \
+	  egrep -v '^(Passed:|Directory)' test/check-$$i.log; \
+	done | tee test/jtreg-summary.log
 
 check-local: jtregcheck
 
