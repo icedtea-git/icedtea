@@ -628,9 +628,9 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
-	  false; \
+	  exit 2; \
 	fi ; \
-	if [ -e $(abs_top_srcdir)/.hg ]; then \
+	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
 	  revision="-r`(cd $(srcdir); $(HG) tip --template '{rev}')`" ; \
 	fi ; \
 	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
