@@ -1569,11 +1569,41 @@ clean-jtreg-reports:
 	rm -rf test/hotspot test/langtools test/jdk
 	rm -f test/check-*.log test/jtreg-summary.log
 
+# FIXME: this might need some adjustment for other OS than Linux
+jtreg_processes = ps x -ww -o pid,ppid,args \
+	| awk '$$2 == 1 && $$3 ~ /^$(subst /,\/,/scratch)/' \
+	| sed 's,$(CURDIR)/$(sdkimg),<sdkimg>,g;s,$(CURDIR),<pwd>,g'
+jtreg_pids = ps x --no-headers -ww -o pid,ppid,args \
+	| awk '$$2 == 1 && $$3 ~ /^$(subst /,\/,$(CURDIR)/$(sdkimg))/ {print $$1}'
+
 jtregcheck: jtreg check-hotspot check-langtools check-jdk
 	for i in hotspot langtools jdk; do \
 	  echo "--------------- jtreg console summary for $$i ---------------"; \
 	  egrep -v '^(Passed:|Directory)' test/check-$$i.log; \
 	done | tee test/jtreg-summary.log
+
+	: # kill testsuite processes still hanging
+	@pids=$$($(jtreg_pids)); \
+	if [ -n "$$pids" ]; then \
+	  echo "killing processes..."; \
+	  $(jtreg_processes); \
+	  kill -1 $$pids; \
+	  sleep 2; \
+	  pids=$$($(jtreg_pids)); \
+	  if [ -n "$$pids" ]; then \
+	    echo "try harder..."; \
+	    $(jtreg_processes); \
+	    kill -9 $$pids; \
+	    sleep 2; \
+	  fi; \
+	else \
+	  echo "nothing to cleanup"; \
+	fi; \
+	pids=$$($(jtreg_pids)); \
+	if [ -n "$$pids" ]; then \
+	  echo "leftover processes..."; \
+	  $(jtreg_processes); \
+	fi
 
 check-local: jtregcheck
 

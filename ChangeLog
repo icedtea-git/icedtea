@@ -1,5 +1,9 @@
 2008-10-19  Matthias Klose  <doko@ubuntu.com>
 
+	* Makefile.am (jtregcheck): Cleanup processes.
+
+2008-10-19  Matthias Klose  <doko@ubuntu.com>
+
 	* patches/icedtea-cacao-ignore-jdi-tests.patch: Ignore jdi tests,
 	not yet implemented in cacao.
 	* patches/icedtea-cacao-ignore-tests.patch: Ignore long running failing
