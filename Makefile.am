@@ -33,7 +33,7 @@ if ENABLE_PULSE_JAVA
 PULSE_JAVA_DIR = $(srcdir)/pulseaudio
 PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
 PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
-PULSE_JAVA_CLASS_DIR = $(PULSE_JAVA_DIR)/bin
+PULSE_JAVA_CLASS_DIR = $(abs_top_builddir)/pulseaudio
 else 
 PULSE_JAVA_DIR =
 PULSE_JAVA_NATIVE_SRCDIR =
@@ -1580,14 +1580,14 @@ if ENABLE_PULSE_JAVA
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-		 $(JAVAC) -d ../../../$(PULSE_JAVA_CLASS_DIR) \
+		 $(JAVAC) -d $(PULSE_JAVA_CLASS_DIR) \
 		-bootclasspath  \
 	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
 		org/classpath/icedtea/pulseaudio/*.java\
 		) \
         else \
 		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-		$(ICEDTEA_BOOT_DIR)/bin/javac -d ../../../$(PULSE_JAVA_CLASS_DIR)\
+		$(ICEDTEA_BOOT_DIR)/bin/javac -d $(PULSE_JAVA_CLASS_DIR)\
 		-bootclasspath \
 	        '$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar' \
 		org/classpath/icedtea/pulseaudio/*.java\
