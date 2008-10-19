@@ -1,3 +1,14 @@
+2008-10-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Make PULSE_JAVA_DIR use srcdir, link
+	rt-system.jar to the system rt.jar and include
+	com.sun.net.httpserver in rt.jar for jaxws.
+	* patches/icedtea-ecj.patch:
+	Include rt-system.jar in jaxws compilation bootclasspath
+	so java.net and java.util.concurrent classes can be found.
+	Add back missing javazic patch.
+
 2008-10-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* rt/netscape/javascript/JSException.java,

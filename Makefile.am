@@ -30,7 +30,7 @@ endif
 
 if ENABLE_PULSE_JAVA
 # include the makefile in pulseaudio subdir
-PULSE_JAVA_DIR = pulseaudio
+PULSE_JAVA_DIR = $(srcdir)/pulseaudio
 PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
 PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
 PULSE_JAVA_CLASS_DIR = $(PULSE_JAVA_DIR)/bin
@@ -992,6 +992,8 @@ stamps/bootstrap-directory-ecj.stamp:
 	if test -d $(SYSTEM_GCJ_DIR); \
 	then \
 	  mkdir -p bootstrap/ecj/jre/lib; \
+	  ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/rt.jar \
+	    bootstrap/ecj/jre/lib/rt-system.jar; \
 	  ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR) \
 	    bootstrap/ecj/jre/lib/; \
 	  if ! test -d bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
@@ -1281,6 +1283,7 @@ ICEDTEA_COPY_DIRS = \
 	com/sun/jdi/request \
 	com/sun/jmx/snmp/agent \
 	com/sun/tools/jdi \
+	com/sun/net/httpserver \
 	java/io \
 	java/util \
 	java/rmi \

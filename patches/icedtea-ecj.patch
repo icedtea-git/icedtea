@@ -350,7 +350,7 @@ diff -Nru openjdk-ecj.orig/jaxws/make/build.properties openjdk-ecj/jaxws/make/bu
  javac.memoryInitialSize = 128m
 diff -Nru openjdk-ecj.orig/jaxws/make/build.xml openjdk-ecj/jaxws/make/build.xml
 --- openjdk-ecj.orig/jaxws/make/build.xml	2008-10-17 03:12:24.000000000 +0100
-+++ openjdk-ecj/jaxws/make/build.xml	2008-10-17 03:28:27.000000000 +0100
++++ openjdk-ecj/jaxws/make/build.xml	2008-10-19 03:42:43.000000000 +0100
 @@ -84,7 +84,10 @@
        <mkdir dir="${build.toolclasses.dir}"/>
        <javac srcdir="${make.tools.dir}/StripProperties"
@@ -363,7 +363,7 @@ diff -Nru openjdk-ecj.orig/jaxws/make/build.xml openjdk-ecj/jaxws/make/build.xml
        <taskdef name="pstrip"
  		 classname="StripPropertiesTask"
  		 classpath="${build.toolclasses.dir}/"/>
-@@ -96,10 +99,12 @@
+@@ -96,11 +99,13 @@
        <javac fork="true"
               srcdir="${src.classes.dir}"
               destdir="${build.classes.dir}"
@@ -372,11 +372,13 @@ diff -Nru openjdk-ecj.orig/jaxws/make/build.xml openjdk-ecj/jaxws/make/build.xml
               memoryMaximumSize="${javac.memoryMaximumSize}"
               target="${javac.target}"
 -             excludes="com/sun/tools/internal/txw2/**">
+-	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${plugs}/jre/lib/tools.jar:${plugs}/jre/lib/rt-closed.jar"/>
 +             excludes="com/sun/tools/internal/txw2/**"
 + 	     source="1.5">
- 	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${plugs}/jre/lib/tools.jar:${plugs}/jre/lib/rt-closed.jar"/>
++	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${boot.java.home}/jre/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar:${boot.java.home}/jre/lib/rt-system.jar"/>
           <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
           <compilerarg line="${javac.version.opt}"/>
+          <compilerarg line="${javac.no.jdk.warnings}"/>
 diff -Nru openjdk-ecj.orig/jaxws/make/Makefile openjdk-ecj/jaxws/make/Makefile
 --- openjdk-ecj.orig/jaxws/make/Makefile	2008-10-17 03:12:24.000000000 +0100
 +++ openjdk-ecj/jaxws/make/Makefile	2008-10-17 03:29:11.000000000 +0100
@@ -618,6 +620,19 @@ diff -Nru openjdk-ecj.orig/jdk/make/sun/awt/Makefile openjdk-ecj/jdk/make/sun/aw
  	@$(java-vm-cleanup)
  
  fontconfigs.clean :
+diff -Nru openjdk-ecj.orig/jdk/make/sun/javazic/Makefile openjdk-ecj/jdk/make/sun/javazic/Makefile
+--- openjdk-ecj.orig/jdk/make/sun/javazic/Makefile	2008-10-19 04:36:26.000000000 +0100
++++ openjdk-ecj/jdk/make/sun/javazic/Makefile	2008-10-19 04:37:33.000000000 +0100
+@@ -62,7 +62,8 @@
+ $(WORKDIR)/$(MAPFILE): $(BUILDTOOLJARDIR)/javazic.jar $(TZFILES)
+ 	$(RM) -r $(@D)
+ 	$(prep-target)
+-	$(BOOT_JAVA_CMD) -jar $(BUILDTOOLJARDIR)/javazic.jar -V "$(TZDATA_VER)" -d $(WORKDIR) $(TZFILES)
++	$(BOOT_JAVA_CMD) -cp $(ICEDTEA_CLS_DIR):$(BUILDTOOLJARDIR)/javazic.jar \
++		build.tools.javazic.Main -V "$(TZDATA_VER)" -d $(WORKDIR) $(TZFILES)
+ 	@$(java-vm-cleanup)
+ 
+ $(INSTALLDIR)/$(MAPFILE): $(WORKDIR)/$(MAPFILE)
 diff -Nru openjdk-ecj.orig/jdk/make/sun/text/Makefile openjdk-ecj/jdk/make/sun/text/Makefile
 --- openjdk-ecj.orig/jdk/make/sun/text/Makefile	2008-09-25 08:43:37.000000000 +0100
 +++ openjdk-ecj/jdk/make/sun/text/Makefile	2008-10-17 03:21:22.000000000 +0100
