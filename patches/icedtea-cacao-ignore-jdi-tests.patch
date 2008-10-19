@@ -1,0 +1,1359 @@
+--- openjdk/jdk/test/com/sun/jdi/TemplateTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/TemplateTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -26,6 +26,7 @@
+ // TEMPLATE: delete TEMPLATE lines
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 0000000
+  *  @summary <SUMMARY>
+  *
+--- openjdk/jdk/test/com/sun/jdi/RedefineIntConstantToLong.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineIntConstantToLong.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 6394084
+ #  @summary Redefine class can't handle addition of 64 bit constants in JDK1.5.0_05
+ #
+--- openjdk/jdk/test/com/sun/jdi/LineNumberOnBraceTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/LineNumberOnBraceTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /**
+  *  @test/nodynamiccopyright/
++ *  @ignore cacao nyi
+  *  @bug 4952629 4870514
+  *  @summary REGRESSION: javac generates a spurious line number entry on } else {
+  *
+--- openjdk/jdk/test/com/sun/jdi/Redefine-g.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/Redefine-g.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4777868
+ #  @summary Compile with java -g, do a RedefineClasses, and you don't get local vars
+ #  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/RedefineClasses.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineClasses.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4628760
+ #  @summary RedefineClasses gets assertion: "Should be a method entry in cpcache!"
+ #  @author jjh
+--- openjdk/jdk/test/com/sun/jdi/EarlyReturnNegativeTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/EarlyReturnNegativeTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 6431735
+  *  @summary Unexpected ClassCastException in ThreadReference.forceEarlyReturn
+  *  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/DebuggerThreadTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/DebuggerThreadTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4513488
+  *  @summary Test for JDI: Internal JDI helper threads should setDaemon(true)
+  *
+--- openjdk/jdk/test/com/sun/jdi/RedefineException.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineException.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4559100
+ #  @summary The VM crashes when a method in a redefined class throws an exception.
+ #  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/LocationTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/LocationTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4419453
+  *  @summary Test that Method.location() returns the right values
+  *
+--- openjdk/jdk/test/com/sun/jdi/LineNumberInfo.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/LineNumberInfo.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4238644 4238643 4238641 4944198
+  *  @summary Test javac regressions in the generation of line number info
+  *  @author Gordon Hirsch
+--- openjdk/jdk/test/com/sun/jdi/GetSetLocalTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/GetSetLocalTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /** hard coded linenumbers in other tests - DO NOT CHANGE
+  *  @test/nodynamiccopyright/
++ *  @ignore cacao nyi
+  *  @bug 4300412
+  *  @summary Test GetLocal* and SetLocal* functions
+  *
+--- openjdk/jdk/test/com/sun/jdi/CommandCommentDelimiter.sh.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/CommandCommentDelimiter.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4507088
+ #  @summary TTY: Add a comment delimiter to the jdb command set
+ #  @author Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/WatchFramePop.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/WatchFramePop.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4546478
+ #  @summary Enabling a watchpoint can kill following NotifyFramePops
+ #  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/FinalLocalsTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/FinalLocalsTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4326648 4768329
+  *  @summary Test to verify that table entries are generated for all final
+  *           locals when a class is built for debug, even if they could be
+--- openjdk/jdk/test/com/sun/jdi/ClassesByName.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ClassesByName.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4287992
+  *  @author Robert Field
+  *
+--- openjdk/jdk/test/com/sun/jdi/DeoptimizeWalk.sh.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/DeoptimizeWalk.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4525714
+ #  @summary jtreg test PopAsynchronousTest fails in build 85 with -Xcomp
+ #  @author Jim Holmlund/Swamy Venkataramanappa
+--- openjdk/jdk/test/com/sun/jdi/OptionTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/OptionTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /*
+  *   @test       OptionTest
++ *   @ignore cacao nyi
+  *   @bug        5095072
+  *   @summary    Test for misc jdwp options, just that the option is parsed
+  *   @author     Kelly O'Hair (copied from Tim Bell's NoLaunchOptionTest)
+--- openjdk/jdk/test/com/sun/jdi/VMDeathLastTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/VMDeathLastTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4420844 4449394
+  *  @summary Checks that no events are sent after VMDeath, and test vm.canBeModified
+  *
+--- openjdk/jdk/test/com/sun/jdi/InstanceFilter.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/InstanceFilter.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4312961
+  *  @summary Verify that an instance filter on a MethodEntryRequest works
+  *   properly.
+--- openjdk/jdk/test/com/sun/jdi/GetLocalVariables3Test.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/GetLocalVariables3Test.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4448658
+ #  @summary javac produces the inconsistent variable debug in while loops.
+ #  @author Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/SuspendThreadTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/SuspendThreadTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 6485605
+  *  @summary com.sun.jdi.InternalException: Inconsistent suspend policy in internal event handler
+  *
+--- openjdk/jdk/test/com/sun/jdi/UTF8Test.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/UTF8Test.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 5033550
+  *  @summary  JDWP back end uses modified UTF-8
+  *
+--- openjdk/jdk/test/com/sun/jdi/RedefineStep.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineStep.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4689395
+ #  @summary "step over" after a class is redefined acts like "step out"
+ #  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/RedefineTTYLineNumber.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineTTYLineNumber.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4660756
+ #  @summary TTY: Need to clear source cache after doing a redefine class
+ #  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/JdbMethodExitTest.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/JdbMethodExitTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 6202891
+ #  @summary TTY: Add support for method exit event return values to jdb
+ #  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/RedefineChangeClassOrder.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineChangeClassOrder.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 6270982
+ #  @summary Redefine a class so that the order of external classes in
+ #  the constant pool are changed.
+--- openjdk/jdk/test/com/sun/jdi/ListenAddress.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ListenAddress.java	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+  */
+ 
+ /* @test
++ * @ignore cacao nyi
+  * @bug 4932074
+  * @summary Test that startListening(Map) method of the com.sun.jdi.SocketListen
+  *          Connector returns an address that is usable for the address option on
+--- openjdk/jdk/test/com/sun/jdi/ClassesByName2Test.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ClassesByName2Test.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4406439 4925740
+  *  @summary ClassesByName2 verifies that all the classes in the loaded class list can be found with classesByName..
+  *
+--- openjdk/jdk/test/com/sun/jdi/UnpreparedByName.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/UnpreparedByName.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4368402
+  *  @summary UnpreparedByName verifies that unprepared classes
+  *  won't be returned by classesByName.
+--- openjdk/jdk/test/com/sun/jdi/RedefineFinal.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineFinal.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4788344
+ #  @summary RedefineClasses is an apparent no-op if instance method is final
+ #
+--- openjdk/jdk/test/com/sun/jdi/FramesTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/FramesTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4434232
+  *  @summary Test ThreadReference.frames(int,int)
+  *
+--- openjdk/jdk/test/com/sun/jdi/ArrayRangeTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ArrayRangeTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4439631
+  *  @bug 4448721
+  *  @bug 4448603
+--- openjdk/jdk/test/com/sun/jdi/AfterThreadDeathTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/AfterThreadDeathTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4364671
+  *  @summary Creating a StepRequest on a nonexistant thread fails
+  *
+--- openjdk/jdk/test/com/sun/jdi/LaunchCommandLine.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/LaunchCommandLine.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4245011
+  *  @summary Test launcher command line construction
+  *  @author Gordon Hirsch
+--- openjdk/jdk/test/com/sun/jdi/ExpiredRequestDeletionTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ExpiredRequestDeletionTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4453310
+  *  @summary Test the deletion of event requests that are expired
+  *     by virtue of addCountFilter.
+--- openjdk/jdk/test/com/sun/jdi/SDENullTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/SDENullTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4621289
+  *  @summary vm.setDefaultStratum(null) causes a Null Ptr exception
+  *
+--- openjdk/jdk/test/com/sun/jdi/RedefineAnnotation.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineAnnotation.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 5002251 6407335 6412391
+ #  @summary Redefine a class that has an annotation and verify that the
+ #    new annotation is returned.
+--- openjdk/jdk/test/com/sun/jdi/VMDeathRequestTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/VMDeathRequestTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4419314
+  *  @author Robert Field
+  *
+--- openjdk/jdk/test/com/sun/jdi/PopAsynchronousTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/PopAsynchronousTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4467564
+  *  @summary Test the popping of frames in an asynchronous context
+  *           (that is, when suspended by the debugger at random points)
+--- openjdk/jdk/test/com/sun/jdi/InvokeHangTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/InvokeHangTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 6293795
+  *  @summary  Backend hangs when invokeMethod is called from a JDI eventHandler
+  *
+--- openjdk/jdk/test/com/sun/jdi/EventQueueDisconnectTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/EventQueueDisconnectTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4425852
+  *  @author Robert Field
+  *
+--- openjdk/jdk/test/com/sun/jdi/EarlyReturnTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/EarlyReturnTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /*
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 6175634
+  *  @summary Allow early return from methods
+  *
+--- openjdk/jdk/test/com/sun/jdi/ArgumentValuesTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ArgumentValuesTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /** hard coded linenumbers in other tests - DO NOT CHANGE
+  *  @test/nodynamiccopyright/
++ *  @ignore cacao nyi
+  *  @bug 4490824
+  *  @summary JDI: provide arguments when no debug attributes present
+  *
+--- openjdk/jdk/test/com/sun/jdi/ImmutableResourceTest.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ImmutableResourceTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+ #
+ 
+ #   @test
++#   @ignore cacao nyi
+ #   @bug        6287579
+ #   @summary    SubClasses of ListResourceBundle should fix getContents()
+ #   @author     Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/ProcessAttachTest.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ProcessAttachTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ 
+ # @test
++# @ignore cacao nyi
+ # @bug 4527279
+ # @summary Unit test for ProcessAttachingConnector
+ #
+--- openjdk/jdk/test/com/sun/jdi/MethodExitReturnValuesTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/MethodExitReturnValuesTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4195445 6204179
+  *  @summary JDWP, JDI: Add return value to Method Exit Event
+  *  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/PopAndStepTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/PopAndStepTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -2,6 +2,7 @@
+ //    THIS TEST IS LINE NUMBER SENSITIVE
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4530424
+  *  @summary Hin says that doing a step over after a popframe acts like a resume.
+  *
+--- openjdk/jdk/test/com/sun/jdi/PopAndInvokeTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/PopAndInvokeTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 6517249
+  *  @summary JDWP: Cannot do an invokeMethod after a popFrames operation
+  *
+--- openjdk/jdk/test/com/sun/jdi/JdbArgTest.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/JdbArgTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4684386
+ #  @summary TTY: jdb throws IllegalArumentException on cmd line args
+ #  @author Jim/suvasis
+--- openjdk/jdk/test/com/sun/jdi/PrivateTransportTest.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/PrivateTransportTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #   @test       PrivateTransportTest.sh
++#   @ignore cacao nyi
+ #   @bug        6225664 6220618
+ #   @summary    Test for when private transport library outside jdk
+ #   @author     Kelly O'Hair
+--- openjdk/jdk/test/com/sun/jdi/CountFilterTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/CountFilterTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4321339
+  *  @summary Check correct processing of filters after a count filter
+  *
+--- openjdk/jdk/test/com/sun/jdi/TwoThreadsTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/TwoThreadsTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 6296125
+  *  @summary  JDI: Disabling an EventRequest can cause a multi-threaded debuggee to hang
+  *
+--- openjdk/jdk/test/com/sun/jdi/ThreadGroupTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ThreadGroupTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4893530
+  *  @summary If JDI is initially started from a thread group that is subsequently
+  *           destroyed this should not impact subsequent thread creation by
+--- openjdk/jdk/test/com/sun/jdi/InvokeTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/InvokeTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4451941 4527072
+  *  @summary Test argument types for invoke
+  *
+--- openjdk/jdk/test/com/sun/jdi/NewInstanceTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/NewInstanceTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4419450
+  *  @summary Test newInstance() for arrays - currently covers
+  *  only reference type arrays (see bug #4450091).
+--- openjdk/jdk/test/com/sun/jdi/MixedSuspendTest.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/MixedSuspendTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 6224859
+ #  @summary JDWP: Mixing application suspends and debugger suspends can cause hangs
+ # 
+--- openjdk/jdk/test/com/sun/jdi/InterruptHangTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/InterruptHangTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 6459476
+  *  @summary Debuggee is blocked,  looks like running
+  *
+--- openjdk/jdk/test/com/sun/jdi/MonitorEventTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/MonitorEventTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4401399
+  *  @summary Simple basic test of jdi Monitor request and event.
+  *
+--- openjdk/jdk/test/com/sun/jdi/AcceptTimeout.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/AcceptTimeout.java	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+  */
+ 
+ /* @test
++ * @ignore cacao nyi
+  * @bug 6198277
+  * @summary Test that each ListeningConnector that supports a "timeout" argument will
+  *     timeout with TransportTimeoutException
+--- openjdk/jdk/test/com/sun/jdi/ZZZcleanup.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ZZZcleanup.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 1234567
+ #  @summary no bug
+ #  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/ConstantPoolInfo.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ConstantPoolInfo.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 5024104
+  *  @summary Test ReferenceType.majorVersion(), minorVersion, constantPoolCount and ConstantPool apis.
+  *
+--- openjdk/jdk/test/com/sun/jdi/CatchCaughtTest.sh.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/CatchCaughtTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4788864
+ #  @summary TTY: 'catch caught' with no class pattern throws NullPointerException
+ #  @author Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/JdbMissStep.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/JdbMissStep.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4762765
+ #  @summary REGRESSION: jdb / jdi not stopping at some breakpoints and steps in j2sdk1.4.
+ #  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/Vars.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/Vars.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @summary Test Method.variables() and the like.
+  *
+  *  @author Robert Field
+--- openjdk/jdk/test/com/sun/jdi/UnpreparedClasses.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/UnpreparedClasses.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4368402
+  *  @summary UnpreparedClasses verifies that all the classes in the
+  *  loaded class list are prepared classes.
+--- openjdk/jdk/test/com/sun/jdi/DeleteEventRequestsTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/DeleteEventRequestsTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4331872
+  *  @summary erm.deleteEventRequests(erm.breakpointRequests()) throws exception
+  *
+--- openjdk/jdk/test/com/sun/jdi/PopSynchronousTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/PopSynchronousTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4467564
+  *  @summary Test the popping of frames in synchronous context
+  *           (that is, when stopped at an event)
+--- openjdk/jdk/test/com/sun/jdi/MultiBreakpointsTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/MultiBreakpointsTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4359247
+  *  @summary Breakpoints on multiple threads have problems.
+  *
+--- openjdk/jdk/test/com/sun/jdi/RedefineCrossStart.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineCrossStart.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4628726
+  *  @summary Test class redefinition at start only (they use breakpoint
+  *  or resumeTo()) cross tested with other tests.
+--- openjdk/jdk/test/com/sun/jdi/SourceNameFilterTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/SourceNameFilterTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4836939
+  *  @summary JDI add addSourceNameFilter to ClassPrepareRequest
+  *
+--- openjdk/jdk/test/com/sun/jdi/ArrayLengthDumpTest.sh.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ArrayLengthDumpTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4422141 4695338
+ #  @summary TTY: .length field for arrays in print statements in jdb not recognized
+ #           TTY: dump <ArrayReference> command not implemented.
+--- openjdk/jdk/test/com/sun/jdi/CatchAllTest.sh.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/CatchAllTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4749692
+ #  @summary REGRESSION: jdb rejects the syntax catch java.lang.IndexOutOfBoundsException
+ #  @author Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/JdbLockTest.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/JdbLockTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4847812
+ #  @summary TTY: jdb lock command displays incorrect data
+ #  @author Jim Holmlund
+--- openjdk/jdk/test/com/sun/jdi/CountEvent.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/CountEvent.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4315352
+  *  @summary disabling EventRequest expired with addCountFilter() throws
+  *   InternalException.
+--- openjdk/jdk/test/com/sun/jdi/StringConvertTest.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/StringConvertTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4511950 4843082
+ #  @summary 1. jdb's expression evaluation doesn't perform string conversion properly
+ #           2. TTY: run on expression evaluation
+--- openjdk/jdk/test/com/sun/jdi/EnumTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/EnumTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4728816
+  *  @summary JPDA: Add support for enums
+  *
+--- openjdk/jdk/test/com/sun/jdi/redefine/RedefineTest.java.orig	2008-08-28 08:19:48.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/redefine/RedefineTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4287595
+  *  @bug 4462989
+  *  @bug 4531511
+--- openjdk/jdk/test/com/sun/jdi/RedefineMulti.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineMulti.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4724076
+ #  @summary Redefine does not work in for/while loop
+ #  @author Jim Holmlund/Swamy Venkataramanappa
+--- openjdk/jdk/test/com/sun/jdi/FinalizerTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/FinalizerTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4272800 4274208 4392010
+  *  @summary Test debugger operations in finalize() methods
+  *  @author Gordon Hirsch  (modified for HotSpot by tbell & rfield)
+--- openjdk/jdk/test/com/sun/jdi/RedefineCrossEvent.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineCrossEvent.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4628726
+  *  @summary Test class redefinition at each event cross tested with other tests
+  *
+--- openjdk/jdk/test/com/sun/jdi/NoLocInfoTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/NoLocInfoTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4642611
+  *  @summary Test that method.allLineLocations() should
+  *           throw AbsentInformationException exception
+--- openjdk/jdk/test/com/sun/jdi/MethodEntryExitEvents.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/MethodEntryExitEvents.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4409241 4432820
+  *  @summary Test the bug fix for: MethodExitEvents disappear when Object-Methods are called from main
+  *  @author Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/GetLocalVariables2Test.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/GetLocalVariables2Test.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4349534 4690242 4695338
+  *  @summary regression - bad LocalVariableTable attribute when no initialization needed
+  *
+--- openjdk/jdk/test/com/sun/jdi/AccessSpecifierTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/AccessSpecifierTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4359628
+  *  @summary Test fix for JDI: methods Accessible.is...() lie about array types
+  *
+--- openjdk/jdk/test/com/sun/jdi/ClassLoaderClassesTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ClassLoaderClassesTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4450091
+  *  @summary Test ClassLoaderReference.visibleClasses() which is
+  *  a direct pass-through of the JVMDI function GetClassLoaderClasses
+--- openjdk/jdk/test/com/sun/jdi/DoubleAgentTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/DoubleAgentTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+  */
+ 
+ /* @test
++ * @ignore cacao nyi
+  * @bug 6354345
+  * @summary Check that a double agent request fails
+  *
+--- openjdk/jdk/test/com/sun/jdi/JdbVarargsTest.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/JdbVarargsTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4870984
+ #  @summary  JPDA: Add support for RFE 4856541 - varargs
+ #
+--- openjdk/jdk/test/com/sun/jdi/FilterNoMatch.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/FilterNoMatch.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4331522
+  *  @summary addClassFilter("Foo") acts like "Foo*"
+  *
+--- openjdk/jdk/test/com/sun/jdi/ExceptionEvents.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ExceptionEvents.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4407397
+  *  @summary Test the requesting of exception events
+  *
+--- openjdk/jdk/test/com/sun/jdi/DeleteAllBkptsTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/DeleteAllBkptsTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4528948
+  *  @summary Unable to finish a debugging in NetBeans IDE
+  *
+--- openjdk/jdk/test/com/sun/jdi/CompatibleConnectors.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/CompatibleConnectors.java	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+  */
+ 
+ /* @test
++ * @ignore cacao nyi
+  * @bug 4287596
+  * @summary Unit test for "Pluggable Connectors and Transports" feature.
+  *
+--- openjdk/jdk/test/com/sun/jdi/EvalArgs.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/EvalArgs.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4663146
+ #  @summary Arguments match no method error 
+ #  @author Jim Holmlund/Suvasis
+--- openjdk/jdk/test/com/sun/jdi/BadHandshakeTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/BadHandshakeTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+  */
+ 
+ /* @test
++ * @ignore cacao nyi
+  * @bug 6306165
+  * @summary Check that a bad handshake doesn't cause a debuggee to abort
+  *
+--- openjdk/jdk/test/com/sun/jdi/ConnectedVMs.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ConnectedVMs.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4329140
+  *  @author Robert Field
+  *
+--- openjdk/jdk/test/com/sun/jdi/RepStep.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RepStep.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4334008
+  *  @author Robert Field
+  *
+--- openjdk/jdk/test/com/sun/jdi/RedefineImplementor.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineImplementor.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 6173560
+ #  @summary Redefine a class that implements an interface
+ #    and verify that a subclass calls the right method.
+--- openjdk/jdk/test/com/sun/jdi/NullLocalVariable.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/NullLocalVariable.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4690242 4695338
+ #  @summary TTY: jdb throws NullPointerException when printing local variables
+ #  @author Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/BacktraceFieldTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/BacktraceFieldTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4446677
+  *  @summary debuggee crashes when debugging under jbuilder
+  *
+--- openjdk/jdk/test/com/sun/jdi/SuspendNoFlagTest.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/SuspendNoFlagTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #   @test       SuspendNoFlagTest.sh
++#   @ignore cacao nyi
+ #   @bug        4914611
+ #   @summary    Test for JDWP: -agentlib:jdwp=suspend=n hanging
+ #   @author     Kelly O'Hair
+--- openjdk/jdk/test/com/sun/jdi/StepTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/StepTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4270488 4787861
+  *  @author Gordon Hirsch
+  *
+--- openjdk/jdk/test/com/sun/jdi/VarargsTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/VarargsTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4870984
+  *  @summary  JPDA: Add support for RFE 4856541 - varargs
+  *
+--- openjdk/jdk/test/com/sun/jdi/FilterMatch.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/FilterMatch.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4331522
+  *  @summary addClassFilter("Foo") acts like "Foo*"
+  *
+--- openjdk/jdk/test/com/sun/jdi/redefineMethod/RedefineTest.java.orig	2008-08-28 08:19:48.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/redefineMethod/RedefineTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4628726
+  *  @summary Test class redefinition - method data line numbers and local vars,
+  *
+--- openjdk/jdk/test/com/sun/jdi/NotAField.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/NotAField.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4467887 4913748
+ #  @summary TTY: NullPointerException at
+ #           com.sun.tools.jdi.MirrorImpl.validateMirrors
+--- openjdk/jdk/test/com/sun/jdi/MonitorFrameInfo.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/MonitorFrameInfo.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 6230699
+  *  @summary Test ThreadReference.ownedMonitorsAndFrames()
+  *
+--- openjdk/jdk/test/com/sun/jdi/NoLaunchOptionTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/NoLaunchOptionTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /*
+  *   @test       NoLaunchOptionTest.java
++ *   @ignore cacao nyi
+  *   @bug        4554734 4724714
+  *   @summary    Test for -Xrunjdwp:[onthrow,onuncaught] suboptions require launch suboption
+  *   @author     Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/AllLineLocations.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/AllLineLocations.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4248728
+  *  @summary Test ReferenceType.allLineLocations
+  *  @author Gordon Hirsch
+--- openjdk/jdk/test/com/sun/jdi/FieldWatchpoints.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/FieldWatchpoints.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4408582
+  *  @summary Test fix for: JDWP: WatchpointEvents outside of class filtered out
+  *
+--- openjdk/jdk/test/com/sun/jdi/RedefineClearBreakpoint.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefineClearBreakpoint.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4705330
+ #  @summary Netbeans Fix and Continue crashes JVM
+ #  @author Jim Holmlund/Swamy Venkataramanappa
+--- openjdk/jdk/test/com/sun/jdi/CatchPatternTest.sh.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/CatchPatternTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4671838
+ #  @summary TTY: surprising ExceptionSpec.resolveEventRequest() wildcard results
+ #  @author Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/Solaris32AndSolaris64Test.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/Solaris32AndSolaris64Test.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #   @test       Solaris32AndSolaris64Test.sh
++#   @ignore cacao nyi
+ #   @bug        4478312 4780570 4913748
+ #   @summary    Test debugging with mixed 32/64bit VMs.
+ #   @author     Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/GenericsTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/GenericsTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4421040
+  *  @summary  JPDA: Add support for JSR-014 Generics
+  *
+--- openjdk/jdk/test/com/sun/jdi/BreakpointTest.java.orig	2008-08-28 08:19:45.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/BreakpointTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 6496524
+  *  @summary Setting breakpoint in jdb crashes Hotspot JVM
+  *
+--- openjdk/jdk/test/com/sun/jdi/OnThrowTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/OnThrowTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /*
+  *   @test       OnThrowTest.java
++ *   @ignore cacao nyi
+  *   @bug        6263814
+  *   @summary    Test for -agentlib::[onthrow,launch]
+  *   @author     Kelly O'Hair
+--- openjdk/jdk/test/com/sun/jdi/GetLocalVariables.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/GetLocalVariables.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /** hard coded linenumbers in this test - DO NOT CHANGE
+  *  @test/nodynamiccopyright/
++ *  @ignore cacao nyi
+  *  @bug 4359312 4450091
+  *  @summary Test PTR 1421 JVM exceptions making a call to LocalVariable.type().name()
+  *
+--- openjdk/jdk/test/com/sun/jdi/LocalVariableEqual.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/LocalVariableEqual.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4916263
+  *  @summary Test
+  *
+--- openjdk/jdk/test/com/sun/jdi/Java_gTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/Java_gTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4500906 4433599 4740097
+  *  @summary vmexec= debug java fails for SunCommandLineLauncher
+  *
+--- openjdk/jdk/test/com/sun/jdi/ExclusiveBind.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ExclusiveBind.java	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+  */
+ 
+ /* @test
++ * @ignore cacao nyi
+  * @bug 4531526
+  * @summary Test that more than one debuggee cannot bind to same port
+  *          at the same time.
+--- openjdk/jdk/test/com/sun/jdi/sde/MangleStepTest.java.orig	2008-08-28 08:19:48.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/sde/MangleStepTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4390869
+  *  @bug 4460328
+  *  @summary Test Stepping in the new SourceDebugExtension facility
+--- openjdk/jdk/test/com/sun/jdi/sde/MangleTest.java.orig	2008-08-28 08:19:48.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/sde/MangleTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4390869
+  *  @bug 4460328
+  *  @summary Test the new SourceDebugExtension facility
+--- openjdk/jdk/test/com/sun/jdi/sde/SourceDebugExtensionTest.java.orig	2008-08-28 08:19:48.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/sde/SourceDebugExtensionTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4390869
+  *  @bug 4460328
+  *  @summary Test the new SourceDebugExtension facility
+--- openjdk/jdk/test/com/sun/jdi/sde/TemperatureTableTest.java.orig	2008-08-28 08:19:48.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/sde/TemperatureTableTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4390869
+  *  @bug 4460328
+  *  @summary Test the new SourceDebugExtension facility
+--- openjdk/jdk/test/com/sun/jdi/sde/FilterMangleTest.java.orig	2008-08-28 08:19:48.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/sde/FilterMangleTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4836939
+  *  @summary JDI add addSourceNameFilter to ClassPrepareRequest
+  *
+--- openjdk/jdk/test/com/sun/jdi/connect/spi/JdiLoadedByCustomLoader.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/connect/spi/JdiLoadedByCustomLoader.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+ #
+ 
+ # @test
++# @ignore cacao nyi
+ # @bug 5055681
+ # @summary Test loading JDI classes via custom class loader
+ 
+--- openjdk/jdk/test/com/sun/jdi/connect/spi/DebugUsingCustomConnector.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/connect/spi/DebugUsingCustomConnector.java	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+  */
+ 
+ /* @test
++ * @ignore cacao nyi
+  * @bug 4287596
+  * @summary Unit test for "Pluggable Connectors and Transports" feature.
+  *
+--- openjdk/jdk/test/com/sun/jdi/connect/spi/GeneratedConnectors.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/connect/spi/GeneratedConnectors.java	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+  */
+ 
+ /* @test
++ * @ignore cacao nyi
+  * @bug 4287596
+  * @summary Unit test for "Pluggable Connectors and Transports" feature.
+  *
+--- openjdk/jdk/test/com/sun/jdi/ReferrersTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ReferrersTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 5089849
+  *  @summary Add support for backtracking reference graph.
+  *  @author jjh
+--- openjdk/jdk/test/com/sun/jdi/RedefinePop.sh.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RedefinePop.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -24,6 +24,7 @@
+ #
+ 
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4622663
+ #  @summary redefine and pop top frame from jdb gets assertion failure
+ #  @author Jim Holmlund/Swamy Venkataramanappa
+--- openjdk/jdk/test/com/sun/jdi/JITDebug.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/JITDebug.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #   @test       JITDebug.sh 1.7 03/09/05
++#   @ignore cacao nyi
+ #   @bug        4291701 4376819 4422312 4522770 4913748
+ #   @summary    Test JIT debugging - assure that launching on
+ #               uncaught exception works
+--- openjdk/jdk/test/com/sun/jdi/ModificationWatchpoints.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/ModificationWatchpoints.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4409582
+  *  @summary Test all info returned by modification watchpoints
+  *
+--- openjdk/jdk/test/com/sun/jdi/FetchLocals.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/FetchLocals.java	2008-10-19 15:21:54.000000000 +0000
+@@ -1,5 +1,6 @@
+ /** hard coded linenumbers in test - DO NOT CHANGE
+  *  @test/nodynamiccopyright/
++ *  @ignore cacao nyi
+  *  @bug 4386002 4429245
+  *  @summary Test fix for: Incorrect values reported for some locals of type long
+  *
+--- openjdk/jdk/test/com/sun/jdi/JdbReadTwiceTest.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/JdbReadTwiceTest.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #  
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4981536
+ #  @summary TTY: .jdbrc is read twice if jdb is run in the user's home dir
+ #  @author jjh
+--- openjdk/jdk/test/com/sun/jdi/HomeTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/HomeTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4446294
+  *  @summary JDI spec/impl: default "home" for CommandLineLaunch isn't java.home
+  *
+--- openjdk/jdk/test/com/sun/jdi/RequestReflectionTest.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RequestReflectionTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 4425840
+  *  @author Robert Field
+  *
+--- openjdk/jdk/test/com/sun/jdi/RunToExit.java.orig	2008-08-28 08:19:47.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/RunToExit.java	2008-10-19 15:21:54.000000000 +0000
+@@ -22,6 +22,7 @@
+  */
+ 
+ /* @test
++ * @ignore cacao nyi
+  * @bug 4997445
+  * @summary Test that with server=y, when VM runs to System.exit() no error happens
+  *
+--- openjdk/jdk/test/com/sun/jdi/GetLocalVariables4Test.sh.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/GetLocalVariables4Test.sh	2008-10-19 15:21:54.000000000 +0000
+@@ -25,6 +25,7 @@
+ 
+ #
+ #  @test
++#  @ignore cacao nyi
+ #  @bug 4070747 4486859
+ #  @summary Compiler fails to generate local var tbl entry for exception passed to catch
+ #  @author Tim Bell
+--- openjdk/jdk/test/com/sun/jdi/InstancesTest.java.orig	2008-08-28 08:19:46.000000000 +0000
++++ openjdk/jdk/test/com/sun/jdi/InstancesTest.java	2008-10-19 15:21:54.000000000 +0000
+@@ -23,6 +23,7 @@
+ 
+ /**
+  *  @test
++ *  @ignore cacao nyi
+  *  @bug 5024119
+  *  @summary Add ReferenceType.getAllInstances () method to JDI.
+  *  @author jjh

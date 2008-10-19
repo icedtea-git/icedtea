@@ -538,7 +538,9 @@ endif
 
 if WITH_CACAO
 ICEDTEA_PATCHES += \
-	patches/icedtea-cacao.patch
+	patches/icedtea-cacao.patch \
+	patches/icedtea-cacao-ignore-jdi-tests.patch \
+	patches/icedtea-cacao-ignore-tests.patch
 endif
 
 if ENABLE_PULSE_JAVA

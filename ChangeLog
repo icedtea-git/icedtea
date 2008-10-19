@@ -1,3 +1,11 @@
+2008-10-19  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-cacao-ignore-jdi-tests.patch: Ignore jdi tests,
+	not yet implemented in cacao.
+	* patches/icedtea-cacao-ignore-tests.patch: Ignore long running failing
+	tests, be nice with build daemoms: ProducerConsumerLoops.
+	* Makefile.am: Apply patches when configured with --enable-cacao.
+
 2008-10-17  Deepak Bhole  <dbhole@redhat.com>
 
 	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Make applet size
