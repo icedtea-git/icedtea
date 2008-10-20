@@ -530,7 +530,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-6open-6616825.patch \
 	patches/icedtea-6open-6651382.patch \
 	patches/icedtea-6open-6756202.patch \
-	$(VISUALVM_PATCH)
+	$(VISUALVM_PATCH) \
+	patches/icedtea-javac-debuginfo.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -1478,14 +1479,14 @@ if ENABLE_PULSE_JAVA
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-		 $(JAVAC) -d $(PULSE_JAVA_CLASS_DIR) \
+		 $(JAVAC) -g -d $(PULSE_JAVA_CLASS_DIR) \
 		-bootclasspath  \
 	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
 		org/classpath/icedtea/pulseaudio/*.java\
 		) \
         else \
 		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-		$(ICEDTEA_BOOT_DIR)/bin/javac -d $(PULSE_JAVA_CLASS_DIR)\
+		$(ICEDTEA_BOOT_DIR)/bin/javac -g -d $(PULSE_JAVA_CLASS_DIR)\
 		-bootclasspath \
 	        '$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar' \
 		org/classpath/icedtea/pulseaudio/*.java\
