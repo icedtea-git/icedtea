@@ -1,3 +1,9 @@
+2008-10-20  Alon Bar-Lev  <alon.barlev@gmail.com>
+
+	PR icedtea/224:
+	* configure.ac:
+	Correct use of --enable options.
+	
 2008-10-19  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (jtregcheck): Cleanup processes.
