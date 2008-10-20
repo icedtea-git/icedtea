@@ -30,7 +30,7 @@ endif
 
 if ENABLE_PULSE_JAVA
 # include the makefile in pulseaudio subdir
-PULSE_JAVA_DIR = $(srcdir)/pulseaudio
+PULSE_JAVA_DIR = $(abs_top_srcdir)/pulseaudio
 PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
 PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
 PULSE_JAVA_CLASS_DIR = $(abs_top_builddir)/pulseaudio
@@ -557,7 +557,7 @@ stamps/extract.stamp: stamps/download.stamp
 	  mkdir openjdk ; \
 	  $(TAR) xf $(OPENJDK_SRC_ZIP) -C openjdk; \
 	  chmod -R ug+w openjdk ; \
-	  sh $(srcdir)/fsg.sh ; \
+	  sh $(abs_top_srcdir)/fsg.sh ; \
 	fi
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
@@ -633,14 +633,14 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  exit 2; \
 	fi ; \
 	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
-	  revision="-r`(cd $(srcdir); $(HG) tip --template '{rev}')`" ; \
+	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
 	fi ; \
 	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
 	sed -i "s#IcedTea6#IcedTea6 $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk
 
 if ENABLE_PLUGIN
-	cp -a $(srcdir)/plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
-	cp -a $(srcdir)/plugin/icedtea/netscape rt/
+	cp -a $(abs_top_srcdir)/plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
+	cp -a $(abs_top_srcdir)/plugin/icedtea/netscape rt/
 endif
 
 clean-patch:
@@ -1534,8 +1534,8 @@ stamps/jtreg.stamp: stamps/icedtea.stamp
 	rm -rf test/jtreg/classes
 	mkdir -p test/jtreg/classes
 	$(ICEDTEA_BOOT_DIR)/bin/javac -g -d test/jtreg/classes -source 1.5 \
-	   -encoding iso-8859-1 `find $(srcdir)/test/jtreg/com -name '*.java'`
-	(cd $(srcdir)/test/jtreg; \
+	   -encoding iso-8859-1 `find $(abs_top_srcdir)/test/jtreg/com -name '*.java'`
+	(cd $(abs_top_srcdir)/test/jtreg; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm $(abs_top_builddir)/test/jtreg.jar \
 	   META-INF/MANIFEST.MF \
 	   legal  README JavaTest.cmdMgrs.lst JavaTest.toolMgrs.lst \
