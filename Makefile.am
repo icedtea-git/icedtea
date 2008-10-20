@@ -863,7 +863,7 @@ clean-bootstrap-directory-symlink:
 # ===============================
 
 # bootstrap/ecj.
-stamps/bootstrap-directory-ecj.stamp:
+stamps/bootstrap-directory-ecj.stamp: stamps/native-ecj.stamp
 	mkdir -p bootstrap/ecj/bin stamps/
 	ln -sf $(JAVA) bootstrap/ecj/bin/java
 	ln -sf $(JAVAH) bootstrap/ecj/bin/javah
@@ -1096,6 +1096,14 @@ icedtea-debug-against-icedtea: \
 
 # OpenJDK ecj Targets
 # ===================
+
+stamps/native-ecj.stamp: 
+	mkdir -p stamps ; \
+	if test "x${GCJ}" != x; then \
+	  ${GCJ} ${CFLAGS} -Wl,-Bsymbolic -o native-ecj \
+	    --main=org.eclipse.jdt.internal.compiler.batch.Main ${ECJ_JAR} ; \
+	fi ; \
+	touch stamps/native-ecj.stamp
 
 stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp stamps/cacao.stamp
@@ -1703,6 +1711,8 @@ icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
 icedtea-debug: stamps/icedtea-debug.stamp
 
 icedtea-ecj: stamps/icedtea-ecj.stamp
+
+native-ecj: stamps/native-ecj.stamp
 
 patch-ecj: stamps/patch-ecj.stamp
 
