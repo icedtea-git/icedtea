@@ -1,6 +1,17 @@
 2008-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
+	Use GCJ if not equal to no instead
+	of being empty.
+	* acinclude.m4:
+	(AC_CHECK_WITH_GCJ): New macro.
+	* configure.ac:
+	Use AC_CHECK_WITH_GCJ in preference to
+	just checking for GCJ.
+
+2008-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
 	Build native ecj for ecj builds when
 	gcj is available.
 	* acinclude.m4:

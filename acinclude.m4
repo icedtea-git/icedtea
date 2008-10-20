@@ -895,3 +895,21 @@ AC_DEFUN([AC_CHECK_WITH_CACAO_SRC_ZIP],
   AC_MSG_RESULT(${ALT_CACAO_SRC_ZIP})
   AC_SUBST(ALT_CACAO_SRC_ZIP)
 ])
+
+AC_DEFUN([AC_CHECK_WITH_GCJ],
+[
+  AC_MSG_CHECKING([whether to compile ecj natively])
+  AC_ARG_WITH([gcj],
+	      [AS_HELP_STRING(--with-gcj,location of gcj for natively compiling ecj)],
+  [
+    GCJ="${withval}"
+  ],
+  [ 
+    GCJ="no"
+  ])
+  AC_MSG_RESULT([${GCJ}])
+  if test "x${GCJ}" = xyes; then
+    AC_PATH_TOOL([GCJ],[gcj])
+  fi
+  AC_SUBST([GCJ])
+])

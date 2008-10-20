@@ -1099,7 +1099,7 @@ icedtea-debug-against-icedtea: \
 
 stamps/native-ecj.stamp: 
 	mkdir -p stamps ; \
-	if test "x${GCJ}" != x; then \
+	if test "x${GCJ}" != "xno"; then \
 	  ${GCJ} ${CFLAGS} -Wl,-Bsymbolic -o native-ecj \
 	    --main=org.eclipse.jdt.internal.compiler.batch.Main ${ECJ_JAR} ; \
 	fi ; \

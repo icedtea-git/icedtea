@@ -32,8 +32,7 @@ dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
 AC_PATH_TOOL([HG],[hg])
 AC_SUBST([HG])
-AC_PATH_TOOL([GCJ],[gcj])
-AC_SUBST([GCJ])
+AC_CHECK_WITH_GCJ
 
 AC_MSG_CHECKING([for a JDK home directory])
 AC_ARG_WITH([gcj-home],
