@@ -1,5 +1,10 @@
 2008-10-20  Lillian Angel  <langel@redhat.com>
 
+	* Makefile.am
+	(EXTRA_DIST): Added plugin dir.
+
+2008-10-20  Lillian Angel  <langel@redhat.com>
+
 	* Makefile.am: Changed all instances of $(srcdir) to
 	$(abs_top_srcdir).
 
