@@ -173,6 +173,8 @@ ICEDTEA_ENV = \
 	"JAVAC=" \
 	"RHINO_JAR=$(RHINO_JAR)"
 
+ICEDTEA_ENV += $(if $(DIST_ID),"DISTRIBUTION_ID=$(DIST_ID)")
+
 if WITH_CACAO
 ICEDTEA_ENV += \
 	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO_IMPORT_PATH)"
@@ -633,11 +635,15 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
 	  exit 2; \
-	fi ; \
+	fi
+
 	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
 	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
 	fi ; \
 	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
+	if [ -n "$(PKGVERSION)" ]; then \
+	  icedtea_version="$${icedtea_version} ($(PKGVERSION))" ; \
+	fi; \
 	sed -i "s#IcedTea6#IcedTea6 $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk
 
 if ENABLE_PLUGIN

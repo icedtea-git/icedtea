@@ -32,6 +32,7 @@ dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
 AC_PATH_TOOL([HG],[hg])
 AC_SUBST([HG])
+AC_PATH_TOOL([LSB_RELEASE],[lsb_release])
 AC_CHECK_WITH_GCJ
 
 AC_MSG_CHECKING([for a JDK home directory])
@@ -223,6 +224,27 @@ AC_ARG_WITH([parallel-jobs],
         ])
 AC_MSG_RESULT(${PARALLEL_JOBS})
 AC_SUBST(PARALLEL_JOBS)
+
+AC_ARG_WITH([pkgversion],
+        [AS_HELP_STRING([--with-pkgversion=PKG],
+                        [Use PKG in the version string in addition to "IcedTea"])],
+        [case "$withval" in
+          yes) AC_MSG_ERROR([package version not specified]) ;;
+          no)  PKGVERSION= ;;
+          *)   PKGVERSION="$withval" ;;
+         esac],
+        [PKGVERSION=])
+AC_SUBST(PKGVERSION)
+
+if test -n "$LSB_RELEASE"; then
+  DIST_ID=$($LSB_RELEASE -ds)
+else
+  DIST_ID='Custom build'
+fi
+if test -n "$PKGVERSION"; then
+  DIST_ID="$DIST_ID, package $PKGVERSION"
+fi
+AC_SUBST(DIST_ID)
 
 SET_ARCH_DIRS
 if test "${with_openjdk}" = true
