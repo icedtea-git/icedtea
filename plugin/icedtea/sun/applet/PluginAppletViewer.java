@@ -434,9 +434,6 @@ import sun.misc.Ref;
 				// do nothing
 				e.printStackTrace();
 			}
-
-//        	 this.validate();
-//        	 panel.validate();
          } else if (message.startsWith("destroy")) {
              dispose();
          } else if (message.startsWith("GetJavaObject")) {
@@ -458,7 +455,7 @@ import sun.misc.Ref;
             	 }
              }
 
-             PluginDebug.debug ("Looking for object " + o + " panel is " + panel.getClass());
+             PluginDebug.debug ("Looking for object " + o + " panel is " + panel);
              AppletSecurityContextManager.getSecurityContext(0).store(o);
              PluginDebug.debug ("WRITING 1: " + "context 0 reference " + reference + " GetJavaObject "
                                  + AppletSecurityContextManager.getSecurityContext(0).getIdentifier(o));
