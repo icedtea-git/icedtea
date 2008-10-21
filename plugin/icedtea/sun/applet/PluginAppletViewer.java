@@ -47,11 +47,11 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.SocketPermission;
 import java.net.URL;
 import java.security.AccessController;
-import java.security.Policy;
 import java.security.PrivilegedAction;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -59,6 +59,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
+
+import javax.swing.SwingUtilities;
 
 import net.sourceforge.jnlp.NetxPanel;
 import sun.awt.AppContext;
@@ -261,12 +263,6 @@ import sun.misc.Ref;
     showStatus(amh.getMessage("status.start"));
  	initEventQueue();
  	
- 	try {
- 	    write("initialized");
- 	} catch (IOException ioe) {
- 		ioe.printStackTrace();
- 	}
- 	
     // Wait for a maximum of 10 seconds for the panel to initialize
     // (happens in a separate thread)
  	Applet a;
@@ -280,6 +276,12 @@ import sun.misc.Ref;
    	 } catch (InterruptedException ie) {
    		 ie.printStackTrace();
    	 }
+    }
+
+    // Still null?
+    if (panel.getApplet() == null) {
+    	this.streamhandler.write("instance " + identifier + " reference " + -1 + " fatalError " + "Initialization failed");
+    	return;
     }
 
     PluginDebug.debug("Applet initialized");
@@ -297,6 +299,12 @@ import sun.misc.Ref;
     }
 
     AppletSecurityContextManager.getSecurityContext(0).associateSrc(a.getClass().getClassLoader(), codeBase);
+    
+ 	try {
+ 	    write("initialized");
+ 	} catch (IOException ioe) {
+ 		ioe.printStackTrace();
+ 	}
 
      }
 
@@ -386,20 +394,49 @@ import sun.misc.Ref;
      public void handleMessage(int reference, String message)
      {
          if (message.startsWith("width")) {
-        	 
-        	 String[] dimMsg = message.split(" ");
+
         	 // 0 => width, 1=> width_value, 2 => height, 3=> height_value
+        	 String[] dimMsg = message.split(" ");
         	 
-        	 int height = (int) (proposedHeightFactor*Integer.parseInt(dimMsg[3]));
-        	 int width = (int) (proposedWidthFactor*Integer.parseInt(dimMsg[1]));
+        	 final int height = (int) (proposedHeightFactor*Integer.parseInt(dimMsg[3]));
+        	 final int width = (int) (proposedWidthFactor*Integer.parseInt(dimMsg[1]));
 
         	 if (panel instanceof NetxPanel)
         		 ((NetxPanel) panel).updateSizeInAtts(height, width);
 
-        	 panel.setSize(width, height);
-        	 setSize(width, height);
+        	 try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					 public void run() {
 
-        	 panel.validate();
+			        	 setSize(width, height);
+						 
+						 // There is a rather odd drawing bug whereby resizing 
+						 // the panel makes no difference on initial call 
+						 // because the panel thinks that it is already the 
+						 // right size. Validation has no effect there either. 
+						 // So we work around by setting size to 1, validating, 
+						 // and then setting to the right size and validating 
+						 // again. This is not very efficient, and there is 
+						 // probably a better way -- but resizing happens 
+						 // quite infrequently, so for now this is how we do it
+
+			        	 panel.setSize(1,1);
+			        	 panel.validate();
+
+			        	 panel.setSize(width, height);
+			        	 panel.validate();
+					 }
+				 });
+			} catch (InterruptedException e) {
+				// do nothing
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// do nothing
+				e.printStackTrace();
+			}
+
+//        	 this.validate();
+//        	 panel.validate();
          } else if (message.startsWith("destroy")) {
              dispose();
          } else if (message.startsWith("GetJavaObject")) {

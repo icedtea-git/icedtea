@@ -1,3 +1,13 @@
+2008-10-21  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Implemented JVM respawning.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Prepopulate
+	classes requested by LiveConnect at initialization.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Fix panel applet
+	resizing when window height and width is in %.
+	* plugin/icedtea/sun/applet/PluginMain.java: Handle error during NetX
+	initialization gracefully.
+
 2008-10-21  Matthias Klose  <doko@ubuntu.com>
 
 	* configure.ac: Add new option --with-pkgversion,

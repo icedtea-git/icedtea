@@ -1010,6 +1010,135 @@ public class PluginAppletSecurityContext {
 				+ " " + message);
 	}
 	
+	public void prePopulateLCClasses() {
+		
+		int classID;
+		
+		prepopulateClass("netscape/javascript/JSObject");
+		classID = prepopulateClass("netscape/javascript/JSException");
+		prepopulateMethod(classID, "<init>", "(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;I)V");
+		prepopulateMethod(classID, "<init>", "(ILjava/lang/Object;)V");
+		prepopulateField(classID, "lineno");
+		prepopulateField(classID, "tokenIndex");
+		prepopulateField(classID, "source");
+		prepopulateField(classID, "filename");
+		prepopulateField(classID, "wrappedExceptionType");
+		prepopulateField(classID, "wrappedException");
+		
+		classID = prepopulateClass("netscape/javascript/JSUtil");
+		prepopulateMethod(classID, "getStackTrace", "(Ljava/lang/Throwable;)Ljava/lang/String;");
+
+		prepopulateClass("java/lang/Object");
+		classID = prepopulateClass("java/lang/Class");
+		prepopulateMethod(classID, "getMethods", "()[Ljava/lang/reflect/Method;");
+		prepopulateMethod(classID, "getConstructors", "()[Ljava/lang/reflect/Constructor;");
+		prepopulateMethod(classID, "getFields", "()[Ljava/lang/reflect/Field;");
+		prepopulateMethod(classID, "getName", "()Ljava/lang/String;");
+		prepopulateMethod(classID, "isArray", "()Z");
+		prepopulateMethod(classID, "getComponentType", "()Ljava/lang/Class;");
+		prepopulateMethod(classID, "getModifiers", "()I");
+		
+
+		classID = prepopulateClass("java/lang/reflect/Method");
+		prepopulateMethod(classID, "getName", "()Ljava/lang/String;");
+		prepopulateMethod(classID, "getParameterTypes", "()[Ljava/lang/Class;");
+		prepopulateMethod(classID, "getReturnType", "()Ljava/lang/Class;");
+		prepopulateMethod(classID, "getModifiers", "()I");
+
+		classID = prepopulateClass("java/lang/reflect/Constructor");
+		prepopulateMethod(classID, "getParameterTypes", "()[Ljava/lang/Class;");
+		prepopulateMethod(classID, "getModifiers", "()I");
+		
+		classID = prepopulateClass("java/lang/reflect/Field");
+		prepopulateMethod(classID, "getName", "()Ljava/lang/String;");
+		prepopulateMethod(classID, "getType", "()Ljava/lang/Class;");
+		prepopulateMethod(classID, "getModifiers", "()I");
+		
+		classID = prepopulateClass("java/lang/reflect/Array");
+		prepopulateMethod(classID, "newInstance", "(Ljava/lang/Class;I)Ljava/lang/Object;");
+		
+		classID = prepopulateClass("java/lang/Throwable");
+		prepopulateMethod(classID, "toString", "()Ljava/lang/String;");
+		prepopulateMethod(classID, "getMessage", "()Ljava/lang/String;");
+		
+		classID = prepopulateClass("java/lang/System");
+		prepopulateMethod(classID, "identityHashCode", "(Ljava/lang/Object;)I");
+		
+		classID = prepopulateClass("java/lang/Boolean");
+		prepopulateMethod(classID, "booleanValue", "()D");
+		prepopulateMethod(classID, "<init>", "(Z)V");
+
+		classID = prepopulateClass("java/lang/Double");
+		prepopulateMethod(classID, "doubleValue", "()D");
+		prepopulateMethod(classID, "<init>", "(D)V");
+
+		classID = prepopulateClass("java/lang/Void");
+		prepopulateField(classID, "TYPE");
+
+		prepopulateClass("java/lang/String");		
+		prepopulateClass("java/applet/Applet");
+	}
+
+	private int prepopulateClass(String name) {
+		name = name.replace('/', '.');
+		ClassLoader cl = liveconnectLoader;
+		Class c = null;
+
+		try {
+			c = cl.loadClass(name);
+			store.reference(c);
+		} catch (ClassNotFoundException cnfe) {
+			// do nothing ... this should never happen
+			cnfe.printStackTrace();
+		}
+
+		return store.getIdentifier(c);
+	}
+	
+	private int prepopulateMethod(int classID, String methodName, String signatureStr) {
+		Signature signature = parseCall(signatureStr, ((Class) store.getObject(classID)).getClassLoader(), Signature.class);
+		Object[] a = signature.getClassArray();
+
+		Class c = (Class) store.getObject(classID);
+		Method m = null;
+		Constructor cs = null;
+		Object o = null;
+		
+		try {
+			if (methodName.equals("<init>")
+					|| methodName.equals("<clinit>")) {
+				o = cs = c.getConstructor(signature.getClassArray());
+				store.reference(cs);
+			} else {
+				o = m = c.getMethod(methodName, signature.getClassArray());
+				store.reference(m);
+			}
+		} catch (NoSuchMethodException e) {
+			// should never happen
+			e.printStackTrace();
+		}
+		
+		return store.getIdentifier(m);
+	}
+	
+	private int prepopulateField(int classID, String fieldName) {
+
+		Class c = (Class) store.getObject(classID);
+		Field f = null;
+		try {
+			f = c.getField(fieldName);
+		} catch (SecurityException e) {
+			// should never happen
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			// should never happen			
+			e.printStackTrace();
+		}
+
+		store.reference(f);
+		return store.getIdentifier(f);
+	}
+
 	public void dumpStore() {
 		store.dump();
 	}

@@ -54,7 +54,14 @@ public class PluginMain
     public static void main(String args[])
 	throws IOException
     {
-    	PluginMain pm = new PluginMain(System.getProperty("user.home") + "/.icedteaplugin/icedtea-plugin-to-appletviewer", System.getProperty("user.home") + "/.icedteaplugin/icedtea-appletviewer-to-plugin");
+
+    	try {
+    		PluginMain pm = new PluginMain(System.getProperty("user.home") + "/.icedteaplugin/icedtea-plugin-to-appletviewer", System.getProperty("user.home") + "/.icedteaplugin/icedtea-appletviewer-to-plugin");
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		System.err.println("Something very bad happened. I don't know what to do, so I am going to exit :(");
+    		System.exit(1);
+    	}
     }
 
     public PluginMain(String inPipe, String outPipe) {
@@ -76,6 +83,7 @@ public class PluginMain
     	connect(inPipe, outPipe);
 
     	securityContext = new PluginAppletSecurityContext(0);
+    	securityContext.prePopulateLCClasses();
     	securityContext.setStreamhandler(streamHandler);
     	AppletSecurityContextManager.addContext(0, securityContext);
 

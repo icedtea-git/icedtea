@@ -319,6 +319,8 @@ class IcedTeaPluginFactory;
 static PRBool factory_created = PR_FALSE;
 static IcedTeaPluginFactory* factory = NULL;
 
+static PRBool jvm_attached = PR_FALSE;
+
 // Applet viewer input channel (needs to be static because it is used in plugin_in_pipe_callback)
 GIOChannel* in_from_appletviewer = NULL;
 
@@ -492,30 +494,24 @@ char const* TYPES[10] = { "Object",
 // shutdown (so that the permanent loop does not block 
 // proper exit). We need better error handling
 
-#define PROCESS_PENDING_EVENTS_REF2(reference)  \
-    ResultContainer *resultC;                    \
-	factory->result_map.Get(reference, &resultC); \
-    if (factory->shutting_down == PR_TRUE && \
-		resultC->errorOccurred == PR_TRUE) \
-	{                                                           \
-		PLUGIN_DEBUG_0ARG("Error occured. Exiting function\n");            \
+#define PROCESS_PENDING_EVENTS_REF(reference) \
+    if (jvm_attached == PR_FALSE) \
+	{ \
+	    fprintf(stderr, "Error on Java side detected. Abandoning wait and returning.\n"); \
 		return NS_ERROR_FAILURE; \
 	} \
-	PRBool hasPending;  \
-	factory->current->HasPendingEvents(&hasPending); \
-	if (hasPending == PR_TRUE) { \
-		PRBool processed = PR_FALSE; \
-		factory->current->ProcessNextEvent(PR_TRUE, &processed); \
-	} else if (g_main_context_pending (NULL)) { \
-	   g_main_context_iteration(NULL, false); \
-	} else { \
-		PR_Sleep(PR_INTERVAL_NO_WAIT); \
-	}
-
-
-#define PROCESS_PENDING_EVENTS_REF(reference) \
 	if (g_main_context_pending (NULL)) { \
 	   g_main_context_iteration(NULL, false); \
+	} \
+    PRBool hasPending;  \
+    factory->current->HasPendingEvents(&hasPending); \
+	if (hasPending == PR_TRUE) \
+	{ \
+	  PRBool processed = PR_FALSE; \
+	  factory->current->ProcessNextEvent(PR_TRUE, &processed); \
+	} else \
+	{\
+	    PR_Sleep(PR_INTERVAL_NO_WAIT); \
 	}
 
 #define PROCESS_PENDING_EVENTS \
@@ -524,7 +520,11 @@ char const* TYPES[10] = { "Object",
 	if (hasPending == PR_TRUE) { \
 		PRBool processed = PR_FALSE; \
 		factory->current->ProcessNextEvent(PR_TRUE, &processed); \
-	} else { \
+	} \
+	if (g_main_context_pending (NULL)) { \
+       g_main_context_iteration(NULL, false); \
+    } else \
+    { \
 		PR_Sleep(PR_INTERVAL_NO_WAIT); \
 	}
 
@@ -945,6 +945,7 @@ public:
   nsISecureEnv* secureEnv;
   nsDataHashtable<nsUint32HashKey,ResultContainer*> result_map;
 
+  void InitializeJava();
   void GetMember ();
   void SetMember ();
   void GetSlot ();
@@ -954,6 +955,7 @@ public:
   void Call ();
   void Finalize ();
   void ToString ();
+  void MarkInstancesVoid ();
   nsCOMPtr<nsILiveconnect> liveconnect;
 
   // normally, we shouldn't have to track unref'd handles, but in some cases, 
@@ -970,21 +972,21 @@ private:
   nsresult StartAppletviewer ();
   void ProcessMessage();
   void ConsumeMsgFromJVM();
-  void InitializeJava();
   nsCOMPtr<IcedTeaEventSink> sink;
   nsCOMPtr<nsISocketTransport> transport;
   nsCOMPtr<nsIProcess> applet_viewer_process;
   PRBool connected;
   PRUint32 next_instance_identifier;
-  // Does not do construction/deconstruction or reference counting.
-  nsDataHashtable<nsUint32HashKey, IcedTeaPluginInstance*> instances;
   PRUint32 object_identifier_return;
+  PRUint32 instance_count;
   int javascript_identifier;
   int name_identifier;
   int args_identifier;
   int string_identifier;
   int slot_index;
   int value_identifier;
+  // Does not do construction/deconstruction or reference counting.
+  nsDataHashtable<nsUint32HashKey, IcedTeaPluginInstance*> instances;
 
   // Applet viewer input pipe name.
   gchar* in_pipe_name;
@@ -1015,6 +1017,7 @@ public:
 
   nsIPluginInstancePeer* peer;
   PRBool initialized;
+  PRBool fatalErrorOccurred;
 
 private:
 
@@ -1449,6 +1452,7 @@ IcedTeaPluginFactory::IcedTeaPluginFactory ()
   value_identifier (0),
   connected (PR_FALSE),
   liveconnect (0),
+  instance_count(0),
   shutting_down(PR_FALSE),
   in_pipe_name(NULL),
   in_watch_source(NULL),
@@ -1533,6 +1537,7 @@ IcedTeaPluginFactory::CreateInstance (nsISupports* aOuter, nsIID const& iid,
   if (!instance)
     return NS_ERROR_OUT_OF_MEMORY;
 
+  instance_count++;
   return instance->QueryInterface (iid, result);
 }
 
@@ -1576,7 +1581,16 @@ IcedTeaPluginFactory::Initialize ()
   result = threadManager->GetCurrentThread (getter_AddRefs (current));
   PLUGIN_CHECK_RETURN ("current thread", result);
 
-  InitializeJava();
+  if (jvm_attached == PR_FALSE)
+  {
+    // using printf on purpose.. this should happen rarely
+    printf("Initializing JVM...\n");
+
+    // mark attached right away, in case another initialize() call 
+    //is made (happens if multiple applets are present on the same page)
+    jvm_attached = PR_TRUE;
+    InitializeJava();
+  }
 
   return NS_OK;
 }
@@ -1610,7 +1624,26 @@ IcedTeaPluginFactory::InitializeJava ()
 
   result = StartAppletviewer ();
   PLUGIN_CHECK ("started appletviewer", result);
+}
 
+void
+IcedTeaPluginFactory::MarkInstancesVoid ()
+{
+      PLUGIN_TRACE_FACTORY ();
+	
+      IcedTeaPluginInstance* instance = NULL;
+
+      int instance_id = 1;
+
+      while (instance_id <= instance_count)
+	  {
+		if (instances.Get(instance_id, &instance))
+		{
+            PLUGIN_DEBUG_2ARG("Marking %d of %d void\n", instance_id, instance_count);
+            instance->fatalErrorOccurred = PR_TRUE;
+	    }
+		instance_id++;
+	  }
 }
 
 NS_IMETHODIMP
@@ -2218,10 +2251,24 @@ IcedTeaPluginFactory::DisplayFailureDialog ()
 NS_IMPL_ISUPPORTS2 (IcedTeaPluginInstance, nsIPluginInstance,
                     nsIJVMPluginInstance)
 
+
 NS_IMETHODIMP
 IcedTeaPluginInstance::Initialize (nsIPluginInstancePeer* aPeer)
 {
   PLUGIN_TRACE_INSTANCE ();
+
+  // Ensure that there is a jvm running...
+ 
+  if (jvm_attached == PR_FALSE)
+  {
+    // using printf on purpose.. this should happen rarely
+    fprintf(stderr, "WARNING: Looks like the JVM is not up. Attempting to re-initialize...\n");
+
+    // mark attached right away, in case another initialize() call 
+    //is made (happens if multiple applets are present on the same page)
+    jvm_attached = PR_TRUE;
+    factory->InitializeJava();
+  }
 
   // Send applet tag message to appletviewer.
   // FIXME: nsCOMPtr
@@ -2254,8 +2301,8 @@ IcedTeaPluginInstance::Initialize (nsIPluginInstancePeer* aPeer)
   tagMessage += appletTag;
   tagMessage += "</embed>";
 
-  // remove \n characters from the message
-  tagMessage.StripChars("\n");
+  // remove newline characters from the message
+  tagMessage.StripChars("\r\n");
 
   factory->SendMessageToAppletViewer (tagMessage);
 
@@ -2307,6 +2354,11 @@ IcedTeaPluginInstance::Destroy ()
 {
   PLUGIN_TRACE_INSTANCE ();
 
+  if (fatalErrorOccurred == PR_TRUE)
+  {
+      return NS_OK;
+  }
+
   nsCString destroyMessage (instanceIdentifierPrefix);
   destroyMessage += "destroy";
   factory->SendMessageToAppletViewer (destroyMessage);
@@ -2335,9 +2387,16 @@ IcedTeaPluginInstance::SetWindow (nsPluginWindow* aWindow)
 
             PLUGIN_DEBUG_1ARG ("IcedTeaPluginInstance::SetWindow: Instance %p waiting for initialization...\n", this);
 
-           while (initialized == PR_FALSE) {
+           while (initialized == PR_FALSE && this->fatalErrorOccurred == PR_FALSE) {
               PROCESS_PENDING_EVENTS;
             }
+
+            // did we bail because there is no jvm?
+            if (this->fatalErrorOccurred == PR_TRUE)
+			{
+				PLUGIN_DEBUG_0ARG("Initialization failed. SetWindow returning\n");
+				return NS_ERROR_FAILURE;
+			}
 
             PLUGIN_DEBUG_1ARG ("Instance %p initialization complete...\n", this);
        }
@@ -2584,6 +2643,9 @@ plugin_in_pipe_callback (GIOChannel* source,
   {
       PLUGIN_DEBUG ("appletviewer has stopped.");
       keep_installed = FALSE;
+	  jvm_attached = PR_FALSE;
+
+	  factory->MarkInstancesVoid();
   } else
   {
   
@@ -2667,10 +2729,7 @@ IcedTeaPluginFactory::OnInputStreamReady (nsIAsyncInputStream* aStream)
   return NS_OK;
 }
 
-#include <nsIWebNavigation.h>
 #include <nsServiceManagerUtils.h>
-#include <nsIExternalProtocolService.h>
-#include <nsNetUtil.h>
 
 void
 IcedTeaPluginFactory::HandleMessage (nsCString const& message)
@@ -2725,7 +2784,6 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           if (instance != 0)
 		  {
             instance->peer->ShowStatus (nsCString (rest).get ());
-
           }
         }
       else if (command == "initialized")
@@ -2736,6 +2794,16 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 			PLUGIN_DEBUG_2ARG ("Setting instance.initialized for %p from %d ", instance, instance->initialized);
             instance->initialized = PR_TRUE;
 			PLUGIN_DEBUG_1ARG ("to %d...\n", instance->initialized);
+		  }
+		}
+      else if (command == "fatalError")
+        {
+          IcedTeaPluginInstance* instance = NULL;
+          instances.Get (identifier, &instance);
+          if (instance != 0) {
+			PLUGIN_DEBUG_2ARG ("Setting instance.fatalErrorOccurred for %p from %d ", instance, instance->fatalErrorOccurred);
+            instance->fatalErrorOccurred = PR_TRUE;
+			PLUGIN_DEBUG_1ARG ("to %d...\n", instance->fatalErrorOccurred);
 		  }
 		}
       else if (command == "url")
@@ -3727,6 +3795,7 @@ IcedTeaPluginInstance::IcedTeaPluginInstance (IcedTeaPluginFactory* factory)
   peer(0),
   liveconnect_window (0),
   initialized(PR_FALSE),
+  fatalErrorOccurred(PR_FALSE),
   instanceIdentifierPrefix ("")
 {
   PLUGIN_TRACE_INSTANCE ();
@@ -4272,7 +4341,6 @@ NS_IMPL_ISUPPORTS1 (IcedTeaJNIEnv, nsISecureEnv)
 #include <nsNetCID.h>
 #include <nsServiceManagerUtils.h>
 #include <iostream>
-#include <jvmmgr.h>
 #include <nsIPrincipal.h>
 #include <nsIScriptSecurityManager.h>
 #include <nsIURI.h>
@@ -5444,6 +5512,8 @@ NSGetFactory (nsISupports* aServMgr, nsCID const& aClass,
               char const* aClassName, char const* aContractID,
               nsIFactory** aFactory)
 {
+  PLUGIN_DEBUG_0ARG("NSGetFactory called\n");
+
   static NS_DEFINE_CID (PluginCID, NS_PLUGIN_CID);
   if (!aClass.Equals (PluginCID))
     return NS_ERROR_FACTORY_NOT_LOADED;
