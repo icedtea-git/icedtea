@@ -1,3 +1,9 @@
+2008-10-22  Matthias Klose  <doko@ubuntu.com>
+
+        * Makefile.am: Revert the previous change. Always pass DISTRIBUTION_ID
+        instead.
+        * configure.ac: Make DIST_ID more precise.
+
 2008-10-22  Omair Majid  <omajid@redhat.com>
 
 	* rt/net/sourceforge/nanoxml/XMLElement.java 
