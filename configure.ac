@@ -237,10 +237,11 @@ AC_ARG_WITH([pkgversion],
 AC_SUBST(PKGVERSION)
 
 if test -n "$LSB_RELEASE"; then
+  lsb_info="$($LSB_RELEASE -ds | sed 's/^"//;s/"$//')"
   if test -n "$PKGVERSION"; then
-    DIST_ID="$DIST_ID, package $PKGVERSION"
+    DIST_ID="$lsb_info, package $PKGVERSION"
   else
-    DIST_ID="Built on $($LSB_RELEASE -ds)"
+    DIST_ID="Built on $lsb_info"
   fi
 else
   DIST_ID="Custom build ($(date))"

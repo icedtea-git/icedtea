@@ -2,7 +2,8 @@
 
         * Makefile.am: Revert the previous change. Always pass DISTRIBUTION_ID
         instead.
-        * configure.ac: Make DIST_ID more precise.
+        * configure.ac: Make DIST_ID more precise. Some implementations of the
+	lsb_release command quote the output; ignore it.
 
 2008-10-22  Omair Majid  <omajid@redhat.com>
 
