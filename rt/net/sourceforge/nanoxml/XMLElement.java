@@ -1266,6 +1266,7 @@ public class XMLElement
 
                     int i = this.reader.read();
                     if (i == -1) {
+                        // no character in buffer, and nothing read
                         out.flush();
                         break;
                     } else if (i == 10) {
@@ -1278,7 +1279,19 @@ public class XMLElement
                 char next;
                 int i = this.reader.read();
                 if (i == -1) {
+                    // character in buffer and nothing read. write out
+                    // what's in the buffer
+                    out.print(ch);
                     out.flush();
+                    if (JNLPRuntime.isDebug()) {
+                        if (ch == 10) {
+                            System.out.println();
+                            System.out.print("line: " + newline + " ");
+                            newline++;
+                        } else {
+                            System.out.print(ch);
+                        }
+                    }
                     break;
                 } else if (i == 10) {
                     next = '\n';
