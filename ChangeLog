@@ -1,3 +1,14 @@
+2008-10-22  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-constructor-properties.patch:
+	Removed.
+	* Makefile.am: Bump to b37, pass JAR_KNOWS_J_OPTIONS
+	to ecj make.
+	* acinclude.m4: Check whether or not jar supports -J
+	options at the end.
+	* patches/icedtea-ecj-jopt.patch: Only add -J options
+	to jar in JDK and CORBA when supported.
+
 2008-10-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:

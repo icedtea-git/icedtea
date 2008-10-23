@@ -1,6 +1,6 @@
-OPENJDK_DATE = 25_sep_2008
-OPENJDK_MD5SUM = 6432f04891bc0e61142a73bb8500314c
-OPENJDK_VERSION = b36
+OPENJDK_DATE = 09_oct_2008
+OPENJDK_MD5SUM = 979a7f60de588f1f416657d41ad5e63c
+OPENJDK_VERSION = b37
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -247,6 +247,7 @@ ICEDTEA_ENV_ECJ = \
 	"JAVAC=" \
 	"RHINO_JAR=$(RHINO_JAR)" \
 	"JAR_KNOWS_ATFILE=$(JAR_KNOWS_ATFILE)" \
+	"JAR_KNOWS_J_OPTIONS=$(JAR_KNOWS_J_OPTIONS)" \
 	"JAR_ACCEPTS_STDIN_LIST=$(JAR_ACCEPTS_STDIN_LIST)"
 
 if WITH_CACAO
@@ -567,7 +568,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
 	patches/icedtea-security-updates.patch \
-	patches/icedtea-constructor-properties.patch \
 	patches/icedtea-jsoundhs.patch \
 	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-mbeanintrospector.patch \
@@ -871,7 +871,8 @@ stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCHES = patches/icedtea-ecj.patch \
-	patches/icedtea-ecj-spp.patch
+	patches/icedtea-ecj-spp.patch \
+	patches/icedtea-ecj-jopt.patch
 
 stamps/patch-ecj.stamp: stamps/clone-ecj.stamp
 	mkdir -p stamps; \

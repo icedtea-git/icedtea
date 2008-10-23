@@ -349,10 +349,20 @@ EOF
     JAR_ACCEPTS_STDIN_LIST=
     AC_MSG_RESULT(no)
   fi
-  rm -f _config.txt _config.list _config.jar
+  rm -f _config.list _config.jar
+  AC_MSG_CHECKING([whether jar supports -J options at the end])
+  if $JAR cf _config.jar _config.txt -J-Xmx896m 2>/dev/null; then
+    JAR_KNOWS_J_OPTIONS=1
+    AC_MSG_RESULT(yes)
+  else
+    JAR_KNOWS_J_OPTIONS=
+    AC_MSG_RESULT(no)
+  fi
+  rm -f _config.txt _config.jar
   AC_SUBST(JAR)
   AC_SUBST(JAR_KNOWS_ATFILE)
   AC_SUBST(JAR_ACCEPTS_STDIN_LIST)
+  AC_SUBST(JAR_KNOWS_J_OPTIONS)
 ])
 
 AC_DEFUN([FIND_RMIC],
