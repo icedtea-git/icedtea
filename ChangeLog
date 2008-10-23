@@ -1,3 +1,9 @@
+2008-10-23  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/229:
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse): Parse goto_w correctly.
+
 2008-10-23  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am (stamps/patch.stamp): Make sure rt dir exists when
