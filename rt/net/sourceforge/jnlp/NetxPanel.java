@@ -39,10 +39,18 @@ import sun.applet.AppletViewerPanel;
 public class NetxPanel extends AppletViewerPanel
 {
     private PluginBridge bridge = null;
+    private boolean exitOnFailure = true;
 
     public NetxPanel(URL documentURL, Hashtable atts)
     {
         super(documentURL, atts);
+    }
+    
+    // overloaded constructor, called when initialized via plugin 
+    public NetxPanel(URL documentURL, Hashtable atts, boolean exitOnFailure)
+    {
+        this(documentURL, atts);
+        this.exitOnFailure = exitOnFailure;
     }
 
     //Overriding to use Netx classloader. You might need to relax visibility
@@ -72,14 +80,15 @@ public class NetxPanel extends AppletViewerPanel
     		dispatchAppletEvent(APPLET_LOADING, null);
     		status = APPLET_LOAD;
 
-    		Launcher l = new Launcher();
+    		Launcher l = new Launcher(exitOnFailure);
     		AppletInstance appInst = null;
                 try {
                     appInst = (AppletInstance) l.launch(bridge, this);
                 } catch (LaunchException e) {
                     // Assume user has indicated he does not trust the
                     // applet.
-                    System.exit(0);
+                	if (exitOnFailure)
+                		System.exit(0);
                 }
     		applet = appInst.getApplet();
     		

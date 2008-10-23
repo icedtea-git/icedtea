@@ -84,6 +84,9 @@ PRThread* current_thread ();
 // #13 0x0153f91c in ProxyJNIEnv::InvokeMethod (env=0xa8b8040, obj=0x9dad690, method=0xa0ed070, args=0xbff3065c "\235\225$") at ProxyJNI.cpp:580
 // #14 0x0153fdbf in ProxyJNIEnv::CallObjectMethod (env=0xa8b8040, obj=0x9dad690, methodID=0xa0ed070) at ProxyJNI.cpp:641
 
+// timeout (in seconds) for various calls to java side
+#define TIMEOUT 20
+
 #define NOT_IMPLEMENTED() \
   printf ("NOT IMPLEMENTED: %s\n", __PRETTY_FUNCTION__)
 
@@ -312,6 +315,7 @@ static GError* channel_error = NULL;
 // Fully-qualified appletviewer executable.
 gchar* data_directory = NULL;
 static char* appletviewer_executable = NULL;
+static char* appletviewer_classpath = NULL;
 static char* libjvm_so = NULL;
 
 class IcedTeaPluginFactory;
@@ -2383,13 +2387,27 @@ IcedTeaPluginInstance::SetWindow (nsPluginWindow* aWindow)
     {
 
        if (initialized == PR_FALSE) 
-	     {
+       {
 
-            PLUGIN_DEBUG_1ARG ("IcedTeaPluginInstance::SetWindow: Instance %p waiting for initialization...\n", this);
+           PLUGIN_DEBUG_1ARG ("IcedTeaPluginInstance::SetWindow: Instance %p waiting for initialization...\n", this);
 
-           while (initialized == PR_FALSE && this->fatalErrorOccurred == PR_FALSE) {
-              PROCESS_PENDING_EVENTS;
+           suseconds_t startTime = get_time_in_ms();
+           PRBool timedOut = PR_FALSE;
+
+           while (initialized == PR_FALSE && this->fatalErrorOccurred == PR_FALSE) 
+           {
+               PROCESS_PENDING_EVENTS;
+
+               if ((get_time_in_ms() - startTime) > TIMEOUT*1000)
+               {
+                   timedOut = PR_TRUE;
+                   break;
+                }
             }
+
+            // we timed out
+            if (timedOut == PR_TRUE)
+              return NS_ERROR_FAILURE;
 
             // did we bail because there is no jvm?
             if (this->fatalErrorOccurred == PR_TRUE)
@@ -2572,8 +2590,13 @@ IcedTeaPluginFactory::GetJavaObject (PRUint32 instance_identifier,
   nsresult result = NS_OK;
 
   // wait for result
+  suseconds_t startTime = get_time_in_ms();
   while (object_identifier_return == 0) {
 	  current->ProcessNextEvent(PR_TRUE, &processed);
+
+	  // If we have been waiting for more than 20 seconds, something is wrong
+	  if ((get_time_in_ms() - startTime) > TIMEOUT*1000)
+		  break;
   }
 
   PLUGIN_DEBUG_1ARG ("GOT JAVA OBJECT IDENTIFIER: %d\n", object_identifier_return);
@@ -3551,15 +3574,17 @@ IcedTeaPluginFactory::StartAppletviewer ()
   
   if (getenv("ICEDTEAPLUGIN_DEBUG"))
   {
-	  numArgs = 4;
-      char const* javaArgs[4] = { "-Xdebug", "-Xnoagent", "-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n", "sun.applet.PluginMain" };
+	  numArgs = 6;
+      char const* javaArgs[6] = { "-cp", appletviewer_classpath, "-Xdebug", "-Xnoagent", "-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n", "sun.applet.PluginMain" };
 	  args = javaArgs;
   } else
   {
-	  numArgs = 1;
-	  char const* javaArgs[1] = { "sun.applet.PluginMain" };
+	  numArgs = 3;
+	  char const* javaArgs[3] = { "-cp", appletviewer_classpath, "sun.applet.PluginMain" };
 	  args = javaArgs;
   }
+
+  printf("Executing: %s %s\n", appletviewer_executable, args);
 
   // start processing thread
   nsCOMPtr<nsIRunnable> processMessageEvent =
@@ -3585,14 +3610,14 @@ IcedTeaPluginFactory::StartAppletviewer ()
   PLUGIN_DEBUG_TWO ("clearing old input fifo (if any):", in_pipe_name);
   g_remove(in_pipe_name);
 
-  PLUGIN_DEBUG_TWO ("GCJ_New: creating input fifo:", in_pipe_name);
+  PLUGIN_DEBUG_TWO ("creating input fifo:", in_pipe_name);
   if (mkfifo (in_pipe_name, 0700) == -1 && errno != EEXIST)
     {
       PLUGIN_ERROR_TWO ("Failed to create input pipe", strerror (errno));
       result = NS_ERROR_OUT_OF_MEMORY;
       goto cleanup_in_pipe_name;
     }
-  PLUGIN_DEBUG_TWO ("GCJ_New: created input fifo:", in_pipe_name);
+  PLUGIN_DEBUG_TWO ("created input fifo:", in_pipe_name);
 
   // Create plugin-to-appletviewer pipe which we refer to as the
   // output pipe.
@@ -3614,14 +3639,14 @@ IcedTeaPluginFactory::StartAppletviewer ()
   PLUGIN_DEBUG_TWO ("clearing old output fifo (if any):", out_pipe_name);
   
   g_remove(out_pipe_name);
-  PLUGIN_DEBUG_TWO ("GCJ_New: creating output fifo:", out_pipe_name);
+  PLUGIN_DEBUG_TWO ("creating output fifo:", out_pipe_name);
   if (mkfifo (out_pipe_name, 0700) == -1 && errno != EEXIST)
     {
       PLUGIN_ERROR_TWO ("Failed to create output pipe", strerror (errno));
       result = NS_ERROR_OUT_OF_MEMORY;
       goto cleanup_out_pipe_name;
     }
-  PLUGIN_DEBUG_TWO ("GCJ_New: created output fifo:", out_pipe_name);
+  PLUGIN_DEBUG_TWO ("created output fifo:", out_pipe_name);
 
   result = applet_viewer_process->Run (PR_FALSE, args, numArgs, nsnull);
   PLUGIN_CHECK_RETURN ("run process", result);
@@ -3696,9 +3721,9 @@ IcedTeaPluginFactory::StartAppletviewer ()
 
   // cleanup_out_pipe:
   // Delete output pipe.
-  PLUGIN_DEBUG_TWO ("GCJ_New: deleting input fifo:", in_pipe_name);
+  PLUGIN_DEBUG_TWO ("deleting input fifo:", in_pipe_name);
   unlink (out_pipe_name);
-  PLUGIN_DEBUG_TWO ("GCJ_New: deleted input fifo:", in_pipe_name);
+  PLUGIN_DEBUG_TWO ("deleted input fifo:", in_pipe_name);
 
  cleanup_out_pipe_name:
   g_free (out_pipe_name);
@@ -3706,9 +3731,9 @@ IcedTeaPluginFactory::StartAppletviewer ()
 
   // cleanup_in_pipe:
   // Delete input pipe.
-  PLUGIN_DEBUG_TWO ("GCJ_New: deleting output fifo:", out_pipe_name);
+  PLUGIN_DEBUG_TWO ("deleting output fifo:", out_pipe_name);
   unlink (in_pipe_name);
-  PLUGIN_DEBUG_TWO ("GCJ_New: deleted output fifo:", out_pipe_name);
+  PLUGIN_DEBUG_TWO ("deleted output fifo:", out_pipe_name);
 
  cleanup_in_pipe_name:
   g_free (in_pipe_name);
@@ -5536,24 +5561,28 @@ NSGetFactory (nsISupports* aServMgr, nsCID const& aClass,
       return NS_ERROR_OUT_OF_MEMORY;
     }
   nsCString executable (dirname (filename));
-  nsCString jar(dirname (filename));
-  nsCString extrajars("");
+  nsCString classpath(dirname (filename));
   free (filename);
   filename = NULL;
 
-  //executableString += nsCString ("/../../bin/pluginappletviewer");
   executable += nsCString ("/../../bin/java");
-
-  //executable += nsCString ("/client/libjvm.so");
 
   // Never freed.
   appletviewer_executable = strdup (executable.get ());
-  //libjvm_so = strdup (executable.get ());
   if (!appletviewer_executable)
     {
       PLUGIN_ERROR ("Failed to create java executable name.");
       return NS_ERROR_OUT_OF_MEMORY;
     }
+
+  classpath += nsCString ("/rt.jar");
+  appletviewer_classpath = strdup (classpath.get ());
+  if (!appletviewer_classpath)
+    {
+      PLUGIN_ERROR ("Failed to create java classpath string.");
+      return NS_ERROR_OUT_OF_MEMORY;
+    }
+
 
   // Make sure the plugin data directory exists, creating it if
   // necessary.
