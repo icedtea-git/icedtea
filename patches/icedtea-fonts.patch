@@ -383,8 +383,8 @@
 +
 +filename.Sazanami_Gothic=/usr/share/fonts/sazanami-fonts-gothic/sazanami-gothic.ttf
 +filename.Sazanami_Mincho=/usr/share/fonts/sazanami-fonts-mincho/sazanami-mincho.ttf
-+filename.AR_PL_ShanHeiSun_Uni=/usr/share/fonts/cjkunifonts-uming/uming.ttf
-+filename.AR_PL_ZenKai_Uni=/usr/share/fonts/cjkunifonts-ukai/ukai.ttf
++filename.AR_PL_ShanHeiSun_Uni=/usr/share/fonts/cjkunifonts-uming/uming.ttc
++filename.AR_PL_ZenKai_Uni=/usr/share/fonts/cjkunifonts-ukai/ukai.ttc
 +filename.Baekmuk_Gulim=/usr/share/fonts/baekmuk-ttf-gulim/gulim.ttf
 +filename.Baekmuk_Batang=/usr/share/fonts/baekmuk-ttf-batang/batang.ttf
 +

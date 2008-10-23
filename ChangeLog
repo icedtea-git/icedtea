@@ -1,3 +1,8 @@
+2008-10-23  Lillian Angel  <langel@redhat.com>
+
+	PR redhat/468193:
+	* patches/icedtea-fonts.patch: Updated for filename change.
+
 2008-10-23  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/229:
