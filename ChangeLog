@@ -1,3 +1,8 @@
+2008-10-23  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (stamps/patch.stamp): Make sure rt dir exists when
+	ENABLE_PLUGIN is true.
+
 2008-10-23  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/204:
@@ -10,9 +15,9 @@
 
 2008-10-22  Matthias Klose  <doko@ubuntu.com>
 
-        * Makefile.am: Revert the previous change. Always pass DISTRIBUTION_ID
-        instead.
-        * configure.ac: Make DIST_ID more precise. Some implementations of the
+	* Makefile.am: Revert the previous change. Always pass DISTRIBUTION_ID
+	instead.
+	* configure.ac: Make DIST_ID more precise. Some implementations of the
 	lsb_release command quote the output; ignore it.
 
 2008-10-22  Omair Majid  <omajid@redhat.com>
