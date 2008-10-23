@@ -175,7 +175,7 @@ import sun.misc.Ref;
          AccessController.doPrivileged(new PrivilegedAction() {
              public Object run() {
             	 	try {
-            	 		panel = new NetxPanel(doc, atts, false);
+            	 		panel = new NetxPanel(doc, atts, true);
             	 		AppletViewerPanel.debug("Using NetX panel");
             	 	} catch (Exception ex) {
             	 		AppletViewerPanel.debug("Unable to start NetX applet - defaulting to Sun applet", ex);

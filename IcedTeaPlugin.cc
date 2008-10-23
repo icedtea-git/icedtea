@@ -194,6 +194,12 @@ inline suseconds_t get_time_in_ms()
 	return tv.tv_usec;
 }
 
+inline long get_time_in_s()
+{
+	time_t t;
+	return time(&t);
+}
+
 // __func__ is a variable, not a string literal, so it cannot be
 // concatenated by the preprocessor.
 #define PLUGIN_TRACE_JNIENV() Trace _trace ("JNIEnv::", __func__)
@@ -315,7 +321,6 @@ static GError* channel_error = NULL;
 // Fully-qualified appletviewer executable.
 gchar* data_directory = NULL;
 static char* appletviewer_executable = NULL;
-static char* appletviewer_classpath = NULL;
 static char* libjvm_so = NULL;
 
 class IcedTeaPluginFactory;
@@ -2391,14 +2396,14 @@ IcedTeaPluginInstance::SetWindow (nsPluginWindow* aWindow)
 
            PLUGIN_DEBUG_1ARG ("IcedTeaPluginInstance::SetWindow: Instance %p waiting for initialization...\n", this);
 
-           suseconds_t startTime = get_time_in_ms();
+           long startTime = get_time_in_s();
            PRBool timedOut = PR_FALSE;
 
            while (initialized == PR_FALSE && this->fatalErrorOccurred == PR_FALSE) 
            {
                PROCESS_PENDING_EVENTS;
 
-               if ((get_time_in_ms() - startTime) > TIMEOUT*1000)
+               if ((get_time_in_s() - startTime) > TIMEOUT)
                {
                    timedOut = PR_TRUE;
                    break;
@@ -2407,7 +2412,11 @@ IcedTeaPluginInstance::SetWindow (nsPluginWindow* aWindow)
 
             // we timed out
             if (timedOut == PR_TRUE)
-              return NS_ERROR_FAILURE;
+			{
+                PLUGIN_DEBUG_1ARG ("Initialization for instance %d has timed out. Marking it void\n", instance_identifier);
+				this->fatalErrorOccurred = PR_TRUE;
+                return NS_ERROR_FAILURE;
+			}
 
             // did we bail because there is no jvm?
             if (this->fatalErrorOccurred == PR_TRUE)
@@ -2549,12 +2558,28 @@ IcedTeaPluginInstance::GetJavaObject (jobject* object)
   if (initialized == PR_FALSE) 
     {
 
-      PLUGIN_DEBUG_1ARG ("IcedTeaPluginInstance::SetWindow: Instance %p waiting for initialization...\n", this);
+      PLUGIN_DEBUG_1ARG ("IcedTeaPluginInstance::GetJavaObject: Instance %p waiting for initialization...\n", this);
 
-      while (initialized == PR_FALSE) {
-        PROCESS_PENDING_EVENTS;
-//      printf("waiting for java object\n");
+      long startTime = get_time_in_s();
+      PRBool timedOut = PR_FALSE;
+      while (initialized == PR_FALSE && this->fatalErrorOccurred == PR_FALSE) 
+      {
+          PROCESS_PENDING_EVENTS;
+
+          if ((get_time_in_s() - startTime) > TIMEOUT)
+          {
+              timedOut = PR_TRUE;
+              break;
+           }
       }
+
+      // we timed out
+      if (timedOut == PR_TRUE)
+	  {
+          PLUGIN_DEBUG_1ARG ("IcedTeaPluginInstance::GetJavaObject: Initialization for instance %d has timed out. Marking it void\n", instance_identifier);
+          this->fatalErrorOccurred = PR_TRUE;
+          return NS_ERROR_FAILURE;
+	  }
 
       PLUGIN_DEBUG_1ARG ("Instance %p initialization complete...\n", this);
     }
@@ -2590,12 +2615,12 @@ IcedTeaPluginFactory::GetJavaObject (PRUint32 instance_identifier,
   nsresult result = NS_OK;
 
   // wait for result
-  suseconds_t startTime = get_time_in_ms();
+  long startTime = get_time_in_s();
   while (object_identifier_return == 0) {
 	  current->ProcessNextEvent(PR_TRUE, &processed);
 
 	  // If we have been waiting for more than 20 seconds, something is wrong
-	  if ((get_time_in_ms() - startTime) > TIMEOUT*1000)
+	  if ((get_time_in_ms() - startTime) > TIMEOUT)
 		  break;
   }
 
@@ -3574,17 +3599,15 @@ IcedTeaPluginFactory::StartAppletviewer ()
   
   if (getenv("ICEDTEAPLUGIN_DEBUG"))
   {
-	  numArgs = 6;
-      char const* javaArgs[6] = { "-cp", appletviewer_classpath, "-Xdebug", "-Xnoagent", "-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n", "sun.applet.PluginMain" };
+	  numArgs = 4;
+      char const* javaArgs[4] = { "-Xdebug", "-Xnoagent", "-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n", "sun.applet.PluginMain" };
 	  args = javaArgs;
   } else
   {
-	  numArgs = 3;
-	  char const* javaArgs[3] = { "-cp", appletviewer_classpath, "sun.applet.PluginMain" };
+	  numArgs = 1;
+	  char const* javaArgs[1] = { "sun.applet.PluginMain" };
 	  args = javaArgs;
   }
-
-  printf("Executing: %s %s\n", appletviewer_executable, args);
 
   // start processing thread
   nsCOMPtr<nsIRunnable> processMessageEvent =
@@ -5561,7 +5584,7 @@ NSGetFactory (nsISupports* aServMgr, nsCID const& aClass,
       return NS_ERROR_OUT_OF_MEMORY;
     }
   nsCString executable (dirname (filename));
-  nsCString classpath(dirname (filename));
+
   free (filename);
   filename = NULL;
 
@@ -5574,15 +5597,6 @@ NSGetFactory (nsISupports* aServMgr, nsCID const& aClass,
       PLUGIN_ERROR ("Failed to create java executable name.");
       return NS_ERROR_OUT_OF_MEMORY;
     }
-
-  classpath += nsCString ("/rt.jar");
-  appletviewer_classpath = strdup (classpath.get ());
-  if (!appletviewer_classpath)
-    {
-      PLUGIN_ERROR ("Failed to create java classpath string.");
-      return NS_ERROR_OUT_OF_MEMORY;
-    }
-
 
   // Make sure the plugin data directory exists, creating it if
   // necessary.

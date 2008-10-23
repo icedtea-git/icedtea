@@ -1,8 +1,8 @@
 2008-10-23  Deepak Bhole  <dbhole@redhat.com>
 
-	* IcedTeaPlugin.cc: Supply classpath to rt.jar when starting java.
-	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Tell Netx to exit VM
-	on error.
+	* IcedTeaPlugin.cc: Implement proper timeout action.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Supply new
+	exitOnFailure argument to Netx.
 	* rt/net/sourceforge/jnlp/Launcher.java: Implement an option for not
 	exiting VM on error.
 	* rt/net/sourceforge/jnlp/NetxPanel.java: Same.
