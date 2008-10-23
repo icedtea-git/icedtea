@@ -129,7 +129,8 @@ void SharkPHIState::initialize()
       break;
 
     case T_ADDRESS:
-      value = SharkValue::create_returnAddress(block()->jsr_ret_bci());
+      value = SharkValue::create_returnAddress(
+        type->as_return_address()->bci());
       break;
 
     case ciTypeFlow::StateVector::T_BOTTOM:
@@ -167,7 +168,8 @@ void SharkPHIState::initialize()
       break;
 
     case T_ADDRESS:
-      value = SharkValue::create_returnAddress(block()->jsr_ret_bci());
+      value = SharkValue::create_returnAddress(
+        type->as_return_address()->bci());
       break;
 
     case ciTypeFlow::StateVector::T_LONG2:
