@@ -1,3 +1,11 @@
+2008-10-24  Omair Majid <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(write): Check for offset being negative.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java
+	(testMixerKnowsAboutOpenClips): Removed the assumption that mixer had no
+	other lines open.
+
 2008-10-24  Deepak Bhole  <dbhole@redhat.com>
 
 	* plugin/icedtea/netscape/javascript/JSObject.java: Make long constructor
