@@ -41,13 +41,12 @@ package sun.applet;
 public class VoidPluginCallRequest extends PluginCallRequest {
     public VoidPluginCallRequest(String message, String returnString) {
         super(message, returnString);
-        System.out.println ("VoidPLUGINCAlL " + message + " " + returnString);
+        PluginDebug.debug ("VoidPLUGINCAlL " + message + " " + returnString);
     }
 
     public void parseReturn(String message) {
     	setDone(true);
     }
-    
     
     /**
      * Returns whether the given message is serviceable by this object

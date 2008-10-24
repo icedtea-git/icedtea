@@ -46,66 +46,66 @@ public class TestEnv
     public String complexStringField = "z\uD834\uDD1E\u6C34";
 
     public static void TestIt() {
-        System.out.println("TestIt");
+        PluginDebug.debug("TestIt");
     }
 
     public static void TestItBool(boolean arg) {
-        System.out.println("TestItBool: " + arg);
+        PluginDebug.debug("TestItBool: " + arg);
     }
 
     public static void TestItByte(byte arg) {
-        System.out.println("TestItByte: " + arg);
+        PluginDebug.debug("TestItByte: " + arg);
     }
 
     public static void TestItChar(char arg) {
-        System.out.println("TestItChar: " + arg);
+        PluginDebug.debug("TestItChar: " + arg);
     }
 
     public static void TestItShort(short arg) {
-        System.out.println("TestItShort: " + arg);
+        PluginDebug.debug("TestItShort: " + arg);
     }
 
     public static void TestItInt(int arg) {
-        System.out.println("TestItInt: " + arg);
+        PluginDebug.debug("TestItInt: " + arg);
     }
 
     public static void TestItLong(long arg) {
-        System.out.println("TestItLong: " + arg);
+        PluginDebug.debug("TestItLong: " + arg);
     }
 
     public static void TestItFloat(float arg) {
-        System.out.println("TestItFloat: " + arg);
+        PluginDebug.debug("TestItFloat: " + arg);
     }
 
     public static void TestItDouble(double arg) {
-        System.out.println("TestItDouble: " + arg);
+        PluginDebug.debug("TestItDouble: " + arg);
     }
 
     public static void TestItObject(TestEnv arg) {
-        System.out.println("TestItObject: " + arg);
+        PluginDebug.debug("TestItObject: " + arg);
     }
 
     public static void TestItObjectString(String arg) {
-        System.out.println("TestItObjectString: " + arg);
+        PluginDebug.debug("TestItObjectString: " + arg);
     }
 
     public static void TestItIntArray(int[] arg) {
-        System.out.println("TestItIntArray: " + arg);
+        PluginDebug.debug("TestItIntArray: " + arg);
         for (int i = 0; i < arg.length; i++)
-            System.out.println ("ELEMENT: " + i + " " + arg[i]);
+            PluginDebug.debug ("ELEMENT: " + i + " " + arg[i]);
     }
 
     public static void TestItObjectArray(String[] arg) {
-        System.out.println("TestItObjectArray: " + arg);
+        PluginDebug.debug("TestItObjectArray: " + arg);
         for (int i = 0; i < arg.length; i++)
-            System.out.println ("ELEMENT: " + i + " " + arg[i]);
+            PluginDebug.debug ("ELEMENT: " + i + " " + arg[i]);
     }
 
     public static void TestItObjectArrayMulti(String[][] arg) {
-        System.out.println("TestItObjectArrayMulti: " + arg);
+        PluginDebug.debug("TestItObjectArrayMulti: " + arg);
         for (int i = 0; i < arg.length; i++)
             for (int j = 0; j < arg[i].length; j++)
-                System.out.println ("ELEMENT: " + i + " " + j + " " + arg[i][j]);
+                PluginDebug.debug ("ELEMENT: " + i + " " + j + " " + arg[i][j]);
     }
 
     public static boolean TestItBoolReturnTrue() {
@@ -166,7 +166,7 @@ public class TestEnv
     }
 
     public int TestItIntInstance(int arg) {
-        System.out.println("TestItIntInstance: " + this + " " + arg);
+        PluginDebug.debug("TestItIntInstance: " + this + " " + arg);
         return 899;
     }
 }

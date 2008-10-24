@@ -1,3 +1,47 @@
+2008-10-24  Andrew John Hughes  <ahughes@redhat.com>
+
+	Merge from IcedTea6.
+	* ChangeLog,
+	* HACKING,
+	* IcedTeaPlugin.cc,
+	* Makefile.am,
+	* README,
+	* THANKYOU,
+	* acinclude.m4,
+	* configure.ac,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/NetxPanel.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/nanoxml/XMLElement.java,
+	* patches/icedtea-cacao-ignore-jdi-tests.patch,
+	* patches/icedtea-cacao-ignore-tests.patch: Merged.
+	* patches/icedtea-ecj.patch: Regenerated.
+	* patches/icedtea-javac-debuginfo.patch: Merged.
+	* patches/icedtea-liveconnect.patch: Regenerated.
+	* patches/icedtea-shark.patch,
+	* patches/icedtea-version.patch,
+	* patches/icedtea-webstart.patch,
+	* patches/icedtea-xjc.patch,
+	* plugin/icedtea/netscape/javascript/JSObject.java,
+	* plugin/icedtea/netscape/javascript/JSRunnable.java,
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java,
+	* plugin/icedtea/sun/applet/GetMemberPluginCallRequest.java,
+	* plugin/icedtea/sun/applet/GetWindowPluginCallRequest.java,
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java,
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java,
+	* plugin/icedtea/sun/applet/PluginDebug.java,
+	* plugin/icedtea/sun/applet/PluginMain.java,
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java,
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java,
+	* plugin/icedtea/sun/applet/PluginObjectStore.java,
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java,
+	* plugin/icedtea/sun/applet/RequestQueue.java,
+	* plugin/icedtea/sun/applet/TestEnv.java,
+	* plugin/icedtea/sun/applet/VoidPluginCallRequest.java,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Merged.
+
 2008-10-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-constructor-properties.patch:
@@ -9,6 +53,109 @@
 	* patches/icedtea-ecj-jopt.patch: Only add -J options
 	to jar in JDK and CORBA when supported.
 
+2008-10-23  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/204:
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkPHIState::initialize): Fix return address initialization.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::jsr_ret_bci): Removed now-unnecessary code.
+	* patches/icedtea-shark.patch
+	(openjdk/hotspot/src/share/vm/ci/ciTypeFlow.hpp): Likewise.
+
+2008-10-22  Matthias Klose  <doko@ubuntu.com>
+
+        * Makefile.am: Revert the previous change. Always pass DISTRIBUTION_ID
+        instead.
+        * configure.ac: Make DIST_ID more precise. Some implementations of the
+	lsb_release command quote the output; ignore it.
+
+2008-10-22  Omair Majid  <omajid@redhat.com>
+
+	* rt/net/sourceforge/nanoxml/XMLElement.java 
+	(sanitizeInput): Fix for last character of the jnlp file being ignored.
+
+2008-10-22  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Added quotes around DIST_ID.
+
+2008-10-22  Andrew Haley  <aph@redhat.com>
+
+	* patches/icedtea-xjc.patch: New.
+
+2008-10-21  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Implemented JVM respawning.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Prepopulate
+	classes requested by LiveConnect at initialization.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Fix panel applet
+	resizing when window height and width is in %.
+	* plugin/icedtea/sun/applet/PluginMain.java: Handle error during NetX
+	initialization gracefully.
+
+2008-10-21  Matthias Klose  <doko@ubuntu.com>
+
+	* configure.ac: Add new option --with-pkgversion,
+	substitute PKGVERSION and DIST_ID.
+	* Makefile.am (ICEDTEA_ENV): Add DISTRIBUTION_ID;
+	(stamps/patch.stamp): Encode PKGVERSION in IcedTea version.
+	* patches/icedtea-version.patch: Add DISTRIBUTION_ID in vm crash report.
+
+2008-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* HACKING: Add new patch.
+	* Makefile.am: Compile PulseAudio Java
+	files with debugging information.
+	* patches/icedtea-ecj.patch: Regenerated.
+	* patches/icedtea-javac-debuginfo.patch:
+	Ensure JAXWS, JAXP, CORBA and the language
+	tools include debugging information.
+
+2008-10-20  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(EXTRA_DIST): Added plugin dir.
+
+2008-10-20  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Changed all instances of $(srcdir) to
+	$(abs_top_srcdir).
+
+2008-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Use GCJ if not equal to no instead
+	of being empty.
+	* acinclude.m4:
+	(AC_CHECK_WITH_GCJ): New macro.
+	* configure.ac:
+	Use AC_CHECK_WITH_GCJ in preference to
+	just checking for GCJ.
+
+2008-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Build native ecj for ecj builds when
+	gcj is available.
+	* acinclude.m4:
+	Make configure output more explicit and readable.
+	* configure.ac:
+	Check for gcj, and make output more explicit
+	and readable.
+	* javac.in: Use native ecj when available.
+
+2008-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Fix LiveConnect and PulseAudio paths to work
+	when srcdir != builddir.
+
+2008-10-20  Alon Bar-Lev  <alon.barlev@gmail.com>
+
+	PR icedtea/224:
+	* configure.ac:
+	Correct use of --enable options.
+	
 2008-10-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
@@ -24,6 +171,62 @@
 	Include rt-system.jar in jaxws compilation bootclasspath
 	so java.net and java.util.concurrent classes can be found.
 	Add back missing javazic patch.
+
+2008-10-19  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (jtregcheck): Cleanup processes.
+
+2008-10-19  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-cacao-ignore-jdi-tests.patch: Ignore jdi tests,
+	not yet implemented in cacao.
+	* patches/icedtea-cacao-ignore-tests.patch: Ignore long running failing
+	tests, be nice with build daemoms: ProducerConsumerLoops.
+	* Makefile.am: Apply patches when configured with --enable-cacao.
+
+2008-10-17  Deepak Bhole  <dbhole@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Make applet size
+	factors doubles instead of ints. 
+
+2008-10-18  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Write a summary of the jtreg test results.
+
+2008-10-18  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/patch{,-fsg,-ecj}.stamp): Fail if patches don't
+	apply, call $(HG) only if it exists.
+
+2008-10-17  Deepak Bhole  <dbhole@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Re-encode <, > and &
+	characters in applet params.
+
+2008-10-17  Deepak Bhole  <dbhole@redhat.com>
+
+	* plugin/icedtea/netscape/javascript/JSObject.java: Handle null args to
+	call() (bug# 217).
+
+2008-10-17  Matthias Klose  <doko@ubuntu.com>
+
+	* IcedTeaPlugin.cc: Don't use open if's in macros; cache getenv() call.
+
+2008-10-17  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/203:
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::start_stack): Always set the stack pointer.
+	(SharkCacher::start_stack): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp
+	(SharkCacher::start_stack): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::CreateBuildFrame): Only set the stack pointer
+	for non-product builds.
+
+2008-10-17  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4 (FIND_LIBGCJ_JAR): Fix quoting.
 
 2008-10-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
@@ -237,7 +440,44 @@
 	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLineTest.java,
 	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java,
 	* visualvm.desktop: Updated.
+
+2008-10-16  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Use fifo pipes instead of tcp/ip, make debug output
+	optional, update how security is handled.
+	* Makefile.am: Make liveconnect the default plugin
+	* configure.ac: Same.
+	* icedtea-webstart.patch: Revert to old revision. The new revision was
+	never meant to go in.
+	* plugin/icedtea/netscape/javascript/JSObject.java: Change println's to
+	debug().
+	* plugin/icedtea/netscape/javascript/JSRunnable.java: Same.
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: Same.
+	* plugin/icedtea/sun/applet/GetMemberPluginCallRequest.java: Same.
+	* plugin/icedtea/sun/applet/GetWindowPluginCallRequest.java: Same.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Same, and
+	add some time calculation output to guage performance.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Update panel resizing
+	code, centralize debug output calls.
+	* plugin/icedtea/sun/applet/PluginDebug.java: Make debug output based on
+	environment variable "ICEDTEAPLUGIN_DEBUG".
+	* plugin/icedtea/sun/applet/PluginMain.java: Update to make use of fifo. Make 
+	stream redirectionoptional, depending on the environment variable 
+	"ICEDTEAPLUGIN_DEBUG".
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java: Centralize debug
+	output calls.
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java: Same.
+	* plugin/icedtea/sun/applet/PluginObjectStore.java: Same.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Add some time
+	calculation code, update to use new transfer model over fifo.
+	* plugin/icedtea/sun/applet/RequestQueue.java: Centralize debug output calls.
+	* plugin/icedtea/sun/applet/TestEnv.java: Same.
+	* plugin/icedtea/sun/applet/VoidPluginCallRequest.java: Same.
 	
+2008-10-16  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Updated version from 1.3 to 1.3.1.
+
 2008-10-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:

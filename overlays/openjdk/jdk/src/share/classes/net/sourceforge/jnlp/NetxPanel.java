@@ -114,5 +114,10 @@ public class NetxPanel extends AppletViewerPanel
     	handler = new Thread(this);
     	handler.start();
     }
-
+    
+    public void updateSizeInAtts(int height, int width) {
+    	this.atts.put("height", Integer.toString(height));
+    	this.atts.put("width", Integer.toString(width));
+    }
 }
+

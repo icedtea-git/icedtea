@@ -47,8 +47,11 @@
 package netscape.javascript;
 
 import java.applet.Applet;
-import java.io.IOException;
+
 import sun.applet.PluginAppletViewer;
+import sun.applet.PluginDebug;
+
+
 
 /**
  * JSObject allows Java to manipulate objects that are
@@ -90,11 +93,11 @@ public final class JSObject {
      * initialize
      */
     private static void initClass() {
-        System.err.println ("JSObject.initClass");
+        PluginDebug.debug ("JSObject.initClass");
     }
 
     static {
-        System.err.println ("JSObject INITIALIZER");
+        PluginDebug.debug ("JSObject INITIALIZER");
     }
 
     /**
@@ -102,12 +105,12 @@ public final class JSObject {
      */
     // FIXME: make private!
     public JSObject(int jsobj_addr) {
-        System.err.println ("JSObject int CONSTRUCTOR");
+        PluginDebug.debug ("JSObject int CONSTRUCTOR");
         internal = jsobj_addr;
     }
 
     private JSObject(long jsobj_addr) {
-        System.err.println ("JSObject long CONSTRUCTOR");
+        PluginDebug.debug ("JSObject long CONSTRUCTOR");
         long_internal = jsobj_addr;
     }
 
@@ -117,10 +120,10 @@ public final class JSObject {
      */
     public Object	getMember(String name)
     {
-        System.err.println ("JSObject.getMember " + name);
+        PluginDebug.debug ("JSObject.getMember " + name);
 
         Object o = PluginAppletViewer.getMember(internal, name);
-        System.out.println ("JSObject.getMember GOT " + o);
+        PluginDebug.debug ("JSObject.getMember GOT " + o);
         return o;
     }
 
@@ -132,7 +135,7 @@ public final class JSObject {
     //    public Object		getMember(int index) { return getSlot(index); }
     public Object	getSlot(int index)
     {
-        System.err.println ("JSObject.getSlot " + index);
+        PluginDebug.debug ("JSObject.getSlot " + index);
 
         return PluginAppletViewer.getSlot(internal, index);
     }
@@ -144,7 +147,7 @@ public final class JSObject {
      */
     public void 		setMember(String name, Object value)
     {
-        System.err.println ("JSObject.setMember " + name + " " + value);
+        PluginDebug.debug ("JSObject.setMember " + name + " " + value);
 
         PluginAppletViewer.setMember(internal, name, value);
     }
@@ -158,7 +161,7 @@ public final class JSObject {
     //    }
     public void 		setSlot(int index, Object value)
     {
-        System.err.println ("JSObject.setSlot " + index + " " + value);
+        PluginDebug.debug ("JSObject.setSlot " + index + " " + value);
 
         PluginAppletViewer.setSlot(internal, index, value);
     }
@@ -171,7 +174,7 @@ public final class JSObject {
      */
     public void 		removeMember(String name)
     {
-        System.err.println ("JSObject.removeMember " + name);
+        PluginDebug.debug ("JSObject.removeMember " + name);
 
         PluginAppletViewer.removeMember(internal, name);
     }
@@ -183,10 +186,13 @@ public final class JSObject {
      */
     public Object	call(String methodName, Object args[])
     {
+    	if (args == null)
+    		args = new Object[0];
+
         System.err.print ("JSObject.call " + methodName);
         for (int i = 0; i < args.length; i++)
             System.err.print (" " + args[i]);
-        System.err.println("");
+        PluginDebug.debug("");
         return PluginAppletViewer.call(internal, methodName, args);
     }
 
@@ -198,7 +204,7 @@ public final class JSObject {
      */
     public Object	eval(String s)
     {
-        System.err.println("JSObject.eval " + s);
+        PluginDebug.debug("JSObject.eval " + s);
         return PluginAppletViewer.eval(internal, s);
     }
 
@@ -208,7 +214,7 @@ public final class JSObject {
      */
     public String        toString()
     {
-        System.err.println("JSObject.toString");
+        PluginDebug.debug("JSObject.toString");
         return PluginAppletViewer.javascriptToString(internal);
     }
 
@@ -223,12 +229,12 @@ public final class JSObject {
      */
     public static JSObject	getWindow(Applet applet)
     {
-        System.err.println("JSObject.getWindow");
+        PluginDebug.debug("JSObject.getWindow");
         // FIXME: handle long case as well.
         int internal = 0;
         internal = ((PluginAppletViewer)
                     applet.getAppletContext()).getWindow();
-        System.out.println ("GOT IT: " + internal);
+        PluginDebug.debug ("GOT IT: " + internal);
         return new JSObject(internal);
     }
 
@@ -239,7 +245,7 @@ public final class JSObject {
      */
     protected void	finalize()
     {
-        System.err.println("JSObject.finalize ");
+        PluginDebug.debug("JSObject.finalize ");
         PluginAppletViewer.JavaScriptFinalize(internal);
     }
 
@@ -250,7 +256,7 @@ public final class JSObject {
      */
     public boolean equals(Object obj)
     {
-        System.err.println("JSObject.equals " + obj);
+        PluginDebug.debug("JSObject.equals " + obj);
 
         return false;
     }

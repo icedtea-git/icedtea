@@ -1,6 +1,20 @@
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2008-10-09 08:42:26.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/vm.make	2008-10-24 10:08:32.000000000 +0100
+@@ -86,6 +86,10 @@
+   ${JRE_VERSION}     \
+   ${VM_DISTRO}
+ 
++ifdef DISTRIBUTION_ID
++CPPFLAGS += -DDISTRIBUTION_ID="\"$(DISTRIBUTION_ID)\""
++endif
++
+ # CFLAGS_WARN holds compiler options to suppress/enable warnings.
+ CFLAGS += $(CFLAGS_WARN/BYFILE)
+ 
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2008-08-04 08:40:23.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2008-08-09 01:10:55.000000000 +0100
+--- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2008-10-09 08:42:33.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2008-10-24 10:08:32.000000000 +0100
 @@ -25,7 +25,7 @@
  #include "incls/_precompiled.incl"
  #include "incls/_arguments.cpp.incl"
@@ -10,9 +24,32 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
  #define DEFAULT_JAVA_LAUNCHER  "generic"
  
  char**  Arguments::_jvm_flags_array             = NULL;
+diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/share/vm/utilities/vmError.cpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp	2008-10-09 08:42:34.000000000 +0100
++++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-10-24 10:08:32.000000000 +0100
+@@ -165,7 +165,8 @@
+ 
+ static void print_bug_submit_message(outputStream *out, Thread *thread) {
+   if (out == NULL) return;
+-  out->print_raw_cr("# If you would like to submit a bug report, please visit:");
++  out->print_raw_cr("# If you would like to submit a bug report, please include");
++  out->print_raw_cr("# instructions how to reproduce the bug and visit:");
+   out->print_raw   ("#   ");
+   out->print_raw_cr(Arguments::java_vendor_url_bug());
+   // If the crash is in native code, encourage user to submit a bug to the
+@@ -339,6 +340,9 @@
+                    Abstract_VM_Version::vm_platform_string(),
+                    UseCompressedOops ? "compressed oops" : ""
+                  );
++#ifdef DISTRIBUTION_ID
++     st->print_cr("# Distribution: %s", DISTRIBUTION_ID);
++#endif
+ 
+   STEP(60, "(printing problematic frame)")
+ 
 diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/shared/Defs.gmk
---- openjdk.orig/jdk/make/common/shared/Defs.gmk	2008-08-04 08:43:01.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Defs.gmk	2008-08-09 01:13:25.000000000 +0100
+--- openjdk.orig/jdk/make/common/shared/Defs.gmk	2008-10-09 08:45:42.000000000 +0100
++++ openjdk/jdk/make/common/shared/Defs.gmk	2008-10-24 10:08:32.000000000 +0100
 @@ -189,8 +189,8 @@
  
  # Default names

@@ -32,8 +32,10 @@ dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
 AC_PATH_TOOL([HG],[hg])
 AC_SUBST([HG])
+AC_PATH_TOOL([LSB_RELEASE],[lsb_release])
+AC_CHECK_WITH_GCJ
 
-AC_MSG_CHECKING(for JDK home directory)
+AC_MSG_CHECKING([for a JDK home directory])
 AC_ARG_WITH([gcj-home],
 	    [AS_HELP_STRING([--with-gcj-home],
                             [gcj home directory \
@@ -52,7 +54,7 @@ AC_ARG_WITH([gcj-home],
 AC_MSG_RESULT(${SYSTEM_GCJ_DIR})
 AC_SUBST(SYSTEM_GCJ_DIR)
 
-AC_MSG_CHECKING(for existing OpenJDK installation)
+AC_MSG_CHECKING([for an existing OpenJDK installation])
 AC_ARG_WITH([openjdk-home],
             [AS_HELP_STRING([--with-openjdk-home],
                             [OpenJDK home directory \
@@ -71,7 +73,7 @@ AC_ARG_WITH([openjdk-home],
 AC_MSG_RESULT(${SYSTEM_OPENJDK_DIR})
 AC_SUBST(SYSTEM_OPENJDK_DIR)
 
-AC_MSG_CHECKING(for existing IcedTea installation)
+AC_MSG_CHECKING(for an existing IcedTea installation)
 AC_ARG_WITH([icedtea-home],
             [AS_HELP_STRING([--with-icedtea-home],
                             [IcedTea home directory \
@@ -90,7 +92,7 @@ AC_ARG_WITH([icedtea-home],
 AC_MSG_RESULT(${SYSTEM_ICEDTEA_DIR})
 AC_SUBST(SYSTEM_ICEDTEA_DIR)
 
-AC_MSG_CHECKING(for NetBeans home directory)
+AC_MSG_CHECKING([for a NetBeans installation])
 AC_ARG_WITH([netbeans-home],
 	    [AS_HELP_STRING([--with-netbeans-home],
                             [NetBeans home directory (default is /usr/share/netbeans)])],
@@ -105,7 +107,7 @@ AC_ARG_WITH([netbeans-home],
             [
               SYSTEM_NETBEANS_DIR=/usr/share/netbeans
             ])
-AC_MSG_RESULT(${SYSTEM_NETBEANS_DIR})
+AC_MSG_RESULT([${SYSTEM_NETBEANS_DIR}])
 AC_SUBST(SYSTEM_NETBEANS_DIR)
 
 AC_MSG_CHECKING(for Ant home directory)
@@ -125,28 +127,29 @@ AC_ARG_WITH([ant-home],
             ])
 AC_MSG_RESULT(${SYSTEM_ANT_DIR})
 AC_SUBST(SYSTEM_ANT_DIR)
+AC_MSG_RESULT(${SYSTEM_ANT_DIR})
 
-AC_MSG_CHECKING(whether to build gcjwebplugin)
-AC_ARG_ENABLE([gcjwebplugin],
-              [AS_HELP_STRING([--disable-gcjwebplugin],
+AC_MSG_CHECKING([whether to build the LiveConnect plugin])
+AC_ARG_ENABLE([liveconnect],
+              [AS_HELP_STRING([--disable-liveconnect],
                               [Disable compilation of browser plugin])],
               [enable_plugin="${enableval}"], [enable_plugin="yes"])
 AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
 AC_MSG_RESULT(${enable_plugin})
 
-AC_MSG_CHECKING(whether to build the LiveConnect plugin)
-AC_ARG_ENABLE([liveconnect],
-              [AS_HELP_STRING([--enable-liveconnect],
-                              [Enable experimental LiveConnect plugin])],
-              [enable_liveconnect="yes"], [enable_liveconnect="no"])
-AM_CONDITIONAL(ENABLE_LIVECONNECT, test "x${enable_liveconnect}" = "xyes")
-AC_MSG_RESULT(${enable_liveconnect})
+AC_MSG_CHECKING([whether to build gcjwebplugin])
+AC_ARG_ENABLE([gcjwebplugin],
+              [AS_HELP_STRING([--enable-gcjwebplugin],
+                              [Build the GCJ Web Plugin plugin (deprecated)])],
+              [enable_gcjwebplugin="${enableval}"], [enable_gcjwebplugin="no"])
+AM_CONDITIONAL(ENABLE_GCJWEBPLUGIN, test "x${enable_gcjwebplugin}" = "xyes")
+AC_MSG_RESULT(${enable_gcjwebplugin})
 
 AC_MSG_CHECKING([whether to include PulseAudio support])
 AC_ARG_ENABLE([pulse-java],
               [AS_HELP_STRING([--enable-pulse-java],
                               [Enable pulse-java - an audio mixer spi that uses PulseAudio])],
-              [enable_pulse_java="yes"], [enable_pulse_java="no"])
+              [enable_pulse_java="${enableval}"], [enable_pulse_java="no"])
 AM_CONDITIONAL(ENABLE_PULSE_JAVA, test "x${enable_pulse_java}" = "xyes")
 AC_MSG_RESULT(${enable_pulse_java})
 
@@ -162,7 +165,7 @@ AC_MSG_CHECKING(whether to build VisualVM)
 AC_ARG_ENABLE([visualvm],
               [AS_HELP_STRING([--enable-visualvm],
 			                  [Enable compilation of visualvm.])],
-              [enable_visualvm="yes"], [enable_visualvm="no"])
+              [enable_visualvm="${enableval}"], [enable_visualvm="no"])
 AM_CONDITIONAL(WITH_VISUALVM, test "x${enable_visualvm}" = "xyes")
 AC_MSG_RESULT(${enable_visualvm})
 
@@ -224,6 +227,29 @@ AC_ARG_WITH([parallel-jobs],
         ])
 AC_MSG_RESULT(${PARALLEL_JOBS})
 AC_SUBST(PARALLEL_JOBS)
+
+AC_ARG_WITH([pkgversion],
+        [AS_HELP_STRING([--with-pkgversion=PKG],
+                        [Use PKG in the version string in addition to "IcedTea"])],
+        [case "$withval" in
+          yes) AC_MSG_ERROR([package version not specified]) ;;
+          no)  PKGVERSION= ;;
+          *)   PKGVERSION="$withval" ;;
+         esac],
+        [PKGVERSION=])
+AC_SUBST(PKGVERSION)
+
+if test -n "$LSB_RELEASE"; then
+  lsb_info="$($LSB_RELEASE -ds | sed 's/^"//;s/"$//')"
+  if test -n "$PKGVERSION"; then
+    DIST_ID="$lsb_info, package $PKGVERSION"
+  else
+    DIST_ID="Built on $lsb_info"
+  fi
+else
+  DIST_ID="Custom build ($(date))"
+fi
+AC_SUBST(DIST_ID)
 
 SET_ARCH_DIRS
 if test "${with_openjdk}" = true
@@ -422,14 +448,8 @@ fi
 
 dnl Check for plugin support headers and libraries.
 dnl FIXME: use unstable
-if test "x${enable_liveconnect}" = "xyes"
+if test "x${enable_gcjwebplugin}" = "xyes"
 then
-  PKG_CHECK_MODULES(XULRUNNER, \
-    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9)
-  PKG_CHECK_MODULES(GTK, gtk+-2.0)
-else
-  if test "x${enable_plugin}" = "xyes"
-  then
     PKG_CHECK_MODULES(MOZILLA, mozilla-plugin libxul-unstable, \
       [MOZILLA_FOUND=yes], [MOZILLA_FOUND=no])
     if test "x${MOZILLA_FOUND}" = xno
@@ -476,6 +496,12 @@ else
     AC_SUBST(GLIB_LIBS)
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
+else
+  if test "x${enable_plugin}" = "xyes"
+  then
+    PKG_CHECK_MODULES(XULRUNNER, \
+      nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9)
+    PKG_CHECK_MODULES(GTK, gtk+-2.0)
   fi
 fi
 

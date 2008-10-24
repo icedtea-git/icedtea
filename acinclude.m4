@@ -257,7 +257,7 @@ AC_DEFUN([FIND_LIBGCJ_JAR],
     for jar in /usr/share/java/libgcj-4.3*.jar; do
       test -e $jar && LIBGCJ_JAR=$jar
     done
-    if test -n ${LIBGCJ_JAR}; then
+    if test -n "${LIBGCJ_JAR}"; then
       AC_MSG_RESULT(${LIBGCJ_JAR})
     else
       for jar in /usr/share/java/libgcj-4.1*.jar /usr/share/java/libgcj-4.2*.jar; do
@@ -989,4 +989,22 @@ AC_DEFUN([WITH_PROJECT],
   AM_CONDITIONAL([USE_CVMI], test x"${project}" = "xcvmi")
   AM_CONDITIONAL([USE_CACIOCAVALLO], test x"${project}" = "xcaciocavallo")
   AM_CONDITIONAL([USE_BSD], test x"${project}" = "xbsd")
+])
+
+AC_DEFUN([AC_CHECK_WITH_GCJ],
+[
+  AC_MSG_CHECKING([whether to compile ecj natively])
+  AC_ARG_WITH([gcj],
+	      [AS_HELP_STRING(--with-gcj,location of gcj for natively compiling ecj)],
+  [
+    GCJ="${withval}"
+  ],
+  [ 
+    GCJ="no"
+  ])
+  AC_MSG_RESULT([${GCJ}])
+  if test "x${GCJ}" = xyes; then
+    AC_PATH_TOOL([GCJ],[gcj])
+  fi
+  AC_SUBST([GCJ])
 ])

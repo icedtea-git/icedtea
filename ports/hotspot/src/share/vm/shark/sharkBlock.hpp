@@ -128,12 +128,6 @@ class SharkBlock : public ResourceObj {
   {
     return function()->block(ciblock()->successors()->at(index)->pre_order());
   }
-  int jsr_ret_bci() const
-  {
-    int jsr_level = ciblock()->jsrset()->size();
-    assert(jsr_level > 0, "should be");
-    return ciblock()->jsrset()->record_at(jsr_level - 1)->return_address();
-  }
   SharkBlock* bci_successor(int bci) const;
 
   // Bytecode stream

@@ -26,23 +26,20 @@
 package sun.applet;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.security.Policy;
 import java.util.Enumeration;
 import java.util.Properties;
-
-
-import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 /**
  * The main entry point into PluginAppletViewer.
  */
 public class PluginMain
 {
-	final boolean redirectStreams = true;
+	final boolean redirectStreams = System.getenv().containsKey("ICEDTEAPLUGIN_DEBUG");
 	static PluginStreamHandler streamHandler;
 	
     // This is used in init().	Getting rid of this is desirable but depends
@@ -58,24 +55,16 @@ public class PluginMain
 	throws IOException
     {
 
-    	if (args.length != 1) {
-    		// Indicate to plugin that appletviewer is installed correctly.
-    		System.exit(0);
-    	}
-
-    	int port = 0;
     	try {
-    		port = Integer.parseInt(args[0]);
-    	} catch (NumberFormatException e) {
-    		System.err.println("Failed to parse port number: " + e);
+    		PluginMain pm = new PluginMain(System.getProperty("user.home") + "/.icedteaplugin/icedtea-plugin-to-appletviewer", System.getProperty("user.home") + "/.icedteaplugin/icedtea-appletviewer-to-plugin");
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		System.err.println("Something very bad happened. I don't know what to do, so I am going to exit :(");
     		System.exit(1);
     	}
-
-    	PluginMain pm = new PluginMain();
-    	
     }
 
-    public PluginMain() {
+    public PluginMain(String inPipe, String outPipe) {
     	
     	if (redirectStreams) {
     		try {
@@ -86,14 +75,15 @@ public class PluginMain
     			System.setOut(new PrintStream(new FileOutputStream(outFile)));
 
     		} catch (Exception e) {
-    			System.err.println("Unable to redirect streams");
+    			PluginDebug.debug("Unable to redirect streams");
     			e.printStackTrace();
     		}
     	}
 
-    	connect(50007);
+    	connect(inPipe, outPipe);
 
     	securityContext = new PluginAppletSecurityContext(0);
+    	securityContext.prePopulateLCClasses();
     	securityContext.setStreamhandler(streamHandler);
     	AppletSecurityContextManager.addContext(0, securityContext);
 
@@ -106,23 +96,10 @@ public class PluginMain
 		streamHandler.startProcessing();
     }
 
-	public void connect(int port) {
-    	/*
-    	 * Code for TCP/IP communication
-    	 */ 
-    	Socket socket = null;
-
-    	try {
-    		socket = new Socket("localhost", port);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	
-    	System.err.println("Socket initialized. Proceeding with start()");
-
+	public void connect(String inPipe, String outPipe) {
 		try {
-			streamHandler = new PluginStreamHandler(socket.getInputStream(), socket.getOutputStream());
-	    	System.err.println("Streams initialized");
+			streamHandler = new PluginStreamHandler(new FileInputStream(inPipe), new FileOutputStream(outPipe));
+	    	PluginDebug.debug("Streams initialized");
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

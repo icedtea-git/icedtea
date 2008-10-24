@@ -148,13 +148,8 @@ directory.
 The NetX sources are built into rt.jar
 
 IcedTea's NetX currently supports verification of signed jars, trusted
-<<<<<<< local
-certificate storing, system certificate store checking, and provides 
-some services specified by the jnlp API.
-=======
 certificate storing, system certificate store checking, and provides
 the services specified by the jnlp API.
->>>>>>> other
 
 CACAO as VM
 ===========

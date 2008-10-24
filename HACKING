@@ -30,6 +30,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-gcc-suffix.patch: Append $(GCC_SUFFIX) to end of 'gcc' binary name.
 * icedtea-graphics.patch: Fix word wrap in JTextArea (PR57/S6593649)
 * icedtea-ia64-fdlibm.patch: Fix name of ia64 architecture from _M_IA64 to ia64.
+* icedtea-javac-debuginfo.patch: Ensure debugging information is generated for all class files.
 * icedtea-javafiles.patch: Add missing Java files to list.
 * icedtea-jdk-docs-target.patch: Always set DOCS_TARGET.
 * icedtea-jpegclasses.patch: Add com.sun.image.codec.jpeg support.

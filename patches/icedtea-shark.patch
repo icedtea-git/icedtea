@@ -303,41 +303,6 @@ diff -r ef3bb05d21d5 openjdk/hotspot/src/share/vm/code/nmethod.cpp
  }
  
  
-diff -r 70711eb56d8e openjdk/hotspot/src/share/vm/ci/ciTypeFlow.hpp
---- openjdk/hotspot/src/share/vm/ci/ciTypeFlow.hpp	Mon Sep 29 08:47:58 2008 +0100
-+++ openjdk/hotspot/src/share/vm/ci/ciTypeFlow.hpp	Mon Sep 29 08:51:58 2008 +0100
-@@ -94,9 +94,17 @@ public:
-   private:
-     GrowableArray<JsrRecord*>* _set;
- 
-+#ifdef SHARK
-+    // XXX This can be removed if it turns out we have to deal
-+    // with T_ADDRESS values the same as everything else.
-+  public:
-+#endif // SHARK
-     JsrRecord* record_at(int i) {
-       return _set->at(i);
-     }
-+#ifdef SHARK
-+  private:
-+#endif // SHARK
- 
-     // Insert the given JsrRecord into the JsrSet, maintaining the order
-     // of the set and replacing any element with the same entry address.
-@@ -515,6 +523,13 @@ public:
-     ciType* local_type_at(int i) const { return _state->local_type_at(i); }
-     ciType* stack_type_at(int i) const { return _state->stack_type_at(i); }
- 
-+    // access to the JSRs
-+#ifdef SHARK
-+    // XXX This can be removed if it turns out we have to deal
-+    // with T_ADDRESS values the same as everything else.
-+    JsrSet* jsrset() const { return _jsrs; }
-+#endif // SHARK
-+    
-     // Get the successors for this Block.
-     GrowableArray<Block*>* successors(ciBytecodeStream* str,
- 				      StateVector* state,
 diff -r 70711eb56d8e openjdk/hotspot/src/share/vm/runtime/deoptimization.cpp
 --- openjdk/hotspot/src/share/vm/runtime/deoptimization.cpp	Mon Sep 29 08:47:58 2008 +0100
 +++ openjdk/hotspot/src/share/vm/runtime/deoptimization.cpp	Mon Sep 29 08:54:36 2008 +0100

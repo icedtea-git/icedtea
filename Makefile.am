@@ -9,7 +9,13 @@ NETBEANS_BASIC_CLUSTER = a7ea855f475fa3a982f094a45c155ab4
 NETBEANS_PROFILER_MD5SUM = ff8e8abc42df6c6749e6b02bcf7bb0a5
 VISUALVM_MD5SUM = 4b55bc623418818793392bb233da2927
 
-if ENABLE_LIVECONNECT
+if ENABLE_GCJWEBPLUGIN
+GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
+GCJWEBPLUGIN_TARGET = gcjwebplugin.so
+else
+GCJWEBPLUGIN_CLEAN =
+GCJWEBPLUGIN_TARGET =
+if ENABLE_PLUGIN
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
@@ -19,18 +25,12 @@ ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
 PLUGIN_PATCH = patches/icedtea-plugin.patch
 LIVECONNECT_DIR =
-if ENABLE_PLUGIN
-GCJWEBPLUGIN_CLEAN = clean-gcjwebplugin
-GCJWEBPLUGIN_TARGET = gcjwebplugin.so
-else
-GCJWEBPLUGIN_CLEAN =
-GCJWEBPLUGIN_TARGET =
 endif
 endif
 
 if ENABLE_PULSE_JAVA
 # include the makefile in pulseaudio subdir
-PULSE_JAVA_DIR = $(srcdir)/pulseaudio
+PULSE_JAVA_DIR = $(abs_top_srcdir)/pulseaudio
 PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
 PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
 PULSE_JAVA_CLASS_DIR = $(abs_top_builddir)/pulseaudio
@@ -64,10 +64,10 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports clean-pulse-java
 	rm -rf openjdk
 	rm -rf hotspot-tools
 	rm -rf rt/netscape
-if ENABLE_LIVECONNECT
+if ENABLE_PLUGIN
 	rm -f IcedTeaPlugin.o IcedTeaPlugin.so
 else
-if ENABLE_PLUGIN
+if ENABLE_GCJWEBPLUGIN
 	rm -f gcjwebplugin.so
 endif
 endif
@@ -97,7 +97,8 @@ EXTRA_DIST = rt generated patches/openjdk-*.patch \
 	jconsole.desktop policytool.desktop \
 	test/jtreg \
 	IcedTeaPlugin.cc \
-	HACKING pulseaudio fsg.sh
+	HACKING pulseaudio fsg.sh \
+	plugin
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -170,7 +171,8 @@ ICEDTEA_ENV = \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
 	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
 	"JAVAC=" \
-	"RHINO_JAR=$(RHINO_JAR)"
+	"RHINO_JAR=$(RHINO_JAR)" \
+	"DISTRIBUTION_ID=$(DIST_ID)"
 
 if WITH_CACAO
 ICEDTEA_ENV += \
@@ -585,7 +587,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-lc_ctype.patch \
 	patches/icedtea-messageutils.patch \
-	$(VISUALVM_PATCH)
+	$(VISUALVM_PATCH) \
+	patches/icedtea-javac-debuginfo.patch \
+	patches/icedtea-xjc.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -594,7 +598,9 @@ endif
 
 if WITH_CACAO
 ICEDTEA_PATCHES += \
-	patches/icedtea-cacao.patch
+	patches/icedtea-cacao.patch \
+	patches/icedtea-cacao-ignore-jdi-tests.patch \
+	patches/icedtea-cacao-ignore-tests.patch
 endif
 
 if ENABLE_PULSE_JAVA
@@ -713,12 +719,21 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
-	  false; \
-	fi ; 
+	  exit 2; \
+	fi
 
-if ENABLE_LIVECONNECT
-	cp -a plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
-	cp -a plugin/icedtea/netscape rt/
+	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
+	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
+	fi ; \
+	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
+	if [ -n "$(PKGVERSION)" ]; then \
+	  icedtea_version="$${icedtea_version} ($(PKGVERSION))" ; \
+	fi; \
+	sed -i "s#IcedTea6#IcedTea6 $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk
+
+if ENABLE_PLUGIN
+	cp -a $(abs_top_srcdir)/plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
+	cp -a $(abs_top_srcdir)/plugin/icedtea/netscape rt/
 endif
 
 clean-patch:
@@ -785,7 +800,7 @@ stamps/patch-fsg.stamp: stamps/generated.stamp
 	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
-	  false; \
+	  exit 2; \
 	fi ; 
 
 clean-patch-fsg:
@@ -815,10 +830,13 @@ stamps/native-ecj.stamp: stamps/patch.stamp
 	touch stamps/native-ecj.stamp
 
 stamps/overlay.stamp: stamps/native-ecj.stamp
-	if [ -e $(abs_top_srcdir)/.hg ]; then \
-	  revision="-r`(cd $(srcdir); $(HG) tip|grep changeset|cut -d':' -f2|sed -r 's#\W+##')`" ; \
+	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
+	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
 	fi ; \
 	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
+	if [ -n "$(PKGVERSION)" ]; then \
+	  icedtea_version="$${icedtea_version} ($(PKGVERSION))" ; \
+	fi; \
 	if test x"$(PROJECT_NAME)" != "xjdk7"; then \
 	  proj_suffix="-$(PROJECT_NAME)"; \
 	fi ; \
@@ -902,7 +920,7 @@ stamps/patch-ecj.stamp: stamps/clone-ecj.stamp
 	if ! test x$${all_patches_ok} = "xyes"; then \
 	  echo ERROR patch $${all_patches_ok} FAILED! ; \
 	  echo WARNING make clean-patch before retrying a fix ; \
-	  false; \
+	  exit 2; \
 	fi
 
 clean-patch-ecj:
@@ -977,7 +995,7 @@ clean-bootstrap-directory-symlink:
 # ===============================
 
 # bootstrap/ecj.
-stamps/bootstrap-directory-ecj.stamp:
+stamps/bootstrap-directory-ecj.stamp: stamps/native-ecj.stamp
 	mkdir -p bootstrap/ecj/bin stamps/
 	ln -sf $(JAVA) bootstrap/ecj/bin/java
 	ln -sf $(JAVAH) bootstrap/ecj/bin/javah
@@ -1081,16 +1099,16 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_BUILD_TARGET)
-if ENABLE_LIVECONNECT
-	cp -pPRf IcedTeaPlugin.so \
+if ENABLE_GCJWEBPLUGIN
+	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf IcedTeaPlugin.so \
+	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 else
 if ENABLE_PLUGIN
-	cp -pPRf gcjwebplugin.so \
+	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf gcjwebplugin.so \
+	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 endif
@@ -1144,16 +1162,16 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
-if ENABLE_LIVECONNECT
-	cp -pPRf IcedTeaPlugin.so \
+if ENABLE_GCJWEBPLUGIN
+	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf IcedTeaPlugin.so \
+	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 else
 if ENABLE_PLUGIN
-	cp -pPRf gcjwebplugin.so \
+	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf gcjwebplugin.so \
+	cp -pPRf IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 endif
@@ -1214,6 +1232,14 @@ icedtea-debug-against-icedtea: \
 
 # OpenJDK ecj Targets
 # ===================
+
+stamps/native-ecj.stamp: 
+	mkdir -p stamps ; \
+	if test "x${GCJ}" != "xno"; then \
+	  ${GCJ} ${CFLAGS} -Wl,-Bsymbolic -o native-ecj \
+	    --main=org.eclipse.jdt.internal.compiler.batch.Main ${ECJ_JAR} ; \
+	fi ; \
+	touch stamps/native-ecj.stamp
 
 stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp stamps/cacao.stamp
@@ -1507,7 +1533,19 @@ clean-cacao:
 	rm -rf cacao
 	rm -f stamps/cacao.stamp
 
-if ENABLE_LIVECONNECT
+if ENABLE_GCJWEBPLUGIN
+# gcjwebplugin.so.
+gcjwebplugin.so: gcjwebplugin.cc
+	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
+	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
+	  $(GTK_CFLAGS) $(GTK_LIBS) \
+	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	  -fPIC -shared -o $@ $<
+
+clean-gcjwebplugin:
+	rm -f gcjwebplugin.so
+else
+if ENABLE_PLUGIN
 # IcedTeaPlugin.so.
 # Separate compile and link invocations to ensure intermediate object
 # is listed before -l options.  See:
@@ -1528,18 +1566,6 @@ IcedTeaPlugin.so: IcedTeaPlugin.o
 clean-IcedTeaPlugin:
 	rm -f IcedTeaPlugin.o
 	rm -f IcedTeaPlugin.so
-else
-if ENABLE_PLUGIN
-# gcjwebplugin.so.
-gcjwebplugin.so: gcjwebplugin.cc
-	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
-	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
-	  $(GTK_CFLAGS) $(GTK_LIBS) \
-	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -fPIC -shared -o $@ $<
-
-clean-gcjwebplugin:
-	rm -f gcjwebplugin.so
 endif
 endif
 
@@ -1581,14 +1607,14 @@ if ENABLE_PULSE_JAVA
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-		 $(JAVAC) -d $(PULSE_JAVA_CLASS_DIR) \
+		 $(JAVAC) -g -d $(PULSE_JAVA_CLASS_DIR) \
 		-bootclasspath  \
 	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
 		org/classpath/icedtea/pulseaudio/*.java\
 		) \
         else \
 		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-		$(ICEDTEA_BOOT_DIR)/bin/javac -d $(PULSE_JAVA_CLASS_DIR)\
+		$(ICEDTEA_BOOT_DIR)/bin/javac -g -d $(PULSE_JAVA_CLASS_DIR)\
 		-bootclasspath \
 	        '$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar' \
 		org/classpath/icedtea/pulseaudio/*.java\
@@ -1638,8 +1664,8 @@ stamps/jtreg.stamp: stamps/icedtea.stamp
 	rm -rf test/jtreg/classes
 	mkdir -p test/jtreg/classes
 	$(ICEDTEA_BOOT_DIR)/bin/javac -g -d test/jtreg/classes -source 1.5 \
-	   -encoding iso-8859-1 `find $(srcdir)/test/jtreg/com -name '*.java'`
-	(cd $(srcdir)/test/jtreg; \
+	   -encoding iso-8859-1 `find $(abs_top_srcdir)/test/jtreg/com -name '*.java'`
+	(cd $(abs_top_srcdir)/test/jtreg; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm $(abs_top_builddir)/test/jtreg.jar \
 	   META-INF/MANIFEST.MF \
 	   legal  README JavaTest.cmdMgrs.lst JavaTest.toolMgrs.lst \
@@ -1653,31 +1679,69 @@ clean-jtreg:
 	rm -f test/jtreg.jar
 	rm -f stamps/jtreg.stamp
 
-check-hotspot: jtreg
+check-hotspot: stamps/jtreg.stamp
 	mkdir -p test/hotspot/JTwork test/hotspot/JTreport
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/hotspot/JTwork -r:test/hotspot/JTreport \
 		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
-		`pwd`/openjdk/hotspot/test
+		`pwd`/openjdk/hotspot/test \
+	    | tee test/$@.log
 
-check-langtools: jtreg
+check-langtools: stamps/jtreg.stamp
 	mkdir -p test/langtools/JTwork test/langtools/JTreport
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/langtools/JTwork -r:test/langtools/JTreport \
 		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
-		`pwd`/openjdk/langtools/test
+		`pwd`/openjdk/langtools/test \
+	    | tee test/$@.log
 
-check-jdk: jtreg
+check-jdk: stamps/jtreg.stamp
 	mkdir -p test/jdk/JTwork test/jdk/JTreport
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
 		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
-		`pwd`/openjdk/jdk/test
+		`pwd`/openjdk/jdk/test \
+	    | tee test/$@.log
 
 clean-jtreg-reports:
 	rm -rf test/hotspot test/langtools test/jdk
+	rm -f test/check-*.log test/jtreg-summary.log
+
+# FIXME: this might need some adjustment for other OS than Linux
+jtreg_processes = ps x -ww -o pid,ppid,args \
+	| awk '$$2 == 1 && $$3 ~ /^$(subst /,\/,/scratch)/' \
+	| sed 's,$(CURDIR)/$(sdkimg),<sdkimg>,g;s,$(CURDIR),<pwd>,g'
+jtreg_pids = ps x --no-headers -ww -o pid,ppid,args \
+	| awk '$$2 == 1 && $$3 ~ /^$(subst /,\/,$(CURDIR)/$(sdkimg))/ {print $$1}'
 
 jtregcheck: jtreg check-hotspot check-langtools check-jdk
+	for i in hotspot langtools jdk; do \
+	  echo "--------------- jtreg console summary for $$i ---------------"; \
+	  egrep -v '^(Passed:|Directory)' test/check-$$i.log; \
+	done | tee test/jtreg-summary.log
+
+	: # kill testsuite processes still hanging
+	@pids=$$($(jtreg_pids)); \
+	if [ -n "$$pids" ]; then \
+	  echo "killing processes..."; \
+	  $(jtreg_processes); \
+	  kill -1 $$pids; \
+	  sleep 2; \
+	  pids=$$($(jtreg_pids)); \
+	  if [ -n "$$pids" ]; then \
+	    echo "try harder..."; \
+	    $(jtreg_processes); \
+	    kill -9 $$pids; \
+	    sleep 2; \
+	  fi; \
+	else \
+	  echo "nothing to cleanup"; \
+	fi; \
+	pids=$$($(jtreg_pids)); \
+	if [ -n "$$pids" ]; then \
+	  echo "leftover processes..."; \
+	  $(jtreg_processes); \
+	fi
 
 check-local: jtregcheck
 
