@@ -1,3 +1,8 @@
+2008-10-24  Deepak Bhole  <dbhole@redhat.com>
+
+	* plugin/icedtea/netscape/javascript/JSObject.java: Make long constructor
+	public.
+
 2008-10-24  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (clean-pulseaudio): Don't remove source files. Might
