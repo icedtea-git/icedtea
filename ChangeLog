@@ -1,3 +1,8 @@
+2008-10-24  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (clean-pulseaudio): Don't remove source files. Might
+	not be correct, but doesn't do harm in any build environment.
+
 2008-10-23  Deepak Bhole  <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Implement proper timeout action.
