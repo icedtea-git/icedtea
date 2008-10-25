@@ -1,5 +1,9 @@
 2008-10-25  Matthias Klose  <doko@ubuntu.com>
 
+	* Makefile.am (clean-pulse-java): Remove object files.
+
+2008-10-25  Matthias Klose  <doko@ubuntu.com>
+
 	* Makefile.am (gcjwebplugin.so, IcedTeaPlugin.o): Pass PLUGIN_VERSION.
 	* gcjwebplugin.cc, IcedTeaPlugin.cc: Encode PLUGIN_VERSION in
 	PLUGIN_DESCRIPTION.

@@ -1541,7 +1541,7 @@ endif
 clean-pulse-java:
 if ENABLE_PULSE_JAVA
 	[ -z "$(PULSE_JAVA_CLASS_DIR)" ] || find $(PULSE_JAVA_CLASS_DIR) -name '*.class' | xargs -r rm -f
-	[ -z "$(PULSE_JAVA_NATIVE_SRCDIR)" ] || rm -f $(PULSE_JAVA_NATIVE_SRCDIR)/org_*.h
+	[ -z "$(PULSE_JAVA_NATIVE_SRCDIR)" ] || rm -f $(PULSE_JAVA_NATIVE_SRCDIR)/org_*.h $(PULSE_JAVA_NATIVE_SRCDIR)/*.o
 	rm -f stamps/pulse-java*.stamp
 	rm -f pulse-java.jar
 	rm -f libpulse-java.so
