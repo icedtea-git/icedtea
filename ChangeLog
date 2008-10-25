@@ -1,3 +1,9 @@
+2008-10-25  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (gcjwebplugin.so, IcedTeaPlugin.o): Pass PLUGIN_VERSION.
+	* gcjwebplugin.cc, IcedTeaPlugin.cc: Encode PLUGIN_VERSION in
+	PLUGIN_DESCRIPTION.
+
 2008-10-24  Omair Majid <omajid@redhat.com>
 
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
