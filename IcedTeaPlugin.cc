@@ -448,7 +448,7 @@ char const* TYPES[10] = { "Object",
 
 #define MESSAGE_ADD_SIZE(size)                  \
   message += " ";                               \
-  message.AppendInt (size);
+  message.AppendInt ((PRUintn) size);
 
 // Pass character value through socket as an integer.
 #define MESSAGE_ADD_TYPE(type)                  \
@@ -3888,7 +3888,7 @@ IcedTeaPluginInstance::GetWindow ()
   message += " ";
   message += "JavaScriptGetWindow";
   message += " ";
-  message.AppendInt (liveconnect_window);
+  message.AppendInt ((PRUintn) liveconnect_window);
   factory->SendMessageToAppletViewer (message);
 }
 
@@ -4606,7 +4606,7 @@ IcedTeaJNIEnv::ValueString (jni_type type, jvalue value)
       retstr.AppendInt (value.i);
       break;
     case jlong_type:
-      retstr.AppendInt (value.j);
+      retstr.AppendInt ((PRUintn) value.j);
       break;
     case jfloat_type:
       retstr += IcedTeaPrintfCString ("%f", value.f);
@@ -4735,7 +4735,7 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
           retstr.AppendInt (args[arg].i);
           break;
         case 'J':
-          retstr.AppendInt (args[arg].j);
+          retstr.AppendInt ((PRUintn) args[arg].j);
           break;
         case 'F':
           retstr += IcedTeaPrintfCString ("%f", args[arg].f);

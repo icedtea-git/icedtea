@@ -1266,9 +1266,7 @@ import sun.misc.Ref;
  		val = buf.toString();
  	    }
  	    PluginDebug.debug("PUT " + att + " = '" + val + "'");
- 	    if (! val.equals("")) {
- 		atts.put(att.toLowerCase(java.util.Locale.ENGLISH), val);
- 	    }
+ 	    atts.put(att.toLowerCase(java.util.Locale.ENGLISH), val);
              while (true) {
                  if ((c == '>') || (c < 0) ||
                      ((c >= 'a') && (c <= 'z')) ||

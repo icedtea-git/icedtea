@@ -1,3 +1,12 @@
+2008-10-27  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Fix address pointer integer overflow on 64-bit
+	systems.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Set cache
+	dir to be local to each user (~/.icedteaplugin/cache).
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Apply patch from Tom
+	Fitzsimmons for Bug# 230.
+
 2008-10-27  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-renderer-crossing.patch: New patch.
