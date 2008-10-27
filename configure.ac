@@ -153,7 +153,7 @@ AC_ARG_ENABLE([pulse-java],
 AM_CONDITIONAL(ENABLE_PULSE_JAVA, test "x${enable_pulse_java}" = "xyes")
 AC_MSG_RESULT(${enable_pulse_java})
 
-AC_MSG_CHECKING(whether to build documentation)
+AC_MSG_CHECKING([whether to build documentation])
 AC_ARG_ENABLE([docs],
 	      [AS_HELP_STRING([--disable-docs],
 	      		      [Disable generation of documentation])],
@@ -161,7 +161,7 @@ AC_ARG_ENABLE([docs],
 AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
 AC_MSG_RESULT(${ENABLE_DOCS})
 
-AC_MSG_CHECKING(whether to build VisualVM)
+AC_MSG_CHECKING([whether to build VisualVM])
 AC_ARG_ENABLE([visualvm],
               [AS_HELP_STRING([--enable-visualvm],
 			                  [Enable compilation of visualvm.])],
@@ -192,7 +192,7 @@ AC_ARG_WITH([icedtea],
 AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" = true)
 AC_MSG_RESULT(${with_icedtea})
 
-AC_MSG_CHECKING(whether to build using an existing installation of OpenJDK)
+AC_MSG_CHECKING([whether to build using an existing installation of OpenJDK])
 AC_ARG_WITH([openjdk],
         [AS_HELP_STRING([--with-openjdk],
                         [build IcedTea with system-installed OpenJDK])],
@@ -210,7 +210,7 @@ AC_ARG_WITH([openjdk],
 AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" = true)
 AC_MSG_RESULT(${with_openjdk})
 
-AC_MSG_CHECKING(how many parallel build jobs to execute)
+AC_MSG_CHECKING([how many parallel build jobs to execute])
 AC_ARG_WITH([parallel-jobs],
 	[AS_HELP_STRING([--with-parallel-jobs],
 			[build IcedTea using the specified number of parallel jobs])],
