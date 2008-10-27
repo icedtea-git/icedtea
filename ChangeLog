@@ -1,3 +1,8 @@
+2008-10-27  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-uname.dpatch: Only call dpkg-architecture if it is
+	available.
+
 2008-10-25  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (clean-pulse-java): Remove object files.
