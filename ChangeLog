@@ -1,5 +1,13 @@
 2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	PR icedtea/234:
+	* Makefile.am:
+	Don't force the HotSpot release version
+	to be the JDK release version so the HotSpot
+	versioning is revealed.
+
+2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/icedtea-license-headers.patch,
 	* patches/icedtea-timerqueue.patch:
 	Removed, now obsolete for IcedTea7.
