@@ -1,5 +1,14 @@
 2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	* acinclude.m4:
+	Add path of Gentoo rhino JAR file.
+	* configure.ac:
+	Remove extra ant home output.
+	* patches/icedtea-rhino.patch:
+	Regenerated.
+
+2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	PR icedtea/234:
 	* Makefile.am:
 	Don't force the HotSpot release version

@@ -127,7 +127,6 @@ AC_ARG_WITH([ant-home],
             ])
 AC_MSG_RESULT(${SYSTEM_ANT_DIR})
 AC_SUBST(SYSTEM_ANT_DIR)
-AC_MSG_RESULT(${SYSTEM_ANT_DIR})
 
 AC_MSG_CHECKING([whether to build the LiveConnect plugin])
 AC_ARG_ENABLE([liveconnect],

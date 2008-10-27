@@ -1,92 +1,17 @@
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java	2008-06-22 18:52:46.000000000 +0200
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java	2008-06-22 19:03:00.000000000 +0200
-@@ -26,7 +26,7 @@
- package com.sun.script.javascript;
- 
- import java.util.*;
--import sun.org.mozilla.javascript.internal.*;
-+import org.mozilla.javascript.*;
- 
- /**
-  * This class prevents script access to certain sensitive classes.
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java	2008-06-22 18:52:46.000000000 +0200
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java	2008-06-22 19:03:10.000000000 +0200
-@@ -26,7 +26,7 @@
- package com.sun.script.javascript;
- import javax.script.*;
- import java.util.*;
--import sun.org.mozilla.javascript.internal.*;
-+import org.mozilla.javascript.*;
- import com.sun.script.util.*;
- 
- /**
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java	2008-06-22 18:52:46.000000000 +0200
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java	2008-06-22 19:03:25.000000000 +0200
-@@ -25,7 +25,7 @@
- 
- package com.sun.script.javascript;
- import javax.script.*;
--import sun.org.mozilla.javascript.internal.*;
-+import org.mozilla.javascript.*;
- 
- /**
-  * Represents compiled JavaScript code.
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java	2008-06-22 18:52:46.000000000 +0200
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java	2008-06-22 19:03:35.000000000 +0200
-@@ -25,7 +25,7 @@
- 
- package com.sun.script.javascript;
- 
--import sun.org.mozilla.javascript.internal.*;
-+import org.mozilla.javascript.*;
- import javax.script.*;
- 
- /**
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java	2008-06-22 18:52:46.000000000 +0200
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java	2008-06-22 19:03:48.000000000 +0200
-@@ -27,7 +27,7 @@
- 
- import java.lang.reflect.*;
- import static sun.security.util.SecurityConstants.*;
--import sun.org.mozilla.javascript.internal.*;
-+import org.mozilla.javascript.*;
- 
- /**
-  * This wrap factory is used for security reasons. JSR 223 script
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2008-06-22 18:52:46.000000000 +0200
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2008-06-22 19:05:17.000000000 +0200
-@@ -26,7 +26,7 @@
- package com.sun.script.javascript;
- 
- import javax.script.Invocable;
--import sun.org.mozilla.javascript.internal.*;
-+import org.mozilla.javascript.*;
- 
- /**
-  * This class implements Rhino-like JavaAdapter to help implement a Java
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java	2008-06-22 18:52:46.000000000 +0200
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java	2008-06-22 19:05:31.000000000 +0200
-@@ -24,7 +24,7 @@
-  */
- 
- package com.sun.script.javascript;
--import sun.org.mozilla.javascript.internal.*;
-+import org.mozilla.javascript.*;
- import javax.script.*;
- import java.util.*;
- 
---- openjdk.orig/jdk/make/common/Release.gmk	2008-06-22 18:53:02.000000000 +0200
-+++ openjdk/jdk/make/common/Release.gmk	2008-06-23 00:14:02.000000000 +0200
-@@ -772,6 +772,7 @@
- 	$(CP) $(RT_JAR) $(JRE_IMAGE_DIR)/lib/rt.jar
- 	$(CP) $(RESOURCES_JAR) $(JRE_IMAGE_DIR)/lib/resources.jar
- 	$(CP) $(JSSE_JAR) $(JRE_IMAGE_DIR)/lib/jsse.jar
-+	$(LN) -sf $(RHINO_JAR) $(JRE_IMAGE_DIR)/lib/rhino.jar
- 	@# Generate meta-index to make boot and extension class loaders lazier
- 	$(CD) $(JRE_IMAGE_DIR)/lib && \
- 	    $(BOOT_JAVA_CMD) -jar $(BUILDMETAINDEX_JARFILE) \
---- /old/openjdk/jdk/make/com/sun/Makefile	2008-07-17 03:43:07.000000000 -0400
-+++ openjdk/jdk/make/com/sun/Makefile	2008-07-23 11:19:02.000000000 -0400
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/os.cpp openjdk/hotspot/src/share/vm/runtime/os.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/os.cpp	2008-10-23 08:41:05.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/os.cpp	2008-10-27 23:00:47.000000000 +0000
+@@ -886,6 +886,7 @@
+         "%/lib/jsse.jar:"
+         "%/lib/jce.jar:"
+         "%/lib/charsets.jar:"
++	"%/lib/rhino.jar:"
+         "%/classes";
+     char* sysclasspath = format_boot_path(classpath_format, home, home_len, fileSep, pathSep);
+     if (sysclasspath == NULL) return false;
+diff -Nru openjdk.orig/jdk/make/com/sun/Makefile openjdk/jdk/make/com/sun/Makefile
+--- openjdk.orig/jdk/make/com/sun/Makefile	2008-10-23 08:44:04.000000000 +0100
++++ openjdk/jdk/make/com/sun/Makefile	2008-10-27 23:00:47.000000000 +0000
 @@ -31,15 +31,8 @@
  PRODUCT = sun
  include $(BUILDDIR)/common/Defs.gmk
@@ -102,32 +27,11 @@
 -SUBDIRS = $(SCRIPT_SUBDIR) image security crypto/provider jndi jmx \
 +SUBDIRS = script image security crypto/provider jndi jmx \
      java inputmethods org xml rowset net/httpserver net/ssl demo \
-     tools jarsigner tracing
+     tools jarsigner tracing servicetag
  
---- /old/openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java	2008-07-17 03:43:16.000000000 -0400
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java	2008-07-23 11:19:56.000000000 -0400
-@@ -26,7 +26,7 @@
- package com.sun.script.javascript;
- import com.sun.script.util.*;
- import javax.script.*;
--import sun.org.mozilla.javascript.internal.*;
-+import org.mozilla.javascript.*;
- import java.lang.reflect.Method;
- import java.io.*;
- import java.util.*;
---- /old/openjdk/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java	2008-07-17 03:43:16.000000000 -0400
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java	2008-07-23 11:20:49.000000000 -0400
-@@ -25,7 +25,7 @@
- 
- package com.sun.script.javascript;
- 
--import sun.org.mozilla.javascript.internal.*;
-+import org.mozilla.javascript.*;
- import java.util.*;
- 
- /**
---- /old/openjdk/jdk/make/com/sun/script/Makefile	2008-07-17 03:43:08.000000000 -0400
-+++ openjdk/jdk/make/com/sun/script/Makefile	2008-07-23 11:22:03.000000000 -0400
+diff -Nru openjdk.orig/jdk/make/com/sun/script/Makefile openjdk/jdk/make/com/sun/script/Makefile
+--- openjdk.orig/jdk/make/com/sun/script/Makefile	2008-10-23 08:44:04.000000000 +0100
++++ openjdk/jdk/make/com/sun/script/Makefile	2008-10-27 23:00:47.000000000 +0000
 @@ -31,6 +31,8 @@
  
  AUTO_FILES_JAVA_DIRS = com/sun/script
@@ -137,13 +41,122 @@
  #
  # Files that need to be copied
  #
---- /old/openjdk/hotspot/src/share/vm/runtime/os.cpp	2008-07-17 03:40:34.000000000 -0400
-+++ openjdk/hotspot/src/share/vm/runtime/os.cpp	2008-07-23 11:22:42.000000000 -0400
-@@ -877,6 +877,7 @@
-         "%/lib/jsse.jar:"
-         "%/lib/jce.jar:"
-         "%/lib/charsets.jar:"
-+	"%/lib/rhino.jar:"
-         "%/classes";
-     char* sysclasspath = format_boot_path(classpath_format, home, home_len, fileSep, pathSep);
-     if (sysclasspath == NULL) return false;
+diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Release.gmk
+--- openjdk.orig/jdk/make/common/Release.gmk	2008-10-27 23:00:09.000000000 +0000
++++ openjdk/jdk/make/common/Release.gmk	2008-10-27 23:00:47.000000000 +0000
+@@ -774,6 +774,7 @@
+ 	$(CP) $(RT_JAR) $(JRE_IMAGE_DIR)/lib/rt.jar
+ 	$(CP) $(RESOURCES_JAR) $(JRE_IMAGE_DIR)/lib/resources.jar
+ 	$(CP) $(JSSE_JAR) $(JRE_IMAGE_DIR)/lib/jsse.jar
++	$(LN) -sf $(RHINO_JAR) $(JRE_IMAGE_DIR)/lib/rhino.jar
+ 	@# Generate meta-index to make boot and extension class loaders lazier
+ 	$(CD) $(JRE_IMAGE_DIR)/lib && \
+ 	    $(BOOT_JAVA_CMD) -jar $(BUILDMETAINDEX_JARFILE) \
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java openjdk/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java	2008-10-23 08:44:13.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java	2008-10-27 23:00:47.000000000 +0000
+@@ -24,7 +24,7 @@
+  */
+ 
+ package com.sun.script.javascript;
+-import sun.org.mozilla.javascript.internal.*;
++import org.mozilla.javascript.*;
+ import javax.script.*;
+ import java.util.*;
+ 
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java openjdk/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2008-10-23 08:44:13.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2008-10-27 23:00:47.000000000 +0000
+@@ -26,7 +26,7 @@
+ package com.sun.script.javascript;
+ 
+ import javax.script.Invocable;
+-import sun.org.mozilla.javascript.internal.*;
++import org.mozilla.javascript.*;
+ 
+ /**
+  * This class implements Rhino-like JavaAdapter to help implement a Java
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java openjdk/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java	2008-10-23 08:44:13.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java	2008-10-27 23:00:47.000000000 +0000
+@@ -25,7 +25,7 @@
+ 
+ package com.sun.script.javascript;
+ 
+-import sun.org.mozilla.javascript.internal.*;
++import org.mozilla.javascript.*;
+ import java.util.*;
+ 
+ /**
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java	2008-10-23 08:44:13.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java	2008-10-27 23:00:47.000000000 +0000
+@@ -26,7 +26,7 @@
+ package com.sun.script.javascript;
+ 
+ import java.util.*;
+-import sun.org.mozilla.javascript.internal.*;
++import org.mozilla.javascript.*;
+ 
+ /**
+  * This class prevents script access to certain sensitive classes.
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java	2008-10-23 08:44:13.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java	2008-10-27 23:00:47.000000000 +0000
+@@ -25,7 +25,7 @@
+ 
+ package com.sun.script.javascript;
+ import javax.script.*;
+-import sun.org.mozilla.javascript.internal.*;
++import org.mozilla.javascript.*;
+ 
+ /**
+  * Represents compiled JavaScript code.
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java	2008-10-23 08:44:13.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java	2008-10-27 23:00:47.000000000 +0000
+@@ -26,7 +26,7 @@
+ package com.sun.script.javascript;
+ import javax.script.*;
+ import java.util.*;
+-import sun.org.mozilla.javascript.internal.*;
++import org.mozilla.javascript.*;
+ import com.sun.script.util.*;
+ 
+ /**
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java	2008-10-23 08:44:13.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java	2008-10-27 23:00:47.000000000 +0000
+@@ -26,7 +26,7 @@
+ package com.sun.script.javascript;
+ import com.sun.script.util.*;
+ import javax.script.*;
+-import sun.org.mozilla.javascript.internal.*;
++import org.mozilla.javascript.*;
+ import java.lang.reflect.Method;
+ import java.io.*;
+ import java.util.*;
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java	2008-10-23 08:44:13.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java	2008-10-27 23:00:47.000000000 +0000
+@@ -25,7 +25,7 @@
+ 
+ package com.sun.script.javascript;
+ 
+-import sun.org.mozilla.javascript.internal.*;
++import org.mozilla.javascript.*;
+ import javax.script.*;
+ 
+ /**
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java	2008-10-23 08:44:13.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java	2008-10-27 23:00:47.000000000 +0000
+@@ -27,7 +27,7 @@
+ 
+ import java.lang.reflect.*;
+ import static sun.security.util.SecurityConstants.*;
+-import sun.org.mozilla.javascript.internal.*;
++import org.mozilla.javascript.*;
+ 
+ /**
+  * This wrap factory is used for security reasons. JSR 223 script

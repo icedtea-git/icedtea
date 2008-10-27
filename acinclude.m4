@@ -670,6 +670,8 @@ AC_DEFUN([FIND_RHINO_JAR],
       RHINO_JAR=/usr/share/java/rhino.jar
     elif test -e "/usr/share/java/js.jar"; then
       RHINO_JAR=/usr/share/java/js.jar
+    elif test -e "/usr/share/rhino-1.6/lib/js.jar"; then
+      RHINO_JAR=/usr/share/rhino-1.6/lib/js.jar
     fi
     if test x"${RHINO_JAR}" = "xyes"; then
       AC_MSG_RESULT([not found])
