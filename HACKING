@@ -9,7 +9,6 @@ included in the tarball resulting from the dist-openjdk-fsg target:
 
 * icedtea-idl.patch: Fix IDL licenses (PR141/S6695776).
 * icedtea-jscheme.patch: Replace use of jscheme.jar with Java alternative (PR140/S6695776).
-* icedtea-license-headers.patch: Generate GPL header from automulti tool (PR148/S6713083).
 
 The fsg.sh script is also run to delete certain files with dubious licensing and/or only occuring
 in binary format.
@@ -53,7 +52,6 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-static-libstdc++.patch: Don't use static C++ on PPC64.
 * icedtea-sunsrc.patch: Remove service property files from TOOLS list.
 * icedtea-text-relocations.patch: Use correct -fPIC/-fpic flag on all platforms.
-* icedtea-timerqueue.patch: Fix setting of running variable (PR87).
 * icedtea-tools.patch: Remove DebugHelperHelper and add sources in make/java/awt/Makefile to fix build of jvmti.
 * icedtea-use-system-tzdata.patch: Use timezone data from the system (PR70/S6593486).
 * icedtea-version.patch: Replace name and bug URL with IcedTea versions.
@@ -78,6 +76,7 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 * icedtea-lucene-crash.patch: Fix lucene bad code generation bug #6707044.
 * icedtea-6700047-loopopts.patch: Fix partial peeling issue, bug #6700047.
 * icedtea-6712835-ifnode.patch: Fix infinite loop in PhaseIterGVN::transform.
+* icedtea-timerqueue.patch: Fix setting of running variable (PR87/S6623943).
 
 The following patches are only applied to OpenJDK in IcedTea:
 
@@ -159,3 +158,4 @@ icedtea-webservices.patch.
 XSL file (S6707485): Included upstream in OpenJDK7 b29/hs13.
 * openjdk-color.patch: Include Free java.awt.color and java.awt.image
 (S6662775): Included upstream in OpenJDK6 b06 and OpenJDK7 b28.
+* icedtea-license-headers.patch: Generate GPL header from automulti tool (PR148/S6713083).

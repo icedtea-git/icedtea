@@ -1,5 +1,13 @@
 2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-license-headers.patch,
+	* patches/icedtea-timerqueue.patch:
+	Removed, now obsolete for IcedTea7.
+	* HACKING: Updated.
+	* Makefile.am: Bump to b38.
+
+2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	* configure.ac:
 	Quote checking output.
 	

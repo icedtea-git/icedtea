@@ -1,6 +1,6 @@
-OPENJDK_DATE = 09_oct_2008
-OPENJDK_MD5SUM = 979a7f60de588f1f416657d41ad5e63c
-OPENJDK_VERSION = b37
+OPENJDK_DATE = 23_oct_2008
+OPENJDK_MD5SUM = 2893ceeae804ce4f7e268388afed3449
+OPENJDK_VERSION = b38
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -521,7 +521,6 @@ else
 endif
 
 ICEDTEA_FSG_PATCHES = \
-	patches/icedtea-license-headers.patch \
 	patches/icedtea-idl.patch \
 	patches/icedtea-jscheme.patch
 
@@ -551,7 +550,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
 	patches/icedtea-static-libstdc++.patch \
-	patches/icedtea-timerqueue.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
