@@ -1,3 +1,9 @@
+2008-10-27  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-renderer-crossing.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	* HACKING: Document new patch.
+
 2008-10-27  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-uname.dpatch: Only call dpkg-architecture if it is

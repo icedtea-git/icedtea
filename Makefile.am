@@ -533,7 +533,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-6open-6756202.patch \
 	$(VISUALVM_PATCH) \
 	patches/icedtea-javac-debuginfo.patch \
-	patches/icedtea-xjc.patch
+	patches/icedtea-xjc.patch \
+	patches/icedtea-renderer-crossing.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \

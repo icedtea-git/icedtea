@@ -1,0 +1,15 @@
+--- openjdk6/jdk/src/share/classes/sun/java2d/pisces/Renderer.java	2008-08-28 10:14:15.000000000 +0200
++++ openjdk/jdk/src/share/classes/sun/java2d/pisces/Renderer.java	2008-10-27 13:54:25.000000000 +0100
+@@ -775,10 +775,10 @@
+ 
+     // Free sorting arrays if larger than maximum size
+     private void crossingListFinished() {
+-        if (crossings.length > DEFAULT_CROSSINGS_SIZE) {
++        if (crossings != null && crossings.length > DEFAULT_CROSSINGS_SIZE) {
+             crossings = new int[DEFAULT_CROSSINGS_SIZE];
+         }
+-        if (crossingIndices.length > DEFAULT_INDICES_SIZE) {
++        if (crossingIndices != null && crossingIndices.length > DEFAULT_INDICES_SIZE) {
+             crossingIndices = new int[DEFAULT_INDICES_SIZE];
+         }
+     }
