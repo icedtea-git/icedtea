@@ -122,6 +122,10 @@ class JNLPSecurityManager extends SecurityManager {
         public void windowDeactivated(WindowEvent e) {
             activeApplication = null;
         }
+        
+        public void windowClosing(WindowEvent e) {
+        	e.getWindow().dispose();
+        }
     };
 
 

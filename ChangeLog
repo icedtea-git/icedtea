@@ -1,3 +1,8 @@
+2008-10-27  Deepak Bhole  <dbhole@redhat.com>
+
+	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Act on window
+	close events (Bug# 215)
+
 2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	PR icedtea/234:
