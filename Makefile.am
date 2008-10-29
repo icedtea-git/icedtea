@@ -585,7 +585,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-messageutils.patch \
 	$(VISUALVM_PATCH) \
 	patches/icedtea-javac-debuginfo.patch \
-	patches/icedtea-xjc.patch
+	patches/icedtea-xjc.patch \
+	patches/icedtea-renderer-crossing.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -729,6 +730,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 
 if ENABLE_PLUGIN
 	cp -a $(abs_top_srcdir)/plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
+	mkdir -p rt
 	cp -a $(abs_top_srcdir)/plugin/icedtea/netscape rt/
 endif
 
@@ -1532,10 +1534,16 @@ clean-cacao:
 if ENABLE_GCJWEBPLUGIN
 # gcjwebplugin.so.
 gcjwebplugin.so: gcjwebplugin.cc
+	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
+	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
+	fi ; \
+	if [ -n "$(PKGVERSION)" ]; then plugin_version=" ($(PKGVERSION))"; fi; \
+	plugin_version=" $(PACKAGE_VERSION)$$revision$$plugin_version"; \
 	$(CXX) $(CXXFLAGS) $(MOZILLA_CFLAGS) \
 	  $(MOZILLA_LIBS) $(GLIB_CFLAGS) $(GLIB_LIBS) \
 	  $(GTK_CFLAGS) $(GTK_LIBS) \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	  -DPLUGIN_VERSION="\"$$plugin_version\"" \
 	  -fPIC -shared -o $@ $<
 
 clean-gcjwebplugin:
@@ -1547,8 +1555,14 @@ if ENABLE_PLUGIN
 # is listed before -l options.  See:
 # http://developer.mozilla.org/en/docs/XPCOM_Glue
 IcedTeaPlugin.o: IcedTeaPlugin.cc
+	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
+	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
+	fi ; \
+	if [ -n "$(PKGVERSION)" ]; then plugin_version=" ($(PKGVERSION))"; fi; \
+	plugin_version=" $(PACKAGE_VERSION)$$revision$$plugin_version"; \
 	$(CXX) $(CXXFLAGS) \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
+	  -DPLUGIN_VERSION="\"$$plugin_version\"" \
 	  $(GTK_CFLAGS) \
 	  $(XULRUNNER_CFLAGS) \
 	  -fPIC -c -o $@ $<
@@ -1645,8 +1659,8 @@ endif
 
 clean-pulse-java:
 if ENABLE_PULSE_JAVA
-	rm -rf $(PULSE_JAVA_CLASS_DIR)/*
-	rm -f $(PULSE_JAVA_NATIVE_SRCDIR)/org_*.h
+	[ -z "$(PULSE_JAVA_CLASS_DIR)" ] || find $(PULSE_JAVA_CLASS_DIR) -name '*.class' | xargs -r rm -f
+	[ -z "$(PULSE_JAVA_NATIVE_SRCDIR)" ] || rm -f $(PULSE_JAVA_NATIVE_SRCDIR)/org_*.h $(PULSE_JAVA_NATIVE_SRCDIR)/*.o
 	rm -f stamps/pulse-java*.stamp
 	rm -f pulse-java.jar
 	rm -f libpulse-java.so

@@ -605,12 +605,13 @@ public class PulseAudioClipTest {
 		AudioInputStream audioInputStream1 = AudioSystem
 				.getAudioInputStream(soundFile1);
 
-		Assert.assertEquals(0, mixer.getSourceLines().length);
+		int initiallyOpenClips = mixer.getSourceLines().length;
+		Assert.assertEquals(initiallyOpenClips, mixer.getSourceLines().length);
 		clip.open(audioInputStream1);
-		Assert.assertEquals(1, mixer.getSourceLines().length);
-		Assert.assertEquals(clip, mixer.getSourceLines()[0]);
+		Assert.assertEquals(initiallyOpenClips + 1, mixer.getSourceLines().length);
+		Assert.assertEquals(clip, mixer.getSourceLines()[initiallyOpenClips]);
 		clip.close();
-		Assert.assertEquals(0, mixer.getSourceLines().length);
+		Assert.assertEquals(initiallyOpenClips, mixer.getSourceLines().length);
 
 	}
 

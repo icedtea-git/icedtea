@@ -109,7 +109,7 @@ public final class JSObject {
         internal = jsobj_addr;
     }
 
-    private JSObject(long jsobj_addr) {
+    public JSObject(long jsobj_addr) {
         PluginDebug.debug ("JSObject long CONSTRUCTOR");
         long_internal = jsobj_addr;
     }

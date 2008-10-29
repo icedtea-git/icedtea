@@ -63,6 +63,8 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-arch.patch: Add support for additional architectures.
 * icedtea-alt-jar.patch: Add support for using an alternate jar tool in JDK building. 
 * icedtea-hotspot7-tests.patch: Adds hotspot compiler tests from jdk7 tree.
+* patches/icedtea-renderer-crossing.patch: Check whether crossing is
+  initialized in Pisces Renderer.
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 

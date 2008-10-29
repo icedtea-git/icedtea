@@ -84,7 +84,7 @@ exception statement from your version. */
 
 // Plugin information passed to about:plugins.
 #define PLUGIN_NAME "GCJ Web Browser Plugin (using IcedTea)"
-#define PLUGIN_DESC "The " PLUGIN_NAME " executes Java applets."
+#define PLUGIN_DESC "The " PLUGIN_NAME PLUGIN_VERSION " executes Java applets."
 #define PLUGIN_MIME_DESC                                               \
   "application/x-java-vm:class,jar:IcedTea;"                           \
   "application/x-java-applet:class,jar:IcedTea;"                       \

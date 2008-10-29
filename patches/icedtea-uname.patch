@@ -1,10 +1,10 @@
---- openjdk/jdk/make/common/shared/Platform.gmk.orig	2008-07-26 17:21:17.441295678 +0200
-+++ openjdk/jdk/make/common/shared/Platform.gmk	2008-07-26 17:30:24.589549285 +0200
+--- openjdk/jdk/make/common/shared/Platform.gmk.orig	2008-10-27 11:44:47.000000000 +0100
++++ openjdk/jdk/make/common/shared/Platform.gmk	2008-10-27 11:52:17.000000000 +0100
 @@ -191,6 +191,9 @@
    OS_VERSION := $(shell uname -r)
    # Arch and OS name/version
    mach := $(shell uname -m)
-+  ifneq (,$(filter $(mach),mips s390 s390x))
++  ifneq (,$(wildcard /usr/bin/dpkg-architecture))
 +    mach := $(shell dpkg-architecture -qDEB_BUILD_ARCH_CPU 2>/dev/null || echo $(mach))
 +  endif
    archExpr = case "$(mach)" in \
@@ -20,13 +20,13 @@
                  *) \
                      echo $(mach) \
                      ;; \
---- openjdk/corba/make/common/shared/Platform.gmk.orig	2008-07-26 17:21:17.441295678 +0200
-+++ openjdk/corba/make/common/shared/Platform.gmk	2008-07-26 17:30:22.059511120 +0200
+--- openjdk/corba/make/common/shared/Platform.gmk.orig	2008-10-27 11:44:47.000000000 +0100
++++ openjdk/corba/make/common/shared/Platform.gmk	2008-10-27 11:53:01.000000000 +0100
 @@ -181,6 +181,9 @@
    OS_VERSION := $(shell uname -r)
    # Arch and OS name/version
    mach := $(shell uname -m)
-+  ifneq (,$(filter $(mach),mips s390 s390x))
++  ifneq (,$(wildcard /usr/bin/dpkg-architecture))
 +    mach := $(shell dpkg-architecture -qDEB_BUILD_ARCH_CPU 2>/dev/null || echo $(mach))
 +  endif
    archExpr = case "$(mach)" in \

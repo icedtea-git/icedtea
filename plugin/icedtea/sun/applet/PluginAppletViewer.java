@@ -175,7 +175,7 @@ import sun.misc.Ref;
          AccessController.doPrivileged(new PrivilegedAction() {
              public Object run() {
             	 	try {
-            	 		panel = new NetxPanel(doc, atts);
+            	 		panel = new NetxPanel(doc, atts, true);
             	 		AppletViewerPanel.debug("Using NetX panel");
             	 	} catch (Exception ex) {
             	 		AppletViewerPanel.debug("Unable to start NetX applet - defaulting to Sun applet", ex);
@@ -1266,9 +1266,7 @@ import sun.misc.Ref;
  		val = buf.toString();
  	    }
  	    PluginDebug.debug("PUT " + att + " = '" + val + "'");
- 	    if (! val.equals("")) {
- 		atts.put(att.toLowerCase(java.util.Locale.ENGLISH), val);
- 	    }
+ 	    atts.put(att.toLowerCase(java.util.Locale.ENGLISH), val);
              while (true) {
                  if ((c == '>') || (c < 0) ||
                      ((c >= 'a') && (c <= 'z')) ||

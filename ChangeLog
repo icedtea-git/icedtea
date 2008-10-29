@@ -1,3 +1,25 @@
+2008-10-29  Andrew John Hughes  <ahughes@redhat.com>
+
+	Merge from IcedTea6 1.3.1.
+	* ChangeLog,
+	* HACKING,
+	* IcedTeaPlugin.cc,
+	* Makefile.am,
+	* NEWS,
+	* gcjwebplugin.cc,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/Launcher.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/NetxPanel.java,
+	* patches/icedtea-fonts.patch,
+	* patches/icedtea-renderer-crossing.patch,
+	* patches/icedtea-uname.patch,
+	* plugin/icedtea/netscape/javascript/JSObject.java,
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java,
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java:
+	Merged.
+
 2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
@@ -7,6 +29,10 @@
 	* patches/icedtea-rhino.patch:
 	Regenerated.
 
+2008-10-27  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated for 1.3.1 release.
+
 2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	PR icedtea/234:
@@ -14,6 +40,21 @@
 	Don't force the HotSpot release version
 	to be the JDK release version so the HotSpot
 	versioning is revealed.
+
+2008-10-27  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Fix address pointer integer overflow on 64-bit
+	systems.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Set cache
+	dir to be local to each user (~/.icedteaplugin/cache).
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Apply patch from Tom
+	Fitzsimmons for Bug# 230.
+
+2008-10-27  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-renderer-crossing.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	* HACKING: Document new patch.
 
 2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -27,6 +68,11 @@
 
 	* configure.ac:
 	Quote checking output.
+
+2008-10-27  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-uname.dpatch: Only call dpkg-architecture if it is
+	available.
 	
 2008-10-24  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -72,6 +118,10 @@
 	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp,
 	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Merged.
 
+2008-10-25  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (clean-pulse-java): Remove object files.
+
 2008-10-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-constructor-properties.patch:
@@ -82,6 +132,55 @@
 	options at the end.
 	* patches/icedtea-ecj-jopt.patch: Only add -J options
 	to jar in JDK and CORBA when supported.
+
+2008-10-25  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (gcjwebplugin.so, IcedTeaPlugin.o): Pass PLUGIN_VERSION.
+	* gcjwebplugin.cc, IcedTeaPlugin.cc: Encode PLUGIN_VERSION in
+	PLUGIN_DESCRIPTION.
+
+2008-10-24  Omair Majid <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(write): Check for offset being negative.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java
+	(testMixerKnowsAboutOpenClips): Removed the assumption that mixer had no
+	other lines open.
+
+2008-10-24  Deepak Bhole  <dbhole@redhat.com>
+
+	* plugin/icedtea/netscape/javascript/JSObject.java: Make long constructor
+	public.
+
+2008-10-24  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (clean-pulseaudio): Don't remove source files. Might
+	not be correct, but doesn't do harm in any build environment.
+
+2008-10-23  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Implement proper timeout action.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Supply new
+	exitOnFailure argument to Netx.
+	* rt/net/sourceforge/jnlp/Launcher.java: Implement an option for not
+	exiting VM on error.
+	* rt/net/sourceforge/jnlp/NetxPanel.java: Same.
+
+2008-10-23  Lillian Angel  <langel@redhat.com>
+
+	PR redhat/468193:
+	* patches/icedtea-fonts.patch: Updated for filename change.
+
+2008-10-23  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/229:
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse): Parse goto_w correctly.
+
+2008-10-23  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (stamps/patch.stamp): Make sure rt dir exists when
+	ENABLE_PLUGIN is true.
 
 2008-10-23  Gary Benson  <gbenson@redhat.com>
 
@@ -95,9 +194,9 @@
 
 2008-10-22  Matthias Klose  <doko@ubuntu.com>
 
-        * Makefile.am: Revert the previous change. Always pass DISTRIBUTION_ID
-        instead.
-        * configure.ac: Make DIST_ID more precise. Some implementations of the
+	* Makefile.am: Revert the previous change. Always pass DISTRIBUTION_ID
+	instead.
+	* configure.ac: Make DIST_ID more precise. Some implementations of the
 	lsb_release command quote the output; ignore it.
 
 2008-10-22  Omair Majid  <omajid@redhat.com>

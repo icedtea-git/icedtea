@@ -37,14 +37,12 @@ exception statement from your version. */
 
 package sun.applet;
 
-import java.awt.AWTPermission;
-import java.io.FilePermission;
+import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.net.SocketPermission;
 import java.net.URL;
 import java.security.AccessControlContext;
 import java.security.AccessControlException;
@@ -52,15 +50,12 @@ import java.security.AccessController;
 import java.security.AllPermission;
 import java.security.BasicPermission;
 import java.security.CodeSource;
-import java.security.PermissionCollection;
 import java.security.Permissions;
-import java.security.Policy;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.PropertyPermission;
 
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
@@ -244,6 +239,11 @@ public class PluginAppletSecurityContext {
 	public PluginAppletSecurityContext(int identifier) {
 		this.identifier = identifier;
 		
+		// also, override the basedir, use a different one for the plugin
+		File f = new File(System.getProperty("user.home") + "/.icedteaplugin/");
+		f.mkdir();
+		JNLPRuntime.setBaseDir(f);
+
 		// We need a security manager.. and since there is a good chance that 
 		// an applet will be loaded at some point, we should make it the SM 
 		// that JNLPRuntime will try to install

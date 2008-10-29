@@ -153,8 +153,12 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 			throw new IllegalArgumentException("length is negative");
 		}
 
+		if (offset < 0) {
+			throw new ArrayIndexOutOfBoundsException("offset is negative: " + offset);
+		}
+		
 		if (length + offset > data.length) {
-			throw new ArrayIndexOutOfBoundsException(length + offset);
+			throw new ArrayIndexOutOfBoundsException("writing data beyond the length of the array: " + (length + offset));
 		}
 
 		int position = offset;

@@ -59,6 +59,8 @@ public class Launcher {
     /** whether to create an AppContext (if possible) */
     private boolean context = true;
 
+    /** If the application should call System.exit on fatal errors */
+    private boolean exitOnFailure = true;
 
     /**
      * Create a launcher with the runtime's default update policy
@@ -69,6 +71,21 @@ public class Launcher {
 
         if (handler == null)
             handler = JNLPRuntime.getDefaultLaunchHandler();
+    }
+    
+    /**
+     * Create a launcher with the runtime's default update policy
+     * and launch handler.
+     * 
+     * @param exitOnError Exit if there is an error (usually default, but false when being used from the plugin)
+     */
+    public Launcher(boolean exitOnFailure) {
+        this(null, null);
+
+        if (handler == null)
+            handler = JNLPRuntime.getDefaultLaunchHandler();
+        
+        this.exitOnFailure = exitOnFailure;
     }
 
     /**
@@ -595,7 +612,8 @@ public class Launcher {
                 ex.printStackTrace();
                 exception = ex;
                 // Exit if we can't launch the application.
-                System.exit(0);
+                if (exitOnFailure)
+                	System.exit(0);
             }
         }
 

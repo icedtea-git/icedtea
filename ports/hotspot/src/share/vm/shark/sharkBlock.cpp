@@ -140,7 +140,6 @@ void SharkBlock::parse()
 
       switch (bc()) {
       case Bytecodes::_goto:
-      case Bytecodes::_goto_w:
       case Bytecodes::_ifnull:
       case Bytecodes::_ifnonnull:
       case Bytecodes::_if_acmpeq:
@@ -158,6 +157,11 @@ void SharkBlock::parse()
       case Bytecodes::_if_icmpgt:
       case Bytecodes::_if_icmpge:
         if (iter()->get_dest() <= bci())
+          add_safepoint();
+        break;
+
+      case Bytecodes::_goto_w:
+        if (iter()->get_far_dest() <= bci())
           add_safepoint();
         break;
 

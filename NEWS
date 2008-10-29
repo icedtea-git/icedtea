@@ -4,7 +4,7 @@ New in release 1.8 (XXXX-XX-XX)
   IcedTea6 and OpenJDK. The following noteworthy changes were added in
   this release:
 
-- Updated to b36 build.
+- Updated to b38 build.
 - Fixed to use new sound service, Gervill.
 - Many Netx fixes and now built by default.
 - LiveConnect support (--enable-liveconnect).
@@ -22,6 +22,12 @@ New in release 1.8 (XXXX-XX-XX)
 - Add support for Zero builds on alpha, arm, mips, mipsel, m68k, s390.
 - Various build fixes.
 - Several bug and security fixes.
+- Plugin including LiveConnect support built as default.
+- Various bugs fixed: renderer patch, version string updated, 
+chinese fonts filename fix for Fedora etc.
+- More progress on Shark and Cacao.
+- Several plugin bug fixes.
+- Several build fixes.
 
 New in release 1.7 (2008-06-02)
 
