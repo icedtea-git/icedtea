@@ -1,3 +1,9 @@
+2008-10-29  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/238:
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse): Fix copy-and-paste error in f2l.
+
 2008-10-27  Deepak Bhole  <dbhole@redhat.com>
 
 	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Act on window

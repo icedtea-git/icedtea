@@ -731,7 +731,7 @@ void SharkBlock::parse()
           pop()->jfloat_value(), SharkType::jint_type())));
       break;
     case Bytecodes::_f2l:
-      push(SharkValue::create_jint(
+      push(SharkValue::create_jlong(
         builder()->CreateFPToSI(
           pop()->jfloat_value(), SharkType::jlong_type())));
       break;
