@@ -1,3 +1,15 @@
+2008-10-31  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Fix potential DoS issue when dealing with very long
+	URL/target addresses.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Decode param values
+	correctly.
+	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Bypass
+	authentication check when origin matches.
+	* rt/net/sourceforge/jnlp/security/AccessWarningPane.java: Show proper
+	Name/Publisher/Origin values when no certificate is associated.
+
+
 2008-10-31  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Updated for new visualvm 1.0.1.

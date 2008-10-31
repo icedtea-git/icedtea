@@ -1265,6 +1265,10 @@ import sun.misc.Ref;
  		skipSpace(in);
  		val = buf.toString();
  	    }
+
+        val = val.replace("&gt;", ">");
+        val = val.replace("&lt;", "<");
+        val = val.replace("&amp;", "&");
  	    PluginDebug.debug("PUT " + att + " = '" + val + "'");
  	    atts.put(att.toLowerCase(java.util.Locale.ENGLISH), val);
              while (true) {
