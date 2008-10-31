@@ -315,7 +315,7 @@ VISUALVM_URL = http://icedtea.classpath.org/visualvm/
 if USE_ALT_VISUALVM_SRC_ZIP
   VISUALVM_SRC_ZIP = $(ALT_VISUALVM_SRC_ZIP)
 else
-  VISUALVM_SRC_ZIP = visualvm-20080728-src.tar.gz
+  VISUALVM_SRC_ZIP = visualvm-20081031-src.tar.gz
 endif
 
 stamps/download.stamp:

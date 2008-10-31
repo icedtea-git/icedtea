@@ -1,3 +1,8 @@
+2008-10-31  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Updated for new visualvm 1.0.1.
+	* patches/icedtea-visualvm.patch: Updated.
+
 2008-10-29  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/238:
