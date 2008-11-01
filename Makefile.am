@@ -247,6 +247,7 @@ ICEDTEA_ENV_ECJ = \
 	"JAVAC=" \
 	"RHINO_JAR=$(RHINO_JAR)" \
 	"JAR_KNOWS_ATFILE=$(JAR_KNOWS_ATFILE)" \
+	"JAR_KNOWS_J_OPTIONS=$(JAR_KNOWS_J_OPTIONS)" \
 	"JAR_ACCEPTS_STDIN_LIST=$(JAR_ACCEPTS_STDIN_LIST)"
 
 if WITH_CACAO
@@ -766,7 +767,8 @@ stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCHES = patches/icedtea-ecj.patch \
-	patches/icedtea-ecj-spp.patch
+	patches/icedtea-ecj-spp.patch \
+	patches/icedtea-ecj-jopt.patch
 
 stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 	mkdir -p stamps; \
@@ -1113,7 +1115,8 @@ stamps/native-ecj.stamp:
 	fi ; \
 	touch stamps/native-ecj.stamp
 
-stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
+stamps/icedtea-ecj.stamp: stamps/bootstrap-directory-symlink-ecj.stamp \
+	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp stamps/cacao.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
