@@ -486,19 +486,28 @@ void SharkBlock::parse()
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateShl(a->jint_value(), b->jint_value())));
+        builder()->CreateShl(
+          a->jint_value(),
+          builder()->CreateAnd(
+            b->jint_value(), LLVMValue::jint_constant(0x1f))));
       break;
     case Bytecodes::_ishr:
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateAShr(a->jint_value(), b->jint_value())));
+        builder()->CreateAShr(
+          a->jint_value(),
+          builder()->CreateAnd(
+            b->jint_value(), LLVMValue::jint_constant(0x1f))));
       break;
     case Bytecodes::_iushr:
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateLShr(a->jint_value(), b->jint_value())));
+        builder()->CreateLShr(
+          a->jint_value(),
+          builder()->CreateAnd(
+            b->jint_value(), LLVMValue::jint_constant(0x1f))));
       break;
     case Bytecodes::_iand:
       b = pop();
@@ -555,7 +564,9 @@ void SharkBlock::parse()
         builder()->CreateShl(
           a->jlong_value(),
           builder()->CreateIntCast(
-            b->jint_value(), SharkType::jlong_type(), true))));
+            builder()->CreateAnd(
+              b->jint_value(), LLVMValue::jint_constant(0x3f)),
+            SharkType::jlong_type(), true))));
       break;
     case Bytecodes::_lshr:
       b = pop();
@@ -564,7 +575,9 @@ void SharkBlock::parse()
         builder()->CreateAShr(
           a->jlong_value(),
           builder()->CreateIntCast(
-            b->jint_value(), SharkType::jlong_type(), true))));
+            builder()->CreateAnd(
+              b->jint_value(), LLVMValue::jint_constant(0x3f)),
+            SharkType::jlong_type(), true))));
       break;
     case Bytecodes::_lushr:
       b = pop();
@@ -573,7 +586,9 @@ void SharkBlock::parse()
         builder()->CreateLShr(
           a->jlong_value(),
           builder()->CreateIntCast(
-            b->jint_value(), SharkType::jlong_type(), true))));
+            builder()->CreateAnd(
+              b->jint_value(), LLVMValue::jint_constant(0x3f)),
+            SharkType::jlong_type(), true))));
       break;
     case Bytecodes::_land:
       b = pop();

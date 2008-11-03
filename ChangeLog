@@ -1,5 +1,11 @@
 2008-11-03  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse): Fix shift instructions to use only the
+	lower order bits of the second argument.
+
+2008-11-03  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp
 	(BytecodeInterpreter::VMintShl): Only shift by the lower five bits.
 	(BytecodeInterpreter::VMintShr): Likewise.
