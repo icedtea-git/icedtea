@@ -1,3 +1,8 @@
+2008-11-03  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-alsa-default-device.patch: New patch. Use the ALSA 
+	'default' device if possible. Makes Java play nice with PulseAudio.
+
 2008-11-03  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
