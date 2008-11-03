@@ -1,3 +1,9 @@
+2008-11-03 Nix  <nix@esperi.org.uk>
+		   Omair Majid  <omajid@redhat.com>
+
+	* Makefile.am (ICEDTEA_PATCHES): Added icedtea-linker-libs-order.patch.
+	* patches/icedtea-linker-libs-order.patch: Fixes icedtea bug#237.
+
 2008-11-03  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-alsa-default-device.patch: New patch. Use the ALSA 

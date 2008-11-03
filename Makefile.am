@@ -533,7 +533,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-javac-debuginfo.patch \
 	patches/icedtea-xjc.patch \
 	patches/icedtea-renderer-crossing.patch \
-	patches/icedtea-alsa-default-device.patch
+	patches/icedtea-alsa-default-device.patch \
+	patches/icedtea-linker-libs-order.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
