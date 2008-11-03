@@ -1,3 +1,10 @@
+2008-11-03  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp
+	(BytecodeInterpreter::VMintShl): Only shift by the lower five bits.
+	(BytecodeInterpreter::VMintShr): Likewise.
+	(BytecodeInterpreter::VMintUshr): Likewise.
+
 2008-10-31  Deepak Bhole  <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Fix potential DoS issue when dealing with very long
