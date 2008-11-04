@@ -162,6 +162,31 @@ class SharkRuntime : public AllStatic {
     return *(thread->zero_stack()->sp() + offset);
   }  
 
+  // Leaf calls
+ private:
+  static llvm::Constant* _f2i;
+  static llvm::Constant* _f2l;
+  static llvm::Constant* _d2i;
+  static llvm::Constant* _d2l;
+
+ public:
+  static llvm::Constant* f2i()
+  {
+    return _f2i;
+  }  
+  static llvm::Constant* f2l()
+  {
+    return _f2l;
+  }  
+  static llvm::Constant* d2i()
+  {
+    return _d2i;
+  }  
+  static llvm::Constant* d2l()
+  {
+    return _d2l;
+  }  
+  
   // Non-VM calls
  private:
   static llvm::Constant* _dump;

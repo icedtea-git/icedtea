@@ -742,13 +742,11 @@ void SharkBlock::parse()
 
     case Bytecodes::_f2i:
       push(SharkValue::create_jint(
-        builder()->CreateFPToSI(
-          pop()->jfloat_value(), SharkType::jint_type())));
+        call_vm_leaf(SharkRuntime::f2i(), pop()->jfloat_value())));
       break;
     case Bytecodes::_f2l:
       push(SharkValue::create_jlong(
-        builder()->CreateFPToSI(
-          pop()->jfloat_value(), SharkType::jlong_type())));
+        call_vm_leaf(SharkRuntime::f2l(), pop()->jfloat_value())));
       break;
     case Bytecodes::_f2d:
       push(SharkValue::create_jdouble(
@@ -758,13 +756,11 @@ void SharkBlock::parse()
 
     case Bytecodes::_d2i:
       push(SharkValue::create_jint(
-        builder()->CreateFPToSI(
-          pop()->jdouble_value(), SharkType::jint_type())));
+        call_vm_leaf(SharkRuntime::d2i(), pop()->jdouble_value())));
       break;
     case Bytecodes::_d2l:
       push(SharkValue::create_jlong(
-        builder()->CreateFPToSI(
-          pop()->jdouble_value(), SharkType::jlong_type())));
+        call_vm_leaf(SharkRuntime::d2l(), pop()->jdouble_value())));
       break;
     case Bytecodes::_d2f:
       push(SharkValue::create_jfloat(

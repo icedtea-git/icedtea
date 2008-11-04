@@ -43,6 +43,11 @@ Constant* SharkRuntime::_throw_ArrayIndexOutOfBoundsException;
 Constant* SharkRuntime::_throw_NullPointerException;
 Constant* SharkRuntime::_trace_bytecode;
 
+Constant* SharkRuntime::_f2i;
+Constant* SharkRuntime::_f2l;
+Constant* SharkRuntime::_d2i;
+Constant* SharkRuntime::_d2l;
+
 Constant* SharkRuntime::_dump;
 Constant* SharkRuntime::_is_subtype_of;
 Constant* SharkRuntime::_should_not_reach_here;
@@ -158,6 +163,29 @@ void SharkRuntime::initialize(SharkBuilder* builder)
     FunctionType::get(Type::VoidTy, params, false),
     "SharkRuntime__trace_bytecode");
 
+  // Leaf calls
+  params.clear();
+  params.push_back(SharkType::jfloat_type());
+  _f2i = builder->make_function(
+    (intptr_t) SharedRuntime::f2i,
+    FunctionType::get(SharkType::jint_type(), params, false),
+    "SharedRuntime__f2i");  
+  _f2l = builder->make_function(
+    (intptr_t) SharedRuntime::f2l,
+    FunctionType::get(SharkType::jlong_type(), params, false),
+    "SharedRuntime__f2l");  
+
+  params.clear();
+  params.push_back(SharkType::jdouble_type());
+  _d2i = builder->make_function(
+    (intptr_t) SharedRuntime::d2i,
+    FunctionType::get(SharkType::jint_type(), params, false),
+    "SharedRuntime__d2i");  
+  _d2l = builder->make_function(
+    (intptr_t) SharedRuntime::d2l,
+    FunctionType::get(SharkType::jlong_type(), params, false),
+    "SharedRuntime__d2l");  
+  
   // Non-VM calls
   params.clear();
   params.push_back(SharkType::intptr_type());

@@ -371,6 +371,12 @@ class SharkBlock : public ResourceObj {
     return call_vm_nocheck(callee, args, args + 4);
   }
 
+  llvm::CallInst* call_vm_leaf(llvm::Constant* callee,
+                               llvm::Value*    arg1)
+  {
+    return builder()->CreateCall(callee, arg1);
+  }
+
   // Whole-method synchronization
  public:
   void acquire_method_lock();  
