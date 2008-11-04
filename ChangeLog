@@ -1,5 +1,27 @@
 2008-11-04  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp
+	(SharkRuntime::_f2i): New constant.
+	(SharkRuntime::_f2l): Likewise.
+	(SharkRuntime::_d2i): Likewise.
+	(SharkRuntime::_d2l): Likewise.
+	(SharkRuntime::f2i): New accessor.
+	(SharkRuntime::f2l): Likewise.
+	(SharkRuntime::d2i): Likewise.
+	(SharkRuntime::d2l): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::_f2i): New constant.
+	(SharkRuntime::_f2l): Likewise.
+	(SharkRuntime::_d2i): Likewise.
+	(SharkRuntime::_d2l): Likewise.
+	(SharkRuntime::initialize): Initialize the above.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::call_vm_leaf): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse): Use runtime calls for f2i, f2l, d2i and d2l.
+
+2008-11-04  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
 	(SharkBlock::parse): Fix syntax errors.
 
