@@ -1,3 +1,20 @@
+2008-11-04  Omair Majid  <omajid@redhat.com>
+
+	* Makefile.am (stamps/pulse-java.stamp): Link in libpulse.so after all
+	the object files that use it.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java
+	(testWriteIntegralNumberFrames): New function. Tests that a SourceDataLine
+	will only write an integral number of frames.
+	(testWriteNegativeLength): New function. Tests that a
+	SourceDataLine.write() wont accept a negative length.
+	(testWriteNegativeOffset): New function. Tests that a
+	SourceDataLine.write() will not accept a negative offset.
+	(testWriteMoreThanArrayLength): New function. Tests that
+	SourceDataLine.write() wont write more than the length of the array.
+	(testWriteMoreThanArrayLength2): Likewise.
+	(testWriteWithoutStart): Added a check to avoid throwing an
+	IllegalStateException.
+
 2008-11-04  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp

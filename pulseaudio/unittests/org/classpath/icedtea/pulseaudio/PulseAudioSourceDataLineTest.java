@@ -227,6 +227,66 @@ public class PulseAudioSourceDataLineTest {
 
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testWriteIntegralNumberFrames() throws LineUnavailableException {
+		sourceDataLine = (SourceDataLine) mixer.getLine(new Line.Info(
+				SourceDataLine.class));
+
+		/* try writing an non-integral number of frames size */
+		sourceDataLine.open();
+		int frameSize = sourceDataLine.getFormat().getFrameSize();
+		byte[] buffer = new byte[(frameSize * 2) - 1];
+		sourceDataLine.write(buffer, 0, buffer.length);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testWriteNegativeLength() throws LineUnavailableException {
+		sourceDataLine = (SourceDataLine) mixer.getLine(new Line.Info(
+				SourceDataLine.class));
+
+		sourceDataLine.open();
+		int frameSize = sourceDataLine.getFormat().getFrameSize();
+		byte[] buffer = new byte[(frameSize * 2)];
+		/* try writing a negative length */
+		sourceDataLine.write(buffer, 0, -2);
+	}
+
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void testWriteNegativeOffset() throws LineUnavailableException {
+		sourceDataLine = (SourceDataLine) mixer.getLine(new Line.Info(
+				SourceDataLine.class));
+
+		sourceDataLine.open();
+		int frameSize = sourceDataLine.getFormat().getFrameSize();
+		byte[] buffer = new byte[(frameSize * 2)];
+		/* try writing with a negative offset */
+		sourceDataLine.write(buffer, -1, buffer.length);
+	}
+
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void testWriteMoreThanArrayLength() throws LineUnavailableException {
+		sourceDataLine = (SourceDataLine) mixer.getLine(new Line.Info(
+				SourceDataLine.class));
+
+		sourceDataLine.open();
+		int frameSize = sourceDataLine.getFormat().getFrameSize();
+		byte[] buffer = new byte[(frameSize * 2)];
+		/* try writing more than the array length */
+		sourceDataLine.write(buffer, 0, frameSize * 3);
+	}
+
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void testWriteMoreThanArrayLength2() throws LineUnavailableException {
+		sourceDataLine = (SourceDataLine) mixer.getLine(new Line.Info(
+				SourceDataLine.class));
+
+		sourceDataLine.open();
+		int frameSize = sourceDataLine.getFormat().getFrameSize();
+		byte[] buffer = new byte[(frameSize * 2)];
+		/* try writing more than the array length */
+		sourceDataLine.write(buffer, 1, buffer.length);
+	}
+
 	@Test
 	public void testWriteWithoutStart() throws UnsupportedAudioFileException,
 			IOException, LineUnavailableException, InterruptedException {
@@ -253,10 +313,17 @@ public class PulseAudioSourceDataLineTest {
 					int total = 0;
 
 					while (bytesRead >= 0 && total < 50) {
+
 						bytesRead = audioInputStream.read(abData, 0,
 								abData.length);
 						if (bytesRead > 0) {
 							sourceDataLine.write(abData, 0, bytesRead);
+						}
+						
+						// when the line is closed (in tearDown),
+						// break out of the loop
+						if (!sourceDataLine.isOpen()) {
+							break;
 						}
 						total++;
 					}
@@ -273,7 +340,7 @@ public class PulseAudioSourceDataLineTest {
 
 		Thread.sleep(100);
 
-		writer.join(1000);
+		writer.join(2000);
 
 		/* assert that the writer is still waiting in write */
 		Assert.assertTrue(writer.isAlive());
