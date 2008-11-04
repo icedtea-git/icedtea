@@ -489,7 +489,7 @@ void SharkBlock::parse()
         builder()->CreateShl(
           a->jint_value(),
           builder()->CreateAnd(
-            b->jint_value(), LLVMValue::jint_constant(0x1f))));
+            b->jint_value(), LLVMValue::jint_constant(0x1f)))));
       break;
     case Bytecodes::_ishr:
       b = pop();
@@ -498,7 +498,7 @@ void SharkBlock::parse()
         builder()->CreateAShr(
           a->jint_value(),
           builder()->CreateAnd(
-            b->jint_value(), LLVMValue::jint_constant(0x1f))));
+            b->jint_value(), LLVMValue::jint_constant(0x1f)))));
       break;
     case Bytecodes::_iushr:
       b = pop();
@@ -507,7 +507,7 @@ void SharkBlock::parse()
         builder()->CreateLShr(
           a->jint_value(),
           builder()->CreateAnd(
-            b->jint_value(), LLVMValue::jint_constant(0x1f))));
+            b->jint_value(), LLVMValue::jint_constant(0x1f)))));
       break;
     case Bytecodes::_iand:
       b = pop();
