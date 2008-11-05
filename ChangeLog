@@ -1,3 +1,7 @@
+2008-11-05  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/mixtec-hacks.patch: new file.
+
 2008-11-04  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp
