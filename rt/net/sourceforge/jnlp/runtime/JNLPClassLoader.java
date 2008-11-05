@@ -682,65 +682,60 @@ public class JNLPClassLoader extends URLClassLoader {
 
         // search this and the extension loaders
         if (result == null)
-        	try {
-        		result = loadClassExt(name);
-        	} catch (ClassNotFoundException cnfe) {
+            try {
+                result = loadClassExt(name);
+            } catch (ClassNotFoundException cnfe) {
 
-        		// Not found in external loader either. As a last resort, look in any available indexes
-        		
-        		// Currently this loads jars directly from the site. We cannot cache it because this 
-        		// call is initiated from within the applet, which does not have disk read/write permissions
-        		for (JarIndex index: jarIndexes) {
-        			LinkedList<String> jarList = index.get(name.replace('.', '/'));
+                // Not found in external loader either. As a last resort, look in any available indexes
 
-        			if (jarList != null) {
-        				for (String jarName: jarList) {
-        					System.err.println("Jar " + name + " is potentially in " + jarName);
+                // Currently this loads jars directly from the site. We cannot cache it because this 
+                // call is initiated from within the applet, which does not have disk read/write permissions
+                for (JarIndex index: jarIndexes) {
+                    LinkedList<String> jarList = index.get(name.replace('.', '/'));
 
-        					JARDesc desc;
-        					try {
-        						desc = new JARDesc(new URL(file.getCodeBase(), jarName),
-        								null, null, false, true, false);
-        					} catch (MalformedURLException mfe) {
-        						throw new ClassNotFoundException(name);
-        					}
+                    if (jarList != null) {
+                        for (String jarName: jarList) {
+                            JARDesc desc;
+                            try {
+                                desc = new JARDesc(new URL(file.getCodeBase(), jarName),
+                                        null, null, false, true, false);
+                            } catch (MalformedURLException mfe) {
+                                throw new ClassNotFoundException(name);
+                            }
 
-       						available.add(desc);
+                            available.add(desc);
 
-        		            tracker.addResource(desc.getLocation(), 
-        		            					desc.getVersion(), 
-        		            					JNLPRuntime.getDefaultUpdatePolicy()
-                                   				);
+                            tracker.addResource(desc.getLocation(), 
+                                    desc.getVersion(), 
+                                    JNLPRuntime.getDefaultUpdatePolicy()
+                            );
 
-        					URL remoteURL;
-        					try {
-        						remoteURL = new URL(file.getCodeBase() + jarName);
-        					} catch (MalformedURLException mfe) {
-        						throw new ClassNotFoundException(name);
-        					}
-        					
-        					URL u;
-        					
-        					try {
-        						u = tracker.getCacheURL(remoteURL);
-        						System.out.println("URL = " + u);
-        					} catch (Exception e) {
-        						throw new ClassNotFoundException(name);
-        					}
+                            URL remoteURL;
+                            try {
+                                remoteURL = new URL(file.getCodeBase() + jarName);
+                            } catch (MalformedURLException mfe) {
+                                throw new ClassNotFoundException(name);
+                            }
 
-        					if (u != null)
-        						addURL(u);
-        		            
-        				}
+                            URL u;
 
-        				// If it still fails, let it error out
-        				result = loadClassExt(name);
-        				
-        				System.err.println("Returning from index: " + result);
-        			}
-        		}
-        		
-        	}
+                            try {
+                                u = tracker.getCacheURL(remoteURL);
+                                System.out.println("URL = " + u);
+                            } catch (Exception e) {
+                                throw new ClassNotFoundException(name);
+                            }
+
+                            if (u != null)
+                                addURL(u);
+
+                        }
+
+                        // If it still fails, let it error out
+                        result = loadClassExt(name);
+                    }
+                }
+            }
 
         return result;
     }
