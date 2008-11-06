@@ -1,5 +1,11 @@
 2008-11-06  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	(JVM_handle_linux_signal): Added signal chaining,
+	abort_if_unrecognised, and stack overflow recognition.
+
+2008-11-06  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp
 	(StackShadowPages): Increase for debug builds.
 
