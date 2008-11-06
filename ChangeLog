@@ -1,5 +1,10 @@
 2008-11-05  Deepak Bhole  <dbhole@redhat.com>
 
+	* patches/icedtea-copy-plugs.patch: Add netscape.* classes to rt.jar when
+	building with an alternate jar application.
+
+2008-11-05  Deepak Bhole  <dbhole@redhat.com>
+
 	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Correct
 	indentation from last commit, remove debug output.
 
