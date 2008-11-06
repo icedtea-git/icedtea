@@ -206,10 +206,8 @@ void CppInterpreter::native_entry(methodOop method, intptr_t UNUSED, TRAPS)
       }
       else {
         CALL_VM_NOCHECK(InterpreterRuntime::monitorenter(thread, monitor));
-        if (HAS_PENDING_EXCEPTION) {
-          thread->pop_zero_frame();
-          return;
-        }
+        if (HAS_PENDING_EXCEPTION)
+          goto unwind_and_return;
       }
     }
   }
@@ -220,20 +218,17 @@ void CppInterpreter::native_entry(methodOop method, intptr_t UNUSED, TRAPS)
     address handlerAddr = method->signature_handler();
     if (handlerAddr == NULL) {
       CALL_VM_NOCHECK(InterpreterRuntime::prepare_native_call(thread, method));
-      if (HAS_PENDING_EXCEPTION) {
-        thread->pop_zero_frame();
-        return;
-      }
+      if (HAS_PENDING_EXCEPTION)
+        goto unwind_and_return;
+
       handlerAddr = method->signature_handler();
       assert(handlerAddr != NULL, "eh?");
     }
     if (handlerAddr == (address) InterpreterRuntime::slow_signature_handler) {
       CALL_VM_NOCHECK(handlerAddr =
         InterpreterRuntime::slow_signature_handler(thread, method, NULL,NULL));
-      if (HAS_PENDING_EXCEPTION) {
-        thread->pop_zero_frame();
-        return;
-      }
+      if (HAS_PENDING_EXCEPTION)
+        goto unwind_and_return;
     }
     handler = \
       InterpreterRuntime::SignatureHandler::from_handlerAddr(handlerAddr);
