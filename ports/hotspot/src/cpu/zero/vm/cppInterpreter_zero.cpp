@@ -173,6 +173,9 @@ void CppInterpreter::main_loop(int recurse, TRAPS)
 
 void CppInterpreter::native_entry(methodOop method, intptr_t UNUSED, TRAPS)
 {
+  // Make sure method is native and not abstract
+  assert(method->is_native() && !method->is_abstract(), "should be");
+
   JavaThread *thread = (JavaThread *) THREAD;
   ZeroStack *stack = thread->zero_stack();
 
@@ -182,11 +185,15 @@ void CppInterpreter::native_entry(methodOop method, intptr_t UNUSED, TRAPS)
   interpreterState istate = frame->interpreter_state();
   intptr_t *locals = istate->locals();
 
-  // Make sure method is native and not abstract
-  assert(method->is_native() && !method->is_abstract(), "should be");
+  // Check we're not about to run out of stack
+  if (stack_overflow_imminent(thread)) {
+    CALL_VM_NOCHECK(InterpreterRuntime::throw_StackOverflowError(thread));
+    goto unwind_and_return;
+  }
 
   // Lock if necessary
-  BasicObjectLock *monitor = NULL;
+  BasicObjectLock *monitor;
+  monitor = NULL;
   if (method->is_synchronized()) {
     monitor = (BasicObjectLock*) istate->stack_base();
     oop lockee = monitor->obj();
@@ -208,72 +215,79 @@ void CppInterpreter::native_entry(methodOop method, intptr_t UNUSED, TRAPS)
   }
 
   // Get the signature handler
-  address handlerAddr = method->signature_handler();
-  if (handlerAddr == NULL) {
-    CALL_VM_NOCHECK(InterpreterRuntime::prepare_native_call(thread, method));
-    if (HAS_PENDING_EXCEPTION) {
-      thread->pop_zero_frame();
-      return;
+  InterpreterRuntime::SignatureHandler *handler;
+  {
+    address handlerAddr = method->signature_handler();
+    if (handlerAddr == NULL) {
+      CALL_VM_NOCHECK(InterpreterRuntime::prepare_native_call(thread, method));
+      if (HAS_PENDING_EXCEPTION) {
+        thread->pop_zero_frame();
+        return;
+      }
+      handlerAddr = method->signature_handler();
+      assert(handlerAddr != NULL, "eh?");
     }
-    handlerAddr = method->signature_handler();
-    assert(handlerAddr != NULL, "eh?");
-  }
-  if (handlerAddr == (address) InterpreterRuntime::slow_signature_handler) {
-    CALL_VM_NOCHECK(handlerAddr =
-      InterpreterRuntime::slow_signature_handler(thread, method, NULL, NULL));
-    if (HAS_PENDING_EXCEPTION) {
-      thread->pop_zero_frame();
-      return;
+    if (handlerAddr == (address) InterpreterRuntime::slow_signature_handler) {
+      CALL_VM_NOCHECK(handlerAddr =
+        InterpreterRuntime::slow_signature_handler(thread, method, NULL,NULL));
+      if (HAS_PENDING_EXCEPTION) {
+        thread->pop_zero_frame();
+        return;
+      }
     }
+    handler = \
+      InterpreterRuntime::SignatureHandler::from_handlerAddr(handlerAddr);
   }
-  InterpreterRuntime::SignatureHandler *handler =
-    InterpreterRuntime::SignatureHandler::from_handlerAddr(handlerAddr);
 
   // Get the native function entry point
-  address function = method->native_function();
+  address function;
+  function = method->native_function();
   assert(function != NULL, "should be set if signature handler is");
 
   // Build the argument list
   if (handler->argument_count() * 2 > stack->available_words()) {
     Unimplemented();
   }
-  void **arguments =
-    (void **) stack->alloc(handler->argument_count() * sizeof(void **));
-  void **dst = arguments;
-
-  void *env = thread->jni_environment();
-  *(dst++) = &env;
-
-  void *mirror = NULL;
-  if (method->is_static()) {
-    istate->set_oop_temp(
-      method->constants()->pool_holder()->klass_part()->java_mirror());
-    mirror = istate->oop_temp_addr();
-    *(dst++) = &mirror;
-  }
-
-  intptr_t *src = locals;
-  for (int i = dst - arguments; i < handler->argument_count(); i++) {
-    ffi_type *type = handler->argument_type(i);
-    if (type == &ffi_type_pointer) {
-      if (*src) {
-        stack->push((intptr_t) src);
-        *(dst++) = stack->sp();
+  void **arguments;
+  {
+    arguments =
+      (void **) stack->alloc(handler->argument_count() * sizeof(void **));
+    void **dst = arguments;
+  
+    void *env = thread->jni_environment();
+    *(dst++) = &env;
+  
+    void *mirror = NULL;
+    if (method->is_static()) {
+      istate->set_oop_temp(
+        method->constants()->pool_holder()->klass_part()->java_mirror());
+      mirror = istate->oop_temp_addr();
+      *(dst++) = &mirror;
+    }
+  
+    intptr_t *src = locals;
+    for (int i = dst - arguments; i < handler->argument_count(); i++) {
+      ffi_type *type = handler->argument_type(i);
+      if (type == &ffi_type_pointer) {
+        if (*src) {
+          stack->push((intptr_t) src);
+          *(dst++) = stack->sp();
+        }
+        else {
+          *(dst++) = src;
+        }
+        src--;
+      }
+      else if (type->size == 4) {
+        *(dst++) = src--;
+      }
+      else if (type->size == 8) {
+        src--;
+        *(dst++) = src--;
       }
       else {
-        *(dst++) = src;
+        ShouldNotReachHere();
       }
-      src--;
-    }
-    else if (type->size == 4) {
-      *(dst++) = src--;
-    }
-    else if (type->size == 8) {
-      src--;
-      *(dst++) = src--;
-    }
-    else {
-      ShouldNotReachHere();
     }
   }
 
@@ -326,6 +340,8 @@ void CppInterpreter::native_entry(methodOop method, intptr_t UNUSED, TRAPS)
       }
     }
   }
+
+ unwind_and_return:
 
   // Unwind the current activation
   thread->pop_zero_frame();

@@ -1,5 +1,10 @@
 2008-11-06  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+	(CppInterpreter::native_entry): Add stack overflow check.
+
+2008-11-06  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp
 	(CppInterpreter::stack_overflow_imminent): New method.
 
