@@ -38,3 +38,7 @@
  public:
   // Main loop of normal_entry
   static void main_loop(int recurse, TRAPS);
+
+ private:
+  // Stack overflow checks
+  static bool stack_overflow_imminent(JavaThread *thread);

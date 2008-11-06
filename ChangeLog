@@ -1,3 +1,12 @@
+2008-11-06  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp
+	(CppInterpreter::stack_overflow_imminent): New method.
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+	(CppInterpreter::stack_overflow_imminent): New method.
+	(CppInterpreter::normal_entry): Add stack overflow check.
+
 2008-11-05  Deepak Bhole  <dbhole@redhat.com>
 
 	* patches/icedtea-copy-plugs.patch: Add netscape.* classes to rt.jar when
@@ -8,7 +17,8 @@
 	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Correct
 	indentation from last commit, remove debug output.
 
-2008-11-05  Gary Benson  <gbenson@redhat.com>
+2008-11-05  Andrew Haley  <aph@redhat.com>
+	    Gary Benson  <gbenson@redhat.com>
 
 	* contrib/mixtec-hacks.patch: new file.
 

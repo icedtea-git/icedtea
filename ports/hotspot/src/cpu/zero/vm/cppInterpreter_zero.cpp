@@ -77,6 +77,13 @@ void CppInterpreter::main_loop(int recurse, TRAPS)
 
   intptr_t *result = NULL;
   int result_slots = 0;
+
+  // Check we're not about to run out of stack
+  if (stack_overflow_imminent(thread)) {
+    CALL_VM_NOCHECK(InterpreterRuntime::throw_StackOverflowError(thread));
+    goto unwind_and_return;
+  }
+
   while (true) {
     // We can set up the frame anchor with everything we want at
     // this point as we are thread_in_Java and no safepoints can
@@ -150,6 +157,8 @@ void CppInterpreter::main_loop(int recurse, TRAPS)
       break;
     }
   }
+
+ unwind_and_return:
 
   // Unwind the current frame
   thread->pop_zero_frame();
@@ -534,6 +543,30 @@ void CppInterpreter::empty_entry(methodOop method, intptr_t UNUSED, TRAPS)
 
   // Pop our parameters
   stack->set_sp(stack->sp() + method->size_of_parameters());
+}
+
+bool CppInterpreter::stack_overflow_imminent(JavaThread *thread)
+{
+  // How is the ABI stack?
+  address stack_top = thread->stack_base() - thread->stack_size();
+  int free_stack = os::current_stack_pointer() - stack_top;
+  if (free_stack < StackShadowPages * os::vm_page_size()) {
+    return true;
+  }
+
+  // How is the Zero stack?
+  // Throwing a StackOverflowError involves a VM call, which means
+  // we need a frame on the stack.  We should be checking here to
+  // ensure that methods we call have enough room to install the
+  // largest possible frame, but that's more than twice the size
+  // of the entire Zero stack we get by default, so we just check
+  // we have *some* space instead...
+  free_stack = thread->zero_stack()->available_words() * wordSize;
+  if (free_stack < StackShadowPages * os::vm_page_size()) {
+    return true;
+  }
+  
+  return false;
 }
 
 InterpreterFrame *InterpreterFrame::build(ZeroStack*       stack,
