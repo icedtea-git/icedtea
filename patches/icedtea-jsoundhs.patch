@@ -51,3 +51,31 @@ diff -Nru openjdk.orig/jdk/make/javax/sound/Makefile openjdk/jdk/make/javax/soun
  # system dependent flags
  #
  ifeq ($(PLATFORM), windows)
+diff -uNr openjdk-orig/jdk/src/share/classes/com/sun/media/sound/Platform.java openjdk/jdk/src/share/classes/com/sun/media/sound/Platform.java
+--- openjdk-orig/jdk/src/share/classes/com/sun/media/sound/Platform.java	2008-11-07 10:38:15.000000000 -0500
++++ openjdk/jdk/src/share/classes/com/sun/media/sound/Platform.java	2008-11-07 10:43:21.000000000 -0500
+@@ -42,7 +42,6 @@
+ 
+     // native library we need to load
+     private static final String libNameMain     = "jsound";
+-    private static final String libNameMain2    = "jsoundhs";
+ 
+     private static final String libNameALSA     = "jsoundalsa";
+     private static final String libNameDSound   = "jsoundds";
+@@ -160,7 +159,6 @@
+         try {
+             // load the main libraries
+             JSSecurityManager.loadLibrary(libNameMain);
+-            JSSecurityManager.loadLibrary(libNameMain2);
+             // just for the heck of it...
+             loadedLibs |= LIB_MAIN;
+         } catch (SecurityException e) {
+diff -uNr openjdk-orig/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.MixerProvider openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.MixerProvider
+--- openjdk-orig/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.MixerProvider	2008-11-07 10:38:15.000000000 -0500
++++ openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.MixerProvider	2008-11-07 10:43:38.000000000 -0500
+@@ -1,5 +1,4 @@
+ # last mixer is default mixer
+ com.sun.media.sound.PortMixerProvider
+ com.sun.media.sound.SimpleInputDeviceProvider
+-com.sun.media.sound.HeadspaceMixerProvider
+ com.sun.media.sound.DirectAudioDeviceProvider

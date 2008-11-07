@@ -1,3 +1,8 @@
+2008-11-07  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-jsoundhs.patch: Added two more diffs to remove all uses 
+	of jsoundhs and Headspace libraries.
+
 2008-11-07  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Use 'node|short' instead of 'rev'
