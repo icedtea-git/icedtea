@@ -536,7 +536,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-alsa-default-device.patch \
 	patches/icedtea-linker-libs-order.patch \
 	patches/icedtea-f2i-overflow.patch \
-	patches/icedtea-cc-interp-no-fer.patch
+	patches/icedtea-cc-interp-no-fer.patch \
+	patches/icedtea-6761856-freetypescaler.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \

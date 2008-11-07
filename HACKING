@@ -65,6 +65,8 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-renderer-crossing.patch: Check whether crossing is initialized in Pisces Renderer.
 * icedtea-f2i-overflow.patch: Replaces the code used by [fd]2[il] bytecodes to correctly handle overflows. (PR244)
 * icedtea-cc-interp-no-fer.patch: Report that we cannot force early returns with the C++ interpreter.
+* icedtea-6761856-freetypescaler.patch: Fix IcedTea bug #227, OpenJDK bug
+  #6761856, swing TextLayout.getBounds() returns shifted bounds.
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
