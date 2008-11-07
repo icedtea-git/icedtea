@@ -2,7 +2,21 @@
 
 	* Makefile.am: Use 'node|short' instead of 'rev'
 	for Mercurial revision number.
-	
+
+2008-10-30  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Add bootstrap-directory-symlink
+	target to icedtea-ecj so it works as the user-specified
+	make target.
+
+2008-10-22  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Pass JAR_KNOWS_J_OPTIONS	to ecj make.
+	* acinclude.m4: Check whether or not jar supports -J
+	options at the end.
+	* patches/icedtea-ecj-jopt.patch: Only add -J options
+	to jar in JDK and CORBA when supported.
+
 2008-10-29  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-6761856-freetypescaler.patch: New patch.
@@ -168,6 +182,8 @@
 	* Makefile.am: Updated for new visualvm 1.0.1.
 	* patches/icedtea-visualvm.patch: Updated.
 
+=======
+>>>>>>> other
 2008-10-29  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/238:
