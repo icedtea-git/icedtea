@@ -1,3 +1,8 @@
+2008-11-07  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp
+	(frame::interpreter_frame_result): Implemented.
+
 2008-11-06  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
