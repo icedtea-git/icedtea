@@ -174,7 +174,7 @@ inline void Atomic::store(jint store_value, volatile jint* dest)
 
 inline void Atomic::store_ptr(intptr_t store_value, intptr_t* dest)
 {
-  Unimplemented();
+  *dest = store_value;
 }
 
 inline jint Atomic::add(jint add_value, volatile jint* dest)
