@@ -499,8 +499,7 @@ ZERO_PATCHES = \
 	patches/icedtea-signature-iterator.patch \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-zero.patch \
-	patches/icedtea-ia64-bugfix.patch \
-	patches/icedtea-hotspot-citypeflow.patch
+	patches/icedtea-ia64-bugfix.patch 
 
 # Patches needed when not using the newer OpenJDK 7 HotSpot for zero.
 NON_ZERO_PATCHES = 
@@ -523,7 +522,6 @@ ICEDTEA_FSG_PATCHES = \
 	patches/icedtea-jscheme.patch
 
 ICEDTEA_PATCHES = \
-	$(ZERO_PATCHES_COND) \
 	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-version.patch \
 	patches/icedtea-text-relocations.patch \
@@ -561,7 +559,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-sparc-ptracefix.patch \
 	patches/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
-	$(ZERO_PATCHES_COND) \
 	patches/icedtea-no-bcopy.patch \
 	patches/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
@@ -586,7 +583,8 @@ ICEDTEA_PATCHES = \
 	$(VISUALVM_PATCH) \
 	patches/icedtea-javac-debuginfo.patch \
 	patches/icedtea-xjc.patch \
-	patches/icedtea-renderer-crossing.patch
+	patches/icedtea-renderer-crossing.patch \
+	$(ZERO_PATCHES_COND)
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -827,7 +825,7 @@ stamps/native-ecj.stamp: stamps/patch.stamp
 	fi ; \
 	touch stamps/native-ecj.stamp
 
-stamps/overlay.stamp: stamps/native-ecj.stamp
+stamps/overlay.stamp: 
 	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
 	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
 	fi ; \
@@ -1239,7 +1237,8 @@ stamps/native-ecj.stamp:
 	fi ; \
 	touch stamps/native-ecj.stamp
 
-stamps/icedtea-ecj.stamp: stamps/hotspot-tools.stamp stamps/plugs.stamp \
+stamps/icedtea-ecj.stamp: stamps/bootstrap-directory-symlink-ecj.stamp \
+	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp stamps/cacao.stamp
 	$(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
@@ -1273,9 +1272,7 @@ clean-icedtea-ecj: stamps/clone-ecj.stamp
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj clobber
 
-stamps/icedtea-against-ecj.stamp: \
-	stamps/bootstrap-directory-symlink-ecj.stamp \
-	stamps/icedtea-ecj.stamp
+stamps/icedtea-against-ecj.stamp: stamps/icedtea-ecj.stamp
 	mkdir -p stamps
 	touch stamps/icedtea-against-ecj.stamp
 

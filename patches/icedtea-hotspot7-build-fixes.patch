@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-27 22:41:12.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-05-28 11:58:57.000000000 +0100
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2008-10-30 17:10:16.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-10-30 17:11:34.000000000 +0000
 @@ -88,9 +88,6 @@
    #define VMLP ""
  #endif

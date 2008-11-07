@@ -47,3 +47,4 @@ void Disassembler::decode(u_char *begin, u_char *end, outputStream *st)
   Unimplemented();
 }
 #endif // PRODUCT
+

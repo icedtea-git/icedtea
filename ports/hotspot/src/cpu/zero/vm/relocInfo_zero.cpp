@@ -66,3 +66,11 @@ void Relocation::pd_swap_out_breakpoint(address x, short* instrs, int instrlen)
 {
   Unimplemented();
 }
+
+void poll_Relocation::fix_relocation_after_move(const CodeBuffer* src, CodeBuffer *dest) {
+  Unimplemented();
+}
+
+void poll_return_Relocation::fix_relocation_after_move(const CodeBuffer* src, CodeBuffer* dest) {
+  Unimplemented();
+}

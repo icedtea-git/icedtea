@@ -125,7 +125,7 @@ void frame::pd_gc_epilog()
 {
 }
 
-bool frame::is_interpreted_frame_valid() const
+bool frame::is_interpreted_frame_valid(JavaThread *thread) const
 {
   Unimplemented();
 }
