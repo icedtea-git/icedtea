@@ -1,3 +1,8 @@
+2008-11-07  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Use 'node|short' instead of 'rev'
+	for Mercurial revision number.
+	
 2008-10-29  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-6761856-freetypescaler.patch: New patch.
