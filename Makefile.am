@@ -718,7 +718,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	fi
 
 	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
-	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
+	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{node|short}')`" ; \
 	fi ; \
 	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
 	if [ -n "$(PKGVERSION)" ]; then \

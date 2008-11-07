@@ -1,5 +1,10 @@
 2008-11-07  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am: Use 'node|short' instead of 'rev'
+	for Mercurial revision number.
+
+2008-11-07  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am: Remove unneeded citypeflow fix,
 	move zero patching to the end.
 	* patches/icedtea-bytecodeInterpreter.patch,
