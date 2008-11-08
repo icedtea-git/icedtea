@@ -1,6 +1,6 @@
-OPENJDK_DATE = 28_aug_2008
-OPENJDK_MD5SUM = b53e1ef643909ce82721ee4c970d958b
-OPENJDK_VERSION = b12
+OPENJDK_DATE = 05_nov_2008
+OPENJDK_MD5SUM = 3b6975c8eaf465396c8c488a9877f259
+OPENJDK_VERSION = b13
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -527,9 +527,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-arch.patch \
 	patches/icedtea-lc_ctype.patch \
 	patches/icedtea-messageutils.patch \
-	patches/icedtea-6open-6616825.patch \
-	patches/icedtea-6open-6651382.patch \
-	patches/icedtea-6open-6756202.patch \
 	$(VISUALVM_PATCH) \
 	patches/icedtea-javac-debuginfo.patch \
 	patches/icedtea-xjc.patch \

@@ -1,3 +1,13 @@
+2008-11-08  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (OPENJDK_DATE, OPENJDK_MD5SUM, OPENJDK_VERSION):
+	Update for b13.
+	(ICEDTEA_PATCHES): Removed patches 6616825, 6651382, 6756202.
+	* patches/icedtea-6open-6616825.patch: Removed.
+	* patches/icedtea-6open-6651382.patch: Removed.
+	* patches/icedtea-6open-6756202.patch: Removed.
+	* NEWS: Add integration of b13.
+
 2008-11-07  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Use 'node|short' instead of 'rev'
