@@ -12,20 +12,6 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/s
    PRODUCT_SUFFIX = Runtime Environment
    JDK_RC_PLATFORM_NAME = Platform
    COMPANY_NAME = N/A
-@@ -260,12 +260,7 @@
- JDK_UNDERSCORE_VERSION =  $(subst .,_,$(JDK_VERSION))
- JDK_MKTG_UNDERSCORE_VERSION =  $(subst .,_,$(JDK_MKTG_VERSION))
- 
--# RELEASE is JDK_VERSION and -MILESTONE if MILESTONE is set
--ifneq ($(MILESTONE),fcs)
--  RELEASE      = $(JDK_VERSION)-$(MILESTONE)$(BUILD_VARIANT_RELEASE)
--else
--  RELEASE      = $(JDK_VERSION)$(BUILD_VARIANT_RELEASE)
--endif
-+RELEASE      = $(JDK_VERSION)$(BUILD_VARIANT_RELEASE)
- 
- # FULL_VERSION is RELEASE and -BUILD_NUMBER if BUILD_NUMBER is set
- ifdef BUILD_NUMBER
 --- openjdk/hotspot/src/share/vm/utilities/vmError.cpp~	2008-08-28 10:23:18.000000000 +0200
 +++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-10-21 14:05:12.000000000 +0200
 @@ -168,7 +168,8 @@
@@ -61,3 +47,17 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/s
  # CFLAGS_WARN holds compiler options to suppress/enable warnings.
  CFLAGS += $(CFLAGS_WARN/BYFILE)
  
+--- openjdk/langtools/make/Makefile.orig
++++ openjdk/langtools/make/Makefile
+@@ -82,7 +82,11 @@
+ endif 
+ 
+ ifdef MILESTONE
++ifneq ($(MILESTONE),fcs)
+   ANT_OPTIONS += -Dmilestone=$(MILESTONE)
++else
++  ANT_OPTIONS += -Drelease=$(JDK_VERSION)
++endif
+ endif
+ 
+ ifdef BUILD_NUMBER

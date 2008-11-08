@@ -1,5 +1,12 @@
 2008-11-08  Mark Wielaard  <mark@klomp.org>
 
+	* Makefile.am (ICEDTEA_ENV): Set MILESTONE to fcs.
+	* patches/icedtea-version.patch: Remove special casing of
+	MILESTONE in hotspot build, add special casing of milestone in
+	langtools build.
+
+2008-11-08  Mark Wielaard  <mark@klomp.org>
+
 	* Makefile.am (OPENJDK_MD5SUM): Fixed value.
 
 2008-11-08  Mark Wielaard  <mark@klomp.org>
