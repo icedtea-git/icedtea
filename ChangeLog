@@ -1,5 +1,9 @@
 2008-11-08  Mark Wielaard  <mark@klomp.org>
 
+	* Makefile.am (OPENJDK_MD5SUM): Fixed value.
+
+2008-11-08  Mark Wielaard  <mark@klomp.org>
+
 	* Makefile.am (OPENJDK_DATE, OPENJDK_MD5SUM, OPENJDK_VERSION):
 	Update for b13.
 	(ICEDTEA_PATCHES): Removed patches 6616825, 6651382, 6756202.
