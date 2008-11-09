@@ -1,3 +1,7 @@
+2008-11-09  Mark Wielaard  <mark@klomp.org>
+
+	* .hgignore: Add test/check-.*log.
+
 2008-11-08  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am (ICEDTEA_ENV): Set MILESTONE to fcs.

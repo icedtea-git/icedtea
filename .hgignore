@@ -38,6 +38,7 @@ test/jdk
 test/langtools
 test/jtreg.jar
 test/jtreg/classes
+test/check-.*log
 rt/com/sun/jdi/AbsentInformationException.java
 rt/com/sun/jdi/Accessible.java
 rt/com/sun/jdi/ArrayReference.java
