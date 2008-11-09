@@ -25,7 +25,6 @@
 
 package com.sun.javatest.regtest;
 
-import java.lang.RuntimePermission;
 import java.security.Permission;
 import java.util.PropertyPermission;
 
@@ -55,7 +54,7 @@ public class RegressionSecurityManager extends JavaTestSecurityManager {
                 System.err.println("execution of sameJVM tests");
                 System.err.println();
             }
-            else 
+            else
                 System.setSecurityManager(new RegressionSecurityManager());
         }
         catch (SecurityException e) {
@@ -104,13 +103,13 @@ public class RegressionSecurityManager extends JavaTestSecurityManager {
         // allow most stuff, but limit as appropriate
         if (perm instanceof RuntimePermission) {
             if (perm.getName().equals("setIO")) {
-                if (!allowSetIO) 
+                if (!allowSetIO)
                     // is this right or should we really restrict this more?
                     super.checkPermission(new java.lang.RuntimePermission("setIO"));
             }
             else if (perm.getName().equals("exitVM"))
                 checkExit(0);
-            else if (perm.getName().equals("createSecurityManager")) 
+            else if (perm.getName().equals("createSecurityManager"))
                 super.checkPermission(new java.lang.RuntimePermission("createSecurityManager"));
         }
         else if (perm instanceof PropertyPermission) {
@@ -118,21 +117,21 @@ public class RegressionSecurityManager extends JavaTestSecurityManager {
                 checkPropertiesAccess();
         }
     }
-    
+
     private boolean propertiesAccessed;
-    
+
     public synchronized void checkPropertiesAccess() {
         super.checkPropertiesAccess();
         propertiesAccessed = true;
     }
-    
+
     boolean isPropertiesAccessed() {
         return propertiesAccessed;
     }
-    
+
     void resetPropertiesAccessed() {
         propertiesAccessed = false;
-    } 
+    }
 
     public boolean setAllowSetIO(boolean bool) {
         boolean prev = allowSetIO;

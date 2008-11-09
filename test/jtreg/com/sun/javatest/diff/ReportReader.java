@@ -39,28 +39,28 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Read a set of test results from summary.txt, possibly located in a 
+ * Read a set of test results from summary.txt, possibly located in a
  * report directory.
  */
 public class ReportReader implements DiffReader {
-    private static final String SUMMARY_TXT = "summary.txt"; 
-    
+    private static final String SUMMARY_TXT = "summary.txt";
+
     public static boolean accepts(File f) {
         if (!f.exists())
             return false;
-        
+
         if (f.isFile() && f.getName().equals(SUMMARY_TXT))
             return true;
-        
+
         if (f.isDirectory() && new File(f, SUMMARY_TXT).exists())
             return true;
-        
+
         if (f.isDirectory() && new File(new File(f, "text"), SUMMARY_TXT).exists())
             return true;
-        
+
         return false;
     }
-    
+
     /** Creates a new instance of SummaryReader */
     public ReportReader(File file) {
         this.file = file;
@@ -69,11 +69,7 @@ public class ReportReader implements DiffReader {
     public File getFile() {
         return file;
     }
-    
-    public File getWorkDirectory() {
-        return null;
-    }
-    
+
     public String getFileType() {
         if (file != null && file.isDirectory())
             return i18n.getString("report.reportDir");
@@ -81,10 +77,14 @@ public class ReportReader implements DiffReader {
             return i18n.getString("report.reportFile");
     }
 
+    public File getWorkDirectory() {
+        return null;
+    }
+
     public Iterator<TestResult> iterator() {
         return readSummary().iterator();
     }
-    
+
     private List<TestResult> readSummary() {
         List<TestResult> list = new ArrayList<TestResult>();
         File root = getRoot();
@@ -97,7 +97,7 @@ public class ReportReader implements DiffReader {
             f = new File(new File(file, "text"), SUMMARY_TXT);
         else
             throw new IllegalStateException();
-        
+
         try {
             BufferedReader in = new BufferedReader(new FileReader(f));
             String line;
@@ -113,14 +113,14 @@ public class ReportReader implements DiffReader {
         }
         return list;
     }
-    
+
     private File getRoot() {
         return UNKNOWN;
     }
-    
+
     private static File UNKNOWN = new File("unknown");
-    
+
     private File file;
-    
+
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(WorkDirectoryReader.class);
 }

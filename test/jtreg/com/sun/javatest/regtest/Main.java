@@ -83,7 +83,7 @@ import static com.sun.javatest.regtest.Option.ArgType.*;
  * JavaTest entry point to be used to access regression extensions.
  */
 public class Main {
-    
+
     /**
      * Exception to report a problem while executing in Main.
      */
@@ -93,14 +93,14 @@ public class Main {
             super(i18n.getString(s, args));
         }
     }
-    
+
     public static final String MAIN = "main";           // main set of options
     public static final String SELECT = "select";       // test selection options
     public static final String JDK = "jdk";             // specify JDK to use
     public static final String MODE = "mode";           // sameVM or otherVM
     public static final String VERBOSE = "verbose";     // verbose controls
     public static final String DOC = "doc";             // help or doc info
-    
+
     Option[] options = {
         new Option(OPT, VERBOSE, "verbose", "v", "verbose") {
             @Override
@@ -122,49 +122,49 @@ public class Main {
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, VERBOSE, "verbose", "v1") {
             public void process(String opt, String arg) {
                 verbose = Verbose.SUMMARY;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, VERBOSE, "verbose", "va") {
             public void process(String opt, String arg) {
                 verbose = Verbose.ALL;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, VERBOSE, "verbose", "vp") {
             public void process(String opt, String arg) {
                 verbose = Verbose.PASS;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, VERBOSE, "verbose", "vf") {
             public void process(String opt, String arg) {
                 verbose = Verbose.FAIL;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, VERBOSE, "verbose", "ve") {
             public void process(String opt, String arg) {
                 verbose = Verbose.ERROR;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, VERBOSE, "verbose", "vt") {
             public void process(String opt, String arg) {
                 verbose = Verbose.TIME;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, DOC, "", "t", "tagspec") {
             public void process(String opt, String arg) {
                 if (help == null)
@@ -172,7 +172,7 @@ public class Main {
                 help.setTagSpec(true);
             }
         },
-        
+
         new Option(NONE, DOC, "", "n", "relnote") {
             public void process(String opt, String arg) {
                 if (help == null)
@@ -180,15 +180,15 @@ public class Main {
                 help.setReleaseNotes(true);
             }
         },
-        
+
         new Option(OLD, MAIN, "", "w", "workDir") {
             public void process(String opt, String arg) {
-                
+
                 workDirArg = new File(arg);
                 childArgs.add("-w:" + workDirArg.getAbsolutePath());
             }
         },
-        
+
         new Option(OPT, MAIN, "", "retain") {
             @Override
             public String[] getChoices() {
@@ -204,34 +204,40 @@ public class Main {
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(OLD, MAIN, "", "r", "reportDir") {
             public void process(String opt, String arg) {
                 reportDirArg = new File(arg);
                 childArgs.add("-r:" + reportDirArg.getAbsolutePath());
             }
         },
-        
-        new Option(NONE, MAIN, null, "ro", "reportOnly") {
+
+        new Option(NONE, MAIN, "ro-nr", "ro", "reportOnly") {
             public void process(String opt, String arg) {
                 reportOnlyFlag = true;
             }
         },
-        
+
+        new Option(NONE, MAIN, "ro-nr", "nr", "noreport") {
+            public void process(String opt, String arg) {
+                noReportFlag = true;
+            }
+        },
+
         new Option(STD, MAIN, "", "timeout", "timeoutFactor") {
             public void process(String opt, String arg) {
                 timeoutFactorArg = arg;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(STD, MAIN, "", "dir") {
             public void process(String opt, String arg) {
                 baseDirArg = new File(arg);
                 childArgs.add("-dir:" + baseDirArg.getAbsolutePath());
             }
         },
-        
+
         new Option(STD, SELECT, "", "status") {
             @Override
             public String[] getChoices() {
@@ -242,29 +248,29 @@ public class Main {
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(STD, SELECT, "", "exclude", "Xexclude") {
             public void process(String opt, String arg) {
                 File f = new File(arg);
                 excludeListArgs.add(f);
-                childArgs.add(f.getAbsolutePath());
+                childArgs.add("-exclude:" + f.getAbsolutePath());
             }
         },
-        
+
         new Option(NONE, MAIN, null, "startHttpd") {
             public void process(String opt, String arg) {
                 httpdFlag = true;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(OLD, MAIN, "", "o", "observer") {
             public void process(String opt, String arg) {
                 observerClassName = arg;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(OLD, MAIN, "", "od", "observerDir", "op", "observerPath") {
             public void process(String opt, String arg) {
                 arg = arg.trim();
@@ -279,20 +285,20 @@ public class Main {
                 childArgs.add("-op:" + filesToAbsolutePath(pathToFiles(arg)));
             }
         },
-        
+
         new Option(NONE, MAIN, null, "g", "gui") {
             public void process(String opt, String arg) {
                 guiFlag = true;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, MAIN, null, "c", "check") {
             public void process(String opt, String arg) {
                 checkFlag = true;
             }
         },
-        
+
         // deprecated
         new Option(NONE, MAIN, "ignore", "noignore") {
             public void process(String opt, String arg) {
@@ -300,7 +306,7 @@ public class Main {
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(STD, MAIN, "ignore", "ignore") {
             @Override
             public String[] getChoices() {
@@ -323,69 +329,69 @@ public class Main {
                 throw new BadArgs(i18n, "main.unknownIgnore", arg);
             }
         },
-        
+
         new Option(NONE, SELECT, "a-m", "a", "automatic", "automagic") {
             public void process(String opt, String arg) {
                 keywordsExprArg = combineKeywords(keywordsExprArg, AUTOMATIC);
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, SELECT, "a-m", "m", "manual") {
             public void process(String opt, String arg) {
                 keywordsExprArg = combineKeywords(keywordsExprArg, MANUAL);
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, SELECT, "shell-noshell", "shell") {
             public void process(String opt, String arg) {
                 keywordsExprArg = combineKeywords(keywordsExprArg, "shell");
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, SELECT, "shell-noshell", "noshell") {
             public void process(String opt, String arg) {
                 keywordsExprArg = combineKeywords(keywordsExprArg, "!shell");
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(STD, SELECT, null, "bug") {
             public void process(String opt, String arg) {
                 keywordsExprArg = combineKeywords(keywordsExprArg, "bug" + arg);
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(STD, SELECT, null, "k", "keywords") {
             public void process(String opt, String arg) {
                 keywordsExprArg = combineKeywords(keywordsExprArg, "(" + arg + ")");
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, MODE, "svm-ovm", "ovm", "othervm") {
             public void process(String opt, String arg) {
                 sameJVMFlag = false;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(NONE, MODE, "svm-ovm", "s", "svm", "samevm") {
             public void process(String opt, String arg) {
                 sameJVMFlag = true;
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(OLD, JDK, "", "jdk", "testjdk") {
             public void process(String opt, String arg) {
                 jdk = new JDK(arg);
             }
         },
-        
+
         new Option(STD, JDK, "", "cpa", "classpathappend") {
             public void process(String opt, String arg) {
                 arg = arg.trim();
@@ -398,73 +404,73 @@ public class Main {
                 }
             }
         },
-        
+
         new Option(NONE, JDK, "jit-nojit", "jit") {
             public void process(String opt, String arg) {
                 jitFlag = true;
             }
         },
-        
+
         new Option(NONE, JDK, "jit-nojit", "nojit") {
             public void process(String opt, String arg) {
                 jitFlag = false;
             }
         },
-        
+
         new Option(WILDCARD, JDK, null, "Xrunjcov") {
             public void process(String opt, String arg) {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(NONE, JDK, null, "classic", "green", "native", "hotspot", "client", "server", "d32", "d64") {
             public void process(String opt, String arg) {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(OPT, JDK, null, "enableassertions", "ea", "disableassertions", "da") {
             public void process(String opt, String arg) {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(NONE, JDK, null, "enablesystemassertions", "esa", "disablesystemassertions", "dsa") {
             public void process(String opt, String arg) {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(WILDCARD, JDK, null, "XX", "Xms", "Xmx") {
             public void process(String opt, String arg) {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(WILDCARD, JDK, null, "Xint", "Xmixed", "Xcomp") {
             public void process(String opt, String arg) {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(STD, JDK, null, "Xbootclasspath") {
             public void process(String opt, String arg) {
                 testVMOpts.add("-Xbootclasspath:" + filesToAbsolutePath(pathToFiles(arg)));
             }
         },
-        
+
         new Option(STD, JDK, null, "Xbootclasspath/a") {
             public void process(String opt, String arg) {
                 testVMOpts.add("-Xbootclasspath/a:" + filesToAbsolutePath(pathToFiles(arg)));
             }
         },
-        
+
         new Option(STD, JDK, null, "Xbootclasspath/p") {
             public void process(String opt, String arg) {
                 testVMOpts.add("-Xbootclasspath/p:" + filesToAbsolutePath(pathToFiles(arg)));
             }
         },
-        
+
         new Option(WILDCARD, JDK, null, "X") {
             public void process(String opt, String arg) {
                 // This is a change in spec. Previously. -X was used to tunnel
@@ -473,20 +479,20 @@ public class Main {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(WILDCARD, JDK, null, "D") {
             public void process(String opt, String arg) {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(STD, JDK, null, "vmoption") {
             public void process(String opt, String arg) {
                 if (arg.length() > 0)
                     testVMOpts.add(arg);
             }
         },
-        
+
         new Option(STD, JDK, null, "vmoptions") {
             public void process(String opt, String arg) {
                 arg = arg.trim();
@@ -495,7 +501,7 @@ public class Main {
                 testVMOpts.addAll(Arrays.asList(arg.split("\\s+")));
             }
         },
-        
+
         new Option(OLD, JDK, null, "e") {
             public void process(String opt, String arg) {
                 arg = arg.trim();
@@ -504,25 +510,25 @@ public class Main {
                 envVarArgs.addAll(Arrays.asList(arg.split(",")));
             }
         },
-        
+
         new Option(STD, JDK, null, "agentlib") {
             public void process(String opt, String arg) {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(STD, JDK, null, "agentpath") {
             public void process(String opt, String arg) {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(STD, JDK, null, "javaagent") {
             public void process(String opt, String arg) {
                 testVMOpts.add(opt);
             }
         },
-        
+
         new Option(STD, JDK, null, "javacoption") {
             public void process(String opt, String arg) {
                 arg = arg.trim();
@@ -532,7 +538,7 @@ public class Main {
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(STD, JDK, null, "javacoptions") {
             public void process(String opt, String arg) {
                 arg = arg.trim();
@@ -542,7 +548,7 @@ public class Main {
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(STD, JDK, null, "javaoption") {
             public void process(String opt, String arg) {
                 arg = arg.trim();
@@ -552,7 +558,7 @@ public class Main {
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(STD, JDK, null, "javaoptions") {
             public void process(String opt, String arg) {
                 arg = arg.trim();
@@ -562,7 +568,7 @@ public class Main {
                 childArgs.add(opt);
             }
         },
-        
+
         new Option(REST, DOC, "help", "h", "help", "usage") {
             public void process(String opt, String arg) {
                 if (help == null)
@@ -570,7 +576,7 @@ public class Main {
                 help.setCommandLineHelpQuery(arg);
             }
         },
-        
+
         new Option(REST, DOC, "help", "onlineHelp") {
             public void process(String opt, String arg) {
                 if (help == null)
@@ -578,7 +584,7 @@ public class Main {
                 help.setOnlineHelpQuery(arg);
             }
         },
-        
+
         new Option(NONE, DOC, "help", "version") {
             public void process(String opt, String arg) {
                 if (help == null)
@@ -586,7 +592,7 @@ public class Main {
                 help.setVersionFlag(true);
             }
         },
-        
+
         new Option(FILE, MAIN, null) {
             public void process(String opt, String arg) {
                 File f= new File(arg);
@@ -610,7 +616,7 @@ public class Main {
     public static final int EXIT_FAULT = 4;
     /** Unexpected exception occurred. */
     public static final int EXIT_EXCEPTION = 5;
-    
+
     /**
      * Standard entry point. Only returns if GUI mode is initiated; otherwise, it calls System.exit
      * with an appropriate exit code.
@@ -628,7 +634,7 @@ public class Main {
                 out.flush();
                 err.flush();
             }
-            
+
             if (!(m.guiFlag && rc == EXIT_OK)) {
                 // take care not to exit if GUI might be around,
                 // and take care to ensure JavaTestSecurityManager will
@@ -654,21 +660,21 @@ public class Main {
             exit(EXIT_EXCEPTION);
         }
     } // main()
-    
+
     public Main() {
         this(new PrintWriter(System.out, true), new PrintWriter(System.err, true));
     }
-    
+
     public Main(PrintWriter out, PrintWriter err) {
         this.out = out;
         this.err = err;
-        
+
         // FIXME: work around bug 6466752
         File javatest_jar = findJar("javatest.jar", "lib/javatest.jar", com.sun.javatest.Harness.class);
         if (javatest_jar != null)
             System.setProperty("javatestClassDir", javatest_jar.getPath());
     }
-    
+
     /**
      * Decode command line args and perform the requested operations.
      * @param args An array of args, such as might be supplied on the command line.
@@ -681,7 +687,7 @@ public class Main {
         new OptionDecoder(options).decodeArgs(expandAtFiles(args));
         return run();
     }
-    
+
     private int run() throws BadArgs, Fault, Harness.Fault, InterruptedException {
         if (help != null) {
             guiFlag = help.show(out);
@@ -690,7 +696,7 @@ public class Main {
 
         if (sameJVMFlag && !testJavaOpts.isEmpty())
             throw new Fault(i18n, "main.cant.mix.samevm.java.options");
-        
+
         if (jdk == null) {
             String s = null;
             if (!sameJVMFlag)
@@ -706,23 +712,23 @@ public class Main {
                 f = f.getParentFile();
             jdk = new JDK(f);
         }
-        
+
         if (jitFlag == false) {
             if (sameJVMFlag)
                 testVMOpts.add("-Djava.compiler=");
             else
                 envVarArgs.add("JAVA_COMPILER=");
         }
-        
+
         if (classPathAppendArg.size() > 0) {
             // TODO: store this separately in RegressionParameters, instead of in envVars
             if (!sameJVMFlag)
                 envVarArgs.add("CPAPPEND=" + filesToAbsolutePath(classPathAppendArg));
         }
-        
+
         if (!jdk.exists())
             throw new Fault(i18n, "main.jdk.not.found", jdk);
-        
+
         File baseDir;
         if (baseDirArg == null) {
             baseDir = new File(System.getProperty("user.dir"));
@@ -731,9 +737,9 @@ public class Main {
                 throw new Fault(i18n, "main.cantFindFile", baseDirArg);
             baseDir = baseDirArg.getAbsoluteFile();
         }
-        
+
         List<File> absTestFileArgs = new ArrayList<File>();
-        
+
         for (File t: testFileArgs) {
             if (!t.isAbsolute())
                 t = new File(baseDir, t.getPath());
@@ -741,13 +747,13 @@ public class Main {
                 throw new Fault(i18n, "main.cantFindFile", t);
             absTestFileArgs.add(t);
         }
-        
+
         testFileArgs = absTestFileArgs;
-        
+
         String antFileList = System.getProperty(JAVATEST_ANT_FILE_LIST);
         if (antFileList != null)
             antFileArgs.addAll(readFileList(new File(antFileList)));
-        
+
         if (testSuiteArg == null) {
             File t;
             if (testFileArgs.size() > 0)
@@ -756,49 +762,57 @@ public class Main {
                 t = antFileArgs.iterator().next();
             else
                 throw new BadArgs(i18n, "main.noTestSuiteOrTests");
-            
+
             testSuiteArg = getTestSuite(t);
             if (testSuiteArg == null)
                 throw new Fault(i18n, "main.cantDetermineTestSuite", t);
         }
-        
+
         if (workDirArg == null) {
             workDirArg = new File("JTwork");
             childArgs.add(0, "-w:" + workDirArg.getAbsolutePath());
         }
-        
-        if (reportDirArg == null) {
+
+        if (reportDirArg == null && !noReportFlag) {
             reportDirArg = new File("JTreport");
             childArgs.add(0, "-r:" + reportDirArg.getAbsolutePath());
         }
-        
-        makeDir(reportDirArg);
+
+        if (!noReportFlag)
+            makeDir(reportDirArg);
+
         makeDir(workDirArg);
         makeDir(new File(workDirArg, "scratch"));
-        
+
         if (!isThisVMOK())
             return execChild();
-        
+
         RegressionParameters params = createParameters();
-        
+
         checkLockFiles(params.getWorkDirectory().getRoot(), "start");
-        
+
         Harness.setClassDir(ProductInfo.getJavaTestClassDir());
-        
+
         // Allow keywords to begin with a numeric
         Keywords.setAllowNumericKeywords(true);
-        
+
         // Before we install our own security manager (which will restrict access
         // to the system properties), take a copy of the system properties.
         TestEnvironment.addDefaultPropTable("(system properties)", System.getProperties());
-        
+
         // TODO: take SecurityManager into account for isThisVMOK
-        if (sameJVMFlag)
+        if (sameJVMFlag) {
             RegressionSecurityManager.install();
-        
+            SecurityManager sc = System.getSecurityManager();
+            if (sc instanceof RegressionSecurityManager) {
+                // experimental
+                ((RegressionSecurityManager) sc).setAllowSetIO(true);
+            }
+        }
+
         if (httpdFlag)
             startHttpServer();
-        
+
         if (guiFlag) {
             showTool(params);
             return EXIT_OK;
@@ -810,7 +824,7 @@ public class Main {
             }
         }
     }
-    
+
     /**
      * Process Win32-style command files for the specified command line
      * arguments and return the resulting arguments. A command file argument
@@ -839,7 +853,7 @@ public class Main {
         }
         return newArgs.toArray(new String[newArgs.size()]);
     }
-    
+
     private static void loadCmdFile(String name, List<String> args)
     throws Fault {
         Reader r;
@@ -871,7 +885,7 @@ public class Main {
             }
         }
     }
-    
+
     private static List<File> readFileList(File file)
     throws Fault {
         BufferedReader r;
@@ -898,7 +912,7 @@ public class Main {
             }
         }
     }
-    
+
     private static void writeFileList(File file, List<File> list) throws Fault {
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(file));
@@ -912,21 +926,21 @@ public class Main {
             throw new Fault(i18n, "main.cantWrite", file, e);
         }
     }
-    
+
     public int[] getTestStats() {
         return testStats;
     }
-    
+
     private boolean isThisVMOK() {
         if (reportOnlyFlag || checkFlag || !sameJVMFlag)
             return true;
-        
+
         // sameVM tests can use this VM if
         // - the current directory is the required scratch directory
         // - the current VM is the required test VM
         // - there are no outstanding VM options
         // - there is no classpath append
-        
+
         File scratchDir = canon(new File(workDirArg, "scratch"));
         File currDir = canon(new File(""));
         if (!currDir.equals(scratchDir)) {
@@ -934,7 +948,7 @@ public class Main {
                 System.err.println("dir mismatch: " + currDir + " " + scratchDir);
             return false;
         }
-        
+
         File currJDKHome = canon(new File(System.getProperty("java.home")));
         if (currJDKHome.getName().toLowerCase().equals("jre"))
             currJDKHome = currJDKHome.getParentFile();
@@ -943,53 +957,53 @@ public class Main {
                 System.err.println("jdk mismatch: " + currJDKHome + " " + jdk + " (" + jdk.getCanonicalFile() + ")");
             return false;
         }
-        
+
         if (System.getProperty("javatest.child") == null && !testVMOpts.isEmpty()) {
             if (debugChild)
                 System.err.println("need VM opts: " + testVMOpts);
             return false;
         }
-        
+
         if (classPathAppendArg.size() > 0) {
             if (debugChild)
                 System.err.println("need classPathAppend: " + classPathAppendArg);
             return false;
         }
-        
+
         return true;
     }
-    
+
     // TODO use @file for args?
     private int execChild() throws Fault {
         if (System.getProperty("javatest.child") != null)
             throw new AssertionError();
-        
+
         File javatest_jar = findJar("javatest.jar", "lib/javatest.jar", com.sun.javatest.Harness.class);
         if (javatest_jar == null)
             throw new Fault(i18n, "main.cantFind.javatest.jar");
-        
+
         File jtreg_jar = findJar("jtreg.jar", "lib/jtreg.jar", getClass());
         if (jtreg_jar == null)
             throw new Fault(i18n, "main.cantFind.jtreg.jar");
-        
+
         File childJDKHome = jdk.getAbsoluteFile();
         File childJava = new File(new File(childJDKHome, "bin"), "java");
         File childTools  = new File(new File(childJDKHome, "lib"), "tools.jar");
-        
+
         File scratchDir = canon(new File(workDirArg, "scratch"));
-        
+
         List<String> c = new ArrayList<String>();
         c.add(childJava.getPath());
-        
+
         c.add("-classpath");
         List<File> classpath = new ArrayList<File>();
         classpath.add(jtreg_jar);
         classpath.add(childTools);
         classpath.addAll(classPathAppendArg);
         c.add(filesToAbsolutePath(classpath));
-        
+
         c.addAll(testVMOpts);
-        
+
         // Tunnel Ant file args separately from command line tests, so that
         // they can be treated specially in the child VM:  invalid files
         // specified by the user on the command line give an error;
@@ -1003,39 +1017,39 @@ public class Main {
                 throw new Fault(i18n, "main.cantWriteTempFile", e);
             }
         }
-        
+
         for (Map.Entry<?,?> e: System.getProperties().entrySet()) {
             String name = (String) e.getKey();
             if (name.startsWith("javatest."))
                 c.add("-D" + name + "=" + e.getValue());
         }
-        
+
         c.add("-Djavatest.child=true");
-        
+
         c.add(Main.class.getName());
-        
+
         for (String o: testVMOpts)
             c.add("-vmoption:" + o);
-        
+
         if (baseDirArg == null)
             c.add("-dir:" + System.getProperty("user.dir"));
-        
+
         c.addAll(childArgs);
-        
+
         String[] cmd = c.toArray(new String[c.size()]);
         File execDir = scratchDir;
-        
+
         if (debugChild) {
             System.err.println("Starting JavaTest child");
             System.err.println("Dir " + execDir + "; Command " + c);
         }
-        
+
         Runtime r = Runtime.getRuntime();
         Process p = null;
-        
+
         try {
             try {
-                
+
                 // strictly speaking, we do not need to set the CLASSPATH for the child VM,
                 // but we do it to maximize the consistency between sameVM and otherVM env.
                 // See similar code in MainAction for otherVM tests.
@@ -1043,46 +1057,46 @@ public class Main {
                 // because it will not have (and cannot have) the test-specific values.
                 String cp = "CLASSPATH=" + javatest_jar + PATHSEP + jtreg_jar
                         + PATHSEP + jdk.getToolsJar();
-                
+
                 String[] env = getEnvVars();
                 String[] env_cp = new String[env.length + 1];
                 System.arraycopy(env, 0, env_cp, 0, env.length);
                 env_cp[env_cp.length - 1] = cp;
-                
+
                 p = r.exec(cmd, env_cp, execDir);
             } catch (IOException e) {
                 err.println("cannot start child VM");
                 return EXIT_FAULT;
             }
-            
+
             InputStream childOut = p.getInputStream(); // output stream from process
             StreamCopier childOutCopier = new StreamCopier(childOut, out);
             childOutCopier.start();
             InputStream childErr = p.getErrorStream();
             StreamCopier childErrCopier = new StreamCopier(childErr, err);
             childErrCopier.start();
-            
+
             OutputStream childIn = p.getOutputStream();  // input stream to process
             if (childIn != null)
                 childIn.close();
-            
+
             // wait for the stream copiers to complete
             childOutCopier.waitUntilDone();
             childErrCopier.waitUntilDone();
-            
+
             // wait for the process to complete;
             int exitCode = p.waitFor();
             p = null;
-            
+
             if (debugChild) {
                 System.err.println("JavaTest child process: rc=" + exitCode);
             }
-            
+
             childOut.close();
             childErr.close();
-            
+
             return exitCode;
-            
+
         } catch (IOException e) {
             // TODO handle exception
             return EXIT_EXCEPTION;
@@ -1094,7 +1108,7 @@ public class Main {
                 p.destroy();
         }
     }
-    
+
     /**
      * A thread to copy an input stream to an output stream
      */
@@ -1109,7 +1123,7 @@ public class Main {
             in = new BufferedReader(new InputStreamReader(from));
             out = to;
         }
-        
+
         /**
          * Set the thread going.
          */
@@ -1130,32 +1144,32 @@ public class Main {
                 notifyAll();
             }
         }
-        
+
         public synchronized boolean isDone() {
             return done;
         }
-        
+
         /**
          * Blocks until the copy is complete, or until the thread is interrupted
          */
         public synchronized void waitUntilDone() throws InterruptedException {
             boolean interrupted = false;
-            
+
             // poll interrupted flag, while waiting for copy to complete
             while (!(interrupted = Thread.interrupted()) && !done)
                 wait(1000);
-            
+
             if (interrupted)
                 throw new InterruptedException();
         }
-        
+
         private BufferedReader in;
         private PrintWriter out;
         private boolean done;
         private static int serial;
-        
+
     }
-    
+
     private File getTestSuite(File test) {
         File f = canon(test);
         if (f.isFile())
@@ -1168,7 +1182,7 @@ public class Main {
         // TODO try and default from work directory
         return null;
     }
-    
+
     private String getEnvVar(String name) {
         for (String arg: envVarArgs) {
             if (arg.startsWith(name + "="))
@@ -1176,7 +1190,7 @@ public class Main {
         }
         return null;
     }
-    
+
     private void makeDir(File dir) throws Fault {
         // FIXME: I18N
         if (dir.isDirectory())
@@ -1187,7 +1201,7 @@ public class Main {
             throw new Fault(i18n, "main.cantCreateDir", dir);
         }
     }
-    
+
     private static List<File> pathToFiles(String path) {
         List<File> files = new ArrayList<File>();
         for (String f: path.split(File.pathSeparator)) {
@@ -1196,7 +1210,7 @@ public class Main {
         }
         return files;
     }
-    
+
     private static String filesToAbsolutePath(List<File> files) {
         StringBuffer sb = new StringBuffer();
         for (File f: files) {
@@ -1206,7 +1220,7 @@ public class Main {
         }
         return sb.toString();
     }
-    
+
     private static String join(Iterator<?> iter, String sep) {
         StringBuilder sb = new StringBuilder();
         while (iter.hasNext()) {
@@ -1216,7 +1230,7 @@ public class Main {
         }
         return sb.toString();
     }
-    
+
     /**
      * Create a RegressionParameters object based on the values set up by decodeArgs.
      * @return a RegressionParameters object
@@ -1224,26 +1238,26 @@ public class Main {
     private RegressionParameters createParameters() throws BadArgs, Fault {
         File ts = testSuiteArg;
         File wd = workDirArg;
-        
+
         try {
             // create a canonTestFile suite and work dir.
             RegressionTestSuite testSuite = new RegressionTestSuite(ts);
             RegressionParameters rp = (RegressionParameters) (testSuite.createInterview());
-            
+
             WorkDirectory workDir;
             if (WorkDirectory.isWorkDirectory(wd))
                 workDir = WorkDirectory.open(wd, testSuite);
             else
                 workDir = WorkDirectory.convert(wd, testSuite);
             rp.setWorkDirectory(workDir);
-            
+
             rp.setRetainArgs(retainArgs);
-            
+
             // set up the tests mode, and if specified tests are used, pass in the canonTestFile list.
             // ensure the tests parameters are root-relative
             File root = testSuite.getRoot();
             List<String> tests = new ArrayList<String>();
-            
+
             if (testFileArgs != null) {
                 // In the command line, the canonTestFile args are filenames, probably absolute,
                 // and possibly with non-canonical file separators (e.g. / on Windows).
@@ -1261,7 +1275,7 @@ public class Main {
                     }
                 }
             }
-            
+
             // no need to scan ant tests if all test suite selected (i.e. tests == null)
             if (tests != null && antFileArgs != null && antFileArgs.size() > 0) {
                 TestResultTable trt = workDir.getTestResultTable();
@@ -1279,10 +1293,10 @@ public class Main {
                     }
                 }
             }
-            
+
             if (tests != null && tests.size() > 0)
                 rp.setTests(tests);
-            
+
             if (keywordsExprArg != null)
                 rp.setKeywordsExpr(keywordsExprArg);
             rp.setExcludeLists(excludeListArgs.toArray(new File[excludeListArgs.size()]));
@@ -1296,7 +1310,7 @@ public class Main {
                 b[Status.NOT_RUN] = (priorStatusValuesArg.indexOf("notr") != -1);
                 rp.setPriorStatusValues(b);
             }
-            
+
             if (concurrencyArg != null) {
                 try {
                     rp.setConcurrency(Integer.parseInt(concurrencyArg));
@@ -1304,7 +1318,7 @@ public class Main {
                     throw new BadArgs(i18n, "main.badConcurrency");
                 }
             }
-            
+
             if (timeoutFactorArg != null) {
                 try {
                     rp.setTimeoutFactor(Integer.parseInt(timeoutFactorArg));
@@ -1312,10 +1326,10 @@ public class Main {
                     throw new BadArgs(i18n, "main.badTimeoutFactor");
                 }
             }
-            
+
             if (!rp.isValid())
                 throw new Fault(i18n, "main.badParams", rp.getErrorMessage());
-            
+
             for (String o: testVMOpts) {
                 if (o.startsWith("-Xrunjcov")) {
                     if (!testVMOpts.contains("-XX:+EnableJVMPIInstructionStartEvent"))
@@ -1323,23 +1337,23 @@ public class Main {
                     break;
                 }
             }
-            
+
             if (testVMOpts.size() > 0)
                 rp.setTestVMOptions(testVMOpts);
-            
+
             if (testCompilerOpts.size() > 0)
                 rp.setTestCompilerOptions(testCompilerOpts);
-            
+
             if (testJavaOpts.size() > 0)
                 rp.setTestJavaOptions(testJavaOpts);
-            
+
             rp.setCheck(checkFlag);
             rp.setSameJVM(sameJVMFlag);
             rp.setEnvVars(getEnvVars());
             rp.setJDK(jdk);
             if (ignoreKind != null)
                 rp.setIgnoreKind(ignoreKind);
-            
+
             return rp;
         } catch (TestSuite.Fault f) {
             f.printStackTrace();
@@ -1359,7 +1373,7 @@ public class Main {
             return file.getAbsoluteFile();
         }
     }
-    
+
     private String getRelativePath(File base, File f) {
         StringBuilder sb = new StringBuilder();
         for ( ; f != null; f = f.getParentFile()) {
@@ -1371,18 +1385,18 @@ public class Main {
         }
         return null;
     }
-    
+
     /**
      * Initialize the harness.  If we are in verbose mode, add our own observer.
      */
     private Harness createHarness() throws Fault {
-        
+
         // Set backup parameters; in time this might become more versatile.
         BackupPolicy backupPolicy = createBackupPolicy();
-        
+
         Harness h = new Harness();
         h.setBackupPolicy(backupPolicy);
-        
+
         if (observerClassName != null) {
             try {
                 Class observerClass;
@@ -1413,16 +1427,16 @@ public class Main {
                 throw new Fault(i18n, "main.obsvrFault", e);
             }
         }
-        
+
         // add our own observer for verbose
         if (verbose != null) {
             Harness.Observer observer = new RegressionObserver(verbose, out, err);
             h.addObserver(observer);
         }
-        
+
         return h;
     } // createHarness()
-    
+
     /**
      * Run the harness in batch mode, using the specified parameters.
      */
@@ -1430,7 +1444,7 @@ public class Main {
     throws Fault, Harness.Fault, InterruptedException {
         try {
             boolean ok;
-            
+
             if (reportOnlyFlag) {
                 testStats = new int[Status.NUM_STATES];
                 for (Iterator iter = getResultsIterator(params); iter.hasNext(); ) {
@@ -1443,15 +1457,27 @@ public class Main {
                 harness.addObserver(new BatchObserver());
                 ok = harness.batch(params);
             }
-            
+
             showResultStats(testStats);
-            
-            boolean reportRequired = !Boolean.getBoolean("javatest.noReportRequired");
+
+            boolean reportRequired =
+                    !noReportFlag && !Boolean.getBoolean("javatest.noReportRequired");
+            List<String> reportKinds =
+                    Arrays.asList(System.getProperty("javatest.report.kinds", "html text").split("[ ,]+"));
             if (reportRequired) {
                 try {
                     Report r = new Report();
                     Report.Settings s = new Report.Settings(params);
-                    s.setHtmlMainReport(true, true);
+                    if (reportKinds.contains("html")) {
+                        s.setEnableHtmlReport(true);
+                        s.setHtmlMainReport(true, true);
+                    }
+                    if (reportKinds.contains("text")) {
+                        s.setEnablePlainReport(true);
+                    }
+                    if (reportKinds.contains("xml")) {
+                        s.setEnableXmlReport(true);
+                    }
                     s.setFilter(new CompositeFilter(params.getFilters()));
                     r.writeReport(s, reportDirArg);
                     File report = new File(reportDirArg, "report.html"); // std through version 3.*
@@ -1463,15 +1489,15 @@ public class Main {
                     out.println("Error while writing report: " + e);
                 }
             }
-            
+
             if (!reportOnlyFlag)
                 out.println("Results written to " + params.getWorkDirectory().getPath());
-            
+
             // report a brief msg to System.err as well, in case System.out has
             // been redirected.
             if (!ok)
                 err.println(i18n.getString("main.testsFailed"));
-            
+
             return (testStats[Status.ERROR] > 0 ? EXIT_TEST_ERROR :
                 testStats[Status.FAILED] > 0 ? EXIT_TEST_FAILED :
                     EXIT_OK);
@@ -1480,11 +1506,11 @@ public class Main {
             err.flush();
         }
     }
-    
+
     private Iterator getResultsIterator(InterviewParameters params) {
         TestResultTable trt = params.getWorkDirectory().getTestResultTable();
         trt.waitUntilReady();
-        
+
         String[] tests = params.getTests();
         TestFilter[] filters = params.getFilters();
         if (tests == null)
@@ -1492,10 +1518,10 @@ public class Main {
         else
             return trt.getIterator(tests, filters);
     }
-    
+
     private void showTool(final InterviewParameters params) throws BadArgs {
         Startup startup = new Startup();
-        
+
         try {
             EventQueue.invokeLater(new Runnable() {
                 public void run() {
@@ -1512,13 +1538,13 @@ public class Main {
             startup.disposeLater();
         }
     } // showTool()
-    
+
     private void showResultStats(int[] stats) {
         int p = stats[Status.PASSED];
         int f = stats[Status.FAILED];
         int e = stats[Status.ERROR];
         int nr = stats[Status.NOT_RUN];
-        
+
         String msg;
         if (p + f + e + nr == 0)
             msg = i18n.getString("main.noTests");
@@ -1536,7 +1562,7 @@ public class Main {
         }
         out.println(msg);
     }
-    
+
     private BackupPolicy createBackupPolicy() {
         return new BackupPolicy() {
             public int getNumBackupsToKeep(File file) {
@@ -1555,7 +1581,7 @@ public class Main {
             private String[] ignoreExtns = StringArray.split(System.getProperty("javatest.backup.ignore", ".jtr"));
         };
     }
-    
+
     private void startHttpServer() {
         // start the http server
         // do this as early as possible, since objects may check
@@ -1563,9 +1589,9 @@ public class Main {
         // register their handlers
         HttpdServer server = new HttpdServer();
         Thread thr = new Thread(server);
-        
+
         PageGenerator.setSWName(ProductInfo.getName());
-        
+
         // format the date for i18n
         DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
         Date dt = ProductInfo.getBuildDate();
@@ -1574,15 +1600,15 @@ public class Main {
             date = df.format(dt);
         else
             date = i18n.getString("main.nobDate");
-        
+
         PageGenerator.setSWBuildDate(date);
         PageGenerator.setSWVersion(ProductInfo.getVersion());
-        
+
         thr.start();
     }
-    
+
     private String[] getEnvVars() {
-        
+
         Map<String,String> envVars = new TreeMap<String,String>();
         String osName = System.getProperty("os.name").toLowerCase();
         if (osName.startsWith("windows")) {
@@ -1594,22 +1620,22 @@ public class Main {
             addEnvVars(envVars, "PATH=/bin:/usr/bin");
         }
         addEnvVars(envVars, envVarArgs);
-        
+
         return envVars.values().toArray(new String[envVars.size()]);
     }
-    
+
     private void addEnvVars(Map<String,String> table, String list) {
         addEnvVars(table, list.split(","));
     }
-    
+
     private void addEnvVars(Map<String,String> table, String[] list) {
         addEnvVars(table, Arrays.asList(list));
     }
-    
+
     private void addEnvVars(Map<String,String> table, List<String> list) {
         if (list == null)
             return;
-        
+
         for (String s: list) {
             s = s.trim();
             if (s.length() == 0)
@@ -1625,24 +1651,24 @@ public class Main {
             }
         }
     }
-    
+
     private static String combineKeywords(String kw1, String kw2) {
         return (kw1 == null ? kw2 : kw1 + " & " + kw2);
     }
-    
+
     private File findJar(String jarProp, String pathFromHome, Class<?> c) {
         if (jarProp != null) {
             String v = System.getProperty(jarProp);
             if (v != null)
                 return new File(v);
         }
-        
+
         if (pathFromHome != null) {
             String v = System.getProperty("jtreg.home");
             if (v != null)
                 return new File(v, pathFromHome);
         }
-        
+
         if (c != null)  {
             try {
                 String className = c.getName().replace(".", "/") + ".class";
@@ -1659,10 +1685,10 @@ public class Main {
                 ignore.printStackTrace();
             }
         }
-        
+
         return null;
     }
-    
+
     /**
      * Call System.exit, taking care to get permission from the
      * JavaTestSecurityManager, if it is installed.
@@ -1675,7 +1701,7 @@ public class Main {
             ((JavaTestSecurityManager) sc).setAllowExit(true);
         System.exit(exitCode);
     }
-    
+
     // This is almost completely dead code; testStats appears unused
     // so the only use here is error handling, which perhaps can be
     // folded into RegressionObserver
@@ -1683,24 +1709,24 @@ public class Main {
         public void startingTestRun(Parameters params) {
             testStats = new int[Status.NUM_STATES];
         }
-        
+
         public void startingTest(TestResult tr) { }
-        
+
         public void finishedTest(TestResult tr) {
             testStats[tr.getStatus().getType()]++;
         }
-        
+
         public void stoppingTestRun() { }
-        
+
         public void finishedTesting() { }
-        
+
         public void finishedTestRun(boolean allOK) { }
-        
+
         public void error(String msg) {
             err.println(i18n.getString("main.error", msg));
         }
     }
-    
+
     private void checkLockFiles(File workDir, String msg) {
 //      String jc = System.getProperty("javatest.child");
 //      File jtData = new File(workDir, "jtData");
@@ -1712,12 +1738,12 @@ public class Main {
 //          }
 //      }
     }
-    
+
     //----------member variables-----------------------------------------------
-    
+
     private PrintWriter out;
     private PrintWriter err;
-    
+
     // this first group of args are the "standard" JavaTest args
     private File testSuiteArg;
     private File workDirArg;
@@ -1732,13 +1758,14 @@ public class Main {
     // TODO: consider making this a "pathset" to detect redundant specification
     // of directories and paths within them.
     private List<File> antFileArgs = new ArrayList<File>();
-    
+
     // these args are jtreg extras
     private File baseDirArg;
     private boolean sameJVMFlag;
     private JDK jdk;
     private boolean guiFlag;
     private boolean reportOnlyFlag;
+    private boolean noReportFlag;
     private static Verbose  verbose;
     private boolean httpdFlag;
     private String observerClassName;
@@ -1752,28 +1779,28 @@ public class Main {
     private List<File> classPathAppendArg = new ArrayList<File>();
     private boolean jitFlag = true;
     private Help help;
-    
-    
+
+
     // the list of args to be passed down to a  child VM
     private List<String> childArgs = new ArrayList<String>();
-    
+
     private int[] testStats;
-    
+
     private static final String AUTOMATIC = "!manual";
     private static final String MANUAL    = "manual";
-    
+
     private static final String[] DEFAULT_UNIX_ENV_VARS = {
         "DISPLAY", "HOME", "LANG", "LC_ALL", "LC_TYPE", "LPDEST", "PRINTER", "TZ", "XMODIFIERS"
     };
-    
+
     private static final String[] DEFAULT_WINDOWS_ENV_VARS = {
         "SystemDrive", "SystemRoot", "windir", "TMP", "TEMP"
     };
-    
+
     private static final String JAVATEST_ANT_FILE_LIST = "javatest.ant.file.list";
-    
+
     private static boolean debugChild = Boolean.getBoolean("javatest.regtest.debugChild");
     private static final String PATHSEP  = System.getProperty("path.separator");
-    
+
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(Main.class);
 }

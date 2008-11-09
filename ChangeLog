@@ -1,5 +1,26 @@
 2008-11-09  Mark Wielaard  <mark@klomp.org>
 
+	* test/jtreg/README,
+	test/jtreg/com/sun/javatest/diff/HTMLReporter.java,
+	test/jtreg/com/sun/javatest/diff/Main.java,
+	test/jtreg/com/sun/javatest/diff/MultiMap.java,
+	test/jtreg/com/sun/javatest/diff/ReportReader.java,
+	test/jtreg/com/sun/javatest/diff/WorkDirectoryReader.java,
+	test/jtreg/com/sun/javatest/diff/i18n.properties,
+	test/jtreg/com/sun/javatest/regtest/Main.java,
+	test/jtreg/com/sun/javatest/regtest/MainAction.java,
+	test/jtreg/com/sun/javatest/regtest/RegressionSecurityManager.java,
+	test/jtreg/com/sun/javatest/regtest/RegressionTestFinder.java,
+	test/jtreg/com/sun/javatest/regtest/i18n.properties,
+	test/jtreg/com/sun/javatest/diff/Diff.java,
+	test/jtreg/com/sun/javatest/diff/Fault.java,
+	test/jtreg/com/sun/javatest/diff/HTMLWriter.java,
+	test/jtreg/com/sun/javatest/diff/StandardDiff.java,
+	test/jtreg/com/sun/javatest/diff/SuperDiff.java,
+	Upgrade to jtreg-4_0-src-b02-15_oct_2008.
+
+2008-11-09  Mark Wielaard  <mark@klomp.org>
+
 	* .hgignore: Add test/check-.*log.
 
 2008-11-08  Mark Wielaard  <mark@klomp.org>

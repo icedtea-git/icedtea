@@ -40,6 +40,7 @@ import java.util.Set;
 import com.sun.javatest.finder.TagTestFinder;
 import com.sun.javatest.finder.HTMLCommentStream;
 import com.sun.javatest.finder.ShScriptCommentStream;
+import java.util.regex.Pattern;
 
 /**
   * This is a specific implementation of the TagTestFinder which is to be used
@@ -169,42 +170,43 @@ public class RegressionTestFinder extends TagTestFinder
         }
 
         // force more key words based on actions
-        String name;
         String value = newTagValues.get("run");
 
         String origKeywords = newTagValues.get("keywords");
         String addKeywords  = "";
 
-        if (value.indexOf(name = "othervm") != -1)
-            addKeywords += "othervm ";
+        if (match(value, OTHERVM_OPTION))
+            addKeywords += " othervm";
 
-        if (value.indexOf(name = "manual") != -1)
-            addKeywords += "manual ";
+        if (match(value, MANUAL_OPTION))
+            addKeywords += " manual";
 
-        if (value.indexOf(name = "shell") != -1)
-            addKeywords += "shell ";
+        if (match(value, SHELL_ACTION))
+            addKeywords += " shell";
 
-        if (value.indexOf(name = "ignore") != -1)
-            addKeywords += "ignore ";
+        if (match(value, IGNORE_ACTION))
+            addKeywords += " ignore";
 
         if (!addKeywords.equals("")) {
             if (origKeywords == null)
                 newTagValues.put("keywords", addKeywords.trim());
             else
-                newTagValues.put("keywords", origKeywords + " " + addKeywords.trim());
+                newTagValues.put("keywords", origKeywords + addKeywords);
         }
 
         /*
-        for (Enumeration e = newTagValues.keys(); e.hasMoreElements(); ) {
-            name  = (String) e.nextElement();
-            value = (String) newTagValues.get(name);
-            System.out.println("NAME: " + name + " VALUE: " + value);
+        for (Map.Entry<String,String> e: newTagValues.entrySet()) {
+            System.out.println("NAME: " + e.getKey() + " VALUE: " + e.getValue());
 //          if (name.equals("keywords"))
 //              System.out.println(currFile + " " + "`" + value + "'");
         }
         */
 
         return newTagValues;
+    }
+    
+    private static boolean match(CharSequence cs, Pattern p) {
+        return p.matcher(cs).matches();
     }
 
     /**
@@ -221,7 +223,6 @@ public class RegressionTestFinder extends TagTestFinder
     {
         Map<String,String> tagValues = (Map<String,String>) tv;
         
-        File currFile = getCurrentFile();
         // check for valid tag name, don't produce error message for the
         // the SCCS sequence '%' 'W' '%'
         if (name.startsWith("(#)"))
@@ -552,6 +553,12 @@ public class RegressionTestFinder extends TagTestFinder
     
     private static final boolean allowLocalKeys = 
             Boolean.parseBoolean(System.getProperty("javatest.regtest.allowLocalKeys", "true"));
+    
+    private static final Pattern 
+        OTHERVM_OPTION = Pattern.compile(".*/othervm[/ \t].*",    Pattern.DOTALL),
+        MANUAL_OPTION  = Pattern.compile(".*/manual[/= \t].*",    Pattern.DOTALL),
+        SHELL_ACTION   = Pattern.compile(".*[ \t]shell[/ \t].*",  Pattern.DOTALL),
+        IGNORE_ACTION  = Pattern.compile(".*[ \t]ignore[/ \t].*", Pattern.DOTALL);
 
     //----------member variables------------------------------------------------
 

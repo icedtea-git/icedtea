@@ -48,12 +48,12 @@ public class WorkDirectoryReader implements DiffReader {
     public static boolean accepts(File f) {
         return WorkDirectory.isWorkDirectory(f);
     }
-    
+
     /** Creates a new instance of WorkDirectoryReader */
-    public WorkDirectoryReader(File file) 
+    public WorkDirectoryReader(File file)
             throws FileNotFoundException, WorkDirectory.Fault, TestSuite.Fault {
         this.file = file;
-        
+
         // Because regtest testsuites don't contain testsuite.jtt
         // files, we can't use the standard WorkDirectory.open call.
         File tsp = getTestSuitePath(file);
@@ -63,31 +63,31 @@ public class WorkDirectoryReader implements DiffReader {
         } else
             wd = WorkDirectory.open(file);
     }
-    
-    public String getFileType() {
-        return i18n.getString("wd.name");
-    }
-    
+
     public File getFile() {
         return file;
     }
-    
+
+    public String getFileType() {
+        return i18n.getString("wd.name");
+    }
+
     public File getWorkDirectory() {
         return wd.getRoot();
     }
-    
+
     @SuppressWarnings("unchecked")
     public Iterator<TestResult> iterator() {
         TestResultTable trt = wd.getTestResultTable();
         trt.waitUntilReady();
         return trt.getIterator();
     }
-    
+
     private static File getTestSuitePath(File workDir) {
         File f = new File(new File(workDir, "jtData"), "testsuite");
-        if (!f.exists()) 
+        if (!f.exists())
             return null;
-          
+
         InputStream in = null;
         try {
             in = new BufferedInputStream(new FileInputStream(f));
@@ -105,9 +105,9 @@ public class WorkDirectoryReader implements DiffReader {
             return null;
         }
     }
-    
+
     private File file;;
     private WorkDirectory wd;
-    
+
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(WorkDirectoryReader.class);
 }
