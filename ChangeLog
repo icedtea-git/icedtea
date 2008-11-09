@@ -1,5 +1,9 @@
 2008-11-09  Mark Wielaard  <mark@klomp.org>
 
+	* Makefile.am (check-langtools): Run jtreg with -samevm.
+
+2008-11-09  Mark Wielaard  <mark@klomp.org>
+
 	* test/jtreg/README,
 	test/jtreg/com/sun/javatest/diff/HTMLReporter.java,
 	test/jtreg/com/sun/javatest/diff/Main.java,

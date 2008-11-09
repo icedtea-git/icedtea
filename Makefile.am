@@ -1588,7 +1588,7 @@ check-langtools: stamps/jtreg.stamp
 	mkdir -p test/langtools/JTwork test/langtools/JTreport
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/langtools/JTwork -r:test/langtools/JTreport \
-		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		-s -jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
 		`pwd`/openjdk/langtools/test \
 	    | tee test/$@.log
 
