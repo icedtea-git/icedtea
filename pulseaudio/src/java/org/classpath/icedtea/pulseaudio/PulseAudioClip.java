@@ -46,6 +46,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 
+import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 import org.classpath.icedtea.pulseaudio.Stream.WriteListener;
 
 public class PulseAudioClip extends PulseAudioDataLine implements Clip,
@@ -144,6 +145,9 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		};
 
 		stream.addWriteListener(writeListener);
+
+		Debug.println(DebugLevel.Verbose,
+				"PulseAudioClip$ClipThread.writeFrames(): Writing");
 
 		int remainingFrames = lastFrame - startingFrame - 1;
 		while (remainingFrames > 0) {
@@ -249,6 +253,9 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		mixer.removeSourceLine(this);
 
 		super.close();
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioClip.close(): "
+				+ "Clip closed");
 
 	}
 
@@ -416,6 +423,7 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		mixer.addSourceLine(this);
 
 		isOpen = true;
+		Debug.println(DebugLevel.Verbose, "PulseAudioClip.open(): Clip opened");
 
 	}
 

@@ -1,4 +1,4 @@
-/* PulseAudioMixerProvider.java
+/* EventLoop.java
    Copyright (C) 2008 Red Hat, Inc.
 
 This file is part of IcedTea.
@@ -37,31 +37,68 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.Mixer.Info;
+public class Debug {
 
-public class PulseAudioMixerProvider extends
-		javax.sound.sampled.spi.MixerProvider {
-
-	public PulseAudioMixerProvider() {
-		Debug.initialize();
+	public enum DebugLevel {
+		Verbose, Debug, Info, Warning, Error, None
 	}
 
-	@Override
-	public Mixer getMixer(Info info) {
-		// System.out.println("DEBUG: getMixer called");
-		if (info.equals(PulseAudioMixerInfo.getInfo())) {
-			return PulseAudioMixer.getInstance();
+	private static DebugLevel currentDebugLevel = DebugLevel.None;
+
+	public static void initialize() {
+		// System.out.println("PulseAudio: initializing Debug");
+
+		String systemSetting;
+		try {
+			systemSetting = System.getProperty("pulseaudio.debugLevel");
+		} catch (SecurityException e) {
+			// sigh, we cant read that property
+			systemSetting = null;
+		}
+
+		DebugLevel wantedLevel;
+		try {
+			wantedLevel = DebugLevel.valueOf(systemSetting);
+
+		} catch (IllegalArgumentException e) {
+			wantedLevel = DebugLevel.Info;
+		} catch (NullPointerException e) {
+			wantedLevel = DebugLevel.None;
+		}
+
+		currentDebugLevel = wantedLevel;
+		println(DebugLevel.Info, "Using debug level: " + currentDebugLevel);
+	}
+
+	public static void println(String string) {
+		println(DebugLevel.Info, string);
+	}
+
+	public static void print(DebugLevel level, String string) {
+		int result = level.compareTo(currentDebugLevel);
+		if (result >= 0) {
+			if (level.compareTo(DebugLevel.Error) >= 0) {
+				System.err.print(string);
+			} else {
+				System.out.print(string);
+			}
 		} else {
-			throw new IllegalArgumentException("Mixer type not supported");
+			// do nothing
 		}
 	}
 
-	@Override
-	public Info[] getMixerInfo() {
-		// System.out.println("DEBUG: get mixer info called");
-		Mixer.Info[] m = { PulseAudioMixerInfo.getInfo() };
-		return m;
+	public static void println(DebugLevel level, String string) {
+
+		int result = level.compareTo(currentDebugLevel);
+		if (result >= 0) {
+			if (level.compareTo(DebugLevel.Error) >= 0) {
+				System.err.println("DEBUG: pulse-java: " + string);
+			} else {
+				System.out.println("DEBUG: pulse-java: " + string);
+			}
+		} else {
+			// do nothing
+		}
 	}
 
 }

@@ -1,5 +1,30 @@
 2008-11-10  Omair Majid  <omajid@redhat.com>
 
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Debug.java
+	New class containing debugging functions.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	(run): Print some debugging info.
+	(update): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(ClipThread.writeFrames): Likewise.
+	(close): Likewise.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(PulseAudioMixer): Likewise.
+	(getLine): Likewise.
+	(close): Likewise.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerProvider.java
+	(PulseAudioMixerProvider): Initialize Debug class.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(open): Print some debug info.
+	(close): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(open): Likewise.
+	(close): Likewise.
+
+2008-11-10  Omair Majid  <omajid@redhat.com>
+
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
 	(close): Dont check for permission to play audio. Always granted.
 	Infact, checking it causes an AccessControlException for untrusted

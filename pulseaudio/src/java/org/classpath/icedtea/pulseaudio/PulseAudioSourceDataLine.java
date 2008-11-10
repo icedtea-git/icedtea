@@ -41,10 +41,11 @@ import java.util.ArrayList;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.AudioPermission;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+
+import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 
 public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 		SourceDataLine, PulseAudioPlaybackLine {
@@ -77,6 +78,9 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 
 		PulseAudioMixer parentMixer = PulseAudioMixer.getInstance();
 		parentMixer.addSourceLine(this);
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioSourceDataLine.open(): "
+				+ "line opened");
 
 	}
 
@@ -327,6 +331,10 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 		parent.removeSourceLine(this);
 
 		super.close();
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioSourceDataLine.close():"
+				+ " line closed");
+
 	}
 
 	public javax.sound.sampled.Line.Info getLineInfo() {
