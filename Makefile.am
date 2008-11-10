@@ -89,8 +89,7 @@ install:
 	$(ICEDTEAPLUGIN_CLEAN) hotspot hotspot-helper clean-extra \
 	clean-jtreg clean-jtreg-reports clean-visualvm clean-nbplatform
 
-EXTRA_DIST = rt generated patches/openjdk-*.patch \
-	patches/icedtea-*.patch \
+EXTRA_DIST = rt generated $(abs_top_srcdir)/patches/icedtea-*.patch \
 	gcjwebplugin.cc tools-copy contrib ports \
 	extra overlays \
 	javaws.png javaws.desktop visualvm.desktop \
