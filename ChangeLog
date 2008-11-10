@@ -1,3 +1,10 @@
+2008-11-09  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Bump to b39.
+	* patches/icedtea-hotspot-use-idx_t.patch,
+	* patches/icedtea-security-updates.patch:
+	Remove parts applied/changed in b39.
+	
 2008-11-07  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-jsoundhs.patch: Added two more diffs to remove all uses 

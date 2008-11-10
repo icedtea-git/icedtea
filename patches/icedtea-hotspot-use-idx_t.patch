@@ -1,65 +1,9 @@
---- openjdk/hotspot/src/share/vm/oops/generateOopMap.hpp.orig	2008-07-10 22:04:33.000000000 +0200
-+++ openjdk/hotspot/src/share/vm/oops/generateOopMap.hpp	2008-08-14 23:08:36.000000000 +0200
-@@ -341,7 +341,7 @@
-   BasicBlock *    _basic_blocks;             // Array of basicblock info
-   int             _gc_points;
-   int             _bb_count;
--  uintptr_t *     _bb_hdr_bits;
-+  size_t *     _bb_hdr_bits;
+diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/methodLiveness.cpp openjdk/hotspot/src/share/vm/compiler/methodLiveness.cpp
+--- openjdk.orig/hotspot/src/share/vm/compiler/methodLiveness.cpp	2008-11-06 08:40:55.000000000 +0000
++++ openjdk/hotspot/src/share/vm/compiler/methodLiveness.cpp	2008-11-10 00:55:09.000000000 +0000
+@@ -567,15 +567,15 @@
  
-   // Basicblocks methods
-   void          initialize_bb               ();
---- openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp.orig	2008-08-14 22:58:36.000000000 +0200
-+++ openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp	2008-08-14 23:03:33.000000000 +0200
-@@ -374,19 +374,19 @@
-   _gc_points = 0;
-   _bb_count  = 0;    
-   int size = binsToHold(method()->code_size());
--  _bb_hdr_bits = NEW_RESOURCE_ARRAY(uintptr_t,size);
--  memset(_bb_hdr_bits, 0, size*sizeof(uintptr_t));
-+  _bb_hdr_bits = NEW_RESOURCE_ARRAY(size_t,size);
-+  memset(_bb_hdr_bits, 0, size*sizeof(size_t));
- }
-  
- void GenerateOopMap ::set_bbmark_bit(int bci) {
-   int idx  = bci >> LogBitsPerWord;
--  uintptr_t bit = (uintptr_t)1 << (bci & (BitsPerWord-1));
-+  size_t bit = (size_t)1 << (bci & (BitsPerWord-1));
-   _bb_hdr_bits[idx] |= bit;
- }
  
- void GenerateOopMap ::clear_bbmark_bit(int bci) {
-   int idx   = bci >> LogBitsPerWord;
--  uintptr_t bit = (uintptr_t)1 << (bci & (BitsPerWord-1));
-+  size_t bit = (size_t)1 << (bci & (BitsPerWord-1));
-   _bb_hdr_bits[idx] &= (~bit);
- }
- 
-@@ -1027,7 +1027,7 @@
-          "new method size is too small");
-   int newWords = binsToHold(new_method_size);
- 
--  uintptr_t * new_bb_hdr_bits = NEW_RESOURCE_ARRAY(uintptr_t, newWords);
-+  size_t * new_bb_hdr_bits = NEW_RESOURCE_ARRAY(size_t, newWords);
- 
-   BitMap bb_bits(new_bb_hdr_bits, new_method_size);
-   bb_bits.clear();
---- openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp.orig	2008-07-10 22:04:31.000000000 +0200
-+++ openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2008-08-14 22:59:30.000000000 +0200
-@@ -6162,7 +6162,7 @@
-   }
-   assert(_virtual_space.committed_size() == brs.size(),
-          "didn't reserve backing store for all of CMS bit map?");
--  _bm.set_map((uintptr_t*)_virtual_space.low());
-+  _bm.set_map((size_t*)_virtual_space.low());
-   assert(_virtual_space.committed_size() << (_shifter + LogBitsPerByte) >=
-          _bmWordSize, "inconsistency in bit map sizing");
-   _bm.set_size(_bmWordSize >> _shifter);
---- openjdk/hotspot/src/share/vm/compiler/methodLiveness.cpp.orig	2008-07-10 22:04:30.000000000 +0200
-+++ openjdk/hotspot/src/share/vm/compiler/methodLiveness.cpp	2008-08-14 22:59:30.000000000 +0200
-@@ -569,15 +569,15 @@
- 
-     
  MethodLiveness::BasicBlock::BasicBlock(MethodLiveness *analyzer, int start, int limit) :
 -         _gen((uintptr_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
 +         _gen((size_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
@@ -78,7 +22,7 @@
                           analyzer->bit_map_size_bits()),
           _last_bci(-1) {
    _analyzer = analyzer;
-@@ -994,7 +994,7 @@
+@@ -992,7 +992,7 @@
  }
  
  MethodLivenessResult MethodLiveness::BasicBlock::get_liveness_at(ciMethod* method, int bci) {
@@ -87,196 +31,15 @@
                  _analyzer->bit_map_size_bits());
    answer.set_is_valid();
  
---- openjdk/hotspot/src/share/vm/compiler/methodLiveness.hpp.orig	2008-07-10 22:04:30.000000000 +0200
-+++ openjdk/hotspot/src/share/vm/compiler/methodLiveness.hpp	2008-08-14 22:59:30.000000000 +0200
-@@ -32,7 +32,7 @@
-   bool _is_valid;
- 
-  public:
--  MethodLivenessResult(uintptr_t* map, idx_t size_in_bits)
-+  MethodLivenessResult(idx_t* map, idx_t size_in_bits)
-     : BitMap(map, size_in_bits)
-     , _is_valid(false)
-   {}
---- openjdk/hotspot/src/share/vm/utilities/bitMap.cpp.orig	2008-07-10 22:04:37.000000000 +0200
-+++ openjdk/hotspot/src/share/vm/utilities/bitMap.cpp	2008-08-14 23:06:51.000000000 +0200
-@@ -46,7 +46,7 @@
- void BitMap::resize(idx_t size_in_bits) {
-   assert(size_in_bits >= 0, "just checking");
-   size_t old_size_in_words = size_in_words();
--  uintptr_t* old_map = map();
-+  idx_t* old_map = map();
-   _size = size_in_bits;
-   size_t new_size_in_words = size_in_words();
-   _map = NEW_RESOURCE_ARRAY(idx_t, new_size_in_words);
-@@ -109,11 +109,11 @@
- }
- 
- inline void BitMap::set_large_range_of_words(idx_t beg, idx_t end) {
--  memset(_map + beg, ~(unsigned char)0, (end - beg) * sizeof(uintptr_t));
-+  memset(_map + beg, ~(unsigned char)0, (end - beg) * sizeof(idx_t));
- }
- 
- inline void BitMap::clear_large_range_of_words(idx_t beg, idx_t end) {
--  memset(_map + beg, 0, (end - beg) * sizeof(uintptr_t));
-+  memset(_map + beg, 0, (end - beg) * sizeof(idx_t));
- }
- 
- inline BitMap::idx_t BitMap::word_index_round_up(idx_t bit) const {
-@@ -285,11 +285,11 @@
- 
- bool BitMap::contains(const BitMap other) const {
-   assert(size() == other.size(), "must have same size");
--  uintptr_t* dest_map = map();
--  uintptr_t* other_map = other.map();
-+  idx_t* dest_map = map();
-+  idx_t* other_map = other.map();
-   idx_t size = size_in_words();
-   for (idx_t index = 0; index < size_in_words(); index++) {
--    uintptr_t word_union = dest_map[index] | other_map[index];
-+    idx_t word_union = dest_map[index] | other_map[index];
-     // If this has more bits set than dest_map[index], then other is not a
-     // subset.
-     if (word_union != dest_map[index]) return false;
-@@ -299,8 +299,8 @@
- 
- bool BitMap::intersects(const BitMap other) const {
-   assert(size() == other.size(), "must have same size");
--  uintptr_t* dest_map = map();
--  uintptr_t* other_map = other.map();
-+  idx_t* dest_map = map();
-+  idx_t* other_map = other.map();
-   idx_t size = size_in_words();
-   for (idx_t index = 0; index < size_in_words(); index++) {
-     if ((dest_map[index] & other_map[index]) != 0) return true;
-@@ -411,24 +411,24 @@
- }
- 
- bool BitMap::is_full() const {
--  uintptr_t* word = map();
-+  idx_t* word = map();
-   idx_t rest = size();
-   for (; rest >= (idx_t) BitsPerWord; rest -= BitsPerWord) {
--    if (*word != (uintptr_t) AllBits) return false;
-+    if (*word != (idx_t) AllBits) return false;
-     word++;
-   }
--  return rest == 0 || (*word | ~right_n_bits((int)rest)) == (uintptr_t) AllBits;
-+  return rest == 0 || (*word | ~right_n_bits((int)rest)) == (idx_t) AllBits;
- }
- 
- 
- bool BitMap::is_empty() const {
--  uintptr_t* word = map();
-+  idx_t* word = map();
-   idx_t rest = size();
-   for (; rest >= (idx_t) BitsPerWord; rest -= BitsPerWord) {
--    if (*word != (uintptr_t) NoBits) return false;
-+    if (*word != (idx_t) NoBits) return false;
-     word++;
-   }
--  return rest == 0 || (*word & right_n_bits((int)rest)) == (uintptr_t) NoBits;
-+  return rest == 0 || (*word & right_n_bits((int)rest)) == (idx_t) NoBits;
- }
- 
- void BitMap::clear_large() {
-@@ -448,7 +448,7 @@
-        offset < rightOffset && index < endIndex;
-        offset = (++index) << LogBitsPerWord) {
-     idx_t rest = map(index) >> (offset & (BitsPerWord - 1));
--    for (; offset < rightOffset && rest != (uintptr_t)NoBits; offset++) {
-+    for (; offset < rightOffset && rest != (idx_t)NoBits; offset++) {
-       if (rest & 1) {
-         blk->do_bit(offset);
-         //  resample at each closure application
-@@ -481,7 +481,7 @@
-   // check bits including and to the _left_ of offset's position
-   idx_t pos = bit_in_word(res_offset);
-   idx_t res = map(index) >> pos;
--  if (res != (uintptr_t)NoBits) {
-+  if (res != (idx_t)NoBits) {
-     // find the position of the 1-bit
-     for (; !(res & 1); res_offset++) {
-       res = res >> 1;
-@@ -492,7 +492,7 @@
-   // skip over all word length 0-bit runs
-   for (index++; index < r_index; index++) {
-     res = map(index);
--    if (res != (uintptr_t)NoBits) {
-+    if (res != (idx_t)NoBits) {
-       // found a 1, return the offset
-       for (res_offset = index << LogBitsPerWord; !(res & 1);
-            res_offset++) {
-@@ -523,7 +523,7 @@
-   idx_t pos = res_offset & (BitsPerWord - 1);
-   idx_t res = (map(index) >> pos) | left_n_bits((int)pos);
- 
--  if (res != (uintptr_t)AllBits) {
-+  if (res != (idx_t)AllBits) {
-     // find the position of the 0-bit
-     for (; res & 1; res_offset++) {
-       res = res >> 1;
-@@ -534,7 +534,7 @@
-   // skip over all word length 1-bit runs
-   for (index++; index < r_index; index++) {
-     res = map(index);
--    if (res != (uintptr_t)AllBits) {
-+    if (res != (idx_t)AllBits) {
-       // found a 0, return the offset
-       for (res_offset = index << LogBitsPerWord; res & 1;
-            res_offset++) {
-@@ -561,7 +561,7 @@
- #endif
- 
- 
--BitMap2D::BitMap2D(uintptr_t* map, idx_t size_in_slots, idx_t bits_per_slot)
-+BitMap2D::BitMap2D(idx_t* map, idx_t size_in_slots, idx_t bits_per_slot)
-   : _bits_per_slot(bits_per_slot)
-   , _map(map, size_in_slots * bits_per_slot)
- {
---- openjdk/hotspot/src/share/vm/utilities/bitMap.hpp.orig	2008-07-10 22:04:37.000000000 +0200
-+++ openjdk/hotspot/src/share/vm/utilities/bitMap.hpp	2008-08-14 23:08:18.000000000 +0200
-@@ -35,7 +35,7 @@
- 
- 
- // Operations for bitmaps represented as arrays of unsigned 32- or 64-bit
--// integers (uintptr_t).
-+// integers (size_t).
- //
- // Bit offsets are numbered from 0 to size-1
- 
-@@ -82,7 +82,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/bitMap.hpp openjdk/hotspot/src/share/vm/utilities/bitMap.hpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/bitMap.hpp	2008-11-06 08:40:58.000000000 +0000
++++ openjdk/hotspot/src/share/vm/utilities/bitMap.hpp	2008-11-10 00:57:20.000000000 +0000
+@@ -73,7 +73,7 @@
  
    // Set a word to a specified value or to all ones; clear a word.
-   void set_word  (idx_t word, idx_t val) { _map[word] = val; }
+   void set_word  (idx_t word, bm_word_t val) { _map[word] = val; }
 -  void set_word  (idx_t word)            { set_word(word, ~(uintptr_t)0); }
 +  void set_word  (idx_t word)            { set_word(word, ~(idx_t)0); }
    void clear_word(idx_t word)            { _map[word] = 0; }
  
    // Utilities for ranges of bits.  Ranges are half-open [beg, end).
-@@ -313,7 +313,7 @@
- 
-  public:
-   // Construction. bits_per_slot must be greater than 0.
--  BitMap2D(uintptr_t* map, idx_t size_in_slots, idx_t bits_per_slot);
-+  BitMap2D(idx_t* map, idx_t size_in_slots, idx_t bits_per_slot);
- 
-   // Allocates necessary data structure in resource area. bits_per_slot must be greater than 0.
-   BitMap2D(idx_t size_in_slots, idx_t bits_per_slot);
-@@ -366,13 +366,13 @@
- 
- 
- inline void BitMap::set_range_of_words(idx_t beg, idx_t end) {
--  uintptr_t* map = _map;
--  for (idx_t i = beg; i < end; ++i) map[i] = ~(uintptr_t)0;
-+  idx_t* map = _map;
-+  for (idx_t i = beg; i < end; ++i) map[i] = ~(idx_t)0;
- }
- 
- 
- inline void BitMap::clear_range_of_words(idx_t beg, idx_t end) {
--  uintptr_t* map = _map;
-+  idx_t* map = _map;
-   for (idx_t i = beg; i < end; ++i) map[i] = 0;
- }
- 
