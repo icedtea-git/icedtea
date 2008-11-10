@@ -1,3 +1,10 @@
+2008-11-10  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	CHANGES.txt,SoftAudioPusher.java,SoftFilter.java,
+	SoftJitterCorrector.java,SoftMainMixer.java,SoftVoice.java:
+	Updated to new Gervill CVS.
+
 2008-11-09  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am (check-langtools): Run jtreg with -samevm.
