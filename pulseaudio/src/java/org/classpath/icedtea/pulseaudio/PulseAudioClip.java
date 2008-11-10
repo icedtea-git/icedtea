@@ -41,7 +41,6 @@ import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioPermission;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
@@ -231,10 +230,6 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 	@Override
 	public void close() {
 
-		/* check for permission to play audio */
-		AudioPermission perm = new AudioPermission("play", null);
-		perm.checkGuard(null);
-
 		if (!isOpen) {
 			throw new IllegalStateException("line already closed");
 		}
@@ -396,10 +391,6 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 	@Override
 	public void open(AudioFormat format, byte[] data, int offset, int bufferSize)
 			throws LineUnavailableException {
-
-		/* check for permission to play audio */
-		AudioPermission perm = new AudioPermission("play", null);
-		perm.checkGuard(null);
 
 		super.open(format);
 		this.data = new byte[bufferSize];

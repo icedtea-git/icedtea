@@ -1,5 +1,24 @@
 2008-11-10  Omair Majid  <omajid@redhat.com>
 
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(close): Dont check for permission to play audio. Always granted.
+	Infact, checking it causes an AccessControlException for untrusted
+	applets. The ALSA based backend doesnt check this permission at all.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(getLine): Likewise.
+	(getSourceLines): Likewise.
+	(close): Likewise.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(open): Likewise.
+	(close): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java
+	(open): Likewise.
+	(close): Likewise.
+
+2008-11-10  Omair Majid  <omajid@redhat.com>
+
 	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
 	(Java_org_classpath_icedtea_pulseaudio_EventLoop_native_1set_1sink_1volume):
 	Deallocate unused memory.

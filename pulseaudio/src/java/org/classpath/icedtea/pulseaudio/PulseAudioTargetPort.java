@@ -37,7 +37,6 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
-import javax.sound.sampled.AudioPermission;
 import javax.sound.sampled.Port;
 
 public class PulseAudioTargetPort extends PulseAudioPort {
@@ -55,10 +54,6 @@ public class PulseAudioTargetPort extends PulseAudioPort {
 
 	public void open() {
 
-		/* check for permission to play audio */
-		AudioPermission perm = new AudioPermission("play", null);
-		perm.checkGuard(null);
-
 		super.open();
 
 		PulseAudioMixer parent = PulseAudioMixer.getInstance();
@@ -66,10 +61,6 @@ public class PulseAudioTargetPort extends PulseAudioPort {
 	}
 
 	public void close() {
-
-		/* check for permission to play audio */
-		AudioPermission perm = new AudioPermission("play", null);
-		perm.checkGuard(null);
 
 		if (!isOpen) {
 			throw new IllegalStateException("not open, so cant close Port");
