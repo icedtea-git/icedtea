@@ -1,3 +1,9 @@
+2008-11-10  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	(Java_org_classpath_icedtea_pulseaudio_EventLoop_native_1set_1sink_1volume):
+	Deallocate unused memory.
+
 2008-11-10  Mark Wielaard  <mark@klomp.org>
 
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
