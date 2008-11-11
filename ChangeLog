@@ -1,3 +1,7 @@
+2008-11-11  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-uname.patch: Fix ARCH on powerpc-linux-gnu.
+
 2008-11-10  Omair Majid  <omajid@redhat.com>
 
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Debug.java
