@@ -1,39 +1,42 @@
-#!/bin/sh
+#!/usr/bin/perl -w
+use strict;
+use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
+use constant STRIP_ARGS => qw(-Werror);
 
-case "$*" in
-  *-bootclasspath*) ;;
-  *) bcoption="-bootclasspath @LIBGCJ_JAR@"
-esac
+my @bcoption;
+push @bcoption, '-bootclasspath', glob '@LIBGCJ_JAR@'
+    unless grep {$_ eq '-bootclasspath'} @ARGV;
 
 # Work around ecj's inability to handle duplicate command-line
 # options.
 
-NEW_ARGS="$@"
+my @new_args = @ARGV;
 
-if echo "$@" | grep -q '\-source\ .*\-source\ '
-then
-  NEW_ARGS=`echo $NEW_ARGS | sed -e 's/-source\ *1\.[3456]//1'`
-fi
+for my $opt (NO_DUP_ARGS) 
+{
+    my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
+    if (@indices > 1) {
+        shift @indices;    # keep last instance only
+        splice @new_args, $_, 2 for @indices;
+    }
+}
 
-if echo "$@" | grep -q '\-d\ .*\-d\ '
-then
-  NEW_ARGS=`echo $NEW_ARGS | sed -e 's/-d\ *[^\ ]*//1'`
-fi
+for my $opt (STRIP_ARGS) 
+{
+    my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
+    splice @new_args, $_, 1 for @indices;
+}
 
-if echo "$@" | grep -q '\-encoding\ .*\-encoding\ '
-then
-  NEW_ARGS=`echo $NEW_ARGS | sed -e 's/-encoding\ *[^\ ]*//1'`
-fi
+my @CLASSPATH = ('@ECJ_JAR@');
+push @CLASSPATH, split /:/, $ENV{CLASSPATH} if exists $ENV{CLASSPATH};
+$ENV{CLASSPATH} = join ':', @CLASSPATH;
 
-if echo "$@" | grep -q '\-Werror'
-then
-  NEW_ARGS=`echo $NEW_ARGS | sed -e 's/-Werror//1'`
-fi
-
-if [ -e @abs_top_builddir@/native-ecj ] ; then
-    @abs_top_builddir@/native-ecj -1.5 -nowarn $bcoption $NEW_ARGS ;
+if ( -e "@abs_top_builddir@/native-ecj" )
+{
+    exec '@abs_top_builddir@/native-ecj', '-1.5', '-nowarn', @bcoption, @new_args ;
+}
 else
-    CLASSPATH=@ECJ_JAR@${CLASSPATH:+:}$CLASSPATH \
-     @JAVA@ org.eclipse.jdt.internal.compiler.batch.Main -1.5 -nowarn $bcoption $NEW_ARGS
-fi
-
+{
+    exec '@JAVA@', 'org.eclipse.jdt.internal.compiler.batch.Main', '-1.5',
+    '-nowarn', @bcoption, @new_args;
+}

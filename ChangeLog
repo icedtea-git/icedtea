@@ -1,5 +1,16 @@
 2008-11-10  Andrew John Hughes  <ahughes@redhat.com>
 
+	* javac.in:
+	Update with native ecj changes.
+
+2008-09-18  C. K. Jester-Young  <cky944@gmail.com>
+
+	* javac.in:
+	Convert to Perl script to avoid
+	quoting errors.
+	
+2008-11-10  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am: Fix make dist.
 
 2008-11-09  Andrew John Hughes  <ahughes@redhat.com>
