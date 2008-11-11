@@ -1,3 +1,15 @@
+2008-11-11  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
+	(os::atomic_copy64): New method.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	(_Copy_conjoint_jlongs_atomic): Use the above.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp
+	(OrderAccess::load_acquire): Likewise.
+	(OrderAccess::release_store): Likewise.
+	(OrderAccess::store_fence): Likewise.
+	(OrderAccess::release_store_fence): Likewise.
+	
 2008-11-11  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-uname.patch: Fix ARCH on powerpc-linux-gnu.

@@ -410,14 +410,14 @@ extern "C" {
     if (from > to) {
       jlong *end = from + count;
       while (from < end)
-        *(to++) = *(from++);
+        os::atomic_copy64(from++, to++);
     }
     else if (from < to) {
       jlong *end = from;
       from += count - 1;
       to   += count - 1;
       while (from >= end)
-        *(to--) = *(from--);
+        os::atomic_copy64(from--, to--);
     }
   }
 
