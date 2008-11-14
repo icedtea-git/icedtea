@@ -45,7 +45,7 @@ public class PulseAudioSourcePort extends PulseAudioPort {
 	/* aka mic */
 
 	static {
-		System.loadLibrary("pulse-java");
+		SecurityWrapper.loadNativeLibrary();
 	}
 
 	public PulseAudioSourcePort(String name) {

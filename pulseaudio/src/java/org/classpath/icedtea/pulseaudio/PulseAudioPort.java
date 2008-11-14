@@ -63,7 +63,7 @@ public abstract class PulseAudioPort extends PulseAudioLine implements Port,
 	private PulseAudioVolumeControl volumeControl;
 
 	static {
-		System.loadLibrary("pulse-java");
+		SecurityWrapper.loadNativeLibrary();
 	}
 
 	public PulseAudioPort(String name) {

@@ -104,11 +104,10 @@ public class Stream {
 
 	public static final String DEFAULT_DEVICE = null;
 
-	@SuppressWarnings("unused")
 	private byte[] streamPointer;
 
 	static {
-		System.loadLibrary("pulse-java");
+		SecurityWrapper.loadNativeLibrary();
 	}
 
 	private Format format;

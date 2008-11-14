@@ -44,7 +44,7 @@ public class PulseAudioTargetPort extends PulseAudioPort {
 	/* aka speaker */
 
 	static {
-		System.loadLibrary("pulse-java");
+		SecurityWrapper.loadNativeLibrary();
 	}
 
 	public PulseAudioTargetPort(String name) {

@@ -92,9 +92,7 @@ public class EventLoop implements Runnable {
 	/*
 	 * These fields hold pointers
 	 */
-	@SuppressWarnings("unused")
 	private byte[] contextPointer;
-	@SuppressWarnings("unused")
 	private byte[] mainloopPointer;
 
 	/*
@@ -102,7 +100,7 @@ public class EventLoop implements Runnable {
 	 */
 
 	static {
-		System.loadLibrary("pulse-java");
+		SecurityWrapper.loadNativeLibrary();
 	}
 
 	private EventLoop() {

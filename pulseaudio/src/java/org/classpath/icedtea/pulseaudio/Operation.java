@@ -58,7 +58,7 @@ public class Operation {
 	}
 
 	static {
-		System.loadLibrary("pulse-java");
+		SecurityWrapper.loadNativeLibrary();
 	}
 
 	private native void native_ref();

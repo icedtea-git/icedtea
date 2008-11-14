@@ -1,3 +1,23 @@
+2008-11-14  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	Removed useless SuppressWarnings.
+	(static): Delegate the loading of native libraries to SecurityWrapper.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java 
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/SecurityWrapper.java
+	New class.
+	(loadNativeLibrary): Loads libpulse-java.so in a privileged operation to
+	work when a security manager is installed.
+
 2008-11-11  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
