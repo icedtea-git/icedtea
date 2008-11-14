@@ -1,5 +1,20 @@
 2008-11-14  Andrew John Hughes  <ahughes@redhat.com>
 
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiDeviceProvider,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiFileReader,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiFileWriter,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.SoundbankReader,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.AudioFileReader,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.AudioFileWriter,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.FormatConversionProvider,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.sampled.spi.MixerProvider,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/linux-i586/javax.sound.sampled.spi.MixerProvider,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/windows-i586/javax.sound.sampled.spi.MixerProvider,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/windows-ia64/javax.sound.sampled.spi.MixerProvider:
+	Add property files missed by hg.
+
+2008-11-14  Andrew John Hughes  <ahughes@redhat.com>
+
 	* HACKING: List new plugs patches.
 	* Makefile.am: Remove use of rt from source dir,
 	remove redundant Gervill patch, add new patches.
