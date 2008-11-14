@@ -1,0 +1,235 @@
+diff -Nru openjdk.orig/jdk/make/com/sun/jmx/Makefile openjdk/jdk/make/com/sun/jmx/Makefile
+--- openjdk.orig/jdk/make/com/sun/jmx/Makefile	2008-11-11 01:22:14.000000000 +0000
++++ openjdk/jdk/make/com/sun/jmx/Makefile	2008-11-11 01:24:31.000000000 +0000
+@@ -41,7 +41,7 @@
+ # Note : some targets are double colon rules and some single colon rules
+ # within common included gmk files : that is why the following for loop
+ # has been duplicated.
+-SUBDIRS = snmp
++SUBDIRS = 
+ 
+ all build:
+ 	$(SUBDIRS-loop)
+diff -Nru openjdk.orig/jdk/make/com/sun/jmx/snmp/Makefile openjdk/jdk/make/com/sun/jmx/snmp/Makefile
+--- openjdk.orig/jdk/make/com/sun/jmx/snmp/Makefile	2008-11-11 01:22:23.000000000 +0000
++++ openjdk/jdk/make/com/sun/jmx/snmp/Makefile	1970-01-01 01:00:00.000000000 +0100
+@@ -1,45 +0,0 @@
+-#
+-# Copyright 2003-2005 Sun Microsystems, Inc.  All Rights Reserved.
+-# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+-#
+-# This code is free software; you can redistribute it and/or modify it
+-# under the terms of the GNU General Public License version 2 only, as
+-# published by the Free Software Foundation.  Sun designates this
+-# particular file as subject to the "Classpath" exception as provided
+-# by Sun in the LICENSE file that accompanied this code.
+-#
+-# This code is distributed in the hope that it will be useful, but WITHOUT
+-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+-# version 2 for more details (a copy is included in the LICENSE file that
+-# accompanied this code).
+-#
+-# You should have received a copy of the GNU General Public License version
+-# 2 along with this work; if not, write to the Free Software Foundation,
+-# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+-#
+-# Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+-# CA 95054 USA or visit www.sun.com if you need additional information or
+-# have any questions.
+-#
+-
+-#
+-# Makefile for building SNMP runtime support for
+-# Sun-specific JDK out of the box management support.
+-#
+-
+-BUILDDIR = ../../../..
+-PACKAGE = com.sun.jmx.snmp
+-PRODUCT = sun
+-include $(BUILDDIR)/common/Defs.gmk
+-
+-#
+-# Files to compile
+-#
+-AUTO_FILES_JAVA_DIRS = com/sun/jmx/snmp
+-
+-#
+-# Rules
+-#
+-include $(BUILDDIR)/common/Classes.gmk
+-
+diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
+--- openjdk.orig/jdk/make/docs/Makefile	2008-11-11 01:23:00.000000000 +0000
++++ openjdk/jdk/make/docs/Makefile	2008-11-11 01:26:08.000000000 +0000
+@@ -328,14 +328,8 @@
+ MGMT_DOCDIR	   = $(DOCSDIR)/jre/api/management/
+ MGMT_EXT_DIR	   = $(MGMT_DOCDIR)/extension
+ MGMT_SOURCEPATH    = $(TOPDIR)/src/share/classes
+-JVM_MIB_NAME       = JVM-MANAGEMENT-MIB.mib
+-JVM_MIB_SRC        = $(CLOSED_SRC)/share/classes/sun/management/snmp/$(JVM_MIB_NAME)
+ 
+-ifdef OPENJDK
+-   COPY-MIB-TARGET =
+-else
+-   COPY-MIB-TARGET = copy-mib
+-endif
++COPY-MIB-TARGET =
+ MGMT_JAVADOCFLAGS  = $(COMMON_JAVADOCFLAGS)			   \
+ 		     -encoding ascii			           \
+                      -nodeprecatedlist                             \
+@@ -632,12 +626,6 @@
+ 	$(JAVADOC_CMD) $(MGMT_JAVADOCFLAGS)                     \
+ 		   $(MGMT_PKGS)
+ 
+-copy-mib:
+-	@# ######## copy-snmp-mib ############################
+-	$(RM) $(MGMT_DOCDIR)/$(JVM_MIB_NAME)
+-	$(MKDIR) -p $(MGMT_DOCDIR)
+-	$(CP) $(JVM_MIB_SRC) $(MGMT_DOCDIR)
+-
+ .PHONY: attachdocs
+ attachdocs:
+ 	@# ######## api-attach ############################
+diff -Nru openjdk.orig/jdk/make/sun/management/Makefile openjdk/jdk/make/sun/management/Makefile
+--- openjdk.orig/jdk/make/sun/management/Makefile	2008-11-11 01:22:47.000000000 +0000
++++ openjdk/jdk/make/sun/management/Makefile	2008-11-11 01:25:00.000000000 +0000
+@@ -33,26 +33,20 @@
+ MGMT_LIBDIR = $(LIBDIR)/management
+ MGMT_LIB_SRC = $(SHARE_SRC)/lib/management
+ 
+-all build:: properties aclfile jmxremotefiles
++all build:: properties jmxremotefiles
+ 
+-SUBDIRS = snmp jmxremote
++SUBDIRS = jmxremote
+ all build clean clobber::
+ 	$(SUBDIRS-loop)
+ 
+ properties: $(MGMT_LIBDIR)/management.properties
+ 
+-aclfile: $(MGMT_LIBDIR)/snmp.acl.template
+-
+ jmxremotefiles: $(MGMT_LIBDIR)/jmxremote.password.template $(MGMT_LIBDIR)/jmxremote.access
+ 
+ $(MGMT_LIBDIR)/management.properties: $(MGMT_LIB_SRC)/management.properties
+ 	$(install-file)
+ 	$(CHMOD) 644 $@
+ 
+-$(MGMT_LIBDIR)/snmp.acl.template: $(MGMT_LIB_SRC)/snmp.acl.template
+-	$(install-file)
+-	$(CHMOD) 444 $@
+-
+ $(MGMT_LIBDIR)/jmxremote.password.template: $(MGMT_LIB_SRC)/jmxremote.password.template
+ 	$(install-file)
+ 	$(CHMOD) 444 $@
+diff -Nru openjdk.orig/jdk/make/sun/management/snmp/Makefile openjdk/jdk/make/sun/management/snmp/Makefile
+--- openjdk.orig/jdk/make/sun/management/snmp/Makefile	2008-11-11 01:22:41.000000000 +0000
++++ openjdk/jdk/make/sun/management/snmp/Makefile	1970-01-01 01:00:00.000000000 +0100
+@@ -1,44 +0,0 @@
+-#
+-# Copyright 2003-2005 Sun Microsystems, Inc.  All Rights Reserved.
+-# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+-#
+-# This code is free software; you can redistribute it and/or modify it
+-# under the terms of the GNU General Public License version 2 only, as
+-# published by the Free Software Foundation.  Sun designates this
+-# particular file as subject to the "Classpath" exception as provided
+-# by Sun in the LICENSE file that accompanied this code.
+-#
+-# This code is distributed in the hope that it will be useful, but WITHOUT
+-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+-# version 2 for more details (a copy is included in the LICENSE file that
+-# accompanied this code).
+-#
+-# You should have received a copy of the GNU General Public License version
+-# 2 along with this work; if not, write to the Free Software Foundation,
+-# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+-#
+-# Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+-# CA 95054 USA or visit www.sun.com if you need additional information or
+-# have any questions.
+-#
+-
+-#
+-# Makefile for building SNMP MIB instrumentation
+-#
+-
+-BUILDDIR = ../../..
+-PACKAGE = sun.management.snmp
+-PRODUCT = sun
+-include $(BUILDDIR)/common/Defs.gmk
+-
+-#
+-# Files to compile
+-#
+-AUTO_FILES_JAVA_DIRS = sun/management/snmp
+-
+-#
+-# Rules
+-#
+-include $(BUILDDIR)/common/Classes.gmk
+-
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/management/Agent.java openjdk/jdk/src/share/classes/sun/management/Agent.java
+--- openjdk.orig/jdk/src/share/classes/sun/management/Agent.java	2008-11-11 01:45:39.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/management/Agent.java	2008-11-11 01:46:56.000000000 +0000
+@@ -41,15 +41,13 @@
+ 
+ import javax.management.remote.JMXConnectorServer;
+ 
+-import sun.management.snmp.AdaptorBootstrap;
+ import sun.management.jmxremote.ConnectorBootstrap;
+ import static sun.management.AgentConfigurationError.*;
+ import sun.misc.VMSupport;
+ 
+ /**
+- * This Agent is started by the VM when -Dcom.sun.management.snmp
+- * or -Dcom.sun.management.jmxremote is set. This class will be
+- * loaded by the system class loader.
++ * This Agent is started by the VM when -Dcom.sun.management.jmxremote
++ * is set. This class will be loaded by the system class loader.
+  */
+ public class Agent {
+     // management properties
+@@ -58,8 +56,6 @@
+ 
+     private static final String CONFIG_FILE =
+         "com.sun.management.config.file";
+-    private static final String SNMP_PORT =
+-        "com.sun.management.snmp.port";
+     private static final String JMXREMOTE =
+         "com.sun.management.jmxremote";
+     private static final String JMXREMOTE_PORT =
+@@ -114,7 +110,6 @@
+     }
+ 
+     private static void startAgent(Properties props) throws Exception {
+-        String snmpPort = props.getProperty(SNMP_PORT);
+         String jmxremote = props.getProperty(JMXREMOTE);
+         String jmxremotePort = props.getProperty(JMXREMOTE_PORT);
+ 
+@@ -127,10 +122,6 @@
+         }
+ 
+         try {
+-            if (snmpPort != null) {
+-                AdaptorBootstrap.initialize(snmpPort, props);
+-            }
+-
+             /*
+              * If the jmxremote.port property is set then we start the
+              * RMIConnectorServer for remote M&M.
+@@ -190,11 +181,10 @@
+     public static synchronized Properties getManagementProperties() {
+         if (mgmtProps == null) {
+             String configFile = System.getProperty(CONFIG_FILE);
+-            String snmpPort = System.getProperty(SNMP_PORT);
+             String jmxremote = System.getProperty(JMXREMOTE);
+             String jmxremotePort = System.getProperty(JMXREMOTE_PORT);
+ 
+-            if (configFile == null && snmpPort == null &&
++            if (configFile == null &&
+                 jmxremote == null && jmxremotePort == null) {
+                 // return if out-of-the-management option is not specified
+                 return null;

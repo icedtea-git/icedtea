@@ -89,7 +89,7 @@ install:
 	$(ICEDTEAPLUGIN_CLEAN) hotspot hotspot-helper clean-extra \
 	clean-jtreg clean-jtreg-reports clean-visualvm clean-nbplatform
 
-EXTRA_DIST = rt generated $(abs_top_srcdir)/patches/icedtea-*.patch \
+EXTRA_DIST = generated $(abs_top_srcdir)/patches/icedtea-*.patch \
 	gcjwebplugin.cc tools-copy contrib ports \
 	extra overlays \
 	javaws.png javaws.desktop visualvm.desktop \
@@ -552,7 +552,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-fonts.patch \
-	patches/icedtea-gervill.patch \
 	patches/icedtea-directaudio-close-trick.patch \
 	patches/icedtea-sparc64-linux.patch \
 	patches/icedtea-sparc-ptracefix.patch \
@@ -583,6 +582,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-javac-debuginfo.patch \
 	patches/icedtea-xjc.patch \
 	patches/icedtea-renderer-crossing.patch \
+	patches/icedtea-snmp.patch \
+	patches/icedtea-sound.patch \
 	$(ZERO_PATCHES_COND)
 
 if WITH_RHINO
@@ -1302,7 +1303,6 @@ ICEDTEA_COPY_DIRS = \
 	com/sun/jdi/connect/spi \
 	com/sun/jdi/event \
 	com/sun/jdi/request \
-	com/sun/jmx/snmp/agent \
 	com/sun/tools/jdi \
 	com/sun/net/httpserver \
 	java/io \
@@ -1377,7 +1377,7 @@ hotspot-tools-source-files.txt: stamps/generated.stamp \
 	find hotspot-tools -name '*.java' | sort > $@
 	mkdir -p lib/hotspot-tools
 
-ABS_SOURCE_DIRS = $(abs_top_builddir)/generated:$(abs_top_srcdir)/rt
+ABS_SOURCE_DIRS = $(abs_top_builddir)/generated
 stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
@@ -1426,7 +1426,7 @@ bootstrap/jdk1.7.0/jre/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 
 # rt-closed.jar class files.
 rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
-	find $(abs_top_srcdir)/rt $(abs_top_builddir)/rt -name '*.java' \
+	find $(abs_top_builddir)/rt -name '*.java' \
 	  | sort -u > $@
 
 stamps/rt-class-files.stamp: rt-source-files.txt

@@ -1,3 +1,43 @@
+2008-11-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* HACKING: List new plugs patches.
+	* Makefile.am: Remove use of rt from source dir,
+	remove redundant Gervill patch, add new patches.
+	* fsg.sh: Remove code related to proprietary sound
+	and SNMP support.
+	* patches/icedtea-copy-plugs.patch: Remove SNMP patch.
+	* patches/icedtea-gervill.patch: Removed.
+	* patches/icedtea-jsoundhs.patch: No need to patch services.
+	* patches/icedtea-snmp.patch,
+	* patches/icedtea-sound.patch: Remove references to proprietary code.
+	* rt/com/sun/jmx/snmp/SnmpDataTypeEnums.java,
+	* rt/com/sun/jmx/snmp/SnmpDefinitions.java,
+	* rt/com/sun/jmx/snmp/SnmpOid.java,
+	* rt/com/sun/jmx/snmp/SnmpOidRecord.java,
+	* rt/com/sun/jmx/snmp/SnmpOidTable.java,
+	* rt/com/sun/jmx/snmp/SnmpOidTableSupport.java,
+	* rt/com/sun/jmx/snmp/SnmpParameters.java,
+	* rt/com/sun/jmx/snmp/SnmpPduPacket.java,
+	* rt/com/sun/jmx/snmp/SnmpPeer.java,
+	* rt/com/sun/jmx/snmp/SnmpSession.java,
+	* rt/com/sun/jmx/snmp/SnmpTimeticks.java,
+	* rt/com/sun/jmx/snmp/SnmpVarBind.java,
+	* rt/com/sun/jmx/snmp/SnmpVarBindList.java,
+	* rt/com/sun/jmx/snmp/daemon/SnmpInformRequest.java,
+	* rt/com/sun/jmx/snmp/daemon/SnmpSession.java,
+	* rt/com/sun/media/sound/AbstractPlayer.java,
+	* rt/com/sun/media/sound/HeadspaceMixer.java,
+	* rt/com/sun/media/sound/HeadspaceSoundbank.java,
+	* rt/com/sun/media/sound/MixerClip.java,
+	* rt/com/sun/media/sound/MixerMidiChannel.java,
+	* rt/com/sun/media/sound/MixerSequencer.java,
+	* rt/com/sun/media/sound/MixerSourceLine.java,
+	* rt/com/sun/media/sound/MixerSynth.java,
+	* rt/com/sun/media/sound/MixerThread.java,
+	* rt/com/sun/media/sound/SimpleInputDevice.java,
+	* rt/com/sun/media/sound/SimpleInputDeviceProvider.java:
+	Remove redundant stubs.
+
 2008-11-10  Andrew John Hughes  <ahughes@redhat.com>
 
 	* javac.in:

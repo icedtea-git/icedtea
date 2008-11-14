@@ -48,19 +48,6 @@ diff -Nru openjdk.orig/jdk/make/common/internal/BinaryPlugs.gmk openjdk/jdk/make
  ($(CD) $(CLASSDESTDIR) && $(java-vm-cleanup) )
  endef # import-binary-plug-classes
  
-diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java
---- openjdk.orig/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2008-08-14 08:42:55.000000000 +0100
-+++ openjdk/jdk/src/share/classes/com/sun/jmx/snmp/SnmpPduTrap.java	2008-08-20 22:55:35.000000000 +0100
-@@ -78,6 +78,9 @@
-      */
-     public long            timeStamp ;
- 
-+    // TODO: IcedTea: I am a stub.
-+    static public int trapAuthenticationFailure = 0;
-+
- 
- 
-     /**
 diff -Nru openjdk.orig/jdk/src/share/classes/java/beans/MetaData.java openjdk/jdk/src/share/classes/java/beans/MetaData.java
 --- openjdk.orig/jdk/src/share/classes/java/beans/MetaData.java	2008-08-14 08:43:00.000000000 +0100
 +++ openjdk/jdk/src/share/classes/java/beans/MetaData.java	2008-08-20 22:55:35.000000000 +0100

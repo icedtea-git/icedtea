@@ -89,6 +89,8 @@ The following patches are only applied to OpenJDK in IcedTea:
   is broken in libgcj 4.3.
 * icedtea-override.patch: Remove @Override annotation in
   javax.management.AttributeValueExp (unsupported by ecj < 3.4).
+* icedtea-snmp.patch: Remove proprietary SNMP support hooks.
+* icedtea-sound.patch: Remove proprietary MIDI support hooks.
 
 The following patches are only applied to the icedtea-ecj bootstrap tree:
 

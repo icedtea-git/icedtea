@@ -102,3 +102,14 @@ rm -f \
 
 # END Debian/Ubuntu additions
 
+# Remove support for proprietary SNMP plug
+rm -rf openjdk/jdk/src/share/classes/sun/management/snmp
+rm -rf openjdk/jdk/src/share/classes/com/sun/jmx/snmp
+
+# Remove support for proprietary sound
+rm -rf openjdk/jdk/src/share/classes/com/sun/media/sound/services
+rm -f openjdk/jdk/src/share/classes/com/sun/media/sound/MixerSynthProvider.java
+rm -f openjdk/jdk/src/share/classes/com/sun/media/sound/RmfFileReader.java
+rm -f openjdk/jdk/src/share/classes/com/sun/media/sound/HsbParser.java
+rm -f openjdk/jdk/src/share/classes/com/sun/media/sound/SimpleInputDeviceProvider.java
+
