@@ -68,6 +68,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-6761856-freetypescaler.patch: Fix IcedTea bug #227, OpenJDK bug
   #6761856, swing TextLayout.getBounds() returns shifted bounds.
 * icedtea-display-mode-changer.patch: Add extra test class.
+* icedtea-testenv.patch: Provide public reachable machines for net/nio tests.
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 

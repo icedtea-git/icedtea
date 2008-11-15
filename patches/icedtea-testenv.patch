@@ -1,0 +1,66 @@
+--- openjdk.orig/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2008-11-05 10:20:19.000000000 +0100
++++ openjdk/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2008-11-15 22:07:26.000000000 +0100
+@@ -40,7 +40,7 @@
+         InetAddress bogus = InetAddress.getByName("0.0.0.0");
+         SocketChannel sc = SocketChannel.open();
+         InetSocketAddress saddr = new InetSocketAddress(
+-            InetAddress.getByName(TestEnv.getProperty("host")), 23);
++            InetAddress.getByName(TestEnv.getProperty("host")), 7);
+ 
+         //Test1: connect only
+         sc.connect(saddr);
+--- openjdk.orig/jdk/test/java/nio/channels/SocketChannel/Shutdown.java	2008-11-05 10:20:19.000000000 +0100
++++ openjdk/jdk/test/java/nio/channels/SocketChannel/Shutdown.java	2008-11-15 22:07:51.000000000 +0100
+@@ -35,7 +35,7 @@
+ 
+     public static void main(String args[]) throws Exception {
+         InetSocketAddress sa = new InetSocketAddress(
+-            InetAddress.getByName(TestEnv.getProperty("host")), 23);
++            InetAddress.getByName(TestEnv.getProperty("host")), 7);
+         SocketChannel sc = SocketChannel.open(sa);
+         boolean before = sc.socket().isInputShutdown();
+         sc.socket().shutdownInput();
+--- ../openjdk6/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2008-11-05 10:21:00.000000000 +0100
++++ openjdk/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2008-11-15 22:58:14.000000000 +0100
+@@ -26,14 +26,19 @@
+ 
+ # @test
+ # @bug 4763315
+-# @build CanonicalName Lookup 
++# @library ../../../../..
++# @build CanonicalName Lookup TestEnv
+ # @run shell/timeout=120 cname.sh
+ # @summary Test DNS provider's handling of CNAME records
+ 
+ 
+ # The host that we try to resolve
+ 
+-HOST=webcache.sfbay.sun.com
++CLASSPATH=${TESTCLASSES}
++export CLASSPATH
++JAVA="${TESTJAVA}/bin/java"
++
++HOST=`$JAVA TestEnv -get far_host`
+ 
+ # fail gracefully if DNS is not configured or there 
+ # isn't a CNAME record.
+--- openjdk.orig/jdk/test/TestEnv.java	2008-11-05 10:16:16.000000000 +0100
++++ openjdk/jdk/test/TestEnv.java	2008-11-15 22:42:11.000000000 +0100
+@@ -65,14 +65,14 @@
+         // Reachable host with the following services running:
+         // - echo service (port 7)
+         // - day time port (port 13)
+-        { "host", "javaweb.sfbay.sun.com"  },
++        { "host", "icedtea.classpath.org"  },
+ 
+         // Reachable host that refuses connections to port 80
+-        { "refusing_host", "jano1.sfbay.sun.com" },
++        { "refusing_host", "ns1.gnu.org" },
+ 
+         // Reachable host that is of sufficient hops away that a connection
+         // takes a while to be established (connect doesn't complete immediatly)
+-        { "far_host", "irejano.ireland.sun.com" },
++        { "far_host", "developer.classpath.org" },
+ 
+         // Hostname that cannot be resolved by named service
+         { "unresovable_host", "blah-blah.blah-blah.blah" },

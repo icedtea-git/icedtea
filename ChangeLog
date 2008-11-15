@@ -1,5 +1,11 @@
 2008-11-15  Mark Wielaard  <mark@klomp.org>
 
+	* patches/icedtea-testenv.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	* HACKING: Document new patch.
+
+2008-11-15  Mark Wielaard  <mark@klomp.org>
+
 	* patches/icedtea-display-mode-changer.patch: New patch.
 	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
 	* HACKING: Document new patch.
