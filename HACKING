@@ -67,6 +67,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-cc-interp-no-fer.patch: Report that we cannot force early returns with the C++ interpreter.
 * icedtea-6761856-freetypescaler.patch: Fix IcedTea bug #227, OpenJDK bug
   #6761856, swing TextLayout.getBounds() returns shifted bounds.
+* icedtea-display-mode-changer.patch: Add extra test class.
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
