@@ -1,5 +1,20 @@
 2008-11-14  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Expand generated and pulseaudio.  Lock
+	patches to $(top_srcdir).  Run jtreg with
+	exclusion lists. General cleanup.
+	* fsg.sh: Remove more files related to proprietary plugs.
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftSynthesizer/DummySourceDataLine.java:
+	Added, required by some Gervill tests.
+	* patches/icedtea-tests-jdk.patch:
+	Fix compilation of some tests.
+	* test/jtreg/excludelist.jdk.jtx,
+	* test/jtreg/excludelist.langtools.jtx:
+	Exclude broken tests.
+
+2008-11-14  Andrew John Hughes  <ahughes@redhat.com>
+
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiDeviceProvider,
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiFileReader,
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiFileWriter,
