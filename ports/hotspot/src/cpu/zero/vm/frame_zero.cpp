@@ -133,7 +133,58 @@ bool frame::is_interpreted_frame_valid(JavaThread *thread) const
 BasicType frame::interpreter_frame_result(oop* oop_result,
                                           jvalue* value_result)
 {
-  Unimplemented();
+  assert(is_interpreted_frame(), "interpreted frame expected");
+  methodOop method = interpreter_frame_method();
+  BasicType type = method->result_type();
+  intptr_t* tos_addr = (intptr_t *) interpreter_frame_tos_address();
+  oop obj;
+
+  switch (type) {
+  case T_VOID:
+    break;
+  case T_BOOLEAN:
+    value_result->z = *(jboolean *) tos_addr;
+    break;
+  case T_BYTE:
+    value_result->b = *(jbyte *) tos_addr;
+    break;
+  case T_CHAR:
+    value_result->c = *(jchar *) tos_addr;
+    break;
+  case T_SHORT:
+    value_result->s = *(jshort *) tos_addr;
+    break;
+  case T_INT:
+    value_result->i = *(jint *) tos_addr;
+    break;
+  case T_LONG:
+    value_result->j = *(jlong *) tos_addr;
+    break;
+  case T_FLOAT:
+    value_result->f = *(jfloat *) tos_addr;
+    break;
+  case T_DOUBLE:
+    value_result->d = *(jdouble *) tos_addr;
+    break;
+
+  case T_OBJECT: 
+  case T_ARRAY:
+    if (method->is_native()) {
+      obj = get_interpreterState()->oop_temp();
+    }
+    else {
+      oop* obj_p = (oop *) tos_addr;
+      obj = (obj_p == NULL) ? (oop) NULL : *obj_p;
+    }
+    assert(obj == NULL || Universe::heap()->is_in(obj), "sanity check");
+    *oop_result = obj;
+    break;
+
+  default:
+    ShouldNotReachHere();
+  }
+
+  return type;
 }
 
 int frame::frame_size() const

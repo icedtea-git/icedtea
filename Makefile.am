@@ -1393,6 +1393,7 @@ ICEDTEA_ENV = \
         "BUILD_NUMBER=$(OPENJDK_VERSION)" \
 	"JDK_UPDATE_VERSION=$(JDK_UPDATE_VERSION)" \
         "JRE_RELEASE_VERSION=1.7.0_$(COMBINED_VERSION)" \
+	"MILESTONE=fcs" \
 	"LANG=C" \
 	"PATH=$(abs_top_builddir)/bootstrap/jdk1.6.0/bin:/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
@@ -1462,6 +1463,7 @@ ICEDTEA_ENV_ECJ = \
 	"BUILD_NUMBER=$(OPENJDK_VERSION)" \
 	"JDK_UPDATE_VERSION=$(JDK_UPDATE_VERSION)" \
         "JRE_RELEASE_VERSION=1.7.0_$(COMBINED_VERSION)" \
+	"MILESTONE=fcs" \
 	"LANG=C" \
 	"PATH=$(abs_top_builddir)/bootstrap/jdk1.6.0/bin:/usr/bin:/bin:/usr/sbin:/sbin" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
@@ -1584,7 +1586,7 @@ VISUALVM_URL = http://icedtea.classpath.org/visualvm/
 if USE_ALT_VISUALVM_SRC_ZIP
   VISUALVM_SRC_ZIP = $(ALT_VISUALVM_SRC_ZIP)
 else
-  VISUALVM_SRC_ZIP = visualvm-20080728-src.tar.gz
+  VISUALVM_SRC_ZIP = visualvm-20081031-src.tar.gz
 endif
 
 stamps/download.stamp: stamps/hgforest.stamp
@@ -1839,6 +1841,13 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-snmp.patch \
 	patches/icedtea-sound.patch \
 	patches/icedtea-tests-jdk.patch \
+	patches/icedtea-alsa-default-device.patch \
+	patches/icedtea-linker-libs-order.patch \
+	patches/icedtea-f2i-overflow.patch \
+	patches/icedtea-cc-interp-no-fer.patch \
+	patches/icedtea-6761856-freetypescaler.patch \
+	patches/icedtea-display-mode-changer.patch \
+	patches/icedtea-testenv.patch \
 	$(ZERO_PATCHES_COND)
 
 if WITH_RHINO
@@ -2825,7 +2834,7 @@ if ENABLE_PULSE_JAVA
 	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Stream.c
 	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c 
 	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c
-	$(CC) $(LDFLAGS) -shared $(LIBPULSE_LIBS) -o libpulse-java.so org_*pulseaudio*.o jni-common.o
+	$(CC) $(LDFLAGS) -shared org_*pulseaudio*.o jni-common.o $(LIBPULSE_LIBS) -o libpulse-java.so 
 	mv org_classpath_icedtea_pulseaudio_*.o $(PULSE_JAVA_CLASS_DIR)
 	mv jni-common.o $(PULSE_JAVA_CLASS_DIR)
 endif
@@ -2935,7 +2944,7 @@ check-langtools: stamps/jtreg.stamp
 	mkdir -p test/langtools/JTwork test/langtools/JTreport
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/langtools/JTwork -r:test/langtools/JTreport \
-		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		-s -jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
 		-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.langtools.jtx \
 		`pwd`/openjdk/langtools/test \
 	    | tee test/$@.log

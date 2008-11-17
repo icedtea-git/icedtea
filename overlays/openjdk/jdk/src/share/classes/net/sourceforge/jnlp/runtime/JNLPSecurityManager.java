@@ -17,19 +17,23 @@
 
 package net.sourceforge.jnlp.runtime;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.lang.ref.*;
-import javax.swing.*;
-import java.security.*;
+import java.awt.Frame;
+import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.lang.ref.WeakReference;
+import java.net.SocketPermission;
+import java.security.AccessController;
+import java.security.Permission;
+import java.security.PrivilegedAction;
 
+import javax.swing.JWindow;
+
+import net.sourceforge.jnlp.JNLPFile;
 import net.sourceforge.jnlp.security.SecurityWarningDialog;
 import net.sourceforge.jnlp.services.ServiceUtil;
-import net.sourceforge.jnlp.util.*;
-
+import net.sourceforge.jnlp.util.WeakList;
 import sun.security.util.SecurityConstants;
-
-import java.net.SocketPermission;
 
 /**
  * Security manager for JNLP environment.  This security manager
@@ -121,6 +125,11 @@ class JNLPSecurityManager extends SecurityManager {
 
         public void windowDeactivated(WindowEvent e) {
             activeApplication = null;
+        }
+        
+        public void windowClosing(WindowEvent e) {
+        	System.err.println("Disposing window");
+        	e.getWindow().dispose();
         }
     };
 
@@ -278,6 +287,46 @@ class JNLPSecurityManager extends SecurityManager {
 				if (perm instanceof SocketPermission) {
 					tmpPerm = new SocketPermission(perm.getName(), 
 							SecurityConstants.SOCKET_CONNECT_ACCEPT_ACTION);
+					
+					// before proceeding, check if we are trying to connect to same origin
+					ApplicationInstance app = getApplication();
+					JNLPFile file = app.getJNLPFile();
+
+					String srcHost =  file.getSourceLocation().getAuthority();
+					String destHost = name;
+					
+					// host = abc.xyz.com or abc.xyz.com:<port> 
+					if (destHost.indexOf(':') >= 0)
+						destHost = destHost.substring(0, destHost.indexOf(':'));
+					
+					// host = abc.xyz.com
+					String[] hostComponents = destHost.split("\\.");
+					
+					int length = hostComponents.length;
+					if (length >= 2) {
+						
+						// address is in xxx.xxx.xxx format
+						destHost = hostComponents[length -2] + "." + hostComponents[length -1];
+					
+						// host = xyz.com i.e. origin
+						boolean isDestHostName = false;
+
+						// make sure that it is not an ip address
+						try {
+							Integer.parseInt(hostComponents[length -1]);
+						} catch (NumberFormatException e) {
+							isDestHostName = true;
+						}
+
+						if (isDestHostName) {
+							// okay, destination is hostname. Now figure out if it is a subset of origin
+							if (srcHost.endsWith(destHost)) {
+								addPermission(tmpPerm);
+								return;
+							}
+						}
+					}
+
 				} else
 					tmpPerm = perm;
 				

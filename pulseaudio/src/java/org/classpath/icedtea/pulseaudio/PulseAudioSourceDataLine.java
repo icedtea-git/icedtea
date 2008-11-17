@@ -41,10 +41,11 @@ import java.util.ArrayList;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.AudioPermission;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+
+import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 
 public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 		SourceDataLine, PulseAudioPlaybackLine {
@@ -68,10 +69,6 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 	synchronized public void open(AudioFormat format, int bufferSize)
 			throws LineUnavailableException {
 
-		/* check for permission to play audio */
-		AudioPermission perm = new AudioPermission("play", null);
-		perm.checkGuard(null);
-
 		super.open(format, bufferSize);
 
 		volumeControl = new PulseAudioVolumeControl(this, eventLoop);
@@ -81,6 +78,9 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 
 		PulseAudioMixer parentMixer = PulseAudioMixer.getInstance();
 		parentMixer.addSourceLine(this);
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioSourceDataLine.open(): "
+				+ "line opened");
 
 	}
 
@@ -154,11 +154,14 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 		}
 
 		if (offset < 0) {
-			throw new ArrayIndexOutOfBoundsException("offset is negative: " + offset);
+			throw new ArrayIndexOutOfBoundsException("offset is negative: "
+					+ offset);
 		}
-		
+
 		if (length + offset > data.length) {
-			throw new ArrayIndexOutOfBoundsException("writing data beyond the length of the array: " + (length + offset));
+			throw new ArrayIndexOutOfBoundsException(
+					"writing data beyond the length of the array: "
+							+ (length + offset));
 		}
 
 		int position = offset;
@@ -318,10 +321,6 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 	@Override
 	synchronized public void close() {
 
-		/* check for permmission to play audio */
-		AudioPermission perm = new AudioPermission("play", null);
-		perm.checkGuard(null);
-
 		if (!isOpen) {
 			throw new IllegalStateException("not open so cant close");
 		}
@@ -332,8 +331,12 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 		parent.removeSourceLine(this);
 
 		super.close();
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioSourceDataLine.close():"
+				+ " line closed");
+
 	}
-	
+
 	public javax.sound.sampled.Line.Info getLineInfo() {
 		return new DataLine.Info(SourceDataLine.class, supportedFormats,
 				StreamBufferAttributes.MIN_VALUE,

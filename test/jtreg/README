@@ -20,7 +20,7 @@ For the full versions of jtharness and jtreg see:
 This version is based on:
 
 - jtharness-oss-4_1_3a-dev
-- jtreg-4_0-src-b01-29_apr_2008
+- jtreg-4_0-src-b02-15_oct_2008
 
 IcedJTReg is distrubuted under the GPLv2.0, like jtreg and jtharness.
 See the documents in the legal directory included in this release.

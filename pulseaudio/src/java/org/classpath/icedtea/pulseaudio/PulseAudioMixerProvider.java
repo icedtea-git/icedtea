@@ -43,6 +43,10 @@ import javax.sound.sampled.Mixer.Info;
 public class PulseAudioMixerProvider extends
 		javax.sound.sampled.spi.MixerProvider {
 
+	public PulseAudioMixerProvider() {
+		Debug.initialize();
+	}
+
 	@Override
 	public Mixer getMixer(Info info) {
 		// System.out.println("DEBUG: getMixer called");

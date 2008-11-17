@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import org.classpath.icedtea.pulseaudio.ContextEvent.Type;
+import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 
 /*
  * any methods that can obstruct the behaviour of pa_mainloop should run
@@ -55,7 +56,6 @@ public class EventLoop implements Runnable {
 	/*
 	 * the threadLock object is the object used for synchronizing the
 	 * non-thread-safe operations of pulseaudio's c api
-	 * 
 	 */
 	public Object threadLock = new Object();
 
@@ -79,7 +79,6 @@ public class EventLoop implements Runnable {
 	 * 
 	 * Do not synchronize the individual functions, synchronize
 	 * block/method/lines around the call
-	 * 
 	 */
 
 	private native void native_setup(String appName, String server);
@@ -92,12 +91,8 @@ public class EventLoop implements Runnable {
 
 	/*
 	 * These fields hold pointers
-	 * 
-	 * 
 	 */
-	@SuppressWarnings("unused")
 	private byte[] contextPointer;
-	@SuppressWarnings("unused")
 	private byte[] mainloopPointer;
 
 	/*
@@ -105,7 +100,7 @@ public class EventLoop implements Runnable {
 	 */
 
 	static {
-		System.loadLibrary("pulse-java");
+		SecurityWrapper.loadNativeLibrary();
 	}
 
 	private EventLoop() {
@@ -132,6 +127,8 @@ public class EventLoop implements Runnable {
 	public void run() {
 		native_setup(this.name, this.serverString);
 
+		Debug.println(DebugLevel.Info, "Eventloop.run(): eventloop starting");
+
 		/*
 		 * Perhaps this loop should be written in C doing a Java to C call on
 		 * every iteration of the loop might be slow
@@ -144,13 +141,14 @@ public class EventLoop implements Runnable {
 
 				if (Thread.interrupted()) {
 					native_shutdown();
-					// System.out.println(this.getClass().getName()
-					// + ": shutting down");
 
 					// clean up the listeners
 					synchronized (contextListeners) {
 						contextListeners.clear();
 					}
+
+					Debug.println(DebugLevel.Info,
+							"EventLoop.run(): event loop terminated");
 
 					return;
 
@@ -197,7 +195,8 @@ public class EventLoop implements Runnable {
 				break;
 			case 5:
 				fireEvent(new ContextEvent(Type.FAILED));
-				System.out.println("context failed");
+				Debug.println(DebugLevel.Warning,
+						"EventLoop.update(): Context failed");
 				break;
 			case 6:
 				fireEvent(new ContextEvent(Type.TERMINATED));

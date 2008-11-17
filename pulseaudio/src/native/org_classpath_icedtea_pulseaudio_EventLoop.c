@@ -356,7 +356,8 @@ JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_EventLoop_native_1s
 	*new_volume = volume;
 
 	int stream_id = pa_stream_get_index(stream);
-	pa_context_get_sink_input_info(context, stream_id,sink_input_change_volume, new_volume);
+	pa_operation* o = pa_context_get_sink_input_info(context, stream_id,sink_input_change_volume, new_volume);
+	pa_operation_unref(o);
 	return;
 }
 

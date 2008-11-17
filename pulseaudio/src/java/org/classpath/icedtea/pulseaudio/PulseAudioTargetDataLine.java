@@ -44,6 +44,8 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
+import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
+
 public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 		TargetDataLine {
 
@@ -84,6 +86,9 @@ public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 		parentMixer.removeTargetLine(this);
 
 		super.close();
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioTargetDataLine.close(): "
+				+ "Line closed");
 	}
 
 	@Override
@@ -107,6 +112,9 @@ public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 		/* add this open line to the mixer */
 		PulseAudioMixer parentMixer = PulseAudioMixer.getInstance();
 		parentMixer.addTargetLine(this);
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioTargetDataLine.open(): "
+				+ "Line opened");
 	}
 
 	@Override

@@ -38,26 +38,26 @@ import java.util.TreeMap;
  */
 public class MultiMap<K,V> implements Map<K, MultiMap.Entry<V>> {
     public static class Entry<V> {
-        
+
         private Entry(MultiMap<?,?> t) {
             table = t;
         }
-        
+
         V get(int index) {
             return (index < list.size() ? list.get(index) : null);
         }
-        
+
         int getSize() {
             return table.getColumns();
         }
-        
+
         void put(int index, V value) {
             if (index >= table.getColumns())
                 throw new IndexOutOfBoundsException();
-            
+
             if (list == null)
                 list = new ArrayList<V>(index);
-            
+
             if (index < list.size())
                 list.set(index, value);
             else {
@@ -66,7 +66,7 @@ public class MultiMap<K,V> implements Map<K, MultiMap.Entry<V>> {
                 list.add(value);
             }
         }
-        
+
         boolean allEqual(Comparator<V> c) {
             if (list.size() == 0)
                 return true;
@@ -79,96 +79,95 @@ public class MultiMap<K,V> implements Map<K, MultiMap.Entry<V>> {
             }
             return true;
         }
-        
+
         private List<V> list;
         private MultiMap<?,?> table;
     }
-    
-    /** Creates a new instance of DiffTable */
+
+    /** Creates a new instance of MultiMap */
     public MultiMap() {
         names = new ArrayList<String>();
         map = new TreeMap<K, Entry<V>>();
     }
-    
+
     int getColumns() {
         return names.size();
     }
-    
+
     String getColumnName(int index) {
         return names.get(index);
     }
-    
-    int add(String name) {
+
+    int addColumn(String name) {
         names.add(name);
         return names.size() - 1;
     }
-    
-    void add(int index, K k, V v) {
+
+    void addColumn(String name, Map<K, V> map) {
+        addColumn(name, map.entrySet());
+    }
+
+    void addColumn(String name, Iterable<Map.Entry<K,V>> iter) {
+        int index = addColumn(name);
+        for (Map.Entry<K,V> e: iter)
+            addRow(index, e.getKey(), e.getValue());
+    }
+
+    void addRow(int index, K k, V v) {
         Entry<V> de = get(k);
         if (de == null)
             put(k, de = new Entry<V>(this));
         de.put(index, v);
-        
     }
-    
-    void add(String name, Map<K, V> map) {
-        add(name, map.entrySet());
-    }
-    
-    void add(String name, Iterable<Map.Entry<K,V>> iter) {
-        int index = add(name);
-        for (Map.Entry<K,V> e: iter)
-            add(index, e.getKey(), e.getValue());
-    }
-    
+
     public int size() {
         return map.size();
     }
-    
+
     public Entry<V> get(Object path) {
         return map.get(path);
     }
-    
+
     public boolean isEmpty() {
         return map.isEmpty();
     }
-    
+
     public boolean containsKey(Object key) {
         return map.containsKey(key);
     }
-    
+
     public boolean containsValue(Object value) {
         return map.containsValue(value);
     }
-    
+
     public Entry<V> put(K key, Entry<V> value) {
         return map.put(key, value);
     }
-    
+
     public Entry<V> remove(Object key) {
         return map.remove(key);
     }
-    
+
     public void putAll(Map<? extends K, ? extends Entry<V>> t) {
         map.putAll(t);
     }
-    
+
     public void clear() {
         map.clear();
     }
-    
+
     public Set<Map.Entry<K, Entry<V>>> entrySet() {
         return map.entrySet();
     }
-    
+
     public Set<K> keySet() {
         return map.keySet();
     }
-    
+
     public Collection<Entry<V>> values() {
         return map.values();
     }
-    
+
     private List<String> names;
     private TreeMap<K, Entry<V>> map;
 }

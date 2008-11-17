@@ -1,0 +1,66 @@
+diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/sun/java/pack/Makefile
+--- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2008-11-17 13:13:17.000000000 +0000
++++ openjdk/jdk/make/com/sun/java/pack/Makefile	2008-11-17 14:25:44.000000000 +0000
+@@ -75,12 +75,12 @@
+ 	     $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
+ 	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
+ 
+-  OTHER_LDLIBS += -lz
+ else
+   OTHER_CXXFLAGS += -DNO_ZLIB -DUNPACK_JNI
+-  OTHER_LDLIBS += -lz $(JVMLIB)
++  OTHER_LDLIBS += $(JVMLIB)
+ endif
+ 
++OTHER_LDLIBS += -lz
+ CXXFLAGS_DBG += -DFULL
+ CXXFLAGS_OPT += -DPRODUCT
+ CXXFLAGS_COMMON += -DFULL
+@@ -97,12 +97,11 @@
+   RES = $(OBJDIR)/$(PGRM).res
+ else
+   LDOUTPUT = -o #Have a space 
+-  LDDFLAGS += -lz -lc
+-  OTHER_LDLIBS  += $(LIBCXX)
++  OTHER_LDLIBS += $(LIBCXX) -lc
+ # setup the list of libraries to link in...
+ ifeq ($(PLATFORM), linux)
+ ifeq ("$(CC_VER_MAJOR)", "3")
+-  OTHER_LDLIBS  += -lz -Wl,-Bstatic -lgcc_eh -Wl,-Bdynamic
++  OTHER_LDLIBS  += -Wl,-Bstatic -lgcc_eh -Wl,-Bdynamic
+ endif
+ endif #LINUX
+ endif #PLATFORM
+@@ -139,7 +138,7 @@
+ 
+ $(UNPACK_EXE): $(UNPACK_EXE_FILES_o) winres 
+ 	$(prep-target)
+-	$(LINKER)  $(LDDFLAGS) $(UNPACK_EXE_FILES_o) $(RES) $(LIBCXX) $(LDOUTPUT)$(TEMPDIR)/unpack200$(EXE_SUFFIX)
++	$(LINKER)  $(LDDFLAGS) $(UNPACK_EXE_FILES_o) $(RES) $(OTHER_LDLIBS) $(LIBCXX) $(LDOUTPUT)$(TEMPDIR)/unpack200$(EXE_SUFFIX)
+ 	$(CP) $(TEMPDIR)/unpack200$(EXE_SUFFIX) $(UNPACK_EXE)
+ 
+ 
+diff -Nru openjdk.orig/jdk/make/common/shared/Sanity.gmk openjdk/jdk/make/common/shared/Sanity.gmk
+--- openjdk.orig/jdk/make/common/shared/Sanity.gmk	2008-11-06 08:44:09.000000000 +0000
++++ openjdk/jdk/make/common/shared/Sanity.gmk	2008-11-17 14:25:44.000000000 +0000
+@@ -1345,7 +1345,7 @@
+ ifdef ALSA_VERSION_CHECK
+ $(ALSA_VERSION_CHECK): $(ALSA_VERSION_CHECK).c
+ 	@$(prep-target)
+-	@$(CC) -lasound -o $@ $<
++	@$(CC) -o $@ $< -lasound
+ 
+ $(ALSA_VERSION_CHECK).c:
+ 	@$(prep-target)
+diff -Nru openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile openjdk/jdk/make/javax/sound/jsoundalsa/Makefile
+--- openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile	2008-11-06 08:44:10.000000000 +0000
++++ openjdk/jdk/make/javax/sound/jsoundalsa/Makefile	2008-11-17 14:25:44.000000000 +0000
+@@ -65,7 +65,7 @@
+ 	$(MIDIFILES_export) \
+ 	$(PORTFILES_export)
+ 
+-LDFLAGS += -lasound
++OTHER_LDLIBS += -lasound
+ 
+ CPPFLAGS += \
+ 	-DUSE_DAUDIO=TRUE \

@@ -1,4 +1,4 @@
-/* PulseAudioClip.java
+/* EventLoop.java
    Copyright (C) 2008 Red Hat, Inc.
 
 This file is part of IcedTea.
@@ -37,48 +37,68 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
-import javax.sound.sampled.Port;
+public class Debug {
 
-public class PulseAudioTargetPort extends PulseAudioPort {
-
-	/* aka speaker */
-
-	static {
-		SecurityWrapper.loadNativeLibrary();
+	public enum DebugLevel {
+		Verbose, Debug, Info, Warning, Error, None
 	}
 
-	public PulseAudioTargetPort(String name) {
+	private static DebugLevel currentDebugLevel = DebugLevel.None;
 
-		super(name);
-	}
+	public static void initialize() {
+		// System.out.println("PulseAudio: initializing Debug");
 
-	public void open() {
-
-		super.open();
-
-		PulseAudioMixer parent = PulseAudioMixer.getInstance();
-		parent.addTargetLine(this);
-	}
-
-	public void close() {
-
-		if (!isOpen) {
-			throw new IllegalStateException("not open, so cant close Port");
+		String systemSetting;
+		try {
+			systemSetting = System.getProperty("pulseaudio.debugLevel");
+		} catch (SecurityException e) {
+			// sigh, we cant read that property
+			systemSetting = null;
 		}
 
-		PulseAudioMixer parent = PulseAudioMixer.getInstance();
-		parent.removeTargetLine(this);
+		DebugLevel wantedLevel;
+		try {
+			wantedLevel = DebugLevel.valueOf(systemSetting);
 
-		super.close();
+		} catch (IllegalArgumentException e) {
+			wantedLevel = DebugLevel.Info;
+		} catch (NullPointerException e) {
+			wantedLevel = DebugLevel.None;
+		}
+
+		currentDebugLevel = wantedLevel;
+		println(DebugLevel.Info, "Using debug level: " + currentDebugLevel);
 	}
 
-	public native byte[] native_setVolume(float newValue);
+	public static void println(String string) {
+		println(DebugLevel.Info, string);
+	}
 
-	public synchronized native byte[] native_updateVolumeInfo();
+	public static void print(DebugLevel level, String string) {
+		int result = level.compareTo(currentDebugLevel);
+		if (result >= 0) {
+			if (level.compareTo(DebugLevel.Error) >= 0) {
+				System.err.print(string);
+			} else {
+				System.out.print(string);
+			}
+		} else {
+			// do nothing
+		}
+	}
 
-	@Override
-	public javax.sound.sampled.Line.Info getLineInfo() {
-		return new Port.Info(Port.class, getName(), false);
+	public static void println(DebugLevel level, String string) {
+
+		int result = level.compareTo(currentDebugLevel);
+		if (result >= 0) {
+			if (level.compareTo(DebugLevel.Error) >= 0) {
+				System.err.println("DEBUG: pulse-java: " + string);
+			} else {
+				System.out.println("DEBUG: pulse-java: " + string);
+			}
+		} else {
+			// do nothing
+		}
 	}
 
 }

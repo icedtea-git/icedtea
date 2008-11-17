@@ -33,7 +33,6 @@ import java.util.Map;
 
 import com.sun.javatest.TestResult;
 import com.sun.javatest.Status;
-import com.sun.javatest.util.HTMLWriter;
 import com.sun.javatest.util.I18NResourceBundle;
 
 import static com.sun.javatest.util.HTMLWriter.*;
@@ -47,8 +46,8 @@ import static com.sun.javatest.util.HTMLWriter.*;
  * Report differences to an HTML file.
  */
 public class HTMLReporter extends Reporter {
-    
-    /** Creates a new instance of SimpleDiffReporter */
+
+    /** Creates a new instance of HTMLReporter */
     public HTMLReporter(Writer out) throws IOException {
         this.out = new HTMLWriter(out, DOCTYPE);
         this.out.setI18NResourceBundle(i18n);
@@ -56,10 +55,40 @@ public class HTMLReporter extends Reporter {
 
     public void write(MultiMap<String, TestResult> table) throws IOException {
         this.table = table;
-        
         size = table.getColumns();
-        
+
+        startReport(title);
+
+        out.startTag(H1);
+        if (title == null)
+            out.writeI18N("html.head.notitle");
+        else
+            out.writeI18N("html.head.title", title);
+        out.endTag(H1);
+
+        writeIndexTable();
+        writeMainTable();
+        writeSummary();
+
+        endReport();
+    }
+
+    protected void startReport(String title) throws IOException {
         out.startTag(HTML);
+        writeHead(title);
+        out.startTag(BODY);
+    }
+
+    protected void endReport() throws IOException {
+        out.startTag(HR);
+        out.writeI18N("html.generatedAt", new Date());
+        out.endTag(BODY);
+
+        out.endTag(HTML);
+        out.flush();
+    }
+
+    protected void writeHead(String title) throws IOException {
         out.startTag(HEAD);
         out.startTag(TITLE);
         if (title == null)
@@ -74,40 +103,24 @@ public class HTMLReporter extends Reporter {
         out.write("tr.head { background-color:#dddddd }");
         out.write("tr.odd  { background-color:#eeeeee }");
         out.write("tr.even { background-color:white } ");
-        out.write("td { padding: 0 1em }");
+        out.write("td { padding: 0 .5em }");
         out.write("td.pass { background-color:#ddffdd } ");
         out.write("td.fail { background-color:#ffdddd } ");
         out.write("td.error { background-color:#ddddff } ");
         out.write("td.notRun { background-color:#dddddd } ");
+        out.write("th { padding: 0 .5em }");
         out.write("hr      { margin-top:30px; }");
         out.write("\n");
         out.endTag(STYLE);
         out.endTag(HEAD);
-        
-        out.startTag(BODY);
-        out.startTag(H1);
-        if (title == null)
-            out.writeI18N("html.head.notitle");
-        else
-            out.writeI18N("html.head.title", title);
-        out.endTag(H1);
-        writeHead();
-        writeBody();
-        writeSummary();
-        
-        out.startTag(HR);
-        out.writeI18N("html.generatedAt", new Date());
-        out.endTag(BODY);
-        
-        out.endTag(HTML);
-        out.flush();
+
     }
-    
-    private void writeHead() throws IOException {
+
+    private void writeIndexTable() throws IOException {
         out.startTag(H2);
         out.writeI18N("html.head.sets");
         out.endTag(H2);
-        
+
         out.startTag(TABLE);
         out.writeAttr(FRAME, BOX);
         out.writeAttr(RULES, GROUPS);
@@ -120,6 +133,7 @@ public class HTMLReporter extends Reporter {
         out.startTag(TH);
         out.writeI18N("html.th.location");
         out.endTag(TH);
+        writeIndexTableInfoHeadings();
 //        out.startTag(TH);
 //        out.writeI18N("html.th.type");
 //        out.endTag(TH);
@@ -146,16 +160,17 @@ public class HTMLReporter extends Reporter {
         out.endTag(TH);
         out.endTag(TR);
         out.endTag(THEAD);
-        
+
         out.startTag(TBODY);
         for (int i = 0; i < size; i++) {
             out.startTag(TR);
             out.writeAttr(CLASS, (i % 2 == 0 ? EVEN : ODD));
             out.startTag(TD);
-            out.write(String.valueOf(i));
+            out.write(String.valueOf(i + 1));
             out.endTag(TD);
             out.startTag(TD);
             out.write(table.getColumnName(i));
+            writeIndexTableInfoValues(table.getColumnName(i));
             out.endTag(TD);
 //            out.startTag(TD);
 //            out.write("??");
@@ -166,7 +181,7 @@ public class HTMLReporter extends Reporter {
                 out.startTag(TD);
                 if (counts[c] > 0)
                     out.write(String.valueOf(counts[c]));
-                else 
+                else
                     out.writeEntity("&nbsp;");
                 total += counts[c];
                 out.endTag(TD);
@@ -179,8 +194,14 @@ public class HTMLReporter extends Reporter {
         out.endTag(TBODY);
         out.endTag(TABLE);
     }
-    
-    private void writeBody() throws IOException {
+
+    protected void writeIndexTableInfoHeadings() throws IOException {
+    }
+
+    protected void writeIndexTableInfoValues(String name) throws IOException {
+    }
+
+    private void writeMainTable() throws IOException {
         diffs = 0;
         for (Map.Entry<String, MultiMap.Entry<TestResult>> e: table.entrySet()) {
             String testName = e.getKey();
@@ -202,7 +223,10 @@ public class HTMLReporter extends Reporter {
                 out.endTag(TH);
                 for (int i = 0; i < result.getSize(); i++) {
                     out.startTag(TH);
-                    out.writeI18N("html.th.setN", i);
+                    if (compact)
+                        out.write(String.valueOf(i + 1));
+                    else
+                        out.writeI18N("html.th.setN", i + 1);
                     out.endTag(TH);
                 }
                 out.endTag(TR);
@@ -222,36 +246,24 @@ public class HTMLReporter extends Reporter {
                     if (wd != null)
                         trFile = new File(wd, tr.getWorkRelativePath());
                 }
-                Status s = (tr == null ? null : tr.getStatus());
                 out.startTag(TD);
-                String classAttr;
-                String text;
-                switch (s == null ? Status.NOT_RUN : s.getType()) {
-                    case Status.PASSED:
-                        classAttr = PASS;
-                        text = i18n.getString("html.pass");
-                        break;
-                    case Status.FAILED:
-                        classAttr = FAIL;
-                        text = i18n.getString("html.fail");
-                        break;
-                    case Status.ERROR:
-                        classAttr = ERROR;
-                        text = i18n.getString("html.error");
-                        break;
-                    default:
-                        classAttr = NOT_RUN;
-                        text = i18n.getString("html.notRun");
-                        break;
-                }
-                out.writeAttr(CLASS, classAttr);
+                Status s = (tr == null ? null : tr.getStatus());
+                out.writeAttr(CLASS, getClassAttr(s));
+                String text = getText(s);
                 if (trFile != null && trFile.exists()) {
                     out.startTag(A);
                     out.writeAttr(HREF, trFile.toURI().toString());
-                    out.write(text);
+                    if (text.startsWith("&"))
+                        out.writeEntity(text);
+                    else
+                        out.write(text);
                     out.endTag(A);
-                } else
-                    out.write(text);
+                } else {
+                    if (text.startsWith("&"))
+                        out.writeEntity(text);
+                    else
+                        out.write(text);
+                }
                 out.endTag(TD);
             }
             out.endTag(TR);
@@ -262,7 +274,7 @@ public class HTMLReporter extends Reporter {
             out.endTag(TABLE);
         }
     }
-    
+
     private void writeSummary() throws IOException {
         out.startTag(P);
         if (diffs == 0)
@@ -271,27 +283,60 @@ public class HTMLReporter extends Reporter {
             out.writeI18N("html.diffs.count", diffs);
         out.endTag(P);
     }
-    
+
+    protected String getClassAttr(Status s) {
+        switch (s == null ? Status.NOT_RUN : s.getType()) {
+            case Status.PASSED:
+                return PASS;
+            case Status.FAILED:
+                return FAIL;
+            case Status.ERROR:
+                return ERROR;
+            default:
+                return NOT_RUN;
+        }
+    }
+
+    protected String getText(Status s) {
+        if (statusStrings == null) {
+            statusStrings = new String[Status.NUM_STATES];
+            if (compact) {
+                statusStrings[Status.PASSED] = i18n.getString("html.pass.compact");
+                statusStrings[Status.FAILED] = i18n.getString("html.fail.compact");
+                statusStrings[Status.ERROR] = i18n.getString("html.error.compact");
+                statusStrings[Status.NOT_RUN] = i18n.getString("html.notRun.compact");
+            } else {
+                statusStrings[Status.PASSED] = i18n.getString("html.pass");
+                statusStrings[Status.FAILED] = i18n.getString("html.fail");
+                statusStrings[Status.ERROR] = i18n.getString("html.error");
+                statusStrings[Status.NOT_RUN] = i18n.getString("html.notRun");
+            }
+        }
+        return statusStrings[s == null ? Status.NOT_RUN : s.getType()];
+    }
+
+    private String[] statusStrings;
+
+    protected final HTMLWriter out;
     private MultiMap<String, TestResult> table;
     private int size;
-    private HTMLWriter out;
-    
-    private static final String DOCTYPE = 
+
+    private static final String DOCTYPE =
             "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd\">";
-    
+
     // HTML tags
     private static final String THEAD = "thead";
     private static final String TBODY = "tbody";
-    
+
     // HTML attribute names
     private static final String CLASS = "class";
     private static final String FRAME = "frame";
     private static final String RULES = "rules";
-    
+
     // HTML attribute values
     private static final String BOX = "box";
     private static final String GROUPS = "groups";
-    
+
     // HTML class values
     private static final String HEAD = "head";
     private static final String ODD  = "odd";
@@ -300,6 +345,7 @@ public class HTMLReporter extends Reporter {
     private static final String FAIL = "fail";
     private static final String ERROR = "error";
     private static final String NOT_RUN = "notRun";
-    
+
+    private boolean compact = Boolean.TRUE.equals(Boolean.getBoolean("jtdiff.html.compact"));
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(HTMLReporter.class);
 }

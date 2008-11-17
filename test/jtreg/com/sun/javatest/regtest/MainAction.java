@@ -151,7 +151,7 @@ public class MainAction extends Action
                 throw new ParseException(PARSE_SECURE_OTHERVM);
         }
     } // init()
-    
+
     @Override
     public File[] getSourceFiles() {
         List<File> l = new ArrayList<File>();
@@ -244,11 +244,11 @@ public class MainAction extends Action
         // available to main and applet actions via the system properties
         // "test.src" and "test.classes", respectively"
         List<String> command = new ArrayList<String>(6);
-        
+
         // some tests are inappropriately relying on the CLASSPATH environment
         // variable being set, so force the use here.
         final boolean useCLASSPATH = true;
-        
+
         if (useCLASSPATH || script.isJDK11()) {
             command.add("CLASSPATH=" + script.getJavaTestClassPath() +
                         PATHSEP + script.testClassPath());
@@ -263,10 +263,10 @@ public class MainAction extends Action
 
         command.add("-Dtest.src=" + script.absTestSrcDir());
         command.add("-Dtest.classes=" + script.absTestClsDir());
-        command.add("-Dtest.vm.opts=" + script.getTestVMOptions());
-        command.add("-Dtest.tool.vm.opts=" + script.getTestToolVMOptions());
-        command.add("-Dtest.javac.opts=" + script.getTestCompilerOptions());
-        command.add("-Dtest.java.opts=" + script.getTestJavaOptions());
+        command.add("-Dtest.vm.opts=" + join(script.getTestVMOptions()));
+        command.add("-Dtest.tool.vm.opts=" + join(script.getTestToolVMOptions()));
+        command.add("-Dtest.javac.opts=" + join(script.getTestCompilerOptions()));
+        command.add("-Dtest.java.opts=" + join(script.getTestJavaOptions()));
 
         String newPolicyFN;
         if (policyFN != null) {
@@ -364,7 +364,7 @@ public class MainAction extends Action
     } // runOtherJVM()
 
     private static Hashtable savedSystemProperties;
-    
+
     private Status runSameJVM() throws TestRunException {
         // TAG-SPEC:  "The source and class directories of a test are made
         // available to main and applet actions via the system properties
@@ -376,6 +376,11 @@ public class MainAction extends Action
                 Properties p = System.getProperties();
                 if (savedSystemProperties == null)
                     savedSystemProperties = copyProperties(p);
+                p.put("java.class.path",
+                        script.absTestClsDir() + PATHSEP +
+                        script.absTestSrcDir() + PATHSEP +
+                        script.absClsLibListStr() + PATHSEP +
+                        p.getProperty("java.class.path"));
                 p.put("test.src", script.absTestSrcDir().getPath());
                 p.put("test.classes", script.absTestClsDir().getPath());
                 p.put("test.vm.opts", StringUtils.join(script.getTestVMOptions(), " "));
@@ -390,18 +395,18 @@ public class MainAction extends Action
                 //return Status.error(MAIN_SECMGR_BAD);
             }
         }
-        
+
         ByteArrayOutputStream newOut = new ByteArrayOutputStream();
         ByteArrayOutputStream newErr = new ByteArrayOutputStream();
         PrintStream psOut = new PrintStream(newOut);
         PrintStream psErr = new PrintStream(newErr);
-        
+
         Status status;
         PrintStream saveOut = System.out;
         PrintStream saveErr = System.err;
         try {
             status = Status.passed(EXEC_PASS);
-            
+
             String[] classpath = StringArray.splitSeparator(PATHSEP, script.testClassPath());
             List<URL> urls = new ArrayList<URL>();
             for (int i = 0; i < classpath.length; i++) {
@@ -417,18 +422,18 @@ public class MainAction extends Action
             Class<?> c = loader.loadClass(buildFN);
             Class<?>[] argTypes = { String[].class };
             Method method = c.getMethod("main", argTypes);
-            
+
             // XXX 4/1 possible to use splitSeparator instead?
             String[] tmpArgs = StringArray.splitWS(mainArgs);
             Object[] runArgs = {tmpArgs};
-            
+
             Status stat = redirectOutput(psOut, psErr);
             if (!stat.isPassed()) {
                 return stat;
             }
-            
+
             // RUN JAVA IN ANOTHER THREADGROUP
-            
+
             SameVMThreadGroup tg = new SameVMThreadGroup();
             SameVMThread svmt = new SameVMThread(method, runArgs, psErr);
             Thread t = new Thread(tg, svmt, "SameVMThread");
@@ -443,7 +448,7 @@ public class MainAction extends Action
                 }
             }
             tg.cleanup();
-            
+
             if (((svmt.t != null) || (tg.uncaughtThrowable != null)) && (error == null)) {
                 if (svmt.t == null)
                     error = tg.uncaughtThrowable;
@@ -451,12 +456,12 @@ public class MainAction extends Action
                     error = svmt.t;
                 status = Status.failed(MAIN_THREW_EXCEPT + error.toString());
             }
-            
+
             // EVALUATE RESULTS
             if (status.getReason().endsWith("java.lang.SecurityException: System.exit() forbidden by JavaTest")) {
                 status = Status.failed(UNEXPECT_SYS_EXIT);
             } else {
-                
+
                 boolean ok = status.isPassed();
                 int st   = status.getType();
                 String sr;
@@ -503,19 +508,20 @@ public class MainAction extends Action
                     System.setProperties(newProperties(savedSystemProperties));
 //                    System.err.println("reset properties");
                 } else {
+                    System.setProperty("java.class.path", (String) savedSystemProperties.get("java.class.path"));
 //                    System.err.println("no need to reset properties");
                 }
                 rsm.setAllowPropertiesAccess(false);
             }
-            
+
             Status stat = redirectOutput(saveOut, saveErr);
             if (!stat.isPassed()) {
                 return stat;
             }
-            
+
             psOut.close();
             psErr.close();
-            
+
             String outString = newOut.toString();
             String errString = newErr.toString();
             PrintWriter sysOut = section.createOutput("System.out");
@@ -528,7 +534,7 @@ public class MainAction extends Action
                 if (sysErr != null) sysErr.close();
             }
         }
-        
+
         return status;
     } // runSameJVM()
 
@@ -539,7 +545,7 @@ public class MainAction extends Action
             value = "novalue";
         return value;
     } // parseMainManual()
-    
+
     private static Hashtable<Object,Object> copyProperties(Properties p) {
         Hashtable<Object,Object> h = new Hashtable<Object,Object>();
         for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements(); ) {
@@ -548,7 +554,7 @@ public class MainAction extends Action
         }
         return h;
     }
-    
+
     private static Properties newProperties(Hashtable<?,?> h) {
         Properties p = new Properties();
         for (Enumeration<?> e = h.keys(); e.hasMoreElements(); ) {
@@ -556,7 +562,17 @@ public class MainAction extends Action
             p.put(key, h.get(key));
         }
         return p;
-        
+
+    }
+
+    private String join(List<String> list) {
+        StringBuffer sb = new StringBuffer();
+        for (String s: list) {
+            if (sb.length() > 0)
+                sb.append(" ");
+            sb.append(s);
+        }
+        return sb.toString();
     }
 
     //----------internal classes------------------------------------------------
@@ -630,27 +646,27 @@ public class MainAction extends Action
 
         private void cleanup() {
             cleanMode = true;
-            
+
             final int CLEANUP_ROUNDS = 4;
             final long MAX_CLEANUP_TIME_MILLIS = 2 * 60 * 1000;
             final long CLEANUP_MILLIS_PER_ROUND = MAX_CLEANUP_TIME_MILLIS / CLEANUP_ROUNDS;
             final long NANOS_PER_MILLI = 1000L * 1000L;
-            
+
             long startCleanupTime = System.nanoTime();
-            
+
             for (int i = 1; i <= CLEANUP_ROUNDS; i++) {
                 long deadline = startCleanupTime + i * CLEANUP_MILLIS_PER_ROUND * NANOS_PER_MILLI;
                 List<Thread> liveThreads = liveThreads();
-                if (liveThreads.isEmpty()) { 
+                if (liveThreads.isEmpty()) {
                     // nothing left to cleanup
                     cleanupOK = true;
                     return;
                 }
-                
+
                 // kick the remaining live threads
                 for (Thread thread : liveThreads)
                     thread.interrupt();
-                
+
                 // try joining as many threads as possible before
                 // the round times out
                 for (Thread thread : liveThreads) {
@@ -663,10 +679,10 @@ public class MainAction extends Action
                     }
                 }
             }
-            
+
             cleanupOK = liveThreads().isEmpty();
         } // cleanup()
-        
+
         /**
          * Gets all the "interesting" threads in the thread group.
          * @see ThreadGroup#enumerate(Thread[])

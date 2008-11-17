@@ -126,6 +126,60 @@ JVM_handle_linux_signal(int sig,
   }
 
   if (info != NULL && thread != NULL) {
+    // Handle ALL stack overflow variations here
+    if (sig == SIGSEGV) {
+      address addr = (address) info->si_addr;
+
+      // check if fault address is within thread stack
+      if (addr < thread->stack_base() &&
+          addr >= thread->stack_base() - thread->stack_size()) {
+        // stack overflow
+        if (thread->in_stack_yellow_zone(addr)) {
+          thread->disable_stack_yellow_zone();
+          Unimplemented();
+        }
+        else if (thread->in_stack_red_zone(addr)) {
+          thread->disable_stack_red_zone();
+          Unimplemented();
+        }
+        else {
+          // Accessing stack address below sp may cause SEGV if
+          // current thread has MAP_GROWSDOWN stack. This should
+          // only happen when current thread was created by user
+          // code with MAP_GROWSDOWN flag and then attached to VM.
+          // See notes in os_linux.cpp.
+          if (thread->osthread()->expanding_stack() == 0) {
+            thread->osthread()->set_expanding_stack();
+            if (os::Linux::manually_expand_stack(thread, addr)) {
+              thread->osthread()->clear_expanding_stack();
+              return true;
+            }
+            thread->osthread()->clear_expanding_stack();
+          }
+          else {
+            fatal("recursive segv. expanding stack.");
+          }
+        } 
+      }
+    }
+
+    /*if (thread->thread_state() == _thread_in_Java) {
+      Unimplemented();
+    }
+    else*/ if (thread->thread_state() == _thread_in_vm &&
+               sig == SIGBUS && thread->doing_unsafe_access()) {
+      Unimplemented();
+    }
+
+    // jni_fast_Get<Primitive>Field can trap at certain pc's if a GC
+    // kicks in and the heap gets shrunk before the field access.
+    /*if (sig == SIGSEGV || sig == SIGBUS) {
+      address addr = JNI_FastGetField::find_slowcase_pc(pc);
+      if (addr != (address)-1) {
+        stub = addr;
+      }
+    }*/
+
     // Check to see if we caught the safepoint code in the process
     // of write protecting the memory serialization page.  It write
     // enables the page immediately after protecting it so we can
@@ -136,6 +190,16 @@ JVM_handle_linux_signal(int sig,
       os::block_on_serialize_page_trap();
       return true;
     }
+  }
+
+  // signal-chaining
+  if (os::Linux::chained_handler(sig, info, ucVoid)) {
+     return true;
+  }
+
+  if (!abort_if_unrecognized) {
+    // caller wants another chance, so give it to him
+    return false;
   }
 
 #ifndef PRODUCT
@@ -341,14 +405,14 @@ extern "C" {
     if (from > to) {
       jlong *end = from + count;
       while (from < end)
-        *(to++) = *(from++);
+        os::atomic_copy64(from++, to++);
     }
     else if (from < to) {
       jlong *end = from;
       from += count - 1;
       to   += count - 1;
       while (from >= end)
-        *(to--) = *(from--);
+        os::atomic_copy64(from--, to--);
     }
   }
 

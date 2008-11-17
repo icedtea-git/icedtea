@@ -1,5 +1,81 @@
-2008-11-14  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
+	Merge with IcedTea6.
+	* .hgignore,
+	* .hgtags,
+	* ChangeLog,
+	* HACKING,
+	* IcedTeaPlugin.cc,
+	* Makefile.am,
+	* contrib/mixtec-hacks.patch,
+	* fsg.sh,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/CHANGES.txt,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftAudioPusher.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftFilter.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftJitterCorrector.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftMainMixer.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftVoice.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPClassLoader.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/AccessWarningPane.java,
+	* patches/icedtea-6761856-freetypescaler.patch,
+	* patches/icedtea-alsa-default-device.patch,
+	* patches/icedtea-cc-interp-no-fer.patch,
+	* patches/icedtea-display-mode-changer.patch,
+	* patches/icedtea-f2i-overflow.patch: Merged.
+	* patches/icedtea-linker-libs-order.patch: Rebuilt.
+	* patches/icedtea-testenv.patch: Converted to work against TestUtil.
+	* patches/icedtea-uname.patch,
+	* patches/icedtea-visualvm.patch,
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java,
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Debug.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerProvider.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/SecurityWrapper.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java,
+	* test/jtreg/README,
+	* test/jtreg/com/sun/javatest/diff/Diff.java,
+	* test/jtreg/com/sun/javatest/diff/Fault.java,
+	* test/jtreg/com/sun/javatest/diff/HTMLReporter.java,
+	* test/jtreg/com/sun/javatest/diff/HTMLWriter.java,
+	* test/jtreg/com/sun/javatest/diff/Main.java,
+	* test/jtreg/com/sun/javatest/diff/MultiMap.java,
+	* test/jtreg/com/sun/javatest/diff/ReportReader.java,
+	* test/jtreg/com/sun/javatest/diff/StandardDiff.java,
+	* test/jtreg/com/sun/javatest/diff/SuperDiff.java,
+	* test/jtreg/com/sun/javatest/diff/WorkDirectoryReader.java,
+	* test/jtreg/com/sun/javatest/diff/i18n.properties,
+	* test/jtreg/com/sun/javatest/regtest/Main.java,
+	* test/jtreg/com/sun/javatest/regtest/MainAction.java,
+	* test/jtreg/com/sun/javatest/regtest/RegressionSecurityManager.java,
+	* test/jtreg/com/sun/javatest/regtest/RegressionTestFinder.java,
+	* test/jtreg/com/sun/javatest/regtest/i18n.properties: Merged.
+
+2008-11-17  Andrew John Hughes  <ahughes@redhat.com>
+	
 	* Makefile.am:
 	Expand generated and pulseaudio.  Lock
 	patches to $(top_srcdir).  Run jtreg with
@@ -12,6 +88,16 @@
 	* test/jtreg/excludelist.jdk.jtx,
 	* test/jtreg/excludelist.langtools.jtx:
 	Exclude broken tests.
+
+2008-11-17  Matthias Klose  <doko@ubuntu.com>
+
+	* fsg.sh: Don't remove xml-stylesheet files.
+
+2008-11-15  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-testenv.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	* HACKING: Document new patch.
 
 2008-11-14  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -27,6 +113,32 @@
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/windows-i586/javax.sound.sampled.spi.MixerProvider,
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/windows-ia64/javax.sound.sampled.spi.MixerProvider:
 	Add property files missed by hg.
+
+2008-11-15  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-display-mode-changer.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	* HACKING: Document new patch.
+
+2008-11-14  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	Removed useless SuppressWarnings.
+	(static): Delegate the loading of native libraries to SecurityWrapper.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java 
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/SecurityWrapper.java
+	New class.
+	(loadNativeLibrary): Loads libpulse-java.so in a privileged operation to
+	work when a security manager is installed.
 
 2008-11-14  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -78,10 +190,83 @@
 	* javac.in:
 	Convert to Perl script to avoid
 	quoting errors.
-	
+
+2008-11-11  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
+	(os::atomic_copy64): New method.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	(_Copy_conjoint_jlongs_atomic): Use the above.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp
+	(OrderAccess::load_acquire): Likewise.
+	(OrderAccess::release_store): Likewise.
+	(OrderAccess::store_fence): Likewise.
+	(OrderAccess::release_store_fence): Likewise.
+
+2008-11-11  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-uname.patch: Fix ARCH on powerpc-linux-gnu
+
 2008-11-10  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Fix make dist.
+
+2008-11-10  Omair Majid  <omajid@redhat.com>
+
+		* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Debug.java
+	New class containing debugging functions.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	(run): Print some debugging info.
+	(update): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(ClipThread.writeFrames): Likewise.
+	(close): Likewise.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(PulseAudioMixer): Likewise.
+	(getLine): Likewise.
+	(close): Likewise.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerProvider.java
+	(PulseAudioMixerProvider): Initialize Debug class.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(open): Print some debug info.
+	(close): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(open): Likewise.
+	(close): Likewise.
+	
+2008-11-10  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(close): Dont check for permission to play audio. Always granted.
+	Infact, checking it causes an AccessControlException for untrusted
+	applets. The ALSA based backend doesnt check this permission at all.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(getLine): Likewise.
+	(getSourceLines): Likewise.
+	(close): Likewise.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(open): Likewise.
+	(close): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java
+	(open): Likewise.
+	(close): Likewise.
+
+2008-11-10  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	(Java_org_classpath_icedtea_pulseaudio_EventLoop_native_1set_1sink_1volume):
+	Deallocate unused memory.
+
+2008-11-10  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/
+	CHANGES.txt,SoftAudioPusher.java,SoftFilter.java,
+	SoftJitterCorrector.java,SoftMainMixer.java,SoftVoice.java:
+	Updated to new Gervill CVS.
 
 2008-11-09  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -89,16 +274,66 @@
 	* patches/icedtea-hotspot-use-idx_t.patch,
 	* patches/icedtea-security-updates.patch:
 	Remove parts applied/changed in b39.
-	
-2008-11-07  Omair Majid  <omajid@redhat.com>
 
-	* patches/icedtea-jsoundhs.patch: Added two more diffs to remove all uses 
-	of jsoundhs and Headspace libraries.
+2008-11-09  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (check-langtools): Run jtreg with -samevm.
+
+2008-11-09  Mark Wielaard  <mark@klomp.org>
+
+	* test/jtreg/README,
+	test/jtreg/com/sun/javatest/diff/HTMLReporter.java,
+	test/jtreg/com/sun/javatest/diff/Main.java,
+	test/jtreg/com/sun/javatest/diff/MultiMap.java,
+	test/jtreg/com/sun/javatest/diff/ReportReader.java,
+	test/jtreg/com/sun/javatest/diff/WorkDirectoryReader.java,
+	test/jtreg/com/sun/javatest/diff/i18n.properties,
+	test/jtreg/com/sun/javatest/regtest/Main.java,
+	test/jtreg/com/sun/javatest/regtest/MainAction.java,
+	test/jtreg/com/sun/javatest/regtest/RegressionSecurityManager.java,
+	test/jtreg/com/sun/javatest/regtest/RegressionTestFinder.java,
+	test/jtreg/com/sun/javatest/regtest/i18n.properties,
+	test/jtreg/com/sun/javatest/diff/Diff.java,
+	test/jtreg/com/sun/javatest/diff/Fault.java,
+	test/jtreg/com/sun/javatest/diff/HTMLWriter.java,
+	test/jtreg/com/sun/javatest/diff/StandardDiff.java,
+	test/jtreg/com/sun/javatest/diff/SuperDiff.java,
+	Upgrade to jtreg-4_0-src-b02-15_oct_2008.
+
+2008-11-09  Mark Wielaard  <mark@klomp.org>
+
+	* .hgignore: Add test/check-.*log.
+
+2008-11-08  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (ICEDTEA_ENV): Set MILESTONE to fcs.
+	* patches/icedtea-version.patch: Remove special casing of
+	MILESTONE in hotspot build, add special casing of milestone in
+	langtools build.
+
+2008-11-08  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (OPENJDK_MD5SUM): Fixed value.
+
+2008-11-08  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (OPENJDK_DATE, OPENJDK_MD5SUM, OPENJDK_VERSION):
+	Update for b13.
+	(ICEDTEA_PATCHES): Removed patches 6616825, 6651382, 6756202.
+	* patches/icedtea-6open-6616825.patch: Removed.
+	* patches/icedtea-6open-6651382.patch: Removed.
+	* patches/icedtea-6open-6756202.patch: Removed.
+	* NEWS: Add integration of b13.
 
 2008-11-07  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Use 'node|short' instead of 'rev'
 	for Mercurial revision number.
+
+2008-11-07  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-jsoundhs.patch: Added two more diffs to remove all uses 
+	of jsoundhs and Headspace libraries.
 
 2008-11-07  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -113,6 +348,165 @@
 	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp,
 	* ports/hotspot/src/cpu/zero/vm/relocInfo_zero.cpp:
 	Updated for HotSpot 14 b05.
+
+2008-11-07  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-cc-interp-no-fer.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
+2008-11-07  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp
+	(Atomic::store_ptr): Implemented.
+
+2008-11-07  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp
+	(frame::interpreter_frame_result): Implemented.
+
+2008-11-06  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	(JVM_handle_linux_signal): Added signal chaining,
+	abort_if_unrecognised, and stack overflow recognition.
+
+2008-11-06  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp
+	(StackShadowPages): Increase for debug builds.
+
+2008-11-06  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+	(CppInterpreter::native_entry): Unwind correctly if an
+	exception is thrown while setting up the call.
+
+2008-11-06  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+	(CppInterpreter::native_entry): Add stack overflow check.
+
+2008-11-06  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp
+	(CppInterpreter::stack_overflow_imminent): New method.
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+	(CppInterpreter::stack_overflow_imminent): New method.
+	(CppInterpreter::normal_entry): Add stack overflow check.
+
+2008-11-05  Deepak Bhole  <dbhole@redhat.com>
+
+	* patches/icedtea-copy-plugs.patch: Add netscape.* classes to rt.jar when
+	building with an alternate jar application.
+
+2008-11-05  Deepak Bhole  <dbhole@redhat.com>
+
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Correct
+	indentation from last commit, remove debug output.
+
+2008-11-05  Andrew Haley  <aph@redhat.com>
+	    Gary Benson  <gbenson@redhat.com>
+
+	* contrib/mixtec-hacks.patch: new file.
+
+2008-11-04  Deepak Bhole  <dbhole@redhat.com>
+
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Dynamically load
+	files from the index.
+
+2008-11-04  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp
+	(SharkRuntime::_f2i): New constant.
+	(SharkRuntime::_f2l): Likewise.
+	(SharkRuntime::_d2i): Likewise.
+	(SharkRuntime::_d2l): Likewise.
+	(SharkRuntime::f2i): New accessor.
+	(SharkRuntime::f2l): Likewise.
+	(SharkRuntime::d2i): Likewise.
+	(SharkRuntime::d2l): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::_f2i): New constant.
+	(SharkRuntime::_f2l): Likewise.
+	(SharkRuntime::_d2i): Likewise.
+	(SharkRuntime::_d2l): Likewise.
+	(SharkRuntime::initialize): Initialize the above.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::call_vm_leaf): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse): Use runtime calls for f2i, f2l, d2i and d2l.
+
+2008-11-04  Omair Majid  <omajid@redhat.com>
+
+	* Makefile.am (stamps/pulse-java.stamp): Link in libpulse.so after all
+	the object files that use it.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java
+	(testWriteIntegralNumberFrames): New function. Tests that a SourceDataLine
+	will only write an integral number of frames.
+	(testWriteNegativeLength): New function. Tests that a
+	SourceDataLine.write() wont accept a negative length.
+	(testWriteNegativeOffset): New function. Tests that a
+	SourceDataLine.write() will not accept a negative offset.
+	(testWriteMoreThanArrayLength): New function. Tests that
+	SourceDataLine.write() wont write more than the length of the array.
+	(testWriteMoreThanArrayLength2): Likewise.
+	(testWriteWithoutStart): Added a check to avoid throwing an
+	IllegalStateException.
+
+2008-11-04  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse): Fix syntax errors.
+
+2008-11-04  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/244:
+	* patches/icedtea-f2i-overflow.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
+2008-11-03 Nix  <nix@esperi.org.uk>
+		   Omair Majid  <omajid@redhat.com>
+
+	* Makefile.am (ICEDTEA_PATCHES): Added icedtea-linker-libs-order.patch.
+	* patches/icedtea-linker-libs-order.patch: Fixes icedtea bug#237.
+
+2008-11-03  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-alsa-default-device.patch: New patch. Use the ALSA 
+	'default' device if possible. Makes Java play nice with PulseAudio.
+
+2008-11-03  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse): Fix shift instructions to use only the
+	lower order bits of the second argument.
+
+2008-11-03  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp
+	(BytecodeInterpreter::VMintShl): Only shift by the lower five bits.
+	(BytecodeInterpreter::VMintShr): Likewise.
+	(BytecodeInterpreter::VMintUshr): Likewise.
+
+2008-10-31  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Fix potential DoS issue when dealing with very long
+	URL/target addresses.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Decode param values
+	correctly.
+	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Bypass
+	authentication check when origin matches.
+	* rt/net/sourceforge/jnlp/security/AccessWarningPane.java: Show proper
+	Name/Publisher/Origin values when no certificate is associated.
+
+
+2008-10-31  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Updated for new visualvm 1.0.1.
+	* patches/icedtea-visualvm.patch: Updated.
 
 2008-10-30  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -142,6 +536,23 @@
 	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java:
 	Merged.
 
+2008-10-29  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-6761856-freetypescaler.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	* HACKING: Document new patch.
+
+2008-10-29  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/238:
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse): Fix copy-and-paste error in f2l.
+
+2008-10-27  Deepak Bhole  <dbhole@redhat.com>
+
+	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Act on window
+	close events (Bug# 215)
+
 2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
@@ -150,6 +561,10 @@
 	Remove extra ant home output.
 	* patches/icedtea-rhino.patch:
 	Regenerated.
+
+2008-10-27  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Updated version to 1.4.
 
 2008-10-27  Lillian Angel  <langel@redhat.com>
 

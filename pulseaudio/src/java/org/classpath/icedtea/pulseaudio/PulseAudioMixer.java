@@ -67,6 +67,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.sound.sampled.AudioFormat.Encoding;
 import javax.sound.sampled.Control.Type;
 
+import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
+
 public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 	// singleton
 
@@ -92,6 +94,10 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 	private final List<LineListener> lineListeners = new ArrayList<LineListener>();
 
 	private PulseAudioMixer() {
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioMixer.PulseAudioMixer(): "
+				+ "Contructing PulseAudioMixer...");
+
 		AudioFormat[] formats = getSupportedFormats();
 
 		staticSourceLineInfos.add(new DataLine.Info(SourceDataLine.class,
@@ -106,6 +112,9 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 				StreamBufferAttributes.MAX_VALUE));
 
 		refreshSourceAndTargetLines();
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioMixer.PulseAudioMixer(): "
+				+ "Finished constructing PulseAudioMixer");
 
 	}
 
@@ -126,7 +135,9 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		 * frameSize = sample size (in bytes, not bits) x # of channels
 		 * 
 		 * From PulseAudio's sources
-		 * http://git.0pointer.de/?p=pulseaudio.git;a=blob;f=src/pulse/sample.c;h=93da2465f4301e27af4976e82737c3a048124a68;hb=82ea8dde8abc51165a781c69bc3b38034d62d969#l63
+		 * http://git.0pointer.de/?p=pulseaudio.git;a=blob
+		 * ;f=src/pulse/sample.c;h=93da2465f4301e27af4976e82737c3a048124a68;hb=
+		 * 82ea8dde8abc51165a781c69bc3b38034d62d969#l63
 		 */
 
 		/*
@@ -135,7 +146,6 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		 * 
 		 * PA_CHANNEL_MAP_DEFAULT (=PA_CHANNEL_MAP_AIFF) supports 1,2,3,4,5 or 6
 		 * channels only
-		 * 
 		 */
 		int[] channelSizes = new int[] { 1, 2, 3, 4, 5, 6 };
 
@@ -298,15 +308,11 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		}
 
 		if ((info.getLineClass() == SourceDataLine.class)) {
-			/* check for permission to play audio */
-			AudioPermission perm = new AudioPermission("play", null);
-			perm.checkGuard(null);
-
 			return new PulseAudioSourceDataLine(formats, defaultFormat);
 		}
 
 		if ((info.getLineClass() == TargetDataLine.class)) {
-			/* check for permission to play audio */
+			/* check for permission to record audio */
 			AudioPermission perm = new AudioPermission("record", null);
 			perm.checkGuard(null);
 
@@ -314,10 +320,6 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		}
 
 		if ((info.getLineClass() == Clip.class)) {
-			/* check for permission to play audio */
-			AudioPermission perm = new AudioPermission("play", null);
-			perm.checkGuard(null);
-
 			return new PulseAudioClip(formats, defaultFormat);
 		}
 
@@ -329,6 +331,9 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 				return new PulseAudioTargetPort(portInfo.getName());
 			}
 		}
+
+		Debug.println(DebugLevel.Info, "PulseAudioMixer.getLine(): "
+				+ "No matching line supported by PulseAudio");
 
 		throw new IllegalArgumentException("No matching lines found");
 
@@ -371,11 +376,6 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 
 	@Override
 	public Line[] getSourceLines() {
-
-		/* check for permmission to play audio */
-		AudioPermission perm = new AudioPermission("play", null);
-		perm.checkGuard(null);
-
 		return (Line[]) sourceLines.toArray(new Line[0]);
 
 	}
@@ -401,7 +401,7 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 	@Override
 	public Line[] getTargetLines() {
 
-		/* check for permission to play audio */
+		/* check for permission to record audio */
 		AudioPermission perm = new AudioPermission("record", null);
 		perm.checkGuard(null);
 
@@ -492,16 +492,6 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		 * is allowed
 		 */
 
-		try {
-			/* check for permission to play audio */
-			AudioPermission perm = new AudioPermission("play", null);
-			perm.checkGuard(null);
-		} catch (SecurityException e) {
-			/* check for permission to record audio */
-			AudioPermission perm = new AudioPermission("record", null);
-			perm.checkGuard(null);
-		}
-
 		if (!this.isOpen) {
 			throw new IllegalStateException("Mixer is not open; cant close");
 		}
@@ -509,11 +499,14 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		List<Line> linesToClose = new LinkedList<Line>();
 		linesToClose.addAll(sourceLines);
 		if (sourceLines.size() > 0) {
+
+			Debug.println(DebugLevel.Warning, "PulseAudioMixer.close(): "
+					+ linesToClose.size()
+					+ " source lines were not closed. closing them now.");
+
 			linesToClose.addAll(sourceLines);
 			for (Line line : linesToClose) {
 				if (line.isOpen()) {
-					System.out
-							.println("PulseAudioMixer: DEBUG: some source lines have not been closed");
 					line.close();
 				}
 			}
@@ -521,11 +514,13 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		linesToClose.clear();
 
 		if (targetLines.size() > 0) {
+			Debug.println(DebugLevel.Warning, "PulseAudioMixer.close(): "
+					+ linesToClose.size()
+					+ " target lines have not been closed");
+
 			linesToClose.addAll(targetLines);
 			for (Line line : linesToClose) {
 				if (line.isOpen()) {
-					System.out
-							.println("PulseAudioMixer: DEBUG: some target lines have not been closed");
 					line.close();
 				}
 			}
@@ -544,11 +539,12 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 					+ ": interrupted while waiting for eventloop to finish");
 		}
 
-		// System.out.println(this.getClass().getName() + ": closed");
-
 		isOpen = false;
 
 		refreshSourceAndTargetLines();
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioMixer.close(): "
+				+ "Mixer closed");
 
 	}
 
@@ -616,16 +612,6 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		 * only allow the mixer to be controlled if either playback or recording
 		 * is allowed
 		 */
-
-		try {
-			/* check for permission to play audio */
-			AudioPermission perm = new AudioPermission("play", null);
-			perm.checkGuard(null);
-		} catch (SecurityException e) {
-			/* check for permission to record audio */
-			AudioPermission perm = new AudioPermission("record", null);
-			perm.checkGuard(null);
-		}
 
 		if (isOpen) {
 			throw new IllegalStateException("Mixer is already open");
@@ -724,6 +710,9 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 			targetLineInfos.add(new Port.Info(Port.class, portName, false));
 		}
 
+		Debug.println(DebugLevel.Debug, "PulseAudioMixer.open(): "
+				+ "Mixer opened");
+
 	}
 
 	@Override
@@ -738,7 +727,6 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 	 * Cons: - eventListeners are run from other threads, if those then call
 	 * fireEvent while a method is waiting on a listener, this synchronized
 	 * block wont be entered: deadlock!
-	 * 
 	 */
 	private void fireEvent(final LineEvent e) {
 		synchronized (lineListeners) {

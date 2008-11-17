@@ -1409,19 +1409,19 @@ public:
   NS_DECL_ISUPPORTS
   NS_DECL_NSIRUNNABLE
 
-  GetURLRunnable (nsIPluginInstancePeer* peer, const char* url, const char* target);
+  GetURLRunnable (nsIPluginInstancePeer* peer, nsCString url, nsCString target);
 
   ~GetURLRunnable ();
 
 private:
   nsIPluginInstancePeer* peer;
-  const char* url;
-  const char* target;
+  nsCString url;
+  nsCString target;
 };
 
 NS_IMPL_ISUPPORTS1 (GetURLRunnable, nsIRunnable)
 
-GetURLRunnable::GetURLRunnable (nsIPluginInstancePeer* peer, const char* url, const char* target)
+GetURLRunnable::GetURLRunnable (nsIPluginInstancePeer* peer, nsCString url, nsCString target)
 : peer(peer),
   url(url),
   target(target)
@@ -1442,7 +1442,7 @@ GetURLRunnable::Run ()
    nsIPluginInstanceOwner* owner = nsnull;
    ownerGetter->GetOwner (&owner);
 
-   return owner->GetURL ((const char*) url, (const char*) target,
+   return owner->GetURL ((const char*) url.get(), (const char*) target.get(),
                          nsnull, 0, nsnull, 0);
 }
 
@@ -2869,8 +2869,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
               ownerGetter->GetOwner (&owner);
 			  PLUGIN_DEBUG_2ARG ("Calling GetURL with %s and %s\n", nsCString (url).get (), nsCString (target).get ());
               nsCOMPtr<nsIRunnable> event = new GetURLRunnable (instance->peer,
-													 nsCString (url).get (),
-													 nsCString (target).get ());
+													 nsCString (url),
+													 nsCString (target));
               current->Dispatch(event, nsIEventTarget::DISPATCH_NORMAL);
             }
         }
@@ -4062,7 +4062,11 @@ IcedTeaPluginFactory::Eval ()
     {
       if (!factory->js_cleared_handles.Get(javascript_identifier, NULL))
 	  {
-        PLUGIN_DEBUG_2ARG ("Calling Eval: %d, %d\n", javascript_identifier, strSize);
+	    nsCString evStr("");
+		for (int i=0; i < strSize; i++)
+			evStr += nameString[i];
+
+        PLUGIN_DEBUG_2ARG ("Calling Eval: %d, %s\n", javascript_identifier, evStr.get());
         result = liveconnect->Eval(proxyEnv,
                                    javascript_identifier,
                                    nameString, strSize,

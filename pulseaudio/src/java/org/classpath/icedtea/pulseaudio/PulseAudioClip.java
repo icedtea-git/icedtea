@@ -41,12 +41,12 @@ import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioPermission;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 
+import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 import org.classpath.icedtea.pulseaudio.Stream.WriteListener;
 
 public class PulseAudioClip extends PulseAudioDataLine implements Clip,
@@ -146,6 +146,9 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 
 		stream.addWriteListener(writeListener);
 
+		Debug.println(DebugLevel.Verbose,
+				"PulseAudioClip$ClipThread.writeFrames(): Writing");
+
 		int remainingFrames = lastFrame - startingFrame - 1;
 		while (remainingFrames > 0) {
 			synchronized (eventLoop.threadLock) {
@@ -231,10 +234,6 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 	@Override
 	public void close() {
 
-		/* check for permission to play audio */
-		AudioPermission perm = new AudioPermission("play", null);
-		perm.checkGuard(null);
-
 		if (!isOpen) {
 			throw new IllegalStateException("line already closed");
 		}
@@ -254,6 +253,9 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		mixer.removeSourceLine(this);
 
 		super.close();
+
+		Debug.println(DebugLevel.Verbose, "PulseAudioClip.close(): "
+				+ "Clip closed");
 
 	}
 
@@ -397,10 +399,6 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 	public void open(AudioFormat format, byte[] data, int offset, int bufferSize)
 			throws LineUnavailableException {
 
-		/* check for permission to play audio */
-		AudioPermission perm = new AudioPermission("play", null);
-		perm.checkGuard(null);
-
 		super.open(format);
 		this.data = new byte[bufferSize];
 		System.arraycopy(data, offset, this.data, 0, bufferSize);
@@ -425,6 +423,7 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		mixer.addSourceLine(this);
 
 		isOpen = true;
+		Debug.println(DebugLevel.Verbose, "PulseAudioClip.open(): Clip opened");
 
 	}
 

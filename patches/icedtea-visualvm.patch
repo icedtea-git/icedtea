@@ -1,5 +1,5 @@
---- oldplatform.properties	2008-09-29 13:52:36.000000000 -0400
-+++ visualvm/visualvm/jvm/nbproject/platform.properties	2008-09-29 13:53:33.000000000 -0400
+--- pp	2008-10-31 11:24:42.000000000 -0400
++++ visualvm/visualvm/jvm/nbproject/platform.properties	2008-10-31 11:24:48.000000000 -0400
 @@ -16,8 +16,8 @@
      org.openide.compat,\
      org.openide.util.enumerations
@@ -8,12 +8,12 @@
 -    profiler2
 +    platform8,\
 +    profiler3
- nbjdk.active=Java_HotSpot_TM__Client_VM_1.6.0-b88-17-release
+ nbjdk.active=default
  nbplatform.active=NetBeans_Platform_Dev_(Build_200711261600)
  suite.dir=${basedir}
---- oldplatform.properties1	2008-09-29 13:52:46.000000000 -0400
-+++ visualvm/visualvm/nbproject/platform.properties	2008-09-29 13:53:41.000000000 -0400
-@@ -15,8 +15,8 @@
+--- pp2	2008-10-31 11:50:40.000000000 -0400
++++ visualvm/visualvm/nbproject/platform.properties	2008-10-31 11:50:47.000000000 -0400
+@@ -14,8 +14,8 @@
      org.openide.compat,\
      org.openide.util.enumerations
  enabled.clusters=\

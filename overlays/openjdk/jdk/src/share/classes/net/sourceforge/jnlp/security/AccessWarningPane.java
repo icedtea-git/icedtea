@@ -84,18 +84,19 @@ public class AccessWarningPane extends SecurityDialogUI {
 		//We don't worry about exceptions when trying to fill in
 		//these strings -- we just want to fill in as many as possible.
 		try {
-			name = file.getInformation().getTitle();
+			name = file.getInformation().getTitle() != null ? file.getInformation().getTitle() : "<no associated certificate>";
 		} catch (Exception e) {
 		}
 
 		try {
-			publisher = file.getInformation().getVendor();
+			publisher = file.getInformation().getVendor() != null ? file.getInformation().getVendor() : "<no associated certificate>";
 		} catch (Exception e) {
 		}
 
 		try {
-			from = file.getInformation().getHomepage().toString();
+			from = !file.getInformation().getHomepage().toString().equals("") ? file.getInformation().getHomepage().toString() : file.getSourceLocation().getAuthority();
 		} catch (Exception e) {
+			from = file.getSourceLocation().getAuthority();
 		}
 
 		//Top label

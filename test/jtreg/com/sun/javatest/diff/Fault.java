@@ -1,11 +1,12 @@
 /*
- * Copyright 1997-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2007, 2008 Red Hat, Inc.
+ * Copyright 2007 Sun Microsystems, Inc.  All Rights Reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.
+ * published by the Free Software Foundation.  Sun designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Sun in the LICENSE file that accompanied this code.
  *
  * This code is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -20,25 +21,20 @@
  * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
- *
  */
 
+package com.sun.javatest.diff;
 
- protected:
-  // Size of interpreter code
-  const static int InterpreterCodeSize = 6 * K;
+import com.sun.javatest.util.I18NResourceBundle;
 
- public:
-  // Method entries
-  static void normal_entry(methodOop method, intptr_t UNUSED, TRAPS);
-  static void native_entry(methodOop method, intptr_t UNUSED, TRAPS);
-  static void accessor_entry(methodOop method, intptr_t UNUSED, TRAPS);
-  static void empty_entry(methodOop method, intptr_t UNUSED, TRAPS);
+/**
+ * Exception to report a problem while executing in Main.
+ */
+public class Fault extends Exception {
 
- public:
-  // Main loop of normal_entry
-  static void main_loop(int recurse, TRAPS);
+    static final long serialVersionUID = 1607979458544175906L;
 
- private:
-  // Stack overflow checks
-  static bool stack_overflow_imminent(JavaThread *thread);
+    Fault(I18NResourceBundle i18n, String s, Object... args) {
+        super(i18n.getString(s, args));
+    }
+}

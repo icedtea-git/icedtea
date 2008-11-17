@@ -1,0 +1,15 @@
+diff -r 11b9bdd4bbd3 openjdk/hotspot/src/share/vm/prims/jvmtiManageCapabilities.cpp
+--- openjdk/hotspot/src/share/vm/prims/jvmtiManageCapabilities.cpp	Fri Nov 07 10:53:57 2008 +0000
++++ openjdk/hotspot/src/share/vm/prims/jvmtiManageCapabilities.cpp	Fri Nov 07 11:29:34 2008 +0000
+@@ -116,7 +116,11 @@ jvmtiCapabilities JvmtiManageCapabilitie
+   
+   memset(&jc, 0, sizeof(jc));
+   jc.can_pop_frame = 1;
++#ifdef CC_INTERP
++  jc.can_force_early_return = 0;
++#else
+   jc.can_force_early_return = 1;
++#endif // CC_INTERP
+   jc.can_get_source_debug_extension = 1;
+   jc.can_access_local_variables = 1;
+   jc.can_maintain_original_method_order = 1;

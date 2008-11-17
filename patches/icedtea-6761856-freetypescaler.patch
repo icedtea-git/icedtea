@@ -1,0 +1,47 @@
+# User igor
+# Date 1225234342 -10800
+# Node ID 9cdababf6179bd03270d881740fbb5dcc405854f
+# Parent 594c52582b21063bdbc36b38d9f73a3c46abe041
+6761856: OpenJDK: vertical text metrics may be significanly different from those returned by Sun JDK
+Reviewed-by: bae, prr
+
+--- openjdk.orig/jdk/src/share/native/sun/font/freetypeScaler.c	Tue Oct 28 14:47:14 2008 -0700
++++ openjdk/jdk/src/share/native/sun/font/freetypeScaler.c	Wed Oct 29 01:52:22 2008 +0300
+@@ -1281,7 +1281,7 @@ Java_sun_font_FreetypeFontScaler_getGlyp
+                                    sunFontIDs.rect2DFloatClass,
+                                    sunFontIDs.rect2DFloatCtr4,
+                                    F26Dot6ToFloat(bbox.xMin),
+-                                   F26Dot6ToFloat(bbox.yMax),
++                                   F26Dot6ToFloat(-bbox.yMax),
+                                    F26Dot6ToFloat(bbox.xMax-bbox.xMin),
+                                    F26Dot6ToFloat(bbox.yMax-bbox.yMin));
+     }
+--- openjdk.orig/jdk/test/java/awt/font/TextLayout/TextLayoutBounds.java	Tue Oct 28 14:47:14 2008 -0700
++++ openjdk/jdk/test/java/awt/font/TextLayout/TextLayoutBounds.java	Wed Oct 29 01:52:22 2008 +0300
+@@ -22,7 +22,7 @@
+  */
+ /* @test
+  * @summary verify TextLayout.getBounds() return visual bounds
+- * @bug 6323611
++ * @bug 6323611 6761856
+  */
+ 
+ import java.awt.*;
+@@ -39,10 +39,15 @@ public class TextLayoutBounds {
+        Rectangle2D tlBounds = tl.getBounds();
+        GlyphVector gv = f.createGlyphVector(frc, s);
+        Rectangle2D gvvBounds = gv.getVisualBounds();
++       Rectangle2D oBounds = tl.getOutline(null).getBounds2D();
+        System.out.println("tlbounds="+tlBounds);
+        System.out.println("gvbounds="+gvvBounds);
++       System.out.println("outlineBounds="+oBounds);
+        if (!gvvBounds.equals(tlBounds)) {
+-          throw new RuntimeException("Bounds differ");
++          throw new RuntimeException("Bounds differ [gvv != tl]");
++       }
++       if (!tlBounds.equals(oBounds)) {
++          throw new RuntimeException("Bounds differ [tl != outline]");
+        }
+     }
+ }
+

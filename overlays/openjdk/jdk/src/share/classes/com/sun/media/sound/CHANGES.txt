@@ -1,3 +1,14 @@
+  - Fix: Throw IllegalArgumentException Exception on
+         invalid soundbank to:
+         SoftSynthesizer.unloadAllInstruments(Soundbank soundbank)
+         SoftSynthesizer.unloadInstruments(Soundbank soundbank, Patch[] patchList)
+         just like done in:
+         SoftSynthesizer.unloadInstrument(Instrument instrument).
+  - Change: SoftMainMixer, SoftVoice optimized for mono voices.
+  - Change: SoftFilter optimized. 
+  - Fix: Turn SoftJitterCorrector, SoftAudioPusher threads into a daemon threads.
+         These threads prevented the VM to exit when synthesizer was open.
+         See: http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=213 
   - Add: More JTreg tests added:
            EmergencySoundbank
            SoftFilter
@@ -6,6 +17,8 @@
   - Fix: ModelByteBuffer.skip called super.skip
          instead to call to RandomAccessFile directly.
          JTreg tests added: ModelByteBuffer/RandomFileInputStream/*.java
+         
+Version 1.0.2 (released in OpenJDK 6 b12)   
   - Fix: ModelByteBuffer.len was being modified in inner
          class RandomFileInputStream. The variable was made final
          and RandomFileInputStream.read methods where fixed.
@@ -13,7 +26,7 @@
          Keys array was to small, it couldn't
          hold all possible midi notes (0..127).
 
-Version 1.0.1
+Version 1.0.1 (released as 1.0)
   - Fix: Created dummy SourceDataline so that following 
          jtreg test can be tested without using
          a real Audio Device SourceDataLine.  

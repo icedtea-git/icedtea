@@ -17,24 +17,44 @@
 
 package net.sourceforge.jnlp.runtime;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.jar.*;
-import java.security.*;
-import java.lang.reflect.*;
-import javax.jnlp.*;
-import javax.swing.JOptionPane;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.security.CodeSource;
+import java.security.Permission;
+import java.security.PermissionCollection;
+import java.security.Permissions;
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Vector;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
-
-import java.security.cert.Certificate;
-
-import net.sourceforge.jnlp.*;
-import net.sourceforge.jnlp.cache.*;
-import net.sourceforge.jnlp.security.*;
-import net.sourceforge.jnlp.services.*;
+import net.sourceforge.jnlp.ExtensionDesc;
+import net.sourceforge.jnlp.JARDesc;
+import net.sourceforge.jnlp.JNLPFile;
+import net.sourceforge.jnlp.LaunchException;
+import net.sourceforge.jnlp.ParseException;
+import net.sourceforge.jnlp.PluginBridge;
+import net.sourceforge.jnlp.ResourcesDesc;
+import net.sourceforge.jnlp.SecurityDesc;
+import net.sourceforge.jnlp.cache.CacheUtil;
+import net.sourceforge.jnlp.cache.ResourceTracker;
+import net.sourceforge.jnlp.cache.UpdatePolicy;
+import net.sourceforge.jnlp.security.SecurityWarningDialog;
 import net.sourceforge.jnlp.tools.JarSigner;
-import net.sourceforge.jnlp.tools.KeyTool;
+import sun.misc.JarIndex;
 
 /**
  * Classloader that takes it's resources from a JNLP file.  If the
@@ -109,6 +129,8 @@ public class JNLPClassLoader extends URLClassLoader {
 	private JarSigner js = null;
 
 	private boolean signing = false;
+	
+	private ArrayList<JarIndex> jarIndexes = new ArrayList<JarIndex>();
 
     /**
      * Create a new JNLPClassLoader from the specified file.
@@ -469,6 +491,11 @@ public class JNLPClassLoader extends URLClassLoader {
 
                         addURL(location);
 
+                        // there is currently no mechanism to cache files per 
+                        // instance.. so only index cached files
+                        if (localFile != null)
+                        	jarIndexes.add(JarIndex.getJarIndex(new JarFile(localFile.getAbsolutePath()), null));
+
                         if (JNLPRuntime.isDebug())
                             System.err.println("Activate jar: "+location);
                     }
@@ -635,6 +662,7 @@ public class JNLPClassLoader extends URLClassLoader {
      * extensions.
      */
     public Class loadClass(String name) throws ClassNotFoundException {
+
         Class result = findLoadedClassAll(name);
 
         // try parent classloader
@@ -654,7 +682,60 @@ public class JNLPClassLoader extends URLClassLoader {
 
         // search this and the extension loaders
         if (result == null)
-            result = loadClassExt(name);
+            try {
+                result = loadClassExt(name);
+            } catch (ClassNotFoundException cnfe) {
+
+                // Not found in external loader either. As a last resort, look in any available indexes
+
+                // Currently this loads jars directly from the site. We cannot cache it because this 
+                // call is initiated from within the applet, which does not have disk read/write permissions
+                for (JarIndex index: jarIndexes) {
+                    LinkedList<String> jarList = index.get(name.replace('.', '/'));
+
+                    if (jarList != null) {
+                        for (String jarName: jarList) {
+                            JARDesc desc;
+                            try {
+                                desc = new JARDesc(new URL(file.getCodeBase(), jarName),
+                                        null, null, false, true, false);
+                            } catch (MalformedURLException mfe) {
+                                throw new ClassNotFoundException(name);
+                            }
+
+                            available.add(desc);
+
+                            tracker.addResource(desc.getLocation(), 
+                                    desc.getVersion(), 
+                                    JNLPRuntime.getDefaultUpdatePolicy()
+                            );
+
+                            URL remoteURL;
+                            try {
+                                remoteURL = new URL(file.getCodeBase() + jarName);
+                            } catch (MalformedURLException mfe) {
+                                throw new ClassNotFoundException(name);
+                            }
+
+                            URL u;
+
+                            try {
+                                u = tracker.getCacheURL(remoteURL);
+                                System.out.println("URL = " + u);
+                            } catch (Exception e) {
+                                throw new ClassNotFoundException(name);
+                            }
+
+                            if (u != null)
+                                addURL(u);
+
+                        }
+
+                        // If it still fails, let it error out
+                        result = loadClassExt(name);
+                    }
+                }
+            }
 
         return result;
     }

@@ -1,0 +1,60 @@
+diff -Nru openjdk.orig/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java openjdk/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java
+--- openjdk.orig/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2008-11-06 08:45:01.000000000 +0000
++++ openjdk/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2008-11-17 14:46:05.000000000 +0000
+@@ -40,7 +40,7 @@
+         InetAddress bogus = InetAddress.getByName("0.0.0.0");
+         SocketChannel sc = SocketChannel.open();
+         InetSocketAddress saddr = new InetSocketAddress(
+-            InetAddress.getByName(TestUtil.HOST), 23);
++            InetAddress.getByName(TestUtil.HOST), 7);
+ 
+         //Test1: connect only
+         sc.connect(saddr);
+diff -Nru openjdk.orig/jdk/test/java/nio/channels/SocketChannel/Shutdown.java openjdk/jdk/test/java/nio/channels/SocketChannel/Shutdown.java
+--- openjdk.orig/jdk/test/java/nio/channels/SocketChannel/Shutdown.java	2008-11-06 08:45:01.000000000 +0000
++++ openjdk/jdk/test/java/nio/channels/SocketChannel/Shutdown.java	2008-11-17 14:45:53.000000000 +0000
+@@ -35,7 +35,7 @@
+ 
+     public static void main(String args[]) throws Exception {
+         InetSocketAddress sa = new InetSocketAddress(
+-                                InetAddress.getByName(TestUtil.HOST), 23);
++                                InetAddress.getByName(TestUtil.HOST), 7);
+         SocketChannel sc = SocketChannel.open(sa);
+         boolean before = sc.socket().isInputShutdown();
+         sc.socket().shutdownInput();
+diff -Nru openjdk.orig/jdk/test/java/nio/channels/TestUtil.java openjdk/jdk/test/java/nio/channels/TestUtil.java
+--- openjdk.orig/jdk/test/java/nio/channels/TestUtil.java	2008-11-17 14:43:22.000000000 +0000
++++ openjdk/jdk/test/java/nio/channels/TestUtil.java	2008-11-17 14:44:24.000000000 +0000
+@@ -36,9 +36,9 @@
+ 
+     // Test hosts used by the channels tests - change these when
+     // executing in a different network.
+-    public static final String HOST = "javaweb.sfbay.sun.com";
+-    public static final String REFUSING_HOST = "jano1.sfbay.sun.com";
+-    public static final String FAR_HOST = "irejano.ireland.sun.com";
++    public static final String HOST = "icedtea.classpath.org";
++    public static final String REFUSING_HOST = "ns1.gnu.org";
++    public static final String FAR_HOST = "developer.classpath.org";
+     public static final String UNRESOLVABLE_HOST = "blah-blah.blah-blah.blah";
+ 
+     private TestUtil() { }
+diff -Nru openjdk.orig/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh openjdk/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh
+--- openjdk.orig/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2008-11-06 08:45:08.000000000 +0000
++++ openjdk/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2008-11-17 14:48:52.000000000 +0000
+@@ -26,14 +26,14 @@
+ 
+ # @test
+ # @bug 4763315
+-# @build CanonicalName Lookup 
++# @build CanonicalName Lookup
+ # @run shell/timeout=120 cname.sh
+ # @summary Test DNS provider's handling of CNAME records
+ 
+ 
+ # The host that we try to resolve
+ 
+-HOST=webcache.sfbay.sun.com
++HOST=developer.classpath.org
+ 
+ # fail gracefully if DNS is not configured or there 
+ # isn't a CNAME record.

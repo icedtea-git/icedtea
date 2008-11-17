@@ -1,0 +1,104 @@
+diff -r 4f4d268762d7 Makefile.am
+--- a/Makefile.am	Wed Aug 20 04:24:45 2008 -0400
++++ b/Makefile.am	Thu Aug 28 03:53:35 2008 -0400
+@@ -442,6 +442,13 @@
+ endif
+ 
+ ICEDTEA_FSG_PATCHES =
++
++# Build with assertions and lowered optimization
++DISTRIBUTION_PATCHES = \
++	patches/mixtec-assertions.patch \
++	patches/mixtec-no-log-vm-output.patch \
++	patches/mixtec-no-print-vm-options.patch \
++	patches/mixtec-optimization.patch
+ 
+ ICEDTEA_PATCHES = \
+ 	$(ZERO_PATCHES_COND) \
+diff -r 4f4d268762d7 patches/mixtec-assertions.patch
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/patches/mixtec-assertions.patch	Thu Aug 28 03:53:35 2008 -0400
+@@ -0,0 +1,14 @@
++diff -r d384f5a5bd0c hotspot/build/linux/makefiles/product.make
++--- openjdk/hotspot/build/linux/makefiles/product.make	Mon Aug 06 13:11:51 2007 +0100
+++++ openjdk/hotspot/build/linux/makefiles/product.make	Fri Sep 14 09:58:33 2007 +0100
++@@ -41,8 +41,8 @@ MAPFILE = $(GAMMADIR)/build/linux/makefi
++ MAPFILE = $(GAMMADIR)/build/linux/makefiles/mapfile-vers-product
++ 
++ G_SUFFIX =
++-SYSDEFS += -DPRODUCT
++-VERSION = optimized
+++SYSDEFS += -DASSERT
+++VERSION = mixtec
++ 
++ # use -g to strip library as -x will discard its symbol table; -x is fine for
++ # executables.
+diff -r 4f4d268762d7 patches/mixtec-no-log-vm-output.patch
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/patches/mixtec-no-log-vm-output.patch	Thu Aug 28 03:53:35 2008 -0400
+@@ -0,0 +1,11 @@
++--- openjdk-ecj/hotspot/src/share/vm/runtime/globals.hpp	2007-11-13 09:19:54.000000000 -0500
+++++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2007-11-13 17:13:24.000000000 -0500
++@@ -2081,7 +2081,7 @@
++   diagnostic(bool, DisplayVMOutput, true,                                   \
++          "Display all VM output on the tty, independently of LogVMOutput")  \
++                                                                             \
++-  diagnostic(bool, LogVMOutput, trueInDebug,                                \
+++  diagnostic(bool, LogVMOutput, false,                                      \
++          "Save VM output to hotspot.log, or to LogFile")                    \
++                                                                             \
++   diagnostic(ccstr, LogFile, NULL,                                          \
+diff -r 4f4d268762d7 patches/mixtec-no-print-vm-options.patch
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/patches/mixtec-no-print-vm-options.patch	Thu Aug 28 03:53:35 2008 -0400
+@@ -0,0 +1,12 @@
++diff -r c5904941581b openjdk-ecj/hotspot/src/share/vm/runtime/globals.hpp
++--- openjdk/hotspot/src/share/vm/runtime/globals.hpp	Tue Nov 13 14:09:56 2007 +0000
+++++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	Tue Nov 13 14:19:54 2007 +0000
++@@ -2072,7 +2072,7 @@ class CommandLineFlags {
++   diagnostic(bool, DebugInlinedCalls, true,                                 \
++          "If false, restricts profiled locations to the root method only")  \
++                                                                             \
++-  product(bool, PrintVMOptions, trueInDebug,                                \
+++  product(bool, PrintVMOptions, false,                                      \
++          "print VM flag settings")                                          \
++                                                                             \
++   diagnostic(bool, SerializeVMOutput, true,                                 \
+diff -r 4f4d268762d7 patches/mixtec-optimization.patch
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/patches/mixtec-optimization.patch	Thu Aug 28 03:53:35 2008 -0400
+@@ -0,0 +1,34 @@
++diff -urN openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/build/linux/makefiles/gcc.make
++--- openjdk.orig/hotspot/build/linux/makefiles/gcc.make	2007-10-12 03:46:25.000000000 -0400
+++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-10-12 17:41:02.000000000 -0400
++@@ -111,7 +111,7 @@
++ CFLAGS_WARN/BYFILE = $(CFLAGS_WARN/$@)$(CFLAGS_WARN/DEFAULT$(CFLAGS_WARN/$@)) 
++ 
++ # The flags to use for an Optimized g++ build
++-OPT_CFLAGS += -O3
+++OPT_CFLAGS += -O0
++ 
++ # Hotspot uses very unstrict aliasing turn this optimization off
++ OPT_CFLAGS += -fno-strict-aliasing
++diff -urN openjdk.orig/j2se/make/common/Defs-linux.gmk openjdk/j2se/make/common/Defs-linux.gmk
++--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2007-10-12 03:54:05.000000000 -0400
+++++ openjdk/jdk/make/common/Defs-linux.gmk	2007-10-12 17:41:02.000000000 -0400
++@@ -97,6 +97,7 @@
++     _OPT = $(CC_LOWER_OPT)
++     CPPFLAGS_DBG    += -DLOGGING 
++ endif
+++_OPT = -O0
++ 
++ # For all platforms, do not omit the frame pointer register usage. 
++ #    We need this frame pointer to make it easy to walk the stacks.
++diff -r e847abdac6f6 openjdk/corba/make/common/Defs-linux.gmk
++--- openjdk/corba/make/common/Defs-linux.gmk	Thu Nov 22 08:57:34 2007 +0000
+++++ openjdk/corba/make/common/Defs-linux.gmk	Thu Nov 22 08:59:18 2007 +0000
++@@ -87,6 +87,7 @@ else
++     _OPT = $(CC_LOWER_OPT)
++     CPPFLAGS_DBG    += -DLOGGING 
++ endif
+++_OPT = -O0
++ 
++ # For all platforms, do not omit the frame pointer register usage. 
++ #    We need this frame pointer to make it easy to walk the stacks.
