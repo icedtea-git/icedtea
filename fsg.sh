@@ -82,10 +82,5 @@ rm -rf \
 rm -f \
   openjdk/jdk/test/sun/net/idn/*.spp
 
-# has w3c copyright. license to be checked / needs checking after decoding
-rm -f \
-  openjdk/jdk/test/javax/xml/crypto/dsig/data/xml-stylesheet \
-  openjdk/jdk/test/javax/xml/crypto/dsig/data/xml-stylesheet.b64
-
 # END Debian/Ubuntu additions
 
