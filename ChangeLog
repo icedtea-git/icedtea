@@ -1,5 +1,10 @@
 2008-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
+	* test/jtreg/excludelist.jdk.jtx:
+	Remove NIO tests following mjw's fix.
+	
+2008-11-17  Andrew John Hughes  <ahughes@redhat.com>
+
 	Merge with IcedTea6.
 	* .hgignore,
 	* .hgtags,

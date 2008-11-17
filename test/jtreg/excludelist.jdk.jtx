@@ -16,32 +16,10 @@ sun/java2d/SunGraphics2D/PolyVertTest.java
 sun/java2d/SunGraphics2D/SimplePrimQuality.java
 
 # Failed due to connection refused
-sun/security/ssl/javax/net/ssl/NewAPIs/SessionCacheSizeTests.java
+#sun/security/ssl/javax/net/ssl/NewAPIs/SessionCacheSizeTests.java
 
 # Failed due to network unreachable
-java/net/ipv6tests/TcpTest.java
-
-# Failed due to unknown host javaweb.sfbay.sun.com
-java/nio/channels/DatagramChannel/IsBound.java
-java/nio/channels/DatagramChannel/IsConnected.java
-java/nio/channels/Selector/Alias.java
-java/nio/channels/Selector/BasicConnect.java
-java/nio/channels/Selector/Connect.java
-java/nio/channels/Selector/ConnectWrite.java
-java/nio/channels/Selector/KeysReady.java
-java/nio/channels/Selector/OpRead.java
-java/nio/channels/SocketChannel/AdaptSocket.java
-java/nio/channels/SocketChannel/Basic.java
-java/nio/channels/SocketChannel/BufferSize.java
-java/nio/channels/SocketChannel/Connect.java
-java/nio/channels/SocketChannel/ConnectState.java
-java/nio/channels/SocketChannel/FinishConnect.java
-java/nio/channels/SocketChannel/IsConnectable.java
-java/nio/channels/SocketChannel/LocalAddress.java
-java/nio/channels/SocketChannel/Shutdown.java
-java/nio/channels/SocketChannel/Stream.java
-java/nio/channels/SocketChannel/VectorParams.java
-java/nio/channels/DatagramChannel/AdaptDatagramSocket.java
+#java/net/ipv6tests/TcpTest.java
 
 # Failed due to java.security.ProviderException: sun.security.pkcs11.wrapper.PKCS11Exception: CKR_DEVICE_ERROR
 sun/security/pkcs11/KeyAgreement/TestDH.java
