@@ -1,3 +1,8 @@
+2008-11-17  Omair Majid  <omajid@redhat.com>
+
+	* HACKING: Document icedtea-alsa-default-device.patch and
+	icedtea-linker-libs-order.patch.
+
 2008-11-17  Matthias Klose  <doko@ubuntu.com>
 
 	* fsg.sh: Don't remove xml-stylesheet files.
