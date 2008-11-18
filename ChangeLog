@@ -1,3 +1,15 @@
+2008-11-18  Deepak Bhole  <dbhole@redhat.com>
+	* IcedTeaPlugin.cc: Encode newline characters instead of stripping them.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Minor debug
+	output change.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Fix bug in code that
+	computed width factor. Try to load images from local cache first. Decode
+	newline characters. Update parser to skip comments in applet tag.
+	* rt/net/sourceforge/jnlp/runtime/JNLPPolicy.java: Take into consideration
+	system policy in addition to applet policy when determining permissions.
+	* rt/net/sourceforge/jnlp/tools/JarSigner.java: Return immediately if jar
+	could not be fetched.
+
 2008-11-17  Omair Majid  <omajid@redhat.com>
 
 	* HACKING: Document icedtea-alsa-default-device.patch and

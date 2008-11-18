@@ -189,7 +189,16 @@ public class JarSigner {
             certs = new ArrayList<CertPath>();
 
             try {
-                String localFile = tracker.getCacheFile(jar.getLocation()).getAbsolutePath();
+                
+                File jarFile = tracker.getCacheFile(jar.getLocation());
+                
+                // some sort of resource download/cache error. Nothing to add 
+                // in that case ... but don't fail here
+                if (jarFile == null) {
+                    return;
+                }
+
+                String localFile = jarFile.getAbsolutePath();
                 boolean result = verifyJar(localFile);
                 checkTrustedCerts();
 

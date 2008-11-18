@@ -63,6 +63,7 @@ import java.util.Vector;
 import javax.swing.SwingUtilities;
 
 import net.sourceforge.jnlp.NetxPanel;
+import net.sourceforge.jnlp.runtime.JNLPClassLoader;
 import sun.awt.AppContext;
 import sun.awt.SunToolkit;
 import sun.awt.X11.XEmbeddedFrame;
@@ -103,7 +104,7 @@ import sun.misc.Ref;
       * Some constants...
       */
      private static String defaultSaveFile = "Applet.ser";
- 
+     
      /**
       * The panel in which the applet is being displayed.
       */
@@ -138,6 +139,8 @@ import sun.misc.Ref;
      
      private double proposedHeightFactor;
      private double proposedWidthFactor;
+     
+     private JNLPClassLoader pluginCL; 
 
      /**
       * Null constructor to allow instantiation via newInstance()
@@ -168,7 +171,7 @@ import sun.misc.Ref;
         	 proposedHeightFactor = (Integer) atts.get("heightPercentage")/100.0;
          }
          
-         if (((String) atts.get("width")).endsWith("%")) {
+         if (atts.get("widthPercentage") != null) {
         	 proposedWidthFactor = (Integer) atts.get("widthPercentage")/100.0;
          }
  
@@ -177,6 +180,7 @@ import sun.misc.Ref;
             	 	try {
             	 		panel = new NetxPanel(doc, atts, true);
             	 		AppletViewerPanel.debug("Using NetX panel");
+            	 		PluginDebug.debug(atts.toString());
             	 	} catch (Exception ex) {
             	 		AppletViewerPanel.debug("Unable to start NetX applet - defaulting to Sun applet", ex);
             	 		panel = new AppletViewerPanel(doc, atts);
@@ -284,6 +288,9 @@ import sun.misc.Ref;
     	return;
     }
 
+    if (panel instanceof NetxPanel)
+        pluginCL = (JNLPClassLoader) panel.getApplet().getClass().getClassLoader();
+
     PluginDebug.debug("Applet initialized");
 
     // Applet initialized. Find out it's classloader and add it to the list
@@ -291,7 +298,7 @@ import sun.misc.Ref;
 
     if (atts.get("codebase") != null) {
     	try {
-    		URL appletSrcURL = new URL((String) atts.get("codebase"));
+    		URL appletSrcURL = new URL(codeBase + (String) atts.get("codebase"));
     		codeBase = appletSrcURL.getProtocol() + "://" + appletSrcURL.getHost();
     	} catch (MalformedURLException mfue) {
     		// do nothing
@@ -587,7 +594,7 @@ import sun.misc.Ref;
  	return getCachedImage(url);
      }
  
-     static Image getCachedImage(URL url) {
+     private Image getCachedImage(URL url) {
  	// System.getSecurityManager().checkConnection(url.getHost(), url.getPort());
  	return (Image)getCachedImageRef(url).get();
      }
@@ -595,15 +602,45 @@ import sun.misc.Ref;
      /**
       * Get an image ref.
       */
-     static Ref getCachedImageRef(URL url) {
- 	synchronized (imageRefs) {
- 	    AppletImageRef ref = (AppletImageRef)imageRefs.get(url);
- 	    if (ref == null) {
- 		ref = new AppletImageRef(url);
- 		imageRefs.put(url, ref);
- 	    }
- 	    return ref;
- 	}
+     private synchronized Ref getCachedImageRef(URL url) {
+         PluginDebug.debug("getCachedImageRef() searching for " + url);
+         
+         try {
+
+             // wait till aplet initializes
+             while (pluginCL == null) {
+                 PluginDebug.debug("Plugin CL is null. Waiting in getCachedImageRef()..");
+             }
+
+             String originalURL = url.toString();
+             String codeBase = pluginCL.getJNLPFile().getCodeBase().toString();
+
+             if (originalURL.startsWith("http")) {
+                 PluginDebug.debug("getCachedImageRef() got URL = " + url);
+                 PluginDebug.debug("getCachedImageRef() plugin codebase = " + pluginCL.getJNLPFile().getCodeBase().toString());
+
+                 URL localURL = null;
+                 if (originalURL.startsWith(codeBase))
+                     localURL = pluginCL.getResource(originalURL.substring(codeBase.length()));
+
+                 url = localURL != null ? localURL : url;
+             }
+
+             PluginDebug.debug("getCachedImageRef() getting img from URL = " + url);
+
+             synchronized (imageRefs) {
+                 AppletImageRef ref = (AppletImageRef)imageRefs.get(url);
+                 if (ref == null) {
+                     ref = new AppletImageRef(url);
+                     imageRefs.put(url, ref);
+                 }
+                 return ref;
+             }
+         } catch (Exception e) {
+             System.err.println("Error occurred wgen trying to fetch image:");
+             e.printStackTrace();
+             return null;
+         }
      }
  
      /**
@@ -1221,6 +1258,16 @@ import sun.misc.Ref;
       */
      public static String scanIdentifier(Reader in) throws IOException {
  	StringBuffer buf = new StringBuffer();
+ 	
+ 	if (c == '!') {
+        // Technically, we should be scanning for '!--' but we are reading 
+        // from a stream, and there is no way to peek ahead. That said, 
+        // a ! at this point can only mean comment here afaik, so we 
+        // should be okay
+        skipComment(in);
+        return "";
+    }
+ 	
  	while (true) {
  	    if (((c >= 'a') && (c <= 'z')) ||
  		((c >= 'A') && (c <= 'Z')) ||
@@ -1231,6 +1278,41 @@ import sun.misc.Ref;
  		return buf.toString();
  	    }
  	}
+     }
+
+     public static void skipComment(Reader in) throws IOException {
+         StringBuffer buf = new StringBuffer();
+         boolean commentHeaderPassed = false;
+         c = in.read();
+         buf.append((char)c);
+
+         while (true) {
+             if (c == '-' && (c = in.read()) == '-') {
+                 buf.append((char)c);
+                 if (commentHeaderPassed) {
+                     // -- encountered ... is > next?
+                     if ((c = in.read()) == '>') {
+                         buf.append((char)c);
+
+                         PluginDebug.debug("Comment skipped: " + buf.toString());
+
+                         // comment skipped.
+                         return;
+                     }
+                 } else {
+                     // first -- is part of <!-- ... , just mark that we have passed it
+                     commentHeaderPassed = true;
+                 }
+
+             } else if (commentHeaderPassed == false) {
+                 buf.append((char)c);
+                 PluginDebug.debug("Warning: Attempted to skip comment, but this tag does not appear to be a comment: " + buf.toString());
+                 return;
+             }
+
+             c = in.read();
+             buf.append((char)c);
+         }
      }
  
      /**
@@ -1266,11 +1348,21 @@ import sun.misc.Ref;
  		val = buf.toString();
  	    }
 
+        att = att.replace("&gt;", ">");
+        att = att.replace("&lt;", "<");
+        att = att.replace("&amp;", "&");
+        att = att.replace("&#10;", "\n");
+        att = att.replace("&#13;", "\r");
+ 	    
         val = val.replace("&gt;", ">");
         val = val.replace("&lt;", "<");
         val = val.replace("&amp;", "&");
- 	    PluginDebug.debug("PUT " + att + " = '" + val + "'");
- 	    atts.put(att.toLowerCase(java.util.Locale.ENGLISH), val);
+        val = val.replace("&#10;", "\n");
+        val = val.replace("&#13;", "\r");
+
+        PluginDebug.debug("PUT " + att + " = '" + val + "'");
+        atts.put(att.toLowerCase(java.util.Locale.ENGLISH), val);
+
              while (true) {
                  if ((c == '>') || (c < 0) ||
                      ((c >= 'a') && (c <= 'z')) ||
@@ -1282,6 +1374,20 @@ import sun.misc.Ref;
              //skipSpace(in);
  	}
  	return atts;
+     }
+     
+     // private static final == inline
+     private static final boolean isInt(Object o) {
+         boolean isInt = false;
+
+         try {
+             Integer.parseInt((String) o);
+             isInt = true;
+         } catch (Exception e) {
+             // don't care
+         }
+
+         return isInt;
      }
  
      /* values used for placement of AppletViewer's frames */
@@ -1426,12 +1532,19 @@ import sun.misc.Ref;
     						 if (val == null) {
     							 statusMsgStream.println(requiresNameWarning);
     						 } else if (atts != null) {
-    							 // to prevent headaches, c++ side encodes &, < and >
-    							 // decode them back
+    							 att = att.replace("&gt;", ">");
+    							 att = att.replace("&lt;", "<");
+    							 att = att.replace("&amp;", "&");
+    							 att = att.replace("&#10;", "\n");
+    							 att = att.replace("&#13;", "\r");
+
     							 val = val.replace("&gt;", ">");
     							 val = val.replace("&lt;", "<");
     							 val = val.replace("&amp;", "&");
-    							 atts.put(att.toLowerCase(), val);
+    							 val = val.replace("&#10;", "\n");
+    							 val = val.replace("&#13;", "\r");
+    							 PluginDebug.debug("PUT " + att + " = " + val);
+   							     atts.put(att.toLowerCase(), val);
     						 } else {
     							 statusMsgStream.println(paramOutsideWarning);
     						 }
@@ -1453,21 +1566,21 @@ import sun.misc.Ref;
     						 atts = null;
     					 }
 
-    					 if (atts.get("width") == null) {
-    						 atts.put("width", "100");
+    					 if (atts.get("width") == null || !isInt(atts.get("width"))) {
+    						 atts.put("width", "1000");
     						 atts.put("widthPercentage", 100);
     					 } else if (((String) atts.get("width")).endsWith("%")) {
     						 String w = (String) atts.get("width");
-    						 atts.put("width", "100");
+    						 atts.put("width", "1000");
     						 atts.put("widthPercentage", Integer.parseInt((w.substring(0,  w.length() -1))));
     					  }
 
-    					 if (atts.get("height") == null) {
-    						 atts.put("height", "100");
+    					 if (atts.get("height") == null || !isInt(atts.get("height"))) {
+    						 atts.put("height", "1000");
     						 atts.put("heightPercentage", 100);
     					 } else if (((String) atts.get("height")).endsWith("%")) {
     						 String h = (String) atts.get("height");
-    						 atts.put("height", "100");
+    						 atts.put("height", "1000");
     						 atts.put("heightPercentage", Integer.parseInt(h.substring(0,  h.length() -1)));
     					 }
     				 }
@@ -1489,21 +1602,21 @@ import sun.misc.Ref;
     						 atts.remove("codebase");
     					 }
 
-    					 if (atts.get("width") == null) {
-    						 atts.put("width", "100");
+    					 if (atts.get("width") == null || !isInt(atts.get("width"))) {
+    						 atts.put("width", "1000");
     						 atts.put("widthPercentage", 100);
     					 } else if (((String) atts.get("width")).endsWith("%")) {
     						 String w = (String) atts.get("width");
-    						 atts.put("width", "100");
+    						 atts.put("width", "1000");
     						 atts.put("widthPercentage", Integer.parseInt(w.substring(0,  w.length() -1)));
     					 }
 
-    					 if (atts.get("height") == null) {
-    						 atts.put("height", "100");
+    					 if (atts.get("height") == null || !isInt(atts.get("height"))) {
+    						 atts.put("height", "1000");
     						 atts.put("heightPercentage", 100);
     					 } else if (((String) atts.get("height")).endsWith("%")) {
     						 String h = (String) atts.get("height");
-    						 atts.put("height", "100");
+    						 atts.put("height", "1000");
     						 atts.put("heightPercentage", Integer.parseInt(h.substring(0,  h.length() -1)));
     					 }
     				 }
@@ -1523,8 +1636,8 @@ import sun.misc.Ref;
     						 atts = null;
     					 }
     					 
-    					 if (atts.get("width") == null) {
-    						 atts.put("width", "100");
+    					 if (atts.get("width") == null || !isInt(atts.get("width"))) {
+    						 atts.put("width", "1000");
     						 atts.put("widthPercentage", 100);
     					 } else if (((String) atts.get("width")).endsWith("%")) {
     						 String w = (String) atts.get("width");
@@ -1532,8 +1645,8 @@ import sun.misc.Ref;
     						 atts.put("widthPercentage", Integer.parseInt(w.substring(0,  w.length() -1)));
     					 }
 
-    					 if (atts.get("height") == null) {
-    						 atts.put("height", "100");
+    					 if (atts.get("height") == null || !isInt(atts.get("height"))) {
+    						 atts.put("height", "1000");
     						 atts.put("heightPercentage", 100);
     					 } else if (((String) atts.get("height")).endsWith("%")) {
     						 String h = (String) atts.get("height");
@@ -1554,17 +1667,17 @@ import sun.misc.Ref;
     						 atts2.remove("src");
     						 atts2.put("codebase", nm);
     					 }
-    					 if (atts2.get("width") == null) {
-    						 atts2.put("width", "100");
+    					 if (atts2.get("width") == null || !isInt(atts2.get("width"))) {
+    						 atts2.put("width", "1000");
     						 atts2.put("widthPercentage", 100);
     					 } else if (((String) atts.get("width")).endsWith("%")) {
     						 String w = (String) atts.get("width");
     						 atts2.put("width", "100");
     						 atts2.put("widthPercentage", Integer.parseInt(w.substring(0,  w.length() -1)));
     					 }
-    					 
-    					 if (atts2.get("height") == null) {
-    						 atts2.put("height", "100");
+
+    					 if (atts2.get("height") == null || !isInt(atts2.get("height"))) {
+    						 atts2.put("height", "1000");
     						 atts2.put("heightPercentage", 100);
     					 } else if (((String) atts.get("height")).endsWith("%")) {
     						 String h = (String) atts.get("height");

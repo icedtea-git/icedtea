@@ -18,6 +18,7 @@
 package net.sourceforge.jnlp.runtime;
 
 import java.security.*;
+import java.util.Enumeration;
 
 /**
  * Policy for JNLP environment.  This class delegates to the
@@ -60,7 +61,15 @@ public class JNLPPolicy extends Policy {
         if (JNLPRuntime.getApplication() != null) {
         	if (JNLPRuntime.getApplication().getClassLoader() instanceof JNLPClassLoader) {
         		JNLPClassLoader cl = (JNLPClassLoader) JNLPRuntime.getApplication().getClassLoader();
-        		return cl.getPermissions(source);
+        		
+        		PermissionCollection clPermissions = cl.getPermissions(source);
+        		
+        		// systempolicy permissions need to be accounted for as well
+        		Enumeration e = systemPolicy.getPermissions(source).elements();
+                while (e.hasMoreElements())
+                    clPermissions.add((Permission) e.nextElement());
+
+        		return clPermissions;
         	}
         }
 

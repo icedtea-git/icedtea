@@ -2310,10 +2310,28 @@ IcedTeaPluginInstance::Initialize (nsIPluginInstancePeer* aPeer)
   tagMessage += appletTag;
   tagMessage += "</embed>";
 
-  // remove newline characters from the message
-  tagMessage.StripChars("\r\n");
+  PLUGIN_DEBUG_1ARG("TAG FROM BROWSER = %s\n", tagMessage.get());
 
-  factory->SendMessageToAppletViewer (tagMessage);
+  // encode newline characters in the message
+  nsCString toSend("");
+  for (int i=0; i < tagMessage.Length(); i++)
+  {
+	  if (tagMessage.get()[i] == '\r')
+	  {
+		  toSend += "&#13;";
+		  continue;
+	  }
+
+	  if (tagMessage.get()[i] == '\n')
+	  {
+		  toSend += "&#10;";
+		  continue;
+	  }
+
+	  toSend += tagMessage.get()[i];
+  }
+
+  factory->SendMessageToAppletViewer (toSend);
 
   // Set back-pointer to peer instance.
   PLUGIN_DEBUG_1ARG ("SETTING PEER!!!: %p\n", aPeer);

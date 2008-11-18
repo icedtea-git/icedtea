@@ -996,7 +996,7 @@ public class PluginAppletSecurityContext {
 
 		String classSrc = this.classLoaders.get(target.getClassLoader());
 
-		PluginDebug.debug("jsSrc=" + jsSrc + " classSrc=" + classSrc);
+		PluginDebug.debug("target = " + target + " jsSrc=" + jsSrc + " classSrc=" + classSrc);
 		
 		// if src is not a file and class loader does not map to the same base, UniversalBrowserRead (BrowserReadPermission) must be set
 		if (jsSrc != "file://" && !classSrc.equals(jsSrc)) {
