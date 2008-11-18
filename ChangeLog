@@ -1,3 +1,12 @@
+2008-11-18  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Fix issues with
+	distcheck so generated, pulse-audio
+	and plugin files are correctly removed.
+	* acinclude.m4:
+	Add conditional for native ecj,
+	BUILD_NATIVE_ECJ.
+
 2008-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* test/jtreg/excludelist.jdk.jtx:

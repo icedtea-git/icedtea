@@ -1008,5 +1008,6 @@ AC_DEFUN([AC_CHECK_WITH_GCJ],
   if test "x${GCJ}" = xyes; then
     AC_PATH_TOOL([GCJ],[gcj])
   fi
+  AM_CONDITIONAL([BUILD_NATIVE_ECJ], test x"${GCJ}" != xno)
   AC_SUBST([GCJ])
 ])
