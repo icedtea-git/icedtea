@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
---- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2008-10-09 08:42:26.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/vm.make	2008-10-24 10:08:32.000000000 +0100
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2008-11-06 08:40:50.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/vm.make	2008-11-19 12:15:54.000000000 +0000
 @@ -86,6 +86,10 @@
    ${JRE_VERSION}     \
    ${VM_DISTRO}
@@ -13,8 +13,8 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make
  CFLAGS += $(CFLAGS_WARN/BYFILE)
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2008-10-09 08:42:33.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2008-10-24 10:08:32.000000000 +0100
+--- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2008-11-06 08:40:57.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2008-11-19 12:15:54.000000000 +0000
 @@ -25,7 +25,7 @@
  #include "incls/_precompiled.incl"
  #include "incls/_arguments.cpp.incl"
@@ -25,8 +25,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
  
  char**  Arguments::_jvm_flags_array             = NULL;
 diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/share/vm/utilities/vmError.cpp
---- openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp	2008-10-09 08:42:34.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-10-24 10:08:32.000000000 +0100
+--- openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp	2008-11-06 08:40:58.000000000 +0000
++++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-11-19 12:15:54.000000000 +0000
 @@ -165,7 +165,8 @@
  
  static void print_bug_submit_message(outputStream *out, Thread *thread) {
@@ -48,8 +48,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspo
    STEP(60, "(printing problematic frame)")
  
 diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/shared/Defs.gmk
---- openjdk.orig/jdk/make/common/shared/Defs.gmk	2008-10-09 08:45:42.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Defs.gmk	2008-10-24 10:08:32.000000000 +0100
+--- openjdk.orig/jdk/make/common/shared/Defs.gmk	2008-11-06 08:44:09.000000000 +0000
++++ openjdk/jdk/make/common/shared/Defs.gmk	2008-11-19 12:15:54.000000000 +0000
 @@ -189,8 +189,8 @@
  
  # Default names
@@ -61,17 +61,18 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/s
    PRODUCT_SUFFIX = Runtime Environment
    JDK_RC_PLATFORM_NAME = Platform
    COMPANY_NAME = N/A
-@@ -255,12 +255,7 @@
- JDK_UNDERSCORE_VERSION =  $(subst .,_,$(JDK_VERSION))
- JDK_MKTG_UNDERSCORE_VERSION =  $(subst .,_,$(JDK_MKTG_VERSION))
+diff -Nru openjdk.orig/langtools/make/Makefile openjdk/langtools/make/Makefile
+--- openjdk.orig/langtools/make/Makefile	2008-11-19 12:16:39.000000000 +0000
++++ openjdk/langtools/make/Makefile	2008-11-19 12:17:38.000000000 +0000
+@@ -82,7 +82,11 @@
+ endif 
  
--# RELEASE is JDK_VERSION and -MILESTONE if MILESTONE is set
--ifneq ($(MILESTONE),fcs)
--  RELEASE      = $(JDK_VERSION)-$(MILESTONE)$(BUILD_VARIANT_RELEASE)
--else
--  RELEASE      = $(JDK_VERSION)$(BUILD_VARIANT_RELEASE)
--endif
-+RELEASE      = $(JDK_VERSION)$(BUILD_VARIANT_RELEASE)
+ ifdef MILESTONE
++ifneq ($(MILESTONE),fcs)
+   ANT_OPTIONS += -Dmilestone=$(MILESTONE)
++else
++  ANT_OPTIONS += -Drelease=$(JDK_VERSION)
++endif
+ endif
  
- # FULL_VERSION is RELEASE and -BUILD_NUMBER if BUILD_NUMBER is set
  ifdef BUILD_NUMBER

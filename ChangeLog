@@ -1,3 +1,9 @@
+2008-11-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-version.patch,
+	Reapply Mark Wielaard's patch from
+	recent merge.
+	
 2008-11-18  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Fix issues with
