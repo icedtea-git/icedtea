@@ -136,14 +136,6 @@ AC_ARG_ENABLE([liveconnect],
 AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
 AC_MSG_RESULT(${enable_plugin})
 
-AC_MSG_CHECKING([whether to build gcjwebplugin])
-AC_ARG_ENABLE([gcjwebplugin],
-              [AS_HELP_STRING([--enable-gcjwebplugin],
-                              [Build the GCJ Web Plugin plugin (deprecated)])],
-              [enable_gcjwebplugin="${enableval}"], [enable_gcjwebplugin="no"])
-AM_CONDITIONAL(ENABLE_GCJWEBPLUGIN, test "x${enable_gcjwebplugin}" = "xyes")
-AC_MSG_RESULT(${enable_gcjwebplugin})
-
 AC_MSG_CHECKING([whether to include PulseAudio support])
 AC_ARG_ENABLE([pulse-java],
               [AS_HELP_STRING([--enable-pulse-java],

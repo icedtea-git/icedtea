@@ -1,3 +1,11 @@
+2008-11-20  Andrew John Hughes  <ahughes@redhat.com>
+
+	PR icedtea/236:
+	* gcjwebplugin.cc,
+	* Makefile.am,
+	* configure.ac:
+	Remove gcjwebplugin.
+
 2008-09-04  C. K. Jester-Young  <cky944@gmail.com>
 
 	* Makefile.am,
