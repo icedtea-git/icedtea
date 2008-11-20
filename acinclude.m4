@@ -968,7 +968,7 @@ AC_DEFUN([WITH_PROJECT],
 [
   AC_MSG_CHECKING(which OpenJDK project is being used)
   AC_ARG_WITH([project],
-              [AS_HELP_STRING(--with-project,choose the OpenJDK project to use: jdk7 closures cvmi cacioavallo bsd [[default=jdk7]])],
+              [AS_HELP_STRING(--with-project,choose the OpenJDK project to use: jdk7 closures cvmi caciocavallo bsd nio2 [[default=jdk7]])],
   [
     case "${withval}" in
       yes)
@@ -991,6 +991,7 @@ AC_DEFUN([WITH_PROJECT],
   AM_CONDITIONAL([USE_CVMI], test x"${project}" = "xcvmi")
   AM_CONDITIONAL([USE_CACIOCAVALLO], test x"${project}" = "xcaciocavallo")
   AM_CONDITIONAL([USE_BSD], test x"${project}" = "xbsd")
+  AM_CONDITIONAL([USE_NIO2], test x"${project}" = "xnio2")
 ])
 
 AC_DEFUN([AC_CHECK_WITH_GCJ],

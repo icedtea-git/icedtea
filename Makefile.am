@@ -1552,6 +1552,7 @@ CVMI_HG_URL = http://hg.openjdk.java.net/cvmi/cvmi/
 CLOSURES_HG_URL = http://hg.openjdk.java.net/closures/closures/
 CACIOCAVALLO_HG_URL = http://hg.openjdk.java.net/caciocavallo/jdk7/
 BSD_HG_URL = http://hg.openjdk.java.net/bsd-port/bsd-port
+NIO2_HG_URL = http://hg.openjdk.java.net/nio/nio/
 
 OPENJDK_URL = http://www.java.net/download/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
 if USE_ALT_OPENJDK_SRC_ZIP
@@ -1613,6 +1614,9 @@ else
 if USE_BSD
 	$(HG) fclone $(BSD_HG_URL) openjdk;
 else
+if USE_NIO2
+	hg fclone $(NIO2_HG_URL) openjdk;
+else
 if USE_HG
 	$(HG) fclone -r jdk7-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk;
 else
@@ -1625,6 +1629,7 @@ else
 	  fi ; \
 	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
 	fi
+endif
 endif
 endif
 endif

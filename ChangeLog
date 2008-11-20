@@ -1,3 +1,9 @@
+2008-09-04  C. K. Jester-Young  <cky944@gmail.com>
+
+	* Makefile.am,
+	* acinclude.m4:
+	Add support for NIO2.
+
 2008-11-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-version.patch,
