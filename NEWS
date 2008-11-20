@@ -1,13 +1,18 @@
-New in release 1.8 (XXXX-XX-XX)
+New in release 1.8 (2008-11-20)
 
   IcedTea is based on the hard work of a lot of people that contributed to
   IcedTea6 and OpenJDK. The following noteworthy changes were added in
   this release:
 
-- Updated to b38 build.
+- Updated to b39 build.
+- Support for external projects (closures, caciocavallo, cvmi, bsd, nio2).
+  Note that these are based on Mercurial repositories so may require local
+  changes for a working build due to noticeable differences between the
+  repository and the reference OpenJDK b39 build.  At the time of release,
+  NIO2 was buildable out of the box.
 - Fixed to use new sound service, Gervill.
 - Many Netx fixes and now built by default.
-- LiveConnect support (--enable-liveconnect).
+- LiveConnect support replaces gcjwebplugin.
 - Implemented JavaScript->Java security.
 - PulseAudio integrated (--enable-pulse-java)
 - VisualVM tool integrated (--enable-visualvm).

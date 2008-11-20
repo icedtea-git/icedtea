@@ -1,5 +1,11 @@
 2008-11-20  Andrew John Hughes  <ahughes@redhat.com>
 
+	Prepare for 1.8 release.
+	* NEWS: Updated.
+	* configure.ac: Bump to 1.8.
+
+2008-11-20  Andrew John Hughes  <ahughes@redhat.com>
+
 	PR icedtea/236:
 	* gcjwebplugin.cc,
 	* Makefile.am,
