@@ -1,3 +1,7 @@
+2008-11-21  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Fix a mistake in previous commit re: integer overflow.
+
 2008-11-21  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-stroker-finish.patch: New patch.

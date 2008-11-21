@@ -4638,6 +4638,7 @@ IcedTeaJNIEnv::ValueString (jni_type type, jvalue value)
   PLUGIN_TRACE_JNIENV ();
   nsCString retstr ("");
 
+  char* longVal = (char*) malloc(sizeof(char)*20);
   switch (type)
     {
     case jboolean_type:
@@ -4656,7 +4657,8 @@ IcedTeaJNIEnv::ValueString (jni_type type, jvalue value)
       retstr.AppendInt (value.i);
       break;
     case jlong_type:
-      retstr += IcedTeaPrintfCString ("%ld", value.j);
+      sprintf(longVal, "%"PRId64, value.j);
+      retstr += longVal;
       break;
     case jfloat_type:
       retstr += IcedTeaPrintfCString ("%f", value.f);
@@ -4672,6 +4674,8 @@ IcedTeaJNIEnv::ValueString (jni_type type, jvalue value)
     default:
       break;
     }
+
+  free(longVal);
 
   // Freed by calling function.
   return strdup (retstr.get ());
@@ -4762,6 +4766,7 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
   // Method.
   int arg = 0;
   char* fl;
+  char* longVal = (char*) malloc(sizeof(char)*20);
   while (id->signature[i] != stopchar)
     {
       switch (id->signature[i])
@@ -4785,7 +4790,8 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
           retstr.AppendInt (args[arg].i);
           break;
         case 'J':
-          retstr += IcedTeaPrintfCString ("%ld", args[arg].j);
+          sprintf(longVal, "%"PRId64, args[arg].j);
+          retstr += longVal;
           break;
         case 'F':
           retstr += IcedTeaPrintfCString ("%f", args[arg].f);
@@ -4832,6 +4838,8 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
       i++;
 	  arg++;
     }
+
+  free(longVal);
 
   // Freed by calling function.
   return strdup (retstr.get ());
