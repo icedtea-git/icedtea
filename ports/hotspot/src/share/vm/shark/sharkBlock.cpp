@@ -1814,6 +1814,8 @@ Value* SharkBlock::get_interface_callee(Value *cache, SharkValue *receiver)
     in_ByteSize(instanceKlass::vtable_length_offset() * HeapWordSize),
     SharkType::jint_type(),
     "vtable_length");
+  vtable_length =
+    builder()->CreateIntCast(vtable_length, SharkType::intptr_type(), false);
 
   bool needs_aligning = HeapWordsPerLong > 1;
   const char *itable_start_name = "itable_start";
@@ -1821,7 +1823,7 @@ Value* SharkBlock::get_interface_callee(Value *cache, SharkValue *receiver)
     vtable_start,
     builder()->CreateShl(
       vtable_length,
-      LLVMValue::jint_constant(exact_log2(vtableEntry::size() * wordSize))),
+      LLVMValue::intptr_constant(exact_log2(vtableEntry::size() * wordSize))),
     needs_aligning ? "" : itable_start_name);
   if (needs_aligning)
     itable_start = builder()->CreateAlign(
@@ -1878,6 +1880,8 @@ Value* SharkBlock::get_interface_callee(Value *cache, SharkValue *receiver)
     in_ByteSize(itableOffsetEntry::offset_offset_in_bytes()),
     SharkType::jint_type(),
     "offset");
+  offset =
+    builder()->CreateIntCast(offset, SharkType::intptr_type(), false);
 
   Value *index = builder()->CreateValueOfStructEntry(
     cache, ConstantPoolCacheEntry::f2_offset(),
@@ -1894,7 +1898,7 @@ Value* SharkBlock::get_interface_callee(Value *cache, SharkValue *receiver)
             offset),
           builder()->CreateShl(
             index,
-            LLVMValue::jint_constant(
+            LLVMValue::intptr_constant(
               exact_log2(itableMethodEntry::size() * wordSize)))),
         LLVMValue::intptr_constant(
           itableMethodEntry::method_offset_in_bytes())),

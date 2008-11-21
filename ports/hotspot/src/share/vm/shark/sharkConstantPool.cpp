@@ -82,6 +82,12 @@ Value *SharkConstantPool::tag_at(int which)
 
 Value *SharkConstantPool::cache_entry_at(int which)
 {
+  // Takes a constant pool cache index in byte-swapped byte order
+  // (which comes from the bytecodes after rewriting).  This is a
+  // bizarre hack but it's the same as
+  // constantPoolOopDesc::field_or_method_at().
+  which = Bytes::swap_u2(which);
+
   Value *entry = builder()->CreateIntToPtr(
     builder()->CreateAdd(
       builder()->CreatePtrToInt(
@@ -109,7 +115,7 @@ Value *SharkConstantPool::cache_entry_at(int which)
       builder()->CreateValueOfStructEntry(
         entry, ConstantPoolCacheEntry::indices_offset(),
         SharkType::intptr_type()),
-      LLVMValue::jint_constant(shift)),
+      LLVMValue::intptr_constant(shift)),
     LLVMValue::intptr_constant(0xff));
 
   BasicBlock *orig_block = builder()->GetInsertBlock();

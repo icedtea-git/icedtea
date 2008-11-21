@@ -12,6 +12,27 @@
 	* rt/net/sourceforge/jnlp/NetxPanel.java: Provide function to return the
 	applet classloader.
 
+2008-11-21 Andrew Haley <aph@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
+	(class SharkComputableValue): Use IRBuilder<>, not IRBuilder.
+	(class SharkValue): Use IRBuilder<>, not IRBuilder.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::CreatePopFrame): Change a few jint_types to
+	intptr_types.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp
+	(SharkConstantPool::cache_entry_at): Byte-swap the cache index.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::SharkBuilder) Inherit from template class
+	IRBuilder<>.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp:
+	(SharkBuilder::SharkBuilder) Inherit from template class
+	IRBuilder<>.
+	Change a few jint_types to intptr_types.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::get_interface_callee): Change a few jint_types to
+	intptr_types.
+
 2008-11-18  Deepak Bhole  <dbhole@redhat.com>
 	* IcedTeaPlugin.cc: Encode newline characters instead of stripping them.
 	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Minor debug
