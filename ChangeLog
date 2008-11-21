@@ -1,5 +1,10 @@
 2008-11-21  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Bump to b40.
+	
+2008-11-21  Andrew John Hughes  <ahughes@redhat.com>
+
 	* NEWS,
 	* configure.ac:
 	Bump to 1.9-pre.
