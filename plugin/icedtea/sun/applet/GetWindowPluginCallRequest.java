@@ -44,7 +44,7 @@ import java.security.ProtectionDomain;
 
 public class GetWindowPluginCallRequest extends PluginCallRequest {
     // FIXME: look into int vs long JavaScript internal values.
-    int internal;
+    long internal;
 
     public GetWindowPluginCallRequest(String message, String returnString) {
         super(message, returnString);
@@ -55,7 +55,7 @@ public class GetWindowPluginCallRequest extends PluginCallRequest {
         String[] args = message.split(" ");
         // FIXME: add thread ID to messages to support multiple
         // threads using the netscape.javascript package.
-        internal = Integer.parseInt(args[1]);
+        internal = Long.parseLong(args[1]);
         setDone(true);
     }
     
@@ -69,7 +69,7 @@ public class GetWindowPluginCallRequest extends PluginCallRequest {
     	return message.contains("JavaScriptGetWindow");
     }
 
-    public Integer getObject() {
+    public Long getObject() {
     	return this.internal;
     }
 }

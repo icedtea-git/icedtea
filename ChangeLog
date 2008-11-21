@@ -1,3 +1,17 @@
+2008-11-21  Deepak Bhole  <dbhole@redhat.com>
+	* IcedTeaPlugin.cc: Handle memory address->string encoding correctly
+	depending on arch/word size.
+	* plugin/icedtea/netscape/javascript/JSObject.java: Use only long for
+	internal variable, to be on the safe side.
+	* plugin/icedtea/sun/applet/GetWindowPluginCallRequest.java: Ditto.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Rewrite
+	network->local image cache mapping code to prevent freezes on certain
+	sites. Add support for java_code, java_codebase, etc.
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java: Fix race
+	condition that froze the vm under the right circumstances.
+	* rt/net/sourceforge/jnlp/NetxPanel.java: Provide function to return the
+	applet classloader.
+
 2008-11-18  Deepak Bhole  <dbhole@redhat.com>
 	* IcedTeaPlugin.cc: Encode newline characters instead of stripping them.
 	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Minor debug

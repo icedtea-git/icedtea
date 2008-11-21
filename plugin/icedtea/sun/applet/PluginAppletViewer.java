@@ -139,8 +139,6 @@ import sun.misc.Ref;
      
      private double proposedHeightFactor;
      private double proposedWidthFactor;
-     
-     private JNLPClassLoader pluginCL; 
 
      /**
       * Null constructor to allow instantiation via newInstance()
@@ -287,9 +285,6 @@ import sun.misc.Ref;
     	this.streamhandler.write("instance " + identifier + " reference " + -1 + " fatalError " + "Initialization failed");
     	return;
     }
-
-    if (panel instanceof NetxPanel)
-        pluginCL = (JNLPClassLoader) panel.getApplet().getClass().getClassLoader();
 
     PluginDebug.debug("Applet initialized");
 
@@ -607,23 +602,21 @@ import sun.misc.Ref;
          
          try {
 
-             // wait till aplet initializes
-             while (pluginCL == null) {
-                 PluginDebug.debug("Plugin CL is null. Waiting in getCachedImageRef()..");
-             }
-
              String originalURL = url.toString();
-             String codeBase = pluginCL.getJNLPFile().getCodeBase().toString();
+             String codeBase = panel.getCodeBase().toString();
 
-             if (originalURL.startsWith("http")) {
+             if (originalURL.startsWith(codeBase)) {
+
                  PluginDebug.debug("getCachedImageRef() got URL = " + url);
-                 PluginDebug.debug("getCachedImageRef() plugin codebase = " + pluginCL.getJNLPFile().getCodeBase().toString());
+                 PluginDebug.debug("getCachedImageRef() plugin codebase = " + codeBase);
 
-                 URL localURL = null;
-                 if (originalURL.startsWith(codeBase))
-                     localURL = pluginCL.getResource(originalURL.substring(codeBase.length()));
+                 // try to fetch it locally
+                 if (panel instanceof NetxPanel) {
+                     URL localURL = null;
+                     localURL = ((NetxPanel) panel).getAppletClassLoader().getResource(originalURL.substring(codeBase.length()));
 
-                 url = localURL != null ? localURL : url;
+                     url = localURL != null ? localURL : url;
+                 }
              }
 
              PluginDebug.debug("getCachedImageRef() getting img from URL = " + url);
@@ -740,7 +733,7 @@ import sun.misc.Ref;
  	}
      }
  
-     public int getWindow() {
+     public long getWindow() {
     	 PluginDebug.debug ("STARTING getWindow");
     	 PluginCallRequest request = requestFactory.getPluginCallRequest("window",
     			 							"instance " + identifier + " " + "GetWindow", 
@@ -753,7 +746,7 @@ import sun.misc.Ref;
     		 PluginDebug.debug ("wait request 1");
     		 synchronized(request) {
     			 PluginDebug.debug ("wait request 2");
-    			 while ((Integer) request.getObject() == 0)
+    			 while ((Long) request.getObject() == 0)
     				 request.wait();
     			 PluginDebug.debug ("wait request 3");
     		 }
@@ -763,11 +756,11 @@ import sun.misc.Ref;
     	 }
 
     	 PluginDebug.debug ("STARTING getWindow DONE");
-    	 return (Integer) request.getObject();
+    	 return (Long) request.getObject();
      }
  
      // FIXME: make private, access via reflection.
-     public static Object getMember(int internal, String name)
+     public static Object getMember(long internal, String name)
      {
     	 AppletSecurityContextManager.getSecurityContext(0).store(name);
          int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
@@ -794,7 +787,7 @@ import sun.misc.Ref;
          return request.getObject();
      }
  
-     public static void setMember(int internal, String name, Object value) {
+     public static void setMember(long internal, String name, Object value) {
     	 AppletSecurityContextManager.getSecurityContext(0).store(name);
          int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
          AppletSecurityContextManager.getSecurityContext(0).store(value);
@@ -823,7 +816,7 @@ import sun.misc.Ref;
      }
  
      // FIXME: handle long index as well.
-     public static void setSlot(int internal, int index, Object value) {
+     public static void setSlot(long internal, int index, Object value) {
     	 AppletSecurityContextManager.getSecurityContext(0).store(value);
          int valueID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(value);
  
@@ -848,7 +841,7 @@ import sun.misc.Ref;
          PluginDebug.debug (" setSlot DONE");
      }
  
-     public static Object getSlot(int internal, int index)
+     public static Object getSlot(long internal, int index)
      {
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("member", 
@@ -872,7 +865,7 @@ import sun.misc.Ref;
          return request.getObject();
      }
  
-     public static Object eval(int internal, String s)
+     public static Object eval(long internal, String s)
      {
     	 AppletSecurityContextManager.getSecurityContext(0).store(s);
          int stringID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(s);
@@ -899,7 +892,7 @@ import sun.misc.Ref;
          return request.getObject();
      }
  
-     public static void removeMember (int internal, String name) {
+     public static void removeMember (long internal, String name) {
     	 AppletSecurityContextManager.getSecurityContext(0).store(name);
          int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
  
@@ -924,7 +917,7 @@ import sun.misc.Ref;
          PluginDebug.debug (" RemoveMember DONE");
      }
  
-     public static Object call(int internal, String name, Object args[])
+     public static Object call(long internal, String name, Object args[])
      {
          // FIXME: when is this removed from the object store?
          // FIXME: reference should return the ID.
@@ -956,7 +949,7 @@ import sun.misc.Ref;
          return request.getObject();
      }
  
-     public static void JavaScriptFinalize(int internal)
+     public static void JavaScriptFinalize(long internal)
      {
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("void",
@@ -979,7 +972,7 @@ import sun.misc.Ref;
          PluginDebug.debug (" finalize DONE");
      }
  
-     public static String javascriptToString(int internal)
+     public static String javascriptToString(long internal)
      {
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("member",
@@ -1595,6 +1588,28 @@ import sun.misc.Ref;
     						 atts.put("code", ((String) atts.get("classid")).substring(5));
     					 }
 
+                         // java_* aliases override older names:
+                         // http://java.sun.com/j2se/1.4.2/docs/guide/plugin/developer_guide/using_tags.html#in-ie
+                         if (atts.get("java_code") != null) {
+                             atts.put("code", ((String) atts.get("java_code")));
+                         }
+
+                         if (atts.get("java_codebase") != null) {
+                             atts.put("codebase", ((String) atts.get("java_codebase")));
+                         }
+
+                         if (atts.get("java_archive") != null) {
+                             atts.put("archive", ((String) atts.get("java_archive")));
+                         }
+
+                         if (atts.get("java_object") != null) {
+                             atts.put("object", ((String) atts.get("java_object")));
+                         }
+
+                         if (atts.get("java_type") != null) {
+                             atts.put("type", ((String) atts.get("java_type")));
+                         }
+
     					 // The <OBJECT> attribute codebase isn't what
     					 // we want when not dealing with jars. If its 
     					 // defined, remove it in that case.
@@ -1630,6 +1645,28 @@ import sun.misc.Ref;
     						 //skip "java:"
     						 atts.put("code", ((String) atts.get("classid")).substring(5));
     					 }
+    					 
+    					 // java_* aliases override older names:
+    					 // http://java.sun.com/j2se/1.4.2/docs/guide/plugin/developer_guide/using_tags.html#in-nav
+    					 if (atts.get("java_code") != null) {
+    					     atts.put("code", ((String) atts.get("java_code")));
+    					 }
+    					 
+                         if (atts.get("java_codebase") != null) {
+                             atts.put("codebase", ((String) atts.get("java_codebase")));
+                         }
+                         
+                         if (atts.get("java_archive") != null) {
+                             atts.put("archive", ((String) atts.get("java_archive")));
+                         }
+                         
+                         if (atts.get("java_object") != null) {
+                             atts.put("object", ((String) atts.get("java_object")));
+                         }
+    					 
+                         if (atts.get("java_type") != null) {
+                             atts.put("type", ((String) atts.get("java_type")));
+                         }
 
     					 if (atts.get("code") == null && atts.get("object") == null) {
     						 statusMsgStream.println(embedRequiresCodeWarning);

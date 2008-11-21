@@ -24,6 +24,8 @@ class PluginMessageHandlerWorker extends Thread {
 
 			if (message != null) {
 				
+			    PluginDebug.debug("Consumer thread " + id + " consuming " + message);
+			    
 				// ideally, whoever returns things object should mark it 
 				// busy first, but just in case..
 				busy();
@@ -39,21 +41,24 @@ class PluginMessageHandlerWorker extends Thread {
 				}
 
 				this.message = null;
+				
+				PluginDebug.debug("Consumption completed by consumer thread " + id);
+
+	            // mark ourselves free again
+				free();
+				
 			} else {
 				
 				// Sleep when there is nothing to do
-				try {
-					Thread.sleep(Integer.MAX_VALUE);
-					PluginDebug.debug("Consumer thread " + id + " sleeping...");
-				} catch (InterruptedException ie) {
-					PluginDebug.debug("Consumer thread " + id + " woken...");
-					// nothing.. someone woke us up, see if there 
-					// is work to do
-				}
+			    try {
+			        Thread.sleep(Integer.MAX_VALUE);
+			        PluginDebug.debug("Consumer thread " + id + " sleeping...");
+			    } catch (InterruptedException ie) {
+			        PluginDebug.debug("Consumer thread " + id + " woken...");
+			        // nothing.. someone woke us up, see if there 
+			        // is work to do
+			    }
 			}
-			
-			// mark ourselves free again
-			free();
 		}
 	}
 	
