@@ -63,6 +63,8 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-alt-jar.patch: Add support for using an alternate jar tool in JDK building. 
 * icedtea-hotspot7-tests.patch: Adds hotspot compiler tests from jdk7 tree.
 * icedtea-renderer-crossing.patch: Check whether crossing is initialized in Pisces Renderer.
+* icedtea-stroker-finish.patch: Make sure cap calculation doesn't result in
+  divide by zero on tiny paths.
 * icedtea-alsa-default-device.patch: Fix problems with using the ALSA 'default' device.
 * icedtea-linker-libs-order.patch: When linking, put the referenced libraries after the object files (PR237).
 * icedtea-f2i-overflow.patch: Replaces the code used by [fd]2[il] bytecodes to correctly handle overflows. (PR244)

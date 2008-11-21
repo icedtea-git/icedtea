@@ -1,4 +1,11 @@
+2008-11-21  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-stroker-finish.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	* HACKING: Document new patch.
+
 2008-11-21  Deepak Bhole  <dbhole@redhat.com>
+
 	* IcedTeaPlugin.cc: Handle memory address->string encoding correctly
 	depending on arch/word size.
 	* plugin/icedtea/netscape/javascript/JSObject.java: Use only long for

@@ -533,6 +533,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-javac-debuginfo.patch \
 	patches/icedtea-xjc.patch \
 	patches/icedtea-renderer-crossing.patch \
+	patches/icedtea-stroker-finish.patch \
 	patches/icedtea-alsa-default-device.patch \
 	patches/icedtea-linker-libs-order.patch \
 	patches/icedtea-f2i-overflow.patch \
