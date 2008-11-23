@@ -540,7 +540,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-cc-interp-no-fer.patch \
 	patches/icedtea-6761856-freetypescaler.patch \
 	patches/icedtea-display-mode-changer.patch \
-	patches/icedtea-testenv.patch
+	patches/icedtea-testenv.patch \
+	patches/icedtea-samejvm-safe.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -1599,7 +1600,7 @@ check-jdk: stamps/jtreg.stamp
 	mkdir -p test/jdk/JTwork test/jdk/JTreport
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
-		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		-s -jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
 		`pwd`/openjdk/jdk/test \
 	    | tee test/$@.log
 

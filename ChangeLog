@@ -1,5 +1,12 @@
 2008-11-23  Mark Wielaard  <mark@klomp.org>
 
+	* patches/icedtea-samejvm-safe.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	(check-jdk): Run jtreg with -samevm.
+	* HACKING: Document new patch.
+
+2008-11-23  Mark Wielaard  <mark@klomp.org>
+
 	* test/jtreg/com/sun/javatest/regtest/Main.java
 	(createParameters): Set same jvm safe dirs when non-null.
 	(getSameJVMSafeDirs): New method that reads samejvmsafe property

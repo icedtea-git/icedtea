@@ -73,6 +73,7 @@ The following patches are currently applied before the building of OpenJDK or Op
   #6761856, swing TextLayout.getBounds() returns shifted bounds.
 * icedtea-display-mode-changer.patch: Add extra test class.
 * icedtea-testenv.patch: Provide public reachable machines for net/nio tests.
+* icedtea-samejvm-safe.patch: Add samejvmsafe dirs to TEST.ROOT.
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
