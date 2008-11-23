@@ -29,6 +29,7 @@ import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -52,6 +53,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 
 import com.sun.javatest.CompositeFilter;
@@ -1354,6 +1356,10 @@ public class Main {
             if (ignoreKind != null)
                 rp.setIgnoreKind(ignoreKind);
 
+            sameJVMSafeDirs = getSameJVMSafeDirs(ts);
+            if (sameJVMSafeDirs != null)
+                rp.setSameJVMSafeDirs(sameJVMSafeDirs);
+
             return rp;
         } catch (TestSuite.Fault f) {
             f.printStackTrace();
@@ -1372,6 +1378,35 @@ public class Main {
         } catch (IOException e) {
             return file.getAbsoluteFile();
         }
+    }
+
+    // Returns directory (prefix) for tests that are same jvm safe
+    // read from amejvmsafe property in TEST.ROOT file. Returning null
+    // means all tests are considered same jvm safe. null is returned
+    // when there is no samejvmsafe property, or there was a problem
+    // reading it, and when anything else than the test root was given
+    // as test file argument. Meaning that this only returns something
+    // non-null if anything was actually specified as same jvm safe and
+    // the whole test suite is being tested.
+    private List<String> getSameJVMSafeDirs(File testRoot) {
+	// Only use the same jvm safe dirs when running from the root.
+	if (testFileArgs.size() != 1
+	    || !canon(testFileArgs.iterator().next()).equals(canon(testRoot)))
+	    return null;
+
+	try {
+	    File file = new File(testRoot, "TEST.ROOT");
+            if (file.exists()) {
+		Properties testRootProps = new Properties();
+		testRootProps.load(new FileInputStream(file));
+		String safedirs = testRootProps.getProperty("samejvmsafe");
+		if ((safedirs != null) && (safedirs.trim().length() > 0))
+		    return Arrays.asList(StringArray.splitWS(safedirs));
+	    }
+	} catch (IOException ioe) {
+	    // Bah, then just assume everything is safe.
+	}
+	return null;
     }
 
     private String getRelativePath(File base, File f) {
@@ -1762,6 +1797,7 @@ public class Main {
     // these args are jtreg extras
     private File baseDirArg;
     private boolean sameJVMFlag;
+    private List<String> sameJVMSafeDirs;
     private JDK jdk;
     private boolean guiFlag;
     private boolean reportOnlyFlag;

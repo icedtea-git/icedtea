@@ -1,3 +1,22 @@
+2008-11-23  Mark Wielaard  <mark@klomp.org>
+
+	* test/jtreg/com/sun/javatest/regtest/Main.java
+	(createParameters): Set same jvm safe dirs when non-null.
+	(getSameJVMSafeDirs): New method that reads samejvmsafe property
+	from TEST.ROOT.
+	(sameJVMSafeDirs): New private field.
+	* test/jtreg/com/sun/javatest/regtest/RegressionParameters.java
+	(SAME_JVM_SAFE_DIRS): New static final field.
+	(load): Read same jvm safe dirs.
+	(save0): Write same jvm safe dirs.
+	(getSameJVMSafeDirs): New method.
+	(setSameJVMSafeDirs): New method.
+	* test/jtreg/com/sun/javatest/regtest/RegressionScript.java
+	(run): Set testDirPath.
+	(isOtherJVM): Take same jvm safe into account.
+	(isSameJVMSafe): New method.
+	(testDirPath): New private field.
+
 2008-11-21  Deepak Bhole  <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Fix a mistake in previous commit re: integer overflow.

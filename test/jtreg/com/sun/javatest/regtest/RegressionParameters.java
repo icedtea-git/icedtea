@@ -139,6 +139,7 @@ public class RegressionParameters
     private static final String TEST_JAVA_OPTIONS = ".testJavaOpts";
     private static final String IGNORE = ".ignore";
     private static final String RETAIN_ARGS = ".retain";
+    private static final String SAME_JVM_SAFE_DIRS = ".samejvmsafedirs";
     
     @Override
     public void load(Map data, boolean checkChecksum) throws Interview.Fault {
@@ -182,6 +183,10 @@ public class RegressionParameters
         v = (String) data.get(prefix + RETAIN_ARGS);
         if (v != null)
             setRetainArgs(Arrays.asList(StringArray.splitSeparator("\n", v)));
+
+        v = (String) data.get(prefix + SAME_JVM_SAFE_DIRS);
+        if (v != null)
+            setSameJVMSafeDirs(Arrays.asList(StringArray.splitSeparator("\n", v)));
     }
     
     @SuppressWarnings("unchecked")
@@ -203,6 +208,9 @@ public class RegressionParameters
         
         if (jdk != null)
             data.put(prefix + JDK, jdk.getPath());
+        
+        if (sameJVMSafeDirs != null)
+            data.put(prefix + SAME_JVM_SAFE_DIRS, StringUtils.join(sameJVMSafeDirs, "\n"));
         
         if (retainArgs != null)
             data.put(prefix + RETAIN_ARGS, StringUtils.join(retainArgs, "\n"));
@@ -590,6 +598,18 @@ public class RegressionParameters
     private List<String> retainArgs;
     private Set<Integer> retainStatusSet = new HashSet<Integer>(4);
     private Pattern retainFilesPattern;
+
+    //---------------------------------------------------------------------
+    
+    List<String> getSameJVMSafeDirs() {
+        return sameJVMSafeDirs;
+    }
+    
+    void setSameJVMSafeDirs(List<String> sameJVMSafeDirs) {
+        this.sameJVMSafeDirs= sameJVMSafeDirs;
+    }
+
+    private List<String> sameJVMSafeDirs;
 
     //---------------------------------------------------------------------
 
