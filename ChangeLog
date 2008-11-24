@@ -1,3 +1,20 @@
+2008-11-24  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/test/com/sun/media/sound/
+	EmergencySoundbank/TestCreateSoundbank.java
+	ModelByteBuffer/RandomFileInputStream/Available.java
+	ModelByteBuffer/RandomFileInputStream/Close.java
+	ModelByteBuffer/RandomFileInputStream/MarkReset.java
+	ModelByteBuffer/RandomFileInputStream/MarkSupported.java
+	ModelByteBuffer/RandomFileInputStream/Read.java
+	ModelByteBuffer/RandomFileInputStream/ReadByte.java
+	ModelByteBuffer/RandomFileInputStream/ReadByteIntInt.java
+	ModelByteBuffer/RandomFileInputStream/Skip.java
+	SoftAudioSynthesizer/DummySourceDataLine.java
+	SoftFilter/TestProcessAudio.java
+	SoftSynthesizer/DummySourceDataLine.java: Add missing Gervill
+	test files.
+
 2008-11-23  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-samejvm-safe.patch: New patch.
