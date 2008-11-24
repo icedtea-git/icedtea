@@ -1,5 +1,9 @@
 2008-11-24  Mark Wielaard  <mark@klomp.org>
 
+	* Makefile.am (jtregcheck): Clean up jtreg-summary.log a bit more.
+
+2008-11-24  Mark Wielaard  <mark@klomp.org>
+
 	* overlays/openjdk/jdk/test/com/sun/media/sound/
 	EmergencySoundbank/TestCreateSoundbank.java
 	ModelByteBuffer/RandomFileInputStream/Available.java

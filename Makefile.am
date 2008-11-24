@@ -1618,7 +1618,7 @@ jtreg_pids = ps x --no-headers -ww -o pid,ppid,args \
 jtregcheck: jtreg check-hotspot check-langtools check-jdk
 	for i in hotspot langtools jdk; do \
 	  echo "--------------- jtreg console summary for $$i ---------------"; \
-	  egrep -v '^(Passed:|Directory)' test/check-$$i.log; \
+	  egrep -v '^(Passed:|Directory)|Re[a-z]+\ written\ to)' test/check-$$i.log; \
 	done | tee test/jtreg-summary.log
 
 	: # kill testsuite processes still hanging
