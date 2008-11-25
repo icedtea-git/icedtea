@@ -1,3 +1,7 @@
+2008-11-25  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (jtregcheck): Fix regexp.
+
 2008-11-24  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am (jtregcheck): Clean up jtreg-summary.log a bit more.
