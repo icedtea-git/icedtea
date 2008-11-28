@@ -541,7 +541,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-6761856-freetypescaler.patch \
 	patches/icedtea-display-mode-changer.patch \
 	patches/icedtea-testenv.patch \
-	patches/icedtea-samejvm-safe.patch
+	patches/icedtea-samejvm-safe.patch \
+	patches/icedtea-6728542-epoll.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \

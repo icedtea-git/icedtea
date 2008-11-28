@@ -1,0 +1,90 @@
+
+# HG changeset patch
+# User alanb
+# Date 1219738992 -3600
+# Node ID 2a5377a6492e1738b4310c400d041a0f94071abf
+# Parent 872241636752db4f3c8401242a2dfe9f4ee38615
+6728542: (se) epoll based SelectorProvider should be portable to platforms other than x86 and x64
+Reviewed-by: sherman
+
+--- openjdk/jdk/make/java/nio/mapfile-linux	Mon Aug 25 08:11:08 2008 -0700
++++ openjdk/jdk/make/java/nio/mapfile-linux	Tue Aug 26 09:23:12 2008 +0100
+@@ -18,6 +18,8 @@ SUNWprivate_1.1 {
+ 		Java_sun_nio_ch_EPollArrayWrapper_fdLimit;
+ 		Java_sun_nio_ch_EPollArrayWrapper_init;
+ 		Java_sun_nio_ch_EPollArrayWrapper_interrupt;
++		Java_sun_nio_ch_EPollArrayWrapper_offsetofData;
++		Java_sun_nio_ch_EPollArrayWrapper_sizeofEPollEvent;
+                 Java_sun_nio_ch_FileChannelImpl_close0;
+                 Java_sun_nio_ch_FileChannelImpl_force0;
+                 Java_sun_nio_ch_FileChannelImpl_initIDs;
+--- openjdk/jdk/src/solaris/classes/sun/nio/ch/EPollArrayWrapper.java	Mon Aug 25 08:11:08 2008 -0700
++++ openjdk/jdk/src/solaris/classes/sun/nio/ch/EPollArrayWrapper.java	Tue Aug 26 09:23:12 2008 +0100
+@@ -69,11 +69,11 @@ class EPollArrayWrapper {
+     static final int EPOLL_CTL_MOD      = 3;
+ 
+     // Miscellaneous constants
+-    static final short SIZE_EPOLLEVENT  = 12;
+-    static final short EVENT_OFFSET     = 0;
+-    static final short DATA_OFFSET      = 4;
+-    static final short FD_OFFSET        = 4;
+-    static final int   NUM_EPOLLEVENTS  = Math.min(fdLimit(), 8192);
++    static final int SIZE_EPOLLEVENT  = sizeofEPollEvent();
++    static final int EVENT_OFFSET     = 0;
++    static final int DATA_OFFSET      = offsetofData();
++    static final int FD_OFFSET        = DATA_OFFSET;
++    static final int NUM_EPOLLEVENTS  = Math.min(fdLimit(), 8192);
+ 
+     // Base address of the native pollArray
+     private final long pollArrayAddress;
+@@ -280,6 +280,8 @@ class EPollArrayWrapper {
+     private native void epollCtl(int epfd, int opcode, int fd, int events);
+     private native int epollWait(long pollAddress, int numfds, long timeout,
+                                  int epfd) throws IOException;
++    private static native int sizeofEPollEvent();
++    private static native int offsetofData();
+     private static native int fdLimit();
+     private static native void interrupt(int fd);
+     private static native void init();
+--- openjdk/jdk/src/solaris/native/sun/nio/ch/EPollArrayWrapper.c	Mon Aug 25 08:11:08 2008 -0700
++++ openjdk/jdk/src/solaris/native/sun/nio/ch/EPollArrayWrapper.c	Tue Aug 26 09:23:12 2008 +0100
+@@ -48,10 +48,18 @@ typedef union epoll_data {
+     __uint64_t u64;
+ } epoll_data_t;
+ 
++
++/* x86-64 has same alignment as 32-bit */
++#ifdef __x86_64__
++#define EPOLL_PACKED __attribute__((packed))
++#else
++#define EPOLL_PACKED
++#endif
++
+ struct epoll_event {
+     __uint32_t events;  /* Epoll events */
+     epoll_data_t data;  /* User data variable */
+-} __attribute__ ((__packed__));
++} EPOLL_PACKED;
+ 
+ #ifdef  __cplusplus
+ }
+@@ -143,6 +151,18 @@ Java_sun_nio_ch_EPollArrayWrapper_fdLimi
+     return (jint)rlp.rlim_max;
+ }
+ 
++JNIEXPORT jint JNICALL
++Java_sun_nio_ch_EPollArrayWrapper_sizeofEPollEvent(JNIEnv* env, jclass this)
++{
++    return sizeof(struct epoll_event);
++}
++
++JNIEXPORT jint JNICALL
++Java_sun_nio_ch_EPollArrayWrapper_offsetofData(JNIEnv* env, jclass this)
++{
++    return offsetof(struct epoll_event, data);
++}
++
+ JNIEXPORT void JNICALL
+ Java_sun_nio_ch_EPollArrayWrapper_epollCtl(JNIEnv *env, jobject this, jint epfd,
+                                            jint opcode, jint fd, jint events)
+
