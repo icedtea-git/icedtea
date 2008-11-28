@@ -1,3 +1,8 @@
+2008-11-28  Mark Wielaard  <mark@klomp.org>
+
+	* autogen.sh: Check for autoconf > 2.61.
+	* configure.ac: Remove AC_PREREQ([2.61]).
+
 2008-11-26  Mark Wielaard  <mark@klomp.org>
 
 	* .hgignore: Add test/jtreg-summary.log.
