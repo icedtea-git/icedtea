@@ -94,7 +94,8 @@ The following patches are only applied to the icedtea-ecj bootstrap tree:
   javac executable with Ant, remove -Werror from javac call, don't build JDK demos,
   don't run sun.awt.X11.ToBin, explicitly pull in timezone data and rt.jar in javac
   calls, replace hexadecimal floating point literals with decimal variants in
-  java.lang.Double and java.lang.Float.   
+  java.lang.Double and java.lang.Float.
+* icedtea-ecj-pr261.patch: Adds a couple of classes that are omitted from rt.jar.
 
 The following patches are only applied for IcedTea builds using the zero-assembler:
 

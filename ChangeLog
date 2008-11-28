@@ -1,3 +1,10 @@
+2008-11-28  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/261:
+	* patches/icedtea-ecj-pr261.patch: New file.
+	* Makefile.am (ICEDTEA_ECJ_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
 2008-11-28  Mark Wielaard  <mark@klomp.org>
 
 	* autogen.sh: Check for autoconf > 2.61.

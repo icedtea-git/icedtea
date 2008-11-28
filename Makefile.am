@@ -776,7 +776,8 @@ stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCHES = patches/icedtea-ecj.patch \
 	patches/icedtea-ecj-spp.patch \
-	patches/icedtea-ecj-jopt.patch
+	patches/icedtea-ecj-jopt.patch \
+	patches/icedtea-ecj-pr261.patch
 
 stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 	mkdir -p stamps; \
