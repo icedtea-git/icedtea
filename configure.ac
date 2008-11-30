@@ -159,6 +159,14 @@ AC_ARG_ENABLE([docs],
 AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
 AC_MSG_RESULT(${ENABLE_DOCS})
 
+AC_MSG_CHECKING(whether to include xrender pipeline)
+AC_ARG_ENABLE([xrender],
+	      [AS_HELP_STRING([--disable-xrender],
+	      		      [Disable inclusion of xrender pipeline])],
+	      [ENABLE_XRENDER="${enableval}"], [ENABLE_XRENDER='yes'])
+AM_CONDITIONAL([ENABLE_XRENDER], [test x$ENABLE_XRENDER = xyes])
+AC_MSG_RESULT(${ENABLE_XRENDER})
+
 AC_MSG_CHECKING(whether to build VisualVM)
 AC_ARG_ENABLE([visualvm],
               [AS_HELP_STRING([--enable-visualvm],
@@ -373,6 +381,16 @@ then
 fi
 AC_SUBST(XINERAMA_CFLAGS)
 AC_SUBST(XINERAMA_LIBS)
+
+if test "x${ENABLE_XRENDER}" = "xyes"
+then
+  PKG_CHECK_MODULES(XRENDER, xrender, [XRENDER_FOUND=yes], [XRENDER_FOUND=no])
+  if test "x${XRENDER_FOUND}" = xno
+  then
+    AC_MSG_ERROR([Could not find Xrender extension - \
+Try installing libXrender-devel or configure --disable-xrender.])
+  fi
+fi
 
 dnl Check for libpng headers and libraries.
 PKG_CHECK_MODULES(LIBPNG, libpng,[LIBPNG_FOUND=yes]

@@ -1,3 +1,10 @@
+2008-11-29  Mark Wielaard  <mark@klomp.org>
+
+	* configure.ac: Add and check --enable-xrender.
+	* Makefile.am: Add XRENDER_PATCHES when ENABLE_XRENDER set.
+	* patches/icedtea-xrender-00[0-8].patch: New patches.
+	* HACKING: Document new patches.
+
 2008-11-28  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/265:

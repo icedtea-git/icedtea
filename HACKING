@@ -132,6 +132,11 @@ The following patches are only applied when building with the CACAO virtual mach
 
 * icedtea-cacao.patch: Don't run 'java' in a new thread.
 
+The following patches are to support Xrender pipeline (-Dsun.java2d.xrender):
+
+* icedtea-xrender-xxx.patch: Numbered patches from xrender branch
+  http://hg.openjdk.java.net/xrender/xrender/jdk
+
 Obsolete Patches
 ================
 

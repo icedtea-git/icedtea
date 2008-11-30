@@ -561,6 +561,11 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-pulse-soundproperties.patch
 endif
 
+if ENABLE_XRENDER
+XRENDER_PATCHES = patches/icedtea-xrender-???.patch
+ICEDTEA_PATCHES += $(sort $(wildcard $(XRENDER_PATCHES)))
+endif
+
 ICEDTEA_PATCHES += \
 	$(DISTRIBUTION_PATCHES)
 
