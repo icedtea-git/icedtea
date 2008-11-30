@@ -156,7 +156,7 @@ diff -r dc592ff5af5e jdk/src/solaris/classes/sun/awt/X11GraphicsDevice.java
 -                            doubleBuffer);
 +                         doubleBufferVisuals.contains(Integer.valueOf(visNum)));
 +                    
-+                    if(xrender)
++                    if(!xrender)
 +                    {
 +                        ret[i] = XRGraphicsConfig.getConfig(this, visNum, depth,
 +                                getConfigColormap(i, screen),
