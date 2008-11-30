@@ -1,3 +1,8 @@
+2008-11-30  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (stamps/native-ecj.stamp): Use -findirect-dispatch.
+	* javac.in: Use ecj binary if available and no native-ecj.
+
 2008-11-29  Mark Wielaard  <mark@klomp.org>
 
 	* configure.ac: Add and check --enable-xrender.

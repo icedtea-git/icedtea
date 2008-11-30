@@ -32,6 +32,8 @@ fi
 
 if [ -e @abs_top_builddir@/native-ecj ] ; then
     @abs_top_builddir@/native-ecj -1.5 -nowarn $bcoption $NEW_ARGS ;
+elif [ ! -z "@ECJ@" ] ; then
+    @ECJ@ -1.5 -nowarn $bcoption $NEW_ARGS
 else
     CLASSPATH=@ECJ_JAR@${CLASSPATH:+:}$CLASSPATH \
      @JAVA@ org.eclipse.jdt.internal.compiler.batch.Main -1.5 -nowarn $bcoption $NEW_ARGS
