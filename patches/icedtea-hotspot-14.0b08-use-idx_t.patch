@@ -1,0 +1,45 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/methodLiveness.cpp openjdk/hotspot/src/share/vm/compiler/methodLiveness.cpp
+--- openjdk.orig/hotspot/src/share/vm/compiler/methodLiveness.cpp	2008-11-06 08:40:55.000000000 +0000
++++ openjdk/hotspot/src/share/vm/compiler/methodLiveness.cpp	2008-11-10 00:55:09.000000000 +0000
+@@ -567,15 +567,15 @@
+ 
+ 
+ MethodLiveness::BasicBlock::BasicBlock(MethodLiveness *analyzer, int start, int limit) :
+-         _gen((uintptr_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
++         _gen((size_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
+                          analyzer->bit_map_size_bits()),
+-         _kill((uintptr_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
++         _kill((size_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
+                          analyzer->bit_map_size_bits()),
+-         _entry((uintptr_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
++         _entry((size_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
+                          analyzer->bit_map_size_bits()),
+-         _normal_exit((uintptr_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
++         _normal_exit((size_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
+                          analyzer->bit_map_size_bits()),
+-         _exception_exit((uintptr_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
++         _exception_exit((size_t*)analyzer->arena()->Amalloc(BytesPerWord * analyzer->bit_map_size_words()),
+                          analyzer->bit_map_size_bits()),
+          _last_bci(-1) {
+   _analyzer = analyzer;
+@@ -992,7 +992,7 @@
+ }
+ 
+ MethodLivenessResult MethodLiveness::BasicBlock::get_liveness_at(ciMethod* method, int bci) {
+-  MethodLivenessResult answer(NEW_RESOURCE_ARRAY(uintptr_t, _analyzer->bit_map_size_words()),
++  MethodLivenessResult answer(NEW_RESOURCE_ARRAY(size_t, _analyzer->bit_map_size_words()),
+                 _analyzer->bit_map_size_bits());
+   answer.set_is_valid();
+ 
+diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/bitMap.hpp openjdk/hotspot/src/share/vm/utilities/bitMap.hpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/bitMap.hpp	2008-11-06 08:40:58.000000000 +0000
++++ openjdk/hotspot/src/share/vm/utilities/bitMap.hpp	2008-11-10 00:57:20.000000000 +0000
+@@ -73,7 +73,7 @@
+ 
+   // Set a word to a specified value or to all ones; clear a word.
+   void set_word  (idx_t word, bm_word_t val) { _map[word] = val; }
+-  void set_word  (idx_t word)            { set_word(word, ~(uintptr_t)0); }
++  void set_word  (idx_t word)            { set_word(word, ~(idx_t)0); }
+   void clear_word(idx_t word)            { _map[word] = 0; }
+ 
+   // Utilities for ranges of bits.  Ranges are half-open [beg, end).

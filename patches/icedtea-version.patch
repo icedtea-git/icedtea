@@ -12,41 +12,6 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/s
    PRODUCT_SUFFIX = Runtime Environment
    JDK_RC_PLATFORM_NAME = Platform
    COMPANY_NAME = N/A
---- openjdk/hotspot/src/share/vm/utilities/vmError.cpp~	2008-08-28 10:23:18.000000000 +0200
-+++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-10-21 14:05:12.000000000 +0200
-@@ -168,7 +168,8 @@
- 
- static void print_bug_submit_message(outputStream *out, Thread *thread) {
-   if (out == NULL) return;
--  out->print_raw_cr("# If you would like to submit a bug report, please visit:");
-+  out->print_raw_cr("# If you would like to submit a bug report, please include");
-+  out->print_raw_cr("# instructions how to reproduce the bug and visit:");
-   out->print_raw   ("#   ");
-   out->print_raw_cr(Arguments::java_vendor_url_bug());
-   // If the crash is in native code, encourage user to submit a bug to the
-@@ -340,6 +341,9 @@
-                    Abstract_VM_Version::vm_info_string(),
-                    Abstract_VM_Version::vm_platform_string()
-                  );
-+#ifdef DISTRIBUTION_ID
-+     st->print_cr("# Distribution: %s", DISTRIBUTION_ID);
-+#endif
- 
-   STEP(60, "(printing problematic frame)")
- 
---- openjdk/hotspot/build/linux/makefiles/vm.make~	2008-08-28 10:22:55.000000000 +0200
-+++ openjdk/hotspot/build/linux/makefiles/vm.make	2008-10-21 14:03:36.000000000 +0200
-@@ -111,6 +111,10 @@
-   ${JRE_VERSION}     \
-   ${VM_DISTRO}
- 
-+ifdef DISTRIBUTION_ID
-+CPPFLAGS += -DDISTRIBUTION_ID="\"$(DISTRIBUTION_ID)\""
-+endif
-+
- # CFLAGS_WARN holds compiler options to suppress/enable warnings.
- CFLAGS += $(CFLAGS_WARN/BYFILE)
- 
 --- openjdk/langtools/make/Makefile.orig
 +++ openjdk/langtools/make/Makefile
 @@ -82,7 +82,11 @@

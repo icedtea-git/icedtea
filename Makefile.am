@@ -47,6 +47,12 @@ else
 VISUALVM_PATCH = 
 endif
 
+if WITH_ALT_HSBUILD
+HOTSPOT_MAKE_DIR = make
+else
+HOTSPOT_MAKE_DIR = build
+endif
+
 # Top-Level Targets
 # =================
 
@@ -281,11 +287,18 @@ snapshot: dist
 
 # Download OpenJDK sources.
 OPENJDK_URL = http://download.java.net/openjdk/jdk6/promoted/$(OPENJDK_VERSION)/
+HOTSPOT_URL = http://hg.openjdk.java.net/jdk7/hotspot/hotspot/archive/
 
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 else
   OPENJDK_SRC_ZIP = openjdk-6-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).tar.gz
+endif
+
+if USE_ALT_HOTSPOT_SRC_ZIP
+  HOTSPOT_SRC_ZIP = $(ALT_HOTSPOT_SRC_ZIP)
+else
+  HOTSPOT_SRC_ZIP = hotspot.tar.gz
 endif
 
 CACAO_BASE_URL = http://www.complang.tuwien.ac.at
@@ -333,6 +346,13 @@ else
 	  fi ; \
 	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
 	fi
+endif
+if WITH_ALT_HSBUILD
+if USE_ALT_HOTSPOT_SRC_ZIP
+else
+	changeset="`cat $(abs_top_srcdir)/hotspot.map|grep $(HSBUILD)|cut -f2`"; \
+	$(WGET) $(HOTSPOT_URL)$${changeset}.tar.gz -O $(HOTSPOT_SRC_ZIP);
+endif
 endif
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
@@ -407,13 +427,13 @@ endif
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
+	for target in $(abs_top_srcdir)/ports/hotspot/$(HOTSPOT_MAKE_DIR)/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/*cpu/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'); \
 	  ln -sf $$target $$link; \
 	done
-	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/build/linux
+	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/$(HOTSPOT_MAKE_DIR)/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" \
 	  = "xno" ; then \
 	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR) ; \
@@ -431,7 +451,8 @@ stamps/ports.stamp: stamps/extract.stamp
 if GCC_OLD
   GCC_PATCH =
 else
-  GCC_PATCH = patches/icedtea-gcc-4.3.patch
+  GCC_PATCH = patches/icedtea-gcc-4.3.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-gcc-4.3.patch
 endif
 
 # If ZERO_BUILD is set then we are building zero and need
@@ -458,7 +479,11 @@ NON_ZERO_PATCHES = \
 if ZERO_BUILD
   ZERO_PATCHES_COND = $(ZERO_PATCHES)
 else
+if WITH_ALT_HSBUILD
+  ZERO_PATCHES_COND = 
+else
   ZERO_PATCHES_COND = $(NON_ZERO_PATCHES)
+endif
 endif
 
 # If Shark is required, apply shark patch
@@ -472,12 +497,13 @@ ICEDTEA_FSG_PATCHES =
 
 ICEDTEA_PATCHES = \
 	$(ZERO_PATCHES_COND) \
-	patches/icedtea-hotspot7-tests.patch \
-	patches/icedtea-copy-plugs.patch \
 	patches/icedtea-version.patch \
-	patches/icedtea-text-relocations.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-version.patch \
+	patches/icedtea-copy-plugs.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-text-relocations.patch \
 	patches/icedtea-graphics.patch \
 	patches/icedtea-debuginfo.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-debuginfo.patch \
 	patches/icedtea-ssl.patch \
 	$(PLUGIN_PATCH) \
 	patches/icedtea-webstart.patch \
@@ -487,32 +513,36 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-demos.patch \
 	patches/icedtea-use-system-tzdata.patch \
 	patches/icedtea-headers.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-headers.patch \
 	patches/icedtea-ant.patch \
 	patches/icedtea-gcc-suffix.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-gcc-suffix.patch \
 	patches/icedtea-bytebuffer-compact.patch \
 	patches/icedtea-float-double-trailing-zeros.patch \
-	patches/icedtea-memory-limits.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-memory-limits.patch \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
 	patches/icedtea-javafiles.patch \
 	patches/icedtea-core-build.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-core-build.patch \
 	patches/icedtea-linker-options.patch \
-	patches/icedtea-static-libstdc++.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-static-libstdc++.patch \
 	patches/icedtea-timerqueue.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero-build.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
 	patches/icedtea-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-fonts.patch \
-	patches/icedtea-sparc.patch \
-	patches/icedtea-sparc64-linux.patch \
-	patches/icedtea-sparc-ptracefix.patch \
-	patches/icedtea-sparc-trapsfix.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-sparc64-linux.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-sparc-ptracefix.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-no-bcopy.patch \
 	patches/icedtea-shark-build.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-shark-build.patch \
 	patches/icedtea-toolkit.patch \
 	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-nomotif-6706121.patch \
@@ -521,8 +551,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-alt-jar.patch \
 	patches/icedtea-enum-bug-181.patch \
 	patches/icedtea-jdk-use-ssize_t.patch \
-	patches/icedtea-hotspot-use-idx_t.patch \
-	patches/icedtea-hotspot-params-cast-size_t.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-use-idx_t.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-params-cast-size_t.patch \
 	patches/icedtea-clean-crypto.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
@@ -543,6 +573,12 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-samejvm-safe.patch \
 	patches/icedtea-6728542-epoll.patch
+
+if !WITH_ALT_HSBUILD
+ICEDTEA_PATCHES += \
+	patches/icedtea-hotspot7-tests.patch \
+	patches/icedtea-sparc.patch
+endif
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -575,6 +611,13 @@ stamps/extract.stamp: stamps/download.stamp
 	  mkdir openjdk ; \
 	  $(TAR) xf $(OPENJDK_SRC_ZIP) -C openjdk; \
 	  chmod -R ug+w openjdk ; \
+	  if test -e ${HOTSPOT_SRC_ZIP} ; \
+	  then \
+	    rm -rf openjdk/hotspot ; \
+	    $(TAR) xf $(HOTSPOT_SRC_ZIP) ; \
+	    chmod -R ug+w hotspot-* ; \
+	    mv hotspot-* openjdk/hotspot ; \
+	  fi ; \
 	  sh $(abs_top_srcdir)/fsg.sh ; \
 	fi
 if WITH_CACAO
@@ -759,13 +802,13 @@ clean-extract-ecj:
 
 # Link ports sources into tree
 stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
+	for target in $(abs_top_srcdir)/ports/hotspot/$(HOTSPOT_MAKE_DIR)/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/*cpu/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk-ecj/'); \
 	  ln -sf $$target $$link; \
 	done
-	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/build/linux
+	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/$(HOTSPOT_MAKE_DIR)/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" \
 	  = "xno"; then \
 	  mkdir -p openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
@@ -781,6 +824,7 @@ stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 
 # Patch OpenJDK for plug replacements and ecj.
 ICEDTEA_ECJ_PATCHES = patches/icedtea-ecj.patch \
+	patches/icedtea-ecj-hotspot-$(HSBUILD).patch \
 	patches/icedtea-ecj-spp.patch \
 	patches/icedtea-ecj-jopt.patch \
 	patches/icedtea-ecj-pr261.patch
@@ -1206,6 +1250,11 @@ ICEDTEA_COPY_DIRS = \
 	java/rmi \
 	sun/awt/ \
 	javax/net/ssl
+
+if WITH_ALT_HSBUILD
+ICEDTEA_COPY_DIRS += \
+	javax/script
+endif
 
 stamps/copy-source-files.stamp: stamps/patch.stamp
 	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \

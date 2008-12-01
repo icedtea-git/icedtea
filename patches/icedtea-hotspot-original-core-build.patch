@@ -1,0 +1,113 @@
+diff -u openjdk.orig/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/linux/makefiles/defs.make
+--- openjdk.orig/hotspot/build/linux/makefiles/defs.make	2008-01-31 14:19:00.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-02-01 15:57:40.000000000 +0000
+@@ -97,6 +97,7 @@ EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusa
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjsig.so
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.so
++ifndef ICEDTEA_CORE_BUILD
+ ifeq ($(ARCH_DATA_MODEL), 32)
+   EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
+   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
+@@ -111,3 +112,4 @@ else
+       EXPORT_LIST += $(EXPORT_LIB_DIR)/sa-jdi.jar
+     endif
+ endif
++endif
+diff -r 79d639c8a75f openjdk/hotspot/make/Makefile
+--- openjdk/hotspot/make/Makefile	Wed Apr 16 08:42:01 2008 +0100
++++ openjdk/hotspot/make/Makefile	Wed Apr 16 08:49:31 2008 +0100
+@@ -90,6 +90,15 @@ all_debug:     jvmg jvmg1 docs export_de
+ all_debug:     jvmg jvmg1 docs export_debug
+ all_optimized: optimized optimized1 docs export_optimized
+ 
++# Core (non-compiler) targets made available with this Makefile
++CORE_VM_TARGETS=productcore fastdebugcore optimizedcore jvmgcore
++
++allcore:           all_productcore all_fastdebugcore
++all_productcore:   productcore docs export_product
++all_fastdebugcore: fastdebugcore docs export_fastdebug
++all_debugcore:     jvmgcore docs export_debug
++all_optimizedcore: optimizedcore docs export_optimized
++
+ # Do everything
+ world:         all create_jdk
+ 
+@@ -111,6 +120,10 @@ endif
+ $(C2_VM_TARGETS):
+ 	$(CD) $(GAMMADIR)/make; \
+ 	$(MAKE) VM_TARGET=$@ generic_build2 $(ALT_OUT)
++
++$(CORE_VM_TARGETS):
++	$(CD) $(GAMMADIR)/make; \
++	$(MAKE) VM_TARGET=$@ generic_buildcore $(ALT_OUT)
+ 
+ # Build compiler1 (client) rule, different for platforms
+ generic_build1:
+@@ -153,6 +166,12 @@ else
+ 	    $(MAKE) -f $(ABS_OS_MAKEFILE) \
+ 		      $(MAKE_ARGS) $(VM_TARGET)
+ endif
++
++generic_buildcore:
++	$(MKDIR) -p $(OUTPUTDIR)
++	$(CD) $(OUTPUTDIR); \
++		$(MAKE) -f $(ABS_OS_MAKEFILE) \
++			$(MAKE_ARGS) $(VM_TARGET)
+ 
+ # Export file rule
+ generic_export: $(EXPORT_LIST)
+@@ -182,11 +201,19 @@ XUSAGE=$(HS_SRC_DIR)/share/vm/Xusage.txt
+ XUSAGE=$(HS_SRC_DIR)/share/vm/Xusage.txt
+ DOCS_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_docs
+ C1_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler1
++ifdef ICEDTEA_CORE_BUILD
++C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_core
++else
+ C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler2
++endif
+ C1_DIR=$(C1_BASE_DIR)/$(VM_SUBDIR)
+ C2_DIR=$(C2_BASE_DIR)/$(VM_SUBDIR)
+ 
+ # Misc files and generated files need to come from C1 or C2 area
++ifdef ICEDTEA_CORE_BUILD
++  MISC_DIR=$(C2_DIR)
++  GEN_DIR=$(C2_BASE_DIR)/generated
++else
+ ifeq ($(ARCH_DATA_MODEL), 32)
+   MISC_DIR=$(C1_DIR)
+   GEN_DIR=$(C1_BASE_DIR)/generated
+@@ -194,6 +221,7 @@ else
+   MISC_DIR=$(C2_DIR)
+   GEN_DIR=$(C2_BASE_DIR)/generated
+ endif
++endif
+ 
+ # Bin files (windows)
+ ifeq ($(OSNAME),windows)
+@@ -264,6 +292,7 @@ endif
+ 
+ # Xusage file
+ $(EXPORT_SERVER_DIR)/Xusage.txt $(EXPORT_CLIENT_DIR)/Xusage.txt: $(XUSAGE)
++$(EXPORT_SERVER_DIR)/Xusage.txt $(EXPORT_CLIENT_DIR)/Xusage.txt $(EXPORT_KERNEL_DIR)/Xusage.txt: $(XUSAGE)
+ 	$(prep-target)
+ 	$(RM) $@.temp
+ 	$(SED) 's/\(separated by \)[;:]/\1$(PATH_SEP)/g' $< > $@.temp
+diff -r 79d639c8a75f openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
+--- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-02-12 04:14:24.000000000 -0500
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-02-14 17:39:45.000000000 -0500
+@@ -89,8 +89,12 @@
+ #ifdef TIERED
+   #define VMTYPE "Server"
+ #else
+-  #define VMTYPE COMPILER1_PRESENT("Client")   \
+-                 COMPILER2_PRESENT("Server")   
++#if defined(COMPILER1) || defined(COMPILER2)
++   #define VMTYPE COMPILER1_PRESENT("Client")   \
++                  COMPILER2_PRESENT("Server")
++#else
++  #define VMTYPE "Core"
++#endif // COMPILER1 || COMPILER2
+ #endif // TIERED
+ 
+ #ifndef HOTSPOT_VM_DISTRO

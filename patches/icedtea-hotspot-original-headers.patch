@@ -1,0 +1,12 @@
+--- oldopenjdk/hotspot/build/linux/makefiles/jvmti.make	2008-02-12 04:14:13.000000000 -0500
++++ openjdk/hotspot/build/linux/makefiles/jvmti.make	2008-02-26 11:34:28.000000000 -0500
+@@ -57,7 +57,7 @@
+ 
+ JvmtiGeneratedFiles = $(JvmtiGeneratedNames:%=$(JvmtiOutDir)/%)
+ 
+-XSLT = $(QUIETLY) $(REMOTE) $(RUN.JAVA) -classpath $(JvmtiOutDir) jvmtiGen
++XSLT = $(QUIETLY) $(REMOTE) $(RUN.JAVA) $(ENDORSED) -classpath $(JvmtiOutDir) jvmtiGen
+ 
+ .PHONY: all jvmtidocs clean cleanall
+ 
+

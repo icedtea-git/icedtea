@@ -1,3 +1,72 @@
+2008-12-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/icedtea-hotspot-params-cast-size_t.patch,
+	* patches/icedtea-hotspot-use-idx_t.patch,
+	* patches/icedtea-memory-limits.patch,
+	* patches/icedtea-sparc-ptracefix.patch,
+	* patches/icedtea-sparc-trapsfix.patch,
+	* patches/icedtea-sparc64-linux.patch,
+	* patches/icedtea-static-libstdc++.patch,
+	* patches/icedtea-text-relocations.patch:
+	Removed; replaced by HotSpot-specific versions.
+	* Makefile.am:
+	Download a HotSpot version matching a given changeset
+	and use it in place of the copy of hs10.0b19 shipping
+	with OpenJDK6.  Apply patches based on ${HSBUILD}.
+	* acinclude.m4: New macros for options --with-hotspot-build
+	and --with-hotspot-src-zip.
+	* configure.ac: Run new macros.
+	* hotspot.map: Map of HotSpot build numbers to changesets.
+	* patches/icedtea-core-build.patch,
+	* patches/icedtea-debuginfo.patch:
+	Remove HotSpot specific parts.
+	* patches/icedtea-ecj-hotspot-14.0b08.patch,
+	* patches/icedtea-ecj-hotspot-original.patch:
+	New HotSpot-specific patches built from IcedTea7
+	and 6 versions of icedtea-ecj respectively.
+	* patches/icedtea-ecj.patch,
+	* patches/icedtea-gcc-4.3.patch,
+	* patches/icedtea-gcc-suffix.patch,
+	* patches/icedtea-headers.patch:
+	Remove HotSpot-specific parts.
+	* patches/icedtea-hotspot-14.0b08-core-build.patch,
+	* patches/icedtea-hotspot-14.0b08-debuginfo.patch,
+	* patches/icedtea-hotspot-14.0b08-gcc-suffix.patch,
+	* patches/icedtea-hotspot-14.0b08-headers.patch,
+	* patches/icedtea-hotspot-14.0b08-memory-limits.patch,
+	* patches/icedtea-hotspot-14.0b08-params-cast-size_t.patch,
+	* patches/icedtea-hotspot-14.0b08-shark-build.patch,
+	* patches/icedtea-hotspot-14.0b08-sparc-ptracefix.patch,
+	* patches/icedtea-hotspot-14.0b08-sparc-trapsfix.patch,
+	* patches/icedtea-hotspot-14.0b08-sparc64-linux.patch,
+	* patches/icedtea-hotspot-14.0b08-static-libstdc++.patch,
+	* patches/icedtea-hotspot-14.0b08-text-relocations.patch,
+	* patches/icedtea-hotspot-14.0b08-use-idx_t.patch,
+	* patches/icedtea-hotspot-14.0b08-version.patch,
+	* patches/icedtea-hotspot-14.0b08-zero-build.patch,
+	* patches/icedtea-hotspot-original-core-build.patch,
+	* patches/icedtea-hotspot-original-debuginfo.patch,
+	* patches/icedtea-hotspot-original-gcc-4.3.patch,
+	* patches/icedtea-hotspot-original-gcc-suffix.patch,
+	* patches/icedtea-hotspot-original-headers.patch,
+	* patches/icedtea-hotspot-original-memory-limits.patch,
+	* patches/icedtea-hotspot-original-params-cast-size_t.patch,
+	* patches/icedtea-hotspot-original-shark-build.patch,
+	* patches/icedtea-hotspot-original-sparc-ptracefix.patch,
+	* patches/icedtea-hotspot-original-sparc-trapsfix.patch,
+	* patches/icedtea-hotspot-original-sparc64-linux.patch,
+	* patches/icedtea-hotspot-original-static-libstdc++.patch,
+	* patches/icedtea-hotspot-original-text-relocations.patch,
+	* patches/icedtea-hotspot-original-use-idx_t.patch,
+	* patches/icedtea-hotspot-original-version.patch,
+	* patches/icedtea-hotspot-original-zero-build.patch:
+	New HotSpot-specific patches built from IcedTea7
+	and 6 versions of the patch respectively.	
+	* patches/icedtea-shark-build.patch,
+	* patches/icedtea-version.patch,
+	* patches/icedtea-zero-build.patch:
+	Remove HotSpot-specific parts.
+
 2008-11-30  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-xrender-001.patch: Remove !xrender bug fix.
