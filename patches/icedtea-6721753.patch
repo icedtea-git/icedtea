@@ -88,10 +88,9 @@
      /**
 --- /dev/null	Thu Oct  9 16:12:28 2008
 +++ openjdk/jdk/test/closed/java/io/File/createTempFile/GuessNext.java	Thu Oct  9 16:12:25 2008
-@@ -0,0 +1,26 @@
+@@ -0,0 +1,25 @@
 +/* @test
 + * @bug 6721753
-+ * @key closed-security
 + * @summary Test that temporary files don't use incrementing counter
 + */
 +

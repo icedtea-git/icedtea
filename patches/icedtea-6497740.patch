@@ -1546,8 +1546,6 @@
 +        }
 +    }
 +}
-Binary files /tmp/dnlaqOr and new/test/closed/sun/security/rsa/keystore.bad differ
-Binary files /tmp/dxQaGis and new/test/closed/sun/security/rsa/keystore.good differ
 --- /dev/null	Fri Aug 22 18:59:31 2008
 +++ openjdk/jdk/test/closed/sun/security/rsa/sunpkcs11-solaris_enableSHA1withRSAsig.cfg	Fri Aug 22 18:59:29 2008
 @@ -0,0 +1,36 @@

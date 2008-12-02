@@ -1,3 +1,12 @@
+2008-12-02  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/test/closed/sun/security/rsa/keystore.bad,
+	overlays/openjdk/jdk/test/closed/sun/security/rsa/keystore.good:
+	New keystore files.
+	* patches/icedtea-6497740.patch: Remove binary file diffs.
+	* patches/icedtea-6721753.patch: Remove @key closed-security.
+	* patches/icedtea-6733959.patch: Add @build ZipMeUp.
+
 2008-12-02  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (stamps/extract.stamp): Fix extraction of

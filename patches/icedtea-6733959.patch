@@ -112,6 +112,14 @@
 +}
 --- MultipleJRE.sh	2008-11-21 14:18:54.000000000 -0500
 +++ openjdk/jdk/test/tools/launcher/MultipleJRE.sh	2008-11-21 14:23:48.000000000 -0500
+@@ -2,6 +2,7 @@
+ # @bug 4811102 4953711 4955505 4956301 4991229 4998210 5018605 6387069
+ # @build PrintVersion
+ # @build UglyPrintVersion
++# @build ZipMeUp
+ # @run shell MultipleJRE.sh
+ # @summary Verify Multiple JRE version support
+ # @author Joseph E. Kowalski
 @@ -48,10 +48,23 @@
    exit 1
  fi
