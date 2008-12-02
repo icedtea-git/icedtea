@@ -26,34 +26,3 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/s
  endif
  
  ifdef BUILD_NUMBER
---- openjdk.orig/langtools/src/share/classes/com/sun/tools/doclets/formats/html/PackageUseWriter.java	2008-11-05 10:27:27.000000000 +0100
-+++ openjdk/langtools/src/share/classes/com/sun/tools/doclets/formats/html/PackageUseWriter.java	2008-11-24 21:47:38.000000000 +0100
-@@ -138,7 +138,15 @@
-         tableHeaderEnd();
-         Iterator it = usingPackageToUsedClasses.keySet().iterator();
-         while (it.hasNext()) {
--            PackageDoc pkg = configuration.root.packageNamed((String)it.next());
-+	    String pkgstr = (String)it.next();
-+            PackageDoc pkg = configuration.root.packageNamed(pkgstr);
-+	    if (pkg == null)
-+		{
-+			System.err.println("null package returned for '"
-+					   + pkgstr + "', which uses package '"
-+					   + Util.getPackageName(pkgdoc)
-+					   + "'");
-+		}
-             generatePackageUse(pkg);
-         }
-         tableEnd();
-@@ -195,7 +203,10 @@
-         trBgcolorStyle("white", "TableRowColor");
-         summaryRow(0);
-         //Just want an anchor here.
--        printHyperLink("", pkg.name(), Util.getPackageName(pkg), true);
-+        if (pkg != null)
-+	  printHyperLink("", pkg.name(), Util.getPackageName(pkg), true);
-+	else
-+          printHyperLink("WHOA!", "PKG IS NULL", Util.getPackageName(pkg), true);
-         summaryRowEnd();
-         summaryRow(0);
-         if (pkg != null) {

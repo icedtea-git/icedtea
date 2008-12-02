@@ -1,5 +1,10 @@
 2008-12-02  Mark Wielaard  <mark@klomp.org>
 
+	* patches/icedtea-version.patch: Remove accidentially added debug
+	patch.
+
+2008-12-02  Mark Wielaard  <mark@klomp.org>
+
 	* overlays/openjdk/jdk/test/closed/sun/security/rsa/keystore.bad,
 	overlays/openjdk/jdk/test/closed/sun/security/rsa/keystore.good:
 	New keystore files.
