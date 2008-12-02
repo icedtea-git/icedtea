@@ -542,7 +542,18 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-display-mode-changer.patch \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-samejvm-safe.patch \
-	patches/icedtea-6728542-epoll.patch
+	patches/icedtea-6728542-epoll.patch \
+	patches/icedtea-4486841.patch \
+        patches/icedtea-6484091.patch \
+        patches/icedtea-6497740.patch \
+        patches/icedtea-6588160.patch \
+        patches/icedtea-6592792.patch \
+        patches/icedtea-6721753.patch \
+        patches/icedtea-6726779.patch \
+        patches/icedtea-6733959.patch \
+        patches/icedtea-6734167.patch \
+        patches/icedtea-6755943.patch \
+        patches/icedtea-6766136.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
