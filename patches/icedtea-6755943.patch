@@ -1,0 +1,617 @@
+--- old/src/share/native/com/sun/java/util/jar/pack/bytes.cpp	Fri Oct 17 10:50:38 2008
++++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/bytes.cpp	Fri Oct 17 10:50:38 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2001-2003 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2001-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -56,7 +56,7 @@
+     return;
+   }
+   byte* oldptr = ptr;
+-  ptr = (byte*)::realloc(ptr, len_+1);
++  ptr = (len_ >= PSIZE_MAX) ? null : (byte*)::realloc(ptr, len_+1);
+   if (ptr != null)  {
+     mtrace('r', oldptr, 0);
+     mtrace('m', ptr, len_+1);
+@@ -126,7 +126,7 @@
+ // Make sure there are 'o' bytes beyond the fill pointer,
+ // advance the fill pointer, and return the old fill pointer.
+ byte* fillbytes::grow(size_t s) {
+-  size_t nlen = b.len+s;
++  size_t nlen = add_size(b.len, s);
+   if (nlen <= allocated) {
+     b.len = nlen;
+     return limit()-s;
+--- old/src/share/native/com/sun/java/util/jar/pack/defines.h	Fri Oct 17 10:50:38 2008
++++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	Fri Oct 17 10:50:38 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2001-2004 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2001-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -47,11 +47,13 @@
+ #define NOT_PRODUCT(xxx)
+ #define assert(p) (0)
+ #define printcr false &&
++#define VERSION_STRING "%s version %s\n"
+ #else
+ #define IF_PRODUCT(xxx)
+ #define NOT_PRODUCT(xxx) xxx
+ #define assert(p) ((p) || (assert_failed(#p), 1))
+ #define printcr u->verbose && u->printcr_if_verbose
++#define VERSION_STRING "%s version non-product %s\n"
+ extern "C" void breakpoint();
+ extern void assert_failed(const char*);
+ #define BREAK (breakpoint())
+@@ -79,9 +81,9 @@
+ 
+ #define lengthof(array) (sizeof(array)/sizeof(array[0]))
+ 
+-#define NEW(T, n)    (T*) must_malloc(sizeof(T)*(n))
+-#define U_NEW(T, n)  (T*) u->alloc(sizeof(T)*(n))
+-#define T_NEW(T, n)  (T*) u->temp_alloc(sizeof(T)*(n))
++#define NEW(T, n)    (T*) must_malloc(scale_size(n, sizeof(T)))
++#define U_NEW(T, n)  (T*) u->alloc(scale_size(n, sizeof(T)))
++#define T_NEW(T, n)  (T*) u->temp_alloc(scale_size(n, sizeof(T)))
+ 
+ 
+ // bytes and byte arrays
+--- old/src/share/native/com/sun/java/util/jar/pack/main.cpp	Fri Oct 17 10:50:39 2008
++++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/main.cpp	Fri Oct 17 10:50:39 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2003-2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2003-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -300,7 +300,7 @@
+     case 'J':  argp += 1; break;  // skip ignored -Jxxx parameter
+ 
+     case 'V':
+-      fprintf(u.errstrm, "%s version %s\n", nbasename(argv[0]), sccsver);
++      fprintf(u.errstrm, VERSION_STRING, nbasename(argv[0]), sccsver);
+       exit(0);
+ 
+     case 'h':
+--- old/src/share/native/com/sun/java/util/jar/pack/unpack.cpp	Fri Oct 17 10:50:40 2008
++++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/unpack.cpp	Fri Oct 17 10:50:40 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2001-2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2001-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -618,18 +618,17 @@
+   if ((archive_options & AO_HAVE_FILE_HEADERS) != 0) {
+     uint hi = hdr.getInt();
+     uint lo = hdr.getInt();
+-    archive_size = band::makeLong(hi, lo);
++    julong x = band::makeLong(hi, lo);
++    archive_size = (size_t) x;
++    if (archive_size != x) {
++      // Silly size specified; force overflow.
++      archive_size = PSIZE_MAX+1;
++    }
+     hdrVals += 2;
+   } else {
+     hdrValsSkipped += 2;
+   }
+ 
+-  if (archive_size != (size_t)archive_size) {
+-    // Silly size specified.
+-    abort("archive too large");
+-    return;
+-  }
+-
+   // Now we can size the whole archive.
+   // Read everything else into a mega-buffer.
+   rp = hdr.rp;
+@@ -643,8 +642,8 @@
+       abort("EOF reading fixed input buffer");
+       return;
+     }
+-  } else if (archive_size > 0) {
+-    input.set(U_NEW(byte, (size_t) header_size_0 + archive_size + C_SLOP),
++  } else if (archive_size != 0) {
++    input.set(U_NEW(byte, add_size(header_size_0, archive_size, C_SLOP)),
+               (size_t) header_size_0 + archive_size);
+     assert(input.limit()[0] == 0);
+     // Move all the bytes we read initially into the real buffer.
+@@ -654,7 +653,6 @@
+   } else {
+     // It's more complicated and painful.
+     // A zero archive_size means that we must read until EOF.
+-    assert(archive_size == 0);
+     input.init(CHUNK*2);
+     CHECK;
+     input.b.len = input.allocated;
+@@ -664,7 +662,7 @@
+     rplimit += header_size;
+     while (ensure_input(input.limit() - rp)) {
+       size_t dataSoFar = input_remaining();
+-      size_t nextSize = dataSoFar + CHUNK;
++      size_t nextSize = add_size(dataSoFar, CHUNK);
+       input.ensureSize(nextSize);
+       CHECK;
+       input.b.len = input.allocated;
+@@ -949,10 +947,12 @@
+   // First band:  Read lengths of shared prefixes.
+   if (len > PREFIX_SKIP_2)
+     cp_Utf8_prefix.readData(len - PREFIX_SKIP_2);
++    NOT_PRODUCT(else cp_Utf8_prefix.readData(0));  // for asserts
+ 
+   // Second band:  Read lengths of unshared suffixes:
+   if (len > SUFFIX_SKIP_1)
+     cp_Utf8_suffix.readData(len - SUFFIX_SKIP_1);
++    NOT_PRODUCT(else cp_Utf8_suffix.readData(0));  // for asserts
+ 
+   bytes* allsuffixes = T_NEW(bytes, len);
+   CHECK;
+--- old/src/share/native/com/sun/java/util/jar/pack/unpack.h	Fri Oct 17 10:50:41 2008
++++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/unpack.h	Fri Oct 17 10:50:41 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2002-2005 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2002-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -204,7 +204,7 @@
+ 
+   // archive header fields
+   int      magic, minver, majver;
+-  julong   archive_size;
++  size_t   archive_size;
+   int      archive_next_count, archive_options, archive_modtime;
+   int      band_headers_size;
+   int      file_count, attr_definition_count, ic_count, class_count;
+--- old/src/share/native/com/sun/java/util/jar/pack/utils.cpp	Fri Oct 17 10:50:41 2008
++++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/utils.cpp	Fri Oct 17 10:50:41 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2001-2004 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2001-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -46,14 +46,13 @@
+ 
+ #include "unpack.h"
+ 
+-void* must_malloc(int size) {
+-  int msize = size;
+-  assert(size >= 0);
++void* must_malloc(size_t size) {
++  size_t msize = size;
+   #ifdef USE_MTRACE
+-  if (msize < sizeof(int))
++  if (msize >= 0 && msize < sizeof(int))
+     msize = sizeof(int);  // see 0xbaadf00d below
+   #endif
+-  void* ptr = malloc(msize);
++  void* ptr = (msize > PSIZE_MAX) ? null : malloc(msize);
+   if (ptr != null) {
+     memset(ptr, 0, size);
+   } else {
+--- old/src/share/native/com/sun/java/util/jar/pack/utils.h	Fri Oct 17 10:50:42 2008
++++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/utils.h	Fri Oct 17 10:50:42 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2001-2003 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2001-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -25,7 +25,7 @@
+ 
+ //Definitions of our util functions
+ 
+-void* must_malloc(int size);
++void* must_malloc(size_t size);
+ #ifndef USE_MTRACE
+ #define mtrace(c, ptr, size) (0)
+ #else
+@@ -32,6 +32,24 @@
+ void mtrace(char c, void* ptr, size_t size);
+ #endif
+ 
++// overflow management
++#define OVERFLOW ((size_t)-1)
++#define PSIZE_MAX (OVERFLOW/2)  /* normal size limit */
++
++inline size_t scale_size(size_t size, size_t scale) {
++  return (size > PSIZE_MAX / scale) ? OVERFLOW : size * scale;
++}
++
++inline size_t add_size(size_t size1, size_t size2) {
++  return ((size1 | size2 | (size1 + size2)) > PSIZE_MAX)
++    ? OVERFLOW
++    : size1 + size2;
++}
++
++inline size_t add_size(size_t size1, size_t size2, int size3) {
++  return add_size(add_size(size1, size2), size3);
++}
++
+ // These may be expensive, because they have to go via Java TSD,
+ // if the optional u argument is missing.
+ struct unpacker;
+--- /dev/null	Fri Oct 17 10:50:42 2008
++++ openjdk/jdk/test/tools/pack200/MemoryAllocatorTest.java	Fri Oct 17 10:50:42 2008
+@@ -0,0 +1,369 @@
++/*
++ * Copyright 2008 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
++ */
++
++/*
++ * @test
++ * @bug 6755943
++ * @summary Checks any memory overruns in archive length.
++ * @run main/timeout=1200 MemoryAllocatorTest
++ */
++import java.io.BufferedReader;
++import java.io.DataOutputStream;
++import java.io.File;
++import java.io.FileOutputStream;
++import java.io.IOException;
++import java.io.InputStreamReader;
++import java.io.OutputStream;
++import java.io.RandomAccessFile;
++import java.nio.MappedByteBuffer;
++import java.nio.channels.FileChannel;
++import java.util.ArrayList;
++import java.util.List;
++import java.util.Map;
++
++public class MemoryAllocatorTest {
++
++    /*
++     * The smallest possible pack file with 1 empty resource
++     */
++    static int[] magic = {
++        0xCA, 0xFE, 0xD0, 0x0D
++    };
++    static int[] version_info = {
++        0x07, // minor
++        0x96  // major
++    };
++    static int[] option = {
++        0x10
++    };
++    static int[] size_hi = {
++        0x00
++    };
++    static int[] size_lo_ulong = {
++        0xFF, 0xFC, 0xFC, 0xFC, 0xFC // ULONG_MAX 0xFFFFFFFF
++    };
++    static int[] size_lo_correct = {
++        0x17
++    };
++    static int[] data = {
++        0x00, 0xEC, 0xDA, 0xDE, 0xF8, 0x45, 0x01, 0x02,
++        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++        0x00, 0x00, 0x00, 0x01, 0x31, 0x01, 0x00
++    };
++    // End of pack file data
++
++    static final String JAVA_HOME = System.getProperty("java.home");
++
++    static final boolean debug = Boolean.getBoolean("MemoryAllocatorTest.Debug");
++    static final boolean WINDOWS = System.getProperty("os.name").startsWith("Windows");
++    static final boolean LINUX = System.getProperty("os.name").startsWith("Linux");
++    static final boolean SIXTYFOUR_BIT = System.getProperty("sun.arch.data.model", "32").equals("64");
++    static final private int EXPECTED_EXIT_CODE = (WINDOWS) ? -1 : 255;
++
++    static int testExitValue = 0;
++    
++    static byte[] bytes(int[] a) {
++        byte[] b = new byte[a.length];
++        for (int i = 0; i < b.length; i++) {
++            b[i] = (byte) a[i];
++        }
++        return b;
++    }
++    
++    static void createPackFile(boolean good, File packFile) throws IOException {
++        FileOutputStream fos = new FileOutputStream(packFile);
++        fos.write(bytes(magic));
++        fos.write(bytes(version_info));
++        fos.write(bytes(option));
++        fos.write(bytes(size_hi));
++        if (good) {
++            fos.write(bytes(size_lo_correct));
++        } else {
++            fos.write(bytes(size_lo_ulong));
++        }
++        fos.write(bytes(data));
++    }
++
++    /*
++     * This method modifies the LSB of the size_lo for various wicked
++     * values between MAXINT-0x3F and MAXINT.
++     */
++    static int modifyPackFile(File packFile) throws IOException {
++        RandomAccessFile raf = new RandomAccessFile(packFile, "rws");
++        long len = packFile.length();
++        FileChannel fc = raf.getChannel();
++        MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_WRITE, 0, len);
++        int pos = magic.length + version_info.length + option.length +
++                size_hi.length;
++        byte value = bb.get(pos);
++        value--;
++        bb.position(pos);
++        bb.put(value);
++        bb.force();
++        fc.truncate(len);
++        fc.close();
++        return value & 0xFF;
++    }
++
++    static String getUnpack200Cmd() throws Exception {
++        File binDir = new File(JAVA_HOME, "bin");
++        File unpack200File = WINDOWS
++                ? new File(binDir, "unpack200.exe")
++                : new File(binDir, "unpack200");
++
++        String cmd = unpack200File.getAbsolutePath();
++        if (!unpack200File.canExecute()) {
++            throw new Exception("please check" +
++                    cmd + " exists and is executable");
++        }
++        return cmd;
++    }
++
++    static TestResult runUnpacker(File packFile) throws Exception {
++        if (!packFile.exists()) {
++            throw new Exception("please check" + packFile + " exists");
++        }
++        ArrayList<String> alist = new ArrayList<String>();
++        ProcessBuilder pb = new ProcessBuilder(getUnpack200Cmd(),
++                packFile.getName(), "testout.jar");
++        Map<String, String> env = pb.environment();
++        pb.directory(new File("."));
++        int retval = 0;
++        try {
++            pb.redirectErrorStream(true);
++            Process p = pb.start();
++            BufferedReader rd = new BufferedReader(
++                    new InputStreamReader(p.getInputStream()), 8192);
++            String in = rd.readLine();
++            while (in != null) {
++                alist.add(in);
++                System.out.println(in);
++                in = rd.readLine();
++            }
++            retval = p.waitFor();
++            p.destroy();
++        } catch (Exception ex) {
++            ex.printStackTrace();
++            throw new RuntimeException(ex.getMessage());
++        }
++        return new TestResult("", retval, alist);
++    }
++
++    /*
++     * The debug version builds of unpack200 call abort(3) which might set
++     * an unexpected return value, therefore this test is to determine
++     * if we are using a product or non-product build and check the
++     * return value appropriately.
++     */
++    static boolean isNonProductVersion() throws Exception {
++        ArrayList<String> alist = new ArrayList<String>();
++        ProcessBuilder pb = new ProcessBuilder(getUnpack200Cmd(), "--version");
++        Map<String, String> env = pb.environment();
++        pb.directory(new File("."));
++        int retval = 0;
++        try {
++            pb.redirectErrorStream(true);
++            Process p = pb.start();
++            BufferedReader rd = new BufferedReader(
++                    new InputStreamReader(p.getInputStream()), 8192);
++            String in = rd.readLine();
++            while (in != null) {
++                alist.add(in);
++                System.out.println(in);
++                in = rd.readLine();
++            }
++            retval = p.waitFor();
++            p.destroy();
++        } catch (Exception ex) {
++            ex.printStackTrace();
++            throw new RuntimeException(ex.getMessage());
++        }
++        for (String x : alist) {
++            if (x.contains("non-product")) {
++                return true;
++            }
++        }
++        return false;
++    }
++
++    /**
++     * @param args the command line arguments
++     * @throws java.lang.Exception 
++     */
++    public static void main(String[] args) throws Exception {
++
++        File packFile = new File("tiny.pack");
++        boolean isNPVersion = isNonProductVersion();
++
++        // Create a good pack file and test if everything is ok
++        createPackFile(true, packFile);
++        TestResult tr = runUnpacker(packFile);
++        tr.setDescription("a good pack file");
++        tr.checkPositive();
++        tr.isOK();
++        System.out.println(tr);
++
++        /*
++         * jprt systems on windows and linux seem to have abundant memory
++         * therefore can take a very long time to run, and even if it does
++         * the error message is not accurate for us to discern if the test
++         * passes successfully.
++         */
++        if (SIXTYFOUR_BIT && (LINUX || WINDOWS)) {
++            System.out.println("Warning: Windows/Linux 64bit tests passes vacuously");
++            return;
++        }
++        
++        /*
++         * debug builds call abort, the exit code under these conditions
++         * are not really relevant.
++         */
++        if (isNPVersion) {
++            System.out.println("Warning: non-product build: exit values not checked");
++        }
++    
++        // create a bad pack file
++        createPackFile(false, packFile);
++        tr = runUnpacker(packFile);
++        tr.setDescription("a wicked pack file");
++        tr.contains("Native allocation failed");
++        if(!isNPVersion) {
++            tr.checkValue(EXPECTED_EXIT_CODE);
++        }
++        System.out.println(tr);
++        int value = modifyPackFile(packFile);
++        tr.setDescription("value=" + value);
++
++        // continue creating bad pack files by modifying the specimen pack file.
++        while (value >= 0xc0) {
++            tr = runUnpacker(packFile);
++            tr.contains("Native allocation failed");
++            if (!isNPVersion) {
++                tr.checkValue(EXPECTED_EXIT_CODE);
++            }
++            tr.setDescription("wicked value=0x" +
++                    Integer.toHexString(value & 0xFF));
++            System.out.println(tr);
++            value = modifyPackFile(packFile);
++        }
++        if (testExitValue != 0) {
++            throw new Exception("Pack200 archive length tests(" +
++                    testExitValue + ") failed ");
++        } else {
++            System.out.println("All tests pass");
++        }
++    }
++
++    /*
++     * A class to encapsulate the test results and stuff, with some ease
++     * of use methods to check the test results.
++     */
++    static class TestResult {
++
++        StringBuilder status;
++        int exitValue;
++        List<String> testOutput;
++        String description;
++
++        public TestResult(String str, int rv, List<String> oList) {
++            status = new StringBuilder(str);
++            exitValue = rv;
++            testOutput = oList;
++        }
++
++        void setDescription(String description) {
++            this.description = description;
++        }
++
++        void checkValue(int value) {
++            if (exitValue != value) {
++                status =
++                        status.append("  Error: test expected exit value " +
++                        value + "got " + exitValue);
++                testExitValue++;
++            }
++        }
++
++        void checkNegative() {
++            if (exitValue == 0) {
++                status = status.append(
++                        "  Error: test did not expect 0 exit value");
++
++                testExitValue++;
++            }
++        }
++
++        void checkPositive() {
++            if (exitValue != 0) {
++                status = status.append(
++                        "  Error: test did not return 0 exit value");
++                testExitValue++;
++            }
++        }
++
++        boolean isOK() {
++            return exitValue == 0;
++        }
++
++        boolean isZeroOutput() {
++            if (!testOutput.isEmpty()) {
++                status = status.append("  Error: No message from cmd please");
++                testExitValue++;
++                return false;
++            }
++            return true;
++        }
++
++        boolean isNotZeroOutput() {
++            if (testOutput.isEmpty()) {
++                status = status.append("  Error: Missing message");
++                testExitValue++;
++                return false;
++            }
++            return true;
++        }
++
++        public String toString() {
++            if (debug) {
++                for (String x : testOutput) {
++                    status = status.append(x + "\n");
++                }
++            }
++            if (description != null) {
++                status.insert(0, description);
++            }
++            return status.append("\nexitValue = " + exitValue).toString();
++        }
++
++        boolean contains(String str) {
++            for (String x : testOutput) {
++                if (x.contains(str)) {
++                    return true;
++                }
++            }
++            status = status.append("   Error: string <" + str + "> not found ");
++            testExitValue++;
++            return false;
++        }
++    }
++}
