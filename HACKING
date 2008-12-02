@@ -96,6 +96,8 @@ The following patches are only applied to OpenJDK in IcedTea:
   javax.management.AttributeValueExp (unsupported by ecj < 3.4).
 * icedtea-snmp.patch: Remove proprietary SNMP support hooks.
 * icedtea-sound.patch: Remove proprietary MIDI support hooks.
+* icedtea-fortify-source.patch: Fix build failures with -D_FORTIFY_SOURCE=2.
+* icedtea-format-warnings.patch: Fix build failures with -Wformat=1.
 
 The following patches are only applied to the icedtea-ecj bootstrap tree:
 

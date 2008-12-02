@@ -1,3 +1,16 @@
+2008-12-02  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-format-warnings.patch: New.
+	* patches/icedtea-format-warnings.patch: Likewise.
+	* HACKING: Document patches.
+	* Makefile.am: Apply patches.
+
+2008-12-02  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/extract.stamp): Handle tar archives.
+	* Makefile.am (stamps/pulse-java.stamp): Add missing include
+	directives.
+
 2008-11-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
