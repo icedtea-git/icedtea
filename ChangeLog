@@ -1,3 +1,8 @@
+2008-12-02  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/extract.stamp): Fix extraction of
+	alternate hotspot tarball.
+
 2008-12-02  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am

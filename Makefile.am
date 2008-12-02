@@ -630,7 +630,7 @@ stamps/extract.stamp: stamps/download.stamp
 	    rm -rf openjdk/hotspot ; \
 	    $(TAR) xf $(HOTSPOT_SRC_ZIP) ; \
 	    chmod -R ug+w hotspot-* ; \
-	    mv hotspot-* openjdk/hotspot ; \
+	    mv $$(find -maxdepth 1 -name 'hotspot-*' -type d) openjdk/hotspot ; \
 	  fi ; \
 	  sh $(abs_top_srcdir)/fsg.sh ; \
 	fi
