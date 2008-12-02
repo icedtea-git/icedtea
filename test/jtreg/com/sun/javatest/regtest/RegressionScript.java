@@ -69,6 +69,10 @@ public class RegressionScript extends Script
     public Status run(String[] argv, TestDescription td, TestEnvironment env) {
         if (!(env instanceof RegressionEnvironment))
             throw new AssertionError();
+
+	String testFilePath = td.getRootRelativePath();
+	int lastSlash = testFilePath.lastIndexOf('/');
+	testDirPath = testFilePath.substring(0, lastSlash);
         
         regEnv = (RegressionEnvironment) env;
         params = regEnv.params;
@@ -833,7 +837,26 @@ public class RegressionScript extends Script
     }
 
     boolean isOtherJVM() {
-        return params.isOtherJVM();
+	boolean samevm = !params.isOtherJVM();
+	if (samevm)
+	    return !isSameJVMSafe();
+	else
+	    return true;
+    }
+
+    // Whether the actions of this script can safely run in the same jvm.
+    // No same jvm safe dirs given means they are all assumed safe.
+    // If our actions come from a file in a subdir of a safe dir that is ok.
+    boolean isSameJVMSafe() {
+        List<String> dirs = params.getSameJVMSafeDirs();
+	if (dirs == null)
+	    return true;
+
+	for (String dir : dirs)
+	    if (testDirPath.startsWith(dir))
+		return true;
+
+	return false;
     }
 
     String getJavaProg() {
@@ -921,5 +944,6 @@ public class RegressionScript extends Script
 
     private RegressionEnvironment regEnv;
     private RegressionParameters params;
+    private String testDirPath;
 }
 

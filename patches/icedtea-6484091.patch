@@ -1,0 +1,129 @@
+--- old/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java	Tue Nov 18 10:35:29 2008
++++ openjdk/jdk/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java	Tue Nov 18 10:35:29 2008
+@@ -38,6 +38,8 @@
+ import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.util.*;
++import java.security.AccessController;
++import java.security.PrivilegedAction;
+ import javax.accessibility.*;
+ 
+ import sun.awt.shell.ShellFolder;
+@@ -957,7 +959,11 @@
+ 
+             File[] baseFolders;
+             if (useShellFolder) {
+-                baseFolders = (File[])ShellFolder.get("fileChooserComboBoxFolders");
++                baseFolders = AccessController.doPrivileged(new PrivilegedAction<File[]>() {
++                    public File[] run() {
++                        return (File[]) ShellFolder.get("fileChooserComboBoxFolders");
++                    }
++                });
+             } else {
+                 baseFolders = fsv.getRoots();
+             }
+--- old/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java	Tue Nov 18 10:35:30 2008
++++ openjdk/jdk/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java	Tue Nov 18 10:35:30 2008
+@@ -29,6 +29,8 @@
+ import java.beans.*;
+ import java.io.*;
+ import java.util.*;
++import java.security.AccessController;
++import java.security.PrivilegedAction;
+ 
+ import javax.swing.*;
+ import javax.swing.event.*;
+@@ -769,7 +771,11 @@
+ 
+             File[] baseFolders;
+             if (useShellFolder) {
+-                baseFolders = (File[])ShellFolder.get("fileChooserComboBoxFolders");
++                baseFolders = AccessController.doPrivileged(new PrivilegedAction<File[]>() {
++                    public File[] run() {
++                        return (File[]) ShellFolder.get("fileChooserComboBoxFolders");
++                    }
++                });
+             } else {
+                 baseFolders = fsv.getRoots();
+             }
+--- old/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java	Tue Nov 18 10:35:31 2008
++++ openjdk/jdk/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java	Tue Nov 18 10:35:31 2008
+@@ -39,6 +39,8 @@
+ import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.util.*;
++import java.security.AccessController;
++import java.security.PrivilegedAction;
+ 
+ import sun.awt.shell.ShellFolder;
+ import sun.awt.OSInfo;
+@@ -1165,7 +1167,11 @@
+ 
+             File[] baseFolders;
+             if (useShellFolder) {
+-                baseFolders = (File[])ShellFolder.get("fileChooserComboBoxFolders");
++                baseFolders = AccessController.doPrivileged(new PrivilegedAction<File[]>() {
++                    public File[] run() {
++                        return (File[]) ShellFolder.get("fileChooserComboBoxFolders");
++                    }
++                });
+             } else {
+                 baseFolders = fsv.getRoots();
+             }
+--- old/src/windows/classes/sun/awt/shell/Win32ShellFolder2.java	Tue Nov 18 10:35:32 2008
++++ openjdk/jdk/src/windows/classes/sun/awt/shell/Win32ShellFolder2.java	Tue Nov 18 10:35:32 2008
+
+@@ -657,6 +657,10 @@
+      *         <code>null</code> if this shellfolder does not denote a directory.
+      */
+     public File[] listFiles(final boolean includeHiddenFiles) {
++        SecurityManager security = System.getSecurityManager();
++        if (security != null) {
++            security.checkRead(getPath());
++        }
+ 
+         return new ComTask<File[]>() {
+             public File[] call() throws Exception {
+--- /dev/null	Tue Nov 18 10:35:33 2008
++++ openjdk/jdk/test/javax/swing/JFileChooser/6484091/bug6484091.java	Tue Nov 18 10:35:33 2008
+@@ -0,0 +1,40 @@
++/* @test @(#)bug6484091.java	1.1 08/11/18
++ * @bug 6484091
++ * @summary FileSystemView leaks directory info
++ * @author Pavel Porvatov
++   @run main bug6484091
++ */
++
++import java.io.*;
++import java.security.AccessControlException;
++import javax.swing.filechooser.FileSystemView;
++import javax.swing.*;
++
++import sun.awt.shell.ShellFolder;
++
++public class bug6484091 {
++    public static void main(String[] args) {
++        ShellFolder dir = (ShellFolder) FileSystemView.getFileSystemView().getDefaultDirectory();
++
++        printDirContent(dir);
++
++        System.setSecurityManager(new SecurityManager());
++
++        // The next test cases use 'dir' obtained without SecurityManager
++        try {
++            printDirContent(dir);
++
++            throw new RuntimeException("Dir content was derived bypass SecurityManager");
++        } catch (AccessControlException e) {
++            // It's a successful situation
++        }
++    }
++
++    private static void printDirContent(File dir) {
++        System.out.println("Files in " + dir.getAbsolutePath() + ":");
++
++        for (File file : dir.listFiles()) {
++            System.out.println(file.getName());
++        }
++    }
++}

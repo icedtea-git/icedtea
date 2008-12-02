@@ -1,3 +1,126 @@
+2008-12-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	Merge from IcedTea6.
+	* .hgignore,
+	* ChangeLog,
+	* HACKING,
+	* IcedTeaPlugin.cc,
+	* Makefile.am,
+	* autogen.sh,
+	* configure.ac,
+	* javac.in,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/NetxPanel.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPClassLoader.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPPolicy.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/tools/JarSigner.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/EmergencySoundbank/TestCreateSoundbank.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/ModelByteBuffer/RandomFileInputStream/Available.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/ModelByteBuffer/RandomFileInputStream/Close.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/ModelByteBuffer/RandomFileInputStream/MarkReset.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/ModelByteBuffer/RandomFileInputStream/MarkSupported.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/ModelByteBuffer/RandomFileInputStream/Read.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/ModelByteBuffer/RandomFileInputStream/ReadByte.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/ModelByteBuffer/RandomFileInputStream/ReadByteIntInt.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/ModelByteBuffer/RandomFileInputStream/Skip.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftAudioSynthesizer/DummySourceDataLine.java,
+	* overlays/openjdk/jdk/test/com/sun/media/sound/SoftFilter/TestProcessAudio.java: Merged.
+	* patches/icedtea-4486841.patch,
+	* patches/icedtea-6484091.patch,
+	* patches/icedtea-6497740.patch,
+	* patches/icedtea-6588160.patch,
+	* patches/icedtea-6592792.patch,
+	* patches/icedtea-6721753.patch,
+	* patches/icedtea-6726779.patch,
+	* patches/icedtea-6728542-epoll.patch,
+	* patches/icedtea-6733959.patch,
+	* patches/icedtea-6734167.patch,
+	* patches/icedtea-6755943.patch,
+	* patches/icedtea-6766136.patch,
+	* patches/icedtea-ecj-pr261.patch,
+	* patches/icedtea-samejvm-safe.patch,
+	* patches/icedtea-stroker-finish.patch,
+	* patches/icedtea-xrender-000.patch,
+	* patches/icedtea-xrender-001.patch,
+	* patches/icedtea-xrender-002.patch,
+	* patches/icedtea-xrender-003.patch,
+	* patches/icedtea-xrender-004.patch,
+	* patches/icedtea-xrender-005.patch,
+	* patches/icedtea-xrender-006.patch,
+	* patches/icedtea-xrender-007.patch,
+	* patches/icedtea-xrender-008.patch,
+	* patches/icedtea-xrender-009.patch: Added.
+	* plugin/icedtea/netscape/javascript/JSObject.java,
+	* plugin/icedtea/sun/applet/GetWindowPluginCallRequest.java,
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java,
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java,
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp,
+	* test/jtreg/com/sun/javatest/regtest/Main.java,
+	* test/jtreg/com/sun/javatest/regtest/RegressionParameters.java,
+	* test/jtreg/com/sun/javatest/regtest/RegressionScript.java: Merged.
+
+2008-12-02  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(ICEDTEA_PATCHES): Added new OpenJDK security patches.
+	* patches/icedtea-4486841.patch,
+	patches/icedtea-6484091.patch,
+	patches/icedtea-6497740.patch,
+	patches/icedtea-6588160.patch,
+	patches/icedtea-6592792.patch,
+	patches/icedtea-6721753.patch,
+	patches/icedtea-6726779.patch,
+	patches/icedtea-6733959.patch,
+	patches/icedtea-6734167.patch,
+	patches/icedtea-6755943.patch,
+	patches/icedtea-6766136.patch: New file
+	
+2008-11-30  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-xrender-001.patch: Remove !xrender bug fix.
+	* patches/icedtea-xrender-009.patch: New upstream patch, includes
+	bug fix.
+
+2008-11-30  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (stamps/native-ecj.stamp): Use -findirect-dispatch.
+	* javac.in: Use ecj binary if available and no native-ecj.
+
+2008-11-29  Mark Wielaard  <mark@klomp.org>
+
+	* configure.ac: Add and check --enable-xrender.
+	* Makefile.am: Add XRENDER_PATCHES when ENABLE_XRENDER set.
+	* patches/icedtea-xrender-00[0-8].patch: New patches.
+	* HACKING: Document new patches.
+
+2008-11-28  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/265:
+	* patches/icedtea-6728542-epoll.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
+2008-11-28  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/261:
+	* patches/icedtea-ecj-pr261.patch: New file.
+	* Makefile.am (ICEDTEA_ECJ_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
+2008-11-28  Mark Wielaard  <mark@klomp.org>
+
+	* autogen.sh: Check for autoconf > 2.61.
+	* configure.ac: Remove AC_PREREQ([2.61]).
+
+2008-11-26  Mark Wielaard  <mark@klomp.org>
+
+	* .hgignore: Add test/jtreg-summary.log.
+
 2008-11-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
@@ -16,7 +139,6 @@
 	* configure.ac: Bump to 1.8.
 
 2008-11-20  Andrew John Hughes  <ahughes@redhat.com>
-
 	PR icedtea/236:
 	* gcjwebplugin.cc,
 	* Makefile.am,
@@ -139,6 +261,120 @@
 	* test/jtreg/excludelist.jdk.jtx,
 	* test/jtreg/excludelist.langtools.jtx:
 	Exclude broken tests.
+
+2008-11-25  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (jtregcheck): Fix regexp.
+
+2008-11-24  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (jtregcheck): Clean up jtreg-summary.log a bit more.
+
+2008-11-24  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/test/com/sun/media/sound/
+	EmergencySoundbank/TestCreateSoundbank.java
+	ModelByteBuffer/RandomFileInputStream/Available.java
+	ModelByteBuffer/RandomFileInputStream/Close.java
+	ModelByteBuffer/RandomFileInputStream/MarkReset.java
+	ModelByteBuffer/RandomFileInputStream/MarkSupported.java
+	ModelByteBuffer/RandomFileInputStream/Read.java
+	ModelByteBuffer/RandomFileInputStream/ReadByte.java
+	ModelByteBuffer/RandomFileInputStream/ReadByteIntInt.java
+	ModelByteBuffer/RandomFileInputStream/Skip.java
+	SoftAudioSynthesizer/DummySourceDataLine.java
+	SoftFilter/TestProcessAudio.java
+	SoftSynthesizer/DummySourceDataLine.java: Add missing Gervill
+	test files.
+
+2008-11-23  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-samejvm-safe.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	(check-jdk): Run jtreg with -samevm.
+	* HACKING: Document new patch.
+
+2008-11-23  Mark Wielaard  <mark@klomp.org>
+
+	* test/jtreg/com/sun/javatest/regtest/Main.java
+	(createParameters): Set same jvm safe dirs when non-null.
+	(getSameJVMSafeDirs): New method that reads samejvmsafe property
+	from TEST.ROOT.
+	(sameJVMSafeDirs): New private field.
+	* test/jtreg/com/sun/javatest/regtest/RegressionParameters.java
+	(SAME_JVM_SAFE_DIRS): New static final field.
+	(load): Read same jvm safe dirs.
+	(save0): Write same jvm safe dirs.
+	(getSameJVMSafeDirs): New method.
+	(setSameJVMSafeDirs): New method.
+	* test/jtreg/com/sun/javatest/regtest/RegressionScript.java
+	(run): Set testDirPath.
+	(isOtherJVM): Take same jvm safe into account.
+	(isSameJVMSafe): New method.
+	(testDirPath): New private field.
+
+2008-11-21  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Fix a mistake in previous commit re: integer overflow.
+
+2008-11-21  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-stroker-finish.patch: New patch.
+	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
+	* HACKING: Document new patch.
+
+2008-11-21  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Handle memory address->string encoding correctly
+	depending on arch/word size.
+	* plugin/icedtea/netscape/javascript/JSObject.java: Use only long for
+	internal variable, to be on the safe side.
+	* plugin/icedtea/sun/applet/GetWindowPluginCallRequest.java: Ditto.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Rewrite
+	network->local image cache mapping code to prevent freezes on certain
+	sites. Add support for java_code, java_codebase, etc.
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java: Fix race
+	condition that froze the vm under the right circumstances.
+	* rt/net/sourceforge/jnlp/NetxPanel.java: Provide function to return the
+	applet classloader.
+
+2008-11-21 Andrew Haley <aph@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
+	(class SharkComputableValue): Use IRBuilder<>, not IRBuilder.
+	(class SharkValue): Use IRBuilder<>, not IRBuilder.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::CreatePopFrame): Change a few jint_types to
+	intptr_types.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp
+	(SharkConstantPool::cache_entry_at): Byte-swap the cache index.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::SharkBuilder) Inherit from template class
+	IRBuilder<>.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp:
+	(SharkBuilder::SharkBuilder) Inherit from template class
+	IRBuilder<>.
+	Change a few jint_types to intptr_types.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::get_interface_callee): Change a few jint_types to
+	intptr_types.
+
+2008-11-18  Deepak Bhole  <dbhole@redhat.com>
+	* IcedTeaPlugin.cc: Encode newline characters instead of stripping them.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Minor debug
+	output change.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Fix bug in code that
+	computed width factor. Try to load images from local cache first. Decode
+	newline characters. Update parser to skip comments in applet tag.
+	* rt/net/sourceforge/jnlp/runtime/JNLPPolicy.java: Take into consideration
+	system policy in addition to applet policy when determining permissions.
+	* rt/net/sourceforge/jnlp/tools/JarSigner.java: Return immediately if jar
+	could not be fetched.
+
+2008-11-17  Omair Majid  <omajid@redhat.com>
+
+	* HACKING: Document icedtea-alsa-default-device.patch and
+	icedtea-linker-libs-order.patch.
 
 2008-11-17  Matthias Klose  <doko@ubuntu.com>
 

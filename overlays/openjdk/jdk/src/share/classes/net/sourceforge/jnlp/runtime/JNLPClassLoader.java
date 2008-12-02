@@ -29,6 +29,7 @@ import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
+import java.security.Policy;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -434,7 +435,7 @@ public class JNLPClassLoader extends URLClassLoader {
         // add in the permissions that the user granted.
         for (int i=0; i < runtimePermissions.size(); i++)
         	result.add(runtimePermissions.get(i));
-        
+
         return result;
     }
 
@@ -731,7 +732,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
                         }
 
-                        // If it still fails, let it error out
+                        // If it still fails, let it error out                        
                         result = loadClassExt(name);
                     }
                 }

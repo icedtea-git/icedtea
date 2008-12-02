@@ -35,6 +35,10 @@ if ( -e "@abs_top_builddir@/native-ecj" )
 {
     exec '@abs_top_builddir@/native-ecj', '-1.5', '-nowarn', @bcoption, @new_args ;
 }
+else if ( -e "@ECJ@" )
+{
+    exec '@ECJ@', '-1.5', '-nowarn', @bcoption, @new_args ;
+}
 else
 {
     exec '@JAVA@', 'org.eclipse.jdt.internal.compiler.batch.Main', '-1.5',

@@ -1,0 +1,20 @@
+--- openjdk6/jdk/src/share/classes/sun/java2d/pisces/Stroker.java
++++ openjdk/jdk/src/share/classes/sun/java2d/pisces/Stroker.java
+@@ -695,7 +695,7 @@
+             long ldx = (long)(px0 - x0);
+             long ldy = (long)(py0 - y0);
+             long llen = lineLength(ldx, ldy);
+-            long s = (long)lineWidth2*65536/llen;
++            long s = (llen == 0) ? 0 : (long)lineWidth2*65536/llen;
+ 
+             int capx = x0 - (int)(ldx*s >> 16);
+             int capy = y0 - (int)(ldy*s >> 16);
+@@ -717,7 +717,7 @@
+             long ldx = (long)(sx1 - sx0);
+             long ldy = (long)(sy1 - sy0);
+             long llen = lineLength(ldx, ldy);
+-            long s = (long)lineWidth2*65536/llen;
++            long s = (llen == 0) ? 0 : (long)lineWidth2*65536/llen;
+ 
+             int capx = sx0 - (int)(ldx*s >> 16);
+             int capy = sy0 - (int)(ldy*s >> 16);

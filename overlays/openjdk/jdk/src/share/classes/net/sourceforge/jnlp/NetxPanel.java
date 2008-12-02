@@ -40,6 +40,7 @@ public class NetxPanel extends AppletViewerPanel
 {
     private PluginBridge bridge = null;
     private boolean exitOnFailure = true;
+    private AppletInstance appInst = null;
 
     public NetxPanel(URL documentURL, Hashtable atts)
     {
@@ -81,7 +82,7 @@ public class NetxPanel extends AppletViewerPanel
     		status = APPLET_LOAD;
 
     		Launcher l = new Launcher(exitOnFailure);
-    		AppletInstance appInst = null;
+    		
                 try {
                     appInst = (AppletInstance) l.launch(bridge, this);
                 } catch (LaunchException e) {
@@ -127,6 +128,10 @@ public class NetxPanel extends AppletViewerPanel
     public void updateSizeInAtts(int height, int width) {
     	this.atts.put("height", Integer.toString(height));
     	this.atts.put("width", Integer.toString(width));
+    }
+    
+    public ClassLoader getAppletClassLoader() {
+        return appInst.getClassLoader();
     }
 }
 

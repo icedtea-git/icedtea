@@ -182,7 +182,7 @@ Value* SharkFunction::CreatePopFrame(int result_slots)
   Value *fp = CreateLoadZeroFramePointer();
   Value *sp = builder()->CreateAdd(
     fp,
-    LLVMValue::jint_constant((1 + locals_to_pop) * wordSize));
+    LLVMValue::intptr_constant((1 + locals_to_pop) * wordSize));
 
   CreateStoreZeroStackPointer(sp);
   CreateStoreZeroFramePointer(

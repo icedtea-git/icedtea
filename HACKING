@@ -64,12 +64,18 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-alt-jar.patch: Add support for using an alternate jar tool in JDK building. 
 * icedtea-hotspot7-tests.patch: Adds hotspot compiler tests from jdk7 tree.
 * icedtea-renderer-crossing.patch: Check whether crossing is initialized in Pisces Renderer.
+* icedtea-stroker-finish.patch: Make sure cap calculation doesn't result in
+  divide by zero on tiny paths.
+* icedtea-alsa-default-device.patch: Fix problems with using the ALSA 'default' device.
+* icedtea-linker-libs-order.patch: When linking, put the referenced libraries after the object files (PR237).
 * icedtea-f2i-overflow.patch: Replaces the code used by [fd]2[il] bytecodes to correctly handle overflows. (PR244)
 * icedtea-cc-interp-no-fer.patch: Report that we cannot force early returns with the C++ interpreter.
 * icedtea-6761856-freetypescaler.patch: Fix IcedTea bug #227, OpenJDK bug
   #6761856, swing TextLayout.getBounds() returns shifted bounds.
 * icedtea-display-mode-changer.patch: Add extra test class.
 * icedtea-testenv.patch: Provide public reachable machines for net/nio tests.
+* icedtea-samejvm-safe.patch: Add samejvmsafe dirs to TEST.ROOT.
+* icedtea-6728542-epoll.patch: Make EPoll work on non-x86 platforms. (PR265)
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
@@ -104,7 +110,8 @@ The following patches are only applied to the icedtea-ecj bootstrap tree:
   javac executable with Ant, remove -Werror from javac call, don't build JDK demos,
   don't run sun.awt.X11.ToBin, explicitly pull in timezone data and rt.jar in javac
   calls, replace hexadecimal floating point literals with decimal variants in
-  java.lang.Double and java.lang.Float.   
+  java.lang.Double and java.lang.Float.
+* icedtea-ecj-pr261.patch: Adds a couple of classes that are omitted from rt.jar. (PR261)
 
 The following patches are only applied for IcedTea builds using the zero-assembler:
 
@@ -139,6 +146,11 @@ The following patches are only applied when building with experimental NetX plug
 The following patches are only applied when building with the CACAO virtual machine:
 
 * icedtea-cacao.patch: Don't run 'java' in a new thread.
+
+The following patches are to support Xrender pipeline (-Dsun.java2d.xrender):
+
+* icedtea-xrender-xxx.patch: Numbered patches from xrender branch
+  http://hg.openjdk.java.net/xrender/xrender/jdk
 
 Obsolete Patches
 ================

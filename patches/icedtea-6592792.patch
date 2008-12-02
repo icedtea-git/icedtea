@@ -1,0 +1,360 @@
+--- old/src/share/classes/com/sun/xml/internal/ws/spi/ProviderImpl.java	Tue Oct 21 15:06:46 2008
++++ openjdk/jaxws/src/share/classes/com/sun/xml/internal/ws/spi/ProviderImpl.java	Tue Oct 21 15:06:46 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2005-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -56,6 +56,8 @@
+ import javax.xml.ws.spi.ServiceDelegate;
+ import javax.xml.ws.wsaddressing.W3CEndpointReference;
+ import java.net.URL;
++import java.security.AccessController;
++import java.security.PrivilegedAction;
+ import java.util.List;
+ 
+ /**
+@@ -94,14 +96,20 @@
+         return endpoint;
+     }
+ 
+-    public EndpointReference readEndpointReference(Source eprInfoset) {
+-        Unmarshaller unmarshaller;
+-        try {
+-            unmarshaller = eprjc.createUnmarshaller();
+-            return (EndpointReference) unmarshaller.unmarshal(eprInfoset);
+-        } catch (JAXBException e) {
+-            throw new WebServiceException("Error creating Marshaller or marshalling.", e);
+-        }
++    public EndpointReference readEndpointReference(final Source eprInfoset) {
++        // EPR constructors are private, so we need privilege escalation.
++        // this unmarshalling can only access instances of a fixed, known set of classes,
++        // so doing that shouldn't introduce security vulnerability.
++        return AccessController.doPrivileged(new PrivilegedAction<EndpointReference>() {
++            public EndpointReference run() {
++                try {
++                    Unmarshaller unmarshaller = eprjc.createUnmarshaller();
++                    return (EndpointReference) unmarshaller.unmarshal(eprInfoset);
++                } catch (JAXBException e) {
++                    throw new WebServiceException("Error creating Marshaller or marshalling.", e);
++                }
++            }
++        });
+     }
+ 
+     public <T> T getPort(EndpointReference endpointReference, Class<T> clazz, WebServiceFeature... webServiceFeatures) {
+@@ -185,10 +193,17 @@
+     }
+ 
+     private static JAXBContext getEPRJaxbContext() {
+-        try {
+-            return JAXBContext.newInstance(MemberSubmissionEndpointReference.class, W3CEndpointReference.class);
+-        } catch (JAXBException e) {
+-            throw new WebServiceException("Error creating JAXBContext for W3CEndpointReference. ", e);
+-        }
++        // EPRs have package and private fields, so we need privilege escalation.
++        // this access only fixed, known set of classes, so doing that
++        // shouldn't introduce security vulnerability.
++        return AccessController.doPrivileged(new PrivilegedAction<JAXBContext>() {
++            public JAXBContext run() {
++                try {
++                    return JAXBContext.newInstance(MemberSubmissionEndpointReference.class, W3CEndpointReference.class);
++                } catch (JAXBException e) {
++                    throw new WebServiceException("Error creating JAXBContext for W3CEndpointReference. ", e);
++                }
++            }
++        });
+     }
+ }
+--- old/src/share/classes/javax/xml/bind/ContextFinder.java	Tue Oct 21 15:06:50 2008
++++ openjdk/jaxws/src/share/classes/javax/xml/bind/ContextFinder.java	Tue Oct 21 15:06:49 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2005-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -130,12 +130,7 @@
+         throws JAXBException
+     {
+         try {
+-            Class spiClass;
+-            if (classLoader == null) {
+-                spiClass = Class.forName(className);
+-            } else {
+-                spiClass = classLoader.loadClass(className);
+-            }
++            Class spiClass = safeLoadClass(className,classLoader);
+ 
+             /*
+              * javax.xml.bind.context.factory points to a class which has a
+@@ -207,11 +202,7 @@
+         ClassLoader cl = Thread.currentThread().getContextClassLoader();
+         Class spi;
+         try {
+-            logger.fine("Trying to load "+className);
+-            if (cl != null)
+-                spi = cl.loadClass(className);
+-            else
+-                spi = Class.forName(className);
++            spi = safeLoadClass(className,cl);
+         } catch (ClassNotFoundException e) {
+             throw new JAXBException(e);
+         }
+@@ -488,4 +479,31 @@
+      * For this reason, we have to hard-code the class name into the API.
+      */
+     private static final String PLATFORM_DEFAULT_FACTORY_CLASS = "com.sun.xml.internal.bind.v2.ContextFactory";
++
++    /**
++     * Loads the class, provided that the calling thread has an access to the class being loaded.
++     */
++    private static Class safeLoadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
++        logger.fine("Trying to load "+className);
++        try {
++            // make sure that the current thread has an access to the package of the given name.
++            SecurityManager s = System.getSecurityManager();
++            if (s != null) {
++                int i = className.lastIndexOf('.');
++                if (i != -1) {
++                    s.checkPackageAccess(className.substring(0,i));
++                }
++            }
++
++            if (classLoader == null)
++                return Class.forName(className);
++            else
++                return classLoader.loadClass(className);
++        } catch (SecurityException se) {
++            // anyone can access the platform default factory class without permission
++            if (PLATFORM_DEFAULT_FACTORY_CLASS.equals(className))
++                return Class.forName(className);
++            throw se;
++        }
++    }
+ }
+--- old/src/share/classes/javax/xml/ws/spi/FactoryFinder.java	Tue Oct 21 15:06:52 2008
++++ openjdk/jaxws/src/share/classes/javax/xml/ws/spi/FactoryFinder.java	Tue Oct 21 15:06:52 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2005-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -47,12 +47,7 @@
+                                       ClassLoader classLoader)
+     {
+         try {
+-            Class spiClass;
+-            if (classLoader == null) {
+-                spiClass = Class.forName(className);
+-            } else {
+-                spiClass = classLoader.loadClass(className);
+-            }
++            Class spiClass = safeLoadClass(className, classLoader);
+             return spiClass.newInstance();
+         } catch (ClassNotFoundException x) {
+             throw new WebServiceException(
+@@ -152,4 +147,33 @@
+ 
+         return newInstance(fallbackClassName, classLoader);
+     }
++
++
++    private static final String PLATFORM_DEFAULT_FACTORY_CLASS = "com.sun.xml.internal.ws.spi.ProviderImpl";
++
++    /**
++     * Loads the class, provided that the calling thread has an access to the class being loaded.
++     */
++    private static Class safeLoadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
++        try {
++            // make sure that the current thread has an access to the package of the given name.
++            SecurityManager s = System.getSecurityManager();
++            if (s != null) {
++                int i = className.lastIndexOf('.');
++                if (i != -1) {
++                    s.checkPackageAccess(className.substring(0,i));
++                }
++            }
++
++            if (classLoader == null)
++                return Class.forName(className);
++            else
++                return classLoader.loadClass(className);
++        } catch (SecurityException se) {
++            // anyone can access the platform default factory class without permission
++            if (PLATFORM_DEFAULT_FACTORY_CLASS.equals(className))
++                return Class.forName(className);
++            throw se;
++        }
++    }
+ }
+--- old/src/share/lib/security/java.security	Tue Oct 21 15:09:46 2008
++++ openjdk/jdk/src/share/lib/security/java.security	Tue Oct 21 15:09:46 2008
+@@ -127,7 +127,7 @@
+ # passed to checkPackageAccess unless the
+ # corresponding RuntimePermission ("accessClassInPackage."+package) has
+ # been granted.
+-package.access=sun.
++package.access=sun.,com.sun.xml.internal.ws.,com.sun.xml.internal.bind.
+ 
+ #
+ # List of comma-separated packages that start with or equal this string
+--- old/src/share/lib/security/java.security-solaris	Tue Oct 21 15:09:49 2008
++++ openjdk/jdk/src/share/lib/security/java.security-solaris	Tue Oct 21 15:09:49 2008
+@@ -128,7 +128,7 @@
+ # passed to checkPackageAccess unless the
+ # corresponding RuntimePermission ("accessClassInPackage."+package) has
+ # been granted.
+-package.access=sun.
++package.access=sun.,com.sun.xml.internal.ws.,com.sun.xml.internal.bind.
+ 
+ #
+ # List of comma-separated packages that start with or equal this string
+--- old/src/share/lib/security/java.security-windows	Tue Oct 21 15:09:52 2008
++++ openjdk/jdk/src/share/lib/security/java.security-windows	Tue Oct 21 15:09:52 2008
+@@ -128,7 +128,7 @@
+ # passed to checkPackageAccess unless the
+ # corresponding RuntimePermission ("accessClassInPackage."+package) has
+ # been granted.
+-package.access=sun.
++package.access=sun.,com.sun.xml.internal.ws.,com.sun.xml.internal.bind.
+ 
+ #
+ # List of comma-separated packages that start with or equal this string
+--- /dev/null	Tue Oct 21 15:09:20 2008
++++ openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java	Tue Oct 21 15:09:56 2008
+@@ -0,0 +1,65 @@
++/*
++ *  @test
++ *  @bug 6592792
++ *  @summary Add com.sun.xml.internal to the "package.access" property in $JAVA_HOME/lib/security/java.security
++ *  @run shell Test6592792.sh
++ */
++
++import java.lang.*;
++import java.lang.reflect.*;
++import com.sun.xml.internal.ws.server.*;
++import com.sun.xml.internal.ws.server.SingletonResolver;
++import com.sun.xml.internal.ws.api.server.*;
++
++public class Test {
++
++  public static void main(String[] args) throws Exception{
++      // Enable the security manager
++      SecurityManager sm = new SecurityManager();
++      System.setSecurityManager(sm);
++      new Test();
++  }
++
++  Object invokeMethod(Object target,Method m,Object args[]) throws Exception {
++      SingletonResolver r = new SingletonResolver(target);
++      Invoker invoker = r.createInvoker();
++      return invoker.invoke(null, m, args);
++  }
++
++  public Test() throws Exception{
++      try {
++          Class c=Class.forName("java.lang.Class");
++
++          Class ctab[]=new Class[1];
++          ctab[0]=Class.forName("java.lang.String");
++          Method forName=c.getMethod("forName",ctab);
++
++          Class gtab[]=new Class[2];
++          gtab[0]=Class.forName("java.lang.String");
++          gtab[1]=Class[].class;
++          Method getMethod=c.getMethod("getMethod",gtab);
++
++          Method newInstance=c.getMethod("newInstance",(Class[])null);
++
++          Object otab[]=new Object[1];
++          otab[0]="sun.misc.Unsafe";
++
++          Object o=invokeMethod(null,forName,otab);
++          c = (Class)o;		// sun.misc.Unsafe class
++          // Test FAILED: Should n't have got the reference.   
++          throw new RuntimeException("Test Failed: Got reference to: "+o);
++
++
++          //o=invokeMethod(c,getMethod, new Object[]{"getUnsafe", (Class[])null});
++          //System.out.println("Got reference to: "+o);
++          //throw new RuntimeException("Got reference to: "+o);
++          //o=invokeMethod(c,(Method)o,null);
++          //System.out.println("Got reference to: "+o);
++          //throw new RuntimeException("Got reference to: "+o);
++   
++      } catch(java.security.AccessControlException e) {
++          System.out.println("Test passed");
++          //e.printStackTrace();
++      } 
++   }
++}
+--- /dev/null	Tue Oct 21 15:09:21 2008
++++ openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test6592792.sh	Tue Oct 21 15:09:56 2008
+@@ -0,0 +1,61 @@
++#!/bin/sh
++
++if [ "${TESTSRC}" = "" ]
++then TESTSRC=.
++fi
++
++if [ "${TESTJAVA}" = "" ]
++then
++  PARENT=`dirname \`which java\``
++  TESTJAVA=`dirname ${PARENT}`
++  echo "TESTJAVA not set, selecting " ${TESTJAVA}
++  echo "If this is incorrect, try setting the variable manually."
++fi
++
++if [ "${TESTCLASSES}" = "" ]
++then
++  echo "TESTCLASSES not set.  Test cannot execute.  Failed."
++  exit 1
++fi
++
++BIT_FLAG=""
++
++# set platform-dependent variables
++OS=`uname -s`
++case "$OS" in
++  SunOS | Linux )
++    NULL=/dev/null
++    PS=":"
++    FS="/"
++    ## for solaris, linux it's HOME
++    FILE_LOCATION=$HOME
++    if [ -f ${FILE_LOCATION}${FS}JDK64BIT -a ${OS} = "SunOS" ]
++    then
++        BIT_FLAG=`cat ${FILE_LOCATION}${FS}JDK64BIT`
++    fi
++    ;;
++  Windows_* )
++    NULL=NUL
++    PS=";"
++    FS="\\"
++    ;;
++  * )
++    echo "Unrecognized system!"
++    exit 1;
++    ;;
++esac
++
++JEMMYPATH=${CPAPPEND}
++CLASSPATH=.${PS}${TESTCLASSES}${PS}${JEMMYPATH} ; export CLASSPATH
++
++THIS_DIR=`pwd`
++
++${TESTJAVA}${FS}bin${FS}java ${BIT_FLAG} -version
++
++${TESTJAVA}${FS}bin${FS}javac ${BIT_FLAG} -d . -cp ${TESTJAVA}${FS}jre${FS}lib${FS}rt.jar ${TESTSRC}${FS}Test.java
++
++${TESTJAVA}${FS}bin${FS}java ${BIT_FLAG} -cp . Test
++
++STATUS=$?
++
++exit $STATUS

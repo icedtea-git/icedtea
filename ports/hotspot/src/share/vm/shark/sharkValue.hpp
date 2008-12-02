@@ -246,7 +246,7 @@ class SharkValue : public ResourceObj {
   {
     ShouldNotCallThis();
   }
-  virtual llvm::Value* intptr_value(llvm::IRBuilder* builder) const
+  virtual llvm::Value* intptr_value(llvm::IRBuilder<>* builder) const
   {
     ShouldNotCallThis();
   }
@@ -370,7 +370,7 @@ class SharkComputableValue : public SharkValue {
   {
     return llvm_value();
   }
-  llvm::Value* intptr_value(llvm::IRBuilder* builder) const
+  llvm::Value* intptr_value(llvm::IRBuilder<>* builder) const
   {
     assert(is_jobject(), "should be");
     return builder->CreatePtrToInt(llvm_value(), SharkType::intptr_type());

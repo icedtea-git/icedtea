@@ -11,7 +11,7 @@ for AUTOCONF in autoconf autoconf259; do
         AUTOCONF_VERSION=`${AUTOCONF} --version | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
 #        echo ${AUTOCONF_VERSION}
         case ${AUTOCONF_VERSION} in
-            2.59* | 2.6[0-9]* )
+            2.6[1-9]* )
                 HAVE_AUTOCONF=true
                 break;
                 ;;
@@ -55,7 +55,7 @@ done
 
 if test ${HAVE_AUTOCONF} = false; then
     echo "No proper autoconf was found."
-    echo "You must have autoconf 2.59 or later installed."
+    echo "You must have autoconf 2.61 or later installed."
     exit 1
 fi
 

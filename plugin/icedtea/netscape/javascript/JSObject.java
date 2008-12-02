@@ -86,8 +86,7 @@ import sun.applet.PluginDebug;
  */
 public final class JSObject {
     /* the internal object data */
-    private int                               internal;
-    private long                              long_internal;
+    private long                              internal;
 
     /**
      * initialize
@@ -111,7 +110,7 @@ public final class JSObject {
 
     public JSObject(long jsobj_addr) {
         PluginDebug.debug ("JSObject long CONSTRUCTOR");
-        long_internal = jsobj_addr;
+        internal = jsobj_addr;
     }
 
     /**
@@ -231,7 +230,7 @@ public final class JSObject {
     {
         PluginDebug.debug("JSObject.getWindow");
         // FIXME: handle long case as well.
-        int internal = 0;
+        long internal = 0;
         internal = ((PluginAppletViewer)
                     applet.getAppletContext()).getWindow();
         PluginDebug.debug ("GOT IT: " + internal);

@@ -194,6 +194,7 @@ inline suseconds_t get_time_in_ms()
 	return tv.tv_usec;
 }
 
+
 inline long get_time_in_s()
 {
 	time_t t;
@@ -342,14 +343,11 @@ static gboolean plugin_in_pipe_callback (GIOChannel* source,
 #include <queue>
 #include <nsCOMPtr.h>
 #include <nsIThread.h>
+#include <nspr.h>
 
 PRMonitor *jvmMsgQueuePRMonitor;
 std::queue<nsCString> jvmMsgQueue;
 nsCOMPtr<nsIThread> processThread;
-
-#include <nspr.h>
-
-#include <prtypes.h>
 
 // IcedTeaJNIEnv helpers.
 class JNIReference
@@ -700,9 +698,10 @@ char const* TYPES[10] = { "Object",
 //   printf ("RECEIVE_BOOLEAN: %s result: %x = %s\n",              \
 //           __func__, result, *result ? "true" : "false");
 
-#include <nscore.h>
 #include <nsISupports.h>
 #include <nsIFactory.h>
+#include <nscore.h>
+#include <prtypes.h>
 
 // Factory functions.
 extern "C" NS_EXPORT nsresult NSGetFactory (nsISupports* aServMgr,
@@ -901,7 +900,33 @@ ResultContainer::stop_timer()
 #include <nsILiveconnect.h>
 #include <nsICollection.h>
 #include <nsIProcess.h>
-#include <map>
+
+#ifndef __STDC_FORMAT_MACROS
+# define __STDC_FORMAT_MACROS
+#endif
+
+#include <inttypes.h>
+
+inline void js_id_to_string(char** str, PLUGIN_JAVASCRIPT_TYPE jsid)
+{
+	if (sizeof(PLUGIN_JAVASCRIPT_TYPE) == 4)
+		sprintf(*str, "%"PRId32, jsid);
+
+	if (sizeof(PLUGIN_JAVASCRIPT_TYPE) == 8)
+		sprintf(*str, "%"PRId64, jsid);
+}
+
+inline PLUGIN_JAVASCRIPT_TYPE string_to_js_id(nsCString str)
+{
+	if (sizeof(PLUGIN_JAVASCRIPT_TYPE) == sizeof(int))
+		return atoi(str.get());
+
+	if (sizeof(PLUGIN_JAVASCRIPT_TYPE) == sizeof(long))
+		return atol(str.get());
+
+	if (sizeof(PLUGIN_JAVASCRIPT_TYPE) == sizeof(long long))
+		return atoll(str.get());
+}
 
 class IcedTeaJNIEnv;
 
@@ -988,7 +1013,7 @@ private:
   PRUint32 next_instance_identifier;
   PRUint32 object_identifier_return;
   PRUint32 instance_count;
-  int javascript_identifier;
+  PLUGIN_JAVASCRIPT_TYPE javascript_identifier;
   int name_identifier;
   int args_identifier;
   int string_identifier;
@@ -1334,7 +1359,6 @@ private:
 #include <nsPIPluginInstancePeer.h>
 #include <nsIPluginInstanceOwner.h>
 #include <nsIRunnable.h>
-#include <iostream>
 
 class IcedTeaRunnable : public nsIRunnable
 {
@@ -2310,10 +2334,28 @@ IcedTeaPluginInstance::Initialize (nsIPluginInstancePeer* aPeer)
   tagMessage += appletTag;
   tagMessage += "</embed>";
 
-  // remove newline characters from the message
-  tagMessage.StripChars("\r\n");
+  PLUGIN_DEBUG_1ARG("TAG FROM BROWSER = %s\n", tagMessage.get());
 
-  factory->SendMessageToAppletViewer (tagMessage);
+  // encode newline characters in the message
+  nsCString toSend("");
+  for (int i=0; i < tagMessage.Length(); i++)
+  {
+	  if (tagMessage.get()[i] == '\r')
+	  {
+		  toSend += "&#13;";
+		  continue;
+	  }
+
+	  if (tagMessage.get()[i] == '\n')
+	  {
+		  toSend += "&#10;";
+		  continue;
+	  }
+
+	  toSend += tagMessage.get()[i];
+  }
+
+  factory->SendMessageToAppletViewer (toSend);
 
   // Set back-pointer to peer instance.
   PLUGIN_DEBUG_1ARG ("SETTING PEER!!!: %p\n", aPeer);
@@ -2894,8 +2936,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_DEBUG_0ARG ("POSTING GetMember\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
-          javascript_identifier = javascriptID.ToInteger (&conversionResult);
-          PLUGIN_CHECK ("parse javascript id", conversionResult);
+          javascript_identifier = string_to_js_id ((nsCString) javascriptID);
+          PLUGIN_DEBUG_1ARG ("parse javascript id %ld\n", javascript_identifier);
           nsDependentCSubstring nameID = Substring (rest, space + 1);
           name_identifier = nameID.ToInteger (&conversionResult);
           PLUGIN_CHECK ("parse name id", conversionResult);
@@ -2912,8 +2954,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_DEBUG_0ARG ("POSTING SetMember\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
-          javascript_identifier = javascriptID.ToInteger (&conversionResult);
-          PLUGIN_CHECK ("parse javascript id", conversionResult);
+          javascript_identifier = string_to_js_id ((nsCString) javascriptID);
+          PLUGIN_DEBUG_1ARG ("parse javascript id %ld\n", javascript_identifier);
           nsDependentCSubstring nameAndValue = Substring (rest, space + 1);
           space = nameAndValue.FindChar (' ');
           nsDependentCSubstring nameID = Substring (nameAndValue, 0, space);
@@ -2936,8 +2978,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_DEBUG_0ARG ("POSTING GetSlot\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
-          javascript_identifier = javascriptID.ToInteger (&conversionResult);
-          PLUGIN_CHECK ("parse javascript id", conversionResult);
+          javascript_identifier = string_to_js_id ((nsCString) javascriptID);
+          PLUGIN_DEBUG_1ARG ("parse javascript id %ld\n", javascript_identifier);
           nsDependentCSubstring indexStr = Substring (rest, space + 1);
           slot_index = indexStr.ToInteger (&conversionResult);
           PLUGIN_CHECK ("parse name id", conversionResult);
@@ -2954,8 +2996,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_DEBUG_0ARG ("POSTING SetSlot\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
-          javascript_identifier = javascriptID.ToInteger (&conversionResult);
-          PLUGIN_CHECK ("parse javascript id", conversionResult);
+          javascript_identifier = string_to_js_id ((nsCString) javascriptID);
+          PLUGIN_DEBUG_1ARG ("parse javascript id %ld\n", javascript_identifier);
           nsDependentCSubstring nameAndValue = Substring (rest, space + 1);
           space = nameAndValue.FindChar (' ');
           nsDependentCSubstring indexStr = Substring (nameAndValue, 0, space);
@@ -2977,8 +3019,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_DEBUG_0ARG ("POSTING Eval\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
-          javascript_identifier = javascriptID.ToInteger (&conversionResult);
-          PLUGIN_CHECK ("parse javascript id", conversionResult);
+          javascript_identifier = string_to_js_id ((nsCString) javascriptID);
+          PLUGIN_DEBUG_1ARG ("parse javascript id %ld\n", javascript_identifier);
           nsDependentCSubstring stringID = Substring (rest, space + 1);
           string_identifier = stringID.ToInteger (&conversionResult);
           PLUGIN_CHECK ("parse string id", conversionResult);
@@ -2995,8 +3037,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_DEBUG_0ARG ("POSTING RemoveMember\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
-          javascript_identifier = javascriptID.ToInteger (&conversionResult);
-          PLUGIN_CHECK ("parse javascript id", conversionResult);
+          javascript_identifier = string_to_js_id ((nsCString) javascriptID);
+          PLUGIN_DEBUG_1ARG ("parse javascript id %ld\n", javascript_identifier);
           nsDependentCSubstring nameID = Substring (rest, space + 1);
           name_identifier = nameID.ToInteger (&conversionResult);
           PLUGIN_CHECK ("parse name id", conversionResult);
@@ -3013,8 +3055,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           PLUGIN_DEBUG_0ARG ("POSTING Call\n");
           space = rest.FindChar (' ');
           nsDependentCSubstring javascriptID = Substring (rest, 0, space);
-          javascript_identifier = javascriptID.ToInteger (&conversionResult);
-          PLUGIN_CHECK ("parse javascript id", conversionResult);
+          javascript_identifier = string_to_js_id ((nsCString) javascriptID);
+          PLUGIN_DEBUG_1ARG ("parse javascript id %ld\n", javascript_identifier);
           nsDependentCSubstring nameAndArgs = Substring (rest, space + 1);
           space = nameAndArgs.FindChar (' ');
           nsDependentCSubstring nameID = Substring (nameAndArgs, 0, space);
@@ -3034,9 +3076,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
       else if (command == "Finalize")
         {
           PLUGIN_DEBUG_0ARG ("POSTING Finalize\n");
-          nsDependentCSubstring javascriptID = Substring (rest, 0, space);
-          javascript_identifier = rest.ToInteger (&conversionResult);
-          PLUGIN_CHECK ("parse javascript id", conversionResult);
+          javascript_identifier = string_to_js_id ((nsCString) rest);
+          PLUGIN_DEBUG_1ARG ("parse javascript id %ld\n", javascript_identifier);
 
           nsCOMPtr<nsIRunnable> event =
             new IcedTeaRunnableMethod<IcedTeaPluginFactory>
@@ -3048,8 +3089,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
       else if (command == "ToString")
         {
           PLUGIN_DEBUG_0ARG ("POSTING ToString\n");
-          javascript_identifier = rest.ToInteger (&conversionResult);
-          PLUGIN_CHECK ("parse javascript id", conversionResult);
+          javascript_identifier = string_to_js_id ((nsCString) rest);
+          PLUGIN_DEBUG_1ARG ("parse javascript id %ld\n", javascript_identifier);
 
           nsCOMPtr<nsIRunnable> event =
             new IcedTeaRunnableMethod<IcedTeaPluginFactory>
@@ -3878,18 +3919,24 @@ IcedTeaPluginInstance::GetWindow ()
                                                NULL, 0, NULL,
                                                &liveconnect_window);
       PLUGIN_CHECK ("get window", result);
-      PLUGIN_DEBUG_1ARG ("HERE 24: %d\n", liveconnect_window);
+      PLUGIN_DEBUG_1ARG ("HERE 24: %ld\n", liveconnect_window);
     }
 
-  PLUGIN_DEBUG_1ARG ("HERE 20: %d\n", liveconnect_window);
+  PLUGIN_DEBUG_1ARG ("HERE 20: %ld\n", liveconnect_window);
+
+  char *windowAddr;
+  windowAddr = (char*) malloc(20*sizeof(char));
+  js_id_to_string(&windowAddr, liveconnect_window);
 
   nsCString message ("context ");
   message.AppendInt (0);
   message += " ";
   message += "JavaScriptGetWindow";
   message += " ";
-  message.AppendInt ((PRUintn) liveconnect_window);
+  message += windowAddr;
   factory->SendMessageToAppletViewer (message);
+
+  free(windowAddr);
 }
 
 IcedTeaPluginInstance::~IcedTeaPluginInstance ()
@@ -4392,7 +4439,6 @@ NS_IMPL_ISUPPORTS1 (IcedTeaJNIEnv, nsISecureEnv)
 #include <nsITransport.h>
 #include <nsNetCID.h>
 #include <nsServiceManagerUtils.h>
-#include <iostream>
 #include <nsIPrincipal.h>
 #include <nsIScriptSecurityManager.h>
 #include <nsIURI.h>
@@ -4592,6 +4638,7 @@ IcedTeaJNIEnv::ValueString (jni_type type, jvalue value)
   PLUGIN_TRACE_JNIENV ();
   nsCString retstr ("");
 
+  char* longVal = (char*) malloc(sizeof(char)*20);
   switch (type)
     {
     case jboolean_type:
@@ -4610,7 +4657,8 @@ IcedTeaJNIEnv::ValueString (jni_type type, jvalue value)
       retstr.AppendInt (value.i);
       break;
     case jlong_type:
-      retstr.AppendInt ((PRUintn) value.j);
+      sprintf(longVal, "%"PRId64, value.j);
+      retstr += longVal;
       break;
     case jfloat_type:
       retstr += IcedTeaPrintfCString ("%f", value.f);
@@ -4626,6 +4674,8 @@ IcedTeaJNIEnv::ValueString (jni_type type, jvalue value)
     default:
       break;
     }
+
+  free(longVal);
 
   // Freed by calling function.
   return strdup (retstr.get ());
@@ -4716,6 +4766,7 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
   // Method.
   int arg = 0;
   char* fl;
+  char* longVal = (char*) malloc(sizeof(char)*20);
   while (id->signature[i] != stopchar)
     {
       switch (id->signature[i])
@@ -4739,7 +4790,8 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
           retstr.AppendInt (args[arg].i);
           break;
         case 'J':
-          retstr.AppendInt ((PRUintn) args[arg].j);
+          sprintf(longVal, "%"PRId64, args[arg].j);
+          retstr += longVal;
           break;
         case 'F':
           retstr += IcedTeaPrintfCString ("%f", args[arg].f);
@@ -4786,6 +4838,8 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
       i++;
 	  arg++;
     }
+
+  free(longVal);
 
   // Freed by calling function.
   return strdup (retstr.get ());

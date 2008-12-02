@@ -23,7 +23,7 @@
  *
  */
 
-class SharkBuilder : public llvm::IRBuilder {
+class SharkBuilder : public llvm::IRBuilder<> {
  public:
   SharkBuilder();
 
@@ -81,13 +81,13 @@ class SharkBuilder : public llvm::IRBuilder {
                                   llvm::Value*      index,
                                   const char*       name = "")
   {
-    llvm::Value* offset = index;
+    llvm::Value* offset = CreateIntCast(index, SharkType::intptr_type(), false);
     if (element_bytes != 1)
       offset = CreateShl(
         offset,
-        LLVMValue::jint_constant(exact_log2(element_bytes)));
+        LLVMValue::intptr_constant(exact_log2(element_bytes)));
     offset = CreateAdd(
-      LLVMValue::jint_constant(in_bytes(base_offset)), offset);
+      LLVMValue::intptr_constant(in_bytes(base_offset)), offset);
 
     return CreateIntToPtr(
       CreateAdd(CreatePtrToInt(arrayoop, SharkType::intptr_type()), offset),
