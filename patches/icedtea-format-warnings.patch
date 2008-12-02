@@ -1,0 +1,30 @@
+--- openjdk/hotspot/src/share/vm/classfile/javaClasses.cpp~	2008-11-20 09:41:03.000000000 +0100
++++ openjdk/hotspot/src/share/vm/classfile/javaClasses.cpp	2008-12-02 16:47:01.000000000 +0100
+@@ -866,7 +866,7 @@
+     }
+     nmethod* nm = method->code();
+     if (WizardMode && nm != NULL) {
+-      sprintf(buf + (int)strlen(buf), "(nmethod %#x)", nm);
++      sprintf(buf + (int)strlen(buf), "(nmethod %p)", nm);
+     }
+   }
+ 
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp~	2008-12-02 16:38:27.000000000 +0100
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2008-12-02 17:05:17.000000000 +0100
+@@ -4133,6 +4133,7 @@
+   int count;
+   long sys_time, user_time;
+   char string[64];
++  char cdummy;
+   int idummy;
+   long ldummy;
+   FILE *fp;
+@@ -4194,7 +4195,7 @@
+   do s++; while (isspace(*s));
+ 
+   count = sscanf(s,"%c %d %d %d %d %d %lu %lu %lu %lu %lu %lu %lu",
+-                 &idummy, &idummy, &idummy, &idummy, &idummy, &idummy,
++                 &cdummy, &idummy, &idummy, &idummy, &idummy, &idummy,
+                  &ldummy, &ldummy, &ldummy, &ldummy, &ldummy,
+                  &user_time, &sys_time);
+   if ( count != 13 ) return -1;

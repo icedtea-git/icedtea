@@ -588,6 +588,12 @@ ICEDTEA_PATCHES = \
         patches/icedtea-6755943.patch \
         patches/icedtea-6766136.patch
 
+if WITH_ALT_HSBUILD
+ICEDTEA_PATCHES += \
+	patches/icedtea-format-warnings.patch \
+	patches/icedtea-fortify-source.patch
+endif
+
 if !WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/icedtea-hotspot7-tests.patch \

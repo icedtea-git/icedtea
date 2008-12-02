@@ -1,3 +1,10 @@
+2008-12-03  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-format-warnings.patch: New.
+	* patches/icedtea-format-warnings.patch: Likewise.
+	* HACKING: Document patches.
+	* Makefile.am: Apply patches.
+
 2008-12-02  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-version.patch: Remove accidentially added debug
