@@ -1,5 +1,24 @@
 2008-12-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* patches/icedtea-bytecodeInterpreter.patch,
+	* patches/icedtea-hotspot7-build-fixes.patch:
+	Removed.
+	* Makefile.am:
+	Sort out Zero patches.
+	* patches/icedtea-hotspot-14.0b08-bytecodeInterpreter.patch,
+	* patches/icedtea-hotspot-14.0b08-gcc-4.3.patch,
+	* patches/icedtea-hotspot-original-bytecodeInterpreter.patch:
+	New HotSpot specific patches.
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/relocInfo_zero.cpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp:
+	Updated using IcedTea7 versions for 14.0b08.
+
+2008-12-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* patches/icedtea-hotspot-params-cast-size_t.patch,
 	* patches/icedtea-hotspot-use-idx_t.patch,
 	* patches/icedtea-memory-limits.patch,

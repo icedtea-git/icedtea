@@ -427,11 +427,11 @@ endif
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/$(HOTSPOT_MAKE_DIR)/*/makefiles/* \
+	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/*cpu/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
-	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'); \
-	  ln -sf $$target $$link; \
+	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'|sed "s#hotspot/build#hotspot/$(HOTSPOT_MAKE_DIR)#"); \
+	  ln -sfv $$target $$link; \
 	done
 	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/$(HOTSPOT_MAKE_DIR)/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" \
@@ -458,16 +458,19 @@ endif
 # If ZERO_BUILD is set then we are building zero and need
 # to patch up to OpenJDK 7 HotSpot for the C++ interpreter.
 ZERO_PATCHES = \
-	patches/icedtea-hotspot-6b12-7b24.patch \
-	patches/icedtea-hotspot7-build-fixes.patch \
-	patches/icedtea-bytecodeInterpreter.patch \
-	patches/icedtea-bytecodeInterpreterWithChecks.patch \
+	patches/icedtea-hotspot-$(HSBUILD)-bytecodeInterpreter.patch \
 	patches/icedtea-signature-iterator.patch \
-	patches/icedtea-signed-types.patch \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-zero.patch \
-	patches/icedtea-ia64-bugfix.patch \
+	patches/icedtea-ia64-bugfix.patch 
+
+if !WITH_ALT_HSBUILD
+ZERO_PATCHES += \
+	patches/icedtea-hotspot-6b12-7b24.patch \
+	patches/icedtea-bytecodeInterpreterWithChecks.patch \
+	patches/icedtea-signed-types.patch \
 	patches/icedtea-hotspot-citypeflow.patch
+endif
 
 # Patches needed when not using the newer OpenJDK 7 HotSpot for zero.
 NON_ZERO_PATCHES = \
@@ -802,11 +805,11 @@ clean-extract-ecj:
 
 # Link ports sources into tree
 stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/$(HOTSPOT_MAKE_DIR)/*/makefiles/* \
+	for target in $(abs_top_srcdir)/ports/hotspot/build/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/*cpu/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
-	  link=$$(dirname $$target | sed 's/^.*ports/openjdk-ecj/'); \
-	  ln -sf $$target $$link; \
+	  link=$$(dirname $$target | sed 's/^.*ports/openjdk-ecj/'|sed "s#hotspot/build#hotspot/$(HOTSPOT_MAKE_DIR)#"); \
+	  ln -sfv $$target $$link; \
 	done
 	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/$(HOTSPOT_MAKE_DIR)/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" \

@@ -44,7 +44,7 @@ class MacroAssembler : public Assembler {
 
   void align(int modulus);
   void bang_stack_with_offset(int offset);
-
+  bool needs_explicit_null_check(intptr_t offset);
  public:
   void advance(int bytes);
 };
