@@ -452,13 +452,13 @@ if GCC_OLD
   GCC_PATCH =
 else
   GCC_PATCH = patches/icedtea-gcc-4.3.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-gcc-4.3.patch
+	patches/hotspot/$(HSBUILD)/icedtea-gcc-4.3.patch
 endif
 
 # If ZERO_BUILD is set then we are building zero and need
 # to patch up to OpenJDK 7 HotSpot for the C++ interpreter.
 ZERO_PATCHES = \
-	patches/icedtea-hotspot-$(HSBUILD)-bytecodeInterpreter.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-bytecodeInterpreter.patch \
 	patches/icedtea-signature-iterator.patch \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-zero.patch \
@@ -501,12 +501,12 @@ ICEDTEA_FSG_PATCHES =
 ICEDTEA_PATCHES = \
 	$(ZERO_PATCHES_COND) \
 	patches/icedtea-version.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-version.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-version.patch \
 	patches/icedtea-copy-plugs.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-text-relocations.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch \
 	patches/icedtea-debuginfo.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-debuginfo.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-debuginfo.patch \
 	patches/icedtea-ssl.patch \
 	$(PLUGIN_PATCH) \
 	patches/icedtea-webstart.patch \
@@ -516,36 +516,36 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-demos.patch \
 	patches/icedtea-use-system-tzdata.patch \
 	patches/icedtea-headers.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-headers.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-headers.patch \
 	patches/icedtea-ant.patch \
 	patches/icedtea-gcc-suffix.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-gcc-suffix.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-gcc-suffix.patch \
 	patches/icedtea-bytebuffer-compact.patch \
 	patches/icedtea-float-double-trailing-zeros.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-memory-limits.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-memory-limits.patch \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
 	patches/icedtea-javafiles.patch \
 	patches/icedtea-core-build.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-core-build.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-static-libstdc++.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-static-libstdc++.patch \
 	patches/icedtea-timerqueue.patch \
 	patches/icedtea-lib64.patch \
 	patches/icedtea-zero-build.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-zero-build.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
 	patches/icedtea-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-fonts.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-sparc64-linux.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-sparc-ptracefix.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-sparc-trapsfix.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-sparc64-linux.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-sparc-ptracefix.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-no-bcopy.patch \
 	patches/icedtea-shark-build.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-shark-build.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
 	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-nomotif-6706121.patch \
@@ -554,8 +554,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-alt-jar.patch \
 	patches/icedtea-enum-bug-181.patch \
 	patches/icedtea-jdk-use-ssize_t.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-use-idx_t.patch \
-	patches/icedtea-hotspot-$(HSBUILD)-params-cast-size_t.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-use-idx_t.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-params-cast-size_t.patch \
 	patches/icedtea-clean-crypto.patch \
 	$(SHARK_PATCH) \
 	$(GCC_PATCH) \
@@ -576,17 +576,17 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-samejvm-safe.patch \
 	patches/icedtea-6728542-epoll.patch \
-	patches/icedtea-4486841.patch \
-        patches/icedtea-6484091.patch \
-        patches/icedtea-6497740.patch \
-        patches/icedtea-6588160.patch \
-        patches/icedtea-6592792.patch \
-        patches/icedtea-6721753.patch \
-        patches/icedtea-6726779.patch \
-        patches/icedtea-6733959.patch \
-        patches/icedtea-6734167.patch \
-        patches/icedtea-6755943.patch \
-        patches/icedtea-6766136.patch
+	patches/security/icedtea-4486841.patch \
+        patches/security/icedtea-6484091.patch \
+        patches/security/icedtea-6497740.patch \
+        patches/security/icedtea-6588160.patch \
+        patches/security/icedtea-6592792.patch \
+        patches/security/icedtea-6721753.patch \
+        patches/security/icedtea-6726779.patch \
+        patches/security/icedtea-6733959.patch \
+        patches/security/icedtea-6734167.patch \
+        patches/security/icedtea-6755943.patch \
+        patches/security/icedtea-6766136.patch
 
 if WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \
@@ -618,7 +618,7 @@ ICEDTEA_PATCHES += \
 endif
 
 if ENABLE_XRENDER
-XRENDER_PATCHES = patches/icedtea-xrender-???.patch
+XRENDER_PATCHES = patches/xrender/icedtea-???.patch
 ICEDTEA_PATCHES += $(sort $(wildcard $(XRENDER_PATCHES)))
 endif
 
@@ -843,11 +843,11 @@ stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 	touch stamps/ports-ecj.stamp
 
 # Patch OpenJDK for plug replacements and ecj.
-ICEDTEA_ECJ_PATCHES = patches/icedtea-ecj.patch \
-	patches/icedtea-ecj-hotspot-$(HSBUILD).patch \
-	patches/icedtea-ecj-spp.patch \
-	patches/icedtea-ecj-jopt.patch \
-	patches/icedtea-ecj-pr261.patch
+ICEDTEA_ECJ_PATCHES = patches/ecj/icedtea.patch \
+	patches/ecj/icedtea-hotspot-$(HSBUILD).patch \
+	patches/ecj/icedtea-spp.patch \
+	patches/ecj/icedtea-jopt.patch \
+	patches/ecj/icedtea-pr261.patch
 
 stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 	mkdir -p stamps; \
