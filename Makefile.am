@@ -1750,7 +1750,6 @@ OPENJDK_PATCHES =
 
 # If ZERO_BUILD is set then we are building zero.
 ZERO_PATCHES = \
-	patches/icedtea-hotspot7-build-fixes.patch \
 	patches/icedtea-bytecodeInterpreter.patch \
 	patches/icedtea-signature-iterator.patch \
 	patches/icedtea-test-atomic-operations.patch \
@@ -1850,7 +1849,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-display-mode-changer.patch \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-format-warnings.patch \
-	patches/icedtea-fortify-source.patch \
 	$(ZERO_PATCHES_COND)
 
 if WITH_RHINO
