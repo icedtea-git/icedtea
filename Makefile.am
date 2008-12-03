@@ -631,15 +631,17 @@ stamps/extract.stamp: stamps/download.stamp
 	  mkdir openjdk ; \
 	  $(TAR) xf $(OPENJDK_SRC_ZIP) -C openjdk; \
 	  chmod -R ug+w openjdk ; \
-	  if test -e ${HOTSPOT_SRC_ZIP} ; \
-	  then \
-	    rm -rf openjdk/hotspot ; \
-	    $(TAR) xf $(HOTSPOT_SRC_ZIP) ; \
-	    chmod -R ug+w hotspot-* ; \
-	    mv $$(find -maxdepth 1 -name 'hotspot-*' -type d) openjdk/hotspot ; \
-	  fi ; \
 	  sh $(abs_top_srcdir)/fsg.sh ; \
 	fi
+if WITH_ALT_HSBUILD
+	if test -e ${HOTSPOT_SRC_ZIP} ; \
+	then \
+	  rm -rf openjdk/hotspot ; \
+	  $(TAR) xf $(HOTSPOT_SRC_ZIP) ; \
+	  chmod -R ug+w hotspot-* ; \
+	  mv $$(find -maxdepth 1 -name 'hotspot-*' -type d) openjdk/hotspot ; \
+	fi
+endif
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
 	if ! test -d cacao ; \
