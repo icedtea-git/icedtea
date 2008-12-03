@@ -491,7 +491,7 @@ endif
 
 # If Shark is required, apply shark patch
 if SHARK_BUILD
-  SHARK_PATCH = patches/icedtea-shark.patch
+  SHARK_PATCH = patches/hotspot/$(HSBUILD)/icedtea-shark.patch
 else
   SHARK_PATCH =
 endif
