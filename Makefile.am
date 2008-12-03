@@ -1,6 +1,6 @@
-OPENJDK_DATE = 05_nov_2008
-OPENJDK_MD5SUM = eb9a408ac0215f3f0aa5c02fa86d5b30
-OPENJDK_VERSION = b13
+OPENJDK_DATE = 25_nov_2008
+OPENJDK_MD5SUM = 9f9773a822156dd3d576d83d794364ce
+OPENJDK_VERSION = b14
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -578,18 +578,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-display-mode-changer.patch \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-samejvm-safe.patch \
-	patches/icedtea-6728542-epoll.patch \
-	patches/security/icedtea-4486841.patch \
-        patches/security/icedtea-6484091.patch \
-        patches/security/icedtea-6497740.patch \
-        patches/security/icedtea-6588160.patch \
-        patches/security/icedtea-6592792.patch \
-        patches/security/icedtea-6721753.patch \
-        patches/security/icedtea-6726779.patch \
-        patches/security/icedtea-6733959.patch \
-        patches/security/icedtea-6734167.patch \
-        patches/security/icedtea-6755943.patch \
-        patches/security/icedtea-6766136.patch
+	patches/icedtea-6728542-epoll.patch
 
 if WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \
