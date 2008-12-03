@@ -38,9 +38,10 @@ exception statement from your version.
 package org.classpath.icedtea.pulseaudio;
 
 import javax.sound.sampled.AudioPermission;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.Port;
 
-public class PulseAudioSourcePort extends PulseAudioPort {
+final class PulseAudioSourcePort extends PulseAudioPort {
 
 	/* aka mic */
 
@@ -48,7 +49,7 @@ public class PulseAudioSourcePort extends PulseAudioPort {
 		SecurityWrapper.loadNativeLibrary();
 	}
 
-	public PulseAudioSourcePort(String name) {
+	PulseAudioSourcePort(String name) {
 		super(name);
 	}
 
@@ -80,12 +81,14 @@ public class PulseAudioSourcePort extends PulseAudioPort {
 		super.close();
 	}
 
+	// FIXME
 	public native byte[] native_setVolume(float newValue);
 
+	// FIXME
 	public synchronized native byte[] native_updateVolumeInfo();
 
 	@Override
-	public javax.sound.sampled.Line.Info getLineInfo() {
+	public Line.Info getLineInfo() {
 		return new Port.Info(Port.class, getName(), false);
 	}
 

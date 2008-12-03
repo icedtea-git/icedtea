@@ -44,12 +44,13 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 
 import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 import org.classpath.icedtea.pulseaudio.Stream.WriteListener;
 
-public class PulseAudioClip extends PulseAudioDataLine implements Clip,
+public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		PulseAudioPlaybackLine {
 
 	private byte[] data = null;
@@ -69,14 +70,18 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 	// the ending frame of the loop
 	private int endFrame = 0;
 
-	public static final String DEFAULT_CLIP_NAME = "Clip";
+	public static final String DEFAULT_CLIP_NAME = "Audio Clip";
 
 	private Object clipLock = new Object();
 	private int loopsLeft = 0;
 
 	// private Semaphore clipSemaphore = new Semaphore(1);
 
-	private class ClipThread extends Thread {
+	/**
+	 * This thread runs
+	 * 
+	 */
+	private final class ClipThread extends Thread {
 		@Override
 		public void run() {
 
@@ -197,16 +202,18 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		stream.removeWriteListener(writeListener);
 	}
 
-	public PulseAudioClip(AudioFormat[] formats, AudioFormat defaultFormat) {
-		supportedFormats = formats;
+	PulseAudioClip(AudioFormat[] formats, AudioFormat defaultFormat) {
+		this.supportedFormats = formats;
 		this.defaultFormat = defaultFormat;
 		this.currentFormat = defaultFormat;
 		this.volume = PulseAudioVolumeControl.MAX_VOLUME;
+		this.streamName = DEFAULT_CLIP_NAME;
 
 		clipThread = new ClipThread();
 
 	}
 
+	@Override
 	protected void connectLine(int bufferSize, Stream masterStream)
 			throws LineUnavailableException {
 		StreamBufferAttributes bufferAttributes = new StreamBufferAttributes(
@@ -263,9 +270,6 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 	 * 
 	 * drain() on a Clip should block until the entire clip has finished playing
 	 * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4732218
-	 * 
-	 * 
-	 * @see org.classpath.icedtea.pulseaudio.PulseAudioDataLine#drain()
 	 */
 	@Override
 	public void drain() {
@@ -427,22 +431,28 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 
 	}
 
+	// FIXME
+	@Override
 	public byte[] native_setVolume(float value) {
 		return stream.native_setVolume(value);
 	}
 
+	@Override
 	public boolean isMuted() {
 		return muted;
 	}
 
+	@Override
 	public void setMuted(boolean value) {
 		muted = value;
 	}
 
+	@Override
 	public float getVolume() {
 		return this.volume;
 	}
 
+	@Override
 	public void setVolume(float value) {
 		this.volume = value;
 
@@ -546,6 +556,7 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 
 	}
 
+	@Override
 	public void stop() {
 		if (!isOpen) {
 			throw new IllegalStateException("Line not open");
@@ -571,7 +582,8 @@ public class PulseAudioClip extends PulseAudioDataLine implements Clip,
 
 	}
 
-	public javax.sound.sampled.Line.Info getLineInfo() {
+	@Override
+	public Line.Info getLineInfo() {
 		return new DataLine.Info(Clip.class, supportedFormats,
 				StreamBufferAttributes.MIN_VALUE,
 				StreamBufferAttributes.MAX_VALUE);

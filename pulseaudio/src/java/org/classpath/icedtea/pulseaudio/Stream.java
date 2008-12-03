@@ -47,8 +47,12 @@ import javax.sound.sampled.LineUnavailableException;
  * This class encapsulates a pa_stream object and provides easier access to the
  * native functions
  * 
+ * 
+ * for more details on this see the pa_stream_* functions in the pulseaudio api
+ * docs
+ * 
  */
-public class Stream {
+final class Stream {
 
 	public interface StateListener {
 		public void update();
@@ -172,9 +176,9 @@ public class Stream {
 	public native int bytesInBuffer();
 
 	/*
-	 * pa_operation pa_stream_update_timing_info (pa_stream *p,
-	 * pa_stream_success_cb_t cb, void *userdata) Request a timing info
-	 * structure update for a stream.
+	 * pa_operation pa_stream_update_timing_info (pa_streamp,
+	 * pa_stream_success_cb_t cb, voiduserdata) Request a timing info structure
+	 * update for a stream.
 	 */
 
 	private native int native_pa_stream_is_corked();
@@ -184,8 +188,8 @@ public class Stream {
 	private native byte[] native_pa_stream_flush();
 
 	/*
-	 * pa_operation pa_stream_prebuf (pa_stream *s, pa_stream_success_cb_t cb,
-	 * void *userdata) Reenable prebuffering as specified in the pa_buffer_attr
+	 * pa_operation pa_stream_prebuf (pa_streams, pa_stream_success_cb_t cb,
+	 * voiduserdata) Reenable prebuffering as specified in the pa_buffer_attr
 	 * structure.
 	 */
 
@@ -201,41 +205,41 @@ public class Stream {
 	private native long native_pa_stream_get_latency();
 
 	/*
-	 * const pa_timing_info * pa_stream_get_timing_info (pa_stream *s) Return
-	 * the latest raw timing data structure.
+	 * const pa_timing_info pa_stream_get_timing_info (pa_streams) Return the
+	 * latest raw timing data structure.
 	 */
 
-	native StreamSampleSpecification native_pa_stream_get_sample_spec();
+	private native StreamSampleSpecification native_pa_stream_get_sample_spec();
 
 	/*
-	 * const pa_channel_map * pa_stream_get_channel_map (pa_stream *s) Return a
+	 * const pa_channel_map pa_stream_get_channel_map (pa_streams) Return a
 	 * pointer to the stream's channel map. const
-	 * 
 	 */
-	native StreamBufferAttributes native_pa_stream_get_buffer_attr();
+	private native StreamBufferAttributes native_pa_stream_get_buffer_attr();
 
-	native byte[] native_pa_stream_set_buffer_attr(StreamBufferAttributes info);
+	private native byte[] native_pa_stream_set_buffer_attr(
+			StreamBufferAttributes info);
 
 	private native byte[] native_pa_stream_update_sample_rate(int rate);
 
-	public native byte[] native_setVolume(float newValue);
+	native byte[] native_setVolume(float newValue);
 
 	/*
-	 * pa_operation pa_stream_proplist_update (pa_stream *s, pa_update_mode_t
-	 * mode, pa_proplist *p, pa_stream_success_cb_t cb, void *userdata) Update
-	 * the property list of the sink input/source output of this stream, adding
-	 * new entries. pa_operation * pa_stream_proplist_remove (pa_stream *s,
-	 * const char *const keys[], pa_stream_success_cb_t cb, void *userdata)
-	 * Update the property list of the sink input/source output of this stream,
-	 * remove entries. int pa_stream_set_monitor_stream (pa_stream *s, uint32_t
+	 * pa_operation pa_stream_proplist_update (pa_streams, pa_update_mode_t
+	 * mode, pa_proplistp, pa_stream_success_cb_t cb, voiduserdata) Update the
+	 * property list of the sink input/source output of this stream, adding new
+	 * entries. pa_operation pa_stream_proplist_remove (pa_streams, const char
+	 * const keys[], pa_stream_success_cb_t cb, voiduserdata) Update the
+	 * property list of the sink input/source output of this stream, remove
+	 * entries. int pa_stream_set_monitor_stream (pa_streams, uint32_t
 	 * sink_input_idx) For record streams connected to a monitor source: monitor
 	 * only a very specific sink input of the sink. uint32_t
-	 * pa_stream_get_monitor_stream (pa_stream *s) Return what has been set with
+	 * pa_stream_get_monitor_stream (pa_streams) Return what has been set with
 	 * pa_stream_set_monitor_stream() ebfore.
 	 */
 
-	public Stream(byte[] contextPointer, String name, Format format,
-			int sampleRate, int channels) {
+	Stream(byte[] contextPointer, String name, Format format, int sampleRate,
+			int channels) {
 		// System.out.println("format: " + format.toString());
 
 		stateListeners = new LinkedList<StateListener>();
@@ -257,129 +261,128 @@ public class Stream {
 				spec.getRate(), spec.getChannels());
 	}
 
-	public void addStateListener(StateListener listener) {
+	void addStateListener(StateListener listener) {
 		synchronized (stateListeners) {
 			stateListeners.add(listener);
 		}
 	}
 
-	public void removeStateListener(StateListener listener) {
+	void removeStateListener(StateListener listener) {
 		synchronized (stateListeners) {
 			stateListeners.remove(listener);
 		}
 
 	}
 
-	public void addWriteListener(WriteListener listener) {
+	void addWriteListener(WriteListener listener) {
 		synchronized (writeListeners) {
 			writeListeners.add(listener);
 		}
 	}
 
-	public void removeWriteListener(WriteListener listener) {
+	void removeWriteListener(WriteListener listener) {
 		synchronized (writeListeners) {
 			writeListeners.remove(listener);
 		}
 	}
 
-	public void addReadListener(ReadListener listener) {
+	void addReadListener(ReadListener listener) {
 		synchronized (readListeners) {
 			readListeners.add(listener);
 		}
 	}
 
-	public void removeReadListener(ReadListener listener) {
+	void removeReadListener(ReadListener listener) {
 		synchronized (readListeners) {
 			readListeners.remove(listener);
 		}
 	}
 
-	public void addOverflowListener(OverflowListener listener) {
+	void addOverflowListener(OverflowListener listener) {
 		synchronized (overflowListeners) {
 			overflowListeners.add(listener);
 		}
 	}
 
-	public void removeOverflowListener(OverflowListener listener) {
+	void removeOverflowListener(OverflowListener listener) {
 		synchronized (overflowListeners) {
 			overflowListeners.remove(listener);
 		}
 	}
 
-	public void addUnderflowListener(UnderflowListener listener) {
+	void addUnderflowListener(UnderflowListener listener) {
 		synchronized (underflowListeners) {
 			underflowListeners.add(listener);
 		}
 	}
 
-	public void removeUnderflowListener(UnderflowListener listener) {
+	void removeUnderflowListener(UnderflowListener listener) {
 		synchronized (underflowListeners) {
 			underflowListeners.remove(listener);
 		}
 	}
 
-	public void addCorkListener(CorkListener listener) {
+	void addCorkListener(CorkListener listener) {
 		synchronized (corkListeners) {
 			corkListeners.add(listener);
 		}
 	}
 
-	public void removeCorkListener(CorkListener listener) {
+	void removeCorkListener(CorkListener listener) {
 		synchronized (corkListeners) {
 			corkListeners.remove(listener);
 		}
 	}
 
-	public void addPlaybackStartedListener(PlaybackStartedListener listener) {
+	void addPlaybackStartedListener(PlaybackStartedListener listener) {
 		synchronized (playbackStartedListeners) {
 			playbackStartedListeners.add(listener);
 		}
 	}
 
-	public void removePlaybackStartedListener(PlaybackStartedListener listener) {
+	void removePlaybackStartedListener(PlaybackStartedListener listener) {
 		synchronized (playbackStartedListeners) {
 			playbackStartedListeners.remove(listener);
 		}
 	}
 
-	public void addLatencyUpdateListener(LatencyUpdateListener listener) {
+	void addLatencyUpdateListener(LatencyUpdateListener listener) {
 		synchronized (latencyUpdateListeners) {
 			latencyUpdateListeners.add(listener);
 		}
 	}
 
-	public void removeLatencyUpdateListener(LatencyUpdateListener listener) {
+	void removeLatencyUpdateListener(LatencyUpdateListener listener) {
 		synchronized (playbackStartedListeners) {
 			latencyUpdateListeners.remove(listener);
 		}
 	}
 
-	public void addMovedListener(MovedListener listener) {
+	void addMovedListener(MovedListener listener) {
 		synchronized (movedListeners) {
 			movedListeners.add(listener);
 		}
 	}
 
-	public void removeMovedListener(MovedListener listener) {
+	void removeMovedListener(MovedListener listener) {
 		synchronized (movedListeners) {
 			movedListeners.remove(listener);
 		}
 	}
 
-	public void addSuspendedListener(SuspendedListener listener) {
+	void addSuspendedListener(SuspendedListener listener) {
 		synchronized (suspendedListeners) {
 			suspendedListeners.add(listener);
 		}
 	}
 
-	public void removeSuspendedListener(SuspendedListener listener) {
+	void removeSuspendedListener(SuspendedListener listener) {
 		synchronized (suspendedListeners) {
 			suspendedListeners.remove(listener);
 		}
 	}
-		
 
-	public Stream.State getState() {
+	Stream.State getState() {
 		int state = native_pa_stream_get_state();
 		switch (state) {
 		case 0:
@@ -398,11 +401,11 @@ public class Stream {
 
 	}
 
-	public byte[] getContextPointer() {
+	byte[] getContextPointer() {
 		return native_pa_stream_get_context();
 	}
 
-	public int getSinkInputIndex() {
+	int getSinkInputIndex() {
 		return native_pa_stream_get_index();
 	}
 
@@ -411,7 +414,7 @@ public class Stream {
 	 * @return the index of the sink or source this stream is connected to in
 	 *         the server
 	 */
-	public int getDeviceIndex() {
+	int getDeviceIndex() {
 		return native_pa_stream_get_device_index();
 	}
 
@@ -420,7 +423,7 @@ public class Stream {
 	 * @return the name of the sink or source this stream is connected to in the
 	 *         server
 	 */
-	public String getDeviceName() {
+	String getDeviceName() {
 		return native_pa_stream_get_device_name();
 	}
 
@@ -429,7 +432,7 @@ public class Stream {
 	 * 
 	 * @return
 	 */
-	public boolean isSuspended() {
+	boolean isSuspended() {
 		return (native_pa_stream_is_suspended() != 0);
 	}
 
@@ -441,7 +444,7 @@ public class Stream {
 	 *            <code>null</code for the default device
 	 * @throws LineUnavailableException
 	 */
-	public void connectForPlayback(String deviceName,
+	void connectForPlayback(String deviceName,
 			StreamBufferAttributes bufferAttributes, byte[] syncStreamPointer)
 			throws LineUnavailableException {
 
@@ -462,7 +465,7 @@ public class Stream {
 	 * @throws LineUnavailableException
 	 * 
 	 */
-	public void connectForRecording(String deviceName,
+	void connectForRecording(String deviceName,
 			StreamBufferAttributes bufferAttributes)
 			throws LineUnavailableException {
 
@@ -480,7 +483,7 @@ public class Stream {
 	/**
 	 * Disconnect a stream from a source/sink.
 	 */
-	public void disconnect() {
+	void disconnect() {
 		int returnValue = native_pa_stream_disconnect();
 		assert (returnValue == 0);
 	}
@@ -492,7 +495,7 @@ public class Stream {
 	 * @param length
 	 * @return
 	 */
-	public int write(byte[] data, int offset, int length) {
+	int write(byte[] data, int offset, int length) {
 		return native_pa_stream_write(data, offset, length);
 	}
 
@@ -502,7 +505,7 @@ public class Stream {
 	 * 
 	 * @param data
 	 */
-	public byte[] peek() {
+	byte[] peek() {
 		return native_pa_stream_peek();
 	}
 
@@ -510,7 +513,7 @@ public class Stream {
 	 * 
 	 * Remove the current fragment on record streams.
 	 */
-	public void drop() {
+	void drop() {
 		native_pa_stream_drop();
 	}
 
@@ -519,7 +522,7 @@ public class Stream {
 	 * 
 	 * @return
 	 */
-	public int getWritableSize() {
+	int getWritableSize() {
 		return native_pa_stream_writable_size();
 	}
 
@@ -528,7 +531,7 @@ public class Stream {
 	 * 
 	 * @return
 	 */
-	public int getReableSize() {
+	int getReableSize() {
 		return native_pa_stream_readable_size();
 	}
 
@@ -537,12 +540,12 @@ public class Stream {
 	 * 
 	 * @return
 	 */
-	public Operation drain() {
+	Operation drain() {
 		Operation drainOperation = new Operation(native_pa_stream_drain());
 		return drainOperation;
 	}
 
-	public Operation updateTimingInfo() {
+	Operation updateTimingInfo() {
 		Operation updateOperation = new Operation(
 				native_pa_stream_updateTimingInfo());
 		return updateOperation;
@@ -656,7 +659,7 @@ public class Stream {
 		}
 	}
 
-	public boolean isCorked() {
+	boolean isCorked() {
 		int corked = native_pa_stream_is_corked();
 		if (corked < 0) {
 			throw new IllegalStateException("Unable to determine state");
@@ -670,17 +673,17 @@ public class Stream {
 	 * @param cork
 	 * @return
 	 */
-	public Operation cork(boolean cork) {
+	Operation cork(boolean cork) {
 		int yes = cork ? 1 : 0;
 		Operation corkOperation = new Operation(native_pa_stream_cork(yes));
 		return corkOperation;
 	}
 
-	public Operation cork() {
+	Operation cork() {
 		return cork(true);
 	}
 
-	public Operation unCork() {
+	Operation unCork() {
 		return cork(false);
 	}
 
@@ -689,14 +692,14 @@ public class Stream {
 	 * 
 	 * @return
 	 */
-	public Operation flush() {
+	Operation flush() {
 		Operation flushOperation = new Operation(native_pa_stream_flush());
 		return flushOperation;
 	}
 
 	/*
-	 * Operation pa_stream_prebuf (pa_stream *s, pa_stream_success_cb_t cb, void
-	 * *userdata)
+	 * Operation pa_stream_prebuf (pa_streams, pa_stream_success_cb_t cb, void
+	 * userdata)
 	 * 
 	 * Reenable prebuffering as specified in the pa_buffer_attr structure.
 	 */
@@ -704,7 +707,7 @@ public class Stream {
 	/**
 	 * Request immediate start of playback on this stream.
 	 */
-	public Operation triggerStart() {
+	Operation triggerStart() {
 		Operation triggerOperation = new Operation(native_pa_stream_trigger());
 		return triggerOperation;
 	}
@@ -715,61 +718,62 @@ public class Stream {
 	 * @param name
 	 * @return
 	 */
-	public Operation setName(String name) {
+	Operation setName(String name) {
 		Operation setNameOperation = new Operation(
 				native_pa_stream_set_name(name));
 		return setNameOperation;
 	}
 
-	public long getTime() {
+	/**
+	 * 
+	 * 
+	 * @return a time between ? and ?
+	 */
+	long getTime() {
 		return native_pa_stream_get_time();
 	}
 
 	/**
-	 * @returns the total stream latency in microseconds
+	 * @return the total stream latency in microseconds
 	 */
-	public long getLatency() {
+	long getLatency() {
 		return native_pa_stream_get_latency();
 	}
 
 	/*
-	 * const pa_timing_info * pa_stream_get_timing_info (pa_stream *s) Return
-	 * the latest raw timing data structure.
-	 * 
+	 * const pa_timing_info pa_stream_get_timing_info (pa_streams) Return the
+	 * latest raw timing data structure.
 	 */
 
-	public Format getFormat() {
+	Format getFormat() {
 		return format;
 	}
 
 	/*
-	 * const pa_channel_map * pa_stream_get_channel_map (pa_stream *s) Return a
+	 * const pa_channel_map pa_stream_get_channel_map (pa_streams) Return a
 	 * pointer to the stream's channel map.
 	 */
 
-	public StreamBufferAttributes getBufferAttributes() {
+	StreamBufferAttributes getBufferAttributes() {
 		return native_pa_stream_get_buffer_attr();
 	}
 
-	public Operation setBufferAtrributes(StreamBufferAttributes attr) {
+	Operation setBufferAtrributes(StreamBufferAttributes attr) {
 		return new Operation(native_pa_stream_set_buffer_attr(attr));
 	}
 
 	/**
 	 * Change the stream sampling rate during playback.
-	 * 
 	 */
-
 	Operation updateSampleRate(int rate) {
 		return new Operation(native_pa_stream_update_sample_rate(rate));
-
 	}
 
-	public byte[] getStreamPointer() {
+	byte[] getStreamPointer() {
 		return streamPointer;
 	}
 
-	public void free() {
+	void free() {
 		native_pa_stream_unref();
 	}
 

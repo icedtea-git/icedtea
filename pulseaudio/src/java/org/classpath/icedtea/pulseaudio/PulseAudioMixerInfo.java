@@ -39,7 +39,7 @@ package org.classpath.icedtea.pulseaudio;
 
 import javax.sound.sampled.Mixer;
 
-public class PulseAudioMixerInfo extends Mixer.Info {
+public final class PulseAudioMixerInfo extends Mixer.Info {
 	// singleton
 
 	private static PulseAudioMixerInfo _instance = null;
@@ -52,8 +52,8 @@ public class PulseAudioMixerInfo extends Mixer.Info {
 	// the "getInstance()" method
 	synchronized public static PulseAudioMixerInfo getInfo() {
 		if (_instance == null) {
-			_instance = new PulseAudioMixerInfo("PulseAudio Mixer", "icedtea",
-					"the ear-candy mixer", "0.01");
+			_instance = new PulseAudioMixerInfo("PulseAudio Mixer", "IcedTea",
+					"the ear-candy mixer", "0.02");
 		}
 
 		return _instance;

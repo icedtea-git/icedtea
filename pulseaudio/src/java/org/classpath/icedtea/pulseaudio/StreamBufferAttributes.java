@@ -37,7 +37,7 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
-public class StreamBufferAttributes {
+class StreamBufferAttributes {
 
 	public static final int SANE_DEFAULT = 50000;
 
@@ -52,7 +52,7 @@ public class StreamBufferAttributes {
 	private int minimumRequest;
 	private int fragmentSize;
 
-	public StreamBufferAttributes(int maxLength, int targetLength,
+	StreamBufferAttributes(int maxLength, int targetLength,
 			int preBuffering, int minimumRequest, int fragmentSize) {
 		this.maxLength = maxLength;
 		this.targetLength = targetLength;
@@ -61,23 +61,23 @@ public class StreamBufferAttributes {
 		this.fragmentSize = fragmentSize;
 	}
 
-	public int getMaxLength() {
+	int getMaxLength() {
 		return maxLength;
 	}
 
-	public int getTargetLength() {
+	int getTargetLength() {
 		return targetLength;
 	}
 
-	public int getPreBuffering() {
+	int getPreBuffering() {
 		return preBuffering;
 	}
 
-	public int getMinimumRequest() {
+	int getMinimumRequest() {
 		return minimumRequest;
 	}
 
-	public int getFragmentSize() {
+	int getFragmentSize() {
 		return fragmentSize;
 	}
 

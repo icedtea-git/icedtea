@@ -55,6 +55,7 @@ abstract class PulseAudioLine implements Line {
 	// resources
 	protected boolean isOpen = false;
 
+	@Override
 	public void addLineListener(LineListener listener) {
 		this.lineListeners.add(listener);
 	}
@@ -98,6 +99,7 @@ abstract class PulseAudioLine implements Line {
 		return (Control[]) controls.toArray(new Control[0]);
 	}
 
+	@Override
 	public boolean isControlSupported(Type control) {
 		for (Control myControl : controls) {
 			if (myControl.getType().getClass() == control.getClass()) {
@@ -107,10 +109,12 @@ abstract class PulseAudioLine implements Line {
 		return false;
 	}
 
+	@Override
 	public boolean isOpen() {
 		return isOpen;
 	}
 
+	@Override
 	public void removeLineListener(LineListener listener) {
 		lineListeners.remove(listener);
 	}

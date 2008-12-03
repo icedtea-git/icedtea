@@ -37,21 +37,25 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
-
-/*
+/**
  * Encapsulates a pa_operation object
  * 
- * 
  * This is really needed only so that we can deallocate the reference counted
+ * object. Any time a function returns an Operation object, the reference has
+ * been incremented. The object wont be freed unless a releaseReference() is
+ * done.
+ * 
+ * Please see the pulseaudio api docs for more information on a pa_opreation
  * object
+ * 
  * 
  * 
  */
 
-public class Operation {
+class Operation {
 
-	byte[] operationPointer;
-	EventLoop eventLoop;
+	private byte[] operationPointer;
+	private EventLoop eventLoop;
 
 	public enum State {
 		Running, Done, Cancelled,
@@ -67,7 +71,7 @@ public class Operation {
 
 	private native int native_get_state();
 
-	public Operation(byte[] operationPointer) {
+	Operation(byte[] operationPointer) {
 		assert (operationPointer != null);
 		this.operationPointer = operationPointer;
 		this.eventLoop = EventLoop.getEventLoop();
@@ -80,14 +84,20 @@ public class Operation {
 		super.finalize();
 	}
 
-	public void addReference() {
+	/**
+	 * Increase reference count by 1
+	 */
+	void addReference() {
 		assert (operationPointer != null);
 		synchronized (eventLoop.threadLock) {
 			native_ref();
 		}
 	}
 
-	public void releaseReference() {
+	/**
+	 * Decrease reference count by 1. If the count reaches 0, object will be freed
+	 */
+	void releaseReference() {
 		assert (operationPointer != null);
 		synchronized (eventLoop.threadLock) {
 			native_unref();
@@ -95,14 +105,15 @@ public class Operation {
 		operationPointer = null;
 	}
 
-	public boolean isNull() {
+	// FIXME broken function
+	boolean isNull() {
 		if (operationPointer == null) {
 			return true;
 		}
 		return false;
 	}
 
-	public State getState() {
+	State getState() {
 		assert (operationPointer != null);
 		int state;
 		synchronized (eventLoop.threadLock) {
@@ -121,7 +132,11 @@ public class Operation {
 
 	}
 
-	public void waitForCompletion() {
+	/**
+	 * Block until the operation has completed
+	 * 
+	 */
+	void waitForCompletion() {
 		assert (operationPointer != null);
 
 		boolean interrupted = false;

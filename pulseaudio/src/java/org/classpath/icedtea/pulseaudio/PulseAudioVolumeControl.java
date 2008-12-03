@@ -39,10 +39,10 @@ package org.classpath.icedtea.pulseaudio;
 
 import javax.sound.sampled.FloatControl;
 
-class PulseAudioVolumeControl extends FloatControl {
+final class PulseAudioVolumeControl extends FloatControl {
 
-	public static final int MAX_VOLUME = 65536;
-	public static final int MIN_VOLUME = 0;
+	static final int MAX_VOLUME = 65536;
+	static final int MIN_VOLUME = 0;
 
 	protected PulseAudioVolumeControl(PulseAudioPlaybackLine line,
 			EventLoop eventLoop) {
@@ -56,6 +56,7 @@ class PulseAudioVolumeControl extends FloatControl {
 	private EventLoop eventLoop;
 	private PulseAudioPlaybackLine line;
 
+	@Override
 	public synchronized void setValue(float newValue) {
 		if (newValue > MAX_VOLUME || newValue < MIN_VOLUME) {
 			throw new IllegalArgumentException("invalid value");

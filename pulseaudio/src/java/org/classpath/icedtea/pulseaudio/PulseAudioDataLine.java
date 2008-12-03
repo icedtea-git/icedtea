@@ -47,13 +47,18 @@ import javax.sound.sampled.LineUnavailableException;
 
 import org.classpath.icedtea.pulseaudio.Stream.WriteListener;
 
-public abstract class PulseAudioDataLine extends PulseAudioLine implements
-		DataLine {
+/**
+ * 
+ * This class contains code that is used by Clip, SourceDataLine and
+ * TargetDataLine
+ * 
+ */
+abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
 
 	protected static final int DEFAULT_BUFFER_SIZE = StreamBufferAttributes.SANE_DEFAULT;
-	protected static final String PULSEAUDIO_FORMAT_KEY = "PulseAudioFormatKey";
 
-	protected String streamName = "Java Stream";
+	// override this to set the stream name
+	protected String streamName;
 
 	// true between start() and stop()
 	protected boolean isStarted = false;
@@ -112,8 +117,6 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 				 * values. SAME sample rate: _not_ safe because myFormat uses
 				 * AudioSystem.NOT_SPECIFIED. SAME frame rate: safe because we
 				 * _ignore_ it completely ;)
-				 * 
-				 * 
 				 */
 
 				float sampleRate = format.getSampleRate();
@@ -122,10 +125,12 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 					sampleRate = 44100.0f;
 				}
 
+				String formatString = (String) myFormat
+						.getProperty(PulseAudioMixer.PULSEAUDIO_FORMAT_KEY);
 				synchronized (eventLoop.threadLock) {
+
 					stream = new Stream(eventLoop.getContextPointer(),
-							streamName, Stream.Format.valueOf((String) myFormat
-									.getProperty(PULSEAUDIO_FORMAT_KEY)),
+							streamName, Stream.Format.valueOf(formatString),
 							(int) sampleRate, myFormat.getChannels());
 
 				}
@@ -142,6 +147,10 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 
 	}
 
+	/**
+	 * This method adds the listeners used to find out when the stream has
+	 * connected/disconnected etc to the actual stream.
+	 */
 	private void addStreamListeners() {
 		Stream.StateListener openCloseListener = new Stream.StateListener() {
 
@@ -159,7 +168,6 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 					 * line.close(); line.removeLineListener(listener)
 					 * 
 					 * the listener is guaranteed to have run
-					 * 
 					 */
 
 					if (stream.getState() == Stream.State.READY) {
@@ -282,11 +290,13 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 
 	}
 
+	@Override
 	public void open() throws LineUnavailableException {
 		assert (defaultFormat != null);
 		open(defaultFormat, DEFAULT_BUFFER_SIZE);
 	}
 
+	@Override
 	public void close() {
 
 		if (!isOpen) {
@@ -313,7 +323,7 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 		isStarted = false;
 	}
 
-	public void reconnectforSynchronization(Stream masterStream)
+	void reconnectforSynchronization(Stream masterStream)
 			throws LineUnavailableException {
 		sendEvents = false;
 		drain();
@@ -334,6 +344,7 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 		sendEvents = true;
 	}
 
+	@Override
 	public void start() {
 		if (!isOpen) {
 			throw new IllegalStateException(
@@ -363,6 +374,7 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 
 	}
 
+	@Override
 	public synchronized void stop() {
 		if (!isOpen) {
 			throw new IllegalStateException(
@@ -406,22 +418,19 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 	 * 
 	 * HOWEVER, the javadocs say the opposite thing! (need help from the jck =
 	 * official spec)
-	 * 
-	 * 
 	 */
-
+	@Override
 	public boolean isActive() {
 		return isStarted;
 	}
 
+	@Override
 	public boolean isRunning() {
 		return isStarted && dataWritten;
 	}
 
 	protected abstract void connectLine(int bufferSize, Stream masterStream)
 			throws LineUnavailableException;
-
-	public abstract void drain();
 
 	public Stream getStream() {
 		if (!isOpen) {
@@ -447,10 +456,16 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 		return currentFormat;
 	}
 
+	@Override
 	public float getLevel() {
 		return AudioSystem.NOT_SPECIFIED;
 	}
 
+	/**
+	 * 
+	 * @param streamName
+	 *            the name of this audio stream
+	 */
 	public void setName(String streamName) {
 		if (isOpen) {
 
@@ -467,6 +482,10 @@ public abstract class PulseAudioDataLine extends PulseAudioLine implements
 
 	}
 
+	/**
+	 * 
+	 * @return the name of this audio stream/clip
+	 */
 	public String getName() {
 		return streamName;
 	}

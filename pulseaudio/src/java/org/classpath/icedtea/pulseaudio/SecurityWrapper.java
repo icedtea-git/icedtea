@@ -3,9 +3,13 @@ package org.classpath.icedtea.pulseaudio;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-class SecurityWrapper {
+/**
+ * A wrapper around the security sensitive functions
+ * 
+ */
+final class SecurityWrapper {
 
-	public static void loadNativeLibrary() {
+	static void loadNativeLibrary() {
 
 		if (System.getSecurityManager() != null) {
 			PrivilegedAction<Boolean> action = new PrivilegedAction<Boolean>() {

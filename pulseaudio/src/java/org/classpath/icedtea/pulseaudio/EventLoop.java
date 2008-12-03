@@ -39,37 +39,39 @@ package org.classpath.icedtea.pulseaudio;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 import org.classpath.icedtea.pulseaudio.ContextEvent.Type;
 import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 
-/*
- * any methods that can obstruct the behaviour of pa_mainloop should run
- * synchronized
+/**
+ * This class wraps pulseaudio's event loop. It also holds the lock used in the
+ * rest of pulse-java
  * 
  * 
  */
 
-public class EventLoop implements Runnable {
+final class EventLoop implements Runnable {
+
+	/*
+	 * any methods that can obstruct the behaviour of pa_mainloop should run
+	 * synchronized
+	 */
 
 	/*
 	 * the threadLock object is the object used for synchronizing the
 	 * non-thread-safe operations of pulseaudio's c api
 	 */
-	public Object threadLock = new Object();
+	final Object threadLock = new Object();
 
 	private static EventLoop instance = null;
 
 	private List<ContextListener> contextListeners;
 	// private List<SourceDataLine> lines;
-	private String name;
+	private String appName;
 	private String serverString;
 
 	private int status;
 	// private boolean eventLoopIsRunning = false;
-
-	public Semaphore finished = new Semaphore(0);
 
 	private List<String> targetPortNameList = new ArrayList<String>();
 	private List<String> sourcePortNameList = new ArrayList<String>();
@@ -105,27 +107,26 @@ public class EventLoop implements Runnable {
 
 	private EventLoop() {
 		contextListeners = new ArrayList<ContextListener>();
-		threadLock = new Object();
 	}
 
-	synchronized public static EventLoop getEventLoop() {
+	synchronized static EventLoop getEventLoop() {
 		if (instance == null) {
 			instance = new EventLoop();
 		}
 		return instance;
 	}
 
-	public void setAppName(String name) {
-		this.name = name;
+	void setAppName(String appName) {
+		this.appName = appName;
 	}
 
-	public void setServer(String serverString) {
+	void setServer(String serverString) {
 		this.serverString = serverString;
 	}
 
 	@Override
 	public void run() {
-		native_setup(this.name, this.serverString);
+		native_setup(this.appName, this.serverString);
 
 		Debug.println(DebugLevel.Info, "Eventloop.run(): eventloop starting");
 
@@ -158,23 +159,23 @@ public class EventLoop implements Runnable {
 
 	}
 
-	public void addContextListener(ContextListener contextListener) {
+	void addContextListener(ContextListener contextListener) {
 		synchronized (contextListeners) {
 			contextListeners.add(contextListener);
 		}
 	}
 
-	public void removeContextListener(ContextListener contextListener) {
+	void removeContextListener(ContextListener contextListener) {
 		synchronized (contextListeners) {
 			contextListeners.remove(contextListener);
 		}
 	}
 
-	public int getStatus() {
+	int getStatus() {
 		return this.status;
 	}
 
-	public void update(int status) {
+	void update(int status) {
 		synchronized (threadLock) {
 			// System.out.println(this.getClass().getName()
 			// + ".update() called! status = " + status);
@@ -187,8 +188,10 @@ public class EventLoop implements Runnable {
 				fireEvent(new ContextEvent(Type.CONNECTING));
 				break;
 			case 2:
+				// no op
 				break;
 			case 3:
+				// no op
 				break;
 			case 4:
 				fireEvent(new ContextEvent(Type.READY));
@@ -220,17 +223,17 @@ public class EventLoop implements Runnable {
 
 	}
 
-	public void setVolume(byte[] streamPointer, int volume) {
+	void setVolume(byte[] streamPointer, int volume) {
 		synchronized (threadLock) {
 			native_set_sink_volume(streamPointer, volume);
 		}
 	}
 
-	public byte[] getContextPointer() {
+	byte[] getContextPointer() {
 		return contextPointer;
 	}
 
-	public byte[] getMainLoopPointer() {
+	byte[] getMainLoopPointer() {
 		return mainloopPointer;
 	}
 
@@ -238,7 +241,7 @@ public class EventLoop implements Runnable {
 
 	private native byte[] nativeUpdateSourcePortNameList();
 
-	protected synchronized List<String> updateTargetPortNameList() {
+	synchronized List<String> updateTargetPortNameList() {
 		targetPortNameList = new ArrayList<String>();
 		Operation op;
 		synchronized (this.threadLock) {

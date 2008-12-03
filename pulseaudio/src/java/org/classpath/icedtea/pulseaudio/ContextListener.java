@@ -37,8 +37,14 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
-public interface ContextListener {
+/**
+ * This interface specifies a listener for a change in PulseAudio's context state
+ * eg: the connection to the server becomes ready, fails or ends.
+ *
+ */
 
-	public void update(ContextEvent e);
+interface ContextListener {
+
+	void update(ContextEvent e);
 
 }

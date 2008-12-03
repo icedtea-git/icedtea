@@ -39,40 +39,35 @@ package org.classpath.icedtea.pulseaudio;
 
 import javax.sound.sampled.BooleanControl;
 
-class PulseAudioMuteControl extends BooleanControl {
-	
+final class PulseAudioMuteControl extends BooleanControl {
+
 	private PulseAudioVolumeControl volumeControl;
 	private PulseAudioPlaybackLine line;
 
-	protected PulseAudioMuteControl(PulseAudioPlaybackLine line, PulseAudioVolumeControl volumeControl) {
+	protected PulseAudioMuteControl(PulseAudioPlaybackLine line,
+			PulseAudioVolumeControl volumeControl) {
 		super(BooleanControl.Type.MUTE, false, "Volume muted", "Volume on");
 		this.volumeControl = volumeControl;
 		this.line = line;
 	}
-	
-	
 
-
-
-		public synchronized void setValue(boolean value) {
-			if(!line.isOpen()) {
-				return;
-			}
-
-			if (value == true) {
-				line.setMuted(true);
-				volumeControl.setStreamVolume(0);
-			} else {
-				line.setMuted(false);
-				float newValue = volumeControl.getValue();
-				volumeControl.setStreamVolume(newValue);
-			}
+	public synchronized void setValue(boolean value) {
+		if (!line.isOpen()) {
+			return;
 		}
 
-		public synchronized boolean getValue() {
-			return line.isMuted();
+		if (value == true) {
+			line.setMuted(true);
+			volumeControl.setStreamVolume(0);
+		} else {
+			line.setMuted(false);
+			float newValue = volumeControl.getValue();
+			volumeControl.setStreamVolume(newValue);
 		}
-
 	}
 
+	public synchronized boolean getValue() {
+		return line.isMuted();
+	}
 
+}

@@ -38,10 +38,11 @@ exception statement from your version.
 package org.classpath.icedtea.pulseaudio;
 
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.Port;
 
-public abstract class PulseAudioPort extends PulseAudioLine implements Port,
+abstract class PulseAudioPort extends PulseAudioLine implements Port,
 		PulseAudioPlaybackLine {
 
 	private String name;
@@ -66,8 +67,8 @@ public abstract class PulseAudioPort extends PulseAudioLine implements Port,
 		SecurityWrapper.loadNativeLibrary();
 	}
 
-	public PulseAudioPort(String name) {
-		this.name = name;
+	PulseAudioPort(String portName) {
+		this.name = portName;
 		this.eventLoop = EventLoop.getEventLoop();
 		this.contextPointer = eventLoop.getContextPointer();
 
@@ -89,29 +90,38 @@ public abstract class PulseAudioPort extends PulseAudioLine implements Port,
 		// System.out.println("Opened Target Port " + name);
 	}
 
+	
+	// FIXME why public
+	@Override
 	public abstract byte[] native_setVolume(float newValue);
 
+	// FIXME why public
 	public abstract byte[] native_updateVolumeInfo();
 
+	@Override
 	public boolean isMuted() {
 		return muted;
 	}
 
+	@Override
 	public void setMuted(boolean value) {
 		muted = value;
 	}
 
+	@Override
 	public float getVolume() {
 
 		// FIXME need to query system for volume
 		return this.volume;
 	}
 
+	@Override
 	public void setVolume(float value) {
 		this.volume = value;
 
 	}
 
+	// FIXME
 	public synchronized void updateVolumeInfo() {
 		Operation op;
 		synchronized (eventLoop.threadLock) {
@@ -122,6 +132,7 @@ public abstract class PulseAudioPort extends PulseAudioLine implements Port,
 		op.releaseReference();
 	}
 
+	// FIXME
 	public void update_channels_and_volume(int channels, float volume) {
 		this.channels = channels;
 		this.volume = volume;
@@ -137,7 +148,7 @@ public abstract class PulseAudioPort extends PulseAudioLine implements Port,
 	}
 
 	@Override
-	public abstract javax.sound.sampled.Line.Info getLineInfo();
+	public abstract Line.Info getLineInfo();
 
 	@Override
 	public void open() {

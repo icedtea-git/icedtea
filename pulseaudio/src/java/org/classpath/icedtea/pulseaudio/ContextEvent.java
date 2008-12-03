@@ -37,8 +37,20 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
-public class ContextEvent {
+/**
+ * This class encapsulates a change in the PulseAudio's connection context.
+ * 
+ * When this event is fired, something has happened to the connection of this
+ * program to the PulseAudio server.
+ * 
+ */
 
+class ContextEvent {
+
+	/**
+	 *  Basically, what is the new state of the context
+	 * 
+	 */
 	public static enum Type {
 		UNCONNECTED, CONNECTING, AUTHORIZING, SETTING_NAME, READY, FAILED, TERMINATED
 	}

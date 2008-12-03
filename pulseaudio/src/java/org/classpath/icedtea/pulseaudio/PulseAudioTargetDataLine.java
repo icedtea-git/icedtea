@@ -38,36 +38,39 @@ exception statement from your version.
 package org.classpath.icedtea.pulseaudio;
 
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.DataLine;
 import javax.sound.sampled.AudioPermission;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
 import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 
-public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
-		TargetDataLine {
+public final class PulseAudioTargetDataLine extends PulseAudioDataLine
+		implements TargetDataLine {
 
 	/*
 	 * This contains the data from the PulseAudio buffer that has since been
 	 * dropped. If 20 bytes of a fragment of size 200 are read, the other 180
 	 * are dumped in this
 	 */
-	byte[] fragmentBuffer;
+	private byte[] fragmentBuffer;
 
 	/*
 	 * these are set to true only by the respective functions (flush(), drain())
 	 * set to false only by read()
 	 */
-	boolean flushed = false;
-	boolean drained = false;
+	private boolean flushed = false;
+	private boolean drained = false;
 
-	public PulseAudioTargetDataLine(AudioFormat[] formats,
-			AudioFormat defaultFormat) {
-		supportedFormats = formats;
+	public static final String DEFAULT_TARGETDATALINE_NAME = "Audio Stream";
+
+	PulseAudioTargetDataLine(AudioFormat[] formats, AudioFormat defaultFormat) {
+		this.supportedFormats = formats;
 		this.defaultFormat = defaultFormat;
 		this.currentFormat = defaultFormat;
+		this.streamName = DEFAULT_TARGETDATALINE_NAME;
 
 	}
 
@@ -123,6 +126,7 @@ public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 		open(format, DEFAULT_BUFFER_SIZE);
 	}
 
+	@Override
 	protected void connectLine(int bufferSize, Stream masterStream)
 			throws LineUnavailableException {
 		int fragmentSize = bufferSize / 10 > 500 ? bufferSize / 10 : 500;
@@ -238,9 +242,9 @@ public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 
 					stream.drop();
 					if (currentFragment == null) {
-						// System.out
-						// .println("DEBUG: PulseAudioTargetDataLine:read():
-						// error in stream.peek()");
+						Debug.println(DebugLevel.Verbose,
+								"PulseAudioTargetDataLine.read(): "
+										+ " error in stream.peek()");
 						continue;
 					}
 
@@ -330,6 +334,7 @@ public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 
 	}
 
+	@Override
 	public int available() {
 		if (!isOpen) {
 			throw new IllegalStateException("Line must be open");
@@ -340,14 +345,17 @@ public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 		}
 	}
 
+	@Override
 	public int getFramePosition() {
 		return (int) framesSinceOpen;
 	}
 
+	@Override
 	public long getLongFramePosition() {
 		return framesSinceOpen;
 	}
 
+	@Override
 	public long getMicrosecondPosition() {
 		return (long) (framesSinceOpen / currentFormat.getFrameRate());
 	}
@@ -372,7 +380,8 @@ public class PulseAudioTargetDataLine extends PulseAudioDataLine implements
 		fireLineEvent(new LineEvent(this, LineEvent.Type.STOP, framesSinceOpen));
 	}
 
-	public javax.sound.sampled.Line.Info getLineInfo() {
+	@Override
+	public Line.Info getLineInfo() {
 		return new DataLine.Info(TargetDataLine.class, supportedFormats,
 				StreamBufferAttributes.MIN_VALUE,
 				StreamBufferAttributes.MAX_VALUE);
