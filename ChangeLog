@@ -2,6 +2,7 @@
 
 	* Makefile.am (ZERO_PATCHES, ICEDTEA_PATCHES): Fix patch order.
 	* patches/icedtea-hotspot7-build-fixes.patch: Restore.
+	* patches/hotspot/original/icedtea-shark.patch: Regenerate.
 
 2008-12-03  Matthias Klose  <doko@ubuntu.com>
 
