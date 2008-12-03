@@ -238,6 +238,11 @@ void os::Linux::set_fpu_control_word(int fpu)
   Unimplemented();
 }
 
+bool os::is_allocatable(size_t bytes)
+{
+  Unimplemented();
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // thread stack
 
