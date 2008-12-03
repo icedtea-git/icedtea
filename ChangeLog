@@ -1,5 +1,9 @@
 2008-12-03  Matthias Klose  <doko@ubuntu.com>
 
+	* patches/hotspot/14.0b08/icedtea-shark.patch: Fix path name.
+
+2008-12-03  Matthias Klose  <doko@ubuntu.com>
+
 	* Makefile.am (ZERO_PATCHES, ICEDTEA_PATCHES): Fix patch order.
 	* patches/icedtea-hotspot7-build-fixes.patch: Restore.
 	* patches/hotspot/original/icedtea-shark.patch: Regenerate.
