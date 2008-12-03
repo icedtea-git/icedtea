@@ -1,5 +1,9 @@
 2008-12-03  Gary Benson  <gbenson@redhat.com>
 
+	* .hgignore: Ignore downloaded HotSpot tarball.
+
+2008-12-03  Gary Benson  <gbenson@redhat.com>
+
 	* a/ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
 	(os::is_allocatable): New method.
 	* a/ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
