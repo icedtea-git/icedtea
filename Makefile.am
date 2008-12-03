@@ -457,7 +457,14 @@ endif
 
 # If ZERO_BUILD is set then we are building zero and need
 # to patch up to OpenJDK 7 HotSpot for the C++ interpreter.
+if WITH_ALT_HSBUILD
+ZERO_PATCHES =
+else
 ZERO_PATCHES = \
+	patches/icedtea-hotspot-6b12-7b24.patch \
+	patches/icedtea-hotspot7-build-fixes.patch
+endif
+ZERO_PATCHES += \
 	patches/hotspot/$(HSBUILD)/icedtea-bytecodeInterpreter.patch \
 	patches/icedtea-signature-iterator.patch \
 	patches/icedtea-test-atomic-operations.patch \
@@ -466,7 +473,6 @@ ZERO_PATCHES = \
 
 if !WITH_ALT_HSBUILD
 ZERO_PATCHES += \
-	patches/icedtea-hotspot-6b12-7b24.patch \
 	patches/icedtea-bytecodeInterpreterWithChecks.patch \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-hotspot-citypeflow.patch
@@ -539,9 +545,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-fonts.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-sparc64-linux.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-sparc-ptracefix.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-no-bcopy.patch \
 	patches/icedtea-shark-build.patch \
@@ -599,6 +602,11 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-hotspot7-tests.patch \
 	patches/icedtea-sparc.patch
 endif
+
+ICEDTEA_PATCHES += \
+	patches/hotspot/$(HSBUILD)/icedtea-sparc64-linux.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-sparc-ptracefix.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-sparc-trapsfix.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
