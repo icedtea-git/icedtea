@@ -35,7 +35,7 @@ if ( -e "@abs_top_builddir@/native-ecj" )
 {
     exec '@abs_top_builddir@/native-ecj', '-1.5', '-nowarn', @bcoption, @new_args ;
 }
-else if ( -e "@ECJ@" )
+elsif ( -e "@ECJ@" )
 {
     exec '@ECJ@', '-1.5', '-nowarn', @bcoption, @new_args ;
 }

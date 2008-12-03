@@ -1,5 +1,31 @@
---- old/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java	Tue Nov 18 10:35:29 2008
-+++ openjdk/jdk/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java	Tue Nov 18 10:35:29 2008
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java openjdk/jdk/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java	2008-12-02 14:54:58.000000000 +0000
++++ openjdk/jdk/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java	2008-12-02 15:12:35.000000000 +0000
+@@ -39,6 +39,8 @@
+ import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.util.*;
++import java.security.AccessController;
++import java.security.PrivilegedAction;
+ 
+ import sun.awt.shell.ShellFolder;
+ import sun.awt.OSInfo;
+@@ -1153,7 +1155,11 @@
+ 
+             File[] baseFolders;
+             if (useShellFolder) {
+-                baseFolders = (File[])ShellFolder.get("fileChooserComboBoxFolders");
++                baseFolders = AccessController.doPrivileged(new PrivilegedAction<File[]>() {
++                    public File[] run() {
++                        return (File[]) ShellFolder.get("fileChooserComboBoxFolders");
++                    }
++                });
+             } else {
+                 baseFolders = fsv.getRoots();
+             }
+diff -Nru openjdk.orig/jdk/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java openjdk/jdk/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java
+--- openjdk.orig/jdk/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java	2008-12-02 14:55:11.000000000 +0000
++++ openjdk/jdk/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java	2008-12-02 15:12:35.000000000 +0000
 @@ -38,6 +38,8 @@
  import java.io.FileNotFoundException;
  import java.io.IOException;
@@ -22,8 +48,9 @@
              } else {
                  baseFolders = fsv.getRoots();
              }
---- old/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java	Tue Nov 18 10:35:30 2008
-+++ openjdk/jdk/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java	Tue Nov 18 10:35:30 2008
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java openjdk/jdk/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java
+--- openjdk.orig/jdk/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java	2008-12-02 14:55:05.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java	2008-12-02 15:12:35.000000000 +0000
 @@ -29,6 +29,8 @@
  import java.beans.*;
  import java.io.*;
@@ -46,46 +73,9 @@
              } else {
                  baseFolders = fsv.getRoots();
              }
---- old/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java	Tue Nov 18 10:35:31 2008
-+++ openjdk/jdk/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java	Tue Nov 18 10:35:31 2008
-@@ -39,6 +39,8 @@
- import java.io.FileNotFoundException;
- import java.io.IOException;
- import java.util.*;
-+import java.security.AccessController;
-+import java.security.PrivilegedAction;
- 
- import sun.awt.shell.ShellFolder;
- import sun.awt.OSInfo;
-@@ -1165,7 +1167,11 @@
- 
-             File[] baseFolders;
-             if (useShellFolder) {
--                baseFolders = (File[])ShellFolder.get("fileChooserComboBoxFolders");
-+                baseFolders = AccessController.doPrivileged(new PrivilegedAction<File[]>() {
-+                    public File[] run() {
-+                        return (File[]) ShellFolder.get("fileChooserComboBoxFolders");
-+                    }
-+                });
-             } else {
-                 baseFolders = fsv.getRoots();
-             }
---- old/src/windows/classes/sun/awt/shell/Win32ShellFolder2.java	Tue Nov 18 10:35:32 2008
-+++ openjdk/jdk/src/windows/classes/sun/awt/shell/Win32ShellFolder2.java	Tue Nov 18 10:35:32 2008
-
-@@ -657,6 +657,10 @@
-      *         <code>null</code> if this shellfolder does not denote a directory.
-      */
-     public File[] listFiles(final boolean includeHiddenFiles) {
-+        SecurityManager security = System.getSecurityManager();
-+        if (security != null) {
-+            security.checkRead(getPath());
-+        }
- 
-         return new ComTask<File[]>() {
-             public File[] call() throws Exception {
---- /dev/null	Tue Nov 18 10:35:33 2008
-+++ openjdk/jdk/test/javax/swing/JFileChooser/6484091/bug6484091.java	Tue Nov 18 10:35:33 2008
+diff -Nru openjdk.orig/jdk/test/javax/swing/JFileChooser/6484091/bug6484091.java openjdk/jdk/test/javax/swing/JFileChooser/6484091/bug6484091.java
+--- openjdk.orig/jdk/test/javax/swing/JFileChooser/6484091/bug6484091.java	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/jdk/test/javax/swing/JFileChooser/6484091/bug6484091.java	2008-12-02 15:12:35.000000000 +0000
 @@ -0,0 +1,40 @@
 +/* @test @(#)bug6484091.java	1.1 08/11/18
 + * @bug 6484091

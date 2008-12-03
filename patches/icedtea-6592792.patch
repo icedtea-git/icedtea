@@ -1,5 +1,6 @@
---- old/src/share/classes/com/sun/xml/internal/ws/spi/ProviderImpl.java	Tue Oct 21 15:06:46 2008
-+++ openjdk/jaxws/src/share/classes/com/sun/xml/internal/ws/spi/ProviderImpl.java	Tue Oct 21 15:06:46 2008
+diff -Nru openjdk.orig/jaxws/src/share/classes/javax/xml/bind/ContextFinder.java openjdk/jaxws/src/share/classes/javax/xml/bind/ContextFinder.java
+--- openjdk.orig/jaxws/src/share/classes/javax/xml/bind/ContextFinder.java	2008-12-02 15:25:05.000000000 +0000
++++ openjdk/jaxws/src/share/classes/javax/xml/bind/ContextFinder.java	2008-12-02 15:29:09.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
@@ -7,77 +8,7 @@
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *
   * This code is free software; you can redistribute it and/or modify it
-@@ -56,6 +56,8 @@
- import javax.xml.ws.spi.ServiceDelegate;
- import javax.xml.ws.wsaddressing.W3CEndpointReference;
- import java.net.URL;
-+import java.security.AccessController;
-+import java.security.PrivilegedAction;
- import java.util.List;
- 
- /**
-@@ -94,14 +96,20 @@
-         return endpoint;
-     }
- 
--    public EndpointReference readEndpointReference(Source eprInfoset) {
--        Unmarshaller unmarshaller;
--        try {
--            unmarshaller = eprjc.createUnmarshaller();
--            return (EndpointReference) unmarshaller.unmarshal(eprInfoset);
--        } catch (JAXBException e) {
--            throw new WebServiceException("Error creating Marshaller or marshalling.", e);
--        }
-+    public EndpointReference readEndpointReference(final Source eprInfoset) {
-+        // EPR constructors are private, so we need privilege escalation.
-+        // this unmarshalling can only access instances of a fixed, known set of classes,
-+        // so doing that shouldn't introduce security vulnerability.
-+        return AccessController.doPrivileged(new PrivilegedAction<EndpointReference>() {
-+            public EndpointReference run() {
-+                try {
-+                    Unmarshaller unmarshaller = eprjc.createUnmarshaller();
-+                    return (EndpointReference) unmarshaller.unmarshal(eprInfoset);
-+                } catch (JAXBException e) {
-+                    throw new WebServiceException("Error creating Marshaller or marshalling.", e);
-+                }
-+            }
-+        });
-     }
- 
-     public <T> T getPort(EndpointReference endpointReference, Class<T> clazz, WebServiceFeature... webServiceFeatures) {
-@@ -185,10 +193,17 @@
-     }
- 
-     private static JAXBContext getEPRJaxbContext() {
--        try {
--            return JAXBContext.newInstance(MemberSubmissionEndpointReference.class, W3CEndpointReference.class);
--        } catch (JAXBException e) {
--            throw new WebServiceException("Error creating JAXBContext for W3CEndpointReference. ", e);
--        }
-+        // EPRs have package and private fields, so we need privilege escalation.
-+        // this access only fixed, known set of classes, so doing that
-+        // shouldn't introduce security vulnerability.
-+        return AccessController.doPrivileged(new PrivilegedAction<JAXBContext>() {
-+            public JAXBContext run() {
-+                try {
-+                    return JAXBContext.newInstance(MemberSubmissionEndpointReference.class, W3CEndpointReference.class);
-+                } catch (JAXBException e) {
-+                    throw new WebServiceException("Error creating JAXBContext for W3CEndpointReference. ", e);
-+                }
-+            }
-+        });
-     }
- }
---- old/src/share/classes/javax/xml/bind/ContextFinder.java	Tue Oct 21 15:06:50 2008
-+++ openjdk/jaxws/src/share/classes/javax/xml/bind/ContextFinder.java	Tue Oct 21 15:06:49 2008
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
-+ * Copyright 2005-2008 Sun Microsystems, Inc.  All Rights Reserved.
-  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-  *
-  * This code is free software; you can redistribute it and/or modify it
-@@ -130,12 +130,7 @@
+@@ -128,12 +128,7 @@
          throws JAXBException
      {
          try {
@@ -91,7 +22,7 @@
  
              /*
               * javax.xml.bind.context.factory points to a class which has a
-@@ -207,11 +202,7 @@
+@@ -205,11 +200,7 @@
          ClassLoader cl = Thread.currentThread().getContextClassLoader();
          Class spi;
          try {
@@ -104,7 +35,7 @@
          } catch (ClassNotFoundException e) {
              throw new JAXBException(e);
          }
-@@ -488,4 +479,31 @@
+@@ -483,4 +474,31 @@
       * For this reason, we have to hard-code the class name into the API.
       */
      private static final String PLATFORM_DEFAULT_FACTORY_CLASS = "com.sun.xml.internal.bind.v2.ContextFactory";
@@ -136,8 +67,9 @@
 +        }
 +    }
  }
---- old/src/share/classes/javax/xml/ws/spi/FactoryFinder.java	Tue Oct 21 15:06:52 2008
-+++ openjdk/jaxws/src/share/classes/javax/xml/ws/spi/FactoryFinder.java	Tue Oct 21 15:06:52 2008
+diff -Nru openjdk.orig/jaxws/src/share/classes/javax/xml/ws/spi/FactoryFinder.java openjdk/jaxws/src/share/classes/javax/xml/ws/spi/FactoryFinder.java
+--- openjdk.orig/jaxws/src/share/classes/javax/xml/ws/spi/FactoryFinder.java	2008-12-02 15:25:04.000000000 +0000
++++ openjdk/jaxws/src/share/classes/javax/xml/ws/spi/FactoryFinder.java	2008-12-02 15:29:09.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
@@ -193,8 +125,9 @@
 +        }
 +    }
  }
---- old/src/share/lib/security/java.security	Tue Oct 21 15:09:46 2008
-+++ openjdk/jdk/src/share/lib/security/java.security	Tue Oct 21 15:09:46 2008
+diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security openjdk/jdk/src/share/lib/security/java.security
+--- openjdk.orig/jdk/src/share/lib/security/java.security	2008-11-20 08:44:48.000000000 +0000
++++ openjdk/jdk/src/share/lib/security/java.security	2008-12-02 15:29:09.000000000 +0000
 @@ -127,7 +127,7 @@
  # passed to checkPackageAccess unless the
  # corresponding RuntimePermission ("accessClassInPackage."+package) has
@@ -204,8 +137,9 @@
  
  #
  # List of comma-separated packages that start with or equal this string
---- old/src/share/lib/security/java.security-solaris	Tue Oct 21 15:09:49 2008
-+++ openjdk/jdk/src/share/lib/security/java.security-solaris	Tue Oct 21 15:09:49 2008
+diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security-solaris openjdk/jdk/src/share/lib/security/java.security-solaris
+--- openjdk.orig/jdk/src/share/lib/security/java.security-solaris	2008-11-20 08:44:48.000000000 +0000
++++ openjdk/jdk/src/share/lib/security/java.security-solaris	2008-12-02 15:29:09.000000000 +0000
 @@ -128,7 +128,7 @@
  # passed to checkPackageAccess unless the
  # corresponding RuntimePermission ("accessClassInPackage."+package) has
@@ -215,8 +149,9 @@
  
  #
  # List of comma-separated packages that start with or equal this string
---- old/src/share/lib/security/java.security-windows	Tue Oct 21 15:09:52 2008
-+++ openjdk/jdk/src/share/lib/security/java.security-windows	Tue Oct 21 15:09:52 2008
+diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security-windows openjdk/jdk/src/share/lib/security/java.security-windows
+--- openjdk.orig/jdk/src/share/lib/security/java.security-windows	2008-11-20 08:44:48.000000000 +0000
++++ openjdk/jdk/src/share/lib/security/java.security-windows	2008-12-02 15:29:09.000000000 +0000
 @@ -128,7 +128,7 @@
  # passed to checkPackageAccess unless the
  # corresponding RuntimePermission ("accessClassInPackage."+package) has
@@ -226,8 +161,74 @@
  
  #
  # List of comma-separated packages that start with or equal this string
---- /dev/null	Tue Oct 21 15:09:20 2008
-+++ openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java	Tue Oct 21 15:09:56 2008
+diff -Nru openjdk.orig/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test6592792.sh openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test6592792.sh
+--- openjdk.orig/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test6592792.sh	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test6592792.sh	2008-12-02 15:29:09.000000000 +0000
+@@ -0,0 +1,61 @@
++#!/bin/sh
++
++if [ "${TESTSRC}" = "" ]
++then TESTSRC=.
++fi
++
++if [ "${TESTJAVA}" = "" ]
++then
++  PARENT=`dirname \`which java\``
++  TESTJAVA=`dirname ${PARENT}`
++  echo "TESTJAVA not set, selecting " ${TESTJAVA}
++  echo "If this is incorrect, try setting the variable manually."
++fi
++
++if [ "${TESTCLASSES}" = "" ]
++then
++  echo "TESTCLASSES not set.  Test cannot execute.  Failed."
++  exit 1
++fi
++
++BIT_FLAG=""
++
++# set platform-dependent variables
++OS=`uname -s`
++case "$OS" in
++  SunOS | Linux )
++    NULL=/dev/null
++    PS=":"
++    FS="/"
++    ## for solaris, linux it's HOME
++    FILE_LOCATION=$HOME
++    if [ -f ${FILE_LOCATION}${FS}JDK64BIT -a ${OS} = "SunOS" ]
++    then
++        BIT_FLAG=`cat ${FILE_LOCATION}${FS}JDK64BIT`
++    fi
++    ;;
++  Windows_* )
++    NULL=NUL
++    PS=";"
++    FS="\\"
++    ;;
++  * )
++    echo "Unrecognized system!"
++    exit 1;
++    ;;
++esac
++
++JEMMYPATH=${CPAPPEND}
++CLASSPATH=.${PS}${TESTCLASSES}${PS}${JEMMYPATH} ; export CLASSPATH
++
++THIS_DIR=`pwd`
++
++${TESTJAVA}${FS}bin${FS}java ${BIT_FLAG} -version
++
++${TESTJAVA}${FS}bin${FS}javac ${BIT_FLAG} -d . -cp ${TESTJAVA}${FS}jre${FS}lib${FS}rt.jar ${TESTSRC}${FS}Test.java
++
++${TESTJAVA}${FS}bin${FS}java ${BIT_FLAG} -cp . Test
++
++STATUS=$?
++
++exit $STATUS
+diff -Nru openjdk.orig/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java
+--- openjdk.orig/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java	2008-12-02 15:29:09.000000000 +0000
 @@ -0,0 +1,65 @@
 +/*
 + *  @test
@@ -294,67 +295,3 @@
 +      } 
 +   }
 +}
---- /dev/null	Tue Oct 21 15:09:21 2008
-+++ openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test6592792.sh	Tue Oct 21 15:09:56 2008
-@@ -0,0 +1,61 @@
-+#!/bin/sh
-+
-+if [ "${TESTSRC}" = "" ]
-+then TESTSRC=.
-+fi
-+
-+if [ "${TESTJAVA}" = "" ]
-+then
-+  PARENT=`dirname \`which java\``
-+  TESTJAVA=`dirname ${PARENT}`
-+  echo "TESTJAVA not set, selecting " ${TESTJAVA}
-+  echo "If this is incorrect, try setting the variable manually."
-+fi
-+
-+if [ "${TESTCLASSES}" = "" ]
-+then
-+  echo "TESTCLASSES not set.  Test cannot execute.  Failed."
-+  exit 1
-+fi
-+
-+BIT_FLAG=""
-+
-+# set platform-dependent variables
-+OS=`uname -s`
-+case "$OS" in
-+  SunOS | Linux )
-+    NULL=/dev/null
-+    PS=":"
-+    FS="/"
-+    ## for solaris, linux it's HOME
-+    FILE_LOCATION=$HOME
-+    if [ -f ${FILE_LOCATION}${FS}JDK64BIT -a ${OS} = "SunOS" ]
-+    then
-+        BIT_FLAG=`cat ${FILE_LOCATION}${FS}JDK64BIT`
-+    fi
-+    ;;
-+  Windows_* )
-+    NULL=NUL
-+    PS=";"
-+    FS="\\"
-+    ;;
-+  * )
-+    echo "Unrecognized system!"
-+    exit 1;
-+    ;;
-+esac
-+
-+JEMMYPATH=${CPAPPEND}
-+CLASSPATH=.${PS}${TESTCLASSES}${PS}${JEMMYPATH} ; export CLASSPATH
-+
-+THIS_DIR=`pwd`
-+
-+${TESTJAVA}${FS}bin${FS}java ${BIT_FLAG} -version
-+
-+${TESTJAVA}${FS}bin${FS}javac ${BIT_FLAG} -d . -cp ${TESTJAVA}${FS}jre${FS}lib${FS}rt.jar ${TESTSRC}${FS}Test.java
-+
-+${TESTJAVA}${FS}bin${FS}java ${BIT_FLAG} -cp . Test
-+
-+STATUS=$?
-+
-+exit $STATUS

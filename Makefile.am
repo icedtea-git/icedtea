@@ -1852,8 +1852,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-testenv.patch \
 	$(ZERO_PATCHES_COND) \
 	patches/icedtea-samejvm-safe.patch \
-	patches/icedtea-6728542-epoll.patch \
-	patches/icedtea-4486841.patch \
         patches/icedtea-6484091.patch \
         patches/icedtea-6497740.patch \
         patches/icedtea-6588160.patch \

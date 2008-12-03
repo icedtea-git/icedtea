@@ -1,5 +1,20 @@
 2008-12-02  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-4486841.patch,
+	* patches/icedtea-6728542-epoll.patch:
+	Removed, already applied to JDK7.
+	* Makefile.am: Remove unneeded patches.
+	* javac.in: Fix use of 'else if' for 'elsif'.
+	* patches/icedtea-6484091.patch,
+	* patches/icedtea-6497740.patch,
+	* patches/icedtea-6592792.patch,
+	* patches/icedtea-6733959.patch,
+	* patches/icedtea-6755943.patch,
+	* patches/icedtea-ecj-pr261.patch:
+	Ported to JDK7.
+
+2008-12-02  Andrew John Hughes  <ahughes@redhat.com>
+
 	Merge from IcedTea6.
 	* .hgignore,
 	* ChangeLog,

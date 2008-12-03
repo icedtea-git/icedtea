@@ -1,5 +1,6 @@
---- old/src/share/classes/sun/security/pkcs11/P11KeyPairGenerator.java	Fri Aug 22 18:58:20 2008
-+++ openjdk/jdk/src/share/classes/sun/security/pkcs11/P11KeyPairGenerator.java	Fri Aug 22 18:58:20 2008
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/pkcs11/P11KeyPairGenerator.java openjdk/jdk/src/share/classes/sun/security/pkcs11/P11KeyPairGenerator.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/pkcs11/P11KeyPairGenerator.java	2008-12-02 15:15:13.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/security/pkcs11/P11KeyPairGenerator.java	2008-12-02 15:22:50.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.
@@ -25,7 +26,7 @@
  
      // SecureRandom instance, if specified in init
      private SecureRandom random;
-@@ -88,7 +90,7 @@
+@@ -88,19 +90,19 @@
      public void initialize(int keySize, SecureRandom random) {
          token.ensureValid();
          try {
@@ -34,7 +35,6 @@
          } catch (InvalidAlgorithmParameterException e) {
              throw new InvalidParameterException(e.getMessage());
          }
-@@ -95,12 +97,12 @@
          this.keySize = keySize;
          this.params = null;
          this.random = random;
@@ -146,42 +146,9 @@
              // sanity check, nobody really wants keys this large
              if (keySize > 64 * 1024) {
                  throw new InvalidAlgorithmParameterException
---- old/src/share/classes/sun/security/pkcs11/P11KeyStore.java	Fri Aug 22 18:58:29 2008
-+++ openjdk/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java	Fri Aug 22 18:58:29 2008
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.
-+ * Copyright 2003-2008 Sun Microsystems, Inc.  All Rights Reserved.
-  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-  *
-  * This code is free software; you can redistribute it and/or modify it
-@@ -80,6 +80,8 @@
- import sun.security.pkcs11.wrapper.*;
- import static sun.security.pkcs11.wrapper.PKCS11Constants.*;
- 
-+import sun.security.rsa.RSAKeyFactory;
-+
- final class P11KeyStore extends KeyStoreSpi {
- 
-     private static final CK_ATTRIBUTE ATTR_CLASS_CERT =
-@@ -1335,6 +1337,15 @@
-             BigInteger modulus = attrs[0].getBigInteger();
-             keyLength = modulus.bitLength();
- 
-+            // This check will combine our "don't care" values here
-+            // with the system-wide min/max values.
-+            try {
-+                RSAKeyFactory.checkKeyLengths(keyLength, null,
-+                    -1, Integer.MAX_VALUE);
-+            } catch (InvalidKeyException e) {
-+                throw new KeyStoreException(e.getMessage());
-+            }
-+
-             return P11Key.privateKey(session,
-                                 oHandle,
-                                 keyType,
---- old/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java	Fri Aug 22 18:58:37 2008
-+++ openjdk/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java	Fri Aug 22 18:58:37 2008
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java openjdk/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java	2008-12-02 15:15:13.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java	2008-12-02 15:22:50.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2003 Sun Microsystems, Inc.  All Rights Reserved.
@@ -246,8 +213,9 @@
          CK_ATTRIBUTE[] attributes = new CK_ATTRIBUTE[] {
              new CK_ATTRIBUTE(CKA_CLASS, CKO_PRIVATE_KEY),
              new CK_ATTRIBUTE(CKA_KEY_TYPE, CKK_RSA),
---- old/src/share/classes/sun/security/rsa/RSAKeyFactory.java	Fri Aug 22 18:58:44 2008
-+++ openjdk/jdk/src/share/classes/sun/security/rsa/RSAKeyFactory.java	Fri Aug 22 18:58:43 2008
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/rsa/RSAKeyFactory.java openjdk/jdk/src/share/classes/sun/security/rsa/RSAKeyFactory.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/rsa/RSAKeyFactory.java	2008-12-02 15:15:10.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/security/rsa/RSAKeyFactory.java	2008-12-02 15:22:50.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.
@@ -289,7 +257,7 @@
      // instance used for static translateKey();
      private final static RSAKeyFactory INSTANCE = new RSAKeyFactory();
  
-@@ -76,75 +96,80 @@
+@@ -76,74 +96,79 @@
      }
  
      /**
@@ -297,14 +265,14 @@
 -     * RSAPublicKey or RSAPrivate(Crt)Key. Check the key and convert it
 -     * to a SunRsaSign key if necessary. If the key is not an RSA key
 -     * or cannot be used, throw an InvalidKeyException.
+-     *
+-     * The difference between this method and engineTranslateKey() is that
+-     * we do not convert keys of other providers that are already an
+-     * instance of RSAPublicKey or RSAPrivate(Crt)Key.
 +     * Static method to convert Key into an instance of RSAPublicKeyImpl
 +     * or RSAPrivate(Crt)KeyImpl. If the key is not an RSA key or cannot be
 +     * used, throw an InvalidKeyException.
       *
--     * The difference between this method and engineTranslateKey() is that
--     * we do not convert keys of other providers that are already an
--     * instance of RSAPublicKey or RSAPrivate(Crt)Key.
--     *
       * Used by RSASignature and RSACipher.
       */
      public static RSAKey toRSAKey(Key key) throws InvalidKeyException {
@@ -397,7 +365,7 @@
 +        if ((minModulusLen > 0) && (modulusLen < (minModulusLen))) {
 +            throw new InvalidKeyException( "RSA keys must be at least " +
 +                minModulusLen + " bits long");
-         }
++        }
 +
 +        // Even though our policy file may allow this, we don't want
 +        // either value (mod/exp) to be too big.
@@ -420,12 +388,12 @@
 +                MAX_RESTRICTED_EXPLEN + " bits " +
 +                " if modulus is greater than " +
 +                MAX_MODLEN_RESTRICT_EXP + " bits");
-+        }
+         }
      }
  
-     /**
---- old/src/share/classes/sun/security/rsa/RSAKeyPairGenerator.java	Fri Aug 22 18:58:50 2008
-+++ openjdk/jdk/src/share/classes/sun/security/rsa/RSAKeyPairGenerator.java	Fri Aug 22 18:58:49 2008
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/rsa/RSAKeyPairGenerator.java openjdk/jdk/src/share/classes/sun/security/rsa/RSAKeyPairGenerator.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/rsa/RSAKeyPairGenerator.java	2008-12-02 15:15:10.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/security/rsa/RSAKeyPairGenerator.java	2008-12-02 15:22:50.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2003-2004 Sun Microsystems, Inc.  All Rights Reserved.
@@ -449,6 +417,11 @@
 -        if (keySize < 512) {
 -            throw new InvalidParameterException
 -                ("Key size must be at least 512 bits");
+-        }
+-        if (keySize > 64 * 1024) {
+-            // do not allow unreasonably large key sizes, probably user error
+-            throw new InvalidParameterException
+-                ("Key size must be 65536 bits or less");
 +
 +        // do not allow unreasonably small or large key sizes,
 +        // probably user error
@@ -458,11 +431,6 @@
 +        } catch (InvalidKeyException e) {
 +            throw new InvalidParameterException(e.getMessage());
          }
--        if (keySize > 64 * 1024) {
--            // do not allow unreasonably large key sizes, probably user error
--            throw new InvalidParameterException
--                ("Key size must be 65536 bits or less");
--        }
 +
          this.keySize = keySize;
          this.random = random;
@@ -525,9 +493,9 @@
      }
  
      // generate the keypair. See JCA doc
---- old/src/share/classes/sun/security/rsa/RSAPrivateCrtKeyImpl.java	Fri Aug 22 18:58:56 2008
-+++ openjdk/jdk/src/share/classes/sun/security/rsa/RSAPrivateCrtKeyImpl.java	Fri Aug 22 18:58:56 2008
-
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/rsa/RSAPrivateCrtKeyImpl.java openjdk/jdk/src/share/classes/sun/security/rsa/RSAPrivateCrtKeyImpl.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/rsa/RSAPrivateCrtKeyImpl.java	2008-12-02 15:15:10.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/security/rsa/RSAPrivateCrtKeyImpl.java	2008-12-02 15:22:50.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2003-2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -554,8 +522,9 @@
          // generate the encoding
          algid = rsaId;
          try {
---- old/src/share/classes/sun/security/rsa/RSAPrivateKeyImpl.java	Fri Aug 22 18:59:02 2008
-+++ openjdk/jdk/src/share/classes/sun/security/rsa/RSAPrivateKeyImpl.java	Fri Aug 22 18:59:01 2008
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/rsa/RSAPrivateKeyImpl.java openjdk/jdk/src/share/classes/sun/security/rsa/RSAPrivateKeyImpl.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/rsa/RSAPrivateKeyImpl.java	2008-12-02 15:15:10.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/security/rsa/RSAPrivateKeyImpl.java	2008-12-02 15:22:50.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2003 Sun Microsystems, Inc.  All Rights Reserved.
@@ -572,8 +541,9 @@
          // generate the encoding
          algid = RSAPrivateCrtKeyImpl.rsaId;
          try {
---- old/src/share/classes/sun/security/rsa/RSAPublicKeyImpl.java	Fri Aug 22 18:59:07 2008
-+++ openjdk/jdk/src/share/classes/sun/security/rsa/RSAPublicKeyImpl.java	Fri Aug 22 18:59:07 2008
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/rsa/RSAPublicKeyImpl.java openjdk/jdk/src/share/classes/sun/security/rsa/RSAPublicKeyImpl.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/rsa/RSAPublicKeyImpl.java	2008-12-02 15:15:10.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/security/rsa/RSAPublicKeyImpl.java	2008-12-02 15:22:50.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2003-2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -604,8 +574,9 @@
      }
  
      // see JCA doc
---- old/src/windows/classes/sun/security/mscapi/RSAKeyPairGenerator.java	Fri Aug 22 18:59:11 2008
-+++ openjdk/jdk/src/windows/classes/sun/security/mscapi/RSAKeyPairGenerator.java	Fri Aug 22 18:59:11 2008
+diff -Nru openjdk.orig/jdk/src/windows/classes/sun/security/mscapi/RSAKeyPairGenerator.java openjdk/jdk/src/windows/classes/sun/security/mscapi/RSAKeyPairGenerator.java
+--- openjdk.orig/jdk/src/windows/classes/sun/security/mscapi/RSAKeyPairGenerator.java	2008-12-02 15:15:21.000000000 +0000
++++ openjdk/jdk/src/windows/classes/sun/security/mscapi/RSAKeyPairGenerator.java	2008-12-02 15:22:50.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -648,7 +619,7 @@
      }
  
      // second initialize method. See JCA doc
-@@ -67,9 +75,9 @@
+@@ -67,21 +75,31 @@
      public void initialize(AlgorithmParameterSpec params, SecureRandom random)
              throws InvalidAlgorithmParameterException {
  
@@ -660,7 +631,6 @@
          } else if (params instanceof RSAKeyGenParameterSpec) {
  
              if (((RSAKeyGenParameterSpec) params).getPublicExponent() != null) {
-@@ -76,12 +84,22 @@
                  throw new InvalidAlgorithmParameterException
                      ("Exponent parameter is not supported");
              }
@@ -703,8 +673,9 @@
      private static native RSAKeyPair generateRSAKeyPair(int keySize,
          String keyContainerName);
  }
---- old/src/windows/classes/sun/security/mscapi/RSASignature.java	Fri Aug 22 18:59:18 2008
-+++ openjdk/jdk/src/windows/classes/sun/security/mscapi/RSASignature.java	Fri Aug 22 18:59:17 2008
+diff -Nru openjdk.orig/jdk/src/windows/classes/sun/security/mscapi/RSASignature.java openjdk/jdk/src/windows/classes/sun/security/mscapi/RSASignature.java
+--- openjdk.orig/jdk/src/windows/classes/sun/security/mscapi/RSASignature.java	2008-12-02 15:15:21.000000000 +0000
++++ openjdk/jdk/src/windows/classes/sun/security/mscapi/RSASignature.java	2008-12-02 15:22:50.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -712,25 +683,24 @@
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *
   * This code is free software; you can redistribute it and/or modify it
-@@ -38,7 +38,10 @@
+@@ -38,6 +38,9 @@
  import java.security.Signature;
  import java.security.SignatureSpi;
  import java.security.SignatureException;
 +import java.math.BigInteger;
- 
-+import sun.security.rsa.RSAKeyFactory;
 +
++import sun.security.rsa.RSAKeyFactory;
+ 
  /**
   * RSA signature implementation. Supports RSA signing using PKCS#1 v1.5 padding.
-  *
-@@ -124,8 +127,17 @@
+@@ -124,7 +127,16 @@
  
              // convert key to MSCAPI format
  
 -            byte[] modulusBytes = rsaKey.getModulus().toByteArray();
 +            BigInteger modulus = rsaKey.getModulus();
 +            BigInteger exponent =  rsaKey.getPublicExponent();
- 
++
 +            // Check against the local and global values to make sure
 +            // the sizes are ok.  Round up to the nearest byte.
 +            RSAKeyFactory.checkKeyLengths(((modulus.bitLength() + 7) & ~7),
@@ -738,10 +708,9 @@
 +
 +            byte[] modulusBytes = modulus.toByteArray();
 +            byte[] exponentBytes = exponent.toByteArray();
-+
+ 
              // Adjust key length due to sign bit
              int keyBitLength = (modulusBytes[0] == 0)
-                 ? (modulusBytes.length - 1) * 8
 @@ -132,8 +144,7 @@
                  : modulusBytes.length * 8;
  
@@ -752,27 +721,67 @@
  
              publicKey = importPublicKey(keyBlob, keyBitLength);
  
-@@ -166,13 +177,12 @@
+@@ -166,12 +177,11 @@
          }
          privateKey = (sun.security.mscapi.RSAPrivateKey) key;
  
 -        // Determine byte length from bit length
 -        int keySize = (privateKey.bitLength() + 7) >> 3;
+-
+-        if (keySize < 64)
+-            throw new InvalidKeyException(
+-                "RSA keys must be at least 512 bits long");
 +        // Check against the local and global values to make sure
 +        // the sizes are ok.  Round up to nearest byte.
 +        RSAKeyFactory.checkKeyLengths(((privateKey.bitLength() + 7) & ~7),
 +            null, RSAKeyPairGenerator.KEY_SIZE_MIN,
 +            RSAKeyPairGenerator.KEY_SIZE_MAX);
  
--        if (keySize < 64)
--            throw new InvalidKeyException(
--                "RSA keys must be at least 512 bits long");
--
          if (needsReset) {
              messageDigest.reset();
-             needsReset = false;
---- /dev/null	Fri Aug 22 18:59:23 2008
-+++ openjdk/jdk/test/closed/sun/security/rsa/TestLimits.java	Fri Aug 22 18:59:22 2008
+diff -Nru openjdk.orig/jdk/test/closed/sun/security/rsa/sunpkcs11-solaris_enableSHA1withRSAsig.cfg openjdk/jdk/test/closed/sun/security/rsa/sunpkcs11-solaris_enableSHA1withRSAsig.cfg
+--- openjdk.orig/jdk/test/closed/sun/security/rsa/sunpkcs11-solaris_enableSHA1withRSAsig.cfg	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/jdk/test/closed/sun/security/rsa/sunpkcs11-solaris_enableSHA1withRSAsig.cfg	2008-12-02 15:22:50.000000000 +0000
+@@ -0,0 +1,36 @@
++#
++# Configuration file to allow the SunPKCS11 provider to utilize
++# the Solaris Cryptographic Framework, if it is available
++#
++
++name = Solaris
++
++description = SunPKCS11 accessing Solaris Cryptographic Framework
++
++library = /usr/lib/$ISA/libpkcs11.so
++
++handleStartupErrors = ignoreAll
++
++attributes = compatibility
++
++disabledMechanisms = {
++  CKM_MD2
++  CKM_MD5
++  CKM_SHA_1
++  CKM_SHA256
++  CKM_SHA384
++  CKM_SHA512
++  CKM_DSA_KEY_PAIR_GEN
++# KEY_AND_MAC_DERIVE disabled due to Solaris bug 6306708
++  CKM_SSL3_KEY_AND_MAC_DERIVE
++  CKM_TLS_KEY_AND_MAC_DERIVE
++# the following mechanisms are disabled due to performance issues (Solaris bug 6337157)
++  CKM_DSA_SHA1
++  CKM_MD5_RSA_PKCS
++# For testing purposes, we'll reenable this suite.
++#  CKM_SHA1_RSA_PKCS
++  CKM_SHA256_RSA_PKCS
++  CKM_SHA384_RSA_PKCS
++  CKM_SHA512_RSA_PKCS
++}
++
+diff -Nru openjdk.orig/jdk/test/closed/sun/security/rsa/TestLimits.java openjdk/jdk/test/closed/sun/security/rsa/TestLimits.java
+--- openjdk.orig/jdk/test/closed/sun/security/rsa/TestLimits.java	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/jdk/test/closed/sun/security/rsa/TestLimits.java	2008-12-02 15:22:50.000000000 +0000
 @@ -0,0 +1,772 @@
 +/**
 + * @test
@@ -1546,44 +1555,3 @@
 +        }
 +    }
 +}
-Binary files /tmp/dnlaqOr and new/test/closed/sun/security/rsa/keystore.bad differ
-Binary files /tmp/dxQaGis and new/test/closed/sun/security/rsa/keystore.good differ
---- /dev/null	Fri Aug 22 18:59:31 2008
-+++ openjdk/jdk/test/closed/sun/security/rsa/sunpkcs11-solaris_enableSHA1withRSAsig.cfg	Fri Aug 22 18:59:29 2008
-@@ -0,0 +1,36 @@
-+#
-+# Configuration file to allow the SunPKCS11 provider to utilize
-+# the Solaris Cryptographic Framework, if it is available
-+#
-+
-+name = Solaris
-+
-+description = SunPKCS11 accessing Solaris Cryptographic Framework
-+
-+library = /usr/lib/$ISA/libpkcs11.so
-+
-+handleStartupErrors = ignoreAll
-+
-+attributes = compatibility
-+
-+disabledMechanisms = {
-+  CKM_MD2
-+  CKM_MD5
-+  CKM_SHA_1
-+  CKM_SHA256
-+  CKM_SHA384
-+  CKM_SHA512
-+  CKM_DSA_KEY_PAIR_GEN
-+# KEY_AND_MAC_DERIVE disabled due to Solaris bug 6306708
-+  CKM_SSL3_KEY_AND_MAC_DERIVE
-+  CKM_TLS_KEY_AND_MAC_DERIVE
-+# the following mechanisms are disabled due to performance issues (Solaris bug 6337157)
-+  CKM_DSA_SHA1
-+  CKM_MD5_RSA_PKCS
-+# For testing purposes, we'll reenable this suite.
-+#  CKM_SHA1_RSA_PKCS
-+  CKM_SHA256_RSA_PKCS
-+  CKM_SHA384_RSA_PKCS
-+  CKM_SHA512_RSA_PKCS
-+}
-+
