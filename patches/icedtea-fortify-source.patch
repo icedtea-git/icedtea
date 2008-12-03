@@ -5,7 +5,7 @@
      jio_fprintf(defaultStream::output_stream(), "%s", s);
    } else {
 -    ::write(defaultStream::output_fd(), s, (int)strlen(s));
-+    ssize_t neverused_rv = ::write(defaultStream::output_fd(), s, (int)strlen(s));
++    ssize_t rv_neverused __attribute__((unused)) = ::write(defaultStream::output_fd(), s, (int)strlen(s));
    }
  }
  
@@ -16,7 +16,7 @@
  
  void fileStream::write(const char* s, size_t len) {
 -  if (_file != NULL)  fwrite(s, 1, len, _file);
-+  if (_file != NULL)  size_t neverused_rv = fwrite(s, 1, len, _file);
++  if (_file != NULL)  size_t rv_neverused __attribute__((unused)) = fwrite(s, 1, len, _file);
    update_position(s, len);
  }
  
@@ -25,7 +25,7 @@
  
  void fdStream::write(const char* s, size_t len) {
 -  if (_fd != -1) ::write(_fd, s, (int)len);
-+  if (_fd != -1)  ssize_t neverused_rv = ::write(_fd, s, (int)len);
++  if (_fd != -1)  ssize_t rv_neverused __attribute__((unused)) = ::write(_fd, s, (int)len);
    update_position(s, len);
  }
  
@@ -36,7 +36,7 @@
                  dli_fname, sizeof(dli_fname), NULL);
    assert(ret != 0, "cannot locate libjvm");
 -  realpath(dli_fname, buf);
-+  char *neverused_rv = realpath(dli_fname, buf);
++  char *rv_neverused __attribute__((unused)) = realpath(dli_fname, buf);
  
    if (strcmp(Arguments::sun_java_launcher(), "gamma") == 0) {
      // Support for the gamma launcher.  Typical value for buf is
@@ -45,7 +45,7 @@
          p = strstr(p, "_g") ? "_g" : "";
  
 -        realpath(java_home_var, buf);
-+        char *neverused_rv = realpath(java_home_var, buf);
++        char *rv_neverused __attribute__((unused)) = realpath(java_home_var, buf);
          sprintf(buf + strlen(buf), "/jre/lib/%s", cpu_arch);
          if (0 == access(buf, F_OK)) {
            // Use current module name "libjvm[_g].so" instead of
@@ -54,7 +54,7 @@
          } else {
            // Go back to path of .so
 -          realpath(dli_fname, buf);
-+          neverused_rv = realpath(dli_fname, buf);
++          rv_neverused = realpath(dli_fname, buf);
          }
        }
      }

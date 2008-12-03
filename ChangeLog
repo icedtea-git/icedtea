@@ -1,6 +1,7 @@
 2008-12-03  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/hotspot/14.0b08/icedtea-shark.patch: Fix path name.
+	* patches/icedtea-fortify-source.patch: Don't introduce new warnings.
 
 2008-12-03  Matthias Klose  <doko@ubuntu.com>
 
