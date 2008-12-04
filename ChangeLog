@@ -331,10 +331,7 @@
 	* a/ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
 	(os::is_allocatable): Likewise.
 
-2008-12-03  Matthias Klose  <doko@ubuntu.com>
-=======
 2008-12-02  Matthias Klose  <doko@ubuntu.com>
->>>>>>> other
 
 	* patches/icedtea-format-warnings.patch: New.
 	* patches/icedtea-format-warnings.patch: Likewise.

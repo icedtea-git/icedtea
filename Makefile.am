@@ -1874,7 +1874,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-display-mode-changer.patch \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-format-warnings.patch \
-<<<<<<< local
 	patches/icedtea-fortify-source.patch \
 	$(ZERO_PATCHES_COND) \
 	patches/icedtea-samejvm-safe.patch \
@@ -1888,9 +1887,6 @@ ICEDTEA_PATCHES = \
         patches/security/icedtea-6734167.patch \
         patches/security/icedtea-6755943.patch \
         patches/security/icedtea-6766136.patch
-=======
-	$(ZERO_PATCHES_COND)
->>>>>>> other
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
