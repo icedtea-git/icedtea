@@ -1015,7 +1015,7 @@ AC_DEFUN([AC_CHECK_WITH_GCJ],
 
 AC_DEFUN([AC_CHECK_WITH_HOTSPOT_BUILD],
 [
-  DEFAULT_BUILD="14.0b08"
+  DEFAULT_BUILD="original"
   AC_MSG_CHECKING([which HotSpot build to use])
   AC_ARG_WITH([hotspot-build],
 	      [AS_HELP_STRING(--with-hotspot-build,the HotSpot build to use)],
