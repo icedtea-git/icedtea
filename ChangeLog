@@ -1,6 +1,14 @@
 2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
+	Prefix the call to uname -m with
+	the ${ARCH_PREFIX}.
+	* acinclude.m4:
+	Apply linux32 on s390 as well.
+
+2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
 	Prefix make invocations with
 	ARCH_PREFIX.  Pass the host, target and
 	build aliases through to the CACAO sub-configure.

@@ -52,6 +52,7 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=s390
       INSTALL_ARCH_DIR=s390
       JRE_ARCH_DIR=s390
+      ARCH_PREFIX=${LINUX32}
        ;;
     *)
       BUILD_ARCH_DIR=`uname -m`

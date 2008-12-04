@@ -1764,7 +1764,7 @@ if WITH_VISUALVM
 	ln -s $(SYSTEM_NETBEANS_DIR)/java2/ ./nbbuild/netbeans/java2 ; \
 	ln -s $(SYSTEM_NETBEANS_DIR)/ide9/ ./nbbuild/netbeans/ide9 ; \
 	cd profiler.cvs/libs/jfluid/native/build ; \
-	if ! (uname -a | grep x86_64) ; then \
+	if ! ($(ARCH_PREFIX) uname -a | grep x86_64) ; then \
 	  buildscript=./buildnative-linux-15.sh ; \
 	else \
 	  buildscript=./buildnative-linux64-15.sh ; \
