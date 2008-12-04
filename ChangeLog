@@ -1,3 +1,7 @@
+2008-12-04  Gary Benson  <gbenson@redhat.com>
+
+	* .hgignore: Ignore rt/javax/script/*.
+
 2008-12-03  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am: Update for b14.
