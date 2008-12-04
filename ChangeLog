@@ -108,6 +108,14 @@
 
 2008-12-03  Matthias Klose  <doko@ubuntu.com>
 
+	* patches/icedtea-shark-build.patch: Regenerate.
+	* patches/icedtea-shark.patch: Regenerate.
+	* patches/icedtea-zero.patch: Regenerate.
+	* patches/icedtea-hotspot7-build-fixes.patch: Remove.
+	* Makefile.am (ZERO_PATCHES): Remove icedtea-hotspot7-build-fixes.patch.
+
+2008-12-03  Matthias Klose  <doko@ubuntu.com>
+
 	* patches/icedtea-shark.patch: Moved to ...
 	* patches/hotspot/original/icedtea-shark.patch: ... here.
 	* patches/hotspot/14.0b08/icedtea-shark.patch: New, regenerated.
@@ -324,6 +332,9 @@
 	(os::is_allocatable): Likewise.
 
 2008-12-03  Matthias Klose  <doko@ubuntu.com>
+=======
+2008-12-02  Matthias Klose  <doko@ubuntu.com>
+>>>>>>> other
 
 	* patches/icedtea-format-warnings.patch: New.
 	* patches/icedtea-format-warnings.patch: Likewise.
