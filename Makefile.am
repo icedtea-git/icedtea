@@ -1047,7 +1047,7 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
 	extra-lib/about.jar stamps/cacao.stamp stamps/visualvm.stamp \
 	stamps/pulse-java.stamp
-	$(MAKE) \
+	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/ \
 	  $(ICEDTEA_BUILD_TARGET)
@@ -1110,7 +1110,7 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	$(GCJWEBPLUGIN_TARGET) $(ICEDTEAPLUGIN_TARGET) \
 	extra-lib/about.jar stamps/cacao.stamp \
 	stamps/pulse-java.stamp
-	$(MAKE) \
+	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
@@ -1169,7 +1169,7 @@ endif
 	touch stamps/icedtea-debug.stamp
 
 clean-icedtea: stamps/extract.stamp
-	$(MAKE) \
+	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make clobber
 	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
@@ -1196,7 +1196,7 @@ stamps/native-ecj.stamp:
 stamps/icedtea-ecj.stamp: stamps/bootstrap-directory-symlink-ecj.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp stamps/cacao.stamp
-	$(MAKE) \
+	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj/control/make \
 	  $(ICEDTEA_BUILD_TARGET)
@@ -1210,7 +1210,7 @@ hotspot:
 	rm -f stamps/bootstrap-directory-symlink-ecj.stamp
 	rm -f stamps/icedtea-ecj.stamp
 	rm -f stamps/icedtea-against-ecj.stamp
-	$(MAKE) hotspot-helper
+	$(ARCH_PREFIX) $(MAKE) hotspot-helper
 	cp $(ECJ_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
 	   $(ECJ_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/server
 	@echo "Hotspot is served:" $(ECJ_BUILD_OUTPUT_DIR)/j2sdk-image
@@ -1218,13 +1218,13 @@ hotspot:
 hotspot-helper: stamps/bootstrap-directory-symlink-ecj.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
-	$(MAKE) \
+	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj/control/make hotspot
 
 clean-icedtea-ecj: stamps/extract-ecj.stamp
 	rm -f stamps/icedtea-ecj.stamp
-	$(MAKE) \
+	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj/control/make clobber
 
@@ -1482,6 +1482,9 @@ if WITH_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao && \
 	./configure \
+	  --host=$(host_alias) \
+	  --build=$(build_alias) \
+	  --target=$(target_alias) \
 	  --prefix=$(abs_top_builddir)/cacao/install \
 	  --with-java-runtime-library=openjdk \
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
