@@ -252,52 +252,6 @@ diff -Nru openjdk-ecj.orig/corba/make/sun/rmi/corbalogsources/Makefile openjdk-e
  
  portableactivation.idl.compile: $(PORTABLEACTIVATIONFILES)
  
-diff -Nru openjdk-ecj.orig/hotspot/make/linux/Makefile openjdk-ecj/hotspot/make/linux/Makefile
---- openjdk-ecj.orig/hotspot/make/linux/Makefile	2008-10-24 10:16:06.000000000 +0100
-+++ openjdk-ecj/hotspot/make/linux/Makefile	2008-10-24 13:32:48.000000000 +0100
-@@ -263,28 +263,24 @@
- 
- $(TARGETS_C2):  $(SUBDIRS_C2)
- 	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && $(MAKE) $(MFLAGS)
--	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && ./test_gamma
- ifdef INSTALL
- 	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && $(MAKE) $(MFLAGS) install
- endif
- 
- $(TARGETS_TIERED):  $(SUBDIRS_TIERED)
- 	cd $(OSNAME)_$(BUILDARCH)_tiered/$(patsubst %tiered,%,$@) && $(MAKE) $(MFLAGS)
--	cd $(OSNAME)_$(BUILDARCH)_tiered/$(patsubst %tiered,%,$@) && ./test_gamma
- ifdef INSTALL
- 	cd $(OSNAME)_$(BUILDARCH)_tiered/$(patsubst %tiered,%,$@) && $(MAKE) $(MFLAGS) install
- endif
- 
- $(TARGETS_C1):  $(SUBDIRS_C1)
- 	cd $(OSNAME)_$(BUILDARCH)_compiler1/$(patsubst %1,%,$@) && $(MAKE) $(MFLAGS)
--	cd $(OSNAME)_$(BUILDARCH)_compiler1/$(patsubst %1,%,$@) && ./test_gamma
- ifdef INSTALL
- 	cd $(OSNAME)_$(BUILDARCH)_compiler1/$(patsubst %1,%,$@) && $(MAKE) $(MFLAGS) install
- endif
- 
- $(TARGETS_CORE):  $(SUBDIRS_CORE)
- 	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS)
--	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && ./test_gamma
- ifdef INSTALL
- 	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS) install
- endif
-diff -Nru openjdk-ecj.orig/hotspot/make/linux/makefiles/sa.make openjdk-ecj/hotspot/make/linux/makefiles/sa.make
---- openjdk-ecj.orig/hotspot/make/linux/makefiles/sa.make	2008-10-24 10:16:06.000000000 +0100
-+++ openjdk-ecj/hotspot/make/linux/makefiles/sa.make	2008-10-24 13:32:48.000000000 +0100
-@@ -74,8 +74,8 @@
- 	  mkdir -p $(SA_CLASSDIR);        \
- 	fi
- 
--	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -g -d $(SA_CLASSDIR) $(AGENT_FILES1)
--	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -g -d $(SA_CLASSDIR) $(AGENT_FILES2)
-+	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -classpath $(SA_CLASSPATH):$(BOOT_JAVA_HOME)/jre/lib/rt.jar -sourcepath $(AGENT_SRC_DIR) -g -d $(SA_CLASSDIR) $(AGENT_FILES1)
-+	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -classpath $(SA_CLASSPATH):$(BOOT_JAVA_HOME)/jre/lib/rt.jar -sourcepath $(AGENT_SRC_DIR) -g -d $(SA_CLASSDIR) $(AGENT_FILES2)
- 
- 	$(QUIETLY) $(REMOTE) $(COMPILE.RMIC)  -classpath $(SA_CLASSDIR) -d $(SA_CLASSDIR) sun.jvm.hotspot.debugger.remote.RemoteDebuggerServer
- 	$(QUIETLY) echo "$(SA_BUILD_VERSION_PROP)" > $(SA_PROPERTIES)
 diff -Nru openjdk-ecj.orig/jaxp/make/build.xml openjdk-ecj/jaxp/make/build.xml
 --- openjdk-ecj.orig/jaxp/make/build.xml	2008-10-24 10:16:06.000000000 +0100
 +++ openjdk-ecj/jaxp/make/build.xml	2008-10-24 13:33:43.000000000 +0100

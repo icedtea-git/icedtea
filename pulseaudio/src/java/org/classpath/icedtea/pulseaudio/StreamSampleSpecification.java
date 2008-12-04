@@ -39,7 +39,7 @@ package org.classpath.icedtea.pulseaudio;
 
 import org.classpath.icedtea.pulseaudio.Stream.Format;
 
-public class StreamSampleSpecification {
+class StreamSampleSpecification {
 	private Format format;
 	private int rate;
 	private int channels;

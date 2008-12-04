@@ -1012,3 +1012,42 @@ AC_DEFUN([AC_CHECK_WITH_GCJ],
   AM_CONDITIONAL([BUILD_NATIVE_ECJ], test x"${GCJ}" != xno)
   AC_SUBST([GCJ])
 ])
+
+AC_DEFUN([AC_CHECK_WITH_HOTSPOT_BUILD],
+[
+  DEFAULT_BUILD="14.0b08"
+  AC_MSG_CHECKING([which HotSpot build to use])
+  AC_ARG_WITH([hotspot-build],
+	      [AS_HELP_STRING(--with-hotspot-build,the HotSpot build to use)],
+  [
+    HSBUILD="${withval}"
+  ],
+  [ 
+    HSBUILD="${DEFAULT_BUILD}"
+  ])
+  if test "x${HSBUILD}" = xyes; then
+	HSBUILD="${DEFAULT_BUILD}"
+  elif test "x${HSBUILD}" = xno; then
+	HSBUILD="original"
+  fi
+  AC_MSG_RESULT([${HSBUILD}])
+  AC_SUBST([HSBUILD])
+  AM_CONDITIONAL(WITH_ALT_HSBUILD, test "x${HSBUILD}" != "xoriginal")
+])
+
+AC_DEFUN([WITH_HOTSPOT_SRC_ZIP],
+[
+  AC_MSG_CHECKING(for a HotSpot source zip)
+  AC_ARG_WITH([hotspot-src-zip],
+              [AS_HELP_STRING(--with-hotspot-src-zip,specify the location of the hotspot source zip)],
+  [
+    ALT_HOTSPOT_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_HOTSPOT_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_HOTSPOT_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_HOTSPOT_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_HOTSPOT_SRC_ZIP})
+  AC_SUBST(ALT_HOTSPOT_SRC_ZIP)
+])

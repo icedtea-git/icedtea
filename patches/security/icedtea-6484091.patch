@@ -1,0 +1,76 @@
+diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java openjdk/jdk/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java
+--- openjdk.orig/jdk/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java	2008-12-02 14:54:58.000000000 +0000
++++ openjdk/jdk/src/share/classes/com/sun/java/swing/plaf/windows/WindowsFileChooserUI.java	2008-12-02 15:12:35.000000000 +0000
+@@ -39,6 +39,8 @@
+ import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.util.*;
++import java.security.AccessController;
++import java.security.PrivilegedAction;
+ 
+ import sun.awt.shell.ShellFolder;
+ import sun.awt.OSInfo;
+@@ -1153,7 +1155,11 @@
+ 
+             File[] baseFolders;
+             if (useShellFolder) {
+-                baseFolders = (File[])ShellFolder.get("fileChooserComboBoxFolders");
++                baseFolders = AccessController.doPrivileged(new PrivilegedAction<File[]>() {
++                    public File[] run() {
++                        return (File[]) ShellFolder.get("fileChooserComboBoxFolders");
++                    }
++                });
+             } else {
+                 baseFolders = fsv.getRoots();
+             }
+diff -Nru openjdk.orig/jdk/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java openjdk/jdk/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java
+--- openjdk.orig/jdk/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java	2008-12-02 14:55:11.000000000 +0000
++++ openjdk/jdk/src/share/classes/javax/swing/plaf/metal/MetalFileChooserUI.java	2008-12-02 15:12:35.000000000 +0000
+@@ -38,6 +38,8 @@
+ import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.util.*;
++import java.security.AccessController;
++import java.security.PrivilegedAction;
+ import javax.accessibility.*;
+ 
+ import sun.awt.shell.ShellFolder;
+@@ -957,7 +959,11 @@
+ 
+             File[] baseFolders;
+             if (useShellFolder) {
+-                baseFolders = (File[])ShellFolder.get("fileChooserComboBoxFolders");
++                baseFolders = AccessController.doPrivileged(new PrivilegedAction<File[]>() {
++                    public File[] run() {
++                        return (File[]) ShellFolder.get("fileChooserComboBoxFolders");
++                    }
++                });
+             } else {
+                 baseFolders = fsv.getRoots();
+             }
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java openjdk/jdk/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java
+--- openjdk.orig/jdk/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java	2008-12-02 14:55:05.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/swing/plaf/synth/SynthFileChooserUIImpl.java	2008-12-02 15:12:35.000000000 +0000
+@@ -29,6 +29,8 @@
+ import java.beans.*;
+ import java.io.*;
+ import java.util.*;
++import java.security.AccessController;
++import java.security.PrivilegedAction;
+ 
+ import javax.swing.*;
+ import javax.swing.event.*;
+@@ -769,7 +771,11 @@
+ 
+             File[] baseFolders;
+             if (useShellFolder) {
+-                baseFolders = (File[])ShellFolder.get("fileChooserComboBoxFolders");
++                baseFolders = AccessController.doPrivileged(new PrivilegedAction<File[]>() {
++                    public File[] run() {
++                        return (File[]) ShellFolder.get("fileChooserComboBoxFolders");
++                    }
++                });
+             } else {
+                 baseFolders = fsv.getRoots();
+             }
+

@@ -37,15 +37,25 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
-public class Debug {
+/**
+ * 
+ * A simple debugging class. Set the debugging level through the system property
+ * pulseaudio.debugLevel=<Level>. Level is one of Verbose, Debug, Info, Warning,
+ * Error or None
+ * 
+ * and then do DebugLevel.println(level, string) and so on
+ * 
+ */
 
-	public enum DebugLevel {
+class Debug {
+
+	enum DebugLevel {
 		Verbose, Debug, Info, Warning, Error, None
 	}
 
 	private static DebugLevel currentDebugLevel = DebugLevel.None;
 
-	public static void initialize() {
+	static {
 		// System.out.println("PulseAudio: initializing Debug");
 
 		String systemSetting;
@@ -70,11 +80,11 @@ public class Debug {
 		println(DebugLevel.Info, "Using debug level: " + currentDebugLevel);
 	}
 
-	public static void println(String string) {
+	static void println(String string) {
 		println(DebugLevel.Info, string);
 	}
 
-	public static void print(DebugLevel level, String string) {
+	static void print(DebugLevel level, String string) {
 		int result = level.compareTo(currentDebugLevel);
 		if (result >= 0) {
 			if (level.compareTo(DebugLevel.Error) >= 0) {
@@ -87,7 +97,7 @@ public class Debug {
 		}
 	}
 
-	public static void println(DebugLevel level, String string) {
+	static void println(DebugLevel level, String string) {
 
 		int result = level.compareTo(currentDebugLevel);
 		if (result >= 0) {

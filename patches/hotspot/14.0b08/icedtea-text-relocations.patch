@@ -1,0 +1,15 @@
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2008-07-17 08:40:27.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-07-21 23:10:50.000000000 +0100
+@@ -46,7 +46,11 @@
+ # Compiler flags
+ 
+ # position-independent code
++ifneq ($(filter ppc ppc64 s390 s390x sparc sparc64 sparcv9,$(ZERO_LIBARCH)),)
+ PICFLAG = -fPIC
++else
++PICFLAG = -fpic
++endif
+ 
+ VM_PICFLAG/LIBJVM = $(PICFLAG)
+ VM_PICFLAG/AOUT   =

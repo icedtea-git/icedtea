@@ -41,28 +41,35 @@ import java.util.ArrayList;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 
-public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
-		SourceDataLine, PulseAudioPlaybackLine {
+public final class PulseAudioSourceDataLine extends PulseAudioDataLine
+		implements SourceDataLine, PulseAudioPlaybackLine {
 
 	private PulseAudioMuteControl muteControl;
 	private PulseAudioVolumeControl volumeControl;
 	private boolean muted;
 	private float volume;
 
-	public PulseAudioSourceDataLine(AudioFormat[] formats,
-			AudioFormat defaultFormat) {
+	public static final String DEFAULT_SOURCEDATALINE_NAME = "Audio Stream";
+
+	/*
+	 * Package-private constructor only called by PulseAudioMixer
+	 */
+	PulseAudioSourceDataLine(AudioFormat[] formats, AudioFormat defaultFormat) {
 
 		this.supportedFormats = formats;
 		this.lineListeners = new ArrayList<LineListener>();
 		this.defaultFormat = defaultFormat;
 		this.currentFormat = defaultFormat;
 		this.volume = PulseAudioVolumeControl.MAX_VOLUME;
+		this.streamName = DEFAULT_SOURCEDATALINE_NAME;
+
 	}
 
 	@Override
@@ -89,29 +96,36 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 		open(format, DEFAULT_BUFFER_SIZE);
 	}
 
+	// FIXME
 	public byte[] native_setVolume(float value) {
 		synchronized (eventLoop.threadLock) {
 			return stream.native_setVolume(value);
 		}
 	}
 
+	// FIXME
+	@Override
 	public boolean isMuted() {
 		return muted;
 	}
 
+	@Override
 	public void setMuted(boolean value) {
 		muted = value;
 	}
 
+	@Override
 	public float getVolume() {
 		return this.volume;
 	}
 
+	@Override
 	synchronized public void setVolume(float value) {
 		this.volume = value;
 
 	}
 
+	@Override
 	protected void connectLine(int bufferSize, Stream masterStream)
 			throws LineUnavailableException {
 		StreamBufferAttributes bufferAttributes = new StreamBufferAttributes(
@@ -203,8 +217,7 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 				}
 
 				// only write entire frames, so round down avialableSize to
-				// a
-				// multiple of frameSize
+				// a multiple of frameSize
 				availableSize = (availableSize / frameSize) * frameSize;
 
 				synchronized (this) {
@@ -234,20 +247,24 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 		return sizeWritten;
 	}
 
+	@Override
 	public int available() {
 		synchronized (eventLoop.threadLock) {
 			return stream.getWritableSize();
 		}
 	};
 
+	@Override
 	public int getFramePosition() {
 		return (int) framesSinceOpen;
 	}
 
+	@Override
 	public long getLongFramePosition() {
 		return framesSinceOpen;
 	}
 
+	@Override
 	public long getMicrosecondPosition() {
 
 		float frameRate = currentFormat.getFrameRate();
@@ -337,7 +354,8 @@ public class PulseAudioSourceDataLine extends PulseAudioDataLine implements
 
 	}
 
-	public javax.sound.sampled.Line.Info getLineInfo() {
+	@Override
+	public Line.Info getLineInfo() {
 		return new DataLine.Info(SourceDataLine.class, supportedFormats,
 				StreamBufferAttributes.MIN_VALUE,
 				StreamBufferAttributes.MAX_VALUE);

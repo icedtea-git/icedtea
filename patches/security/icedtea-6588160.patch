@@ -1,0 +1,42 @@
+--- /export/home/max/ws/jdk6-open/jdk/webrev/src/share/classes/sun/security/krb5/KrbKdcReq.java-        Sun Aug 31 20:04:55 2008
++++ openjdk/jdk/src/share/classes/sun/security/krb5/KrbKdcReq.java      Sun Aug 31 19:33:19 2008
+@@ -271,10 +271,11 @@
+                                +  port +  ", timeout="
+                                + timeout
+                                + ",Attempt =" + i
+                                + ", #bytes=" + obuf.length);
+                     }
++                    try {
+                     /*
+                      * Send the data to the kdc.
+                      */
+ 
+                     kdcClient.send(obuf);
+@@ -293,11 +294,14 @@
+                         if (i == DEFAULT_KDC_RETRY_LIMIT) {
+                             ibuf = null;
+                             throw se;
+                         }
+                     }
++                    } finally {
++                        kdcClient.close();
+                 }
++                }
+             }
+             return ibuf;
+         }
+     }
+ 
+--- /export/home/max/ws/jdk6-open/jdk/webrev/src/share/classes/sun/security/krb5/internal/UDPClient.java-       Sun Aug 31 20:04:55 2008
++++ openjdk/jdk/src/share/classes/sun/security/krb5/internal/UDPClient.java      Sun Aug 31 20:02:07 2008
+@@ -90,6 +90,9 @@
+         System.arraycopy(dgPacketIn.getData(), 0, data, 0,
+                          dgPacketIn.getLength());
+         return data;
+     }
+ 
++    public void close() {
++        dgSocket.close();
++    }
+ }
+

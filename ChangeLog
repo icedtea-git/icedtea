@@ -1,3 +1,389 @@
+2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Merge from IcedTea6.
+	* patches/icedtea-ecj-jopt.patch,
+	* patches/icedtea-ecj-pr261.patch,
+	* patches/icedtea-ecj-spp.patch,
+	* patches/icedtea-ecj.patch,
+	* patches/icedtea-memory-limits.patch,
+	* patches/icedtea-sparc-ptracefix.patch,
+	* patches/icedtea-sparc64-linux.patch,
+	* patches/icedtea-xrender-000.patch,
+	* patches/icedtea-xrender-001.patch,
+	* patches/icedtea-xrender-002.patch,
+	* patches/icedtea-xrender-003.patch,
+	* patches/icedtea-xrender-004.patch,
+	* patches/icedtea-xrender-005.patch,
+	* patches/icedtea-xrender-006.patch,
+	* patches/icedtea-xrender-007.patch,
+	* patches/icedtea-xrender-008.patch,
+	* patches/icedtea-xrender-009.patch:
+	Removed.
+	* .hgignore,
+	* ChangeLog,
+	* HACKING,
+	* Makefile.am,
+	* acinclude.m4,
+	* configure.ac: Merged.
+	* hotspot.map,
+	* patches/ecj/icedtea-hotspot-14.0b08.patch,
+	* patches/ecj/icedtea-jopt.patch,
+	* patches/ecj/icedtea-pr261.patch,
+	* patches/ecj/icedtea-spp.patch,
+	* patches/ecj/icedtea.patch,
+	* patches/hotspot/14.0b08/icedtea-bytecodeInterpreter.patch,
+	* patches/hotspot/14.0b08/icedtea-core-build.patch,
+	* patches/hotspot/14.0b08/icedtea-debuginfo.patch,
+	* patches/hotspot/14.0b08/icedtea-gcc-4.3.patch,
+	* patches/hotspot/14.0b08/icedtea-gcc-suffix.patch,
+	* patches/hotspot/14.0b08/icedtea-headers.patch,
+	* patches/hotspot/14.0b08/icedtea-memory-limits.patch,
+	* patches/hotspot/14.0b08/icedtea-params-cast-size_t.patch,
+	* patches/hotspot/14.0b08/icedtea-shark-build.patch,
+	* patches/hotspot/14.0b08/icedtea-shark.patch,
+	* patches/hotspot/14.0b08/icedtea-sparc-ptracefix.patch,
+	* patches/hotspot/14.0b08/icedtea-sparc-trapsfix.patch,
+	* patches/hotspot/14.0b08/icedtea-sparc64-linux.patch,
+	* patches/hotspot/14.0b08/icedtea-static-libstdc++.patch,
+	* patches/hotspot/14.0b08/icedtea-text-relocations.patch,
+	* patches/hotspot/14.0b08/icedtea-use-idx_t.patch,
+	* patches/hotspot/14.0b08/icedtea-version.patch,
+	* patches/hotspot/14.0b08/icedtea-zero-build.patch: Added.
+	* patches/icedtea-core-build.patch,
+	* patches/icedtea-debuginfo.patch,
+	* patches/icedtea-gcc-suffix.patch,
+	* patches/icedtea-headers.patch,
+	* patches/icedtea-shark-build.patch,
+	* patches/icedtea-version.patch,
+	* patches/icedtea-zero-build.patch: Merged.
+	* patches/security/icedtea-6484091.patch,
+	* patches/security/icedtea-6497740.patch,
+	* patches/security/icedtea-6588160.patch,
+	* patches/security/icedtea-6592792.patch,
+	* patches/security/icedtea-6721753.patch,
+	* patches/security/icedtea-6726779.patch,
+	* patches/security/icedtea-6733959.patch,
+	* patches/security/icedtea-6734167.patch,
+	* patches/security/icedtea-6755943.patch,
+	* patches/security/icedtea-6766136.patch,
+	* patches/xrender/icedtea-000.patch,
+	* patches/xrender/icedtea-001.patch,
+	* patches/xrender/icedtea-002.patch,
+	* patches/xrender/icedtea-003.patch,
+	* patches/xrender/icedtea-004.patch,
+	* patches/xrender/icedtea-005.patch,
+	* patches/xrender/icedtea-006.patch,
+	* patches/xrender/icedtea-007.patch,
+	* patches/xrender/icedtea-008.patch,
+	* patches/xrender/icedtea-009.patch: Added.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextEvent.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextListener.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Debug.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerInfo.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerProvider.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMuteControl.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/SecurityWrapper.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamBufferAttributes.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java: Merged.
+	
+2008-12-03  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ZERO_PATCHES, ICEDTEA_PATCHES): Fix patch order.
+	* patches/icedtea-hotspot7-build-fixes.patch: Restore.
+
+2008-12-03  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-shark.patch: Moved to ...
+	* patches/hotspot/original/icedtea-shark.patch: ... here.
+	* patches/hotspot/14.0b08/icedtea-shark.patch: New, regenerated.
+	* Makefile.am (SHARK_PATCH): Conditionalze on WITH_ALT_HSBUILD.
+
+2008-12-03  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/extract.stamp): Only extract HOTSPOT_SRC_ZIP,
+	if WITH_ALT_HSBUILD is defined.
+
+2008-12-02  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextEvent.java:
+	Change scope of class and functions from public to package-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextListener.java:
+	Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Debug.java:
+	Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java:
+	Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java:
+	Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java:
+	Change class to be final. Change clip name to 'Audio Clip' and add some
+	documentation and annotations.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java:
+	Change class scope to package-private. Add annoatations to functions.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioLine.java:
+	Add override annotations to functions.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java:
+	Change class to final.
+	(getLine): Check for audio permissions before returning Ports.
+	(openRemote): Check for permissions to connect before connecting to a
+	remote PulseAudio server.
+	(openImpl): New function. Connect to the PulseAudio server.
+	(debug): Removed.
+	(main): Removed
+	(ThreadWriter): Removed.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerInfo.java:
+	Change class to final. Bump version.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerProvider.java:
+	(PulseAudioMixerProvider): Removed.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMuteControl.java:
+	Change class to final. Formatting fixes.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java:
+	Change class scope to package private. Make constructor package-private. 
+	Add override annotations.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java:
+	Change class to final. Make constructor package-private. Add override
+	annotations.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java:
+	Make class final. Make constructor package-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java:
+	Make class final. Add override annotations
+	(PulseAudioTargetDataLine): Make constructor package-private.
+	(fragmentBuffer): Make variable private.
+	(drained): Likewise.
+	(flushed): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java:
+	Make class final. Constructor now pacakge-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java:
+	Make class final.
+	(MIN_VOLUME),
+	(MAX_VOLUME): Make variables pacakge-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/SecurityWrapper.java:
+	Make class final.
+	(loadNativeLibrary): Make package-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java:
+	Make class final. Change scope of as many functions from public to
+	package-private as possible.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamBufferAttributes.java:
+	Make class and all functions package-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java:
+	Make class package-private.
+
+2008-12-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Create hierarchical patch space.
+	* patches/icedtea-4486841.patch,
+	* patches/icedtea-6484091.patch,
+	* patches/icedtea-6497740.patch,
+	* patches/icedtea-6588160.patch,
+	* patches/icedtea-6592792.patch,
+	* patches/icedtea-6721753.patch,
+	* patches/icedtea-6726779.patch,
+	* patches/icedtea-6733959.patch,
+	* patches/icedtea-6734167.patch,
+	* patches/icedtea-6755943.patch,
+	* patches/icedtea-6766136.patch,
+	* patches/icedtea-ecj-hotspot-14.0b08.patch,
+	* patches/icedtea-ecj-hotspot-original.patch,
+	* patches/icedtea-ecj-jopt.patch,
+	* patches/icedtea-ecj-pr261.patch,
+	* patches/icedtea-ecj-spp.patch,
+	* patches/icedtea-ecj.patch,
+	* patches/icedtea-hotspot-14.0b08-bytecodeInterpreter.patch,
+	* patches/icedtea-hotspot-14.0b08-core-build.patch,
+	* patches/icedtea-hotspot-14.0b08-debuginfo.patch,
+	* patches/icedtea-hotspot-14.0b08-gcc-4.3.patch,
+	* patches/icedtea-hotspot-14.0b08-gcc-suffix.patch,
+	* patches/icedtea-hotspot-14.0b08-headers.patch,
+	* patches/icedtea-hotspot-14.0b08-memory-limits.patch,
+	* patches/icedtea-hotspot-14.0b08-params-cast-size_t.patch,
+	* patches/icedtea-hotspot-14.0b08-shark-build.patch,
+	* patches/icedtea-hotspot-14.0b08-sparc-ptracefix.patch,
+	* patches/icedtea-hotspot-14.0b08-sparc-trapsfix.patch,
+	* patches/icedtea-hotspot-14.0b08-sparc64-linux.patch,
+	* patches/icedtea-hotspot-14.0b08-static-libstdc++.patch,
+	* patches/icedtea-hotspot-14.0b08-text-relocations.patch,
+	* patches/icedtea-hotspot-14.0b08-use-idx_t.patch,
+	* patches/icedtea-hotspot-14.0b08-version.patch,
+	* patches/icedtea-hotspot-14.0b08-zero-build.patch,
+	* patches/icedtea-hotspot-original-bytecodeInterpreter.patch,
+	* patches/icedtea-hotspot-original-core-build.patch,
+	* patches/icedtea-hotspot-original-debuginfo.patch,
+	* patches/icedtea-hotspot-original-gcc-4.3.patch,
+	* patches/icedtea-hotspot-original-gcc-suffix.patch,
+	* patches/icedtea-hotspot-original-headers.patch,
+	* patches/icedtea-hotspot-original-memory-limits.patch,
+	* patches/icedtea-hotspot-original-params-cast-size_t.patch,
+	* patches/icedtea-hotspot-original-shark-build.patch,
+	* patches/icedtea-hotspot-original-sparc-ptracefix.patch,
+	* patches/icedtea-hotspot-original-sparc-trapsfix.patch,
+	* patches/icedtea-hotspot-original-sparc64-linux.patch,
+	* patches/icedtea-hotspot-original-static-libstdc++.patch,
+	* patches/icedtea-hotspot-original-text-relocations.patch,
+	* patches/icedtea-hotspot-original-use-idx_t.patch,
+	* patches/icedtea-hotspot-original-version.patch,
+	* patches/icedtea-hotspot-original-zero-build.patch,
+	* patches/icedtea-xrender-000.patch,
+	* patches/icedtea-xrender-001.patch,
+	* patches/icedtea-xrender-002.patch,
+	* patches/icedtea-xrender-003.patch,
+	* patches/icedtea-xrender-004.patch,
+	* patches/icedtea-xrender-005.patch,
+	* patches/icedtea-xrender-006.patch,
+	* patches/icedtea-xrender-007.patch,
+	* patches/icedtea-xrender-008.patch,
+	* patches/icedtea-xrender-009.patch:
+	Move patches...
+	* Makefile.am: Fixed paths.
+	* patches/ecj/icedtea-hotspot-14.0b08.patch,
+	* patches/ecj/icedtea-hotspot-original.patch,
+	* patches/ecj/icedtea-jopt.patch,
+	* patches/ecj/icedtea-pr261.patch,
+	* patches/ecj/icedtea-spp.patch,
+	* patches/ecj/icedtea.patch,
+	* patches/hotspot/14.0b08/icedtea-bytecodeInterpreter.patch,
+	* patches/hotspot/14.0b08/icedtea-core-build.patch,
+	* patches/hotspot/14.0b08/icedtea-debuginfo.patch,
+	* patches/hotspot/14.0b08/icedtea-gcc-4.3.patch,
+	* patches/hotspot/14.0b08/icedtea-gcc-suffix.patch,
+	* patches/hotspot/14.0b08/icedtea-headers.patch,
+	* patches/hotspot/14.0b08/icedtea-memory-limits.patch,
+	* patches/hotspot/14.0b08/icedtea-params-cast-size_t.patch,
+	* patches/hotspot/14.0b08/icedtea-shark-build.patch,
+	* patches/hotspot/14.0b08/icedtea-sparc-ptracefix.patch,
+	* patches/hotspot/14.0b08/icedtea-sparc-trapsfix.patch,
+	* patches/hotspot/14.0b08/icedtea-sparc64-linux.patch,
+	* patches/hotspot/14.0b08/icedtea-static-libstdc++.patch,
+	* patches/hotspot/14.0b08/icedtea-text-relocations.patch,
+	* patches/hotspot/14.0b08/icedtea-use-idx_t.patch,
+	* patches/hotspot/14.0b08/icedtea-version.patch,
+	* patches/hotspot/14.0b08/icedtea-zero-build.patch,
+	* patches/hotspot/original/icedtea-bytecodeInterpreter.patch,
+	* patches/hotspot/original/icedtea-core-build.patch,
+	* patches/hotspot/original/icedtea-debuginfo.patch,
+	* patches/hotspot/original/icedtea-gcc-4.3.patch,
+	* patches/hotspot/original/icedtea-gcc-suffix.patch,
+	* patches/hotspot/original/icedtea-headers.patch,
+	* patches/hotspot/original/icedtea-memory-limits.patch,
+	* patches/hotspot/original/icedtea-params-cast-size_t.patch,
+	* patches/hotspot/original/icedtea-shark-build.patch,
+	* patches/hotspot/original/icedtea-sparc-ptracefix.patch,
+	* patches/hotspot/original/icedtea-sparc-trapsfix.patch,
+	* patches/hotspot/original/icedtea-sparc64-linux.patch,
+	* patches/hotspot/original/icedtea-static-libstdc++.patch,
+	* patches/hotspot/original/icedtea-text-relocations.patch,
+	* patches/hotspot/original/icedtea-use-idx_t.patch,
+	* patches/hotspot/original/icedtea-version.patch,
+	* patches/hotspot/original/icedtea-zero-build.patch,
+	* patches/security/icedtea-4486841.patch,
+	* patches/security/icedtea-6484091.patch,
+	* patches/security/icedtea-6497740.patch,
+	* patches/security/icedtea-6588160.patch,
+	* patches/security/icedtea-6592792.patch,
+	* patches/security/icedtea-6721753.patch,
+	* patches/security/icedtea-6726779.patch,
+	* patches/security/icedtea-6733959.patch,
+	* patches/security/icedtea-6734167.patch,
+	* patches/security/icedtea-6755943.patch,
+	* patches/security/icedtea-6766136.patch,
+	* patches/xrender/icedtea-000.patch,
+	* patches/xrender/icedtea-001.patch,
+	* patches/xrender/icedtea-002.patch,
+	* patches/xrender/icedtea-003.patch,
+	* patches/xrender/icedtea-004.patch,
+	* patches/xrender/icedtea-005.patch,
+	* patches/xrender/icedtea-006.patch,
+	* patches/xrender/icedtea-007.patch,
+	* patches/xrender/icedtea-008.patch,
+	* patches/xrender/icedtea-009.patch:
+	...to here.
+
+2008-12-03  Gary Benson  <gbenson@redhat.com>
+
+	* .hgignore: Ignore downloaded HotSpot tarball.
+
+2008-12-03  Gary Benson  <gbenson@redhat.com>
+
+	* a/ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
+	(os::is_allocatable): New method.
+	* a/ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	(os::is_allocatable): Likewise.
+
+2008-12-03  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-format-warnings.patch: New.
+	* patches/icedtea-format-warnings.patch: Likewise.
+	* HACKING: Document patches.
+	* Makefile.am: Apply patches.
+
+2008-12-02  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-version.patch: Remove accidentially added debug
+	patch.
+
+2008-12-02  Mark Wielaard  <mark@klomp.org>
+
+	* overlays/openjdk/jdk/test/closed/sun/security/rsa/keystore.bad,
+	overlays/openjdk/jdk/test/closed/sun/security/rsa/keystore.good:
+	New keystore files.
+	* patches/icedtea-6497740.patch: Remove binary file diffs.
+	* patches/icedtea-6721753.patch: Remove @key closed-security.
+	* patches/icedtea-6733959.patch: Add @build ZipMeUp.
+
+2008-12-02  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/extract.stamp): Fix extraction of
+	alternate hotspot tarball.
+
+2008-12-02  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am
+	(ICEDTEA_PATCHES): Added new OpenJDK security patches.
+	* patches/icedtea-4486841.patch,
+	patches/icedtea-6484091.patch,
+	patches/icedtea-6497740.patch,
+	patches/icedtea-6588160.patch,
+	patches/icedtea-6592792.patch,
+	patches/icedtea-6721753.patch,
+	patches/icedtea-6726779.patch,
+	patches/icedtea-6733959.patch,
+	patches/icedtea-6734167.patch,
+	patches/icedtea-6755943.patch,
+	patches/icedtea-6766136.patch: New files.
+	
+2008-12-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/icedtea-bytecodeInterpreter.patch,
+	* patches/icedtea-hotspot7-build-fixes.patch:
+	Removed.
+	* Makefile.am:
+	Sort out Zero patches.
+	* patches/icedtea-hotspot-14.0b08-bytecodeInterpreter.patch,
+	* patches/icedtea-hotspot-14.0b08-gcc-4.3.patch,
+	* patches/icedtea-hotspot-original-bytecodeInterpreter.patch:
+	New HotSpot specific patches.
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/relocInfo_zero.cpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp:
+	Updated using IcedTea7 versions for 14.0b08.
+
 2008-12-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-4486841.patch,
@@ -108,6 +494,75 @@
 	patches/icedtea-6755943.patch,
 	patches/icedtea-6766136.patch: New file
 	
+2008-12-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/icedtea-hotspot-params-cast-size_t.patch,
+	* patches/icedtea-hotspot-use-idx_t.patch,
+	* patches/icedtea-memory-limits.patch,
+	* patches/icedtea-sparc-ptracefix.patch,
+	* patches/icedtea-sparc-trapsfix.patch,
+	* patches/icedtea-sparc64-linux.patch,
+	* patches/icedtea-static-libstdc++.patch,
+	* patches/icedtea-text-relocations.patch:
+	Removed; replaced by HotSpot-specific versions.
+	* Makefile.am:
+	Download a HotSpot version matching a given changeset
+	and use it in place of the copy of hs10.0b19 shipping
+	with OpenJDK6.  Apply patches based on ${HSBUILD}.
+	* acinclude.m4: New macros for options --with-hotspot-build
+	and --with-hotspot-src-zip.
+	* configure.ac: Run new macros.
+	* hotspot.map: Map of HotSpot build numbers to changesets.
+	* patches/icedtea-core-build.patch,
+	* patches/icedtea-debuginfo.patch:
+	Remove HotSpot specific parts.
+	* patches/icedtea-ecj-hotspot-14.0b08.patch,
+	* patches/icedtea-ecj-hotspot-original.patch:
+	New HotSpot-specific patches built from IcedTea7
+	and 6 versions of icedtea-ecj respectively.
+	* patches/icedtea-ecj.patch,
+	* patches/icedtea-gcc-4.3.patch,
+	* patches/icedtea-gcc-suffix.patch,
+	* patches/icedtea-headers.patch:
+	Remove HotSpot-specific parts.
+	* patches/icedtea-hotspot-14.0b08-core-build.patch,
+	* patches/icedtea-hotspot-14.0b08-debuginfo.patch,
+	* patches/icedtea-hotspot-14.0b08-gcc-suffix.patch,
+	* patches/icedtea-hotspot-14.0b08-headers.patch,
+	* patches/icedtea-hotspot-14.0b08-memory-limits.patch,
+	* patches/icedtea-hotspot-14.0b08-params-cast-size_t.patch,
+	* patches/icedtea-hotspot-14.0b08-shark-build.patch,
+	* patches/icedtea-hotspot-14.0b08-sparc-ptracefix.patch,
+	* patches/icedtea-hotspot-14.0b08-sparc-trapsfix.patch,
+	* patches/icedtea-hotspot-14.0b08-sparc64-linux.patch,
+	* patches/icedtea-hotspot-14.0b08-static-libstdc++.patch,
+	* patches/icedtea-hotspot-14.0b08-text-relocations.patch,
+	* patches/icedtea-hotspot-14.0b08-use-idx_t.patch,
+	* patches/icedtea-hotspot-14.0b08-version.patch,
+	* patches/icedtea-hotspot-14.0b08-zero-build.patch,
+	* patches/icedtea-hotspot-original-core-build.patch,
+	* patches/icedtea-hotspot-original-debuginfo.patch,
+	* patches/icedtea-hotspot-original-gcc-4.3.patch,
+	* patches/icedtea-hotspot-original-gcc-suffix.patch,
+	* patches/icedtea-hotspot-original-headers.patch,
+	* patches/icedtea-hotspot-original-memory-limits.patch,
+	* patches/icedtea-hotspot-original-params-cast-size_t.patch,
+	* patches/icedtea-hotspot-original-shark-build.patch,
+	* patches/icedtea-hotspot-original-sparc-ptracefix.patch,
+	* patches/icedtea-hotspot-original-sparc-trapsfix.patch,
+	* patches/icedtea-hotspot-original-sparc64-linux.patch,
+	* patches/icedtea-hotspot-original-static-libstdc++.patch,
+	* patches/icedtea-hotspot-original-text-relocations.patch,
+	* patches/icedtea-hotspot-original-use-idx_t.patch,
+	* patches/icedtea-hotspot-original-version.patch,
+	* patches/icedtea-hotspot-original-zero-build.patch:
+	New HotSpot-specific patches built from IcedTea7
+	and 6 versions of the patch respectively.	
+	* patches/icedtea-shark-build.patch,
+	* patches/icedtea-version.patch,
+	* patches/icedtea-zero-build.patch:
+	Remove HotSpot-specific parts.
+
 2008-11-30  Mark Wielaard  <mark@klomp.org>
 
 	* patches/icedtea-xrender-001.patch: Remove !xrender bug fix.

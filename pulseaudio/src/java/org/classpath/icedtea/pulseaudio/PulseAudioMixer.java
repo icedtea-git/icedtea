@@ -37,8 +37,6 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -49,7 +47,6 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioPermission;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -63,17 +60,15 @@ import javax.sound.sampled.Mixer;
 import javax.sound.sampled.Port;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.sound.sampled.AudioFormat.Encoding;
 import javax.sound.sampled.Control.Type;
 
 import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 
-public class PulseAudioMixer implements javax.sound.sampled.Mixer {
+public final class PulseAudioMixer implements Mixer {
 	// singleton
 
-	public EventLoop eventLoop;
-	public Thread eventLoopThread;
+	private Thread eventLoopThread;
 
 	private List<Line.Info> sourceLineInfos = new ArrayList<Line.Info>();
 	private List<Line.Info> staticSourceLineInfos = new ArrayList<Line.Info>();
@@ -83,8 +78,8 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 
 	private static PulseAudioMixer _instance = null;
 
-	private static final String DEFAULT_APP_NAME = "Java App";
-	private static final String PULSEAUDIO_FORMAT_KEY = "PulseAudioFormatKey";
+	private static final String DEFAULT_APP_NAME = "Java";
+	static final String PULSEAUDIO_FORMAT_KEY = "PulseAudioFormatKey";
 
 	private boolean isOpen = false;
 
@@ -326,6 +321,10 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		if (Port.Info.class.isInstance(info)) {
 			Port.Info portInfo = (Port.Info) info;
 			if (portInfo.isSource()) {
+				/* check for permission to record audio */
+				AudioPermission perm = new AudioPermission("record", null);
+				perm.checkGuard(null);
+
 				return new PulseAudioSourcePort(portInfo.getName());
 			} else {
 				return new PulseAudioTargetPort(portInfo.getName());
@@ -357,13 +356,12 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 		return PulseAudioMixerInfo.getInfo();
 	}
 
-	public javax.sound.sampled.Line.Info[] getSourceLineInfo() {
+	public Line.Info[] getSourceLineInfo() {
 		return sourceLineInfos.toArray(new Line.Info[0]);
 	}
 
 	@Override
-	public javax.sound.sampled.Line.Info[] getSourceLineInfo(
-			javax.sound.sampled.Line.Info info) {
+	public Line.Info[] getSourceLineInfo(Line.Info info) {
 		ArrayList<Line.Info> infos = new ArrayList<Line.Info>();
 
 		for (Line.Info supportedInfo : sourceLineInfos) {
@@ -371,31 +369,30 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 				infos.add(supportedInfo);
 			}
 		}
-		return infos.toArray(new Line.Info[infos.size()]);
+		return infos.toArray(new Line.Info[0]);
 	}
 
 	@Override
 	public Line[] getSourceLines() {
-		return (Line[]) sourceLines.toArray(new Line[0]);
+		return sourceLines.toArray(new Line[0]);
 
 	}
 
 	@Override
-	public javax.sound.sampled.Line.Info[] getTargetLineInfo() {
+	public Line.Info[] getTargetLineInfo() {
 		return targetLineInfos.toArray(new Line.Info[0]);
 	}
 
 	@Override
-	public javax.sound.sampled.Line.Info[] getTargetLineInfo(
-			javax.sound.sampled.Line.Info info) {
-		ArrayList<javax.sound.sampled.Line.Info> infos = new ArrayList<javax.sound.sampled.Line.Info>();
+	public Line.Info[] getTargetLineInfo(Line.Info info) {
+		ArrayList<Line.Info> infos = new ArrayList<Line.Info>();
 
 		for (Line.Info supportedInfo : targetLineInfos) {
 			if (info.matches(supportedInfo)) {
 				infos.add(supportedInfo);
 			}
 		}
-		return infos.toArray(new Line.Info[infos.size()]);
+		return infos.toArray(new Line.Info[0]);
 	}
 
 	@Override
@@ -409,7 +406,7 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 	}
 
 	@Override
-	public boolean isLineSupported(javax.sound.sampled.Line.Info info) {
+	public boolean isLineSupported(Line.Info info) {
 		if (info != null) {
 			for (Line.Info myInfo : sourceLineInfos) {
 				if (info.matches(myInfo)) {
@@ -583,50 +580,80 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 
 	}
 
-	public void open(String appName, String host) throws UnknownHostException,
-			LineUnavailableException {
-		openRemote(appName, host);
-	}
-
 	public void openLocal() throws LineUnavailableException {
 		openLocal(DEFAULT_APP_NAME);
 	}
 
 	public void openLocal(String appName) throws LineUnavailableException {
-		try {
-			openRemote(appName, null);
-		} catch (UnknownHostException e) {
-			// not possible
-		}
+		openImpl(appName, null);
 	}
 
 	public void openRemote(String appName, String host)
 			throws UnknownHostException, LineUnavailableException {
-		openRemote(appName, host, null);
+		if (host == null) {
+			throw new NullPointerException("hostname");
+		}
+		
+		final int PULSEAUDIO_DEFAULT_PORT = 4713;
+		
+		/*
+		 * If trying to connect to a remote machine, check for permissions
+		 */
+		SecurityManager sm = System.getSecurityManager();
+		if (sm != null) {
+			sm.checkConnect(host,PULSEAUDIO_DEFAULT_PORT );
+		}
+		
+		openImpl(appName, host);
 	}
 
-	synchronized public void openRemote(String appName, String host,
-			Integer port) throws UnknownHostException, LineUnavailableException {
+	public void openRemote(String appName, String host, int port)
+			throws UnknownHostException, LineUnavailableException {
+
+		if ((port < 1) && (port != -1)) {
+			throw new IllegalArgumentException("Invalid value for port");
+		}
+
+		if (host == null) {
+			throw new NullPointerException("hostname");
+		}
 
 		/*
-		 * only allow the mixer to be controlled if either playback or recording
-		 * is allowed
+		 * If trying to connect to a remote machine, check for permissions
 		 */
+		SecurityManager sm = System.getSecurityManager();
+		if (sm != null) {
+			sm.checkConnect(host, port);
+		}
+
+		InetAddress addr = InetAddress.getAllByName(host)[0];
+
+		host = addr.getHostAddress();
+		host = host + ":" + String.valueOf(port);
+
+		openImpl(appName, host);
+		
+	}
+
+	/*
+	 * 
+	 * @param appName name of the application
+	 * 
+	 * @param hostAndIp a string consisting of the host and ip address of the
+	 * server to connect to. Format: "<host>:<ip>". Set to null to indicate a
+	 * local connection
+	 */
+	synchronized private void openImpl(String appName, String hostAndIp)
+			throws LineUnavailableException {
 
 		if (isOpen) {
 			throw new IllegalStateException("Mixer is already open");
 		}
 
-		InetAddress addr = InetAddress.getAllByName(host)[0];
-
-		if (port != null) {
-			host = addr.getHostAddress();
-			host = host + ":" + String.valueOf(port);
-		}
-
+		EventLoop eventLoop;
 		eventLoop = EventLoop.getEventLoop();
 		eventLoop.setAppName(appName);
-		eventLoop.setServer(host);
+		eventLoop.setServer(hostAndIp);
 
 		ContextListener generalEventListener = new ContextListener() {
 			@Override
@@ -733,120 +760,6 @@ public class PulseAudioMixer implements javax.sound.sampled.Mixer {
 			for (LineListener lineListener : lineListeners) {
 				lineListener.update(e);
 			}
-		}
-	}
-
-	public static void debug(String string) {
-		System.out.println("DEBUG: " + string);
-	}
-
-	public static void main(String[] args) throws Exception {
-		Mixer.Info mixerInfos[] = AudioSystem.getMixerInfo();
-		Mixer.Info selectedMixerInfo = null;
-		// int i = 0;
-		for (Mixer.Info info : mixerInfos) {
-			// System.out.println("Mixer Line " + i++ + ": " + info.getName() +
-			// " " + info.getDescription());
-			if (info.getName().contains("PulseAudio")) {
-				selectedMixerInfo = info;
-				System.out.println(selectedMixerInfo);
-			}
-		}
-
-		PulseAudioMixer mixer = (PulseAudioMixer) AudioSystem
-				.getMixer(selectedMixerInfo);
-
-		mixer.open();
-
-		String fileName1 = "testsounds/startup.wav";
-		PulseAudioSourceDataLine line1;
-		line1 = (PulseAudioSourceDataLine) mixer.getLine(new Line.Info(
-				SourceDataLine.class));
-		line1.setName("Line 1");
-
-		String fileName2 = "testsounds/logout.wav";
-		PulseAudioSourceDataLine line2;
-		line2 = (PulseAudioSourceDataLine) mixer.getLine(new Line.Info(
-				SourceDataLine.class));
-		line2.setName("Line 2");
-
-		ThreadWriter writer1 = mixer.new ThreadWriter(line1, fileName1);
-		ThreadWriter writer2 = mixer.new ThreadWriter(line2, fileName2);
-		// line2.start();
-		// line1.start();
-
-		Line[] lines = { line1, line2 };
-		mixer.synchronize(lines, true);
-
-		// line2.stop();
-
-		debug("PulseAudioMixer: " + line1.getName() + " and " + line2.getName()
-				+ " synchronized");
-		writer1.start();
-		writer2.start();
-
-		debug("PulseAudioMixer: writers started");
-		line2.start();
-		// line1.stop();
-		// line1.start();
-		debug("PulseAudioMixer: Started a line");
-
-		writer1.join();
-		writer2.join();
-
-		debug("PulseAudioMixer: both lines joined");
-
-		line2.close();
-		debug("PulseAudioMixer: " + line2.getName() + " closed");
-
-		line1.close();
-		debug("PulseAudioMixer: " + line1.getName() + " closed");
-
-		mixer.close();
-		debug("PulseAudioMixer: mixer closed");
-
-	}
-
-	public class ThreadWriter extends Thread {
-
-		private PulseAudioSourceDataLine line;
-		private AudioInputStream audioInputStream;
-
-		public ThreadWriter(PulseAudioSourceDataLine line, String fileName)
-				throws UnsupportedAudioFileException, IOException,
-				LineUnavailableException {
-			this.line = line;
-			File soundFile1 = new File(fileName);
-			audioInputStream = AudioSystem.getAudioInputStream(soundFile1);
-			AudioFormat audioFormat = audioInputStream.getFormat();
-			line.open(audioFormat);
-		}
-
-		@Override
-		public void run() {
-			debug("PulseAudioMixer: ThreadWriter: run(): entering");
-
-			// line.start();
-			// debug("PulseAudioMixer: " + line.getName() + " started");
-
-			byte[] abData = new byte[1000];
-			int bytesRead = 0;
-			try {
-				while (bytesRead >= 0) {
-					bytesRead = audioInputStream.read(abData, 0, abData.length);
-					if (bytesRead > 0) {
-						line.write(abData, 0, bytesRead);
-						// debug("PulseAudioMixer: wrote " + bytesRead + "data
-						// on "
-						// + line.getName());
-					}
-				}
-			} catch (IOException e) {
-				debug("PulseAudioMixer: ThreadWriter: run(): exception doing a read()");
-			}
-
-			debug("PulseAudioMixer: ThreadWriter: run(): leaving");
-
 		}
 	}
 
