@@ -583,7 +583,8 @@ ICEDTEA_PATCHES = \
 if WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/icedtea-format-warnings.patch \
-	patches/icedtea-fortify-source.patch
+	patches/icedtea-fortify-source.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-sparc-buildfixes.patch
 endif
 
 if !WITH_ALT_HSBUILD
