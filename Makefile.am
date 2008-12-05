@@ -96,7 +96,7 @@ install:
 	clean-jtreg clean-jtreg-reports clean-visualvm clean-nbplatform
 
 EXTRA_DIST = rt generated \
-	patches/icedtea-*.patch \
+	patches/* \
 	gcjwebplugin.cc tools-copy contrib ports \
 	extra overlays \
 	javaws.png javaws.desktop visualvm.desktop \
