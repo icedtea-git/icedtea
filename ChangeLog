@@ -1,3 +1,9 @@
+2008-12-05  Mark Wielaard  <mwielaard@redhat.com>
+
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java:
+	JarIndex.getIndex() can return null when there is no index for the
+	jar. In that case we shouldn't store the null result.
+
 2008-12-05  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-lucene-crash.patch: Update for b14.

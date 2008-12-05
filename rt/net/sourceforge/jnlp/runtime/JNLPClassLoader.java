@@ -494,8 +494,12 @@ public class JNLPClassLoader extends URLClassLoader {
 
                         // there is currently no mechanism to cache files per 
                         // instance.. so only index cached files
-                        if (localFile != null)
-                        	jarIndexes.add(JarIndex.getJarIndex(new JarFile(localFile.getAbsolutePath()), null));
+                        if (localFile != null) {
+                          JarFile file = new JarFile(localFile.getAbsolutePath());
+			  JarIndex index = JarIndex.getJarIndex(file, null);
+			  if (index != null)
+			    jarIndexes.add(index);
+                        }
 
                         if (JNLPRuntime.isDebug())
                             System.err.println("Activate jar: "+location);
@@ -692,7 +696,8 @@ public class JNLPClassLoader extends URLClassLoader {
                 // Currently this loads jars directly from the site. We cannot cache it because this 
                 // call is initiated from within the applet, which does not have disk read/write permissions
                 for (JarIndex index: jarIndexes) {
-                    LinkedList<String> jarList = index.get(name.replace('.', '/'));
+
+		    LinkedList<String> jarList = index.get(name.replace('.', '/'));
 
                     if (jarList != null) {
                         for (String jarName: jarList) {
