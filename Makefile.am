@@ -463,7 +463,7 @@ if WITH_ALT_HSBUILD
 ZERO_PATCHES =
 else
 ZERO_PATCHES = \
-	patches/icedtea-hotspot-6b12-7b24.patch \
+	patches/icedtea-hotspot-6b14-7b24.patch \
 	patches/icedtea-hotspot7-build-fixes.patch
 endif
 ZERO_PATCHES += \
@@ -475,7 +475,6 @@ ZERO_PATCHES += \
 
 if !WITH_ALT_HSBUILD
 ZERO_PATCHES += \
-	patches/icedtea-bytecodeInterpreterWithChecks.patch \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-hotspot-citypeflow.patch
 endif
@@ -534,8 +533,22 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
 	patches/icedtea-javafiles.patch \
-	patches/icedtea-core-build.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-core-build.patch \
+	patches/icedtea-core-build.patch
+
+if WITH_ALT_HSBUILD
+ICEDTEA_PATCHES += \
+	patches/hotspot/$(HSBUILD)/icedtea-core-build.patch
+else
+if ZERO_BUILD
+ICEDTEA_PATCHES += \
+	patches/hotspot/$(HSBUILD)/icedtea-core-zero-build.patch
+else
+ICEDTEA_PATCHES += \
+	patches/hotspot/$(HSBUILD)/icedtea-core-build.patch
+endif
+endif
+
+ICEDTEA_PATCHES += \
 	patches/icedtea-linker-options.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-static-libstdc++.patch \
 	patches/icedtea-timerqueue.patch \
