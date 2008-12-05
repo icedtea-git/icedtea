@@ -104,8 +104,7 @@ EXTRA_DIST = rt generated \
 	test/jtreg \
 	IcedTeaPlugin.cc \
 	HACKING pulseaudio fsg.sh \
-	plugin \
-	hotspot.tar.gz
+	plugin
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
