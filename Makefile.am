@@ -589,7 +589,7 @@ endif
 
 if !WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \
-	patches/icedtea-hotspot7-tests.patch \
+	patches/icedtea-bytecodeInterpreterWithChecks.patch \
 	patches/icedtea-sparc.patch
 endif
 

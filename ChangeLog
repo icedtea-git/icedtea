@@ -1,3 +1,17 @@
+2008-12-05  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-lucene-crash.patch: Update for b14.
+	* patches/hotspot/original/icedtea-memory-limits.patch: Likewise.
+	* patches/hotspot/original/icedtea-core-build.patch: Likewise.
+	* patches/hotspot/original/icedtea-static-libstdc++.patch: Likewise.
+	* patches/hotspot/original/icedtea-zero-build.patch: Likewise.
+	* patches/hotspot/original/icedtea-shark-build.patch: Likewise.
+	* patches/hotspot/original/icedtea-sparc64-linux.patch: Likewise.
+	* Makefile.am (ICEDTEA_PATCHES): Remove icedtea-hotspot7-tests.patch,
+	apply patches/icedtea-bytecodeInterpreterWithChecks.patch for original
+	hotspot build.
+	* patches/icedtea-hotspot7-tests.patch: Remove.
+
 2008-12-04  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/hotspot/14.0b08/icedtea-sparc-buildfixes.patch: Readd

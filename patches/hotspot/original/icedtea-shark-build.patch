@@ -1,164 +1,6 @@
-diff -r 8e41d25d7665 openjdk/hotspot/build/linux/Makefile
---- openjdk/hotspot/build/linux/Makefile	Fri Jun 20 13:26:10 2008 +0100
-+++ openjdk/hotspot/build/linux/Makefile	Fri Jun 20 13:26:20 2008 +0100
-@@ -152,6 +152,13 @@ endif
- #       profiledcore    core            <os>_<arch>_core/profiled
- #       productcore     core            <os>_<arch>_core/product
- #
-+#       debugshark      shark           <os>_<arch>_shark/debug
-+#       fastdebugshark  shark           <os>_<arch>_shark/fastdebug
-+#       jvmgshark       shark           <os>_<arch>_shark/jvmg
-+#       optimizedshark  shark           <os>_<arch>_shark/optimized
-+#       profiledshark   shark           <os>_<arch>_shark/profiled
-+#       productshark    shark           <os>_<arch>_shark/product
-+#
- # What you get with each target:
- #
- # debug*     - "thin" libjvm_g - debug info linked into the gamma_g launcher
-@@ -172,11 +179,13 @@ SUBDIRS_C2        = $(addprefix $(OSNAME
- SUBDIRS_C2        = $(addprefix $(OSNAME)_$(BUILDARCH)_compiler2/,$(TARGETS))
- SUBDIRS_TIERED    = $(addprefix $(OSNAME)_$(BUILDARCH)_tiered/,$(TARGETS))
- SUBDIRS_CORE      = $(addprefix $(OSNAME)_$(BUILDARCH)_core/,$(TARGETS))
-+SUBDIRS_SHARK     = $(addprefix $(OSNAME)_$(BUILDARCH)_shark/,$(TARGETS))
- 
- TARGETS_C2        = $(TARGETS)
- TARGETS_C1        = $(addsuffix 1,$(TARGETS))
- TARGETS_TIERED    = $(addsuffix tiered,$(TARGETS))
- TARGETS_CORE      = $(addsuffix core,$(TARGETS))
-+TARGETS_SHARK     = $(addsuffix shark,$(TARGETS))
- 
- BUILDTREE_MAKE    = $(GAMMADIR)/build/$(OSNAME)/makefiles/buildtree.make
- BUILDTREE_VARS    = GAMMADIR=$(GAMMADIR) OS_FAMILY=$(OSNAME) ARCH=$(SRCARCH) BUILDARCH=$(BUILDARCH) LIBARCH=$(LIBARCH)
-@@ -190,6 +199,7 @@ all:
- 	@echo "  $(TARGETS_C2)"
- 	@echo "  $(TARGETS_C1)"
- 	@echo "  $(TARGETS_CORE)"
-+	@echo "  $(TARGETS_SHARK)"
- 
- checks: check_os_version check_j2se_version
- 
-@@ -239,6 +249,10 @@ endif
- 	$(QUIETLY) $(MAKE) -f $(GAMMADIR)/build/$(OSNAME)/Makefile checks
- 	$(BUILDTREE) VARIANT=core
- 
-+$(SUBDIRS_SHARK): $(BUILDTREE_MAKE)
-+	$(QUIETLY) $(MAKE) -f $(GAMMADIR)/build/$(OSNAME)/Makefile checks
-+	$(BUILDTREE) VARIANT=shark
-+
- # Define INSTALL=y at command line to automatically copy JVM into JAVA_HOME
- 
- $(TARGETS_C2):  $(SUBDIRS_C2)
-@@ -267,6 +281,12 @@ endif
- 	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && ./test_gamma
- ifdef INSTALL
- 	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS) install
-+endif
-+
-+$(TARGETS_SHARK):  $(SUBDIRS_SHARK)
-+	cd $(OSNAME)_$(BUILDARCH)_shark/$(patsubst %shark,%,$@) && $(MAKE) $(MFLAGS)
-+ifdef INSTALL
-+	cd $(OSNAME)_$(BUILDARCH)_shark/$(patsubst %shark,%,$@) && $(MAKE) $(MFLAGS) install
- endif
- 
- # Just build the tree, and nothing else:
-@@ -299,7 +319,7 @@ include $(GAMMADIR)/build/$(OSNAME)/make
- 
- #-------------------------------------------------------------------------------
- 
--.PHONY: $(TARGETS_C2) $(TARGETS_C1) $(TARGETS_CORE)
-+.PHONY: $(TARGETS_C2) $(TARGETS_C1) $(TARGETS_CORE) $(TARGETS_SHARK)
- .PHONY: tree tree1 treecore
- .PHONY: all compiler1 compiler2 core
- .PHONY: clean clean_compiler1 clean_compiler2 clean_core docs clean_docs
-diff -r 8e41d25d7665 openjdk/hotspot/build/linux/makefiles/buildtree.make
---- openjdk/hotspot/build/linux/makefiles/buildtree.make	Fri Jun 20 13:26:10 2008 +0100
-+++ openjdk/hotspot/build/linux/makefiles/buildtree.make	Fri Jun 20 13:26:20 2008 +0100
-@@ -171,8 +171,8 @@ flags_vm.make: $(BUILDTREE_MAKE) ../shar
- 
- ../shared_dirs.lst:  $(BUILDTREE_MAKE) $(GAMMADIR)/src/share/vm
- 	@echo Creating directory list $@
--	$(QUIETLY) find $(GAMMADIR)/src/share/vm/* -prune \
--	-type d \! \( $(TOPLEVEL_EXCLUDE_DIRS) \) -exec find {} \
-+	$(QUIETLY) find -L $(GAMMADIR)/src/share/vm/* -prune \
-+	-type d \! \( $(TOPLEVEL_EXCLUDE_DIRS) \) -exec find -L {} \
-         \( $(ALWAYS_EXCLUDE_DIRS) \) -prune -o -type d -print \; > $@
- 
- Makefile: $(BUILDTREE_MAKE)
-diff -r 8e41d25d7665 openjdk/hotspot/build/linux/makefiles/defs.make
---- openjdk/hotspot/build/linux/makefiles/defs.make	Fri Jun 20 13:26:10 2008 +0100
-+++ openjdk/hotspot/build/linux/makefiles/defs.make	Fri Jun 20 13:26:39 2008 +0100
-@@ -118,6 +118,7 @@ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libj
- EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjsig.so
- EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.so
- ifndef ICEDTEA_CORE_BUILD
-+ifndef ICEDTEA_SHARK_BUILD
- ifeq ($(ARCH_DATA_MODEL), 32)
-   EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
-   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
-@@ -133,3 +134,4 @@ else
-     endif
- endif
- endif
-+endif
-diff -r 8e41d25d7665 openjdk/hotspot/build/linux/makefiles/gcc.make
---- openjdk/hotspot/build/linux/makefiles/gcc.make	Fri Jun 20 13:26:10 2008 +0100
-+++ openjdk/hotspot/build/linux/makefiles/gcc.make	Fri Jun 20 13:26:20 2008 +0100
-@@ -63,6 +63,9 @@ VM_PICFLAG        = $(VM_PICFLAG/$(LINK_
- 
- ifdef ICEDTEA_ZERO_BUILD
- CFLAGS += $(LIBFFI_CFLAGS)
-+endif
-+ifdef ICEDTEA_SHARK_BUILD
-+CFLAGS += $(LLVM_CFLAGS)
- endif
- CFLAGS += $(VM_PICFLAG)
- CFLAGS += -fno-rtti
-diff -r 8e41d25d7665 openjdk/hotspot/build/linux/makefiles/top.make
---- openjdk/hotspot/build/linux/makefiles/top.make	Fri Jun 20 13:26:10 2008 +0100
-+++ openjdk/hotspot/build/linux/makefiles/top.make	Fri Jun 20 13:26:20 2008 +0100
-@@ -71,6 +71,7 @@ Include_DBs/COMPILER1   = $(Include_DBs/
- Include_DBs/COMPILER1   = $(Include_DBs/CORE) $(VM)/includeDB_compiler1
- Include_DBs/COMPILER2   = $(Include_DBs/CORE) $(VM)/includeDB_compiler2
- Include_DBs/TIERED      = $(Include_DBs/CORE) $(VM)/includeDB_compiler1 $(VM)/includeDB_compiler2
-+Include_DBs/SHARK       = $(Include_DBs/CORE) $(VM)/includeDB_shark
- Include_DBs = $(Include_DBs/$(TYPE))
- 
- Cached_plat = $(GENERATED)/platform.current
-diff -r 8e41d25d7665 openjdk/hotspot/build/linux/makefiles/vm.make
---- openjdk/hotspot/build/linux/makefiles/vm.make	Fri Jun 20 13:26:10 2008 +0100
-+++ openjdk/hotspot/build/linux/makefiles/vm.make	Fri Jun 20 13:26:20 2008 +0100
-@@ -149,10 +149,14 @@ mapfile_reorder : mapfile $(REORDERFILE)
- 	rm -f $@
- 	cat $^ > $@
- 
--ifeq ($(ZERO_LIBARCH), ppc64)
-+ifdef ICEDTEA_SHARK_BUILD
-   STATIC_CXX = false
- else
--  STATIC_CXX = true
-+  ifeq ($(ZERO_LIBARCH), ppc64)
-+    STATIC_CXX = false
-+  else
-+    STATIC_CXX = true
-+  endif
- endif
- 
- ifeq ($(LINK_INTO),AOUT)
-@@ -179,6 +183,10 @@ endif
- endif
- ifdef ICEDTEA_ZERO_BUILD
- LIBS_VM += $(LIBFFI_LIBS)
-+endif
-+ifdef ICEDTEA_SHARK_BUILD
-+LFLAGS_VM += $(LLVM_LDFLAGS)
-+LIBS_VM   += $(LLVM_LIBS)
- endif
- 
- LINK_VM = $(LINK_LIB.c)
-diff -r 8e41d25d7665 openjdk/hotspot/make/Makefile
---- openjdk/hotspot/make/Makefile	Fri Jun 20 13:26:10 2008 +0100
-+++ openjdk/hotspot/make/Makefile	Fri Jun 20 13:30:28 2008 +0100
-@@ -99,6 +99,15 @@ all_debugcore:     jvmgcore docs export_
+--- openjdk/hotspot/make/Makefile.orig	2008-12-05 10:41:32.000000000 +0000
++++ openjdk/hotspot/make/Makefile	2008-12-05 10:50:53.000000000 +0000
+@@ -100,6 +100,15 @@
  all_debugcore:     jvmgcore docs export_debug
  all_optimizedcore: optimizedcore docs export_optimized
  
@@ -174,31 +16,31 @@ diff -r 8e41d25d7665 openjdk/hotspot/make/Makefile
  # Do everything
  world:         all create_jdk
  
-@@ -124,6 +133,10 @@ endif
- $(CORE_VM_TARGETS):
+@@ -126,6 +135,10 @@
  	$(CD) $(GAMMADIR)/make; \
  	$(MAKE) VM_TARGET=$@ generic_buildcore $(ALT_OUT)
-+
+ 
 +$(SHARK_VM_TARGETS):
 +	$(CD) $(GAMMADIR)/make; \
 +	$(MAKE) VM_TARGET=$@ generic_buildshark $(ALT_OUT)
- 
- # Build compiler1 (client) rule, different for platforms
- generic_build1:
-@@ -172,6 +185,12 @@ generic_buildcore:
- 	$(CD) $(OUTPUTDIR); \
++
+ $(KERNEL_VM_TARGETS):
+ 	$(CD) $(GAMMADIR)/make; \
+ 	$(MAKE) VM_TARGET=$@ generic_buildkernel $(ALT_OUT)
+@@ -178,6 +191,12 @@
  		$(MAKE) -f $(ABS_OS_MAKEFILE) \
  			$(MAKE_ARGS) $(VM_TARGET)
-+
+ 
 +generic_buildshark:
 +	$(MKDIR) -p $(OUTPUTDIR)
 +	$(CD) $(OUTPUTDIR); \
 +		$(MAKE) -f $(ABS_OS_MAKEFILE) \
 +			$(MAKE_ARGS) $(VM_TARGET) 
- 
- # Export file rule
- generic_export: $(EXPORT_LIST)
-@@ -204,7 +223,11 @@ ifdef ICEDTEA_CORE_BUILD
++
+ generic_buildkernel:
+ 	$(MKDIR) -p $(OUTPUTDIR)
+ ifeq ($(OSNAME),windows)
+@@ -227,8 +246,12 @@
  ifdef ICEDTEA_CORE_BUILD
  C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_core
  else
@@ -206,11 +48,12 @@ diff -r 8e41d25d7665 openjdk/hotspot/make/Makefile
 +C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_shark
 +else
  C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler2
-+endif
  endif
++endif
+ KERNEL_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_kernel
  C1_DIR=$(C1_BASE_DIR)/$(VM_SUBDIR)
  C2_DIR=$(C2_BASE_DIR)/$(VM_SUBDIR)
-@@ -214,6 +237,10 @@ ifdef ICEDTEA_CORE_BUILD
+@@ -239,6 +262,10 @@
    MISC_DIR=$(C2_DIR)
    GEN_DIR=$(C2_BASE_DIR)/generated
  else
@@ -221,7 +64,7 @@ diff -r 8e41d25d7665 openjdk/hotspot/make/Makefile
  ifeq ($(ARCH_DATA_MODEL), 32)
    MISC_DIR=$(C1_DIR)
    GEN_DIR=$(C1_BASE_DIR)/generated
-@@ -222,6 +249,7 @@ else
+@@ -247,6 +274,7 @@
    GEN_DIR=$(C2_BASE_DIR)/generated
  endif
  endif
@@ -229,4 +72,154 @@ diff -r 8e41d25d7665 openjdk/hotspot/make/Makefile
  
  # Bin files (windows)
  ifeq ($(OSNAME),windows)
-d
+--- openjdk/hotspot/build/linux/Makefile.orig	2008-11-25 09:11:51.000000000 +0000
++++ openjdk/hotspot/build/linux/Makefile	2008-12-05 10:50:52.000000000 +0000
+@@ -153,6 +153,13 @@
+ #       profiledcore    core            <os>_<arch>_core/profiled
+ #       productcore     core            <os>_<arch>_core/product
+ #
++#       debugshark      shark           <os>_<arch>_shark/debug
++#       fastdebugshark  shark           <os>_<arch>_shark/fastdebug
++#       jvmgshark       shark           <os>_<arch>_shark/jvmg
++#       optimizedshark  shark           <os>_<arch>_shark/optimized
++#       profiledshark   shark           <os>_<arch>_shark/profiled
++#       productshark    shark           <os>_<arch>_shark/product
++#
+ # What you get with each target:
+ #
+ # debug*     - "thin" libjvm_g - debug info linked into the gamma_g launcher
+@@ -171,11 +178,13 @@
+ SUBDIRS_C2        = $(addprefix $(OSNAME)_$(BUILDARCH)_compiler2/,$(TARGETS))
+ SUBDIRS_TIERED    = $(addprefix $(OSNAME)_$(BUILDARCH)_tiered/,$(TARGETS))
+ SUBDIRS_CORE      = $(addprefix $(OSNAME)_$(BUILDARCH)_core/,$(TARGETS))
++SUBDIRS_SHARK     = $(addprefix $(OSNAME)_$(BUILDARCH)_shark/,$(TARGETS))
+ 
+ TARGETS_C2        = $(TARGETS)
+ TARGETS_C1        = $(addsuffix 1,$(TARGETS))
+ TARGETS_TIERED    = $(addsuffix tiered,$(TARGETS))
+ TARGETS_CORE      = $(addsuffix core,$(TARGETS))
++TARGETS_SHARK     = $(addsuffix shark,$(TARGETS))
+ 
+ BUILDTREE_MAKE    = $(GAMMADIR)/build/$(OSNAME)/makefiles/buildtree.make
+ BUILDTREE_VARS    = GAMMADIR=$(GAMMADIR) OS_FAMILY=$(OSNAME) ARCH=$(SRCARCH) BUILDARCH=$(BUILDARCH) LIBARCH=$(LIBARCH)
+@@ -191,6 +200,7 @@
+ 	@echo "  $(TARGETS_C2)"
+ 	@echo "  $(TARGETS_C1)"
+ 	@echo "  $(TARGETS_CORE)"
++	@echo "  $(TARGETS_SHARK)"
+ 
+ checks: check_os_version check_j2se_version
+ 
+@@ -240,6 +250,10 @@
+ 	$(QUIETLY) $(MAKE) -f $(GAMMADIR)/build/$(OSNAME)/Makefile checks
+ 	$(BUILDTREE) VARIANT=core
+ 
++$(SUBDIRS_SHARK): $(BUILDTREE_MAKE)
++	$(QUIETLY) $(MAKE) -f $(GAMMADIR)/build/$(OSNAME)/Makefile checks
++	$(BUILDTREE) VARIANT=shark
++
+ # Define INSTALL=y at command line to automatically copy JVM into JAVA_HOME
+ 
+ $(TARGETS_C2):  $(SUBDIRS_C2)
+@@ -270,6 +284,12 @@
+ 	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS) install
+ endif
+ 
++$(TARGETS_SHARK):  $(SUBDIRS_SHARK)
++	cd $(OSNAME)_$(BUILDARCH)_shark/$(patsubst %shark,%,$@) && $(MAKE) $(MFLAGS)
++ifdef INSTALL
++	cd $(OSNAME)_$(BUILDARCH)_shark/$(patsubst %shark,%,$@) && $(MAKE) $(MFLAGS) install
++endif
++
+ # Just build the tree, and nothing else:
+ tree:      $(SUBDIRS_C2)
+ tree1:     $(SUBDIRS_C1)
+@@ -300,7 +320,7 @@
+ 
+ #-------------------------------------------------------------------------------
+ 
+-.PHONY: $(TARGETS_C2) $(TARGETS_C1) $(TARGETS_CORE)
++.PHONY: $(TARGETS_C2) $(TARGETS_C1) $(TARGETS_CORE) $(TARGETS_SHARK)
+ .PHONY: tree tree1 treecore
+ .PHONY: all compiler1 compiler2 core
+ .PHONY: clean clean_compiler1 clean_compiler2 clean_core docs clean_docs
+--- openjdk/hotspot/build/linux/makefiles/gcc.make.orig	2008-12-05 10:41:34.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2008-12-05 10:50:52.000000000 +0000
+@@ -60,6 +60,9 @@
+ ifdef ICEDTEA_ZERO_BUILD
+ CFLAGS += $(LIBFFI_CFLAGS)
+ endif
++ifdef ICEDTEA_SHARK_BUILD
++CFLAGS += $(LLVM_CFLAGS)
++endif
+ CFLAGS += $(VM_PICFLAG)
+ CFLAGS += -fno-rtti
+ CFLAGS += -fno-exceptions
+--- openjdk/hotspot/build/linux/makefiles/top.make.orig	2008-11-25 09:11:51.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/top.make	2008-12-05 10:50:52.000000000 +0000
+@@ -73,6 +73,7 @@
+ Include_DBs/COMPILER1   = $(Include_DBs/CORE) $(VM)/includeDB_compiler1
+ Include_DBs/COMPILER2   = $(Include_DBs/CORE) $(VM)/includeDB_compiler2
+ Include_DBs/TIERED      = $(Include_DBs/CORE) $(VM)/includeDB_compiler1 $(VM)/includeDB_compiler2
++Include_DBs/SHARK       = $(Include_DBs/CORE) $(VM)/includeDB_shark
+ Include_DBs = $(Include_DBs/$(TYPE))
+ 
+ Cached_plat = $(GENERATED)/platform.current
+--- openjdk/hotspot/build/linux/makefiles/vm.make.orig	2008-12-05 10:41:34.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/vm.make	2008-12-05 10:50:53.000000000 +0000
+@@ -128,10 +128,14 @@
+ 
+ STATIC_CXX = true
+ 
+-ifeq ($(ZERO_LIBARCH), ppc64)
++ifdef ICEDTEA_SHARK_BUILD
+   STATIC_CXX = false
+ else
+-  STATIC_CXX = true
++  ifeq ($(ZERO_LIBARCH), ppc64)
++    STATIC_CXX = false
++  else
++    STATIC_CXX = true
++  endif
+ endif
+ 
+ ifeq ($(LINK_INTO),AOUT)
+@@ -159,6 +163,10 @@
+ ifdef ICEDTEA_ZERO_BUILD
+ LIBS_VM += $(LIBFFI_LIBS)
+ endif
++ifdef ICEDTEA_SHARK_BUILD
++LFLAGS_VM += $(LLVM_LDFLAGS)
++LIBS_VM   += $(LLVM_LIBS)
++endif
+ 
+ LINK_VM = $(LINK_LIB.c)
+ 
+--- openjdk/hotspot/build/linux/makefiles/buildtree.make.orig	2008-12-05 10:41:34.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/buildtree.make	2008-12-05 10:50:52.000000000 +0000
+@@ -211,8 +211,8 @@
+ 
+ ../shared_dirs.lst:  $(BUILDTREE_MAKE) $(GAMMADIR)/src/share/vm
+ 	@echo Creating directory list $@
+-	$(QUIETLY) find $(GAMMADIR)/src/share/vm/* -prune \
+-	-type d \! \( $(TOPLEVEL_EXCLUDE_DIRS) \) -exec find {} \
++	$(QUIETLY) find -L $(GAMMADIR)/src/share/vm/* -prune \
++	-type d \! \( $(TOPLEVEL_EXCLUDE_DIRS) \) -exec find -L {} \
+         \( $(ALWAYS_EXCLUDE_DIRS) \) -prune -o -type d -print \; > $@
+ 
+ Makefile: $(BUILDTREE_MAKE)
+--- openjdk/hotspot/build/linux/makefiles/defs.make.orig	2008-12-05 10:41:34.000000000 +0000
++++ openjdk/hotspot/build/linux/makefiles/defs.make	2008-12-05 10:50:52.000000000 +0000
+@@ -110,6 +110,7 @@
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjsig.so
+ EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.so
+ ifndef ICEDTEA_CORE_BUILD
++ifndef ICEDTEA_SHARK_BUILD
+ ifeq ($(ARCH_DATA_MODEL), 32)
+   EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
+   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
+@@ -125,3 +126,4 @@
+     endif
+ endif
+ endif
++endif

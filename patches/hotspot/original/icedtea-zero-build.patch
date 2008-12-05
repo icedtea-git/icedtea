@@ -23,23 +23,23 @@ diff -ru openjdk/hotspot/build/linux/makefiles/defs.make openjdk/hotspot/build/l
 diff -ru openjdk/hotspot/make/defs.make openjdk/hotspot/make/defs.make
 --- openjdk/hotspot/make/defs.make	2008-02-28 10:02:25.000000000 +0000
 +++ openjdk/hotspot/make/defs.make	2008-03-13 13:37:14.000000000 +0000
-@@ -199,13 +199,14 @@
+@@ -192,13 +192,14 @@
+ 
    # Use uname output for SRCARCH, but deal with platform differences. If ARCH
-   # is not explicitly listed below, it is treated as i486. Also note amd64 is
-   # a separate src arch, so LP64 && i486 ==> amd64.
+   # is not explicitly listed below, it is treated as x86. 
 -  SRCARCH     = $(ARCH/$(filter sparc sparc64 ia64 amd64 x86_64,$(ARCH)))
 +  SRCARCH     = $(ARCH/$(filter sparc sparc64 ia64 amd64 x86_64 zero,$(ARCH)))
-   ARCH/       = i486
+   ARCH/       = x86
    ARCH/sparc  = sparc
    ARCH/sparc64= sparc
    ARCH/ia64   = ia64
-   ARCH/amd64  = amd64
-   ARCH/x86_64 = amd64
+   ARCH/amd64  = x86
+   ARCH/x86_64 = x86
 +  ARCH/zero   = zero
-   ifdef LP64
-     ifeq ($(SRCARCH), i486)
-       SRCARCH = amd64
-@@ -227,8 +228,9 @@
+ 
+   # BUILDARCH is usually the same as SRCARCH, except for sparcv9
+   BUILDARCH = $(SRCARCH)
+@@ -222,8 +223,9 @@
    LIBARCH/sparc   = sparc
    LIBARCH/sparcv9 = sparcv9
    LIBARCH/ia64    = ia64
