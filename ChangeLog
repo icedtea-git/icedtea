@@ -1,3 +1,7 @@
+2008-12-07  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-uname.patch: Update for PARISC.
+
 2008-12-05  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-hotspot7-build-fixes.patch: Update.
