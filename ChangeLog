@@ -1,3 +1,7 @@
+2008-12-08  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/jck/compile-native-code.sh: New file.
+
 2008-12-07  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-uname.patch: Update for PARISC.
