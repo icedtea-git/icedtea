@@ -161,7 +161,7 @@ AC_ARG_ENABLE([docs],
 AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
 AC_MSG_RESULT(${ENABLE_DOCS})
 
-AC_MSG_CHECKING(whether to include xrender pipeline)
+AC_MSG_CHECKING(whether to include the XRender pipeline)
 AC_ARG_ENABLE([xrender],
 	      [AS_HELP_STRING([--disable-xrender],
 	      		      [Disable inclusion of xrender pipeline])],
