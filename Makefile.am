@@ -290,11 +290,16 @@ snapshot: dist
 # Download OpenJDK sources.
 OPENJDK_URL = http://download.java.net/openjdk/jdk6/promoted/$(OPENJDK_VERSION)/
 HOTSPOT_URL = http://hg.openjdk.java.net/jdk7/hotspot/hotspot/archive/
+OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk6/jdk6
 
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 else
+if USE_HG
+  OPENJDK_SRC_ZIP = 
+else
   OPENJDK_SRC_ZIP = openjdk-6-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).tar.gz
+endif
 endif
 
 if USE_ALT_HOTSPOT_SRC_ZIP
@@ -336,8 +341,27 @@ else
   VISUALVM_SRC_ZIP = visualvm-20081031-src.tar.gz
 endif
 
-stamps/download.stamp:
+stamps/hgforest.stamp:
 if USE_ALT_OPENJDK_SRC_ZIP
+else
+if !USE_HG
+else
+	if ! $(HG) fclone -h; \
+          then \
+          echo "No forest extension found. Please refer to" \
+            "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
+          exit 1; \
+          fi;
+endif
+endif
+	mkdir -p stamps 
+	touch stamps/hgforest.stamp
+
+stamps/download.stamp: stamps/hgforest.stamp
+if USE_ALT_OPENJDK_SRC_ZIP
+else
+if USE_HG
+	$(HG) fclone -r jdk6-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk;
 else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -348,6 +372,7 @@ else
 	  fi ; \
 	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
 	fi
+endif
 endif
 if WITH_ALT_HSBUILD
 if USE_ALT_HOTSPOT_SRC_ZIP
@@ -414,6 +439,9 @@ endif
 endif
 	mkdir -p stamps
 	touch stamps/download.stamp
+
+clean-hgforest:
+	rm -f stamps/hgforest.stamp
 
 clean-download:
 	rm -f stamps/download.stamp

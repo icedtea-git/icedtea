@@ -966,3 +966,25 @@ AC_DEFUN([WITH_HOTSPOT_SRC_ZIP],
   AC_MSG_RESULT(${ALT_HOTSPOT_SRC_ZIP})
   AC_SUBST(ALT_HOTSPOT_SRC_ZIP)
 ])
+
+AC_DEFUN([ENABLE_HG],
+[
+  AC_MSG_CHECKING(whether to retrieve the source code from Mercurial)
+  AC_ARG_ENABLE([hg],
+                [AS_HELP_STRING(--enable-hg,download source code from Mercurial [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+	enable_hg=no
+        ;;
+      *)
+        enable_hg=yes
+        ;;
+    esac
+  ],
+  [
+        enable_hg=no
+  ])
+  AC_MSG_RESULT([${enable_hg}])
+  AM_CONDITIONAL([USE_HG], test x"${enable_hg}" = "xyes")
+])

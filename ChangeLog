@@ -1,6 +1,15 @@
 2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
+	Support downloading from the Mercurial repository.
+	* acinclude.m4:
+	(ENABLE_HG): New macro.
+	* configure.ac:
+	Check for --enable-hg.
+
+2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
 	Make XRender patch wildcard work where
 	srcdir != builddir.
 	* configure.ac:
