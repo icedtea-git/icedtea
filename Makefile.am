@@ -1906,6 +1906,8 @@ ICEDTEA_PATCHES += \
 endif
 
 if ENABLE_XRENDER
+# match against $(abs_top_srcdir) and then remove it again,
+# because stamps/patch.stamp target will also add it
 XRENDER_PATCHES = patches/xrender/icedtea-???.patch
 XRENDER_PATCH_FILES = $(sort $(wildcard $(abs_top_srcdir)/$(XRENDER_PATCHES)))
 ICEDTEA_PATCHES += $(sort $(subst $(abs_top_srcdir)/,,$(XRENDER_PATCH_FILES)))
