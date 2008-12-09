@@ -342,6 +342,8 @@ else
 endif
 
 stamps/hgforest.stamp:
+if OPENJDK_SRC_DIR_FOUND
+else
 if USE_ALT_OPENJDK_SRC_ZIP
 else
 if !USE_HG
@@ -354,10 +356,13 @@ else
           fi;
 endif
 endif
+endif
 	mkdir -p stamps 
 	touch stamps/hgforest.stamp
 
 stamps/download.stamp: stamps/hgforest.stamp
+if OPENJDK_SRC_DIR_FOUND
+else
 if USE_ALT_OPENJDK_SRC_ZIP
 else
 if USE_HG
@@ -379,6 +384,7 @@ if USE_ALT_HOTSPOT_SRC_ZIP
 else
 	changeset="`cat $(abs_top_srcdir)/hotspot.map|grep $(HSBUILD)|cut -f2`"; \
 	$(WGET) $(HOTSPOT_URL)$${changeset}.tar.gz -O $(HOTSPOT_SRC_ZIP);
+endif
 endif
 endif
 if WITH_CACAO
@@ -668,6 +674,9 @@ ICEDTEA_PATCHES += \
 	$(DISTRIBUTION_PATCHES)
 
 stamps/extract.stamp: stamps/download.stamp
+if OPENJDK_SRC_DIR_FOUND
+	cp -a $(OPENJDK_SRC_DIR) openjdk
+else
 	if ! test -d openjdk ; \
 	then \
 	  mkdir openjdk ; \
@@ -683,6 +692,7 @@ if WITH_ALT_HSBUILD
 	  chmod -R ug+w hotspot-* ; \
 	  mv hotspot-$$(cat $(abs_top_srcdir)/hotspot.map|grep $(HSBUILD)|cut -f2) openjdk/hotspot ; \
 	fi
+endif
 endif
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
