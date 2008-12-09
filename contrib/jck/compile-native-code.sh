@@ -58,7 +58,8 @@ gcc -fPIC -shared -o $LIBDIR/libgenrandom.so \
   -I$JCKDIR/src/share/lib/jni/include/solaris \
   $JCKDIR/tests/api/javax_management/loading/data/archives/src/C/com_sun_management_mbeans_loading_RandomGen.c   
 
-jar uf $RESDIR/archives/MBeanUseNativeLib.jar $LIBDIR/libsystemInfo.so 
-rm -f $LIBDIR/libsystemInfo.so   
-jar cf $RESDIR/archives/OnlyLibs.jar $LIBDIR/libjmxlibid.so 
-rm -f $LIBDIR/libjmxlibid.so
+cd $LIBDIR
+jar uf $RESDIR/archives/MBeanUseNativeLib.jar libsystemInfo.so 
+rm -f libsystemInfo.so   
+jar cf $RESDIR/archives/OnlyLibs.jar libjmxlibid.so 
+rm -f libjmxlibid.so
