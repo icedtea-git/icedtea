@@ -652,7 +652,7 @@ if WITH_ALT_HSBUILD
 	  rm -rf openjdk/hotspot ; \
 	  $(TAR) xf $(HOTSPOT_SRC_ZIP) ; \
 	  chmod -R ug+w hotspot-* ; \
-	  mv $$(find -maxdepth 1 -name 'hotspot-*' -type d) openjdk/hotspot ; \
+	  mv hotspot-$$(cat $(abs_top_srcdir)/hotspot.map|grep $(HSBUILD)|cut -f2) openjdk/hotspot ; \
 	fi
 endif
 if WITH_CACAO
