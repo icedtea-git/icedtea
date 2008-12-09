@@ -1,43 +1,36 @@
-# HG changeset patch
-# User ceisserer
-# Date 1217866603 -7200
-# Node ID cf291c1144545d190c719d31a709cf32968ade59
-# Parent  f757686901c7e70f76bfa4860ea2e0c16d7e7252
-Summary: Added some comments
-
-diff -r f757686901c7 -r cf291c114454 make/sun/awt/mapfile-mawt-vers
---- openjdk/jdk/make/sun/awt/mapfile-mawt-vers	Sat Aug 02 21:14:19 2008 +0200
-+++ openjdk/jdk/make/sun/awt/mapfile-mawt-vers	Mon Aug 04 18:16:43 2008 +0200
-@@ -445,7 +445,6 @@
+diff -Nru openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers openjdk/jdk/make/sun/awt/mapfile-mawt-vers
+--- openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers	2008-12-09 19:27:39.000000000 +0000
++++ openjdk/jdk/make/sun/awt/mapfile-mawt-vers	2008-12-09 19:34:01.000000000 +0000
+@@ -444,7 +444,6 @@
          	Java_sun_java2d_xr_XRRenderer_devCopyArea;
  		Java_sun_java2d_xr_XRMaskFill_maskFill;
  		Java_sun_java2d_xr_XRMaskBlit_maskBlit;
--		XRT_DrawGlyphList;
+- 		XRT_DrawGlyphList;
  
+                 Java_sun_java2d_opengl_OGLContext_getOGLIdString;
                  Java_sun_java2d_opengl_OGLMaskFill_maskFill;
-                 Java_sun_java2d_opengl_OGLRenderer_drawPoly;
-@@ -541,6 +540,7 @@
+@@ -542,6 +541,7 @@
                  AWTCharAscent;
                  AWTCharDescent;
                  AWTDrawGlyphList;
-+		XRT_DrawGlyphList;
++ 		XRT_DrawGlyphList;
+                 AccelGlyphCache_RemoveAllCellInfos;
  
  	local:
- 		*;
-diff -r f757686901c7 -r cf291c114454 make/sun/awt/mapfile-vers-linux
---- openjdk/jdk/make/sun/awt/mapfile-vers-linux	Sat Aug 02 21:14:19 2008 +0200
-+++ openjdk/jdk/make/sun/awt/mapfile-vers-linux	Mon Aug 04 18:16:43 2008 +0200
+diff -Nru openjdk.orig/jdk/make/sun/awt/mapfile-vers-linux openjdk/jdk/make/sun/awt/mapfile-vers-linux
+--- openjdk.orig/jdk/make/sun/awt/mapfile-vers-linux	2008-11-20 08:44:12.000000000 +0000
++++ openjdk/jdk/make/sun/awt/mapfile-vers-linux	2008-12-09 19:34:30.000000000 +0000
 @@ -568,6 +568,7 @@
                  AWTCharAscent;
                  AWTCharDescent;
                  AWTDrawGlyphList;
 +		XRT_DrawGlyphList;
+                 AccelGlyphCache_RemoveAllCellInfos;
  
  	local:
- 		*;
-diff -r f757686901c7 -r cf291c114454 make/sun/headless/mapfile-vers
---- openjdk/jdk/make/sun/headless/mapfile-vers	Sat Aug 02 21:14:19 2008 +0200
-+++ openjdk/jdk/make/sun/headless/mapfile-vers	Mon Aug 04 18:16:43 2008 +0200
+diff -Nru openjdk.orig/jdk/make/sun/headless/mapfile-vers openjdk/jdk/make/sun/headless/mapfile-vers
+--- openjdk.orig/jdk/make/sun/headless/mapfile-vers	2008-12-09 19:27:39.000000000 +0000
++++ openjdk/jdk/make/sun/headless/mapfile-vers	2008-12-09 19:34:51.000000000 +0000
 @@ -57,8 +57,6 @@
                  Java_sun_java2d_x11_X11SurfaceData_XSetXorMode;
                  Java_sun_java2d_x11_X11SurfaceData_XSetForeground;
@@ -47,17 +40,17 @@ diff -r f757686901c7 -r cf291c114454 make/sun/headless/mapfile-vers
  		X11SurfaceData_GetOps;
  		Java_java_awt_Font_initIDs;
                  Java_sun_font_FontManager_getFontConfig;
-@@ -100,6 +98,7 @@
+@@ -101,6 +99,7 @@
                  AWTCharAscent;
                  AWTCharDescent;
                  AWTDrawGlyphList;
 +		XRT_DrawGlyphList;
+                 AccelGlyphCache_RemoveAllCellInfos;
  
  
- 	local:
-diff -r f757686901c7 -r cf291c114454 src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c
---- openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	Sat Aug 02 21:14:19 2008 +0200
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	Mon Aug 04 18:16:43 2008 +0200
+diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c
+--- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	2008-12-09 19:27:39.000000000 +0000
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	2008-12-09 19:33:01.000000000 +0000
 @@ -67,6 +67,9 @@
  
  

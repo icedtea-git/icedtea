@@ -1907,7 +1907,8 @@ endif
 
 if ENABLE_XRENDER
 XRENDER_PATCHES = patches/xrender/icedtea-???.patch
-ICEDTEA_PATCHES += $(sort $(wildcard $(XRENDER_PATCHES)))
+XRENDER_PATCH_FILES = $(sort $(wildcard $(abs_top_srcdir)/$(XRENDER_PATCHES)))
+ICEDTEA_PATCHES += $(sort $(subst $(abs_top_srcdir)/,,$(XRENDER_PATCH_FILES)))
 endif
 
 if !USE_CVMI
