@@ -366,7 +366,11 @@ else
 if USE_ALT_OPENJDK_SRC_ZIP
 else
 if USE_HG
-	$(HG) fclone -r jdk6-$(OPENJDK_VERSION) $(OPENJDK_HG_URL) openjdk;
+if WITH_HGREV
+	$(HG) fclone -r $(HGREV) $(OPENJDK_HG_URL) openjdk;
+else
+	$(HG) fclone $(OPENJDK_HG_URL) openjdk;
+endif
 else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \

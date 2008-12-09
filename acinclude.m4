@@ -988,3 +988,20 @@ AC_DEFUN([ENABLE_HG],
   AC_MSG_RESULT([${enable_hg}])
   AM_CONDITIONAL([USE_HG], test x"${enable_hg}" = "xyes")
 ])
+
+AC_DEFUN([AC_CHECK_WITH_HG_REVISION],
+[
+  AC_MSG_CHECKING([which Mercurial revision to use])
+  AC_ARG_WITH([hg-revision],
+	      [AS_HELP_STRING(--with-hg-revision,the Mercurial revision to use)],
+  [
+    HGREV="${withval}"
+    AC_MSG_RESULT([${HGREV}])
+  ],
+  [ 
+    HGREV=""
+    AC_MSG_RESULT([tip])
+  ])
+  AC_SUBST([HGREV])
+  AM_CONDITIONAL(WITH_HGREV, test "x${HGREV}" != "x")
+])
