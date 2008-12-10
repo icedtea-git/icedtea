@@ -509,7 +509,8 @@ ZERO_PATCHES += \
 	patches/icedtea-signature-iterator.patch \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-zero.patch \
-	patches/icedtea-ia64-bugfix.patch 
+	patches/icedtea-ia64-bugfix.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-parisc-opt.patch
 
 if !WITH_ALT_HSBUILD
 ZERO_PATCHES += \

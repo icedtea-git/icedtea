@@ -1,3 +1,10 @@
+2008-12-10  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/*/icedtea-text-relocations.patch: Update for PARISC.
+	* patches/icedtea-zero.patch: Likewise.
+	* patches/hotspot/*/icedtea-parisc-opt.patch: New.
+	* Makefile.am (ICEDTEA_PATCHES): Apply icedtea-parisc-opt.patch.
+
 2008-12-10  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Remove spurious
