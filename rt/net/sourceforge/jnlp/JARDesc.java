@@ -46,6 +46,9 @@ public class JARDesc {
 
     /** whether the JAR contains native libraries */
     private boolean nativeJar;
+    
+    /** whether the JAR can be cached */
+    private boolean cacheable;
 
     /**
      * Create a JAR descriptor.
@@ -57,13 +60,14 @@ public class JARDesc {
      * @param main whether the JAR contains the main class
      * @param nativeJam whether the JAR contains native libraries
      */
-    public JARDesc(URL location, Version version, String part, boolean lazy, boolean main, boolean nativeJar) {
+    public JARDesc(URL location, Version version, String part, boolean lazy, boolean main, boolean nativeJar, boolean cacheable) {
         this.location = location;
         this.version = version;
         this.part = part;
         this.lazy = lazy;
         this.main = main;
         this.nativeJar = nativeJar;
+        this.cacheable = cacheable;
     }
 
     /**
@@ -123,6 +127,15 @@ public class JARDesc {
      */
     public boolean isMain() {
         return main;
+    }
+    
+    /**
+     * Returns if this jar is cacheable
+     * 
+     * @return Whether or not this jar is cacheable
+     */
+    public boolean isCacheable() {
+        return cacheable;
     }
 
 }

@@ -47,6 +47,7 @@ public class UpdatePolicy {
 
     public static UpdatePolicy ALWAYS = new UpdatePolicy(0);
     public static UpdatePolicy SESSION = new UpdatePolicy(-1);
+    public static UpdatePolicy FORCE = new UpdatePolicy(Long.MIN_VALUE);
     public static UpdatePolicy NEVER = new UpdatePolicy(Long.MAX_VALUE);
 
     private long timeDiff = -1;

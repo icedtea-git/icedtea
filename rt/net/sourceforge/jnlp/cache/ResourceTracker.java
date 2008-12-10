@@ -152,7 +152,7 @@ public class ResourceTracker {
         if (location == null)
             throw new IllegalArgumentException("location==null");
 
-        Resource resource = Resource.getResource(location, version);
+        Resource resource = Resource.getResource(location, updatePolicy, version);
         boolean downloaded = false;
 
         synchronized (resources) {
@@ -215,7 +215,7 @@ public class ResourceTracker {
             return true;
         }
 
-        if (updatePolicy != UpdatePolicy.ALWAYS) { // save loading entry props file
+        if (updatePolicy != UpdatePolicy.ALWAYS && updatePolicy != UpdatePolicy.FORCE) { // save loading entry props file
             CacheEntry entry = new CacheEntry(resource.location, resource.downloadVersion);
 
             if (entry.isCached() && !updatePolicy.shouldUpdate(entry)) {
@@ -231,6 +231,11 @@ public class ResourceTracker {
                 fireDownloadEvent(resource);
                 return true;
             }
+        }
+        
+        if (updatePolicy == UpdatePolicy.FORCE) { // ALWAYS update
+            // When we are "always" updating, we update for each instance. Reset resource status.
+            resource.changeStatus(Integer.MAX_VALUE, 0);
         }
 
         // may or may not be cached, but check update when connection
@@ -649,7 +654,7 @@ public class ResourceTracker {
             // connect
             URLConnection connection = resource.location.openConnection(); // this won't change so should be okay unsynchronized
             int size = connection.getContentLength();
-            boolean current = CacheUtil.isCurrent(resource.location, resource.requestVersion, connection);
+            boolean current = CacheUtil.isCurrent(resource.location, resource.requestVersion, connection) && resource.getUpdatePolicy() != UpdatePolicy.FORCE;
 
             synchronized(resource) {
                 resource.localFile = localFile;

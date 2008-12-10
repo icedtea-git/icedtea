@@ -1,3 +1,22 @@
+2008-12-10  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Remove spurious
+	call to getSecuritymanager() that was causing a CCE.
+	* rt/net/sourceforge/jnlp/JARDesc.java: Track if the jar is cacheable or
+	not.
+	* rt/net/sourceforge/jnlp/Parser.java: Provide new cacheable param to
+	JARDesc constructor.
+	* rt/net/sourceforge/jnlp/PluginBridge.java: Track cache_archive and
+	cache_archive_ex parameters in addition to archive.
+	* rt/net/sourceforge/jnlp/cache/Resource.java: Track per resource update
+	policy.
+	* rt/net/sourceforge/jnlp/cache/ResourceTracker.java: Take into account a
+	new update policy of "forced" update on each instantiation.
+	* rt/net/sourceforge/jnlp/cache/UpdatePolicy.java: Create new FORCE update
+	policy.
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Provide new 
+	cacheable param to JARDesc constructor.
+
 2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:

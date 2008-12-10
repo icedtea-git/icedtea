@@ -649,7 +649,6 @@ import sun.misc.Ref;
       * Get an applet by name.
       */
      public Applet getApplet(String name) {
- 	AppletSecurity security = (AppletSecurity)System.getSecurityManager();
  	name = name.toLowerCase();
  	SocketPermission panelSp =
  	    new SocketPermission(panel.getCodeBase().getHost(), "connect");

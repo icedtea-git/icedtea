@@ -308,7 +308,7 @@ class Parser {
             if (strict) 
                 throw new ParseException(R("PNativeHasMain"));
 
-        return new JARDesc(location, version, part, lazy, main, nativeJar);
+        return new JARDesc(location, version, part, lazy, main, nativeJar, true);
 
     }
 

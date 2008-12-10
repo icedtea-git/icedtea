@@ -302,6 +302,7 @@ public class JNLPClassLoader extends URLClassLoader {
         List initialJars = new ArrayList();
 
         for (int i=0; i < jars.length; i++) {
+
             available.add(jars[i]);
 
             if (jars[i].isEager())
@@ -309,7 +310,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
             tracker.addResource(jars[i].getLocation(), 
                                 jars[i].getVersion(), 
-                                JNLPRuntime.getDefaultUpdatePolicy()
+                                jars[i].isCacheable() ? JNLPRuntime.getDefaultUpdatePolicy() : UpdatePolicy.FORCE
                                );
         }
 
@@ -495,10 +496,10 @@ public class JNLPClassLoader extends URLClassLoader {
                         // there is currently no mechanism to cache files per 
                         // instance.. so only index cached files
                         if (localFile != null) {
-                          JarFile file = new JarFile(localFile.getAbsolutePath());
-			  JarIndex index = JarIndex.getJarIndex(file, null);
-			  if (index != null)
-			    jarIndexes.add(index);
+                            JarIndex index = JarIndex.getJarIndex(new JarFile(localFile.getAbsolutePath()), null);
+
+                            if (index != null)
+                                jarIndexes.add(index);
                         }
 
                         if (JNLPRuntime.isDebug())
@@ -696,15 +697,14 @@ public class JNLPClassLoader extends URLClassLoader {
                 // Currently this loads jars directly from the site. We cannot cache it because this 
                 // call is initiated from within the applet, which does not have disk read/write permissions
                 for (JarIndex index: jarIndexes) {
-
-		    LinkedList<String> jarList = index.get(name.replace('.', '/'));
+                    LinkedList<String> jarList = index.get(name.replace('.', '/'));
 
                     if (jarList != null) {
                         for (String jarName: jarList) {
                             JARDesc desc;
                             try {
                                 desc = new JARDesc(new URL(file.getCodeBase(), jarName),
-                                        null, null, false, true, false);
+                                        null, null, false, true, false, true);
                             } catch (MalformedURLException mfe) {
                                 throw new ClassNotFoundException(name);
                             }
