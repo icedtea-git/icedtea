@@ -29,6 +29,8 @@ import java.util.Locale;
 import java.util.List;
 import java.util.ArrayList;
 
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
+
 
 public class PluginBridge extends JNLPFile
 {
@@ -76,9 +78,11 @@ public class PluginBridge extends JNLPFile
         }
 
         if (jar != null && jar.length() > 0) {
-            System.err.println("Jar string: " + jar);
             this.jars = jar.split(",");
-            System.err.println("jars length: " + jars.length);
+            if (JNLPRuntime.isDebug()) {
+                System.err.println("Jar string: " + jar);
+                System.err.println("jars length: " + jars.length);
+            }
         }
         this.atts = atts;
 

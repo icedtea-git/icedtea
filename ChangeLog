@@ -1,3 +1,10 @@
+2008-12-11  Deepak Bhole <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Clean up output shown in non debug mode.
+	* plugin/icedtea/netscape/javascript/JSObject.java: Same.
+	* rt/net/sourceforge/jnlp/NetxPanel.java: Same.
+	* rt/net/sourceforge/jnlp/PluginBridge.java: Same.
+
 2008-12-10  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/hotspot/*/icedtea-text-relocations.patch: Update for PARISC.
