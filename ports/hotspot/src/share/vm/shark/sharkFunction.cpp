@@ -190,10 +190,6 @@ Value* SharkFunction::CreatePopFrame(int result_slots)
       builder()->CreateIntToPtr(
         fp, PointerType::getUnqual(SharkType::intptr_type()))));
 
-#ifdef _LP64
-  if (result_slots == 2)
-    return builder()->CreateAdd(sp, LLVMValue::jint_constant(wordSize));
-#endif // _LP64
   return sp;
 }
 

@@ -838,10 +838,12 @@ void SharkBlock::parse()
       do_if(ICmpInst::ICMP_NE, SharkValue::null(), pop());
       break;
     case Bytecodes::_if_acmpeq:
-      do_if(ICmpInst::ICMP_EQ, pop(), pop());
+      b = pop(); a = pop();
+      do_if(ICmpInst::ICMP_EQ, b, a);
       break;
     case Bytecodes::_if_acmpne:
-      do_if(ICmpInst::ICMP_NE, pop(), pop());
+      b = pop(); a = pop();
+      do_if(ICmpInst::ICMP_NE, b, a);
       break;
     case Bytecodes::_ifeq:
       do_if(ICmpInst::ICMP_EQ, SharkValue::jint_constant(0), pop());
@@ -862,22 +864,28 @@ void SharkBlock::parse()
       do_if(ICmpInst::ICMP_SGE, SharkValue::jint_constant(0), pop());
       break;
     case Bytecodes::_if_icmpeq:
-      do_if(ICmpInst::ICMP_EQ, pop(), pop());
+      b = pop(); a = pop();
+      do_if(ICmpInst::ICMP_EQ, b, a);
       break;
     case Bytecodes::_if_icmpne:
-      do_if(ICmpInst::ICMP_NE, pop(), pop());
+      b = pop(); a = pop();
+      do_if(ICmpInst::ICMP_NE, b, a);
       break;
     case Bytecodes::_if_icmplt:
-      do_if(ICmpInst::ICMP_SLT, pop(), pop());
+      b = pop(); a = pop();
+      do_if(ICmpInst::ICMP_SLT, b, a);
       break;
     case Bytecodes::_if_icmple:
-      do_if(ICmpInst::ICMP_SLE, pop(), pop());
+      b = pop(); a = pop();
+      do_if(ICmpInst::ICMP_SLE, b, a);
       break;
     case Bytecodes::_if_icmpgt:
-      do_if(ICmpInst::ICMP_SGT, pop(), pop());
+      b = pop(); a = pop();
+      do_if(ICmpInst::ICMP_SGT, b, a);
       break;
     case Bytecodes::_if_icmpge:
-      do_if(ICmpInst::ICMP_SGE, pop(), pop());
+      b = pop(); a = pop();
+      do_if(ICmpInst::ICMP_SGE, b, a);
       break;
 
     case Bytecodes::_tableswitch:
