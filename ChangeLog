@@ -1,5 +1,9 @@
 2008-12-17  Gary Benson  <gbenson@redhat.com>
 
+	* contrib/mixtec-hacks.patch: Updated.
+
+2008-12-17  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
 	(_Copy_conjoint_jshorts_atomic): Implemented.
 
