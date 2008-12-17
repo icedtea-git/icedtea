@@ -1028,28 +1028,21 @@ stamps/bootstrap-directory-ecj.stamp: stamps/native-ecj.stamp
 	ln -sf $(XALAN2_SERIALIZER_JAR) \
 	  bootstrap/ecj/lib/endorsed/xalan-j2-serializer.jar
 	ln -sf $(XERCES2_JAR) bootstrap/ecj/lib/endorsed/xerces-j2.jar
-	if test -d $(SYSTEM_GCJ_DIR); \
-	then \
-	  mkdir -p bootstrap/ecj/jre/lib; \
-	  ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR) \
-	    bootstrap/ecj/jre/lib/; \
-	  if ! test -d bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
+	mkdir -p bootstrap/ecj/jre/lib; \
+	ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR) \
+	  bootstrap/ecj/jre/lib/; \
+	if ! test -d bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
 	  then \
-	    ln -sf ./$(JRE_ARCH_DIR) \
-	      bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
-	  fi; \
-	  mkdir -p bootstrap/ecj/include; \
-	  for i in $(SYSTEM_GCJ_DIR)/include/*; do \
-	    test -r $$i | continue; \
-	    i=`basename $$i`; \
-	    rm -f bootstrap/ecj/include/$$i; \
-	    ln -s $(SYSTEM_GCJ_DIR)/include/$$i bootstrap/ecj/include/$$i; \
-	  done; \
-	else \
-	  echo $(SYSTEM_GCJ_DIR) " cannot be found. Try reconfiguring with " \
-	    --with-gcj-home=/path/to/java-gcj-devel ; \
-          exit 1; \
-	fi
+	  ln -sf ./$(JRE_ARCH_DIR) \
+	    bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
+	fi; \
+	mkdir -p bootstrap/ecj/include; \
+	for i in $(SYSTEM_GCJ_DIR)/include/*; do \
+	  test -r $$i | continue; \
+	  i=`basename $$i`; \
+	  rm -f bootstrap/ecj/include/$$i; \
+	  ln -s $(SYSTEM_GCJ_DIR)/include/$$i bootstrap/ecj/include/$$i; \
+	done; \
 	if test -f $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/tools.jar ; \
 	then \
 	  mkdir -p $(abs_top_builddir)/bootstrap/ecj/lib ; \

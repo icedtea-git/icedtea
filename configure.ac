@@ -37,62 +37,41 @@ AC_CHECK_WITH_HOTSPOT_BUILD
 AC_PATH_TOOL([LINUX32],[linux32])
 AC_CHECK_GCC_VERSION
 
-AC_MSG_CHECKING([for a JDK home directory])
-AC_ARG_WITH([gcj-home],
-	    [AS_HELP_STRING([--with-gcj-home],
-                            [gcj home directory \
-                             (default is /usr/lib/jvm/java-gcj)])],
-            [
-              if test "x${withval}" = x
-              then
-                SYSTEM_GCJ_DIR=/usr/lib/jvm/java-gcj
-              else
-                SYSTEM_GCJ_DIR=${withval}
-              fi
-            ],
-            [
-              SYSTEM_GCJ_DIR=/usr/lib/jvm/java-gcj
-            ])
-AC_MSG_RESULT(${SYSTEM_GCJ_DIR})
-AC_SUBST(SYSTEM_GCJ_DIR)
+AC_MSG_CHECKING([whether to build using an existing installation of IcedTea])
+AC_ARG_WITH([icedtea],
+        [AS_HELP_STRING([--with-icedtea],
+                        [build IcedTea with system-installed IcedTea])],
+        [
+          if test "x${withval}" != xno
+          then
+            with_icedtea=true
+          else
+            with_icedtea=false
+          fi
+        ],
+        [
+          with_icedtea=false
+        ])
+AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" = true)
+AC_MSG_RESULT(${with_icedtea})
 
-AC_MSG_CHECKING([for an existing OpenJDK installation])
-AC_ARG_WITH([openjdk-home],
-            [AS_HELP_STRING([--with-openjdk-home],
-                            [OpenJDK home directory \
-                             (default is /usr/lib/jvm/java-openjdk)])],
-            [
-              if test "x${withval}" = x
-              then
-                SYSTEM_OPENJDK_DIR=/usr/lib/jvm/java-openjdk
-              else
-                SYSTEM_OPENJDK_DIR=${withval}
-              fi
-            ],
-            [
-              SYSTEM_OPENJDK_DIR=/usr/lib/jvm/java-openjdk
-            ])
-AC_MSG_RESULT(${SYSTEM_OPENJDK_DIR})
-AC_SUBST(SYSTEM_OPENJDK_DIR)
-
-AC_MSG_CHECKING(for an existing IcedTea installation)
-AC_ARG_WITH([icedtea-home],
-            [AS_HELP_STRING([--with-icedtea-home],
-                            [IcedTea home directory \
-                             (default is /usr/lib/jvm/java-icedtea)])],
-            [
-              if test "x${withval}" = x
-              then
-                SYSTEM_ICEDTEA_DIR=/usr/lib/jvm/java-icedtea
-              else
-                SYSTEM_ICEDTEA_DIR=${withval}
-              fi
-            ],
-            [
-              SYSTEM_ICEDTEA_DIR=/usr/lib/jvm/java-icedtea
-            ])
-AC_MSG_RESULT(${SYSTEM_ICEDTEA_DIR})
-AC_SUBST(SYSTEM_ICEDTEA_DIR)
+AC_MSG_CHECKING([whether to build using an existing installation of OpenJDK])
+AC_ARG_WITH([openjdk],
+        [AS_HELP_STRING([--with-openjdk],
+                        [build IcedTea with system-installed OpenJDK])],
+        [
+          if test "x${withval}" != xno
+          then
+            with_openjdk=true
+          else
+            with_openjdk=false
+          fi
+        ],
+        [
+          with_openjdk=false
+        ])
+AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" = true)
+AC_MSG_RESULT(${with_openjdk})
 
 AC_MSG_CHECKING([for a NetBeans installation])
 AC_ARG_WITH([netbeans-home],
@@ -182,41 +161,6 @@ then
   FIND_NETBEANS
 fi
 
-AC_ARG_WITH([icedtea],
-        [AS_HELP_STRING([--with-icedtea],
-                        [build IcedTea with system-installed IcedTea])],
-        [
-          if test "x${withval}" != xno
-          then
-            with_icedtea=true
-          else
-            with_icedtea=false
-          fi
-        ],
-        [
-          with_icedtea=false
-        ])
-AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" = true)
-AC_MSG_RESULT(${with_icedtea})
-
-AC_MSG_CHECKING(whether to build using an existing installation of OpenJDK)
-AC_ARG_WITH([openjdk],
-        [AS_HELP_STRING([--with-openjdk],
-                        [build IcedTea with system-installed OpenJDK])],
-        [
-          if test "x${withval}" != xno
-          then
-            with_openjdk=true
-          else
-            with_openjdk=false
-          fi
-        ],
-        [
-          with_openjdk=false
-        ])
-AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" = true)
-AC_MSG_RESULT(${with_openjdk})
-
 AC_MSG_CHECKING(how many parallel build jobs to execute)
 AC_ARG_WITH([parallel-jobs],
 	[AS_HELP_STRING([--with-parallel-jobs],
@@ -261,6 +205,7 @@ AC_SUBST(DIST_ID)
 SET_ARCH_DIRS
 if test "${with_openjdk}" = true
 then
+  AC_CHECK_FOR_OPENJDK
   JAVA=$SYSTEM_OPENJDK_DIR/bin/java
   AC_SUBST(JAVA)
   JAVAC=${SYSTEM_OPENJDK_DIR}/bin/javac
@@ -271,10 +216,10 @@ then
   AC_SUBST(JAR)
   RMIC=${SYSTEM_OPENJDK_DIR}/bin/rmic
   AC_SUBST(RMIC)
-  AM_CONDITIONAL(GCC_OLD, test x != x)
 else
 if test "${with_icedtea}" = true
 then
+  AC_CHECK_FOR_ICEDTEA
   JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
   AC_SUBST(JAVA)
   JAVAC=${SYSTEM_ICEDTEA_DIR}/bin/javac
@@ -285,8 +230,8 @@ then
   AC_SUBST(JAR)
   RMIC=${SYSTEM_ICEDTEA_DIR}/bin/rmic
   AC_SUBST(RMIC)
-  AM_CONDITIONAL(GCC_OLD, test x != x)
 else
+  AC_CHECK_FOR_GCJ_JDK
   FIND_JAVA
   FIND_JAVAC
   FIND_JAVAH

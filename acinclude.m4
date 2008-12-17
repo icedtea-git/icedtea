@@ -975,3 +975,104 @@ AC_DEFUN([AC_CHECK_WITH_HG_REVISION],
   AC_SUBST([HGREV])
   AM_CONDITIONAL(WITH_HGREV, test "x${HGREV}" != "x")
 ])
+
+AC_DEFUN([AC_CHECK_FOR_GCJ_JDK],
+[
+  AC_MSG_CHECKING([for a GCJ JDK home directory])
+  AC_ARG_WITH([gcj-home],
+	      [AS_HELP_STRING([--with-gcj-home],
+                              [gcj home directory \
+                               (default is /usr/lib/jvm/java-gcj or /usr/lib/jvm/gcj-jdk)])],
+              [
+                if test "x${withval}" = xyes
+                then
+                  SYSTEM_GCJ_DIR=
+                elif test "x${withval}" = xno
+                then
+	          SYSTEM_GCJ_DIR=
+	        else
+                  SYSTEM_GCJ_DIR=${withval}
+                fi
+              ],
+              [
+	        SYSTEM_GCJ_DIR=
+              ])
+  if test -z "${SYSTEM_GCJ_DIR}"; then
+    for dir in /usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk /usr/lib/jvm/cacao ; do
+       test -d $dir && SYSTEM_GCJ_DIR=$dir
+    done
+  fi
+  AC_MSG_RESULT(${SYSTEM_GCJ_DIR})
+  if ! test -d "${SYSTEM_GCJ_DIR}"; then
+    AC_MSG_ERROR("A GCJ JDK home directory could not be found.")
+  fi
+  AC_SUBST(SYSTEM_GCJ_DIR)
+])
+
+AC_DEFUN([AC_CHECK_FOR_OPENJDK],
+[
+  AC_MSG_CHECKING([for an existing OpenJDK installation])
+  AC_ARG_WITH([openjdk-home],
+              [AS_HELP_STRING([--with-openjdk-home],
+                              [OpenJDK home directory \
+                               (default is /usr/lib/jvm/java-openjdk)])],
+              [
+                if test "x${withval}" = xyes
+                then
+                  SYSTEM_OPENJDK_DIR=
+                elif test "x${withval}" = xno
+                then
+	          SYSTEM_OPENJDK_DIR=
+	        else
+                  SYSTEM_OPENJDK_DIR=${withval}
+                fi
+              ],
+              [
+                SYSTEM_OPENJDK_DIR=
+              ])
+  if test -z "${SYSTEM_OPENJDK_DIR}"; then
+    for dir in /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk ; do
+       test -d $dir && SYSTEM_OPENJDK_DIR=$dir
+    done
+  fi
+  AC_MSG_RESULT(${SYSTEM_OPENJDK_DIR})
+  if ! test -d "${SYSTEM_OPENJDK_DIR}"; then
+    AC_MSG_ERROR("An OpenJDK home directory could not be found.")
+  fi
+  AC_SUBST(SYSTEM_OPENJDK_DIR)
+])
+
+AC_DEFUN([AC_CHECK_FOR_ICEDTEA],
+[
+  AC_MSG_CHECKING(for an existing IcedTea installation)
+  AC_ARG_WITH([icedtea-home],
+              [AS_HELP_STRING([--with-icedtea-home],
+                              [IcedTea home directory \
+                               (default is /usr/lib/jvm/java-icedtea)])],
+              [
+                if test "x${withval}" = xyes
+                then
+                  SYSTEM_ICEDTEA_DIR=
+                elif test "x${withval}" = xno
+                then
+	          SYSTEM_ICEDTEA_DIR=
+	        else
+                  SYSTEM_ICEDTEA_DIR=${withval}
+                fi
+              ],
+              [
+                SYSTEM_ICEDTEA_DIR=
+              ])
+  if test -z "${SYSTEM_ICEDTEA_DIR}"; then
+    for dir in /usr/lib/jvm/java-icedtea /usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk ; do
+       test -d $dir && SYSTEM_ICEDTEA_DIR=$dir
+    done
+  fi
+  AC_MSG_RESULT(${SYSTEM_ICEDTEA_DIR})
+  if ! test -d "${SYSTEM_ICEDTEA_DIR}"; then
+    AC_MSG_ERROR("An IcedTea home directory could not be found.")
+  fi
+  AC_SUBST(SYSTEM_ICEDTEA_DIR)
+])
+
+
