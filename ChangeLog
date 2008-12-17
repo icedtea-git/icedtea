@@ -1,3 +1,9 @@
+2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Remove the HotSpot directory while extracting
+	OpenJDK and then only when HSBUILD is not original.
+	
 2008-12-17  Gary Benson  <gbenson@redhat.com>
 
 	* contrib/mixtec-hacks.patch: Updated.

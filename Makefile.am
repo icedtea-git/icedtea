@@ -687,15 +687,20 @@ else
 	  mkdir openjdk ; \
 	  $(TAR) xf $(OPENJDK_SRC_ZIP) -C openjdk; \
 	  chmod -R ug+w openjdk ; \
+	  if test "x${HSBUILD}" != "xoriginal"; then \
+	    rm -rf openjdk/hotspot ; \
+	  fi ; \
 	  sh $(abs_top_srcdir)/fsg.sh ; \
 	fi
 if WITH_ALT_HSBUILD
 	if test -e ${HOTSPOT_SRC_ZIP} ; \
 	then \
-	  rm -rf openjdk/hotspot ; \
-	  $(TAR) xf $(HOTSPOT_SRC_ZIP) ; \
-	  chmod -R ug+w hotspot-* ; \
-	  mv hotspot-$$(cat $(abs_top_srcdir)/hotspot.map|grep $(HSBUILD)|cut -f2) openjdk/hotspot ; \
+	  if ! test -d openjdk/hotspot ; \
+	  then \
+	    $(TAR) xf $(HOTSPOT_SRC_ZIP) ; \
+	    chmod -R ug+w hotspot-* ; \
+	    mv hotspot-$$(cat $(abs_top_srcdir)/hotspot.map|grep $(HSBUILD)|cut -f2) openjdk/hotspot ; \
+	  fi ; \
 	fi
 endif
 endif
