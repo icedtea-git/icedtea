@@ -1,4 +1,18 @@
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Remove use of LIBGCJ_JAR, replacing with
+	SYSTEM_GCJ_DIR/jre/lib/rt.jar.
+	* acinclude.m4:
+	(AC_CHECK_GCC_VERSION): Added.
+	(FIND_LIBGCJ_JAR): Removed.
+	* configure.ac:
+	Call AC_CHECK_GCC_VERSION, don't
+	call FIND_LIBGCJ_JAR.
+	* javac.in:
+	Use SYSTEM_GCJ_DIR/jre/lib/rt.jar not LIBGCJ_JAR.
+
+2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
 	Remove the HotSpot directory while extracting

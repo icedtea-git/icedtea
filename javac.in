@@ -2,7 +2,7 @@
 
 case "$*" in
   *-bootclasspath*) ;;
-  *) bcoption="-bootclasspath @LIBGCJ_JAR@"
+  *) bcoption="-bootclasspath @SYSTEM_GCJ_DIR@/jre/lib/rt.jar"
 esac
 
 # Work around ecj's inability to handle duplicate command-line
