@@ -385,8 +385,19 @@ endif
 if WITH_ALT_HSBUILD
 if USE_ALT_HOTSPOT_SRC_ZIP
 else
-	changeset="`cat $(abs_top_srcdir)/hotspot.map|grep $(HSBUILD)|cut -f2`"; \
-	$(WGET) $(HOTSPOT_URL)$${changeset}.tar.gz -O $(HOTSPOT_SRC_ZIP);
+	hotspot_md5sum="`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) \
+	  $(abs_top_srcdir)/hotspot.map`" ; \
+	if ! echo "$${hotspot_md5sum}  $(HOTSPOT_SRC_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ $(HOTSPOT_SRC_ZIP) ] ; \
+	  then \
+	    mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
+	  fi ; \
+	  changeset="`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) \
+	    $(abs_top_srcdir)/hotspot.map`" ; \
+	  $(WGET) $(HOTSPOT_URL)$${changeset}.tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
+	fi
 endif
 endif
 endif
