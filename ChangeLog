@@ -1,6 +1,7 @@
 2008-12-19  Andrew Haley  <aph@redhat.com>
 
 	* Makefile.am (stamps/download.stamp): Check MD5sum on hotspot.tar.gz.
+	(stamps/extract.stamp): Use AWK here rather than cut.
 	* hotspot.map: Add md5sum for 14.0b08.
 
 2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
