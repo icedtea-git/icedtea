@@ -709,7 +709,8 @@ if WITH_ALT_HSBUILD
 	  then \
 	    $(TAR) xf $(HOTSPOT_SRC_ZIP) ; \
 	    chmod -R ug+w hotspot-* ; \
-	    mv hotspot-$$(cat $(abs_top_srcdir)/hotspot.map|grep $(HSBUILD)|cut -f2) openjdk/hotspot ; \
+	    mv hotspot-$$($(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) \
+	      $(abs_top_srcdir)/hotspot.map) openjdk/hotspot ; \
 	  fi ; \
 	fi
 endif
