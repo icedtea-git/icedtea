@@ -365,7 +365,7 @@ class DirectIntBufferS
         unsafe.copyMemory(ix(pos), ix(0), rem << 2);
         position(rem);
         limit(capacity());
-	clearMark();
+	discardMark();
         return this;
 
 

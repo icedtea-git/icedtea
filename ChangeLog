@@ -1,3 +1,37 @@
+2008-12-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* HACKING: Updated.
+	* Makefile.am: Bump to b42.
+	* generated/java/nio/DirectByteBuffer.java,
+	* generated/java/nio/DirectCharBufferS.java,
+	* generated/java/nio/DirectCharBufferU.java,
+	* generated/java/nio/DirectDoubleBufferS.java,
+	* generated/java/nio/DirectDoubleBufferU.java,
+	* generated/java/nio/DirectFloatBufferS.java,
+	* generated/java/nio/DirectFloatBufferU.java,
+	* generated/java/nio/DirectIntBufferS.java,
+	* generated/java/nio/DirectIntBufferU.java,
+	* generated/java/nio/DirectLongBufferS.java,
+	* generated/java/nio/DirectLongBufferU.java,
+	* generated/java/nio/DirectShortBufferS.java,
+	* generated/java/nio/DirectShortBufferU.java,
+	* generated/java/nio/HeapByteBuffer.java,
+	* generated/java/nio/HeapCharBuffer.java,
+	* generated/java/nio/HeapDoubleBuffer.java,
+	* generated/java/nio/HeapFloatBuffer.java,
+	* generated/java/nio/HeapIntBuffer.java,
+	* generated/java/nio/HeapLongBuffer.java,
+	* generated/java/nio/HeapShortBuffer.java:
+	Use discardMark() from the S6593946 fix rather than
+	our own clearMark() (identical other than in name).
+	* patches/icedtea-bytebuffer-compact.patch:
+	Remove fixes to template files and addition of the
+	clearMark() method as these are fixed by S6593946.
+	Keep the mark = -1/discardMark changes as this is a
+	cleaner solution.
+	* patches/icedtea-version.patch:
+	Remove mjw's patch.  Applied upstream as S6775152.
+	
 2008-12-09  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am:

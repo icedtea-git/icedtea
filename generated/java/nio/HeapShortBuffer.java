@@ -222,7 +222,7 @@ class HeapShortBuffer
         System.arraycopy(hb, ix(position()), hb, ix(0), remaining());
         position(remaining());
         limit(capacity());
-	clearMark();
+	discardMark();
         return this;
 
 

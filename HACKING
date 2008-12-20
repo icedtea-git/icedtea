@@ -13,11 +13,12 @@ included in the tarball resulting from the dist-openjdk-fsg target:
 The fsg.sh script is also run to delete certain files with dubious licensing and/or only occuring
 in binary format.
 
-The following patches are currently applied before the building of OpenJDK or OpenJDK6 by IcedTea:
+The following patches are currently applied before the building of OpenJDK7 or OpenJDK6 by IcedTea:
 
 * icedtea-ant.patch: Remove use of $(ANT_HOME).
 * icedtea-uname.patch: Handle output of uname on arm and mips{,el}.
-* icedtea-bytebuffer-compact.patch: Add clearMark() method to java.nio.Buffer (PR60).
+* icedtea-bytebuffer-compact.patch: Add clearMark() method to java.nio.Buffer (PR60/S6593946). 
+  Partially fixed by addition of discardMark() in OpenJDK7.
 * icedtea-copy-plugs.patch: Add IcedTea's 'plugs' for Java WebStart support, add
   cast to getAnnotation and trapAuthenticationFailure variable to com.sun.jmx.snmp.SnmpPduTrap.
 * icedtea-core-build.patch: Add support for building IcedTea core VM.
@@ -92,6 +93,7 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 * icedtea-6700047-loopopts.patch: Fix partial peeling issue, bug #6700047.
 * icedtea-6712835-ifnode.patch: Fix infinite loop in PhaseIterGVN::transform.
 * icedtea-timerqueue.patch: Fix setting of running variable (PR87/S6623943).
+* icedtea-version.patch: Fix (langtools) ant build to honor fcs MILESTONE setting (S6778493).
 
 The following patches are only applied to OpenJDK in IcedTea:
 

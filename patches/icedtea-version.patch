@@ -12,18 +12,4 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/s
    PRODUCT_SUFFIX = Runtime Environment
    JDK_RC_PLATFORM_NAME = Platform
    COMPANY_NAME = N/A
-diff -Nru openjdk.orig/langtools/make/Makefile openjdk/langtools/make/Makefile
---- openjdk.orig/langtools/make/Makefile	2008-11-19 12:16:39.000000000 +0000
-+++ openjdk/langtools/make/Makefile	2008-11-19 12:17:38.000000000 +0000
-@@ -82,7 +82,11 @@
- endif 
- 
- ifdef MILESTONE
-+ifneq ($(MILESTONE),fcs)
-   ANT_OPTIONS += -Dmilestone=$(MILESTONE)
-+else
-+  ANT_OPTIONS += -Drelease=$(JDK_VERSION)
-+endif
- endif
- 
- ifdef BUILD_NUMBER
+
