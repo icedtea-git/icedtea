@@ -1,3 +1,8 @@
+2008-12-21  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ICEDTEA_ENV, ICEDTEA_ENV_GCJ): Prepend directories
+	to PATH, don't replace PATH.
+
 2008-12-19  Omair Majid  <omajid@redhat.com>
 
 	* patches/hotspot/14.0b08/icedtea-text-relocations.patch: Build libjvm.so
