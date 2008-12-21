@@ -1,5 +1,10 @@
 2008-12-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* Makefile.am: Fix b42 tarball name and checksum
+	due to reroll.
+
+2008-12-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* HACKING: Updated.
 	* Makefile.am: Bump to b42.
 	* generated/java/nio/DirectByteBuffer.java,
