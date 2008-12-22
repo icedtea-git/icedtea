@@ -642,7 +642,8 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-display-mode-changer.patch \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-samejvm-safe.patch \
-	patches/icedtea-6728542-epoll.patch
+	patches/icedtea-6728542-epoll.patch \
+	patches/icedtea-io_util-overflow.patch
 
 if WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \
