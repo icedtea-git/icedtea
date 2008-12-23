@@ -33,4 +33,14 @@
  # CFLAGS_WARN holds compiler options to suppress/enable warnings.
  CFLAGS += $(CFLAGS_WARN/BYFILE)
  
-
+--- openjdk/hotspot/src/share/vm/runtime/arguments.cpp~	2008-11-25 10:12:12.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2008-12-23 09:38:06.000000000 +0100
+@@ -28,7 +28,7 @@
+ #include "incls/_precompiled.incl"
+ #include "incls/_arguments.cpp.incl"
+ 
+-#define DEFAULT_VENDOR_URL_BUG "http://java.sun.com/webapps/bugreport/crash.jsp"
++#define DEFAULT_VENDOR_URL_BUG "http://icedtea.classpath.org/bugzilla"
+ #define DEFAULT_JAVA_LAUNCHER  "generic"
+ 
+ char**  Arguments::_jvm_flags_array             = NULL;
