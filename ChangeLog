@@ -1,3 +1,8 @@
+2008-12-23  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ICEDTEA_ENV, ICEDTEA_ENV_GCJ): Don't explicitely append
+	standard directories to PATH.
+
 2008-12-22  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-io_util-overflow.patch: New file.
