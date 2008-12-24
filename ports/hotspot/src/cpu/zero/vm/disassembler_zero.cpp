@@ -26,25 +26,3 @@
 #include "incls/_precompiled.incl"
 #include "incls/_disassembler_zero.cpp.incl"
 
-#ifndef PRODUCT
-void Disassembler::decode(CodeBlob *cb, outputStream *st)
-{
-  Unimplemented();
-}
-
-void Disassembler::decode(nmethod *nm, outputStream *st)
-{
-#ifdef SHARK
-  assert(st == NULL, "it's all going to stderr anyway");
-  ((SharkEntry *) nm->instructions_begin())->llvm_function()->dump();
-#else
-  Unimplemented();
-#endif // SHARK
-}
-
-void Disassembler::decode(u_char *begin, u_char *end, outputStream *st)
-{
-  Unimplemented();
-}
-#endif // PRODUCT
-

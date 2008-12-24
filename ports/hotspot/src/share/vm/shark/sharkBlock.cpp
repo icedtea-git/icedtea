@@ -105,6 +105,8 @@ void SharkBlock::parse()
   builder()->SetInsertPoint(entry_block());
 
   if (has_trap()) {
+    iter()->force_bci(start());
+
     current_state()->decache_for_trap();
     builder()->CreateCall2(
       SharkRuntime::uncommon_trap(),
