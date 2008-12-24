@@ -687,7 +687,8 @@ ICEDTEA_PATCHES += $(sort $(subst $(abs_top_srcdir)/,,$(XRENDER_PATCH_FILES)))
 endif
 
 ICEDTEA_PATCHES += \
-	$(DISTRIBUTION_PATCHES)
+	$(DISTRIBUTION_PATCHES) \
+	patches/icedtea-a11y-property-change.patch
 
 stamps/extract.stamp: stamps/download.stamp
 if OPENJDK_SRC_DIR_FOUND
