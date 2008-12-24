@@ -637,13 +637,13 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-alsa-default-device.patch \
 	patches/icedtea-linker-libs-order.patch \
 	patches/icedtea-f2i-overflow.patch \
-	patches/icedtea-cc-interp-no-fer.patch \
 	patches/icedtea-6761856-freetypescaler.patch \
 	patches/icedtea-display-mode-changer.patch \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-samejvm-safe.patch \
 	patches/icedtea-6728542-epoll.patch \
-	patches/icedtea-io_util-overflow.patch
+	patches/icedtea-io_util-overflow.patch \
+	patches/icedtea-cc-interp-jvmti.patch
 
 if WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \

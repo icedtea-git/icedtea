@@ -1,3 +1,10 @@
+2008-12-24  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-cc-interp-jvmti.patch: New file.
+	* patches/icedtea-cc-interp-no-fer.patch: Deleted file.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
 2008-12-23  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/hotspot/original/icedtea-version.patch: Update.
