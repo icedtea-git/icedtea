@@ -1,3 +1,23 @@
+2009-01-05  Andrew Haley  <aph@redhat.com>
+
+	* Makefile.am (ICEDTEA_PATCHES): Fix bad checkin.
+
+2008-12-24  Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Work around bug in
+	ciTypeFlow::Block::pre_order_at().
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp 
+	(SharkCompiler::compile_method): Allow "*" as a wildcard.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp (llvm::IRBuilder):
+	type2aelembytes now a mamber function.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp (class
+	SharkBlock): is_private_copy renamed is_backedge_copy.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp (SharkBlock::parse):
+	force_bci if there's a trap.
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp: Delete
+	everything.
+
 2008-12-24  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-a11y-property-change.patch: New file.

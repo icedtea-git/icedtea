@@ -554,12 +554,6 @@ endif
 
 ICEDTEA_FSG_PATCHES =
 
-DISTRIBUTION_PATCHES = \
-	patches/mixtec-assertions.patch \
-	patches/mixtec-no-log-vm-output.patch \
-	patches/mixtec-no-print-vm-options.patch \
-	patches/mixtec-optimization.patch
-
 ICEDTEA_PATCHES = \
 	$(ZERO_PATCHES_COND) \
 	patches/icedtea-version.patch \
