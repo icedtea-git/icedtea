@@ -688,7 +688,8 @@ endif
 
 ICEDTEA_PATCHES += \
 	$(DISTRIBUTION_PATCHES) \
-	patches/icedtea-a11y-property-change.patch
+	patches/icedtea-a11y-property-change.patch \
+	patches/icedtea-demo-swingapplet.patch
 
 stamps/extract.stamp: stamps/download.stamp
 if OPENJDK_SRC_DIR_FOUND
