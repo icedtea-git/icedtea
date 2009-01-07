@@ -80,6 +80,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-cc-interp-jvmti.patch: Disable some JVMTI capabilities which are unsupported or do not work with the C++ interpreter.
 * icedtea-a11y-property-change.patch: Dont fire PropertyChangeEvent if the property hasnt changed.
 * icedtea-demo-swingapplet.patch: Add missing html file needed to run the demo.
+* icedtea-hotspot-dispatch.patch: Fix build failure with GCC-4.4 (PR 38725).
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 

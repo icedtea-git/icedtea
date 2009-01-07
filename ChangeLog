@@ -1,3 +1,10 @@
+2009-01-07  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/14.0b08/icedtea-hotspot-dispatch.patch: New, fix
+	build failure with GCC-4.4.
+	* Makefile.am: Apply.
+	* HACKING: Document the above.
+
 2009-01-06  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-demo-swingapplet.patch: New file.
