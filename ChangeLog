@@ -1,5 +1,12 @@
 2009-01-08  Matthias Klose  <doko@ubuntu.com>
 
+	PR icedtea/277
+	* patches/hotspot/14.0b08/icedtea-includedb.patch: New.
+	* Makefile.am: Apply.
+	* HACKING: Document the above.
+
+2009-01-08  Matthias Klose  <doko@ubuntu.com>
+
 	* patches/hotspot/14.0b08/icedtea-no-precompiled.patch: Don't use
 	precompiled header files in hotspot.
 	* HACKING: Document the above.

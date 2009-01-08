@@ -1,0 +1,10 @@
+--- openjdk/hotspot/src/share/vm/includeDB_core.orig	2008-11-21 17:11:18.000000000 -0700
++++ openjdk/hotspot/src/share/vm/includeDB_core	2009-01-08 14:32:58.000000000 -0700
+@@ -1314,6 +1314,7 @@
+ cppInterpreter_<arch>.cpp               interpreterRuntime.hpp
+ cppInterpreter_<arch>.cpp               interpreter.hpp
+ cppInterpreter_<arch>.cpp               interpreterGenerator.hpp
++cppInterpreter_<arch>.cpp               interfaceSupport.hpp
+ cppInterpreter_<arch>.cpp               jvmtiExport.hpp
+ cppInterpreter_<arch>.cpp               jvmtiThreadState.hpp
+ cppInterpreter_<arch>.cpp               methodDataOop.hpp
