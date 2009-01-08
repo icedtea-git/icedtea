@@ -203,6 +203,8 @@ fi
 AC_SUBST(DIST_ID)
 
 SET_ARCH_DIRS
+SET_OS_DIRS
+
 if test "${with_openjdk}" = true
 then
   AC_CHECK_FOR_OPENJDK
@@ -374,15 +376,18 @@ fi
 AC_SUBST(FREETYPE2_CFLAGS)
 AC_SUBST(FREETYPE2_LIBS)
 
-dnl Check for alsa headers and libraries.
-PKG_CHECK_MODULES(ALSA, alsa,[ALSA_FOUND=yes],[ALSA_FOUND=no])
-if test "x${ALSA_FOUND}" = xno
+dnl Check for alsa headers and libraries (only required for Linux).
+if test "x${BUILD_OS_DIR}" = "xlinux"
 then
-  AC_MSG_ERROR([Could not find alsa - \
-  Try installing alsa-lib-devel.])
-fi
+  PKG_CHECK_MODULES(ALSA, alsa,[ALSA_FOUND=yes],[ALSA_FOUND=no])
+  if test "x${ALSA_FOUND}" = xno
+  then
+    AC_MSG_ERROR([Could not find alsa - \
+    Try installing alsa-lib-devel.])
+  fi
 AC_SUBST(ALSA_CFLAGS)
 AC_SUBST(ALSA_LIBS)
+fi
 
 if test "x${enable_pulse_java}" = "xyes"
 then

@@ -1,3 +1,11 @@
+2009-01-08  Christian Thalinger  <christian.thalinger@gmail.com>
+
+	* acinclude.m4 (SET_OS_DIRS): New function.
+	* configure.ac: Call SET_OS_DIRS and made ALSA check conditional.
+	* Makefile.am (LINUX_DIR): Renamed to OS_DIR and use BUILD_OS_DIR
+	variable.
+	(ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Added OS_PATH to PATH.
+
 2009-01-07  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/hotspot/14.0b08/icedtea-hotspot-dispatch.patch: New, fix

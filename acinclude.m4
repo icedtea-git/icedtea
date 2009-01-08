@@ -66,6 +66,25 @@ AC_DEFUN([SET_ARCH_DIRS],
   AC_SUBST(ARCH_PREFIX)
 ])
 
+AC_DEFUN([SET_OS_DIRS],
+[
+  case "${host_os}" in
+    *linux*)
+      BUILD_OS_DIR=linux
+      OS_PATH=
+      ;;
+    *solaris*)
+      BUILD_OS_DIR=solaris
+      OS_PATH=/opt/SunStudioExpress/bin:/opt/SUNWpro/bin:/usr/gnu/bin
+      ;;
+    *)
+      AC_MSG_ERROR([unsupported operating system ${host_os}])
+      ;;
+  esac
+  AC_SUBST(BUILD_OS_DIR)
+  AC_SUBST(OS_PATH)
+])
+
 AC_DEFUN([FIND_JAVAC],
 [
   user_specified_javac=

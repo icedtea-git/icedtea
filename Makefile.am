@@ -112,9 +112,9 @@ EXTRA_DIST = rt generated \
 # name is completely irrelevant; only contains the plugs to build IcedTea.
 
 # OpenJDK build environment.
-LINUX_DIR = linux-$(BUILD_ARCH_DIR)
-BUILD_OUTPUT_DIR = openjdk/control/build/$(LINUX_DIR)
-ECJ_BUILD_OUTPUT_DIR = openjdk-ecj/control/build/$(LINUX_DIR)
+OS_DIR = $(BUILD_OS_DIR)-$(BUILD_ARCH_DIR)
+BUILD_OUTPUT_DIR = openjdk/control/build/$(OS_DIR)
+ECJ_BUILD_OUTPUT_DIR = openjdk-ecj/control/build/$(OS_DIR)
 ICEDTEA_BUILD_DIR = \
 	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)
 ICEDTEA_RT = \
@@ -150,7 +150,7 @@ ICEDTEA_ENV = \
         "JRE_RELEASE_VERSION=1.6.0_$(COMBINED_VERSION)" \
 	"MILESTONE=fcs" \
 	"LANG=C" \
-	"PATH=$(abs_top_builddir)/bootstrap/jdk1.6.0/bin:$$PATH" \
+	"PATH=$(abs_top_builddir)/bootstrap/jdk1.6.0/bin:$(OS_PATH):$$PATH" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
 	"ALT_BINARY_PLUGS_PATH=$(abs_top_builddir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
@@ -220,7 +220,7 @@ ICEDTEA_ENV_ECJ = \
         "JRE_RELEASE_VERSION=1.6.0_$(COMBINED_VERSION)" \
 	"MILESTONE=fcs" \
 	"LANG=C" \
-	"PATH=$(abs_top_builddir)/bootstrap/jdk1.6.0/bin:$$PATH" \
+	"PATH=$(abs_top_builddir)/bootstrap/jdk1.6.0/bin:$(OS_PATH):$$PATH" \
 	"ALT_BOOTDIR=$(ICEDTEA_BOOT_DIR)" \
 	"ALT_BINARY_PLUGS_PATH=$(abs_top_builddir)/bootstrap/jdk1.7.0" \
 	"BUILD_ARCH_DIR=$(BUILD_ARCH_DIR)" \
