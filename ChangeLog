@@ -1,3 +1,8 @@
+2009-01-08  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/no-precompiled.patch: Don't use
+	precompiled header files in hotspot.
+
 2009-10-28  Mark Wielaard  <mjw@redhat.com>
 
 	* NEWS: Mention systemtap JNI class tracing support.
