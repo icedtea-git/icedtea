@@ -156,6 +156,9 @@ void CppInterpreter::main_loop(int recurse, TRAPS)
       assert(HAS_PENDING_EXCEPTION, "should do");
       break;
     }
+    else {
+      ShouldNotReachHere();
+    }
   }
 
  unwind_and_return:
