@@ -1,3 +1,10 @@
+2009-01-09  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-awt-window-size.patch: New file. Fix X11 window size
+	calculation.
+	* Makefile.am: Apply patch.
+	* HACKING: Document the above.
+
 2009-01-09  Gary Benson  <gbenson@redhat.com>
 
 	* contrib/mixtec-sleep-on-bomb.patch: New file.
