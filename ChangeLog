@@ -1,5 +1,9 @@
 2009-01-09  Gary Benson  <gbenson@redhat.com>
 
+	* contrib/mixtec-sleep-on-bomb.patch: New file.
+
+2009-01-09  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
 	(CppInterpreter::main_loop): Catch unhandled messages.
 

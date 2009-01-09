@@ -1,0 +1,37 @@
+This patch causes the VM to drop into an infinite sleep if the fatal
+error handler is invoked.  This is handy for getting gdb attached in
+situations where you couldn't usually, when the VM is invoked by the
+JCK for example.
+
+diff -r b0dd0cbb5c04 openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Wed Jan 07 17:45:25 2009
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Thu Jan 08 11:51:14 2009
+@@ -1466,6 +1466,7 @@
+ // called from signal handler. Before adding something to os::abort(), make
+ // sure it is async-safe and can handle partially initialized VM.
+ void os::abort(bool dump_core) {
++  os::infinite_sleep();
+   os::shutdown();
+   if (dump_core) {
+ #ifndef PRODUCT
+@@ -1484,6 +1485,7 @@
+ 
+ // Die immediately, no exit hook, no abort hook, no cleanup.
+ void os::die() {
++  os::infinite_sleep();
+   // _exit() on LinuxThreads only kills current thread
+   ::abort();
+ }
+@@ -2873,6 +2875,12 @@
+ 
+ // Sleep forever; naked call to OS-specific sleep; use with CAUTION
+ void os::infinite_sleep() {
++  fdStream out(defaultStream::output_fd());
++  char buf[16];
++  jio_snprintf(buf, sizeof(buf), UINTX_FORMAT, os::current_thread_id());
++  out.print_raw("thread ");
++  out.print_raw(buf);
++  out.print_raw(" going to sleep...");
+   while (true) {    // sleep forever ...
+     ::sleep(100);   // ... 100 seconds at a time
+   }
