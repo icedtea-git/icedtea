@@ -1,3 +1,7 @@
+2009-01-09  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-cc-interp-jvmti.patch: Also disable pop_frame.
+
 2009-01-08  Matthias Klose  <doko@ubuntu.com>
 
 	PR icedtea/277
