@@ -1428,14 +1428,14 @@ stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt
             -source 1.5 \
             -sourcepath \
 	      'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(ABS_SOURCE_DIRS)' \
-            -bootclasspath '' @$< ; \
+            -bootclasspath \'\' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g \
 	    -d lib/hotspot-tools \
 	    -source 1.5 \
 	    -sourcepath \
 	      'hotspot-tools:$(OPENJDK_SOURCEPATH_DIRS):$(ABS_SOURCE_DIRS)' \
-	    -bootclasspath '' @$< ; \
+	    -bootclasspath \'\' @$< ; \
 	fi
 	mkdir -p stamps
 	touch stamps/hotspot-tools-class-files.stamp
@@ -1480,13 +1480,13 @@ stamps/rt-class-files.stamp: rt-source-files.txt
 	    -source 1.5 \
 	    -sourcepath \
 	      '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
-	    -bootclasspath '' @$< ; \
+	    -bootclasspath \'\' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
             -source 1.5 \
             -sourcepath \
 	      '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
-            -bootclasspath '' @$< ; \
+            -bootclasspath \'\' @$< ; \
 	fi
 	cp -r $(abs_top_srcdir)/rt/net/sourceforge/jnlp/resources \
 	  lib/rt/net/sourceforge/jnlp/
@@ -1527,12 +1527,12 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
 	    -source 1.5 \
 	    -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-	    -bootclasspath '' @extra-source-files.txt ; \
+	    -bootclasspath \'\' @extra-source-files.txt ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
             -source 1.5 \
             -sourcepath extra -cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-            -bootclasspath '' @extra-source-files.txt ; \
+            -bootclasspath \'\' @extra-source-files.txt ; \
 	fi
 	cp -r $(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources \
 	  extra-lib/net/sourceforge/jnlp/about

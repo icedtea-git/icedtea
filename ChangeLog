@@ -1,3 +1,7 @@
+2009-01-11  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am: Escape single quotes in empty bootclasspath.
+
 2009-01-09  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-awt-window-size.patch: New file. Fix X11 window size
