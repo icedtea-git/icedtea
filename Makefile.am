@@ -643,7 +643,8 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-samejvm-safe.patch \
 	patches/icedtea-6728542-epoll.patch \
 	patches/icedtea-io_util-overflow.patch \
-	patches/icedtea-cc-interp-jvmti.patch
+	patches/icedtea-cc-interp-jvmti.patch \
+	patches/icedtea-pr261.patch
 
 if WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \
@@ -686,6 +687,10 @@ if ENABLE_XRENDER
 XRENDER_PATCHES = patches/xrender/icedtea-???.patch
 XRENDER_PATCH_FILES = $(sort $(wildcard $(abs_top_srcdir)/$(XRENDER_PATCHES)))
 ICEDTEA_PATCHES += $(sort $(subst $(abs_top_srcdir)/,,$(XRENDER_PATCH_FILES)))
+endif
+
+if ENABLE_NIO2
+ICEDTEA_PATCHES += patches/icedtea-nio2.patch
 endif
 
 ICEDTEA_PATCHES += \
@@ -883,8 +888,11 @@ clean-patch-fsg:
 	fi
 
 stamps/overlay.stamp: stamps/patch.stamp
-	cp -r $(abs_top_srcdir)/overlays/openjdk/* openjdk/ \
-	  && touch stamps/overlay.stamp
+	cp -r $(abs_top_srcdir)/overlays/openjdk/* openjdk/
+if ENABLE_NIO2
+	cp -r $(abs_top_srcdir)/overlays/nio2/openjdk/* openjdk/
+endif
+	touch stamps/overlay.stamp
 
 # OpenJDK ecj Source Preparation Targets
 # ======================================
@@ -927,8 +935,7 @@ stamps/ports-ecj.stamp: stamps/extract-ecj.stamp
 ICEDTEA_ECJ_PATCHES = patches/ecj/icedtea.patch \
 	patches/ecj/icedtea-hotspot-$(HSBUILD).patch \
 	patches/ecj/icedtea-spp.patch \
-	patches/ecj/icedtea-jopt.patch \
-	patches/ecj/icedtea-pr261.patch
+	patches/ecj/icedtea-jopt.patch
 
 stamps/patch-ecj.stamp: stamps/extract-ecj.stamp
 	mkdir -p stamps; \

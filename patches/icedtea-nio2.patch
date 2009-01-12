@@ -1,0 +1,761 @@
+diff -Nru openjdk.orig/jdk/make/docs/CORE_PKGS.gmk openjdk/jdk/make/docs/CORE_PKGS.gmk
+--- openjdk.orig/jdk/make/docs/CORE_PKGS.gmk	2009-01-07 21:17:37.000000000 +0000
++++ openjdk/jdk/make/docs/CORE_PKGS.gmk	2009-01-09 21:21:59.000000000 +0000
+@@ -36,6 +36,7 @@
+   sunw.*                   \
+   com.sun.*                \
+   org.apache.*             \
++  org.classpath.icedtea.*  \
+   org.jcp.*		   \
+   org.w3c.dom.css          \
+   org.w3c.dom.html         \
+diff -Nru openjdk.orig/jdk/make/docs/NON_CORE_PKGS.gmk openjdk/jdk/make/docs/NON_CORE_PKGS.gmk
+--- openjdk.orig/jdk/make/docs/NON_CORE_PKGS.gmk	2009-01-07 21:27:46.000000000 +0000
++++ openjdk/jdk/make/docs/NON_CORE_PKGS.gmk	2009-01-09 21:21:39.000000000 +0000
+@@ -65,6 +65,11 @@
+ HTTPSERVER_PKGS  = com.sun.net.httpserver       \
+                    com.sun.net.httpserver.spi 
+ 
++NIO_PKGS         = com.sun.nio.file 	        \
++		   org.classpath.icedtea.java.nio.file    		\
++		   org.classpath.icedtea.java.nio.file.attribute	 \
++		   org.classpath.icedtea.java.nio.file.spi		 
++
+ DOCLETAPI_PKGS   = com.sun.javadoc
+ 
+ TAGLETAPI_FILE   = com/sun/tools/doclets/Taglet.java
+@@ -89,6 +94,7 @@
+                    $(MGMT_PKGS) \
+                    $(JAAS_PKGS) \
+                    $(JGSS_PKGS) \
++		   $(NIO_PKGS) \
+                    $(OLD_JSSE_PKGS) \
+                    $(HTTPSERVER_PKGS) \
+                    $(SMARTCARDIO_PKGS)
+diff -Nru openjdk.orig/jdk/make/java/java/FILES_java.gmk openjdk/jdk/make/java/java/FILES_java.gmk
+--- openjdk.orig/jdk/make/java/java/FILES_java.gmk	2009-01-07 21:35:50.000000000 +0000
++++ openjdk/jdk/make/java/java/FILES_java.gmk	2009-01-12 15:24:01.000000000 +0000
+@@ -516,6 +516,13 @@
+     sun/misc/JavaLangAccess.java \
+     sun/misc/JavaIOAccess.java \
+     sun/misc/JavaIODeleteOnExitAccess.java \
+-    sun/misc/JavaIOFileDescriptorAccess.java
++    sun/misc/JavaIOFileDescriptorAccess.java \
++    org/classpath/icedtea/java/io/File.java \
++    org/classpath/icedtea/java/io/FilePermission.java \
++    org/classpath/icedtea/java/io/Inputs.java \
++    org/classpath/icedtea/java/io/Outputs.java \
++    org/classpath/icedtea/java/util/Scanner.java \
++    org/classpath/icedtea/misc/SharedSecrets.java \
++    org/classpath/icedtea/misc/JavaIODeleteOnExitAccess.java
+ 
+ FILES_java = $(JAVA_JAVA_java)
+diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/nio/FILES_java.gmk
+--- openjdk.orig/jdk/make/java/nio/FILES_java.gmk	2009-01-10 03:21:38.000000000 +0000
++++ openjdk/jdk/make/java/nio/FILES_java.gmk	2009-01-12 21:27:13.000000000 +0000
+@@ -75,7 +75,6 @@
+         sun/nio/ch/DefaultSelectorProvider.java \
+ 	sun/nio/ch/DirectBuffer.java \
+ 	sun/nio/ch/FileChannelImpl.java \
+-	sun/nio/ch/FileDispatcher.java \
+ 	sun/nio/ch/FileKey.java \
+ 	sun/nio/ch/Interruptible.java \
+ 	sun/nio/ch/IOUtil.java \
+@@ -144,7 +143,133 @@
+ 	java/lang/StringCoding.java \
+ 	\
+ 	sun/misc/Cleaner.java \
+-	sun/util/PreHashedMap.java
++	sun/util/PreHashedMap.java \
++	\
++	org/classpath/icedtea/java/nio/channels/AsynchronousByteChannel.java \
++	org/classpath/icedtea/java/nio/channels/AsynchronousChannel.java \
++	org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup.java \
++	org/classpath/icedtea/java/nio/channels/AsynchronousDatagramChannel.java \
++	org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel.java \
++	org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel.java \
++	org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel.java \
++	org/classpath/icedtea/java/nio/channels/CompletionHandler.java \
++	org/classpath/icedtea/java/nio/channels/SeekableByteChannel.java \
++	org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider.java \
++	org/classpath/icedtea/java/nio/file/AccessDeniedException.java \
++	org/classpath/icedtea/java/nio/file/AccessMode.java \
++	org/classpath/icedtea/java/nio/file/AtomicMoveNotSupportedException.java \
++	org/classpath/icedtea/java/nio/file/ClosedDirectoryStreamException.java \
++	org/classpath/icedtea/java/nio/file/ClosedFileSystemException.java \
++	org/classpath/icedtea/java/nio/file/ClosedWatchServiceException.java \
++	org/classpath/icedtea/java/nio/file/CopyOption.java \
++	org/classpath/icedtea/java/nio/file/DirectoryNotEmptyException.java \
++	org/classpath/icedtea/java/nio/file/DirectoryStream.java \
++	org/classpath/icedtea/java/nio/file/DirectoryStreamFilters.java \
++	org/classpath/icedtea/java/nio/file/FileAction.java \
++	org/classpath/icedtea/java/nio/file/FileAlreadyExistsException.java \
++	org/classpath/icedtea/java/nio/file/FileRef.java \
++	org/classpath/icedtea/java/nio/file/FileStore.java \
++	org/classpath/icedtea/java/nio/file/FileSystem.java \
++	org/classpath/icedtea/java/nio/file/FileSystemAlreadyExistsException.java \
++	org/classpath/icedtea/java/nio/file/FileSystemException.java \
++	org/classpath/icedtea/java/nio/file/FileSystemNotFoundException.java \
++	org/classpath/icedtea/java/nio/file/FileSystems.java \
++	org/classpath/icedtea/java/nio/file/FileTreeWalker.java \
++	org/classpath/icedtea/java/nio/file/FileVisitOption.java \
++	org/classpath/icedtea/java/nio/file/FileVisitResult.java \
++	org/classpath/icedtea/java/nio/file/FileVisitor.java \
++	org/classpath/icedtea/java/nio/file/Files.java \
++	org/classpath/icedtea/java/nio/file/InvalidPathException.java \
++	org/classpath/icedtea/java/nio/file/LinkPermission.java \
++	org/classpath/icedtea/java/nio/file/NoSuchFileException.java \
++	org/classpath/icedtea/java/nio/file/NotDirectoryException.java \
++	org/classpath/icedtea/java/nio/file/NotLinkException.java \
++	org/classpath/icedtea/java/nio/file/OpenOption.java \
++	org/classpath/icedtea/java/nio/file/Path.java \
++	org/classpath/icedtea/java/nio/file/PathMatcher.java \
++	org/classpath/icedtea/java/nio/file/Paths.java \
++	org/classpath/icedtea/java/nio/file/ProviderMismatchException.java \
++	org/classpath/icedtea/java/nio/file/ProviderNotFoundException.java \
++	org/classpath/icedtea/java/nio/file/ReadOnlyFileSystemException.java \
++	org/classpath/icedtea/java/nio/file/SecureDirectoryStream.java \
++	org/classpath/icedtea/java/nio/file/SimpleFileVisitor.java \
++	org/classpath/icedtea/java/nio/file/StandardCopyOption.java \
++	org/classpath/icedtea/java/nio/file/StandardOpenOption.java \
++	org/classpath/icedtea/java/nio/file/StandardWatchEventKind.java \
++	org/classpath/icedtea/java/nio/file/WatchEvent.java \
++	org/classpath/icedtea/java/nio/file/WatchKey.java \
++	org/classpath/icedtea/java/nio/file/WatchService.java \
++	org/classpath/icedtea/java/nio/file/Watchable.java \
++	\
++	org/classpath/icedtea/java/nio/file/attribute/AclEntry.java \
++	org/classpath/icedtea/java/nio/file/attribute/AclEntryFlag.java \
++	org/classpath/icedtea/java/nio/file/attribute/AclEntryPermission.java \
++	org/classpath/icedtea/java/nio/file/attribute/AclEntryType.java \
++	org/classpath/icedtea/java/nio/file/attribute/AclFileAttributeView.java \
++	org/classpath/icedtea/java/nio/file/attribute/AttributeView.java \
++	org/classpath/icedtea/java/nio/file/attribute/Attributes.java \
++	org/classpath/icedtea/java/nio/file/attribute/BasicFileAttributeView.java \
++	org/classpath/icedtea/java/nio/file/attribute/BasicFileAttributes.java \
++	org/classpath/icedtea/java/nio/file/attribute/DosFileAttributeView.java \
++	org/classpath/icedtea/java/nio/file/attribute/DosFileAttributes.java \
++	org/classpath/icedtea/java/nio/file/attribute/FileAttribute.java \
++	org/classpath/icedtea/java/nio/file/attribute/FileAttributeView.java \
++	org/classpath/icedtea/java/nio/file/attribute/FileOwnerAttributeView.java \
++	org/classpath/icedtea/java/nio/file/attribute/FileStoreAttributeView.java \
++	org/classpath/icedtea/java/nio/file/attribute/FileStoreSpaceAttributeView.java \
++	org/classpath/icedtea/java/nio/file/attribute/FileStoreSpaceAttributes.java \
++	org/classpath/icedtea/java/nio/file/attribute/GroupPrincipal.java \
++	org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView.java \
++	org/classpath/icedtea/java/nio/file/attribute/PosixFileAttributeView.java \
++	org/classpath/icedtea/java/nio/file/attribute/PosixFileAttributes.java \
++	org/classpath/icedtea/java/nio/file/attribute/PosixFilePermission.java \
++	org/classpath/icedtea/java/nio/file/attribute/PosixFilePermissions.java \
++	org/classpath/icedtea/java/nio/file/attribute/UserPrincipal.java \
++	org/classpath/icedtea/java/nio/file/attribute/UserPrincipalLookupService.java \
++	org/classpath/icedtea/java/nio/file/attribute/UserPrincipalNotFoundException.java \
++	\
++	org/classpath/icedtea/java/nio/file/spi/AbstractPath.java \
++	org/classpath/icedtea/java/nio/file/spi/FileSystemProvider.java \
++	org/classpath/icedtea/java/nio/file/spi/FileTypeDetector.java \
++	\
++	com/sun/nio/file/ExtendedCopyOption.java \
++	com/sun/nio/file/ExtendedOpenOption.java \
++	com/sun/nio/file/ExtendedWatchEventModifier.java \
++	\
++	sun/nio/ch/AbstractFuture.java \
++	sun/nio/ch/AsynchronousChannelGroupImpl.java \
++	sun/nio/ch/AsynchronousFileChannelImpl.java \
++	sun/nio/ch/AsynchronousServerSocketChannelImpl.java \
++	sun/nio/ch/AsynchronousSocketChannelImpl.java \
++	sun/nio/ch/Cancellable.java \
++	sun/nio/ch/CompletedFuture.java \
++	sun/nio/ch/DefaultAsynchronousChannelProvider.java \
++	sun/nio/ch/FileDispatcher.java \
++	sun/nio/ch/FileLockImpl.java \
++	sun/nio/ch/FileLockTable.java \
++	sun/nio/ch/Groupable.java \
++	sun/nio/ch/Invoker.java \
++	sun/nio/ch/PendingFuture.java \
++	sun/nio/ch/SimpleAsynchronousDatagramChannelImpl.java \
++	sun/nio/ch/ThreadPool.java \
++	\
++	sun/nio/fs/AbstractAclFileAttributeView.java \
++	sun/nio/fs/AbstractBasicFileAttributeView.java \
++	sun/nio/fs/AbstractFileStoreSpaceAttributeView.java \
++	sun/nio/fs/AbstractFileTypeDetector.java \
++	sun/nio/fs/AbstractPoller.java \
++	sun/nio/fs/AbstractNamedAttributeView.java \
++	sun/nio/fs/AbstractWatchKey.java \
++	sun/nio/fs/AbstractWatchService.java \
++	sun/nio/fs/Cancellable.java \
++	sun/nio/fs/DefaultFileSystemProvider.java \
++	sun/nio/fs/DefaultFileTypeDetector.java \
++	sun/nio/fs/FileOwnerAttributeViewImpl.java \
++	sun/nio/fs/Globs.java \
++	sun/nio/fs/MimeType.java \
++	sun/nio/fs/NativeBuffer.java \
++	sun/nio/fs/NativeBuffers.java \
++	sun/nio/fs/Reflect.java \
+ 
+ # Generated coder classes
+ #
+@@ -263,7 +388,14 @@
+ 	\
+ 	java/nio/charset/CharacterCodingException.java \
+ 	java/nio/charset/IllegalCharsetNameException.java \
+-	java/nio/charset/UnsupportedCharsetException.java
++	java/nio/charset/UnsupportedCharsetException.java \
++	\
++	org/classpath/icedtea/java/nio/channels/AcceptPendingException.java \
++	org/classpath/icedtea/java/nio/channels/IllegalChannelGroupException.java \
++	org/classpath/icedtea/java/nio/channels/InterruptedByTimeoutException.java \
++	org/classpath/icedtea/java/nio/channels/ReadPendingException.java \
++	org/classpath/icedtea/java/nio/channels/ShutdownChannelGroupException.java \
++	org/classpath/icedtea/java/nio/channels/WritePendingException.java 
+ 
+ FILES_gen_csp = sun/nio/cs/StandardCharsets.java
+ 
+diff -Nru openjdk.orig/jdk/make/java/nio/Makefile openjdk/jdk/make/java/nio/Makefile
+--- openjdk.orig/jdk/make/java/nio/Makefile	2009-01-10 03:22:13.000000000 +0000
++++ openjdk/jdk/make/java/nio/Makefile	2009-01-11 00:42:22.000000000 +0000
+@@ -40,6 +40,11 @@
+ SNIO_SRC = $(SHARE_SRC)/classes/sun/nio
+ SNIO_GEN = $(GENSRCDIR)/sun/nio
+ 
++INIO_SRC = $(SHARE_SRC)/classes/org/classpath/icedtea/java/nio
++INIO_GEN = $(GENSRCDIR)/org/classpath/icedtea/java/nio
++
++SERVICES = $(CLASSBINDIR)/META-INF/services
++
+ #
+ # Files to compile
+ #
+@@ -56,30 +61,128 @@
+         sun/nio/ch/DevPollSelectorProvider.java \
+ 	sun/nio/ch/InheritedChannel.java \
+         sun/nio/ch/PollSelectorProvider.java \
+-        sun/nio/ch/PollSelectorImpl.java
++        sun/nio/ch/PollSelectorImpl.java \
++	sun/nio/ch/Port.java \
++	sun/nio/ch/SimpleAsynchronousFileChannelImpl.java \
++	sun/nio/ch/SolarisAsynchronousChannelProvider.java \
++	sun/nio/ch/SolarisEventPort.java \
++	sun/nio/ch/UnixAsynchronousServerSocketChannelImpl.java \
++	sun/nio/ch/UnixAsynchronousSocketChannelImpl.java \
++	\
++	sun/nio/fs/GnomeFileTypeDetector.java \
++	sun/nio/fs/PollingWatchService.java \
++	sun/nio/fs/SolarisAclFileAttributeView.java \
++	sun/nio/fs/SolarisFileStore.java \
++	sun/nio/fs/SolarisFileSystem.java \
++	sun/nio/fs/SolarisFileSystemProvider.java \
++	sun/nio/fs/SolarisNamedAttributeView.java \
++	sun/nio/fs/SolarisNativeDispatcher.java \
++	sun/nio/fs/SolarisWatchService.java \
++	sun/nio/fs/UnixChannelFactory.java \
++	sun/nio/fs/UnixCopyFile.java \
++	sun/nio/fs/UnixDirectoryStream.java \
++	sun/nio/fs/UnixException.java \
++	sun/nio/fs/UnixFileAttributeViews.java \
++	sun/nio/fs/UnixFileAttributes.java \
++	sun/nio/fs/UnixFileKey.java \
++	sun/nio/fs/UnixFileModeAttribute.java \
++	sun/nio/fs/UnixFileStore.java \
++	sun/nio/fs/UnixFileStoreAttributes.java \
++	sun/nio/fs/UnixFileSystem.java \
++	sun/nio/fs/UnixFileSystemProvider.java \
++	sun/nio/fs/UnixMountEntry.java \
++	sun/nio/fs/UnixNativeDispatcher.java \
++	sun/nio/fs/UnixPath.java \
++	sun/nio/fs/UnixSecureDirectoryStream.java \
++	sun/nio/fs/UnixUriUtils.java \
++	sun/nio/fs/UnixUserPrincipals.java
+ 
+ FILES_c += \
+         DevPollArrayWrapper.c \
+ 	InheritedChannel.c \
+         PollArrayWrapper.c \
+-	NativeThread.c
++	NativeThread.c \
++	SolarisEventPort.c \
++	UnixAsynchronousServerSocketChannelImpl.c \
++	UnixAsynchronousSocketChannelImpl.c \
++	\
++	GnomeFileTypeDetector.c \
++	SolarisNativeDispatcher.c \
++	SolarisWatchService.c \
++	UnixCopyFile.c \
++	UnixNativeDispatcher.c
+ 
+ FILES_export += \
+ 	sun/nio/ch/DevPollArrayWrapper.java \
+ 	sun/nio/ch/InheritedChannel.java \
+-	sun/nio/ch/NativeThread.java
++	sun/nio/ch/NativeThread.java \
++	sun/nio/ch/SolarisEventPort.java \
++	sun/nio/ch/UnixAsynchronousServerSocketChannelImpl.java \
++	sun/nio/ch/UnixAsynchronousSocketChannelImpl.java \
++	\
++	sun/nio/fs/GnomeFileTypeDetector.java \
++	sun/nio/fs/SolarisNativeDispatcher.java \
++	sun/nio/fs/SolarisWatchService.java \
++	sun/nio/fs/UnixCopyFile.java \
++	sun/nio/fs/UnixNativeDispatcher.java
++
++FILES_gen += \
++	sun/nio/fs/SolarisConstants.java \
++	sun/nio/fs/UnixConstants.java
+ endif # PLATFORM = solaris
+ 
+ ifeq ($(PLATFORM), windows)
+ FILES_java += \
++	sun/nio/ch/Iocp.java \
++	sun/nio/ch/PendingIoCache.java \
++	sun/nio/ch/WindowsAsynchronousChannelProvider.java \
++	sun/nio/ch/WindowsAsynchronousFileChannelImpl.java \
++	sun/nio/ch/WindowsAsynchronousServerSocketChannelImpl.java \
++	sun/nio/ch/WindowsAsynchronousSocketChannelImpl.java \
+         sun/nio/ch/WindowsSelectorImpl.java \
+-        sun/nio/ch/WindowsSelectorProvider.java
++        sun/nio/ch/WindowsSelectorProvider.java \
++	\
++	sun/nio/fs/RegistryFileTypeDetector.java \
++	sun/nio/fs/WindowsAclFileAttributeView.java \
++	sun/nio/fs/WindowsChannelFactory.java \
++	sun/nio/fs/WindowsConstants.java \
++	sun/nio/fs/WindowsDirectoryStream.java \
++	sun/nio/fs/WindowsException.java \
++	sun/nio/fs/WindowsFileAttributeViews.java \
++	sun/nio/fs/WindowsFileAttributes.java \
++	sun/nio/fs/WindowsFileCopy.java \
++	sun/nio/fs/WindowsFileStore.java \
++	sun/nio/fs/WindowsFileSystem.java \
++	sun/nio/fs/WindowsFileSystemProvider.java \
++	sun/nio/fs/WindowsLinkSupport.java \
++	sun/nio/fs/WindowsNamedAttributeView.java \
++	sun/nio/fs/WindowsNativeDispatcher.java \
++	sun/nio/fs/WindowsPath.java \
++	sun/nio/fs/WindowsPathParser.java \
++	sun/nio/fs/WindowsPathType.java \
++	sun/nio/fs/WindowsSecurity.java \
++	sun/nio/fs/WindowsSecurityDescriptor.java \
++	sun/nio/fs/WindowsUriSupport.java \
++	sun/nio/fs/WindowsUserPrincipals.java \
++	sun/nio/fs/WindowsWatchService.java
+ 
+ FILES_c += \
++	Iocp.c \
++	RegistryFileTypeDetector.c \
++	WindowsAsynchronousFileChannelImpl.c \
++	WindowsAsynchronousServerSocketChannelImpl.c \
++	WindowsAsynchronousSocketChannelImpl.c \
++	WindowsNativeDispatcher.c \
+         WindowsSelectorImpl.c
+ 
+ FILES_export += \
+-	sun/nio/ch/WindowsSelectorImpl.java
++	sun/nio/ch/Iocp.java \
++	sun/nio/ch/WindowsAsynchronousFileChannelImpl.java \
++	sun/nio/ch/WindowsAsynchronousServerSocketChannelImpl.java \
++	sun/nio/ch/WindowsAsynchronousSocketChannelImpl.java \
++	sun/nio/ch/WindowsSelectorImpl.java \
++	sun/nio/fs/WindowsNativeDispatcher.java \
++	sun/nio/fs/RegistryFileTypeDetector.java
+ endif # PLATFORM = windows
+ 
+ ifeq ($(PLATFORM), linux)
+@@ -89,27 +192,84 @@
+ 	sun/nio/ch/DevPollSelectorImpl.java \
+ 	sun/nio/ch/DevPollSelectorProvider.java \
+ 	sun/nio/ch/EPollArrayWrapper.java \
++	sun/nio/ch/EPollPort.java \
+ 	sun/nio/ch/EPollSelectorProvider.java \
+ 	sun/nio/ch/EPollSelectorImpl.java \
+ 	sun/nio/ch/InheritedChannel.java \
++	sun/nio/ch/LinuxAsynchronousChannelProvider.java \
+         sun/nio/ch/PollSelectorProvider.java \
+-        sun/nio/ch/PollSelectorImpl.java
++        sun/nio/ch/PollSelectorImpl.java \
++	sun/nio/ch/Port.java \
++	sun/nio/ch/SimpleAsynchronousFileChannelImpl.java \
++	sun/nio/ch/UnixAsynchronousServerSocketChannelImpl.java \
++	sun/nio/ch/UnixAsynchronousSocketChannelImpl.java \
++	\
++	sun/nio/fs/GnomeFileTypeDetector.java \
++	sun/nio/fs/LinuxDosFileAttributeView.java \
++	sun/nio/fs/LinuxFileStore.java \
++	sun/nio/fs/LinuxFileSystem.java \
++	sun/nio/fs/LinuxFileSystemProvider.java \
++	sun/nio/fs/LinuxNamedAttributeView.java \
++	sun/nio/fs/LinuxNativeDispatcher.java \
++	sun/nio/fs/LinuxWatchService.java \
++	sun/nio/fs/PollingWatchService.java \
++	sun/nio/fs/UnixChannelFactory.java \
++	sun/nio/fs/UnixCopyFile.java \
++	sun/nio/fs/UnixDirectoryStream.java \
++	sun/nio/fs/UnixException.java \
++	sun/nio/fs/UnixFileAttributeViews.java \
++	sun/nio/fs/UnixFileAttributes.java \
++	sun/nio/fs/UnixFileKey.java \
++	sun/nio/fs/UnixFileModeAttribute.java \
++	sun/nio/fs/UnixFileStore.java \
++	sun/nio/fs/UnixFileStoreAttributes.java \
++	sun/nio/fs/UnixFileSystem.java \
++	sun/nio/fs/UnixFileSystemProvider.java \
++	sun/nio/fs/UnixMountEntry.java \
++	sun/nio/fs/UnixNativeDispatcher.java \
++	sun/nio/fs/UnixPath.java \
++	sun/nio/fs/UnixSecureDirectoryStream.java \
++	sun/nio/fs/UnixUriUtils.java \
++	sun/nio/fs/UnixUserPrincipals.java
+ 
+ FILES_c += \
+ 	EPollArrayWrapper.c \
++	EPollPort.c \
+         PollArrayWrapper.c \
+ 	InheritedChannel.c \
+-	NativeThread.c
++	NativeThread.c \
++	UnixAsynchronousServerSocketChannelImpl.c \
++	UnixAsynchronousSocketChannelImpl.c \
++	\
++	GnomeFileTypeDetector.c \
++	LinuxNativeDispatcher.c \
++	LinuxWatchService.c \
++	UnixCopyFile.c \
++	UnixNativeDispatcher.c
+ 
+ FILES_export += \
+ 	sun/nio/ch/DevPollArrayWrapper.java \
+         sun/nio/ch/EPollArrayWrapper.java \
++	sun/nio/ch/EPollPort.java \
+ 	sun/nio/ch/InheritedChannel.java \
+-	sun/nio/ch/NativeThread.java
++	sun/nio/ch/NativeThread.java \
++	sun/nio/ch/UnixAsynchronousServerSocketChannelImpl.java \
++	sun/nio/ch/UnixAsynchronousSocketChannelImpl.java \
++	\
++	sun/nio/fs/GnomeFileTypeDetector.java \
++	sun/nio/fs/LinuxNativeDispatcher.java \
++	sun/nio/fs/LinuxWatchService.java \
++	sun/nio/fs/UnixCopyFile.java \
++	sun/nio/fs/UnixNativeDispatcher.java
++
++FILES_gen += \
++	sun/nio/fs/UnixConstants.java
+ endif # PLATFORM = linux
+ 
++#
+ # Find platform-specific C source files
+ #
++vpath %.c $(PLATFORM_SRC)/native/sun/nio/fs
+ vpath %.c $(PLATFORM_SRC)/native/sun/nio/ch
+ vpath %.c $(SHARE_SRC)/native/sun/nio/ch
+ 
+@@ -153,7 +313,7 @@
+ build: sources
+ 
+ clean clobber::
+-	$(RM) -r $(NIO_GEN) $(SNIO_GEN)
++	$(RM) -r $(NIO_GEN) $(SNIO_GEN) $(INIO_GEN)
+ 	$(RM) -r $(CLASSDESTDIR)/java/nio
+ 	$(RM) -r $(CLASSDESTDIR)/sun/nio
+ 
+@@ -180,12 +340,16 @@
+ CS_SRC=$(NIO_SRC)/charset
+ SCH_SRC=$(SNIO_SRC)/ch
+ SCS_SRC=$(SNIO_SRC)/cs
++SFS_SRC=$(SNIO_SRC)/fs
++ICH_SRC=$(INIO_SRC)/channels
+ 
+ BUF_GEN=$(NIO_GEN)
+ CH_GEN=$(NIO_GEN)/channels
+ CS_GEN=$(NIO_GEN)/charset
+ SCH_GEN=$(SNIO_GEN)/ch
+ SCS_GEN=$(SNIO_GEN)/cs
++SFS_GEN=$(SNIO_GEN)/fs
++ICH_GEN=$(INIO_GEN)/channels
+ 
+ sources: $(SPP_JARFILE) $(FILES_genout)
+ 
+@@ -628,6 +792,10 @@
+ 	@$(RM) $@.temp
+ 	$(GEN_EX_CMD) $(SCH_SRC)/exceptions $(SCH_GEN)
+ 
++$(ICH_GEN)/%Exception.java: genExceptions.sh $(ICH_SRC)/exceptions
++	$(prep-target)
++	@$(RM) $@.temp
++	$(GEN_EX_CMD) $(ICH_SRC)/exceptions $(ICH_GEN)
+ 
+ #
+ # Generated charset-provider classes
+@@ -643,4 +811,48 @@
+ 	  HASHER="$(BOOT_JAVA_CMD) -jar $(HASHER_JARFILE)" \
+ 	  SH="$(SH)" $(SH) -e genCharsetProvider.sh $(SCS_SRC)/standard-charsets $(SCS_GEN)
+ 
++# 
++# Generated file system implementation classes (Unix only)
++#
++
++GENUC_SRC = $(PLATFORM_SRC)/native/sun/nio/fs/genUnixConstants.c
++
++GENUC_EXE = $(TEMPDIR)/genUnixConstants
++
++GENUC_COPYRIGHT_YEARS = $(shell $(CAT) $(GENUC_SRC) | \
++	$(NAWK) '/^.*Copyright.*Sun/ { print $$3 }')
++
++$(GENUC_EXE) : $(GENUC_SRC)
++	$(prep-target)
++	$(CC) $(CPPFLAGS) -o $@ $(GENUC_SRC)
++
++$(SFS_GEN)/UnixConstants.java: $(GENUC_EXE)
++	$(prep-target)
++	NAWK="$(NAWK)" SH="$(SH)" $(SH) -e addNotices.sh $(GENUC_COPYRIGHT_YEARS) > $@
++	$(GENUC_EXE) >> $@
++
++GENSC_SRC = $(PLATFORM_SRC)/native/sun/nio/fs/genSolarisConstants.c
++
++GENSC_EXE = $(TEMPDIR)/genSolarisConstants
++
++GENSC_COPYRIGHT_YEARS = $(shell $(CAT) $(GENSC_SRC) | \
++	$(NAWK) '/^.*Copyright.*Sun/ { print $$3 }')
++
++$(GENSC_EXE) : $(GENSC_SRC)
++	$(prep-target)
++	$(CC) $(CPPFLAGS) -o $@ $(GENSC_SRC)
++
++$(SFS_GEN)/SolarisConstants.java: $(GENSC_EXE)
++	$(prep-target)
++	NAWK="$(NAWK)" SH="$(SH)" $(SH) -e addNotices.sh $(GENSC_COPYRIGHT_YEARS) > $@
++	$(GENSC_EXE) >> $@
++
++#
++# Files to copy
++#
++
++$(SERVICES)/%: $(PLATFORM_SRC)/classes/sun/nio/fs/META-INF/services/%
++	$(install-file)
++
++
+ .PHONY: sources
+diff -Nru openjdk.orig/jdk/make/java/nio/mapfile-linux openjdk/jdk/make/java/nio/mapfile-linux
+--- openjdk.orig/jdk/make/java/nio/mapfile-linux	2009-01-07 22:08:47.000000000 +0000
++++ openjdk/jdk/make/java/nio/mapfile-linux	2009-01-07 22:15:04.000000000 +0000
+@@ -20,6 +20,14 @@
+ 		Java_sun_nio_ch_EPollArrayWrapper_interrupt;
+ 		Java_sun_nio_ch_EPollArrayWrapper_offsetofData;
+ 		Java_sun_nio_ch_EPollArrayWrapper_sizeofEPollEvent;
++		Java_sun_nio_ch_EPollPort_init;
++		Java_sun_nio_ch_EPollPort_close0;
++		Java_sun_nio_ch_EPollPort_epollCreate;
++		Java_sun_nio_ch_EPollPort_epollCtl;
++		Java_sun_nio_ch_EPollPort_epollWait;
++		Java_sun_nio_ch_EPollPort_drain1;
++		Java_sun_nio_ch_EPollPort_interrupt;
++		Java_sun_nio_ch_EPollPort_socketpair;
+                 Java_sun_nio_ch_FileChannelImpl_close0;
+                 Java_sun_nio_ch_FileChannelImpl_force0;
+                 Java_sun_nio_ch_FileChannelImpl_initIDs;
+@@ -75,6 +83,74 @@
+ 		Java_sun_nio_ch_ServerSocketChannelImpl_listen;
+                 Java_sun_nio_ch_SocketChannelImpl_checkConnect;
+ 		Java_sun_nio_ch_SocketChannelImpl_shutdown;
++		Java_sun_nio_ch_UnixAsynchronousServerSocketChannelImpl_accept0;
++		Java_sun_nio_ch_UnixAsynchronousServerSocketChannelImpl_initIDs;
++		Java_sun_nio_ch_UnixAsynchronousSocketChannelImpl_checkConnect;
++		Java_sun_nio_fs_GnomeFileTypeDetector_initializeGio;
++		Java_sun_nio_fs_GnomeFileTypeDetector_probeUsingGio;
++		Java_sun_nio_fs_GnomeFileTypeDetector_initializeGnomeVfs;
++		Java_sun_nio_fs_GnomeFileTypeDetector_probeUsingGnomeVfs;
++		Java_sun_nio_fs_LinuxWatchService_init;
++		Java_sun_nio_fs_LinuxWatchService_inotifyInit;
++		Java_sun_nio_fs_LinuxWatchService_inotifyAddWatch;
++		Java_sun_nio_fs_LinuxWatchService_inotifyRmWatch;
++		Java_sun_nio_fs_LinuxWatchService_configureBlocking;
++		Java_sun_nio_fs_LinuxWatchService_socketpair;
++		Java_sun_nio_fs_LinuxWatchService_poll;
++		Java_sun_nio_fs_LinuxNativeDispatcher_init;
++		Java_sun_nio_fs_LinuxNativeDispatcher_fgetxattr0;
++		Java_sun_nio_fs_LinuxNativeDispatcher_flistxattr;
++		Java_sun_nio_fs_LinuxNativeDispatcher_fsetxattr0;
++		Java_sun_nio_fs_LinuxNativeDispatcher_fremovexattr0;
++		Java_sun_nio_fs_LinuxNativeDispatcher_setmntent0;
++		Java_sun_nio_fs_LinuxNativeDispatcher_endmntent;
++		Java_sun_nio_fs_UnixNativeDispatcher_initIDs;
++		Java_sun_nio_fs_UnixNativeDispatcher_getcwd;
++		Java_sun_nio_fs_UnixNativeDispatcher_strerror;
++		Java_sun_nio_fs_UnixNativeDispatcher_dup;
++		Java_sun_nio_fs_UnixNativeDispatcher_access0;
++		Java_sun_nio_fs_UnixNativeDispatcher_stat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_lstat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fstat;
++		Java_sun_nio_fs_UnixNativeDispatcher_fstatat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_chmod0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fchmod;
++		Java_sun_nio_fs_UnixNativeDispatcher_chown0;
++		Java_sun_nio_fs_UnixNativeDispatcher_lchown0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fchown;
++		Java_sun_nio_fs_UnixNativeDispatcher_utimes0;
++		Java_sun_nio_fs_UnixNativeDispatcher_futimes;
++		Java_sun_nio_fs_UnixNativeDispatcher_open0;
++		Java_sun_nio_fs_UnixNativeDispatcher_openat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_close;
++		Java_sun_nio_fs_UnixNativeDispatcher_read;
++		Java_sun_nio_fs_UnixNativeDispatcher_write;
++		Java_sun_nio_fs_UnixNativeDispatcher_fopen0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fclose;
++		Java_sun_nio_fs_UnixNativeDispatcher_opendir0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fdopendir;
++		Java_sun_nio_fs_UnixNativeDispatcher_readdir;
++		Java_sun_nio_fs_UnixNativeDispatcher_closedir;
++		Java_sun_nio_fs_UnixNativeDispatcher_link0;
++		Java_sun_nio_fs_UnixNativeDispatcher_unlink0;
++		Java_sun_nio_fs_UnixNativeDispatcher_unlinkat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_rename0;
++		Java_sun_nio_fs_UnixNativeDispatcher_renameat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_mkdir0;
++		Java_sun_nio_fs_UnixNativeDispatcher_rmdir0;
++		Java_sun_nio_fs_UnixNativeDispatcher_symlink0;
++		Java_sun_nio_fs_UnixNativeDispatcher_readlink0;
++		Java_sun_nio_fs_UnixNativeDispatcher_realpath0;
++		Java_sun_nio_fs_UnixNativeDispatcher_statvfs0;
++		Java_sun_nio_fs_UnixNativeDispatcher_pathconf0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fpathconf;
++		Java_sun_nio_fs_UnixNativeDispatcher_mknod0;
++		Java_sun_nio_fs_UnixNativeDispatcher_getpwuid;
++		Java_sun_nio_fs_UnixNativeDispatcher_getgrgid;
++		Java_sun_nio_fs_UnixNativeDispatcher_getpwnam0;
++		Java_sun_nio_fs_UnixNativeDispatcher_getgrnam0;
++		Java_sun_nio_fs_UnixNativeDispatcher_getextmntent;
++		Java_sun_nio_fs_UnixCopyFile_transfer;
+ 
+ 	local:
+ 		*;
+diff -Nru openjdk.orig/jdk/make/java/nio/mapfile-solaris openjdk/jdk/make/java/nio/mapfile-solaris
+--- openjdk.orig/jdk/make/java/nio/mapfile-solaris	2009-01-07 22:08:47.000000000 +0000
++++ openjdk/jdk/make/java/nio/mapfile-solaris	2009-01-07 22:18:51.000000000 +0000
+@@ -73,6 +73,75 @@
+ 		Java_sun_nio_ch_ServerSocketChannelImpl_listen;
+                 Java_sun_nio_ch_SocketChannelImpl_checkConnect;
+ 		Java_sun_nio_ch_SocketChannelImpl_shutdown;
++		Java_sun_nio_ch_UnixAsynchronousServerSocketChannelImpl_accept0;
++		Java_sun_nio_ch_UnixAsynchronousServerSocketChannelImpl_initIDs;
++		Java_sun_nio_ch_UnixAsynchronousSocketChannelImpl_checkConnect;
++		Java_sun_nio_ch_SolarisEventPort_init;
++		Java_sun_nio_ch_SolarisEventPort_portCreate;
++		Java_sun_nio_ch_SolarisEventPort_portClose;
++		Java_sun_nio_ch_SolarisEventPort_portAssociate;
++		Java_sun_nio_ch_SolarisEventPort_portGet;
++		Java_sun_nio_ch_SolarisEventPort_portGetn;
++		Java_sun_nio_ch_SolarisEventPort_portSend;
++		Java_sun_nio_fs_GnomeFileTypeDetector_initializeGio;
++		Java_sun_nio_fs_GnomeFileTypeDetector_probeUsingGio;
++		Java_sun_nio_fs_GnomeFileTypeDetector_initializeGnomeVfs;
++		Java_sun_nio_fs_GnomeFileTypeDetector_probeUsingGnomeVfs;
++		Java_sun_nio_fs_UnixNativeDispatcher_initIDs;
++		Java_sun_nio_fs_UnixNativeDispatcher_getcwd;
++		Java_sun_nio_fs_UnixNativeDispatcher_strerror;
++		Java_sun_nio_fs_UnixNativeDispatcher_dup;
++		Java_sun_nio_fs_UnixNativeDispatcher_access0;
++		Java_sun_nio_fs_UnixNativeDispatcher_stat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_lstat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fstat;
++		Java_sun_nio_fs_UnixNativeDispatcher_fstatat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_chmod0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fchmod;
++		Java_sun_nio_fs_UnixNativeDispatcher_chown0;
++		Java_sun_nio_fs_UnixNativeDispatcher_lchown0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fchown;
++		Java_sun_nio_fs_UnixNativeDispatcher_utimes0;
++		Java_sun_nio_fs_UnixNativeDispatcher_futimes;
++		Java_sun_nio_fs_UnixNativeDispatcher_open0;
++		Java_sun_nio_fs_UnixNativeDispatcher_openat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_close;
++		Java_sun_nio_fs_UnixNativeDispatcher_read;
++		Java_sun_nio_fs_UnixNativeDispatcher_write;
++		Java_sun_nio_fs_UnixNativeDispatcher_fopen0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fclose;
++		Java_sun_nio_fs_UnixNativeDispatcher_opendir0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fdopendir;
++		Java_sun_nio_fs_UnixNativeDispatcher_readdir;
++		Java_sun_nio_fs_UnixNativeDispatcher_closedir;
++		Java_sun_nio_fs_UnixNativeDispatcher_link0;
++		Java_sun_nio_fs_UnixNativeDispatcher_unlink0;
++		Java_sun_nio_fs_UnixNativeDispatcher_unlinkat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_rename0;
++		Java_sun_nio_fs_UnixNativeDispatcher_renameat0;
++		Java_sun_nio_fs_UnixNativeDispatcher_mkdir0;
++		Java_sun_nio_fs_UnixNativeDispatcher_rmdir0;
++		Java_sun_nio_fs_UnixNativeDispatcher_symlink0;
++		Java_sun_nio_fs_UnixNativeDispatcher_readlink0;
++		Java_sun_nio_fs_UnixNativeDispatcher_realpath0;
++		Java_sun_nio_fs_UnixNativeDispatcher_statvfs0;
++		Java_sun_nio_fs_UnixNativeDispatcher_pathconf0;
++		Java_sun_nio_fs_UnixNativeDispatcher_fpathconf;
++		Java_sun_nio_fs_UnixNativeDispatcher_mknod0;
++		Java_sun_nio_fs_UnixNativeDispatcher_getpwuid;
++		Java_sun_nio_fs_UnixNativeDispatcher_getgrgid;
++		Java_sun_nio_fs_UnixNativeDispatcher_getpwnam0;
++		Java_sun_nio_fs_UnixNativeDispatcher_getgrnam0;
++		Java_sun_nio_fs_UnixNativeDispatcher_getextmntent;
++		Java_sun_nio_fs_UnixCopyFile_transfer;
++		Java_sun_nio_fs_SolarisNativeDispatcher_init;
++		Java_sun_nio_fs_SolarisNativeDispatcher_facl;
++		Java_sun_nio_fs_SolarisWatchService_init;
++		Java_sun_nio_fs_SolarisWatchService_portCreate;
++		Java_sun_nio_fs_SolarisWatchService_portAssociate;
++		Java_sun_nio_fs_SolarisWatchService_portDissociate;
++		Java_sun_nio_fs_SolarisWatchService_portSend;
++		Java_sun_nio_fs_SolarisWatchService_portGetn;
+ 
+ 	local:
+ 		*;
+diff -Nru openjdk.orig/jdk/make/mkdemo/Makefile openjdk/jdk/make/mkdemo/Makefile
+--- openjdk.orig/jdk/make/mkdemo/Makefile	2009-01-07 22:23:02.000000000 +0000
++++ openjdk/jdk/make/mkdemo/Makefile	2009-01-07 22:23:48.000000000 +0000
+@@ -31,7 +31,7 @@
+ PRODUCT = demos
+ include $(BUILDDIR)/common/Defs.gmk
+ 
+-SUBDIRS = applets jfc jvmti management jni scripting jpda
++SUBDIRS = applets jfc jvmti management jni scripting jpda nio
+ 
+ all build:: nbproject
+ 	$(SUBDIRS-loop)
+diff -Nru openjdk.orig/jdk/make/mksample/nio/Makefile openjdk/jdk/make/mksample/nio/Makefile
+--- openjdk.orig/jdk/make/mksample/nio/Makefile	2009-01-07 22:23:19.000000000 +0000
++++ openjdk/jdk/make/mksample/nio/Makefile	2009-01-07 22:24:06.000000000 +0000
+@@ -31,7 +31,7 @@
+ PRODUCT = java
+ include $(BUILDDIR)/common/Defs.gmk
+ 
+-SUBDIRS = server
++SUBDIRS = aio file server
+ all build clean clobber::
+ 	$(SUBDIRS-loop)
+ 
+diff -Nru openjdk.orig/jdk/src/share/classes/java/io/File.java openjdk/jdk/src/share/classes/java/io/File.java
+--- openjdk.orig/jdk/src/share/classes/java/io/File.java	2009-01-12 13:32:17.000000000 +0000
++++ openjdk/jdk/src/share/classes/java/io/File.java	2009-01-12 13:35:18.000000000 +0000
+@@ -1957,6 +1957,13 @@
+                 }
+             }
+         );
++	org.classpath.icedtea.misc.SharedSecrets.setJavaIODeleteOnExitAccess(
++            new org.classpath.icedtea.misc.JavaIODeleteOnExitAccess() {
++                public void add(String path) {
++		    DeleteOnExitHook.hook().add(path);
++                }
++            }
++        );            									    
+     }
+ 
+ 
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/util/SecurityConstants.java openjdk/jdk/src/share/classes/sun/security/util/SecurityConstants.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/util/SecurityConstants.java	2009-01-12 17:45:26.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/security/util/SecurityConstants.java	2009-01-12 17:45:39.000000000 +0000
+@@ -52,6 +52,7 @@
+     public static final String FILE_EXECUTE_ACTION = "execute";
+     public static final String FILE_READ_ACTION = "read";
+     public static final String FILE_WRITE_ACTION = "write";
++    public static final String FILE_READLINK_ACTION = "readlink";
+ 
+     public static final String SOCKET_RESOLVE_ACTION = "resolve";
+     public static final String SOCKET_CONNECT_ACTION = "connect";
