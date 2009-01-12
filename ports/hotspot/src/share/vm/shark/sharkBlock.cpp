@@ -1236,10 +1236,11 @@ void SharkBlock::do_ldc()
     SharkConstantPool constants(this);
 
     BasicBlock *resolved   = function()->CreateBlock("resolved");
+    BasicBlock *resolved_class = function()->CreateBlock("resolved_class");
     BasicBlock *unresolved = function()->CreateBlock("unresolved");
     BasicBlock *unknown    = function()->CreateBlock("unknown");
     BasicBlock *done       = function()->CreateBlock("done");
-    
+
     SwitchInst *switchinst = builder()->CreateSwitch(
       constants.tag_at(iter()->get_constant_index()),
       unknown, 5);
@@ -1247,7 +1248,7 @@ void SharkBlock::do_ldc()
     switchinst->addCase(
       LLVMValue::jbyte_constant(JVM_CONSTANT_String), resolved);
     switchinst->addCase(
-      LLVMValue::jbyte_constant(JVM_CONSTANT_Class), resolved);
+      LLVMValue::jbyte_constant(JVM_CONSTANT_Class), resolved_class);
     switchinst->addCase(
       LLVMValue::jbyte_constant(JVM_CONSTANT_UnresolvedString), unresolved);
     switchinst->addCase(
@@ -1258,6 +1259,26 @@ void SharkBlock::do_ldc()
 
     builder()->SetInsertPoint(resolved);
     Value *resolved_value = constants.object_at(iter()->get_constant_index());
+    builder()->CreateBr(done);
+
+    builder()->SetInsertPoint(resolved_class);
+    Value *resolved_class_value
+      = constants.object_at(iter()->get_constant_index());
+    resolved_class_value
+      = builder()->CreatePtrToInt(resolved_class_value,
+                                  SharkType::intptr_type());
+    resolved_class_value
+      = (builder()->CreateAdd
+         (resolved_class_value,
+          (LLVMValue::intptr_constant
+           (klassOopDesc::klass_part_offset_in_bytes()
+            + Klass::java_mirror_offset_in_bytes()))));
+    resolved_class_value
+      // FIXME: We need a memory barrier before this load.
+      = (builder()->CreateLoad
+         (builder()->CreateIntToPtr
+          (resolved_class_value,
+           PointerType::getUnqual(SharkType::jobject_type()))));
     builder()->CreateBr(done);
 
     builder()->SetInsertPoint(unresolved);
@@ -1272,6 +1293,7 @@ void SharkBlock::do_ldc()
     builder()->SetInsertPoint(done);
     PHINode *phi = builder()->CreatePHI(SharkType::jobject_type(), "constant");
     phi->addIncoming(resolved_value, resolved);
+    phi->addIncoming(resolved_class_value, resolved_class);
     phi->addIncoming(unresolved_value, unresolved);
     value = SharkValue::create_jobject(phi);
   }

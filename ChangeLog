@@ -1,3 +1,8 @@
+2009-01-12  Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp (SharkBlock::do_ldc):
+        Add logic for ldc(Class).
+
 2009-01-11  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am: Escape single quotes in empty bootclasspath.
