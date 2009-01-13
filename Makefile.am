@@ -650,7 +650,7 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-format-warnings.patch \
 	patches/icedtea-fortify-source.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-buildfixes.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-hotspot-dispatch.patch \
+	patches/hotspot/$(HSBUILD)/icedtea-6791168.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch
 endif
 

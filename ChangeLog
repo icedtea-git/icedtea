@@ -1,3 +1,12 @@
+2009-01-13  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/14.0b08/icedtea-hotspot-dispatch.patch: Remove,
+	replaced by ...
+	* patches/hotspot/14.0b08/icedtea-6791168.patch: New.
+	* patches/hotspot/14.0b08/icedtea-includedb.patch: Update.
+	* HACKING: Update for the above.
+	* Makefile.am: Update for the above.
+
 2009-01-12  Andrew Haley  <aph@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp (SharkBlock::do_ldc):
