@@ -17,6 +17,19 @@ if [ -z $basedir ]; then
   exit 1
 fi
 
+arch=$(uname -m)
+case "$arch" in
+  i?86|ppc)
+    MFLAG=-m32
+    ;;
+  x86_64|ppc64)
+    MFLAG=-m64
+    ;;
+  *)
+    echo 1>&2 "error: unhandled arch '$arch'"
+    exit 1
+esac
+
 LIBDIR=$basedir/lib
 RESDIR=$basedir/resources
 
@@ -29,31 +42,31 @@ set -x
 cp -r $JCKDIR/tests/api/javax_management/loading/data/* $RESDIR
 chmod -R +w  $RESDIR
 
-gcc -fPIC -shared -o $LIBDIR/libjckatr.so -I$JCKDIR \
+gcc $MFLAG -fPIC -shared -o $LIBDIR/libjckatr.so -I$JCKDIR \
   $JCKDIR/src/share/lib/atr/jckatr.c   
 
-gcc -fPIC -shared -o $LIBDIR/libjckjni.so -I$JCKDIR \
+gcc $MFLAG -fPIC -shared -o $LIBDIR/libjckjni.so -I$JCKDIR \
   -I$JCKDIR/src/share/lib/jni/include \
   -I$JCKDIR/src/share/lib/jni/include/solaris \
   $JCKDIR/src/share/lib/jni/jckjni.c   
 
-gcc -fPIC -shared -o $LIBDIR/libjckjvmti.so -I$JCKDIR \
+gcc $MFLAG -fPIC -shared -o $LIBDIR/libjckjvmti.so -I$JCKDIR \
   -I$JCKDIR/src/share/lib/jvmti/include \
   -I$JCKDIR/src/share/lib/jni/include \
   -I$JCKDIR/src/share/lib/jni/include/solaris \
   $JCKDIR/src/share/lib/jvmti/jckjvmti.c   
 
-gcc -fPIC -shared -o $LIBDIR/libsystemInfo.so \
+gcc $MFLAG -fPIC -shared -o $LIBDIR/libsystemInfo.so \
   -I$JCKDIR/src/share/lib/jni/include \
   -I$JCKDIR/src/share/lib/jni/include/solaris \
   $JCKDIR/tests/api/javax_management/loading/data/archives/src/C/com_sun_management_mbeans_loading_SystemInfoUseNativeLib.c   
 
-gcc -fPIC -shared -o $LIBDIR/libjmxlibid.so \
+gcc $MFLAG -fPIC -shared -o $LIBDIR/libjmxlibid.so \
   -I$JCKDIR/src/share/lib/jni/include \
   -I$JCKDIR/src/share/lib/jni/include/solaris \
   $JCKDIR/tests/api/javax_management/loading/data/archives/src/C/com_sun_management_mbeans_loading_GetLibIdFromNativeLib.c   
 
-gcc -fPIC -shared -o $LIBDIR/libgenrandom.so \
+gcc $MFLAG -fPIC -shared -o $LIBDIR/libgenrandom.so \
   -I$JCKDIR/src/share/lib/jni/include \
   -I$JCKDIR/src/share/lib/jni/include/solaris \
   $JCKDIR/tests/api/javax_management/loading/data/archives/src/C/com_sun_management_mbeans_loading_RandomGen.c   

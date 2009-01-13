@@ -53,6 +53,10 @@
 	* patches/icedtea-nio2.patch:
 	Add missing files to java/nio/FILES_java.gmk
 
+2009-01-13  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/jck/compile-native-code.sh: Build with -m32 or -m64.
+
 2009-01-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Initial import of NIO2 code.
@@ -372,6 +376,15 @@
 	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/spi/TestProvider.java: Added.
 	* patches/icedtea-nio2.patch: New patch.
 	* patches/icedtea-pr261.patch: Moved from ecj-specific patches.
+
+2009-01-13  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/14.0b08/icedtea-hotspot-dispatch.patch: Remove,
+	replaced by ...
+	* patches/hotspot/14.0b08/icedtea-6791168.patch: New.
+	* patches/hotspot/14.0b08/icedtea-includedb.patch: Update.
+	* HACKING: Update for the above.
+	* Makefile.am: Update for the above.
 
 2009-01-12  Andrew Haley  <aph@redhat.com>
 

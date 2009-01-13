@@ -1,0 +1,230 @@
+--- openjdk/hotspot/src/cpu/x86/vm/cppInterpreter_x86.cpp.orig	2009-01-13 10:15:42.000000000 +0000
++++ openjdk/hotspot/src/cpu/x86/vm/cppInterpreter_x86.cpp	2009-01-13 10:17:05.000000000 +0000
+@@ -594,7 +594,7 @@
+   __ call_VM(noreg, CAST_FROM_FN_PTR(address, InterpreterRuntime::frequency_counter_overflow), rax);
+ 
+   // for c++ interpreter can rsi really be munged?
+-  __ lea(state, Address(rbp, -sizeof(BytecodeInterpreter)));                               // restore state
++  __ lea(state, Address(rbp, -(int)sizeof(BytecodeInterpreter)));                               // restore state
+   __ movptr(rbx, Address(state, byte_offset_of(BytecodeInterpreter, _method)));            // restore method
+   __ movptr(rdi, Address(state, byte_offset_of(BytecodeInterpreter, _locals)));            // get locals pointer
+ 
+@@ -658,7 +658,7 @@
+     const Address size_of_stack    (rbx, methodOopDesc::max_stack_offset());
+     // Always give one monitor to allow us to start interp if sync method.
+     // Any additional monitors need a check when moving the expression stack
+-    const one_monitor = frame::interpreter_frame_monitor_size() * wordSize;
++    const int one_monitor = frame::interpreter_frame_monitor_size() * wordSize;
+   __ load_unsigned_word(rax, size_of_stack);                            // get size of expression stack in words
+   __ lea(rax, Address(noreg, rax, Interpreter::stackElementScale(), one_monitor));
+   __ lea(rax, Address(rax, rdx, Interpreter::stackElementScale(), overhead_size));
+@@ -1829,7 +1829,7 @@
+   Label unwind_and_forward;
+ 
+   // restore state pointer.
+-  __ lea(state, Address(rbp,  -sizeof(BytecodeInterpreter)));
++  __ lea(state, Address(rbp,  -(int)sizeof(BytecodeInterpreter)));
+ 
+   __ movptr(rbx, STATE(_method));                       // get method
+ #ifdef _LP64
+@@ -1877,14 +1877,14 @@
+ 
+   // The FPU stack is clean if UseSSE >= 2 but must be cleaned in other cases
+   if (UseSSE < 2) {
+-    __ lea(state, Address(rbp,  -sizeof(BytecodeInterpreter)));
++    __ lea(state, Address(rbp,  -(int)sizeof(BytecodeInterpreter)));
+     __ movptr(rbx, STATE(_result._to_call._callee));                   // get method just executed
+     __ movl(rcx, Address(rbx, methodOopDesc::result_index_offset()));
+     __ cmpl(rcx, AbstractInterpreter::BasicType_as_index(T_FLOAT));    // Result stub address array index
+     __ jcc(Assembler::equal, do_float);
+     __ cmpl(rcx, AbstractInterpreter::BasicType_as_index(T_DOUBLE));    // Result stub address array index
+     __ jcc(Assembler::equal, do_double);
+-#ifdef COMPILER2
++#if !defined(_LP64) || defined(COMPILER1) || !defined(COMPILER2)
+     __ empty_FPU_stack();
+ #endif // COMPILER2
+     __ jmp(done_conv);
+@@ -1928,7 +1928,7 @@
+ 
+   // Restore rsi/r13 as compiled code may not preserve it
+ 
+-  __ lea(state, Address(rbp,  -sizeof(BytecodeInterpreter)));
++  __ lea(state, Address(rbp,  -(int)sizeof(BytecodeInterpreter)));
+ 
+   // restore stack to what we had when we left (in case i2c extended it)
+ 
+@@ -1942,7 +1942,7 @@
+ #else
+   __ movptr(rcx, STATE(_thread));                       // get thread
+   __ cmpptr(Address(rcx, Thread::pending_exception_offset()), (int32_t)NULL_WORD);
+-#endif / __LP64
++#endif // _LP64
+   __ jcc(Assembler::notZero, return_with_exception);
+ 
+   // get method just executed
+--- openjdk/hotspot/src/cpu/x86/vm/frame_x86.inline.hpp.orig	2009-01-13 10:15:42.000000000 +0000
++++ openjdk/hotspot/src/cpu/x86/vm/frame_x86.inline.hpp	2009-01-13 10:17:05.000000000 +0000
+@@ -139,7 +139,7 @@
+ #ifdef CC_INTERP
+ 
+ inline interpreterState frame::get_interpreterState() const {
+-  return ((interpreterState)addr_at( -sizeof(BytecodeInterpreter)/wordSize ));
++  return ((interpreterState)addr_at( -((int)sizeof(BytecodeInterpreter))/wordSize ));
+ }
+ 
+ inline intptr_t*    frame::sender_sp()        const {
+--- openjdk/hotspot/src/cpu/x86/vm/assembler_x86.cpp.orig	2009-01-13 10:15:42.000000000 +0000
++++ openjdk/hotspot/src/cpu/x86/vm/assembler_x86.cpp	2009-01-13 10:17:05.000000000 +0000
+@@ -6943,29 +6943,32 @@
+ 
+   Label slow_case, done;
+ 
+-  // x ?<= pi/4
+-  fld_d(ExternalAddress((address)&pi_4));
+-  fld_s(1);                // Stack:  X  PI/4  X
+-  fabs();                  // Stack: |X| PI/4  X
+-  fcmp(tmp);
+-  jcc(Assembler::above, slow_case);
+-
+-  // fastest case: -pi/4 <= x <= pi/4
+-  switch(trig) {
+-  case 's':
+-    fsin();
+-    break;
+-  case 'c':
+-    fcos();
+-    break;
+-  case 't':
+-    ftan();
+-    break;
+-  default:
+-    assert(false, "bad intrinsic");
+-    break;
++  ExternalAddress pi4_adr = (address)&pi_4;
++  if (reachable(pi4_adr)) {
++    // x ?<= pi/4
++    fld_d(pi4_adr); // ExternalAddress((address)&pi_4));
++    fld_s(1);                // Stack:  X  PI/4  X
++    fabs();                  // Stack: |X| PI/4  X
++    fcmp(tmp);
++    jcc(Assembler::above, slow_case);
++
++    // fastest case: -pi/4 <= x <= pi/4
++    switch(trig) {
++    case 's':
++      fsin();
++      break;
++    case 'c':
++      fcos();
++      break;
++    case 't':
++      ftan();
++      break;
++    default:
++      assert(false, "bad intrinsic");
++      break;
++    }
++    jmp(done);
+   }
+-  jmp(done);
+ 
+   // slow case: runtime call
+   bind(slow_case);
+--- openjdk/hotspot/src/cpu/x86/vm/sharedRuntime_x86_64.cpp.orig	2009-01-13 10:15:42.000000000 +0000
++++ openjdk/hotspot/src/cpu/x86/vm/sharedRuntime_x86_64.cpp	2009-01-13 10:17:05.000000000 +0000
+@@ -2954,10 +2954,16 @@
+   __ pushptr(Address(rcx, 0));     // Save return address
+   __ enter();                      // Save old & set new rbp
+   __ subptr(rsp, rbx);             // Prolog
++#ifdef CC_INTERP
++  __ movptr(Address(rbp,
++                  -(sizeof(BytecodeInterpreter)) + in_bytes(byte_offset_of(BytecodeInterpreter, _sender_sp))),
++            sender_sp); // Make it walkable
++#else // CC_INTERP
+   __ movptr(Address(rbp, frame::interpreter_frame_sender_sp_offset * wordSize),
+             sender_sp);            // Make it walkable
+   // This value is corrected by layout_activation_impl
+   __ movptr(Address(rbp, frame::interpreter_frame_last_sp_offset * wordSize), (int32_t)NULL_WORD );
++#endif // CC_INTERP
+   __ mov(sender_sp, rsp);          // Pass sender_sp to next frame
+   __ addptr(rsi, wordSize);        // Bump array pointer (sizes)
+   __ addptr(rcx, wordSize);        // Bump array pointer (pcs)
+--- openjdk/hotspot/src/cpu/x86/vm/bytecodeInterpreter_x86.inline.hpp.orig	2009-01-13 10:15:42.000000000 +0000
++++ openjdk/hotspot/src/cpu/x86/vm/bytecodeInterpreter_x86.inline.hpp	2009-01-13 10:17:05.000000000 +0000
+@@ -213,7 +213,7 @@
+ 
+ inline jint BytecodeInterpreter::VMintDiv(jint op1, jint op2) {
+   /* it's possible we could catch this special case implicitly */
+-  if (op1 == 0x80000000 && op2 == -1) return op1;
++  if ((juint)op1 == 0x80000000 && op2 == -1) return op1;
+   else return op1 / op2;
+ }
+ 
+@@ -231,7 +231,7 @@
+ 
+ inline jint BytecodeInterpreter::VMintRem(jint op1, jint op2) {
+   /* it's possible we could catch this special case implicitly */
+-  if (op1 == 0x80000000 && op2 == -1) return 0;
++  if ((juint)op1 == 0x80000000 && op2 == -1) return 0;
+   else return op1 % op2;
+ }
+ 
+--- openjdk/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp.orig	2009-01-13 10:15:42.000000000 +0000
++++ openjdk/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp	2009-01-13 10:17:05.000000000 +0000
+@@ -30,7 +30,7 @@
+ 
+ #ifdef CC_INTERP
+ void InterpreterMacroAssembler::get_method(Register reg) {
+-  movptr(reg, Address(rbp, -(sizeof(BytecodeInterpreter) + 2 * wordSize)));
++  movptr(reg, Address(rbp, -((int)sizeof(BytecodeInterpreter) + 2 * wordSize)));
+   movptr(reg, Address(reg, byte_offset_of(BytecodeInterpreter, _method)));
+ }
+ #endif // CC_INTERP
+--- openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp.orig	2009-01-13 10:16:45.000000000 +0000
++++ openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.cpp	2009-01-13 10:17:05.000000000 +0000
+@@ -163,7 +163,7 @@
+ #ifdef USELABELS
+ // Have to do this dispatch this way in C++ because otherwise gcc complains about crossing an
+ // initialization (which is is the initialization of the table pointer...)
+-#define DISPATCH(opcode) goto *dispatch_table[opcode]
++#define DISPATCH(opcode) goto *(void*)dispatch_table[opcode]
+ #define CONTINUE {                              \
+         opcode = *pc;                           \
+         DO_UPDATE_INSTRUCTION_COUNT(opcode);    \
+@@ -341,7 +341,7 @@
+  */
+ #undef CHECK_NULL
+ #define CHECK_NULL(obj_)                                                 \
+-    if ((obj_) == 0) {                                                   \
++    if ((obj_) == NULL) {                                                \
+         VM_JAVA_ERROR(vmSymbols::java_lang_NullPointerException(), "");  \
+     }
+ 
+@@ -1362,7 +1362,7 @@
+ 
+ #define NULL_COMPARISON_NOT_OP(name)                                         \
+       CASE(_if##name): {                                                     \
+-          int skip = (!(STACK_OBJECT(-1) == 0))                              \
++          int skip = (!(STACK_OBJECT(-1) == NULL))                           \
+                       ? (int16_t)Bytes::get_Java_u2(pc + 1) : 3;             \
+           address branch_pc = pc;                                            \
+           UPDATE_PC_AND_TOS(skip, -1);                                       \
+@@ -1372,7 +1372,7 @@
+ 
+ #define NULL_COMPARISON_OP(name)                                             \
+       CASE(_if##name): {                                                     \
+-          int skip = ((STACK_OBJECT(-1) == 0))                               \
++          int skip = ((STACK_OBJECT(-1) == NULL))                            \
+                       ? (int16_t)Bytes::get_Java_u2(pc + 1) : 3;             \
+           address branch_pc = pc;                                            \
+           UPDATE_PC_AND_TOS(skip, -1);                                       \
+--- openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.hpp.orig	2009-01-13 10:15:42.000000000 +0000
++++ openjdk/hotspot/src/share/vm/interpreter/bytecodeInterpreter.hpp	2009-01-13 10:17:05.000000000 +0000
+@@ -66,7 +66,6 @@
+ friend class InterpreterGenerator;
+ friend class InterpreterMacroAssembler;
+ friend class frame;
+-friend class SharedRuntime;
+ friend class VMStructs;
+ 
+ public:
