@@ -27,6 +27,10 @@ package sun.nio.fs;
 
 import java.nio.file.attribute.*;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
+import org.classpath.icedtea.java.nio.file.attribute.GroupPrincipal;
+
 import static sun.nio.fs.UnixNativeDispatcher.*;
 
 /**

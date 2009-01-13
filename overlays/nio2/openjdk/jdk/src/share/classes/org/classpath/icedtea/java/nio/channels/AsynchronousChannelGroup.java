@@ -26,9 +26,10 @@
 
 package org.classpath.icedtea.java.nio.channels;
 
-import java.nio.channels.spi.AsynchronousChannelProvider;
 import java.io.IOException;
 import java.util.concurrent.*;
+
+import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**
  * A grouping of asynchronous channels for the purpose of resource sharing.

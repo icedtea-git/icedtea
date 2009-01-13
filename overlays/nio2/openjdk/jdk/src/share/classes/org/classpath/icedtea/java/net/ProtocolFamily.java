@@ -1,5 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,48 +24,17 @@
  * have any questions.
  */
 
-package sun.nio.fs;
-
-import java.io.IOException;
-import sun.nio.fs.MimeType;
-
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.spi.FileTypeDetector;
+package org.classpath.icedtea.java.net;
 
 /**
- * Base implementation of FileTypeDetector
+ * Represents a family of communication protocols.
+ *
+ * @since 1.7
  */
 
-public abstract class AbstractFileTypeDetector
-    extends FileTypeDetector
-{
-    protected AbstractFileTypeDetector() {
-        super();
-    }
-
+public interface ProtocolFamily {
     /**
-     * Invokes the implProbeContentType method to guess the file's content type,
-     * and this validates that the content type's syntax is valid.
+     * Returns the name of the protocol family.
      */
-
-    public final String probeContentType(FileRef file) throws IOException {
-        if (file == null)
-            throw new NullPointerException("'file' is null");
-        String result = implProbeContentType(file);
-        if (result != null) {
-            // check the content type
-            try {
-                MimeType.parse(result);
-            } catch (IllegalArgumentException ignore) {
-                result = null;
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Probes the given file to guess its content type.
-     */
-    protected abstract String implProbeContentType(FileRef file)
-        throws IOException;
+    String name();
 }

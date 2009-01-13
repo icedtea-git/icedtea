@@ -26,13 +26,14 @@
 
 package org.classpath.icedtea.java.nio.file;
 
-import java.nio.file.spi.FileSystemProvider;
 import java.net.URI;
 import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.*;
 import java.lang.reflect.Constructor;
+
+import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
 
 /**
  * Factory methods for file systems. This class defines the {@link #getDefault

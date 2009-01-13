@@ -25,15 +25,16 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
-import java.nio.file.attribute.*;
-import java.nio.file.spi.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.security.PrivilegedAction;
 import java.security.AccessController;
 import sun.security.action.GetBooleanAction;
+
+import org.classpath.icedtea.java.nio.file.FileStore;
+import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
+import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
 
 /**
  * Base implementation of FileSystem for Unix-like implementations.

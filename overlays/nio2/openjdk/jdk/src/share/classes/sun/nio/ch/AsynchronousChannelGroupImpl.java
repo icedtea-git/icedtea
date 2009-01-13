@@ -26,8 +26,6 @@
 package sun.nio.ch;
 
 import java.nio.channels.Channel;
-import java.nio.channels.AsynchronousChannelGroup;
-import java.nio.channels.spi.AsynchronousChannelProvider;
 import java.io.IOException;
 import java.io.FileDescriptor;
 import java.util.Queue;
@@ -38,6 +36,9 @@ import java.security.PrivilegedAction;
 import java.security.AccessController;
 import java.security.AccessControlContext;
 import sun.security.action.GetPropertyAction;
+
+import org.classpath.icedtea.java.nio.channels.AsynchronousChannelGroup;
+import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**
  * Base implementation of AsynchronousChannelGroup

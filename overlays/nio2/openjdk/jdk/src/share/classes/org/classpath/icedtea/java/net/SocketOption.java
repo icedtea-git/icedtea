@@ -1,5 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,48 +24,33 @@
  * have any questions.
  */
 
-package sun.nio.fs;
-
-import java.io.IOException;
-import sun.nio.fs.MimeType;
-
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.spi.FileTypeDetector;
+package org.classpath.icedtea.java.net;
 
 /**
- * Base implementation of FileTypeDetector
+ * A socket option associated with a socket.
+ *
+ * <p> In the {@link java.nio.channels channels} package, the {@link
+ * java.nio.channels.NetworkChannel} interface defines the {@link
+ * java.nio.channels.NetworkChannel#setOption(SocketOption,Object) setOption}
+ * and {@link java.nio.channels.NetworkChannel#getOption(SocketOption) getOption}
+ * methods to set and query the channel's socket options.
+ *
+ * @param   <T>     The type of the socket option value.
+ *
+ * @since 1.7
+ *
+ * @see StandardSocketOption
  */
 
-public abstract class AbstractFileTypeDetector
-    extends FileTypeDetector
-{
-    protected AbstractFileTypeDetector() {
-        super();
-    }
+public interface SocketOption<T> {
 
     /**
-     * Invokes the implProbeContentType method to guess the file's content type,
-     * and this validates that the content type's syntax is valid.
+     * Returns the name of the socket option.
      */
-
-    public final String probeContentType(FileRef file) throws IOException {
-        if (file == null)
-            throw new NullPointerException("'file' is null");
-        String result = implProbeContentType(file);
-        if (result != null) {
-            // check the content type
-            try {
-                MimeType.parse(result);
-            } catch (IllegalArgumentException ignore) {
-                result = null;
-            }
-        }
-        return result;
-    }
+    String name();
 
     /**
-     * Probes the given file to guess its content type.
+     * Returns the type of the socket option value.
      */
-    protected abstract String implProbeContentType(FileRef file)
-        throws IOException;
+    Class<T> type();
 }

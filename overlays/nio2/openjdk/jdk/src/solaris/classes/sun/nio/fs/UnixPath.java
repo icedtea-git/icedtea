@@ -27,13 +27,16 @@ package sun.nio.fs;
 
 import java.nio.file.*;
 import java.nio.file.attribute.*;
-import java.nio.file.spi.AbstractPath;
 import java.nio.channels.*;
 import java.security.AccessController;
 import java.io.*;
 import java.net.URI;
 import java.util.*;
 import sun.security.util.SecurityConstants;
+
+import org.classpath.icedtea.java.nio.file.FileRef;
+import org.classpath.icedtea.java.nio.file.attribute.FilePermission;
+import org.classpath.icedtea.java.nio.file.spi.AbstractPath;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 import static sun.nio.fs.UnixConstants.*;

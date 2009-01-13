@@ -25,12 +25,17 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
-import java.nio.file.attribute.*;
 import java.nio.channels.SeekableByteChannel;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.file.OpenOption;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.SecureDirectoryStream;
+import org.classpath.icedtea.java.nio.file.attribute.GroupPrincipal;
+import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 import static sun.nio.fs.UnixConstants.*;

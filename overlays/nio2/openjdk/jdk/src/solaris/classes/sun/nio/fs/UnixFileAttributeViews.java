@@ -25,11 +25,11 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
-import java.nio.file.attribute.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributeView;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 

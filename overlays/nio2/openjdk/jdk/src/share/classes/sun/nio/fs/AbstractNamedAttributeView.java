@@ -26,9 +26,10 @@
 package sun.nio.fs;
 
 import java.nio.ByteBuffer;
-import java.nio.file.attribute.NamedAttributeView;
 import java.io.IOException;
 import java.util.*;
+
+import org.classpath.icedtea.java.nio.file.attribute.NamedAttributeView;
 
 /**
  * Base implementation of NamedAttributeView

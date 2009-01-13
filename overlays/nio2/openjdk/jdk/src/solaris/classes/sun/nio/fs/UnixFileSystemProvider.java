@@ -25,15 +25,14 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
-import java.nio.file.attribute.*;
-import java.nio.file.spi.FileSystemProvider;
 import java.nio.channels.*;
 import java.nio.channels.spi.AsynchronousChannelProvider.ThreadPoolType;
 import java.net.URI;
 import java.util.concurrent.ExecutorService;
 import java.io.IOException;
 import java.util.*;
+
+import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
 
 import sun.nio.ch.ThreadPool;
 

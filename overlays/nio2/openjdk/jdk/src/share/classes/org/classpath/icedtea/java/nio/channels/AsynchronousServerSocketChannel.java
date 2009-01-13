@@ -26,11 +26,12 @@
 
 package org.classpath.icedtea.java.nio.channels;
 
-import java.nio.channels.spi.*;
 import java.net.SocketOption;
 import java.net.SocketAddress;
 import java.util.concurrent.Future;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**
  * An asynchronous channel for stream-oriented listening sockets.

@@ -36,6 +36,9 @@ import java.security.AccessControlContext;
 import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 
+import org.classpath.icedtea.java.nio.channels.AsynchronousDatagramChannel;
+import org.classpath.icedtea.java.nio.channels.MembershipKey;
+
 /**
  * A prototype implementation of AsynchronousDatagramChannel, used to aid
  * test and spec development.

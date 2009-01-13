@@ -39,6 +39,8 @@ import java.util.Collections;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 
+import org.classpath.icedtea.java.nio.channels.AsynchronousSocketChannel;
+
 /**
  * Base implementation of AsynchronousSocketChannel
  */

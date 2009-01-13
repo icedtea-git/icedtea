@@ -25,13 +25,15 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
 import java.util.Iterator;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.concurrent.locks.*;
 import java.io.IOException;
 import static sun.nio.fs.UnixNativeDispatcher.*;
+
+import org.classpath.icedtea.java.nio.file.DirectoryStream;
+import org.classpath.icedtea.java.nio.file.Path;
 
 /**
  * Unix implementation of java.nio.file.DirectoryStream

@@ -38,6 +38,8 @@ import java.util.Collections;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.classpath.icedtea.java.nio.channels.AsynchronousServerSocketChannel;
+
 /**
  * Base implementation of AsynchronousServerSocketChannel.
  */

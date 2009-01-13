@@ -26,12 +26,16 @@
 
 package org.classpath.icedtea.java.nio.file.spi;
 
-import java.nio.file.*;
-import java.nio.file.attribute.*;
 import java.nio.channels.*;
 import java.nio.ByteBuffer;
 import java.io.*;
 import java.util.*;
+
+import org.classpath.icedtea.java.nio.file.CopyOption;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.StandardOpenOption;
+
+import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
 
 /**
  * Base implementation class for a {@code Path}.

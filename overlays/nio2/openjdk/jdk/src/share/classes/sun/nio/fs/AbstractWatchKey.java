@@ -25,8 +25,10 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
 import java.util.*;
+
+import org.classpath.icedtea.java.nio.file.WatchEvent;
+import org.classpath.icedtea.java.nio.file.WatchKey;
 
 /**
  * Base implementation class for watch keys.

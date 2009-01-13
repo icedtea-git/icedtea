@@ -25,9 +25,10 @@
 
 package sun.nio.fs;
 
-import java.nio.file.attribute.*;
 import java.util.*;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.file.attribute.FileOwnerAttributeView;
 
 /**
  * An implementation of FileOwnerAttributeView that delegates to a given

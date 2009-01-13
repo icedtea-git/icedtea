@@ -27,7 +27,6 @@
 package org.classpath.icedtea.java.nio.channels.spi;
 
 import java.nio.channels.*;
-import java.net.ProtocolFamily;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -35,6 +34,13 @@ import java.util.ServiceConfigurationError;
 import java.util.concurrent.*;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+
+import org.classpath.icedtea.java.net.ProtocolFamily;
+
+import org.classpath.icedtea.java.nio.channels.AsynchronousChannelGroup;
+import org.classpath.icedtea.java.nio.channels.AsynchronousDatagramChannel;
+import org.classpath.icedtea.java.nio.channels.AsynchronousServerSocketChannel;
+import org.classpath.icedtea.java.nio.channels.AsynchronousSocketChannel;
 
 /**
  * Service-provider class for asynchronous channels.

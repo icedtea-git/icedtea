@@ -25,13 +25,14 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
-import java.nio.file.attribute.*;
 import java.nio.channels.*;
 import java.util.*;
 import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+
+import org.classpath.icedtea.java.nio.file.FileStore;
+import org.classpath.icedtea.java.nio.file.FileSystem;
 
 /**
  * Base implementation of FileStore for Unix/like implementations.

@@ -26,14 +26,16 @@
 
 package org.classpath.icedtea.java.nio.channels;
 
-import java.nio.channels.spi.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.Future;
 import java.io.IOException;
-import java.net.SocketOption;
 import java.net.SocketAddress;
-import java.net.ProtocolFamily;
 import java.nio.ByteBuffer;
+
+import org.classpath.icedtea.java.net.ProtocolFamily;
+import org.classpath.icedtea.java.net.SocketOption;
+
+import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**
  * An asynchronous channel for datagram-oriented sockets.

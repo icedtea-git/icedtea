@@ -26,9 +26,6 @@
 
 package org.classpath.icedtea.java.nio.channels;
 
-import java.nio.file.*;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.spi.*;
 import java.nio.ByteBuffer;
 import java.io.IOException;
 import java.util.concurrent.Future;
@@ -36,6 +33,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+
+import org.classpath.icedtea.java.nio.file.FileSystemProvider;
+import org.classpath.icedtea.java.nio.file.OpenOption;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
 
 /**
  * An asynchronous channel for reading, writing, and manipulating a file.

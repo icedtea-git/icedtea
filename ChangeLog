@@ -1,5 +1,60 @@
 2009-01-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedCopyOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedOpenOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedWatchEventModifier.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/ProtocolFamily.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/SocketOption.java:
+	Add missing files.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousDatagramChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/MembershipKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/MulticastChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/NetworkChannel.java:
+	Add missing files.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystems.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/AbstractPath.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousChannelGroupImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/SimpleAsynchronousDatagramChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractAclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractBasicFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractFileStoreSpaceAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/FileOwnerAttributeViewImpl.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/EPollPort.java:
+	Add missing file.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/LinuxAsynchronousChannelProvider.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/Port.java:
+	Add missing file.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxDosFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributeViews.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixPath.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixSecureDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixUserPrincipals.java:
+	Fix imports.
+	* patches/icedtea-nio2.patch:
+	Add missing files to java/nio/FILES_java.gmk
+
+2009-01-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Initial import of NIO2 code.
 	* patches/ecj/icedtea-pr261.patch: Moved to general patches.
 	* Makefile.am: Add NIO2 patch.
