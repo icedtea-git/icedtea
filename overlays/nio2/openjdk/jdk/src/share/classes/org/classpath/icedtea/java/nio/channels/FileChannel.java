@@ -29,13 +29,19 @@ package org.classpath.icedtea.java.nio.channels;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
+import java.nio.channels.GatheringByteChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.ScatteringByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.channels.spi.AbstractInterruptibleChannel;
-import java.nio.file.*;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.spi.*;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+
+import org.classpath.icedtea.java.nio.file.OpenOption;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
+import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
 
 /**
  * A channel for reading, writing, mapping, and manipulating a file.

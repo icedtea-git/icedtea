@@ -33,6 +33,7 @@ import java.security.AccessController;
 import sun.security.action.GetBooleanAction;
 
 import org.classpath.icedtea.java.nio.file.FileStore;
+import org.classpath.icedtea.java.nio.file.FileSystem;
 import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
 import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
 

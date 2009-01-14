@@ -26,11 +26,12 @@
 
 package org.classpath.icedtea.java.nio.file;
 
-import java.nio.file.spi.FileTypeDetector;
 import java.io.IOException;
 import java.util.*;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+
+import org.classpath.icedtea.java.nio.file.spi.FileTypeDetector;
 
 /**
  * Utility methods for files and directories.

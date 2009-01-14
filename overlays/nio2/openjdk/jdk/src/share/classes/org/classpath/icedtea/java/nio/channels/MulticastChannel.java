@@ -29,10 +29,10 @@ package org.classpath.icedtea.java.nio.channels;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.io.IOException;
-import java.net.StandardProtocolFamily;     // javadoc
-import java.net.StandardSocketOption;       // javadoc
 
 import org.classpath.icedtea.java.net.ProtocolFamily;             // javadoc
+import org.classpath.icedtea.java.net.StandardProtocolFamily;     // javadoc
+import org.classpath.icedtea.java.net.StandardSocketOption;       // javadoc
 
 /**
  * A network channel that supports Internet Protocol (IP) multicasting.

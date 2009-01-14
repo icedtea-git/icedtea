@@ -52,7 +52,7 @@ diff -Nru openjdk.orig/jdk/make/java/java/FILES_java.gmk openjdk/jdk/make/java/j
  FILES_java = $(JAVA_JAVA_java)
 diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/nio/FILES_java.gmk
 --- openjdk.orig/jdk/make/java/nio/FILES_java.gmk	2009-01-10 03:21:38.000000000 +0000
-+++ openjdk/jdk/make/java/nio/FILES_java.gmk	2009-01-13 12:44:37.000000000 +0000
++++ openjdk/jdk/make/java/nio/FILES_java.gmk	2009-01-14 01:49:10.000000000 +0000
 @@ -75,7 +75,6 @@
          sun/nio/ch/DefaultSelectorProvider.java \
  	sun/nio/ch/DirectBuffer.java \
@@ -61,7 +61,7 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
  	sun/nio/ch/FileKey.java \
  	sun/nio/ch/Interruptible.java \
  	sun/nio/ch/IOUtil.java \
-@@ -144,7 +143,138 @@
+@@ -144,7 +143,147 @@
  	java/lang/StringCoding.java \
  	\
  	sun/misc/Cleaner.java \
@@ -70,6 +70,8 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
 +	\
 +	org/classpath/icedtea/java/net/ProtocolFamily.java \
 +	org/classpath/icedtea/java/net/SocketOption.java \
++	org/classpath/icedtea/java/net/StandardProtocolFamily.java \
++	org/classpath/icedtea/java/net/StandardSocketOption.java \
 +	org/classpath/icedtea/java/nio/channels/AsynchronousByteChannel.java \
 +	org/classpath/icedtea/java/nio/channels/AsynchronousChannel.java \
 +	org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup.java \
@@ -77,7 +79,10 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
 +	org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel.java \
 +	org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel.java \
 +	org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel.java \
++	org/classpath/icedtea/java/nio/channels/Channels.java \
 +	org/classpath/icedtea/java/nio/channels/CompletionHandler.java \
++	org/classpath/icedtea/java/nio/channels/FileChannel.java \
++	org/classpath/icedtea/java/nio/channels/FileLock.java \
 +	org/classpath/icedtea/java/nio/channels/MembershipKey.java \
 +	org/classpath/icedtea/java/nio/channels/MulticastChannel.java \
 +	org/classpath/icedtea/java/nio/channels/NetworkChannel.java \
@@ -160,6 +165,10 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
 +	org/classpath/icedtea/java/nio/file/spi/FileSystemProvider.java \
 +	org/classpath/icedtea/java/nio/file/spi/FileTypeDetector.java \
 +	\
++	org/classpath/icedtea/java/util/concurrent/ScheduledThreadPoolExecutor.java \
++	\
++	org/classpath/icedtea/misc/JavaUtilConcurrentThreadPoolExecutorAccess.java \
++	\
 +	com/sun/nio/file/ExtendedCopyOption.java \
 +	com/sun/nio/file/ExtendedOpenOption.java \
 +	com/sun/nio/file/ExtendedWatchEventModifier.java \
@@ -201,7 +210,7 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
  
  # Generated coder classes
  #
-@@ -263,7 +393,14 @@
+@@ -263,7 +402,14 @@
  	\
  	java/nio/charset/CharacterCodingException.java \
  	java/nio/charset/IllegalCharsetNameException.java \
@@ -753,6 +762,26 @@ diff -Nru openjdk.orig/jdk/src/share/classes/java/io/File.java openjdk/jdk/src/s
      }
  
  
+diff -Nru openjdk.orig/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java openjdk/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java
+--- openjdk.orig/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java	2009-01-13 23:54:13.000000000 +0000
++++ openjdk/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java	2009-01-14 01:30:11.000000000 +0000
+@@ -2004,4 +2004,16 @@
+             }
+         }
+     }
++
++    static {
++	org.classpath.icedtea.misc.SharedSecrets.setJavaUtilConcurrentThreadPoolExecutorAccess(
++            new org.classpath.icedtea.misc.JavaUtilConcurrentThreadPoolExecutorAccess() {
++	        public AtomicInteger getCtl(ThreadPoolExecutor e) { return e.ctl; }
++	        public ReentrantLock getMainLock(ThreadPoolExecutor e) { return e.mainLock; }
++	        public Condition getTermination(ThreadPoolExecutor e) { return e.termination; }
++	        public RejectedExecutionHandler getHandler(ThreadPoolExecutor e) { return e.handler; }
++            }
++        );            									    
++    }
++
+ }
 diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/util/SecurityConstants.java openjdk/jdk/src/share/classes/sun/security/util/SecurityConstants.java
 --- openjdk.orig/jdk/src/share/classes/sun/security/util/SecurityConstants.java	2009-01-12 17:45:26.000000000 +0000
 +++ openjdk/jdk/src/share/classes/sun/security/util/SecurityConstants.java	2009-01-12 17:45:39.000000000 +0000

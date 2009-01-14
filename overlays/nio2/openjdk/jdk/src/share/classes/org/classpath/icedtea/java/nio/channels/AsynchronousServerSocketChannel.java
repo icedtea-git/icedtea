@@ -26,11 +26,11 @@
 
 package org.classpath.icedtea.java.nio.channels;
 
-import java.net.SocketOption;
 import java.net.SocketAddress;
 import java.util.concurrent.Future;
 import java.io.IOException;
 
+import org.classpath.icedtea.java.net.SocketOption;
 import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**

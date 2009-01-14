@@ -26,7 +26,6 @@
 
 package org.classpath.icedtea.java.nio.file.attribute;
 
-import java.nio.file.*;
 import java.util.Set;
 import java.io.IOException;
 

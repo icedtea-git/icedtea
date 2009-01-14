@@ -26,9 +26,10 @@
 
 package org.classpath.icedtea.java.nio.file;
 
-import java.nio.file.attribute.BasicFileAttributes;
 import java.io.IOException;
 import java.io.IOError;
+
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * A simple visitor of files with default behavior to visit all files and to

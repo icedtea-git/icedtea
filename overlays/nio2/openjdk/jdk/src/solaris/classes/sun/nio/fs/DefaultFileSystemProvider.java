@@ -25,10 +25,11 @@
 
 package sun.nio.fs;
 
-import java.nio.file.spi.FileSystemProvider;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import sun.security.action.GetPropertyAction;
+
+import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
 
 /**
  * Creates this platform's default FileSystemProvider.

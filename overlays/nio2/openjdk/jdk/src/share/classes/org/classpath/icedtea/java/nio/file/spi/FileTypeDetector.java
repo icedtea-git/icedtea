@@ -26,8 +26,9 @@
 
 package org.classpath.icedtea.java.nio.file.spi;
 
-import java.nio.file.FileRef;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.file.FileRef;
 
 /**
  * A file type detector for probing a file to guess its file type.

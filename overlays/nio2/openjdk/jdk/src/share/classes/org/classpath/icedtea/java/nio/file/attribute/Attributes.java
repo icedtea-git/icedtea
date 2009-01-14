@@ -31,6 +31,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.classpath.icedtea.java.nio.file.FileRef;
+import org.classpath.icedtea.java.nio.file.FileStore;
 import org.classpath.icedtea.java.nio.file.LinkOption;
 
 /**

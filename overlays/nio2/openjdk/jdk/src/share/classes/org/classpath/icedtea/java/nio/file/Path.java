@@ -31,6 +31,8 @@ import java.io.*;
 import java.net.URI;
 import java.util.*;
 
+import org.classpath.icedtea.java.nio.channels.SeekableByteChannel;
+
 import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
 
 /**

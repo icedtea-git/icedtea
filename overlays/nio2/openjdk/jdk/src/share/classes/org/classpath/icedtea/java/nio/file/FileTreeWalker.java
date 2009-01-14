@@ -26,9 +26,11 @@
 
 package org.classpath.icedtea.java.nio.file;
 
-import java.nio.file.attribute.*;
 import java.io.IOException;
 import java.util.*;
+
+import org.classpath.icedtea.java.nio.file.attribute.Attributes;
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * Simple file tree walker that works in a similar manner to nftw(3C).

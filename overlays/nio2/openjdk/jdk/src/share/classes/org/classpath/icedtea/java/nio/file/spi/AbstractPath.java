@@ -31,10 +31,26 @@ import java.nio.ByteBuffer;
 import java.io.*;
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.file.CopyOption;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.StandardOpenOption;
+import org.classpath.icedtea.java.nio.channels.SeekableByteChannel;
 
+import org.classpath.icedtea.java.nio.file.AtomicMoveNotSupportedException;
+import org.classpath.icedtea.java.nio.file.CopyOption;
+import org.classpath.icedtea.java.nio.file.DirectoryStream;
+import org.classpath.icedtea.java.nio.file.FileRef;
+import org.classpath.icedtea.java.nio.file.LinkOption;
+import org.classpath.icedtea.java.nio.file.NoSuchFileException;
+import org.classpath.icedtea.java.nio.file.OpenOption;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.PathMatcher;
+import org.classpath.icedtea.java.nio.file.StandardOpenOption;
+import org.classpath.icedtea.java.nio.file.StandardCopyOption;
+import org.classpath.icedtea.java.nio.file.WatchEvent;
+import org.classpath.icedtea.java.nio.file.WatchKey;
+import org.classpath.icedtea.java.nio.file.WatchService;
+
+import org.classpath.icedtea.java.nio.file.attribute.Attributes;
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
 import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
 
 /**

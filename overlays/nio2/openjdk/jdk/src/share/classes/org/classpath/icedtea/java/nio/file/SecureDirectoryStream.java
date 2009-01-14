@@ -25,10 +25,12 @@
  */
 package org.classpath.icedtea.java.nio.file;
 
-import java.nio.file.attribute.*;
-import java.nio.channels.SeekableByteChannel;
 import java.util.Set;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.channels.SeekableByteChannel;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
 
 /**
  * A {@code DirectoryStream} that defines operations on files that are located

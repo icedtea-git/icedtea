@@ -26,9 +26,10 @@
 
 package org.classpath.icedtea.java.nio.file;
 
-import java.nio.file.spi.FileSystemProvider;
 import java.net.URI;
 import java.util.Iterator;
+
+import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
 
 /**
  * This class consists exclusively of static methods that return a {@link Path}

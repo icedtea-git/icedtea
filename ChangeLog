@@ -1,3 +1,44 @@
+2009-01-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/StandardProtocolFamily.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/StandardSocketOption.java:
+	Added missing files.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileLock.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/MulticastChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileTreeWalker.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileVisitor.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Files.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Path.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Paths.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/SecureDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/SimpleFileVisitor.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/Attributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileStoreSpaceAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFilePermissions.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/AbstractPath.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/FileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/FileTypeDetector.java:
+	Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/util/concurrent/ScheduledThreadPoolExecutor.java:
+	Added.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaUtilConcurrentThreadPoolExecutorAccess.java:
+	Added to allow access to private members of java.util.concurrent.ThreadPoolExecutor.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AbstractFuture.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/DefaultAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/DefaultFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/DefaultFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystem.java:
+	Fix imports.
+	* patches/icedtea-nio2.patch:
+	Patch ThreadPoolExecutor to allow access to private variables, add missing files to
+	nio/FILES_java.gmk
+
 2009-01-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedCopyOption.java,

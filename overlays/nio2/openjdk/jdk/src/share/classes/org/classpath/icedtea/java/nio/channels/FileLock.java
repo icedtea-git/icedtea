@@ -28,6 +28,8 @@ package org.classpath.icedtea.java.nio.channels;
 
 import java.io.IOException;
 
+import java.nio.channels.Channel;
+
 /**
  * A token representing a lock on a region of a file.
  *

@@ -25,9 +25,10 @@
 
 package sun.nio.ch;
 
-import java.nio.channels.spi.AsynchronousChannelProvider;
 import java.security.AccessController;
 import sun.security.action.GetPropertyAction;
+
+import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**
  * Creates this platform's default asynchronous channel provider

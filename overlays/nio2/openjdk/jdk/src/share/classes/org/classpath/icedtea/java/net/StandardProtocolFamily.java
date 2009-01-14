@@ -1,5 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,42 +24,23 @@
  * have any questions.
  */
 
-package sun.nio.ch;
-
-import java.util.concurrent.Future;
-
-import org.classpath.icedtea.java.nio.channels.AsynchronousChannel;
+package org.classpath.icedtea.java.net;
 
 /**
- * Base implementation of Future used for asynchronous I/O
+ * Defines the standard families of communication protocols.
+ *
+ * @since 1.7
  */
 
-abstract class AbstractFuture<V,A>
-    implements Future<V>
-{
-    private final AsynchronousChannel channel;
-    private final A attachment;
-
-    protected AbstractFuture(AsynchronousChannel channel, A attachment) {
-        this.channel = channel;
-        this.attachment = attachment;
-    }
-
-    final AsynchronousChannel channel() {
-        return channel;
-    }
-
-    final A attachment() {
-        return attachment;
-    }
+public enum StandardProtocolFamily implements ProtocolFamily {
 
     /**
-     * Returns the result of the operation if it has completed successfully.
+     * Internet Protocol Version 4 (IPv4)
      */
-    abstract V value();
+    INET,
 
     /**
-     * Returns the exception if the operation has failed.
+     * Internet Protocol Version 6 (IPv6)
      */
-    abstract Throwable exception();
+    INET6
 }

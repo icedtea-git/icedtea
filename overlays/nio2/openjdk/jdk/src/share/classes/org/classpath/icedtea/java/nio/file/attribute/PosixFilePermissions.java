@@ -26,8 +26,17 @@
 
 package org.classpath.icedtea.java.nio.file.attribute;
 
-import static java.nio.file.attribute.PosixFilePermission.*;
 import java.util.*;
+
+import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OWNER_READ;
+import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
+import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
+import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.GROUP_READ;
+import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.GROUP_WRITE;
+import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.GROUP_EXECUTE;
+import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OTHERS_READ;
+import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OTHERS_WRITE;
+import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OTHERS_EXECUTE;
 
 /**
  * This class consists exclusively of static methods that operate on sets of

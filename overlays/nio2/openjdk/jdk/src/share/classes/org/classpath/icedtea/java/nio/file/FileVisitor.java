@@ -26,8 +26,9 @@
 
 package org.classpath.icedtea.java.nio.file;
 
-import java.nio.file.attribute.BasicFileAttributes;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * A visitor of files. An implementation of this interface is provided to the
