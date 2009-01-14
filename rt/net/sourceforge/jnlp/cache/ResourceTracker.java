@@ -605,7 +605,7 @@ public class ResourceTracker {
 
         try {
             // create out second in case in does not exist
-            URLConnection con = resource.location.openConnection();
+            URLConnection con = getVersionedResourceURL(resource).openConnection();
             InputStream in = new BufferedInputStream(con.getInputStream());
             OutputStream out = CacheUtil.getOutputStream(resource.location, resource.downloadVersion);
             byte buf[] = new byte[1024];
@@ -652,7 +652,7 @@ public class ResourceTracker {
             File localFile = CacheUtil.getCacheFile(resource.location, resource.downloadVersion);
 
             // connect
-            URLConnection connection = resource.location.openConnection(); // this won't change so should be okay unsynchronized
+            URLConnection connection = getVersionedResourceURL(resource).openConnection(); // this won't change so should be okay unsynchronized
             int size = connection.getContentLength();
             boolean current = CacheUtil.isCurrent(resource.location, resource.requestVersion, connection) && resource.getUpdatePolicy() != UpdatePolicy.FORCE;
 
@@ -696,6 +696,29 @@ public class ResourceTracker {
         }
     }
 
+    
+ 
+    private URL getVersionedResourceURL(Resource resource) {
+        String actualLocation = resource.location.getProtocol() + "://"
+                + resource.location.getHost();
+        if (resource.location.getPort() != -1) {
+            actualLocation += ":" + resource.location.getPort();
+        }
+        actualLocation += resource.location.getPath();
+        if (resource.requestVersion != null
+                && resource.requestVersion.isVersionId()) {
+            actualLocation += "?version-id=" + resource.requestVersion;
+        }
+        URL versionedURL;
+        try {
+            versionedURL = new URL(actualLocation);
+        } catch (MalformedURLException e) {
+            return resource.location;
+        }
+        return versionedURL;
+    }
+ 
+    
     /**
      * Pick the next resource to download or initialize.  If there
      * are no more resources requested then one is taken from a
