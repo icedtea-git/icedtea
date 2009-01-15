@@ -690,7 +690,6 @@ endif
 
 ICEDTEA_PATCHES += \
 	$(DISTRIBUTION_PATCHES) \
-	patches/icedtea-a11y-property-change.patch \
 	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-awt-window-size.patch
 
