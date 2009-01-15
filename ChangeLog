@@ -1,3 +1,8 @@
+2009-01-15  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp
+	(StackShadowPages): Increase for 64-bit builds.
+
 2009-01-13  Omair Majid  <omajid@redhat.com>
 
 	* rt/net/sourceforge/jnlp/cache/ResourceTracker.java
