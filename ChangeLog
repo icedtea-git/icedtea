@@ -1,3 +1,21 @@
+2009-01-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
+	Extend java.nio.channels.FileChannel to minimise code.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/util/concurrent/ScheduledThreadPoolExecutor.java:
+	Adapted to use the SharedSecrets backdoor.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaUtilConcurrentThreadPoolExecutorAccess.java:
+	Add remaining methods needed for our ScheduledThreadPoolExecutor.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousChannelGroupImpl.java:
+	Create a ScheduledThreadPoolExecutor directly so ours is used.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileChannelImpl.java:
+	Refer to AsynchronousFileLockImpl not FileLockImpl.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/FileLockTable.java:
+	Fix imports.
+	* patches/icedtea-nio2.patch:
+	Update implementation of secrets interface.
+
 2009-01-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaIODeleteOnExitAccess.java,

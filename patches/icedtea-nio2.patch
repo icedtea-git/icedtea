@@ -764,8 +764,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/java/io/File.java openjdk/jdk/src/s
  
 diff -Nru openjdk.orig/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java openjdk/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java
 --- openjdk.orig/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java	2009-01-13 23:54:13.000000000 +0000
-+++ openjdk/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java	2009-01-14 01:30:11.000000000 +0000
-@@ -2004,4 +2004,16 @@
++++ openjdk/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java	2009-01-15 01:21:36.000000000 +0000
+@@ -2004,4 +2004,23 @@
              }
          }
      }
@@ -774,9 +774,16 @@ diff -Nru openjdk.orig/jdk/src/share/classes/java/util/concurrent/ThreadPoolExec
 +	org.classpath.icedtea.misc.SharedSecrets.setJavaUtilConcurrentThreadPoolExecutorAccess(
 +            new org.classpath.icedtea.misc.JavaUtilConcurrentThreadPoolExecutorAccess() {
 +	        public AtomicInteger getCtl(ThreadPoolExecutor e) { return e.ctl; }
-+	        public ReentrantLock getMainLock(ThreadPoolExecutor e) { return e.mainLock; }
-+	        public Condition getTermination(ThreadPoolExecutor e) { return e.termination; }
-+	        public RejectedExecutionHandler getHandler(ThreadPoolExecutor e) { return e.handler; }
++	        public void lockMainLock(ThreadPoolExecutor e) { e.mainLock.lock(); }
++	        public void unlockMainLock(ThreadPoolExecutor e) { e.mainLock.unlock(); }
++	        public void signalAll(ThreadPoolExecutor e) { e.termination.signalAll(); }
++	        public boolean isWorkQueueEmpty(ThreadPoolExecutor e) { return e.workQueue.isEmpty(); }
++	        public void rejectedExecution(Runnable command, ThreadPoolExecutor e) {
++		  e.handler.rejectedExecution(command, e); 
++		}
++	        public void interruptIdleWorkers(ThreadPoolExecutor e, boolean onlyOne) {
++		  e.interruptIdleWorkers(onlyOne); 
++		}
 +            }
 +        );            									    
 +    }

@@ -25,12 +25,16 @@
 
 package sun.nio.ch;
 
-import java.nio.channels.*;
+import java.nio.channels.Channel;
+import java.nio.channels.OverlappingFileLockException;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.lang.ref.*;
 import java.io.FileDescriptor;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.channels.FileLock;
 
 abstract class FileLockTable {
     protected FileLockTable() {

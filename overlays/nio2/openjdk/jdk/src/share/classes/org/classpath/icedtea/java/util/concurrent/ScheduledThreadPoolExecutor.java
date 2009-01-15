@@ -54,6 +54,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.*;
 import java.util.concurrent.locks.*;
 
+import org.classpath.icedtea.misc.JavaUtilConcurrentThreadPoolExecutorAccess;
 import org.classpath.icedtea.misc.SharedSecrets;
 
 /**
@@ -1285,12 +1286,15 @@ public class ScheduledThreadPoolExecutor
 
     private static final int COUNT_BITS = Integer.SIZE - 3;
     private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
-    private static final int TIDYING    =  2 << COUNT_BITS;
+    private static final int RUNNING    = -1 << COUNT_BITS;
     private static final int SHUTDOWN   =  0 << COUNT_BITS;
+    private static final int TIDYING    =  2 << COUNT_BITS;
+    private static final int TERMINATED =  3 << COUNT_BITS;
 
     // Packing and unpacking ctl
     private static int runStateOf(int c)     { return c & ~CAPACITY; }
     private static int workerCountOf(int c)  { return c & CAPACITY; }
+    private static int ctlOf(int rs, int wc) { return rs | wc; }
 
     private static final boolean ONLY_ONE = true;
 
@@ -1312,27 +1316,26 @@ public class ScheduledThreadPoolExecutor
 	    int c = ctl.get();
             if (isRunning(c) ||
                 runStateAtLeast(c, TIDYING) ||
-                (runStateOf(c) == SHUTDOWN && ! workQueue.isEmpty()))
+                (runStateOf(c) == SHUTDOWN && ! juctpea.isWorkQueueEmpty(this)))
                 return;
             if (workerCountOf(c) != 0) { // Eligible to terminate
-                interruptIdleWorkers(ONLY_ONE);
+	        juctpea.interruptIdleWorkers(this, ONLY_ONE);
                 return;
             }
 
-            final ReentrantLock mainLock = juctpea.getMainLock(this);
-            mainLock.lock();
+            juctpea.lockMainLock(this);
             try {
                 if (ctl.compareAndSet(c, ctlOf(TIDYING, 0))) {
                     try {
                         terminated();
                     } finally {
                         ctl.set(ctlOf(TERMINATED, 0));
-                        juctpea.getTermination(this).signalAll();
+                        juctpea.signalAll(this);
                     }
                     return;
                 }
             } finally {
-                mainLock.unlock();
+	        juctpea.unlockMainLock(this);
             }
             // else retry on failed CAS
         }
@@ -1345,7 +1348,7 @@ public class ScheduledThreadPoolExecutor
      * @param shutdownOK true if should return true if SHUTDOWN
      */
     private final boolean isRunningOrShutdownSTPE(boolean shutdownOK) {
-        int rs = runStateOf(ctl.get());
+        int rs = runStateOf(SharedSecrets.getJavaUtilConcurrentThreadPoolExecutorAccess().getCtl(this).get());
         return rs == RUNNING || (rs == SHUTDOWN && shutdownOK);
     }
 
@@ -1354,11 +1357,15 @@ public class ScheduledThreadPoolExecutor
      * Package-protected for use by ScheduledThreadPoolExecutor.
      */
     private final void rejectSTPE(Runnable command) {
-        SharedSecrets.getJavaUtilConcurrentThreadPoolExecutorAccess().getHandler(this).rejectedExecution(command, this);
+        SharedSecrets.getJavaUtilConcurrentThreadPoolExecutorAccess().rejectedExecution(command, this);
     }
 
     private static boolean isRunning(int c) {
         return c < SHUTDOWN;
+    }
+
+    private static boolean runStateAtLeast(int c, int s) {
+        return c >= s;
     }
 
 }

@@ -38,7 +38,7 @@ public class AsynchronousFileLockImpl
 {
     boolean valid;
 
-    FileLockImpl(AsynchronousFileChannel channel, long position, long size, boolean shared)
+    AsynchronousFileLockImpl(AsynchronousFileChannel channel, long position, long size, boolean shared)
     {
         super(channel, position, size, shared);
         this.valid = true;

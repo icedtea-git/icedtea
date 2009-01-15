@@ -48,8 +48,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public interface JavaUtilConcurrentThreadPoolExecutorAccess
 {
   AtomicInteger getCtl(ThreadPoolExecutor e);
-  ReentrantLock getMainLock(ThreadPoolExecutor e);
-  Condition getTermination(ThreadPoolExecutor e);
-  RejectedExecutionHandler getHandler(ThreadPoolExecutor e);
+  void lockMainLock(ThreadPoolExecutor e);
+  void unlockMainLock(ThreadPoolExecutor e);
+  void signalAll(ThreadPoolExecutor e);
+  void rejectedExecution(Runnable command, ThreadPoolExecutor e);
+  boolean isWorkQueueEmpty(ThreadPoolExecutor e);
+  void interruptIdleWorkers(ThreadPoolExecutor e, boolean onlyOne);
 }
 

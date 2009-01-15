@@ -29,7 +29,14 @@ import java.nio.channels.Channel;
 import java.io.IOException;
 import java.io.FileDescriptor;
 import java.util.Queue;
-import java.util.concurrent.*;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
+
 import java.util.concurrent.locks.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.security.PrivilegedAction;
@@ -39,6 +46,8 @@ import sun.security.action.GetPropertyAction;
 
 import org.classpath.icedtea.java.nio.channels.AsynchronousChannelGroup;
 import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
+
+import org.classpath.icedtea.java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * Base implementation of AsynchronousChannelGroup
@@ -95,8 +104,8 @@ abstract class AsynchronousChannelGroupImpl
 
         // use default thread factory as thread should not be visible to
         // application (it doesn't execute completion handlers).
-        this.timeoutExecutor = (ScheduledThreadPoolExecutor)
-            Executors.newScheduledThreadPool(1, ThreadPool.defaultThreadFactory());
+        this.timeoutExecutor =
+	  new ScheduledThreadPoolExecutor(1, ThreadPool.defaultThreadFactory());
         this.timeoutExecutor.setRemoveOnCancelPolicy(true);
     }
 

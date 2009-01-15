@@ -25,13 +25,16 @@
 
 package sun.nio.ch;
 
-import java.nio.channels.*;
+import java.nio.channels.AsynchronousCloseException;
+import java.nio.channels.ClosedChannelException;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.*;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
 import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
+import org.classpath.icedtea.java.nio.channels.FileLock;
 
 /**
  * Base implementation of AsynchronousFileChannel.
@@ -120,7 +123,7 @@ abstract class AsynchronousFileChannelImpl
             try {
                 fileLockTable.removeAll( new FileLockTable.Releaser() {
                     public void release(FileLock fl) {
-                        ((FileLockImpl)fl).invalidate();
+                        ((AsynchronousFileLockImpl)fl).invalidate();
                     }
                 });
             } catch (IOException e) {
@@ -132,8 +135,8 @@ abstract class AsynchronousFileChannelImpl
     /**
      * Adds region to lock table
      */
-    protected final FileLockImpl addToFileLockTable(long position, long size, boolean shared) {
-        final FileLockImpl fli;
+    protected final AsynchronousFileLockImpl addToFileLockTable(long position, long size, boolean shared) {
+        final AsynchronousFileLockImpl fli;
         try {
             // like begin() but returns null instead of exception
             closeLock.readLock().lock();
@@ -146,7 +149,7 @@ abstract class AsynchronousFileChannelImpl
                 // should not happen
                 throw new AssertionError(x);
             }
-            fli = new FileLockImpl(this, position, size, shared);
+            fli = new AsynchronousFileLockImpl(this, position, size, shared);
             // may throw OverlappedFileLockException
             fileLockTable.add(fli);
         } finally {
@@ -155,12 +158,12 @@ abstract class AsynchronousFileChannelImpl
         return fli;
     }
 
-    protected final void removeFromFileLockTable(FileLockImpl fli) {
+    protected final void removeFromFileLockTable(AsynchronousFileLockImpl fli) {
         fileLockTable.remove(fli);
     }
 
     /**
      * Invoked by FileLockImpl to release lock acquired by this channel.
      */
-    abstract void release(FileLockImpl fli) throws IOException;
+    abstract void release(AsynchronousFileLockImpl fli) throws IOException;
 }
