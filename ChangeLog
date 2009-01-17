@@ -1,3 +1,14 @@
+2009-01-17  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-version.patch (samejvmsafe): Removed the following
+	directories that contain test that are not samevm safe.
+	javax/crypto/Cipher (TestGetInstance)
+	javax/naming (CompareToEqualsTests)
+	sun/rmi (RmicDefault)
+	sun/security/util (OidFormat)
+	sun/security/x509
+	(ExtensibleAlgorithmId,EmailAddressEncoding,AllAttribs)
+
 2009-01-15  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-a11y-property-change.patch: Removed incorrect patch.
