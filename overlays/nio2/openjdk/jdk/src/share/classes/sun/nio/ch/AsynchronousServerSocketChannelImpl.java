@@ -27,8 +27,6 @@ package sun.nio.ch;
 
 import java.nio.channels.*;
 import java.net.SocketAddress;
-import java.net.SocketOption;
-import java.net.StandardSocketOption;
 import java.net.InetSocketAddress;
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -37,6 +35,9 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.classpath.icedtea.java.net.SocketOption;
+import org.classpath.icedtea.java.net.StandardSocketOption;
 
 import org.classpath.icedtea.java.nio.channels.AsynchronousServerSocketChannel;
 

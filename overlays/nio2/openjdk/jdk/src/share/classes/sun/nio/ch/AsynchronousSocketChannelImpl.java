@@ -27,8 +27,6 @@ package sun.nio.ch;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.net.SocketOption;
-import java.net.StandardSocketOption;
 import java.net.SocketAddress;
 import java.net.InetSocketAddress;
 import java.io.IOException;
@@ -39,7 +37,13 @@ import java.util.Collections;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 
+import org.classpath.icedtea.java.net.SocketOption;
+import org.classpath.icedtea.java.net.StandardSocketOption;
+
 import org.classpath.icedtea.java.nio.channels.AsynchronousSocketChannel;
+import org.classpath.icedtea.java.nio.channels.CompletionHandler;
+import org.classpath.icedtea.java.nio.channels.ReadPendingException;
+import org.classpath.icedtea.java.nio.channels.WritePendingException;
 
 /**
  * Base implementation of AsynchronousSocketChannel

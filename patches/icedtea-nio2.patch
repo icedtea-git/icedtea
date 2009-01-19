@@ -52,7 +52,7 @@ diff -Nru openjdk.orig/jdk/make/java/java/FILES_java.gmk openjdk/jdk/make/java/j
  FILES_java = $(JAVA_JAVA_java)
 diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/nio/FILES_java.gmk
 --- openjdk.orig/jdk/make/java/nio/FILES_java.gmk	2009-01-10 03:21:38.000000000 +0000
-+++ openjdk/jdk/make/java/nio/FILES_java.gmk	2009-01-14 01:49:10.000000000 +0000
++++ openjdk/jdk/make/java/nio/FILES_java.gmk	2009-01-16 19:47:40.000000000 +0000
 @@ -75,7 +75,6 @@
          sun/nio/ch/DefaultSelectorProvider.java \
  	sun/nio/ch/DirectBuffer.java \
@@ -61,7 +61,15 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
  	sun/nio/ch/FileKey.java \
  	sun/nio/ch/Interruptible.java \
  	sun/nio/ch/IOUtil.java \
-@@ -144,7 +143,147 @@
+@@ -100,6 +99,7 @@
+ 	sun/nio/ch/SocketAdaptor.java \
+ 	sun/nio/ch/SocketChannelImpl.java \
+ 	sun/nio/ch/SocketDispatcher.java \
++	sun/nio/ch/SocketOptionRegistry.java \
+ 	sun/nio/ch/SocketOpts.java \
+ 	sun/nio/ch/SocketOptsImpl.java \
+         sun/nio/ch/SourceChannelImpl.java \
+@@ -144,7 +144,150 @@
  	java/lang/StringCoding.java \
  	\
  	sun/misc/Cleaner.java \
@@ -81,6 +89,7 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
 +	org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel.java \
 +	org/classpath/icedtea/java/nio/channels/Channels.java \
 +	org/classpath/icedtea/java/nio/channels/CompletionHandler.java \
++	org/classpath/icedtea/java/nio/channels/DatagramChannel.java \
 +	org/classpath/icedtea/java/nio/channels/FileChannel.java \
 +	org/classpath/icedtea/java/nio/channels/FileLock.java \
 +	org/classpath/icedtea/java/nio/channels/MembershipKey.java \
@@ -88,6 +97,7 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
 +	org/classpath/icedtea/java/nio/channels/NetworkChannel.java \
 +	org/classpath/icedtea/java/nio/channels/SeekableByteChannel.java \
 +	org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider.java \
++	org/classpath/icedtea/java/nio/channels/spi/SelectorProvider.java \
 +	org/classpath/icedtea/java/nio/file/AccessDeniedException.java \
 +	org/classpath/icedtea/java/nio/file/AccessMode.java \
 +	org/classpath/icedtea/java/nio/file/AtomicMoveNotSupportedException.java \
@@ -168,6 +178,7 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
 +	org/classpath/icedtea/java/util/concurrent/ScheduledThreadPoolExecutor.java \
 +	\
 +	org/classpath/icedtea/misc/JavaUtilConcurrentThreadPoolExecutorAccess.java \
++	org/classpath/icedtea/misc/JavaNetGetIndexAccess.java \
 +	\
 +	com/sun/nio/file/ExtendedCopyOption.java \
 +	com/sun/nio/file/ExtendedOpenOption.java \
@@ -210,7 +221,7 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
  
  # Generated coder classes
  #
-@@ -263,7 +402,14 @@
+@@ -263,10 +406,20 @@
  	\
  	java/nio/charset/CharacterCodingException.java \
  	java/nio/charset/IllegalCharsetNameException.java \
@@ -226,9 +237,16 @@ diff -Nru openjdk.orig/jdk/make/java/nio/FILES_java.gmk openjdk/jdk/make/java/ni
  
  FILES_gen_csp = sun/nio/cs/StandardCharsets.java
  
+-FILES_gen = $(FILES_gen_coder) $(FILES_gen_buffer) $(FILES_gen_ex) $(FILES_gen_csp)
++FILES_gen_sor = sun/nio/ch/SocketOptionRegistry.java
++
++FILES_gen = $(FILES_gen_coder) $(FILES_gen_buffer) $(FILES_gen_ex) $(FILES_gen_csp) \
++	  $(FILES_gen_sor)
+ 
+ FILES_java = $(FILES_src) $(FILES_gen)
 diff -Nru openjdk.orig/jdk/make/java/nio/Makefile openjdk/jdk/make/java/nio/Makefile
 --- openjdk.orig/jdk/make/java/nio/Makefile	2009-01-10 03:22:13.000000000 +0000
-+++ openjdk/jdk/make/java/nio/Makefile	2009-01-11 00:42:22.000000000 +0000
++++ openjdk/jdk/make/java/nio/Makefile	2009-01-15 16:35:28.000000000 +0000
 @@ -40,6 +40,11 @@
  SNIO_SRC = $(SHARE_SRC)/classes/sun/nio
  SNIO_GEN = $(GENSRCDIR)/sun/nio
@@ -500,10 +518,35 @@ diff -Nru openjdk.orig/jdk/make/java/nio/Makefile openjdk/jdk/make/java/nio/Make
  
  #
  # Generated charset-provider classes
-@@ -643,4 +811,48 @@
+@@ -643,4 +811,73 @@
  	  HASHER="$(BOOT_JAVA_CMD) -jar $(HASHER_JARFILE)" \
  	  SH="$(SH)" $(SH) -e genCharsetProvider.sh $(SCS_SRC)/standard-charsets $(SCS_GEN)
  
++#
++# Generated channel implementation classes.
++# C source is compiled in TEMPDIR to avoid turds left by Windows compilers.
++#
++
++GENSOR_SRC = $(SHARE_SRC)/native/sun/nio/ch/genSocketOptionRegistry.c
++
++GENSOR_EXE = $(TEMPDIR)/genSocketOptionRegistry$(EXE_SUFFIX)
++
++SOR_COPYRIGHT_YEARS = $(shell $(CAT) $(GENSOR_SRC) | \
++	$(NAWK) '/^.*Copyright.*Sun/ { print $$3 }') 
++
++$(TEMPDIR)/$(GENSOR_SRC) : $(GENSOR_SRC)
++	$(install-file)
++
++$(GENSOR_EXE) : $(TEMPDIR)/$(GENSOR_SRC)
++	$(prep-target)
++	($(CD) $(TEMPDIR); $(CC) $(CPPFLAGS) $(LDDFLAGS) \
++	   -o genSocketOptionRegistry$(EXE_SUFFIX) $(GENSOR_SRC))
++
++$(SCH_GEN)/SocketOptionRegistry.java: $(GENSOR_EXE)
++	$(prep-target)
++	NAWK="$(NAWK)" SH="$(SH)" $(SH) -e addNotices.sh $(SOR_COPYRIGHT_YEARS) > $@
++	$(GENSOR_EXE) >> $@
++
 +# 
 +# Generated file system implementation classes (Unix only)
 +#
@@ -762,6 +805,24 @@ diff -Nru openjdk.orig/jdk/src/share/classes/java/io/File.java openjdk/jdk/src/s
      }
  
  
+diff -Nru openjdk.orig/jdk/src/share/classes/java/net/NetworkInterface.java openjdk/jdk/src/share/classes/java/net/NetworkInterface.java
+--- openjdk.orig/jdk/src/share/classes/java/net/NetworkInterface.java	2009-01-16 04:07:15.000000000 +0000
++++ openjdk/jdk/src/share/classes/java/net/NetworkInterface.java	2009-01-16 04:08:41.000000000 +0000
+@@ -529,4 +529,14 @@
+     }
+     private static native void init();
+ 
++    // Set up JavaIODeleteOnExitAccess in SharedSecrets
++    // Added here as getIndex is package-private and SharedSecrets cannot easily access it.
++    static {
++	org.classpath.icedtea.misc.SharedSecrets.setJavaNetGetIndexAccess(
++            new org.classpath.icedtea.misc.JavaNetGetIndexAccess() {
++	      public int getIndex(NetworkInterface nf) { return nf.getIndex(); }
++            }
++        );            									    
++    }
++
+ }
 diff -Nru openjdk.orig/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java openjdk/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java
 --- openjdk.orig/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java	2009-01-13 23:54:13.000000000 +0000
 +++ openjdk/jdk/src/share/classes/java/util/concurrent/ThreadPoolExecutor.java	2009-01-15 01:21:36.000000000 +0000
@@ -789,6 +850,437 @@ diff -Nru openjdk.orig/jdk/src/share/classes/java/util/concurrent/ThreadPoolExec
 +    }
 +
  }
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/DatagramChannelImpl.java openjdk/jdk/src/share/classes/sun/nio/ch/DatagramChannelImpl.java
+--- openjdk.orig/jdk/src/share/classes/sun/nio/ch/DatagramChannelImpl.java	2009-01-16 03:10:17.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/nio/ch/DatagramChannelImpl.java	2009-01-19 13:34:41.000000000 +0000
+@@ -29,10 +29,27 @@
+ import java.io.IOException;
+ import java.net.*;
+ import java.nio.ByteBuffer;
+-import java.nio.channels.*;
+-import java.nio.channels.spi.*;
++
++import java.nio.channels.ClosedChannelException;
++import java.nio.channels.NotYetConnectedException;
++import java.nio.channels.SelectionKey;
++
++import java.util.Collections;
++import java.util.HashSet;
++import java.util.Set;
++
+ import java.lang.ref.SoftReference;
+ 
++import org.classpath.icedtea.java.net.ProtocolFamily;
++import org.classpath.icedtea.java.net.StandardProtocolFamily;
++import org.classpath.icedtea.java.net.SocketOption;
++import org.classpath.icedtea.java.net.StandardSocketOption;
++
++import org.classpath.icedtea.java.nio.channels.DatagramChannel;
++
++import org.classpath.icedtea.java.nio.channels.spi.SelectorProvider;
++
++import org.classpath.icedtea.misc.SharedSecrets;
+ 
+ /**
+  * An implementation of DatagramChannels.
+@@ -53,6 +70,9 @@
+     // even after the value in the file descriptor object has been set to -1
+     int fdVal;
+ 
++    // The protocol family of the socket
++    private final ProtocolFamily family;
++
+     // IDs of native threads doing reads and writes, for signalling
+     private volatile long readerThread = 0;
+     private volatile long writerThread = 0;
+@@ -98,15 +118,40 @@
+         throws IOException
+     {
+         super(sp);
++        this.family = Net.isIPv6Available() ?
++            StandardProtocolFamily.INET6 : StandardProtocolFamily.INET;
+         this.fd = Net.socket(false);
+         this.fdVal = IOUtil.fdVal(fd);
+         this.state = ST_UNCONNECTED;
+     }
+ 
++    public DatagramChannelImpl(SelectorProvider sp, ProtocolFamily family) {
++        super(sp);
++        if ((family != StandardProtocolFamily.INET) &&
++            (family != StandardProtocolFamily.INET6))
++        {
++            if (family == null)
++                throw new NullPointerException("'family' is null");
++            else
++                throw new UnsupportedOperationException("Protocol family not supported");
++        }
++        if (family == StandardProtocolFamily.INET6) {
++            if (!Net.isIPv6Available()) {
++                throw new UnsupportedOperationException("IPv6 not available");
++            }
++        }
++        this.family = family;
++        this.fd = Net.socket(family, false);
++        this.fdVal = IOUtil.fdVal(fd);
++        this.state = ST_UNCONNECTED;
++    }
++
+     public DatagramChannelImpl(SelectorProvider sp, FileDescriptor fd)
+         throws IOException
+     {
+         super(sp);
++        this.family = Net.isIPv6Available() ?
++            StandardProtocolFamily.INET6 : StandardProtocolFamily.INET;
+         this.fd = fd;
+         this.fdVal = IOUtil.fdVal(fd);
+         this.state = ST_UNCONNECTED;
+@@ -704,4 +749,86 @@
+         initIDs();
+     }
+ 
++    public SocketAddress getRemoteAddress() throws IOException {
++        synchronized (stateLock) {
++            if (!isOpen())
++                throw new ClosedChannelException();
++            return remoteAddress;
++        }
++    }
++
++    public <T> DatagramChannel setOption(SocketOption<T> name, T value)
++        throws IOException
++    {
++        if (name == null)
++            throw new NullPointerException();
++        if (!supportedOptions().contains(name))
++            throw new UnsupportedOperationException("'" + name + "' not supported");
++
++        synchronized (stateLock) {
++            ensureOpen();
++
++            if (name == StandardSocketOption.IP_TOS) {
++                // IPv4 only; no-op for IPv6
++                if (family == StandardProtocolFamily.INET) {
++                    Net.setSocketOption(fd, family, name, value);
++                }
++                return this;
++            }
++
++            if (name == StandardSocketOption.IP_MULTICAST_TTL ||
++                name == StandardSocketOption.IP_MULTICAST_LOOP)
++            {
++                // options are protocol dependent
++                Net.setSocketOption(fd, family, name, value);
++                return this;
++            }
++
++            if (name == StandardSocketOption.IP_MULTICAST_IF) {
++                if (value == null)
++                    throw new IllegalArgumentException("Cannot set IP_MULTICAST_IF to 'null'");
++                NetworkInterface interf = (NetworkInterface)value;
++                if (family == StandardProtocolFamily.INET6) {
++		    int index = SharedSecrets.getJavaNetGetIndexAccess().getIndex(interf);
++                    if (index == -1)
++                        throw new IOException("Network interface cannot be identified");
++                    Net.setInterface6(fd, index);
++                } else {
++                    // need IPv4 address to identify interface
++                    Inet4Address target = Net.anyInet4Address(interf);
++                    if (target == null)
++                        throw new IOException("Network interface not configured for IPv4");
++                    int targetAddress = Net.inet4AsInt(target);
++                    Net.setInterface4(fd, targetAddress);
++                }
++                return this;
++            }
++
++            // remaining options don't need any special handling
++            Net.setSocketOption(fd, Net.UNSPEC, name, value);
++            return this;
++        }
++    }
++
++    private static class LazyInitialization {
++        static final Set<SocketOption<?>> defaultOptions = defaultOptions();
++
++        private static Set<SocketOption<?>> defaultOptions() {
++            HashSet<SocketOption<?>> set = new HashSet<SocketOption<?>>(8);
++            set.add(StandardSocketOption.SO_SNDBUF);
++            set.add(StandardSocketOption.SO_RCVBUF);
++            set.add(StandardSocketOption.SO_REUSEADDR);
++            set.add(StandardSocketOption.SO_BROADCAST);
++            set.add(StandardSocketOption.IP_TOS);
++            set.add(StandardSocketOption.IP_MULTICAST_IF);
++            set.add(StandardSocketOption.IP_MULTICAST_TTL);
++            set.add(StandardSocketOption.IP_MULTICAST_LOOP);
++            return Collections.unmodifiableSet(set);
++        }
++    }
++
++    public final Set<SocketOption<?>> supportedOptions() {
++        return LazyInitialization.defaultOptions;
++    }
++
+ }
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/Net.java openjdk/jdk/src/share/classes/sun/nio/ch/Net.java
+--- openjdk.orig/jdk/src/share/classes/sun/nio/ch/Net.java	2009-01-15 17:37:33.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/nio/ch/Net.java	2009-01-19 13:37:55.000000000 +0000
+@@ -30,6 +30,15 @@
+ import java.net.*;
+ import java.nio.channels.*;
+ 
++import java.security.AccessController;
++import java.security.PrivilegedAction;
++
++import java.util.Enumeration;
++
++import org.classpath.icedtea.java.net.ProtocolFamily;
++import org.classpath.icedtea.java.net.SocketOption;
++import org.classpath.icedtea.java.net.StandardProtocolFamily;
++import org.classpath.icedtea.java.net.StandardSocketOption;
+ 
+ class Net {                                             // package-private
+ 
+@@ -108,16 +117,24 @@
+ 
+     // -- Socket operations --
+ 
++    static native boolean isIPv6Available0();
++
+     static FileDescriptor socket(boolean stream) {
+-        return IOUtil.newFD(socket0(stream, false));
++        return socket(UNSPEC, stream);
++    }
++
++    static FileDescriptor socket(ProtocolFamily family, boolean stream) {
++        boolean preferIPv6 = isIPv6Available() &&
++            (family != StandardProtocolFamily.INET);
++        return IOUtil.newFD(socket0(preferIPv6, stream, false));
+     }
+ 
+     static FileDescriptor serverSocket(boolean stream) {
+-        return IOUtil.newFD(socket0(stream, true));
++        return IOUtil.newFD(socket0(isIPv6Available(), stream, true));
+     }
+ 
+     // Due to oddities SO_REUSEADDR on windows reuse is ignored
+-    private static native int socket0(boolean stream, boolean reuse);
++    private static native int socket0(boolean preferIPv6, boolean stream, boolean reuse);
+ 
+     static native void bind(FileDescriptor fd, InetAddress addr, int port)
+         throws IOException;
+@@ -179,4 +196,164 @@
+         initIDs();
+     }
+ 
++    // From 1.7
++
++    static native void listen(FileDescriptor fd, int backlog) throws IOException;
++
++    // unspecified protocol family
++    static final ProtocolFamily UNSPEC = new ProtocolFamily() {
++        public String name() {
++            return "UNSPEC";
++        }
++    };
++
++    // -- Socket options
++
++    static void setSocketOption(FileDescriptor fd, ProtocolFamily family,
++                                SocketOption<?> name, Object value)
++        throws IOException
++    {
++        if (value == null)
++            throw new IllegalArgumentException("Invalid option value");
++
++        // only simple values supported by this method
++        Class<?> type = name.type();
++        if (type != Integer.class && type != Boolean.class)
++            throw new AssertionError("Should not reach here");
++
++        // special handling
++        if (name == StandardSocketOption.SO_RCVBUF ||
++            name == StandardSocketOption.SO_SNDBUF)
++        {
++            int i = ((Integer)value).intValue();
++            if (i < 0)
++                throw new IllegalArgumentException("Invalid send/receive buffer size");
++        }
++        if (name == StandardSocketOption.SO_LINGER) {
++            int i = ((Integer)value).intValue();
++            if (i < 0)
++                value = Integer.valueOf(-1);
++            if (i > 65535)
++                value = Integer.valueOf(65535);
++        }
++        if (name == StandardSocketOption.IP_TOS) {
++            int i = ((Integer)value).intValue();
++            if (i < 0 || i > 255)
++                throw new IllegalArgumentException("Invalid IP_TOS value");
++        }
++        if (name == StandardSocketOption.IP_MULTICAST_TTL) {
++            int i = ((Integer)value).intValue();
++            if (i < 0 || i > 255)
++                throw new IllegalArgumentException("Invalid TTL/hop value");
++        }
++
++        // map option name to platform level/name
++        OptionKey key = SocketOptionRegistry.findOption(name, family);
++        if (key == null)
++            throw new AssertionError("Option not found");
++
++        int arg;
++        if (type == Integer.class) {
++            arg = ((Integer)value).intValue();
++        } else {
++            boolean b = ((Boolean)value).booleanValue();
++            arg = (b) ? 1 : 0;
++        }
++
++        boolean mayNeedConversion = (family == UNSPEC);
++        setIntOption0(fd, mayNeedConversion, key.level(), key.name(), arg);
++    }
++
++    static Object getSocketOption(FileDescriptor fd, ProtocolFamily family,
++                                  SocketOption<?> name)
++        throws IOException
++    {
++        Class<?> type = name.type();
++
++        // only simple values supported by this method
++        if (type != Integer.class && type != Boolean.class)
++            throw new AssertionError("Should not reach here");
++
++        // map option name to platform level/name
++        OptionKey key = SocketOptionRegistry.findOption(name, family);
++        if (key == null)
++            throw new AssertionError("Option not found");
++
++        boolean mayNeedConversion = (family == UNSPEC);
++        int value = getIntOption0(fd, mayNeedConversion, key.level(), key.name());
++
++        if (type == Integer.class) {
++            return Integer.valueOf(value);
++        } else {
++            return (value == 0) ? Boolean.FALSE : Boolean.TRUE;
++        }
++    }
++
++    private static native int getIntOption0(FileDescriptor fd, boolean mayNeedConversion,
++                                            int level, int opt)
++        throws IOException;
++
++    private static native void setIntOption0(FileDescriptor fd, boolean mayNeedConversion,
++                                             int level, int opt, int arg)
++        throws IOException;
++
++    public final static int SHUT_RD = 0;
++    public final static int SHUT_WR = 1;
++
++    static native void shutdown(FileDescriptor fd, int how) throws IOException;
++
++    static native void setInterface6(FileDescriptor fd, int index) throws IOException;
++
++    static native void setInterface4(FileDescriptor fd, int interf) throws IOException;
++
++    /**
++     * Returns any IPv4 address of the given network interface, or
++     * null if the interface does not have any IPv4 addresses.
++     */
++    static Inet4Address anyInet4Address(final NetworkInterface interf) {
++        return AccessController.doPrivileged(new PrivilegedAction<Inet4Address>() {
++            public Inet4Address run() {
++                Enumeration<InetAddress> addrs = interf.getInetAddresses();
++                while (addrs.hasMoreElements()) {
++                    InetAddress addr = addrs.nextElement();
++                    if (addr instanceof Inet4Address) {
++                        return (Inet4Address)addr;
++                    }
++                }
++                return null;
++            }
++        });
++    }
++
++    /**
++     * Returns an IPv4 address as an int.
++     */
++    static int inet4AsInt(InetAddress ia) {
++        if (ia instanceof Inet4Address) {
++            byte[] addr = ia.getAddress();
++            int address  = addr[3] & 0xFF;
++            address |= ((addr[2] << 8) & 0xFF00);
++            address |= ((addr[1] << 16) & 0xFF0000);
++            address |= ((addr[0] << 24) & 0xFF000000);
++            return address;
++        }
++        throw new AssertionError("Should not reach here");
++    }
++
++    // -- Miscellaneous utilities --
++
++    private static volatile boolean checkedIPv6 = false;
++    private static volatile boolean isIPv6Available;
++
++    /**
++     * Tells whether dual-IPv4/IPv6 sockets should be used.
++     */
++    static boolean isIPv6Available() {
++        if (!checkedIPv6) {
++            isIPv6Available = isIPv6Available0();
++            checkedIPv6 = true;
++        }
++        return isIPv6Available;
++    }
++
+ }
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/SelectorProviderImpl.java openjdk/jdk/src/share/classes/sun/nio/ch/SelectorProviderImpl.java
+--- openjdk.orig/jdk/src/share/classes/sun/nio/ch/SelectorProviderImpl.java	2009-01-16 03:01:03.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/nio/ch/SelectorProviderImpl.java	2009-01-16 03:56:55.000000000 +0000
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2000-2001 Sun Microsystems, Inc.  All Rights Reserved.
++ * Copyright 2000-2008 Sun Microsystems, Inc.  All Rights Reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -29,9 +29,18 @@
+ import java.io.IOException;
+ import java.net.ServerSocket;
+ import java.net.Socket;
+-import java.nio.channels.*;
+-import java.nio.channels.spi.*;
+ 
++import java.nio.channels.Pipe;
++import java.nio.channels.ServerSocketChannel;
++import java.nio.channels.SocketChannel;
++
++import java.nio.channels.spi.AbstractSelector;
++
++import org.classpath.icedtea.java.net.ProtocolFamily;
++
++import org.classpath.icedtea.java.nio.channels.DatagramChannel;
++
++import org.classpath.icedtea.java.nio.channels.spi.SelectorProvider;
+ 
+ public abstract class SelectorProviderImpl
+     extends SelectorProvider
+@@ -41,6 +50,10 @@
+         return new DatagramChannelImpl(this);
+     }
+ 
++    public DatagramChannel openDatagramChannel(ProtocolFamily family) throws IOException {
++        return new DatagramChannelImpl(this, family);
++    }
++
+     public Pipe openPipe() throws IOException {
+         return new PipeImpl(this);
+     }
+@@ -54,5 +67,4 @@
+     public SocketChannel openSocketChannel() throws IOException {
+         return new SocketChannelImpl(this);
+     }
+-
+ }
 diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/util/SecurityConstants.java openjdk/jdk/src/share/classes/sun/security/util/SecurityConstants.java
 --- openjdk.orig/jdk/src/share/classes/sun/security/util/SecurityConstants.java	2009-01-12 17:45:26.000000000 +0000
 +++ openjdk/jdk/src/share/classes/sun/security/util/SecurityConstants.java	2009-01-12 17:45:39.000000000 +0000
@@ -800,3 +1292,16 @@ diff -Nru openjdk.orig/jdk/src/share/classes/sun/security/util/SecurityConstants
  
      public static final String SOCKET_RESOLVE_ACTION = "resolve";
      public static final String SOCKET_CONNECT_ACTION = "connect";
+diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/nio/ch/InheritedChannel.java openjdk/jdk/src/solaris/classes/sun/nio/ch/InheritedChannel.java
+--- openjdk.orig/jdk/src/solaris/classes/sun/nio/ch/InheritedChannel.java	2009-01-19 13:29:01.000000000 +0000
++++ openjdk/jdk/src/solaris/classes/sun/nio/ch/InheritedChannel.java	2009-01-19 13:29:27.000000000 +0000
+@@ -34,7 +34,8 @@
+ import java.nio.channels.SocketChannel;
+ import java.nio.channels.ServerSocketChannel;
+ import java.nio.channels.DatagramChannel;
+-import java.nio.channels.spi.SelectorProvider;
++
++import org.classpath.icedtea.java.nio.channels.spi.SelectorProvider;
+ 
+ class InheritedChannel {
+ 

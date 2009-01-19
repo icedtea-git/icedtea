@@ -25,7 +25,7 @@
 
 # Generated exception classes for java.nio.channels
 
-PACKAGE=java.nio.channels
+PACKAGE=org.classpath.icedtea.java.nio.channels
 # This year should only change if the generated source is modified.
 COPYRIGHT_YEARS=2000-2007
 SINCE=1.7

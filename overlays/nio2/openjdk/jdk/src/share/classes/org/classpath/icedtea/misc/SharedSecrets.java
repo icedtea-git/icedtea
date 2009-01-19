@@ -54,6 +54,7 @@ public class SharedSecrets
   private static final Unsafe unsafe = Unsafe.getUnsafe();
   private static JavaIODeleteOnExitAccess javaIODeleteOnExitAccess;
   private static JavaUtilConcurrentThreadPoolExecutorAccess javaUtilConcurrentThreadPoolExecutorAccess;
+  private static JavaNetGetIndexAccess javaNetGetIndexAccess;
 
   public static void setJavaIODeleteOnExitAccess(JavaIODeleteOnExitAccess jida) 
   {
@@ -82,5 +83,20 @@ public class SharedSecrets
       }
     return javaUtilConcurrentThreadPoolExecutorAccess;
   }
+
+  public static void setJavaNetGetIndexAccess(JavaNetGetIndexAccess jngia) 
+  {
+    javaNetGetIndexAccess = jngia;
+  }
+  
+  public static JavaNetGetIndexAccess getJavaNetGetIndexAccess() 
+  {
+    if (javaNetGetIndexAccess == null) 
+      {
+	unsafe.ensureClassInitialized(java.net.NetworkInterface.class);
+      }
+    return javaNetGetIndexAccess;
+  }
+
 
 }

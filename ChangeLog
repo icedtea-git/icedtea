@@ -1,3 +1,32 @@
+2009-01-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* generated/sun/nio/ch/SocketOptionRegistry.java:
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/DatagramChannel.java:
+	Added (1.7 extensions).
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/exceptions: Fix package.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/spi/SelectorProvider.java:
+	Added (1.7 extensions).
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaNetGetIndexAccess.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/SharedSecrets.java:
+	Added to provide access to package-private NetworkInterface.getIndex().
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/CompletedFuture.java:
+	Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/ExtendedSocketOption.java: Added.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/Invoker.java: Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/OptionKey.java: Added.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/PendingFuture.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/SimpleAsynchronousDatagramChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/ThreadPool.java: Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/share/native/sun/nio/ch/genSocketOptionRegistry.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/DefaultSelectorProvider.java: Added.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/SolarisAsynchronousChannelProvider.java:
+	Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/DefaultSelectorProvider.java: Added.
+	* patches/icedtea-nio2.patch: Add hook for SharedSecrets to NetworkInterface, extend
+	sun.nio.ch.{Net,DatagramChannelImpl,SelectorProviderImpl} to handle 1.7 extensions.
+
 2009-01-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:

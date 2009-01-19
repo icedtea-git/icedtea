@@ -26,7 +26,11 @@
 package sun.nio.ch;
 
 import java.nio.ByteBuffer;
-import java.nio.channels.*;
+
+import java.nio.channels.AsynchronousCloseException;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.NotYetConnectedException;
+
 import java.net.*;
 import java.io.IOException;
 import java.util.*;
@@ -36,8 +40,16 @@ import java.security.AccessControlContext;
 import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 
+import org.classpath.icedtea.java.net.ProtocolFamily;
+import org.classpath.icedtea.java.net.SocketOption;
+
 import org.classpath.icedtea.java.nio.channels.AsynchronousDatagramChannel;
+import org.classpath.icedtea.java.nio.channels.CompletionHandler;
+import org.classpath.icedtea.java.nio.channels.DatagramChannel;
+import org.classpath.icedtea.java.nio.channels.InterruptedByTimeoutException;
 import org.classpath.icedtea.java.nio.channels.MembershipKey;
+import org.classpath.icedtea.java.nio.channels.MulticastChannel;
+import org.classpath.icedtea.java.nio.channels.ShutdownChannelGroupException;
 
 /**
  * A prototype implementation of AsynchronousDatagramChannel, used to aid

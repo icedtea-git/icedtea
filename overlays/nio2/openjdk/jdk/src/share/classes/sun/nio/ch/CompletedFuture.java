@@ -25,10 +25,11 @@
 
 package sun.nio.ch;
 
-import java.nio.channels.AsynchronousChannel;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ExecutionException;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.channels.AsynchronousChannel;
 
 /**
  * A Future representing the result of an I/O operation that has already
