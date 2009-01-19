@@ -34,6 +34,14 @@ import java.net.Socket;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import net.sourceforge.jnlp.security.VariableX509TrustManager;
+
 /**
  * The main entry point into PluginAppletViewer.
  */
@@ -152,7 +160,19 @@ public class PluginMain
 		// INSTALL THE PROPERTY LIST
 		System.setProperties(avProps);
 
-		// REMIND: Create and install a socket factory!
+
+		try {
+		    SSLSocketFactory sslSocketFactory;
+		    SSLContext context = SSLContext.getInstance("SSL");
+		    TrustManager[] trust = new TrustManager[] { VariableX509TrustManager.getInstance() };
+		    context.init(null, trust, null);
+		    sslSocketFactory = context.getSocketFactory();
+		    
+		    HttpsURLConnection.setDefaultSSLSocketFactory(sslSocketFactory);
+		} catch (Exception e) {
+		    System.err.println("Unable to set SSLSocketfactory (may _prevent_ access to sites that should be trusted)! Continuing anyway...");
+		    e.printStackTrace();
+		}
 	}
 
     static boolean messageAvailable() {
