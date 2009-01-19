@@ -1,0 +1,38 @@
+diff -Nru openjdk-ecj.orig/jdk/make/tools/src/build/tools/charsetmapping/GenerateSBCS.java openjdk-ecj/jdk/make/tools/src/build/tools/charsetmapping/GenerateSBCS.java
+--- openjdk-ecj.orig/jdk/make/tools/src/build/tools/charsetmapping/GenerateSBCS.java	2009-01-18 03:30:42.000000000 +0000
++++ openjdk-ecj/jdk/make/tools/src/build/tools/charsetmapping/GenerateSBCS.java	2009-01-19 00:55:58.000000000 +0000
+@@ -27,7 +27,6 @@
+ 
+ import java.io.*;
+ import java.util.ArrayList;
+-import java.util.Scanner;
+ import java.util.Formatter;
+ import java.util.regex.*;
+ import java.nio.charset.*;
+@@ -40,9 +39,8 @@
+             System.exit(1);
+         }
+ 
+-        Scanner s = new Scanner(new File(args[0], args[2]));
+-        while (s.hasNextLine()) {
+-            String line = s.nextLine();
++        BufferedReader s = new BufferedReader(new FileReader(new File(args[0], args[2])));
++        for (String line = s.readLine(); line != null; line = s.readLine()) {
+             if (line.startsWith("#") || line.length() == 0)
+                 continue;
+             String[] fields = line.split("\\s+");
+@@ -201,12 +199,10 @@
+                                      int    c2blen)
+         throws Exception
+     {
+-        Scanner s = new Scanner(new File(srcDir, template));
++      BufferedReader s = new BufferedReader(new FileReader(new File(srcDir, template)));
+         PrintStream out = new PrintStream(new FileOutputStream(
+                               new File(dstDir, clzName + ".java")));
+-
+-        while (s.hasNextLine()) {
+-            String line = s.nextLine();
++        for (String line = s.readLine(); line != null; line = s.readLine()) {
+             int i = line.indexOf("$");
+             if (i == -1) {
+                 out.println(line);

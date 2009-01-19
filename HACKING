@@ -71,9 +71,6 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-linker-libs-order.patch: When linking, put the referenced libraries after the object files (PR237).
 * icedtea-f2i-overflow.patch: Replaces the code used by [fd]2[il] bytecodes to correctly handle overflows. (PR244)
 * icedtea-cc-interp-no-fer.patch: Report that we cannot force early returns with the C++ interpreter.
-* icedtea-6761856-freetypescaler.patch: Fix IcedTea bug #227, OpenJDK bug
-  #6761856, swing TextLayout.getBounds() returns shifted bounds.
-* icedtea-display-mode-changer.patch: Add extra test class.
 * icedtea-testenv.patch: Provide public reachable machines for net/nio tests.
 * icedtea-samejvm-safe.patch: Add samejvmsafe dirs to TEST.ROOT.
 * icedtea-6728542-epoll.patch: Make EPoll work on non-x86 platforms. (PR265)
@@ -83,6 +80,7 @@ The following patches are currently applied before the building of OpenJDK7 or O
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
 * icedtea-corba.patch: Adds additional files to org.omg.CORBA Makefile.
+* icedtea-display-mode-changer.patch: Add extra test class. (applied in OpenJDK7 b43)
 * icedtea-gcc-4.3.patch: Fix code to compile with GCC 4.3 and turn off -Werror.
 * icedtea-generated.patch: Force use of /bin/bash.
 * icedtea-nomotif.patch: Remove sanity and GrabShell.h dependency on Motif/Lesstif library.
@@ -92,6 +90,8 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 * icedtea-lucene-crash.patch: Fix lucene bad code generation bug #6707044.
 * icedtea-6700047-loopopts.patch: Fix partial peeling issue, bug #6700047.
 * icedtea-6712835-ifnode.patch: Fix infinite loop in PhaseIterGVN::transform.
+* icedtea-6761856-freetypescaler.patch: Fix IcedTea bug #227, OpenJDK bug
+  #6761856, swing TextLayout.getBounds() returns shifted bounds (applied in OpenJDK7 b43).
 * icedtea-timerqueue.patch: Fix setting of running variable (PR87/S6623943).
 * icedtea-version.patch: Fix (langtools) ant build to honor fcs MILESTONE setting (S6778493).
 
@@ -111,13 +111,19 @@ The following patches are only applied to OpenJDK in IcedTea:
 
 The following patches are only applied to the icedtea-ecj bootstrap tree:
 
-* icedtea-ecj.patch: Don't generate CORBA sources using MC/idlj, link against -lgcj
+* ecj/icedtea.patch: Don't generate CORBA sources using MC/idlj, link against -lgcj
   instead of -ljava, force use of boot tools, don't run HotSpot's test_gamma, use
   javac executable with Ant, remove -Werror from javac call, don't build JDK demos,
   don't run sun.awt.X11.ToBin, explicitly pull in timezone data and rt.jar in javac
   calls, replace hexadecimal floating point literals with decimal variants in
   java.lang.Double and java.lang.Float.
-* icedtea-ecj-pr261.patch: Adds a couple of classes that are omitted from rt.jar. (PR261)
+* ecj/icedtea-jopt.patch: Disable -J options to jar when unsupported.
+* ecj/icedtea-pr261.patch: Adds a couple of classes that are omitted from rt.jar. (PR261)
+* ecj/icedtea-spp.patch: Fixes Spp.java to not use java.util.Scanner.
+
+The following patches are only applied to the icedtea-ecj bootstrap tree in IcedTea:
+
+* ecj/icedtea-sbcs.patch: Fixes GenerateSBCS.java to not use java.util.Scanner.
 
 The following patches are only applied for IcedTea builds using the zero-assembler:
 

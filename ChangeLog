@@ -1,4 +1,18 @@
-2008-12-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2009-01-18  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to b43.
+	* patches/icedtea-6761856-freetypescaler.patch,
+	* patches/icedtea-display-mode-changer.patch:
+	Removed, applied in b43.
+	* ChangeLog: Fix date on last entry.
+	* HACKING: Updated list of ecj patches and removed
+	dropped patches for IcedTea7.
+	* Makefile.am: Remove dropped patches, add new one.
+	* patches/ecj/icedtea-sbcs.patch: New patch to prevent
+	GenerateSBCS.java using java.util.Scanner for ecj builds.
+	* patches/xrender/icedtea-002.patch: Recreated against b43.
+
+2008-12-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am: Fix b42 tarball name and checksum
 	due to reroll.

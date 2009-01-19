@@ -1,6 +1,6 @@
-OPENJDK_DATE = 19_dec_2008
-OPENJDK_MD5SUM = 89eb28aaa3e89e9350f15e5e4b718a40
-OPENJDK_VERSION = b42
+OPENJDK_DATE = 15_jan_2009
+OPENJDK_MD5SUM = 71d680eab0a8e82ba6a76f66322ff2ab
+OPENJDK_VERSION = b43
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -1870,8 +1870,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-linker-libs-order.patch \
 	patches/icedtea-f2i-overflow.patch \
 	patches/icedtea-cc-interp-no-fer.patch \
-	patches/icedtea-6761856-freetypescaler.patch \
-	patches/icedtea-display-mode-changer.patch \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-format-warnings.patch \
 	patches/icedtea-fortify-source.patch \
@@ -2198,7 +2196,8 @@ ICEDTEA_ECJ_PATCHES = patches/ecj/icedtea.patch \
 	patches/ecj/icedtea-hotspot-$(HSBUILD).patch \
 	patches/ecj/icedtea-spp.patch \
 	patches/ecj/icedtea-jopt.patch \
-	patches/ecj/icedtea-pr261.patch
+	patches/ecj/icedtea-pr261.patch \
+	patches/ecj/icedtea-sbcs.patch
 
 stamps/patch-ecj.stamp: stamps/clone-ecj.stamp
 	mkdir -p stamps; \
