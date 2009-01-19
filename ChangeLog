@@ -27,6 +27,28 @@
 	* patches/icedtea-nio2.patch: Add hook for SharedSecrets to NetworkInterface, extend
 	sun.nio.ch.{Net,DatagramChannelImpl,SelectorProviderImpl} to handle 1.7 extensions.
 
+2009-01-17  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-version.patch (samejvmsafe): Removed the following
+	directories that contain test that are not samevm safe.
+	javax/crypto/Cipher (TestGetInstance)
+	javax/naming (CompareToEqualsTests)
+	sun/rmi (RmicDefault)
+	sun/security/util (OidFormat)
+	sun/security/x509
+	(ExtensibleAlgorithmId,EmailAddressEncoding,AllAttribs)
+
+2009-01-15  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-a11y-property-change.patch: Removed incorrect patch.
+	* HACKING: Remove above patch.
+	* Makefile.am (ICEDTEA_PATCHES): Removed patch.
+
+2009-01-15  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp
+	(StackShadowPages): Increase for 64-bit builds.
+
 2009-01-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
