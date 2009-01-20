@@ -388,7 +388,18 @@ extern "C" {
 
   void _Copy_conjoint_jshorts_atomic(jshort* from, jshort* to, size_t count)
   {
-    Unimplemented();
+    if (from > to) {
+      jshort *end = from + count;
+      while (from < end)
+        *(to++) = *(from++);
+    }
+    else if (from < to) {
+      jshort *end = from;
+      from += count - 1;
+      to   += count - 1;
+      while (from >= end)
+        *(to--) = *(from--);
+    }
   }
   void _Copy_conjoint_jints_atomic(jint* from, jint* to, size_t count)
   {

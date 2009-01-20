@@ -42,8 +42,14 @@ void SharkFunction::initialize()
   set_block_insertion_point(NULL);
   _blocks = NEW_RESOURCE_ARRAY(SharkBlock*, flow()->block_count());
   for (int i = 0; i < block_count(); i++)
-    _blocks[i] = new SharkBlock(this, flow()->pre_order_at(i));
-
+    {
+      ciTypeFlow::Block *b = flow()->pre_order_at(i);
+      // Work around a bug in pre_order_at() that does not return the
+      // correct pre-ordering.  If pre_order_at() were correct this
+      // line could simply be:
+      // _blocks[i] = new SharkBlock(this, b);
+      _blocks[b->pre_order()] = new SharkBlock(this, b);
+    }
   // Walk the tree from the start block to determine which
   // blocks are entered and which blocks require phis
   SharkBlock *start_block = block(0);
@@ -190,10 +196,6 @@ Value* SharkFunction::CreatePopFrame(int result_slots)
       builder()->CreateIntToPtr(
         fp, PointerType::getUnqual(SharkType::intptr_type()))));
 
-#ifdef _LP64
-  if (result_slots == 2)
-    return builder()->CreateAdd(sp, LLVMValue::jint_constant(wordSize));
-#endif // _LP64
   return sp;
 }
 

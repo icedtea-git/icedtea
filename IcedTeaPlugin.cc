@@ -88,7 +88,7 @@ PRThread* current_thread ();
 #define TIMEOUT 20
 
 #define NOT_IMPLEMENTED() \
-  printf ("NOT IMPLEMENTED: %s\n", __PRETTY_FUNCTION__)
+  PLUGIN_DEBUG_1ARG ("NOT IMPLEMENTED: %s\n", __PRETTY_FUNCTION__)
 
 #define ID(object) \
   (object == NULL ? (PRUint32) 0 : reinterpret_cast<JNIReference*> (object)->identifier)
@@ -103,7 +103,7 @@ static int plugin_debug = 0;
   {                                         \
     if (plugin_debug)                       \
     {                                       \
-      printf (str);                         \
+      fprintf (stderr, str);                \
     }                                       \
   } while (0)
 
@@ -112,35 +112,35 @@ static int plugin_debug = 0;
   {                                         \
     if (plugin_debug)                       \
     {                                       \
-      printf (str, arg1);                   \
+      fprintf (stderr, str, arg1);          \
     }                                       \
   } while (0)
 
-#define PLUGIN_DEBUG_2ARG(str, arg1, arg2) \
+#define PLUGIN_DEBUG_2ARG(str, arg1, arg2)  \
   do                                        \
   {                                         \
     if (plugin_debug)                       \
     {                                       \
-      printf (str, arg1, arg2);             \
+      fprintf (stderr, str, arg1, arg2);    \
     }                                       \
   } while (0)
 
 #define PLUGIN_DEBUG_3ARG(str, arg1, arg2, arg3) \
-  do                                        \
-  {                                         \
-    if (plugin_debug)                       \
-    {                                       \
-      printf (str, arg1, arg2, arg3);       \
-    }                                       \
+  do                                           \
+  {                                            \
+    if (plugin_debug)                          \
+    {                                          \
+      fprintf (stderr, str, arg1, arg2, arg3); \
+    }                                          \
   } while (0)
 
 #define PLUGIN_DEBUG_4ARG(str, arg1, arg2, arg3, arg4) \
-  do                                        \
-  {                                         \
-    if (plugin_debug)                       \
-    {                                       \
-      printf (str, arg1, arg2, arg3, arg4); \
-    }                                       \
+  do                                                 \
+  {                                                  \
+    if (plugin_debug)                                \
+    {                                                \
+      fprintf (stderr, str, arg1, arg2, arg3, arg4); \
+    }                                                \
   } while (0)
 
 #define PLUGIN_DEBUG(message)                                           \
@@ -504,7 +504,7 @@ char const* TYPES[10] = { "Object",
 #define PROCESS_PENDING_EVENTS_REF(reference) \
     if (jvm_attached == PR_FALSE) \
 	{ \
-	    fprintf(stderr, "Error on Java side detected. Abandoning wait and returning.\n"); \
+	    PLUGIN_DEBUG_0ARG("Error on Java side detected. Abandoning wait and returning.\n"); \
 		return NS_ERROR_FAILURE; \
 	} \
 	if (g_main_context_pending (NULL)) { \
@@ -1500,7 +1500,7 @@ IcedTeaPluginFactory::IcedTeaPluginFactory ()
   js_cleared_handles.Init();
   result_map.Init();
   PLUGIN_DEBUG_0ARG ("CONSTRUCTING FACTORY\n");
-  printf("ICEDTEAPLUGIN_DEBUG = %s\n", getenv ("ICEDTEAPLUGIN_DEBUG"));
+  PLUGIN_DEBUG_1ARG("ICEDTEAPLUGIN_DEBUG = %s\n", getenv ("ICEDTEAPLUGIN_DEBUG"));
 }
 
 IcedTeaPluginFactory::~IcedTeaPluginFactory ()
@@ -1617,7 +1617,7 @@ IcedTeaPluginFactory::Initialize ()
   if (jvm_attached == PR_FALSE)
   {
     // using printf on purpose.. this should happen rarely
-    printf("Initializing JVM...\n");
+    PLUGIN_DEBUG_0ARG("Initializing JVM...\n");
 
     // mark attached right away, in case another initialize() call 
     //is made (happens if multiple applets are present on the same page)
@@ -2295,7 +2295,7 @@ IcedTeaPluginInstance::Initialize (nsIPluginInstancePeer* aPeer)
   if (jvm_attached == PR_FALSE)
   {
     // using printf on purpose.. this should happen rarely
-    fprintf(stderr, "WARNING: Looks like the JVM is not up. Attempting to re-initialize...\n");
+    PLUGIN_DEBUG_0ARG("WARNING: Looks like the JVM is not up. Attempting to re-initialize...\n");
 
     // mark attached right away, in case another initialize() call 
     //is made (happens if multiple applets are present on the same page)
@@ -2668,7 +2668,7 @@ IcedTeaPluginFactory::GetJavaObject (PRUint32 instance_identifier,
 
   PLUGIN_DEBUG_1ARG ("GOT JAVA OBJECT IDENTIFIER: %d\n", object_identifier_return);
   if (object_identifier_return == 0)
-    printf ("WARNING: received object identifier 0\n");
+    PLUGIN_DEBUG_0ARG ("WARNING: received object identifier 0\n");
 
   *object = references.ReferenceObject (object_identifier_return);
 
@@ -4360,7 +4360,7 @@ IcedTeaSocketListener::OnStopListening (nsIServerSocket *aServ,
   PLUGIN_TRACE_LISTENER ();
 
   nsCString shutdownStr("shutdown");
-  printf("stop listening: %uld\n", aStatus);
+  PLUGIN_DEBUG_1ARG("stop listening: %uld\n", aStatus);
 
   nsresult result = NS_OK;
 
@@ -4374,7 +4374,7 @@ IcedTeaSocketListener::OnStopListening (nsIServerSocket *aServ,
     PLUGIN_CHECK_RETURN ("clear async wait", result);
     break;
   default:
-    printf ("ERROR %x\n", aStatus);
+    PLUGIN_DEBUG_1ARG ("ERROR %x\n", aStatus);
     PLUGIN_DEBUG ("Listener: Unknown status value.");
   }
   return NS_OK;
@@ -4740,7 +4740,7 @@ IcedTeaJNIEnv::ParseValue (jni_type type, nsCString& str)
       retval.i = 0;
       break;
     default:
-      printf ("WARNING: didn't handle parse type\n");
+      PLUGIN_DEBUG_0ARG ("WARNING: didn't handle parse type\n");
       break;
     }
 
@@ -4830,7 +4830,7 @@ IcedTeaJNIEnv::ExpandArgs (JNIID* id, jvalue* args)
           break;
         default:
           PLUGIN_ERROR_TWO ("Failed to parse signature", id->signature);
-          printf ("FAILED ID: %d\n", id->identifier);
+          PLUGIN_DEBUG_1ARG ("FAILED ID: %d\n", id->identifier);
           break;
         }
 	

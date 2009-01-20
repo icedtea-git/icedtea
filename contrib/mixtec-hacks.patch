@@ -1,7 +1,7 @@
-diff -r 4f4d268762d7 Makefile.am
---- a/Makefile.am	Wed Aug 20 04:24:45 2008 -0400
-+++ b/Makefile.am	Thu Aug 28 03:53:35 2008 -0400
-@@ -442,6 +442,13 @@
+diff -r 515916374161 Makefile.am
+--- a/Makefile.am	Wed Dec 17 07:55:15 2008 -0500
++++ b/Makefile.am	Wed Dec 17 11:59:55 2008 -0500
+@@ -543,6 +543,13 @@
  endif
  
  ICEDTEA_FSG_PATCHES =
@@ -15,15 +15,15 @@ diff -r 4f4d268762d7 Makefile.am
  
  ICEDTEA_PATCHES = \
  	$(ZERO_PATCHES_COND) \
-diff -r 4f4d268762d7 patches/mixtec-assertions.patch
+diff -r 515916374161 patches/mixtec-assertions.patch
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/patches/mixtec-assertions.patch	Thu Aug 28 03:53:35 2008 -0400
++++ b/patches/mixtec-assertions.patch	Wed Dec 17 11:59:55 2008 -0500
 @@ -0,0 +1,14 @@
 +diff -r d384f5a5bd0c hotspot/build/linux/makefiles/product.make
-+--- openjdk/hotspot/build/linux/makefiles/product.make	Mon Aug 06 13:11:51 2007 +0100
-++++ openjdk/hotspot/build/linux/makefiles/product.make	Fri Sep 14 09:58:33 2007 +0100
++--- openjdk/hotspot/make/linux/makefiles/product.make	Mon Aug 06 13:11:51 2007 +0100
+++++ openjdk/hotspot/make/linux/makefiles/product.make	Fri Sep 14 09:58:33 2007 +0100
 +@@ -41,8 +41,8 @@ MAPFILE = $(GAMMADIR)/build/linux/makefi
-+ MAPFILE = $(GAMMADIR)/build/linux/makefiles/mapfile-vers-product
++ MAPFILE = $(GAMMADIR)/make/linux/makefiles/mapfile-vers-product
 + 
 + G_SUFFIX =
 +-SYSDEFS += -DPRODUCT
@@ -33,9 +33,9 @@ diff -r 4f4d268762d7 patches/mixtec-assertions.patch
 + 
 + # use -g to strip library as -x will discard its symbol table; -x is fine for
 + # executables.
-diff -r 4f4d268762d7 patches/mixtec-no-log-vm-output.patch
+diff -r 515916374161 patches/mixtec-no-log-vm-output.patch
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/patches/mixtec-no-log-vm-output.patch	Thu Aug 28 03:53:35 2008 -0400
++++ b/patches/mixtec-no-log-vm-output.patch	Wed Dec 17 11:59:55 2008 -0500
 @@ -0,0 +1,11 @@
 +--- openjdk-ecj/hotspot/src/share/vm/runtime/globals.hpp	2007-11-13 09:19:54.000000000 -0500
 ++++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2007-11-13 17:13:24.000000000 -0500
@@ -48,9 +48,9 @@ diff -r 4f4d268762d7 patches/mixtec-no-log-vm-output.patch
 +          "Save VM output to hotspot.log, or to LogFile")                    \
 +                                                                             \
 +   diagnostic(ccstr, LogFile, NULL,                                          \
-diff -r 4f4d268762d7 patches/mixtec-no-print-vm-options.patch
+diff -r 515916374161 patches/mixtec-no-print-vm-options.patch
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/patches/mixtec-no-print-vm-options.patch	Thu Aug 28 03:53:35 2008 -0400
++++ b/patches/mixtec-no-print-vm-options.patch	Wed Dec 17 11:59:55 2008 -0500
 @@ -0,0 +1,12 @@
 +diff -r c5904941581b openjdk-ecj/hotspot/src/share/vm/runtime/globals.hpp
 +--- openjdk/hotspot/src/share/vm/runtime/globals.hpp	Tue Nov 13 14:09:56 2007 +0000
@@ -64,13 +64,13 @@ diff -r 4f4d268762d7 patches/mixtec-no-print-vm-options.patch
 +          "print VM flag settings")                                          \
 +                                                                             \
 +   diagnostic(bool, SerializeVMOutput, true,                                 \
-diff -r 4f4d268762d7 patches/mixtec-optimization.patch
+diff -r 515916374161 patches/mixtec-optimization.patch
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/patches/mixtec-optimization.patch	Thu Aug 28 03:53:35 2008 -0400
++++ b/patches/mixtec-optimization.patch	Wed Dec 17 11:59:55 2008 -0500
 @@ -0,0 +1,34 @@
-+diff -urN openjdk.orig/hotspot/build/linux/makefiles/gcc.make openjdk/hotspot/build/linux/makefiles/gcc.make
-+--- openjdk.orig/hotspot/build/linux/makefiles/gcc.make	2007-10-12 03:46:25.000000000 -0400
-++++ openjdk/hotspot/build/linux/makefiles/gcc.make	2007-10-12 17:41:02.000000000 -0400
++diff -urN openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
++--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2007-10-12 03:46:25.000000000 -0400
+++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2007-10-12 17:41:02.000000000 -0400
 +@@ -111,7 +111,7 @@
 + CFLAGS_WARN/BYFILE = $(CFLAGS_WARN/$@)$(CFLAGS_WARN/DEFAULT$(CFLAGS_WARN/$@)) 
 + 

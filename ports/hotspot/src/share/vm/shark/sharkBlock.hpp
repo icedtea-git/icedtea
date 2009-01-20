@@ -78,7 +78,7 @@ class SharkBlock : public ResourceObj {
   }
   bool is_private_copy() const
   {
-    return ciblock()->is_private_copy();
+    return ciblock()->is_backedge_copy();
   }
   int max_locals() const
   {

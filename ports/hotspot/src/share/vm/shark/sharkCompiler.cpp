@@ -76,7 +76,8 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   if (env->failing())
     return;
   if (SharkPrintTypeflowOf != NULL) {
-    if (!strcmp(SharkPrintTypeflowOf, name))
+    if (!strcmp(SharkPrintTypeflowOf, name) ||
+	!strcmp(SharkPrintTypeflowOf, "*"))
       flow->print_on(tty);
   }
 

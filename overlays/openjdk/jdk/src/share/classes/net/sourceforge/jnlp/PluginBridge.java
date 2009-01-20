@@ -29,6 +29,8 @@ import java.util.Locale;
 import java.util.List;
 import java.util.ArrayList;
 
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
+
 
 public class PluginBridge extends JNLPFile
 {
@@ -36,7 +38,9 @@ public class PluginBridge extends JNLPFile
     Version fileVersion = new Version("1.1");
 
     String name;
-    String[] jars;
+    String[] jars = new String[0];
+    String[] cache_jars = new String[0];
+    String[] cache_ex_jars = new String[0];
     Hashtable atts;
 
     public PluginBridge(URL codebase, URL documentBase, String jar, String main,
@@ -46,10 +50,39 @@ public class PluginBridge extends JNLPFile
         this.codeBase = codebase;
         this.sourceLocation = documentBase;
 
-        if (jar != null) {
-            System.err.println("Jar string: " + jar);
+        // also, see if cache_archive is specified
+        if (atts.get("cache_archive") != null && ((String) atts.get("cache_archive")).length() > 0) {
+            
+            String[] versions = new String[0];
+            
+            // are there accompanying versions?
+            if (atts.get("cache_version") != null) {
+                versions = ((String) atts.get("cache_version")).split(",");
+            }
+            
+            String[] jars = ((String) atts.get("cache_archive")).split(",");
+            cache_jars = new String[jars.length];
+            
+            for (int i=0; i < jars.length; i++) {
+                
+                cache_jars[i] = jars[i].trim();
+
+                if (versions.length > 0) {
+                    cache_jars[i] += ";" + versions[i].trim(); 
+                }
+            }
+        }
+        
+        if (atts.get("cache_archive_ex") != null && ((String) atts.get("cache_archive_ex")).length() > 0) {
+            cache_ex_jars = ((String) atts.get("cache_archive_ex")).split(",");
+        }
+
+        if (jar != null && jar.length() > 0) {
             this.jars = jar.split(",");
-            System.err.println("jars length: " + jars.length);
+            if (JNLPRuntime.isDebug()) {
+                System.err.println("Jar string: " + jar);
+                System.err.println("jars length: " + jars.length);
+            }
         }
         this.atts = atts;
 
@@ -103,11 +136,59 @@ public class PluginBridge extends JNLPFile
                 //should this be done to sharedResources on init?
                 try
                 {
-                    if (launchType.equals(JARDesc.class) && jars != null)
+                    if (launchType.equals(JARDesc.class))
                     {
                         for (int i = 0; i < jars.length; i++)
                             result.add(new JARDesc(new URL(codeBase, jars[i]),
-                                                   null, null, false, true, false));
+                                                   null, null, false, true, false, true));
+                        
+                        boolean cacheable = true;
+
+                        if (atts.get("cache_option") != null && 
+                                ((String) atts.get("cache_option")).equalsIgnoreCase("no"))
+                            cacheable = false;
+
+                        for (int i = 0; i < cache_jars.length; i++) {
+                            
+                            String[] jar_and_ver = cache_jars[i].split(";");
+                            
+                            String jar = jar_and_ver[0];
+                            Version version = null;
+                            
+                            if (jar_and_ver.length > 1) {
+                                version = new Version(jar_and_ver[1]);
+                            }
+
+                            result.add(new JARDesc(new URL(codeBase, jar),
+                                    version, null, false, true, false, cacheable));
+                        }
+                        
+                        for (int i = 0; i < cache_ex_jars.length; i++) {
+                            String[] jar_info = cache_ex_jars[i].split(";");
+                            
+                            String jar = jar_info[0].trim();
+                            Version version = null;
+                            boolean lazy = true;
+                            
+                            if (jar_info.length > 1) {
+                                
+                                // format is name[[;preload];version]
+
+                                if (jar_info[1].equals("preload")) {
+                                    lazy = false;
+                                } else {
+                                    version = new Version(jar_info[1].trim());
+                                }
+                                
+                                if (jar_info.length > 2) {
+                                    lazy = false;
+                                    version = new Version(jar_info[2].trim());
+                                }
+                            }
+
+                            result.add(new JARDesc(new URL(codeBase, jar),
+                                    version, null, lazy, true, false, false));
+                        }
                     }
                 }
                 catch (MalformedURLException ex)
@@ -132,9 +213,9 @@ public class PluginBridge extends JNLPFile
                 for (int i = 0; i < objectArray.length; i++)
                     jarArray[i] = (JARDesc) objectArray[i];
 
-                return jarArray;
+                return jarArray;  
             }
-
+            
             public void addResource(Object resource)
             {
                 // todo: honor the current locale, os, arch values

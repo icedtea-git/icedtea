@@ -22,7 +22,7 @@
 +    {EM_ALPHA,       EM_ALPHA,   ELFCLASS64, ELFDATA2LSB, (char*)"Alpha"},
 +    {EM_MIPS_RS3_LE, EM_MIPS_RS3_LE, ELFCLASS32, ELFDATA2LSB, (char*)"MIPSel"},
 +    {EM_MIPS,        EM_MIPS,    ELFCLASS32, ELFDATA2MSB, (char*)"MIPS"},
-+    {EM_PARISC,      EM_PARISC,  ELFCLASS32, ELFDATA2MSB, (char*)"HPPA"},
++    {EM_PARISC,      EM_PARISC,  ELFCLASS32, ELFDATA2MSB, (char*)"PARISC"},
 +    {EM_68K,         EM_68K,     ELFCLASS32, ELFDATA2MSB, (char*)"M68k"}
    };
  
@@ -39,7 +39,7 @@
 +    static  Elf32_Half running_arch_code=EM_ALPHA;
 +  #elif  (defined MIPSEL)
 +    static  Elf32_Half running_arch_code=EM_MIPS_RS3_LE;
-+  #elif  (defined HPPA)
++  #elif  (defined PARISC)
 +    static  Elf32_Half running_arch_code=EM_PARISC;
 +  #elif  (defined MIPS)
 +    static  Elf32_Half running_arch_code=EM_MIPS;
@@ -48,7 +48,7 @@
    #else
      #error Method os::dll_load requires that one of following is defined:\
 -         IA32, AMD64, IA64, __sparc, __powerpc__
-+         IA32, AMD64, IA64, __sparc, __powerpc__, ARM, S390, ALPHA, MIPS, MIPSEL, HPPA, M68K
++         IA32, AMD64, IA64, __sparc, __powerpc__, ARM, S390, ALPHA, MIPS, MIPSEL, PARISC, M68K
    #endif
  
    // Identify compatability class for VM's architecture and library's architecture
