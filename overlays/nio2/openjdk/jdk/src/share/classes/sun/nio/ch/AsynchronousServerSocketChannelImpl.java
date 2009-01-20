@@ -25,11 +25,11 @@
 
 package sun.nio.ch;
 
-import java.nio.channels.*;
 import java.net.SocketAddress;
 import java.net.InetSocketAddress;
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.nio.channels.ClosedChannelException;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;

@@ -28,6 +28,9 @@ package sun.nio.fs;
 import java.util.concurrent.*;
 import java.io.IOException;
 
+import org.classpath.icedtea.java.nio.file.ClosedWatchServiceException;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.WatchEvent;
 import org.classpath.icedtea.java.nio.file.WatchKey;
 import org.classpath.icedtea.java.nio.file.WatchService;
 

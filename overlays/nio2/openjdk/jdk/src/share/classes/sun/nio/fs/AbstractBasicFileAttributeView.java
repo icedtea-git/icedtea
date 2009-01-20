@@ -200,7 +200,7 @@ abstract class AbstractBasicFileAttributeView
     }
 
 
-    public Map<String,?> readAttributes(String first, String[] rest)
+    public Map<String,?> readAttributes(String first, String... rest)
         throws IOException
     {
         AttributesBuilder builder = AttributesBuilder.create(first, rest);

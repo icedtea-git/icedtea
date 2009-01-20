@@ -1,5 +1,81 @@
 2009-01-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaNetGetIndexAccess.java:
+	(getByIndex(int)): New method.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousServerSocketChannelImpl.java:
+	Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/MembershipKeyImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/MembershipRegistry.java:
+	New files.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/SimpleAsynchronousFileChannelImpl.java:
+	Fix imports, refer to AsynchronousFileLockImpl instead of FileLockImpl.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractAclFileAttributeView.java:
+	Fix imports and vararg usage.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractBasicFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractFileStoreSpaceAttributeView.java:
+	Fix vararg usage.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractPoller.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchService.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/FileOwnerAttributeViewImpl.java:
+	Fix imports and vararg usage.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/EPollPort.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/LinuxAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/Port.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/UnixAsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/UnixAsynchronousSocketChannelImpl.java:
+	Fix imports.
+	* patches/icedtea-nio2.patch:
+	Add new classes.
+	(Unsafe.copyMemory(long,long,long)): Backported.
+	(Unsafe.copyMemory(Object,long,Object,long,long)): Backported.
+	(Unsafe.ARRAY_BYTE_BASE_OFFSET): Likewise.
+	(DatagramChannelImpl.bind(SocketAddress)): Likewise.
+	(DatagramChannelImpl.getLocalAddress()): Likewise.
+	(DatagramChannelImpl.getOption(SocketOption)): Likewise.
+	(DatagramChannelImpl.innerJoin(InetAddress,NetworkInterface,InetAddress)): Likewise.
+	(DatagramChannelImpl.join(InetAddress,NetworkInterface)): Likewise.
+	(DatagramChannelImpl.join(InetAddress,NetworkInterface,InetAddress)): Likewise.
+	(DatagramChannelImpl.block(MembershipKeyImpl,InetAddress)): Likewise.
+	(DatagramChannelImpl.unblock(MembershipKeyImpl,InetAddress)): Likewise.
+	(DatagramChannelImpl.drop(MembershipKeyImpl)): Likewise.
+	(Net.getInterface4(FileDescriptor)): Likewise.
+	(Net.getInterface6(FileDescriptor)): Likewise.
+	(Net.inet4FromInt(int)): Likewise.
+	(Net.inet6AsByteArray(InetAddress)): Likewise.
+	(Net.join6(FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.drop6(FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.joinOrDrop6(boolean,FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.block6(FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.unblock6(FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.blockOrUnblock6(boolean,FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.join4(FileDescriptor,int,int,int)): Likewise.
+	(Net.drop4(FileDescriptor,int,int,int)): Likewise.
+	(Net.joinOrDrop4(boolean,FileDescriptor,int,int,int)): Likewise.
+	(Net.block4(FileDescriptor,int,int,int)): Likewise.
+	(Net.unblock4(FileDescriptor,int,int,int)): Likewise.
+	(Net.blockOrUnblock4(boolean,FileDescriptor,int,int,int)): Likewise.
+	(Net.connect(FileDescriptor,InetAddress,int)): Likewise.
+	(Net.connect(ProtocolFamily,FileDescriptor,InetAddress,int)): Likewise.
+	(Net.connect0(boolean,FileDescriptor,InetAddress,int)): Likewise.
+	(FileDispatcher.NO_LOCK)): Likewise.
+	(FileDispatcher.LOCKED)): Likewise.
+	(FileDispatcher.RET_EX_LOCK)): Likewise.
+	(FileDispatcher.INTERRUPTED)): Likewise.
+	(FileDispatcher.size(FileDescriptor)): Likewise.
+	(FileDispatcher.truncate(FileDescriptor, long)): Likewise.
+	(FileDispatcher.force(FileDescriptor, boolean)): Likewise.
+	(FileDispatcher.lock(FileDescriptor, boolean, long, long, boolean)): Likewise.
+	(FileDispatcher.release(FileDescriptor, long, long)): Likewise.
+	(FileDispatcher.force0(FileDescriptor,boolean)): Likewise.
+	(FileDispatcher.truncate0(FileDescriptor, long)): Likewise.
+	(FileDispatcher.size0(FileDescriptor)): Likewise.
+	(FileDispatcher.lock0(FileDescriptor, boolean, long, long, boolean)): Likewise.
+	(FileDispatcher.release0(FileDescriptor, long, long)): Likewise.
+	
+2009-01-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* generated/sun/nio/ch/SocketOptionRegistry.java:
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/DatagramChannel.java:
 	Added (1.7 extensions).

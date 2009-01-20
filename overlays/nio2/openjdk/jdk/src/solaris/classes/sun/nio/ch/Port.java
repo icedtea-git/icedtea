@@ -25,15 +25,18 @@
 
 package sun.nio.ch;
 
-import java.nio.channels.spi.AsynchronousChannelProvider;
-import java.nio.channels.*;
 import java.io.IOException;
 import java.io.Closeable;
 import java.io.FileDescriptor;
+import java.nio.channels.Channel;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.classpath.icedtea.java.nio.channels.ShutdownChannelGroupException;
+
+import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**
  * Base implementation of AsynchronousChannelGroupImpl for Unix systems.

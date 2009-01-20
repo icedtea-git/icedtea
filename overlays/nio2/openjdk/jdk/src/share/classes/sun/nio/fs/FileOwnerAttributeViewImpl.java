@@ -28,7 +28,11 @@ package sun.nio.fs;
 import java.util.*;
 import java.io.IOException;
 
+import org.classpath.icedtea.java.nio.file.attribute.AclFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
 import org.classpath.icedtea.java.nio.file.attribute.FileOwnerAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
 
 /**
  * An implementation of FileOwnerAttributeView that delegates to a given
@@ -75,7 +79,7 @@ final class FileOwnerAttributeViewImpl implements FileOwnerAttributeView {
     }
 
 
-    public Map<String,?> readAttributes(String first, String[] rest) throws IOException {
+    public Map<String,?> readAttributes(String first, String... rest) throws IOException {
         Map<String,Object> result = new HashMap<String,Object>();
         if (first.equals("*") || first.equals(OWNER_NAME)) {
             result.put(OWNER_NAME, getOwner());

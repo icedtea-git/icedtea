@@ -42,4 +42,5 @@ import java.net.NetworkInterface;
 public interface JavaNetGetIndexAccess
 {
   int getIndex(NetworkInterface nf);
+  NetworkInterface getByIndex(int i);
 }

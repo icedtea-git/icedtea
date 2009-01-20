@@ -28,6 +28,7 @@ package sun.nio.fs;
 import java.io.IOException;
 import java.util.*;
 
+import org.classpath.icedtea.java.nio.file.attribute.AclEntry;
 import org.classpath.icedtea.java.nio.file.attribute.AclFileAttributeView;
 import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
 
@@ -72,7 +73,7 @@ abstract class AbstractAclFileAttributeView
     }
 
 
-    public final Map<String,?> readAttributes(String first, String[] rest)
+    public final Map<String,?> readAttributes(String first, String... rest)
         throws IOException
     {
         boolean acl = false;

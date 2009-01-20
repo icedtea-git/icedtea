@@ -25,8 +25,11 @@
 
 package sun.nio.ch;
 
-import java.nio.channels.*;
 import java.nio.ByteBuffer;
+import java.nio.channels.AlreadyConnectedException;
+import java.nio.channels.AsynchronousCloseException;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.ConnectionPendingException;
 import java.net.*;
 import java.util.concurrent.*;
 import java.io.IOException;
@@ -34,6 +37,10 @@ import java.io.FileDescriptor;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import sun.security.action.GetBooleanAction;
+
+import org.classpath.icedtea.java.nio.channels.CompletionHandler;
+import org.classpath.icedtea.java.nio.channels.InterruptedByTimeoutException;
+import org.classpath.icedtea.java.nio.channels.ShutdownChannelGroupException;
 
 /**
  * Unix implementation of AsynchronousSocketChannel

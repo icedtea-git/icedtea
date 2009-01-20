@@ -25,11 +25,17 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.io.IOException;
 import java.util.*;
+
+import org.classpath.icedtea.java.nio.file.ClosedWatchServiceException;
+import org.classpath.icedtea.java.nio.file.FileRef;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.StandardWatchEventKind;
+import org.classpath.icedtea.java.nio.file.WatchEvent;
+import org.classpath.icedtea.java.nio.file.WatchKey;
 
 /**
  * Base implementation of background poller thread used in watch service

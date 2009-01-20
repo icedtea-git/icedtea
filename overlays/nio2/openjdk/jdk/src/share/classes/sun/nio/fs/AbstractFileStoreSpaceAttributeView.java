@@ -69,7 +69,7 @@ abstract class AbstractFileStoreSpaceAttributeView
     }
 
 
-    public final Map<String,?> readAttributes(String first, String[] rest)
+    public final Map<String,?> readAttributes(String first, String... rest)
         throws IOException
     {
         boolean total = false;

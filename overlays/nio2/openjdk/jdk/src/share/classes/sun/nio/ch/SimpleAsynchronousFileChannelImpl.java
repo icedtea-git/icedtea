@@ -25,13 +25,21 @@
 
 package sun.nio.ch;
 
-import java.nio.channels.*;
 import java.util.concurrent.*;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousCloseException;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.NonReadableChannelException;
+import java.nio.channels.NonWritableChannelException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.io.FileDescriptor;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
+import org.classpath.icedtea.java.nio.channels.CompletionHandler;
+import org.classpath.icedtea.java.nio.channels.FileLock;
+import org.classpath.icedtea.java.nio.channels.ShutdownChannelGroupException;
 
 /**
  * "Portable" implementation of AsynchronousFileChannel for use on operating
@@ -60,7 +68,7 @@ public class SimpleAsynchronousFileChannelImpl
     }
 
     // Used to make native read and write calls
-    private static final FileDispatcher nd = new FileDispatcherImpl();
+    private static final FileDispatcher nd = new FileDispatcher();
 
     // Thread-safe set of IDs of native threads, for signalling
     private final NativeThreadSet threads = new NativeThreadSet(2);
@@ -209,7 +217,7 @@ public class SimpleAsynchronousFileChannelImpl
             throw new NonWritableChannelException();
 
         // add to lock table
-        final FileLockImpl fli = addToFileLockTable(position, size, shared);
+        final AsynchronousFileLockImpl fli = addToFileLockTable(position, size, shared);
         if (fli == null) {
             CompletedFuture<FileLock,A> result = CompletedFuture
                 .withFailure(this, new ClosedChannelException(), attachment);
@@ -270,7 +278,7 @@ public class SimpleAsynchronousFileChannelImpl
             throw new NonWritableChannelException();
 
         // add to lock table
-        FileLockImpl fli = addToFileLockTable(position, size, shared);
+        AsynchronousFileLockImpl fli = addToFileLockTable(position, size, shared);
         if (fli == null)
             throw new ClosedChannelException();
 
@@ -301,7 +309,7 @@ public class SimpleAsynchronousFileChannelImpl
     }
 
 
-    void release(FileLockImpl fli) throws IOException {
+    void release(AsynchronousFileLockImpl fli) throws IOException {
         try {
             begin();
             nd.release(fdObj, fli.position(), fli.size());
