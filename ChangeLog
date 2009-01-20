@@ -1,3 +1,11 @@
+2009-01-20  Gary Benson  <gbenson@redhat.com>
+	    Matthias Klose  <doko@ubuntu.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.[ch]pp (i486): Rename
+	to x86.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp (fp): Remove PRODUCT
+	conditional, make the not-PRODUCT bit the default.
+
 2009-01-19  Deepak Bhole  <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Add "Java" in the plugin description string. 

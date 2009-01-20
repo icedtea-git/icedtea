@@ -45,7 +45,7 @@
   };                     // them if that happens.
 
 #ifdef IA32
-  class i486
+  class x86
   {
     friend class VMStructs;
 

@@ -41,11 +41,7 @@
   // accessors for the instance variables
   intptr_t* fp() const
   {
-#ifdef PRODUCT
-    ShouldNotCallThis();
-#else
-    return (intptr_t *) -1; // make frame::print_value_on work
-#endif // !PRODUCT
+    return (intptr_t *) -1;
   }
 
 #ifdef CC_INTERP
