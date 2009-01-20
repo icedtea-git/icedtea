@@ -1,3 +1,14 @@
+2009-01-20  Lillian Angel  <langel@redhat.com>
+
+	* HACKING: Removed visualvm patch.
+	* INSTALL: Updated to remove visualvm notes.
+	* Makefile.am: Removed building of netbeans and visualvm.
+	* README: Updated to remove visualvm notes.
+	* acinclude.m4: Removed options for netbeans and visualvm.
+	* configure.ac: Likewise.
+	* patches/icedtea-visualvm.patch: Removed.
+	* visualvm.desktop: Removed.
+
 2009-01-20  Gary Benson  <gbenson@redhat.com>
 	    Matthias Klose  <doko@ubuntu.com>
 

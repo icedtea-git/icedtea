@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=OpenJDK VisualVM
-Comment=Integrates commandline JDK tools and profiling capabilites.
-Exec=/usr/bin/jvisualvm
-Icon=java
-Terminal=false
-Type=Application
-Categories=Development;Java;
-Version=1.0
