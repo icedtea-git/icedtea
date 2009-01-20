@@ -54,7 +54,6 @@ import javax.swing.UIManager;
 import javax.swing.plaf.OptionPaneUI;
 
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
-import net.sourceforge.jnlp.tools.CertVerifier;
 
 /**
  * Provides a base for JNLP warning dialogs.

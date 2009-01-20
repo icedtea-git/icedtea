@@ -41,16 +41,20 @@ import java.security.cert.CertPath;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.CertificateNotYetValidException;
+import java.security.cert.CertificateExpiredException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
-import net.sourceforge.jnlp.tools.CertVerifier;
-
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import net.sourceforge.jnlp.tools.KeyTool;
+ 
 public class HttpsCertVerifier implements CertVerifier {
 
     private VariableX509TrustManager tm;
     private X509Certificate[] chain;
     private String authType;
+    private ArrayList<String> details = new ArrayList<String>();
     
     public HttpsCertVerifier(VariableX509TrustManager tm, X509Certificate[] chain, String authType) {
         this.tm = tm;
@@ -87,32 +91,84 @@ public class HttpsCertVerifier implements CertVerifier {
     }
 
     public ArrayList<String> getDetails() {
-        // TODO Auto-generated method stub
-        return new ArrayList<String>();
+	boolean hasExpiredCert=false; 
+	boolean hasExpiringCert=false;
+	boolean notYetValidCert=false;
+	boolean isUntrusted=false; 
+
+	if (! getAlreadyTrustPublisher())
+              isUntrusted = true;
+
+	for (int i=0; i < chain.length; i++)
+	{
+	   X509Certificate cert = chain[i];	
+
+           long now = System.currentTimeMillis();
+           long SIX_MONTHS = 180*24*60*60*1000L;
+	   long notAfter = cert.getNotAfter().getTime();
+           if (notAfter < now) {
+             hasExpiredCert = true;
+           } else if (notAfter < now + SIX_MONTHS) {
+             hasExpiringCert = true;
+           }
+	
+	   try {
+	     cert.checkValidity();
+	   } catch (CertificateNotYetValidException cnyve) {
+             notYetValidCert = true;
+	   } catch (CertificateExpiredException cee) {
+	     hasExpiredCert = true;
+	   }
+	}
+
+	if (isUntrusted || hasExpiredCert || hasExpiringCert || notYetValidCert) {
+	      if (isUntrusted)
+	        addToDetails(R("SUntrustedCertificate"));
+              if (hasExpiredCert)
+                addToDetails(R("SHasExpiredCert"));
+              if (hasExpiringCert)
+                addToDetails(R("SHasExpiringCert"));
+              if (notYetValidCert)
+                addToDetails(R("SNotYetValidCert"));
+        }
+	return details;
+    }
+
+    private void addToDetails(String detail) {
+      if (!details.contains(detail))
+        details.add(detail);
+    }
+
+    private static String R(String key) {
+      return JNLPRuntime.getMessage(key);
     }
 
     public Certificate getPublisher() {
-        // TODO Auto-generated method stub
-        return null;
+      if (chain.length > 0)
+        return (Certificate)chain[0];
+      return null;
     }
 
     public Certificate getRoot() {
-        // TODO Auto-generated method stub
-        return null;
+      if (chain.length > 0) 
+        return (Certificate)chain[chain.length - 1];
+      return null;
     }
 
     public boolean getRootInCacerts() {
-        // TODO Auto-generated method stub
-        return false;
+	try {
+	  KeyTool kt = new KeyTool();
+          return kt.checkCacertsForCertificate(getRoot());
+        } catch (Exception e) {
+	}
+	return false;
     }
 
     public boolean hasSigningIssues() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     public boolean noSigningIssues() {
-        // TODO Auto-generated method stub
         return false;
     }
 

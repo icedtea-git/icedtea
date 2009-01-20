@@ -63,10 +63,10 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
+import net.sourceforge.jnlp.security.CertVerifier;
 import net.sourceforge.jnlp.security.SecurityDialogUI;
 import net.sourceforge.jnlp.security.SecurityUtil;
 import net.sourceforge.jnlp.security.SecurityWarningDialog;
-import net.sourceforge.jnlp.tools.CertVerifier;
 import net.sourceforge.jnlp.tools.KeyTool;
 
 //import java.security.KeyStoreException;

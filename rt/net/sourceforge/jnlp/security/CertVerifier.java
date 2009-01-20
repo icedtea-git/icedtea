@@ -35,7 +35,7 @@ obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version.
 */
 
-package net.sourceforge.jnlp.tools;
+package net.sourceforge.jnlp.security;
 
 import java.security.cert.CertPath;
 import java.security.cert.Certificate;

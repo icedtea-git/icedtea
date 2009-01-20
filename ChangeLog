@@ -1,5 +1,45 @@
 2009-01-20  Lillian Angel  <langel@redhat.com>
 
+	* rt/net/sourceforge/jnlp/DefaultLaunchHandler.java: Removed debug
+	lines.
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Likewise. 
+	* rt/net/sourceforge/jnlp/security/AccessWarningPane.java: Updated
+	imports.
+	* rt/net/sourceforge/jnlp/security/AppletWarningPane.java: Updated
+	imports.
+	* rt/net/sourceforge/jnlp/security/CertWarningPane.java: Updated
+	imports, added certVerifier global variable.
+	(CertWarningPane): Initialized certVerifier.
+	(installComponents): Added checks to determine if certificate is for
+	an https site, and set the name/publisher/from variables
+	appropriately. Also, customized warning pane label for https site.
+	* rt/net/sourceforge/jnlp/security/HttpsCertVerifier.java:
+	(getDetails): Implemented.
+	(addToDetails): Likewise.
+	(R): Likewise.
+	(getPublisher): Likewise.
+	(getRoot): Likewise.
+	(getRootInCacerts): Likewise.
+	(hasSigningIssues): Likewise.
+	(noSigningIssues): Likewise.
+	* rt/net/sourceforge/jnlp/security/MoreInfoPane.java: Fixed imports.
+	* rt/net/sourceforge/jnlp/security/SecurityDialogUI.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/security/SingleCertInfoPane.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/security/viewer/CertificatePane.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/tools/KeyTool.java: Removed debug lines.
+	* rt/net/sourceforge/jnlp/security/CertVerifier.java: Moved file
+	below, here.
+	* rt/net/sourceforge/jnlp/tools/CertVerifier.java: Removed.
+	* rt/net/sourceforge/jnlp/security/VariableX509TrustManager.java:
+	Removed debug lines.
+
+2009-01-20  Lillian Angel  <langel@redhat.com>
+
 	* HACKING: Removed visualvm patch.
 	* INSTALL: Updated to remove visualvm notes.
 	* Makefile.am: Removed building of netbeans and visualvm.

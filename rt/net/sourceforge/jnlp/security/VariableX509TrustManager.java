@@ -144,9 +144,6 @@ public class VariableX509TrustManager implements X509TrustManager {
      * @param checkOnly Whether to "check only" i.e. no user prompt, or to prompt for permission 
      */
     public void checkServerTrusted(X509Certificate[] chain, String authType, boolean checkOnly) throws CertificateException {
-        for (int i=0; i < chain.length; i++)
-            System.err.println("checkServerTrusted chain@" + i + " = " + chain[i]);
-        
         try {
             checkAllManagers(chain, authType);
         } catch (CertificateException ce) {

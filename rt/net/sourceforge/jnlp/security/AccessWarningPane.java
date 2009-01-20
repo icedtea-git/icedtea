@@ -58,7 +58,6 @@ import javax.swing.SwingConstants;
 
 import net.sourceforge.jnlp.JNLPFile;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
-import net.sourceforge.jnlp.tools.CertVerifier;
 
 /**
  * Provides the look and feel for a SecurityWarningDialog. These dialogs are

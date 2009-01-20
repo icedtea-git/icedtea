@@ -45,7 +45,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
-import net.sourceforge.jnlp.tools.CertVerifier;
 
 public class SingleCertInfoPane extends CertsInfoPane {
 
