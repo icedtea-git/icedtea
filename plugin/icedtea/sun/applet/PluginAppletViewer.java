@@ -176,7 +176,7 @@ import sun.misc.Ref;
          AccessController.doPrivileged(new PrivilegedAction() {
              public Object run() {
             	 	try {
-            	 		panel = new NetxPanel(doc, atts, true);
+            	 		panel = new NetxPanel(doc, atts, false);
             	 		AppletViewerPanel.debug("Using NetX panel");
             	 		PluginDebug.debug(atts.toString());
             	 	} catch (Exception ex) {
@@ -612,8 +612,14 @@ import sun.misc.Ref;
 
                  // try to fetch it locally
                  if (panel instanceof NetxPanel) {
+
                      URL localURL = null;
-                     localURL = ((NetxPanel) panel).getAppletClassLoader().getResource(originalURL.substring(codeBase.length()));
+                     
+                     String resourceName = originalURL.substring(codeBase.length()); 
+                     JNLPClassLoader loader = (JNLPClassLoader) ((NetxPanel) panel).getAppletClassLoader(); 
+
+                     if (loader.resourceAvailableLocally(resourceName))
+                         localURL = loader.getResource(resourceName);
 
                      url = localURL != null ? localURL : url;
                  }
@@ -630,7 +636,7 @@ import sun.misc.Ref;
                  return ref;
              }
          } catch (Exception e) {
-             System.err.println("Error occurred wgen trying to fetch image:");
+             System.err.println("Error occurred when trying to fetch image:");
              e.printStackTrace();
              return null;
          }

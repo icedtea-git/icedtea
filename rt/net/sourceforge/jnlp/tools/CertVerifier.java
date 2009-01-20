@@ -1,5 +1,5 @@
-/* SingleCertInfoPane.java
-   Copyright (C) 2008 Red Hat, Inc.
+/* VariableX509TrustManager.java
+   Copyright (C) 2009 Red Hat, Inc.
 
 This file is part of IcedTea.
 
@@ -35,45 +35,58 @@ obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version.
 */
 
-package net.sourceforge.jnlp.security;
+package net.sourceforge.jnlp.tools;
 
-import java.security.cert.X509Certificate;
+import java.security.cert.CertPath;
+import java.security.cert.Certificate;
 import java.util.ArrayList;
 
-import javax.swing.JComponent;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeSelectionModel;
+/**
+ * An interface that provides various details about a certificate 
+ */
 
-import net.sourceforge.jnlp.tools.CertVerifier;
+public interface CertVerifier {
 
-public class SingleCertInfoPane extends CertsInfoPane {
+    /**
+     * Return if the publisher is already trusted
+     */
+    public boolean getAlreadyTrustPublisher();
 
-	public SingleCertInfoPane(JComponent x, CertVerifier certVerifier) {
-		super(x, certVerifier);
-	}
-	
-	protected void buildTree() {
-		X509Certificate cert = ((SecurityWarningDialog)optionPane).getCert();
-		String subjectString = 
-			getCN(cert.getSubjectX500Principal().getName());
-		String issuerString = 
-			getCN(cert.getIssuerX500Principal().getName());
+    /**
+     * Return if the root is in CA certs
+     */
+    public boolean getRootInCacerts();
 
-		DefaultMutableTreeNode top = new DefaultMutableTreeNode(subjectString 
-				+ " (" + issuerString + ")");
-		
-		tree = new JTree(top);
-		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.addTreeSelectionListener(new TreeSelectionHandler());
-	}
-	
-	protected void populateTable() {
-		X509Certificate c = ((SecurityWarningDialog)optionPane).getCert();
-		certNames = new String[1];
-		certsData = new ArrayList<String[][]>();
-		certsData.add(parseCert(c));
-		certNames[0] = getCN(c.getSubjectX500Principal().getName())
-		+ " (" + getCN(c.getIssuerX500Principal().getName()) + ")";
-	}
+    /**
+     * Return if there are signing issues with the certificate(s) being veried
+     */
+    public boolean hasSigningIssues();
+
+    /**
+     * Return if there are no signing issues with this cert (!hasSigningIssues())
+     */
+    public boolean noSigningIssues();
+
+    /**
+     * Get the details regarding issue(s) with this certificate
+     */
+    public ArrayList<String> getDetails();
+
+    /**
+     * Return a valid certificate path to this certificate(s) being verified
+     * @return The CertPath
+     */
+    public ArrayList<CertPath> getCerts();
+
+    /** 
+     * Returns the application's publisher's certificate.
+     */
+    public abstract Certificate getPublisher();
+
+    /**
+     * Returns the application's root's certificate. This
+     * may return the same certificate as getPublisher() in
+     * the event that the application is self signed.
+     */
+    public abstract Certificate getRoot();
 }

@@ -50,7 +50,7 @@ import net.sourceforge.jnlp.security.*;
  * @author Jan Luehe
  */
 
-public class JarSigner {
+public class JarSigner implements CertVerifier {
 
     private static String R(String key) {
         return JNLPRuntime.getMessage(key);
@@ -145,10 +145,16 @@ public class JarSigner {
     /** details of this signing */
     private ArrayList<String> details = new ArrayList<String>();
 
+    /* (non-Javadoc)
+     * @see net.sourceforge.jnlp.tools.CertVerifier2#getAlreadyTrustPublisher()
+     */
     public boolean getAlreadyTrustPublisher() {
     	return alreadyTrustPublisher;
     }
     
+    /* (non-Javadoc)
+     * @see net.sourceforge.jnlp.tools.CertVerifier2#getRootInCacerts()
+     */
     public boolean getRootInCacerts() {
     	return rootInCacerts;
     }
@@ -157,11 +163,17 @@ public class JarSigner {
     	return certPath;
     }
     
+    /* (non-Javadoc)
+     * @see net.sourceforge.jnlp.tools.CertVerifier2#hasSigningIssues()
+     */
     public boolean hasSigningIssues() {
         return hasExpiredCert || notYetValidCert || badKeyUsage
                || badExtendedKeyUsage || badNetscapeCertType;
     }
 
+    /* (non-Javadoc)
+     * @see net.sourceforge.jnlp.tools.CertVerifier2#noSigningIssues()
+     */
     public boolean noSigningIssues() {
         return noSigningIssues;
     }
@@ -170,10 +182,16 @@ public class JarSigner {
         return anyJarsSigned;
     }
 
+    /* (non-Javadoc)
+     * @see net.sourceforge.jnlp.tools.CertVerifier2#getDetails()
+     */
     public ArrayList<String> getDetails() {
         return details;
     }
 
+    /* (non-Javadoc)
+     * @see net.sourceforge.jnlp.tools.CertVerifier2#getCerts()
+     */
     public ArrayList<CertPath> getCerts() {
         return certs;
     }
@@ -366,8 +384,8 @@ public class JarSigner {
     	}
     }
     
-    /** 
-     * Returns the application's publisher's certificate.
+    /* (non-Javadoc)
+     * @see net.sourceforge.jnlp.tools.CertVerifier2#getPublisher()
      */
     public Certificate getPublisher() {
     	if (certPath != null) {
@@ -383,10 +401,8 @@ public class JarSigner {
     	}
     }
     
-    /**
-     * Returns the application's root's certificate. This
-     * may return the same certificate as getPublisher() in
-     * the event that the application is self signed.
+    /* (non-Javadoc)
+     * @see net.sourceforge.jnlp.tools.CertVerifier2#getRoot()
      */
     public Certificate getRoot() {
     	if (certPath != null) {
