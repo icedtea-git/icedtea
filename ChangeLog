@@ -1,3 +1,98 @@
+2009-01-21  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java: 
+	Remove unused variables volume and muted.
+	(PulseAudioClip): Remove variable volume.
+	(open): Remove muteControl, volume and muted.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(setVolume): Rename to setCachedVolume.
+	(getVolume): Rename to getCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMuteControl.java:
+	Remove file. Mute relied on chaning the volume only through the api. That
+	assumption is invalid as the user can change volume through pulseaudio's
+	controls.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPlaybackLine.java
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(getVolume): Rename to getCachedVolume.
+	(setVolume): Rename to setCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java:
+	Remove muted and muteControl. Rename volume to cachedVolume. 
+	(PulseAudioPort): Remove muteControl.
+	(isMuted): Remove function.
+	(setMuted): Remove.
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	(setVolume): Rename to setCachedVolume.
+	(getVolume): Rename to getCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java:
+	Remove muteControl, muted and volume.
+	(open): Remove muteControl.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(getVolume): Rename to getCachedVolume.
+	(setVolume): Rename to setCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java
+	(setValue): Dont check for mute.
+	(getValue): Query pulseaudio for any change in volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java:
+	New variable cachedVolume.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(getCachedVolume): New function.
+	(setCachedVolume): New function.
+	(update_channels_and_volume): New function.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	(sink_input_volume_change_complete): Remove.
+	(sink_input_change_volume): Remove.
+	(Java_org_classpath_icedtea_pulseaudio_EventLoop_native_1set_1sink_1volume):
+	Remove.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1updateVolumeInfo):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1update_1volume.
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1setVolume):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1set_1volume.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1updateVolumeInfo):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1update_1volume.
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1setVolume):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1set_1volume.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1setVolume): Rename
+	to Java_org_classpath_icedtea_pulseaudio_Stream_native_1set_1volume.
+	(get_sink_input_volume_callback): New function.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1update_1volume): New
+	function.
+
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java
+	(testSupportedControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineRawTest.java
+	(testVolumeAndMute): Rename to testVolume. Remove test for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java
+	(testVolumeAndMute): Likewise.
+	(testSupportedControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourcePortTest.java	
+	(testControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java
+	(testControls): Likewise.
+
 2009-01-21  Lillian Angel  <langel@redhat.com>
 
 	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: Added

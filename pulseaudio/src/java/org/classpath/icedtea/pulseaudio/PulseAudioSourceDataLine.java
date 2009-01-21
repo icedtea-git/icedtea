@@ -51,10 +51,7 @@ import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 		implements SourceDataLine, PulseAudioPlaybackLine {
 
-	private PulseAudioMuteControl muteControl;
 	private PulseAudioVolumeControl volumeControl;
-	private boolean muted;
-	private float volume;
 
 	public static final String DEFAULT_SOURCEDATALINE_NAME = "Audio Stream";
 
@@ -67,7 +64,6 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 		this.lineListeners = new ArrayList<LineListener>();
 		this.defaultFormat = defaultFormat;
 		this.currentFormat = defaultFormat;
-		this.volume = PulseAudioVolumeControl.MAX_VOLUME;
 		this.streamName = DEFAULT_SOURCEDATALINE_NAME;
 
 	}
@@ -80,8 +76,6 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 
 		volumeControl = new PulseAudioVolumeControl(this, eventLoop);
 		controls.add(volumeControl);
-		muteControl = new PulseAudioMuteControl(this, volumeControl);
-		controls.add(muteControl);
 
 		PulseAudioMixer parentMixer = PulseAudioMixer.getInstance();
 		parentMixer.addSourceLine(this);
@@ -97,32 +91,26 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 	}
 
 	// FIXME
-	public byte[] native_setVolume(float value) {
+	public byte[] native_set_volume(float value) {
 		synchronized (eventLoop.threadLock) {
-			return stream.native_setVolume(value);
+			return stream.native_set_volume(value);
 		}
 	}
 
-	// FIXME
+	public byte[] native_update_volume() {
+		synchronized (eventLoop.threadLock) {
+			return stream.native_update_volume();
+		}
+	}
+	
 	@Override
-	public boolean isMuted() {
-		return muted;
+	public float getCachedVolume() {
+		return stream.getCachedVolume();
 	}
 
 	@Override
-	public void setMuted(boolean value) {
-		muted = value;
-	}
-
-	@Override
-	public float getVolume() {
-		return this.volume;
-	}
-
-	@Override
-	synchronized public void setVolume(float value) {
-		this.volume = value;
-
+	synchronized public void setCachedVolume(float value) {
+		stream.setCachedVolume(value);
 	}
 
 	@Override

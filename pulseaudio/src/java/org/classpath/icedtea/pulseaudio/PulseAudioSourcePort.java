@@ -82,10 +82,10 @@ final class PulseAudioSourcePort extends PulseAudioPort {
 	}
 
 	// FIXME
-	public native byte[] native_setVolume(float newValue);
+	public native byte[] native_set_volume(float newValue);
 
 	// FIXME
-	public synchronized native byte[] native_updateVolumeInfo();
+	public native byte[] native_update_volume();
 
 	@Override
 	public Line.Info getLineInfo() {

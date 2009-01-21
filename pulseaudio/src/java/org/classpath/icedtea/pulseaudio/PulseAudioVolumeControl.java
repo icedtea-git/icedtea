@@ -46,8 +46,12 @@ final class PulseAudioVolumeControl extends FloatControl {
 
 	protected PulseAudioVolumeControl(PulseAudioPlaybackLine line,
 			EventLoop eventLoop) {
+
+		/*
+		 * the initial volume is ignored by pulseaudio.
+		 */
 		super(FloatControl.Type.VOLUME, MIN_VOLUME, MAX_VOLUME, 1, -1, line
-				.getVolume(), "pulseaudio units", "Volume Off",
+				.getCachedVolume(), "pulseaudio units", "Volume Off",
 				"Default Volume", "Full Volume");
 		this.line = line;
 		this.eventLoop = eventLoop;
@@ -66,17 +70,15 @@ final class PulseAudioVolumeControl extends FloatControl {
 			return;
 		}
 
-		if (!line.isMuted()) {
-			setStreamVolume(newValue);
-		}
+		setStreamVolume(newValue);
 
-		line.setVolume(newValue);
+		line.setCachedVolume(newValue);
 	}
 
 	protected synchronized void setStreamVolume(float newValue) {
 		Operation op;
 		synchronized (eventLoop.threadLock) {
-			op = new Operation(line.native_setVolume(newValue));
+			op = new Operation(line.native_set_volume(newValue));
 		}
 
 		op.waitForCompletion();
@@ -85,7 +87,15 @@ final class PulseAudioVolumeControl extends FloatControl {
 	}
 
 	public synchronized float getValue() {
-		return line.getVolume();
+		Operation op;
+		synchronized (eventLoop.threadLock) {
+			op = new Operation(line.native_update_volume());
+		}
+
+		op.waitForCompletion();
+		op.releaseReference();
+
+		return line.getCachedVolume();
 	}
 
 }

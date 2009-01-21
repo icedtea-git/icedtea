@@ -57,10 +57,8 @@ abstract class PulseAudioPort extends PulseAudioLine implements Port,
 
 	private EventLoop eventLoop;
 
-	private float volume;
-	private boolean muted;
+	private float cachedVolume;
 
-	private PulseAudioMuteControl muteControl;
 	private PulseAudioVolumeControl volumeControl;
 
 	static {
@@ -76,72 +74,67 @@ abstract class PulseAudioPort extends PulseAudioLine implements Port,
 
 		volumeControl = new PulseAudioVolumeControl(this, eventLoop);
 		controls.add(volumeControl);
-		muteControl = new PulseAudioMuteControl(this, volumeControl);
-		controls.add(muteControl);
 
 		/*
 		 * unlike other lines, Ports must either be open or close
 		 * 
 		 * close = no sound. open = sound
-		 * 
 		 */
 		open();
 
 		// System.out.println("Opened Target Port " + name);
 	}
 
-	
 	// FIXME why public
 	@Override
-	public abstract byte[] native_setVolume(float newValue);
+	public abstract byte[] native_set_volume(float newValue);
 
+	/**
+	 * 
+	 * @see {@link update_channels_and_volume}
+	 */
 	// FIXME why public
-	public abstract byte[] native_updateVolumeInfo();
+	public abstract byte[] native_update_volume();
 
 	@Override
-	public boolean isMuted() {
-		return muted;
+	public float getCachedVolume() {
+		return this.cachedVolume;
 	}
 
 	@Override
-	public void setMuted(boolean value) {
-		muted = value;
-	}
-
-	@Override
-	public float getVolume() {
-
-		// FIXME need to query system for volume
-		return this.volume;
-	}
-
-	@Override
-	public void setVolume(float value) {
-		this.volume = value;
+	public void setCachedVolume(float value) {
+		this.cachedVolume = value;
 
 	}
 
-	// FIXME
-	public synchronized void updateVolumeInfo() {
+	private void updateVolumeInfo() {
 		Operation op;
 		synchronized (eventLoop.threadLock) {
-			op = new Operation(native_updateVolumeInfo());
+			op = new Operation(native_update_volume());
 		}
 
 		op.waitForCompletion();
 		op.releaseReference();
 	}
 
-	// FIXME
-	public void update_channels_and_volume(int channels, float volume) {
+	/**
+	 * Callback used by JNI when native_update_volume completes
+	 * 
+	 * @param channels
+	 *            the number of channels
+	 * @param cachedVolume
+	 *            the new volume
+	 */
+	@SuppressWarnings("unused")
+	void update_channels_and_volume(int channels, float volume) {
 		this.channels = channels;
-		this.volume = volume;
+		this.cachedVolume = volume;
 	}
 
 	@Override
 	public void close() {
 
-		native_setVolume((float) 0);
+		native_set_volume((float) 0);
 		isOpen = false;
 		fireLineEvent(new LineEvent(this, LineEvent.Type.CLOSE,
 				AudioSystem.NOT_SPECIFIED));
@@ -155,7 +148,7 @@ abstract class PulseAudioPort extends PulseAudioLine implements Port,
 		if (isOpen) {
 			return;
 		}
-		native_setVolume(volume);
+		native_set_volume(cachedVolume);
 		isOpen = true;
 		fireLineEvent(new LineEvent(this, LineEvent.Type.OPEN,
 				AudioSystem.NOT_SPECIFIED));
