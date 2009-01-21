@@ -1,5 +1,9 @@
 2009-01-21  Omair Majid  <omajid@redhat.com>
 
+	* patches/icedtea-awt-window-size.patch: Update patch.
+
+2009-01-21  Omair Majid  <omajid@redhat.com>
+
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java: 
 	Remove unused variables volume and muted.
 	(PulseAudioClip): Remove variable volume.
