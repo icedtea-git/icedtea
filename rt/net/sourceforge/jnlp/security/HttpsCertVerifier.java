@@ -1,4 +1,4 @@
-/* VariableX509TrustManager.java
+/* HttpsCertVerifier.java
    Copyright (C) 2009 Red Hat, Inc.
 
 This file is part of IcedTea.

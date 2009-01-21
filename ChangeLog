@@ -1,3 +1,9 @@
+2009-01-21  Lillian Angel  <langel@redhat.com>
+
+	* rt/net/sourceforge/jnlp/security/CertVerifier.java: Fixed file name
+	in GPL header.
+	* rt/net/sourceforge/jnlp/security/HttpsCertVerifier.java: Likewise.
+
 2009-01-20  Lillian Angel  <langel@redhat.com>
 
 	* rt/net/sourceforge/jnlp/DefaultLaunchHandler.java: Removed debug
