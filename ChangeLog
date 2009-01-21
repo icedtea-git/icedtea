@@ -1,5 +1,20 @@
 2009-01-21  Lillian Angel  <langel@redhat.com>
 
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: Added
+	copyright header.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginClassLoader.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginDebug.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginException.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginMain.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Likewise.
+	* plugin/icedtea/sun/applet/RequestQueue.java: Likewise.
+
+2009-01-21  Lillian Angel  <langel@redhat.com>
+
 	* rt/net/sourceforge/jnlp/security/CertVerifier.java: Fixed file name
 	in GPL header.
 	* rt/net/sourceforge/jnlp/security/HttpsCertVerifier.java: Likewise.
