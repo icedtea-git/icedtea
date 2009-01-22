@@ -48,8 +48,24 @@ class SharkEntry : public ZeroEntry {
 
 #ifndef PRODUCT
  private:
-  address code_start() const;
-  address code_limit() const;
+  address code_start() const
+  {
+    return start;
+  }
+  address code_limit() const
+  {
+    return limit;
+  }
   void print_pd_statistics(address start, address limit) const;
+
+  address start, limit;
+
+public:
+  void setBounds(unsigned char *FunctionStart, unsigned char *FunctionEnd)
+  {
+    start = (address)FunctionStart;
+    limit = (address)FunctionEnd;
+  }
+
 #endif // !PRODUCT
 };

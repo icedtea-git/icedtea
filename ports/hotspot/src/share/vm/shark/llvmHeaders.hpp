@@ -36,6 +36,10 @@
 #include <llvm/ModuleProvider.h>
 #include <llvm/Support/IRBuilder.h>
 #include <llvm/Type.h>
+#include <llvm/ExecutionEngine/JITMemoryManager.h>
+#include <llvm/Support/CommandLine.h>
+
+#include <map>
 
 #ifdef assert
   #undef assert

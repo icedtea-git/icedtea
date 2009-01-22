@@ -142,7 +142,7 @@ class ZeroFrame {
   };
 
   enum FrameType {
-    ENTRY_FRAME = 1,
+    ENTRY_FRAME = 0xCAFEBABE,
     INTERPRETER_FRAME,
     SHARK_FRAME,
     DEOPTIMIZER_FRAME

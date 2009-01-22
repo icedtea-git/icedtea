@@ -28,12 +28,15 @@
 
 using namespace llvm;
 
+std::map<const llvm::Function*, SharkEntry*> SharkBuilder::sharkEntry;
+
 SharkBuilder::SharkBuilder()
   : IRBuilder<>(),
       _module("shark"),
       _module_provider(module()),
-      _execution_engine(ExecutionEngine::create(&_module_provider))
-{
+      _execution_engine(ExecutionEngine::createJIT
+			(&_module_provider, NULL, new MyJITMemoryManager(),
+			 /* Fast */ false)) {
   init_external_functions();
 }
 
@@ -152,7 +155,7 @@ CallInst* SharkBuilder::CreateUnimplemented(const char* file, int line)
 {
   return CreateCall2(
     SharkRuntime::unimplemented(),
-    LLVMValue::intptr_constant((intptr_t) file),
+    pointer_constant(file),
     LLVMValue::jint_constant(line));
 }
 
@@ -160,7 +163,7 @@ CallInst* SharkBuilder::CreateShouldNotReachHere(const char* file, int line)
 {
   return CreateCall2(
     SharkRuntime::should_not_reach_here(),
-    LLVMValue::intptr_constant((intptr_t) file),
+    pointer_constant(file),
     LLVMValue::jint_constant(line));
 }
 
@@ -174,3 +177,16 @@ CallInst *SharkBuilder::CreateMemoryBarrier(BarrierFlags flags)
     ConstantInt::get(Type::Int1Ty, 0)};
   return CreateCall(llvm_memory_barrier_fn(), args, args + 5);
 }
+
+void SharkBuilder::MyJITMemoryManager::endFunctionBody
+  (const llvm::Function *F, unsigned char *FunctionStart,
+   unsigned char *FunctionEnd) 
+{
+  mm->endFunctionBody(F, FunctionStart, FunctionEnd);
+#ifndef PRODUCT
+  SharkEntry *e = sharkEntry[F];
+  if (e)
+    e->setBounds(FunctionStart, FunctionEnd);
+#endif // !PRODUCT
+}
+

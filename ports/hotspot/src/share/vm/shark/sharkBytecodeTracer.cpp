@@ -89,7 +89,7 @@ void SharkBytecodeTracer::decode_one_word(SharkBuilder*     builder,
     break;
 
   case T_ADDRESS:
-    *dst = LLVMValue::intptr_constant(value->returnAddress_value());
+    *dst = builder->pointer_constant((const void*)value->returnAddress_value());
     break;
 
   default:

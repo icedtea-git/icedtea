@@ -1,3 +1,44 @@
+2009-01-22  Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp (class
+	ZeroFrame::FrameType): Set ENTRY_FRAME = 0xCAFEBABE.
+
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp (SHARK_FLAGS):
+	Add SharkPrintAsmOf.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Add comment.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Set builder()->sharkEntry.
+	Use fnmatch() instead of strcmp().
+	Generate debugging dumps.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp
+	(SharkEntry::code_start, code_limit): Rewrite.
+	(SharkEntry::setBounds): New.
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::pointer_constant): New function.
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp
+	(SharkBytecodeTracer::decode_one_word):
+	use SharkBuilder::pointer_constant.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::sharkEntry): New.
+	(SharkBuilder::CreateUnimplemented): use SharkBuilder::pointer_constant.
+	(SharkBuilder::CreateShouldNotReachHere): Likewise.
+	(MyJITMemoryManager::endFunctionBody): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::check_zero): use SharkBuilder::pointer_constant.
+	(SharkBlock::check_bounds): Likewise.
+	(SharkBlock::add_safepoint): Likewise.
+	(SharkBlock::do_new): Likewise.
+	(SharkBlock::do_monitorexit): Don't check for null monitor.
+
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp: Add
+	llvm/ExecutionEngine/JITMemoryManager.h,
+	llvm/Support/CommandLine.h.
+	* ports/hotspot/src/share/vm/includeDB_shark (sharkBuilder.hpp):
+	add sharkEntry.hpp.
+
 2009-01-22  Lillian Angel  <langel@redhat.com>
 
 	* NEWS: Updated for release candidate.
