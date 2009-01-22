@@ -1,3 +1,11 @@
+2009-01-22  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Use
+	Hashtable to store classloaders, instead of HashMap (values cannot be
+	null in HashTable).
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Catch CFE in
+	addition to CNFE.
+
 2009-01-22  Andrew Haley  <aph@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp (class

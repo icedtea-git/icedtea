@@ -775,6 +775,7 @@ public class JNLPClassLoader extends URLClassLoader {
                     return loaders[i].findClass(name);
             }
             catch(ClassNotFoundException ex) { }
+            catch(ClassFormatError cfe) {}
         }
 
         throw new ClassNotFoundException(name);
