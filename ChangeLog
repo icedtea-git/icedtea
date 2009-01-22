@@ -1,3 +1,10 @@
+2009-01-22  Omair Majid  <omajid@redhat.com>
+			Ioana Ivan <iivan@redhat.com>
+			
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(start): Return silently if already started.
+	(stop): Return silently if already stopped.
+
 2009-01-22  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Use

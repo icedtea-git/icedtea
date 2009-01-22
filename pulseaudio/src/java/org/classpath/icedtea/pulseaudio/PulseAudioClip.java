@@ -431,7 +431,7 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
 	public byte[] native_update_volume() {
 		return stream.native_update_volume();
 	}
-	
+
 	@Override
 	public float getCachedVolume() {
 		return stream.getCachedVolume();
@@ -521,12 +521,8 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
 
 	@Override
 	public void start() {
-		if (!isOpen) {
-			throw new IllegalStateException("Line not open");
-		}
-
 		if (isStarted) {
-			throw new IllegalStateException("already started");
+			return;
 		}
 
 		super.start();
@@ -547,8 +543,9 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
 			throw new IllegalStateException("Line not open");
 		}
 
+		/* do what start does and ignore if called at the wrong time */
 		if (!isStarted) {
-			throw new IllegalStateException("not started, so cant stop");
+			return;
 		}
 
 		if (clipThread.isAlive()) {
