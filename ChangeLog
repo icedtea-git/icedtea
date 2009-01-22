@@ -1,3 +1,7 @@
+2009-01-22  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-cc-interp-jvmti.patch: Reenable thread signalling.
+
 2009-01-21  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-awt-window-size.patch: Update patch.
@@ -169,8 +173,8 @@
 	* patches/icedtea-visualvm.patch: Removed.
 	* visualvm.desktop: Removed.
 
-2009-01-20  Gary Benson  <gbenson@redhat.com>
-	    Matthias Klose  <doko@ubuntu.com>
+2009-01-20  Matthias Klose  <doko@ubuntu.com>
+	    Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.[ch]pp (i486): Rename
 	to x86.
