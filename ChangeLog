@@ -1,5 +1,14 @@
 2009-01-22  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp: Updated copyright year.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Likewise.
+
+2009-01-22  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
 	(print_zero_threads): New debug function.
 
