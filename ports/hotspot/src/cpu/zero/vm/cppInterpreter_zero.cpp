@@ -292,15 +292,43 @@ void CppInterpreter::native_entry(methodOop method, intptr_t UNUSED, TRAPS)
   // Set up the Java frame anchor  
   thread->set_last_Java_frame();
 
-  // Change the thread state to native
+  // Change the thread state to _thread_in_native
   ThreadStateTransition::transition_from_java(thread, _thread_in_native);
 
   // Make the call
   intptr_t result[4 - LogBytesPerWord];
   ffi_call(handler->cif(), (void (*)()) function, result, arguments);
 
-  // Change the thread state back to Java
-  ThreadStateTransition::transition_from_native(thread, _thread_in_Java);
+  // Change the thread state back to _thread_in_Java.
+  // ThreadStateTransition::transition_from_native() cannot be used
+  // here because it does not check for asynchronous exceptions.
+  // We have to manage the transition ourself.
+  thread->set_thread_state(_thread_in_native_trans);
+
+  // Make sure new state is visible in the GC thread
+  if (os::is_MP()) {
+    if (UseMembar) {
+      OrderAccess::fence();
+    }
+    else {
+      InterfaceSupport::serialize_memory(thread);
+    }
+  }
+
+  // We need to call check_special_condition_for_native_trans() if
+  // any of the thread's suspend flags are set.  We can't use the
+  // various accessors because thread->_suspend_flags is volatile
+  // and may change while we're reading it.
+  volatile uint32_t *suspend_flags;
+  suspend_flags = (uint32_t *)
+    ((address) thread + in_bytes(JavaThread::suspend_flags_offset()));
+  if (*suspend_flags != 0) {
+    JavaThread::check_special_condition_for_native_trans(thread);
+    CHECK_UNHANDLED_OOPS_ONLY(thread->clear_unhandled_oops());
+  }
+
+  // Finally we can change the thread state to _thread_in_Java.
+  thread->set_thread_state(_thread_in_Java);
   fixup_after_potential_safepoint();
 
   // Clear the frame anchor
