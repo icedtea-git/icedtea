@@ -1,3 +1,7 @@
+2009-01-22  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated for release candidate.
+
 2009-01-22  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp: Updated copyright year.
