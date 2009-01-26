@@ -70,10 +70,13 @@ public class NetxPanel extends AppletViewerPanel
     		synchronized(JNLPRuntime.initMutex) {
     			//The custom NetX Policy and SecurityManager are set here.
     			if (!JNLPRuntime.isInitialized()) {
-    				System.out.println("initializing JNLPRuntime...");
+    			    if (JNLPRuntime.isDebug())
+    			        System.out.println("initializing JNLPRuntime...");
+
     				JNLPRuntime.initialize();
     			} else {
-    				System.out.println("JNLPRuntime already initialized");
+    			    if (JNLPRuntime.isDebug())
+    			        System.out.println("JNLPRuntime already initialized");
     			}
     		}
 

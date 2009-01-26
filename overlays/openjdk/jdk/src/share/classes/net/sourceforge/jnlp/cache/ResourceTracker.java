@@ -152,7 +152,7 @@ public class ResourceTracker {
         if (location == null)
             throw new IllegalArgumentException("location==null");
 
-        Resource resource = Resource.getResource(location, version);
+        Resource resource = Resource.getResource(location, updatePolicy, version);
         boolean downloaded = false;
 
         synchronized (resources) {
@@ -215,7 +215,7 @@ public class ResourceTracker {
             return true;
         }
 
-        if (updatePolicy != UpdatePolicy.ALWAYS) { // save loading entry props file
+        if (updatePolicy != UpdatePolicy.ALWAYS && updatePolicy != UpdatePolicy.FORCE) { // save loading entry props file
             CacheEntry entry = new CacheEntry(resource.location, resource.downloadVersion);
 
             if (entry.isCached() && !updatePolicy.shouldUpdate(entry)) {
@@ -231,6 +231,11 @@ public class ResourceTracker {
                 fireDownloadEvent(resource);
                 return true;
             }
+        }
+        
+        if (updatePolicy == UpdatePolicy.FORCE) { // ALWAYS update
+            // When we are "always" updating, we update for each instance. Reset resource status.
+            resource.changeStatus(Integer.MAX_VALUE, 0);
         }
 
         // may or may not be cached, but check update when connection
@@ -600,7 +605,7 @@ public class ResourceTracker {
 
         try {
             // create out second in case in does not exist
-            URLConnection con = resource.location.openConnection();
+            URLConnection con = getVersionedResourceURL(resource).openConnection();
             InputStream in = new BufferedInputStream(con.getInputStream());
             OutputStream out = CacheUtil.getOutputStream(resource.location, resource.downloadVersion);
             byte buf[] = new byte[1024];
@@ -647,9 +652,9 @@ public class ResourceTracker {
             File localFile = CacheUtil.getCacheFile(resource.location, resource.downloadVersion);
 
             // connect
-            URLConnection connection = resource.location.openConnection(); // this won't change so should be okay unsynchronized
+            URLConnection connection = getVersionedResourceURL(resource).openConnection(); // this won't change so should be okay unsynchronized
             int size = connection.getContentLength();
-            boolean current = CacheUtil.isCurrent(resource.location, resource.requestVersion, connection);
+            boolean current = CacheUtil.isCurrent(resource.location, resource.requestVersion, connection) && resource.getUpdatePolicy() != UpdatePolicy.FORCE;
 
             synchronized(resource) {
                 resource.localFile = localFile;
@@ -691,6 +696,29 @@ public class ResourceTracker {
         }
     }
 
+    
+ 
+    private URL getVersionedResourceURL(Resource resource) {
+        String actualLocation = resource.location.getProtocol() + "://"
+                + resource.location.getHost();
+        if (resource.location.getPort() != -1) {
+            actualLocation += ":" + resource.location.getPort();
+        }
+        actualLocation += resource.location.getPath();
+        if (resource.requestVersion != null
+                && resource.requestVersion.isVersionId()) {
+            actualLocation += "?version-id=" + resource.requestVersion;
+        }
+        URL versionedURL;
+        try {
+            versionedURL = new URL(actualLocation);
+        } catch (MalformedURLException e) {
+            return resource.location;
+        }
+        return versionedURL;
+    }
+ 
+    
     /**
      * Pick the next resource to download or initialize.  If there
      * are no more resources requested then one is taken from a

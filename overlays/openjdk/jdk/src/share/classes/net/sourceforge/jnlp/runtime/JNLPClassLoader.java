@@ -302,6 +302,7 @@ public class JNLPClassLoader extends URLClassLoader {
         List initialJars = new ArrayList();
 
         for (int i=0; i < jars.length; i++) {
+
             available.add(jars[i]);
 
             if (jars[i].isEager())
@@ -309,7 +310,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
             tracker.addResource(jars[i].getLocation(), 
                                 jars[i].getVersion(), 
-                                JNLPRuntime.getDefaultUpdatePolicy()
+                                jars[i].isCacheable() ? JNLPRuntime.getDefaultUpdatePolicy() : UpdatePolicy.FORCE
                                );
         }
 
@@ -494,8 +495,12 @@ public class JNLPClassLoader extends URLClassLoader {
 
                         // there is currently no mechanism to cache files per 
                         // instance.. so only index cached files
-                        if (localFile != null)
-                        	jarIndexes.add(JarIndex.getJarIndex(new JarFile(localFile.getAbsolutePath()), null));
+                        if (localFile != null) {
+                            JarIndex index = JarIndex.getJarIndex(new JarFile(localFile.getAbsolutePath()), null);
+
+                            if (index != null)
+                                jarIndexes.add(index);
+                        }
 
                         if (JNLPRuntime.isDebug())
                             System.err.println("Activate jar: "+location);
@@ -699,7 +704,7 @@ public class JNLPClassLoader extends URLClassLoader {
                             JARDesc desc;
                             try {
                                 desc = new JARDesc(new URL(file.getCodeBase(), jarName),
-                                        null, null, false, true, false);
+                                        null, null, false, true, false, true);
                             } catch (MalformedURLException mfe) {
                                 throw new ClassNotFoundException(name);
                             }

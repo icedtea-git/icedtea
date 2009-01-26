@@ -1,0 +1,11 @@
+--- openjdk/jdk/make/mkdemo/jfc/SwingApplet/Makefile.orig	2009-01-06 17:07:25.000000000 -0500
++++ openjdk/jdk/make/mkdemo/jfc/SwingApplet/Makefile	2009-01-06 16:47:28.000000000 -0500
+@@ -33,7 +33,7 @@
+ include $(BUILDDIR)/common/Defs.gmk
+ 
+ DEMO_ROOT       = $(SHARE_SRC)/demo/jfc/$(DEMONAME)
+-DEMO_TOPFILES   = ./README.txt
++DEMO_TOPFILES   = ./README.txt ./SwingApplet.html
+ DEMO_MAINCLASS  = $(DEMONAME)
+ DEMO_DESTDIR    = $(DEMODIR)/jfc/$(DEMONAME)
+ 

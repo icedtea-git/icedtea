@@ -1,3 +1,70 @@
+2009-01-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Merge with IcedTea6.
+	* patches/hotspot/original/icedtea-sparc64-linux.patch,
+	* patches/icedtea-cc-interp-no-fer.patch,
+	* patches/icedtea-hotspot-6b12-7b24.patch: Removed.
+	* .hgignore,
+	* ChangeLog,
+	* HACKING,
+	* IcedTeaPlugin.cc,
+	* Makefile.am,
+	* acinclude.m4,
+	* configure.ac,
+	* contrib/jck/compile-native-code.sh,
+	* contrib/mixtec-hacks.patch,
+	* contrib/mixtec-sleep-on-bomb.patch,
+	* generated/com/sun/corba/se/impl/logging/ActivationSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/IORSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/InterceptorsSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/NamingSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/OMGSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/ORBUtilSystemException.java,
+	* generated/com/sun/corba/se/impl/logging/POASystemException.java,
+	* generated/com/sun/corba/se/impl/logging/UtilSystemException.java,
+	* hotspot.map,
+	* javac.in,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/JARDesc.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/NetxPanel.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/Parser.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/PluginBridge.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/cache/Resource.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/cache/ResourceTracker.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/cache/UpdatePolicy.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPClassLoader.java,
+	* patches/hotspot/original/icedtea-6791168.patch,
+	* patches/hotspot/original/icedtea-core-zero-build.patch,
+	* patches/hotspot/original/icedtea-includedb.patch,
+	* patches/hotspot/original/icedtea-no-precompiled.patch,
+	* patches/hotspot/original/icedtea-parisc-opt.patch,
+	* patches/hotspot/original/icedtea-shark-build.patch,
+	* patches/hotspot/original/icedtea-sparc-buildfixes.patch,
+	* patches/hotspot/original/icedtea-text-relocations.patch,
+	* patches/hotspot/original/icedtea-version.patch,
+	* patches/icedtea-awt-window-size.patch,
+	* patches/icedtea-cc-interp-jvmti.patch,
+	* patches/icedtea-demo-swingapplet.patch,
+	* patches/icedtea-hotspot-6b14-7b24.patch,
+	* patches/icedtea-hotspot7-build-fixes.patch,
+	* patches/icedtea-io_util-overflow.patch,
+	* patches/icedtea-lucene-crash.patch,
+	* patches/icedtea-rhino.patch,
+	* patches/icedtea-samejvm-safe.patch,
+	* patches/icedtea-uname.patch,
+	* patches/icedtea-zero.patch,
+	* plugin/icedtea/netscape/javascript/JSObject.java,
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp:
+	Merged.
+
 2009-01-18  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to b43.
@@ -11,6 +78,28 @@
 	* patches/ecj/icedtea-sbcs.patch: New patch to prevent
 	GenerateSBCS.java using java.util.Scanner for ecj builds.
 	* patches/xrender/icedtea-002.patch: Recreated against b43.
+
+2009-01-17  Mark Wielaard  <mark@klomp.org>
+
+	* patches/icedtea-version.patch (samejvmsafe): Removed the following
+	directories that contain test that are not samevm safe.
+	javax/crypto/Cipher (TestGetInstance)
+	javax/naming (CompareToEqualsTests)
+	sun/rmi (RmicDefault)
+	sun/security/util (OidFormat)
+	sun/security/x509
+	(ExtensibleAlgorithmId,EmailAddressEncoding,AllAttribs)
+
+2009-01-15  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-a11y-property-change.patch: Removed incorrect patch.
+	* HACKING: Remove above patch.
+	* Makefile.am (ICEDTEA_PATCHES): Removed patch.
+
+2009-01-15  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp
+	(StackShadowPages): Increase for 64-bit builds.
 
 2008-12-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
@@ -50,12 +139,264 @@
 	cleaner solution.
 	* patches/icedtea-version.patch:
 	Remove mjw's patch.  Applied upstream as S6775152.
-	
-2008-12-09  Mark Wielaard  <mark@klomp.org>
+
+2009-01-13  Omair Majid  <omajid@redhat.com>
+
+	* rt/net/sourceforge/jnlp/cache/ResourceTracker.java
+	(downloadResource): Call getVersionedResourceURL to get the versioned jar.
+	(initializeResource): Likewise.
+	(getVersionedResourceURL): New function. Constructs a URL with a
+	version-id as the query.
+
+2009-01-13  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/jck/compile-native-code.sh: Build with -m32 or -m64.
+
+2009-01-13  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/14.0b08/icedtea-hotspot-dispatch.patch: Remove,
+	replaced by ...
+	* patches/hotspot/14.0b08/icedtea-6791168.patch: New.
+	* patches/hotspot/14.0b08/icedtea-includedb.patch: Update.
+	* HACKING: Update for the above.
+	* Makefile.am: Update for the above.
+
+2009-01-12  Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp (SharkBlock::do_ldc):
+        Add logic for ldc(Class).
+
+2009-01-11  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am: Escape single quotes in empty bootclasspath.
+
+2009-01-09  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-awt-window-size.patch: New file. Fix X11 window size
+	calculation.
+	* Makefile.am: Apply patch.
+	* HACKING: Document the above.
+
+2009-01-09  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/mixtec-sleep-on-bomb.patch: New file.
+
+2009-01-09  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+	(CppInterpreter::main_loop): Catch unhandled messages.
+
+2009-01-09  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-cc-interp-jvmti.patch: Also disable pop_frame.
+
+2009-01-08  Matthias Klose  <doko@ubuntu.com>
+
+	PR icedtea/277
+	* patches/hotspot/14.0b08/icedtea-includedb.patch: New.
+	* Makefile.am: Apply.
+	* HACKING: Document the above.
+
+2009-01-08  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/14.0b08/icedtea-no-precompiled.patch: Don't use
+	precompiled header files in hotspot.
+	* HACKING: Document the above.
+
+2009-01-08  Christian Thalinger  <christian.thalinger@gmail.com>
+
+	* acinclude.m4 (SET_OS_DIRS): New function.
+	* configure.ac: Call SET_OS_DIRS and made ALSA check conditional.
+	* Makefile.am (LINUX_DIR): Renamed to OS_DIR and use BUILD_OS_DIR
+	variable.
+	(ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Added OS_PATH to PATH.
+
+2009-01-07  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/14.0b08/icedtea-hotspot-dispatch.patch: New, fix
+	build failure with GCC-4.4.
+	* Makefile.am: Apply.
+	* HACKING: Document the above.
+
+2009-01-06  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-demo-swingapplet.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
+2009-01-05  Andrew Haley  <aph@redhat.com>
+
+	* Makefile.am (ICEDTEA_PATCHES): Fix bad checkin.
+
+2008-12-24  Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Work around bug in
+	ciTypeFlow::Block::pre_order_at().
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp 
+	(SharkCompiler::compile_method): Allow "*" as a wildcard.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp (llvm::IRBuilder):
+	type2aelembytes now a mamber function.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp (class
+	SharkBlock): is_private_copy renamed is_backedge_copy.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp (SharkBlock::parse):
+	force_bci if there's a trap.
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp: Delete
+	everything.
+
+2008-12-24  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-a11y-property-change.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
+2008-12-24  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-cc-interp-jvmti.patch: New file.
+	* patches/icedtea-cc-interp-no-fer.patch: Deleted file.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
+2008-12-23  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/original/icedtea-version.patch: Update.
+
+2008-12-23  Gary Benson  <gbenson@redhat.com>
+
+	* HACKING: Added bug id for my last patch.
+
+2008-12-23  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ICEDTEA_ENV, ICEDTEA_ENV_GCJ): Don't explicitely append
+	standard directories to PATH.
+
+2008-12-22  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-io_util-overflow.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
+2008-12-21  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ICEDTEA_ENV, ICEDTEA_ENV_GCJ): Prepend directories
+	to PATH, don't replace PATH.
+
+2008-12-19  Omair Majid  <omajid@redhat.com>
+
+	* patches/hotspot/14.0b08/icedtea-text-relocations.patch: Build libjvm.so
+	as PIC.
+
+2008-12-19  Andrew Haley  <aph@redhat.com>
+
+	* Makefile.am (stamps/download.stamp): Check MD5sum on hotspot.tar.gz.
+	(stamps/extract.stamp): Use AWK here rather than cut.
+	* hotspot.map: Add md5sum for 14.0b08.
+
+2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* acinclude.m4:
+	(FIND_RHINO_JAR): Check for js.jar
+	in Gentoo install location too.
+
+2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
-	Add comment to describe wildcard fix.
-	
+	No need to check again that SYSTEM_GCJ_DIR exists.
+	* acinclude.m4:
+	(AC_CHECK_FOR_GCJ_JDK): Added.
+	(AC_CHECK_FOR_OPENJDK): Likewise.
+	(AC_CHECK_FOR_ICEDTEA): Likewise.
+	* configure.ac:
+	Do --with-icedtea/--with-openjdk check earlier.
+	More --with-x-home options to macros in acinclude.m4.
+	Remove redundant erroneous use of GCC_OLD.
+
+2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Remove use of LIBGCJ_JAR, replacing with
+	SYSTEM_GCJ_DIR/jre/lib/rt.jar.
+	* acinclude.m4:
+	(AC_CHECK_GCC_VERSION): Added.
+	(FIND_LIBGCJ_JAR): Removed.
+	* configure.ac:
+	Call AC_CHECK_GCC_VERSION, don't
+	call FIND_LIBGCJ_JAR.
+	* javac.in:
+	Use SYSTEM_GCJ_DIR/jre/lib/rt.jar not LIBGCJ_JAR.
+
+2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Remove the HotSpot directory while extracting
+	OpenJDK and then only when HSBUILD is not original.
+
+2008-12-17  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/mixtec-hacks.patch: Updated.
+
+2008-12-17  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	(_Copy_conjoint_jshorts_atomic): Implemented.
+
+2008-12-17  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-zero.patch: Update for PARISC.
+
+2008-12-16  Lillian Angel  <langel@redhat.com>
+
+	* patches/icedtea-version.patch: Moved bug report link
+	patch to following file.
+	* patches/hotspot/14.0b08/icedtea-version.patch: Added patch.
+
+2008-12-16  Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::CreatePopFrame): Remove _LP64 special-case code.
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp (SharkBlock::parse):
+	Don't call pop() more than once in an arglist.
+
+2008-12-15  Lillian Angel  <langel@redhat.com>
+
+	Fixes #475888
+	* patches/icedtea-version.patch: Added patch to set bug report link to
+	icedtea's bugzilla.
+
+2008-12-11  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Clean up output shown in non debug mode.
+	* plugin/icedtea/netscape/javascript/JSObject.java: Same.
+	* rt/net/sourceforge/jnlp/NetxPanel.java: Same.
+	* rt/net/sourceforge/jnlp/PluginBridge.java: Same.
+
+2008-12-10  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/*/icedtea-text-relocations.patch: Update for PARISC.
+	* patches/icedtea-zero.patch: Likewise.
+	* patches/hotspot/*/icedtea-parisc-opt.patch: New.
+	* Makefile.am (ICEDTEA_PATCHES): Apply icedtea-parisc-opt.patch.
+
+2008-12-10  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Remove spurious
+	call to getSecuritymanager() that was causing a CCE.
+	* rt/net/sourceforge/jnlp/JARDesc.java: Track if the jar is cacheable or
+	not.
+	* rt/net/sourceforge/jnlp/Parser.java: Provide new cacheable param to
+	JARDesc constructor.
+	* rt/net/sourceforge/jnlp/PluginBridge.java: Track cache_archive and
+	cache_archive_ex parameters in addition to archive.
+	* rt/net/sourceforge/jnlp/cache/Resource.java: Track per resource update
+	policy.
+	* rt/net/sourceforge/jnlp/cache/ResourceTracker.java: Take into account a
+	new update policy of "forced" update on each instantiation.
+	* rt/net/sourceforge/jnlp/cache/UpdatePolicy.java: Create new FORCE update
+	policy.
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Provide new 
+	cacheable param to JARDesc constructor.
+
 2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* patches/xrender/icedtea-000.patch:
@@ -65,11 +406,118 @@
 	* patches/xrender/icedtea-004.patch:
 	Recreated against OpenJDK7.
 
+2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Support use of HGREV.
+	* acinclude.m4:
+	(AC_CHECK_WITH_HG_REVISION): Add --with-hg-revision.
+	* configure.ac:
+	Call AC_CHECK_WITH_HG_REVISION.
+
 2008-12-09  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am:
 	Fix XRender wildcard to work where
 	srcdir != builddir.
+
+2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Properly support --with-openjdk-src-dir.
+	* acinclude.m4:
+	Correct the define for OPENJDK_SRC_DIR.
+
+2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Support downloading from the Mercurial repository.
+	* acinclude.m4:
+	(ENABLE_HG): New macro.
+	* configure.ac:
+	Check for --enable-hg.
+
+2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* configure.ac:
+	Capitalise 'XRender' in configure option.
+
+2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Don't use find to locate the hotspot directory,
+	explicitly use 'hotspot-' plus the changeset.
+
+2008-12-09  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/jck/compile-native-code.sh: Fix library paths.
+
+2008-12-08  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/jck/compile-native-code.sh: New file.
+
+2008-12-07  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-uname.patch: Update for PARISC.
+
+2008-12-05  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-hotspot7-build-fixes.patch: Update.
+	* patches/hotspot/original/icedtea-core-zero-build.patch: Regenerate
+	from original/icedtea-core-build.patch.
+	* patches/icedtea-hotspot-6b14-7b24.patch: Newly generated.
+	* patches/icedtea-hotspot-6b12-7b24.patch: Remove.
+	* Makefile.am (ICEDTEA_PATCHES): Update for zero, based on original
+	hotspot.
+
+2008-12-05  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am:
+	(EXTRA_DIST): Added everything under patches/.
+
+2008-12-05  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am:
+	(EXTRA_DIST): Added autogen.sh
+
+2008-12-05  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am:
+	(EXTRA_DIST): Added hotspot.map.
+
+2008-12-05  Mark Wielaard  <mwielaard@redhat.com>
+
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java:
+	JarIndex.getIndex() can return null when there is no index for the
+	jar. In that case we shouldn't store the null result.
+
+2008-12-05  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-lucene-crash.patch: Update for b14.
+	* patches/hotspot/original/icedtea-memory-limits.patch: Likewise.
+	* patches/hotspot/original/icedtea-core-build.patch: Likewise.
+	* patches/hotspot/original/icedtea-static-libstdc++.patch: Likewise.
+	* patches/hotspot/original/icedtea-zero-build.patch: Likewise.
+	* patches/hotspot/original/icedtea-shark-build.patch: Likewise.
+	* patches/hotspot/original/icedtea-sparc64-linux.patch: Likewise.
+	* Makefile.am (ICEDTEA_PATCHES): Remove icedtea-hotspot7-tests.patch,
+	apply patches/icedtea-bytecodeInterpreterWithChecks.patch for original
+	hotspot build.
+	* patches/icedtea-hotspot7-tests.patch: Remove.
+
+2008-12-04  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/14.0b08/icedtea-sparc-buildfixes.patch: Readd
+	lost chunks from icedtea-sparc.patch, fix build failure with gcc-4.3.
+	* Makefile.am (ICEDTEA_PATCHES): Apply new patch.
+
+2008-12-04  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am:
+	Prefix the call to uname -m with
+	the ${ARCH_PREFIX}.
+	* acinclude.m4:
+	Apply linux32 on s390 as well.
 
 2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
@@ -113,6 +561,18 @@
 	* patches/hotspot/original/icedtea-use-idx_t.patch,
 	* patches/hotspot/original/icedtea-version.patch,
 	* patches/hotspot/original/icedtea-zero-build.patch: here.
+
+2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Prefix make invocations with
+	ARCH_PREFIX.  Pass the host, target and
+	build aliases through to the CACAO sub-configure.
+	* acinclude.m4:
+	Define ARCH_PREFIX to ${LINUX32} for
+	x86 and ppc architectures.
+	* configure.ac:
+	Check for linux32.
 
 2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
@@ -217,6 +677,27 @@
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamBufferAttributes.java,
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java: Merged.
 	
+2008-12-04  Gary Benson  <gbenson@redhat.com>
+
+	* .hgignore: Ignore rt/javax/script/*.
+
+2008-12-03  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Update for b14.
+	* Makefile.am (ICEDTEA_PATCHES): Remove patches applied in b14.
+	* patches/icedtea-4486841.patch, patches/icedtea-6484091.patch,
+	patches/icedtea-6497740.patch, patches/icedtea-6588160.patch,
+	patches/icedtea-6592792.patch, patches/icedtea-6721753.patch,
+	patches/icedtea-6726779.patch, patches/icedtea-6733959.patch,
+	patches/icedtea-6734167.patch, patches/icedtea-6755943.patch,
+	patches/icedtea-6766136.patch: Remove.
+	* patches/icedtea-rhino.patch: Update.
+
+2008-12-03  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/14.0b08/icedtea-shark.patch: Fix path name.
+	* patches/icedtea-fortify-source.patch: Don't introduce new warnings.
+
 2008-12-03  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (ZERO_PATCHES, ICEDTEA_PATCHES): Fix patch order.
@@ -442,9 +923,9 @@
 
 2008-12-03  Gary Benson  <gbenson@redhat.com>
 
-	* a/ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
 	(os::is_allocatable): New method.
-	* a/ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
 	(os::is_allocatable): Likewise.
 
 2008-12-02  Matthias Klose  <doko@ubuntu.com>
@@ -728,8 +1209,6 @@
 
 	* .hgignore: Add test/jtreg-summary.log.
 
-=======
->>>>>>> other
 2008-11-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

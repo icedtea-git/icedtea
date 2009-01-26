@@ -1,0 +1,35 @@
+--- openjdk/hotspot/make/linux/makefiles/gcc.make.orig	2008-12-04 20:29:08.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-12-04 20:32:54.000000000 +0000
+@@ -52,6 +52,10 @@
+ PICFLAG = -fpic
+ endif
+ 
++ifneq ($(filter sparc sparcv9,$(BUILDARCH)),)
++PICFLAG = -fPIC
++endif
++
+ VM_PICFLAG/LIBJVM = $(PICFLAG)
+ VM_PICFLAG/AOUT   =
+ VM_PICFLAG        = $(VM_PICFLAG/$(LINK_INTO))
+--- openjdk/hotspot/make/linux/makefiles/defs.make.orig	2008-12-04 20:29:04.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/defs.make	2008-12-04 20:32:54.000000000 +0000
+@@ -59,7 +59,7 @@
+ endif
+ 
+ # sparc
+-ifeq ($(ARCH), sparc64)
++ifneq (,$(filter $(ARCH), sparc sparc64))
+   ifeq ($(ARCH_DATA_MODEL), 64)
+     ARCH_DATA_MODEL  = 64
+     MAKE_ARGS        += LP64=1
+--- openjdk/hotspot/src/cpu/sparc/vm/frame_sparc.hpp.orig	2008-12-04 20:32:19.000000000 +0000
++++ openjdk/hotspot/src/cpu/sparc/vm/frame_sparc.hpp	2008-12-04 20:32:54.000000000 +0000
+@@ -264,7 +264,7 @@
+ 
+  private:
+ 
+-  constantPoolCacheOop* frame::interpreter_frame_cpoolcache_addr() const;
++  constantPoolCacheOop* interpreter_frame_cpoolcache_addr() const;
+ 
+ #ifndef CC_INTERP
+ 

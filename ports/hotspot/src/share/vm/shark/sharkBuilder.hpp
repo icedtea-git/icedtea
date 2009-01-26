@@ -104,7 +104,7 @@ class SharkBuilder : public llvm::IRBuilder<> {
     return CreateArrayAddress(
       arrayoop,
       SharkType::to_arrayType(basic_type),
-      type2aelembytes[basic_type],
+      type2aelembytes(basic_type),
       base_offset, index, name);
   }
 

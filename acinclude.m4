@@ -10,6 +10,7 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=i586
       INSTALL_ARCH_DIR=i386
       JRE_ARCH_DIR=i386
+      ARCH_PREFIX=${LINUX32}
       ;;
     alpha*-*-*)
       BUILD_ARCH_DIR=alpha
@@ -35,6 +36,7 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=ppc
       INSTALL_ARCH_DIR=ppc
       JRE_ARCH_DIR=ppc
+      ARCH_PREFIX=${LINUX32}
        ;;
     powerpc64-*-*)
       BUILD_ARCH_DIR=ppc64
@@ -50,6 +52,7 @@ AC_DEFUN([SET_ARCH_DIRS],
       BUILD_ARCH_DIR=s390
       INSTALL_ARCH_DIR=s390
       JRE_ARCH_DIR=s390
+      ARCH_PREFIX=${LINUX32}
        ;;
     *)
       BUILD_ARCH_DIR=`uname -m`
@@ -60,6 +63,26 @@ AC_DEFUN([SET_ARCH_DIRS],
   AC_SUBST(BUILD_ARCH_DIR)
   AC_SUBST(INSTALL_ARCH_DIR)
   AC_SUBST(JRE_ARCH_DIR)
+  AC_SUBST(ARCH_PREFIX)
+])
+
+AC_DEFUN([SET_OS_DIRS],
+[
+  case "${host_os}" in
+    *linux*)
+      BUILD_OS_DIR=linux
+      OS_PATH=
+      ;;
+    *solaris*)
+      BUILD_OS_DIR=solaris
+      OS_PATH=/opt/SunStudioExpress/bin:/opt/SUNWpro/bin:/usr/gnu/bin
+      ;;
+    *)
+      AC_MSG_ERROR([unsupported operating system ${host_os}])
+      ;;
+  esac
+  AC_SUBST(BUILD_OS_DIR)
+  AC_SUBST(OS_PATH)
 ])
 
 AC_DEFUN([FIND_JAVAC],
@@ -238,42 +261,14 @@ AC_DEFUN([FIND_ECJ_JAR],
   AC_SUBST(ECJ_JAR)
 ])
 
-AC_DEFUN([FIND_LIBGCJ_JAR],
+AC_DEFUN([AC_CHECK_GCC_VERSION],
 [
-  AC_ARG_WITH([libgcj-jar],
-              [AS_HELP_STRING(--with-libgcj-jar,specify location of the libgcj 4.3.x jar)],
-  [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(for libgcj jar)
-      LIBGCJ_JAR="${withval}"
-      AC_MSG_RESULT(${withval})
-    fi
-  ],
-  [
-    LIBGCJ_JAR=
-  ])
-  if test -z "${LIBGCJ_JAR}"; then
-    AC_MSG_CHECKING(for libgcj-4.3.*.jar, libgcj-4.2.*.jar or libgcj-4.1.*.jar)
-    for jar in /usr/share/java/libgcj-4.3*.jar; do
-      test -e $jar && LIBGCJ_JAR=$jar
-    done
-    if test -n "${LIBGCJ_JAR}"; then
-      AC_MSG_RESULT(${LIBGCJ_JAR})
-    else
-      for jar in /usr/share/java/libgcj-4.1*.jar /usr/share/java/libgcj-4.2*.jar; do
-	test -e $jar && LIBGCJ_JAR=$jar
-      done
-      if test -n ${LIBGCJ_JAR}; then
-	AC_MSG_RESULT(${LIBGCJ_JAR})
-      else
- 	AC_MSG_RESULT(no)
-      fi
-    fi
-  fi
-  if test -z "${LIBGCJ_JAR}"; then
-    AC_MSG_ERROR("A LIBGCJ jar was not found.")
-  fi
-  AC_SUBST(LIBGCJ_JAR)
+  AC_MSG_CHECKING([version of GCC])
+  gcc_ver=`${CC} -dumpversion`
+  gcc_major_ver=`echo ${gcc_ver}|cut -d'.' -f1`
+  gcc_minor_ver=`echo ${gcc_ver}|cut -d'.' -f2`
+  AM_CONDITIONAL(GCC_OLD, test ! ${gcc_major_ver} -ge 4 -a ${gcc_minor_ver} -ge 3)
+  AC_MSG_RESULT([${gcc_ver} (major version ${gcc_major_ver}, minor version ${gcc_minor_ver})])
 ])
 
 AC_DEFUN([FIND_JAVAH],
@@ -1051,3 +1046,143 @@ AC_DEFUN([WITH_HOTSPOT_SRC_ZIP],
   AC_MSG_RESULT(${ALT_HOTSPOT_SRC_ZIP})
   AC_SUBST(ALT_HOTSPOT_SRC_ZIP)
 ])
+
+AC_DEFUN([ENABLE_HG],
+[
+  AC_MSG_CHECKING(whether to retrieve the source code from Mercurial)
+  AC_ARG_ENABLE([hg],
+                [AS_HELP_STRING(--enable-hg,download source code from Mercurial [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+	enable_hg=no
+        ;;
+      *)
+        enable_hg=yes
+        ;;
+    esac
+  ],
+  [
+        enable_hg=no
+  ])
+  AC_MSG_RESULT([${enable_hg}])
+  AM_CONDITIONAL([USE_HG], test x"${enable_hg}" = "xyes")
+])
+
+AC_DEFUN([AC_CHECK_WITH_HG_REVISION],
+[
+  AC_MSG_CHECKING([which Mercurial revision to use])
+  AC_ARG_WITH([hg-revision],
+	      [AS_HELP_STRING(--with-hg-revision,the Mercurial revision to use)],
+  [
+    HGREV="${withval}"
+    AC_MSG_RESULT([${HGREV}])
+  ],
+  [ 
+    HGREV=""
+    AC_MSG_RESULT([tip])
+  ])
+  AC_SUBST([HGREV])
+  AM_CONDITIONAL(WITH_HGREV, test "x${HGREV}" != "x")
+])
+
+AC_DEFUN([AC_CHECK_FOR_GCJ_JDK],
+[
+  AC_MSG_CHECKING([for a GCJ JDK home directory])
+  AC_ARG_WITH([gcj-home],
+	      [AS_HELP_STRING([--with-gcj-home],
+                              [gcj home directory \
+                               (default is /usr/lib/jvm/java-gcj or /usr/lib/jvm/gcj-jdk)])],
+              [
+                if test "x${withval}" = xyes
+                then
+                  SYSTEM_GCJ_DIR=
+                elif test "x${withval}" = xno
+                then
+	          SYSTEM_GCJ_DIR=
+	        else
+                  SYSTEM_GCJ_DIR=${withval}
+                fi
+              ],
+              [
+	        SYSTEM_GCJ_DIR=
+              ])
+  if test -z "${SYSTEM_GCJ_DIR}"; then
+    for dir in /usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk /usr/lib/jvm/cacao ; do
+       test -d $dir && SYSTEM_GCJ_DIR=$dir
+    done
+  fi
+  AC_MSG_RESULT(${SYSTEM_GCJ_DIR})
+  if ! test -d "${SYSTEM_GCJ_DIR}"; then
+    AC_MSG_ERROR("A GCJ JDK home directory could not be found.")
+  fi
+  AC_SUBST(SYSTEM_GCJ_DIR)
+])
+
+AC_DEFUN([AC_CHECK_FOR_OPENJDK],
+[
+  AC_MSG_CHECKING([for an existing OpenJDK installation])
+  AC_ARG_WITH([openjdk-home],
+              [AS_HELP_STRING([--with-openjdk-home],
+                              [OpenJDK home directory \
+                               (default is /usr/lib/jvm/java-openjdk)])],
+              [
+                if test "x${withval}" = xyes
+                then
+                  SYSTEM_OPENJDK_DIR=
+                elif test "x${withval}" = xno
+                then
+	          SYSTEM_OPENJDK_DIR=
+	        else
+                  SYSTEM_OPENJDK_DIR=${withval}
+                fi
+              ],
+              [
+                SYSTEM_OPENJDK_DIR=
+              ])
+  if test -z "${SYSTEM_OPENJDK_DIR}"; then
+    for dir in /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk ; do
+       test -d $dir && SYSTEM_OPENJDK_DIR=$dir
+    done
+  fi
+  AC_MSG_RESULT(${SYSTEM_OPENJDK_DIR})
+  if ! test -d "${SYSTEM_OPENJDK_DIR}"; then
+    AC_MSG_ERROR("An OpenJDK home directory could not be found.")
+  fi
+  AC_SUBST(SYSTEM_OPENJDK_DIR)
+])
+
+AC_DEFUN([AC_CHECK_FOR_ICEDTEA],
+[
+  AC_MSG_CHECKING(for an existing IcedTea installation)
+  AC_ARG_WITH([icedtea-home],
+              [AS_HELP_STRING([--with-icedtea-home],
+                              [IcedTea home directory \
+                               (default is /usr/lib/jvm/java-icedtea)])],
+              [
+                if test "x${withval}" = xyes
+                then
+                  SYSTEM_ICEDTEA_DIR=
+                elif test "x${withval}" = xno
+                then
+	          SYSTEM_ICEDTEA_DIR=
+	        else
+                  SYSTEM_ICEDTEA_DIR=${withval}
+                fi
+              ],
+              [
+                SYSTEM_ICEDTEA_DIR=
+              ])
+  if test -z "${SYSTEM_ICEDTEA_DIR}"; then
+    for dir in /usr/lib/jvm/java-icedtea /usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk ; do
+       test -d $dir && SYSTEM_ICEDTEA_DIR=$dir
+    done
+  fi
+  AC_MSG_RESULT(${SYSTEM_ICEDTEA_DIR})
+  if ! test -d "${SYSTEM_ICEDTEA_DIR}"; then
+    AC_MSG_ERROR("An IcedTea home directory could not be found.")
+  fi
+  AC_SUBST(SYSTEM_ICEDTEA_DIR)
+])
+
+

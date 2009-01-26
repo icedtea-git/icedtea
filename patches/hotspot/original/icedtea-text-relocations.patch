@@ -5,7 +5,7 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  # Compiler flags
  
  # position-independent code
-+ifneq ($(filter ppc ppc64 s390 s390x sparc sparc64 sparcv9,$(ZERO_LIBARCH)),)
++ifneq ($(filter parisc ppc ppc64 s390 s390x sparc sparc64 sparcv9,$(ZERO_LIBARCH)),)
  PICFLAG = -fPIC
 +else
 +PICFLAG = -fpic
@@ -13,3 +13,49 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  
  VM_PICFLAG/LIBJVM = $(PICFLAG)
  VM_PICFLAG/AOUT   =
+--- rules.make.orig	2008-12-12 11:23:31.000000000 -0500
++++ openjdk/hotspot/make/linux/makefiles/rules.make	2008-12-12 11:32:26.000000000 -0500
+@@ -138,20 +138,10 @@
+ include $(GAMMADIR)/make/pic.make
+ endif
+ 
+-# The non-PIC object files are only generated for 32 bit platforms.
+-ifdef LP64
+ %.o: %.cpp
+ 	@echo Compiling $<
+ 	$(QUIETLY) $(REMOVE_TARGET)
+ 	$(QUIETLY) $(COMPILE.CC) -o $@ $< $(COMPILE_DONE)
+-else
+-%.o: %.cpp
+-	@echo Compiling $<
+-	$(QUIETLY) $(REMOVE_TARGET)
+-	$(QUIETLY) $(if $(findstring $@, $(NONPIC_OBJ_FILES)), \
+-	   $(subst $(VM_PICFLAG), ,$(COMPILE.CC)) -o $@ $< $(COMPILE_DONE), \
+-	   $(COMPILE.CC) -o $@ $< $(COMPILE_DONE))
+-endif
+ 
+ %.o: %.s
+ 	@echo Assembling $<
+--- rules.make.orig	2008-12-12 11:42:55.000000000 -0500
++++ openjdk/hotspot/make/solaris/makefiles/rules.make	2008-12-12 11:44:01.000000000 -0500
+@@ -138,20 +138,10 @@
+ include $(GAMMADIR)/make/pic.make
+ endif
+ 
+-# Sun compiler for 64 bit Solaris does not support building non-PIC object files.
+-ifdef LP64
+ %.o: %.cpp
+ 	@echo Compiling $<
+ 	$(QUIETLY) $(REMOVE_TARGET)
+ 	$(QUIETLY) $(COMPILE.CC) -o $@ $< $(COMPILE_DONE)
+-else
+-%.o: %.cpp
+-	@echo Compiling $<
+-	$(QUIETLY) $(REMOVE_TARGET)
+-	$(QUIETLY) $(if $(findstring $@, $(NONPIC_OBJ_FILES)), \
+-         $(subst $(VM_PICFLAG), ,$(COMPILE.CC)) -o $@ $< $(COMPILE_DONE), \
+-         $(COMPILE.CC) -o $@ $< $(COMPILE_DONE))
+-endif
+ 
+ %.o: %.s
+ 	@echo Assembling $<

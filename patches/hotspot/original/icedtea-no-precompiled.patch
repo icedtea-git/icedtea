@@ -1,0 +1,32 @@
+--- openjdk/hotspot/make/linux/makefiles/gcc.make.orig	2009-01-04 13:51:38.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2009-01-04 13:53:34.000000000 +0000
+@@ -34,13 +34,6 @@
+ CC_VER_MAJOR := $(shell $(CC) -dumpversion | sed 's/egcs-//' | cut -d'.' -f1)
+ CC_VER_MINOR := $(shell $(CC) -dumpversion | sed 's/egcs-//' | cut -d'.' -f2)
+ 
+-# check for precompiled headers support
+-ifneq "$(shell expr \( $(CC_VER_MAJOR) \> 3 \) \| \( \( $(CC_VER_MAJOR) = 3 \) \& \( $(CC_VER_MINOR) \>= 4 \) \))" "0"
+-USE_PRECOMPILED_HEADER=1
+-PRECOMPILED_HEADER_DIR=.
+-PRECOMPILED_HEADER=$(PRECOMPILED_HEADER_DIR)/incls/_precompiled.incl.gch
+-endif
+-
+ 
+ #------------------------------------------------------------------------
+ # Compiler flags
+--- openjdk/hotspot/make/solaris/makefiles/gcc.make.orig	2009-01-04 14:44:12.000000000 +0000
++++ openjdk/hotspot/make/solaris/makefiles/gcc.make	2009-01-04 17:06:50.000000000 +0000
+@@ -45,13 +45,6 @@
+ $(shell $(CC) -dumpversion | sed 's/egcs-//' | cut -d'.' -f2)
+ 
+ 
+-# check for precompiled headers support
+-ifneq "$(shell expr \( $(CC_VER_MAJOR) \> 3 \) \| \( \( $(CC_VER_MAJOR) = 3 \) \& \( $(CC_VER_MINOR) \>= 4 \) \))" "0"
+-USE_PRECOMPILED_HEADER=1
+-PRECOMPILED_HEADER_DIR=.
+-PRECOMPILED_HEADER=$(PRECOMPILED_HEADER_DIR)/incls/_precompiled.incl.gch
+-endif
+-
+ 
+ #------------------------------------------------------------------------
+ # Compiler flags

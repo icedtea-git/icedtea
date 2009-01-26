@@ -1,0 +1,28 @@
+--- openjdk/hotspot/make/linux/makefiles/product.make.orig	2008-12-10 19:02:31.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/product.make	2008-12-10 19:24:53.000000000 +0100
+@@ -25,6 +25,11 @@
+ # Sets make macros for making optimized version of Gamma VM
+ # (This is the "product", not the "release" version.)
+ 
++# work around an ICE in gcc-4.1 and gcc-4.3 on parisc-linux
++ifeq ($(BUILDARCH)-$(ZERO_LIBARCH), zero-parisc)
++  OPT_CFLAGS/codeBlob.o = $(OPT_CFLAGS/NOOPT)
++endif
++
+ # Compiler specific OPT_CFLAGS are passed in from gcc.make, sparcWorks.make
+ OPT_CFLAGS/DEFAULT= $(OPT_CFLAGS)
+ OPT_CFLAGS/BYFILE = $(OPT_CFLAGS/$@)$(OPT_CFLAGS/DEFAULT$(OPT_CFLAGS/$@))
+--- openjdk/hotspot/make/linux/makefiles/optimized.make.orig	2008-12-10 19:02:22.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/optimized.make	2008-12-10 19:24:24.000000000 +0100
+@@ -25,6 +25,11 @@
+ # Sets make macros for making optimized version of Gamma VM
+ # (This is the "product", not the "release" version.)
+ 
++# work around an ICE in gcc-4.1 and gcc-4.3 on parisc-linux
++ifeq ($(BUILDARCH)-$(ZERO_LIBARCH), zero-parisc)
++  OPT_CFLAGS/codeBlob.o = $(OPT_CFLAGS/NOOPT)
++endif
++
+ # Compiler specific OPT_CFLAGS are passed in from gcc.make, sparcWorks.make
+ OPT_CFLAGS/DEFAULT= $(OPT_CFLAGS)
+ OPT_CFLAGS/BYFILE = $(OPT_CFLAGS/$@)$(OPT_CFLAGS/DEFAULT$(OPT_CFLAGS/$@))

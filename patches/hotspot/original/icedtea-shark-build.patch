@@ -42,7 +42,7 @@ diff -Nru openjdk.orig/hotspot/make/linux/Makefile openjdk/hotspot/make/linux/Ma
  	$(BUILDTREE) VARIANT=core
  
 +$(SUBDIRS_SHARK): $(BUILDTREE_MAKE)
-+	$(QUIETLY) $(MAKE) -f $(GAMMADIR)/build/$(OSNAME)/Makefile checks
++	$(QUIETLY) $(MAKE) -f $(GAMMADIR)/make/$(OSNAME)/Makefile checks
 +	$(BUILDTREE) VARIANT=shark
 +
  # Define INSTALL=y at command line to automatically copy JVM into JAVA_HOME

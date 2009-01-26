@@ -88,23 +88,26 @@ public class Resource {
 
     /** the status of the resource */
     int status = UNINITIALIZED;
-
+    
+    /** Update policy for this resource */
+    UpdatePolicy updatePolicy;
 
     /**
      * Create a resource.
      */
-    private Resource(URL location, Version requestVersion) {
+    private Resource(URL location, UpdatePolicy updatePolicy, Version requestVersion) {
         this.location = location;
         this.requestVersion = requestVersion;
+        this.updatePolicy = updatePolicy;
     }
 
     /**
      * Return a shared Resource object representing the given
      * location and version.
      */
-    public static Resource getResource(URL location, Version requestVersion) {
+    public static Resource getResource(URL location, UpdatePolicy updatePolicy, Version requestVersion) {
         synchronized (resources) {
-            Resource resource = new Resource(location, requestVersion);
+            Resource resource = new Resource(location, updatePolicy, requestVersion);
 
             int index = resources.indexOf(resource);
             if (index >= 0) { // return existing object
@@ -149,6 +152,15 @@ public class Resource {
             return status == UNINITIALIZED;
         else
             return (status & flag) != 0;
+    }
+
+    /**
+     * Returns the update policy for this resource
+     * 
+     * @return The update policy
+     */
+    public UpdatePolicy getUpdatePolicy() {
+        return this.updatePolicy;
     }
 
     /**
