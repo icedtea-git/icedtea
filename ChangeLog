@@ -1,3 +1,7 @@
+2009-01-26  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Updated to pre-1.5 version.
+
 2009-01-26  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
