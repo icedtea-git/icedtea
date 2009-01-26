@@ -447,7 +447,7 @@ public class PulseAudioClipTest {
 
 		Control[] controls = clip.getControls();
 		Assert.assertNotNull(controls);
-		Assert.assertTrue(controls.length >= 2);
+		Assert.assertTrue(controls.length >= 1);
 		for (Control control : controls) {
 			Assert.assertNotNull(control);
 		}

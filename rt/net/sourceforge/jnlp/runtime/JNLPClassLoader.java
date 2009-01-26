@@ -745,7 +745,6 @@ public class JNLPClassLoader extends URLClassLoader {
 
                             try {
                                 u = tracker.getCacheURL(remoteURL);
-                                System.out.println("URL = " + u);
                             } catch (Exception e) {
                                 throw new ClassNotFoundException(name);
                             }
@@ -776,6 +775,7 @@ public class JNLPClassLoader extends URLClassLoader {
                     return loaders[i].findClass(name);
             }
             catch(ClassNotFoundException ex) { }
+            catch(ClassFormatError cfe) {}
         }
 
         throw new ClassNotFoundException(name);

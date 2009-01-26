@@ -287,6 +287,7 @@ public class PulseAudioSourceDataLineTest {
 		sourceDataLine.write(buffer, 1, buffer.length);
 	}
 
+	// FIXME
 	@Test
 	public void testWriteWithoutStart() throws UnsupportedAudioFileException,
 			IOException, LineUnavailableException, InterruptedException {
@@ -805,13 +806,11 @@ public class PulseAudioSourceDataLineTest {
 		sourceDataLine.open();
 		Assert.assertTrue(sourceDataLine
 				.isControlSupported(FloatControl.Type.VOLUME));
-		Assert.assertTrue(sourceDataLine
-				.isControlSupported(BooleanControl.Type.MUTE));
 		sourceDataLine.close();
 	}
 
 	@Test
-	public void testVolumeAndMute() throws Exception {
+	public void testVolume() throws Exception {
 
 		Mixer selectedMixer = mixer;
 		sourceDataLine = (SourceDataLine) selectedMixer.getLine(new Line.Info(
@@ -827,13 +826,8 @@ public class PulseAudioSourceDataLineTest {
 		sourceDataLine.start();
 		FloatControl volume = (FloatControl) sourceDataLine
 				.getControl(FloatControl.Type.VOLUME);
-		BooleanControl mute = (BooleanControl) sourceDataLine
-				.getControl(BooleanControl.Type.MUTE);
 
-		mute.setValue(true);
 		volume.setValue(volume.getMaximum());
-
-		mute.setValue(false);
 
 		byte[] abData = new byte[1000];
 		int bytesRead = 0;

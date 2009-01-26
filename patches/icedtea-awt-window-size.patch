@@ -6,9 +6,9 @@
              Rectangle newBounds = constrainBounds(reqBounds.x, reqBounds.y, reqBounds.width, reqBounds.height);
 -            newDimensions = new WindowDimensions(newBounds, newDimensions.getInsets(), newDimensions.isClientSizeSet());
 +            Insets insets = newDimensions.getInsets();
-+            Rectangle fixedBounds = new Rectangle(newBounds.x, newBounds.y, newBounds.width - insets.left - insets.right,
++            Rectangle clientBounds = new Rectangle(newBounds.x, newBounds.y, newBounds.width - insets.left - insets.right,
 +                    newBounds.height - insets.top - insets.bottom);
-+            newDimensions = new WindowDimensions(fixedBounds, insets, newDimensions.isClientSizeSet());
++            newDimensions = new WindowDimensions(newDimensions.isClientSizeSet() ? clientBounds : newBounds , insets, newDimensions.isClientSizeSet());
          }
          XToolkit.awtLock();
          try {

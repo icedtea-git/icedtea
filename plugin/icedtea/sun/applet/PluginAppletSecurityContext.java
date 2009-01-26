@@ -55,6 +55,7 @@ import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
@@ -224,7 +225,7 @@ class Signature {
 
 public class PluginAppletSecurityContext {
 	
-	public static HashMap<ClassLoader, String> classLoaders = new HashMap<ClassLoader, String>();
+	public static Hashtable<ClassLoader, String> classLoaders = new Hashtable<ClassLoader, String>();
 
 	// FIXME: make private
 	public PluginObjectStore store = new PluginObjectStore();

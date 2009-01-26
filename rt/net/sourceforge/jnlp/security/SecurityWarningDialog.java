@@ -38,7 +38,6 @@ exception statement from your version.
 package net.sourceforge.jnlp.security;
 
 import net.sourceforge.jnlp.JNLPFile;
-import net.sourceforge.jnlp.tools.CertVerifier;
 
 import java.awt.*;
 import javax.swing.*;

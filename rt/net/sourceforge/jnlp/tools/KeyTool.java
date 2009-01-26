@@ -374,7 +374,6 @@ public class KeyTool {
                 j++;
             }
             //return newChain;
-            System.out.println("newChain's size: " + newChain.length);
             return newChain != null;
         } else {
             throw new Exception("Failed to establish chain from reply");

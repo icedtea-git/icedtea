@@ -95,6 +95,15 @@
   }
 
  public:
+  // Check for pending suspend requests and pending asynchronous
+  // exceptions.  There are separate accessors for these, but
+  // _suspend_flags is volatile so using them would be unsafe.
+  bool has_special_condition_for_native_trans()
+  {
+    return _suspend_flags != 0;
+  }
+
+ public:
   bool pd_get_top_frame_for_signal_handler(frame* fr_addr,
                                            void* ucontext,
                                            bool isInJava)

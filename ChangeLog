@@ -30,6 +30,281 @@
 	(Net.c): Patch to new version with new functions.
 	(nio_util.h): Add RESTARTABLE macro.
 
+2009-01-26  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Updated to pre-1.5 version.
+
+2009-01-26  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
+	(JavaThread::has_special_condition_for_native_trans): New method.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp:
+	(CppInterpreter::native_entry): Correctly handle safepoints
+	during post-call thread state transition.
+
+2009-01-22  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp:
+	(CppInterpreter::native_entry): Correctly handle asynchronous
+	exceptions during post-call thread state transition.
+
+2009-01-22  Omair Majid  <omajid@redhat.com>
+	    Ioana Ivan <iivan@redhat.com>
+			
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(start): Return silently if already started.
+	(stop): Return silently if already stopped.
+
+2009-01-22  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Use
+	Hashtable to store classloaders, instead of HashMap (values cannot be
+	null in HashTable).
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Catch CFE in
+	addition to CNFE.
+
+2009-01-22  Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp (class
+	ZeroFrame::FrameType): Set ENTRY_FRAME = 0xCAFEBABE.
+
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp (SHARK_FLAGS):
+	Add SharkPrintAsmOf.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Add comment.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Set builder()->sharkEntry.
+	Use fnmatch() instead of strcmp().
+	Generate debugging dumps.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp
+	(SharkEntry::code_start, code_limit): Rewrite.
+	(SharkEntry::setBounds): New.
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::pointer_constant): New function.
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp
+	(SharkBytecodeTracer::decode_one_word):
+	use SharkBuilder::pointer_constant.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::sharkEntry): New.
+	(SharkBuilder::CreateUnimplemented): use SharkBuilder::pointer_constant.
+	(SharkBuilder::CreateShouldNotReachHere): Likewise.
+	(MyJITMemoryManager::endFunctionBody): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::check_zero): use SharkBuilder::pointer_constant.
+	(SharkBlock::check_bounds): Likewise.
+	(SharkBlock::add_safepoint): Likewise.
+	(SharkBlock::do_new): Likewise.
+	(SharkBlock::do_monitorexit): Don't check for null monitor.
+
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp: Add
+	llvm/ExecutionEngine/JITMemoryManager.h,
+	llvm/Support/CommandLine.h.
+	* ports/hotspot/src/share/vm/includeDB_shark (sharkBuilder.hpp):
+	add sharkEntry.hpp.
+
+2009-01-22  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated for release candidate.
+
+2009-01-22  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp: Updated copyright year.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Likewise.
+
+2009-01-22  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
+	(print_zero_threads): New debug function.
+
+2009-01-22  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-cc-interp-jvmti.patch: Reenable thread signalling.
+
+2009-01-21  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-awt-window-size.patch: Update patch.
+
+2009-01-21  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java: 
+	Remove unused variables volume and muted.
+	(PulseAudioClip): Remove variable volume.
+	(open): Remove muteControl, volume and muted.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(setVolume): Rename to setCachedVolume.
+	(getVolume): Rename to getCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMuteControl.java:
+	Remove file. Mute relied on chaning the volume only through the api. That
+	assumption is invalid as the user can change volume through pulseaudio's
+	controls.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPlaybackLine.java
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(getVolume): Rename to getCachedVolume.
+	(setVolume): Rename to setCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java:
+	Remove muted and muteControl. Rename volume to cachedVolume. 
+	(PulseAudioPort): Remove muteControl.
+	(isMuted): Remove function.
+	(setMuted): Remove.
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	(setVolume): Rename to setCachedVolume.
+	(getVolume): Rename to getCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java:
+	Remove muteControl, muted and volume.
+	(open): Remove muteControl.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(getVolume): Rename to getCachedVolume.
+	(setVolume): Rename to setCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java
+	(setValue): Dont check for mute.
+	(getValue): Query pulseaudio for any change in volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java:
+	New variable cachedVolume.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(getCachedVolume): New function.
+	(setCachedVolume): New function.
+	(update_channels_and_volume): New function.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	(sink_input_volume_change_complete): Remove.
+	(sink_input_change_volume): Remove.
+	(Java_org_classpath_icedtea_pulseaudio_EventLoop_native_1set_1sink_1volume):
+	Remove.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1updateVolumeInfo):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1update_1volume.
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1setVolume):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1set_1volume.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1updateVolumeInfo):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1update_1volume.
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1setVolume):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1set_1volume.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1setVolume): Rename
+	to Java_org_classpath_icedtea_pulseaudio_Stream_native_1set_1volume.
+	(get_sink_input_volume_callback): New function.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1update_1volume): New
+	function.
+
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java
+	(testSupportedControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineRawTest.java
+	(testVolumeAndMute): Rename to testVolume. Remove test for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java
+	(testVolumeAndMute): Likewise.
+	(testSupportedControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourcePortTest.java	
+	(testControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java
+	(testControls): Likewise.
+
+2009-01-21  Lillian Angel  <langel@redhat.com>
+
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: Added
+	copyright header.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginClassLoader.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginDebug.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginException.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginMain.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Likewise.
+	* plugin/icedtea/sun/applet/RequestQueue.java: Likewise.
+
+2009-01-21  Lillian Angel  <langel@redhat.com>
+
+	* rt/net/sourceforge/jnlp/security/CertVerifier.java: Fixed file name
+	in GPL header.
+	* rt/net/sourceforge/jnlp/security/HttpsCertVerifier.java: Likewise.
+
+2009-01-20  Lillian Angel  <langel@redhat.com>
+
+	* rt/net/sourceforge/jnlp/DefaultLaunchHandler.java: Removed debug
+	lines.
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Likewise. 
+	* rt/net/sourceforge/jnlp/security/AccessWarningPane.java: Updated
+	imports.
+	* rt/net/sourceforge/jnlp/security/AppletWarningPane.java: Updated
+	imports.
+	* rt/net/sourceforge/jnlp/security/CertWarningPane.java: Updated
+	imports, added certVerifier global variable.
+	(CertWarningPane): Initialized certVerifier.
+	(installComponents): Added checks to determine if certificate is for
+	an https site, and set the name/publisher/from variables
+	appropriately. Also, customized warning pane label for https site.
+	* rt/net/sourceforge/jnlp/security/HttpsCertVerifier.java:
+	(getDetails): Implemented.
+	(addToDetails): Likewise.
+	(R): Likewise.
+	(getPublisher): Likewise.
+	(getRoot): Likewise.
+	(getRootInCacerts): Likewise.
+	(hasSigningIssues): Likewise.
+	(noSigningIssues): Likewise.
+	* rt/net/sourceforge/jnlp/security/MoreInfoPane.java: Fixed imports.
+	* rt/net/sourceforge/jnlp/security/SecurityDialogUI.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/security/SingleCertInfoPane.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/security/viewer/CertificatePane.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/tools/KeyTool.java: Removed debug lines.
+	* rt/net/sourceforge/jnlp/security/CertVerifier.java: Moved file
+	below, here.
+	* rt/net/sourceforge/jnlp/tools/CertVerifier.java: Removed.
+	* rt/net/sourceforge/jnlp/security/VariableX509TrustManager.java:
+	Removed debug lines.
+
+2009-01-20  Lillian Angel  <langel@redhat.com>
+
+	* HACKING: Removed visualvm patch.
+	* INSTALL: Updated to remove visualvm notes.
+	* Makefile.am: Removed building of netbeans and visualvm.
+	* README: Updated to remove visualvm notes.
+	* acinclude.m4: Removed options for netbeans and visualvm.
+	* configure.ac: Likewise.
+	* patches/icedtea-visualvm.patch: Removed.
+	* visualvm.desktop: Removed.
+
+2009-01-20  Matthias Klose  <doko@ubuntu.com>
+	    Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.[ch]pp (i486): Rename
+	to x86.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp (fp): Remove PRODUCT
+	conditional, make the not-PRODUCT bit the default.
+
 2009-01-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaNetGetIndexAccess.java:

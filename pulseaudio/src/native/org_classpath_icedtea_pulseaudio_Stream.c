@@ -5,6 +5,7 @@
 #include <string.h>
 
 #define STREAM_POINTER "streamPointer"
+#define CONTEXT_POINTER "contextPointer"
 
 typedef struct java_context {
 	JNIEnv* env;
@@ -297,10 +298,10 @@ JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
 	setJavaPointer(env, obj, "streamPointer", stream);
 
 	/*
-	 * 
-	 * The stream has been created; now setup the callbacks 
+	 *
+	 * The stream has been created; now setup the callbacks
 	 * so we can do somethig about them
-	 * 
+	 *
 	 */
 
 	pa_stream_set_state_callback (stream, stream_state_callback, j_context);
@@ -966,12 +967,12 @@ JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native
 
 /*
  * Class:     org_classpath_icedtea_pulseaudio_Stream
- * Method:    native_setVolume
+ * Method:    native_set_volume
  * Signature: (F)[B
  */
-JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1setVolume
+JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1set_1volume
 (JNIEnv *env, jobject obj, jfloat new_volume) {
-	
+
 	pa_stream *stream = getJavaPointer(env, obj, STREAM_POINTER);
 	assert(stream);
 	pa_context *context = pa_stream_get_context(stream);
@@ -988,6 +989,55 @@ JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native
 
 }
 
+
+static void get_sink_input_volume_callback(pa_context *context, const pa_sink_input_info *i,
+		int eol, void *userdata) {
+
+	JNIEnv* env = pulse_thread_env;
+
+	assert(context);
+	assert(env);
+	jobject obj = (jobject) userdata;
+	assert(obj);
+
+	if (eol == 0) {
+		jclass cls = (*pulse_thread_env)->GetObjectClass(pulse_thread_env, obj);
+		assert(cls);
+		jmethodID mid1 = (*pulse_thread_env)->GetMethodID(pulse_thread_env, cls,
+				"update_channels_and_volume", "(IF)V");
+		assert(mid1);
+		(*pulse_thread_env)->CallVoidMethod(pulse_thread_env, obj, mid1,
+				(int) (i->volume).channels, (float) (i->volume).values[0]) ;
+	} else {
+		notifyWaitingOperations(pulse_thread_env);
+		(*env)->DeleteGlobalRef(env, obj);
+	}
+}
+
+/*
+ * Class:     org_classpath_icedtea_pulseaudio_Stream
+ * Method:    native_update_volume
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1update_1volume
+(JNIEnv* env, jobject obj) {
+
+	pa_stream* stream = getJavaPointer(env, obj, STREAM_POINTER);
+	assert(stream);
+
+	int sink_input_index = pa_stream_get_index(stream);
+
+	pa_context* context = pa_stream_get_context(stream);
+	assert(context);
+
+	obj = (*env)->NewGlobalRef(env, obj);
+	pa_operation *o = pa_context_get_sink_input_info(context, sink_input_index , get_sink_input_volume_callback, obj);
+	assert(o);
+	return convertNativePointerToJava(env, o);
+
+
+}
+
 JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_bytesInBuffer(JNIEnv *env, jobject obj) {
 	pa_stream *stream = getJavaPointer(env, obj, STREAM_POINTER);
 	assert(stream);
@@ -1000,7 +1050,7 @@ JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_bytesInBuffe
 JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1updateTimingInfo(JNIEnv* env, jobject obj) {
 	pa_stream *stream = getJavaPointer(env, obj, STREAM_POINTER);
 	assert(stream);
-	pa_operation* o = pa_stream_update_timing_info(stream, update_timing_info_callback, NULL); 
+	pa_operation* o = pa_stream_update_timing_info(stream, update_timing_info_callback, NULL);
 	assert(o);
 	return convertNativePointerToJava(env, o);
 

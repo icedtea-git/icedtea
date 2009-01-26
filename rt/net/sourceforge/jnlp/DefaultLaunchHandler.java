@@ -107,8 +107,6 @@ public class DefaultLaunchHandler implements LaunchHandler {
             result.append(causes[i].getMessage());
             result.append(")");
         }
-
-        System.out.println(result);
     }
 
 }

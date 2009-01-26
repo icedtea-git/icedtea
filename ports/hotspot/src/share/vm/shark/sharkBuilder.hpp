@@ -27,10 +27,75 @@ class SharkBuilder : public llvm::IRBuilder<> {
  public:
   SharkBuilder();
 
+  static std::map<const llvm::Function*, SharkEntry*> sharkEntry;
+
  private:
   llvm::Module                 _module;
   llvm::ExistingModuleProvider _module_provider;
   llvm::ExecutionEngine*       _execution_engine;
+
+  // MyJITMemoryManager wraps the JIT Memory Manager: this allows us
+  // to run our own memory allocation policies, but the purpose here
+  // is to allow us to intercept JITMemoryManager::endFunctionBody.
+  class MyJITMemoryManager : public llvm::JITMemoryManager {
+
+    llvm::JITMemoryManager *mm;
+
+  public:
+
+    MyJITMemoryManager()
+    {
+      mm = llvm::JITMemoryManager::CreateDefaultMemManager();
+    }
+
+    virtual void AllocateGOT() {
+      mm->AllocateGOT();
+    }
+
+    virtual unsigned char *getGOTBase() const {
+      return mm->getGOTBase();
+    }
+
+    virtual unsigned char *startFunctionBody(const llvm::Function *F,
+					     uintptr_t &ActualSize) {
+      return mm->startFunctionBody(F, ActualSize);
+    }
+
+    virtual unsigned char *allocateStub(const llvm::GlobalValue* F,
+					unsigned StubSize,
+					unsigned Alignment) {
+      return mm->allocateStub(F, StubSize, Alignment);
+    }
+
+    void endFunctionBody(const llvm::Function *F, unsigned char *FunctionStart,
+			 unsigned char *FunctionEnd);
+
+    virtual void deallocateMemForFunction(const llvm::Function *F) {
+      return mm->deallocateMemForFunction(F);
+    }
+
+    virtual unsigned char* startExceptionTable(const llvm::Function* F,
+					       uintptr_t &ActualSize) {
+      return mm->startExceptionTable(F, ActualSize);
+    }
+
+    virtual void endExceptionTable(const llvm::Function *F,
+				   unsigned char *TableStart,
+				   unsigned char *TableEnd,
+				   unsigned char* FrameRegister) {
+      mm->endExceptionTable(F, TableStart, TableEnd, FrameRegister);
+    }
+
+    virtual void setMemoryWritable() {
+      mm->setMemoryWritable();
+    }
+
+    virtual void setMemoryExecutable() {
+      mm->setMemoryExecutable();
+    }
+  };
+
+  MyJITMemoryManager *MemMgr;
 
  public:
   llvm::Module* module()
@@ -125,9 +190,37 @@ class SharkBuilder : public llvm::IRBuilder<> {
                                 const llvm::FunctionType* sig,
                                 const char*               name);
 
+  llvm::Constant* pointer_constant(const void *ptr)
+  {
+    // Create a pointer constant that points at PTR.  We do this by
+    // creating a GlobalVariable mapped at PTR.  This is a workaround
+    // for http://www.llvm.org/bugs/show_bug.cgi?id=2920
+
+    using namespace llvm;
+
+    // This might be useful but it returns a const pointer that can't
+    // be used for anything.  Go figure...
+//     {
+//       const GlobalValue *value
+// 	= execution_engine()->getGlobalValueAtAddress(const_cast<void*>(ptr));
+//       if (value)
+// 	return ConstantExpr::getPtrToInt(value, SharkType::intptr_type());
+//     }
+
+    char name[128];
+    snprintf(name, sizeof name - 1, "pointer_constant_%p", ptr);
+
+    GlobalVariable *value = new GlobalVariable(SharkType::intptr_type(),
+      false, GlobalValue::ExternalLinkage,
+      NULL, name, module());
+    execution_engine()->addGlobalMapping(value, const_cast<void*>(ptr));
+
+    return ConstantExpr::getPtrToInt(value, SharkType::intptr_type());
+  }
+
   // Helper for making pointers
  public:
-  llvm::Constant* make_pointer(intptr_t addr, const llvm::Type* type) const
+  llvm::Constant* make_pointer(intptr_t addr, const llvm::Type* type)
   {
     return llvm::ConstantExpr::getIntToPtr(
       LLVMValue::intptr_constant(addr),
@@ -193,8 +286,7 @@ class SharkBuilder : public llvm::IRBuilder<> {
       LLVMValue::jbyte_constant(CardTableModRefBS::dirty_card),
       CreateIntToPtr(
         CreateAdd(
-          LLVMValue::intptr_constant(
-            (intptr_t) ((CardTableModRefBS *) bs)->byte_map_base),
+          pointer_constant(((CardTableModRefBS *) bs)->byte_map_base),
           CreateLShr(
             CreatePtrToInt(field, SharkType::intptr_type()),
             LLVMValue::intptr_constant(CardTableModRefBS::card_shift))),

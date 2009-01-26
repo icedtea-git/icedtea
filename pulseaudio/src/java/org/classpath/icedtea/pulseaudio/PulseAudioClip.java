@@ -55,9 +55,6 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
 
 	private byte[] data = null;
 
-	private boolean muted;
-	private float volume;
-
 	// these are frame indices. so counted from 0
 	// the current frame index
 	private int currentFrame = 0;
@@ -206,7 +203,6 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
 		this.supportedFormats = formats;
 		this.defaultFormat = defaultFormat;
 		this.currentFormat = defaultFormat;
-		this.volume = PulseAudioVolumeControl.MAX_VOLUME;
 		this.streamName = DEFAULT_CLIP_NAME;
 
 		clipThread = new ClipThread();
@@ -416,12 +412,7 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
 
 		PulseAudioVolumeControl volumeControl = new PulseAudioVolumeControl(
 				this, eventLoop);
-		PulseAudioMuteControl muteControl = new PulseAudioMuteControl(this,
-				volumeControl);
 		controls.add(volumeControl);
-		controls.add(muteControl);
-		volume = volumeControl.getValue();
-		muted = muteControl.getValue();
 
 		PulseAudioMixer mixer = PulseAudioMixer.getInstance();
 		mixer.addSourceLine(this);
@@ -433,28 +424,22 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
 
 	// FIXME
 	@Override
-	public byte[] native_setVolume(float value) {
-		return stream.native_setVolume(value);
+	public byte[] native_set_volume(float value) {
+		return stream.native_set_volume(value);
+	}
+
+	public byte[] native_update_volume() {
+		return stream.native_update_volume();
 	}
 
 	@Override
-	public boolean isMuted() {
-		return muted;
+	public float getCachedVolume() {
+		return stream.getCachedVolume();
 	}
 
 	@Override
-	public void setMuted(boolean value) {
-		muted = value;
-	}
-
-	@Override
-	public float getVolume() {
-		return this.volume;
-	}
-
-	@Override
-	public void setVolume(float value) {
-		this.volume = value;
+	public void setCachedVolume(float value) {
+		stream.setCachedVolume(value);
 
 	}
 
@@ -536,12 +521,8 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
 
 	@Override
 	public void start() {
-		if (!isOpen) {
-			throw new IllegalStateException("Line not open");
-		}
-
 		if (isStarted) {
-			throw new IllegalStateException("already started");
+			return;
 		}
 
 		super.start();
@@ -562,8 +543,9 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
 			throw new IllegalStateException("Line not open");
 		}
 
+		/* do what start does and ignore if called at the wrong time */
 		if (!isStarted) {
-			throw new IllegalStateException("not started, so cant stop");
+			return;
 		}
 
 		if (clipThread.isAlive()) {

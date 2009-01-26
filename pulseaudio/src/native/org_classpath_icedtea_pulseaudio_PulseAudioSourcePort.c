@@ -22,7 +22,7 @@ void get_source_volume_callback(pa_context *context, const pa_source_info *i,
 	assert(pulse_thread_env);
 	
 	if (eol == 0) {
-		// printf("%s\n", i->name); 
+		// printf("%s\n", i->name);
 		jobject obj = (jobject) userdata;
 		assert(obj);
 		jclass cls = (*pulse_thread_env)->GetObjectClass(pulse_thread_env, obj);
@@ -39,10 +39,10 @@ void get_source_volume_callback(pa_context *context, const pa_source_info *i,
 
 /*
  * Class:     org_classpath_icedtea_pulseaudio_PulseAudioSourcePort
- * Method:    native_updateVolumeInfo
+ * Method:    native_update_volume
  * Signature: ()[B
  */
-JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1updateVolumeInfo
+JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1update_1volume
 (JNIEnv *env, jobject obj) {
 	jclass cls = (*env)->GetObjectClass(env, obj);
 	assert(cls);
@@ -65,10 +65,10 @@ JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_PulseAudioSou
 
 /*
  * Class:     org_classpath_icedtea_pulseaudio_PulseAudioSourcePort
- * Method:    native_setVolume
+ * Method:    native_set_volume
  * Signature: (F)[B
  */
-JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1setVolume
+JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1set_1volume
 (JNIEnv *env, jobject obj, jfloat value) {
 	jclass cls = (*env)->GetObjectClass(env, obj);
 	assert(cls);

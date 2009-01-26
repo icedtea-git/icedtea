@@ -53,7 +53,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
-import net.sourceforge.jnlp.tools.CertVerifier;
 
 /**
  * Provides the UI for the More Info dialog. This dialog shows details about an

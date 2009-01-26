@@ -1,6 +1,6 @@
 /*
  * Copyright 2003-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,13 +37,13 @@ class ZeroStackPrinter {
   {
     intptr_t *lo_addr = thread->zero_stack()->sp();
     if (!lo_addr) {
-      _st->print(" stack not set up");
+      _st->print_cr(" stack not set up");
       return;
     }
 
     intptr_t *hi_addr = (intptr_t *) thread->top_zero_frame();
     if (!hi_addr) {
-      _st->print("no frames pushed"); 
+      _st->print_cr("no frames pushed"); 
       return;
     }
     assert(hi_addr >= lo_addr, "corrupted stack");
@@ -250,3 +250,24 @@ class ZeroStackPrinter {
       _st->print_cr(PTR_FORMAT, *addr);    
   }
 };
+
+#ifndef PRODUCT
+extern "C" {
+  void print_zero_threads() {
+    char buf[O_BUFLEN];
+    ZeroStackPrinter zsp(tty, buf, sizeof(buf));
+
+    for (JavaThread *t = Threads::first(); t; t = t->next()) {
+      tty->print(PTR_FORMAT, t);
+      tty->print(" ");
+      t->print_on_error(tty, buf, sizeof(buf));
+      tty->cr();
+      tty->cr();
+
+      zsp.print(t);
+      if (t->next())
+        tty->cr();
+    }
+  }
+}
+#endif // !PRODUCT

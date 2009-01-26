@@ -1,5 +1,5 @@
-/* PulseAudioMuteControl.java
-   Copyright (C) 2008 Red Hat, Inc.
+/* CertVerifier.java
+   Copyright (C) 2009 Red Hat, Inc.
 
 This file is part of IcedTea.
 
@@ -33,41 +33,60 @@ or based on this library.  If you modify this library, you may extend
 this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version.
+*/
+
+package net.sourceforge.jnlp.security;
+
+import java.security.cert.CertPath;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+
+/**
+ * An interface that provides various details about a certificate 
  */
 
-package org.classpath.icedtea.pulseaudio;
+public interface CertVerifier {
 
-import javax.sound.sampled.BooleanControl;
+    /**
+     * Return if the publisher is already trusted
+     */
+    public boolean getAlreadyTrustPublisher();
 
-final class PulseAudioMuteControl extends BooleanControl {
+    /**
+     * Return if the root is in CA certs
+     */
+    public boolean getRootInCacerts();
 
-	private PulseAudioVolumeControl volumeControl;
-	private PulseAudioPlaybackLine line;
+    /**
+     * Return if there are signing issues with the certificate(s) being veried
+     */
+    public boolean hasSigningIssues();
 
-	protected PulseAudioMuteControl(PulseAudioPlaybackLine line,
-			PulseAudioVolumeControl volumeControl) {
-		super(BooleanControl.Type.MUTE, false, "Volume muted", "Volume on");
-		this.volumeControl = volumeControl;
-		this.line = line;
-	}
+    /**
+     * Return if there are no signing issues with this cert (!hasSigningIssues())
+     */
+    public boolean noSigningIssues();
 
-	public synchronized void setValue(boolean value) {
-		if (!line.isOpen()) {
-			return;
-		}
+    /**
+     * Get the details regarding issue(s) with this certificate
+     */
+    public ArrayList<String> getDetails();
 
-		if (value == true) {
-			line.setMuted(true);
-			volumeControl.setStreamVolume(0);
-		} else {
-			line.setMuted(false);
-			float newValue = volumeControl.getValue();
-			volumeControl.setStreamVolume(newValue);
-		}
-	}
+    /**
+     * Return a valid certificate path to this certificate(s) being verified
+     * @return The CertPath
+     */
+    public ArrayList<CertPath> getCerts();
 
-	public synchronized boolean getValue() {
-		return line.isMuted();
-	}
+    /** 
+     * Returns the application's publisher's certificate.
+     */
+    public abstract Certificate getPublisher();
 
+    /**
+     * Returns the application's root's certificate. This
+     * may return the same certificate as getPublisher() in
+     * the event that the application is self signed.
+     */
+    public abstract Certificate getRoot();
 }

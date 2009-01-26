@@ -48,6 +48,9 @@
   develop(ccstr, SharkPrintBitcodeOf, NULL,                                   \
           "Print the LLVM bitcode of the specified method")                   \
                                                                               \
+  develop(ccstr, SharkPrintAsmOf, NULL,                                   \
+          "Print the asm of the specified method")                   \
+                                                                              \
   develop(bool, SharkTraceBytecodes, false,                                   \
           "Trace bytecode compilation")                                       \
                                                                               \

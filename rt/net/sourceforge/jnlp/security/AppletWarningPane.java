@@ -50,7 +50,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import net.sourceforge.jnlp.tools.CertVerifier;
 
 public class AppletWarningPane extends SecurityDialogUI {
 

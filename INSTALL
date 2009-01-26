@@ -31,10 +31,6 @@ libjpeg-devel = 6b
 zlib-devel
 rhino (can be disabled using --without-rhino)
 
-For building VisualVM, you will need:
-netbeans (harness, platform8, apisupport1, java2, ide9)
-jakarta-commons-logging
-
 For building the PulseAudio based mixer, you will need
 pulseaudio-libs-devel >= 0.9.11
 pulseaudio >= 0.9.11
