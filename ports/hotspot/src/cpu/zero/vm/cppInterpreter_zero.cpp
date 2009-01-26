@@ -315,14 +315,10 @@ void CppInterpreter::native_entry(methodOop method, intptr_t UNUSED, TRAPS)
     }
   }
 
-  // We need to call check_special_condition_for_native_trans() if
-  // any of the thread's suspend flags are set.  We can't use the
-  // various accessors because thread->_suspend_flags is volatile
-  // and may change while we're reading it.
-  volatile uint32_t *suspend_flags;
-  suspend_flags = (uint32_t *)
-    ((address) thread + in_bytes(JavaThread::suspend_flags_offset()));
-  if (*suspend_flags != 0) {
+  // Handle safepoint operations, pending suspend requests,
+  // and pending asynchronous exceptions.
+  if (SafepointSynchronize::do_call_back() ||
+      thread->has_special_condition_for_native_trans()) {
     JavaThread::check_special_condition_for_native_trans(thread);
     CHECK_UNHANDLED_OOPS_ONLY(thread->clear_unhandled_oops());
   }
