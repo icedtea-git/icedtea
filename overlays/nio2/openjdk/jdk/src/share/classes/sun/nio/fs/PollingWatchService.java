@@ -25,14 +25,25 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
-import java.nio.file.attribute.*;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 import java.io.IOException;
 import java.util.*;
+
+import org.classpath.icedtea.java.nio.file.ClosedWatchServiceException;
+import org.classpath.icedtea.java.nio.file.DirectoryStream;
+import org.classpath.icedtea.java.nio.file.FileRef;
+import org.classpath.icedtea.java.nio.file.LinkOption;
+import org.classpath.icedtea.java.nio.file.NotDirectoryException;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.StandardWatchEventKind;
+import org.classpath.icedtea.java.nio.file.WatchEvent;
+import org.classpath.icedtea.java.nio.file.WatchKey;
+
+import org.classpath.icedtea.java.nio.file.attribute.Attributes;
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * Simple WatchService implementation that uses background thread to poll

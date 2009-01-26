@@ -31,6 +31,9 @@ import java.util.HashSet;
 
 import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
 import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributes;
+import org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission;
+import org.classpath.icedtea.java.nio.file.attribute.GroupPrincipal;
+import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
 
 /**
  * Unix implementation of PosixFileAttributes.

@@ -25,16 +25,32 @@
 
 package sun.nio.fs;
 
-import java.nio.channels.SeekableByteChannel;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.io.IOException;
 
+import org.classpath.icedtea.java.nio.channels.SeekableByteChannel;
+
+import org.classpath.icedtea.java.nio.file.AtomicMoveNotSupportedException;
+import org.classpath.icedtea.java.nio.file.ClosedDirectoryStreamException;
+import org.classpath.icedtea.java.nio.file.DirectoryNotEmptyException;
+import org.classpath.icedtea.java.nio.file.DirectoryStream;
+import org.classpath.icedtea.java.nio.file.LinkOption;
+import org.classpath.icedtea.java.nio.file.NotDirectoryException;
 import org.classpath.icedtea.java.nio.file.OpenOption;
 import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.ProviderMismatchException;
 import org.classpath.icedtea.java.nio.file.SecureDirectoryStream;
+
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileOwnerAttributeView;
 import org.classpath.icedtea.java.nio.file.attribute.GroupPrincipal;
+import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributes;
 import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission;
 import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
@@ -529,7 +545,7 @@ class UnixSecureDirectoryStream
         }
 
 
-        public Map<String,?> readAttributes(String first, String[] rest)
+        public Map<String,?> readAttributes(String first, String... rest)
             throws IOException
         {
             AttributesBuilder builder = AttributesBuilder.create(first, rest);

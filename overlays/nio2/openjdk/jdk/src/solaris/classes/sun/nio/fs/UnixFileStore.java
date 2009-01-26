@@ -25,14 +25,25 @@
 
 package sun.nio.fs;
 
-import java.nio.channels.*;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.*;
 import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+import org.classpath.icedtea.java.nio.file.FileRef;
 import org.classpath.icedtea.java.nio.file.FileStore;
 import org.classpath.icedtea.java.nio.file.FileSystem;
+import org.classpath.icedtea.java.nio.file.Paths;
+
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileOwnerAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileStoreAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileStoreSpaceAttributes;
+import org.classpath.icedtea.java.nio.file.attribute.FileStoreSpaceAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributeView;
 
 /**
  * Base implementation of FileStore for Unix/like implementations.

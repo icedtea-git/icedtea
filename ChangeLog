@@ -1,4 +1,36 @@
-2009-01-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2009-01-26  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/GnomeFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxDosFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixChannelFactory.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixCopyFile.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixException.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributeViews.java:
+	Fix imports and use of varargs.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileModeAttribute.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixPath.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixSecureDirectoryStream.java:
+	Fix imports and use of varargs.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixUserPrincipals.java:
+	Fix imports.
+	* patches/icedtea-nio2.patch:
+	(FileChannelImpl): Fix imports.
+	(Net.c): Patch to new version with new functions.
+	(nio_util.h): Add RESTARTABLE macro.
+
+2009-01-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaNetGetIndexAccess.java:
 	(getByIndex(int)): New method.
@@ -75,6 +107,7 @@
 	(FileDispatcher.release0(FileDescriptor, long, long)): Likewise.
 	
 2009-01-19  Deepak Bhole  <dbhole@redhat.com>
+
 	* IcedTeaPlugin.cc: Add "Java" in the plugin description string. 
 	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Change the way the
 	image was searched locally.
@@ -107,7 +140,7 @@
 	* rt/net/sourceforge/jnlp/tools/JarSigner.java: Implement the new
 	CertVerifier verifier interface.
 
-2009-01-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2009-01-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* generated/sun/nio/ch/SocketOptionRegistry.java:
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/DatagramChannel.java:
@@ -158,7 +191,7 @@
 	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp
 	(StackShadowPages): Increase for 64-bit builds.
 
-2009-01-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2009-01-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
 	Extend java.nio.channels.FileChannel to minimise code.
@@ -184,13 +217,13 @@
 	(getVersionedResourceURL): New function. Constructs a URL with a
 	version-id as the query.
 
-2009-01-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2009-01-13  Andrew John Hughes  <ahughes@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaIODeleteOnExitAccess.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/SharedSecrets.java:
 	Add missing SharedSecrets files.
 
-2009-01-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2009-01-13  Andrew John Hughes  <ahughes@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/StandardProtocolFamily.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/StandardSocketOption.java:
@@ -231,7 +264,7 @@
 	Patch ThreadPoolExecutor to allow access to private variables, add missing files to
 	nio/FILES_java.gmk
 
-2009-01-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2009-01-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedCopyOption.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedOpenOption.java,
@@ -290,7 +323,7 @@
 
 	* contrib/jck/compile-native-code.sh: Build with -m32 or -m64.
 
-2009-01-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2009-01-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	Initial import of NIO2 code.
 	* patches/ecj/icedtea-pr261.patch: Moved to general patches.
@@ -750,13 +783,13 @@
 	(stamps/extract.stamp): Use AWK here rather than cut.
 	* hotspot.map: Add md5sum for 14.0b08.
 
-2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
 	(FIND_RHINO_JAR): Check for js.jar
 	in Gentoo install location too.
 	
-2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	No need to check again that SYSTEM_GCJ_DIR exists.
@@ -769,7 +802,7 @@
 	More --with-x-home options to macros in acinclude.m4.
 	Remove redundant erroneous use of GCC_OLD.
 
-2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Remove use of LIBGCJ_JAR, replacing with
@@ -783,7 +816,7 @@
 	* javac.in:
 	Use SYSTEM_GCJ_DIR/jre/lib/rt.jar not LIBGCJ_JAR.
 
-2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Remove the HotSpot directory while extracting
@@ -855,7 +888,7 @@
 	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Provide new 
 	cacheable param to JARDesc constructor.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Support use of HGREV.
@@ -864,14 +897,14 @@
 	* configure.ac:
 	Call AC_CHECK_WITH_HG_REVISION.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Properly support --with-openjdk-src-dir.
 	* acinclude.m4:
 	Correct the define for OPENJDK_SRC_DIR.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Support downloading from the Mercurial repository.
@@ -880,7 +913,7 @@
 	* configure.ac:
 	Check for --enable-hg.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Make XRender patch wildcard work where
@@ -888,7 +921,7 @@
 	* configure.ac:
 	Capitalise 'XRender' in configure option.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Don't use find to locate the hotspot directory,
@@ -957,7 +990,7 @@
 	lost chunks from icedtea-sparc.patch, fix build failure with gcc-4.3.
 	* Makefile.am (ICEDTEA_PATCHES): Apply new patch.
 
-2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Prefix the call to uname -m with
@@ -965,7 +998,7 @@
 	* acinclude.m4:
 	Apply linux32 on s390 as well.
 
-2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Prefix make invocations with
@@ -1081,7 +1114,7 @@
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java:
 	Make class package-private.
 
-2008-12-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	Create hierarchical patch space.
 	* patches/icedtea-4486841.patch,
@@ -1263,7 +1296,7 @@
 	patches/icedtea-6755943.patch,
 	patches/icedtea-6766136.patch: New files.
 	
-2008-12-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-bytecodeInterpreter.patch,
 	* patches/icedtea-hotspot7-build-fixes.patch:
@@ -1282,7 +1315,7 @@
 	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp:
 	Updated using IcedTea7 versions for 14.0b08.
 
-2008-12-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-01  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-hotspot-params-cast-size_t.patch,
 	* patches/icedtea-hotspot-use-idx_t.patch,

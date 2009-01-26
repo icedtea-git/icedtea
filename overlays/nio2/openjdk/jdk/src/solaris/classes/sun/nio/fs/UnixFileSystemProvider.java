@@ -25,12 +25,23 @@
 
 package sun.nio.fs;
 
-import java.nio.channels.*;
-import java.nio.channels.spi.AsynchronousChannelProvider.ThreadPoolType;
 import java.net.URI;
+import java.nio.channels.FileChannel;
 import java.util.concurrent.ExecutorService;
 import java.io.IOException;
 import java.util.*;
+
+import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
+
+import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider.ThreadPoolType;
+
+import org.classpath.icedtea.java.nio.file.FileSystem;
+import org.classpath.icedtea.java.nio.file.FileSystemAlreadyExistsException;
+import org.classpath.icedtea.java.nio.file.OpenOption;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.ProviderMismatchException;
+
+import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
 
 import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
 

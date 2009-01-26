@@ -25,8 +25,6 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
-import java.nio.channels.*;
 import java.io.FileDescriptor;
 import java.util.Set;
 
@@ -35,6 +33,13 @@ import sun.nio.ch.ThreadPool;
 import sun.nio.ch.SimpleAsynchronousFileChannelImpl;
 import sun.misc.SharedSecrets;
 import sun.misc.JavaIOFileDescriptorAccess;
+
+import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
+import org.classpath.icedtea.java.nio.channels.FileChannel;
+
+import org.classpath.icedtea.java.nio.file.LinkOption;
+import org.classpath.icedtea.java.nio.file.OpenOption;
+import org.classpath.icedtea.java.nio.file.StandardOpenOption;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 import static sun.nio.fs.UnixConstants.*;

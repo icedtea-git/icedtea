@@ -25,10 +25,11 @@
 
 package sun.nio.fs;
 
-import java.nio.file.FileRef;
 import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+
+import org.classpath.icedtea.java.nio.file.FileRef;
 
 /**
  * File type detector that uses the GNOME I/O library or the deprecated

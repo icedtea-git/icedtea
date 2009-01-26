@@ -25,8 +25,12 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.nio.file.AccessDeniedException;
+import org.classpath.icedtea.java.nio.file.FileAlreadyExistsException;
+import org.classpath.icedtea.java.nio.file.FileSystemException;
+import org.classpath.icedtea.java.nio.file.NoSuchFileException;
 
 /**
  * Internal exception thrown by native methods when error detected.

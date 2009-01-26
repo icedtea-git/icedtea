@@ -27,6 +27,7 @@
 package sun.nio.ch;
 
 import java.io.IOException;
+import java.nio.channels.Channel;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.FileChannel;
 

@@ -29,7 +29,16 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.io.IOException;
 
+import org.classpath.icedtea.java.nio.file.ProviderMismatchException;
+
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileOwnerAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.GroupPrincipal;
+import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributes;
 import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission;
+import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 
@@ -199,7 +208,7 @@ class UnixFileAttributeViews {
         }
 
 
-        public Map<String,?> readAttributes(String first, String[] rest)
+        public Map<String,?> readAttributes(String first, String... rest)
             throws IOException
         {
             AttributesBuilder builder = AttributesBuilder.create(first, rest);
@@ -349,7 +358,7 @@ class UnixFileAttributeViews {
         }
 
 
-        public Map<String,?> readAttributes(String first, String[] rest)
+        public Map<String,?> readAttributes(String first, String... rest)
             throws IOException
         {
             AttributesBuilder builder = AttributesBuilder.create(first, rest);

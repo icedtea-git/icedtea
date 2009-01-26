@@ -25,13 +25,19 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
-import java.nio.file.attribute.*;
 import java.io.IOException;
 import java.util.*;
 import java.security.AccessController;
 import sun.security.action.GetPropertyAction;
 import static sun.nio.fs.LinuxNativeDispatcher.*;
+
+import org.classpath.icedtea.java.nio.file.FileStore;
+import org.classpath.icedtea.java.nio.file.LinkOption;
+import org.classpath.icedtea.java.nio.file.WatchService;
+
+import org.classpath.icedtea.java.nio.file.attribute.DosFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.NamedAttributeView;
 
 /**
  * Linux implementation of FileSystem

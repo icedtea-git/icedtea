@@ -34,7 +34,18 @@ import sun.security.action.GetBooleanAction;
 
 import org.classpath.icedtea.java.nio.file.FileStore;
 import org.classpath.icedtea.java.nio.file.FileSystem;
+import org.classpath.icedtea.java.nio.file.LinkOption;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.PathMatcher;
+
+import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.FileOwnerAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributeView;
+import org.classpath.icedtea.java.nio.file.attribute.GroupPrincipal;
 import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
+import org.classpath.icedtea.java.nio.file.attribute.UserPrincipalLookupService;
+
 import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
 
 /**

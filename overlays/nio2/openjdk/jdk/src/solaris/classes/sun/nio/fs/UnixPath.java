@@ -25,17 +25,41 @@
 
 package sun.nio.fs;
 
-import java.nio.file.*;
-import java.nio.file.attribute.*;
-import java.nio.channels.*;
 import java.security.AccessController;
 import java.io.*;
 import java.net.URI;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.util.*;
 import sun.security.util.SecurityConstants;
 
+import org.classpath.icedtea.java.io.FilePermission;
+
+import org.classpath.icedtea.java.nio.channels.SeekableByteChannel;
+
+import org.classpath.icedtea.java.nio.file.AccessMode;
+import org.classpath.icedtea.java.nio.file.CopyOption;
+import org.classpath.icedtea.java.nio.file.DirectoryNotEmptyException;
+import org.classpath.icedtea.java.nio.file.DirectoryStream;
 import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.attribute.FilePermission;
+import org.classpath.icedtea.java.nio.file.FileStore;
+import org.classpath.icedtea.java.nio.file.FileSystemException;
+import org.classpath.icedtea.java.nio.file.InvalidPathException;
+import org.classpath.icedtea.java.nio.file.LinkOption;
+import org.classpath.icedtea.java.nio.file.LinkPermission;
+import org.classpath.icedtea.java.nio.file.NotDirectoryException;
+import org.classpath.icedtea.java.nio.file.NotLinkException;
+import org.classpath.icedtea.java.nio.file.OpenOption;
+import org.classpath.icedtea.java.nio.file.Path;
+import org.classpath.icedtea.java.nio.file.ProviderMismatchException;
+import org.classpath.icedtea.java.nio.file.StandardOpenOption;
+import org.classpath.icedtea.java.nio.file.WatchEvent;
+import org.classpath.icedtea.java.nio.file.WatchKey;
+import org.classpath.icedtea.java.nio.file.WatchService;
+
+import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
+import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
+
 import org.classpath.icedtea.java.nio.file.spi.AbstractPath;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;

@@ -32,6 +32,7 @@ import java.util.concurrent.locks.*;
 import java.io.IOException;
 import static sun.nio.fs.UnixNativeDispatcher.*;
 
+import org.classpath.icedtea.java.nio.file.ClosedDirectoryStreamException;
 import org.classpath.icedtea.java.nio.file.DirectoryStream;
 import org.classpath.icedtea.java.nio.file.Path;
 
