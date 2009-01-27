@@ -75,7 +75,6 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-6728542-epoll.patch: Make EPoll work on non-x86 platforms. (PR265)
 * icedtea-fortify-source.patch: Fix build failures with -D_FORTIFY_SOURCE=2.
 * icedtea-format-warnings.patch: Fix build failures with -Wformat=1.
-* icedtea-io_util-overflow.patch: Replace some code to correctly handle overflows. (S6788196)
 * icedtea-cc-interp-jvmti.patch: Disable some JVMTI capabilities which are unsupported or do not work with the C++ interpreter.
 * icedtea-demo-swingapplet.patch: Add missing html file needed to run the demo.
 * icedtea-6791168.patch: Fix build failure with GCC-4.4 (PR 38725) and compiler warnings.
@@ -100,6 +99,7 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
   #6761856, swing TextLayout.getBounds() returns shifted bounds (applied in OpenJDK7 b43).
 * icedtea-timerqueue.patch: Fix setting of running variable (PR87/S6623943).
 * icedtea-version.patch: Fix (langtools) ant build to honor fcs MILESTONE setting (S6778493).
+* icedtea-io_util-overflow.patch: Replace some code to correctly handle overflows. (S6788196)
 
 The following patches are only applied to OpenJDK in IcedTea:
 

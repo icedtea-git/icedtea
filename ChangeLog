@@ -1,4 +1,14 @@
-2009-01-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2009-01-26  Andrew John Hughes  <ahughes@redhat.com>
+
+	Bump to b44.
+	* patches/icedtea-io_util-overflow.patch:
+	Dropped, applied upstream.
+	* HACKING: Updated.
+	* Makefile.am: Bump to b44, drop io_util-overflow patch.
+	* patches/icedtea-linker-libs-order.patch:
+	Recreated against b44.
+
+2009-01-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	Merge with IcedTea6.
 	* patches/hotspot/original/icedtea-sparc64-linux.patch,
@@ -65,7 +75,7 @@
 	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp:
 	Merged.
 
-2009-01-18  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2009-01-18  Andrew John Hughes  <ahughes@redhat.com>
 
 	Bump to b43.
 	* patches/icedtea-6761856-freetypescaler.patch,
@@ -101,12 +111,12 @@
 	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp
 	(StackShadowPages): Increase for 64-bit builds.
 
-2008-12-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Fix b42 tarball name and checksum
 	due to reroll.
 
-2008-12-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* HACKING: Updated.
 	* Makefile.am: Bump to b42.
@@ -292,13 +302,13 @@
 	(stamps/extract.stamp): Use AWK here rather than cut.
 	* hotspot.map: Add md5sum for 14.0b08.
 
-2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
 	(FIND_RHINO_JAR): Check for js.jar
 	in Gentoo install location too.
 
-2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	No need to check again that SYSTEM_GCJ_DIR exists.
@@ -311,7 +321,7 @@
 	More --with-x-home options to macros in acinclude.m4.
 	Remove redundant erroneous use of GCC_OLD.
 
-2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Remove use of LIBGCJ_JAR, replacing with
@@ -325,7 +335,7 @@
 	* javac.in:
 	Use SYSTEM_GCJ_DIR/jre/lib/rt.jar not LIBGCJ_JAR.
 
-2008-12-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Remove the HotSpot directory while extracting
@@ -397,7 +407,7 @@
 	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Provide new 
 	cacheable param to JARDesc constructor.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/xrender/icedtea-000.patch:
 	Removed, already applied in OpenJDK7.
@@ -406,7 +416,7 @@
 	* patches/xrender/icedtea-004.patch:
 	Recreated against OpenJDK7.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Support use of HGREV.
@@ -421,14 +431,14 @@
 	Fix XRender wildcard to work where
 	srcdir != builddir.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Properly support --with-openjdk-src-dir.
 	* acinclude.m4:
 	Correct the define for OPENJDK_SRC_DIR.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Support downloading from the Mercurial repository.
@@ -437,12 +447,12 @@
 	* configure.ac:
 	Check for --enable-hg.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* configure.ac:
 	Capitalise 'XRender' in configure option.
 
-2008-12-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Don't use find to locate the hotspot directory,
@@ -519,7 +529,7 @@
 	* acinclude.m4:
 	Apply linux32 on s390 as well.
 
-2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/ecj/icedtea-hotspot-14.0b08.patch,
 	* patches/hotspot/14.0b08/icedtea-bytecodeInterpreter.patch,
@@ -562,7 +572,7 @@
 	* patches/hotspot/original/icedtea-version.patch,
 	* patches/hotspot/original/icedtea-zero-build.patch: here.
 
-2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Prefix make invocations with
@@ -574,7 +584,7 @@
 	* configure.ac:
 	Check for linux32.
 
-2008-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	Merge from IcedTea6.
 	* patches/icedtea-ecj-jopt.patch,
@@ -788,7 +798,7 @@
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java:
 	Make class package-private.
 
-2008-12-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	Create hierarchical patch space.
 	* patches/icedtea-4486841.patch,
@@ -970,7 +980,7 @@
 	patches/icedtea-6755943.patch,
 	patches/icedtea-6766136.patch: New files.
 	
-2008-12-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-bytecodeInterpreter.patch,
 	* patches/icedtea-hotspot7-build-fixes.patch:
@@ -1099,7 +1109,7 @@
 	patches/icedtea-6755943.patch,
 	patches/icedtea-6766136.patch: New file
 	
-2008-12-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-12-01  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-hotspot-params-cast-size_t.patch,
 	* patches/icedtea-hotspot-use-idx_t.patch,
@@ -2142,7 +2152,7 @@
 	(stamps/patch.stamp): Encode PKGVERSION in IcedTea version.
 	* patches/icedtea-version.patch: Add DISTRIBUTION_ID in vm crash report.
 
-2008-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-10-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* HACKING: Add new patch.
 	* Makefile.am: Compile PulseAudio Java
@@ -2162,7 +2172,7 @@
 	* Makefile.am: Changed all instances of $(srcdir) to
 	$(abs_top_srcdir).
 
-2008-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-10-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Use GCJ if not equal to no instead
@@ -2173,7 +2183,7 @@
 	Use AC_CHECK_WITH_GCJ in preference to
 	just checking for GCJ.
 
-2008-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-10-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Build native ecj for ecj builds when
@@ -2185,7 +2195,7 @@
 	and readable.
 	* javac.in: Use native ecj when available.
 
-2008-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2008-10-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Fix LiveConnect and PulseAudio paths to work

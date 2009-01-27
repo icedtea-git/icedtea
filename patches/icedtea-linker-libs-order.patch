@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/sun/java/pack/Makefile
---- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2008-11-17 13:13:17.000000000 +0000
-+++ openjdk/jdk/make/com/sun/java/pack/Makefile	2008-11-17 14:25:44.000000000 +0000
+--- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2009-01-27 00:55:08.000000000 +0000
++++ openjdk/jdk/make/com/sun/java/pack/Makefile	2009-01-27 01:18:13.000000000 +0000
 @@ -75,12 +75,12 @@
  	     $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
  	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
@@ -37,13 +37,13 @@ diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/
  	$(prep-target)
 -	$(LINKER)  $(LDDFLAGS) $(UNPACK_EXE_FILES_o) $(RES) $(LIBCXX) $(LDOUTPUT)$(TEMPDIR)/unpack200$(EXE_SUFFIX)
 +	$(LINKER)  $(LDDFLAGS) $(UNPACK_EXE_FILES_o) $(RES) $(OTHER_LDLIBS) $(LIBCXX) $(LDOUTPUT)$(TEMPDIR)/unpack200$(EXE_SUFFIX)
- 	$(CP) $(TEMPDIR)/unpack200$(EXE_SUFFIX) $(UNPACK_EXE)
- 
- 
+ ifdef MT
+ 	$(MT) /manifest $(TEMPDIR)/unpack200$(EXE_SUFFIX).manifest /outputresource:$(TEMPDIR)/unpack200$(EXE_SUFFIX);#1
+ endif
 diff -Nru openjdk.orig/jdk/make/common/shared/Sanity.gmk openjdk/jdk/make/common/shared/Sanity.gmk
---- openjdk.orig/jdk/make/common/shared/Sanity.gmk	2008-11-06 08:44:09.000000000 +0000
-+++ openjdk/jdk/make/common/shared/Sanity.gmk	2008-11-17 14:25:44.000000000 +0000
-@@ -1345,7 +1345,7 @@
+--- openjdk.orig/jdk/make/common/shared/Sanity.gmk	2009-01-22 08:46:11.000000000 +0000
++++ openjdk/jdk/make/common/shared/Sanity.gmk	2009-01-27 01:16:47.000000000 +0000
+@@ -1343,7 +1343,7 @@
  ifdef ALSA_VERSION_CHECK
  $(ALSA_VERSION_CHECK): $(ALSA_VERSION_CHECK).c
  	@$(prep-target)
@@ -53,8 +53,8 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Sanity.gmk openjdk/jdk/make/common
  $(ALSA_VERSION_CHECK).c:
  	@$(prep-target)
 diff -Nru openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile openjdk/jdk/make/javax/sound/jsoundalsa/Makefile
---- openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile	2008-11-06 08:44:10.000000000 +0000
-+++ openjdk/jdk/make/javax/sound/jsoundalsa/Makefile	2008-11-17 14:25:44.000000000 +0000
+--- openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile	2009-01-22 08:46:12.000000000 +0000
++++ openjdk/jdk/make/javax/sound/jsoundalsa/Makefile	2009-01-27 01:16:47.000000000 +0000
 @@ -65,7 +65,7 @@
  	$(MIDIFILES_export) \
  	$(PORTFILES_export)
