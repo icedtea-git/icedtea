@@ -1,3 +1,17 @@
+2009-01-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
+	(positionSBC(long)): Renamed from position(long).
+	(truncateSBC(long)): Likewise.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/SeekableByteChannel.java:
+	Same as for FileChannel, prevents conflict with versions in java.nio.channel.FileChannel.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/SolarisAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/SolarisEventPort.java:
+	Add missing imports.
+	* patches/icedtea-nio2.patch:
+	(FileChannelImpl.positionSBC(long)): Added, simply calls position(long).
+	(FileChannelImpl.truncateSBC(long)): Likewise.
+
 2009-01-26  Andrew John Hughes  <ahughes@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,

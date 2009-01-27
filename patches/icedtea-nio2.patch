@@ -1372,7 +1372,7 @@ diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/DatagramChannelImpl.java
  }
 diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/FileChannelImpl.java openjdk/jdk/src/share/classes/sun/nio/ch/FileChannelImpl.java
 --- openjdk.orig/jdk/src/share/classes/sun/nio/ch/FileChannelImpl.java	2009-01-20 13:37:15.000000000 +0000
-+++ openjdk/jdk/src/share/classes/sun/nio/ch/FileChannelImpl.java	2009-01-20 13:45:52.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/nio/ch/FileChannelImpl.java	2009-01-27 02:33:08.000000000 +0000
 @@ -32,8 +32,15 @@
  import java.io.IOException;
  import java.nio.ByteBuffer;
@@ -1399,6 +1399,28 @@ diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/FileChannelImpl.java ope
  
  public class FileChannelImpl
      extends FileChannel
+@@ -316,6 +324,10 @@
+         }
+     }
+ 
++    public FileChannel positionSBC(long newPosition) throws IOException {
++      return position(newPosition);
++    }
++
+     public long size() throws IOException {
+         ensureOpen();
+         synchronized (positionLock) {
+@@ -386,6 +398,10 @@
+         }
+     }
+ 
++    public FileChannel truncateSBC(long size) throws IOException {
++      return truncate(size);
++    }
++
+     public void force(boolean metaData) throws IOException {
+         ensureOpen();
+         int rv = -1;
 diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/Net.java openjdk/jdk/src/share/classes/sun/nio/ch/Net.java
 --- openjdk.orig/jdk/src/share/classes/sun/nio/ch/Net.java	2009-01-15 17:37:33.000000000 +0000
 +++ openjdk/jdk/src/share/classes/sun/nio/ch/Net.java	2009-01-19 23:21:37.000000000 +0000

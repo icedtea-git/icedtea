@@ -25,10 +25,16 @@
 
 package sun.nio.ch;
 
-import java.nio.channels.*;
 import java.util.concurrent.ExecutorService;
-import java.net.ProtocolFamily;
 import java.io.IOException;
+
+import org.classpath.icedtea.java.net.ProtocolFamily;
+
+import org.classpath.icedtea.java.nio.channels.AsynchronousChannelGroup;
+import org.classpath.icedtea.java.nio.channels.AsynchronousDatagramChannel;
+import org.classpath.icedtea.java.nio.channels.AsynchronousSocketChannel;
+import org.classpath.icedtea.java.nio.channels.AsynchronousServerSocketChannel;
+import org.classpath.icedtea.java.nio.channels.IllegalChannelGroupException;
 
 import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
 

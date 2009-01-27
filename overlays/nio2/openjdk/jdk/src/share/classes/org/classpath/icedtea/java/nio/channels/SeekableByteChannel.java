@@ -124,7 +124,7 @@ public interface SeekableByteChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    SeekableByteChannel position(long newPosition) throws IOException;
+    SeekableByteChannel positionSBC(long newPosition) throws IOException;
 
     /**
      * Returns the current size of entity to which this channel is connected.
@@ -166,5 +166,5 @@ public interface SeekableByteChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    SeekableByteChannel truncate(long size) throws IOException;
+    SeekableByteChannel truncateSBC(long size) throws IOException;
 }

@@ -25,10 +25,11 @@
 
 package sun.nio.ch;
 
-import java.nio.channels.spi.AsynchronousChannelProvider;
 import java.util.concurrent.RejectedExecutionException;
 import java.io.IOException;
 import sun.misc.Unsafe;
+
+import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**
  * AsynchronousChannelGroup implementation based on the Solaris 10 event port

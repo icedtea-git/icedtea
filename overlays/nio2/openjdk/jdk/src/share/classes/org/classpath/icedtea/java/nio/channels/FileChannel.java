@@ -369,7 +369,7 @@ public abstract class FileChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    public abstract FileChannel position(long newPosition) throws IOException;
+    public abstract FileChannel positionSBC(long newPosition) throws IOException;
 
     /**
      * Truncates this channel's file to the given size.
@@ -398,7 +398,7 @@ public abstract class FileChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    public abstract FileChannel truncate(long size) throws IOException;
+    public abstract FileChannel truncateSBC(long size) throws IOException;
 
 
 }
