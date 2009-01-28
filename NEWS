@@ -31,8 +31,8 @@ New in release 1.4 (NOT_YET_RELEASED)
   integrated into the langtools and jdk subsystems. Please package the
   test/jtreg-summary.log file with your distribution package so end users
   can compare the test results.
-- Shark (--enable-shark) should now work on 64 bit platforms, but is not
-  currently recommended for production use.
+- Shark (--enable-shark) now builds on 64 bit platforms, but is a
+  pre-alpha technology preview and not recommended for use.
 - Better support for bootstrapping with different jar programs
   (supporting -J options).
 - If --with-pkgversion isn't given the short mercurial rev node version
