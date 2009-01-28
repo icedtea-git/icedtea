@@ -1,3 +1,7 @@
+2009-01-28  Mark Wielaard  <mark@klomp.org>
+
+	* NEWS: Updated for 1.4.
+
 2009-01-27  Andrew Haley  <aph@redhat.com>
 
 	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp:
