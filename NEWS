@@ -1,4 +1,4 @@
-New in release 1.4 (NOT_YET_RELEASED)
+New in release 1.4 (2009-01-29)
 
 - Security fixes for:
   CVE-2008-5360 - Temporary files have guessable file names.
