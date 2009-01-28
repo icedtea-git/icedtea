@@ -1,3 +1,12 @@
+2009-01-28  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Rename PULSEAUDIO_SOURCES and JTREG_SOURCES
+	to avoid conflict with autoconf names.  Move misplaced
+	endif in download.stamp.
+	* patches/icedtea-rhino.patch:
+	Remove merge conflicts.
+	
 2009-01-26  Andrew John Hughes  <ahughes@redhat.com>
 
 	Bump to b44.

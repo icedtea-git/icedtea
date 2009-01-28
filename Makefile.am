@@ -1224,7 +1224,7 @@ GENERATED_FILES = generated/com/sun/java/swing/plaf/gtk/resources/gtk_it.java \
 	generated/fontconfig/fontconfig.Ubuntu.bfc \
 	generated/fontconfig/fontconfig.bfc
 
-JTREG_SOURCES = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
+JTREG_SRCS = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
 	$(top_srcdir)/test/jtreg/com/sun/javatest/cof/COF2_0_2.xsd \
 	$(top_srcdir)/test/jtreg/com/sun/javatest/cof/*.java \
 	$(top_srcdir)/test/jtreg/com/sun/javatest/lib/*.java \
@@ -1301,7 +1301,7 @@ JTREG_SOURCES = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
 	$(top_srcdir)/test/jtreg/JavaTest.cmdMgrs.lst \
 	$(top_srcdir)/test/jtreg/excludelist.langtools.jtx 
 
-PULSEAUDIO_SOURCES = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulseaudio/*.java \
+PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulseaudio/*.java \
 	$(top_srcdir)/pulseaudio/src/java/META-INF/services/javax.sound.sampled.spi.MixerProvider \
 	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_UnderflowListener.h \
 	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_PlaybackStartedListener.h \
@@ -1344,9 +1344,9 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/icedtea-*.patch \
 	tools-copy contrib ports extra overlays \
 	javaws.png javaws.desktop visualvm.desktop \
 	jconsole.desktop policytool.desktop \
-	$(JTREG_SOURCES) \
+	$(JTREG_SRCS) \
 	IcedTeaPlugin.cc \
-	HACKING $(PULSEAUDIO_SOURCES) fsg.sh \
+	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
 	plugin hotspot.map autogen.sh
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
@@ -1619,7 +1619,6 @@ if WITH_HGREV
 else
 	$(HG) fclone $(OPENJDK_HG_URL) openjdk;
 endif
-endif
 else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -1630,6 +1629,7 @@ else
 	  fi ; \
 	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
 	fi
+endif
 endif
 endif
 endif
