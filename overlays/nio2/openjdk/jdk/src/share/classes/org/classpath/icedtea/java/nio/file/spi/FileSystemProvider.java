@@ -26,7 +26,6 @@
 
 package org.classpath.icedtea.java.nio.file.spi;
 
-import java.nio.channels.*;
 import java.net.URI;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -35,6 +34,7 @@ import java.security.PrivilegedAction;
 import java.io.IOException;
 
 import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
+import org.classpath.icedtea.java.nio.channels.FileChannel;
 import org.classpath.icedtea.java.nio.file.FileRef;
 import org.classpath.icedtea.java.nio.file.FileSystem;
 import org.classpath.icedtea.java.nio.file.FileSystems;

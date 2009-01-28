@@ -26,12 +26,12 @@
 package sun.nio.fs;
 
 import java.net.URI;
-import java.nio.channels.FileChannel;
 import java.util.concurrent.ExecutorService;
 import java.io.IOException;
 import java.util.*;
 
 import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
+import org.classpath.icedtea.java.nio.channels.FileChannel;
 
 import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider.ThreadPoolType;
 

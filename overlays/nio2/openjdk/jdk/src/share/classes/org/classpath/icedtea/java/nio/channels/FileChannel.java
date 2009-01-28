@@ -288,9 +288,9 @@ public abstract class FileChannel
      *
      * @since   1.7
      */
-    public static java.nio.channels.FileChannel open(Path file,
-						     Set<? extends OpenOption> options,
-						     FileAttribute<?>... attrs)
+    public static FileChannel open(Path file,
+				   Set<? extends OpenOption> options,
+				   FileAttribute<?>... attrs)
         throws IOException
     {
         FileSystemProvider provider = file.getFileSystem().provider();
@@ -335,7 +335,7 @@ public abstract class FileChannel
      *
      * @since   1.7
      */
-    public static java.nio.channels.FileChannel open(Path file, OpenOption... options)
+    public static FileChannel open(Path file, OpenOption... options)
         throws IOException
     {
         Set<OpenOption> set = new HashSet<OpenOption>(options.length);
