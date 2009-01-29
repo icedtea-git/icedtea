@@ -1,3 +1,10 @@
+2009-01-29  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-java2d-dasher.patch: New patch. Fix interpretation of
+	dash array elements in BasicStroke.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
 2009-01-28  Lillian Angel  <langel@redhat.com>
 
 	* NEWS: Updated date.
