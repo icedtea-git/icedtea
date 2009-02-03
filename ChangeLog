@@ -1,5 +1,14 @@
 2009-01-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-nio2.patch:
+	(mapfile-linux): Add new functions in sun.nio.ch.Net.
+	(Net.java:setIntOption0(FileDescriptor,boolean,int,int,int)): Renamed to...
+	(Net.java:setIntOption1(FileDescriptor,boolean,int,int,int)): to avoid C collision.
+	(Net.c): Add back java_net_SocketOptions.h, bind0 and connect0 and setIntOption0
+	and rename existing setIntOption0 to setIntOption1.
+	
+2009-01-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
 	Use org.classpath.icedtea.java.nio.channels.FileChannel.
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/FileSystemProvider.java:

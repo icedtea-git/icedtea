@@ -601,7 +601,7 @@ diff -Nru openjdk.orig/jdk/make/java/nio/Makefile openjdk/jdk/make/java/nio/Make
  .PHONY: sources
 diff -Nru openjdk.orig/jdk/make/java/nio/mapfile-linux openjdk/jdk/make/java/nio/mapfile-linux
 --- openjdk.orig/jdk/make/java/nio/mapfile-linux	2009-01-07 22:08:47.000000000 +0000
-+++ openjdk/jdk/make/java/nio/mapfile-linux	2009-01-07 22:15:04.000000000 +0000
++++ openjdk/jdk/make/java/nio/mapfile-linux	2009-01-29 01:13:17.000000000 +0000
 @@ -20,6 +20,14 @@
  		Java_sun_nio_ch_EPollArrayWrapper_interrupt;
  		Java_sun_nio_ch_EPollArrayWrapper_offsetofData;
@@ -617,7 +617,32 @@ diff -Nru openjdk.orig/jdk/make/java/nio/mapfile-linux openjdk/jdk/make/java/nio
                  Java_sun_nio_ch_FileChannelImpl_close0;
                  Java_sun_nio_ch_FileChannelImpl_force0;
                  Java_sun_nio_ch_FileChannelImpl_initIDs;
-@@ -75,6 +83,74 @@
+@@ -63,11 +71,24 @@
+ 		Java_sun_nio_ch_Net_socket0;
+ 		Java_sun_nio_ch_Net_bind;
+ 		Java_sun_nio_ch_Net_connect;
++		Java_sun_nio_ch_Net_bind0;
++		Java_sun_nio_ch_Net_connect0;
++		Java_sun_nio_ch_Net_listen;
+ 		Java_sun_nio_ch_Net_localPort;
+ 		Java_sun_nio_ch_Net_localInetAddress;
+ 		Java_sun_nio_ch_Net_getIntOption0;
+ 		Java_sun_nio_ch_Net_setIntOption0;
+                 Java_sun_nio_ch_Net_initIDs;
++		Java_sun_nio_ch_Net_isIPv6Available0;
++		Java_sun_nio_ch_Net_joinOrDrop4;
++		Java_sun_nio_ch_Net_blockOrUnblock4;
++		Java_sun_nio_ch_Net_joinOrDrop6;
++		Java_sun_nio_ch_Net_blockOrUnblock6;
++		Java_sun_nio_ch_Net_setInterface4;
++		Java_sun_nio_ch_Net_getInterface4;
++		Java_sun_nio_ch_Net_setInterface6;
++		Java_sun_nio_ch_Net_getInterface6;
++		Java_sun_nio_ch_Net_shutdown;
+                 Java_sun_nio_ch_PollArrayWrapper_interrupt;
+                 Java_sun_nio_ch_PollArrayWrapper_poll0;
+                 Java_sun_nio_ch_ServerSocketChannelImpl_accept0;
+@@ -75,6 +96,74 @@
  		Java_sun_nio_ch_ServerSocketChannelImpl_listen;
                  Java_sun_nio_ch_SocketChannelImpl_checkConnect;
  		Java_sun_nio_ch_SocketChannelImpl_shutdown;
@@ -1423,7 +1448,7 @@ diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/FileChannelImpl.java ope
          int rv = -1;
 diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/Net.java openjdk/jdk/src/share/classes/sun/nio/ch/Net.java
 --- openjdk.orig/jdk/src/share/classes/sun/nio/ch/Net.java	2009-01-15 17:37:33.000000000 +0000
-+++ openjdk/jdk/src/share/classes/sun/nio/ch/Net.java	2009-01-19 23:21:37.000000000 +0000
++++ openjdk/jdk/src/share/classes/sun/nio/ch/Net.java	2009-02-01 00:35:31.000000000 +0000
 @@ -30,6 +30,15 @@
  import java.net.*;
  import java.nio.channels.*;
@@ -1537,7 +1562,7 @@ diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/Net.java openjdk/jdk/src
 +        }
 +
 +        boolean mayNeedConversion = (family == UNSPEC);
-+        setIntOption0(fd, mayNeedConversion, key.level(), key.name(), arg);
++        setIntOption1(fd, mayNeedConversion, key.level(), key.name(), arg);
 +    }
 +
 +    static Object getSocketOption(FileDescriptor fd, ProtocolFamily family,
@@ -1569,7 +1594,7 @@ diff -Nru openjdk.orig/jdk/src/share/classes/sun/nio/ch/Net.java openjdk/jdk/src
 +                                            int level, int opt)
 +        throws IOException;
 +
-+    private static native void setIntOption0(FileDescriptor fd, boolean mayNeedConversion,
++    private static native void setIntOption1(FileDescriptor fd, boolean mayNeedConversion,
 +                                             int level, int opt, int arg)
 +        throws IOException;
 +
@@ -1920,7 +1945,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/nio/ch/InheritedChannel.java 
  
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/solaris/native/sun/nio/ch/Net.c
 --- openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c	2009-01-26 20:51:08.000000000 +0000
-+++ openjdk/jdk/src/solaris/native/sun/nio/ch/Net.c	2009-01-26 20:55:17.000000000 +0000
++++ openjdk/jdk/src/solaris/native/sun/nio/ch/Net.c	2009-02-01 01:24:41.000000000 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2001-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -1928,11 +1953,8 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *
   * This code is free software; you can redistribute it and/or modify it
-@@ -37,61 +37,171 @@
- #include "net_util.h"
- #include "net_util_md.h"
- #include "nio_util.h"
--#include "java_net_SocketOptions.h"
+@@ -40,58 +40,169 @@
+ #include "java_net_SocketOptions.h"
  #include "nio.h"
  
 -#ifdef __linux__
@@ -1943,12 +1965,12 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
 + */
 +
 +#ifdef __solaris__
++
++#ifndef IP_BLOCK_SOURCE
  
 -#define IPV6_MULTICAST_IF 17
 -#ifndef SO_BSDCOMPAT
 -#define SO_BSDCOMPAT  14
-+#ifndef IP_BLOCK_SOURCE
-+
 +#define IP_BLOCK_SOURCE                 0x15
 +#define IP_UNBLOCK_SOURCE               0x16
 +#define IP_ADD_SOURCE_MEMBERSHIP        0x17
@@ -2108,19 +2130,19 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
  JNIEXPORT void JNICALL
 -Java_sun_nio_ch_Net_bind(JNIEnv *env, jclass clazz, /* ## Needs rest of PSI gunk */
 -                         jobject fdo, jobject ia, int port)
-+Java_sun_nio_ch_Net_bind0(JNIEnv *env, jclass clazz, jboolean preferIPv6,
-+                          jobject fdo, jobject iao, int port)
++Java_sun_nio_ch_Net_bind(JNIEnv *env, jclass clazz, 
++			 jobject fdo, jobject iao, int port)
  {
      SOCKADDR sa;
      int sa_len = SOCKADDR_LEN;
      int rv = 0;
  
 -    if (NET_InetAddressToSockaddr(env, ia, port, (struct sockaddr *)&sa, &sa_len, JNI_TRUE) != 0) {
-+    if (NET_InetAddressToSockaddr(env, iao, port, (struct sockaddr *)&sa, &sa_len, preferIPv6) != 0) {
++    if (NET_InetAddressToSockaddr(env, iao, port, (struct sockaddr *)&sa, &sa_len, JNI_TRUE) != 0) {
        return;
      }
  
-@@ -101,27 +211,27 @@
+@@ -101,26 +212,53 @@
      }
  }
  
@@ -2135,8 +2157,9 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
 -Java_sun_nio_ch_Net_connect(JNIEnv *env, jclass clazz,
 -                                jobject fdo, jobject iao, jint port,
 -                                jint trafficClass)
-+Java_sun_nio_ch_Net_connect0(JNIEnv *env, jclass clazz, jboolean preferIPv6,
-+                             jobject fdo, jobject iao, jint port)
++Java_sun_nio_ch_Net_connect(JNIEnv *env, jclass clazz, 
++			    jobject fdo, jobject iao, jint port,
++			    jint trafficClass)
  {
      SOCKADDR sa;
      int sa_len = SOCKADDR_LEN;
@@ -2144,7 +2167,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
  
 -    if (NET_InetAddressToSockaddr(env, iao, port, (struct sockaddr *) &sa, &sa_len, JNI_TRUE) != 0) {
 +    if (NET_InetAddressToSockaddr(env, iao, port, (struct sockaddr *) &sa,
-+                                  &sa_len, preferIPv6) != 0)
++                                  &sa_len, JNI_TRUE) != 0)
 +    {
        return IOS_THROWN;
      }
@@ -2153,14 +2176,37 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
 -#if 0
 -    if (trafficClass != 0 && ipv6_available()) { /* ## FIX */
 -        NET_SetTrafficClass((struct sockaddr *)&sa, trafficClass);
--    }
++    rv = connect(fdval(env, fdo), (struct sockaddr *)&sa, sa_len);
++    if (rv != 0) {
++        if (errno == EINPROGRESS) {
++            return IOS_UNAVAILABLE;
++        } else if (errno == EINTR) {
++            return IOS_INTERRUPTED;
++        }
++        return handleSocketError(env, errno);
++    }
++    return 1;
++}
++
++JNIEXPORT jint JNICALL
++Java_sun_nio_ch_Net_connect0(JNIEnv *env, jclass clazz, jboolean preferIPv6,
++                             jobject fdo, jobject iao, jint port)
++{
++    SOCKADDR sa;
++    int sa_len = SOCKADDR_LEN;
++    int rv;
++
++    if (NET_InetAddressToSockaddr(env, iao, port, (struct sockaddr *) &sa,
++                                  &sa_len, preferIPv6) != 0)
++    {
++      return IOS_THROWN;
+     }
 -#endif
 -#endif
--
+ 
      rv = connect(fdval(env, fdo), (struct sockaddr *)&sa, sa_len);
      if (rv != 0) {
-         if (errno == EINPROGRESS) {
-@@ -138,7 +248,7 @@
+@@ -138,7 +276,7 @@
  Java_sun_nio_ch_Net_localPort(JNIEnv *env, jclass clazz, jobject fdo)
  {
      SOCKADDR sa;
@@ -2169,7 +2215,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
      if (getsockname(fdval(env, fdo), (struct sockaddr *)&sa, &sa_len) < 0) {
          handleSocketError(env, errno);
          return -1;
-@@ -150,7 +260,7 @@
+@@ -150,7 +288,7 @@
  Java_sun_nio_ch_Net_localInetAddress(JNIEnv *env, jclass clazz, jobject fdo)
  {
      SOCKADDR sa;
@@ -2178,7 +2224,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
      int port;
      if (getsockname(fdval(env, fdo), (struct sockaddr *)&sa, &sa_len) < 0) {
          handleSocketError(env, errno);
-@@ -159,119 +269,79 @@
+@@ -159,119 +297,115 @@
      return NET_SockaddrToInetAddress(env, (struct sockaddr *)&sa, &port);
  }
  
@@ -2308,12 +2354,46 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
  }
  
  JNIEXPORT void JNICALL
--Java_sun_nio_ch_Net_setIntOption0(JNIEnv *env, jclass clazz,
--                                  jobject fdo, jint opt, jint arg)
-+Java_sun_nio_ch_Net_setIntOption0(JNIEnv *env, jclass clazz, jobject fdo,
-+                                  jboolean mayNeedConversion, jint level, jint opt, jint arg)
+ Java_sun_nio_ch_Net_setIntOption0(JNIEnv *env, jclass clazz,
+                                   jobject fdo, jint opt, jint arg)
  {
 -    int klevel, kopt;
++  int klevel, kopt;
++  int result;
++  struct linger linger;
++  void *parg;
++  int arglen;
++ 
++  if (NET_MapSocketOption(opt, &klevel, &kopt) < 0) {
++    JNU_ThrowByNameWithLastError(env,
++				 JNU_JAVANETPKG "SocketException",
++				 "Unsupported socket option");
++    return;
++  }
++ 
++  if (opt == java_net_SocketOptions_SO_LINGER) {
++    parg = (void *)&linger;
++    arglen = sizeof(linger);
++    if (arg >= 0) {
++             linger.l_onoff = 0;
++             linger.l_linger = 0;
++         }
++    } else {
++        parg = (void *)&arg;
++        arglen = sizeof(arg);
++     }
++ 
++    if (NET_SetSockOpt(fdval(env, fdo), klevel, kopt, parg, arglen) < 0) {
++      JNU_ThrowByNameWithLastError(env,
++				   JNU_JAVANETPKG "SocketException",
++				   "sun.nio.ch.Net.setIntOption");
++    }
++}
++
++JNIEXPORT void JNICALL
++Java_sun_nio_ch_Net_setIntOption1(JNIEnv *env, jclass clazz, jobject fdo,
++                                  jboolean mayNeedConversion, jint level, jint opt, jint arg)
++{
      int result;
      struct linger linger;
 +    u_char carg;
@@ -2343,7 +2423,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
          parg = (void *)&linger;
          arglen = sizeof(linger);
          if (arg >= 0) {
-@@ -281,19 +351,199 @@
+@@ -281,19 +415,199 @@
              linger.l_onoff = 0;
              linger.l_linger = 0;
          }
@@ -2475,7 +2555,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
 +    }
 +    return 0;
 +}
- 
++
 +JNIEXPORT void JNICALL
 +Java_sun_nio_ch_Net_setInterface4(JNIEnv* env, jobject this, jobject fdo, jint interf)
 +{
@@ -2535,7 +2615,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/Net.c openjdk/jdk/src/s
 +    }
 +    return (jint)index;
 +}
-+
+ 
 +JNIEXPORT void JNICALL
 +Java_sun_nio_ch_Net_shutdown(JNIEnv *env, jclass cl, jobject fdo, jint jhow)
 +{
