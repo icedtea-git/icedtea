@@ -562,7 +562,8 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-6728542-epoll.patch \
 	patches/icedtea-io_util-overflow.patch \
 	patches/icedtea-cc-interp-jvmti.patch \
-	patches/icedtea-pr261.patch
+	patches/icedtea-pr261.patch \
+	patches/icedtea-doc-headers.patch
 
 if WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \
@@ -615,8 +616,7 @@ ICEDTEA_PATCHES += \
 	$(DISTRIBUTION_PATCHES) \
 	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-awt-window-size.patch \
-	patches/icedtea-java2d-dasher.patch \
-	patches/icedtea-doc-headers.patch
+	patches/icedtea-java2d-dasher.patch
 
 stamps/extract.stamp: stamps/download.stamp
 if OPENJDK_SRC_DIR_FOUND

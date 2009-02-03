@@ -1,6 +1,15 @@
 2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Move doc headers patch above NIO2 patch,
+	as this needs to alter the same file.
+	* patches/icedtea-doc-headers.patch:
+	Add IcedTea bugzilla URL and common licensing
+	to all documentation.
+
+2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Add new patch.
 	* patches/icedtea-doc-headers.patch:
 	Fix licensing of documentation.
