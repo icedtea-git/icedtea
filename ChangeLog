@@ -1,5 +1,11 @@
 2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-nio2.patch:
+	(docs/NON_CORE_PKGS.gmk): Rename NIO to NIO2.
+	(docs/Makefile): Add rule for generating NIO2 docs.
+	
+2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Move doc headers patch above NIO2 patch,
 	as this needs to alter the same file.

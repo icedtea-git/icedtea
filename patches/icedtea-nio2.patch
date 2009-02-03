@@ -9,26 +9,89 @@ diff -Nru openjdk.orig/jdk/make/docs/CORE_PKGS.gmk openjdk/jdk/make/docs/CORE_PK
    org.jcp.*		   \
    org.w3c.dom.css          \
    org.w3c.dom.html         \
+diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
+--- openjdk.orig/jdk/make/docs/Makefile	2009-02-03 16:20:38.000000000 +0000
++++ openjdk/jdk/make/docs/Makefile	2009-02-03 19:40:10.000000000 +0000
+@@ -404,6 +404,29 @@
+ # TREEAPI_PKGS is located in NON_CORE_PKGS.gmk
+ 
+ #
++# Variables used by nio2docs target
++#
++
++NIO2_JAVADOCFLAGS = $(COMMON_JAVADOCFLAGS)		      \
++		    -encoding ascii			      \
++		    -d $(NIO2_DOCDIR)				\
++                    -sourcepath $(NIO2_SOURCEPATH)             	\
++                    -splitIndex                               \
++                    -doctitle $(NIO2_JAVADOCTITLE)          \
++                    -windowtitle $(NIO2_JAVADOCWINDOWTITLE) \
++                    -header $(NIO2_JAVADOCHEADER)           \
++                    -bottom $(JAVADOCBOTTOM)           \
++                    -group $(NIO2_GROUPNAME) $(NIO2_REGEXP)
++NIO2_JAVADOCTITLE  = 'NIO2 API'
++NIO2_JAVADOCWINDOWTITLE  = 'NIO2 API'
++NIO2_JAVADOCHEADER = '<b>NIO2 API</b>'
++NIO2_GROUPNAME = "Packages"
++NIO2_REGEXP = "org.classpath.icedtea.*"
++NIO2_DOCDIR      = $(DOCSDIR)/jre/api/nio2
++NIO2_SOURCEPATH  = $(TOPDIR)/src/share/classes
++# NIO2_PKGS is located in NON_CORE_PKGS.gmk
++
++#
+ # Path where javadoc should find source files for release docs
+ #
+ RELEASEDOCS_SRCPATH = "$(SHARE_SRC)/classes$(CLASSPATH_SEPARATOR)$(PLATFORM_SRC)/classes$(CLASSPATH_SEPARATOR)$(GENSRCDIR)$(CLASSPATH_SEPARATOR)$(SHARE_SRC)/doc/stub$(CLASSPATH_SEPARATOR)$(CLOSED_SRC)/share/classes$(CLASSPATH_SEPARATOR)$(IMPORTSRCDIR)"
+@@ -429,7 +452,8 @@
+     httpserverdocs  \
+     mgmtdocs \
+     attachdocs \
+-    jconsoledocs
++    jconsoledocs \
++    nio2docs
+ 
+ ifdef LANGTOOLS_DIST
+     ALL_OTHER_TARGETS += \
+@@ -646,6 +670,14 @@
+ 		   $(TREEAPI_LINKOPT)                  \
+ 		   $(TREEAPI_PKGS)
+ 
++.PHONY: nio2docs
++nio2docs:
++	@# ######## api-nio2 ############################
++	$(RM) -r $(NIO2_DOCDIR)
++	$(MKDIR) -p $(NIO2_DOCDIR)
++	$(JAVADOC_CMD) $(NIO2_JAVADOCFLAGS)                     \
++		   $(NIO2_PKGS)
++
+ # DEBUG TARGET
+ # List the values defined in the makefile hierarchy, to make sure everything
+ # is set properly, and to help identify values we can use instead of making new ones.
 diff -Nru openjdk.orig/jdk/make/docs/NON_CORE_PKGS.gmk openjdk/jdk/make/docs/NON_CORE_PKGS.gmk
 --- openjdk.orig/jdk/make/docs/NON_CORE_PKGS.gmk	2009-01-07 21:27:46.000000000 +0000
-+++ openjdk/jdk/make/docs/NON_CORE_PKGS.gmk	2009-01-09 21:21:39.000000000 +0000
-@@ -65,6 +65,11 @@
++++ openjdk/jdk/make/docs/NON_CORE_PKGS.gmk	2009-02-03 16:28:29.000000000 +0000
+@@ -65,6 +65,16 @@
  HTTPSERVER_PKGS  = com.sun.net.httpserver       \
                     com.sun.net.httpserver.spi 
  
-+NIO_PKGS         = com.sun.nio.file 	        \
++NIO2_PKGS         = org.classpath.icedtea.java.io			\
++		   org.classpath.icedtea.java.net			\
++		   org.classpath.icedtea.java.nio.channels		\
++		   org.classpath.icedtea.java.nio.channels.spi		\
 +		   org.classpath.icedtea.java.nio.file    		\
 +		   org.classpath.icedtea.java.nio.file.attribute	 \
-+		   org.classpath.icedtea.java.nio.file.spi		 
++		   org.classpath.icedtea.java.nio.file.spi		 \
++		   org.classpath.icedtea.java.util
++   
 +
  DOCLETAPI_PKGS   = com.sun.javadoc
  
  TAGLETAPI_FILE   = com/sun/tools/doclets/Taglet.java
-@@ -89,6 +94,7 @@
+@@ -89,6 +99,7 @@
                     $(MGMT_PKGS) \
                     $(JAAS_PKGS) \
                     $(JGSS_PKGS) \
-+		   $(NIO_PKGS) \
++		   $(NIO2_PKGS) \
                     $(OLD_JSSE_PKGS) \
                     $(HTTPSERVER_PKGS) \
                     $(SMARTCARDIO_PKGS)
