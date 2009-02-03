@@ -1,4 +1,4 @@
-2009-01-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-30  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-nio2.patch:
 	(mapfile-linux): Add new functions in sun.nio.ch.Net.
@@ -6,7 +6,26 @@
 	(Net.java:setIntOption1(FileDescriptor,boolean,int,int,int)): to avoid C collision.
 	(Net.c): Add back java_net_SocketOptions.h, bind0 and connect0 and setIntOption0
 	and rename existing setIntOption0 to setIntOption1.
+
+2009-01-29  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-java2d-dasher.patch: New patch. Fix interpretation of
+	dash array elements in BasicStroke.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
 	
+2009-01-28  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated date.
+
+2009-01-28  Andrew Haley  <aph@redhat.com>
+
+	* NEWS: Updated.
+
+2009-01-28  Mark Wielaard  <mark@klomp.org>
+
+	* NEWS: Updated for 1.4.
+
 2009-01-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:

@@ -614,7 +614,8 @@ endif
 ICEDTEA_PATCHES += \
 	$(DISTRIBUTION_PATCHES) \
 	patches/icedtea-demo-swingapplet.patch \
-	patches/icedtea-awt-window-size.patch
+	patches/icedtea-awt-window-size.patch \
+	patches/icedtea-java2d-dasher.patch
 
 stamps/extract.stamp: stamps/download.stamp
 if OPENJDK_SRC_DIR_FOUND

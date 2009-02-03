@@ -82,6 +82,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-no-precompiled.patch: Don't use precompiled header files in hotspot.
 * icedtea-includedb.patch: Add missing include files.
 * icedtea-awt-window-size.patch: Fix X11 window size calculation (S6721088).
+* icedtea-java2d-dasher.patch: Fix interpretation of dash array elements in BasicStroke (S6793344).
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
