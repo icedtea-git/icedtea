@@ -1,3 +1,11 @@
+2009-02-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Add new patch.
+	* patches/hotspot/14.0b08/icedtea-format.patch,
+	Fix warnings that cause the build to fail with
+	GCC 4.3.3.
+	
 2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-nio2.patch:
