@@ -944,7 +944,10 @@ AC_DEFUN([AC_CHECK_FOR_GCJ_JDK],
               ])
   if test -z "${SYSTEM_GCJ_DIR}"; then
     for dir in /usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk /usr/lib/jvm/cacao ; do
-       test -d $dir && SYSTEM_GCJ_DIR=$dir
+       if test -d $dir; then
+         SYSTEM_GCJ_DIR=$dir
+	 break
+       fi
     done
   fi
   AC_MSG_RESULT(${SYSTEM_GCJ_DIR})
@@ -977,7 +980,10 @@ AC_DEFUN([AC_CHECK_FOR_OPENJDK],
               ])
   if test -z "${SYSTEM_OPENJDK_DIR}"; then
     for dir in /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk ; do
-       test -d $dir && SYSTEM_OPENJDK_DIR=$dir
+       if test -d $dir; then
+         SYSTEM_OPENJDK_DIR=$dir
+	 break
+       fi
     done
   fi
   AC_MSG_RESULT(${SYSTEM_OPENJDK_DIR})
@@ -1010,7 +1016,10 @@ AC_DEFUN([AC_CHECK_FOR_ICEDTEA],
               ])
   if test -z "${SYSTEM_ICEDTEA_DIR}"; then
     for dir in /usr/lib/jvm/java-icedtea /usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk ; do
-       test -d $dir && SYSTEM_ICEDTEA_DIR=$dir
+       if test -d $dir; then
+         SYSTEM_ICEDTEA_DIR=$dir
+	 break
+       fi
     done
   fi
   AC_MSG_RESULT(${SYSTEM_ICEDTEA_DIR})
