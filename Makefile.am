@@ -1,6 +1,6 @@
-OPENJDK_DATE = 22_jan_2009
-OPENJDK_MD5SUM = 6d5ce33b6ffa65966675b769b59e3d0c
-OPENJDK_VERSION = b44
+OPENJDK_DATE = 29_jan_2009
+OPENJDK_MD5SUM = 0d6ae1ed77b470c9665d069b34a1bc88
+OPENJDK_VERSION = b45
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -1899,7 +1899,7 @@ ICEDTEA_PATCHES = \
         patches/security/icedtea-6766136.patch \
 	patches/icedtea-cc-interp-jvmti.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-6791168.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch
+	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch 
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
