@@ -62,18 +62,31 @@ abstract class AbstractNamedAttributeView
 
 
     public final Object getAttribute(String attribute) throws IOException {
-        int size = size(attribute);
-        ByteBuffer buf = ByteBuffer.allocate(size);
-        read(attribute, buf);
-        buf.flip();
-        return buf;
+         int size;
+         try {
+             size = size(attribute);
+         } catch (IOException e) {
+             // not found or some other I/O error
+             if (list().contains(attribute))
+                 throw e;
+             return null;
+         }
+         byte[] buf = new byte[size];
+         int n = read(attribute, ByteBuffer.wrap(buf));
+         return (n == size) ? buf : Arrays.copyOf(buf, n);
     }
 
 
     public final void setAttribute(String attribute, Object value)
         throws IOException
     {
-        write(attribute, (ByteBuffer)value);
+         ByteBuffer bb;
+         if (value instanceof byte[]) {
+             bb = ByteBuffer.wrap((byte[])value);
+         } else {
+             bb = (ByteBuffer)value;
+         }
+         write(attribute, bb);
     }
 
 
@@ -88,29 +101,23 @@ abstract class AbstractNamedAttributeView
             readAll = true;
         } else {
             names.add(first);
-            for (String name: rest) {
-                if (name.equals("*")) {
-                    readAll = true;
-                    break;
-                }
+        }
+        for (String name: rest) {
+            if (name.equals("*")) {
+                readAll = true;
+            } else {
                 names.add(name);
             }
         }
-        if (readAll) {
-            names.clear();
-            for (String name: list()) {
-                names.add(name);
-            }
-        }
+        if (readAll)
+            names = list();
 
-        // allocate buffer for each value and return as map
-        Map<String,ByteBuffer> result = new HashMap<String,ByteBuffer>();
+        // read each value and return in map
+        Map<String,Object> result = new HashMap<String,Object>();
         for (String name: names) {
-            int size = size(name);
-            ByteBuffer buf = ByteBuffer.allocate(size);
-            read(name, buf);
-            result.put(name, buf);
-            buf.flip();
+            Object value = getAttribute(name);
+            if (value != null)
+                result.put(name, value);
         }
 
         return result;

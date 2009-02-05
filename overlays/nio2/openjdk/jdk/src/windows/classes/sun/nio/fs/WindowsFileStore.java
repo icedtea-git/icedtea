@@ -84,11 +84,11 @@ class WindowsFileStore
             // final target
             String target;
             if (file.getFileSystem().supportsLinks()) {
-                target = WindowsLinkSupport.getFinalPath(file);
+                target = WindowsLinkSupport.getFinalPath(file, true);
             } else {
                 // file must exist
                 WindowsFileAttributes.get(file, true);
-                target = file.toString();
+                target = file.getPathForWin32Calls();
             }
             String root = GetVolumePathName(target);
             return new WindowsFileStore(root, file.getPathForPermissionCheck());

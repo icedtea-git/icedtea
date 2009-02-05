@@ -226,9 +226,7 @@ class WindowsFileAttributeViews {
 
             // GetFileAttribtues & SetFileAttributes do not follow links so when
             // following links we need the final target
-            String path = followLinks ? WindowsLinkSupport.getFinalPath(file) :
-                                        file.getPathForWin32Calls();
-
+            String path = WindowsLinkSupport.getFinalPath(file, followLinks);
             try {
                 int oldValue = GetFileAttributes(path);
                 int newValue = oldValue;

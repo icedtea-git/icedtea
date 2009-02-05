@@ -62,16 +62,16 @@ class WindowsDirectoryStream
         this.dir = dir;
         this.filter = filter;
 
-        // Need to append * or \* to match entries in directory.
-        String search = dir.getPathForWin32Calls();
-        char last = search.charAt(search.length() -1);
-        if (last == ':' || last == '\\') {
-            search += "*";
-        } else {
-            search += "\\*";
-        }
-
         try {
+            // Need to append * or \* to match entries in directory.
+            String search = dir.getPathForWin32Calls();
+            char last = search.charAt(search.length() -1);
+            if (last == ':' || last == '\\') {
+                search += "*";
+            } else {
+                search += "\\*";
+            }
+
             FirstFile first = FindFirstFile(search);
             this.handle = first.handle();
             this.firstName = first.name();

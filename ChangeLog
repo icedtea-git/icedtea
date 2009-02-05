@@ -1,3 +1,23 @@
+2009-02-05  Andrew John Hughes  <ahughes@redhat.com>
+
+	Ensure the NIO2 code is in sync with the latest
+	build drop, b98.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/Cancellable.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsAclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsChannelFactory.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileAttributeViews.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileCopy.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsLinkSupport.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsPath.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/InterruptCopy.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView/Basic.java,
+
 2009-02-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:

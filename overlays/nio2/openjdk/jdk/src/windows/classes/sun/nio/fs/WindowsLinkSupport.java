@@ -66,13 +66,17 @@ class WindowsLinkSupport {
      * Returns the final path of a given path as a String. This should be used
      * prior to calling Win32 system calls that do not follow links.
      */
-    static String getFinalPath(WindowsPath input) throws IOException {
+    static String getFinalPath(WindowsPath input, boolean followLinks)
+        throws IOException
+    {
         WindowsFileSystem fs = input.getFileSystem();
-        if (!fs.supportsLinks())
-            return input.getPathForWin32Calls();
 
-        // if the file is not a sym link then return the path to access the file
         try {
+            // if not following links then don't need final path
+            if (!followLinks || !fs.supportsLinks())
+                return input.getPathForWin32Calls();
+
+            // if file is a sym link then don't need final path
             if (!WindowsFileAttributes.get(input, false).isSymbolicLink()) {
                 return input.getPathForWin32Calls();
             }

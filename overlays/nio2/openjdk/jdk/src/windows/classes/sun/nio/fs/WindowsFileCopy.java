@@ -144,8 +144,8 @@ class WindowsFileCopy {
             sm.checkPermission(new LinkPermission("symbolic"));
         }
 
-        final String sourcePath = source.getPathForWin32Calls();
-        final String targetPath = target.getPathForWin32Calls();
+        final String sourcePath = asWin32Path(source);
+        final String targetPath = asWin32Path(target);
 
         // if target exists then delete it.
         if (targetAttrs != null) {
@@ -288,8 +288,8 @@ class WindowsFileCopy {
             target.checkWrite();
         }
 
-        String sourcePath = source.getPathForWin32Calls();
-        String targetPath = target.getPathForWin32Calls();
+        final String sourcePath = asWin32Path(source);
+        final String targetPath = asWin32Path(target);
 
         // atomic case
         if (atomicMove) {
@@ -468,6 +468,16 @@ class WindowsFileCopy {
         }
     }
 
+
+    private static String asWin32Path(WindowsPath path) throws IOException {
+        try {
+            return path.getPathForWin32Calls();
+        } catch (WindowsException x) {
+            x.rethrowAsIOException(path);
+            return null;
+        }
+    }
+
     /**
      * Copy DACL/owner/group from source to target
      */
@@ -476,8 +486,7 @@ class WindowsFileCopy {
                                                boolean followLinks)
         throws IOException
     {
-        String path = followLinks ?
-            WindowsLinkSupport.getFinalPath(source) : source.getPathForWin32Calls();
+        String path = WindowsLinkSupport.getFinalPath(source, followLinks);
 
         // may need SeRestorePrivilege to set file owner
         WindowsSecurity.Privilege priv =

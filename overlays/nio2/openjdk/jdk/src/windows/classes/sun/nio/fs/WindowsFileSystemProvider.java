@@ -137,6 +137,9 @@ public class WindowsFileSystemProvider
                                             options,
                                             sd.address(),
                                             pool);
+        } catch (WindowsException x) {
+            x.rethrowAsIOException(file);
+            return null;
         } finally {
             if (sd != null)
                 sd.release();

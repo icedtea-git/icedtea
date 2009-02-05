@@ -32,7 +32,8 @@ import java.nio.charset.Charset;
 import java.nio.file.*;
 import static java.nio.file.LinkOption.*;
 import java.nio.file.attribute.*;
-import java.util.Iterator;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Random;
 import java.io.IOException;
 
@@ -43,6 +44,29 @@ public class Basic {
     private static final String ATTR_NAME = "user.mime_type";
     private static final String ATTR_VALUE = "text/plain";
     private static final String ATTR_VALUE2 = "text/html";
+
+    static interface Task {
+        void run() throws Exception;
+    }
+
+    static void tryCatch(Class<? extends Throwable> ex, Task task) {
+        boolean caught = false;
+        try {
+            task.run();
+        } catch (Throwable x) {
+            if (ex.isAssignableFrom(x.getClass())) {
+                caught = true;
+            } else {
+                throw new RuntimeException(x);
+            }
+        }
+        if (!caught)
+            throw new RuntimeException(ex.getName() + " expected");
+    }
+
+    static void expectNullPointerException(Task task) {
+        tryCatch(NullPointerException.class, task);
+    }
 
     static boolean hasAttribute(NamedAttributeView view, String attr)
         throws IOException
@@ -55,7 +79,7 @@ public class Basic {
     }
 
     static void test(Path file, LinkOption... options) throws IOException {
-        NamedAttributeView view = file
+        final NamedAttributeView view = file
             .getFileAttributeView(NamedAttributeView.class, options);
         ByteBuffer buf = rand.nextBoolean() ?
             ByteBuffer.allocate(100) : ByteBuffer.allocateDirect(100);
@@ -82,11 +106,10 @@ public class Basic {
             throw new RuntimeException("Unexpected attribute value");
 
         // Test: read with insufficient space
-        try {
-            view.read(ATTR_NAME, ByteBuffer.allocateDirect(size-1));
-            throw new RuntimeException("Read expected to fail");
-        } catch (IOException x) {
-        }
+        tryCatch(IOException.class, new Task() {
+            public void run() throws IOException {
+                view.read(ATTR_NAME, ByteBuffer.allocateDirect(1));
+            }});
 
         // Test: replace value
         buf.clear();
@@ -104,56 +127,97 @@ public class Basic {
         view.delete(ATTR_NAME);
         if (hasAttribute(view, ATTR_NAME))
             throw new RuntimeException("Attribute name in list");
+
+        // Test: dynamic access
+        byte[] valueAsBytes = ATTR_VALUE.getBytes();
+        view.setAttribute(ATTR_NAME, valueAsBytes);
+        byte[] actualAsBytes = (byte[])view.getAttribute(ATTR_NAME);
+        if (!Arrays.equals(valueAsBytes, actualAsBytes))
+            throw new RuntimeException("Unexpected attribute value");
+        Map<String,?> map = view.readAttributes(ATTR_NAME);
+        if (!Arrays.equals(valueAsBytes, (byte[])map.get(ATTR_NAME)))
+            throw new RuntimeException("Unexpected attribute value");
+        map = view.readAttributes(ATTR_NAME, "*");
+        if (!Arrays.equals(valueAsBytes, (byte[])map.get(ATTR_NAME)))
+            throw new RuntimeException("Unexpected attribute value");
+        map = view.readAttributes("DoesNotExist");
+        if (!map.isEmpty())
+            throw new RuntimeException("Map expected to be empty");
     }
 
     static void miscTests(Path file) throws IOException {
-        NamedAttributeView view = file
+        final NamedAttributeView view = file
             .getFileAttributeView(NamedAttributeView.class);
         view.write(ATTR_NAME, ByteBuffer.wrap(ATTR_VALUE.getBytes()));
 
         // NullPointerException
-        ByteBuffer buf = ByteBuffer.allocate(100);
-        try {
-            view.read(null, buf);
-            throw new RuntimeException("NPE expected");
-        } catch (NullPointerException x) { }
-        try {
-            view.read(ATTR_NAME, null);
-            throw new RuntimeException("NPE expected");
-        } catch (NullPointerException x) { }
-        try {
-            view.write(null, buf);
-            throw new RuntimeException("NPE expected");
-        } catch (NullPointerException x) { }
-        try {
-            view.write(ATTR_NAME, null);
-            throw new RuntimeException("NPE expected");
-        } catch (NullPointerException x) { }
-        try {
-            view.size(null);
-            throw new RuntimeException("NPE expected");
-        } catch (NullPointerException x) { }
-        try {
-            view.delete(null);
-            throw new RuntimeException("NPE expected");
-        } catch (NullPointerException x) { }
+        final ByteBuffer buf = ByteBuffer.allocate(100);
+
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+                view.read(null, buf);
+            }});
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+                view.read(ATTR_NAME, null);
+            }});
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+                view.write(null, buf);
+            }});
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+               view.write(ATTR_NAME, null);
+            }});
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+                view.size(null);
+            }});
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+                view.delete(null);
+            }});
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+                view.getAttribute(null);
+            }});
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+                view.setAttribute(ATTR_NAME, null);
+            }});
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+                view.setAttribute(null, new byte[0]);
+            }});
+         expectNullPointerException(new Task() {
+            public void run() throws IOException {
+               view.readAttributes(null);
+            }});
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+                view.readAttributes("*", (String[])null);
+            }});
+        expectNullPointerException(new Task() {
+            public void run() throws IOException {
+                view.readAttributes("*", ATTR_NAME, null);
+            }});
 
         // Read-only buffer
-        buf = ByteBuffer.wrap(ATTR_VALUE.getBytes()).asReadOnlyBuffer();
-        view.write(ATTR_NAME, buf);
-        buf.flip();
-        try {
-            view.read(ATTR_NAME, buf);
-            throw new RuntimeException("IAE expected");
-        } catch (IllegalArgumentException x) { }
+        tryCatch(IllegalArgumentException.class, new Task() {
+            public void run() throws IOException {
+                ByteBuffer buf = ByteBuffer.wrap(ATTR_VALUE.getBytes()).asReadOnlyBuffer();
+                view.write(ATTR_NAME, buf);
+                buf.flip();
+                view.read(ATTR_NAME, buf);
+            }});
 
         // Zero bytes remaining
-        buf = ByteBuffer.allocateDirect(100);
-        buf.position(buf.capacity());
-        try {
-            view.read(ATTR_NAME, buf);
-            throw new RuntimeException("IOE expected");
-        } catch (IOException x) { }
+        tryCatch(IOException.class, new Task() {
+            public void run() throws IOException {
+                ByteBuffer buf = buf = ByteBuffer.allocateDirect(100);
+                buf.position(buf.capacity());
+                view.read(ATTR_NAME, buf);
+            }});
     }
 
     public static void main(String[] args) throws IOException {

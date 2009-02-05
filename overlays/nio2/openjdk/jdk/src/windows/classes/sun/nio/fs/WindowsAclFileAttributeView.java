@@ -117,8 +117,7 @@ class WindowsAclFileAttributeView
 
         // GetFileSecurity does not follow links so when following links we
         // need the final target
-        String path = followLinks ? WindowsLinkSupport.getFinalPath(file) :
-                                    file.getPathForWin32Calls();
+        String path = WindowsLinkSupport.getFinalPath(file, followLinks);
         NativeBuffer buffer = getFileSecurity(path, OWNER_SECURITY_INFORMATION);
         try {
             // get the address of the SID
@@ -142,8 +141,7 @@ class WindowsAclFileAttributeView
 
         // GetFileSecurity does not follow links so when following links we
         // need the final target
-        String path = followLinks ? WindowsLinkSupport.getFinalPath(file) :
-                                    file.getPathForWin32Calls();
+        String path = WindowsLinkSupport.getFinalPath(file, followLinks);
 
         // ALLOW and DENY entries in DACL;
         // AUDIT entries in SACL (ignore for now as it requires privileges)
@@ -170,8 +168,7 @@ class WindowsAclFileAttributeView
 
         // SetFileSecurity does not follow links so when following links we
         // need the final target
-        String path = followLinks ? WindowsLinkSupport.getFinalPath(file) :
-                                    file.getPathForWin32Calls();
+        String path = WindowsLinkSupport.getFinalPath(file, followLinks);
 
         // ConvertStringSidToSid allocates memory for SID so must invoke
         // LocalFree to free it when we are done
@@ -216,9 +213,7 @@ class WindowsAclFileAttributeView
 
         // SetFileSecurity does not follow links so when following links we
         // need the final target
-        String path = followLinks ? WindowsLinkSupport.getFinalPath(file) :
-                                    file.getPathForWin32Calls();
-
+        String path = WindowsLinkSupport.getFinalPath(file, followLinks);
         WindowsSecurityDescriptor sd = WindowsSecurityDescriptor.create(acl);
         try {
             SetFileSecurity(path, DACL_SECURITY_INFORMATION, sd.address());

@@ -51,7 +51,7 @@ class WindowsNamedAttributeView
             throw new NullPointerException("'name' is null");
         return file + ":" + name;
     }
-    private String join(WindowsPath file, String name) {
+    private String join(WindowsPath file, String name) throws WindowsException {
         return join(file.getPathForWin32Calls(), name);
     }
 
@@ -219,11 +219,11 @@ class WindowsNamedAttributeView
             Set<OpenOption> opts = new HashSet<OpenOption>();
             opts.add(READ);
             if (!followLinks)
-                opts.add(WindowsChannelFactory.NOFOLLOW_REPARSEPOINT);
+                opts.add(WindowsChannelFactory.OPEN_REPARSE_POINT);
             fc = WindowsChannelFactory
                 .newFileChannel(join(file, name), null, opts, 0L);
         } catch (WindowsException x) {
-            x.rethrowAsIOException(join(file, name));
+            x.rethrowAsIOException(join(file.getPathForPermissionCheck(), name));
         }
         try {
             long size = fc.size();
@@ -246,11 +246,11 @@ class WindowsNamedAttributeView
             Set<OpenOption> opts = new HashSet<OpenOption>();
             opts.add(READ);
             if (!followLinks)
-                opts.add(WindowsChannelFactory.NOFOLLOW_REPARSEPOINT);
+                opts.add(WindowsChannelFactory.OPEN_REPARSE_POINT);
             fc = WindowsChannelFactory
                 .newFileChannel(join(file, name), null, opts, 0L);
         } catch (WindowsException x) {
-            x.rethrowAsIOException(join(file, name));
+            x.rethrowAsIOException(join(file.getPathForPermissionCheck(), name));
         }
 
         // read to EOF (nothing we can do if I/O error occurs)
@@ -300,7 +300,7 @@ class WindowsNamedAttributeView
         try {
             Set<OpenOption> opts = new HashSet<OpenOption>();
             if (!followLinks)
-                opts.add(WindowsChannelFactory.NOFOLLOW_REPARSEPOINT);
+                opts.add(WindowsChannelFactory.OPEN_REPARSE_POINT);
             opts.add(CREATE);
             opts.add(WRITE);
             opts.add(StandardOpenOption.TRUNCATE_EXISTING);
@@ -309,7 +309,7 @@ class WindowsNamedAttributeView
                 named = WindowsChannelFactory
                     .newFileChannel(join(file, name), null, opts, 0L);
             } catch (WindowsException x) {
-                x.rethrowAsIOException(join(file, name));
+                x.rethrowAsIOException(join(file.getPathForPermissionCheck(), name));
             }
             // write value (nothing we can do if I/O error occurs)
             try {
@@ -331,8 +331,8 @@ class WindowsNamedAttributeView
         if (System.getSecurityManager() != null)
             checkAccess(file.getPathForPermissionCheck(), false, true);
 
-        String toDelete = followLinks ?
-            join(WindowsLinkSupport.getFinalPath(file), name) : join(file, name);
+        String path = WindowsLinkSupport.getFinalPath(file, followLinks);
+        String toDelete = join(path, name);
         try {
             DeleteFile(toDelete);
         } catch (WindowsException x) {

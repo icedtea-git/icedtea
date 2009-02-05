@@ -112,21 +112,24 @@ abstract class Cancellable implements Runnable {
     abstract void implRun() throws Throwable;
 
     /**
-     * Invokes the task in its own thread. If this (meaning the current) thread
-     * is interrupted then an attempt is make to cancel the background task by
-     * writting bits into the memory location that it is polling. On return,
-     * the interrupt status for this thread has been cleared.
+     * Invokes the given task in its own thread. If this (meaning the current)
+     * thread is interrupted then an attempt is make to cancel the background
+     * thread by writing into the memory location that it polls cooperatively.
      */
     static void runInterruptibly(Cancellable task) throws ExecutionException {
         Thread t = new Thread(task);
         t.start();
+        boolean cancelledByInterrupt = false;
         while (t.isAlive()) {
             try {
                 t.join();
             } catch (InterruptedException e) {
+                cancelledByInterrupt = true;
                 task.cancel();
             }
         }
+        if (cancelledByInterrupt)
+            Thread.currentThread().interrupt();
         Throwable exc = task.exception();
         if (exc != null)
             throw new ExecutionException(exc);

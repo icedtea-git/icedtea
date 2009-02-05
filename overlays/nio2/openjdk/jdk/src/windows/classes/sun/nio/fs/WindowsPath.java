@@ -33,6 +33,7 @@ import java.io.*;
 import java.net.URI;
 import java.security.AccessController;
 import java.util.*;
+import java.lang.ref.WeakReference;
 
 import com.sun.nio.file.ExtendedWatchEventModifier;
 
@@ -49,6 +50,15 @@ import static sun.nio.fs.WindowsConstants.*;
 class WindowsPath extends AbstractPath {
     private static final Unsafe unsafe = Unsafe.getUnsafe();
 
+    // The maximum path that does not require long path prefix. On Windows
+    // the maximum path is 260 minus 1 (NUL) but for directories it is 260
+    // minus 12 minus 1 (to allow for the creation of a 8.3 file in the
+    // directory).
+    private static final int MAX_PATH = 247;
+
+    // Maximum extended-length path
+    private static final int MAX_LONG_PATH = 32000;
+
     // FIXME - eliminate this reference to reduce space
     private final WindowsFileSystem fs;
 
@@ -59,18 +69,15 @@ class WindowsPath extends AbstractPath {
     // normalized path
     private final String path;
 
+    // the path to use in Win32 calls. This differs from path for relative
+    // paths and has a long path prefix for all paths longer than MAX_PATH.
+    private volatile WeakReference<String> pathForWin32Calls;
+
     // offsets into name components (computed lazily)
     private volatile Integer[] offsets;
 
-    // resolved against file system's default directory
-    private final String resolved;
-
-    // the path to use in calls to Windows (same as resolved path when less
-    // than 248 characters but differs for long paths)
-    private final String pathForWin32Calls;
-
     // computed hash code (computed lazily, no need to be volatile)
-    private volatile int hash;
+    private int hash;
 
 
     /**
@@ -85,56 +92,6 @@ class WindowsPath extends AbstractPath {
         this.type = type;
         this.root = root;
         this.path = path;
-
-        // resolve path against file system's default directory
-        switch (type) {
-            case ABSOLUTE :
-            case UNC :
-                this.resolved = path;
-                break;
-            case RELATIVE :
-                String defaultDirectory = getFileSystem().defaultDirectory();
-                if (defaultDirectory.endsWith("\\")) {
-                    this.resolved = defaultDirectory + path;
-                } else {
-                    this.resolved = defaultDirectory + "\\" + path;
-                }
-                break;
-            case DIRECTORY_RELATIVE:
-                String defaultRoot = getFileSystem().defaultRoot();
-                this.resolved = defaultRoot + path.substring(1);
-                break;
-            case DRIVE_RELATIVE:
-                // Need to postpone resolving these types of paths as they can
-                // change for the case of removable media devices when media
-                // is inserted or removed.
-                this.resolved = path;
-                break;
-            default:
-                throw new AssertionError();
-        }
-
-        // Long paths need to have "." and ".." removed and be prefixed with \\?\
-        // Note that it is okay to remove ".." even when it follows a link -
-        // for example, it is okay for foo/link/../bar to be changed to foo/bar.
-        // The reason is that Win32 APIs to access foo/link/../bar will access
-        // foo/bar anyway (which differs to Unix systems)
-        String ps = resolved;
-        if (ps.length() > 248) {
-            if (ps.length() > 32000) {
-                throw new InvalidPathException(ps,
-                    "Cannot access file with path exceeding 32000 characters");
-            }
-            try {
-                ps = GetFullPathName(ps);
-            } catch (WindowsException x) {
-                throw new AssertionError("GetFullPathName failed for '" + ps +
-                    "' " + x.getMessage());
-            }
-            ps = addPrefixIfNeeded(ps);
-        }
-
-        this.pathForWin32Calls = ps;
     }
 
     /**
@@ -165,12 +122,107 @@ class WindowsPath extends AbstractPath {
 
     // use this path for permission checks
     String getPathForPermissionCheck() {
+        return path;
+    }
+
+    // use this path for Win32 calls
+    // This method will prefix long paths with \\?\ or \\?\UNC as required.
+    String getPathForWin32Calls() throws WindowsException {
+        // short absolute paths can be used directly
+        if (isAbsolute() && path.length() <= MAX_PATH)
+            return path;
+
+        // return cached values if available
+        WeakReference<String> ref = pathForWin32Calls;
+        String resolved = (ref != null) ? ref.get() : null;
+        if (resolved != null) {
+            // Win32 path already available
+            return resolved;
+        }
+
+        // resolve against default directory
+        resolved = getAbsolutePath();
+
+        // Long paths need to have "." and ".." removed and be prefixed with
+        // "\\?\". Note that it is okay to remove ".." even when it follows
+        // a link - for example, it is okay for foo/link/../bar to be changed
+        // to foo/bar. The reason is that Win32 APIs to access foo/link/../bar
+        // will access foo/bar anyway (which differs to Unix systems)
+        if (resolved.length() > MAX_PATH) {
+            if (resolved.length() > MAX_LONG_PATH) {
+                throw new WindowsException("Cannot access file with path exceeding "
+                    + MAX_LONG_PATH + " characters");
+            }
+            resolved = addPrefixIfNeeded(GetFullPathName(resolved));
+        }
+
+        // cache the resolved path (except drive relative paths as the working
+        // directory on removal media devices can change during the lifetime
+        // of the VM)
+        if (type != WindowsPathType.DRIVE_RELATIVE) {
+            synchronized (path) {
+                pathForWin32Calls = new WeakReference<String>(resolved);
+            }
+        }
         return resolved;
     }
 
-    // use this for calls into Windows (may have \\?\ or \\?\UNC prefix)
-    String getPathForWin32Calls() {
-        return pathForWin32Calls;
+    // return this path resolved against the file system's default directory
+    private String getAbsolutePath() throws WindowsException {
+        if (isAbsolute())
+            return path;
+
+        // Relative path ("foo" for example)
+        if (type == WindowsPathType.RELATIVE) {
+            String defaultDirectory = getFileSystem().defaultDirectory();
+            if (defaultDirectory.endsWith("\\")) {
+                return defaultDirectory + path;
+            } else {
+                StringBuilder sb =
+                    new StringBuilder(defaultDirectory.length() + path.length() + 1);
+                return sb.append(defaultDirectory).append('\\').append(path).toString();
+            }
+        }
+
+        // Directory relative path ("\foo" for example)
+        if (type == WindowsPathType.DIRECTORY_RELATIVE) {
+            String defaultRoot = getFileSystem().defaultRoot();
+            return defaultRoot + path.substring(1);
+        }
+
+        // Drive relative path ("C:foo" for example).
+        if (isSameDrive(root, getFileSystem().defaultRoot())) {
+            // relative to default directory
+            String remaining = path.substring(root.length());
+            String defaultDirectory = getFileSystem().defaultDirectory();
+            String result;
+            if (defaultDirectory.endsWith("\\")) {
+                result = defaultDirectory + remaining;
+            } else {
+                result = defaultDirectory + "\\" + remaining;
+            }
+            return result;
+        } else {
+            // relative to some other drive
+            String wd;
+            try {
+                int dt = GetDriveType(root + "\\");
+                if (dt == DRIVE_UNKNOWN || dt == DRIVE_NO_ROOT_DIR)
+                    throw new WindowsException("");
+                wd = GetFullPathName(root + ".");
+            } catch (WindowsException x) {
+                throw new WindowsException("Unable to get working directory of drive '" +
+                    Character.toUpperCase(root.charAt(0)) + "'");
+            }
+            String result = wd;
+            if (wd.endsWith("\\")) {
+                result += path.substring(root.length());
+            } else {
+                if (path.length() > root.length())
+                    result += "\\" + path.substring(root.length());
+            }
+            return result;
+        }
     }
 
     // Add long path prefix to path if required
@@ -727,9 +779,9 @@ class WindowsPath extends AbstractPath {
      */
     private int getEffectiveAccess() throws IOException {
         // read security descriptor continaing ACL (symlinks are followed)
-        String fp = WindowsLinkSupport.getFinalPath(this);
+        String target = WindowsLinkSupport.getFinalPath(this, true);
         NativeBuffer aclBuffer = WindowsAclFileAttributeView
-            .getFileSecurity(fp, DACL_SECURITY_INFORMATION);
+            .getFileSecurity(target, DACL_SECURITY_INFORMATION);
 
         // retrieves DACL from security descriptor
         long pAcl = GetSecurityDescriptorDacl(aclBuffer.address());
@@ -1189,44 +1241,10 @@ class WindowsPath extends AbstractPath {
             sm.checkPropertyAccess("user.dir");
         }
 
-        // result is the resolved path if the path is not drive-relative
-        if (type != WindowsPathType.DRIVE_RELATIVE)
-            return WindowsPath.createFromNormalizedPath(getFileSystem(), resolved);
-
-        // if the path is drive-relative and is relative to a drive other
-        // than the drive of the default directory then resolve against the
-        // working directory of that drive.
-        if (!isSameDrive(root, getFileSystem().defaultRoot())) {
-            try {
-                int dt = GetDriveType(root + "\\");
-                if (dt == DRIVE_UNKNOWN || dt == DRIVE_NO_ROOT_DIR)
-                    throw new WindowsException("");
-                String wd = GetFullPathName(root + ".");
-                String result = wd;
-                if (wd.endsWith("\\")) {
-                    result += path.substring(root.length());
-                } else {
-                    if (path.length() > root.length())
-                        result += "\\" + path.substring(root.length());
-                }
-                return WindowsPath.createFromNormalizedPath(getFileSystem(), result);
-            } catch (WindowsException x) {
-                IOException ioe = new IOException("Unable to get working " +
-                    "directory of drive '" +
-                    Character.toUpperCase(root.charAt(0)) + "'");
-                throw new java.io.IOError(ioe);
-            }
-        } else {
-            // relative to default directory
-            String remaining = path.substring(root.length());
-            String defaultDirectory = getFileSystem().defaultDirectory();
-            String result;
-            if (defaultDirectory.endsWith("\\")) {
-                result = defaultDirectory + remaining;
-            } else {
-                result = defaultDirectory + "\\" + remaining;
-            }
-            return createFromNormalizedPath(getFileSystem(), result);
+        try {
+            return createFromNormalizedPath(getFileSystem(), getAbsolutePath());
+        } catch (WindowsException x) {
+            throw new IOError(new IOException(x.getMessage()));
         }
     }
 

@@ -90,8 +90,10 @@ public class InterruptCopy {
                 source.copyTo(target, ExtendedCopyOption.INTERRUPTIBLE);
                 throw new RuntimeException("Copy completed (this is not expected)");
             } catch (IOException e) {
+                boolean interrupted = Thread.interrupted();
+                if (!interrupted)
+                    throw new RuntimeException("Interrupt status was not set");
                 System.out.println("Copy failed (this is expected)");
-                e.printStackTrace();
             }
 
             // copy source to target via task in thread pool, interrupting it after

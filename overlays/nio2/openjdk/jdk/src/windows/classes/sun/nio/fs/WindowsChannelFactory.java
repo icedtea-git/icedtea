@@ -56,7 +56,76 @@ class WindowsChannelFactory {
      * Do not follow reparse points when opening an existing file. Do not fail
      * if the file is a reparse point.
      */
-    static final OpenOption NOFOLLOW_REPARSEPOINT = new OpenOption() { };
+    static final OpenOption OPEN_REPARSE_POINT = new OpenOption() { };
+
+    /**
+     * Represents the flags from a user-supplied set of open options.
+     */
+    private static class Flags {
+        boolean read;
+        boolean write;
+        boolean append;
+        boolean truncateExisting;
+        boolean create;
+        boolean createNew;
+        boolean deleteOnClose;
+        boolean sparse;
+        boolean overlapped;
+        boolean sync;
+        boolean dsync;
+
+        // non-standard
+        boolean shareRead = true;
+        boolean shareWrite = true;
+        boolean shareDelete = true;
+        boolean noFollowLinks;
+        boolean openReparsePoint;
+
+        static Flags toFlags(Set<? extends OpenOption> options) {
+            Flags flags = new Flags();
+            for (OpenOption option: options) {
+                if (!(option instanceof StandardOpenOption)) {
+                    if (option == ExtendedOpenOption.NOSHARE_READ) {
+                        flags.shareRead = false;
+                        continue;
+                    }
+                    if (option == ExtendedOpenOption.NOSHARE_WRITE) {
+                        flags.shareWrite = false;
+                        continue;
+                    }
+                    if (option == ExtendedOpenOption.NOSHARE_DELETE) {
+                        flags.shareDelete = false;
+                        continue;
+                    }
+                    if (option == LinkOption.NOFOLLOW_LINKS) {
+                        flags.noFollowLinks = true;
+                        continue;
+                    }
+                    if (option == OPEN_REPARSE_POINT) {
+                        flags.openReparsePoint = true;
+                        continue;
+                    }
+                    if (option == null)
+                        throw new NullPointerException();
+                    throw new UnsupportedOperationException("Unsupported open option");
+                }
+                switch ((StandardOpenOption)option) {
+                    case READ : flags.read = true; break;
+                    case WRITE : flags.write = true; break;
+                    case APPEND : flags.append = true; break;
+                    case TRUNCATE_EXISTING : flags.truncateExisting = true; break;
+                    case CREATE : flags.create = true; break;
+                    case CREATE_NEW : flags.createNew = true; break;
+                    case DELETE_ON_CLOSE : flags.deleteOnClose = true; break;
+                    case SPARSE : flags.sparse = true; break;
+                    case SYNC : flags.sync = true; break;
+                    case DSYNC : flags.dsync = true; break;
+                    default: throw new AssertionError("Should not get here");
+                }
+            }
+            return flags;
+        }
+    }
 
     /**
      * Open/creates file, returning FileChannel to access the file
@@ -72,50 +141,25 @@ class WindowsChannelFactory {
                                       long pSecurityDescriptor)
         throws WindowsException
     {
-        boolean reading = false;
-        boolean writing = false;
-        boolean append = false;
-        boolean trunc = false;
+        Flags flags = Flags.toFlags(options);
 
-        // check for invalid flags
-        for (OpenOption flag: options) {
-            if (flag == StandardOpenOption.READ) {
-                reading = true; continue;
-            }
-            if (flag == StandardOpenOption.WRITE) {
-                writing = true; continue;
-            }
-            if (flag == StandardOpenOption.APPEND) {
-                append = true;
-                writing = true;
-                continue;
-            }
-            if (flag == StandardOpenOption.TRUNCATE_EXISTING) {
-                trunc = true; continue;
-            }
-            if (flag == null)
-                throw new NullPointerException();
-            if (!(flag instanceof StandardOpenOption) &&
-                !(flag instanceof ExtendedOpenOption))
-            {
-                throw new UnsupportedOperationException("Unsupported open option");
+        // default is reading; append => writing
+        if (!flags.read && !flags.write) {
+            if (flags.append) {
+                flags.write = true;
+            } else {
+                flags.read = true;
             }
         }
 
-        // default is reading
-        if (!reading && !writing) {
-            reading = true;
-        }
-
-        // check for invalid combinations
-        if (reading && append)
+        // validation
+        if (flags.read && flags.append)
             throw new IllegalArgumentException("READ + APPEND not allowed");
-        if (append && trunc)
+        if (flags.append && flags.truncateExisting)
             throw new IllegalArgumentException("APPEND + TRUNCATE_EXISTING not allowed");
 
-        FileDescriptor fdObj = open(pathForWindows, pathToCheck, reading, writing,
-            append, false, options, pSecurityDescriptor);
-        return FileChannelImpl.open(fdObj, reading, writing, null);
+        FileDescriptor fdObj = open(pathForWindows, pathToCheck, flags, pSecurityDescriptor);
+        return FileChannelImpl.open(fdObj, flags.read, flags.write, null);
     }
 
     /**
@@ -135,38 +179,24 @@ class WindowsChannelFactory {
                                                               ThreadPool pool)
         throws IOException
     {
-        boolean reading = false;
-        boolean writing = false;
+        Flags flags = Flags.toFlags(options);
 
-        // check for invalid flags
-        for (OpenOption flag: options) {
-            if (flag == StandardOpenOption.READ) {
-                reading = true; continue;
-            }
-            if (flag == StandardOpenOption.WRITE) {
-                writing = true; continue;
-            }
-            if (flag == null)
-                throw new NullPointerException();
-            if (!(flag instanceof StandardOpenOption) &&
-                !(flag instanceof ExtendedOpenOption))
-            {
-                throw new UnsupportedOperationException("Unsupported open option");
-            }
-            if (flag == StandardOpenOption.APPEND)
-                throw new UnsupportedOperationException("'APPEND' not supported");
-        }
+        // Overlapped I/O required
+        flags.overlapped = true;
 
         // default is reading
-        if (!reading && !writing) {
-            reading = true;
+        if (!flags.read && !flags.write) {
+            flags.read = true;
         }
+
+        // validation
+        if (flags.append)
+            throw new UnsupportedOperationException("APPEND not allowed");
 
         // open file for overlapped I/O
         FileDescriptor fdObj;
         try {
-            fdObj = open(pathForWindows, pathToCheck, reading, writing, false,
-                         true, options, pSecurityDescriptor);
+            fdObj = open(pathForWindows, pathToCheck, flags, pSecurityDescriptor);
         } catch (WindowsException x) {
             x.rethrowAsIOException(pathForWindows);
             return null;
@@ -174,7 +204,7 @@ class WindowsChannelFactory {
 
         // create the AsynchronousFileChannel
         try {
-            return WindowsAsynchronousFileChannelImpl.open(fdObj, reading, writing, pool);
+            return WindowsAsynchronousFileChannelImpl.open(fdObj, flags.read, flags.write, pool);
         } catch (IOException x) {
             // IOException is thrown if the file handle cannot be associated
             // with the completion port. All we can do is close the file.
@@ -190,11 +220,7 @@ class WindowsChannelFactory {
      */
     private static FileDescriptor open(String pathForWindows,
                                        String pathToCheck,
-                                       boolean reading,
-                                       boolean writing,
-                                       boolean append,
-                                       boolean overlapped,
-                                       Set<? extends OpenOption> options,
+                                       Flags flags,
                                        long pSecurityDescriptor)
         throws WindowsException
     {
@@ -203,30 +229,30 @@ class WindowsChannelFactory {
 
         // map options
         int dwDesiredAccess = 0;
-        if (reading)
+        if (flags.read)
             dwDesiredAccess |= GENERIC_READ;
-        if (writing)
-            dwDesiredAccess |= (append) ? FILE_APPEND_DATA : GENERIC_WRITE;
+        if (flags.write)
+            dwDesiredAccess |= (flags.append) ? FILE_APPEND_DATA : GENERIC_WRITE;
 
         int dwShareMode = 0;
-        if (!options.contains(ExtendedOpenOption.NOSHARE_READ))
+        if (flags.shareRead)
             dwShareMode |= FILE_SHARE_READ;
-        if (!options.contains(ExtendedOpenOption.NOSHARE_WRITE))
+        if (flags.shareWrite)
             dwShareMode |= FILE_SHARE_WRITE;
-        if (!options.contains(ExtendedOpenOption.NOSHARE_DELETE))
+        if (flags.shareDelete)
             dwShareMode |= FILE_SHARE_DELETE;
 
         int dwFlagsAndAttributes = FILE_ATTRIBUTE_NORMAL;
         int dwCreationDisposition = OPEN_EXISTING;
-        if (writing) {
-            if (options.contains(StandardOpenOption.CREATE_NEW)) {
+        if (flags.write) {
+            if (flags.createNew) {
                 dwCreationDisposition = CREATE_NEW;
                 // force create to fail if file is orphaned reparse point
                 dwFlagsAndAttributes |= FILE_FLAG_OPEN_REPARSE_POINT;
             } else {
-                if (options.contains(StandardOpenOption.CREATE))
+                if (flags.create)
                     dwCreationDisposition = OPEN_ALWAYS;
-                if (options.contains(StandardOpenOption.TRUNCATE_EXISTING)) {
+                if (flags.truncateExisting) {
                     // Windows doesn't have a creation disposition that exactly
                     // corresponds to CREATE + TRUNCATE_EXISTING so we use
                     // the OPEN_ALWAYS mode and then truncate the file.
@@ -239,23 +265,21 @@ class WindowsChannelFactory {
             }
         }
 
-        if (options.contains(StandardOpenOption.DSYNC) || options.contains(StandardOpenOption.SYNC))
+        if (flags.dsync || flags.sync)
             dwFlagsAndAttributes |= FILE_FLAG_WRITE_THROUGH;
-        if (overlapped)
+        if (flags.overlapped)
             dwFlagsAndAttributes |= FILE_FLAG_OVERLAPPED;
-
-        boolean deleteOnClose = options.contains(StandardOpenOption.DELETE_ON_CLOSE);
-        if (deleteOnClose)
+        if (flags.deleteOnClose)
             dwFlagsAndAttributes |= FILE_FLAG_DELETE_ON_CLOSE;
 
         // NOFOLLOW_LINKS and NOFOLLOW_REPARSEPOINT mean open reparse point
         boolean okayToFollowLinks = true;
         if (dwCreationDisposition != CREATE_NEW &&
-            (options.contains(LinkOption.NOFOLLOW_LINKS) ||
-             options.contains(NOFOLLOW_REPARSEPOINT) ||
-             deleteOnClose))
+            (flags.noFollowLinks ||
+             flags.openReparsePoint ||
+             flags.deleteOnClose))
         {
-            if (options.contains(LinkOption.NOFOLLOW_LINKS))
+            if (flags.noFollowLinks)
                 okayToFollowLinks = false;
             dwFlagsAndAttributes |= FILE_FLAG_OPEN_REPARSE_POINT;
         }
@@ -264,11 +288,11 @@ class WindowsChannelFactory {
         if (pathToCheck != null) {
             SecurityManager sm = System.getSecurityManager();
             if (sm != null) {
-                if (reading)
+                if (flags.read)
                     sm.checkRead(pathToCheck);
-                if (writing)
+                if (flags.write)
                     sm.checkWrite(pathToCheck);
-                if (deleteOnClose)
+                if (flags.deleteOnClose)
                     sm.checkDelete(pathToCheck);
             }
         }
@@ -308,9 +332,7 @@ class WindowsChannelFactory {
         }
 
         // make the file sparse if needed
-        if (dwCreationDisposition == CREATE_NEW &&
-            options.contains(StandardOpenOption.SPARSE))
-        {
+        if (dwCreationDisposition == CREATE_NEW && flags.sparse) {
             try {
                 DeviceIoControlSetSparse(handle);
             } catch (WindowsException x) {

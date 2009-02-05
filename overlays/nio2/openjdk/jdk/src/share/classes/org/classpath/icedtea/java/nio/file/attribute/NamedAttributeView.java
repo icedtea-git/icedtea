@@ -48,9 +48,6 @@ import java.io.IOException;
  * intended for use where the size of an attribute value is larger than {@link
  * Integer#MAX_VALUE}.
  *
- * <p> {@note There has been feedback that the read/write methods should use byte
- * arrays instead of ByteBuffers.}
- *
  * <p> Named attributes may be used in some implementations to store security
  * related attributes so consequently, in the case of the default provider at
  * least, all methods that access named attributes require the
@@ -64,13 +61,10 @@ import java.io.IOException;
  * <p> Where dynamic access to file attributes is required, the {@link
  * #getAttribute getAttribute} or {@link #readAttributes(String,String[])
  * readAttributes(String,String[])} methods may be used to read the attribute
- * value as if by invoking the {@link #read read} method. Upon return, the
- * buffer's {@link ByteBuffer#position position} is the index of the first
- * byte of the attribute value, and its {@link ByteBuffer#limit limit} is
- * the index of the first byte that should not be read. The {@link
+ * value. The attribute value is returned as a byte array (byte[]). The {@link
  * #setAttribute setAttribute} method may be used to write the value of a
- * user-defined/named attribute from a buffer as if by invoking the {@link
- * #write write} method.
+ * user-defined/named attribute from a buffer (as if by invoking the {@link
+ * #write write} method), or byte array (byte[]).
  *
  * @since 1.7
  */
