@@ -797,7 +797,7 @@ endif
 # ======================================
 
 # Copy over OpenJDK sources for ecj.
-stamps/extract-ecj.stamp: stamps/patch.stamp stamps/overlay.stamp
+stamps/extract-ecj.stamp: stamps/overlay.stamp
 	if ! test -d openjdk-ecj ; then \
 	    cp -pPRl openjdk openjdk-ecj ; \
 	fi
@@ -1216,7 +1216,7 @@ ICEDTEA_COPY_DIRS += \
 	javax/script
 endif
 
-stamps/copy-source-files.stamp: stamps/patch.stamp
+stamps/copy-source-files.stamp: stamps/overlay.stamp
 	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
 	do \
 	  mkdir -p rt/$$copy_dir ; \
@@ -1244,8 +1244,7 @@ OPENJDK_SOURCEPATH_DIRS = \
         $(SHARE):$(SOLARIS):$(LANGTOOLS):$(JAXP):$(CORBA):$(JAXWS)
 
 # tools.jar class files.
-stamps/hotspot-tools-copy-source-files.stamp: stamps/patch.stamp \
-	stamps/overlay.stamp
+stamps/hotspot-tools-copy-source-files.stamp: stamps/overlay.stamp
 	for copy_dir in \
 	  `cat $(abs_top_srcdir)/tools-copy/tools-jdk-copy-files.txt` ; \
 	do \

@@ -1,5 +1,10 @@
 2009-02-05  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Depend on overlay.stamp rather than patch.stamp.
+	
+2009-02-05  Andrew John Hughes  <ahughes@redhat.com>
+
 	Ensure the NIO2 code is in sync with the latest
 	build drop, b98.
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView.java,
