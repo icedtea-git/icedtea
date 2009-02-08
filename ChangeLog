@@ -1,3 +1,9 @@
+2009-02-08  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Updated sed to search for OpenJDK instead of IcedTea6. 
+	* patches/icedtea-version.patch: Changed PRODUCT_NAME from IcedTea6 to
+	OpenJDK.
+
 2009-02-05  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

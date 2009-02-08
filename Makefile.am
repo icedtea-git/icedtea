@@ -706,7 +706,7 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	if [ -n "$(PKGVERSION)" ]; then \
 	  icedtea_version="$${icedtea_version} ($(PKGVERSION))" ; \
 	fi; \
-	sed -i "s#IcedTea6#IcedTea6 $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk
+	sed -i "s#OpenJDK#OpenJDK $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk
 
 if ENABLE_PLUGIN
 	cp -a $(abs_top_srcdir)/plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
