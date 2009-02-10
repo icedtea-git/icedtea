@@ -43,7 +43,6 @@ import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
@@ -195,7 +194,7 @@ public class PulseAudioSourceDataLineRawTest {
 	}
 
 	@Test
-	public void testVolumeAndMute() throws Exception {
+	public void testVolume() throws Exception {
 
 		Mixer selectedMixer = mixer;
 		SourceDataLine line = (SourceDataLine) selectedMixer
@@ -211,13 +210,8 @@ public class PulseAudioSourceDataLineRawTest {
 		line.start();
 		PulseAudioVolumeControl volume = (PulseAudioVolumeControl) line
 				.getControl(FloatControl.Type.VOLUME);
-		PulseAudioMuteControl mute = (PulseAudioMuteControl) line
-				.getControl(BooleanControl.Type.MUTE);
 
-		mute.setValue(true);
 		volume.setValue(PulseAudioVolumeControl.MAX_VOLUME);
-
-		mute.setValue(false);
 
 		byte[] abData = new byte[1000];
 		int bytesRead = 0;

@@ -73,24 +73,6 @@ AC_ARG_WITH([openjdk],
 AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" = true)
 AC_MSG_RESULT(${with_openjdk})
 
-AC_MSG_CHECKING([for a NetBeans installation])
-AC_ARG_WITH([netbeans-home],
-	    [AS_HELP_STRING([--with-netbeans-home],
-                            [NetBeans home directory (default is /usr/share/netbeans)])],
-            [
-              if test "x${withval}" = x
-              then
-                SYSTEM_NETBEANS_DIR=/usr/share/netbeans
-              else
-                SYSTEM_NETBEANS_DIR=${withval}
-              fi
-            ],
-            [
-              SYSTEM_NETBEANS_DIR=/usr/share/netbeans
-            ])
-AC_MSG_RESULT([${SYSTEM_NETBEANS_DIR}])
-AC_SUBST(SYSTEM_NETBEANS_DIR)
-
 AC_MSG_CHECKING(for Ant home directory)
 AC_ARG_WITH([ant-home],
             [AS_HELP_STRING([--with-ant-home],
@@ -141,18 +123,13 @@ AC_ARG_ENABLE([xrender],
 AM_CONDITIONAL([ENABLE_XRENDER], [test x$ENABLE_XRENDER = xyes])
 AC_MSG_RESULT(${ENABLE_XRENDER})
 
-AC_MSG_CHECKING([whether to build VisualVM])
-AC_ARG_ENABLE([visualvm],
-              [AS_HELP_STRING([--enable-visualvm],
-			                  [Enable compilation of visualvm.])],
-              [enable_visualvm="${enableval}"], [enable_visualvm="no"])
-AM_CONDITIONAL(WITH_VISUALVM, test "x${enable_visualvm}" = "xyes")
-AC_MSG_RESULT(${enable_visualvm})
-
-if test "x${enable_visualvm}" = "xyes"
-then
-  FIND_NETBEANS
-fi
+AC_MSG_CHECKING(whether to include NIO2 support)
+AC_ARG_ENABLE([nio2],
+	      [AS_HELP_STRING([--disable-nio2],
+	      		      [Disable inclusion of backported NIO2])],
+	      [ENABLE_XRENDER="${enableval}"], [ENABLE_NIO2='yes'])
+AM_CONDITIONAL([ENABLE_NIO2], [test x$ENABLE_NIO2 = xyes])
+AC_MSG_RESULT(${ENABLE_NIO2})
 
 AC_MSG_CHECKING([how many parallel build jobs to execute])
 AC_ARG_WITH([parallel-jobs],
@@ -244,9 +221,6 @@ FIND_RHINO_JAR
 WITH_OPENJDK_SRC_ZIP
 WITH_HOTSPOT_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
-WITH_VISUALVM_SRC_ZIP
-WITH_NETBEANS_PROFILER_SRC_ZIP
-WITH_NETBEANS_BASIC_CLUSTER_SRC_ZIP
 WITH_ALT_JAR_BINARY
 AC_CHECK_ENABLE_CACAO
 AC_CHECK_WITH_CACAO_HOME

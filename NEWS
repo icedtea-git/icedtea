@@ -1,5 +1,52 @@
 New in release 1.9 (XXXX-XX-XX)
 
+- Security fixes for:
+  CVE-2008-5360 - Temporary files have guessable file names.
+  CVE-2008-5350 - Allows to list files within the user home directory.
+  CVE-2008-5348 - Denial-Of-Service in kerberos authentication.
+  CVE-2008-5359 - Buffer overflow in image processing.
+  CVE-2008-5351 - UTF-8 decoder accepts non-shortest form sequences.
+  CVE-2008-5356 - Font processing vulnerability.
+  CVE-2008-5353 - Calendar object deserialization allows privilege escalation.
+  CVE-2008-5354 - Privilege escalation in command line applications.
+  CVE-2008-5357 - Truetype Font processing vulnerability.
+  CVE-2008-5352 - Jar200 Decompression buffer overflow.
+  CVE-2008-5358 - Buffer Overflow in GIF image processing.
+- Updated to OpenJDK b14 build.
+- Upgraded to new OpenJDK7 Hotspot 14. The old OpenJDK6 Hotspot 11 can
+  still be configured --with-hotspot-build=original but future versions
+  will drop support for the old version and only support HS14. Zero
+  and Shark have been forward ported to HS14 (from HS12).
+- XRender pipeline support: Java2D are noticably faster and running over a 
+  remote X connection feels like it is all local. Build by default
+  (disable with --disable-xrender). Runtime enabled by running java
+  -Dsun.java2d.xrender=True (default is to use the old X renderer for now).
+- IcedTeaPlugin now supports HTTPS sites and adds a user prompt for
+  untrusted https certificates.
+- Use the ALSA 'default' device. Makes Java play nicer with PulseAudio.
+- VisualVM integration has been removed.
+- Gervill soft synthesizer integration updated to latest CVS version.
+- Integrated jtreg upgraded to 4_0-src-b02-15_oct_2008.
+- make check runs much faster now. jtreg -samevm support has been
+  integrated into the langtools and jdk subsystems. Please package the
+  test/jtreg-summary.log file with your distribution package so end users
+  can compare the test results.
+- Shark (--enable-shark) now builds on 64 bit platforms, but is a
+  pre-alpha technology preview and not recommended for use.
+- Better support for bootstrapping with different jar programs
+  (supporting -J options).
+- If --with-pkgversion isn't given the short mercurial rev node version
+  will be used.  Package distributors are encouraged to build packages with
+  --with-pkgversion to uniquely identify their distribution version number
+  when java -version is run to help distribution specific bug reporting.
+- Various freetype font, pisces renderer and awt X window size fixes
+  to fix visual anomalies.
+- Build fixes for gcc 4.3 and 4.4-pre-release.
+- Added support for building against a specific openjdk src dir
+  or hg revision (--with-openjdk-src-dir or --with-hg-revision).
+- Many other Plugin, Zero, Shark and PulseAudio bug fixes.
+- Build clean up.
+
 New in release 1.8 (2008-11-20)
 
   IcedTea is based on the hard work of a lot of people that contributed to

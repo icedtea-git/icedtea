@@ -76,8 +76,8 @@ public class CertsInfoPane extends SecurityDialogUI {
     private String[] columnNames = { "Field", "Value" };
 	protected ArrayList<String[][]> certsData;
 
-	public CertsInfoPane(JComponent x) {
-		super(x);
+	public CertsInfoPane(JComponent x, CertVerifier certVerifier) {
+		super(x, certVerifier);
 	}
 
 	/**

@@ -37,11 +37,24 @@ exception statement from your version.
 
 package net.sourceforge.jnlp.security;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.net.URL;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import net.sourceforge.jnlp.JNLPFile;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
@@ -59,12 +72,12 @@ public class AccessWarningPane extends SecurityDialogUI {
 	JCheckBox alwaysAllow;
 	Object[] extras;
 	
-	public AccessWarningPane(JComponent x) {
-		super(x);
+	public AccessWarningPane(JComponent x, CertVerifier certVerifier) {
+		super(x, certVerifier);
 	}
 
-	public AccessWarningPane(JComponent x, Object[] extras) {
-		super(x);
+	public AccessWarningPane(JComponent x, Object[] extras, CertVerifier certVerifier) {
+		super(x, certVerifier);
 		this.extras = extras;
 	}
 

@@ -37,18 +37,22 @@ exception statement from your version.
 
 package net.sourceforge.jnlp.security;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.OptionPaneUI;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.ComponentAdapter;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import net.sourceforge.jnlp.JNLPFile;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.plaf.OptionPaneUI;
+
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 /**
@@ -63,13 +67,16 @@ public abstract class SecurityDialogUI extends OptionPaneUI {
 
 	/** Component to receive focus when messaged with selectInitialValue. */
 	Component initialFocusComponent;
+	
+	CertVerifier certVerifier;
 
 	/** PropertyChangeListener for <code>optionPane</code> */
 	private PropertyChangeListener propertyChangeListener;
 	private Handler handler;
 
-	public SecurityDialogUI(JComponent x){
+	public SecurityDialogUI(JComponent x, CertVerifier certVerifier){
 		optionPane = (JOptionPane)x;
+		this.certVerifier = certVerifier;
 	}
 
 	/**

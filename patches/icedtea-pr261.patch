@@ -1,0 +1,59 @@
+diff -Nru openjdk-ecj.orig/jdk/make/java/nio/FILES_java.gmk openjdk-ecj/jdk/make/java/nio/FILES_java.gmk
+--- openjdk.orig/jdk/make/java/nio/FILES_java.gmk	2008-11-20 08:44:11.000000000 +0000
++++ openjdk/jdk/make/java/nio/FILES_java.gmk	2008-12-02 16:00:15.000000000 +0000
+@@ -32,6 +32,7 @@
+ 	java/nio/StringCharBuffer.java \
+ 	\
+ 	java/nio/channels/ByteChannel.java \
++	java/nio/channels/CancelledKeyException.java \
+ 	java/nio/channels/Channel.java \
+ 	java/nio/channels/Channels.java \
+ 	java/nio/channels/DatagramChannel.java \
+@@ -42,6 +43,7 @@
+ 	java/nio/channels/MembershipKey.java \
+ 	java/nio/channels/MulticastChannel.java \
+ 	java/nio/channels/NetworkChannel.java \
++	java/nio/channels/Pipe.java \
+ 	java/nio/channels/ReadableByteChannel.java \
+ 	java/nio/channels/ScatteringByteChannel.java \
+ 	java/nio/channels/SelectableChannel.java \
+diff -Nru openjdk-ecj.orig/jdk/make/java/nio/Makefile openjdk-ecj/jdk/make/java/nio/Makefile
+--- openjdk.orig/jdk/make/java/nio/Makefile	2008-12-02 15:52:07.000000000 +0000
++++ openjdk/jdk/make/java/nio/Makefile	2008-12-02 15:59:32.000000000 +0000
+@@ -85,6 +85,9 @@
+ ifeq ($(PLATFORM), linux)
+ FILES_java += \
+         sun/nio/ch/AbstractPollSelectorImpl.java \
++	sun/nio/ch/DevPollArrayWrapper.java \
++	sun/nio/ch/DevPollSelectorImpl.java \
++	sun/nio/ch/DevPollSelectorProvider.java \
+ 	sun/nio/ch/EPollArrayWrapper.java \
+ 	sun/nio/ch/EPollSelectorProvider.java \
+ 	sun/nio/ch/EPollSelectorImpl.java \
+@@ -99,6 +102,7 @@
+         PollArrayWrapper.c
+ 
+ FILES_export += \
++	sun/nio/ch/DevPollArrayWrapper.java \
+         sun/nio/ch/EPollArrayWrapper.java \
+ 	sun/nio/ch/InheritedChannel.java \
+ 	sun/nio/ch/NativeThread.java
+diff -r 3ee709488c6c openjdk-ecj/jdk/make/java/nio/FILES_java.gmk
+--- openjdk/jdk/make/java/nio/FILES_java.gmk	Thu Nov 27 10:16:56 2008 +0000
++++ openjdk/jdk/make/java/nio/FILES_java.gmk	Thu Nov 27 11:08:57 2008 +0000
+@@ -31,6 +31,7 @@ FILES_src = \
+ 	java/nio/StringCharBuffer.java \
+ 	\
+ 	java/nio/channels/ByteChannel.java \
++	java/nio/channels/CancelledKeyException.java \
+ 	java/nio/channels/Channel.java \
+ 	java/nio/channels/Channels.java \
+ 	java/nio/channels/DatagramChannel.java \
+@@ -38,6 +39,7 @@ FILES_src = \
+ 	java/nio/channels/FileLock.java \
+ 	java/nio/channels/GatheringByteChannel.java \
+ 	java/nio/channels/InterruptibleChannel.java \
++	java/nio/channels/Pipe.java \
+ 	java/nio/channels/ReadableByteChannel.java \
+ 	java/nio/channels/ScatteringByteChannel.java \
+ 	java/nio/channels/SelectableChannel.java \

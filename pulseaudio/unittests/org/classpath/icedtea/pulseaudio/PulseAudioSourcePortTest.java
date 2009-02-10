@@ -40,7 +40,6 @@ package org.classpath.icedtea.pulseaudio;
 import static org.junit.Assert.assertNotNull;
 
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
@@ -103,10 +102,6 @@ public class PulseAudioSourcePortTest {
 				FloatControl volumeControl = (FloatControl) port
 						.getControl(FloatControl.Type.VOLUME);
 				volumeControl.setValue(60000);
-				BooleanControl muteControl = (BooleanControl) port
-						.getControl(BooleanControl.Type.MUTE);
-				muteControl.setValue(true);
-				muteControl.setValue(false);
 				port.close();
 			}
 		}

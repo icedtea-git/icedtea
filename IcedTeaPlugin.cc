@@ -275,7 +275,7 @@ inline long get_time_in_s()
 #define PLUGIN_CHECK(message, result)
 #endif
 
-#define PLUGIN_NAME "IcedTea Web Browser Plugin"
+#define PLUGIN_NAME "IcedTea Java Web Browser Plugin"
 #define PLUGIN_DESCRIPTION "The " PLUGIN_NAME PLUGIN_VERSION " executes Java applets."
 #define PLUGIN_MIME_DESC                                               \
   "application/x-java-vm:class,jar:IcedTea;"                           \

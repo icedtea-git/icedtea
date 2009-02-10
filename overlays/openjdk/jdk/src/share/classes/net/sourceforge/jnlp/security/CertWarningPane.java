@@ -37,14 +37,26 @@ exception statement from your version.
 
 package net.sourceforge.jnlp.security;
 
-import java.awt.*;
-import javax.swing.*;
-
-
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import net.sourceforge.jnlp.JNLPFile;
 import net.sourceforge.jnlp.PluginBridge;
@@ -62,9 +74,11 @@ import net.sourceforge.jnlp.tools.KeyTool;
 public class CertWarningPane extends SecurityDialogUI {
 
 	JCheckBox alwaysTrust;
+	CertVerifier certVerifier;
 
-	public CertWarningPane(JComponent x) {
-		super(x);
+	public CertWarningPane(JComponent x, CertVerifier certVerifier) {
+		super(x, certVerifier);
+		this.certVerifier = certVerifier;
 	}
 
 	/**
@@ -75,7 +89,9 @@ public class CertWarningPane extends SecurityDialogUI {
 			((SecurityWarningDialog)optionPane).getType();
 		JNLPFile file =
 			((SecurityWarningDialog)optionPane).getFile();
-
+		Certificate c = ((SecurityWarningDialog)optionPane)
+                                .getJarSigner().getPublisher();
+		
 		String name = "";
 		String publisher = "";
 		String from = "";
@@ -83,7 +99,11 @@ public class CertWarningPane extends SecurityDialogUI {
 		//We don't worry about exceptions when trying to fill in
 		//these strings -- we just want to fill in as many as possible.
 		try {
-			if (file instanceof PluginBridge)
+			if ((certVerifier instanceof HttpsCertVerifier) && 
+			     (c instanceof X509Certificate))
+			   name = getCN(((X509Certificate)c)
+                                        .getSubjectX500Principal().getName());
+			else if (file instanceof PluginBridge)
 				name = file.getTitle();
 			else
 				name = file.getInformation().getTitle();
@@ -91,8 +111,6 @@ public class CertWarningPane extends SecurityDialogUI {
 		}
 
 		try {
-			Certificate c = ((SecurityWarningDialog)optionPane)
-				.getJarSigner().getPublisher();
 			if (c instanceof X509Certificate) {
 				publisher = getCN(((X509Certificate)c)
 					.getSubjectX500Principal().getName());
@@ -111,20 +129,27 @@ public class CertWarningPane extends SecurityDialogUI {
 		//Top label
 		String topLabelText = "";
 		String propertyName = "";
-		switch (type) {
-		case VERIFIED:
-			topLabelText = R("SSigVerified");
+		if (certVerifier instanceof HttpsCertVerifier)
+		{
+		  topLabelText = "The website's certificate cannot be verified. " +
+				 "Do you want to continue?";
+		  propertyName = "OptionPane.warningIcon";
+		}
+		else
+		  switch (type) {
+		  case VERIFIED:
+		 	topLabelText = R("SSigVerified");
 			propertyName = "OptionPane.informationIcon";
 			break;
-		case UNVERIFIED:
+		  case UNVERIFIED:
 			topLabelText = R("SSigUnverified");
 			propertyName = "OptionPane.warningIcon";
 			break;
-		case SIGNING_ERROR:
+	  	  case SIGNING_ERROR:
 			topLabelText = R("SSignatureError");
 			propertyName = "OptionPane.warningIcon";
 			break;
-		}
+		  }
 		ImageIcon icon = new ImageIcon((new sun.misc.Launcher())
 				.getClassLoader().getResource("net/sourceforge/jnlp/resources/warning.png"));
 		JLabel topLabel = new JLabel(htmlWrap(topLabelText), icon, SwingConstants.LEFT);
@@ -151,7 +176,10 @@ public class CertWarningPane extends SecurityDialogUI {
 		JPanel infoPanel = new JPanel(new GridLayout(4,1));
 		infoPanel.add(nameLabel);
 		infoPanel.add(publisherLabel);
-		infoPanel.add(fromLabel);
+
+		if (!(certVerifier instanceof HttpsCertVerifier))
+		  infoPanel.add(fromLabel);
+
 		infoPanel.add(alwaysTrust);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(25,25,25,25));
 

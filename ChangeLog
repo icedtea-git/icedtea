@@ -1,5 +1,448 @@
 2009-02-10  Andrew John Hughes  <ahughes@redhat.com>
 
+	Merge from IcedTea6.
+	* patches/ecj/icedtea-pr261.patch: Merged.
+	* patches/icedtea-visualvm.patch: Dropped.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMuteControl.java,
+	* visualvm.desktop,
+	* .hgtags,
+	* ChangeLog,
+	* HACKING,
+	* INSTALL,
+	* IcedTeaPlugin.cc,
+	* Makefile.am,
+	* NEWS,
+	* README,
+	* acinclude.m4,
+	* configure.ac,
+	* generated/sun/nio/ch/SocketOptionRegistry.java: Merged.
+	* overlays/nio2/openjdk/jdk/make/mkdemo/nio/Makefile,
+	* overlays/nio2/openjdk/jdk/make/mkdemo/nio/ZipFileSystem/Makefile,
+	* overlays/nio2/openjdk/jdk/make/mksample/nio/aio/Makefile,
+	* overlays/nio2/openjdk/jdk/make/mksample/nio/file/Makefile,
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedCopyOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedOpenOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedWatchEventModifier.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/File.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/FilePermission.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/Inputs.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/Outputs.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/ProtocolFamily.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/SocketOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/StandardProtocolFamily.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/StandardSocketOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousByteChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousDatagramChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/Channels.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/CompletionHandler.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/DatagramChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileLock.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/MembershipKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/MulticastChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/NetworkChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/SeekableByteChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/exceptions,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/package-info.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/spi/SelectorProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/spi/package.html,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/AccessDeniedException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/AccessMode.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/AtomicMoveNotSupportedException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ClosedDirectoryStreamException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ClosedFileSystemException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ClosedWatchServiceException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/CopyOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/DirectoryNotEmptyException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/DirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/DirectoryStreamFilters.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileAction.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileAlreadyExistsException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileRef.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileStore.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystemAlreadyExistsException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystemException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystemNotFoundException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystems.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileTreeWalker.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileVisitOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileVisitResult.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileVisitor.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Files.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/InvalidPathException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/LinkOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/LinkPermission.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/NoSuchFileException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/NotDirectoryException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/NotLinkException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/OpenOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Path.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/PathMatcher.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Paths.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ProviderMismatchException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ProviderNotFoundException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ReadOnlyFileSystemException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/SecureDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/SimpleFileVisitor.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/StandardCopyOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/StandardOpenOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/StandardWatchEventKind.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/WatchEvent.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/WatchKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/WatchService.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Watchable.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclEntry.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclEntryFlag.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclEntryPermission.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclEntryType.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/Attributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/BasicFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/BasicFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/DosFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/DosFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileAttribute.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileOwnerAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileStoreAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileStoreSpaceAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileStoreSpaceAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/GroupPrincipal.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFilePermission.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFilePermissions.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/UserPrincipal.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/UserPrincipalLookupService.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/UserPrincipalNotFoundException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/package-info.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/package-info.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/AbstractPath.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/FileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/FileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/package-info.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/util/Scanner.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/util/concurrent/ScheduledThreadPoolExecutor.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaIODeleteOnExitAccess.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaNetGetIndexAccess.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaUtilConcurrentThreadPoolExecutorAccess.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/SharedSecrets.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AbstractFuture.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousChannelGroupImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/Cancellable.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/CompletedFuture.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/ExtendedSocketOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/FileLockTable.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/Groupable.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/Invoker.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/MembershipKeyImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/MembershipRegistry.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/OptionKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/PendingFuture.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/SimpleAsynchronousDatagramChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/SimpleAsynchronousFileChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/ThreadPool.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractAclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractBasicFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractFileStoreSpaceAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractPoller.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/Cancellable.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/FileOwnerAttributeViewImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/Globs.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/MimeType.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/NativeBuffer.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/NativeBuffers.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/Reflect.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/META-INF/services/java.nio.file.spi.FileSystemProvider,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/README.txt,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/JarEntryInfo.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/JarFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/JarFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipEntryInfo.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileBasicAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileBasicAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFilePath.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileStream.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipHeaderConstants.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipPathParser.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipUtils.java,
+	* overlays/nio2/openjdk/jdk/src/share/native/sun/nio/ch/genSocketOptionRegistry.c,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/aio/EchoServer.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/AclEdit.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/Chmod.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/Copy.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/DiskUsage.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/FileType.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/WatchDir.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/Xdd.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/DefaultAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/DefaultSelectorProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/EPollPort.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/LinuxAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/Port.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/SolarisAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/SolarisEventPort.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/UnixAsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/UnixAsynchronousSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/DefaultFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/DefaultFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/GnomeFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxDosFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxNativeDispatcher.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisAclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisNativeDispatcher.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixChannelFactory.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixCopyFile.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixException.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributeViews.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileKey.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileModeAttribute.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileStoreAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixMountEntry.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixNativeDispatcher.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixPath.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixSecureDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixUserPrincipals.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/ch/EPollPort.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/ch/SolarisEventPort.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/ch/UnixAsynchronousServerSocketChannelImpl.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/ch/UnixAsynchronousSocketChannelImpl.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/GnomeFileTypeDetector.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/LinuxNativeDispatcher.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/LinuxWatchService.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/SolarisNativeDispatcher.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/SolarisWatchService.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/UnixCopyFile.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/UnixNativeDispatcher.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/genSolarisConstants.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/genUnixConstants.c,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/DefaultAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/DefaultSelectorProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/Iocp.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/PendingIoCache.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/WindowsAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/WindowsAsynchronousFileChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/WindowsAsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/WindowsAsynchronousSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/DefaultFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/DefaultFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/RegistryFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsAclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsChannelFactory.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsConstants.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsException.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileAttributeViews.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileCopy.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsLinkSupport.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsNativeDispatcher.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsPath.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsPathParser.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsPathType.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsSecurity.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsSecurityDescriptor.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsUriSupport.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsUserPrincipals.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/ch/Iocp.c,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/ch/WindowsAsynchronousFileChannelImpl.c,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/ch/WindowsAsynchronousServerSocketChannelImpl.c,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/ch/WindowsAsynchronousSocketChannelImpl.c,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/fs/RegistryFileTypeDetector.c,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/fs/WindowsNativeDispatcher.c,
+	* overlays/nio2/openjdk/jdk/test/demo/nio/ZipFileSystem/Sanity.java,
+	* overlays/nio2/openjdk/jdk/test/demo/nio/ZipFileSystem/sanity.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/io/Inputs/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/AsExecutor.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/Attack.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/GroupOfOne.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/Identity.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/PrivilegedThreadFactory.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/Restart.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/Unbounded.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/run_any_task.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousDatagramChannel/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel/CustomThreadPool.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel/Lock.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel/MyThreadFactory.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel/WithSecurityManager.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel/java.policy.allow,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel/java.policy.deny,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel/Leaky.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/Channels/Basic2.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider/CheckProvider.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider/META-INF/services/java.nio.channels.spi.AsynchronousChannelProvider,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider/Provider1.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider/Provider2.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider/custom_provider.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/DirectoryStream/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/DirectoryStream/Filters.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/DirectoryStream/SecureDS.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/FileStore/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/FileSystem/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/ContentType.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/CreateFileTree.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/ForceLoad.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/META-INF/services/java.nio.file.spi.FileTypeDetector,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/Misc.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/PrintFileTree.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/SimpleFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/SkipSiblings.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/TerminateWalk.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/content_type.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/walk_file_tree.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/CopyAndMove.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/DeleteOnClose.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/InterruptCopy.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/Links.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/Misc.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/PathOps.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/SBC.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/TemporaryFiles.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/UriImportExport.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/delete_on_close.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/temporary_files.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/PathMatcher/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/TestUtil.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/FileTreeModifier.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/WithSecurityManager.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/denyAll.policy,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/grantDirAndOneLevel.policy,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/grantDirAndTree.policy,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/grantDirOnly.policy,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/AclFileAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/Attributes/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/BasicFileAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/DosFileAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/FileStoreAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/PosixFileAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/spi/SetDefaultProvider.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/spi/TestProvider.java: Added.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/DefaultLaunchHandler.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPClassLoader.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/AccessWarningPane.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/AppletWarningPane.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/CertVerifier.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/CertWarningPane.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/CertsInfoPane.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/HttpsCertVerifier.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/MoreInfoPane.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/SecurityDialogUI.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/SecurityWarningDialog.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/SingleCertInfoPane.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/VariableX509TrustManager.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/security/viewer/CertificatePane.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/tools/JarSigner.java,
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/tools/KeyTool.java,
+	* patches/hotspot/14.0b08/icedtea-format.patch,
+	* patches/icedtea-awt-window-size.patch,
+	* patches/icedtea-cc-interp-jvmti.patch,
+	* patches/icedtea-doc-headers.patch,
+	* patches/icedtea-java2d-dasher.patch,
+	* patches/icedtea-nio2.patch,
+	* patches/icedtea-pr261.patch,
+	* patches/icedtea-version.patch,
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java,
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java,
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java,
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java,
+	* plugin/icedtea/sun/applet/PluginClassLoader.java,
+	* plugin/icedtea/sun/applet/PluginDebug.java,
+	* plugin/icedtea/sun/applet/PluginException.java,
+	* plugin/icedtea/sun/applet/PluginMain.java,
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java,
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java,
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java,
+	* plugin/icedtea/sun/applet/RequestQueue.java,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp,
+	* ports/hotspot/src/share/vm/includeDB_shark,
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkEntry.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp,
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPlaybackLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineRawTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourcePortTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java: Merged.
+	
+2009-02-10  Andrew John Hughes  <ahughes@redhat.com>
+
 	Bump to b46.
 	* patches/icedtea-directaudio-close-trick.patch,
 	* patches/icedtea-enum-bug-181.patch,
@@ -13,12 +456,81 @@
 	* patches/icedtea-copy-plugs.patch: Recreated
 	due to S6702956.
 
+2009-02-08  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Updated sed to search for OpenJDK instead of IcedTea6. 
+	* patches/icedtea-version.patch: Changed PRODUCT_NAME from IcedTea6 to
+	OpenJDK.
+
+2009-02-05  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Depend on overlay.stamp rather than patch.stamp.
+	
+2009-02-05  Andrew John Hughes  <ahughes@redhat.com>
+
+	Ensure the NIO2 code is in sync with the latest
+	build drop, b98.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/Cancellable.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsAclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsChannelFactory.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileAttributeViews.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileCopy.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsLinkSupport.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsPath.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/InterruptCopy.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView/Basic.java,
+
+2009-02-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(AC_CHECK_FOR_GCJ_JDK): Drop out of loop
+	when first solution is found.
+	(AC_CHECK_FOR_OPENJDK): Likewise.
+	(AC_CHECK_FOR_ICEDTEA): Likewise.
+	
+2009-02-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Add new patch.
+	* patches/hotspot/14.0b08/icedtea-format.patch,
+	Fix warnings that cause the build to fail with
+	GCC 4.3.3.
+	
+2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-nio2.patch:
+	(docs/NON_CORE_PKGS.gmk): Rename NIO to NIO2.
+	(docs/Makefile): Add rule for generating NIO2 docs.
+	
+2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Move doc headers patch above NIO2 patch,
+	as this needs to alter the same file.
+	* patches/icedtea-doc-headers.patch:
+	Add IcedTea bugzilla URL and common licensing
+	to all documentation.
+
 2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Bump to b45.
-	
-2009-01-28  Andrew John Hughes  <ahughes@redhat.com>
+
+2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Add new patch.
+	* patches/icedtea-doc-headers.patch:
+	Fix licensing of documentation.
+
+2009-01-30  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Rename PULSEAUDIO_SOURCES and JTREG_SOURCES
@@ -26,7 +538,82 @@
 	endif in download.stamp.
 	* patches/icedtea-rhino.patch:
 	Remove merge conflicts.
-	
+
+2009-01-28  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-nio2.patch:
+	(mapfile-linux): Add new functions in sun.nio.ch.Net.
+	(Net.java:setIntOption0(FileDescriptor,boolean,int,int,int)): Renamed to...
+	(Net.java:setIntOption1(FileDescriptor,boolean,int,int,int)): to avoid C collision.
+	(Net.c): Add back java_net_SocketOptions.h, bind0 and connect0 and setIntOption0
+	and rename existing setIntOption0 to setIntOption1.
+
+2009-01-29  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-java2d-dasher.patch: New patch. Fix interpretation of
+	dash array elements in BasicStroke.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
+2009-01-28  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated date.
+
+2009-01-28  Andrew Haley  <aph@redhat.com>
+
+	* NEWS: Updated.
+
+2009-01-28  Mark Wielaard  <mark@klomp.org>
+
+	* NEWS: Updated for 1.4.
+
+2009-01-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
+	Use org.classpath.icedtea.java.nio.channels.FileChannel.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/FileSystemProvider.java:
+	Likewise.
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/META-INF/services/java.nio.file.spi.FileSystemProvider,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/README.txt,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/JarEntryInfo.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/JarFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/JarFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipEntryInfo.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileBasicAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileBasicAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFilePath.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileStream.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipHeaderConstants.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipPathParser.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipUtils.java:
+	Import NIO2 demo and fix imports.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystemProvider.java:
+	Use org.classpath.icedtea.java.nio.channels.FileChannel.
+
+2009-01-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
+	(positionSBC(long)): Renamed from position(long).
+	(truncateSBC(long)): Likewise.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/SeekableByteChannel.java:
+	Same as for FileChannel, prevents conflict with versions in java.nio.channel.FileChannel.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/SolarisAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/SolarisEventPort.java:
+	Add missing imports.
+	* patches/icedtea-nio2.patch:
+	(FileChannelImpl.positionSBC(long)): Added, simply calls position(long).
+	(FileChannelImpl.truncateSBC(long)): Likewise.
+
+2009-01-27  Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp:
+	Add memory barriers where needed for PPC.
+
 2009-01-26  Andrew John Hughes  <ahughes@redhat.com>
 
 	Bump to b44.
@@ -36,6 +623,389 @@
 	* Makefile.am: Bump to b44, drop io_util-overflow patch.
 	* patches/icedtea-linker-libs-order.patch:
 	Recreated against b44.
+
+2009-01-26  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/GnomeFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxDosFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixChannelFactory.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixCopyFile.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixException.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributeViews.java:
+	Fix imports and use of varargs.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileModeAttribute.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixPath.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixSecureDirectoryStream.java:
+	Fix imports and use of varargs.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixUserPrincipals.java:
+	Fix imports.
+	* patches/icedtea-nio2.patch:
+	(FileChannelImpl): Fix imports.
+	(Net.c): Patch to new version with new functions.
+	(nio_util.h): Add RESTARTABLE macro.
+
+2009-01-26  Lillian Angel  <langel@redhat.com>
+
+	* configure.ac: Updated to pre-1.5 version.
+
+2009-01-26  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
+	(JavaThread::has_special_condition_for_native_trans): New method.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp:
+	(CppInterpreter::native_entry): Correctly handle safepoints
+	during post-call thread state transition.
+
+2009-01-22  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp:
+	(CppInterpreter::native_entry): Correctly handle asynchronous
+	exceptions during post-call thread state transition.
+
+2009-01-22  Omair Majid  <omajid@redhat.com>
+	    Ioana Ivan <iivan@redhat.com>
+			
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(start): Return silently if already started.
+	(stop): Return silently if already stopped.
+
+2009-01-22  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Use
+	Hashtable to store classloaders, instead of HashMap (values cannot be
+	null in HashTable).
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Catch CFE in
+	addition to CNFE.
+
+2009-01-22  Andrew Haley  <aph@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp (class
+	ZeroFrame::FrameType): Set ENTRY_FRAME = 0xCAFEBABE.
+
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp (SHARK_FLAGS):
+	Add SharkPrintAsmOf.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Add comment.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Set builder()->sharkEntry.
+	Use fnmatch() instead of strcmp().
+	Generate debugging dumps.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp
+	(SharkEntry::code_start, code_limit): Rewrite.
+	(SharkEntry::setBounds): New.
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::pointer_constant): New function.
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp
+	(SharkBytecodeTracer::decode_one_word):
+	use SharkBuilder::pointer_constant.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::sharkEntry): New.
+	(SharkBuilder::CreateUnimplemented): use SharkBuilder::pointer_constant.
+	(SharkBuilder::CreateShouldNotReachHere): Likewise.
+	(MyJITMemoryManager::endFunctionBody): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::check_zero): use SharkBuilder::pointer_constant.
+	(SharkBlock::check_bounds): Likewise.
+	(SharkBlock::add_safepoint): Likewise.
+	(SharkBlock::do_new): Likewise.
+	(SharkBlock::do_monitorexit): Don't check for null monitor.
+
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp: Add
+	llvm/ExecutionEngine/JITMemoryManager.h,
+	llvm/Support/CommandLine.h.
+	* ports/hotspot/src/share/vm/includeDB_shark (sharkBuilder.hpp):
+	add sharkEntry.hpp.
+
+2009-01-22  Lillian Angel  <langel@redhat.com>
+
+	* NEWS: Updated for release candidate.
+
+2009-01-22  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp: Updated copyright year.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.cpp: Likewise.
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Likewise.
+
+2009-01-22  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
+	(print_zero_threads): New debug function.
+
+2009-01-22  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-cc-interp-jvmti.patch: Reenable thread signalling.
+
+2009-01-21  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-awt-window-size.patch: Update patch.
+
+2009-01-21  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java: 
+	Remove unused variables volume and muted.
+	(PulseAudioClip): Remove variable volume.
+	(open): Remove muteControl, volume and muted.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(setVolume): Rename to setCachedVolume.
+	(getVolume): Rename to getCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMuteControl.java:
+	Remove file. Mute relied on chaning the volume only through the api. That
+	assumption is invalid as the user can change volume through pulseaudio's
+	controls.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPlaybackLine.java
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(getVolume): Rename to getCachedVolume.
+	(setVolume): Rename to setCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java:
+	Remove muted and muteControl. Rename volume to cachedVolume. 
+	(PulseAudioPort): Remove muteControl.
+	(isMuted): Remove function.
+	(setMuted): Remove.
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	(setVolume): Rename to setCachedVolume.
+	(getVolume): Rename to getCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java:
+	Remove muteControl, muted and volume.
+	(open): Remove muteControl.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(getVolume): Rename to getCachedVolume.
+	(setVolume): Rename to setCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java
+	(setValue): Dont check for mute.
+	(getValue): Query pulseaudio for any change in volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java:
+	New variable cachedVolume.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(getCachedVolume): New function.
+	(setCachedVolume): New function.
+	(update_channels_and_volume): New function.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	(sink_input_volume_change_complete): Remove.
+	(sink_input_change_volume): Remove.
+	(Java_org_classpath_icedtea_pulseaudio_EventLoop_native_1set_1sink_1volume):
+	Remove.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1updateVolumeInfo):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1update_1volume.
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1setVolume):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1set_1volume.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1updateVolumeInfo):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1update_1volume.
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1setVolume):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1set_1volume.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1setVolume): Rename
+	to Java_org_classpath_icedtea_pulseaudio_Stream_native_1set_1volume.
+	(get_sink_input_volume_callback): New function.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1update_1volume): New
+	function.
+
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java
+	(testSupportedControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineRawTest.java
+	(testVolumeAndMute): Rename to testVolume. Remove test for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java
+	(testVolumeAndMute): Likewise.
+	(testSupportedControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourcePortTest.java	
+	(testControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java
+	(testControls): Likewise.
+
+2009-01-21  Lillian Angel  <langel@redhat.com>
+
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java: Added
+	copyright header.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginClassLoader.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginDebug.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginException.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginMain.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java: Likewise.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Likewise.
+	* plugin/icedtea/sun/applet/RequestQueue.java: Likewise.
+
+2009-01-21  Lillian Angel  <langel@redhat.com>
+
+	* rt/net/sourceforge/jnlp/security/CertVerifier.java: Fixed file name
+	in GPL header.
+	* rt/net/sourceforge/jnlp/security/HttpsCertVerifier.java: Likewise.
+
+2009-01-20  Lillian Angel  <langel@redhat.com>
+
+	* rt/net/sourceforge/jnlp/DefaultLaunchHandler.java: Removed debug
+	lines.
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Likewise. 
+	* rt/net/sourceforge/jnlp/security/AccessWarningPane.java: Updated
+	imports.
+	* rt/net/sourceforge/jnlp/security/AppletWarningPane.java: Updated
+	imports.
+	* rt/net/sourceforge/jnlp/security/CertWarningPane.java: Updated
+	imports, added certVerifier global variable.
+	(CertWarningPane): Initialized certVerifier.
+	(installComponents): Added checks to determine if certificate is for
+	an https site, and set the name/publisher/from variables
+	appropriately. Also, customized warning pane label for https site.
+	* rt/net/sourceforge/jnlp/security/HttpsCertVerifier.java:
+	(getDetails): Implemented.
+	(addToDetails): Likewise.
+	(R): Likewise.
+	(getPublisher): Likewise.
+	(getRoot): Likewise.
+	(getRootInCacerts): Likewise.
+	(hasSigningIssues): Likewise.
+	(noSigningIssues): Likewise.
+	* rt/net/sourceforge/jnlp/security/MoreInfoPane.java: Fixed imports.
+	* rt/net/sourceforge/jnlp/security/SecurityDialogUI.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/security/SingleCertInfoPane.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/security/viewer/CertificatePane.java: Fixed
+	imports.
+	* rt/net/sourceforge/jnlp/tools/KeyTool.java: Removed debug lines.
+	* rt/net/sourceforge/jnlp/security/CertVerifier.java: Moved file
+	below, here.
+	* rt/net/sourceforge/jnlp/tools/CertVerifier.java: Removed.
+	* rt/net/sourceforge/jnlp/security/VariableX509TrustManager.java:
+	Removed debug lines.
+
+2009-01-20  Lillian Angel  <langel@redhat.com>
+
+	* HACKING: Removed visualvm patch.
+	* INSTALL: Updated to remove visualvm notes.
+	* Makefile.am: Removed building of netbeans and visualvm.
+	* README: Updated to remove visualvm notes.
+	* acinclude.m4: Removed options for netbeans and visualvm.
+	* configure.ac: Likewise.
+	* patches/icedtea-visualvm.patch: Removed.
+	* visualvm.desktop: Removed.
+
+2009-01-20  Matthias Klose  <doko@ubuntu.com>
+	    Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.[ch]pp (i486): Rename
+	to x86.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp (fp): Remove PRODUCT
+	conditional, make the not-PRODUCT bit the default.
+
+2009-01-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaNetGetIndexAccess.java:
+	(getByIndex(int)): New method.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousServerSocketChannelImpl.java:
+	Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/MembershipKeyImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/MembershipRegistry.java:
+	New files.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/SimpleAsynchronousFileChannelImpl.java:
+	Fix imports, refer to AsynchronousFileLockImpl instead of FileLockImpl.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractAclFileAttributeView.java:
+	Fix imports and vararg usage.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractBasicFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractFileStoreSpaceAttributeView.java:
+	Fix vararg usage.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractPoller.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchService.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/FileOwnerAttributeViewImpl.java:
+	Fix imports and vararg usage.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/EPollPort.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/LinuxAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/Port.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/UnixAsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/UnixAsynchronousSocketChannelImpl.java:
+	Fix imports.
+	* patches/icedtea-nio2.patch:
+	Add new classes.
+	(Unsafe.copyMemory(long,long,long)): Backported.
+	(Unsafe.copyMemory(Object,long,Object,long,long)): Backported.
+	(Unsafe.ARRAY_BYTE_BASE_OFFSET): Likewise.
+	(DatagramChannelImpl.bind(SocketAddress)): Likewise.
+	(DatagramChannelImpl.getLocalAddress()): Likewise.
+	(DatagramChannelImpl.getOption(SocketOption)): Likewise.
+	(DatagramChannelImpl.innerJoin(InetAddress,NetworkInterface,InetAddress)): Likewise.
+	(DatagramChannelImpl.join(InetAddress,NetworkInterface)): Likewise.
+	(DatagramChannelImpl.join(InetAddress,NetworkInterface,InetAddress)): Likewise.
+	(DatagramChannelImpl.block(MembershipKeyImpl,InetAddress)): Likewise.
+	(DatagramChannelImpl.unblock(MembershipKeyImpl,InetAddress)): Likewise.
+	(DatagramChannelImpl.drop(MembershipKeyImpl)): Likewise.
+	(Net.getInterface4(FileDescriptor)): Likewise.
+	(Net.getInterface6(FileDescriptor)): Likewise.
+	(Net.inet4FromInt(int)): Likewise.
+	(Net.inet6AsByteArray(InetAddress)): Likewise.
+	(Net.join6(FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.drop6(FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.joinOrDrop6(boolean,FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.block6(FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.unblock6(FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.blockOrUnblock6(boolean,FileDescriptor,byte[],int,byte[])): Likewise.
+	(Net.join4(FileDescriptor,int,int,int)): Likewise.
+	(Net.drop4(FileDescriptor,int,int,int)): Likewise.
+	(Net.joinOrDrop4(boolean,FileDescriptor,int,int,int)): Likewise.
+	(Net.block4(FileDescriptor,int,int,int)): Likewise.
+	(Net.unblock4(FileDescriptor,int,int,int)): Likewise.
+	(Net.blockOrUnblock4(boolean,FileDescriptor,int,int,int)): Likewise.
+	(Net.connect(FileDescriptor,InetAddress,int)): Likewise.
+	(Net.connect(ProtocolFamily,FileDescriptor,InetAddress,int)): Likewise.
+	(Net.connect0(boolean,FileDescriptor,InetAddress,int)): Likewise.
+	(FileDispatcher.NO_LOCK)): Likewise.
+	(FileDispatcher.LOCKED)): Likewise.
+	(FileDispatcher.RET_EX_LOCK)): Likewise.
+	(FileDispatcher.INTERRUPTED)): Likewise.
+	(FileDispatcher.size(FileDescriptor)): Likewise.
+	(FileDispatcher.truncate(FileDescriptor, long)): Likewise.
+	(FileDispatcher.force(FileDescriptor, boolean)): Likewise.
+	(FileDispatcher.lock(FileDescriptor, boolean, long, long, boolean)): Likewise.
+	(FileDispatcher.release(FileDescriptor, long, long)): Likewise.
+	(FileDispatcher.force0(FileDescriptor,boolean)): Likewise.
+	(FileDispatcher.truncate0(FileDescriptor, long)): Likewise.
+	(FileDispatcher.size0(FileDescriptor)): Likewise.
+	(FileDispatcher.lock0(FileDescriptor, boolean, long, long, boolean)): Likewise.
+	(FileDispatcher.release0(FileDescriptor, long, long)): Likewise.
 
 2009-01-19  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -103,6 +1073,40 @@
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp,
 	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp:
 	Merged.
+	
+2009-01-19  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Add "Java" in the plugin description string. 
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Change the way the
+	image was searched locally.
+	* plugin/icedtea/sun/applet/PluginMain.java: Install a custom SSL trust
+	manager.
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Cache file names
+	from jars.
+	* rt/net/sourceforge/jnlp/security/AccessWarningPane.java: Accept
+	CertVerifier as an additional argument.
+	* rt/net/sourceforge/jnlp/security/AppletWarningPane.java: Same.
+	* rt/net/sourceforge/jnlp/security/CertWarningPane.java: Same.
+	* rt/net/sourceforge/jnlp/security/CertsInfoPane.java: Same.
+	* rt/net/sourceforge/jnlp/security/HttpsCertVerifier.java: New file.
+	Implements information gathering functions used by various prompt dialogs.
+	* rt/net/sourceforge/jnlp/security/MoreInfoPane.java: Accept CertVerifier 
+	as an additional argument.
+	* rt/net/sourceforge/jnlp/security/SecurityDialogUI.java: Same.
+	* rt/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Use the new
+	common CertVerifier interface to gather information.
+	* rt/net/sourceforge/jnlp/security/SingleCertInfoPane.java: Accept
+	CertVerifier as an additional argument.
+	* rt/net/sourceforge/jnlp/security/VariableX509TrustManager.java:
+	Customized trustmanager that can temporarily trust certificates on the
+	fly.
+	* rt/net/sourceforge/jnlp/security/viewer/CertificatePane.java: Accept
+	CertVerifier as an additional argument.
+	* rt/net/sourceforge/jnlp/tools/CertVerifier.java: New common interface
+	that all security related dialogs now query for certificate info (jar and
+	https).
+	* rt/net/sourceforge/jnlp/tools/JarSigner.java: Implement the new
+	CertVerifier verifier interface.
 
 2009-01-18  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -117,6 +1121,35 @@
 	* patches/ecj/icedtea-sbcs.patch: New patch to prevent
 	GenerateSBCS.java using java.util.Scanner for ecj builds.
 	* patches/xrender/icedtea-002.patch: Recreated against b43.
+
+2009-01-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* generated/sun/nio/ch/SocketOptionRegistry.java:
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/DatagramChannel.java:
+	Added (1.7 extensions).
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/exceptions: Fix package.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/spi/SelectorProvider.java:
+	Added (1.7 extensions).
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaNetGetIndexAccess.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/SharedSecrets.java:
+	Added to provide access to package-private NetworkInterface.getIndex().
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/CompletedFuture.java:
+	Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/ExtendedSocketOption.java: Added.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/Invoker.java: Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/OptionKey.java: Added.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/PendingFuture.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/SimpleAsynchronousDatagramChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/ThreadPool.java: Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/share/native/sun/nio/ch/genSocketOptionRegistry.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/DefaultSelectorProvider.java: Added.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/SolarisAsynchronousChannelProvider.java:
+	Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/DefaultSelectorProvider.java: Added.
+	* patches/icedtea-nio2.patch: Add hook for SharedSecrets to NetworkInterface, extend
+	sun.nio.ch.{Net,DatagramChannelImpl,SelectorProviderImpl} to handle 1.7 extensions.
 
 2009-01-17  Mark Wielaard  <mark@klomp.org>
 
@@ -139,6 +1172,24 @@
 
 	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp
 	(StackShadowPages): Increase for 64-bit builds.
+
+2009-01-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
+	Extend java.nio.channels.FileChannel to minimise code.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/util/concurrent/ScheduledThreadPoolExecutor.java:
+	Adapted to use the SharedSecrets backdoor.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaUtilConcurrentThreadPoolExecutorAccess.java:
+	Add remaining methods needed for our ScheduledThreadPoolExecutor.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousChannelGroupImpl.java:
+	Create a ScheduledThreadPoolExecutor directly so ours is used.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileChannelImpl.java:
+	Refer to AsynchronousFileLockImpl not FileLockImpl.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/FileLockTable.java:
+	Fix imports.
+	* patches/icedtea-nio2.patch:
+	Update implementation of secrets interface.
 
 2008-12-22  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -187,9 +1238,431 @@
 	(getVersionedResourceURL): New function. Constructs a URL with a
 	version-id as the query.
 
+2009-01-13  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaIODeleteOnExitAccess.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/SharedSecrets.java:
+	Add missing SharedSecrets files.
+
+2009-01-13  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/StandardProtocolFamily.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/StandardSocketOption.java:
+	Added missing files.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileLock.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/MulticastChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileTreeWalker.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileVisitor.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Files.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Path.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Paths.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/SecureDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/SimpleFileVisitor.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/Attributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileStoreSpaceAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFilePermissions.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/AbstractPath.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/FileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/FileTypeDetector.java:
+	Fixed imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/util/concurrent/ScheduledThreadPoolExecutor.java:
+	Added.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaUtilConcurrentThreadPoolExecutorAccess.java:
+	Added to allow access to private members of java.util.concurrent.ThreadPoolExecutor.
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AbstractFuture.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/DefaultAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/DefaultFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/DefaultFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystem.java:
+	Fix imports.
+	* patches/icedtea-nio2.patch:
+	Patch ThreadPoolExecutor to allow access to private variables, add missing files to
+	nio/FILES_java.gmk
+
+2009-01-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedCopyOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedOpenOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedWatchEventModifier.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/ProtocolFamily.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/SocketOption.java:
+	Add missing files.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousDatagramChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/MembershipKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/MulticastChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/NetworkChannel.java:
+	Add missing files.
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystems.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/AbstractPath.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousChannelGroupImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/SimpleAsynchronousDatagramChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractAclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractBasicFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractFileStoreSpaceAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/FileOwnerAttributeViewImpl.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/EPollPort.java:
+	Add missing file.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/LinuxAsynchronousChannelProvider.java:
+	Fix imports.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/Port.java:
+	Add missing file.
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxDosFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributeViews.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixPath.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixSecureDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixUserPrincipals.java:
+	Fix imports.
+	* patches/icedtea-nio2.patch:
+	Add missing files to java/nio/FILES_java.gmk
+
 2009-01-13  Gary Benson  <gbenson@redhat.com>
 
 	* contrib/jck/compile-native-code.sh: Build with -m32 or -m64.
+
+2009-01-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	Initial import of NIO2 code.
+	* patches/ecj/icedtea-pr261.patch: Moved to general patches.
+	* Makefile.am: Add NIO2 patch.
+	* configure.ac: Add --enable-nio2 option (on by default).
+	* overlays/nio2/openjdk/jdk/make/mkdemo/nio/Makefile,
+	* overlays/nio2/openjdk/jdk/make/mkdemo/nio/ZipFileSystem/Makefile,
+	* overlays/nio2/openjdk/jdk/make/mksample/nio/aio/Makefile,
+	* overlays/nio2/openjdk/jdk/make/mksample/nio/file/Makefile,
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedCopyOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedOpenOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedWatchEventModifier.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/File.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/FilePermission.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/Inputs.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/Outputs.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousByteChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousDatagramChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/Channels.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/CompletionHandler.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileLock.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/SeekableByteChannel.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/exceptions,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/package-info.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/spi/package.html,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/AccessDeniedException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/AccessMode.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/AtomicMoveNotSupportedException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ClosedDirectoryStreamException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ClosedFileSystemException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ClosedWatchServiceException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/CopyOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/DirectoryNotEmptyException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/DirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/DirectoryStreamFilters.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileAction.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileAlreadyExistsException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileRef.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileStore.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystemAlreadyExistsException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystemException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystemNotFoundException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileSystems.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileTreeWalker.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileVisitOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileVisitResult.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/FileVisitor.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Files.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/InvalidPathException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/LinkOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/LinkPermission.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/NoSuchFileException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/NotDirectoryException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/NotLinkException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/OpenOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Path.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/PathMatcher.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Paths.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ProviderMismatchException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ProviderNotFoundException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/ReadOnlyFileSystemException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/SecureDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/SimpleFileVisitor.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/StandardCopyOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/StandardOpenOption.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/StandardWatchEventKind.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/WatchEvent.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/WatchKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/WatchService.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/Watchable.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclEntry.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclEntryFlag.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclEntryPermission.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclEntryType.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/AttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/Attributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/BasicFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/BasicFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/DosFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/DosFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileAttribute.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileOwnerAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileStoreAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileStoreSpaceAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/FileStoreSpaceAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/GroupPrincipal.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFilePermission.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/PosixFilePermissions.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/UserPrincipal.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/UserPrincipalLookupService.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/UserPrincipalNotFoundException.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/attribute/package-info.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/package-info.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/AbstractPath.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/FileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/FileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/file/spi/package-info.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/util/Scanner.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AbstractFuture.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousChannelGroupImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/Cancellable.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/CompletedFuture.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/FileLockTable.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/Groupable.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/Invoker.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/PendingFuture.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/SimpleAsynchronousDatagramChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/SimpleAsynchronousFileChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/ThreadPool.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractAclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractBasicFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractFileStoreSpaceAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractPoller.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchKey.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/Cancellable.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/FileOwnerAttributeViewImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/Globs.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/MimeType.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/NativeBuffer.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/NativeBuffers.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/Reflect.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/aio/EchoServer.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/AclEdit.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/Chmod.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/Copy.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/DiskUsage.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/FileType.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/WatchDir.java,
+	* overlays/nio2/openjdk/jdk/src/share/sample/nio/file/Xdd.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/DefaultAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/LinuxAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/SolarisAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/SolarisEventPort.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/UnixAsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/ch/UnixAsynchronousSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/DefaultFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/DefaultFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/GnomeFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxDosFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxNativeDispatcher.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisAclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisNativeDispatcher.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixChannelFactory.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixCopyFile.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixException.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributeViews.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileKey.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileModeAttribute.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileStoreAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixMountEntry.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixNativeDispatcher.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixPath.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixSecureDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixUserPrincipals.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/ch/EPollPort.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/ch/SolarisEventPort.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/ch/UnixAsynchronousServerSocketChannelImpl.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/ch/UnixAsynchronousSocketChannelImpl.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/GnomeFileTypeDetector.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/LinuxNativeDispatcher.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/LinuxWatchService.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/SolarisNativeDispatcher.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/SolarisWatchService.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/UnixCopyFile.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/UnixNativeDispatcher.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/genSolarisConstants.c,
+	* overlays/nio2/openjdk/jdk/src/solaris/native/sun/nio/fs/genUnixConstants.c,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/DefaultAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/Iocp.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/PendingIoCache.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/WindowsAsynchronousChannelProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/WindowsAsynchronousFileChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/WindowsAsynchronousServerSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/ch/WindowsAsynchronousSocketChannelImpl.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/DefaultFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/DefaultFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/RegistryFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsAclFileAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsChannelFactory.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsConstants.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsDirectoryStream.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsException.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileAttributeViews.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileAttributes.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileCopy.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileStore.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileSystem.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsFileSystemProvider.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsLinkSupport.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsNativeDispatcher.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsPath.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsPathParser.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsPathType.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsSecurity.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsSecurityDescriptor.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsUriSupport.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsUserPrincipals.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsWatchService.java,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/ch/Iocp.c,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/ch/WindowsAsynchronousFileChannelImpl.c,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/ch/WindowsAsynchronousServerSocketChannelImpl.c,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/ch/WindowsAsynchronousSocketChannelImpl.c,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/fs/RegistryFileTypeDetector.c,
+	* overlays/nio2/openjdk/jdk/src/windows/native/sun/nio/fs/WindowsNativeDispatcher.c,
+	* overlays/nio2/openjdk/jdk/test/demo/nio/ZipFileSystem/Sanity.java,
+	* overlays/nio2/openjdk/jdk/test/demo/nio/ZipFileSystem/sanity.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/io/Inputs/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/AsExecutor.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/Attack.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/GroupOfOne.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/Identity.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/PrivilegedThreadFactory.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/Restart.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/Unbounded.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/run_any_task.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousDatagramChannel/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel/CustomThreadPool.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel/Lock.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousFileChannel/MyThreadFactory.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel/WithSecurityManager.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel/java.policy.allow,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousServerSocketChannel/java.policy.deny,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousSocketChannel/Leaky.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/Channels/Basic2.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider/CheckProvider.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider/META-INF/services/java.nio.channels.spi.AsynchronousChannelProvider,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider/Provider1.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider/Provider2.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/spi/AsynchronousChannelProvider/custom_provider.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/DirectoryStream/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/DirectoryStream/Filters.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/DirectoryStream/SecureDS.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/FileStore/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/FileSystem/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/ContentType.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/CreateFileTree.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/ForceLoad.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/META-INF/services/java.nio.file.spi.FileTypeDetector,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/Misc.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/PrintFileTree.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/SimpleFileTypeDetector.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/SkipSiblings.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/TerminateWalk.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/content_type.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Files/walk_file_tree.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/CopyAndMove.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/DeleteOnClose.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/InterruptCopy.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/Links.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/Misc.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/PathOps.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/SBC.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/TemporaryFiles.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/UriImportExport.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/delete_on_close.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/temporary_files.sh,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/PathMatcher/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/TestUtil.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/FileTreeModifier.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/WithSecurityManager.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/denyAll.policy,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/grantDirAndOneLevel.policy,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/grantDirAndTree.policy,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/WatchService/grantDirOnly.policy,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/AclFileAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/Attributes/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/BasicFileAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/DosFileAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/FileStoreAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/PosixFileAttributeView/Basic.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/spi/SetDefaultProvider.java,
+	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/spi/TestProvider.java: Added.
+	* patches/icedtea-nio2.patch: New patch.
+	* patches/icedtea-pr261.patch: Moved from ecj-specific patches.
 
 2009-01-13  Matthias Klose  <doko@ubuntu.com>
 
@@ -454,6 +1927,11 @@
 	* configure.ac:
 	Call AC_CHECK_WITH_HG_REVISION.
 
+2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
+
+	* configure.ac:
+	Capitalise 'XRender' in configure option.
+
 2008-12-09  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am:
@@ -475,11 +1953,6 @@
 	(ENABLE_HG): New macro.
 	* configure.ac:
 	Check for --enable-hg.
-
-2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
-
-	* configure.ac:
-	Capitalise 'XRender' in configure option.
 
 2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
 

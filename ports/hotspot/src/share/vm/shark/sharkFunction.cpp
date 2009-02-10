@@ -26,6 +26,8 @@
 #include "incls/_precompiled.incl"
 #include "incls/_sharkFunction.cpp.incl"
 
+#include <fnmatch.h>
+
 using namespace llvm;
 
 void SharkFunction::initialize()
@@ -37,6 +39,11 @@ void SharkFunction::initialize()
   // Create the function
   _function = builder()->CreateFunction();
   entry->set_llvm_function(function());
+#ifndef PRODUCT
+  // FIXME: there should be a mutex when updating sharkEntry in case
+  // there are multiple compilation threads.
+  builder()->sharkEntry[function()] = entry;
+#endif // !PRODUCT
 
   // Create the list of blocks
   set_block_insertion_point(NULL);
@@ -122,8 +129,23 @@ void SharkFunction::initialize()
 
   // Dump the bitcode, if requested
   if (SharkPrintBitcodeOf != NULL) {
-    if (!strcmp(SharkPrintBitcodeOf, name()))
+    if (!fnmatch(SharkPrintBitcodeOf, name(), 0))
       function()->dump();
+  }
+
+  if (SharkPrintAsmOf != NULL) {
+#if defined (__x86_64) || defined (__i386)
+      std::vector<const char*> Args;
+      Args.push_back(""); // program name
+      if (!fnmatch(SharkPrintAsmOf, name(), 0))
+	// Oh, yuck.  The LLVM name for this debugging dump is
+	// target-specific.
+	Args.push_back("-debug-only=" "x86-emitter");
+      else
+	Args.push_back("-debug-only=");
+      Args.push_back(0);  // Null terminator.
+      cl::ParseCommandLineOptions(Args.size()-1, (char**)&Args[0]);
+#endif
   }
 
   // Compile to native code

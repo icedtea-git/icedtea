@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -992,7 +992,7 @@ void SharkBlock::check_zero(SharkValue *value)
   if (value->is_jobject()) {
     call_vm_nocheck(
       SharkRuntime::throw_NullPointerException(),
-      LLVMValue::intptr_constant((intptr_t) __FILE__),
+      builder()->pointer_constant(__FILE__),
       LLVMValue::jint_constant(__LINE__));
   }
   else {
@@ -1021,7 +1021,7 @@ void SharkBlock::check_bounds(SharkValue* array, SharkValue* index)
   SharkTrackingState *saved_state = current_state()->copy();
   call_vm_nocheck(
     SharkRuntime::throw_ArrayIndexOutOfBoundsException(),
-    LLVMValue::intptr_constant((intptr_t) __FILE__),
+    builder()->pointer_constant(__FILE__),
     LLVMValue::jint_constant(__LINE__),
     index->jint_value());
   handle_exception(function()->CreateGetPendingException());
@@ -1141,8 +1141,7 @@ void SharkBlock::add_safepoint()
 
   Value *state = builder()->CreateLoad(
     builder()->CreateIntToPtr(
-      LLVMValue::intptr_constant(
-        (intptr_t) SafepointSynchronize::address_of_state()),
+      builder()->pointer_constant(SafepointSynchronize::address_of_state()),
       PointerType::getUnqual(SharkType::jint_type())),
     "state");
 
@@ -2238,13 +2237,13 @@ void SharkBlock::do_new()
     builder()->SetInsertPoint(heap_alloc);
 
     Value *top_addr = builder()->CreateIntToPtr(
-      LLVMValue::intptr_constant((intptr_t) Universe::heap()->top_addr()),
+	builder()->pointer_constant(Universe::heap()->top_addr()),
       PointerType::getUnqual(SharkType::intptr_type()),
       "top_addr");
 
     Value *end = builder()->CreateLoad(
       builder()->CreateIntToPtr(
-        LLVMValue::intptr_constant((intptr_t) Universe::heap()->end_addr()),
+        builder()->pointer_constant(Universe::heap()->end_addr()),
         PointerType::getUnqual(SharkType::intptr_type())),
       "end");
 
@@ -2473,7 +2472,10 @@ void SharkBlock::do_monitorenter()
 void SharkBlock::do_monitorexit()
 {
   SharkValue *lockee = pop();
-  check_null(lockee);
+  // The monitorexit can't throw an NPE because the verifier checks
+  // that the monitor operations are block structured before we
+  // compile.
+  // check_null(lockee);
   Value *object = lockee->jobject_value();
 
   // Find the monitor associated with this object
@@ -2513,5 +2515,8 @@ void SharkBlock::do_monitorexit()
   // Release the lock
   builder()->SetInsertPoint(got_monitor);
   monitor->release(this);
-  check_pending_exception();
+  // The monitorexit can't throw an NPE because the verifier checks
+  // that the monitor operations are block structured before we
+  // compile.
+  // check_pending_exception();
 }

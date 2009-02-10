@@ -446,57 +446,6 @@ AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
   AC_SUBST(ALT_OPENJDK_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_VISUALVM_SRC_ZIP],
-[
-  AC_MSG_CHECKING(for a VisualVM source zip)
-  AC_ARG_WITH([visualvm-src-zip],
-              [AS_HELP_STRING(--with-visualvm-src-zip, specify the location of the visualvm source zip)],
-  [
-    ALT_VISUALVM_SRC_ZIP=${withval}
-    AM_CONDITIONAL(USE_ALT_VISUALVM_SRC_ZIP, test x = x)
-  ],
-  [ 
-    ALT_VISUALVM_SRC_ZIP="not specified"
-    AM_CONDITIONAL(USE_ALT_VISUALVM_SRC_ZIP, test x != x)
-  ])
-  AC_MSG_RESULT(${ALT_VISUALVM_SRC_ZIP})
-  AC_SUBST(ALT_VISUALVM_SRC_ZIP)
-])
-
-AC_DEFUN([WITH_NETBEANS_PROFILER_SRC_ZIP],
-[
-  AC_MSG_CHECKING(for a NetBeans profiler source zip)
-  AC_ARG_WITH([netbeans-profiler-src-zip],
-              [AS_HELP_STRING(--with-netbeans-profiler-src-zip, specify the location of the netbeans profiler source zip)],
-  [
-    ALT_NETBEANS_PROFILER_SRC_ZIP=${withval}
-    AM_CONDITIONAL(USE_ALT_NETBEANS_PROFILER_SRC_ZIP, test x = x)
-  ],
-  [ 
-    ALT_NETBEANS_PROFILER_SRC_ZIP="not specified"
-    AM_CONDITIONAL(USE_ALT_NETBEANS_PROFILER_SRC_ZIP, test x != x)
-  ])
-  AC_MSG_RESULT(${ALT_NETBEANS_PROFILER_SRC_ZIP})
-  AC_SUBST(ALT_NETBEANS_PROFILER_SRC_ZIP)
-])
-
-AC_DEFUN([WITH_NETBEANS_BASIC_CLUSTER_SRC_ZIP],
-[
-  AC_MSG_CHECKING(for a NetBeans basic cluster source zip)
-  AC_ARG_WITH([netbeans-basic-cluster-src-zip],
-              [AS_HELP_STRING(--with-netbeans-basic-cluster-src-zip, specify the location of the netbeans basic cluster source zip)],
-  [
-    ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP=${withval}
-    AM_CONDITIONAL(USE_ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP, test x = x)
-  ],
-  [ 
-    ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP="not specified"
-    AM_CONDITIONAL(USE_ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP, test x != x)
-  ])
-  AC_MSG_RESULT(${ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP})
-  AC_SUBST(ALT_NETBEANS_BASIC_CLUSTER_SRC_ZIP)
-])
-
 AC_DEFUN([WITH_ALT_JAR_BINARY],
 [
   AC_MSG_CHECKING(for an alternate jar command)
@@ -607,31 +556,6 @@ AC_DEFUN([FIND_XERCES2_JAR],
   fi
   AC_MSG_RESULT(${XERCES2_JAR})
   AC_SUBST(XERCES2_JAR)
-])
-
-AC_DEFUN([FIND_NETBEANS],
-[
-  AC_ARG_WITH([netbeans],
-              [AS_HELP_STRING(--with-netbeans,specify location of netbeans)],
-  [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(netbeans)
-      NETBEANS="${withval}"
-      AC_MSG_RESULT(${withval})
-    else
-      AC_PATH_PROG(NETBEANS, "${withval}")
-    fi
-  ],
-  [
-    NETBEANS=
-  ])
-  if test -z "${NETBEANS}"; then
-    AC_PATH_PROG(NETBEANS, "netbeans")
-  fi
-  if test -z "${NETBEANS}"; then
-    AC_MSG_ERROR("NetBeans was not found.")
-  fi
-  AC_SUBST(NETBEANS)
 ])
 
 AC_DEFUN([FIND_RHINO_JAR],
@@ -1109,7 +1033,10 @@ AC_DEFUN([AC_CHECK_FOR_GCJ_JDK],
               ])
   if test -z "${SYSTEM_GCJ_DIR}"; then
     for dir in /usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk /usr/lib/jvm/cacao ; do
-       test -d $dir && SYSTEM_GCJ_DIR=$dir
+       if test -d $dir; then
+         SYSTEM_GCJ_DIR=$dir
+	 break
+       fi
     done
   fi
   AC_MSG_RESULT(${SYSTEM_GCJ_DIR})
@@ -1142,7 +1069,10 @@ AC_DEFUN([AC_CHECK_FOR_OPENJDK],
               ])
   if test -z "${SYSTEM_OPENJDK_DIR}"; then
     for dir in /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk ; do
-       test -d $dir && SYSTEM_OPENJDK_DIR=$dir
+       if test -d $dir; then
+         SYSTEM_OPENJDK_DIR=$dir
+	 break
+       fi
     done
   fi
   AC_MSG_RESULT(${SYSTEM_OPENJDK_DIR})
@@ -1175,7 +1105,10 @@ AC_DEFUN([AC_CHECK_FOR_ICEDTEA],
               ])
   if test -z "${SYSTEM_ICEDTEA_DIR}"; then
     for dir in /usr/lib/jvm/java-icedtea /usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk ; do
-       test -d $dir && SYSTEM_ICEDTEA_DIR=$dir
+       if test -d $dir; then
+         SYSTEM_ICEDTEA_DIR=$dir
+	 break
+       fi
     done
   fi
   AC_MSG_RESULT(${SYSTEM_ICEDTEA_DIR})

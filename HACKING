@@ -55,7 +55,6 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-tools.patch: Remove DebugHelperHelper and add sources in make/java/awt/Makefile to fix build of jvmti.
 * icedtea-use-system-tzdata.patch: Use timezone data from the system (PR70/S6593486).
 * icedtea-version.patch: Replace name and bug URL with IcedTea versions.
-* icedtea-visualvm.patch: Patches sources to build with platform8 and profiler3 instead of platform7 and profiler2.
 * icedtea-webservices.patch: Add applet support.
 * icedtea-zero-build.patch: Add support for the zero assembler build.
 * icedtea-shark-build.patch: Add support for building the Shark JIT.
@@ -80,6 +79,7 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-no-precompiled.patch: Don't use precompiled header files in hotspot.
 * icedtea-includedb.patch: Add missing include files.
 * icedtea-awt-window-size.patch: Fix X11 window size calculation (S6721088).
+* icedtea-java2d-dasher.patch: Fix interpretation of dash array elements in BasicStroke (S6793344).
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 

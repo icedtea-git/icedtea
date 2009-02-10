@@ -38,7 +38,6 @@ exception statement from your version.
 package net.sourceforge.jnlp.security;
 
 import net.sourceforge.jnlp.JNLPFile;
-import net.sourceforge.jnlp.tools.JarSigner;
 
 import java.awt.*;
 import javax.swing.*;
@@ -86,10 +85,10 @@ public class SecurityWarningDialog extends JOptionPane {
 	/** The type of access that this dialog is for */
 	private AccessType accessType;
 
-	/** The application file assocated with this security warning */
+	/** The application file associated with this security warning */
 	private JNLPFile file;
 
-	private JarSigner jarSigner;
+	private CertVerifier certVerifier;
 	
 	private X509Certificate cert;
 	
@@ -107,27 +106,37 @@ public class SecurityWarningDialog extends JOptionPane {
 		this.dialogType = dialogType;
 		this.accessType = accessType;
 		this.file = file;
-		this.jarSigner = null;
+		this.certVerifier = null;
 		initialized = true;
 		updateUI();
 	}
 	
 	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
-			JNLPFile file, JarSigner jarSigner) {
+			JNLPFile file, CertVerifier jarSigner) {
 		this.dialogType = dialogType;
 		this.accessType = accessType;
 		this.file = file;
-		this.jarSigner = jarSigner;
+		this.certVerifier = jarSigner;
 		initialized = true;
 		updateUI();
 	}
 	
+	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
+	        CertVerifier certVerifier) {
+	    this.dialogType = dialogType;
+	    this.accessType = accessType;
+	    this.file = null;
+	    this.certVerifier = certVerifier;
+	    initialized = true;
+	    updateUI();
+	}
+
 	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
 			JNLPFile file, Object[] extras) {
 		this.dialogType = dialogType;
 		this.accessType = accessType;
 		this.file = file;
-		this.jarSigner = null;
+		this.certVerifier = null;
 		initialized = true;
 		this.extras = extras;
 		updateUI();
@@ -138,7 +147,7 @@ public class SecurityWarningDialog extends JOptionPane {
 		this.dialogType = dialogType;
 		this.accessType = null;
 		this.file = null;
-		this.jarSigner = null;
+		this.certVerifier = null;
 		this.cert = c;
 		initialized = true;
 		updateUI();
@@ -210,7 +219,7 @@ public class SecurityWarningDialog extends JOptionPane {
 	 * @param jarSigner the JarSigner used to verify this application
 	 */
 	public static boolean showCertWarningDialog(AccessType accessType, 
-			JNLPFile file, JarSigner jarSigner) {
+			JNLPFile file, CertVerifier jarSigner) {
 		SecurityWarningDialog swd = 
 			new SecurityWarningDialog(DialogType.CERT_WARNING, accessType, file,
 			jarSigner);
@@ -241,7 +250,7 @@ public class SecurityWarningDialog extends JOptionPane {
 	 * @param parent the parent option pane
 	 */
 	public static void showMoreInfoDialog(
-		JarSigner jarSigner, JOptionPane parent) {
+		CertVerifier jarSigner, JOptionPane parent) {
 
 		SecurityWarningDialog swd =
 			new SecurityWarningDialog(DialogType.MORE_INFO, null, null,
@@ -259,7 +268,7 @@ public class SecurityWarningDialog extends JOptionPane {
 	 *
 	 * @param certs the certificates used in signing.
 	 */
-	public static void showCertInfoDialog(JarSigner jarSigner,
+	public static void showCertInfoDialog(CertVerifier jarSigner,
 		JOptionPane parent) {
 		SecurityWarningDialog swd = new SecurityWarningDialog(DialogType.CERT_INFO,
 			null, null, jarSigner);
@@ -291,7 +300,7 @@ public class SecurityWarningDialog extends JOptionPane {
 	
 	public static int showAppletWarning() {
         	SecurityWarningDialog swd = new SecurityWarningDialog(DialogType.APPLET_WARNING,
-            		null, null, (JarSigner) null);
+            		null, null, (CertVerifier) null);
         	JDialog dialog = swd.createDialog();
 		centerDialog(dialog);
         	swd.selectInitialValue();
@@ -382,8 +391,8 @@ public class SecurityWarningDialog extends JOptionPane {
 		return file;
 	}
 	
-	public JarSigner getJarSigner() {
-		return jarSigner;
+	public CertVerifier getJarSigner() {
+		return certVerifier;
 	}
 	
 	public X509Certificate getCert() {
@@ -397,17 +406,17 @@ public class SecurityWarningDialog extends JOptionPane {
 	public void updateUI() {
 
 		if (dialogType == DialogType.CERT_WARNING)
-			setUI((OptionPaneUI) new CertWarningPane(this));
+			setUI((OptionPaneUI) new CertWarningPane(this, this.certVerifier));
 		else if (dialogType == DialogType.MORE_INFO)
-			setUI((OptionPaneUI) new MoreInfoPane(this));
+			setUI((OptionPaneUI) new MoreInfoPane(this, this.certVerifier));
 		else if (dialogType == DialogType.CERT_INFO)
-			setUI((OptionPaneUI) new CertsInfoPane(this));
+			setUI((OptionPaneUI) new CertsInfoPane(this, this.certVerifier));
 		else if (dialogType == DialogType.SINGLE_CERT_INFO)
-			setUI((OptionPaneUI) new SingleCertInfoPane(this));
+			setUI((OptionPaneUI) new SingleCertInfoPane(this, this.certVerifier));
 		else if (dialogType == DialogType.ACCESS_WARNING)
-			setUI((OptionPaneUI) new AccessWarningPane(this, extras));
+			setUI((OptionPaneUI) new AccessWarningPane(this, extras, this.certVerifier));
 		else if (dialogType == DialogType.APPLET_WARNING)
-			setUI((OptionPaneUI) new AppletWarningPane(this));
+			setUI((OptionPaneUI) new AppletWarningPane(this, this.certVerifier));
 	}
 
 	private static void centerDialog(JDialog dialog) {

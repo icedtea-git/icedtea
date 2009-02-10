@@ -232,6 +232,8 @@ class SharkFunction : public StackObj {
 
   // OopMap support
  public:
+  // Every time a new, distinct pc is required, an extra byte is
+  // emitted into the codebuffer
   int code_offset() const
   {
     int offset = masm()->offset();

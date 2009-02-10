@@ -45,10 +45,11 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+
 public class SingleCertInfoPane extends CertsInfoPane {
 
-	public SingleCertInfoPane(JComponent x) {
-		super(x);
+	public SingleCertInfoPane(JComponent x, CertVerifier certVerifier) {
+		super(x, certVerifier);
 	}
 	
 	protected void buildTree() {

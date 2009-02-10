@@ -37,15 +37,22 @@ exception statement from your version.
 
 package net.sourceforge.jnlp.security;
 
-import java.awt.*;
-import javax.swing.*;
-
-import net.sourceforge.jnlp.runtime.*;
-
-import java.util.ArrayList;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import javax.swing.border.Border;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 /**
  * Provides the UI for the More Info dialog. This dialog shows details about an
@@ -55,17 +62,15 @@ import javax.swing.border.Border;
  */
 public class MoreInfoPane extends SecurityDialogUI {
 
-	public MoreInfoPane(JComponent x) {
-		super(x);
+	public MoreInfoPane(JComponent x, CertVerifier certVerifier) {
+		super(x, certVerifier);
 	}
 
 	/**
 	 * Constructs the GUI components of this UI
 	 */
 	protected void installComponents() {
-		ArrayList<String> details = 
-			((SecurityWarningDialog)optionPane)
-				.getJarSigner().getDetails();
+		ArrayList<String> details = certVerifier.getDetails();
 
 		int numLabels = details.size();
 		JPanel errorPanel = new JPanel(new GridLayout(numLabels,1));

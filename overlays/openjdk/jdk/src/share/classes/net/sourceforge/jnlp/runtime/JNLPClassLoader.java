@@ -29,7 +29,6 @@ import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
-import java.security.Policy;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -38,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeSet;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -131,7 +131,11 @@ public class JNLPClassLoader extends URLClassLoader {
 
 	private boolean signing = false;
 	
+	/** ArrayList containing jar indexes for various jars available to this classloader */
 	private ArrayList<JarIndex> jarIndexes = new ArrayList<JarIndex>();
+	
+	/** File entries in the jar files available to this classloader */
+	private TreeSet jarEntries = new TreeSet();
 
     /**
      * Create a new JNLPClassLoader from the specified file.
@@ -478,7 +482,6 @@ public class JNLPClassLoader extends URLClassLoader {
                 // transfer the Jars
                 waitForJars(jars);
 
-
                 for (int i=0; i < jars.size(); i++) {
                     JARDesc jar = (JARDesc) jars.get(i);
 
@@ -488,8 +491,23 @@ public class JNLPClassLoader extends URLClassLoader {
                     File localFile = tracker.getCacheFile(jar.getLocation());
                     try {
                         URL location = jar.getLocation(); // non-cacheable, use source location
-                        if (localFile != null)
+                        if (localFile != null) {
                             location = localFile.toURL(); // cached file
+                            
+                            // This is really not the best way.. but we need some way for 
+                            // PluginAppletViewer::getCachedImageRef() to check if the image 
+                            // is available locally, and it cannot use getResources() because 
+                            // that prefetches the resource, which confuses MediaTracker.waitForAll() 
+                            // which does a wait(), waiting for notification (presumably 
+                            // thrown after a resource is fetched). This bug manifests itself
+                            // particularly when using The FileManager applet from Webmin.
+                            
+                            JarFile jarFile = new JarFile(localFile);
+                            Enumeration e = jarFile.entries();
+                            while (e.hasMoreElements())
+                                jarEntries.add(((JarEntry) e.nextElement()).getName());
+
+                        }
 
                         addURL(location);
 
@@ -727,7 +745,6 @@ public class JNLPClassLoader extends URLClassLoader {
 
                             try {
                                 u = tracker.getCacheURL(remoteURL);
-                                System.out.println("URL = " + u);
                             } catch (Exception e) {
                                 throw new ClassNotFoundException(name);
                             }
@@ -758,6 +775,7 @@ public class JNLPClassLoader extends URLClassLoader {
                     return loaders[i].findClass(name);
             }
             catch(ClassNotFoundException ex) { }
+            catch(ClassFormatError cfe) {}
         }
 
         throw new ClassNotFoundException(name);
@@ -828,6 +846,16 @@ public class JNLPClassLoader extends URLClassLoader {
         }
 
         return resources.elements();
+    }
+    
+    /**
+     * Returns if the specified resource is available locally from a cached jar
+     * 
+     * @param s The name of the resource
+     * @return Whether or not the resource is available locally
+     */
+    public boolean resourceAvailableLocally(String s) {
+        return jarEntries.contains(s);
     }
 
     /**

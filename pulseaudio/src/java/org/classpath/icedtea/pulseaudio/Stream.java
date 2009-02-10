@@ -115,6 +115,7 @@ final class Stream {
 	}
 
 	private Format format;
+	private float cachedVolume;
 
 	private List<StateListener> stateListeners;
 	private List<WriteListener> writeListeners;
@@ -222,7 +223,9 @@ final class Stream {
 
 	private native byte[] native_pa_stream_update_sample_rate(int rate);
 
-	native byte[] native_setVolume(float newValue);
+	native byte[] native_set_volume(float newValue);
+
+	native byte[] native_update_volume();
 
 	/*
 	 * pa_operation pa_stream_proplist_update (pa_streams, pa_update_mode_t
@@ -775,6 +778,18 @@ final class Stream {
 
 	void free() {
 		native_pa_stream_unref();
+	}
+
+	float getCachedVolume() {
+		return this.cachedVolume;
+	}
+
+	void setCachedVolume(float volume) {
+		this.cachedVolume = volume;
+	}
+
+	void update_channels_and_volume(int channels, float volume) {
+		this.cachedVolume = volume;
 	}
 
 }

@@ -112,6 +112,7 @@ sharkBuilder.hpp                        llvmHeaders.hpp
 sharkBuilder.hpp                        sizes.hpp
 sharkBuilder.hpp                        sharkType.hpp
 sharkBuilder.hpp                        sharkValue.inline.hpp
+sharkBuilder.hpp                        sharkEntry.hpp
 
 sharkBytecodeTracer.cpp                 sharkBytecodeTracer.hpp
 sharkBytecodeTracer.cpp                 sharkState.inline.hpp
@@ -269,3 +270,4 @@ sharkValue.hpp                          sharkType.hpp
 sharkValue.inline.hpp                   ciType.hpp
 sharkValue.inline.hpp                   llvmHeaders.hpp
 sharkValue.inline.hpp                   sharkValue.hpp
+

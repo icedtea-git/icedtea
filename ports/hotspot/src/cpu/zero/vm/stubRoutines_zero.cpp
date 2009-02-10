@@ -1,6 +1,6 @@
 /*
  * Copyright 2003-2005 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,5 +27,5 @@
 #include "incls/_stubRoutines_zero.cpp.incl"
 
 #ifdef IA32
-address StubRoutines::i486::_call_stub_compiled_return = NULL;
+address StubRoutines::x86::_call_stub_compiled_return = NULL;
 #endif // IA32

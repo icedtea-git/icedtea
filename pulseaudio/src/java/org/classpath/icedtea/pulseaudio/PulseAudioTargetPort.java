@@ -49,7 +49,6 @@ final class PulseAudioTargetPort extends PulseAudioPort {
 	}
 
 	PulseAudioTargetPort(String name) {
-
 		super(name);
 	}
 
@@ -75,12 +74,11 @@ final class PulseAudioTargetPort extends PulseAudioPort {
 		super.close();
 	}
 
-	
 	// FIXME
-	public native byte[] native_setVolume(float newValue);
+	public native byte[] native_set_volume(float newValue);
 
 	// FIXME
-	public synchronized native byte[] native_updateVolumeInfo();
+	public native byte[] native_update_volume();
 
 	@Override
 	public Line.Info getLineInfo() {

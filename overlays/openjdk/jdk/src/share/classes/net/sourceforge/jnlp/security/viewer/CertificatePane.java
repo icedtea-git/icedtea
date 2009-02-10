@@ -43,17 +43,13 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
-
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -61,20 +57,16 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.plaf.OptionPaneUI;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JScrollPane;
 
-import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import net.sourceforge.jnlp.security.CertVerifier;
+import net.sourceforge.jnlp.security.SecurityDialogUI;
 import net.sourceforge.jnlp.security.SecurityUtil;
 import net.sourceforge.jnlp.security.SecurityWarningDialog;
-import net.sourceforge.jnlp.security.SecurityDialogUI;
 import net.sourceforge.jnlp.tools.KeyTool;
 
 //import java.security.KeyStoreException;
@@ -106,7 +98,7 @@ public class CertificatePane extends SecurityDialogUI {
 	private KeyStore keyStore = null;
 	
 	public CertificatePane(JComponent x) {
-		super(x);
+		super(x, null);
 		initializeKeyStore();
 	}
 	

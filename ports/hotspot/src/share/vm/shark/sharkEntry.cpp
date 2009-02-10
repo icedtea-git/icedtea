@@ -41,30 +41,6 @@ void SharkEntry::print_statistics(const char* name) const
 // Lots of the stuff down here is machine- and LLVM-specific.
 // It's only debug stuff though, and none of it's critical.
 
-address SharkEntry::code_start() const
-{
-  return (address) entry_point();
-}
-
-address SharkEntry::code_limit() const
-{
-#ifdef PPC
-  // LLVM seems to insert three junk instructions and a null after
-  // every function.  Only the first junk instruction seems to be
-  // kept after the next function is generated, however, so this
-  // method will only work before you generate another function.
-  // I wish there was a nicer way to do this, but that's life...
-  uint32_t *limit = (uint32_t *) code_start();
-  while (*limit)
-    limit++;
-  assert(limit[-1] == 0xd143cfec && limit[-2] == 0xd143cfec, "should be");
-  limit -= 3;
-  return (address) limit;
-#else
-  Unimplemented();
-#endif // PPC
-}
-
 void SharkEntry::print_pd_statistics(address start, address limit) const
 {
 #ifdef PPC

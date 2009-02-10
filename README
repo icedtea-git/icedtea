@@ -163,20 +163,6 @@ CACAO provides a Just-In-Time compiler for various architectures.
 The environment variable CACAO_CONFIGURE_ARGS can be used to pass
 additional arguments to the cacao configure.
 
-VisualVM
-========
-
-Passing --enable-visualvm to configure will build the VisualVM profiling
-and troubleshooting tool. NetBeans profiler3 (visualvm_preview2) is 
-built from source before building VisualVM. NetBeans 6.1 must be installed 
-on the system. A binary launcher jvisualvm is placed in the
-openjdk/control/build/arch/j2sdk-image/bin directory after the jdk is built.
-Other useful VisualVM configure options include --with-visualvm-src-zip,
-and --with-netbeans-profiler-src-zip which can be used to prevent 
-re-downloading of the source zips. --with-netbeans-home can be used to specify
-where the Netbeans tools are installed (default /usr/share/netbeans).
-
-
 
 PulseAudio Mixer
 ================

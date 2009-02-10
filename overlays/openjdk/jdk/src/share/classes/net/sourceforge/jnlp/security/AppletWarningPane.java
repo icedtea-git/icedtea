@@ -50,10 +50,11 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+
 public class AppletWarningPane extends SecurityDialogUI {
 
-	public AppletWarningPane(JComponent x) {
-		super(x);
+	public AppletWarningPane(JComponent x, CertVerifier certVerifier) {
+		super(x, certVerifier);
 	}
 
 	protected void installComponents() {
