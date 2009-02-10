@@ -285,6 +285,15 @@ public class JNLPRuntime {
         checkExitClass();
         security.setExitClass(exitClass);
     }
+    
+    /**
+     * Disables applets from calling exit.
+     * 
+     * Once disabled, exit cannot be re-enabled for the duration of the JVM instance
+     */
+    public static void disableExit() {
+    	security.disableExit();
+    }
 
     /**
      * Return the current Application, or null if none can be

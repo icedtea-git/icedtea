@@ -23,6 +23,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.ref.WeakReference;
 import java.net.SocketPermission;
+import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.Permission;
 import java.security.PrivilegedAction;
@@ -102,6 +103,9 @@ class JNLPSecurityManager extends SecurityManager {
 
     /** listener installs the app's classloader on the event dispatch thread */
     private ContextUpdater contextListener = new ContextUpdater();
+    
+    /** Sets whether or not exit is allowed (in the context of the plugin, this is always false) */
+    private boolean exitAllowed = true;
 
     private class ContextUpdater extends WindowAdapter implements PrivilegedAction {
         private ApplicationInstance app = null;
@@ -275,7 +279,7 @@ class JNLPSecurityManager extends SecurityManager {
 			try {
 				super.checkPermission(perm);
 			} catch (SecurityException se) {
-				
+
 				//This section is a special case for dealing with SocketPermissions.
 				if (JNLPRuntime.isDebug())
 					System.err.println("Requesting permission: " + perm.toString());
@@ -436,9 +440,17 @@ class JNLPSecurityManager extends SecurityManager {
      * behave normally, and the exit class can always exit the JVM.
      */
     public void checkExit(int status) {
-        super.checkExit(status);
 
+    	// applets are not allowed to exit, but the plugin main class (primordial loader) is
         Class stack[] = getClassContext();
+        if (!exitAllowed) {
+        	for (int i=0; i < stack.length; i++)
+        		if (stack[i].getClassLoader() != null)
+        			throw new AccessControlException("Applets may not call System.exit()");
+        }
+
+    	super.checkExit(status);
+        
         boolean realCall = (stack[1] == Runtime.class);
 
         if (isExitClass(stack)) // either exitClass called or no exitClass set
@@ -468,6 +480,10 @@ class JNLPSecurityManager extends SecurityManager {
         throw closeAppEx;
     }
 
+    protected void disableExit() {
+    	exitAllowed = false;
+    }
+    
 }
 
 
