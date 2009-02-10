@@ -24,7 +24,6 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-core-build.patch: Add support for building IcedTea core VM.
 * icedtea-debuginfo.patch: Add -g option to build to generate debugging information.
 * icedtea-demos.patch: Fix building of JVMTI demo.
-* icedtea-enum-bug-181.patch: Fixes class type check (PR181/S6736248)
 * icedtea-float-double-trailing-zeros.patch: Remove trailing zeros from Double/Float (PR29/30)
 * icedtea-fonts.patch: Add Fedora fontconfig.
 * icedtea-gcc-suffix.patch: Append $(GCC_SUFFIX) to end of 'gcc' binary name.
@@ -86,6 +85,7 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 
 * icedtea-corba.patch: Adds additional files to org.omg.CORBA Makefile.
 * icedtea-display-mode-changer.patch: Add extra test class. (applied in OpenJDK7 b43)
+* icedtea-enum-bug-181.patch: Fixes class type check (PR181/S6736248)
 * icedtea-gcc-4.3.patch: Fix code to compile with GCC 4.3 and turn off -Werror.
 * icedtea-generated.patch: Force use of /bin/bash.
 * icedtea-nomotif.patch: Remove sanity and GrabShell.h dependency on Motif/Lesstif library.
@@ -105,15 +105,12 @@ The following patches are only applied to OpenJDK in IcedTea:
 
 * icedtea-constructor-properties.patch: Explicitly cast to ConstructorProperties
   as getAnnotation is broken in libgcj 4.3.
-* icedtea-jsoundhs.patch: Remove attempted build of proprietary jsoundhs library.
 * icedtea-mbeanintrospector.patch: Explicitly cast to Description as getAnnotation
   is broken in libgcj 4.3.
 * icedtea-override.patch: Remove @Override annotation in
   javax.management.AttributeValueExp (unsupported by ecj < 3.4).
 * icedtea-snmp.patch: Remove proprietary SNMP support hooks.
 * icedtea-sound.patch: Remove proprietary MIDI support hooks.
-* icedtea-fortify-source.patch: Fix build failures with -D_FORTIFY_SOURCE=2.
-* icedtea-format-warnings.patch: Fix build failures with -Wformat=1.
 
 The following patches are only applied to the icedtea-ecj bootstrap tree:
 

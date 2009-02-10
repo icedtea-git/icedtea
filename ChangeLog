@@ -1,3 +1,18 @@
+2009-02-10  Andrew John Hughes  <ahughes@redhat.com>
+
+	Bump to b46.
+	* patches/icedtea-directaudio-close-trick.patch,
+	* patches/icedtea-enum-bug-181.patch,
+	* patches/icedtea-jsoundhs.patch,
+	* patches/icedtea-sound.patch:
+	Applied upstream.
+	* HACKING,
+	* Makefile.am: Updated.
+	* patches/ecj/icedtea.patch: Recreated due to
+	S6795030.
+	* patches/icedtea-copy-plugs.patch: Recreated
+	due to S6702956.
+
 2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

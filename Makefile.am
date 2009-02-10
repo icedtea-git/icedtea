@@ -1,6 +1,6 @@
-OPENJDK_DATE = 29_jan_2009
-OPENJDK_MD5SUM = 0d6ae1ed77b470c9665d069b34a1bc88
-OPENJDK_VERSION = b45
+OPENJDK_DATE = 05_feb_2009
+OPENJDK_MD5SUM = d5f92fec2f645d44437ab90e1dd2dbaf
+OPENJDK_VERSION = b46
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -1845,7 +1845,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
 	patches/icedtea-fonts.patch \
-	patches/icedtea-directaudio-close-trick.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-ptracefix.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
@@ -1854,13 +1853,11 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
 	patches/icedtea-security-updates.patch \
-	patches/icedtea-jsoundhs.patch \
 	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-mbeanintrospector.patch \
 	patches/icedtea-hotspot-gcc-pr36917.patch \
 	patches/icedtea-alpha-fixes.patch \
 	patches/icedtea-alt-jar.patch \
-	patches/icedtea-enum-bug-181.patch \
 	patches/icedtea-jdk-use-ssize_t.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-use-idx_t.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-params-cast-size_t.patch \
@@ -1876,7 +1873,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-xjc.patch \
 	patches/icedtea-renderer-crossing.patch \
 	patches/icedtea-snmp.patch \
-	patches/icedtea-sound.patch \
 	patches/icedtea-tests-jdk.patch \
 	patches/icedtea-stroker-finish.patch \
 	patches/icedtea-alsa-default-device.patch \
