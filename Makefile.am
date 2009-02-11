@@ -563,7 +563,9 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-io_util-overflow.patch \
 	patches/icedtea-cc-interp-jvmti.patch \
 	patches/icedtea-pr261.patch \
-	patches/icedtea-doc-headers.patch
+	patches/icedtea-doc-headers.patch \
+	patches/openjdk/bidi-tests.patch \
+	patches/openjdk/annotation-tests.patch
 
 if WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \

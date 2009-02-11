@@ -1,0 +1,295 @@
+
+# HG changeset patch
+# User peytoia
+# Date 1224218043 -32400
+# Node ID 8ea49fa4c2f761eeb67711ba2fa5482cb3b0347c
+# Parent 244f62312fec34c292e082ba3bb9c76aef30858e
+6759521: Move Bidi test programs from closed to open.
+Reviewed-by: okutsu
+
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ openjdk/jdk/test/java/text/Bidi/BidiBug.java	Fri Oct 17 13:34:03 2008 +0900
+@@ -0,0 +1,41 @@
++/*
++ * Copyright (c) 2008 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
++ */
++
++/*
++ * @test
++ * @bug 4827312
++ * @summary verify that argument validity check is not fooled by overflow
++ */
++public class BidiBug {
++  public static void main(String[] args) {
++    try {
++        byte buff[] = new byte[3000];
++        java.text.Bidi bidi = new java.text.Bidi(new char[20],10,buff,Integer.MAX_VALUE-3,4,1);
++    }
++    catch (IllegalArgumentException e) {
++        System.out.println(e);
++        return; // success
++    }
++    throw new RuntimeException("didn't throw error, though we didn't crash either");
++  }
++}
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ openjdk/jdk/test/java/text/Bidi/BidiEmbeddingTest.java	Fri Oct 17 13:34:03 2008 +0900
+@@ -0,0 +1,132 @@
++/*
++ * Copyright (c) 2008 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
++ */
++
++/*
++ * @test
++ * @bug 4396492 4396496 4778510
++ * @summary verify that the embedding values processed by the bidi code use negative values to
++ * indicate overrides, rather than using bit 7.  Also tests Bidi without loading awt classes to
++ * confirm that Bidi can be used without awt. Verify that embedding level 0 is properly mapped
++ * to the base embedding level.
++ */
++
++import java.awt.Color;
++import java.awt.Frame;
++import java.awt.font.TextAttribute;
++import java.text.AttributedString;
++import java.text.Bidi;
++
++public class BidiEmbeddingTest {
++    public static void main(String[] args) {
++        // to regress embedding test against old fix, call with an arg.  A window will pop
++        // up causing awt lib to be loaded so the vm won't die with the unsatisfied link error.
++        if (args.length > 0) {
++            Frame f = new Frame();
++            f.setSize(300, 300);
++            f.setBackground(Color.white);
++            f.show();
++        }
++
++        test1();
++        test2();
++    }
++
++    static void test1() {
++        String target = "BACK WARDS";
++        String str = "If this text is >" + target + "< the test passed.";
++        int start = str.indexOf(target);
++        int limit = start + target.length();
++
++        System.out.println("start: " + start + " limit: " + limit);
++
++        AttributedString astr = new AttributedString(str);
++        astr.addAttribute(TextAttribute.BIDI_EMBEDDING,
++                         new Integer(-1),
++                         start,
++                         limit);
++
++        Bidi bidi = new Bidi(astr.getIterator());
++
++        for (int i = 0; i < bidi.getRunCount(); ++i) {
++            System.out.println("run " + i +
++                               " from " + bidi.getRunStart(i) +
++                               " to " + bidi.getRunLimit(i) +
++                               " at level " + bidi.getRunLevel(i));
++        }
++
++        System.out.println(bidi);
++
++        byte[] embs = new byte[str.length() + 3];
++        for (int i = start + 1; i < limit + 1; ++i) {
++            embs[i] = -1;
++        }
++
++        Bidi bidi2 = new Bidi(str.toCharArray(), 0, embs, 1, str.length(), Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
++        for (int i = 0; i < bidi2.getRunCount(); ++i) {
++            System.out.println("run " + i +
++                               " from " + bidi2.getRunStart(i) +
++                               " to " + bidi2.getRunLimit(i) +
++                               " at level " + bidi2.getRunLevel(i));
++        }
++
++        System.out.println(bidi2);
++
++        if (bidi.getRunCount() != 3 || bidi2.getRunCount() != 3) {
++            throw new Error("Bidi run count incorrect");
++        }
++    }
++
++    // make sure BIDI_EMBEDDING values of 0 are mapped to base run direction, instead of flagging an error.
++    static void test2() {
++        String target = "BACK WARDS";
++        String str = "If this text is >" + target + "< the test passed.";
++        int length = str.length();
++        int start = str.indexOf(target);
++        int limit = start + target.length();
++
++        System.out.println("start: " + start + " limit: " + limit);
++
++        AttributedString astr = new AttributedString(str);
++        astr.addAttribute(TextAttribute.RUN_DIRECTION, TextAttribute.RUN_DIRECTION_RTL);
++
++        astr.addAttribute(TextAttribute.BIDI_EMBEDDING,
++                         new Integer(-3),
++                         start,
++                         limit);
++
++        Bidi bidi = new Bidi(astr.getIterator());
++
++        for (int i = 0; i < bidi.getRunCount(); ++i) {
++            System.out.println("run " + i +
++                               " from " + bidi.getRunStart(i) +
++                               " to " + bidi.getRunLimit(i) +
++                               " at level " + bidi.getRunLevel(i));
++        }
++
++        System.out.println(bidi);
++
++        if (bidi.getRunCount() != 6) { // runs of spaces and angles at embedding bound,s and final period, each get level 1
++            throw new Error("Bidi embedding processing failed");
++        }
++    }
++}
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ openjdk/jdk/test/java/text/Bidi/BidiSurrogateTest.java	Fri Oct 17 13:34:03 2008 +0900
+@@ -0,0 +1,103 @@
++/*
++ * Copyright (c) 2008 Sun Microsystems, Inc.  All Rights Reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
++ * CA 95054 USA or visit www.sun.com if you need additional information or
++ * have any questions.
++ */
++
++/*
++ * @test
++ * @bug 4888843
++ * @summary verify that surrogate pairs representing codepoints with R or AL directionality
++ * and correctly recognized and reordered.
++ */
++
++import java.text.Bidi;
++
++public class BidiSurrogateTest {
++    private static final String RTLS = new String(Character.toChars(0x10800)); // surrogate code point with R directionality
++    private static final String LTRS = new String(Character.toChars(0x107ff)); // surrogate code point with L directionality
++    private static final String LRE = "\u202a";
++    private static final String RLE = "\u202b";
++    private static final String PDF = "\u202c";
++
++
++    public static void main(String[] args) {
++        new BidiSurrogateTest().test();
++    }
++
++    void test() {
++        test0();
++        test1();
++    }
++
++    void test0() {
++        // test unpaired surrogates - should have L directionality
++        testRequiresBidi("\ud800", false);           // unpaired lead surrogate
++        testRequiresBidi("\udc00", false);           // unpaired trail surrogate
++        testRequiresBidi("\udc00\ud800", false);     // out of order surrogates
++        testRequiresBidi("a\udc00b\ud800c", false);  // out of order surrogates split
++        testRequiresBidi(LTRS, false);               // supplementary with L
++        testRequiresBidi(RTLS, true);                // supplementary with R
++        testRequiresBidi("a" + RTLS + "b", true);    // R supplementary in LTR text
++        testRequiresBidi(LTRS + RTLS, true);         // R supplementary in LTR supplementary text
++        testRequiresBidi(LRE, false);                // LRE lone embedding
++        testRequiresBidi(RLE, true);                 // RLE lone embedding
++        testRequiresBidi(PDF, false);                // PDF lone pop embedding
++    }
++
++    void testRequiresBidi(String string, boolean requiresBidi) {
++        char[] text = string.toCharArray();
++        if (Bidi.requiresBidi(text, 0, text.length) != requiresBidi) {
++            throw new RuntimeException("testRequiresBidi failed with '" + string + "', " + requiresBidi);
++        }
++    }
++
++    void test1() {
++        // test that strings with surrogate runs process surrogate directionality ok
++        testBidi("This is a string with " + LTRS + " in it.", false);
++        testBidi("This is a string with \ud800 in it.", false);
++        testBidi("This is a string with \u0640 in it.", 22, 1);
++        testBidi(RTLS, true);
++        testBidi("This is a string with " + RTLS + RTLS + RTLS + " in it.", 22, 6);
++    }
++
++    void testBidi(String string, boolean directionIsRTL) {
++        Bidi bidi = new Bidi(string, Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
++        if (bidi.isMixed()) {
++            throw new RuntimeException("bidi is mixed");
++        }
++        if (bidi.isRightToLeft() != directionIsRTL) {
++            throw new RuntimeException("bidi is not " + (directionIsRTL ? "rtl" : "ltr"));
++        }
++    }
++
++    void testBidi(String string, int rtlstart, int rtllength) {
++        Bidi bidi = new Bidi(string, Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
++        for (int i = 0; i < bidi.getRunCount(); ++i) {
++            if ((bidi.getRunLevel(i) & 1) != 0) {
++                if (bidi.getRunStart(i) != rtlstart ||
++                    bidi.getRunLimit(i) != rtlstart + rtllength) {
++                    throw new RuntimeException("first rtl run didn't match " + rtlstart + ", " + rtllength);
++                }
++                break;
++            }
++        }
++    }
++}
+

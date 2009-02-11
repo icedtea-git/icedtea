@@ -1,4 +1,13 @@
+2009-02-11  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Add new patches.
+	* patches/openjdk/bidi-tests.patch,
+	* patches/openjdk/annotation-tests.patch:
+	New.
+	
 2009-02-10  Deepak Bhole <dbhole@redhat.com>
+
 	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Fix
 	exit permissions for applets.
 	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Fix harmless, but
