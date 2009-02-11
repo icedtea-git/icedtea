@@ -156,10 +156,10 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
 		if (length < 0) {
 			throw new IllegalArgumentException("length is negative");
 		}
-
-		if (length + offset > data.length) {
-			throw new ArrayIndexOutOfBoundsException("index: "
-					+ (length + offset) + " array size: " + data.length);
+		
+		if ( offset < 0 || offset > data.length - length) {
+			throw new ArrayIndexOutOfBoundsException("array size: " + data.length
+					+ " offset:" + offset + " length:" + length );
 		}
 
 		/* everything ok */
