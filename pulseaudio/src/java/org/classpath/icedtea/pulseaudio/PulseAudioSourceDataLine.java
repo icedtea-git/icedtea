@@ -151,6 +151,11 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 			throw new IllegalArgumentException(
 					"amount of data to write does not represent an integral number of frames");
 		}
+		
+		if (length < 0) {
+		    throw new IllegalArgumentException("length is negative");
+		}
+		
 		if (length < 0 || offset < 0 || offset > data.length - length) {
 			throw new ArrayIndexOutOfBoundsException(
 					"Overflow condition: buffer.length=" + data.length + 

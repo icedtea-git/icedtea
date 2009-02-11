@@ -469,6 +469,14 @@
 	* patches/icedtea-pr261.patch,
 	* patches/icedtea-version.patch: Regenerated.
 
+2009-02-11  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(write): Throw IllegalArgumentException instead of 
+	ArrayIndexOutOfBoundsException for length.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(read): Fixed bounds checking.
+
 2009-02-11  Marc Schoenefeld <mschoene@redhat.com>
             Omair Majid  <omajid@redhat.com>
 
