@@ -1,3 +1,9 @@
+2009-02-11  Marc Schoenefeld <mschoene@redhat.com>
+            Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(write): Fix bounds checking.
+
 2009-02-11  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
