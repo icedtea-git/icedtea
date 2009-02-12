@@ -469,6 +469,11 @@
 	* patches/icedtea-pr261.patch,
 	* patches/icedtea-version.patch: Regenerated.
 
+2009-02-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	* configure.ac:
+	Fix typo in --enable-nio2.
+	
 2009-02-11  Omair Majid  <omajid@redhat.com>
 
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
