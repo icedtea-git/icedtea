@@ -1329,14 +1329,7 @@ PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulsea
 
 EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/icedtea-*.patch \
 	tools-copy contrib ports extra overlays \
-	javaws.png javaws.desktop visualvm.desktop \
-=======
-EXTRA_DIST = rt generated \
-	patches/* \
-	gcjwebplugin.cc tools-copy contrib ports \
-	extra overlays \
 	javaws.png javaws.desktop \
->>>>>>> other
 	jconsole.desktop policytool.desktop \
 	$(JTREG_SRCS) \
 	IcedTeaPlugin.cc \
@@ -1641,9 +1634,6 @@ endif
 	mkdir -p stamps
 	touch stamps/download.stamp
 
-clean-hgforest:
-	rm -f stamps/hgforest.stamp
-
 stamps/hgforest.stamp:
 if OPENJDK_SRC_DIR_FOUND
 else
@@ -1803,15 +1793,11 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-linker-libs-order.patch \
 	patches/icedtea-f2i-overflow.patch \
 	patches/icedtea-testenv.patch \
-	patches/icedtea-samejvm-safe.patch \
-	patches/icedtea-6728542-epoll.patch \
-	patches/icedtea-cc-interp-jvmti.patch \
 	patches/icedtea-pr261.patch \
 	patches/icedtea-doc-headers.patch \
 	patches/icedtea-format-warnings.patch \
 	patches/icedtea-fortify-source.patch \
 	$(ZERO_PATCHES_COND) \
-	patches/icedtea-samejvm-safe.patch \
         patches/security/icedtea-6484091.patch \
         patches/security/icedtea-6497740.patch \
         patches/security/icedtea-6588160.patch \
@@ -1822,7 +1808,6 @@ ICEDTEA_PATCHES = \
         patches/security/icedtea-6734167.patch \
         patches/security/icedtea-6755943.patch \
         patches/security/icedtea-6766136.patch \
-	patches/icedtea-cc-interp-jvmti.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-6791168.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch 
 
@@ -2066,7 +2051,7 @@ clean-patch-fsg:
 	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
-stamps/overlay.stamp: stamps/extract.stamp
+stamps/overlay.stamp: stamps/patch.stamp
 	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
 	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{node|short}')`" ; \
 	fi ; \

@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
---- openjdk.orig/jdk/make/docs/Makefile	2009-02-03 13:34:38.000000000 +0000
-+++ openjdk/jdk/make/docs/Makefile	2009-02-03 16:11:08.000000000 +0000
-@@ -99,36 +99,20 @@
+--- openjdk.orig/jdk/make/docs/Makefile	2009-02-11 00:49:35.000000000 +0000
++++ openjdk/jdk/make/docs/Makefile	2009-02-11 00:55:31.000000000 +0000
+@@ -77,34 +77,19 @@
  
  TAGS = $(IGNORED_TAGS:%=-tag %:X) $(TAG_JLS3)
  
@@ -29,23 +29,21 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  
  JAVADOCTITLE  = 'Java$(TRADEMARK) Platform, Standard Edition $(JDK_MINOR_VERSION)<br>API Specification'
  JAVADOCWINDOWTITLE  = 'Java Platform SE $(JDK_MINOR_VERSION)'
- JAVADOCHEADER = '<b>Java$(TRADEMARK)&nbsp;Platform<br>Standard&nbsp;Ed.&nbsp;$(JDK_MINOR_VERSION)</b>'
--JAVADOCBOTTOM = '<font size="-1"><a href="http://bugs.sun.com/services/bugreport/index.jsp">Submit a bug or feature</a><br>For further API reference and developer documentation, see <a href="{@docroot}/../../webnotes/devdocs-vs-specs.html">Java SE Developer Documentation</a>. That documentation contains more detailed, developer-targeted descriptions, with conceptual overviews, definitions of terms, workarounds, and working code examples. <p>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All rights reserved. Use is subject to <a href="{@docroot}/../legal/license.html">license terms</a>. Also see the <a href="http://java.sun.com/docs/redist.html">documentation redistribution policy</a>.</font>'
-+JAVADOCBOTTOM = '<font size="-1"><a href="http://icedtea.classpath.org/bugzilla/">Submit a bug or feature</a> <p>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All rights reserved. Use is subject to the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a>.</font>'
+ JAVADOCHEADER = '<strong>Java$(TRADEMARK)&nbsp;Platform<br>Standard&nbsp;Ed.&nbsp;$(JDK_MINOR_VERSION)</strong>'
+-JAVADOCBOTTOM = '<font size="-1"><a href="http://bugs.sun.com/services/bugreport/index.jsp">Submit a bug or feature</a><br>For further API reference and developer documentation, see <a href="{@docroot}/../../webnotes/devdocs-vs-specs.html">Java SE Developer Documentation</a>. That documentation contains more detailed, developer-targeted descriptions, with conceptual overviews, definitions of terms, workarounds, and working code examples. <p>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All Rights Reserved. Use is subject to <a href="{@docroot}/../legal/license.html">license terms</a>. Also see the <a href="http://java.sun.com/docs/redist.html">documentation redistribution policy</a>.</font>'
+++ JAVADOCBOTTOM = '<font size="-1"><a href="http://icedtea.classpath.org/bugzilla/">Submit a bug or feature</a> <p>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All rights reserved. Use is subject to the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a>.</font>'
  JAVADOCOVERVIEW = $(SHARE_SRC)/classes/overview-core.html
  
- #
+-#
 -# Early access top and bottom text (for snapshots, beta and rc)
 -#
 -JAVADOCTOP_EARLYACCESS = '<div style="background-color: \#EEEEEE"> <div style="padding: 6px; margin-top: 2px; margin-bottom: 6px; margin-left: 6px; margin-right: 6px; text-align: justify; font-size: 80%; font-family: Helvetica, Arial, sans-serif; font-weight: normal;"> Please note that this documentation is not final and is subject to change. </div> </div>'
--JAVADOCBOTTOM_EARLYACCESS = '<font size="-1"><a href="http://bugs.sun.com/services/bugreport/index.jsp">Submit a bug or feature</a> <p>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All rights reserved. Use is subject to the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a>.</font>'
+-JAVADOCBOTTOM_EARLYACCESS = '<font size="-1"><a href="http://bugs.sun.com/services/bugreport/index.jsp">Submit a bug or feature</a> <p>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All Rights Reserved. Use is subject to <a href="{@docroot}/../legal/license.html">license terms</a>.</font>'
 -JAVADOCTITLE_EARLYACCESS = $(subst Specification,Documentation,$(JAVADOCTITLE))
--
--#
- # Variables used by domapidocs target
- #
  
-@@ -138,12 +122,11 @@
+ #
+ # Variables used by domapidocs target
+@@ -116,12 +101,11 @@
                      -doctitle $(DOMAPI_JAVADOCTITLE)          \
                      -windowtitle $(DOMAPI_JAVADOCWINDOWTITLE) \
                      -header $(DOMAPI_JAVADOCHEADER)           \
@@ -54,12 +52,12 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                      -group $(DOMAPI_GROUPNAME) $(DOMAPI_REGEXP)
  DOMAPI_JAVADOCTITLE  = 'Common DOM API'
  DOMAPI_JAVADOCWINDOWTITLE  = 'Common DOM API'
- DOMAPI_JAVADOCHEADER = '<b>Common DOM API</b>'
+ DOMAPI_JAVADOCHEADER = '<strong>Common DOM API</strong>'
 -DOMAPI_JAVADOCBOTTOM = '<font size="-1"><a href="http://bugs.sun.com/services/bugreport/index.jsp">Submit a bug or feature</a><br>Java is a trademark or registered trademark of Sun Microsystems, Inc. in the US and other countries.<br>Copyright $(THIS_YEAR) Sun Microsystems, Inc. 4150 Network Circle<br>Santa Clara, California, 95054, U.S.A.  All Rights Reserved.</font>'
  DOMAPI_GROUPNAME = "Packages"
  DOMAPI_REGEXP = "com.sun.java.browser.dom:org.w3c.dom*"
  # DOMAPI_PKGS is located in NON_CORE_PKGS.gmk
-@@ -157,13 +140,12 @@
+@@ -135,13 +119,12 @@
                      -doctitle $(MIRROR_JAVADOCTITLE)            \
                      -windowtitle $(MIRROR_JAVADOCWINDOWTITLE)   \
                      -header $(MIRROR_JAVADOCHEADER)             \
@@ -69,26 +67,26 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                      -overview $(MIRROR_OVERVIEW)
  MIRROR_JAVADOCTITLE = 'Mirror API'
  MIRROR_JAVADOCWINDOWTITLE = 'Mirror API'
- MIRROR_JAVADOCHEADER = '<b>Mirror API</b>'
+ MIRROR_JAVADOCHEADER = '<strong>Mirror API</strong>'
 -MIRROR_JAVADOCBOTTOM = '<font size="-1"><a href="http://bugs.sun.com/services/bugreport/index.jsp">Report a bug or request a feature.</a><br>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All Rights Reserved. Use is subject to license terms.</font>'
  MIRROR_GROUPNAME = "Packages"
  MIRROR_OVERVIEW = $(IMPORTSRCDIR)/com/sun/mirror/overview.html
  MIRROR_REGEXP = "com.sun.mirror.*"
-@@ -181,12 +163,11 @@
+@@ -159,12 +142,11 @@
                      -doctitle $(DOCLETAPI_JAVADOCTITLE)          \
                      -windowtitle $(DOCLETAPI_JAVADOCWINDOWTITLE) \
                      -header $(DOCLETAPI_JAVADOCHEADER)           \
 -                    -bottom $(DOCLETAPI_JAVADOCBOTTOM)           \
-+                    -bottom $(JAVADOCBOTTOM)           		 \
++                    -bottom $(JAVADOCBOTTOM)           \
                      -group $(DOCLETAPI_GROUPNAME) $(DOCLETAPI_REGEXP)
  DOCLETAPI_JAVADOCTITLE  = 'Doclet API'
  DOCLETAPI_JAVADOCWINDOWTITLE  = 'Doclet API'
- DOCLETAPI_JAVADOCHEADER = '<b>Doclet API</b>'
+ DOCLETAPI_JAVADOCHEADER = '<strong>Doclet API</strong>'
 -DOCLETAPI_JAVADOCBOTTOM = '<font size="-1"><a href="http://bugs.sun.com/services/bugreport/index.jsp">Submit a bug or feature</a><br>Java is a trademark or registered trademark of Sun Microsystems, Inc. in the US and other countries.<br>Copyright 1993-$(THIS_YEAR) Sun Microsystems, Inc. 4150 Network Circle<br>Santa Clara, California, 95054, U.S.A.  All Rights Reserved.</font>'
  DOCLETAPI_GROUPNAME = "Packages"
  DOCLETAPI_REGEXP = "com.sun.javadoc"
  DOCLETAPI_LINKOPT = -linkoffline ../../../../api $(DOCSDIR)/api/
-@@ -200,8 +181,7 @@
+@@ -178,8 +160,7 @@
  		    -encoding ascii			        \
                      -nonavbar                                   \
                      -noindex                                    \
@@ -98,7 +96,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  # TAGLETAPI_FILE is located in NON_CORE_PKGS.gmk
  
  #
-@@ -218,6 +198,7 @@
+@@ -196,6 +177,7 @@
                     -windowtitle $(JDI_WINDOWTITLE)               \
                     -doctitle $(JDI_DOCTITLE)                     \
                     -header $(JDI_HEADER)                         \
@@ -106,7 +104,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                     -linkoffline ../../../../api $(DOCSDIR)/api/     \
                     -overview $(JPDA_SOURCEPATH)/jdi-overview.html
  JDI_WINDOWTITLE = "Java Debug Interface"
-@@ -242,6 +223,7 @@
+@@ -220,6 +202,7 @@
                     -windowtitle $(JAAS_WINDOWTITLE)              \
                     -doctitle $(JAAS_DOCTITLE)                    \
                     -header $(JAAS_JAVADOCHEADER)                 \
@@ -114,7 +112,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                     -linkoffline ../../../../../api $(DOCSDIR)/api/	 \
                     -overview $(TOPDIR)/src/share/classes/com/sun/security/auth/jaas-overview.html
  JAAS_WINDOWTITLE = "Java Authentication and Authorization Service "
-@@ -264,6 +246,7 @@
+@@ -242,6 +225,7 @@
                     -windowtitle $(JGSS_WINDOWTITLE)             \
                     -doctitle $(JGSS_DOCTITLE)                   \
                     -header $(JGSS_JAVADOCHEADER)                \
@@ -122,7 +120,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                     -linkoffline ../../../../../api $(DOCSDIR)/api/ \
                     -overview $(JGSS_SOURCEPATH)/com/sun/security/jgss/jgss-overview.html
  
-@@ -287,6 +270,7 @@
+@@ -265,6 +249,7 @@
                     -windowtitle $(SMARTCARDIO_WINDOWTITLE)             \
                     -doctitle $(SMARTCARDIO_DOCTITLE)                   \
                     -header $(SMARTCARDIO_JAVADOCHEADER)                \
@@ -130,7 +128,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                     -linkoffline ../../../../../api $(DOCSDIR)/api/
  
  SMARTCARDIO_WINDOWTITLE = "Java Smart Card I/O"
-@@ -309,6 +293,7 @@
+@@ -309,6 +294,7 @@
                     -windowtitle $(HTTPSERVER_WINDOWTITLE)             \
                     -doctitle $(HTTPSERVER_DOCTITLE)                   \
                     -header $(HTTPSERVER_JAVADOCHEADER)                \
@@ -138,7 +136,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                     -linkoffline ../../../../../api $(DOCSDIR)/api/
  
  HTTPSERVER_WINDOWTITLE = "Java HTTP Server"
-@@ -344,6 +329,7 @@
+@@ -338,6 +324,7 @@
                       -windowtitle $(MGMT_WINDOWTITLE)              \
                       -doctitle $(MGMT_DOCTITLE)                    \
                       -header $(MGMT_HEADER)                        \
@@ -146,7 +144,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  		     -linkoffline ../../../../api $(DOCSDIR)/api/  \
                       -overview $(MGMT_SOURCEPATH)/com/sun/management/mgmt-overview.html
  MGMT_WINDOWTITLE = "Monitoring and Management Interface for the Java Platform"
-@@ -365,6 +351,7 @@
+@@ -359,6 +346,7 @@
                     -windowtitle $(ATTACH_WINDOWTITLE)               	\
                     -doctitle $(ATTACH_DOCTITLE)                     	\
                     -header $(ATTACH_HEADER)                         	\
@@ -154,7 +152,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  		   -linkoffline ../../../../api $(DOCSDIR)/api/
  ATTACH_WINDOWTITLE = "Attach API"
  ATTACH_DOCTITLE    = "Attach API"
-@@ -385,6 +372,7 @@
+@@ -379,6 +367,7 @@
                     -windowtitle $(JCONSOLE_WINDOWTITLE)               	\
                     -doctitle $(JCONSOLE_DOCTITLE)                     	\
                     -header $(JCONSOLE_HEADER)                         	\
@@ -162,7 +160,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  		   -linkoffline ../../../../api $(DOCSDIR)/api/
  JCONSOLE_WINDOWTITLE = "JConsole API"
  JCONSOLE_DOCTITLE    = "JConsole API"
-@@ -400,7 +388,7 @@
+@@ -394,7 +383,7 @@
                      -doctitle $(TREEAPI_JAVADOCTITLE)            \
                      -windowtitle $(TREEAPI_JAVADOCWINDOWTITLE)   \
                      -header $(TREEAPI_JAVADOCHEADER)             \
@@ -171,10 +169,10 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                      -group $(TREEAPI_GROUPNAME) $(TREEAPI_REGEXP) 
  #
  #	            -overview $(TREEAPI_OVERVIEW)
-@@ -408,7 +396,6 @@
+@@ -402,7 +391,6 @@
  TREEAPI_JAVADOCTITLE = 'Compiler Tree API'
  TREEAPI_JAVADOCWINDOWTITLE = 'Compiler Tree API'
- TREEAPI_JAVADOCHEADER = '<b>Compiler Tree API</b>'
+ TREEAPI_JAVADOCHEADER = '<strong>Compiler Tree API</strong>'
 -TREEAPI_JAVADOCBOTTOM = '<font size="-1"><a href="http://bugs.sun.com/services/bugreport/index.jsp">Report a bug or request a feature.</a><br>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All Rights Reserved. Use is subject to license terms.</font>'
  TREEAPI_GROUPNAME = "Packages"
  TREEAPI_OVERVIEW = $(SHARE_SRC)/classes/com/sun/source/overview.html

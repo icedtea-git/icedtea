@@ -1,3 +1,20 @@
+2009-02-13  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/hotspot/14.0b08/icedtea-format.patch:
+	Moved...
+	* patches/icedtea-cc-interp-jvmti.patch,
+	* patches/icedtea-samejvm-safe.patch:
+	Removed, applied upstream.
+	* Makefile.am: Remove unneeded patches, fix
+	remaining conflicts from merge, make overlay
+	depend on patch stage.
+	* patches/hotspot/original/icedtea-format.patch:
+	to here.
+	* patches/icedtea-doc-headers.patch,
+	* patches/icedtea-nio2.patch: Recreated against 7.
+	* patches/icedtea-pr261.patch,
+	* patches/icedtea-version.patch: Regenerated.
+
 2009-02-10  Andrew John Hughes  <ahughes@redhat.com>
 
 	Merge from IcedTea6.
