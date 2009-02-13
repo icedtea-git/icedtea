@@ -1,3 +1,7 @@
+2009-02-13  Lillian Angel  <langel@redhat.com>
+
+	* acinclude.m4: Upgraded rhino to 1.7 from 1.6.
+
 2009-02-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* configure.ac:
