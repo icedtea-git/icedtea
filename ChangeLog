@@ -1,3 +1,56 @@
+2009-02-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/hotspot/14.0b08/icedtea-6791168.patch,
+	* patches/hotspot/14.0b08/icedtea-bytecodeInterpreter.patch,
+	* patches/hotspot/14.0b08/icedtea-core-build.patch,
+	* patches/hotspot/14.0b08/icedtea-debuginfo.patch,
+	* patches/hotspot/14.0b08/icedtea-format.patch,
+	* patches/hotspot/14.0b08/icedtea-gcc-4.3.patch,
+	* patches/hotspot/14.0b08/icedtea-gcc-suffix.patch,
+	* patches/hotspot/14.0b08/icedtea-headers.patch,
+	* patches/hotspot/14.0b08/icedtea-includedb.patch,
+	* patches/hotspot/14.0b08/icedtea-memory-limits.patch,
+	* patches/hotspot/14.0b08/icedtea-no-precompiled.patch,
+	* patches/hotspot/14.0b08/icedtea-params-cast-size_t.patch,
+	* patches/hotspot/14.0b08/icedtea-parisc-opt.patch,
+	* patches/hotspot/14.0b08/icedtea-shark-build.patch,
+	* patches/hotspot/14.0b08/icedtea-shark.patch,
+	* patches/hotspot/14.0b08/icedtea-sparc-buildfixes.patch,
+	* patches/hotspot/14.0b08/icedtea-sparc-ptracefix.patch,
+	* patches/hotspot/14.0b08/icedtea-sparc-trapsfix.patch,
+	* patches/hotspot/14.0b08/icedtea-sparc64-linux.patch,
+	* patches/hotspot/14.0b08/icedtea-static-libstdc++.patch,
+	* patches/hotspot/14.0b08/icedtea-text-relocations.patch,
+	* patches/hotspot/14.0b08/icedtea-use-idx_t.patch,
+	* patches/hotspot/14.0b08/icedtea-version.patch,
+	* patches/hotspot/14.0b08/icedtea-zero-build.patch: Moved...
+	* acinclude.m4: Make 'default' the default.
+	* hotspot.map: Change 14.0b08 to default.
+	* patches/hotspot/default/icedtea-6791168.patch,
+	* patches/hotspot/default/icedtea-bytecodeInterpreter.patch,
+	* patches/hotspot/default/icedtea-core-build.patch,
+	* patches/hotspot/default/icedtea-debuginfo.patch,
+	* patches/hotspot/default/icedtea-format.patch,
+	* patches/hotspot/default/icedtea-gcc-4.3.patch,
+	* patches/hotspot/default/icedtea-gcc-suffix.patch,
+	* patches/hotspot/default/icedtea-headers.patch,
+	* patches/hotspot/default/icedtea-includedb.patch,
+	* patches/hotspot/default/icedtea-memory-limits.patch,
+	* patches/hotspot/default/icedtea-no-precompiled.patch,
+	* patches/hotspot/default/icedtea-params-cast-size_t.patch,
+	* patches/hotspot/default/icedtea-parisc-opt.patch,
+	* patches/hotspot/default/icedtea-shark-build.patch,
+	* patches/hotspot/default/icedtea-shark.patch,
+	* patches/hotspot/default/icedtea-sparc-buildfixes.patch,
+	* patches/hotspot/default/icedtea-sparc-ptracefix.patch,
+	* patches/hotspot/default/icedtea-sparc-trapsfix.patch,
+	* patches/hotspot/default/icedtea-sparc64-linux.patch,
+	* patches/hotspot/default/icedtea-static-libstdc++.patch,
+	* patches/hotspot/default/icedtea-text-relocations.patch,
+	* patches/hotspot/default/icedtea-use-idx_t.patch,
+	* patches/hotspot/default/icedtea-version.patch,
+	* patches/hotspot/default/icedtea-zero-build.patch: to here.
+
 2009-02-13  Lillian Angel  <langel@redhat.com>
 
 	* acinclude.m4: Upgraded rhino to 1.7 from 1.6.
