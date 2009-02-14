@@ -1,5 +1,12 @@
 2009-02-12  Andrew John Hughes  <ahughes@redhat.com>
 
+	* acinclude.m4:
+	Revert Rhino change so IcedTea6 builds
+	on Gentoo again.
+	
+2009-02-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/ecj/icedtea-hotspot-14.0b08.patch,
 	* patches/hotspot/14.0b08/icedtea-6791168.patch,
 	* patches/hotspot/14.0b08/icedtea-bytecodeInterpreter.patch,
 	* patches/hotspot/14.0b08/icedtea-core-build.patch,
@@ -26,6 +33,7 @@
 	* patches/hotspot/14.0b08/icedtea-zero-build.patch: Moved...
 	* acinclude.m4: Make 'default' the default.
 	* hotspot.map: Change 14.0b08 to default.
+	* patches/ecj/icedtea-hotspot-default.patch,
 	* patches/hotspot/default/icedtea-6791168.patch,
 	* patches/hotspot/default/icedtea-bytecodeInterpreter.patch,
 	* patches/hotspot/default/icedtea-core-build.patch,
