@@ -1,3 +1,8 @@
+2009-02-15  Mark Wielaard  <mark@klomp.org>
+
+	* patches/hotspot/default/14.0b08/*: Moved to ...
+	patches/hotspot/default/*.
+
 2009-02-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
