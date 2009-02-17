@@ -231,6 +231,27 @@
 	java.nio.channels.FileChannel, java.nio.channels.FileLock, java.nio.channels.package-info.java,
 	java.util.Scanner.  Remove patch to sun.nio.ch.FileChannelImpl. Fix imports.  Remove 6 cruft.
 
+2009-02-17  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp: Updated copyright year.	
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp:
+	Likewise.
+	* ports/hotspot/src/share/vm/includeDB_shark
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp: Likewise.
+
+	* ports/hotspot/src/cpu/zero/vm/bytecodes_zero.hpp:
+	Deleted contents (was all comment).
+
 2009-02-13  Andrew John Hughes  <ahughes@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/File.java,
