@@ -55,6 +55,24 @@ AC_ARG_WITH([icedtea],
 AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" = true)
 AC_MSG_RESULT(${with_icedtea})
 
+AC_MSG_CHECKING([for a NetBeans installation])
+AC_ARG_WITH([netbeans-home],
+           [AS_HELP_STRING([--with-netbeans-home],
+                            [NetBeans home directory (default is /usr/share/netbeans)])],
+            [
+              if test "x${withval}" = x
+              then
+                SYSTEM_NETBEANS_DIR=/usr/share/netbeans
+              else
+                SYSTEM_NETBEANS_DIR=${withval}
+              fi
+            ],
+            [
+              SYSTEM_NETBEANS_DIR=/usr/share/netbeans
+            ])
+AC_MSG_RESULT([${SYSTEM_NETBEANS_DIR}])
+AC_SUBST(SYSTEM_NETBEANS_DIR)
+
 AC_MSG_CHECKING([whether to build using an existing installation of OpenJDK])
 AC_ARG_WITH([openjdk],
         [AS_HELP_STRING([--with-openjdk],
@@ -90,6 +108,14 @@ AC_ARG_WITH([ant-home],
             ])
 AC_MSG_RESULT(${SYSTEM_ANT_DIR})
 AC_SUBST(SYSTEM_ANT_DIR)
+
+AC_MSG_CHECKING(whether to build VisualVM)
+AC_ARG_ENABLE([visualvm],
+              [AS_HELP_STRING([--enable-visualvm],
+                                         [Enable compilation of visualvm.])],
+              [enable_visualvm="${enableval}"], [enable_visualvm="no"])
+AM_CONDITIONAL(WITH_VISUALVM, test "x${enable_visualvm}" = "xyes")
+AC_MSG_RESULT(${enable_visualvm})
 
 AC_MSG_CHECKING([whether to build the LiveConnect plugin])
 AC_ARG_ENABLE([liveconnect],
@@ -243,6 +269,11 @@ AC_CHECK_WITH_HG_REVISION
 
 AC_PATH_TOOL([GCJ],[gcj])
 AC_SUBST([GCJ])
+
+if test "x${enable_visualvm}" = "xyes"
+then
+  FIND_NETBEANS
+fi
 
 if test "x${enable_pulse_java}" = "xyes"
 then
