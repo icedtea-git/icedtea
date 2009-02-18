@@ -1659,8 +1659,39 @@ if WITH_VISUALVM
           -O $(VISUALVM_SRC_ZIP) ; \
          fi
 endif
+if WITH_VISUALVM
+	if ! echo "$(NETBEANS_PROFILER_MD5SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
+	 | $(MD5SUM) --check ; \
+	then \
+	 if [ $(NETBEANS_PROFILER_SRC_ZIP) ] ; \
+	 then \
+	  mv $(NETBEANS_PROFILER_SRC_ZIP) $(NETBEANS_PROFILER_SRC_ZIP).old ; \
+	 fi ; \
+	 $(WGET) $(NETBEANS_PROFILER_URL)$(NETBEANS_PROFILER_SRC_ZIP) \
+	  -O $(NETBEANS_PROFILER_SRC_ZIP) ; \
+	 fi
+
+	if ! echo "$(VISUALVM_MD5SUM)  $(VISUALVM_SRC_ZIP)" \
+         | $(MD5SUM) --check ; \
+        then \
+         if [ $(VISUALVM_SRC_ZIP) ] ; \
+         then \
+          mv $(VISUALVM_SRC_ZIP) $(VISUALVM_SRC_ZIP).old ; \
+         fi ; \
+         $(WGET) $(VISUALVM_URL)$(VISUALVM_SRC_ZIP) \
+          -O $(VISUALVM_SRC_ZIP) ; \
+         fi
+endif
 	mkdir -p stamps
 	touch stamps/download.stamp
+
+# VisualVM sources. Alternatives cannot be used here.
+NETBEANS_PROFILER_URL = http://icedtea.classpath.org/visualvm/
+NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_release65_mod.tar.gz
+
+VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/127067/
+VISUALVM_SRC_ZIP = visualvm-11-src.tar.gz
+
 
 # VisualVM sources. Alternatives cannot be used here.
 NETBEANS_PROFILER_URL = http://icedtea.classpath.org/visualvm/
@@ -1701,6 +1732,10 @@ clean-download:
 	rm -f $(OPENJDK_SRC_ZIP)
 if WITH_CACAO
 	rm -f $(CACAO_SRC_ZIP)
+endif
+if WITH_VISUALVM
+	rm -f $(VISUALVM_SRC_ZIP)
+	rm -f $(NETBEANS_PROFILER_SRC_ZIP)
 endif
 if WITH_VISUALVM
 	rm -f $(VISUALVM_SRC_ZIP)
@@ -3051,6 +3086,59 @@ clean-nbplatform:
 	rm -rf netbeans
 	rm -f stamps/nbplatform.stamp
 
+# VisualVM
+
+stamps/visualvm.stamp: $(BOOTSTRAP_DIRECTORY_STAMP) stamps/download.stamp \
+	stamps/extract.stamp stamps/nbplatform.stamp
+if WITH_VISUALVM
+	cd visualvm ; \
+	ln -s $(abs_top_srcdir)/netbeans/nbbuild/netbeans_visualvm netbeans ; \
+	JAVA_HOME=$(ICEDTEA_HOME) $(ANT) build
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-visualvm:
+	rm -rf visualvm
+	rm -f stamps/visualvm.stamp
+
+stamps/nbplatform.stamp: $(BOOTSTRAP_DIRECTORY_STAMP) stamps/extract.stamp \
+	stamps/download.stamp
+if WITH_VISUALVM
+	mkdir netbeans ; \
+	cd netbeans ; \
+        rm nbbuild/external/binaries-list ; \
+        rm -r lib.profiler/release/lib/deployed ; \
+        mkdir -p lib.profiler/release/lib/deployed/jdk15/linux ; \
+        mkdir -p lib.profiler/release/lib/deployed/jdk16/linux ; \
+	mkdir -p ./nbbuild/netbeans_visualvm/ ; \
+	ln -s $(SYSTEM_NETBEANS_DIR)/platform9/ ./nbbuild/netbeans_visualvm/platform9 ; \
+	ln -s $(SYSTEM_NETBEANS_DIR)/apisupport1/ ./nbbuild/netbeans_visualvm/apisupport1 ; \
+	ln -s $(SYSTEM_NETBEANS_DIR)/harness/ ./nbbuild/netbeans_visualvm/harness ; \
+	cd lib.profiler/native/build ; \
+	if ! (uname -a | grep x86_64) ; then \
+	  buildscript=./buildnative-linux-15.sh ; \
+	else \
+	  buildscript=./buildnative-linux64-15.sh ; \
+	fi ; \
+	JAVA_HOME_15=$(ICEDTEA_HOME) JAVA_HOME_16=$(ICEDTEA_HOME) \
+	  $$buildscript ; \
+	cd ../../.. ; \
+        JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true \
+            -f nbbuild/build.xml bootstrap ; \
+	for dir in lib.profiler lib.profiler.ui lib.profiler.common profiler ; do \
+	  JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true -Dbuildnumber=081204 \
+            -Dnetbeans.dest.dir=../nbbuild/netbeans_visualvm \
+	    -f $$dir/build.xml ; \
+	done 
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-nbplatform:
+	rm -rf netbeans
+	rm -f stamps/nbplatform.stamp
+
 # fsg-tarball
 
 # Creates archive of openjdk that is compliant with Free Software guidelines.
@@ -3077,6 +3165,10 @@ visualvm: stamps/visualvm.stamp
 nbplatform: stamps/nbplatform.stamp
 
 extract-visualvm: stamps/extract-visualvm.stamp
+
+visualvm: stamps/visualvm.stamp
+
+nbplatform: stamps/nbplatform.stamp
 
 copy-source-files: stamps/copy-source-files.stamp
 

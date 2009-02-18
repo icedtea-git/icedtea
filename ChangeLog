@@ -254,6 +254,15 @@
 	* configure.ac: Added --enable-visualvm option.
 	* visualvm.desktop: New file.	
 
+2009-02-18  Lillian Angel  <langel@redhat.com>
+	Tomas Hurka <tomas.hurka@sun.com>
+	
+	* INSTALL: Updated requirements.
+	* Makefile.am: Added building support for VisualVM with NetBeans 6.5.
+	* acinclude.m4: Added check for NetBeans.
+	* configure.ac: Added --enable-visualvm option.
+	* visualvm.desktop: New file.	
+
 2009-02-17  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp: Updated copyright year.	
