@@ -231,6 +231,11 @@
 	java.nio.channels.FileChannel, java.nio.channels.FileLock, java.nio.channels.package-info.java,
 	java.util.Scanner.  Remove patch to sun.nio.ch.FileChannelImpl. Fix imports.  Remove 6 cruft.
 
+2009-02-19  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp:
+	Deleted contents (was all comment).
+
 2009-02-18  Lillian Angel  <langel@redhat.com>
 	Tomas Hurka <tomas.hurka@sun.com>
 	
