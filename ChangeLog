@@ -241,6 +241,11 @@
 	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp:
 	Deleted contents (was all comment).
 
+2009-02-19  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp:
+	Deleted contents (was all comment).
+
 2009-02-19  Mark Wielaard  <mark@klomp.org>
 
 	* AUTHORS: Fix my email address.
