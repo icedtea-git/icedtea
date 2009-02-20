@@ -1,5 +1,10 @@
 2009-02-20  Andrew John Hughes  <ahughes@redhat.com>
 
+	* AUTHORS:
+	Add back my main e-mail address.
+	
+2009-02-20  Andrew John Hughes  <ahughes@redhat.com>
+
 	* configure.ac:
 	Disable NIO2 by default.
 
