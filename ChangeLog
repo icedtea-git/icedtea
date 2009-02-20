@@ -1,3 +1,8 @@
+2009-02-20  Andrew John Hughes  <ahughes@redhat.com>
+
+	* configure.ac:
+	Disable NIO2 by default.
+	
 2009-02-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
