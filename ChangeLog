@@ -2,7 +2,55 @@
 
 	* configure.ac:
 	Disable NIO2 by default.
-	
+
+2009-02-19  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp:
+	Deleted contents (was all comment).
+
+2009-02-19  Mark Wielaard  <mark@klomp.org>
+
+	* AUTHORS: Fix my email address.
+
+2009-02-18  Lillian Angel  <langel@redhat.com>
+
+	* AUTHORS: Updated.
+
+2009-02-18  Lillian Angel  <langel@redhat.com>
+	Tomas Hurka <tomas.hurka@sun.com>
+
+	* INSTALL: Updated requirements.
+	* Makefile.am: Added building support for VisualVM with NetBeans 6.5.
+	* acinclude.m4: Added check for NetBeans.
+	* configure.ac: Added --enable-visualvm option.
+	* visualvm.desktop: New file.	
+
+2009-02-17  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp: Updated copyright year.	
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp:
+	Likewise.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp:
+	Likewise.
+	* ports/hotspot/src/share/vm/includeDB_shark
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp: Likewise.
+
+	* ports/hotspot/src/cpu/zero/vm/bytecodes_zero.hpp:
+	Deleted contents (was all comment).
+
+2009-02-15  Mark Wielaard  <mark@klomp.org>
+
+	* patches/hotspot/default/14.0b08/*: Moved to ...
+	patches/hotspot/default/*.
+
 2009-02-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
