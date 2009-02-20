@@ -23,7 +23,7 @@
  *
  */
 
-#ifdef __PPC
+#ifdef PPC
 
 #define READ_MEM_BARRIER __asm __volatile ("isync":::"memory")
 #ifdef __NO_LWSYNC__
