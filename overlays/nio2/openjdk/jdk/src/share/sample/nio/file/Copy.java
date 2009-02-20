@@ -32,19 +32,19 @@
 import java.io.IOException;
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.file.CopyOption;
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.FileVisitor;
-import org.classpath.icedtea.java.nio.file.FileVisitResult;
-import org.classpath.icedtea.java.nio.file.Path;
+import java.nio.file.CopyOption;
+import java.nio.file.FileRef;
+import java.nio.file.FileVisitor;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Path;
 
-import static org.classpath.icedtea.java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
-import static org.classpath.icedtea.java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.BasicFileAttributes;
 
-import static org.classpath.icedtea.java.nio.file.FileVisitResult.CONTINUE;
-import static org.classpath.icedtea.java.nio.file.FileVisitResult.SKIP_SUBTREE;
+import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
 
 /**
  * Sample code that copies files in a similar manner to the cp(1) program.

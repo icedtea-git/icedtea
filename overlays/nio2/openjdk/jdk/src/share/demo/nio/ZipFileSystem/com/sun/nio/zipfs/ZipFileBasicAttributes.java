@@ -35,11 +35,11 @@ import java.util.concurrent.*;
 import java.io.IOException;
 import java.util.Calendar;
 
-import org.classpath.icedtea.java.nio.file.ClosedFileSystemException;
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.ReadOnlyFileSystemException;
+import java.nio.file.ClosedFileSystemException;
+import java.nio.file.FileRef;
+import java.nio.file.ReadOnlyFileSystemException;
 
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class ZipFileBasicAttributes implements
         BasicFileAttributes {

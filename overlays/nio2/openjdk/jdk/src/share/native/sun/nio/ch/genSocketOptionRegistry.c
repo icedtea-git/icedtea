@@ -64,10 +64,10 @@ int main(int argc, const char* argv[]) {
     out("package sun.nio.ch;                                                            ");
     out("import java.util.Map;                                                          ");
     out("import java.util.HashMap;                                                      ");
-    out("import org.classpath.icedtea.java.net.ProtocolFamily;                          ");
-    out("import org.classpath.icedtea.java.net.StandardProtocolFamily;                  ");
-    out("import org.classpath.icedtea.java.net.SocketOption;                            ");
-    out("import org.classpath.icedtea.java.net.StandardSocketOption;                    ");
+    out("import java.net.ProtocolFamily;                                                ");
+    out("import java.net.StandardProtocolFamily;                                        ");
+    out("import java.net.SocketOption;                                                  ");
+    out("import java.net.StandardSocketOption;                                          "); 
     out("class SocketOptionRegistry {                                                   ");
     out("    private SocketOptionRegistry() { }                                         ");
     out("    private static class RegistryKey {                                         ");

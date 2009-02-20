@@ -34,7 +34,7 @@ import java.lang.ref.*;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.channels.FileLock;
+import java.nio.channels.FileLock;
 
 abstract class FileLockTable {
     protected FileLockTable() {

@@ -27,9 +27,9 @@ package sun.nio.fs;
 
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.file.attribute.GroupPrincipal;
-import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
-import org.classpath.icedtea.java.nio.file.attribute.UserPrincipalNotFoundException;
+import java.nio.file.attribute.GroupPrincipal;
+import java.nio.file.attribute.UserPrincipal;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 

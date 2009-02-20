@@ -37,10 +37,10 @@ import java.util.Map;
 import java.io.IOException;
 import java.util.HashSet;
 
-import org.classpath.icedtea.java.nio.file.DirectoryStream;
-import org.classpath.icedtea.java.nio.file.NotDirectoryException;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.ReadOnlyFileSystemException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.NotDirectoryException;
+import java.nio.file.Path;
+import java.nio.file.ReadOnlyFileSystemException;
 
 public class ZipFileStream implements DirectoryStream<Path> {
 

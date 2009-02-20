@@ -30,9 +30,9 @@ import java.util.concurrent.TimeUnit;
 import java.io.IOException;
 import sun.misc.Unsafe;
 
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.DosFileAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.DosFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.DosFileAttributes;
+import java.nio.file.attribute.DosFileAttributeView;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 import static sun.nio.fs.UnixConstants.*;

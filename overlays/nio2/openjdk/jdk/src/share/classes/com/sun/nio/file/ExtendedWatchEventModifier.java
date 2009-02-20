@@ -25,7 +25,7 @@
 
 package com.sun.nio.file;
 
-import org.classpath.icedtea.java.nio.file.WatchEvent.Modifier;
+import java.nio.file.WatchEvent.Modifier;
 
 /**
  * Defines <em>extended</em> watch event modifiers supported on some platforms

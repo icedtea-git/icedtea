@@ -24,7 +24,7 @@
  */
 
 /**
- * Service-provider classes for the <tt>{@link org.classpath.icedtea.java.nio.file}</tt> package.
+ * Service-provider classes for the <tt>{@link java.nio.file}</tt> package.
  *
  * <p> Only developers who are defining new file system providers or file type
  * detectors should need to make direct use of this package.  </p>
@@ -36,4 +36,4 @@
  * @since 1.7
  */
 
-package org.classpath.icedtea.java.nio.file.spi;
+package java.nio.file.spi;

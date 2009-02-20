@@ -37,20 +37,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.classpath.icedtea.java.nio.channels.FileChannel;
+import java.nio.channels.FileChannel;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.FileSystem;
-import org.classpath.icedtea.java.nio.file.FileSystems;
-import org.classpath.icedtea.java.nio.file.FileSystemNotFoundException;
-import org.classpath.icedtea.java.nio.file.InvalidPathException;
-import org.classpath.icedtea.java.nio.file.OpenOption;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.Paths;
+import java.nio.file.FileRef;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.FileAttribute;
 
-import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
+import java.nio.file.spi.FileSystemProvider;
 
 public class ZipFileSystemProvider
         extends FileSystemProvider {

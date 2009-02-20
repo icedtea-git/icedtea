@@ -1,6 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
+ * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,7 +24,7 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.java.nio.channels;
+package java.nio.channels;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.Future;
@@ -32,10 +32,10 @@ import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 
-import org.classpath.icedtea.java.net.ProtocolFamily;
-import org.classpath.icedtea.java.net.SocketOption;
+import java.net.ProtocolFamily;
+import java.net.SocketOption;
 
-import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
+import java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**
  * An asynchronous channel for datagram-oriented sockets.

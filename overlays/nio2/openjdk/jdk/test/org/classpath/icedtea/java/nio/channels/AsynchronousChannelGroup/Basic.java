@@ -35,7 +35,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.AsynchronousChannelGroup;
 
 public class Basic {
     static final Random rand = new Random();

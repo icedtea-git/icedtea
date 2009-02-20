@@ -25,14 +25,14 @@ import java.util.*;
 import java.net.URI;
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.file.FileSystem;
-import org.classpath.icedtea.java.nio.file.FileVisitResult;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.Paths;
+import java.nio.file.FileSystem;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import org.classpath.icedtea.java.nio.file.attribute.Attributes;
+import java.nio.file.attribute.Attributes;
 
-import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
+import java.nio.file.spi.FileSystemProvider;
 
 /**
  * Sanity check zip provider by running a few simple tests.

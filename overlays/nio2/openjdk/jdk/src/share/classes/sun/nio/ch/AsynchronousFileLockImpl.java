@@ -1,6 +1,6 @@
 /*
  * Copyright 2001-2003 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
+ * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -31,8 +31,8 @@ import java.nio.channels.Channel;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.FileChannel;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
-import org.classpath.icedtea.java.nio.channels.FileLock;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.FileLock;
 
 public class AsynchronousFileLockImpl
     extends FileLock

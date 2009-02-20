@@ -44,10 +44,10 @@ import java.security.AccessController;
 import java.security.AccessControlContext;
 import sun.security.action.GetPropertyAction;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousChannelGroup;
-import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
+import java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.spi.AsynchronousChannelProvider;
 
-import org.classpath.icedtea.java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * Base implementation of AsynchronousChannelGroup

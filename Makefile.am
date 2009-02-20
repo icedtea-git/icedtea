@@ -2117,7 +2117,6 @@ ICEDTEA_ECJ_PATCHES = patches/ecj/icedtea.patch \
 	patches/ecj/icedtea-hotspot-$(HSBUILD).patch \
 	patches/ecj/icedtea-spp.patch \
 	patches/ecj/icedtea-jopt.patch \
-	patches/ecj/icedtea-pr261.patch \
 	patches/ecj/icedtea-sbcs.patch
 
 stamps/patch-ecj.stamp: stamps/clone-ecj.stamp

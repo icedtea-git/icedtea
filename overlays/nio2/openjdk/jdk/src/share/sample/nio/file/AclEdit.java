@@ -33,12 +33,12 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import org.classpath.icedtea.java.nio.file.AclEntryFlag;
-import org.classpath.icedtea.java.nio.file.AclEntryPermission;
-import org.classpath.icedtea.java.nio.file.AclEntryType;
+import java.nio.file.AclEntryFlag;
+import java.nio.file.AclEntryPermission;
+import java.nio.file.AclEntryType;
 
-import org.classpath.icedtea.java.nio.file.attribute.UserPrincipalLookupService;
-import org.classpath.icedtea.java.nio.file.attribute.UserPrincipalNotFoundException;
+import java.nio.file.attribute.UserPrincipalLookupService;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 /**
  * Sample utility for editing a file's ACL.

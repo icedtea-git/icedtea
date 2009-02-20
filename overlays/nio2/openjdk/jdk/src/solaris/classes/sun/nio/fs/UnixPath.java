@@ -33,34 +33,34 @@ import java.nio.channels.FileChannel;
 import java.util.*;
 import sun.security.util.SecurityConstants;
 
-import org.classpath.icedtea.java.io.FilePermission;
+import java.io.FilePermission;
 
-import org.classpath.icedtea.java.nio.channels.SeekableByteChannel;
+import java.nio.channels.SeekableByteChannel;
 
-import org.classpath.icedtea.java.nio.file.AccessMode;
-import org.classpath.icedtea.java.nio.file.CopyOption;
-import org.classpath.icedtea.java.nio.file.DirectoryNotEmptyException;
-import org.classpath.icedtea.java.nio.file.DirectoryStream;
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.FileStore;
-import org.classpath.icedtea.java.nio.file.FileSystemException;
-import org.classpath.icedtea.java.nio.file.InvalidPathException;
-import org.classpath.icedtea.java.nio.file.LinkOption;
-import org.classpath.icedtea.java.nio.file.LinkPermission;
-import org.classpath.icedtea.java.nio.file.NotDirectoryException;
-import org.classpath.icedtea.java.nio.file.NotLinkException;
-import org.classpath.icedtea.java.nio.file.OpenOption;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.ProviderMismatchException;
-import org.classpath.icedtea.java.nio.file.StandardOpenOption;
-import org.classpath.icedtea.java.nio.file.WatchEvent;
-import org.classpath.icedtea.java.nio.file.WatchKey;
-import org.classpath.icedtea.java.nio.file.WatchService;
+import java.nio.file.AccessMode;
+import java.nio.file.CopyOption;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileRef;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystemException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.LinkOption;
+import java.nio.file.LinkPermission;
+import java.nio.file.NotDirectoryException;
+import java.nio.file.NotLinkException;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.ProviderMismatchException;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 
-import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
-import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.FileAttributeView;
 
-import org.classpath.icedtea.java.nio.file.spi.AbstractPath;
+import java.nio.file.spi.AbstractPath;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 import static sun.nio.fs.UnixConstants.*;

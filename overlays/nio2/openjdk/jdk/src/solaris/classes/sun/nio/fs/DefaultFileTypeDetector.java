@@ -25,7 +25,7 @@
 
 package sun.nio.fs;
 
-import org.classpath.icedtea.java.nio.file.spi.FileTypeDetector;
+import java.nio.file.spi.FileTypeDetector;
 
 public class DefaultFileTypeDetector {
     private DefaultFileTypeDetector() { }

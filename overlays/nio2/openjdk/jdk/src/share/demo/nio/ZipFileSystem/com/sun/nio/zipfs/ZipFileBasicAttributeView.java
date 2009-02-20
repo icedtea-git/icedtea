@@ -34,11 +34,11 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.ReadOnlyFileSystemException;
+import java.nio.file.FileRef;
+import java.nio.file.ReadOnlyFileSystemException;
 
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.BasicFileAttributeView;
 
 public class ZipFileBasicAttributeView implements
         BasicFileAttributeView {

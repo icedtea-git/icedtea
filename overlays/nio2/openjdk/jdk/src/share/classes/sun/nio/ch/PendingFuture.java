@@ -28,8 +28,8 @@ package sun.nio.ch;
 import java.util.concurrent.*;
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousChannel;
-import org.classpath.icedtea.java.nio.channels.CompletionHandler;
+import java.nio.channels.AsynchronousChannel;
+import java.nio.channels.CompletionHandler;
 
 /**
  * A Future for a pending I/O operation. A PendingFuture allows for the

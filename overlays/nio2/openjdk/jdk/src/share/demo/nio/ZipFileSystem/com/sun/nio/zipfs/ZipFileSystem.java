@@ -38,19 +38,19 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Pattern;
 
-import org.classpath.icedtea.java.nio.file.ClosedFileSystemException;
-import org.classpath.icedtea.java.nio.file.DirectoryStream;
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.FileStore;
-import org.classpath.icedtea.java.nio.file.FileSystem;
-import org.classpath.icedtea.java.nio.file.InvalidPathException;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.PathMatcher;
-import org.classpath.icedtea.java.nio.file.WatchService;
+import java.nio.file.ClosedFileSystemException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileRef;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystem;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.WatchService;
 
-import org.classpath.icedtea.java.nio.file.attribute.UserPrincipalLookupService;
+import java.nio.file.attribute.UserPrincipalLookupService;
 
-import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
+import java.nio.file.spi.FileSystemProvider;
 
 public class ZipFileSystem extends FileSystem {
 

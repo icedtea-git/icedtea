@@ -31,11 +31,11 @@ import java.util.*;
 import java.io.IOException;
 import sun.misc.Unsafe;
 
-import org.classpath.icedtea.java.nio.file.NotDirectoryException;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.StandardWatchEventKind;
-import org.classpath.icedtea.java.nio.file.WatchEvent;
-import org.classpath.icedtea.java.nio.file.WatchKey;
+import java.nio.file.NotDirectoryException;
+import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKind;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 import static sun.nio.fs.UnixConstants.*;

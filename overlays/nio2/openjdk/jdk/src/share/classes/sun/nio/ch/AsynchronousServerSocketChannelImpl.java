@@ -29,6 +29,7 @@ import java.net.SocketAddress;
 import java.net.InetSocketAddress;
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.nio.channels.AlreadyBoundException;
 import java.nio.channels.ClosedChannelException;
 import java.util.Set;
 import java.util.HashSet;
@@ -36,10 +37,10 @@ import java.util.Collections;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.classpath.icedtea.java.net.SocketOption;
-import org.classpath.icedtea.java.net.StandardSocketOption;
+import java.net.SocketOption;
+import java.net.StandardSocketOption;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousServerSocketChannel;
+import java.nio.channels.AsynchronousServerSocketChannel;
 
 /**
  * Base implementation of AsynchronousServerSocketChannel.
@@ -158,7 +159,7 @@ abstract class AsynchronousServerSocketChannelImpl
     {
         if (name == null)
             throw new NullPointerException();
-        if (!supportedOptions().contains(name))
+        if (!options().contains(name))
             throw new UnsupportedOperationException("'" + name + "' not supported");
 
         try {
@@ -175,7 +176,7 @@ abstract class AsynchronousServerSocketChannelImpl
     public final <T> T getOption(SocketOption<T> name) throws IOException {
         if (name == null)
             throw new NullPointerException();
-        if (!supportedOptions().contains(name))
+        if (!options().contains(name))
             throw new UnsupportedOperationException("'" + name + "' not supported");
 
         try {
@@ -198,7 +199,7 @@ abstract class AsynchronousServerSocketChannelImpl
     }
 
 
-    public final Set<SocketOption<?>> supportedOptions() {
+    public final Set<SocketOption<?>> options() {
         return LazyInitialization.defaultOptions;
     }
 

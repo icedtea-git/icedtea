@@ -1,6 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
+ * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,7 +24,7 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.java.nio.channels.spi;
+package java.nio.channels.spi;
 
 import java.nio.channels.*;
 import java.io.IOException;
@@ -35,12 +35,12 @@ import java.util.concurrent.*;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import org.classpath.icedtea.java.net.ProtocolFamily;
+import java.net.ProtocolFamily;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousChannelGroup;
-import org.classpath.icedtea.java.nio.channels.AsynchronousDatagramChannel;
-import org.classpath.icedtea.java.nio.channels.AsynchronousServerSocketChannel;
-import org.classpath.icedtea.java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.AsynchronousDatagramChannel;
+import java.nio.channels.AsynchronousServerSocketChannel;
+import java.nio.channels.AsynchronousSocketChannel;
 
 /**
  * Service-provider class for asynchronous channels.
@@ -83,7 +83,7 @@ public abstract class AsynchronousChannelProvider {
     }
 
     private static boolean loadProviderFromProperty() {
-        String cn = System.getProperty("org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider");
+        String cn = System.getProperty("java.nio.channels.spi.AsynchronousChannelProvider");
         if (cn == null)
             return false;
         try {

@@ -37,13 +37,13 @@ import java.util.Collections;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 
-import org.classpath.icedtea.java.net.SocketOption;
-import org.classpath.icedtea.java.net.StandardSocketOption;
+import java.net.SocketOption;
+import java.net.StandardSocketOption;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousSocketChannel;
-import org.classpath.icedtea.java.nio.channels.CompletionHandler;
-import org.classpath.icedtea.java.nio.channels.ReadPendingException;
-import org.classpath.icedtea.java.nio.channels.WritePendingException;
+import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.CompletionHandler;
+import java.nio.channels.ReadPendingException;
+import java.nio.channels.WritePendingException;
 
 /**
  * Base implementation of AsynchronousSocketChannel
@@ -415,7 +415,7 @@ abstract class AsynchronousSocketChannelImpl
     {
         if (name == null)
             throw new NullPointerException();
-        if (!supportedOptions().contains(name))
+        if (!options().contains(name))
             throw new UnsupportedOperationException("'" + name + "' not supported");
 
         try {
@@ -432,7 +432,7 @@ abstract class AsynchronousSocketChannelImpl
     public final <T> T getOption(SocketOption<T> name) throws IOException {
         if (name == null)
             throw new NullPointerException();
-        if (!supportedOptions().contains(name))
+        if (!options().contains(name))
             throw new UnsupportedOperationException("'" + name + "' not supported");
 
         try {
@@ -458,7 +458,7 @@ abstract class AsynchronousSocketChannelImpl
     }
 
 
-    public final Set<SocketOption<?>> supportedOptions() {
+    public final Set<SocketOption<?>> options() {
         return LazyInitialization.defaultOptions;
     }
 

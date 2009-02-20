@@ -25,7 +25,7 @@
 
 package com.sun.nio.file;
 
-import org.classpath.icedtea.java.nio.file.OpenOption;
+import java.nio.file.OpenOption;
 
 /**
  * Defines <em>extended</em> open options supported on some platforms

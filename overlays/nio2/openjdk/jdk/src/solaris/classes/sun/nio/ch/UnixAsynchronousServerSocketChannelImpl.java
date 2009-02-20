@@ -38,9 +38,9 @@ import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import org.classpath.icedtea.java.nio.channels.AcceptPendingException;
-import org.classpath.icedtea.java.nio.channels.AsynchronousSocketChannel;
-import org.classpath.icedtea.java.nio.channels.CompletionHandler;
+import java.nio.channels.AcceptPendingException;
+import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.CompletionHandler;
 
 /**
  * Unix implementation of AsynchronousServerSocketChannel

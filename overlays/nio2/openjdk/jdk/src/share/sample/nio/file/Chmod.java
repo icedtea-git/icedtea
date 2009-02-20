@@ -32,25 +32,25 @@
 import java.io.IOException;
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.FileVisitor;
-import org.classpath.icedtea.java.nio.file.FileVisitOption;
-import org.classpath.icedtea.java.nio.file.FileVisitResult;
+import java.nio.file.FileRef;
+import java.nio.file.FileVisitor;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
 
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
 
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OWNER_READ;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.GROUP_READ;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.GROUP_WRITE;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.GROUP_EXECUTE;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OTHERS_READ;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OTHERS_WRITE;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OTHERS_EXECUTE;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
+import static java.nio.file.attribute.PosixFilePermission.GROUP_READ;
+import static java.nio.file.attribute.PosixFilePermission.GROUP_WRITE;
+import static java.nio.file.attribute.PosixFilePermission.GROUP_EXECUTE;
+import static java.nio.file.attribute.PosixFilePermission.OTHERS_READ;
+import static java.nio.file.attribute.PosixFilePermission.OTHERS_WRITE;
+import static java.nio.file.attribute.PosixFilePermission.OTHERS_EXECUTE;
 
-import static org.classpath.icedtea.java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.FileVisitResult.CONTINUE;
 
 /**
  * Sample code that changes the permissions of files in a similar manner to the

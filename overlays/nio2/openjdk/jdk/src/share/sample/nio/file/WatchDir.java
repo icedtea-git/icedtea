@@ -32,23 +32,23 @@
 import java.io.*;
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.FileSystems;
-import org.classpath.icedtea.java.nio.file.FileVisitResult;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.SimpleFileVisitor;
-import org.classpath.icedtea.java.nio.file.WatchDir;
-import org.classpath.icedtea.java.nio.file.WatchEvent;
-import org.classpath.icedtea.java.nio.file.WatchKey;
-import org.classpath.icedtea.java.nio.file.WatchService;
+import java.nio.file.FileRef;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.WatchDir;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 
-import static org.classpath.icedtea.java.nio.file.StandardWatchEventKind.ENTRY_CREATE;
-import static org.classpath.icedtea.java.nio.file.StandardWatchEventKind.ENTRY_DELETE;
-import static org.classpath.icedtea.java.nio.file.StandardWatchEventKind.ENTRY_MODIFY;
+import static java.nio.file.StandardWatchEventKind.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKind.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKind.ENTRY_MODIFY;
 
-import static org.classpath.icedtea.java.nio.file.LinkOption.NOFOLLOW_LINKS;
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
-import org.classpath.icedtea.java.nio.file.attribute.Attributes;
+import java.nio.file.attribute.Attributes;
 
 /**
  * Example to watch a directory (or tree) for changes to files.

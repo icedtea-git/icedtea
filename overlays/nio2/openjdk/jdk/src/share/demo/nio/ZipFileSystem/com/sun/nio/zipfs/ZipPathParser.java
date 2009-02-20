@@ -35,9 +35,9 @@ import java.util.LinkedList;
 import java.util.Stack;
 import java.util.regex.*;
 
-import org.classpath.icedtea.java.nio.file.InvalidPathException;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.Paths;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ZipPathParser {
 

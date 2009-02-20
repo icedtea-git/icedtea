@@ -30,9 +30,9 @@ import java.util.*;
 import java.nio.charset.UnsupportedCharsetException;
 import java.nio.charset.MalformedInputException;
 
-import org.classpath.icedtea.java.io.Inputs;
+import java.io.Inputs;
 
-import org.classpath.icedtea.java.nio.file.Path;
+import java.nio.file.Path;
 
 public class Basic {
     static final Random rand = new Random();

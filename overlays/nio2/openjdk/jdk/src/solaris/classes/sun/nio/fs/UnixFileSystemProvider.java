@@ -30,20 +30,20 @@ import java.util.concurrent.ExecutorService;
 import java.io.IOException;
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
-import org.classpath.icedtea.java.nio.channels.FileChannel;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.FileChannel;
 
-import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider.ThreadPoolType;
+import java.nio.channels.spi.AsynchronousChannelProvider.ThreadPoolType;
 
-import org.classpath.icedtea.java.nio.file.FileSystem;
-import org.classpath.icedtea.java.nio.file.FileSystemAlreadyExistsException;
-import org.classpath.icedtea.java.nio.file.OpenOption;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.ProviderMismatchException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.ProviderMismatchException;
 
-import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.FileAttribute;
 
-import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
+import java.nio.file.spi.FileSystemProvider;
 
 import sun.nio.ch.ThreadPool;
 

@@ -38,9 +38,9 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import sun.security.action.GetBooleanAction;
 
-import org.classpath.icedtea.java.nio.channels.CompletionHandler;
-import org.classpath.icedtea.java.nio.channels.InterruptedByTimeoutException;
-import org.classpath.icedtea.java.nio.channels.ShutdownChannelGroupException;
+import java.nio.channels.CompletionHandler;
+import java.nio.channels.InterruptedByTimeoutException;
+import java.nio.channels.ShutdownChannelGroupException;
 
 /**
  * Unix implementation of AsynchronousSocketChannel

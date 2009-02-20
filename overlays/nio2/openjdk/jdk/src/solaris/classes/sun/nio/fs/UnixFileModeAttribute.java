@@ -27,8 +27,8 @@ package sun.nio.fs;
 
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
-import org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
 
 class UnixFileModeAttribute {
     static final int ALL_PERMISSIONS =

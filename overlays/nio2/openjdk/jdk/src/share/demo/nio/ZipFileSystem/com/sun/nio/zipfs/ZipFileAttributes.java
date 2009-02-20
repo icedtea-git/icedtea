@@ -34,7 +34,7 @@ package com.sun.nio.zipfs;
 import java.util.concurrent.*;
 import java.io.*;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
+import java.nio.file.FileRef;
 
 public class ZipFileAttributes extends ZipFileBasicAttributes {
 

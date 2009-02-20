@@ -43,37 +43,37 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.classpath.icedtea.java.nio.channels.FileChannel;
-import org.classpath.icedtea.java.nio.channels.SeekableByteChannel;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SeekableByteChannel;
 
-import org.classpath.icedtea.java.nio.file.AccessDeniedException;
-import org.classpath.icedtea.java.nio.file.AccessMode;
-import org.classpath.icedtea.java.nio.file.ClosedFileSystemException;
-import org.classpath.icedtea.java.nio.file.CopyOption;
-import org.classpath.icedtea.java.nio.file.DirectoryStream;
-import org.classpath.icedtea.java.nio.file.DirectoryStream.Filter;
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.FileStore;
-import org.classpath.icedtea.java.nio.file.LinkOption;
-import org.classpath.icedtea.java.nio.file.NoSuchFileException;
-import org.classpath.icedtea.java.nio.file.OpenOption;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.Paths;
-import org.classpath.icedtea.java.nio.file.PathMatcher;
-import org.classpath.icedtea.java.nio.file.ProviderMismatchException;
-import org.classpath.icedtea.java.nio.file.ReadOnlyFileSystemException;
-import org.classpath.icedtea.java.nio.file.StandardOpenOption;
-import org.classpath.icedtea.java.nio.file.WatchEvent;
-import org.classpath.icedtea.java.nio.file.WatchKey;
-import org.classpath.icedtea.java.nio.file.WatchService;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.AccessMode;
+import java.nio.file.ClosedFileSystemException;
+import java.nio.file.CopyOption;
+import java.nio.file.DirectoryStream;
+import java.nio.file.DirectoryStream.Filter;
+import java.nio.file.FileRef;
+import java.nio.file.FileStore;
+import java.nio.file.LinkOption;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.PathMatcher;
+import java.nio.file.ProviderMismatchException;
+import java.nio.file.ReadOnlyFileSystemException;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 
-import org.classpath.icedtea.java.nio.file.attribute.Attributes;
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
-import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
+import java.nio.file.attribute.Attributes;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.FileAttributeView;
 
-import org.classpath.icedtea.java.nio.file.spi.AbstractPath;
-import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
+import java.nio.file.spi.AbstractPath;
+import java.nio.file.spi.FileSystemProvider;
 
 /**
  * Jar/Zip path implementation of Path

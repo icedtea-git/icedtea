@@ -1,6 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
+ * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,34 +24,34 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.java.nio.file.spi;
+package java.nio.file.spi;
 
 import java.nio.channels.*;
 import java.nio.ByteBuffer;
 import java.io.*;
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.channels.SeekableByteChannel;
+import java.nio.channels.SeekableByteChannel;
 
-import org.classpath.icedtea.java.nio.file.AtomicMoveNotSupportedException;
-import org.classpath.icedtea.java.nio.file.CopyOption;
-import org.classpath.icedtea.java.nio.file.DirectoryStream;
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.LinkOption;
-import org.classpath.icedtea.java.nio.file.NoSuchFileException;
-import org.classpath.icedtea.java.nio.file.OpenOption;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.PathMatcher;
-import org.classpath.icedtea.java.nio.file.StandardOpenOption;
-import org.classpath.icedtea.java.nio.file.StandardCopyOption;
-import org.classpath.icedtea.java.nio.file.WatchEvent;
-import org.classpath.icedtea.java.nio.file.WatchKey;
-import org.classpath.icedtea.java.nio.file.WatchService;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.CopyOption;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileRef;
+import java.nio.file.LinkOption;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 
-import org.classpath.icedtea.java.nio.file.attribute.Attributes;
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.Attributes;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.FileAttribute;
 
 /**
  * Base implementation class for a {@code Path}.

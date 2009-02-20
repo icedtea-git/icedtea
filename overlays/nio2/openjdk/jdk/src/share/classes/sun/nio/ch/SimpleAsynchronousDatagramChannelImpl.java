@@ -40,16 +40,16 @@ import java.security.AccessControlContext;
 import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 
-import org.classpath.icedtea.java.net.ProtocolFamily;
-import org.classpath.icedtea.java.net.SocketOption;
+import java.net.ProtocolFamily;
+import java.net.SocketOption;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousDatagramChannel;
-import org.classpath.icedtea.java.nio.channels.CompletionHandler;
-import org.classpath.icedtea.java.nio.channels.DatagramChannel;
-import org.classpath.icedtea.java.nio.channels.InterruptedByTimeoutException;
-import org.classpath.icedtea.java.nio.channels.MembershipKey;
-import org.classpath.icedtea.java.nio.channels.MulticastChannel;
-import org.classpath.icedtea.java.nio.channels.ShutdownChannelGroupException;
+import java.nio.channels.AsynchronousDatagramChannel;
+import java.nio.channels.CompletionHandler;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.InterruptedByTimeoutException;
+import java.nio.channels.MembershipKey;
+import java.nio.channels.MulticastChannel;
+import java.nio.channels.ShutdownChannelGroupException;
 
 /**
  * A prototype implementation of AsynchronousDatagramChannel, used to aid
@@ -141,23 +141,23 @@ class SimpleAsynchronousDatagramChannelImpl
         }
 
 
-        public MulticastChannel channel() {
+        public MulticastChannel getChannel() {
             return channel;
         }
 
 
-        public InetAddress group() {
-            return key.group();
+        public InetAddress getGroup() {
+            return key.getGroup();
         }
 
 
-        public NetworkInterface networkInterface() {
-            return key.networkInterface();
+        public NetworkInterface getNetworkInterface() {
+            return key.getNetworkInterface();
         }
 
 
-        public InetAddress sourceAddress() {
-            return key.sourceAddress();
+        public InetAddress getSourceAddress() {
+            return key.getSourceAddress();
         }
 
 
@@ -414,12 +414,12 @@ class SimpleAsynchronousDatagramChannelImpl
     }
 
 
-    public Set<SocketOption<?>> supportedOptions() {
-        return dc.supportedOptions();
+    public Set<SocketOption<?>> options() {
+        return dc.options();
     }
 
 
     public SocketAddress getRemoteAddress() throws IOException {
-        return dc.getRemoteAddress();
+        return dc.getConnectedAddress();
     }
 }

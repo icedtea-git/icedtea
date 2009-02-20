@@ -29,7 +29,7 @@ import java.util.concurrent.*;
 import java.security.AccessController;
 import sun.security.action.GetPropertyAction;
 
-import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider.ThreadPoolType;
+import java.nio.channels.spi.AsynchronousChannelProvider.ThreadPoolType;
 
 /**
  * Defines static methods to create thread pools that are configured by

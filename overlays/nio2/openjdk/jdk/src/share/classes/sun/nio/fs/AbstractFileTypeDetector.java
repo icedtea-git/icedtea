@@ -28,8 +28,8 @@ package sun.nio.fs;
 import java.io.IOException;
 import sun.nio.fs.MimeType;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.spi.FileTypeDetector;
+import java.nio.file.FileRef;
+import java.nio.file.spi.FileTypeDetector;
 
 /**
  * Base implementation of FileTypeDetector

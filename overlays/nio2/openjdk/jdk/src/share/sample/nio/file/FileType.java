@@ -31,12 +31,12 @@
 
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.file.Files;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import org.classpath.icedtea.java.nio.file.attribute.Attributes;
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.Attributes;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class FileType {
     public static void main(String[] args) throws IOException {

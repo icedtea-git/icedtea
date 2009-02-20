@@ -36,10 +36,10 @@ import java.nio.ByteBuffer;
 
 import java.nio.charset.Charset;
 
-import org.classpath.icedtea.java.nio.file.FileStore;
-import org.classpath.icedtea.java.nio.file.Path;
+import java.nio.file.FileStore;
+import java.nio.file.Path;
 
-import org.classpath.icedtea.java.nio.file.attribute.NamedAttributeView;
+import java.nio.file.attribute.NamedAttributeView;
 
 /**
  * Example code to list/set/get/delete the named attributes of a file.

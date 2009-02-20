@@ -31,13 +31,13 @@ import java.security.PrivilegedAction;
 import java.util.concurrent.ExecutionException;
 import com.sun.nio.file.ExtendedCopyOption;
 
-import org.classpath.icedtea.java.nio.file.AtomicMoveNotSupportedException;
-import org.classpath.icedtea.java.nio.file.CopyOption;
-import org.classpath.icedtea.java.nio.file.DirectoryNotEmptyException;
-import org.classpath.icedtea.java.nio.file.FileAlreadyExistsException;
-import org.classpath.icedtea.java.nio.file.LinkOption;
-import org.classpath.icedtea.java.nio.file.LinkPermission;
-import org.classpath.icedtea.java.nio.file.StandardCopyOption;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.CopyOption;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.LinkOption;
+import java.nio.file.LinkPermission;
+import java.nio.file.StandardCopyOption;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 import static sun.nio.fs.UnixConstants.*;

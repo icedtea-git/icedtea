@@ -1,6 +1,5 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,7 +23,7 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.java.io;
+package java.io;
 
 import java.io.Closeable;
 import java.io.FileInputStream;
@@ -41,11 +40,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import org.classpath.icedtea.java.nio.file.FileRef;
+import java.nio.file.FileRef;
 
-import org.classpath.icedtea.java.nio.file.attribute.Attributes;
+import java.nio.file.attribute.Attributes;
 
-import org.classpath.icedtea.java.util.Scanner;
+import java.util.Scanner;
 
 /**
  * {@note experimental}

@@ -31,7 +31,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  JAVADOCWINDOWTITLE  = 'Java Platform SE $(JDK_MINOR_VERSION)'
  JAVADOCHEADER = '<strong>Java$(TRADEMARK)&nbsp;Platform<br>Standard&nbsp;Ed.&nbsp;$(JDK_MINOR_VERSION)</strong>'
 -JAVADOCBOTTOM = '<font size="-1"><a href="http://bugs.sun.com/services/bugreport/index.jsp">Submit a bug or feature</a><br>For further API reference and developer documentation, see <a href="{@docroot}/../../webnotes/devdocs-vs-specs.html">Java SE Developer Documentation</a>. That documentation contains more detailed, developer-targeted descriptions, with conceptual overviews, definitions of terms, workarounds, and working code examples. <p>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All Rights Reserved. Use is subject to <a href="{@docroot}/../legal/license.html">license terms</a>. Also see the <a href="http://java.sun.com/docs/redist.html">documentation redistribution policy</a>.</font>'
-++ JAVADOCBOTTOM = '<font size="-1"><a href="http://icedtea.classpath.org/bugzilla/">Submit a bug or feature</a> <p>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All rights reserved. Use is subject to the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a>.</font>'
++JAVADOCBOTTOM = '<font size="-1"><a href="http://icedtea.classpath.org/bugzilla/">Submit a bug or feature</a> <p>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All rights reserved. Use is subject to the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a>.</font>'
  JAVADOCOVERVIEW = $(SHARE_SRC)/classes/overview-core.html
  
 -#

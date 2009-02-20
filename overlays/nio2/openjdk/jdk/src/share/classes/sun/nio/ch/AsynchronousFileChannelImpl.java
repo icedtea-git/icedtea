@@ -33,8 +33,8 @@ import java.util.concurrent.locks.*;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
-import org.classpath.icedtea.java.nio.channels.FileLock;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.FileLock;
 
 /**
  * Base implementation of AsynchronousFileChannel.

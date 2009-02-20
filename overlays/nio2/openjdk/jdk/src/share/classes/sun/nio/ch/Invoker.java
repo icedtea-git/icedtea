@@ -29,9 +29,9 @@ import java.util.concurrent.*;
 import java.security.AccessController;
 import sun.security.action.GetPropertyAction;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousChannel;
-import org.classpath.icedtea.java.nio.channels.CompletionHandler;
-import org.classpath.icedtea.java.nio.channels.ShutdownChannelGroupException;
+import java.nio.channels.AsynchronousChannel;
+import java.nio.channels.CompletionHandler;
+import java.nio.channels.ShutdownChannelGroupException;
 
 /**
  * Defines static methods to invoke a completion handler or arbitrary task.

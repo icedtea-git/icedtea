@@ -25,7 +25,7 @@
 
 package com.sun.nio.file;
 
-import org.classpath.icedtea.java.nio.file.CopyOption;
+import java.nio.file.CopyOption;
 
 /**
  * Defines <em>extended</em> copy options supported on some platforms

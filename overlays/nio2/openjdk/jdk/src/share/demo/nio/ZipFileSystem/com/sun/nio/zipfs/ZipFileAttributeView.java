@@ -33,7 +33,7 @@ package com.sun.nio.zipfs;
 import java.io.IOException;
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
+import java.nio.file.FileRef;
 
 public class ZipFileAttributeView extends ZipFileBasicAttributeView {
 

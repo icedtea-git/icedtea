@@ -1,6 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
+ * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,15 +24,15 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.java.nio.file.attribute;
+package java.nio.file.attribute;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.FileStore;
-import org.classpath.icedtea.java.nio.file.LinkOption;
+import java.nio.file.FileRef;
+import java.nio.file.FileStore;
+import java.nio.file.LinkOption;
 
 /**
  * This class consists exclusively of static methods that operate on or return

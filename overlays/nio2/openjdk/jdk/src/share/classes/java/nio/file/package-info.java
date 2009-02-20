@@ -27,9 +27,9 @@
  * Define interfaces and classes for the Java virtual machine to access files,
  * file attributes, and file systems.
  *
- * <p> The org.classpath.icedtea.java.nio.file package defines classes to access files and file
+ * <p> The java.nio.file package defines classes to access files and file
  * systems. The API to access file and file system attributes is defined in the
- * {@link org.classpath.icedtea.java.nio.file.attribute} package. The {@link org.classpath.icedtea.java.nio.file.spi}
+ * {@link java.nio.file.attribute} package. The {@link java.nio.file.spi}
  * package is used by service provider implementors wishing to extend the
  * platform default provider, or to construct other provider implementations.
  *
@@ -46,13 +46,13 @@
  * not included in this package.
  *
  * <a name="interop"><h3>Interoperability</h3></a>
- * The {@link org.classpath.icedtea.java.io.File} class defines the {@link org.classpath.icedtea.java.io.File#toPath
- * toPath} method to construct a {@link org.classpath.icedtea.java.nio.file.Path} by converting
- * the abstract path represented by the {@code org.classpath.icedtea.java.io.File} object. The resulting
+ * The {@link java.io.File} class defines the {@link java.io.File#toPath
+ * toPath} method to construct a {@link java.nio.file.Path} by converting
+ * the abstract path represented by the {@code java.io.File} object. The resulting
  * {@code Path} can be used to operate on the same file as the {@code File}
  * object. The {@code Path} specification provides further information
  * on the <a href="Path.html#interop">interoperability</a> between {@code Path}
- * and {@code org.classpath.icedtea.java.io.File} objects.
+ * and {@code java.io.File} objects.
  *
  * <h3>Visibility</h3>
  * The view of the files and file system provided by classes in this package are
@@ -66,8 +66,8 @@
  * system-dependent and are therefore unspecified.
  *
  * <a name="integrity"><h3>Synchronized I/O File Integrity</h3></a>
- * The {@link org.classpath.icedtea.java.nio.file.StandardOpenOption#SYNC SYNC} and {@link
- * org.classpath.icedtea.java.nio.file.StandardOpenOption#DSYNC DSYNC} options are used when opening a file
+ * The {@link java.nio.file.StandardOpenOption#SYNC SYNC} and {@link
+ * java.nio.file.StandardOpenOption#DSYNC DSYNC} options are used when opening a file
  * to require that updates to the file are written synchronously to the underlying
  * storage device. In the case of the default provider, and the file resides on
  * a local storage device, and the {@link java.nio.channels.SeekableByteChannel
@@ -79,7 +79,7 @@
  * for ensuring that critical information is not lost in the event of a system
  * crash. If the file does not reside on a local device then no such guarantee
  * is made. Whether this guarantee is possible with other {@link
- * org.classpath.icedtea.java.nio.file.spi.FileSystemProvider provider} implementations is provider
+ * java.nio.file.spi.FileSystemProvider provider} implementations is provider
  * specific.
  *
  * <h3>General Exceptions</h3>
@@ -90,17 +90,17 @@
  * cause a {@code NullPointerException}, unless otherwise specified.
  *
  * <p> Unless otherwise noted, methods that attempt to access the file system
- * will throw {@link org.classpath.icedtea.java.nio.file.ClosedFileSystemException} when invoked on
- * objects associated with a {@link org.classpath.icedtea.java.nio.file.FileSystem} that has been
- * {@link org.classpath.icedtea.java.nio.file.FileSystem#close closed}. Additionally, any methods
+ * will throw {@link java.nio.file.ClosedFileSystemException} when invoked on
+ * objects associated with a {@link java.nio.file.FileSystem} that has been
+ * {@link java.nio.file.FileSystem#close closed}. Additionally, any methods
  * that attempt write access to a file system will throw {@link
- * org.classpath.icedtea.java.nio.file.ReadOnlyFileSystemException} when invoked on an object associated
- * with a {@link org.classpath.icedtea.java.nio.file.FileSystem} that only provides read-only access.
+ * java.nio.file.ReadOnlyFileSystemException} when invoked on an object associated
+ * with a {@link java.nio.file.FileSystem} that only provides read-only access.
  *
  * <p> Unless otherwise noted, invoking a method of any class or interface in
- * this package created by one {@link org.classpath.icedtea.java.nio.file.spi.FileSystemProvider
+ * this package created by one {@link java.nio.file.spi.FileSystemProvider
  * provider} with a parameter that is an object created by another provider,
- * will throw {@link org.classpath.icedtea.java.nio.file.ProviderMismatchException}.
+ * will throw {@link java.nio.file.ProviderMismatchException}.
  *
  * <h3>Optional Specific Exceptions</h3>
  * Most of the methods defined by classes in this package that access the
@@ -113,4 +113,4 @@
  *
  * @since 1.7
  */
-package org.classpath.icedtea.java.nio.file;
+package java.nio.file;

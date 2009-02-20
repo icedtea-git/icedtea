@@ -32,21 +32,21 @@ import java.security.PrivilegedAction;
 import java.security.AccessController;
 import sun.security.action.GetBooleanAction;
 
-import org.classpath.icedtea.java.nio.file.FileStore;
-import org.classpath.icedtea.java.nio.file.FileSystem;
-import org.classpath.icedtea.java.nio.file.LinkOption;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.PathMatcher;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystem;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.FileOwnerAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.GroupPrincipal;
-import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
-import org.classpath.icedtea.java.nio.file.attribute.UserPrincipalLookupService;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.FileAttributeView;
+import java.nio.file.attribute.FileOwnerAttributeView;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.GroupPrincipal;
+import java.nio.file.attribute.UserPrincipal;
+import java.nio.file.attribute.UserPrincipalLookupService;
 
-import org.classpath.icedtea.java.nio.file.spi.FileSystemProvider;
+import java.nio.file.spi.FileSystemProvider;
 
 /**
  * Base implementation of FileSystem for Unix-like implementations.

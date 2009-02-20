@@ -43,16 +43,16 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.zip.*;
 
-import org.classpath.icedtea.java.nio.channels.FileChannel;
-import org.classpath.icedtea.java.nio.channels.SeekableByteChannel;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SeekableByteChannel;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.FileSystem;
-import org.classpath.icedtea.java.nio.file.FileSystems;
-import org.classpath.icedtea.java.nio.file.NoSuchFileException;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.Paths;
-import org.classpath.icedtea.java.nio.file.StandardOpenOption;
+import java.nio.file.FileRef;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /**
  * This class implements static methods for reading the zip file contents
@@ -86,7 +86,7 @@ public class ZipUtils {
             throws IOException {
         ByteBuffer buf = ByteBuffer.allocate(nBytes);
         buf = buf.order(ByteOrder.LITTLE_ENDIAN);
-        ch.positionSBC(offset);
+        ch.position(offset);
         int read = ch.read(buf);
         if (read <= 0) {
             return null;
@@ -362,7 +362,7 @@ public class ZipUtils {
                 Path p = Paths.get(zfp.getFileSystem().getZipFileSystemFile());
                 try {
                     long time =
-		      org.classpath.icedtea.java.nio.file.attribute.Attributes.readBasicFileAttributes(p).lastModifiedTime();
+		      java.nio.file.attribute.Attributes.readBasicFileAttributes(p).lastModifiedTime();
                     zei.lastModifiedTime = javaTimeToDosTime(time);
                 } catch (IOException e) {
                     throw e;

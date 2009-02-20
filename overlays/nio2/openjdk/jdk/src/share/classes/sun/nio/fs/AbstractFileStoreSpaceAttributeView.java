@@ -28,8 +28,8 @@ package sun.nio.fs;
 import java.io.IOException;
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.file.attribute.FileStoreSpaceAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.FileStoreSpaceAttributeView;
+import java.nio.file.attribute.FileStoreSpaceAttributes;
+import java.nio.file.attribute.FileStoreSpaceAttributeView;
 
 /**
  * Base implementation of FileStoreSpaceAttributeView

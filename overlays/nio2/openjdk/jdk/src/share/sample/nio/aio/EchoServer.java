@@ -38,8 +38,8 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousServerSocketChannel;
-import org.classpath.icedtea.java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.AsynchronousServerSocketChannel;
+import java.nio.channels.AsynchronousSocketChannel;
 
 public class EchoServer {
 

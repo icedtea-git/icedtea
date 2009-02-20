@@ -30,10 +30,10 @@ import java.io.IOException;
 import java.util.*;
 import sun.misc.Unsafe;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
-import org.classpath.icedtea.java.nio.channels.FileChannel;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.FileChannel;
 
-import org.classpath.icedtea.java.nio.file.FileSystemException;
+import java.nio.file.FileSystemException;
 
 import static sun.nio.fs.UnixConstants.*;
 import static sun.nio.fs.LinuxNativeDispatcher.*;

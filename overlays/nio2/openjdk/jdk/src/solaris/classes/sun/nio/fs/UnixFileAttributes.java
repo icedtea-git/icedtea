@@ -29,11 +29,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.Set;
 import java.util.HashSet;
 
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission;
-import org.classpath.icedtea.java.nio.file.attribute.GroupPrincipal;
-import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.GroupPrincipal;
+import java.nio.file.attribute.UserPrincipal;
 
 /**
  * Unix implementation of PosixFileAttributes.

@@ -1,6 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
+ * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,7 +24,7 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.java.nio.file.spi;
+package java.nio.file.spi;
 
 import java.net.URI;
 import java.util.*;
@@ -33,14 +33,14 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
-import org.classpath.icedtea.java.nio.channels.FileChannel;
-import org.classpath.icedtea.java.nio.file.FileRef;
-import org.classpath.icedtea.java.nio.file.FileSystem;
-import org.classpath.icedtea.java.nio.file.FileSystems;
-import org.classpath.icedtea.java.nio.file.OpenOption;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.attribute.FileAttribute;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.FileChannel;
+import java.nio.file.FileRef;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
 
 /**
  * Service-provider class for file systems.

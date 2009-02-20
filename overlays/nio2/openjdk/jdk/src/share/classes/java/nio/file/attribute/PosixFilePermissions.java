@@ -1,6 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
+ * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,19 +24,19 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.java.nio.file.attribute;
+package java.nio.file.attribute;
 
 import java.util.*;
 
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OWNER_READ;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.GROUP_READ;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.GROUP_WRITE;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.GROUP_EXECUTE;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OTHERS_READ;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OTHERS_WRITE;
-import static org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission.OTHERS_EXECUTE;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
+import static java.nio.file.attribute.PosixFilePermission.GROUP_READ;
+import static java.nio.file.attribute.PosixFilePermission.GROUP_WRITE;
+import static java.nio.file.attribute.PosixFilePermission.GROUP_EXECUTE;
+import static java.nio.file.attribute.PosixFilePermission.OTHERS_READ;
+import static java.nio.file.attribute.PosixFilePermission.OTHERS_WRITE;
+import static java.nio.file.attribute.PosixFilePermission.OTHERS_EXECUTE;
 
 /**
  * This class consists exclusively of static methods that operate on sets of

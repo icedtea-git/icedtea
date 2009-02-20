@@ -1,6 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
+ * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,7 +24,7 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.java.nio.channels;
+package java.nio.channels;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
@@ -124,7 +124,7 @@ public interface SeekableByteChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    SeekableByteChannel positionSBC(long newPosition) throws IOException;
+    SeekableByteChannel position(long newPosition) throws IOException;
 
     /**
      * Returns the current size of entity to which this channel is connected.
@@ -166,5 +166,5 @@ public interface SeekableByteChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    SeekableByteChannel truncateSBC(long size) throws IOException;
+    SeekableByteChannel truncate(long size) throws IOException;
 }

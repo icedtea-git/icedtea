@@ -29,7 +29,7 @@ import java.nio.ByteBuffer;
 import java.io.IOException;
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.file.attribute.NamedAttributeView;
+import java.nio.file.attribute.NamedAttributeView;
 
 /**
  * Base implementation of NamedAttributeView

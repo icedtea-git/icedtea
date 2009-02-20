@@ -28,9 +28,9 @@ package sun.nio.fs;
 import java.io.IOException;
 import java.util.*;
 
-import org.classpath.icedtea.java.nio.file.attribute.AclEntry;
-import org.classpath.icedtea.java.nio.file.attribute.AclFileAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
+import java.nio.file.attribute.AclEntry;
+import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.UserPrincipal;
 
 /**
  * Base implementation of AclFileAttributeView

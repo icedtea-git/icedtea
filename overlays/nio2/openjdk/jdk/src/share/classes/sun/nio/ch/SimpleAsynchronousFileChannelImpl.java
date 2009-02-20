@@ -36,10 +36,10 @@ import java.security.PrivilegedAction;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousFileChannel;
-import org.classpath.icedtea.java.nio.channels.CompletionHandler;
-import org.classpath.icedtea.java.nio.channels.FileLock;
-import org.classpath.icedtea.java.nio.channels.ShutdownChannelGroupException;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.CompletionHandler;
+import java.nio.channels.FileLock;
+import java.nio.channels.ShutdownChannelGroupException;
 
 /**
  * "Portable" implementation of AsynchronousFileChannel for use on operating

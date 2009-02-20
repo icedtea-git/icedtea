@@ -36,17 +36,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.classpath.icedtea.java.nio.file.FileStore;
-import org.classpath.icedtea.java.nio.file.FileSystems;
-import org.classpath.icedtea.java.nio.file.Path;
-import org.classpath.icedtea.java.nio.file.ProviderMismatchException;
-import org.classpath.icedtea.java.nio.file.attribute.FileAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.FileStoreAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.FileStoreAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.FileStoreSpaceAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.FileStoreSpaceAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.Attributes;
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.ProviderMismatchException;
+import java.nio.file.attribute.FileAttributeView;
+import java.nio.file.attribute.FileStoreAttributeView;
+import java.nio.file.attribute.FileStoreAttributeView;
+import java.nio.file.attribute.FileStoreSpaceAttributeView;
+import java.nio.file.attribute.FileStoreSpaceAttributes;
+import java.nio.file.attribute.Attributes;
+import java.nio.file.attribute.BasicFileAttributeView;
 
 public class ZipFileStore extends FileStore {
 

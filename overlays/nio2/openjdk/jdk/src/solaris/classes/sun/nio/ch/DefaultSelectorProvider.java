@@ -29,7 +29,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import sun.security.action.GetPropertyAction;
 
-import org.classpath.icedtea.java.nio.channels.spi.SelectorProvider;
+import java.nio.channels.spi.SelectorProvider;
 
 /**
  * Creates this platform's default SelectorProvider

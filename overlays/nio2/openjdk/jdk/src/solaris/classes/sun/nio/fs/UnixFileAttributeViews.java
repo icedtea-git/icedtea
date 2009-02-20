@@ -29,16 +29,16 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.file.ProviderMismatchException;
+import java.nio.file.ProviderMismatchException;
 
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.BasicFileAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.FileOwnerAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.GroupPrincipal;
-import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributes;
-import org.classpath.icedtea.java.nio.file.attribute.PosixFileAttributeView;
-import org.classpath.icedtea.java.nio.file.attribute.PosixFilePermission;
-import org.classpath.icedtea.java.nio.file.attribute.UserPrincipal;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.FileOwnerAttributeView;
+import java.nio.file.attribute.GroupPrincipal;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.UserPrincipal;
 
 import static sun.nio.fs.UnixNativeDispatcher.*;
 

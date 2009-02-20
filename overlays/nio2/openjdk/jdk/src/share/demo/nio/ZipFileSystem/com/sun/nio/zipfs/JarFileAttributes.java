@@ -36,7 +36,7 @@ import java.io.*;
 import java.util.Map;
 import java.util.Set;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
+import java.nio.file.FileRef;
 
 public class JarFileAttributes extends ZipFileAttributes {
 

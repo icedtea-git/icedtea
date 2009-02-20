@@ -31,11 +31,11 @@
 
 import java.io.IOException;
 
-import org.classpath.icedtea.java.nio.file.FileStore;
-import org.classpath.icedtea.java.nio.file.FileSystem;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystem;
 
-import org.classpath.icedtea.java.nio.file.attribute.Attributes;
-import org.classpath.icedtea.java.nio.file.attribute.FileStoreSpaceAttributes;
+import java.nio.file.attribute.Attributes;
+import java.nio.file.attribute.FileStoreSpaceAttributes;
 
 /**
  * Example utility that works like the df(1M) program to print out disk space

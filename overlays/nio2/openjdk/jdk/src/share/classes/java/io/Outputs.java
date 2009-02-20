@@ -1,6 +1,5 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,7 +23,7 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.java.io;
+package java.io;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -40,11 +39,11 @@ import java.nio.channels.WritableByteChannel;
 import java.util.Arrays;
 import java.util.List;
 
-import org.classpath.icedtea.java.nio.file.FileRef;
+import java.nio.file.FileRef;
 
-import static org.classpath.icedtea.java.nio.file.StandardOpenOption.CREATE;
-import static org.classpath.icedtea.java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
-import static org.classpath.icedtea.java.nio.file.StandardOpenOption.WRITE;
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+import static java.nio.file.StandardOpenOption.WRITE;
 
 /**
  * {@note experimental}

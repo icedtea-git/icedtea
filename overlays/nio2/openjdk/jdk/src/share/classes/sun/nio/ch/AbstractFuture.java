@@ -27,7 +27,7 @@ package sun.nio.ch;
 
 import java.util.concurrent.Future;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousChannel;
+import java.nio.channels.AsynchronousChannel;
 
 /**
  * Base implementation of Future used for asynchronous I/O

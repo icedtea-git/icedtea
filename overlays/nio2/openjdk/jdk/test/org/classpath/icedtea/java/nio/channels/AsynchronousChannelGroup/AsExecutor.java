@@ -23,7 +23,7 @@
 
 import java.util.concurrent.*;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.AsynchronousChannelGroup;
 
 /**
  * Test that arbitrary tasks can be submitted to a channel group's thread pool.

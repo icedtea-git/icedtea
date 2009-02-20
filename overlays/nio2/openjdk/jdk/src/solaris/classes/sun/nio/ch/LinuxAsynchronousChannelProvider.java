@@ -28,15 +28,15 @@ package sun.nio.ch;
 import java.util.concurrent.ExecutorService;
 import java.io.IOException;
 
-import org.classpath.icedtea.java.net.ProtocolFamily;
+import java.net.ProtocolFamily;
 
-import org.classpath.icedtea.java.nio.channels.AsynchronousChannelGroup;
-import org.classpath.icedtea.java.nio.channels.AsynchronousDatagramChannel;
-import org.classpath.icedtea.java.nio.channels.AsynchronousSocketChannel;
-import org.classpath.icedtea.java.nio.channels.AsynchronousServerSocketChannel;
-import org.classpath.icedtea.java.nio.channels.IllegalChannelGroupException;
+import java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.AsynchronousDatagramChannel;
+import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.AsynchronousServerSocketChannel;
+import java.nio.channels.IllegalChannelGroupException;
 
-import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
+import java.nio.channels.spi.AsynchronousChannelProvider;
 
 public class LinuxAsynchronousChannelProvider
     extends AsynchronousChannelProvider

@@ -34,9 +34,9 @@ import java.util.HashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.classpath.icedtea.java.nio.channels.ShutdownChannelGroupException;
+import java.nio.channels.ShutdownChannelGroupException;
 
-import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
+import java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**
  * Base implementation of AsynchronousChannelGroupImpl for Unix systems.

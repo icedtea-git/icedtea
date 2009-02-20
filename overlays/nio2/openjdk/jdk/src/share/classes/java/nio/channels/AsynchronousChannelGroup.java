@@ -1,6 +1,6 @@
 /*
  * Copyright 2007-2008 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
+ * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,12 +24,12 @@
  * have any questions.
  */
 
-package org.classpath.icedtea.java.nio.channels;
+package java.nio.channels;
 
 import java.io.IOException;
 import java.util.concurrent.*;
 
-import org.classpath.icedtea.java.nio.channels.spi.AsynchronousChannelProvider;
+import java.nio.channels.spi.AsynchronousChannelProvider;
 
 /**
  * A grouping of asynchronous channels for the purpose of resource sharing.
