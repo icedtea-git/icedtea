@@ -84,7 +84,7 @@
    if (ProfileInterpreter) {
 --- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp.orig	2008-12-03 14:23:37.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2008-12-03 14:33:48.000000000 +0000
-@@ -94,12 +94,16 @@
+@@ -94,6 +94,9 @@
  #ifdef TIERED
    #define VMTYPE "Server"
  #else
@@ -92,12 +92,11 @@
 +  #define VMTYPE "Shark"
 +#else
  #if defined(COMPILER1) || defined(COMPILER2)
--   #define VMTYPE COMPILER1_PRESENT("Client")   \
--                  COMPILER2_PRESENT("Server")
-+  #define VMTYPE COMPILER1_PRESENT("Client")   \
-+                 COMPILER2_PRESENT("Server")
- #else
+    #define VMTYPE COMPILER1_PRESENT("Client")   \
+                   COMPILER2_PRESENT("Server")
+@@ -104,6 +107,7 @@
    #define VMTYPE "Core"
+ #endif // ZERO
  #endif // COMPILER1 || COMPILER2
 +#endif // SHARK
  #endif // TIERED

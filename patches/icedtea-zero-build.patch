@@ -173,18 +173,30 @@ diff -r c9fa8e3d5aa2 openjdk/corba/make/common/shared/Platform.gmk
 diff -r b5e5d2ef906a openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
 --- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	Thu Jun 19 17:05:23 2008 +0100
 +++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	Fri Jun 20 10:29:14 2008 +0100
+@@ -98,7 +98,11 @@
+    #define VMTYPE COMPILER1_PRESENT("Client")   \
+                   COMPILER2_PRESENT("Server")
+ #else
++#ifdef ZERO
++  #define VMTYPE "Zero"
++#else
+   #define VMTYPE "Core"
++#endif // ZERO
+ #endif // COMPILER1 || COMPILER2
+ #endif // TIERED
+ #endif // KERNEL
 @@ -143,10 +143,14 @@ const char* Abstract_VM_Version::vm_rele
                   WINDOWS_ONLY("windows")         \
                   SOLARIS_ONLY("solaris")
  
-+#ifdef ZERO_LIBARCH
++#ifdef ZERO
 +#define CPU      ZERO_LIBARCH
 +#else
  #define CPU      IA32_ONLY("x86")                \
                   IA64_ONLY("ia64")               \
                   AMD64_ONLY("amd64")             \
                   SPARC_ONLY("sparc")
-+#endif // ZERO_LIBARCH
++#endif // ZERO
  
  const char *Abstract_VM_Version::vm_platform_string() {
    return OS "-" CPU;
