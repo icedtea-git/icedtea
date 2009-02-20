@@ -18,6 +18,13 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-20  Gary Benson  <gbenson@redhat.com>
+
+	* patches/icedtea-zero-build.patch: Make Zero builds say "Zero"
+	in the VM version string as opposed to "Core".
+
+	* patches/hotspot/default/icedtea-shark.patch: Fixup for the above.
+
 2009-02-20  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Updated md5sum for NETBEANS_PROFILER_MD5SUM, and
