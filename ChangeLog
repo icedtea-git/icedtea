@@ -18,6 +18,11 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-20  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp:
+	Fixed conditional.
+
 2009-02-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* AUTHORS:
