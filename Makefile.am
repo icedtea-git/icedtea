@@ -5,7 +5,7 @@ OPENJDK_VERSION = b49
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
 
-NETBEANS_PROFILER_MD5SUM = 35f9dc474dfc19ed3713f362139b099a
+NETBEANS_PROFILER_MD5SUM = 786ab31817cbd902a7211cd6a6161750
 VISUALVM_MD5SUM = 1174486e82a65840b44c47166d79f212
 
 if ENABLE_PLUGIN
@@ -3039,7 +3039,6 @@ if WITH_VISUALVM
 	mkdir netbeans ; \
 	cd netbeans ; \
         rm nbbuild/external/binaries-list ; \
-        rm -r lib.profiler/release/lib/deployed ; \
         mkdir -p lib.profiler/release/lib/deployed/jdk15/linux ; \
         mkdir -p lib.profiler/release/lib/deployed/jdk16/linux ; \
 	mkdir -p ./nbbuild/netbeans_visualvm/ ; \
