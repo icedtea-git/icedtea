@@ -20,6 +20,11 @@
 
 2009-02-20  Andrew John Hughes  <ahughes@redhat.com>
 
+	* AUTHORS:
+	Add back my main e-mail address.
+	
+2009-02-20  Andrew John Hughes  <ahughes@redhat.com>
+
  	* overlays/nio2/openjdk/jdk/src/share/classes/java/io/File.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/java/io/FilePermission.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/java/net/ProtocolFamily.java,
