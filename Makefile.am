@@ -758,10 +758,20 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{node|short}')`" ; \
 	fi ; \
 	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
+	if ! test "x$(WITH_CACAO)" = "xno"; then \
+	  echo "JDK_DERIVATIVE_NAME=$${icedtea_version}" \
+	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	  echo "PRODUCT_NAME=IcedTea6" \
+	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	else \
+	  echo "JDK_DERIVATIVE_NAME=IcedTea6 $${icedtea_version}" \
+	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	fi
+
 	if [ -n "$(PKGVERSION)" ]; then \
-	  icedtea_version="$${icedtea_version} ($(PKGVERSION))" ; \
-	fi; \
-	sed -i "s#OpenJDK#OpenJDK $${icedtea_version}#" openjdk/jdk/make/common/shared/Defs.gmk
+	  echo "DISTRO_PACKAGE_VERSION=$(PKGVERSION)" \
+	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	fi
 
 if ENABLE_PLUGIN
 	cp -a $(abs_top_srcdir)/plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
