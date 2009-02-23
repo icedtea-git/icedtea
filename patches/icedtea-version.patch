@@ -10,3 +10,49 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/s
    PRODUCT_NAME = OpenJDK
    PRODUCT_SUFFIX = Runtime Environment
    JDK_RC_PLATFORM_NAME = Platform
+--- openjdk/jdk/src/share/classes/sun/misc/Version-template.java.~1~	2008-11-25 01:04:53.000000000 -0800
++++ openjdk/jdk/src/share/classes/sun/misc/Version-template.java	2009-02-20 09:03:25.000000000 -0800
+@@ -41,6 +41,12 @@
+     private static final String java_runtime_version =
+         "@@java_runtime_version@@";
+ 
++    private static final String jdk_derivative_name =
++        "@@jdk_derivative_name@@";
++
++    private static final String distro_package_version =
++        "@@distro_package_version@@";
++
+     static {
+         init();
+     }
+@@ -82,8 +88,17 @@
+         ps.println(launcher_name + " version \"" + java_version + "\"");
+ 
+         /* Second line: runtime version (ie, libraries). */
+-        ps.println(java_runtime_name + " (build " +
+-                           java_runtime_version + ")");
++	StringBuilder sb = new StringBuilder();
++	sb.append(java_runtime_name);
++	if (jdk_derivative_name.length() > 0) {
++	    sb.append(" (").append(jdk_derivative_name).append(")");
++	}
++	if (distro_package_version.length() > 0) {
++	    sb.append(" (").append(distro_package_version).append(")");
++	} else {
++	    sb.append(" (build ").append(java_runtime_version).append(")");
++	}
++	ps.println(sb.toString());
+ 
+         /* Third line: JVM information. */
+         String java_vm_name    = System.getProperty("java.vm.name");
+--- openjdk/jdk/make/java/version/Makefile.~1~	2008-11-25 01:01:15.000000000 -0800
++++ openjdk/jdk/make/java/version/Makefile	2009-02-20 09:03:56.000000000 -0800
+@@ -39,6 +39,8 @@
+ 	$(SED) -e 's/@@launcher_name@@/$(LAUNCHER_NAME)/g' \
+ 	    -e 's/@@java_version@@/$(RELEASE)/g' \
+ 	    -e 's/@@java_runtime_version@@/$(FULL_VERSION)/g' \
++	    -e 's/@@jdk_derivative_name@@/$(JDK_DERIVATIVE_NAME)/g' \
++	    -e 's/@@distro_package_version@@/$(DISTRO_PACKAGE_VERSION)/g' \
+ 	    -e 's/@@java_runtime_name@@/$(RUNTIME_NAME)/g' \
+ 	$< > $@.temp
+ 	@$(MV) $@.temp $@

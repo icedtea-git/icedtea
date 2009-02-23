@@ -2098,8 +2098,19 @@ stamps/overlay.stamp: stamps/patch.stamp
 	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{node|short}')`" ; \
 	fi ; \
 	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
+	if ! test "x$(WITH_CACAO)" = "xno"; then \
+	  echo "JDK_DERIVATIVE_NAME=$${icedtea_version}" \
+	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	  echo "PRODUCT_NAME=IcedTea6" \
+	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	else \
+	  echo "JDK_DERIVATIVE_NAME=IcedTea6 $${icedtea_version}" \
+	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	fi
 	if [ -n "$(PKGVERSION)" ]; then \
 	  icedtea_version="$${icedtea_version} ($(PKGVERSION))" ; \
+	  echo "DISTRO_PACKAGE_VERSION=$(PKGVERSION)" \
+	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
 	fi; \
 	if test x"$(PROJECT_NAME)" != "xjdk7"; then \
 	  proj_suffix="-$(PROJECT_NAME)"; \
@@ -2107,7 +2118,6 @@ stamps/overlay.stamp: stamps/patch.stamp
 	if test x"$(VERSION_SUFFIX)" != "x"; then \
 	  ver_suffix="-$(VERSION_SUFFIX)"; \
 	fi ; \
-	sed -i "s#OpenJDK#OpenJDK (IcedTea $${icedtea_version})#" openjdk/jdk/make/common/shared/Defs.gmk ; \
 	sed -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
 	  openjdk/jdk/make/common/shared/Defs.gmk; \
 	cp -r $(abs_top_srcdir)/overlays/openjdk/* openjdk/

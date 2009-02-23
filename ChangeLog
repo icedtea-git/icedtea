@@ -69,10 +69,23 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
-2009-02-23  Gary Benson  <gbenson@redhat.com>
-            Robert Schuster  <robertschuster@fsfe.org>
+2009-02-23  Lillian Angel  <langel@redhat.com>
 
-    * configure.ac (llvm_components): Add nativecodegen.
+	* AUTHORS: Added Mark Reinhold.
+
+2009-02-23  Mark Reinhold  <mr@sun.com>
+
+	* Makefile.am: Set PRODUCT_NAME to OpenJDK, unless doing a CACAO
+	build (set to IcedTea).
+	* patches/icedtea-version.patch: Introduced two new make variables:
+	JDK_DERIVATIVE_NAME to set "IcedTea6 <version>" and
+	DISTRO_PACKAGE_VERSION carries the argument given to the
+	--with-pkgversion configure option.
+
+2009-02-23  Gary Benson  <gbenson@redhat.com>
+	    Robert Schuster  <robertschuster@fsfe.org>
+
+	* configure.ac (llvm_components): Add nativecodegen.
 
 2009-02-23  Gary Benson  <gbenson@redhat.com>
 
