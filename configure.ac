@@ -524,7 +524,7 @@ AC_SUBST(LIBFFI_LIBS)
 
 if test "x${SHARK_BUILD_TRUE}" = x; then
   FIND_TOOL([LLVM_CONFIG], [llvm-config])
-  llvm_components=engine
+  llvm_components="engine nativecodegen"
   LLVM_CFLAGS=`$LLVM_CONFIG --cflags $llvm_components | \
     sed -e 's/-O.//g' | sed -e 's/-fomit-frame-pointer//g' | \
     sed -e 's/-D_DEBUG//g'`

@@ -70,6 +70,11 @@
 	* patches/icedtea-libraries.patch: Recreated.
 
 2009-02-23  Gary Benson  <gbenson@redhat.com>
+            Robert Schuster  <robertschuster@fsfe.org>
+
+    * configure.ac (llvm_components): Add nativecodegen.
+
+2009-02-23  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
 	(CppInterpreter::deopt_entry): Remove Shark conditional.
