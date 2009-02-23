@@ -18,6 +18,21 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-23  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+	(CppInterpreter::deopt_entry): Remove Shark conditional.
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp
+	(frame::patch_pc): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.cpp
+	(Deoptimization::unwind_callee_save_values): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.hpp
+	(NativeJump::check_verified_entry_alignment): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp
+	(NativeJump::patch_verified_entry): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/sharedRuntime_zero.cpp
+	(Deoptimization::last_frame_adjust): Likewise.
+	
 2009-02-20  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-zero-build.patch: Make Zero builds say "Zero"

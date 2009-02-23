@@ -68,7 +68,4 @@ int AbstractInterpreter::size_activation(methodOop method,
 void Deoptimization::unwind_callee_save_values(frame* f,
                                                vframeArray* vframe_array)
 {
-#ifndef SHARK
-  Unimplemented();
-#endif // !SHARK
 }
