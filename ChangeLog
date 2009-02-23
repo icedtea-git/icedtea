@@ -1,3 +1,31 @@
+2009-02-23  Deepak Bhole <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Supply cookie info to Java side.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Apply patch from
+	Xerxes Rånby to prevent initialization timeout on slower systems. Also,
+	use cookie info when equests for jar are made.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Fix bug that was
+	causing unnecessary exception prints on exit.
+	* rt/net/sourceforge/jnlp/ExtensionDesc.java: Store/supply cookie info as
+	needed.
+	* rt/net/sourceforge/jnlp/JNLPFile.java: Same.
+	* rt/net/sourceforge/jnlp/Launcher.java: Same. 
+	* rt/net/sourceforge/jnlp/NetxPanel.java: Same.
+	* rt/net/sourceforge/jnlp/Parser.java: Same.
+	* rt/net/sourceforge/jnlp/PluginBridge.java: Same. Also, handle empty jar
+	specification (Bug: 294) in archive tags.
+	* rt/net/sourceforge/jnlp/cache/CacheUtil.java: Store/supply cookie info
+	as needed.
+	* rt/net/sourceforge/jnlp/cache/Resource.java: Same.
+	* rt/net/sourceforge/jnlp/cache/ResourceTracker.java: Supply cookie string
+	to server when requesting jars, if there is one set.
+	* rt/net/sourceforge/jnlp/runtime/Boot.java: Initialize JNLPFile with null
+	cookie string.
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Store/supply
+	cookie info as needed.
+	* rt/net/sourceforge/jnlp/tools/JarSigner.java: Use JarInputStream instead
+	of Jar to handle empty jars, and update signature checking accordingly.
+
 2009-02-23  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Added Mark Reinhold.

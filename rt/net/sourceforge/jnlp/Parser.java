@@ -323,7 +323,7 @@ class Parser {
         Version version = getVersion(node, "version", null);
         URL location = getRequiredURL(node, "href", base);
 
-        ExtensionDesc ext = new ExtensionDesc(name, version, location);
+        ExtensionDesc ext = new ExtensionDesc(name, version, location, null);
 
         Node dload[] = getChildNodes(node, "ext-download");
         for (int i=0; i < dload.length; i++) {

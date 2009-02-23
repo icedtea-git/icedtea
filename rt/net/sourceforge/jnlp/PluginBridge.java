@@ -43,7 +43,7 @@ public class PluginBridge extends JNLPFile
     String[] cache_ex_jars = new String[0];
     Hashtable atts;
 
-    public PluginBridge(URL codebase, URL documentBase, String jar, String main,
+    public PluginBridge(URL codebase, String cookieStr, URL documentBase, String jar, String main,
                         int width, int height, Hashtable atts)
     throws Exception
     {
@@ -103,6 +103,8 @@ public class PluginBridge extends JNLPFile
                                         codebase.getHost());
         else
             security = null;
+        
+        this.cookieStr = cookieStr;
     }
 
     public String getTitle()
@@ -139,8 +141,9 @@ public class PluginBridge extends JNLPFile
                     if (launchType.equals(JARDesc.class))
                     {
                         for (int i = 0; i < jars.length; i++)
-                            result.add(new JARDesc(new URL(codeBase, jars[i]),
-                                                   null, null, false, true, false, true));
+                            if (jars[i].length() > 0)
+                                result.add(new JARDesc(new URL(codeBase, jars[i]),
+                                        null, null, false, true, false, true));
                         
                         boolean cacheable = true;
 
@@ -155,6 +158,9 @@ public class PluginBridge extends JNLPFile
                             String jar = jar_and_ver[0];
                             Version version = null;
                             
+                            if (jar.length() == 0)
+                                continue;
+                            
                             if (jar_and_ver.length > 1) {
                                 version = new Version(jar_and_ver[1]);
                             }
@@ -164,6 +170,10 @@ public class PluginBridge extends JNLPFile
                         }
                         
                         for (int i = 0; i < cache_ex_jars.length; i++) {
+
+                            if (cache_ex_jars[i].length() == 0)
+                                continue;
+                            
                             String[] jar_info = cache_ex_jars[i].split(";");
                             
                             String jar = jar_info[0].trim();

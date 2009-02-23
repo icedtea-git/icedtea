@@ -148,11 +148,11 @@ public class ResourceTracker {
      * @param version the resource version
      * @param updatePolicy whether to check for updates if already in cache
      */
-    public void addResource(URL location, Version version, UpdatePolicy updatePolicy) {
+    public void addResource(URL location, String cookieStr, Version version, UpdatePolicy updatePolicy) {
         if (location == null)
             throw new IllegalArgumentException("location==null");
 
-        Resource resource = Resource.getResource(location, updatePolicy, version);
+        Resource resource = Resource.getResource(location, cookieStr, updatePolicy, version);
         boolean downloaded = false;
 
         synchronized (resources) {
@@ -606,6 +606,10 @@ public class ResourceTracker {
         try {
             // create out second in case in does not exist
             URLConnection con = getVersionedResourceURL(resource).openConnection();
+            
+            if (resource.getCookieStr() != null && resource.getCookieStr().length() > 0)
+                con.setRequestProperty("Cookie", resource.getCookieStr());
+
             InputStream in = new BufferedInputStream(con.getInputStream());
             OutputStream out = CacheUtil.getOutputStream(resource.location, resource.downloadVersion);
             byte buf[] = new byte[1024];
@@ -653,6 +657,10 @@ public class ResourceTracker {
 
             // connect
             URLConnection connection = getVersionedResourceURL(resource).openConnection(); // this won't change so should be okay unsynchronized
+            
+            if (resource.getCookieStr() != null && resource.getCookieStr().length() > 0)
+                connection.setRequestProperty("Cookie", resource.getCookieStr());
+
             int size = connection.getContentLength();
             boolean current = CacheUtil.isCurrent(resource.location, resource.requestVersion, connection) && resource.getUpdatePolicy() != UpdatePolicy.FORCE;
 

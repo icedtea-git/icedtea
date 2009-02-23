@@ -40,6 +40,9 @@ public class ExtensionDesc {
 
     /** the location of the extension JNLP file */
     private URL location;
+    
+    /** the cookie string sent with resource requests */
+    private String cookieStr;
 
     /** the JNLPFile the extension refers to */
     private JNLPFile file;
@@ -58,10 +61,11 @@ public class ExtensionDesc {
      * @param version the required version of the extention JNLPFile
      * @param location the location of the extention JNLP file
      */
-    public ExtensionDesc(String name, Version version, URL location) {
+    public ExtensionDesc(String name, Version version, URL location, String cookieStr) {
         this.name = name;
         this.version = version;
         this.location = location;
+        this.cookieStr = cookieStr;
     }
 
     /**
@@ -121,7 +125,7 @@ public class ExtensionDesc {
      */
     public void resolve() throws ParseException, IOException {
         if (file == null) {
-            file = new JNLPFile(location);
+            file = new JNLPFile(location, cookieStr);
 
             if (JNLPRuntime.isDebug())
                 System.out.println("Resolve: "+file.getInformation().getTitle());
@@ -139,6 +143,13 @@ public class ExtensionDesc {
      */
     public JNLPFile getJNLPFile() {
         return file;
+    }
+    
+    /**
+     * Returns the cookie associated with this instance
+     */
+    public String getCookieStr() {
+        return cookieStr;
     }
 
 }
