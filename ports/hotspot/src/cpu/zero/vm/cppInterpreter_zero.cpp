@@ -902,11 +902,7 @@ address CppInterpreter::return_entry(TosState state, int length)
 
 address CppInterpreter::deopt_entry(TosState state, int length)
 {
-#ifdef SHARK
   return NULL;
-#else
-  Unimplemented();
-#endif // SHARK
 }
 
 // Helper for (runtime) stack overflow checks

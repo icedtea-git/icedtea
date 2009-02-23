@@ -106,14 +106,10 @@ BasicObjectLock* frame::interpreter_frame_monitor_end() const
 
 void frame::patch_pc(Thread* thread, address pc)
 {
-#ifdef SHARK
   // We borrow this call to set the thread pointer in the interpreter
   // state; the hook to set up deoptimized frames isn't supplied it.
   assert(pc == NULL, "should be");
   get_interpreterState()->set_thread((JavaThread *) thread);
-#else
-  Unimplemented();
-#endif // SHARK
 }
 
 bool frame::safe_for_sender(JavaThread *thread)
