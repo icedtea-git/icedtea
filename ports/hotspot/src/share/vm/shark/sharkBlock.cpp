@@ -1726,14 +1726,58 @@ void SharkBlock::do_switch()
   }
 }
 
-Value* SharkBlock::get_basic_callee(Value *cache)
+// Direct calls can be made when the callee is fixed.
+// invokestatic and invokespecial are always direct;
+// invokevirtual is direct in some circumstances.
+Value *SharkBlock::get_direct_callee(ciMethod* method)
 {
+  SharkConstantPool constants(this);
+  Value *cache = constants.cache_entry_at(iter()->get_method_index());
   return builder()->CreateValueOfStructEntry(
-    cache, ConstantPoolCacheEntry::f1_offset(),
+    cache,
+    bc() == Bytecodes::_invokevirtual ?
+      ConstantPoolCacheEntry::f2_offset() :
+      ConstantPoolCacheEntry::f1_offset(),
     SharkType::methodOop_type(),
     "callee");
 }
 
+// Non-direct virtual calls are handled here
+Value *SharkBlock::get_virtual_callee(SharkValue *receiver, ciMethod* method)
+{
+  Value *klass = builder()->CreateValueOfStructEntry(
+    receiver->jobject_value(),
+    in_ByteSize(oopDesc::klass_offset_in_bytes()),
+    SharkType::jobject_type(),
+    "klass");
+
+  Value *index;
+  if (!method->holder()->is_linked()) {
+    // Yuck, we have to do this one slow :(
+    // XXX should we trap on this?
+    NOT_PRODUCT(warning("unresolved invokevirtual in %s", function()->name()));
+    SharkConstantPool constants(this);
+    Value *cache = constants.cache_entry_at(iter()->get_method_index());
+    index = builder()->CreateValueOfStructEntry(
+      cache, ConstantPoolCacheEntry::f2_offset(),
+      SharkType::intptr_type(),
+      "index");
+  }
+  else {
+    index = LLVMValue::intptr_constant(method->vtable_index());
+  }
+
+  return builder()->CreateLoad(
+    builder()->CreateArrayAddress(
+      klass,
+      SharkType::methodOop_type(),
+      vtableEntry::size() * wordSize,
+      in_ByteSize(instanceKlass::vtable_start_offset() * wordSize),
+      index),
+    "callee");
+}
+
+// Interpreter-style virtual call lookup
 Value* SharkBlock::get_virtual_callee(Value *cache, SharkValue *receiver)
 {
   BasicBlock *final      = function()->CreateBlock("final");
@@ -1792,8 +1836,12 @@ Value* SharkBlock::get_virtual_callee(Value *cache, SharkValue *receiver)
   return callee;
 }
 
-Value* SharkBlock::get_interface_callee(Value *cache, SharkValue *receiver)
+// Interpreter-style interface call lookup
+Value* SharkBlock::get_interface_callee(SharkValue *receiver)
 {
+  SharkConstantPool constants(this);
+  Value *cache = constants.cache_entry_at(iter()->get_method_index());
+
   BasicBlock *hacky      = function()->CreateBlock("hacky");
   BasicBlock *normal     = function()->CreateBlock("normal");
   BasicBlock *loop       = function()->CreateBlock("loop");
@@ -1947,24 +1995,6 @@ Value* SharkBlock::get_interface_callee(Value *cache, SharkValue *receiver)
   return callee;
 } 
 
-Value* SharkBlock::get_callee(Value *cache, SharkValue *receiver)
-{
-  switch (bc()) {
-  case Bytecodes::_invokestatic:
-  case Bytecodes::_invokespecial:
-    return get_basic_callee(cache);
-
-  case Bytecodes::_invokevirtual:
-    return get_virtual_callee(cache, receiver);
-
-  case Bytecodes::_invokeinterface:
-    return get_interface_callee(cache, receiver);
-
-  default:
-    ShouldNotReachHere();
-  }
-}
-
 void SharkBlock::do_call()
 {
   bool will_link;
@@ -1979,9 +2009,13 @@ void SharkBlock::do_call()
   }
 
   // Find the method we are calling
-  SharkConstantPool constants(this);
-  Value *cache = constants.cache_entry_at(iter()->get_method_index());
-  Value *callee = get_callee(cache, receiver);
+  Value *callee;
+  if (bc() == Bytecodes::_invokeinterface)
+    callee = get_interface_callee(receiver);
+  else if (bc() == Bytecodes::_invokevirtual && !method->is_final_method())
+    callee = get_virtual_callee(receiver, method);
+  else
+    callee = get_direct_callee(method);
 
   Value *base_pc = builder()->CreateValueOfStructEntry(
     callee, methodOopDesc::from_interpreted_offset(),

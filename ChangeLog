@@ -69,6 +69,23 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-24  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::get_basic_callee): Removed.
+	(SharkBlock::get_direct_callee): New method.
+	(SharkBlock::get_virtual_callee): Likewise.
+	(SharkBlock::get_interface_callee): Removed cache parameter.
+	(SharkBlock::get_callee): Removed.
+	(SharkBlock::do_call): Perform caller selection inline.
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::get_basic_callee): Removed.
+	(SharkBlock::get_direct_callee): New method.
+	(SharkBlock::get_virtual_callee): Likewise.
+	(SharkBlock::get_interface_callee): Changed prototype.
+	(SharkBlock::get_callee): Removed.
+
 2009-02-23  Lillian Angel  <langel@redhat.com>
 
 	* AUTHORS: Added Mark Reinhold.
