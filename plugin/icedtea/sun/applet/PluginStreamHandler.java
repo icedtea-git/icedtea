@@ -52,6 +52,8 @@ import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.LinkedList;
 
+import javax.swing.SwingUtilities;
+
 
 public class PluginStreamHandler {
 
@@ -60,6 +62,8 @@ public class PluginStreamHandler {
     private BufferedWriter pluginOutputWriter;
     
     private RequestQueue queue = new RequestQueue();
+    
+    private JavaConsole console = new JavaConsole();
 
 	LinkedList<String> writeQueue = new LinkedList<String>();
 
@@ -150,6 +154,10 @@ public class PluginStreamHandler {
     					AppletSecurityContextManager.dumpStore(0);
     					PluginDebug.debug("APPLETVIEWER: exiting appletviewer");
     					System.exit(0);
+				} else if (message.equals("showconsole")) {
+				  showConsole();
+				} else if (message.equals("hideconsole")) {
+				  hideConsole();            
     				}
     				
 /*    				
@@ -426,7 +434,7 @@ public class PluginStreamHandler {
 	*/
 
     }
-    
+
     public boolean messageAvailable() {
     	return writeQueue.size() != 0;
     }
@@ -436,5 +444,21 @@ public class PluginStreamHandler {
 			String ret = writeQueue.size() > 0 ? writeQueue.poll() : "";
     		return ret;
     	}
+    }
+    
+    private void showConsole() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                console.showConsole();
+            }
+        });
+    }
+    
+    private void hideConsole() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                console.hideConsole();
+            }
+        });
     }
 }

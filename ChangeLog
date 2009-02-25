@@ -69,6 +69,16 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-25  Deepak Bhole <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Implement Show/Hide from IJVMConsole, remove
+	IJVMPerfWindow stubs, as they were empty and unused.
+	* plugin/icedtea/sun/applet/JavaConsole.java: Pack components inside panel
+	rather than directly in the frame, to fix sizing issues. Addition
+	sizing/divider related code changes for aesthetics.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Wire in
+	showconsole/hideconsole functionality.
+
 2009-02-25  Omair Majid  <omajid@redhat.com>
 
 	* plugin/icedtea/sun/applet/PluginMain.java:

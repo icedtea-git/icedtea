@@ -715,7 +715,7 @@ extern "C" NS_EXPORT nsresult NSGetFactory (nsISupports* aServMgr,
 #include <nsIFactory.h>
 #include <nsIPlugin.h>
 #include <nsIJVMManager.h>
-#include <nsIJVMPrefsWindow.h>
+#include <nsIJVMConsole.h>
 #include <nsIJVMPlugin.h>
 #include <nsIInputStream.h>
 #include <nsIAsyncInputStream.h>
@@ -933,8 +933,8 @@ class IcedTeaJNIEnv;
 // nsIPlugin inherits from nsIFactory.
 class IcedTeaPluginFactory : public nsIPlugin,
                              public nsIJVMManager,
-                             public nsIJVMPrefsWindow,
                              public nsIJVMPlugin,
+							 public nsIJVMConsole,
                              public nsIInputStreamCallback
 {
 public:
@@ -942,11 +942,12 @@ public:
   NS_DECL_NSIFACTORY
   NS_DECL_NSIPLUGIN
   NS_DECL_NSIJVMMANAGER
-  // nsIJVMPrefsWindow does not provide an NS_DECL macro.
+  // nsIJVMConsole does not provide an NS_DECL macro.
 public:
   NS_IMETHOD Show (void);
   NS_IMETHOD Hide (void);
   NS_IMETHOD IsVisible (PRBool* result);
+  NS_IMETHOD Print(const char* msg, const char* encodingName = NULL);
   // nsIJVMPlugin does not provide an NS_DECL macro.
 public:
   NS_IMETHOD AddToClassPath (char const* dirPath);
@@ -1471,7 +1472,7 @@ GetURLRunnable::Run ()
 }
 
 NS_IMPL_ISUPPORTS6 (IcedTeaPluginFactory, nsIFactory, nsIPlugin, nsIJVMManager,
-                    nsIJVMPrefsWindow, nsIJVMPlugin, nsIInputStreamCallback)
+                    nsIJVMPlugin, nsIJVMConsole, nsIInputStreamCallback)
 
 // IcedTeaPluginFactory functions.
 IcedTeaPluginFactory::IcedTeaPluginFactory ()
@@ -1784,19 +1785,23 @@ IcedTeaPluginFactory::GetJavaEnabled (PRBool* aJavaEnabled)
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-// nsIJVMPrefsWindow functions.
+#include <typeinfo>
+
+// nsIJVMConsole functions.
 NS_IMETHODIMP
 IcedTeaPluginFactory::Show (void)
 {
-  NOT_IMPLEMENTED ();
-  return NS_ERROR_NOT_IMPLEMENTED;
+  nsCString msg("showconsole");
+  this->SendMessageToAppletViewer(msg);
+  return NS_OK;
 }
 
 NS_IMETHODIMP
 IcedTeaPluginFactory::Hide (void)
 {
-  NOT_IMPLEMENTED ();
-  return NS_ERROR_NOT_IMPLEMENTED;
+  nsCString msg("hideconsole");
+  this->SendMessageToAppletViewer(msg);
+  return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -2279,6 +2284,13 @@ IcedTeaPluginFactory::DisplayFailureDialog ()
   gtk_dialog_run (GTK_DIALOG (dialog));
   gtk_widget_destroy (dialog);
 
+}
+
+NS_IMETHODIMP
+IcedTeaPluginFactory::Print(const char* msg, const char* encoding)
+{
+  NOT_IMPLEMENTED ();
+  return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMPL_ISUPPORTS2 (IcedTeaPluginInstance, nsIPluginInstance,
