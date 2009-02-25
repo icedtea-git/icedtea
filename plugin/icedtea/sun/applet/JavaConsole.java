@@ -37,7 +37,6 @@ exception statement from your version. */
 
 package sun.applet;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -49,7 +48,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -64,8 +62,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-
-import net.sourceforge.jnlp.runtime.JNLPClassLoader;
 
 /**
  * A simple Java console for IcedTeaPlugin
@@ -92,8 +88,8 @@ public class JavaConsole {
 
         consoleWindow = new JFrame("Java Console");
 
-        Container contentPane = consoleWindow.getContentPane();
-        contentPane.setLayout(new GridBagLayout());
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints c;
 
@@ -133,7 +129,7 @@ public class JavaConsole {
         c.gridheight = 10;
         c.weighty = 1;
 
-        contentPane.add(splitPane, c);
+        contentPanel.add(splitPane, c);
 
         /* buttons */
 
@@ -144,12 +140,11 @@ public class JavaConsole {
         c.weighty = 0;
 
         JPanel buttonPanel = new JPanel();
-        contentPane.add(buttonPanel, c);
+        contentPanel.add(buttonPanel, c);
 
         JButton gcButton = new JButton("Run GC");
         buttonPanel.add(gcButton);
         gcButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
                 printMemoryInfo();
                 System.out.print("Performing Garbage Collection....");
@@ -163,7 +158,6 @@ public class JavaConsole {
         JButton finalizersButton = new JButton("Run Finalizers");
         buttonPanel.add(finalizersButton);
         finalizersButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
                 printMemoryInfo();
                 System.out.print("Running finalization....");
@@ -177,7 +171,6 @@ public class JavaConsole {
         buttonPanel.add(memoryButton);
         memoryButton.addActionListener(new ActionListener() {
 
-            @Override
             public void actionPerformed(ActionEvent e) {
                 printMemoryInfo();
             }
@@ -187,7 +180,6 @@ public class JavaConsole {
         JButton systemPropertiesButton = new JButton("System Properties");
         buttonPanel.add(systemPropertiesButton);
         systemPropertiesButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
                 printSystemProperties();
             }
@@ -197,7 +189,6 @@ public class JavaConsole {
         JButton classloadersButton = new JButton("Classloaders");
         buttonPanel.add(classloadersButton);
         classloadersButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
                 printClassLoaders();
             }
@@ -207,34 +198,37 @@ public class JavaConsole {
         JButton threadListButton = new JButton("Thread List");
         buttonPanel.add(threadListButton);
         threadListButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
                 printThreadInfo();
             }
 
         });
 
-        JButton killVmButton = new JButton("Destory VM");
-        buttonPanel.add(killVmButton);
-        killVmButton.addActionListener(new ActionListener() {
-            @Override
+        JButton closeButton = new JButton("Close");
+        buttonPanel.add(closeButton);
+        closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        hideConsole();
+                    }
+                });
             }
-
         });
 
         stdOutUpdater.start();
         stdErrUpdater.start();
 
-        consoleWindow.setMinimumSize(new Dimension(500, 400));
+        consoleWindow.add(contentPanel);
         consoleWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         consoleWindow.pack();
+        consoleWindow.setSize(new Dimension(900, 600));
+        consoleWindow.setMinimumSize(new Dimension(900, 300));
 
         initialized = true;
 
         splitPane.setDividerLocation(0.5);
-
+        splitPane.setResizeWeight(0.5);
     }
 
     public void showConsole() {
@@ -315,7 +309,6 @@ public class JavaConsole {
 
         if (toShowConsole) {
             SwingUtilities.invokeLater(new Runnable() {
-                @Override
                 public void run() {
                     console.showConsole();
                 }
