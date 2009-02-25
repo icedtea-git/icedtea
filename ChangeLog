@@ -69,6 +69,17 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-25  Omair Majid  <omajid@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginMain.java:
+	New File. Implements a Java console for IcedTea Plugin.
+	* plugin/icedtea/sun/applet/JavaConsole.java
+	New constants PLUGIN_STDERR_FILE and PLUGIN_STDOUT_FILE for filenames that
+	stdout/stderr is redirected to.
+	(PluginMain): Always write stdout/stderr to
+	PLUGIN_STDERR_FILE/PLUGIN_STDOUT_FILE.
+	(TeeOutputStream): New class. Copies a PrintStream to a file.
+
 2009-02-24  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp

@@ -84,6 +84,11 @@ import net.sourceforge.jnlp.security.VariableX509TrustManager;
  */
 public class PluginMain
 {
+
+    // the files where stdout/stderr are sent to
+    public static final String PLUGIN_STDERR_FILE = System.getProperty("user.home") + "/.icedteaplugin/java.stderr";
+    public static final String PLUGIN_STDOUT_FILE = System.getProperty("user.home") + "/.icedteaplugin/java.stdout";
+
 	final boolean redirectStreams = System.getenv().containsKey("ICEDTEAPLUGIN_DEBUG");
 	static PluginStreamHandler streamHandler;
 	
@@ -111,18 +116,15 @@ public class PluginMain
 
     public PluginMain(String inPipe, String outPipe) {
     	
-    	if (redirectStreams) {
-    		try {
-    			File errFile = new File("/tmp/java.stderr");
-    			File outFile = new File("/tmp/java.stdout");
+    	try {
+    		File errFile = new File(PLUGIN_STDERR_FILE);
+    		File outFile = new File(PLUGIN_STDOUT_FILE);
 
-    			System.setErr(new PrintStream(new FileOutputStream(errFile)));
-    			System.setOut(new PrintStream(new FileOutputStream(outFile)));
-
-    		} catch (Exception e) {
-    			PluginDebug.debug("Unable to redirect streams");
-    			e.printStackTrace();
-    		}
+    		System.setErr(new TeeOutputStream(new FileOutputStream(errFile), System.err));
+    		System.setOut(new TeeOutputStream(new FileOutputStream(outFile), System.out));
+    	} catch (Exception e) {
+    		PluginDebug.debug("Unable to redirect streams");
+    		e.printStackTrace();
     	}
 
     	connect(inPipe, outPipe);
@@ -219,4 +221,63 @@ public class PluginMain
     static String getMessage() {
     	return streamHandler.getMessage();
     }
+
+    /**
+     * Behaves like the 'tee' command, sends output to both actual std stream and a
+     * file
+     */
+    class TeeOutputStream extends PrintStream {
+
+        // Everthing written to TeeOutputStream is written to this file
+        PrintStream logFile;
+
+        public TeeOutputStream(FileOutputStream fileOutputStream,
+                PrintStream stdStream) {
+            super(stdStream);
+            logFile = new PrintStream(fileOutputStream);
+        }
+
+        @Override
+        public boolean checkError() {
+            boolean thisError = super.checkError();
+            boolean fileError = logFile.checkError();
+
+            return thisError || fileError;
+        }
+
+        @Override
+        public void close() {
+            logFile.close();
+            super.close();
+        }
+
+        @Override
+        public void flush() {
+            logFile.flush();
+            super.flush();
+        }
+
+        /*
+         * The big ones: these do the actual writing
+         */
+
+        @Override
+        public void write(byte[] buf, int off, int len) {
+            logFile.write(buf, off, len);
+            super.write(buf, off, len);
+        }
+
+        @Override
+        public void write(int b) {
+            logFile.write(b);
+            super.write(b);
+        }
+
+        @Override
+        public void write(byte[] b) throws IOException {
+            logFile.write(b);
+            super.write(b);
+        }
+    }
+    
 }
