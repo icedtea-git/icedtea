@@ -69,6 +69,13 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-26  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-xml-encodinginfo.patch: New file. Fix possible
+	StackOverflowError.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
 2009-02-26  Andrew Haley  <aph@redhat.com>
 
 	* patches/openjdk/hotspot/src/share/vm/prims/jvmtiEnv.cpp: New file.

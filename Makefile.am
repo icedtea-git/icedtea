@@ -1859,6 +1859,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-java2d-dasher.patch \
 	patches/icedtea-jvmtiEnv.patch \
+	patches/icedtea-xml-encodinginfo.patch \
 	$(DISTRIBUTION_PATCHES)
 
 if WITH_RHINO

@@ -74,6 +74,7 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-no-precompiled.patch: Don't use precompiled header files in hotspot.
 * icedtea-java2d-dasher.patch: Fix interpretation of dash array elements in BasicStroke (S6793344).
 * icedtea-includedb.patch: Add missing include files. (S6793825, mostly applied in b47)
+* icedtea-xml-encodinginfo.patch: Fix possible StackOverflowError in EncodingInfo (PR295).
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
