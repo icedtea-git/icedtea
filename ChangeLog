@@ -69,6 +69,22 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-26  Andrew Haley  <aph@redhat.com>
+
+	* patches/openjdk/hotspot/src/share/vm/prims/jvmtiEnv.cpp: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-jvmtiEnv.patch.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Use real name, not "func".
+	Pass "none" to "-debug-only=".
+	Register generated code for profiling, etc.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp (class SharkEntry):
+	Remove #ifndef PRODUCT.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::CreateFunction): Use real name, not "func".
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::CreateFunction): Use real name, not "func".
+	(MyJITMemoryManager::endFunctionBody): Remove #ifndef PRODUCT.
+
 2009-02-26  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
