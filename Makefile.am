@@ -541,7 +541,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
 	patches/icedtea-javafiles.patch \
-	patches/icedtea-core-build.patch
+	patches/icedtea-core-build.patch \
+	patches/icedtea-jvmtiEnv.patch
 
 if WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \

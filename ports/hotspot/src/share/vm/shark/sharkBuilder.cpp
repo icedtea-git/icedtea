@@ -97,12 +97,12 @@ void SharkBuilder::init_external_functions()
     module()->getOrInsertFunction("llvm.memory.barrier", type));
 }
 
-Function *SharkBuilder::CreateFunction()
+Function *SharkBuilder::CreateFunction(const char *name)
 {
   Function *function = Function::Create(
       SharkType::entry_point_type(),
       GlobalVariable::InternalLinkage,
-      "func");
+      name);
   module()->getFunctionList().push_back(function);
   return function;
 }
@@ -180,13 +180,12 @@ CallInst *SharkBuilder::CreateMemoryBarrier(BarrierFlags flags)
 
 void SharkBuilder::MyJITMemoryManager::endFunctionBody
   (const llvm::Function *F, unsigned char *FunctionStart,
-   unsigned char *FunctionEnd) 
+   unsigned char *FunctionEnd)
 {
   mm->endFunctionBody(F, FunctionStart, FunctionEnd);
-#ifndef PRODUCT
+
   SharkEntry *e = sharkEntry[F];
   if (e)
     e->setBounds(FunctionStart, FunctionEnd);
-#endif // !PRODUCT
 }
 

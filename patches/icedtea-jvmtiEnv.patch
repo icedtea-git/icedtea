@@ -1,0 +1,12 @@
+--- openjdk/hotspot/src/share/vm/prims/jvmtiEnv.cpp.old	2009-02-26 17:18:35.000000000 +0000
++++ openjdk/hotspot/src/share/vm/prims/jvmtiEnv.cpp	2009-02-26 17:16:59.000000000 +0000
+@@ -2702,6 +2702,9 @@
+   (*entry_count_ptr) = num_entries;
+   (*table_ptr) = jvmti_table;
+ 
++  if (num_entries == 0)
++    return JVMTI_ERROR_ABSENT_INFORMATION;
++
+   return JVMTI_ERROR_NONE;
+ } /* end GetLineNumberTable */
+ 
