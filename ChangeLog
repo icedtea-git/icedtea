@@ -71,6 +71,24 @@
 
 2009-02-26  Gary Benson  <gbenson@redhat.com>
 
+	PR icedtea/202:
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp
+	(SharkRuntime::_register_finalizer): New variable.
+	(SharkRuntime::register_finalizer): New method.
+	(SharkRuntime::register_finalizer_C): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::_register_finalizer): New variable.
+	(SharkRuntime::initialize): Initialize the above.
+	(SharkRuntime::register_finalizer_C): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::call_register_finalizer): New method.
+	(SharkBlock::do_return): Call the above when compiling
+	java.lang.Object.<init>.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::call_register_finalizer): New method.
+
+2009-02-26  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Updated copyright.
 	* ports/hotspot/src/share/vm/shark/sharkState.hpp: Likewise.
 	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp: Likewise.
