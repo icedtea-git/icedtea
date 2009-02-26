@@ -69,6 +69,39 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-26  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::do_field_access): Add optional field parameter.
+	(SharkBlock::get_call_type): New method.
+	(SharkBlock::get_callee): Likewise.
+	(SharkBlock::maybe_inline_call): Likewise.
+	(SharkBlock::maybe_inline_accessor): Likewise.
+	(SharkBlock::do_call): Separate call type detection from
+	callee fetch code, and attempt to inline inbetween.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::do_field_access): Add optional field parameter.
+	(SharkBlock::CallType): New enum.
+	(SharkBlock::get_call_type): New method.
+	(SharkBlock::get_callee): Likewise.
+	(SharkBlock::maybe_inline_call): Likewise.
+	(SharkBlock::maybe_inline_accessor): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkTrackingState::enter_inlined_section): New method.
+	(SharkTrackingState::leave_inlined_section): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkTrackingState::_has_stack_frame): New field.
+	(SharkTrackingState::has_stack_frame): New method.
+	(SharkTrackingState::set_has_stack_frame): Likewise.
+	(SharkTrackingState::enter_inlined_section): Likewise.
+	(SharkTrackingState::leave_inlined_section): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp
+	(SharkTrackingState::decache_for_Java_call): Check we have a frame.
+	(SharkTrackingState::cache_after_Java_call): Likewise.
+	(SharkTrackingState::decache_for_VM_call): Likewise.
+	(SharkTrackingState::cache_after_VM_call): Likewise.
+	(SharkTrackingState::decache_for_trap): Likewise.
+
 2009-02-25  Deepak Bhole <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Implement Show/Hide from IJVMConsole, remove
@@ -99,7 +132,6 @@
 	(SharkBlock::get_interface_callee): Removed cache parameter.
 	(SharkBlock::get_callee): Removed.
 	(SharkBlock::do_call): Perform caller selection inline.
-
 	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
 	(SharkBlock::get_basic_callee): Removed.
 	(SharkBlock::get_direct_callee): New method.

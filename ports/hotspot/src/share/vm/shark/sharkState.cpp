@@ -262,3 +262,17 @@ void SharkTrackingState::merge(SharkState* other,
     set_stack(i, SharkValue::create_generic(this_type, phi));
   }
 }
+
+#ifndef PRODUCT
+void SharkTrackingState::enter_inlined_section()
+{
+  assert(has_stack_frame(), "should do");
+  set_has_stack_frame(false);
+}
+
+void SharkTrackingState::leave_inlined_section()
+{
+  assert(!has_stack_frame(), "shouldn't do");
+  set_has_stack_frame(true);
+}
+#endif // PRODUCT

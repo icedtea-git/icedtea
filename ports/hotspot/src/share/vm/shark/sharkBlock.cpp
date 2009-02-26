@@ -1485,15 +1485,17 @@ void SharkBlock::do_div_or_rem(bool is_long, bool is_rem)
     push(SharkValue::create_jint(result));
 }
 
-void SharkBlock::do_field_access(bool is_get, bool is_field)
+void SharkBlock::do_field_access(bool is_get, bool is_field, ciField* field)
 {
-  bool will_link;
-  ciField *field = iter()->get_field(will_link);
-  assert(will_link, "typeflow responsibility");
+  if (field == NULL) {
+    bool will_link;
+    field = iter()->get_field(will_link);
+    assert(will_link, "typeflow responsibility");
 
-  // Check the bytecode matches the field
-  if (is_field == field->is_static())
-    Unimplemented();
+    // Check the bytecode matches the field
+    if (is_field == field->is_static())
+      Unimplemented();
+  }
 
   // Pop the value off the stack where necessary
   SharkValue *value = NULL;
@@ -1724,6 +1726,36 @@ void SharkBlock::do_switch()
       dest_block->add_incoming(current_state());      
     }
   }
+}
+
+// Figure out what type of call this is.
+//  - Direct calls are where the callee is fixed.
+//  - Interface and Virtual calls require lookup at runtime.
+// NB some invokevirtuals can be resolved to direct calls.
+SharkBlock::CallType SharkBlock::get_call_type(ciMethod* method)
+{
+  if (bc() == Bytecodes::_invokeinterface)
+    return CALL_INTERFACE;
+  else if (bc() == Bytecodes::_invokevirtual && !method->is_final_method())
+    return CALL_VIRTUAL;
+  else
+    return CALL_DIRECT;
+}
+
+Value *SharkBlock::get_callee(CallType    call_type,
+                              ciMethod*   method,
+                              SharkValue* receiver)
+{
+  switch (call_type) {
+  case CALL_DIRECT:
+    return get_direct_callee(method);
+  case CALL_VIRTUAL:
+    return get_virtual_callee(receiver, method);
+  case CALL_INTERFACE:
+    return get_interface_callee(receiver);
+  default:
+    ShouldNotReachHere();
+  } 
 }
 
 // Direct calls can be made when the callee is fixed.
@@ -1995,33 +2027,174 @@ Value* SharkBlock::get_interface_callee(SharkValue *receiver)
   return callee;
 } 
 
+bool SharkBlock::maybe_inline_call(ciMethod *method)
+{
+  // Quick checks to allow us to bail out fast.  We can't inline
+  // native methods, there's no point inlining abstract ones, and
+  // monitors aren't allowed because the inlined section has no
+  // frame to put them in.
+  if (method->is_native() ||
+      method->is_abstract() ||
+      method->is_synchronized() ||
+      method->has_monitor_bytecodes())
+    return false;
+
+  // We need to scan the bytecode to do any more, so we bail out
+  // now if the method is too big
+  if (method->code_size() > 5)
+    return false;
+  
+  // Inspect the method's code to see if we can inline it.  We
+  // don't use method->is_accessor() because that only spots
+  // some getfields, whereas we can inline *all* getfields, all
+  // putfields, and some getstatics too.
+  address code = method->code();
+  switch (method->code_size()) {
+  case 4:
+    // getstatic and putstatic will try to look up the receiver
+    // from the holder's constant pool, which we can't do.  Some
+    // getstatics, however, resolve to constants, and those we
+    // can do.  So we try...
+    if (code[0] == Bytecodes::_getstatic)
+      return maybe_inline_accessor(method, false);
+    break;
+
+  case 5:
+    if (code[0] == Bytecodes::_aload_0 &&
+        (code[1] == Bytecodes::_getfield ||
+         code[1] == Bytecodes::_putfield))
+      return maybe_inline_accessor(method, true);
+    break;
+  }
+  return false;
+}
+
+bool SharkBlock::maybe_inline_accessor(ciMethod *method, bool is_field)
+{
+  if (method->arg_size() != (is_field ? 1 : 0)) {
+    NOT_PRODUCT(warning("wacky accessor in %s", function()->name()));
+    return false;
+  }
+
+  ciBytecodeStream iter(method);
+  Bytecodes::Code bc;
+
+  if (is_field) {
+    bc = iter.next();
+    assert(bc == Bytecodes::_aload_0, "eh?");
+  }
+
+  bool is_get;
+  bc = iter.next();
+  if (is_field) {
+    assert(bc == Bytecodes::_getfield || bc == Bytecodes::_putfield, "eh?");
+    is_get = bc == Bytecodes::_getfield;
+  }
+  else {
+    assert(bc == Bytecodes::_getstatic, "eh?");
+    is_get = true;
+  }
+
+  bool will_link;
+  ciField *field = iter.get_field(will_link);
+  if (!will_link)
+    return false;
+
+  // We can only inline getstatic if the field resolves to a
+  // non-oop constant.
+  if (!is_field) {
+    if (!field->is_constant())
+      return false;
+
+    if (SharkValue::from_ciConstant(field->constant_value()) == NULL)
+      return false;
+  }
+
+  // We mustn't inline if the resolved field is the wrong type,
+  // because the thrown exception would appear to come from the
+  // wrong method.
+  if (is_field == field->is_static())
+    return false;
+  
+  bc = iter.next();
+  if (is_get) {
+    switch (bc) {
+    case Bytecodes::_ireturn:
+    case Bytecodes::_lreturn:
+    case Bytecodes::_freturn:
+    case Bytecodes::_dreturn:
+    case Bytecodes::_areturn:
+      break;
+
+    default:
+      NOT_PRODUCT(warning("wacky accessor in %s", function()->name()));
+      return false;
+    }
+  }
+  else {
+    if (bc != Bytecodes::_return) {
+      NOT_PRODUCT(warning("wacky accessor in %s", function()->name()));
+      return false;
+    }
+  }
+
+  bc = iter.next();
+  assert(bc == ciBytecodeStream::EOBC(), "eh?");
+
+  // For field accesses we need to null check the receiver before
+  // entering the inlined section.  For the majority of accessors
+  // this has already been done (in do_call) but if the accessor
+  // was invoked by invokestatic (eg synthetic accessors) then it
+  // won't have been checked and do_field_access will try to do
+  // it and fail.  So we check here, which is moderately wrong in
+  // that the NullPointerException will have been thrown by the
+  // caller rather than the callee.
+  if (is_field)
+    check_null(xstack(0));
+  
+  current_state()->enter_inlined_section();
+  do_field_access(is_get, is_field, field);
+  current_state()->leave_inlined_section();
+  return true;
+}
+
 void SharkBlock::do_call()
 {
   bool will_link;
   ciMethod *method = iter()->get_method(will_link);
   assert(will_link, "typeflow responsibility");
 
-  // Find the receiver in the stack
+  // Figure out what type of call this is
+  CallType call_type = get_call_type(method);
+
+  // Find the receiver in the stack.  This has to happen
+  // before we try to inline, because nothing in the inlined
+  // code can decache (which check_null needs to do for the
+  // VM call to throw the NullPointerException).  Once we've
+  // checked, the repeated null check elimination stuff does
+  // the work for us.
   SharkValue *receiver = NULL;
   if (bc() != Bytecodes::_invokestatic) {
     receiver = xstack(method->arg_size() - 1);
     check_null(receiver);
   }
 
-  // Find the method we are calling
-  Value *callee;
-  if (bc() == Bytecodes::_invokeinterface)
-    callee = get_interface_callee(receiver);
-  else if (bc() == Bytecodes::_invokevirtual && !method->is_final_method())
-    callee = get_virtual_callee(receiver, method);
-  else
-    callee = get_direct_callee(method);
+  // Try to inline the call
+  if (call_type == CALL_DIRECT) {
+    if (maybe_inline_call(method))
+      return;
+  }
 
+  // Find the method we are calling
+  Value *callee = get_callee(call_type, method, receiver);
+
+  // Load the SharkEntry from the callee
   Value *base_pc = builder()->CreateValueOfStructEntry(
     callee, methodOopDesc::from_interpreted_offset(),
     SharkType::intptr_type(),
     "base_pc");
 
+  // Load the entry point from the SharkEntry
   Value *entry_point = builder()->CreateLoad(
     builder()->CreateIntToPtr(
       builder()->CreateAdd(

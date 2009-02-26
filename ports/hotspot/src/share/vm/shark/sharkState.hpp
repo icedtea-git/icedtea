@@ -153,7 +153,11 @@ class SharkPHIState : public SharkState {
 class SharkTrackingState : public SharkState {
  public:
   SharkTrackingState(const SharkState* state)
-    : SharkState(state) { set_method(state->method()); }
+    : SharkState(state)
+  {
+    set_method(state->method());
+    NOT_PRODUCT(set_has_stack_frame(true));
+  }
 
   // Cache and decache
  public:
@@ -172,4 +176,24 @@ class SharkTrackingState : public SharkState {
   void merge(SharkState*       other,
              llvm::BasicBlock* other_block,
              llvm::BasicBlock* this_block);
+
+  // Inlining
+#ifndef PRODUCT
+ private:
+  bool _has_stack_frame;
+
+ protected:
+  bool has_stack_frame() const
+  {
+    return _has_stack_frame;
+  }
+  void set_has_stack_frame(bool has_stack_frame)
+  {
+    _has_stack_frame = has_stack_frame;
+  }
+#endif // PRODUCT
+
+ public:
+  void enter_inlined_section() PRODUCT_RETURN;
+  void leave_inlined_section() PRODUCT_RETURN;
 };
