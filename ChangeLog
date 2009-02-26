@@ -71,6 +71,12 @@
 
 2009-02-26  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Updated copyright.
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp: Likewise.
+
+2009-02-26  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
 	(SharkBlock::do_field_access): Add optional field parameter.
 	(SharkBlock::get_call_type): New method.
