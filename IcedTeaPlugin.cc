@@ -2832,6 +2832,7 @@ IcedTeaPluginFactory::OnInputStreamReady (nsIAsyncInputStream* aStream)
 }
 
 #include <nsServiceManagerUtils.h>
+#include <nsINetUtil.h>
 
 void
 IcedTeaPluginFactory::HandleMessage (nsCString const& message)
@@ -2915,7 +2916,17 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           if (instance != 0)
             {
               space = rest.FindChar (' ');
-              nsDependentCSubstring url = Substring (rest, 0, space);
+              nsDependentCSubstring escapedUrl = Substring (rest, 0, space);
+
+              nsresult rv;
+              nsCOMPtr<nsINetUtil> net_util = do_GetService(NS_NETUTIL_CONTRACTID, &rv);
+
+              if (!net_util)
+                printf("Error instantiating NetUtil service.\n");
+
+              nsDependentCSubstring url;
+              net_util->UnescapeString(escapedUrl, 0, url);
+
               nsDependentCSubstring target = Substring (rest, space + 1);
               nsCOMPtr<nsPIPluginInstancePeer> ownerGetter =
                 do_QueryInterface (instance->peer);

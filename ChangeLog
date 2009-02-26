@@ -69,6 +69,15 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-26  Deepak Bhole <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Decode url via nsINetUtil::UnescapeString()
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Encode URL before
+	sending it to mozilla. Increment timeout for initialization message. Fix
+	parser to handle "java:" in code attribute.
+	* plugin/icedtea/sun/applet/PluginMain.java: Tee outputstream only if not
+	in debug mode.
+
 2009-02-26  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-xml-encodinginfo.patch: New file. Fix possible
