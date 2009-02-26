@@ -84,6 +84,7 @@ The following patches are currently applied before the building of OpenJDK or Op
 * icedtea-awt-window-size.patch: Fix X11 window size calculation (S6721088).
 * icedtea-java2d-dasher.patch: Fix interpretation of dash array elements in BasicStroke (S6793344).
 * icedtea-cc-interp-backedge.patch: Remove some duplicated code in DO_BACKEDGE_CHECKS.
+* icedtea-xml-encodinginfo.patch: Fix possible StackOverflowError in EncodingInfo (PR295).
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 

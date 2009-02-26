@@ -661,7 +661,8 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-awt-window-size.patch \
 	patches/icedtea-java2d-dasher.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-format.patch \
-	patches/icedtea-cc-interp-backedge.patch
+	patches/icedtea-cc-interp-backedge.patch \
+	patches/icedtea-xml-encodinginfo.patch
 
 stamps/extract.stamp: stamps/download.stamp
 if OPENJDK_SRC_DIR_FOUND
