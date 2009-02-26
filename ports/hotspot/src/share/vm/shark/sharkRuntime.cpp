@@ -35,6 +35,7 @@ Constant* SharkRuntime::_new_instance;
 Constant* SharkRuntime::_newarray;
 Constant* SharkRuntime::_anewarray;
 Constant* SharkRuntime::_multianewarray;
+Constant* SharkRuntime::_register_finalizer;
 Constant* SharkRuntime::_resolve_get_put;
 Constant* SharkRuntime::_resolve_invoke;
 Constant* SharkRuntime::_resolve_klass;
@@ -112,6 +113,14 @@ void SharkRuntime::initialize(SharkBuilder* builder)
     (intptr_t) multianewarray_C,
     FunctionType::get(Type::VoidTy, params, false),
     "SharkRuntime__multianewarray");
+
+  params.clear();
+  params.push_back(SharkType::thread_type());
+  params.push_back(SharkType::oop_type());
+  _register_finalizer = builder->make_function(
+    (intptr_t) register_finalizer_C,
+    FunctionType::get(Type::VoidTy, params, false),
+    "SharkRuntime__register_finalizer");
 
   params.clear();
   params.push_back(SharkType::thread_type());
@@ -339,6 +348,15 @@ JRT_ENTRY(void, SharkRuntime::multianewarray_C(JavaThread* thread,
   klassOop klass = method(thread)->constants()->klass_at(index, CHECK);
   oop obj = arrayKlass::cast(klass)->multi_allocate(ndims, dims, CHECK);
   thread->set_vm_result(obj);
+}
+JRT_END
+
+JRT_ENTRY(void, SharkRuntime::register_finalizer_C(JavaThread* thread,
+                                                   oop         object))
+{
+  assert(object->is_oop(), "should be");
+  assert(object->klass()->klass_part()->has_finalizer(), "should have");
+  instanceKlass::register_finalizer(instanceOop(object), CHECK);
 }
 JRT_END
 

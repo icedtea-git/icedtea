@@ -1160,6 +1160,49 @@ void SharkBlock::add_safepoint()
   current_state()->merge(orig_state, orig_block, safepointed_block);
 }
 
+void SharkBlock::call_register_finalizer(Value *receiver)
+{
+  BasicBlock *orig_block = builder()->GetInsertBlock();
+  SharkState *orig_state = current_state()->copy();
+
+  BasicBlock *do_call = function()->CreateBlock("has_finalizer");
+  BasicBlock *done    = function()->CreateBlock("done");
+
+  Value *klass = builder()->CreateValueOfStructEntry(
+    receiver,
+    in_ByteSize(oopDesc::klass_offset_in_bytes()),
+    SharkType::jobject_type(),
+    "klass");
+  
+  Value *klass_part = builder()->CreateAddressOfStructEntry(
+    klass,
+    in_ByteSize(klassOopDesc::klass_part_offset_in_bytes()),
+    SharkType::klass_type(),
+    "klass_part");
+
+  Value *access_flags = builder()->CreateValueOfStructEntry(
+    klass_part,
+    in_ByteSize(Klass::access_flags_offset_in_bytes()),
+    SharkType::jint_type(),
+    "access_flags");
+
+  builder()->CreateCondBr(
+    builder()->CreateICmpNE(
+      builder()->CreateAnd(
+        access_flags,
+        LLVMValue::jint_constant(JVM_ACC_HAS_FINALIZER)),
+      LLVMValue::intptr_constant(0)),
+    do_call, done);
+
+  builder()->SetInsertPoint(do_call);
+  call_vm(SharkRuntime::register_finalizer(), receiver);
+  BasicBlock *branch_block = builder()->GetInsertBlock();  
+  builder()->CreateBr(done);
+
+  builder()->SetInsertPoint(done);
+  current_state()->merge(orig_state, orig_block, branch_block);
+}
+
 void SharkBlock::handle_return(BasicType type, Value* exception)
 {
   assert (exception == NULL || type == T_VOID, "exception OR result, please");

@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -403,6 +403,7 @@ class SharkBlock : public ResourceObj {
 
   // Returns
  private:
+  void call_register_finalizer(llvm::Value* receiver);
   void handle_return(BasicType type, llvm::Value* exception);
   void release_locked_monitors();
 
@@ -468,7 +469,10 @@ class SharkBlock : public ResourceObj {
  private:
   void do_return(BasicType type)
   {
-    add_safepoint();
+    if (target()->intrinsic_id() == vmIntrinsics::_Object_init)
+      call_register_finalizer(local(0)->jobject_value());
+    else
+      add_safepoint();
     handle_return(type, NULL);
   }
   void do_athrow()

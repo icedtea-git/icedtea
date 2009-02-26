@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -36,6 +36,7 @@ class SharkRuntime : public AllStatic {
   static llvm::Constant* _newarray;
   static llvm::Constant* _anewarray;
   static llvm::Constant* _multianewarray;
+  static llvm::Constant* _register_finalizer;
   static llvm::Constant* _resolve_get_put;
   static llvm::Constant* _resolve_invoke;
   static llvm::Constant* _resolve_klass;
@@ -72,6 +73,10 @@ class SharkRuntime : public AllStatic {
   static llvm::Constant* multianewarray()
   {
     return _multianewarray;
+  }
+  static llvm::Constant* register_finalizer()
+  {
+    return _register_finalizer;
   }
   static llvm::Constant* resolve_get_put()
   {
@@ -117,6 +122,8 @@ class SharkRuntime : public AllStatic {
                                int         index,
                                int         ndims,
                                int*        dims);
+
+  static void register_finalizer_C(JavaThread* thread, oop object);
 
   static void resolve_get_put_C(JavaThread*             thread,
                                 ConstantPoolCacheEntry* entry,
