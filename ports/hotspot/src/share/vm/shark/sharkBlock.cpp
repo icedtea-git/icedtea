@@ -1191,7 +1191,7 @@ void SharkBlock::call_register_finalizer(Value *receiver)
       builder()->CreateAnd(
         access_flags,
         LLVMValue::jint_constant(JVM_ACC_HAS_FINALIZER)),
-      LLVMValue::intptr_constant(0)),
+      LLVMValue::jint_constant(0)),
     do_call, done);
 
   builder()->SetInsertPoint(do_call);
