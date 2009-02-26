@@ -46,8 +46,6 @@ class SharkEntry : public ZeroEntry {
  public:
   void print_statistics(const char* name) const PRODUCT_RETURN;
 
-#ifndef PRODUCT
- private:
   address code_start() const
   {
     return start;
@@ -66,6 +64,4 @@ public:
     start = (address)FunctionStart;
     limit = (address)FunctionEnd;
   }
-
-#endif // !PRODUCT
 };

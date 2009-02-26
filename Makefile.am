@@ -1858,6 +1858,7 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch \
 	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-java2d-dasher.patch \
+	patches/icedtea-jvmtiEnv.patch \
 	$(DISTRIBUTION_PATCHES)
 
 if WITH_RHINO

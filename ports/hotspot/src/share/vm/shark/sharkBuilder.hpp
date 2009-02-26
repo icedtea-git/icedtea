@@ -109,7 +109,7 @@ class SharkBuilder : public llvm::IRBuilder<> {
 
   // Function creation
  public:
-  llvm::Function *CreateFunction();
+  llvm::Function *CreateFunction(const char *name = "func");
 
   // Helpers for accessing structures and arrays
  public:

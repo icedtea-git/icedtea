@@ -37,7 +37,7 @@ void SharkFunction::initialize()
   masm()->advance(sizeof(SharkEntry));
 
   // Create the function
-  _function = builder()->CreateFunction();
+  _function = builder()->CreateFunction(name());
   entry->set_llvm_function(function());
 #ifndef PRODUCT
   // FIXME: there should be a mutex when updating sharkEntry in case
@@ -142,7 +142,7 @@ void SharkFunction::initialize()
 	// target-specific.
 	Args.push_back("-debug-only=" "x86-emitter");
       else
-	Args.push_back("-debug-only=");
+	Args.push_back("-debug-only=" "none");
       Args.push_back(0);  // Null terminator.
       cl::ParseCommandLineOptions(Args.size()-1, (char**)&Args[0]);
 #endif
@@ -150,6 +150,13 @@ void SharkFunction::initialize()
 
   // Compile to native code
   void *code = builder()->execution_engine()->getPointerToFunction(function());
+
+  // Register generated code for profiling, etc
+  if (JvmtiExport::should_post_dynamic_code_generated()) {
+    JvmtiExport::post_dynamic_code_generated
+      (name(), entry->code_start(), entry->code_limit());
+  }
+
   entry->set_entry_point((ZeroEntry::method_entry_t) code);
   if (SharkTraceInstalls)
     entry->print_statistics(name());
