@@ -71,6 +71,11 @@
 
 2009-02-26  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::call_register_finalizer): Fix mismatch.
+
+2009-02-26  Gary Benson  <gbenson@redhat.com>
+
 	PR icedtea/202:
 	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp
 	(SharkRuntime::_register_finalizer): New variable.
