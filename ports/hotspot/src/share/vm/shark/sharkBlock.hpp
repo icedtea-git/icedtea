@@ -457,7 +457,7 @@ class SharkBlock : public ResourceObj {
   {
     do_field_access(false, true);
   }
-  void do_field_access(bool is_get, bool is_field);
+  void do_field_access(bool is_get, bool is_field, ciField* field = NULL);
 
   // lcmp and [fd]cmp[lg]
  private:
@@ -493,11 +493,24 @@ class SharkBlock : public ResourceObj {
 
   // invoke*
  private:
+  enum CallType {
+    CALL_DIRECT,
+    CALL_VIRTUAL,
+    CALL_INTERFACE
+  };
+  CallType get_call_type(ciMethod* method);
+  llvm::Value* get_callee(CallType    call_type,
+                          ciMethod*   method,
+                          SharkValue* receiver);
+
   llvm::Value* get_direct_callee(ciMethod* method);
   llvm::Value* get_virtual_callee(SharkValue* receiver, ciMethod* method);
 
   llvm::Value* get_virtual_callee(llvm::Value* cache, SharkValue* receiver);
   llvm::Value* get_interface_callee(SharkValue* receiver);
+
+  bool maybe_inline_call(ciMethod* method);
+  bool maybe_inline_accessor(ciMethod* method, bool is_field);
 
   void do_call();
 

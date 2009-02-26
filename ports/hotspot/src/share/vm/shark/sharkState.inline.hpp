@@ -50,12 +50,14 @@ inline int SharkState::stack_depth_at_entry() const
 
 inline void SharkTrackingState::decache_for_Java_call(ciMethod* callee)
 {
+  assert(has_stack_frame(), "should do");
   SharkJavaCallDecacher(function(), block()->bci(), callee).scan(this);
   pop(callee->arg_size());
 }
 
 inline void SharkTrackingState::cache_after_Java_call(ciMethod* callee)
 {
+  assert(has_stack_frame(), "should do");
   if (callee->return_type()->size()) {
     ciType *type;
     switch (callee->return_type()->basic_type()) {
@@ -79,15 +81,18 @@ inline void SharkTrackingState::cache_after_Java_call(ciMethod* callee)
 
 inline void SharkTrackingState::decache_for_VM_call()
 {
+  assert(has_stack_frame(), "should do");
   SharkVMCallDecacher(function(), block()->bci()).scan(this);
 }
 
 inline void SharkTrackingState::cache_after_VM_call()
 {
+  assert(has_stack_frame(), "should do");
   SharkVMCallCacher(function(), block()->bci()).scan(this);
 }
 
 inline void SharkTrackingState::decache_for_trap()
 {
+  assert(has_stack_frame(), "should do");
   SharkTrapDecacher(function(), block()->bci()).scan(this);
 }
