@@ -99,6 +99,8 @@ import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
+import com.sun.jndi.toolkit.url.UrlUtil;
+
 import net.sourceforge.jnlp.NetxPanel;
 import net.sourceforge.jnlp.runtime.JNLPClassLoader;
 import sun.awt.AppContext;
@@ -309,7 +311,7 @@ import sun.misc.Ref;
  	Applet a;
     while ((a = panel.getApplet()) == null && panel.getAppletHandlerThread().isAlive()) {
    	 try {
-   		 Thread.sleep(100);
+   		 Thread.sleep(2000);
    		 PluginDebug.debug("Waiting for applet to initialize... ");
    	 } catch (InterruptedException ie) {
    		 ie.printStackTrace();
@@ -493,7 +495,7 @@ import sun.misc.Ref;
              // (happens in a separate thread)
              while ((o = panel.getApplet()) == null && panel.getAppletHandlerThread().isAlive()) {
             	 try {
-            		 Thread.sleep(100);
+            		 Thread.sleep(2000);
             		 PluginDebug.debug("Waiting for applet to initialize...");
             	 } catch (InterruptedException ie) {
             		 ie.printStackTrace();
@@ -765,7 +767,7 @@ import sun.misc.Ref;
      public void showDocument(URL url, String target) {
  	try {
              // FIXME: change to postCallRequest
- 	    write("url " + url + " " + target);
+ 	    write("url " + UrlUtil.encode(url.toString(), "UTF-8") + " " + target);
  	} catch (IOException exception) {
  	    // Deliberately ignore IOException.  showDocument may be
  	    // called from threads other than the main thread after
@@ -1606,12 +1608,15 @@ import sun.misc.Ref;
     					 isAppletTag = true;
     					 atts = scanTag(in);
 
-    					 // If there is a classid present, transform it to code tag
-    					 if (atts.get("code") == null && atts.get("classid") != null && 
-    							 ((String) atts.get("classid")).startsWith("java:")) {
-    						 //skip "java:"
-    						 atts.put("code", ((String) atts.get("classid")).substring(5));
-    					 }
+                         // If there is a classid and no code tag present, transform it to code tag
+                         if (atts.get("code") == null && atts.get("classid") != null) {
+                             atts.put("code", atts.get("classid"));
+                         }
+                         
+                         // remove java: from code tag
+                         if (atts.get("code") != null && ((String) atts.get("code")).startsWith("java:")) {
+                             atts.put("code", ((String) atts.get("code")).substring(5));
+                         }
 
     					 if (atts.get("code") == null && atts.get("object") == null) {
     						 statusMsgStream.println(appletRequiresCodeWarning);
@@ -1640,12 +1645,15 @@ import sun.misc.Ref;
     					 isObjectTag = true;
     					 atts = scanTag(in);
 
-    					 // If there is a classid present, transform it to code tag
-    					 if (atts.get("code") == null && atts.get("classid") != null && 
-    							 ((String) atts.get("classid")).startsWith("java:")) {
-    						 //skip "java:"
-    						 atts.put("code", ((String) atts.get("classid")).substring(5));
-    					 }
+    					 // If there is a classid and no code tag present, transform it to code tag
+                         if (atts.get("code") == null && atts.get("classid") != null) {
+                             atts.put("code", atts.get("classid"));
+                         }
+                         
+                         // remove java: from code tag
+                         if (atts.get("code") != null && ((String) atts.get("code")).startsWith("java:")) {
+                             atts.put("code", ((String) atts.get("code")).substring(5));
+                         }
 
                          // java_* aliases override older names:
                          // http://java.sun.com/j2se/1.4.2/docs/guide/plugin/developer_guide/using_tags.html#in-ie
@@ -1698,12 +1706,15 @@ import sun.misc.Ref;
     					 isEmbedTag = true;
     					 atts = scanTag(in);
 
-    					 // If there is a classid present, transform it to code tag
-    					 if (atts.get("code") == null && atts.get("classid") != null && 
-    							 ((String) atts.get("classid")).startsWith("java:")) {
-    						 //skip "java:"
-    						 atts.put("code", ((String) atts.get("classid")).substring(5));
-    					 }
+                         // If there is a classid and no code tag present, transform it to code tag
+                         if (atts.get("code") == null && atts.get("classid") != null) {
+                             atts.put("code", atts.get("classid"));
+                         }
+                         
+                         // remove java: from code tag
+                         if (atts.get("code") != null && ((String) atts.get("code")).startsWith("java:")) {
+                             atts.put("code", ((String) atts.get("code")).substring(5));
+                         }
     					 
     					 // java_* aliases override older names:
     					 // http://java.sun.com/j2se/1.4.2/docs/guide/plugin/developer_guide/using_tags.html#in-nav
