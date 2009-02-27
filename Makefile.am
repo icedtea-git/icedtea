@@ -3026,7 +3026,6 @@ clean-visualvm:
 
 stamps/nbplatform.stamp: $(BOOTSTRAP_DIRECTORY_STAMP) stamps/extract-visualvm.stamp
 if WITH_VISUALVM
-	mkdir netbeans ; \
 	cd netbeans ; \
         rm nbbuild/external/binaries-list ; \
         mkdir -p lib.profiler/release/lib/deployed/jdk15/linux ; \
