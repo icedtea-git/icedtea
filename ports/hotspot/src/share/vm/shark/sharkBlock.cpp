@@ -2197,12 +2197,12 @@ bool SharkBlock::maybe_inline_accessor(ciMethod *method, bool is_field)
   // entering the inlined section.  For the majority of accessors
   // this has already been done (in do_call) but if the accessor
   // was invoked by invokestatic (eg synthetic accessors) then it
-  // won't have been checked and do_field_access will try to do
-  // it and fail.  So we check here, which is moderately wrong in
-  // that the NullPointerException will have been thrown by the
-  // caller rather than the callee.
-  if (is_field)
-    check_null(xstack(0));
+  // may not have been checked and do_field_access will try to do
+  // it and fail.
+  if (is_field) {
+    if (!xstack(0)->zero_checked())
+      return false;
+  }
   
   current_state()->enter_inlined_section();
   do_field_access(is_get, is_field, field);

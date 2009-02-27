@@ -71,6 +71,11 @@
 
 2009-02-27  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::maybe_inline_accessor): Remove a hack
+
+2009-02-27  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkState.cpp
 	(SharkEntryState::initialize): Mark the receiver as
 	zero-checked for non-static methods.
