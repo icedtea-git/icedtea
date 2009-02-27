@@ -69,6 +69,11 @@
 	* patches/hotspot/original/icedtea-includedb.patch,
 	* patches/icedtea-libraries.patch: Recreated.
 
+2009-02-27  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::maybe_inline_call): Inline empty methods.
+
 2009-02-26  Deepak Bhole <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Decode url via nsINetUtil::UnescapeString()

@@ -2082,6 +2082,15 @@ bool SharkBlock::maybe_inline_call(ciMethod *method)
       method->has_monitor_bytecodes())
     return false;
 
+  // Inlining empty methods is trivial
+  if (method->is_empty_method()) {
+    int desired_stack_depth = xstack_depth() - method->arg_size();
+    while (xstack_depth() > desired_stack_depth)
+      pop();
+
+    return true;
+  } 
+  
   // We need to scan the bytecode to do any more, so we bail out
   // now if the method is too big
   if (method->code_size() > 5)
