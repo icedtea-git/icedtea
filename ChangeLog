@@ -1,3 +1,19 @@
+2009-02-24  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/hotspot/original/icedtea-6791168.patch,
+	* patches/hotspot/original/icedtea-format.patch,
+	* patches/icedtea-awt-window-size.patch,
+	* patches/icedtea-f2i-overflow.patch,
+	* patches/icedtea-format-warnings.patch,
+	* patches/icedtea-fortify-source.patch,
+	* patches/icedtea-lib64.patch,
+	* patches/icedtea-no-bcopy.patch:
+	Removed, applied upstream.
+	* HACKING: Updated.
+	* Makefile.am: Bump to b48.
+	* patches/hotspot/original/icedtea-includedb.patch,
+	* patches/icedtea-libraries.patch: Recreated.
+
 2009-02-20  Andrew John Hughes  <ahughes@redhat.com>
 
  	* overlays/nio2/openjdk/jdk/src/share/classes/java/io/File.java,

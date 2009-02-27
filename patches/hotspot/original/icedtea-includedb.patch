@@ -1,51 +1,7 @@
---- openjdk/hotspot/src/share/vm/includeDB_compiler2.orig	2009-01-13 10:10:44.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/includeDB_compiler2	2009-01-13 10:11:17.000000000 +0000
-@@ -140,6 +140,7 @@
- c2_globals_<os_family>.hpp              macros.hpp
- 
- c2_init_<arch>.cpp                      compile.hpp
-+c2_init_<arch>.cpp                      node.hpp
- 
- c2compiler.cpp                          ad_<arch_model>.hpp
- c2compiler.cpp                          c2compiler.hpp
-@@ -839,6 +840,7 @@
- phase.cpp                               compile.hpp
- phase.cpp                               compileBroker.hpp
- phase.cpp                               nmethod.hpp
-+phase.cpp                               node.hpp
- phase.cpp                               phase.hpp
- 
- phase.hpp                               port.hpp
---- openjdk/hotspot/src/share/vm/gc_implementation/includeDB_gc_g1.orig	2009-01-13 10:10:44.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/includeDB_gc_g1	2009-01-13 10:11:17.000000000 +0000
-@@ -34,6 +34,7 @@
- collectionSetChooser.cpp		g1CollectedHeap.hpp
- collectionSetChooser.cpp		g1CollectorPolicy.hpp
- collectionSetChooser.cpp		collectionSetChooser.hpp
-+collectionSetChooser.cpp		space.inline.hpp
- 
- collectionSetChooser.hpp		heapRegion.hpp
- collectionSetChooser.hpp                growableArray.hpp
-@@ -44,6 +45,7 @@
- concurrentG1Refine.cpp			copy.hpp
- concurrentG1Refine.cpp			g1CollectedHeap.hpp
- concurrentG1Refine.cpp			g1RemSet.hpp
-+concurrentG1Refine.cpp			space.inline.hpp
- 
- concurrentG1Refine.hpp			globalDefinitions.hpp
- 
-@@ -264,7 +266,7 @@
- heapRegion.cpp                          iterator.hpp
- heapRegion.cpp                          oop.inline.hpp
- 
--heapRegion.hpp                          space.hpp
-+heapRegion.hpp                          space.inline.hpp
- heapRegion.hpp                          spaceDecorator.hpp
- heapRegion.hpp                          g1BlockOffsetTable.inline.hpp
- heapRegion.hpp                          watermark.hpp
---- openjdk/hotspot/src/share/vm/gc_implementation/includeDB_gc_parallelScavenge.orig	2009-01-13 10:10:44.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/includeDB_gc_parallelScavenge	2009-01-13 10:11:17.000000000 +0000
-@@ -306,6 +306,8 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/includeDB_gc_parallelScavenge openjdk/hotspot/src/share/vm/gc_implementation/includeDB_gc_parallelScavenge
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/includeDB_gc_parallelScavenge	2009-02-19 08:40:26.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/includeDB_gc_parallelScavenge	2009-02-23 21:09:49.000000000 +0000
+@@ -308,6 +308,8 @@
  psPermGen.cpp                           psMarkSweepDecorator.hpp
  psPermGen.cpp                           psParallelCompact.hpp
  psPermGen.cpp                           psPermGen.hpp
@@ -54,44 +10,3 @@
  
  psPermGen.hpp                           psOldGen.hpp
  
---- openjdk/hotspot/src/share/vm/gc_implementation/includeDB_gc_concurrentMarkSweep.orig	2009-01-13 10:10:44.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/includeDB_gc_concurrentMarkSweep	2009-01-13 10:11:17.000000000 +0000
-@@ -28,6 +28,7 @@
- binaryTreeDictionary.cpp                binaryTreeDictionary.hpp
- binaryTreeDictionary.cpp                globals.hpp
- binaryTreeDictionary.cpp                ostream.hpp
-+binaryTreeDictionary.cpp                space.inline.hpp
- binaryTreeDictionary.cpp                spaceDecorator.hpp
- 
- binaryTreeDictionary.hpp                freeBlockDictionary.hpp
---- openjdk/hotspot/src/share/vm/gc_implementation/includeDB_gc_parNew.orig	2009-01-13 10:10:44.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/includeDB_gc_parNew	2009-01-13 10:11:17.000000000 +0000
-@@ -29,6 +29,8 @@
- asParNewGeneration.cpp                  cmsAdaptiveSizePolicy.hpp
- asParNewGeneration.cpp                  cmsGCAdaptivePolicyCounters.hpp
- asParNewGeneration.cpp                  defNewGeneration.inline.hpp
-+asParNewGeneration.cpp                  markOop.inline.hpp
-+asParNewGeneration.cpp                  markSweep.inline.hpp
- asParNewGeneration.cpp                  oop.pcgc.inline.hpp
- asParNewGeneration.cpp                  parNewGeneration.hpp
- asParNewGeneration.cpp                  referencePolicy.hpp
-@@ -40,7 +42,7 @@
- parCardTableModRefBS.cpp                java.hpp
- parCardTableModRefBS.cpp                mutexLocker.hpp
- parCardTableModRefBS.cpp                sharedHeap.hpp
--parCardTableModRefBS.cpp                space.hpp
-+parCardTableModRefBS.cpp                space.inline.hpp
- parCardTableModRefBS.cpp                universe.hpp
- parCardTableModRefBS.cpp                virtualspace.hpp
- 
---- openjdk/hotspot/src/share/vm/includeDB_features.orig	2009-01-13 10:10:44.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/includeDB_features	2009-01-13 10:11:17.000000000 +0000
-@@ -59,6 +59,8 @@
- 
- dump_<arch_model>.cpp                   assembler_<arch>.inline.hpp
- dump_<arch_model>.cpp                   compactingPermGenGen.hpp
-+dump_<arch_model>.cpp                   generation.inline.hpp
-+dump_<arch_model>.cpp                   space.inline.hpp
- 
- forte.cpp                               collectedHeap.inline.hpp
- forte.cpp                               debugInfoRec.hpp

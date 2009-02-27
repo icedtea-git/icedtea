@@ -1,6 +1,6 @@
-OPENJDK_DATE = 05_feb_2009
-OPENJDK_MD5SUM = d5f92fec2f645d44437ab90e1dd2dbaf
-OPENJDK_VERSION = b46
+OPENJDK_DATE = 19_feb_2009
+OPENJDK_MD5SUM = b9846275d2ac5b2f414aa527eaf523ed
+OPENJDK_VERSION = b48
 
 CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
@@ -1752,7 +1752,6 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-core-build.patch \
 	patches/icedtea-linker-options.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-static-libstdc++.patch \
-	patches/icedtea-lib64.patch \
 	patches/icedtea-zero-build.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
@@ -1763,7 +1762,6 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-ptracefix.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
-	patches/icedtea-no-bcopy.patch \
 	patches/icedtea-shark-build.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-shark-build.patch \
 	patches/icedtea-toolkit.patch \
@@ -1791,12 +1789,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-stroker-finish.patch \
 	patches/icedtea-alsa-default-device.patch \
 	patches/icedtea-linker-libs-order.patch \
-	patches/icedtea-f2i-overflow.patch \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-pr261.patch \
 	patches/icedtea-doc-headers.patch \
-	patches/icedtea-format-warnings.patch \
-	patches/icedtea-fortify-source.patch \
 	$(ZERO_PATCHES_COND) \
         patches/security/icedtea-6484091.patch \
         patches/security/icedtea-6497740.patch \
@@ -1808,8 +1803,10 @@ ICEDTEA_PATCHES = \
         patches/security/icedtea-6734167.patch \
         patches/security/icedtea-6755943.patch \
         patches/security/icedtea-6766136.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-6791168.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch 
+	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch \
+	patches/icedtea-demo-swingapplet.patch \
+	patches/icedtea-java2d-dasher.patch \
+	$(DISTRIBUTION_PATCHES)
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -1844,13 +1841,6 @@ endif
 if ENABLE_NIO2
 ICEDTEA_PATCHES += patches/icedtea-nio2.patch
 endif
-
-ICEDTEA_PATCHES += \
-	$(DISTRIBUTION_PATCHES) \
-	patches/icedtea-demo-swingapplet.patch \
-	patches/icedtea-awt-window-size.patch \
-	patches/icedtea-java2d-dasher.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-format.patch
 
 stamps/extract.stamp: stamps/download.stamp
 if OPENJDK_SRC_DIR_FOUND
