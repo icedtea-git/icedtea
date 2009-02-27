@@ -1,3 +1,7 @@
+2009-02-27  Tomas Hurka  <tomas.hurka@sun.com>
+
+	* Makefile.am: Removed redundant creation of netbeans dir.
+
 2009-02-27  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
