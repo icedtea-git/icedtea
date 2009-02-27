@@ -71,6 +71,17 @@
 
 2009-02-27  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkEntryState::initialize): Mark the receiver as
+	zero-checked for non-static methods.
+
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
+	(SharkValue::jint_constant): Mark non-zero constants
+	as zero-checked.
+	(SharkValue::jlong_constant): Likewise.
+
+2009-02-27  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
 	(SharkBlock::maybe_inline_call): Inline empty methods.
 

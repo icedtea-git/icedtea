@@ -149,11 +149,17 @@ class SharkValue : public ResourceObj {
  public:
   static SharkValue* jint_constant(jint value)
   {
-    return create_jint(LLVMValue::jint_constant(value));
+    SharkValue *result = create_jint(LLVMValue::jint_constant(value));
+    if (value != 0)
+      result->set_zero_checked(true);
+    return result;
   }
   static SharkValue* jlong_constant(jlong value)
   {
-    return create_jlong(LLVMValue::jlong_constant(value));
+    SharkValue *result = create_jlong(LLVMValue::jlong_constant(value));
+    if (value != 0)
+      result->set_zero_checked(true);
+    return result;
   }
   static SharkValue* jfloat_constant(jfloat value)
   {

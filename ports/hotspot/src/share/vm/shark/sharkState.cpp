@@ -94,6 +94,12 @@ void SharkEntryState::initialize(Value* method)
     set_local(i, value);
   }
 
+  // Non-static methods have a guaranteed non-null receiver
+  if (!function()->target()->is_static()) {
+    assert(local(0)->is_jobject(), "should be");
+    local(0)->set_zero_checked(true);
+  }
+
   // Expression stack
   assert(!stack_depth_at_entry(), "entry block shouldn't have stack");
 }
