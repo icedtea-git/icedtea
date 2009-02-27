@@ -2095,6 +2095,10 @@ bool SharkBlock::maybe_inline_call(ciMethod *method)
   // now if the method is too big
   if (method->code_size() > 5)
     return false;
+
+  // If the holder isn't linked then there isn't a lot we can do
+  if (!method->holder()->is_linked())
+    return false;
   
   // Inspect the method's code to see if we can inline it.  We
   // don't use method->is_accessor() because that only spots
