@@ -54,7 +54,6 @@ import java.security.Permissions;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -251,6 +250,8 @@ public class PluginAppletSecurityContext {
 		if (System.getSecurityManager() == null) {
 			JNLPRuntime.initialize();
 		}
+
+		JNLPRuntime.disableExit();
 
 		this.classLoaders.put(liveconnectLoader, "file://");
 	}

@@ -221,7 +221,10 @@ public class PluginStreamHandler {
     	String rest = "";
 
     	String[] msgComponents = message.split(" ");
-    	
+    
+		if (msgComponents.length < 2)
+			return;
+	
     	// type and identifier are guaranteed to be there
     	String type = msgComponents[0];
     	final int identifier = Integer.parseInt(msgComponents[1]);
