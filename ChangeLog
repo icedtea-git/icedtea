@@ -1,3 +1,7 @@
+2009-02-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Bump to b49.
+	
 2009-02-24  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/hotspot/original/icedtea-6791168.patch,
