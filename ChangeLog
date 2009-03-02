@@ -1,3 +1,7 @@
+2009-03-02  Mark Wielaard  <mark@klomp.org>
+
+	* hotspot.map (default): Set to rev fc6a5ae3fef5 (14.0-b10).
+
 2009-02-27  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
