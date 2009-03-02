@@ -469,6 +469,22 @@
 	* patches/icedtea-pr261.patch,
 	* patches/icedtea-version.patch: Regenerated.
 
+2009-02-11  Marc Schoenefeld <mschoene@redhat.com>
+            Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(write): Fix bounds checking.
+	
+2009-02-10  Deepak Bhole <dbhole@redhat.com>
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Fix
+	exit permissions for applets.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Fix harmless, but
+	annoying OOB exception on browser exit.
+	* rt/net/sourceforge/jnlp/runtime/JNLPRuntime.java: Add function to
+	'always' disable exit.
+	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Same, and
+	update support in checkPermission() for exit permissions.
+
 2009-02-10  Andrew John Hughes  <ahughes@redhat.com>
 
 	Merge from IcedTea6.
@@ -926,16 +942,6 @@
 	S6795030.
 	* patches/icedtea-copy-plugs.patch: Recreated
 	due to S6702956.
-
-2009-02-10  Deepak Bhole <dbhole@redhat.com>
-	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Fix
-	exit permissions for applets.
-	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Fix harmless, but
-	annoying OOB exception on browser exit.
-	* rt/net/sourceforge/jnlp/runtime/JNLPRuntime.java: Add function to
-	'always' disable exit.
-	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Same, and
-	update support in checkPermission() for exit permissions.
 
 2009-02-08  Lillian Angel  <langel@redhat.com>
 
