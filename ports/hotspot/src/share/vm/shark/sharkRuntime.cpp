@@ -42,7 +42,6 @@ Constant* SharkRuntime::_resolve_klass;
 Constant* SharkRuntime::_safepoint;
 Constant* SharkRuntime::_throw_ArrayIndexOutOfBoundsException;
 Constant* SharkRuntime::_throw_NullPointerException;
-Constant* SharkRuntime::_trace_bytecode;
 
 Constant* SharkRuntime::_f2i;
 Constant* SharkRuntime::_f2l;
@@ -161,16 +160,6 @@ void SharkRuntime::initialize(SharkBuilder* builder)
     (intptr_t) throw_NullPointerException_C,
     FunctionType::get(Type::VoidTy, params, false),
     "SharkRuntime__throw_NullPointerException");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  params.push_back(SharkType::jint_type());
-  params.push_back(SharkType::intptr_type());
-  params.push_back(SharkType::intptr_type());
-  _trace_bytecode = builder->make_function(
-    (intptr_t) trace_bytecode_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__trace_bytecode");
 
   // Leaf calls
   params.clear();
@@ -522,19 +511,6 @@ JRT_ENTRY(void, SharkRuntime::throw_NullPointerException_C(JavaThread* thread,
     thread, file, line, 
     vmSymbols::java_lang_NullPointerException(),
     "");
-}
-JRT_END
-
-JRT_ENTRY(void, SharkRuntime::trace_bytecode_C(JavaThread* thread,
-                                               int         bci,
-                                               intptr_t    tos,
-                                               intptr_t    tos2))
-{
-#ifndef PRODUCT
-  methodHandle mh(thread, method(thread));
-  //BytecodeCounter::_counter_value++;
-  BytecodeTracer::trace(mh, mh->code_base() + bci, tos, tos2);
-#endif // !PRODUCT
 }
 JRT_END
 

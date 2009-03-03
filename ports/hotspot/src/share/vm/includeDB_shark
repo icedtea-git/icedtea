@@ -74,7 +74,6 @@ sharkBlock.cpp                          llvmHeaders.hpp
 sharkBlock.cpp                          shark_globals.hpp
 sharkBlock.cpp                          sharkBlock.hpp
 sharkBlock.cpp                          sharkBuilder.hpp
-sharkBlock.cpp                          sharkBytecodeTracer.hpp
 sharkBlock.cpp                          sharkConstantPool.hpp
 sharkBlock.cpp                          sharkRuntime.hpp
 sharkBlock.cpp                          sharkState.inline.hpp
@@ -113,14 +112,6 @@ sharkBuilder.hpp                        sizes.hpp
 sharkBuilder.hpp                        sharkType.hpp
 sharkBuilder.hpp                        sharkValue.inline.hpp
 sharkBuilder.hpp                        sharkEntry.hpp
-
-sharkBytecodeTracer.cpp                 sharkBytecodeTracer.hpp
-sharkBytecodeTracer.cpp                 sharkState.inline.hpp
-sharkBytecodeTracer.cpp                 sharkValue.hpp
-
-sharkBytecodeTracer.hpp                 allocation.hpp
-sharkBytecodeTracer.hpp                 llvmHeaders.hpp
-sharkBytecodeTracer.hpp                 sharkState.hpp
 
 sharkCacheDecache.cpp                   ciMethod.hpp
 sharkCacheDecache.cpp                   debugInfoRec.hpp
