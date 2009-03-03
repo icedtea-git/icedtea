@@ -263,6 +263,12 @@
 	
 2009-02-20  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-cc-interp-backedge.patch: New file.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* HACKING: Document the above.
+
+2009-02-20  Gary Benson  <gbenson@redhat.com>
+
 	* patches/icedtea-zero-build.patch: Make Zero builds say "Zero"
 	in the VM version string as opposed to "Core".
 

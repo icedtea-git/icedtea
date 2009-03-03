@@ -1860,6 +1860,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-java2d-dasher.patch \
 	patches/icedtea-jvmtiEnv.patch \
 	patches/icedtea-xml-encodinginfo.patch \
+	patches/icedtea-cc-interp-backedge.patch \
 	$(DISTRIBUTION_PATCHES)
 
 if WITH_RHINO
