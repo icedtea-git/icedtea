@@ -154,10 +154,6 @@ public class PluginStreamHandler {
     					AppletSecurityContextManager.dumpStore(0);
     					PluginDebug.debug("APPLETVIEWER: exiting appletviewer");
     					System.exit(0);
-				} else if (message.equals("showconsole")) {
-				  showConsole();
-				} else if (message.equals("hideconsole")) {
-				  hideConsole();            
     				}
     				
 /*    				
@@ -386,8 +382,11 @@ public class PluginStreamHandler {
                 AppletSecurityContextManager.dumpStore(0);
                 PluginDebug.debug("APPLETVIEWER: exiting appletviewer");
                 System.exit(0);
+            } else if (message.equals("showconsole")) {
+                showConsole();
+            } else if (message.equals("hideconsole")) {
+                hideConsole();            
             }
-
     	} catch (IOException e) {
     	       e.printStackTrace();
     	}
