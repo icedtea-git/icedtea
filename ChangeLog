@@ -1,3 +1,12 @@
+2009-03-03  Andrew John Hughes  <ahughes@redhat.com>
+
+	* AUTHORS: Add Michael Franz.
+	
+2009-03-03  Michael Franz  <mvfranz@gmail.com>
+
+	* acinclude.m4:
+	Add support for BSD.
+	
 2009-03-03  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp:

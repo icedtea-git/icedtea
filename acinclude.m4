@@ -77,6 +77,10 @@ AC_DEFUN([SET_OS_DIRS],
       BUILD_OS_DIR=solaris
       OS_PATH=/opt/SunStudioExpress/bin:/opt/SUNWpro/bin:/usr/gnu/bin
       ;;
+    *darwin*|*bsd*)
+      BUILD_OS_DIR=bsd
+      OS_PATH=
+      ;;
     *)
       AC_MSG_ERROR([unsupported operating system ${host_os}])
       ;;
