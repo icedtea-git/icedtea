@@ -1669,15 +1669,6 @@ NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_release65_mod.tar.gz
 VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/127067/
 VISUALVM_SRC_ZIP = visualvm-11-src.tar.gz
 
-
-# VisualVM sources. Alternatives cannot be used here.
-NETBEANS_PROFILER_URL = http://icedtea.classpath.org/visualvm/
-NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_release65_mod.tar.gz
-
-VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/127067/
-VISUALVM_SRC_ZIP = visualvm-11-src.tar.gz
-
-
 stamps/hgforest.stamp:
 if OPENJDK_SRC_DIR_FOUND
 else
