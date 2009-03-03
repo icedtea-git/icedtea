@@ -1,3 +1,22 @@
+2009-03-03  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.cpp:
+	Removed.
+	* ports/hotspot/src/share/vm/shark/sharkBytecodeTracer.hpp:
+	Likewise.
+	* ports/hotspot/src/share/vm/includeDB_shark:
+	Removed references to the above.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::_trace_bytecode): Removed.
+	(SharkRuntime::initialize): Remove initialization for the above.
+	(SharkRuntime::trace_bytecode_C): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp
+	(SharkRuntime::_trace_bytecode): Likewise.
+	(SharkRuntime::trace_bytecode): Likewise.
+	(SharkRuntime::trace_bytecode_C): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse): Remove bytecode tracer code.
+
 2009-03-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/ecj/icedtea-hotspot-original.patch,

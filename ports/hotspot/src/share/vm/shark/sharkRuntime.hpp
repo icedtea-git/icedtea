@@ -43,7 +43,6 @@ class SharkRuntime : public AllStatic {
   static llvm::Constant* _safepoint;
   static llvm::Constant* _throw_ArrayIndexOutOfBoundsException;
   static llvm::Constant* _throw_NullPointerException;
-  static llvm::Constant* _trace_bytecode;
 
  public:
   static llvm::Constant* find_exception_handler()
@@ -102,10 +101,6 @@ class SharkRuntime : public AllStatic {
   {
     return _throw_NullPointerException;
   }  
-  static llvm::Constant* trace_bytecode()
-  {
-    return _trace_bytecode;
-  }
 
  private:
   static int find_exception_handler_C(JavaThread* thread,
@@ -141,10 +136,6 @@ class SharkRuntime : public AllStatic {
   static void throw_NullPointerException_C(JavaThread* thread,
                                            const char* file,
                                            int         line);
-  static void trace_bytecode_C(JavaThread* thread,
-                               int         bci,
-                               intptr_t    tos,
-                               intptr_t    tos2);
 
   // Helpers for VM calls
  private:

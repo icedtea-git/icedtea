@@ -121,15 +121,6 @@ void SharkBlock::parse()
   while (iter()->next() != ciBytecodeStream::EOBC() && bci() < limit()) {
     NOT_PRODUCT(a = b = c = d = NULL);    
 
-    if (TraceBytecodes) {
-      Value *tos, *tos2;
-      SharkBytecodeTracer::decode(builder(), current_state(), &tos, &tos2);
-      call_vm(
-        SharkRuntime::trace_bytecode(),
-        LLVMValue::jint_constant(bci()),
-        tos, tos2);
-    }
-    
     if (SharkTraceBytecodes)
       tty->print_cr("%4d: %s", bci(), Bytecodes::name(bc()));
     
