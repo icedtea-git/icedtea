@@ -41,6 +41,7 @@ public class NetxPanel extends AppletViewerPanel
     private PluginBridge bridge = null;
     private boolean exitOnFailure = true;
     private AppletInstance appInst = null;
+    private String cookieStr;
 
     public NetxPanel(URL documentURL, Hashtable atts)
     {
@@ -48,10 +49,11 @@ public class NetxPanel extends AppletViewerPanel
     }
     
     // overloaded constructor, called when initialized via plugin 
-    public NetxPanel(URL documentURL, Hashtable atts, boolean exitOnFailure)
+    public NetxPanel(URL documentURL, String cookieStr, Hashtable atts, boolean exitOnFailure)
     {
         this(documentURL, atts);
         this.exitOnFailure = exitOnFailure;
+        this.cookieStr = cookieStr;
     }
 
     //Overriding to use Netx classloader. You might need to relax visibility
@@ -59,7 +61,8 @@ public class NetxPanel extends AppletViewerPanel
     protected void runLoader() {
 
     	try {
-    		bridge = new PluginBridge(baseURL, 
+    		bridge = new PluginBridge(baseURL,
+    				cookieStr,
     				getDocumentBase(),
     				getJarFiles(), 
     				getCode(),

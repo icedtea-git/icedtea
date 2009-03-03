@@ -299,10 +299,10 @@ public class Launcher {
             JNLPFile file = null;
 
             try {
-                file = new JNLPFile(location, true, updatePolicy); // strict
+                file = new JNLPFile(location, null, true, updatePolicy); // strict
             }
             catch (ParseException ex) {
-                file = new JNLPFile(location, false, updatePolicy);
+                file = new JNLPFile(location, null, false, updatePolicy);
 
                 // only here if strict failed but lax did not fail 
                 LaunchException lex = 

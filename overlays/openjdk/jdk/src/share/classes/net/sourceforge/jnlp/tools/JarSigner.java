@@ -239,22 +239,20 @@ public class JarSigner implements CertVerifier {
     public boolean verifyJar(String jarName) throws Exception {
         boolean anySigned = false;
         boolean hasUnsignedEntry = false;
-        JarFile jf = null;
+        JarInputStream jis = null;
 
         try {
-            jf = new JarFile(jarName, true);
+            jis = new JarInputStream(new FileInputStream(jarName), true);
             Vector<JarEntry> entriesVec = new Vector<JarEntry>();
             byte[] buffer = new byte[8192];
 
-            Enumeration<JarEntry> entries = jf.entries();
-            while (entries.hasMoreElements()) {
-                JarEntry je = entries.nextElement();
+            JarEntry je;
+            while ((je = jis.getNextJarEntry()) != null) {
                 entriesVec.addElement(je);
                 InputStream is = null;
                 try {
-                    is = jf.getInputStream(je);
                     int n;
-                    while ((n = is.read(buffer, 0, buffer.length)) != -1) {
+                    while ((n = jis.read(buffer, 0, buffer.length)) != -1) {
                         // we just read. this will throw a SecurityException
                         // if  a signature/digest check fails.
                     }
@@ -265,7 +263,7 @@ public class JarSigner implements CertVerifier {
                 }
             }
 
-            Manifest man = jf.getManifest();
+            Manifest man = jis.getManifest();
 
             if (man != null) {
                 if (verbose) System.out.println();
@@ -274,7 +272,7 @@ public class JarSigner implements CertVerifier {
                 long now = System.currentTimeMillis();
 
                 while (e.hasMoreElements()) {
-                    JarEntry je = e.nextElement();
+                    je = e.nextElement();
                     String name = je.getName();
                     CodeSigner[] signers = je.getCodeSigners();
                     boolean isSigned = (signers != null);
@@ -349,8 +347,8 @@ public class JarSigner implements CertVerifier {
             e.printStackTrace();
             throw e;
         } finally { // close the resource
-            if (jf != null) {
-                jf.close();
+            if (jis != null) {
+                jis.close();
             }
         }
 

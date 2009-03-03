@@ -1064,6 +1064,7 @@ private:
   IcedTeaPluginFactory* factory;
   PRUint32 instance_identifier;
   nsCString instanceIdentifierPrefix;
+  nsresult GetCookie(const char* siteAddr, char** cookieString);
 };
 
 
@@ -2293,6 +2294,12 @@ IcedTeaPluginFactory::Print(const char* msg, const char* encoding)
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
+#include <nsICookieService.h>
+#include <nsIIOService.h>
+#include <nsIScriptSecurityManager.h>
+#include <nsIURI.h>
+#include <nsServiceManagerUtils.h>
+
 NS_IMPL_ISUPPORTS2 (IcedTeaPluginInstance, nsIPluginInstance,
                     nsIJVMPluginInstance)
 
@@ -2349,25 +2356,35 @@ IcedTeaPluginInstance::Initialize (nsIPluginInstancePeer* aPeer)
   PLUGIN_DEBUG_1ARG("TAG FROM BROWSER = %s\n", tagMessage.get());
 
   // encode newline characters in the message
-  nsCString toSend("");
+  nsCString encodedAppletTag("");
   for (int i=0; i < tagMessage.Length(); i++)
   {
 	  if (tagMessage.get()[i] == '\r')
 	  {
-		  toSend += "&#13;";
+		  encodedAppletTag += "&#13;";
 		  continue;
 	  }
 
 	  if (tagMessage.get()[i] == '\n')
 	  {
-		  toSend += "&#10;";
+		  encodedAppletTag += "&#10;";
 		  continue;
 	  }
 
-	  toSend += tagMessage.get()[i];
+	  encodedAppletTag += tagMessage.get()[i];
   }
 
-  factory->SendMessageToAppletViewer (toSend);
+  nsCString cookieInfo(instanceIdentifierPrefix);
+  cookieInfo += "cookie ";
+
+  char* cookieString;
+  if (GetCookie(documentbase, &cookieString) == NS_OK)
+  {
+	  cookieInfo += cookieString;
+  }
+
+  factory->SendMessageToAppletViewer (cookieInfo);
+  factory->SendMessageToAppletViewer (encodedAppletTag);
 
   // Set back-pointer to peer instance.
   PLUGIN_DEBUG_1ARG ("SETTING PEER!!!: %p\n", aPeer);
@@ -2641,6 +2658,42 @@ IcedTeaPluginInstance::GetJavaObject (jobject* object)
   return factory->GetJavaObject (instance_identifier, object);
 }
 
+
+NS_IMETHODIMP
+IcedTeaPluginInstance::GetCookie(const char* siteAddr, char** cookieString) 
+{
+
+  nsresult rv;
+  nsCOMPtr<nsIScriptSecurityManager> sec_man = 
+    do_GetService(NS_SCRIPTSECURITYMANAGER_CONTRACTID, &rv);
+
+  if (!sec_man) {
+    return NS_ERROR_FAILURE;
+  }
+
+  nsCOMPtr<nsIIOService> io_svc = do_GetService(NS_IOSERVICE_CONTRACTID, &rv);
+
+  if (NS_FAILED(rv) || !io_svc) {
+    return NS_ERROR_FAILURE;
+  }
+
+  nsIURI *uri;
+  io_svc->NewURI(nsCString(siteAddr), NULL, NULL, &uri);
+
+  nsCOMPtr<nsICookieService> cookie_svc = do_GetService(NS_COOKIESERVICE_CONTRACTID, &rv);
+
+  if (NS_FAILED(rv) || !cookie_svc) {
+    return NS_ERROR_FAILURE;
+  }
+
+  rv = cookie_svc->GetCookieString(uri, NULL, cookieString);
+
+  if (NS_FAILED(rv) || !*cookieString) {
+    return NS_ERROR_FAILURE;
+  }
+
+  return NS_OK;
+}
 
 NS_IMETHODIMP
 IcedTeaPluginFactory::GetJavaObject (PRUint32 instance_identifier,
@@ -4461,10 +4514,7 @@ NS_IMPL_ISUPPORTS1 (IcedTeaJNIEnv, nsISecureEnv)
 #include <nsISocketTransport.h>
 #include <nsITransport.h>
 #include <nsNetCID.h>
-#include <nsServiceManagerUtils.h>
 #include <nsIPrincipal.h>
-#include <nsIScriptSecurityManager.h>
-#include <nsIURI.h>
 #include <xpcjsid.h>
 
 IcedTeaJNIEnv::IcedTeaJNIEnv (IcedTeaPluginFactory* factory)
@@ -4509,16 +4559,6 @@ IcedTeaJNIEnv::DecrementContextCounter ()
 nsresult
 IcedTeaJNIEnv::GetEnabledPrivileges(nsCString *privileges, nsISecurityContext *ctx)
 {
-	nsresult rv;
-	nsCOMPtr<nsIScriptSecurityManager> sec_man = 
-		do_GetService(NS_SCRIPTSECURITYMANAGER_CONTRACTID, &rv);
-
-	if (NS_FAILED(rv) || !sec_man) {
-		return NS_ERROR_FAILURE;
-	}
-
-	PRBool isEnabled = PR_FALSE;
-
 	// check privileges one by one
 
 	privileges->Truncate();

@@ -62,6 +62,9 @@ public class JNLPFile {
 
     /** the URL used to resolve relative URLs in the file */
     protected URL codeBase;
+    
+    /** cookie string to send alongwith resource requests */
+    protected String cookieStr;
 
     /** file version */
     protected Version fileVersion;
@@ -117,8 +120,8 @@ public class JNLPFile {
      * @throws IOException if an IO exception occurred
      * @throws ParseException if the JNLP file was invalid
      */
-    public JNLPFile(URL location) throws IOException, ParseException {
-        this(location, false); // not strict
+    public JNLPFile(URL location, String cookieStr) throws IOException, ParseException {
+        this(location, cookieStr, false); // not strict
     }
 
     /**
@@ -130,8 +133,8 @@ public class JNLPFile {
      * @throws IOException if an IO exception occurred
      * @throws ParseException if the JNLP file was invalid
      */
-    public JNLPFile(URL location, boolean strict) throws IOException, ParseException {
-        this(location, strict, JNLPRuntime.getDefaultUpdatePolicy());
+    public JNLPFile(URL location, String cookieStr, boolean strict) throws IOException, ParseException {
+        this(location, cookieStr, strict, JNLPRuntime.getDefaultUpdatePolicy());
     }
 
     /**
@@ -144,11 +147,12 @@ public class JNLPFile {
      * @throws IOException if an IO exception occurred
      * @throws ParseException if the JNLP file was invalid
      */
-    public JNLPFile(URL location, boolean strict, UpdatePolicy policy) throws IOException, ParseException {
-        Node root = Parser.getRootNode(openURL(location, policy));
+    public JNLPFile(URL location, String cookieStr, boolean strict, UpdatePolicy policy) throws IOException, ParseException {
+        Node root = Parser.getRootNode(openURL(location, cookieStr, policy));
         parse(root, strict, location);
 
         this.fileLocation = location;
+        this.cookieStr = cookieStr;
     }
 
     /**
@@ -179,13 +183,13 @@ public class JNLPFile {
      * Open the jnlp file URL from the cache if there, otherwise
      * download to the cache.  Called from constructor.
      */
-    private static InputStream openURL(URL location, UpdatePolicy policy) throws IOException {
+    private static InputStream openURL(URL location, String cookieStr, UpdatePolicy policy) throws IOException {
         if (location == null || policy == null)
             throw new IllegalArgumentException(R("NullParameter"));
 
         try {
             ResourceTracker tracker = new ResourceTracker(false); // no prefetch
-            tracker.addResource(location, null/*version*/, policy);
+            tracker.addResource(location, cookieStr, null/*version*/, policy);
 
             return tracker.getInputStream(location);
         }
@@ -246,6 +250,13 @@ public class JNLPFile {
         return codeBase;
     }
 
+    /**
+     * Returns the cookie string that will be send when resources for this file are requested 
+     */
+    public String getCookieStr() {
+        return cookieStr;
+    }
+    
     /**
      * Returns the information section of the JNLP file as viewed
      * through the default locale.

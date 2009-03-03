@@ -176,6 +176,8 @@ import sun.misc.Ref;
      
      private static PluginCallRequestFactory requestFactory;
      
+     private static HashMap<Integer, String> siteCookies = new HashMap<Integer,String>();
+
      private double proposedHeightFactor;
      private double proposedWidthFactor;
 
@@ -188,7 +190,7 @@ import sun.misc.Ref;
      /**
       * Create the applet viewer
       */
-     public PluginAppletViewer(int identifier, long handle, int x, int y, final URL doc,
+     public PluginAppletViewer(final int identifier, long handle, int x, int y, final URL doc,
                                final Hashtable atts, PrintStream statusMsgStream,
                                PluginAppletViewerFactory factory) {
          super(handle, true);
@@ -215,7 +217,7 @@ import sun.misc.Ref;
          AccessController.doPrivileged(new PrivilegedAction() {
              public Object run() {
             	 	try {
-            	 		panel = new NetxPanel(doc, atts, false);
+            	 		panel = new NetxPanel(doc, siteCookies.get(identifier), atts, false);
             	 		AppletViewerPanel.debug("Using NetX panel");
             	 		PluginDebug.debug(atts.toString());
             	 	} catch (Exception ex) {
@@ -304,15 +306,12 @@ import sun.misc.Ref;
     showStatus(amh.getMessage("status.start"));
  	initEventQueue();
  	
-    // Wait for a maximum of 10 seconds for the panel to initialize
+ 	// Wait for the panel to initialize
     // (happens in a separate thread)
  	Applet a;
-    int maxSleepTime = 10000;
-    int sleepTime = 0;
-    while ((a = panel.getApplet()) == null && sleepTime < maxSleepTime) {
+    while ((a = panel.getApplet()) == null && panel.getAppletHandlerThread().isAlive()) {
    	 try {
    		 Thread.sleep(2000);
-   		 sleepTime += 100;
    		 PluginDebug.debug("Waiting for applet to initialize... ");
    	 } catch (InterruptedException ie) {
    		 ie.printStackTrace();
@@ -346,7 +345,7 @@ import sun.misc.Ref;
  	} catch (IOException ioe) {
  		ioe.printStackTrace();
  	}
-
+ 	
      }
 
  	public static void setStreamhandler(PluginStreamHandler sh) {
@@ -422,6 +421,16 @@ import sun.misc.Ref;
             			 PluginDebug.debug ("REQUEST TAG NOT SET: " + request.tag + ". BYPASSING");
             		 }
             	 }
+             } else if (message.startsWith("cookie")) {
+                 
+                 int cookieStrIndex = message.indexOf(" ");
+                 String cookieStr = null;
+
+                 if (cookieStrIndex > 0)
+                     cookieStr = message.substring(cookieStrIndex);
+
+                 // Always set the cookie -- even if it is null
+                 siteCookies.put(identifier, cookieStr);
              } else {
                  PluginDebug.debug ("HANDLING MESSAGE " + message + " instance " + identifier + " " + Thread.currentThread());
                  applets.get(identifier).handleMessage(reference, message);
@@ -482,18 +491,21 @@ import sun.misc.Ref;
              // object should belong to?
              Object o;
 
-             // Wait for a maximum of 10 seconds for the panel to initialize
+             // Wait for the panel to initialize
              // (happens in a separate thread)
-             int maxSleepTime = 10000;
-             int sleepTime = 0;
-             while ((o = panel.getApplet()) == null && sleepTime < maxSleepTime) {
+             while ((o = panel.getApplet()) == null && panel.getAppletHandlerThread().isAlive()) {
             	 try {
             		 Thread.sleep(2000);
-            		 sleepTime += 100;
             		 PluginDebug.debug("Waiting for applet to initialize...");
             	 } catch (InterruptedException ie) {
             		 ie.printStackTrace();
             	 }
+             }
+
+             // Still null?
+             if (panel.getApplet() == null) {
+                 this.streamhandler.write("instance " + identifier + " reference " + -1 + " fatalError " + "Initialization failed");
+                 return;
              }
 
              PluginDebug.debug ("Looking for object " + o + " panel is " + panel);
@@ -1457,6 +1469,11 @@ import sun.misc.Ref;
  
      public static void parse(int identifier, long handle, Reader in, URL url)
          throws IOException {
+         
+         // wait until cookie is set (even if cookie is null, it needs to be 
+         // "set" to that first
+         while (!siteCookies.containsKey(identifier));
+
     	 final int fIdentifier = identifier;
     	 final long fHandle = handle;
     	 final Reader fIn = in;

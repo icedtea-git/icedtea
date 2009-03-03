@@ -370,24 +370,26 @@ public class PluginStreamHandler {
     	try {
     		message = pluginInputReader.readLine();
     		PluginDebug.debug("  PIPE: appletviewer read: " + message);
-    	} catch (IOException e) {
 
-    		if (message == null || message.equals("shutdown")) {
-    			synchronized(shuttingDown) {
-    				shuttingDown = true;
-    			}
-    			try {
-    				// Close input/output channels to plugin.
-    				pluginInputReader.close();
-    				pluginOutputWriter.close();
-    			} catch (IOException exception) {
-    				// Deliberately ignore IOException caused by broken
-    				// pipe since plugin may have already detached.
-    			}
-    			AppletSecurityContextManager.dumpStore(0);
-    			PluginDebug.debug("APPLETVIEWER: exiting appletviewer");
-    			System.exit(0);
-    		}
+            if (message == null || message.equals("shutdown")) {
+                synchronized(shuttingDown) {
+                    shuttingDown = true;
+                }
+                try {
+                    // Close input/output channels to plugin.
+                    pluginInputReader.close();
+                    pluginOutputWriter.close();
+                } catch (IOException exception) {
+                    // Deliberately ignore IOException caused by broken
+                    // pipe since plugin may have already detached.
+                }
+                AppletSecurityContextManager.dumpStore(0);
+                PluginDebug.debug("APPLETVIEWER: exiting appletviewer");
+                System.exit(0);
+            }
+
+    	} catch (IOException e) {
+    	       e.printStackTrace();
     	}
 
     	return message;
