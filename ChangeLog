@@ -1,3 +1,54 @@
+2009-03-03  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/ecj/icedtea-hotspot-original.patch,
+	* patches/hotspot/original/icedtea-bytecodeInterpreter.patch,
+	* patches/hotspot/original/icedtea-core-build.patch,
+	* patches/hotspot/original/icedtea-core-zero-build.patch,
+	* patches/hotspot/original/icedtea-debuginfo.patch,
+	* patches/hotspot/original/icedtea-gcc-4.3.patch,
+	* patches/hotspot/original/icedtea-gcc-suffix.patch,
+	* patches/hotspot/original/icedtea-headers.patch,
+	* patches/hotspot/original/icedtea-includedb.patch,
+	* patches/hotspot/original/icedtea-memory-limits.patch,
+	* patches/hotspot/original/icedtea-no-precompiled.patch,
+	* patches/hotspot/original/icedtea-params-cast-size_t.patch,
+	* patches/hotspot/original/icedtea-parisc-opt.patch,
+	* patches/hotspot/original/icedtea-shark-build.patch,
+	* patches/hotspot/original/icedtea-shark.patch,
+	* patches/hotspot/original/icedtea-sparc-buildfixes.patch,
+	* patches/hotspot/original/icedtea-sparc-ptracefix.patch,
+	* patches/hotspot/original/icedtea-sparc-trapsfix.patch,
+	* patches/hotspot/original/icedtea-static-libstdc++.patch,
+	* patches/hotspot/original/icedtea-text-relocations.patch,
+	* patches/hotspot/original/icedtea-use-idx_t.patch,
+	* patches/hotspot/original/icedtea-version.patch,
+	* patches/hotspot/original/icedtea-zero-build.patch: Moved to...
+	* Makefile.am,
+	* acinclude.m4: Switch HotSpot default to 'default'.
+	* patches/ecj/icedtea-hotspot-default.patch,
+	* patches/hotspot/default/icedtea-bytecodeInterpreter.patch,
+	* patches/hotspot/default/icedtea-core-build.patch,
+	* patches/hotspot/default/icedtea-core-zero-build.patch,
+	* patches/hotspot/default/icedtea-debuginfo.patch,
+	* patches/hotspot/default/icedtea-gcc-4.3.patch,
+	* patches/hotspot/default/icedtea-gcc-suffix.patch,
+	* patches/hotspot/default/icedtea-headers.patch,
+	* patches/hotspot/default/icedtea-includedb.patch,
+	* patches/hotspot/default/icedtea-memory-limits.patch,
+	* patches/hotspot/default/icedtea-no-precompiled.patch,
+	* patches/hotspot/default/icedtea-params-cast-size_t.patch,
+	* patches/hotspot/default/icedtea-parisc-opt.patch,
+	* patches/hotspot/default/icedtea-shark-build.patch,
+	* patches/hotspot/default/icedtea-shark.patch,
+	* patches/hotspot/default/icedtea-sparc-buildfixes.patch,
+	* patches/hotspot/default/icedtea-sparc-ptracefix.patch,
+	* patches/hotspot/default/icedtea-sparc-trapsfix.patch,
+	* patches/hotspot/default/icedtea-static-libstdc++.patch,
+	* patches/hotspot/default/icedtea-text-relocations.patch,
+	* patches/hotspot/default/icedtea-use-idx_t.patch,
+	* patches/hotspot/default/icedtea-version.patch,
+	* patches/hotspot/default/icedtea-zero-build.patch: here.
+
 2009-02-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Bump to b49.
@@ -267,11 +318,6 @@
 	java.nio.channels.Channels, java.nio.channels.DatagramChannel, java.nio.channels.exceptions,
 	java.nio.channels.FileChannel, java.nio.channels.FileLock, java.nio.channels.package-info.java,
 	java.util.Scanner.  Remove patch to sun.nio.ch.FileChannelImpl. Fix imports.  Remove 6 cruft.
-
-2009-02-19  Gary Benson  <gbenson@redhat.com>
-
-	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.cpp:
-	Deleted contents (was all comment).
 
 2009-02-19  Gary Benson  <gbenson@redhat.com>
 
