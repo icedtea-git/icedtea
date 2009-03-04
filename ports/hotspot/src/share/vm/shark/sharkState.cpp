@@ -28,6 +28,24 @@
 
 using namespace llvm;
 
+SharkState::SharkState(SharkBlock*    block,
+                       SharkFunction* function,
+                       llvm::Value*   method)
+  : _block(block),
+    _function(function),
+    _method(method)
+{
+  initialize(NULL);
+}
+
+SharkState::SharkState(const SharkState* state)
+  : _block(state->block()),
+    _function(state->function()),
+    _method(state->method())
+{
+  initialize(state);
+}
+
 void SharkState::initialize(const SharkState *state)
 {
   _locals = NEW_RESOURCE_ARRAY(SharkValue*, max_locals());
@@ -45,177 +63,9 @@ void SharkState::initialize(const SharkState *state)
     NOT_PRODUCT(memset(_stack,  23, max_stack()  * sizeof(SharkValue *)));
   }
 }
-
-void SharkEntryState::initialize(Value* method)
-{
-  char name[18];
-
-  // Method
-  set_method(method);
-
-  // Local variables
-  for (int i = 0; i < max_locals(); i++) {
-    ciType *type = block()->local_type_at_entry(i);
-
-    SharkValue *value = NULL;
-    switch (type->basic_type()) {
-    case T_INT:
-    case T_LONG:
-    case T_FLOAT:
-    case T_DOUBLE:
-    case T_OBJECT:
-    case T_ARRAY:
-      if (i < function()->arg_size()) {
-        snprintf(name, sizeof(name), "local_%d_", i);
-        value = SharkValue::create_generic(
-          type,
-          builder()->CreateLoad(
-            function()->CreateAddressOfFrameEntry(
-              function()->locals_slots_offset()
-                + max_locals() - type->size() - i,
-              SharkType::to_stackType(type)),
-            name));
-      }
-      else {
-        Unimplemented();
-      }
-      break;
-      
-    case ciTypeFlow::StateVector::T_BOTTOM:
-      break;
-
-    case ciTypeFlow::StateVector::T_LONG2:
-    case ciTypeFlow::StateVector::T_DOUBLE2:
-      break;
-
-    default:
-      ShouldNotReachHere();
-    }
-    set_local(i, value);
-  }
-
-  // Non-static methods have a guaranteed non-null receiver
-  if (!function()->target()->is_static()) {
-    assert(local(0)->is_jobject(), "should be");
-    local(0)->set_zero_checked(true);
-  }
-
-  // Expression stack
-  assert(!stack_depth_at_entry(), "entry block shouldn't have stack");
-}
-
-void SharkPHIState::initialize()
-{
-  BasicBlock *saved_insert_point = builder()->GetInsertBlock();
-  builder()->SetInsertPoint(block()->entry_block());
-  char name[18];
-
-  // Method
-  set_method(builder()->CreatePHI(SharkType::methodOop_type(), "method"));
-
-  // Local variables
-  for (int i = 0; i < max_locals(); i++) {
-    ciType *type = block()->local_type_at_entry(i);
-    if (type->basic_type() == (BasicType) ciTypeFlow::StateVector::T_NULL) {
-      // XXX we could do all kinds of clever stuff here
-      type = ciType::make(T_OBJECT); // XXX what about T_ARRAY?
-    }
-
-    SharkValue *value = NULL;
-    switch (type->basic_type()) {
-    case T_INT:
-    case T_LONG:
-    case T_FLOAT:
-    case T_DOUBLE:
-    case T_OBJECT:
-    case T_ARRAY:
-      snprintf(name, sizeof(name), "local_%d_", i);
-      value = SharkValue::create_generic(
-        type, builder()->CreatePHI(SharkType::to_stackType(type), name));
-      break;
-
-    case T_ADDRESS:
-      value = SharkValue::create_returnAddress(
-        type->as_return_address()->bci());
-      break;
-
-    case ciTypeFlow::StateVector::T_BOTTOM:
-      break;
-
-    case ciTypeFlow::StateVector::T_LONG2:
-    case ciTypeFlow::StateVector::T_DOUBLE2:
-      break;
-
-    default:
-      ShouldNotReachHere();
-    }
-    set_local(i, value);
-  }
-
-  // Expression stack
-  for (int i = 0; i < stack_depth_at_entry(); i++) {
-    ciType *type = block()->stack_type_at_entry(i);
-    if (type->basic_type() == (BasicType) ciTypeFlow::StateVector::T_NULL) {
-      // XXX we could do all kinds of clever stuff here
-      type = ciType::make(T_OBJECT); // XXX what about T_ARRAY?
-    }
-
-    SharkValue *value = NULL;
-    switch (type->basic_type()) {
-    case T_INT:
-    case T_LONG:
-    case T_FLOAT:
-    case T_DOUBLE:
-    case T_OBJECT:
-    case T_ARRAY:
-      snprintf(name, sizeof(name), "stack_%d_", i);
-      value = SharkValue::create_generic(
-        type, builder()->CreatePHI(SharkType::to_stackType(type), name));
-      break;
-
-    case T_ADDRESS:
-      value = SharkValue::create_returnAddress(
-        type->as_return_address()->bci());
-      break;
-
-    case ciTypeFlow::StateVector::T_LONG2:
-    case ciTypeFlow::StateVector::T_DOUBLE2:
-      break;
-
-    default:
-      ShouldNotReachHere();
-    }
-    push(value);
-  }
-
-  builder()->SetInsertPoint(saved_insert_point);
-}
-
-void SharkPHIState::add_incoming(SharkState* incoming_state)
-{
-  BasicBlock *predecessor = builder()->GetInsertBlock();
-    
-  // Method
-  ((PHINode *) method())->addIncoming(incoming_state->method(), predecessor);
-
-  // Local variables
-  for (int i = 0; i < max_locals(); i++) {
-    if (local(i) != NULL)
-      local(i)->addIncoming(incoming_state->local(i), predecessor);
-  }
-
-  // Expression stack
-  assert(stack_depth_at_entry() == incoming_state->stack_depth(), "should be");
-  for (int i = 0; i < stack_depth_at_entry(); i++) {
-    assert((stack(i) == NULL) == (incoming_state->stack(i) == NULL), "oops");
-    if (stack(i))
-      stack(i)->addIncoming(incoming_state->stack(i), predecessor);
-  }
-}
-
-void SharkTrackingState::merge(SharkState* other,
-                               BasicBlock* other_block,
-                               BasicBlock* this_block)
+void SharkState::merge(SharkState* other,
+                       BasicBlock* other_block,
+                       BasicBlock* this_block)
 {
   PHINode *phi;
   char name[18];
@@ -269,16 +119,51 @@ void SharkTrackingState::merge(SharkState* other,
   }
 }
 
-#ifndef PRODUCT
-void SharkTrackingState::enter_inlined_section()
+void SharkState::decache_for_Java_call(ciMethod* callee)
 {
-  assert(has_stack_frame(), "should do");
-  set_has_stack_frame(false);
+  assert(function() && method(), "you cannot decache here");
+  SharkJavaCallDecacher(function(), block()->bci(), callee).scan(this);
+  pop(callee->arg_size());
 }
 
-void SharkTrackingState::leave_inlined_section()
+void SharkState::cache_after_Java_call(ciMethod* callee)
 {
-  assert(!has_stack_frame(), "shouldn't do");
-  set_has_stack_frame(true);
+  assert(function() && method(), "you cannot cache here");
+  if (callee->return_type()->size()) {
+    ciType *type;
+    switch (callee->return_type()->basic_type()) {
+    case T_BOOLEAN:
+    case T_BYTE:
+    case T_CHAR:
+    case T_SHORT:
+      type = ciType::make(T_INT);
+      break;
+
+    default:
+      type = callee->return_type();
+    }
+
+    push(SharkValue::create_generic(type, NULL));
+    if (type->is_two_word())
+      push(NULL);
+  }
+  SharkJavaCallCacher(function(), block()->bci(), callee).scan(this);
 }
-#endif // PRODUCT
+
+void SharkState::decache_for_VM_call()
+{
+  assert(function() && method(), "you cannot decache here");
+  SharkVMCallDecacher(function(), block()->bci()).scan(this);
+}
+
+void SharkState::cache_after_VM_call()
+{
+  assert(function() && method(), "you cannot cache here");
+  SharkVMCallCacher(function(), block()->bci()).scan(this);
+}
+
+void SharkState::decache_for_trap()
+{
+  assert(function() && method(), "you cannot decache here");
+  SharkTrapDecacher(function(), block()->bci()).scan(this);
+}

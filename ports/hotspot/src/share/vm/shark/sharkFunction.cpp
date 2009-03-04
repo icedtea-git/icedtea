@@ -30,6 +30,65 @@
 
 using namespace llvm;
 
+class SharkEntryState : public SharkState {
+ public:
+  SharkEntryState(SharkTopLevelBlock* block, llvm::Value* method)
+    : SharkState(block, block->function(), method)
+  {
+    char name[18];
+
+    // Local variables
+    for (int i = 0; i < max_locals(); i++) {
+      ciType *type = block->local_type_at_entry(i);
+
+      SharkValue *value = NULL;
+      switch (type->basic_type()) {
+      case T_INT:
+      case T_LONG:
+      case T_FLOAT:
+      case T_DOUBLE:
+      case T_OBJECT:
+      case T_ARRAY:
+        if (i < function()->arg_size()) {
+          snprintf(name, sizeof(name), "local_%d_", i);
+          value = SharkValue::create_generic(
+            type,
+            builder()->CreateLoad(
+              function()->CreateAddressOfFrameEntry(
+                function()->locals_slots_offset()
+                + max_locals() - type->size() - i,
+                SharkType::to_stackType(type)),
+              name));
+        }
+        else {
+          Unimplemented();
+        }
+        break;
+      
+      case ciTypeFlow::StateVector::T_BOTTOM:
+        break;
+
+      case ciTypeFlow::StateVector::T_LONG2:
+      case ciTypeFlow::StateVector::T_DOUBLE2:
+        break;
+
+      default:
+        ShouldNotReachHere();
+      }
+      set_local(i, value);
+    }
+
+    // Non-static methods have a guaranteed non-null receiver
+    if (!function()->target()->is_static()) {
+      assert(local(0)->is_jobject(), "should be");
+      local(0)->set_zero_checked(true);
+    }
+
+    // Expression stack
+    assert(!block->stack_depth_at_entry(), "entry block shouldn't have stack");
+  }
+};
+
 void SharkFunction::initialize()
 {
   // Emit the entry point
@@ -47,19 +106,19 @@ void SharkFunction::initialize()
 
   // Create the list of blocks
   set_block_insertion_point(NULL);
-  _blocks = NEW_RESOURCE_ARRAY(SharkBlock*, flow()->block_count());
+  _blocks = NEW_RESOURCE_ARRAY(SharkTopLevelBlock*, flow()->block_count());
   for (int i = 0; i < block_count(); i++)
     {
       ciTypeFlow::Block *b = flow()->pre_order_at(i);
       // Work around a bug in pre_order_at() that does not return the
       // correct pre-ordering.  If pre_order_at() were correct this
       // line could simply be:
-      // _blocks[i] = new SharkBlock(this, b);
-      _blocks[b->pre_order()] = new SharkBlock(this, b);
+      // _blocks[i] = new SharkTopLevelBlock(this, b);
+      _blocks[b->pre_order()] = new SharkTopLevelBlock(this, b);
     }
   // Walk the tree from the start block to determine which
   // blocks are entered and which blocks require phis
-  SharkBlock *start_block = block(0);
+  SharkTopLevelBlock *start_block = block(0);
   assert(start_block->start() == 0, "blocks out of order");
   start_block->enter();
 
@@ -99,9 +158,10 @@ void SharkFunction::initialize()
       "method_slot")));
 
   // Lock if necessary
-  SharkState *entry_state = new SharkEntryState(method, start_block);
+  SharkState *entry_state = new SharkEntryState(start_block, method);
   if (target()->is_synchronized()) {
-    SharkBlock *locker = new SharkBlock(this, start_block->ciblock());
+    SharkTopLevelBlock *locker =
+      new SharkTopLevelBlock(this, start_block->ciblock());
     locker->add_incoming(entry_state);
 
     set_block_insertion_point(start_block->entry_block());
@@ -124,7 +184,7 @@ void SharkFunction::initialize()
     else
       set_block_insertion_point(NULL);
 
-    block(i)->parse();
+    block(i)->emit_IR();
   }
 
   // Dump the bitcode, if requested
