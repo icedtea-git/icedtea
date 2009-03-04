@@ -1,4 +1,4 @@
-AC_INIT([icedtea6], [pre-1.5], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea6], [1.5pre], [distro-pkg-dev@openjdk.java.net])
 AM_INIT_AUTOMAKE([1.10 tar-pax foreign])
 AC_CONFIG_FILES([Makefile])
 AC_CANONICAL_HOST

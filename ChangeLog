@@ -1,3 +1,7 @@
+2009-03-04  Matthias Klose  <doko@ubuntu.com>
+
+	* configure.ac: Set version to 1.5pre.
+
 2009-03-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* AUTHORS: Add Michael Franz.
