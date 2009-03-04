@@ -36,6 +36,10 @@
   product(intx, SharkMaxInlineSize, 32,                                       \
           "Maximum bytecode size of methods to inline when using Shark")      \
                                                                               \
+  /* inlining */                                                              \
+  product(intx, SharkMaxInlineSize, 32,                                       \
+          "Maximum bytecode size of methods to inline when using Shark")      \
+                                                                              \
   /* compiler debugging */                                                    \
   develop(uintx, SharkStartAt, 0,                                             \
           "First method to consider when using Shark")                        \

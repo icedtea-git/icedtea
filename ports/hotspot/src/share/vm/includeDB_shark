@@ -44,6 +44,25 @@ sharkBlock.hpp                          sharkBuilder.hpp
 sharkBlock.hpp                          sharkState.hpp
 sharkBlock.hpp                          sharkValue.hpp
 
+sharkBlock.cpp                          debug.hpp
+sharkBlock.cpp                          bytecodes.hpp
+sharkBlock.cpp                          llvmHeaders.hpp
+sharkBlock.cpp                          shark_globals.hpp
+sharkBlock.cpp                          sharkBlock.hpp
+sharkBlock.cpp                          sharkBuilder.hpp
+sharkBlock.cpp                          sharkRuntime.hpp
+sharkBlock.cpp                          sharkState.inline.hpp
+sharkBlock.cpp                          sharkValue.inline.hpp
+
+sharkBlock.hpp                          allocation.hpp
+sharkBlock.hpp                          ciMethod.hpp
+sharkBlock.hpp                          ciStreams.hpp
+sharkBlock.hpp                          debug.hpp
+sharkBlock.hpp                          llvmHeaders.hpp
+sharkBlock.hpp                          sharkBuilder.hpp
+sharkBlock.hpp                          sharkState.hpp
+sharkBlock.hpp                          sharkValue.hpp
+
 ciMethod.cpp                            ciTypeFlow.hpp
 ciMethod.cpp                            methodOop.hpp
 

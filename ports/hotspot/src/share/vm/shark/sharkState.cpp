@@ -46,6 +46,24 @@ SharkState::SharkState(const SharkState* state)
   initialize(state);
 }
 
+SharkState::SharkState(SharkBlock*    block,
+                       SharkFunction* function,
+                       llvm::Value*   method)
+  : _block(block),
+    _function(function),
+    _method(method)
+{
+  initialize(NULL);
+}
+
+SharkState::SharkState(const SharkState* state)
+  : _block(state->block()),
+    _function(state->function()),
+    _method(state->method())
+{
+  initialize(state);
+}
+
 void SharkState::initialize(const SharkState *state)
 {
   _locals = NEW_RESOURCE_ARRAY(SharkValue*, max_locals());
