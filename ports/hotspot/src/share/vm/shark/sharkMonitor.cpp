@@ -43,7 +43,7 @@ void SharkMonitor::initialize()
     "displaced_header_addr");
 }
 
-void SharkMonitor::acquire(SharkBlock* block, Value *lockee) const
+void SharkMonitor::acquire(SharkTopLevelBlock* block, Value *lockee) const
 {
   BasicBlock *try_recursive = function()->CreateBlock("try_recursive");
   BasicBlock *got_recursive = function()->CreateBlock("got_recursive");
@@ -120,7 +120,7 @@ void SharkMonitor::acquire(SharkBlock* block, Value *lockee) const
   block->current_state()->merge(fast_state, acquired_fast, acquired_slow);
 }
 
-void SharkMonitor::release(SharkBlock* block) const
+void SharkMonitor::release(SharkTopLevelBlock* block) const
 {
   BasicBlock *not_recursive = function()->CreateBlock("not_recursive");
   BasicBlock *released_fast = function()->CreateBlock("released_fast");

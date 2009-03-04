@@ -1,3 +1,36 @@
+2009-03-04  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkInliner.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp: Moved partly into...
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Likewise into...
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp: New file.
+
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp:
+	Merged SharkTrackingState into SharkState, and moved
+	SharkEntryState into sharkFunction.cpp and SharkPHIState
+	into sharkTopLevelBlock.cpp.
+	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Likewise.
+	
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.hpp:
+	s/SharkBlock/SharkTopLevelBlock/g
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp
+	(SharkMaxInlineSize): New parameter.
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::GetBlockInsertionPoint): New method.
+	(SharkBuilder::CreateBlock): Likewise.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
 2009-03-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* AUTHORS: Add Michael Franz.

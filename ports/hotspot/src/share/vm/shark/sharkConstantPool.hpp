@@ -25,17 +25,17 @@
 
 class SharkConstantPool : public StackObj {
  public:
-  SharkConstantPool(SharkBlock* block)
+  SharkConstantPool(SharkTopLevelBlock* block)
     : _block(block),
       _constants_method(NULL),
       _tags_constants(NULL),
       _cache_constants(NULL) {}
 
  private:
-  SharkBlock* _block;
+  SharkTopLevelBlock* _block;
 
  private:
-  SharkBlock* block() const
+  SharkTopLevelBlock* block() const
   {
     return _block;
   }

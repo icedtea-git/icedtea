@@ -32,6 +32,10 @@
   product(intx, MaxNodeLimit, 65000,                                          \
           "Maximum number of nodes")                                          \
                                                                               \
+  /* inlining */                                                              \
+  product(intx, SharkMaxInlineSize, 32,                                       \
+          "Maximum bytecode size of methods to inline when using Shark")      \
+                                                                              \
   /* compiler debugging */                                                    \
   develop(uintx, SharkStartAt, 0,                                             \
           "First method to consider when using Shark")                        \
@@ -48,8 +52,8 @@
   develop(ccstr, SharkPrintBitcodeOf, NULL,                                   \
           "Print the LLVM bitcode of the specified method")                   \
                                                                               \
-  develop(ccstr, SharkPrintAsmOf, NULL,                                   \
-          "Print the asm of the specified method")                   \
+  develop(ccstr, SharkPrintAsmOf, NULL,                                       \
+          "Print the asm of the specified method")                            \
                                                                               \
   develop(bool, SharkTraceBytecodes, false,                                   \
           "Trace bytecode compilation")                                       \

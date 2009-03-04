@@ -23,7 +23,7 @@
  *
  */
 
-class SharkBlock;
+class SharkTopLevelBlock;
 
 class SharkMonitor : public ResourceObj {
  public:
@@ -89,6 +89,6 @@ class SharkMonitor : public ResourceObj {
   }
 
  public:
-  void acquire(SharkBlock* block, llvm::Value* lockee) const;
-  void release(SharkBlock* block) const;
+  void acquire(SharkTopLevelBlock* block, llvm::Value* lockee) const;
+  void release(SharkTopLevelBlock* block) const;
 };

@@ -24,40 +24,40 @@
  */
 
 class SharkBlock;
+class SharkFunction;
 
 class SharkState : public ResourceObj {
- protected:
-  SharkState(SharkBlock* block)
-    : _block(block)          { initialize(NULL); }
-  SharkState(const SharkState* state)
-    : _block(state->block()) { initialize(state); }
+ public:
+  SharkState(SharkBlock*    block,
+             SharkFunction* function = NULL,
+             llvm::Value*   method = NULL);
+  SharkState(const SharkState* state);
 
  private:
   void initialize(const SharkState* state);
 
  private:
-  SharkBlock* _block;
+  SharkBlock*    _block;
+  SharkFunction* _function;
+  llvm::Value*   _method;
+  SharkValue**   _locals;
+  SharkValue**   _stack;
+  SharkValue**   _sp;
 
  public:
   SharkBlock *block() const
   {
     return _block;
   }
-
- protected:
-  inline SharkBuilder* builder() const;
-  inline SharkFunction* function() const;
-
+  SharkFunction *function() const
+  {
+    return _function;
+  }
+  
  public:
+  inline SharkBuilder* builder() const;
   inline int max_locals() const;
   inline int max_stack() const;
-
-  // The values we are tracking
- private:
-  llvm::Value* _method;
-  SharkValue** _locals;
-  SharkValue** _stack;
-  SharkValue** _sp;
 
   // Method
  public:
@@ -125,75 +125,23 @@ class SharkState : public ResourceObj {
   {
     assert(stack_depth() >= slots, "stack underrun");
     _sp -= slots;
-  }  
-  inline int stack_depth_at_entry() const;
-};
-
-class SharkEntryState : public SharkState {
- public:
-  SharkEntryState(llvm::Value* method, SharkBlock* start_block)
-    : SharkState(start_block) { initialize(method); }
-
- private:
-  void initialize(llvm::Value* method);
-};
-
-class SharkPHIState : public SharkState {
- public:
-  SharkPHIState(SharkBlock* block)
-    : SharkState(block) { initialize(); }
-
- private:
-  void initialize();
-
- public:
-  void add_incoming(SharkState* incoming_state);
-};
-
-class SharkTrackingState : public SharkState {
- public:
-  SharkTrackingState(const SharkState* state)
-    : SharkState(state)
-  {
-    set_method(state->method());
-    NOT_PRODUCT(set_has_stack_frame(true));
   }
-
-  // Cache and decache
- public:
-  inline void decache_for_Java_call(ciMethod* callee);
-  inline void cache_after_Java_call(ciMethod* callee);
-  inline void decache_for_VM_call();
-  inline void cache_after_VM_call();
-  inline void decache_for_trap();
 
   // Copy and merge
  public:
-  SharkTrackingState* copy() const
+  SharkState* copy() const
   {
-    return new SharkTrackingState(this);
+    return new SharkState(this);
   }
   void merge(SharkState*       other,
              llvm::BasicBlock* other_block,
              llvm::BasicBlock* this_block);
 
-  // Inlining
-#ifndef PRODUCT
- private:
-  bool _has_stack_frame;
-
- protected:
-  bool has_stack_frame() const
-  {
-    return _has_stack_frame;
-  }
-  void set_has_stack_frame(bool has_stack_frame)
-  {
-    _has_stack_frame = has_stack_frame;
-  }
-#endif // PRODUCT
-
+  // Cache and decache
  public:
-  void enter_inlined_section() PRODUCT_RETURN;
-  void leave_inlined_section() PRODUCT_RETURN;
+  void decache_for_Java_call(ciMethod* callee);
+  void cache_after_Java_call(ciMethod* callee);
+  void decache_for_VM_call();
+  void cache_after_VM_call();
+  void decache_for_trap();
 };

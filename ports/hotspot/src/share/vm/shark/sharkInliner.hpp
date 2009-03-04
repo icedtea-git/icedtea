@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,17 +23,10 @@
  *
  */
 
-inline SharkBuilder* SharkState::builder() const
-{
-  return block()->builder();
-}  
-  
-inline int SharkState::max_locals() const
-{
-  return block()->max_locals();
-}
-
-inline int SharkState::max_stack() const
-{
-  return block()->max_stack();
-}
+class SharkInliner : public AllStatic {
+ public:
+  static bool attempt_inline(ciMethod* target, SharkState* state);
+                      
+ private:
+  static bool may_be_inlinable(ciMethod* target);
+};

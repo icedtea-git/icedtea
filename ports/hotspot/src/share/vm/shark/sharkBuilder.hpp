@@ -111,6 +111,35 @@ class SharkBuilder : public llvm::IRBuilder<> {
  public:
   llvm::Function *CreateFunction(const char *name = "func");
 
+  // Helpers for creating basic blocks
+  // NB don't use unless SharkFunction::CreateBlock is unavailable
+ public:
+  llvm::BasicBlock* GetBlockInsertionPoint() const
+  {
+    llvm::BasicBlock *cur = GetInsertBlock();
+
+    // BasicBlock::Create takes an insertBefore argument, so
+    // we need to find the block _after_ the current block
+    llvm::Function::iterator iter = cur->getParent()->begin();
+    llvm::Function::iterator end  = cur->getParent()->end();
+    while (iter != end) {
+      iter++;
+      if (&*iter == cur) {
+        iter++;
+        break;
+      }
+    }
+
+    if (iter == end)
+      return NULL;
+    else
+      return iter;
+  }
+  llvm::BasicBlock* CreateBlock(llvm::BasicBlock* ip, const char* name="") const
+  {
+    return llvm::BasicBlock::Create(name, GetInsertBlock()->getParent(), ip);
+  }
+  
   // Helpers for accessing structures and arrays
  public:
   llvm::Value* CreateAddressOfStructEntry(llvm::Value* base,

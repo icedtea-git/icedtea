@@ -23,7 +23,7 @@
  *
  */
 
-class SharkBlock;
+class SharkTopLevelBlock;
 class SharkMonitor;
 
 class SharkFunction : public StackObj {
@@ -44,16 +44,16 @@ class SharkFunction : public StackObj {
   void initialize();
 
  private:
-  SharkBuilder*     _builder;
-  const char*       _name;
-  ciTypeFlow*       _flow;
-  ciBytecodeStream* _iter;
-  MacroAssembler*   _masm;
-  llvm::Function*   _function;
-  SharkBlock**      _blocks;
-  llvm::Value*      _base_pc;
-  llvm::Value*      _thread;
-  int               _monitor_count;
+  SharkBuilder*        _builder;
+  const char*          _name;
+  ciTypeFlow*          _flow;
+  ciBytecodeStream*    _iter;
+  MacroAssembler*      _masm;
+  llvm::Function*      _function;
+  SharkTopLevelBlock** _blocks;
+  llvm::Value*         _base_pc;
+  llvm::Value*         _thread;
+  int                  _monitor_count;
 
  public:  
   SharkBuilder* builder() const
@@ -80,7 +80,7 @@ class SharkFunction : public StackObj {
   {
     return _function;
   }
-  SharkBlock* block(int i) const
+  SharkTopLevelBlock* block(int i) const
   {
     return _blocks[i];
   }
