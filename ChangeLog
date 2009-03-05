@@ -1,3 +1,8 @@
+2009-03-05  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp
+	(SharkInliner::may_be_inlinable): Bail out early on constructors.
+
 2009-03-04  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkInliner.hpp: New file.
