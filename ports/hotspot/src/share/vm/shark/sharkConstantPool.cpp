@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -98,6 +98,9 @@ Value *SharkConstantPool::cache_entry_at(int which)
     SharkType::cpCacheEntry_type());
 
   // Resolve the entry if necessary
+  if (target()->holder()->is_cache_entry_resolved(which, block()->bc()))
+    return entry;
+
   int shift;
   switch (ConstantPoolCacheEntry::bytecode_number(block()->bc())) {
   case 1:
