@@ -226,7 +226,15 @@ bool SharkInliner::may_be_inlinable(ciMethod *target)
   if (target->has_exception_handlers() || target->has_jsrs())
     return false;
 
+  // Don't try to inline constructors, as they must
+  // eventually call Object.<init> which we can't inline.
+  // Note that this catches <clinit> too, but why would
+  // we be compiling that?
+  if (target->is_initializer())
+    return false;
+
   // Mustn't inline Object.<init>
+  // Should be caught by the above, but just in case...
   if (target->intrinsic_id() == vmIntrinsics::_Object_init)
     return false;
 
