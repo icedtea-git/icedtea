@@ -656,13 +656,13 @@ ICEDTEA_PATCHES += patches/icedtea-nio2.patch
 endif
 
 ICEDTEA_PATCHES += \
-	$(DISTRIBUTION_PATCHES) \
 	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-awt-window-size.patch \
 	patches/icedtea-java2d-dasher.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-format.patch \
 	patches/icedtea-cc-interp-backedge.patch \
-	patches/icedtea-xml-encodinginfo.patch
+	patches/icedtea-xml-encodinginfo.patch \
+	$(DISTRIBUTION_PATCHES)
 
 stamps/extract.stamp: stamps/download.stamp
 if OPENJDK_SRC_DIR_FOUND
