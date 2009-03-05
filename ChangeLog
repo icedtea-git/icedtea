@@ -492,6 +492,20 @@
 
 2009-03-05  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp
+	(SharkEntry::_code_start): Renamed from start.
+	(SharkEntry::_code_limit): Renamed from limit.
+	(SharkEntry::set_bounds): Renamed from setBounds.
+	(SharkEntry::print_pd_statistics): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.cpp
+	(SharkEntry::print_pd_statistics): Likewise.
+	(SharkEntry::print_statistics): Don't call the above.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::MyJITMemoryManager::endFunctionBody):
+	Fix for setBounds rename.
+
+2009-03-05  Gary Benson  <gbenson@redhat.com>
+
 	* patches/hotspot/default/icedtea-shark.patch
 	(ciInstanceKlass::is_cache_entry_resolved): New method.
 	* ports/hotspot/src/share/vm/shark/sharkConstantPool.hpp
