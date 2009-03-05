@@ -364,3 +364,34 @@
  }
  
  // ------------------------------------------------------------------
+diff -r 5297ff20101d openjdk-ecj/hotspot/src/share/vm/ci/ciInstanceKlass.hpp
+--- openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	Mon Dec 15 15:32:37 2008 +0000
++++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	Thu Mar 05 11:48:56 2009 +0000
+@@ -198,4 +198,9 @@
+   // What kind of ciObject is this?
+   bool is_instance_klass() { return true; }
+   bool is_java_klass()     { return true; }
++
++#ifdef SHARK
++  // Is this entry in the constant pool cache resolved?
++  bool is_cache_entry_resolved(int index, Bytecodes::Code opcode);
++#endif // SHARK
+ };
+diff -r 5297ff20101d openjdk-ecj/hotspot/src/share/vm/ci/ciInstanceKlass.cpp
+--- openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	Mon Dec 15 15:32:37 2008 +0000
++++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	Thu Mar 05 11:48:56 2009 +0000
+@@ -548,3 +548,14 @@
+   }
+   return impl;
+ }
++
++#ifdef SHARK
++// ------------------------------------------------------------------
++// ciInstanceKlass::is_cache_entry_resolved
++//
++// Is this entry in the constant pool cache resolved?
++bool ciInstanceKlass::is_cache_entry_resolved(int index, Bytecodes::Code opcode) {
++  VM_ENTRY_MARK;
++  return get_instanceKlass()->constants()->cache()->entry_at(index)->is_resolved(opcode);
++}
++#endif // SHARK

@@ -492,6 +492,16 @@
 
 2009-03-05  Gary Benson  <gbenson@redhat.com>
 
+	* patches/hotspot/default/icedtea-shark.patch
+	(ciInstanceKlass::is_cache_entry_resolved): New method.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.hpp
+	(SharkConstantPool::target): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp
+	(SharkConstantPool::cache_entry_at): Don't emit code to
+	resolve entry if the entry is resolved at compile time.
+
+2009-03-05  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp
 	(SharkInliner::may_be_inlinable): Bail out early on constructors.
 
