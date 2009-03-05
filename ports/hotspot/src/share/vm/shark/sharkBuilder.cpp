@@ -184,8 +184,8 @@ void SharkBuilder::MyJITMemoryManager::endFunctionBody
 {
   mm->endFunctionBody(F, FunctionStart, FunctionEnd);
 
-  SharkEntry *e = sharkEntry[F];
-  if (e)
-    e->setBounds(FunctionStart, FunctionEnd);
+  SharkEntry *entry = sharkEntry[F];
+  if (entry)
+    entry->set_bounds((address) FunctionStart, (address) FunctionEnd);
 }
 

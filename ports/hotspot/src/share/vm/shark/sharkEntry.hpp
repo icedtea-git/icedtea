@@ -26,6 +26,8 @@
 class SharkEntry : public ZeroEntry {
  private:
   llvm::Function* _llvm_function;
+  address         _code_start;
+  address         _code_limit;
 
  public:
   llvm::Function* llvm_function() const
@@ -38,6 +40,21 @@ class SharkEntry : public ZeroEntry {
   }
 
  public:
+  address code_start() const
+  {
+    return _code_start;
+  }
+  address code_limit() const
+  {
+    return _code_limit;
+  }
+  void set_bounds(address code_start, address code_limit)
+  {
+    _code_start = code_start;
+    _code_limit = code_limit;
+  }
+  
+ public:
   static ByteSize llvm_function_offset()
   {
     return byte_offset_of(SharkEntry, _llvm_function);
@@ -45,23 +62,4 @@ class SharkEntry : public ZeroEntry {
 
  public:
   void print_statistics(const char* name) const PRODUCT_RETURN;
-
-  address code_start() const
-  {
-    return start;
-  }
-  address code_limit() const
-  {
-    return limit;
-  }
-  void print_pd_statistics(address start, address limit) const;
-
-  address start, limit;
-
-public:
-  void setBounds(unsigned char *FunctionStart, unsigned char *FunctionEnd)
-  {
-    start = (address)FunctionStart;
-    limit = (address)FunctionEnd;
-  }
 };
