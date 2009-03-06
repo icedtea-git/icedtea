@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,9 +29,21 @@
 using namespace llvm;
 
 SharkCompiler::SharkCompiler()
-  : AbstractCompiler(),
-    _builder()
+  : AbstractCompiler()
 {
+  // Create a module to build our functions into
+  _module = new Module("shark");
+
+  // Create the builder to build our functions
+  _builder = new SharkBuilder(this);
+  
+  // Create the JIT
+  ModuleProvider *module_provider = new ExistingModuleProvider(module());
+  _memory_manager = new SharkMemoryManager();
+  _execution_engine = ExecutionEngine::createJIT(
+    module_provider, NULL, memory_manager(), false);
+
+  // Initialize Shark components that need it
   SharkType::initialize();
   SharkRuntime::initialize(builder());
   mark_initialized();
@@ -97,7 +109,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
 
   // Compile the method into the CodeBuffer
   ciBytecodeStream iter(target);
-  SharkFunction function(builder(), name, flow, &iter, masm);
+  SharkFunction function(this, name, flow, &iter, masm);
 
   // Install the method into the VM
   CodeOffsets offsets;
@@ -125,6 +137,31 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
 
   // Free the BufferBlob
   BufferBlob::free(bb);
+}
+
+
+ZeroEntry::method_entry_t SharkCompiler::compile(const char* name,
+                                                 Function*   function)
+{
+  // Dump the generated code, if requested
+#ifndef PRODUCT
+#ifdef X86
+  if (SharkPrintAsmOf != NULL) {
+    std::vector<const char*> args;
+    args.push_back(""); // program name
+    if (!fnmatch(SharkPrintAsmOf, name, 0))
+      args.push_back("-debug-only=x86-emitter");
+    else
+      args.push_back("-debug-only=none");
+    args.push_back(0);  // terminator
+    cl::ParseCommandLineOptions(args.size() - 1, (char **) &args[0]);
+  }
+#endif // X86
+#endif // !PRODUCT
+
+  // Compile to native code
+  return (ZeroEntry::method_entry_t)
+    execution_engine()->getPointerToFunction(function);
 }
 
 const char* SharkCompiler::methodname(const ciMethod* target)

@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,9 +23,9 @@
  *
  */
 
-class SharkCompiler : public AbstractCompiler {
-  friend class SharkCompilation;
+class SharkBuilder;
 
+class SharkCompiler : public AbstractCompiler {
  public:
   // Creation
   SharkCompiler();
@@ -47,17 +47,35 @@ class SharkCompiler : public AbstractCompiler {
   // Compilation entry point for methods
   void compile_method(ciEnv* env, ciMethod* target, int entry_bci);
 
-  // The builder we'll use to compile our functions
+  // LLVM interface
  private:
-  SharkBuilder _builder;
+  llvm::Module*          _module;
+  SharkBuilder*          _builder;
+  SharkMemoryManager*    _memory_manager;
+  llvm::ExecutionEngine* _execution_engine;
 
- protected:
-  SharkBuilder* builder()
+ public:
+  llvm::Module* module() const
   {
-    return &_builder;
+    return _module;
   }
+  SharkBuilder* builder() const
+  {
+    return _builder;
+  }
+  SharkMemoryManager* memory_manager() const
+  {
+    return _memory_manager;
+  }
+  llvm::ExecutionEngine* execution_engine() const
+  {
+    return _execution_engine;
+  }
+
+ public:
+  ZeroEntry::method_entry_t compile(const char* name, llvm::Function* func);
 
   // Helper
  private:
-  static const char *methodname(const ciMethod* target);
+  static const char* methodname(const ciMethod* target);
 };

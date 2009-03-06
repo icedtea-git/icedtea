@@ -25,8 +25,6 @@
 
 #include "incls/_precompiled.incl"
 #include "incls/_sharkTopLevelBlock.cpp.incl"
-#include "ciArrayKlass.hpp" // XXX fuck you makeDeps
-#include "ciObjArrayKlass.hpp" // XXX likewise
 
 using namespace llvm;
 

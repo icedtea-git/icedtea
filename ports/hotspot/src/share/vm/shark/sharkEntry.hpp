@@ -24,9 +24,10 @@
  */
 
 class SharkEntry : public ZeroEntry {
+  friend class SharkMemoryManager;
+
  private:
   llvm::Function* _llvm_function;
-  address         _code_start;
   address         _code_limit;
 
  public:
@@ -42,24 +43,18 @@ class SharkEntry : public ZeroEntry {
  public:
   address code_start() const
   {
-    return _code_start;
+    return (address) entry_point();
   }
   address code_limit() const
   {
     return _code_limit;
   }
-  void set_bounds(address code_start, address code_limit)
+ protected:
+  void set_code_limit(address code_limit)
   {
-    _code_start = code_start;
     _code_limit = code_limit;
   }
   
- public:
-  static ByteSize llvm_function_offset()
-  {
-    return byte_offset_of(SharkEntry, _llvm_function);
-  }
-
  public:
   void print_statistics(const char* name) const PRODUCT_RETURN;
 };

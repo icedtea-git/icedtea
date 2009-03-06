@@ -1,3 +1,52 @@
+2009-03-06  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::SharkBuilder): New argument.
+	(SharkBuilder::_compiler): New field.
+	(SharkBuilder::_module): Removed field.
+	(SharkBuilder::_module_provider): Likewise.
+	(SharkBuilder::_execution_engine): Likewise.
+	(SharkBuilder::module): Rewritten.
+	(SharkBuilder::execution_engine): Likewise.
+	(SharkBuilder::MyJITMemoryManager): Moved to sharkMemoryManager.hpp.
+	(SharkBuilder::sharkEntry): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::SharkBuilder): New argument.
+	(SharkBuilder::MyJITMemoryManager::endFunctionBody) Moved to
+	sharkMemoryManager.cpp.
+	(SharkBuilder::sharkEntry): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp
+	(SharkCompiler::_module): New field.
+	(SharkCompiler::_execution_engine): Likewise.
+	(SharkCompiler::module): New method.
+	(SharkCompiler::execution_engine): Likewise.
+	(SharkCompiler::compile): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp
+	(SharkCompiler::SharkCompiler): Initialize new fields.
+	(SharkCompiler::compile): New method.
+
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp
+	(SharkEntry::_code_start): Removed field.
+	(SharkEntry::code_start): Rewritten.
+	(SharkEntry::set_bounds): Replaced with...
+	(SharkEntry::set_code_limit): New method.
+	(SharkEntry::llvm_function_offset): Removed method.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::SharkFunction): Changed arguments.
+	(SharkFunction::_builder): Removed field.
+	(SharkFunction::_compiler): New field.
+	(SharkFunction::compiler): New method.
+	(SharkFunction::builder): Rewritten.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::initialize): Updated for new interfaces.
+
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
 2009-03-06  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (check-*): Pass $(ICEDTEA_JTREG_OPTIONS), unset
