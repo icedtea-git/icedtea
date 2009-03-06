@@ -1,3 +1,8 @@
+2009-03-06  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (check-*): Pass $(ICEDTEA_JTREG_OPTIONS), unset
+	by default.
+
 2009-03-05  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (ICEDTEA_PATCHES): Make $(DISTRIBUTION_PATCHES) the
