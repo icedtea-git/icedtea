@@ -25,86 +25,25 @@
 
 class SharkBuilder : public llvm::IRBuilder<> {
  public:
-  SharkBuilder();
-
-  static std::map<const llvm::Function*, SharkEntry*> sharkEntry;
+  SharkBuilder(SharkCompiler* compiler);
 
  private:
-  llvm::Module                 _module;
-  llvm::ExistingModuleProvider _module_provider;
-  llvm::ExecutionEngine*       _execution_engine;
-
-  // MyJITMemoryManager wraps the JIT Memory Manager: this allows us
-  // to run our own memory allocation policies, but the purpose here
-  // is to allow us to intercept JITMemoryManager::endFunctionBody.
-  class MyJITMemoryManager : public llvm::JITMemoryManager {
-
-    llvm::JITMemoryManager *mm;
-
-  public:
-
-    MyJITMemoryManager()
-    {
-      mm = llvm::JITMemoryManager::CreateDefaultMemManager();
-    }
-
-    virtual void AllocateGOT() {
-      mm->AllocateGOT();
-    }
-
-    virtual unsigned char *getGOTBase() const {
-      return mm->getGOTBase();
-    }
-
-    virtual unsigned char *startFunctionBody(const llvm::Function *F,
-					     uintptr_t &ActualSize) {
-      return mm->startFunctionBody(F, ActualSize);
-    }
-
-    virtual unsigned char *allocateStub(const llvm::GlobalValue* F,
-					unsigned StubSize,
-					unsigned Alignment) {
-      return mm->allocateStub(F, StubSize, Alignment);
-    }
-
-    void endFunctionBody(const llvm::Function *F, unsigned char *FunctionStart,
-			 unsigned char *FunctionEnd);
-
-    virtual void deallocateMemForFunction(const llvm::Function *F) {
-      return mm->deallocateMemForFunction(F);
-    }
-
-    virtual unsigned char* startExceptionTable(const llvm::Function* F,
-					       uintptr_t &ActualSize) {
-      return mm->startExceptionTable(F, ActualSize);
-    }
-
-    virtual void endExceptionTable(const llvm::Function *F,
-				   unsigned char *TableStart,
-				   unsigned char *TableEnd,
-				   unsigned char* FrameRegister) {
-      mm->endExceptionTable(F, TableStart, TableEnd, FrameRegister);
-    }
-
-    virtual void setMemoryWritable() {
-      mm->setMemoryWritable();
-    }
-
-    virtual void setMemoryExecutable() {
-      mm->setMemoryExecutable();
-    }
-  };
-
-  MyJITMemoryManager *MemMgr;
+  SharkCompiler* _compiler;
 
  public:
-  llvm::Module* module()
+  SharkCompiler* compiler() const
   {
-    return &_module;
+    return _compiler;
+  }
+
+ private:
+  llvm::Module* module() const
+  {
+    return compiler()->module();
   }
   llvm::ExecutionEngine* execution_engine() const
   {
-    return _execution_engine;
+    return compiler()->execution_engine();
   }
 
   // Function creation

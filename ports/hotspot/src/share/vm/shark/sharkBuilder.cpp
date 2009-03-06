@@ -28,15 +28,10 @@
 
 using namespace llvm;
 
-std::map<const llvm::Function*, SharkEntry*> SharkBuilder::sharkEntry;
-
-SharkBuilder::SharkBuilder()
+SharkBuilder::SharkBuilder(SharkCompiler* compiler)
   : IRBuilder<>(),
-      _module("shark"),
-      _module_provider(module()),
-      _execution_engine(ExecutionEngine::createJIT
-			(&_module_provider, NULL, new MyJITMemoryManager(),
-			 /* Fast */ false)) {
+    _compiler(compiler)
+{
   init_external_functions();
 }
 
@@ -177,15 +172,3 @@ CallInst *SharkBuilder::CreateMemoryBarrier(BarrierFlags flags)
     ConstantInt::get(Type::Int1Ty, 0)};
   return CreateCall(llvm_memory_barrier_fn(), args, args + 5);
 }
-
-void SharkBuilder::MyJITMemoryManager::endFunctionBody
-  (const llvm::Function *F, unsigned char *FunctionStart,
-   unsigned char *FunctionEnd)
-{
-  mm->endFunctionBody(F, FunctionStart, FunctionEnd);
-
-  SharkEntry *entry = sharkEntry[F];
-  if (entry)
-    entry->set_bounds((address) FunctionStart, (address) FunctionEnd);
-}
-

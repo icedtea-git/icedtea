@@ -28,12 +28,12 @@ class SharkMonitor;
 
 class SharkFunction : public StackObj {
  public:
-  SharkFunction(SharkBuilder*     builder,
+  SharkFunction(SharkCompiler*    compiler,
                 const char*       name,
                 ciTypeFlow*       flow,
                 ciBytecodeStream* iter,
                 MacroAssembler*   masm)
-    : _builder(builder),
+    : _compiler(compiler),
       _name(name),
       _flow(flow),
       _iter(iter),
@@ -44,7 +44,7 @@ class SharkFunction : public StackObj {
   void initialize();
 
  private:
-  SharkBuilder*        _builder;
+  SharkCompiler*       _compiler;
   const char*          _name;
   ciTypeFlow*          _flow;
   ciBytecodeStream*    _iter;
@@ -56,9 +56,9 @@ class SharkFunction : public StackObj {
   int                  _monitor_count;
 
  public:  
-  SharkBuilder* builder() const
+  SharkCompiler* compiler() const
   {
-    return _builder;
+    return _compiler;
   }
   const char* name() const
   {
@@ -98,6 +98,10 @@ class SharkFunction : public StackObj {
   }
 
  public:
+  SharkBuilder* builder() const
+  {
+    return compiler()->builder();
+  }
   int arg_size() const
   {
     return target()->arg_size();

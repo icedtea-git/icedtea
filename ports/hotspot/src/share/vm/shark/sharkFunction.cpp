@@ -157,11 +157,7 @@ void SharkFunction::initialize()
   // Create the function
   _function = builder()->CreateFunction(name());
   entry->set_llvm_function(function());
-#ifndef PRODUCT
-  // FIXME: there should be a mutex when updating sharkEntry in case
-  // there are multiple compilation threads.
-  builder()->sharkEntry[function()] = entry;
-#endif // !PRODUCT
+  compiler()->memory_manager()->set_entry_for_function(function(), entry);
 
   // Create the list of blocks
   set_block_insertion_point(NULL);
@@ -252,31 +248,16 @@ void SharkFunction::initialize()
       function()->dump();
   }
 
-  if (SharkPrintAsmOf != NULL) {
-#if defined (__x86_64) || defined (__i386)
-      std::vector<const char*> Args;
-      Args.push_back(""); // program name
-      if (!fnmatch(SharkPrintAsmOf, name(), 0))
-	// Oh, yuck.  The LLVM name for this debugging dump is
-	// target-specific.
-	Args.push_back("-debug-only=" "x86-emitter");
-      else
-	Args.push_back("-debug-only=" "none");
-      Args.push_back(0);  // Null terminator.
-      cl::ParseCommandLineOptions(Args.size()-1, (char**)&Args[0]);
-#endif
-  }
-
   // Compile to native code
-  void *code = builder()->execution_engine()->getPointerToFunction(function());
+  entry->set_entry_point(compiler()->compile(name(), function()));
 
   // Register generated code for profiling, etc
   if (JvmtiExport::should_post_dynamic_code_generated()) {
-    JvmtiExport::post_dynamic_code_generated
-      (name(), entry->code_start(), entry->code_limit());
+    JvmtiExport::post_dynamic_code_generated(
+      name(), entry->code_start(), entry->code_limit());
   }
 
-  entry->set_entry_point((ZeroEntry::method_entry_t) code);
+  // Print statistics, if requested
   if (SharkTraceInstalls)
     entry->print_statistics(name());
 }
