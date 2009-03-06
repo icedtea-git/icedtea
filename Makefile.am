@@ -2918,6 +2918,7 @@ check-hotspot: stamps/jtreg.stamp
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/hotspot/JTwork -r:test/hotspot/JTreport \
 		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		$(ICEDTEA_JTREG_OPTIONS) \
 		`pwd`/openjdk/hotspot/test \
 	    | tee test/$@.log
 
@@ -2926,6 +2927,7 @@ check-langtools: stamps/jtreg.stamp
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/langtools/JTwork -r:test/langtools/JTreport \
 		-s -jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		$(ICEDTEA_JTREG_OPTIONS) \
 		-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.langtools.jtx \
 		`pwd`/openjdk/langtools/test \
 	    | tee test/$@.log
@@ -2935,6 +2937,7 @@ check-jdk: stamps/jtreg.stamp
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
 		-s -jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		$(ICEDTEA_JTREG_OPTIONS) \
 		-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.jdk.jtx \
 		`pwd`/openjdk/jdk/test \
 	    | tee test/$@.log
