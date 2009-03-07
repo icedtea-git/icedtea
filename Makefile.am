@@ -1099,6 +1099,10 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make/ \
 	  $(ICEDTEA_BUILD_TARGET)
+	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
+	mkdir -p $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext
 if ENABLE_GCJWEBPLUGIN
 	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
@@ -1162,6 +1166,10 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/control/make \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
+	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/ext
+	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/ext
 if ENABLE_GCJWEBPLUGIN
 	cp -pPRf gcjwebplugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
