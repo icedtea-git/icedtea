@@ -130,6 +130,29 @@ class SharkTopLevelBlock : public SharkBlock {
  private:
   int scan_for_traps();
 
+  // Traps
+ private:
+  enum {
+    TRAP_UNCHECKED = 232323, // > any constant pool index
+    TRAP_NO_TRAPS
+  };
+  int _trap_request;
+
+ public:
+  int trap_request()
+  {
+    if (_trap_request == TRAP_UNCHECKED)
+      _trap_request = scan_for_traps();
+    return _trap_request;
+  }
+  bool has_trap()
+  {
+    return trap_request() != TRAP_NO_TRAPS;
+  }
+
+ private:
+  int scan_for_traps();
+
   // Entry state
  private:
   bool _entered;
