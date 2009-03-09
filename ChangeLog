@@ -1,3 +1,40 @@
+2009-03-09  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::_trap_request): New field.
+	(SharkTopLevelBlock::trap_request): New method.
+	(SharkTopLevelBlock::scan_for_traps): Likewise.
+	(SharkTopLevelBlock::has_trap): Rewritten.
+	(SharkTopLevelBlock::trap_index): Removed method.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): New method.
+	(SharkTopLevelBlock::emit_IR): s/trap_index/trap_request/.
+	(SharkTopLevelBlock::get_virtual_callee): Removed slow case.
+
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp
+	(SharkConstantPool::cache_entry_at): Removed slow case.
+
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp
+	(SharkRuntime::_resolve_get_put): Removed.
+	(SharkRuntime::_resolve_invoke): Likewise.
+	(SharkRuntime::resolve_get_put): Likewise.
+	(SharkRuntime::resolve_invoke): Likewise.
+	(SharkRuntime::resolve_get_put_C): Likewise.
+	(SharkRuntime::resolve_invoke_C): Likewise.
+	(SharkRuntime::uncommon_trap_C): s/index/trap_request/.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::_resolve_get_put): Removed.
+	(SharkRuntime::_resolve_invoke): Likewise.
+	(SharkRuntime::initialize): Removed initialization for the above.
+	(SharkRuntime::resolve_get_put_C): Removed.
+	(SharkRuntime::resolve_invoke_C): Likewise.
+	(SharkRuntime::uncommon_trap_C): s/index/trap_request/.
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::do_field_access): Mismatch case now handled by trap.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
 2009-03-06  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp

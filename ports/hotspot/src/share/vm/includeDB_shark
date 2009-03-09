@@ -171,7 +171,6 @@ sharkConstantPool.cpp                   llvmHeaders.hpp
 sharkConstantPool.cpp                   methodOop.hpp
 sharkConstantPool.cpp                   sharkBuilder.hpp
 sharkConstantPool.cpp                   sharkConstantPool.hpp
-sharkConstantPool.cpp                   sharkRuntime.hpp
 sharkConstantPool.cpp                   sharkState.inline.hpp
 sharkConstantPool.cpp                   sharkType.hpp
 sharkConstantPool.cpp                   sharkValue.inline.hpp
@@ -285,6 +284,7 @@ sharkTopLevelBlock.cpp                  ciStreams.hpp
 sharkTopLevelBlock.cpp                  ciType.hpp
 sharkTopLevelBlock.cpp                  ciTypeFlow.hpp
 sharkTopLevelBlock.cpp                  debug.hpp
+sharkTopLevelBlock.cpp                  deoptimization.hpp
 sharkTopLevelBlock.cpp                  llvmHeaders.hpp
 sharkTopLevelBlock.cpp                  shark_globals.hpp
 sharkTopLevelBlock.cpp                  sharkTopLevelBlock.hpp

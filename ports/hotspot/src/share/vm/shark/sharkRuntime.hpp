@@ -37,8 +37,6 @@ class SharkRuntime : public AllStatic {
   static llvm::Constant* _anewarray;
   static llvm::Constant* _multianewarray;
   static llvm::Constant* _register_finalizer;
-  static llvm::Constant* _resolve_get_put;
-  static llvm::Constant* _resolve_invoke;
   static llvm::Constant* _resolve_klass;
   static llvm::Constant* _safepoint;
   static llvm::Constant* _throw_ArrayIndexOutOfBoundsException;
@@ -77,14 +75,6 @@ class SharkRuntime : public AllStatic {
   {
     return _register_finalizer;
   }
-  static llvm::Constant* resolve_get_put()
-  {
-    return _resolve_get_put;
-  }
-  static llvm::Constant* resolve_invoke()
-  {
-    return _resolve_invoke;
-  }
   static llvm::Constant* resolve_klass()
   {
     return _resolve_klass;
@@ -120,14 +110,6 @@ class SharkRuntime : public AllStatic {
 
   static void register_finalizer_C(JavaThread* thread, oop object);
 
-  static void resolve_get_put_C(JavaThread*             thread,
-                                ConstantPoolCacheEntry* entry,
-                                int                     bci,
-                                Bytecodes::Code         bytecode);
-  static void resolve_invoke_C(JavaThread*             thread,
-                               ConstantPoolCacheEntry* entry,
-                               int                     bci,
-                               Bytecodes::Code         bytecode);
   static void resolve_klass_C(JavaThread* thread, int index);
   static void throw_ArrayIndexOutOfBoundsException_C(JavaThread* thread,
                                                      const char* file,
@@ -218,5 +200,5 @@ class SharkRuntime : public AllStatic {
  private:
   static void dump_C(const char *name, intptr_t value);
   static bool is_subtype_of_C(klassOop check_klass, klassOop object_klass); 
-  static void uncommon_trap_C(JavaThread* thread, int index);
+  static void uncommon_trap_C(JavaThread* thread, int trap_request);
 };
