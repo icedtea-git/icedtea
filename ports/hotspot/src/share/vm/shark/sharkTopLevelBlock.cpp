@@ -143,6 +143,99 @@ class SharkPHIState : public SharkState {
   }
 };
 
+int SharkTopLevelBlock::scan_for_traps()
+{
+  // If typeflow got one then we're already done
+  if (ciblock()->has_trap()) {
+    return Deoptimization::make_trap_request(
+      Deoptimization::Reason_unloaded,
+      Deoptimization::Action_reinterpret,
+      ciblock()->trap_index());
+  }
+
+  // Scan the bytecode
+  iter()->reset_to_bci(start());
+  while (iter()->next_bci() < limit()) {
+    iter()->next();
+
+    ciField *field;
+    ciMethod *method;
+    bool will_link;
+    bool is_field;
+
+    int index = -1;
+
+    switch (bc()) {
+    case Bytecodes::_getfield:
+    case Bytecodes::_getstatic:
+    case Bytecodes::_putfield:
+    case Bytecodes::_putstatic:
+      field = iter()->get_field(will_link);
+      assert(will_link, "typeflow responsibility");
+      is_field = (bc() == Bytecodes::_getfield || bc() == Bytecodes::_putfield);
+
+      // If the bytecode does not match the field then bail out to
+      // the interpreter to throw an IncompatibleClassChangeError
+      if (is_field == field->is_static()) {
+        return Deoptimization::make_trap_request(
+                 Deoptimization::Reason_unhandled,
+                 Deoptimization::Action_none);
+      }
+
+      // If this is a getfield or putfield then there won't be a
+      // pool access and we're done
+      if (is_field)
+        break;
+
+      // There won't be a pool access if this is a getstatic that
+      // resolves to a handled constant either
+      if (bc() == Bytecodes::_getstatic && field->is_constant()) {
+        if (SharkValue::from_ciConstant(field->constant_value()))
+          break;
+      }
+
+      // Continue to the check
+      index = iter()->get_field_index();
+      break;
+
+    case Bytecodes::_invokespecial:
+    case Bytecodes::_invokestatic:
+    case Bytecodes::_invokevirtual:
+    case Bytecodes::_invokeinterface:
+      method = iter()->get_method(will_link);
+      assert(will_link, "typeflow responsibility");
+
+      // If this is a non-final invokevirtual then there won't
+      // be a pool access.  We do need to check that its holder
+      // is linked, however, because its vtable won't have been
+      // set up otherwise.
+      if (bc() == Bytecodes::_invokevirtual && !method->is_final_method()) {
+        if (!method->holder()->is_linked()) {
+          return Deoptimization::make_trap_request(
+            Deoptimization::Reason_uninitialized,
+            Deoptimization::Action_reinterpret);
+        }
+        break;
+      }
+
+      // Continue to the check
+      index = iter()->get_method_index();
+      break;
+    }
+
+    // If we found a constant pool access on this bytecode then check it
+    if (index != -1) {
+      if (!target()->holder()->is_cache_entry_resolved(
+             Bytes::swap_u2(index), bc())) {
+        return Deoptimization::make_trap_request(
+          Deoptimization::Reason_uninitialized,
+          Deoptimization::Action_reinterpret);
+      }
+    }
+  }
+  return TRAP_NO_TRAPS;
+}
+
 SharkState* SharkTopLevelBlock::entry_state()
 {
   if (_entry_state == NULL) {
@@ -243,7 +336,7 @@ void SharkTopLevelBlock::emit_IR()
     builder()->CreateCall2(
       SharkRuntime::uncommon_trap(),
       thread(),
-      LLVMValue::jint_constant(trap_index()));
+      LLVMValue::jint_constant(trap_request()));
     builder()->CreateRetVoid();
     return;
   }
@@ -860,8 +953,8 @@ SharkTopLevelBlock::CallType SharkTopLevelBlock::get_call_type(ciMethod* method)
 }
 
 Value *SharkTopLevelBlock::get_callee(CallType    call_type,
-                              ciMethod*   method,
-                              SharkValue* receiver)
+                                      ciMethod*   method,
+                                      SharkValue* receiver)
 {
   switch (call_type) {
   case CALL_DIRECT:
@@ -901,34 +994,19 @@ Value *SharkTopLevelBlock::get_virtual_callee(SharkValue* receiver,
     SharkType::jobject_type(),
     "klass");
 
-  Value *index;
-  if (!method->holder()->is_linked()) {
-    // Yuck, we have to do this one slow :(
-    // XXX should we trap on this?
-    NOT_PRODUCT(warning("unresolved invokevirtual in %s", function()->name()));
-    SharkConstantPool constants(this);
-    Value *cache = constants.cache_entry_at(iter()->get_method_index());
-    index = builder()->CreateValueOfStructEntry(
-      cache, ConstantPoolCacheEntry::f2_offset(),
-      SharkType::intptr_type(),
-      "index");
-  }
-  else {
-    index = LLVMValue::intptr_constant(method->vtable_index());
-  }
-
   return builder()->CreateLoad(
     builder()->CreateArrayAddress(
       klass,
       SharkType::methodOop_type(),
       vtableEntry::size() * wordSize,
       in_ByteSize(instanceKlass::vtable_start_offset() * wordSize),
-      index),
+      LLVMValue::intptr_constant(method->vtable_index())),
     "callee");
 }
 
 // Interpreter-style virtual call lookup
-Value* SharkTopLevelBlock::get_virtual_callee(Value *cache, SharkValue *receiver)
+Value* SharkTopLevelBlock::get_virtual_callee(Value *cache,
+                                              SharkValue *receiver)
 {
   BasicBlock *final      = function()->CreateBlock("final");
   BasicBlock *not_final  = function()->CreateBlock("not_final");

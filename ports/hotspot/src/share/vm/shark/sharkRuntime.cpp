@@ -36,8 +36,6 @@ Constant* SharkRuntime::_newarray;
 Constant* SharkRuntime::_anewarray;
 Constant* SharkRuntime::_multianewarray;
 Constant* SharkRuntime::_register_finalizer;
-Constant* SharkRuntime::_resolve_get_put;
-Constant* SharkRuntime::_resolve_invoke;
 Constant* SharkRuntime::_resolve_klass;
 Constant* SharkRuntime::_safepoint;
 Constant* SharkRuntime::_throw_ArrayIndexOutOfBoundsException;
@@ -120,20 +118,6 @@ void SharkRuntime::initialize(SharkBuilder* builder)
     (intptr_t) register_finalizer_C,
     FunctionType::get(Type::VoidTy, params, false),
     "SharkRuntime__register_finalizer");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  params.push_back(SharkType::cpCacheEntry_type());
-  params.push_back(SharkType::jint_type());
-  params.push_back(SharkType::jint_type());
-  _resolve_get_put = builder->make_function(
-    (intptr_t) resolve_get_put_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__resolve_get_put");
-  _resolve_invoke = builder->make_function(
-    (intptr_t) resolve_invoke_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__resolve_invoke");
 
   params.clear();
   params.push_back(SharkType::thread_type());
@@ -349,138 +333,6 @@ JRT_ENTRY(void, SharkRuntime::register_finalizer_C(JavaThread* thread,
 }
 JRT_END
 
-JRT_ENTRY(void, SharkRuntime::resolve_get_put_C(JavaThread*             thread,
-                                                ConstantPoolCacheEntry* entry,
-                                                int                     bci,
-                                                Bytecodes::Code      bytecode))
-{
-  // Resolve the field
-  FieldAccessInfo info;
-  {
-    constantPoolHandle pool(thread, method(thread)->constants());
-    JvmtiHideSingleStepping jhss(thread);
-    LinkResolver::resolve_field(
-      info, pool, two_byte_index(thread, bci), bytecode, false, CHECK);
-  }
-
-  // Check if link resolution caused the cache to be updated
-  if (entry->is_resolved(bytecode))
-    return;
-  
-  // Compute auxiliary field attributes
-  TosState state = as_TosState(info.field_type());
-
-  // We need to delay resolving put instructions on final fields
-  // until we actually invoke one. This is required so we throw
-  // exceptions at the correct place. If we do not resolve completely
-  // in the current pass, leaving the put_code set to zero will
-  // cause the next put instruction to reresolve.
-  bool is_put =
-    (bytecode == Bytecodes::_putfield || bytecode == Bytecodes::_putstatic);
-  Bytecodes::Code put_code = (Bytecodes::Code) 0;
-
-  // We also need to delay resolving getstatic instructions until the
-  // class is intitialized.  This is required so that access to the
-  // static field will call the initialization function every time
-  // until the class is completely initialized as per 2.17.5 in JVM
-  // Specification.
-  instanceKlass *klass = instanceKlass::cast(info.klass()->as_klassOop());
-  bool is_static =
-    (bytecode == Bytecodes::_getstatic || bytecode == Bytecodes::_putstatic);
-  bool uninitialized_static = (is_static && !klass->is_initialized());
-  Bytecodes::Code get_code = (Bytecodes::Code) 0;
-
-  if (!uninitialized_static) {
-    get_code = ((is_static) ? Bytecodes::_getstatic : Bytecodes::_getfield);
-    if (is_put || !info.access_flags().is_final()) {
-      put_code = ((is_static) ? Bytecodes::_putstatic : Bytecodes::_putfield);
-    }
-  }
-
-  // Update the cache entry
-  entry->set_field(
-    get_code,
-    put_code,
-    info.klass(),
-    info.field_index(),
-    info.field_offset(),
-    state,
-    info.access_flags().is_final(),
-    info.access_flags().is_volatile());
-}
-JRT_END
-
-JRT_ENTRY(void, SharkRuntime::resolve_invoke_C(JavaThread*             thread,
-                                               ConstantPoolCacheEntry* entry,
-                                               int                     bci,
-                                               Bytecodes::Code       bytecode))
-{
-  // Find the receiver
-  Handle receiver(thread, NULL);
-  if (bytecode == Bytecodes::_invokevirtual ||
-      bytecode == Bytecodes::_invokeinterface) {
-    ResourceMark rm(thread);
-    methodHandle mh(thread, method(thread));
-    Bytecode_invoke *call = Bytecode_invoke_at(mh, bci);
-    symbolHandle signature(thread, call->signature());
-    ArgumentSizeComputer asc(signature);
-    receiver = Handle(thread, (oop) tos_at(thread, asc.size()));
-    assert(
-      receiver.is_null() ||
-      (Universe::heap()->is_in_reserved(receiver()) &&
-       Universe::heap()->is_in_reserved(receiver->klass())), "sanity check");
-  }
-
-  // Resolve the method
-  CallInfo info;
-  {
-    constantPoolHandle pool(thread, method(thread)->constants());
-    JvmtiHideSingleStepping jhss(thread);
-    LinkResolver::resolve_invoke(
-      info, receiver, pool, two_byte_index(thread, bci), bytecode, CHECK);
-    if (JvmtiExport::can_hotswap_or_post_breakpoint()) {
-      int retry_count = 0;
-      while (info.resolved_method()->is_old()) {
-        // It is very unlikely that method is redefined more than 100
-        // times in the middle of resolve. If it is looping here more
-        // than 100 times means then there could be a bug here.
-        guarantee((retry_count++ < 100),
-                  "Could not resolve to latest version of redefined method");
-        // method is redefined in the middle of resolve so re-try.
-        LinkResolver::resolve_invoke(
-          info, receiver, pool, two_byte_index(thread, bci), bytecode, CHECK);
-      }
-    }
-  }
-
-  // Check if link resolution caused the cache to be updated
-  if (entry->is_resolved(bytecode))
-    return;
-
-  // Update the cache entry
-  methodHandle rm = info.resolved_method();
-  if (bytecode == Bytecodes::_invokeinterface) {
-    if (rm->method_holder() == SystemDictionary::object_klass()) {
-      // Workaround for the case where we encounter an invokeinterface,
-      // but should really have an invokevirtual since the resolved
-      // method is a virtual method in java.lang.Object. This is a
-      // corner case in the spec but is presumably legal, and while
-      // javac does not generate this code there's no reason it could
-      // not be produced by a compliant java compiler.  See
-      // cpCacheOop.cpp for more details.
-      assert(rm->is_final() || info.has_vtable_index(), "should be set");
-      entry->set_method(bytecode, rm, info.vtable_index()); 
-    }
-    else {
-      entry->set_interface_call(rm, klassItable::compute_itable_index(rm()));
-    }
-  }
-  else {
-    entry->set_method(bytecode, rm, info.vtable_index());
-  }
-}
-JRT_END
-
 JRT_ENTRY(void, SharkRuntime::resolve_klass_C(JavaThread* thread, int index))
 {
   klassOop klass = method(thread)->constants()->klass_at(index, CHECK);
@@ -535,7 +387,7 @@ bool SharkRuntime::is_subtype_of_C(klassOop check_klass, klassOop object_klass)
   return object_klass->klass_part()->is_subtype_of(check_klass);
 }
 
-void SharkRuntime::uncommon_trap_C(JavaThread* thread, int index)
+void SharkRuntime::uncommon_trap_C(JavaThread* thread, int trap_request)
 {
   // In C2, uncommon_trap_blob creates a frame, so all the various
   // deoptimization functions expect to find the frame of the method
@@ -547,7 +399,7 @@ void SharkRuntime::uncommon_trap_C(JavaThread* thread, int index)
   // Initiate the trap
   thread->set_last_Java_frame();
   Deoptimization::UnrollBlock *urb =
-    Deoptimization::uncommon_trap(thread, index);
+    Deoptimization::uncommon_trap(thread, trap_request);
   thread->reset_last_Java_frame();
 
   // Pop our dummy frame and the frame being deoptimized

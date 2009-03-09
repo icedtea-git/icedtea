@@ -87,8 +87,10 @@ Value *SharkConstantPool::cache_entry_at(int which)
   // bizarre hack but it's the same as
   // constantPoolOopDesc::field_or_method_at().
   which = Bytes::swap_u2(which);
+  assert(target()->holder()->is_cache_entry_resolved(which, block()->bc()),
+         "should be");
 
-  Value *entry = builder()->CreateIntToPtr(
+  return builder()->CreateIntToPtr(
     builder()->CreateAdd(
       builder()->CreatePtrToInt(
         cache(), SharkType::intptr_type()),
@@ -96,74 +98,6 @@ Value *SharkConstantPool::cache_entry_at(int which)
         in_bytes(constantPoolCacheOopDesc::base_offset()) +
         which * sizeof(ConstantPoolCacheEntry))),
     SharkType::cpCacheEntry_type());
-
-  // Resolve the entry if necessary
-  if (target()->holder()->is_cache_entry_resolved(which, block()->bc()))
-    return entry;
-
-  int shift;
-  switch (ConstantPoolCacheEntry::bytecode_number(block()->bc())) {
-  case 1:
-    shift = 16;
-    break;
-  case 2:
-    shift = 24;
-    break;
-  default:
-    ShouldNotReachHere();
-  }
-
-  Value *opcode = builder()->CreateAnd(
-    builder()->CreateLShr(
-      builder()->CreateValueOfStructEntry(
-        entry, ConstantPoolCacheEntry::indices_offset(),
-        SharkType::intptr_type()),
-      LLVMValue::intptr_constant(shift)),
-    LLVMValue::intptr_constant(0xff));
-
-  BasicBlock *orig_block = builder()->GetInsertBlock();
-  SharkState *orig_state = block()->current_state()->copy();
-
-  BasicBlock *resolve  = block()->function()->CreateBlock("resolve");
-  BasicBlock *resolved = block()->function()->CreateBlock("resolved");
-
-  builder()->CreateCondBr(
-    builder()->CreateICmpNE(opcode, LLVMValue::intptr_constant(block()->bc())),
-    resolve, resolved);
-
-  builder()->SetInsertPoint(resolve);
-  Constant *resolver;
-  switch (block()->bc()) {
-  case Bytecodes::_invokestatic:
-  case Bytecodes::_invokespecial:
-  case Bytecodes::_invokevirtual:
-  case Bytecodes::_invokeinterface:
-    resolver = SharkRuntime::resolve_invoke();
-    break;
-
-  case Bytecodes::_getfield:
-  case Bytecodes::_getstatic:
-  case Bytecodes::_putfield:
-  case Bytecodes::_putstatic:
-    resolver = SharkRuntime::resolve_get_put();
-    break;
-
-  default:
-    ShouldNotReachHere();
-  }
-
-  block()->call_vm(
-    resolver,
-    entry,
-    LLVMValue::jint_constant(block()->bci()),
-    LLVMValue::jint_constant(block()->bc()));
-  BasicBlock *resolve_block = builder()->GetInsertBlock();  
-  builder()->CreateBr(resolved);
-
-  builder()->SetInsertPoint(resolved);
-  block()->current_state()->merge(orig_state, orig_block, resolve_block);
-
-  return entry;
 }
 
 Value *SharkConstantPool::java_mirror()

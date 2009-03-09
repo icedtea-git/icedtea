@@ -968,10 +968,7 @@ void SharkBlock::do_field_access(bool is_get, bool is_field)
   bool will_link;
   ciField *field = iter()->get_field(will_link);
   assert(will_link, "typeflow responsibility");
-
-  // Check the bytecode matches the field
-  if (is_field == field->is_static())
-    Unimplemented();
+  assert(is_field != field->is_static(), "mismatch");
 
   // Pop the value off the stack where necessary
   SharkValue *value = NULL;

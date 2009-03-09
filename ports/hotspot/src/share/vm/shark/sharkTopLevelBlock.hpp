@@ -29,6 +29,7 @@ class SharkTopLevelBlock : public SharkBlock {
     : SharkBlock(function->builder(), function->target(), function->iter()),
       _function(function),
       _ciblock(ciblock),
+      _trap_request(TRAP_UNCHECKED),
       _entered(false),
       _needs_phis(false),
       _entry_state(NULL),
@@ -59,14 +60,6 @@ class SharkTopLevelBlock : public SharkBlock {
   int index() const
   {
     return ciblock()->pre_order();
-  }
-  bool has_trap() const
-  {
-    return ciblock()->has_trap();
-  }
-  int trap_index() const
-  {
-    return ciblock()->trap_index();
   }
   bool is_private_copy() const
   {
@@ -113,6 +106,29 @@ class SharkTopLevelBlock : public SharkBlock {
     return function()->block(ciblock()->successors()->at(index)->pre_order());
   }
   SharkTopLevelBlock* bci_successor(int bci) const;
+
+  // Traps
+ private:
+  enum {
+    TRAP_UNCHECKED = 232323, // > any constant pool index
+    TRAP_NO_TRAPS
+  };
+  int _trap_request;
+
+ public:
+  int trap_request()
+  {
+    if (_trap_request == TRAP_UNCHECKED)
+      _trap_request = scan_for_traps();
+    return _trap_request;
+  }
+  bool has_trap()
+  {
+    return trap_request() != TRAP_NO_TRAPS;
+  }
+
+ private:
+  int scan_for_traps();
 
   // Entry state
  private:
