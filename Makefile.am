@@ -6,7 +6,7 @@ CACAO_VERSION = 0.99.3
 CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
 
 NETBEANS_PROFILER_MD5SUM = 786ab31817cbd902a7211cd6a6161750
-VISUALVM_MD5SUM = 1174486e82a65840b44c47166d79f212
+VISUALVM_MD5SUM = a289739f4a5bcdb9a2c642cfcc1e83fe
 
 if ENABLE_PLUGIN
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
@@ -1645,8 +1645,8 @@ endif
 NETBEANS_PROFILER_URL = http://icedtea.classpath.org/visualvm/
 NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_release65_mod.tar.gz
 
-VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/127067/
-VISUALVM_SRC_ZIP = visualvm-11-src.tar.gz
+VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/127170/
+VISUALVM_SRC_ZIP = visualvm-111-src.tar.gz
 
 stamps/hgforest.stamp:
 if OPENJDK_SRC_DIR_FOUND
