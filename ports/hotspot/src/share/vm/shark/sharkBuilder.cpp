@@ -76,6 +76,14 @@ void SharkBuilder::init_external_functions()
   set_llvm_memset_fn(module()->getOrInsertFunction("llvm.memset.i32", type));
 
   params.clear();
+  params.push_back(PointerType::getUnqual(SharkType::jint_type()));
+  params.push_back(SharkType::jint_type());
+  params.push_back(SharkType::jint_type());
+  type = FunctionType::get(SharkType::jint_type(), params, false);
+  set_llvm_cmpxchg_int_fn(
+    module()->getOrInsertFunction("llvm.atomic.cmp.swap.i32", type));
+
+  params.clear();
   params.push_back(PointerType::getUnqual(SharkType::intptr_type()));
   params.push_back(SharkType::intptr_type());
   params.push_back(SharkType::intptr_type());
@@ -90,6 +98,22 @@ void SharkBuilder::init_external_functions()
   type = FunctionType::get(Type::VoidTy, params, false);
   set_llvm_memory_barrier_fn(
     module()->getOrInsertFunction("llvm.memory.barrier", type));
+
+  params.clear();
+  params.push_back(SharkType::jdouble_type());
+  type = FunctionType::get(SharkType::jdouble_type(), params, false);
+  set_llvm_sin_fn  (module()->getOrInsertFunction("llvm.sin.f64",   type));
+  set_llvm_cos_fn  (module()->getOrInsertFunction("llvm.cos.f64",   type));
+  set_llvm_sqrt_fn (module()->getOrInsertFunction("llvm.sqrt.f64",  type));
+  set_llvm_log_fn  (module()->getOrInsertFunction("llvm.log.f64",   type));
+  set_llvm_log10_fn(module()->getOrInsertFunction("llvm.log10.f64", type));
+  set_llvm_exp_fn  (module()->getOrInsertFunction("llvm.exp.f64",   type));  
+
+  params.clear();
+  params.push_back(SharkType::jdouble_type());
+  params.push_back(SharkType::jdouble_type());
+  type = FunctionType::get(SharkType::jdouble_type(), params, false);
+  set_llvm_pow_fn(module()->getOrInsertFunction("llvm.pow.f64", type));  
 }
 
 Function *SharkBuilder::CreateFunction(const char *name)
@@ -128,6 +152,14 @@ CallInst* SharkBuilder::CreateDump(llvm::Value* value)
 
   Value *args[] = {name, value};
   return CreateCall2(SharkRuntime::dump(), name, value);
+}
+
+CallInst* SharkBuilder::CreateCmpxchgInt(Value* exchange_value,
+                                         Value* dst,
+                                         Value* compare_value)
+{
+  return CreateCall3(
+    llvm_cmpxchg_int_fn(), dst, compare_value, exchange_value);
 }
 
 CallInst* SharkBuilder::CreateCmpxchgPtr(Value* exchange_value,

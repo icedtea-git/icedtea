@@ -23,12 +23,19 @@
  *
  */
 
-class SharkInliner : public AllStatic {
+class SharkIntrinsics : public AllStatic {
  public:
-  static bool attempt_inline(ciMethod*    target,
-                             SharkState*  state,
-                             llvm::Value* thread);
-                      
+  static bool is_intrinsic(ciMethod* target);
+  static void inline_intrinsic(ciMethod*    target,
+                               SharkState*  state,
+                               llvm::Value* thread);
+
  private:
-  static bool may_be_inlinable(ciMethod* target);
+  static void do_Math_minmax(SharkState* state, llvm::ICmpInst::Predicate p);
+  static void do_Math_1to1(SharkState* state, llvm::Constant* function);
+  static void do_Math_2to1(SharkState* state, llvm::Constant* function);
+  static void do_Object_getClass(SharkState* state);
+  static void do_System_currentTimeMillis(SharkState* state);
+  static void do_Thread_currentThread(SharkState* state, llvm::Value* thread);
+  static void do_Unsafe_compareAndSwapInt(SharkState* state);
 };

@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,6 +28,7 @@
 
 using namespace llvm;
 
+// VM calls
 Constant* SharkRuntime::_find_exception_handler;
 Constant* SharkRuntime::_monitorenter;
 Constant* SharkRuntime::_monitorexit;
@@ -41,16 +42,25 @@ Constant* SharkRuntime::_safepoint;
 Constant* SharkRuntime::_throw_ArrayIndexOutOfBoundsException;
 Constant* SharkRuntime::_throw_NullPointerException;
 
+// Leaf calls
 Constant* SharkRuntime::_f2i;
 Constant* SharkRuntime::_f2l;
 Constant* SharkRuntime::_d2i;
 Constant* SharkRuntime::_d2l;
 
+// Non-VM calls
 Constant* SharkRuntime::_dump;
 Constant* SharkRuntime::_is_subtype_of;
 Constant* SharkRuntime::_should_not_reach_here;
 Constant* SharkRuntime::_unimplemented;
 Constant* SharkRuntime::_uncommon_trap;
+Constant* SharkRuntime::_current_time_millis;
+Constant* SharkRuntime::_fabs;
+Constant* SharkRuntime::_tan;
+Constant* SharkRuntime::_atan2;
+Constant* SharkRuntime::_unsafe_field_offset_to_byte_offset;
+
+extern jlong Unsafe_field_offset_to_byte_offset(jlong field_offset);
 
 void SharkRuntime::initialize(SharkBuilder* builder)
 {
@@ -205,6 +215,35 @@ void SharkRuntime::initialize(SharkBuilder* builder)
     (intptr_t) uncommon_trap_C,
     FunctionType::get(Type::VoidTy, params, false),
     "SharkRuntime__uncommon_trap");
+
+  params.clear();
+  _current_time_millis = builder->make_function(
+    (intptr_t) os::javaTimeMillis,
+    FunctionType::get(SharkType::jlong_type(), params, false),
+    "os__javaTimeMillis");
+
+  params.clear();
+  params.push_back(SharkType::jdouble_type());
+  _fabs = builder->make_function(
+    (intptr_t) ::fabs,
+    FunctionType::get(SharkType::jdouble_type(), params, false),
+    "fabs");
+  _tan = builder->make_function(
+    (intptr_t) ::tan,
+    FunctionType::get(SharkType::jdouble_type(), params, false),
+    "tan");
+  params.push_back(SharkType::jdouble_type());
+  _atan2 = builder->make_function(
+    (intptr_t) ::atan2,
+    FunctionType::get(SharkType::jdouble_type(), params, false),
+    "atan2");
+
+  params.clear();
+  params.push_back(SharkType::jlong_type());
+  _unsafe_field_offset_to_byte_offset = builder->make_function(
+    (intptr_t) Unsafe_field_offset_to_byte_offset,
+    FunctionType::get(SharkType::jlong_type(), params, false),
+    "Unsafe_field_offset_to_byte_offset");
 }
 
 JRT_ENTRY(int, SharkRuntime::find_exception_handler_C(JavaThread* thread,
