@@ -95,3 +95,13 @@
  
  forte.cpp                               collectedHeap.inline.hpp
  forte.cpp                               debugInfoRec.hpp
+--- openjdk/hotspot/src/share/vm/includeDB_core.orig	2009-03-11 13:14:45.000000000 +0000
++++ openjdk/hotspot/src/share/vm/includeDB_core	2009-03-11 13:15:59.000000000 +0000
+@@ -1311,6 +1311,7 @@
+ cppInterpreter_<arch>.cpp               debug.hpp
+ cppInterpreter_<arch>.cpp               deoptimization.hpp
+ cppInterpreter_<arch>.cpp               frame.inline.hpp
++cppInterpreter_<arch>.cpp               interfaceSupport.hpp
+ cppInterpreter_<arch>.cpp               interpreterRuntime.hpp
+ cppInterpreter_<arch>.cpp               interpreter.hpp
+ cppInterpreter_<arch>.cpp               interpreterGenerator.hpp
