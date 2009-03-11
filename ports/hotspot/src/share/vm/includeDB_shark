@@ -210,12 +210,27 @@ sharkInliner.cpp                        ciMethod.hpp
 sharkInliner.cpp                        ciStreams.hpp
 sharkInliner.cpp                        shark_globals.hpp
 sharkInliner.cpp                        sharkInliner.hpp
+sharkInliner.cpp                        sharkIntrinsics.hpp
 sharkInliner.cpp                        sharkState.inline.hpp
 sharkInliner.cpp                        sharkValue.inline.hpp
 
 sharkInliner.hpp                        allocation.hpp
 sharkInliner.hpp                        ciMethod.hpp
+sharkInliner.hpp                        llvmHeaders.hpp
 sharkInliner.hpp                        sharkState.inline.hpp
+
+sharkIntrinsics.cpp                     ciMethod.hpp
+sharkIntrinsics.cpp                     llvmHeaders.hpp
+sharkIntrinsics.cpp                     shark_globals.hpp
+sharkIntrinsics.cpp                     sharkIntrinsics.hpp
+sharkIntrinsics.cpp                     sharkRuntime.hpp
+sharkIntrinsics.cpp                     sharkState.inline.hpp
+sharkIntrinsics.cpp                     sharkValue.inline.hpp
+
+sharkIntrinsics.hpp                     allocation.hpp
+sharkIntrinsics.hpp                     ciMethod.hpp
+sharkIntrinsics.hpp                     llvmHeaders.hpp
+sharkIntrinsics.hpp                     sharkState.hpp
 
 sharkMemoryManager.hpp                  llvmHeaders.hpp
 sharkMemoryManager.hpp                  sharkEntry.hpp

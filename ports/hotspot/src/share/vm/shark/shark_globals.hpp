@@ -64,5 +64,8 @@
                                                                               \
   develop(bool, SharkTraceInstalls, false,                                    \
           "Trace method installation")                                        \
+                                                                              \
+  develop(bool, SharkPerformanceWarnings, false,                              \
+          "Warn about things that could be made faster")                      \
 
 SHARK_FLAGS(DECLARE_DEVELOPER_FLAG, DECLARE_PD_DEVELOPER_FLAG, DECLARE_PRODUCT_FLAG, DECLARE_PD_PRODUCT_FLAG, DECLARE_DIAGNOSTIC_FLAG, DECLARE_NOTPRODUCT_FLAG)

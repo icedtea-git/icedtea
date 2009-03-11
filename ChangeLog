@@ -1,3 +1,86 @@
+2009-03-11  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp
+	(SharkPerformanceWarnings): New flag.
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::_llvm_cmpxchg_int_fn): New field.
+	(SharkBuilder::_llvm_sin_fn): Likewise.
+	(SharkBuilder::_llvm_cos_fn): Likewise.
+	(SharkBuilder::_llvm_sqrt_fn): Likewise.
+	(SharkBuilder::_llvm_log_fn): Likewise.
+	(SharkBuilder::_llvm_log10_fn): Likewise.
+	(SharkBuilder::_llvm_pow_fn): Likewise.
+	(SharkBuilder::_llvm_exp_fn): Likewise.
+	(SharkBuilder::set_llvm_cmpxchg_int_fn): New method.
+	(SharkBuilder::set_llvm_sin_fn): Likewise.
+	(SharkBuilder::set_llvm_cos_fn): Likewise.
+	(SharkBuilder::set_llvm_sqrt_fn): Likewise.
+	(SharkBuilder::set_llvm_log_fn): Likewise.
+	(SharkBuilder::set_llvm_log10_fn): Likewise.
+	(SharkBuilder::set_llvm_pow_fn): Likewise.
+	(SharkBuilder::set_llvm_exp_fn): Likewise.
+	(SharkBuilder::llvm_cmpxchg_int_fn): Likewise.
+	(SharkBuilder::llvm_sin_fn): Likewise.
+	(SharkBuilder::llvm_cos_fn): Likewise.
+	(SharkBuilder::llvm_sqrt_fn): Likewise.
+	(SharkBuilder::llvm_log_fn): Likewise.
+	(SharkBuilder::llvm_log10_fn): Likewise.
+	(SharkBuilder::llvm_pow_fn): Likewise.
+	(SharkBuilder::llvm_exp_fn): Likewise.
+	(SharkBuilder::CreateCmpxchgInt): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::init_external_functions): Initialize new fields.
+	(SharkBuilder::CreateCmpxchgInt): New method.
+	
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp
+	(SharkRuntime::_current_time_millis): New field.
+	(SharkRuntime::_fabs): Likewise.
+	(SharkRuntime::_tan): Likewise.
+	(SharkRuntime::_atan2): Likewise.
+	(SharkRuntime::_unsafe_field_offset_to_byte_offset): Likewise.
+	(SharkRuntime::current_time_millis): New method.
+	(SharkRuntime::fabs): Likewise.
+	(SharkRuntime::tan): Likewise.
+	(SharkRuntime::atan2): Likewise.
+	(SharkRuntime::unsafe_field_offset_to_byte_offset): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::_current_time_millis): New field.
+	(SharkRuntime::_fabs): Likewise.
+	(SharkRuntime::_tan): Likewise.
+	(SharkRuntime::_atan2): Likewise.
+	(SharkRuntime::_unsafe_field_offset_to_byte_offset): Likewise.
+	(SharkRuntime::initialize): Initialize the above.
+	
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::SharkBlock): New thread argument.
+	(SharkBlock::_thread): New field.
+	(SharkBlock::thread): New method.
+	
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::SharkTopLevelBlock): Pass thread to super.
+	(SharkTopLevelBlock::thread): Removed method.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::do_call): Pass thread to inliner.
+	
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Do the arguments before creating blocks.
+
+	* ports/hotspot/src/share/vm/shark/sharkInliner.hpp
+	(SharkInliner::attempt_inline): New thread argument.
+	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp
+	(SharkInlineBlock::SharkInlineBlock): Pass thread to super.
+	(SharkInlinerHelper::SharkInlinerHelper): New thread argument.
+	(SharkInlinerHelper::_thread): New field.
+	(SharkInlinerHelper::thread): New method.
+	(SharkInlinerHelper::do_inline): Pass thread to block constructor.
+	(SharkInliner::attempt_inline): Attempt to inline intrinsics.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
 2009-03-09  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp

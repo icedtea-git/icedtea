@@ -26,7 +26,10 @@
 class SharkTopLevelBlock : public SharkBlock {
  public:
   SharkTopLevelBlock(SharkFunction* function, ciTypeFlow::Block* ciblock)
-    : SharkBlock(function->builder(), function->target(), function->iter()),
+    : SharkBlock(function->builder(),
+                 function->target(),
+                 function->iter(),
+                 function->thread()),
       _function(function),
       _ciblock(ciblock),
       _trap_request(TRAP_UNCHECKED),
@@ -47,12 +50,6 @@ class SharkTopLevelBlock : public SharkBlock {
   ciTypeFlow::Block* ciblock() const
   {
     return _ciblock;
-  }
-
- public:
-  llvm::Value* thread() const
-  {
-    return function()->thread();
   }
 
   // Typeflow properties

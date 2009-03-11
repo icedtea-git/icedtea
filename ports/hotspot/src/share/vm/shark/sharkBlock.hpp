@@ -27,14 +27,22 @@ class SharkState;
 
 class SharkBlock : public ResourceObj {
  public:
-  SharkBlock(SharkBuilder* builder, ciMethod* target, ciBytecodeStream* iter)
-    : _builder(builder),_target(target),_iter(iter),_current_state(NULL) {}
+  SharkBlock(SharkBuilder*     builder,
+             ciMethod*         target,
+             ciBytecodeStream* iter,
+             llvm::Value*      thread)
+    : _builder(builder),
+      _target(target),
+      _iter(iter),
+      _current_state(NULL),
+      _thread(thread) {}
 
  private:
   SharkBuilder*     _builder;
   ciMethod*         _target;
   ciBytecodeStream* _iter;
   SharkState*       _current_state;
+  llvm::Value*      _thread;
 
  public:
   SharkBuilder* builder() const
@@ -48,6 +56,10 @@ class SharkBlock : public ResourceObj {
   ciBytecodeStream* iter() const
   {
     return _iter;
+  }
+  llvm::Value* thread() const
+  {
+    return _thread;
   }
 
   // Target properties

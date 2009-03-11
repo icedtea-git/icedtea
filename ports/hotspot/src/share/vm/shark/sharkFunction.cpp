@@ -159,6 +159,15 @@ void SharkFunction::initialize()
   entry->set_llvm_function(function());
   compiler()->memory_manager()->set_entry_for_function(function(), entry);
 
+  // Get our arguments
+  Function::arg_iterator ai = function()->arg_begin();
+  Argument *method = ai++;
+  method->setName("method");
+  _base_pc = ai++;
+  _base_pc->setName("base_pc");
+  _thread = ai++;
+  _thread->setName("thread");
+
   // Create the list of blocks
   set_block_insertion_point(NULL);
   _blocks = NEW_RESOURCE_ARRAY(SharkTopLevelBlock*, flow()->block_count());
@@ -191,15 +200,6 @@ void SharkFunction::initialize()
         _monitor_count, block(i)->ciblock()->monitor_count());
   }
   
-  // Get our arguments
-  Function::arg_iterator ai = function()->arg_begin();
-  Argument *method = ai++;
-  method->setName("method");
-  _base_pc = ai++;
-  _base_pc->setName("base_pc");
-  _thread = ai++;
-  _thread->setName("thread");
-
   // Create the method preamble
   set_block_insertion_point(&function()->front());
   builder()->SetInsertPoint(CreateBlock());

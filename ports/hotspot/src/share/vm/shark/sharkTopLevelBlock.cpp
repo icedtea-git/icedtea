@@ -1337,7 +1337,7 @@ void SharkTopLevelBlock::do_call()
 
   // Try to inline the call
   if (call_type == CALL_DIRECT) {
-    if (SharkInliner::attempt_inline(method, current_state()))
+    if (SharkInliner::attempt_inline(method, current_state(), thread()))
       return;
   }
 

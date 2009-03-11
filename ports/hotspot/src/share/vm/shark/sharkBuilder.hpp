@@ -197,10 +197,22 @@ class SharkBuilder : public llvm::IRBuilder<> {
 
   // External functions (and intrinsics)
  private:
+  llvm::Constant* _llvm_cmpxchg_int_fn;
   llvm::Constant* _llvm_cmpxchg_ptr_fn;  
   llvm::Constant* _llvm_memory_barrier_fn;
   llvm::Constant* _llvm_memset_fn;  
+  llvm::Constant* _llvm_sin_fn;
+  llvm::Constant* _llvm_cos_fn;
+  llvm::Constant* _llvm_sqrt_fn;
+  llvm::Constant* _llvm_log_fn;
+  llvm::Constant* _llvm_log10_fn;
+  llvm::Constant* _llvm_pow_fn;
+  llvm::Constant* _llvm_exp_fn;
 
+  void set_llvm_cmpxchg_int_fn(llvm::Constant* llvm_cmpxchg_int_fn)
+  {
+    _llvm_cmpxchg_int_fn = llvm_cmpxchg_int_fn;
+  }
   void set_llvm_cmpxchg_ptr_fn(llvm::Constant* llvm_cmpxchg_ptr_fn)
   {
     _llvm_cmpxchg_ptr_fn = llvm_cmpxchg_ptr_fn;
@@ -213,10 +225,42 @@ class SharkBuilder : public llvm::IRBuilder<> {
   {
     _llvm_memset_fn = llvm_memset_fn;
   }
+  void set_llvm_sin_fn(llvm::Constant* llvm_sin_fn)
+  {
+    _llvm_sin_fn = llvm_sin_fn;
+  }
+  void set_llvm_cos_fn(llvm::Constant* llvm_cos_fn)
+  {
+    _llvm_cos_fn = llvm_cos_fn;
+  }
+  void set_llvm_sqrt_fn(llvm::Constant* llvm_sqrt_fn)
+  {
+    _llvm_sqrt_fn = llvm_sqrt_fn;
+  }
+  void set_llvm_log_fn(llvm::Constant* llvm_log_fn)
+  {
+    _llvm_log_fn = llvm_log_fn;
+  }
+  void set_llvm_log10_fn(llvm::Constant* llvm_log10_fn)
+  {
+    _llvm_log10_fn = llvm_log10_fn;
+  }
+  void set_llvm_pow_fn(llvm::Constant* llvm_pow_fn)
+  {
+    _llvm_pow_fn = llvm_pow_fn;
+  }
+  void set_llvm_exp_fn(llvm::Constant* llvm_exp_fn)
+  {
+    _llvm_exp_fn = llvm_exp_fn;
+  }
 
   void init_external_functions();
 
  protected:
+  llvm::Constant* llvm_cmpxchg_int_fn() const
+  {
+    return _llvm_cmpxchg_int_fn;
+  }
   llvm::Constant* llvm_cmpxchg_ptr_fn() const
   {
     return _llvm_cmpxchg_ptr_fn;
@@ -231,11 +275,44 @@ class SharkBuilder : public llvm::IRBuilder<> {
   }
 
  public:
+  llvm::Constant* llvm_sin_fn() const
+  {
+    return _llvm_sin_fn;
+  }
+  llvm::Constant* llvm_cos_fn() const
+  {
+    return _llvm_cos_fn;
+  }
+  llvm::Constant* llvm_sqrt_fn() const
+  {
+    return _llvm_sqrt_fn;
+  }
+  llvm::Constant* llvm_log_fn() const
+  {
+    return _llvm_log_fn;
+  }
+  llvm::Constant* llvm_log10_fn() const
+  {
+    return _llvm_log10_fn;
+  }
+  llvm::Constant* llvm_pow_fn() const
+  {
+    return _llvm_pow_fn;
+  }
+  llvm::Constant* llvm_exp_fn() const
+  {
+    return _llvm_exp_fn;
+  }
+
+ public:
   llvm::CallInst* CreateDump(llvm::Value* value);
   llvm::CallInst* CreateMemset(llvm::Value* dst,
                                llvm::Value* value,
                                llvm::Value* len,
                                llvm::Value* align);
+  llvm::CallInst* CreateCmpxchgInt(llvm::Value* exchange_value,
+                                    llvm::Value* dst,
+                                    llvm::Value* compare_value);
   llvm::CallInst* CreateCmpxchgPtr(llvm::Value* exchange_value,
                                    llvm::Value* dst,
                                    llvm::Value* compare_value);

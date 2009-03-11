@@ -174,6 +174,11 @@ class SharkRuntime : public AllStatic {
   static llvm::Constant* _should_not_reach_here;
   static llvm::Constant* _unimplemented;
   static llvm::Constant* _uncommon_trap;
+  static llvm::Constant* _current_time_millis;
+  static llvm::Constant* _fabs;
+  static llvm::Constant* _tan;
+  static llvm::Constant* _atan2;
+  static llvm::Constant* _unsafe_field_offset_to_byte_offset;
 
  public:
   static llvm::Constant* dump()
@@ -196,6 +201,26 @@ class SharkRuntime : public AllStatic {
   {
     return _uncommon_trap;
   }
+  static llvm::Constant* current_time_millis()
+  {
+    return _current_time_millis;
+  }
+  static llvm::Constant* fabs()
+  {
+    return _fabs;
+  }
+  static llvm::Constant* tan()
+  {
+    return _tan;
+  }
+  static llvm::Constant* atan2()
+  {
+    return _atan2;
+  }
+  static llvm::Constant* unsafe_field_offset_to_byte_offset()
+  {
+    return _unsafe_field_offset_to_byte_offset;
+  }  
 
  private:
   static void dump_C(const char *name, intptr_t value);
