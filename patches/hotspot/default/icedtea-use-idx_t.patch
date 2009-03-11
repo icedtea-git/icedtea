@@ -1,6 +1,14 @@
-diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/methodLiveness.cpp openjdk/hotspot/src/share/vm/compiler/methodLiveness.cpp
---- openjdk.orig/hotspot/src/share/vm/compiler/methodLiveness.cpp	2008-11-06 08:40:55.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/compiler/methodLiveness.cpp	2008-11-10 00:55:09.000000000 +0000
+--- openjdk/hotspot/src/share/vm/compiler/methodLiveness.cpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/compiler/methodLiveness.cpp	2009-03-11 21:49:08.000000000 +0100
+@@ -468,7 +468,7 @@
+     bci = 0;
+   }
+ 
+-  MethodLivenessResult answer((uintptr_t*)NULL,0);
++  MethodLivenessResult answer((size_t*)NULL,0);
+ 
+   if (_block_count > 0) {
+     if (TimeLivenessAnalysis) _time_total.start();
 @@ -567,15 +567,15 @@
  
  
@@ -31,9 +39,17 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/methodLiveness.cpp openjdk/
                  _analyzer->bit_map_size_bits());
    answer.set_is_valid();
  
-diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/bitMap.hpp openjdk/hotspot/src/share/vm/utilities/bitMap.hpp
---- openjdk.orig/hotspot/src/share/vm/utilities/bitMap.hpp	2008-11-06 08:40:58.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/utilities/bitMap.hpp	2008-11-10 00:57:20.000000000 +0000
+--- openjdk/hotspot/src/share/vm/utilities/bitMap.hpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/utilities/bitMap.hpp	2009-03-11 21:48:18.000000000 +0100
+@@ -33,7 +33,7 @@
+ 
+  public:
+   typedef size_t idx_t;         // Type used for bit and word indices.
+-  typedef uintptr_t bm_word_t;  // Element type of array that represents
++  typedef size_t bm_word_t;     // Element type of array that represents
+                                 // the bitmap.
+ 
+   // Hints for range sizes.
 @@ -73,7 +73,7 @@
  
    // Set a word to a specified value or to all ones; clear a word.
@@ -43,3 +59,43 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/bitMap.hpp openjdk/hotspot
    void clear_word(idx_t word)            { _map[word] = 0; }
  
    // Utilities for ranges of bits.  Ranges are half-open [beg, end).
+--- openjdk/hotspot/src/share/vm/utilities/bitMap.inline.hpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/utilities/bitMap.inline.hpp	2009-03-11 21:48:18.000000000 +0100
+@@ -35,7 +35,7 @@
+ 
+ inline bool BitMap::par_set_bit(idx_t bit) {
+   verify_index(bit);
+-  volatile idx_t* const addr = word_addr(bit);
++  volatile idx_t* const addr = (idx_t *) word_addr(bit);
+   const idx_t mask = bit_mask(bit);
+   idx_t old_val = *addr;
+ 
+@@ -56,7 +56,7 @@
+ 
+ inline bool BitMap::par_clear_bit(idx_t bit) {
+   verify_index(bit);
+-  volatile idx_t* const addr = word_addr(bit);
++  volatile idx_t* const addr = (idx_t *) word_addr(bit);
+   const idx_t mask = ~bit_mask(bit);
+   idx_t old_val = *addr;
+ 
+--- openjdk/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp	2009-03-11 21:48:47.000000000 +0100
+@@ -29,7 +29,7 @@
+ // CMS Bit Map Wrapper
+ 
+ CMBitMapRO::CMBitMapRO(ReservedSpace rs, int shifter):
+-  _bm((uintptr_t*)NULL,0),
++  _bm((size_t*)NULL,0),
+   _shifter(shifter) {
+   _bmStartWord = (HeapWord*)(rs.base());
+   _bmWordSize  = rs.size()/HeapWordSize;    // rs.size() is in bytes
+@@ -43,7 +43,7 @@
+             "couldn't reseve backing store for CMS bit map");
+   assert(_virtual_space.committed_size() == brs.size(),
+          "didn't reserve backing store for all of CMS bit map?");
+-  _bm.set_map((uintptr_t*)_virtual_space.low());
++  _bm.set_map((size_t*)_virtual_space.low());
+   assert(_virtual_space.committed_size() << (_shifter + LogBitsPerByte) >=
+          _bmWordSize, "inconsistency in bit map sizing");
+   _bm.set_size(_bmWordSize >> _shifter);

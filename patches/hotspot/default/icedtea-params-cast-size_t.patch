@@ -1,37 +1,17 @@
-diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp
---- openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2008-09-01 01:47:18.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2008-09-01 01:53:31.000000000 +0100
-@@ -938,7 +938,7 @@
-   if (free_percentage < desired_free_percentage) {
-     size_t desired_capacity = (size_t)(used() / ((double) 1 - desired_free_percentage));
-     assert(desired_capacity >= capacity(), "invalid expansion size");
--    expand_bytes = MAX2(desired_capacity - capacity(), MinHeapDeltaBytes);
-+    expand_bytes = MAX2((long unsigned int) (desired_capacity - capacity()), (long unsigned int) MinHeapDeltaBytes);
-   }
-   if (expand_bytes > 0) {
-     if (PrintGCDetails && Verbose) {
-@@ -6044,7 +6044,7 @@
-     HeapWord* curAddr = _markBitMap.startWord();
-     while (curAddr < _markBitMap.endWord()) {
-       size_t remaining  = pointer_delta(_markBitMap.endWord(), curAddr);
--      MemRegion chunk(curAddr, MIN2(CMSBitMapYieldQuantum, remaining));
-+      MemRegion chunk(curAddr, MIN2((size_t) CMSBitMapYieldQuantum, remaining));
-       _markBitMap.clear_large_range(chunk);
-       if (ConcurrentMarkSweepThread::should_yield() &&
-           !foregroundGCIsActive() &&
-@@ -6332,7 +6332,7 @@
-     return;
-   }
-   // Double capacity if possible
--  size_t new_capacity = MIN2(_capacity*2, CMSMarkStackSizeMax);
-+  size_t new_capacity = MIN2((size_t) (_capacity*2), (size_t) CMSMarkStackSizeMax);
-   // Do not give up existing stack until we have managed to
-   // get the double capacity that we desired.
-   ReservedSpace rs(ReservedSpace::allocation_align_size_up(
-diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp
---- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2008-08-14 08:40:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2008-09-01 01:49:59.000000000 +0100
-@@ -904,8 +904,8 @@
+--- openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psPermGen.cpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psPermGen.cpp	2009-03-11 21:54:11.000000000 +0100
+@@ -63,7 +63,7 @@
+   _last_used = current_live;
+ 
+   // We have different alignment constraints than the rest of the heap.
+-  const size_t alignment = MAX2(MinPermHeapExpansion,
++  const size_t alignment = MAX2((size_t) MinPermHeapExpansion,
+                                 virtual_space()->alignment());
+ 
+   // Compute the desired size:
+--- openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2009-03-11 21:54:11.000000000 +0100
+@@ -864,8 +864,8 @@
  void PSParallelCompact::initialize_dead_wood_limiter()
  {
    const size_t max = 100;
@@ -42,46 +22,116 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/p
    _dwl_first_term = 1.0 / (sqrt(2.0 * M_PI) * _dwl_std_dev);
    DEBUG_ONLY(_dwl_initialized = true;)
    _dwl_adjustment = normal_distribution(1.0);
-diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psPermGen.cpp openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psPermGen.cpp
---- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psPermGen.cpp	2008-08-14 08:40:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psPermGen.cpp	2008-09-01 01:52:42.000000000 +0100
-@@ -63,7 +63,7 @@
-   _last_used = current_live;
+--- openjdk/hotspot/src/share/vm/gc_implementation/g1/dirtyCardQueue.cpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/dirtyCardQueue.cpp	2009-03-11 21:54:11.000000000 +0100
+@@ -72,7 +72,7 @@
+ }
  
-   // We have different alignment constraints than the rest of the heap.
--  const size_t alignment = MAX2(MinPermHeapExpansion,
-+  const size_t alignment = MAX2((size_t) MinPermHeapExpansion,
-                                 virtual_space()->alignment());
+ size_t DirtyCardQueueSet::num_par_ids() {
+-  return MAX2(ParallelGCThreads, (size_t)2);
++  return MAX2((size_t)ParallelGCThreads, (size_t)2);
+ }
  
-   // Compute the desired size:
-diff -Nru openjdk.orig/hotspot/src/share/vm/memory/collectorPolicy.cpp openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp
---- openjdk.orig/hotspot/src/share/vm/memory/collectorPolicy.cpp	2008-08-14 08:40:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp	2008-09-01 02:58:03.000000000 +0100
-@@ -287,7 +287,7 @@
-     // yield a size that is too small) and bound it by MaxNewSize above.
-     // Ergonomics plays here by previously calculating the desired
-     // NewSize and MaxNewSize.
--    max_new_size = MIN2(MAX2(max_new_size, NewSize), MaxNewSize);
-+    max_new_size = MIN2(MAX2(max_new_size, (size_t) NewSize), (size_t) MaxNewSize);
+ 
+--- openjdk/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp	2009-03-11 21:54:11.000000000 +0100
+@@ -1061,7 +1061,7 @@
+ int HeapRegionRemSet::num_par_rem_sets() {
+   // We always have at least two, so that a mutator thread can claim an
+   // id and add to a rem set.
+-  return (int) MAX2(ParallelGCThreads, (size_t)2);
++  return (int) MAX2((size_t)ParallelGCThreads, (size_t)2);
+ }
+ 
+ HeapRegionRemSet::HeapRegionRemSet(G1BlockOffsetSharedArray* bosa,
+--- openjdk/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp.orig	2009-03-11 21:52:00.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp	2009-03-11 21:54:11.000000000 +0100
+@@ -412,7 +412,7 @@
+   _regionStack(),
+   // _finger set in set_non_marking_state
+ 
+-  _max_task_num(MAX2(ParallelGCThreads, (size_t)1)),
++  _max_task_num(MAX2((size_t)ParallelGCThreads, (size_t)1)),
+   // _active_tasks set in set_non_marking_state
+   // _tasks set inside the constructor
+   _task_queues(new CMTaskQueueSet((int) _max_task_num)),
+@@ -463,7 +463,7 @@
+   SATBMarkQueueSet& satb_qs = JavaThread::satb_mark_queue_set();
+   satb_qs.set_buffer_size(G1SATBLogBufferSize);
+ 
+-  int size = (int) MAX2(ParallelGCThreads, (size_t)1);
++  int size = (int) MAX2((size_t)ParallelGCThreads, (size_t)1);
+   _par_cleanup_thread_state = NEW_C_HEAP_ARRAY(ParCleanupThreadState*, size);
+   for (int i = 0 ; i < size; i++) {
+     _par_cleanup_thread_state[i] = new ParCleanupThreadState;
+@@ -521,7 +521,7 @@
+       _sleep_factor             = sleep_factor;
+       _marking_task_overhead    = marking_task_overhead;
+     } else {
+-      _parallel_marking_threads = MAX2((ParallelGCThreads + 2) / 4, (size_t)1);
++      _parallel_marking_threads = MAX2((size_t)((ParallelGCThreads + 2) / 4), (size_t)1);
+       _sleep_factor             = 0.0;
+       _marking_task_overhead    = 1.0;
+     }
+@@ -648,7 +648,7 @@
+ }
+ 
+ ConcurrentMark::~ConcurrentMark() {
+-  int size = (int) MAX2(ParallelGCThreads, (size_t)1);
++  int size = (int) MAX2((size_t)ParallelGCThreads, (size_t)1);
+   for (int i = 0; i < size; i++) delete _par_cleanup_thread_state[i];
+   FREE_C_HEAP_ARRAY(ParCleanupThreadState*,
+                     _par_cleanup_thread_state);
+@@ -1746,7 +1746,7 @@
+   if (has_aborted()) return;
+ 
+   int first = 0;
+-  int last = (int)MAX2(ParallelGCThreads, (size_t)1);
++  int last = (int)MAX2((size_t)ParallelGCThreads, (size_t)1);
+   for (int t = 0; t < last; t++) {
+     UncleanRegionList* list = &_par_cleanup_thread_state[t]->list;
+     assert(list->well_formed(), "Inv");
+@@ -3199,7 +3199,7 @@
+   // of things to do) or totally (at the very end).
+   size_t target_size;
+   if (partially)
+-    target_size = MIN2((size_t)_task_queue->max_elems()/3, GCDrainStackTargetSize);
++    target_size = MIN2((size_t)_task_queue->max_elems()/3, (size_t)GCDrainStackTargetSize);
+   else
+     target_size = 0;
+ 
+--- openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2009-03-11 21:54:11.000000000 +0100
+@@ -939,7 +939,7 @@
+   if (free_percentage < desired_free_percentage) {
+     size_t desired_capacity = (size_t)(used() / ((double) 1 - desired_free_percentage));
+     assert(desired_capacity >= capacity(), "invalid expansion size");
+-    expand_bytes = MAX2(desired_capacity - capacity(), MinHeapDeltaBytes);
++    expand_bytes = MAX2((long unsigned int) (desired_capacity - capacity()), (long unsigned int) MinHeapDeltaBytes);
    }
-   assert(max_new_size > 0, "All paths should set max_new_size");
- 
-diff -Nru openjdk.orig/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp openjdk/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp
---- openjdk.orig/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp	2008-08-14 08:40:11.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp	2008-09-01 01:49:59.000000000 +0100
-@@ -222,7 +222,7 @@
-   size_t init_sz;
- 
-   if (TLABSize > 0) {
--    init_sz = MIN2(TLABSize / HeapWordSize, max_size());
-+    init_sz = MIN2((size_t) (TLABSize / HeapWordSize), max_size());
-   } else if (global_stats() == NULL) {
-     // Startup issue - main thread initialized before heap initialized.
-     init_sz = min_size();
-diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2008-09-01 01:47:17.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2008-09-01 01:58:01.000000000 +0100
-@@ -1025,7 +1025,7 @@
+   if (expand_bytes > 0) {
+     if (PrintGCDetails && Verbose) {
+@@ -6054,7 +6054,7 @@
+     HeapWord* curAddr = _markBitMap.startWord();
+     while (curAddr < _markBitMap.endWord()) {
+       size_t remaining  = pointer_delta(_markBitMap.endWord(), curAddr);
+-      MemRegion chunk(curAddr, MIN2(CMSBitMapYieldQuantum, remaining));
++      MemRegion chunk(curAddr, MIN2((size_t) CMSBitMapYieldQuantum, remaining));
+       _markBitMap.clear_large_range(chunk);
+       if (ConcurrentMarkSweepThread::should_yield() &&
+           !foregroundGCIsActive() &&
+@@ -6342,7 +6342,7 @@
+     return;
+   }
+   // Double capacity if possible
+-  size_t new_capacity = MIN2(_capacity*2, CMSMarkStackSizeMax);
++  size_t new_capacity = MIN2((size_t) (_capacity*2), (size_t) CMSMarkStackSizeMax);
+   // Do not give up existing stack until we have managed to
+   // get the double capacity that we desired.
+   ReservedSpace rs(ReservedSpace::allocation_align_size_up(
+--- openjdk/hotspot/src/share/vm/runtime/arguments.cpp.orig	2009-03-11 21:45:27.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2009-03-11 21:54:11.000000000 +0100
+@@ -1051,7 +1051,7 @@
    // for "short" pauses ~ 4M*ParallelGCThreads
    if (FLAG_IS_DEFAULT(MaxNewSize)) {  // MaxNewSize not set at command-line
      if (!FLAG_IS_DEFAULT(NewSize)) {   // NewSize explicitly set at command-line
@@ -90,7 +140,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
      } else {
        FLAG_SET_ERGO(uintx, MaxNewSize, preferred_max_new_size);
      }
-@@ -1038,7 +1038,7 @@
+@@ -1064,7 +1064,7 @@
    // Old to Young gen size so as to shift the collection load
    // to the old generation concurrent collector
    if (FLAG_IS_DEFAULT(NewRatio)) {
@@ -99,7 +149,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
  
      size_t min_new  = align_size_up(ScaleForWordSize(min_new_default), os::vm_page_size());
      size_t prev_initial_size = initial_heap_size();
-@@ -1067,8 +1067,8 @@
+@@ -1093,8 +1093,8 @@
        // Unless explicitly requested otherwise, make young gen
        // at least min_new, and at most preferred_max_new_size.
        if (FLAG_IS_DEFAULT(NewSize)) {
@@ -110,7 +160,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
          if(PrintGCDetails && Verbose) {
            // Too early to use gclog_or_tty
            tty->print_cr("Ergo set NewSize: " SIZE_FORMAT, NewSize);
-@@ -1079,7 +1079,7 @@
+@@ -1105,7 +1105,7 @@
        // later NewRatio will decide how it grows; see above.
        if (FLAG_IS_DEFAULT(OldSize)) {
          if (max_heap > NewSize) {
@@ -119,3 +169,87 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
            if(PrintGCDetails && Verbose) {
              // Too early to use gclog_or_tty
              tty->print_cr("Ergo set OldSize: " SIZE_FORMAT, OldSize);
+--- openjdk/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/memory/threadLocalAllocBuffer.cpp	2009-03-11 21:54:11.000000000 +0100
+@@ -221,7 +221,7 @@
+   size_t init_sz;
+ 
+   if (TLABSize > 0) {
+-    init_sz = MIN2(TLABSize / HeapWordSize, max_size());
++    init_sz = MIN2((size_t) (TLABSize / HeapWordSize), max_size());
+   } else if (global_stats() == NULL) {
+     // Startup issue - main thread initialized before heap initialized.
+     init_sz = min_size();
+--- openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp.orig	2008-12-20 18:59:01.000000000 +0100
++++ openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp	2009-03-11 21:55:31.000000000 +0100
+@@ -281,7 +281,7 @@
+     // yield a size that is too small) and bound it by MaxNewSize above.
+     // Ergonomics plays here by previously calculating the desired
+     // NewSize and MaxNewSize.
+-    max_new_size = MIN2(MAX2(max_new_size, NewSize), MaxNewSize);
++    max_new_size = MIN2(MAX2(max_new_size, (size_t)NewSize), (size_t)MaxNewSize);
+   }
+   assert(max_new_size > 0, "All paths should set max_new_size");
+ 
+@@ -308,7 +308,7 @@
+       // generally small compared to the NewRatio calculation.
+       _min_gen0_size = NewSize;
+       desired_new_size = NewSize;
+-      max_new_size = MAX2(max_new_size, NewSize);
++      max_new_size = MAX2(max_new_size, (size_t) NewSize);
+     } else {
+       // For the case where NewSize is the default, use NewRatio
+       // to size the minimum and initial generation sizes.
+@@ -316,10 +316,10 @@
+       // NewRatio is overly large, the resulting sizes can be too
+       // small.
+       _min_gen0_size = MAX2(scale_by_NewRatio_aligned(min_heap_byte_size()),
+-                          NewSize);
++                          (size_t) NewSize);
+       desired_new_size =
+         MAX2(scale_by_NewRatio_aligned(initial_heap_byte_size()),
+-             NewSize);
++             (size_t) NewSize);
+     }
+ 
+     assert(_min_gen0_size > 0, "Sanity check");
+@@ -374,14 +374,14 @@
+       // Adjust gen0 down to accomodate OldSize
+       *gen0_size_ptr = heap_size - min_gen0_size;
+       *gen0_size_ptr =
+-        MAX2((uintx)align_size_down(*gen0_size_ptr, min_alignment()),
++        MAX2((size_t)align_size_down(*gen0_size_ptr, min_alignment()),
+              min_alignment());
+       assert(*gen0_size_ptr > 0, "Min gen0 is too large");
+       result = true;
+     } else {
+       *gen1_size_ptr = heap_size - *gen0_size_ptr;
+       *gen1_size_ptr =
+-        MAX2((uintx)align_size_down(*gen1_size_ptr, min_alignment()),
++        MAX2((size_t)align_size_down(*gen1_size_ptr, min_alignment()),
+                        min_alignment());
+     }
+   }
+@@ -405,7 +405,7 @@
+   // for setting the gen1 maximum.
+   _max_gen1_size = max_heap_byte_size() - _max_gen0_size;
+   _max_gen1_size =
+-    MAX2((uintx)align_size_down(_max_gen1_size, min_alignment()),
++    MAX2((size_t)align_size_down(_max_gen1_size, min_alignment()),
+          min_alignment());
+   // If no explicit command line flag has been set for the
+   // gen1 size, use what is left for gen1.
+@@ -419,11 +419,11 @@
+       "gen0 has an unexpected minimum size");
+     set_min_gen1_size(min_heap_byte_size() - min_gen0_size());
+     set_min_gen1_size(
+-      MAX2((uintx)align_size_down(_min_gen1_size, min_alignment()),
++      MAX2((size_t)align_size_down(_min_gen1_size, min_alignment()),
+            min_alignment()));
+     set_initial_gen1_size(initial_heap_byte_size() - initial_gen0_size());
+     set_initial_gen1_size(
+-      MAX2((uintx)align_size_down(_initial_gen1_size, min_alignment()),
++      MAX2((size_t)align_size_down(_initial_gen1_size, min_alignment()),
+            min_alignment()));
+ 
+   } else {

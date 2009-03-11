@@ -1,5 +1,11 @@
 2009-03-11  Matthias Klose  <doko@ubuntu.com>
 
+	* patches/hotspot/default/icedtea-params-cast-size_t.patch: Update for
+	recent hotspot.
+	* patches/hotspot/default/icedtea-use-idx_t.patch: Likewise.
+
+2009-03-11  Matthias Klose  <doko@ubuntu.com>
+
 	* patches/hotspot/default/icedtea-includedb.patch: Add missing include in
 	openjdk/hotspot/src/share/vm/includeDB_core.
 
