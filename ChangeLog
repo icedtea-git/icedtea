@@ -1,3 +1,9 @@
+2009-03-12  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse_bytecode): Ensure that state setup
+	code is the first code for the block.
+
 2009-03-11  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/hotspot/default/icedtea-params-cast-size_t.patch: Update for
