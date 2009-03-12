@@ -75,6 +75,9 @@ globals.hpp                             shark_globals_<arch>.hpp
 
 globals.cpp                             shark_globals.hpp
 
+llvmValue.hpp                           llvmHeaders.hpp
+llvmValue.hpp                           sharkType.hpp
+
 methodOop.cpp                           sharkEntry.hpp
 
 shark_globals.cpp                       shark_globals.hpp
@@ -85,12 +88,13 @@ shark_globals.hpp                       globals.hpp
 sharkBlock.cpp                          debug.hpp
 sharkBlock.cpp                          bytecodes.hpp
 sharkBlock.cpp                          llvmHeaders.hpp
+sharkBlock.cpp                          llvmValue.hpp
 sharkBlock.cpp                          shark_globals.hpp
 sharkBlock.cpp                          sharkBlock.hpp
 sharkBlock.cpp                          sharkBuilder.hpp
 sharkBlock.cpp                          sharkRuntime.hpp
 sharkBlock.cpp                          sharkState.inline.hpp
-sharkBlock.cpp                          sharkValue.inline.hpp
+sharkBlock.cpp                          sharkValue.hpp
 
 sharkBlock.hpp                          allocation.hpp
 sharkBlock.hpp                          ciMethod.hpp
@@ -104,6 +108,7 @@ sharkBlock.hpp                          sharkValue.hpp
 sharkBuilder.cpp                        ciMethod.hpp
 sharkBuilder.cpp                        debug.hpp
 sharkBuilder.cpp                        llvmHeaders.hpp
+sharkBuilder.cpp                        llvmValue.hpp
 sharkBuilder.cpp                        methodOop.hpp
 sharkBuilder.cpp                        os.hpp
 sharkBuilder.cpp                        resourceArea.hpp
@@ -119,14 +124,16 @@ sharkBuilder.hpp                        cardTableModRefBS.hpp
 sharkBuilder.hpp                        ciType.hpp
 sharkBuilder.hpp                        debug.hpp
 sharkBuilder.hpp                        llvmHeaders.hpp
+sharkBuilder.hpp                        llvmValue.hpp
 sharkBuilder.hpp                        sizes.hpp
 sharkBuilder.hpp                        sharkCompiler.hpp
 sharkBuilder.hpp                        sharkType.hpp
-sharkBuilder.hpp                        sharkValue.inline.hpp
+sharkBuilder.hpp                        sharkValue.hpp
 sharkBuilder.hpp                        sharkEntry.hpp
 
 sharkCacheDecache.cpp                   ciMethod.hpp
 sharkCacheDecache.cpp                   debugInfoRec.hpp
+sharkCacheDecache.cpp                   llvmValue.hpp
 sharkCacheDecache.cpp                   sharkBuilder.hpp
 sharkCacheDecache.cpp                   sharkCacheDecache.hpp
 sharkCacheDecache.cpp                   sharkFunction.hpp
@@ -168,12 +175,13 @@ sharkConstantPool.cpp                   constantPoolOop.hpp
 sharkConstantPool.cpp                   cpCacheOop.hpp
 sharkConstantPool.cpp                   debug.hpp
 sharkConstantPool.cpp                   llvmHeaders.hpp
+sharkConstantPool.cpp                   llvmValue.hpp
 sharkConstantPool.cpp                   methodOop.hpp
 sharkConstantPool.cpp                   sharkBuilder.hpp
 sharkConstantPool.cpp                   sharkConstantPool.hpp
 sharkConstantPool.cpp                   sharkState.inline.hpp
 sharkConstantPool.cpp                   sharkType.hpp
-sharkConstantPool.cpp                   sharkValue.inline.hpp
+sharkConstantPool.cpp                   sharkValue.hpp
 
 sharkConstantPool.hpp                   allocation.hpp
 sharkConstantPool.hpp                   llvmHeaders.hpp
@@ -188,6 +196,7 @@ sharkFunction.cpp                       allocation.hpp
 sharkFunction.cpp                       ciTypeFlow.hpp
 sharkFunction.cpp                       debug.hpp
 sharkFunction.cpp                       llvmHeaders.hpp
+sharkFunction.cpp                       llvmValue.hpp
 sharkFunction.cpp                       shark_globals.hpp
 sharkFunction.cpp                       sharkBuilder.hpp
 sharkFunction.cpp                       sharkEntry.hpp
@@ -201,6 +210,7 @@ sharkFunction.hpp                       ciEnv.hpp
 sharkFunction.hpp                       ciStreams.hpp
 sharkFunction.hpp                       ciTypeFlow.hpp
 sharkFunction.hpp                       llvmHeaders.hpp
+sharkFunction.hpp                       llvmValue.hpp
 sharkFunction.hpp                       sharkBuilder.hpp
 
 sharkInliner.cpp                        allocation.hpp
@@ -212,7 +222,7 @@ sharkInliner.cpp                        shark_globals.hpp
 sharkInliner.cpp                        sharkInliner.hpp
 sharkInliner.cpp                        sharkIntrinsics.hpp
 sharkInliner.cpp                        sharkState.inline.hpp
-sharkInliner.cpp                        sharkValue.inline.hpp
+sharkInliner.cpp                        sharkValue.hpp
 
 sharkInliner.hpp                        allocation.hpp
 sharkInliner.hpp                        ciMethod.hpp
@@ -225,7 +235,7 @@ sharkIntrinsics.cpp                     shark_globals.hpp
 sharkIntrinsics.cpp                     sharkIntrinsics.hpp
 sharkIntrinsics.cpp                     sharkRuntime.hpp
 sharkIntrinsics.cpp                     sharkState.inline.hpp
-sharkIntrinsics.cpp                     sharkValue.inline.hpp
+sharkIntrinsics.cpp                     sharkValue.hpp
 
 sharkIntrinsics.hpp                     allocation.hpp
 sharkIntrinsics.hpp                     ciMethod.hpp
@@ -240,6 +250,7 @@ sharkMemoryManager.cpp                  sharkEntry.hpp
 sharkMemoryManager.cpp                  sharkMemoryManager.hpp
 
 sharkMonitor.cpp                        llvmHeaders.hpp
+sharkMonitor.cpp                        llvmValue.hpp
 sharkMonitor.cpp                        sharkMonitor.hpp
 sharkMonitor.cpp                        sharkRuntime.hpp
 sharkMonitor.cpp                        sharkState.inline.hpp
@@ -247,6 +258,7 @@ sharkMonitor.cpp                        sharkTopLevelBlock.hpp
 
 sharkMonitor.hpp                        allocation.hpp
 sharkMonitor.hpp                        llvmHeaders.hpp
+sharkMonitor.hpp                        llvmValue.hpp
 sharkMonitor.hpp                        sharkBuilder.hpp
 sharkMonitor.hpp                        sharkFunction.hpp
 
@@ -273,7 +285,7 @@ sharkState.cpp                          sharkCacheDecache.hpp
 sharkState.cpp                          sharkState.inline.hpp
 sharkState.cpp                          sharkTopLevelBlock.hpp
 sharkState.cpp                          sharkType.hpp
-sharkState.cpp                          sharkValue.inline.hpp
+sharkState.cpp                          sharkValue.hpp
 
 sharkState.hpp                          allocation.hpp
 sharkState.hpp                          ciMethod.hpp
@@ -301,6 +313,7 @@ sharkTopLevelBlock.cpp                  ciTypeFlow.hpp
 sharkTopLevelBlock.cpp                  debug.hpp
 sharkTopLevelBlock.cpp                  deoptimization.hpp
 sharkTopLevelBlock.cpp                  llvmHeaders.hpp
+sharkTopLevelBlock.cpp                  llvmValue.hpp
 sharkTopLevelBlock.cpp                  shark_globals.hpp
 sharkTopLevelBlock.cpp                  sharkTopLevelBlock.hpp
 sharkTopLevelBlock.cpp                  sharkBuilder.hpp
@@ -308,7 +321,7 @@ sharkTopLevelBlock.cpp                  sharkConstantPool.hpp
 sharkTopLevelBlock.cpp                  sharkInliner.hpp
 sharkTopLevelBlock.cpp                  sharkRuntime.hpp
 sharkTopLevelBlock.cpp                  sharkState.inline.hpp
-sharkTopLevelBlock.cpp                  sharkValue.inline.hpp
+sharkTopLevelBlock.cpp                  sharkValue.hpp
 
 sharkTopLevelBlock.hpp                  allocation.hpp
 sharkTopLevelBlock.hpp                  bytecodes.hpp
@@ -321,7 +334,7 @@ sharkTopLevelBlock.hpp                  sharkBuilder.hpp
 sharkTopLevelBlock.hpp                  sharkFunction.hpp
 sharkTopLevelBlock.hpp                  sharkMonitor.hpp
 sharkTopLevelBlock.hpp                  sharkState.inline.hpp
-sharkTopLevelBlock.hpp                  sharkValue.inline.hpp
+sharkTopLevelBlock.hpp                  sharkValue.hpp
 
 sharkType.cpp                           arrayOop.hpp
 sharkType.cpp                           globalDefinitions.hpp
@@ -338,9 +351,5 @@ sharkType.hpp                           llvmHeaders.hpp
 sharkValue.hpp                          allocation.hpp
 sharkValue.hpp                          ciType.hpp
 sharkValue.hpp                          llvmHeaders.hpp
+sharkValue.hpp                          llvmValue.hpp
 sharkValue.hpp                          sharkType.hpp
-
-sharkValue.inline.hpp                   ciType.hpp
-sharkValue.inline.hpp                   llvmHeaders.hpp
-sharkValue.inline.hpp                   sharkValue.hpp
-

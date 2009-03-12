@@ -1,5 +1,18 @@
 2009-03-12  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
+	(LLVMValue): Moved to llvmValue.hpp
+	(SharkValue::create_generic): Moved from sharkInline.hpp.
+	(SharkValue::create_returnAddress): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/llvmValue.hpp: New file.
+
+	* ports/hotspot/src/share/vm/shark/sharkValue.inline.hpp: Removed.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
+2009-03-12  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
 	(SharkBlock::parse_bytecode): Ensure that state setup
 	code is the first code for the block.
