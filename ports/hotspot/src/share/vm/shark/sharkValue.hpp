@@ -23,40 +23,6 @@
  *
  */
 
-class LLVMValue : public AllStatic {
- public:
-  static llvm::ConstantInt* jbyte_constant(jbyte value)
-  {
-    return llvm::ConstantInt::get(SharkType::jbyte_type(), value, true);
-  }
-  static llvm::ConstantInt* jint_constant(jint value)
-  {
-    return llvm::ConstantInt::get(SharkType::jint_type(), value, true);
-  }
-  static llvm::ConstantInt* jlong_constant(jlong value)
-  {
-    return llvm::ConstantInt::get(SharkType::jlong_type(), value, true);
-  }
-  static llvm::ConstantFP* jfloat_constant(jfloat value)
-  {
-    return llvm::ConstantFP::get(SharkType::jfloat_type(), value);
-  }
-  static llvm::ConstantFP* jdouble_constant(jdouble value)
-  {
-    return llvm::ConstantFP::get(SharkType::jdouble_type(), value);
-  }
-  static llvm::ConstantPointerNull* null()
-  {
-    return llvm::ConstantPointerNull::get(SharkType::jobject_type());
-  }
-
- public:
-  static llvm::ConstantInt* intptr_constant(intptr_t value)
-  {
-    return llvm::ConstantInt::get(SharkType::intptr_type(), value, false);
-  }
-};
-
 class SharkValue : public ResourceObj {
  protected:
   SharkValue() {}
@@ -403,6 +369,11 @@ class SharkComputableValue : public SharkValue {
   }
 };
 
+inline SharkValue* SharkValue::create_generic(ciType* type, llvm::Value* value)
+{
+  return new SharkComputableValue(type, value);    
+}
+
 class SharkReturnAddressValue : public SharkValue {
   friend class SharkValue;
 
@@ -451,3 +422,8 @@ class SharkReturnAddressValue : public SharkValue {
     assert(_bci == value->returnAddress_value(), "should be");
   }
 };
+
+inline SharkValue* SharkValue::create_returnAddress(int bci)
+{
+  return new SharkReturnAddressValue(bci);
+}
