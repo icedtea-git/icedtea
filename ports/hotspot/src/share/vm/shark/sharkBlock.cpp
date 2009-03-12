@@ -33,6 +33,11 @@ void SharkBlock::parse_bytecode(int start, int limit)
   SharkValue *a, *b, *c, *d;
   int i;
 
+  // Ensure the current state is initialized before we emit any code,
+  // so that any setup code for the state is at the start of the block
+  current_state();
+
+  // Parse the bytecodes
   iter()->reset_to_bci(start);
   while (iter()->next_bci() < limit) {
     NOT_PRODUCT(a = b = c = d = NULL);

@@ -1,3 +1,9 @@
+2009-03-12  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse_bytecode): Ensure that state setup
+	code is the first code for the block.
+
 2009-03-11  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.hpp: New file.
