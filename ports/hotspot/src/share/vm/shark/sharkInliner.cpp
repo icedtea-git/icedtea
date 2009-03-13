@@ -513,7 +513,6 @@ bool SharkInlinerHelper::is_inlinable()
     case Bytecodes::_isub:
     case Bytecodes::_imul:
     case Bytecodes::_iand:
-    case Bytecodes::_ior:
     case Bytecodes::_ixor:
     case Bytecodes::_ishl:
     case Bytecodes::_ishr:
@@ -521,6 +520,11 @@ bool SharkInlinerHelper::is_inlinable()
       pop();
       pop();
       push(false);
+      break;
+    case Bytecodes::_ior:
+      a = pop();
+      b = pop();
+      push(a && b);
       break;
     case Bytecodes::_idiv:
     case Bytecodes::_irem:
@@ -536,7 +540,6 @@ bool SharkInlinerHelper::is_inlinable()
     case Bytecodes::_lsub:
     case Bytecodes::_lmul:
     case Bytecodes::_land:
-    case Bytecodes::_lor:
     case Bytecodes::_lxor:
       pop();
       pop();
@@ -544,6 +547,11 @@ bool SharkInlinerHelper::is_inlinable()
       pop();
       push(false);
       push(false);
+      break;
+    case Bytecodes::_lor:
+      a = pop();
+      b = pop();
+      push(a && b);
       break;
     case Bytecodes::_ldiv:
     case Bytecodes::_lrem:
