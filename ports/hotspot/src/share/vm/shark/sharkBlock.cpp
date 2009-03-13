@@ -369,19 +369,19 @@ void SharkBlock::parse_bytecode(int start, int limit)
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateAdd(a->jint_value(), b->jint_value())));
+        builder()->CreateAdd(a->jint_value(), b->jint_value()), false));
       break;
     case Bytecodes::_isub:
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateSub(a->jint_value(), b->jint_value())));
+        builder()->CreateSub(a->jint_value(), b->jint_value()), false));
       break;
     case Bytecodes::_imul:
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateMul(a->jint_value(), b->jint_value())));
+        builder()->CreateMul(a->jint_value(), b->jint_value()), false));
       break;
     case Bytecodes::_idiv:
       do_idiv();
@@ -392,7 +392,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
     case Bytecodes::_ineg:
       a = pop();      
       push(SharkValue::create_jint(
-        builder()->CreateNeg(a->jint_value())));
+        builder()->CreateNeg(a->jint_value()), a->zero_checked()));
       break;
     case Bytecodes::_ishl:
       b = pop();
@@ -401,7 +401,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
         builder()->CreateShl(
           a->jint_value(),
           builder()->CreateAnd(
-            b->jint_value(), LLVMValue::jint_constant(0x1f)))));
+            b->jint_value(), LLVMValue::jint_constant(0x1f))), false));
       break;
     case Bytecodes::_ishr:
       b = pop();
@@ -410,7 +410,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
         builder()->CreateAShr(
           a->jint_value(),
           builder()->CreateAnd(
-            b->jint_value(), LLVMValue::jint_constant(0x1f)))));
+            b->jint_value(), LLVMValue::jint_constant(0x1f))), false));
       break;
     case Bytecodes::_iushr:
       b = pop();
@@ -419,44 +419,45 @@ void SharkBlock::parse_bytecode(int start, int limit)
         builder()->CreateLShr(
           a->jint_value(),
           builder()->CreateAnd(
-            b->jint_value(), LLVMValue::jint_constant(0x1f)))));
+            b->jint_value(), LLVMValue::jint_constant(0x1f))), false));
       break;
     case Bytecodes::_iand:
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateAnd(a->jint_value(), b->jint_value())));
+        builder()->CreateAnd(a->jint_value(), b->jint_value()), false));
       break;
     case Bytecodes::_ior:
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateOr(a->jint_value(), b->jint_value())));
+        builder()->CreateOr(a->jint_value(), b->jint_value()),
+        a->zero_checked() && b->zero_checked()));
       break;
     case Bytecodes::_ixor:
       b = pop();
       a = pop();
       push(SharkValue::create_jint(
-        builder()->CreateXor(a->jint_value(), b->jint_value())));
+        builder()->CreateXor(a->jint_value(), b->jint_value()), false));
       break;
 
     case Bytecodes::_ladd:
       b = pop();
       a = pop();
       push(SharkValue::create_jlong(
-        builder()->CreateAdd(a->jlong_value(), b->jlong_value())));
+        builder()->CreateAdd(a->jlong_value(), b->jlong_value()), false));
       break;
     case Bytecodes::_lsub:
       b = pop();
       a = pop();
       push(SharkValue::create_jlong(
-        builder()->CreateSub(a->jlong_value(), b->jlong_value())));
+        builder()->CreateSub(a->jlong_value(), b->jlong_value()), false));
       break;
     case Bytecodes::_lmul:
       b = pop();
       a = pop();
       push(SharkValue::create_jlong(
-        builder()->CreateMul(a->jlong_value(), b->jlong_value())));
+        builder()->CreateMul(a->jlong_value(), b->jlong_value()), false));
       break;
     case Bytecodes::_ldiv:
       do_ldiv();
@@ -467,7 +468,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
     case Bytecodes::_lneg:
       a = pop();      
       push(SharkValue::create_jlong(
-        builder()->CreateNeg(a->jlong_value())));
+        builder()->CreateNeg(a->jlong_value()), a->zero_checked()));
       break;
     case Bytecodes::_lshl:
       b = pop();
@@ -478,7 +479,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
           builder()->CreateIntCast(
             builder()->CreateAnd(
               b->jint_value(), LLVMValue::jint_constant(0x3f)),
-            SharkType::jlong_type(), true))));
+            SharkType::jlong_type(), true)), false));
       break;
     case Bytecodes::_lshr:
       b = pop();
@@ -489,7 +490,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
           builder()->CreateIntCast(
             builder()->CreateAnd(
               b->jint_value(), LLVMValue::jint_constant(0x3f)),
-            SharkType::jlong_type(), true))));
+            SharkType::jlong_type(), true)), false));
       break;
     case Bytecodes::_lushr:
       b = pop();
@@ -500,25 +501,26 @@ void SharkBlock::parse_bytecode(int start, int limit)
           builder()->CreateIntCast(
             builder()->CreateAnd(
               b->jint_value(), LLVMValue::jint_constant(0x3f)),
-            SharkType::jlong_type(), true))));
+            SharkType::jlong_type(), true)), false));
       break;
     case Bytecodes::_land:
       b = pop();
       a = pop();
       push(SharkValue::create_jlong(
-        builder()->CreateAnd(a->jlong_value(), b->jlong_value())));
+        builder()->CreateAnd(a->jlong_value(), b->jlong_value()), false));
       break;
     case Bytecodes::_lor:
       b = pop();
       a = pop();
       push(SharkValue::create_jlong(
-        builder()->CreateOr(a->jlong_value(), b->jlong_value())));
+        builder()->CreateOr(a->jlong_value(), b->jlong_value()),
+        a->zero_checked() && b->zero_checked()));
       break;
     case Bytecodes::_lxor:
       b = pop();
       a = pop();
       push(SharkValue::create_jlong(
-        builder()->CreateXor(a->jlong_value(), b->jlong_value())));
+        builder()->CreateXor(a->jlong_value(), b->jlong_value()), false));
       break;
 
     case Bytecodes::_fadd:
@@ -600,7 +602,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
         SharkValue::create_jint(
           builder()->CreateAdd(
             LLVMValue::jint_constant(iter()->get_iinc_con()),
-            local(i)->jint_value())));
+            local(i)->jint_value()), false));
       break;
 
     case Bytecodes::_lcmp:
@@ -621,9 +623,10 @@ void SharkBlock::parse_bytecode(int start, int limit)
       break;
 
     case Bytecodes::_i2l:
+      a = pop();      
       push(SharkValue::create_jlong(
         builder()->CreateIntCast(
-          pop()->jint_value(), SharkType::jlong_type(), true)));
+          a->jint_value(), SharkType::jlong_type(), true), a->zero_checked()));
       break;
     case Bytecodes::_i2f:
       push(SharkValue::create_jfloat(
@@ -639,7 +642,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
     case Bytecodes::_l2i:
       push(SharkValue::create_jint(
         builder()->CreateIntCast(
-          pop()->jlong_value(), SharkType::jint_type(), true)));
+          pop()->jlong_value(), SharkType::jint_type(), true), false));
       break;
     case Bytecodes::_l2f:
       push(SharkValue::create_jfloat(
@@ -654,11 +657,11 @@ void SharkBlock::parse_bytecode(int start, int limit)
 
     case Bytecodes::_f2i:
       push(SharkValue::create_jint(
-        call_vm_leaf(SharkRuntime::f2i(), pop()->jfloat_value())));
+        call_vm_leaf(SharkRuntime::f2i(), pop()->jfloat_value()), false));
       break;
     case Bytecodes::_f2l:
       push(SharkValue::create_jlong(
-        call_vm_leaf(SharkRuntime::f2l(), pop()->jfloat_value())));
+        call_vm_leaf(SharkRuntime::f2l(), pop()->jfloat_value()), false));
       break;
     case Bytecodes::_f2d:
       push(SharkValue::create_jdouble(
@@ -668,11 +671,11 @@ void SharkBlock::parse_bytecode(int start, int limit)
 
     case Bytecodes::_d2i:
       push(SharkValue::create_jint(
-        call_vm_leaf(SharkRuntime::d2i(), pop()->jdouble_value())));
+        call_vm_leaf(SharkRuntime::d2i(), pop()->jdouble_value()), false));
       break;
     case Bytecodes::_d2l:
       push(SharkValue::create_jlong(
-        call_vm_leaf(SharkRuntime::d2l(), pop()->jdouble_value())));
+        call_vm_leaf(SharkRuntime::d2l(), pop()->jdouble_value()), false));
       break;
     case Bytecodes::_d2f:
       push(SharkValue::create_jfloat(
@@ -686,13 +689,13 @@ void SharkBlock::parse_bytecode(int start, int limit)
           builder()->CreateShl(
             pop()->jint_value(),
             LLVMValue::jint_constant(24)),
-          LLVMValue::jint_constant(24))));
+          LLVMValue::jint_constant(24)), false));
       break;
     case Bytecodes::_i2c:
       push(SharkValue::create_jint(
         builder()->CreateAnd(
             pop()->jint_value(),
-            LLVMValue::jint_constant(0xffff))));
+            LLVMValue::jint_constant(0xffff)), false));
       break;
     case Bytecodes::_i2s:
       push(SharkValue::create_jint(
@@ -700,7 +703,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
           builder()->CreateShl(
             pop()->jint_value(),
             LLVMValue::jint_constant(16)),
-          LLVMValue::jint_constant(16))));
+          LLVMValue::jint_constant(16)), false));
       break;
 
     case Bytecodes::_return:
@@ -963,9 +966,9 @@ void SharkBlock::do_div_or_rem(bool is_long, bool is_rem)
   result->addIncoming(general_result, general_case);
 
   if (is_long)
-    push(SharkValue::create_jlong(result));
+    push(SharkValue::create_jlong(result, false));
   else
-    push(SharkValue::create_jint(result));
+    push(SharkValue::create_jint(result, false));
 }
 
 void SharkBlock::do_field_access(bool is_get, bool is_field)
@@ -1011,7 +1014,7 @@ void SharkBlock::do_field_access(bool is_get, bool is_field)
       field_value = builder()->CreateIntCast(
         field_value, stack_type, basic_type != T_CHAR);
 
-      value = SharkValue::create_generic(field->type(), field_value);
+      value = SharkValue::create_generic(field->type(), field_value, false);
     }
     else {
       Value *field_value = value->generic_value();
@@ -1064,7 +1067,7 @@ void SharkBlock::do_lcmp()
   result->addIncoming(LLVMValue::jint_constant(0),  eq);
   result->addIncoming(LLVMValue::jint_constant(1),  gt);
 
-  push(SharkValue::create_jint(result));
+  push(SharkValue::create_jint(result, false));
 }
 
 void SharkBlock::do_fcmp(bool is_double, bool unordered_is_greater)
@@ -1112,7 +1115,7 @@ void SharkBlock::do_fcmp(bool is_double, bool unordered_is_greater)
   result->addIncoming(LLVMValue::jint_constant(0),  eq);
   result->addIncoming(LLVMValue::jint_constant(1),  gt);
 
-  push(SharkValue::create_jint(result));
+  push(SharkValue::create_jint(result, false));
 }
 
 void SharkBlock::emit_IR()

@@ -83,47 +83,41 @@ class SharkValue : public ResourceObj {
 
   // Typed conversion to SharkValues
  public:
-  static SharkValue* create_jint(llvm::Value* value)
+  static SharkValue* create_jint(llvm::Value* value, bool zero_checked)
   {
     assert(value->getType() == SharkType::jint_type(), "should be");
-    return create_generic(ciType::make(T_INT), value);
+    return create_generic(ciType::make(T_INT), value, zero_checked);
   }
-  static SharkValue* create_jlong(llvm::Value* value)
+  static SharkValue* create_jlong(llvm::Value* value, bool zero_checked)
   {
     assert(value->getType() == SharkType::jlong_type(), "should be");
-    return create_generic(ciType::make(T_LONG), value);
+    return create_generic(ciType::make(T_LONG), value, zero_checked);
   }
   static SharkValue* create_jfloat(llvm::Value* value)
   {
     assert(value->getType() == SharkType::jfloat_type(), "should be");
-    return create_generic(ciType::make(T_FLOAT), value);
+    return create_generic(ciType::make(T_FLOAT), value, false);
   }
   static SharkValue* create_jdouble(llvm::Value* value)
   {
     assert(value->getType() == SharkType::jdouble_type(), "should be");
-    return create_generic(ciType::make(T_DOUBLE), value);
+    return create_generic(ciType::make(T_DOUBLE), value, false);
   }
-  static SharkValue* create_jobject(llvm::Value* value)
+  static SharkValue* create_jobject(llvm::Value* value, bool zero_checked)
   {
     assert(value->getType() == SharkType::jobject_type(), "should be");
-    return create_generic(ciType::make(T_OBJECT), value);
+    return create_generic(ciType::make(T_OBJECT), value, zero_checked);
   }
 
   // Typed conversion from constants of various types
  public:
   static SharkValue* jint_constant(jint value)
   {
-    SharkValue *result = create_jint(LLVMValue::jint_constant(value));
-    if (value != 0)
-      result->set_zero_checked(true);
-    return result;
+    return create_jint(LLVMValue::jint_constant(value), value != 0);
   }
   static SharkValue* jlong_constant(jlong value)
   {
-    SharkValue *result = create_jlong(LLVMValue::jlong_constant(value));
-    if (value != 0)
-      result->set_zero_checked(true);
-    return result;
+    return create_jlong(LLVMValue::jlong_constant(value), value != 0);
   }
   static SharkValue* jfloat_constant(jfloat value)
   {
@@ -135,7 +129,7 @@ class SharkValue : public ResourceObj {
   }
   static SharkValue* null()
   {
-    return create_jobject(LLVMValue::null());
+    return create_jobject(LLVMValue::null(), false);
   }
   static inline SharkValue* address_constant(int bci);
 
@@ -185,7 +179,7 @@ class SharkValue : public ResourceObj {
 
   static inline SharkValue* create_generic(ciType*      type,
                                            llvm::Value* value,
-                                           bool         zero_checked = false);
+                                           bool         zero_checked);
 
   // Phi-style stuff
  public:
