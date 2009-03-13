@@ -39,6 +39,14 @@ class SharkValue : public ResourceObj {
  protected:
   SharkValue() {}
 
+  // Cloning
+ public:
+  virtual SharkValue* clone() const = 0;
+
+  // Comparison
+ public:
+  virtual bool equal_to(SharkValue* other) const = 0;
+
   // Type access
  public:
   virtual BasicType basic_type() const = 0;
@@ -175,7 +183,9 @@ class SharkValue : public ResourceObj {
   virtual llvm::Value* generic_value() const = 0;
   virtual llvm::Value* intptr_value(SharkBuilder* builder) const;
 
-  static inline SharkValue* create_generic(ciType* type, llvm::Value* value);
+  static inline SharkValue* create_generic(ciType*      type,
+                                           llvm::Value* value,
+                                           bool         zero_checked = false);
 
   // Phi-style stuff
  public:
@@ -191,8 +201,8 @@ class SharkNormalValue : public SharkValue {
   friend class SharkValue;
   
  protected:
-  SharkNormalValue(ciType* type, llvm::Value* value)
-    : _type(type), _llvm_value(value), _zero_checked(false) {}
+  SharkNormalValue(ciType* type, llvm::Value* value, bool zero_checked)
+    : _type(type), _llvm_value(value), _zero_checked(zero_checked) {}
 
  private:
   ciType*      _type;
@@ -204,6 +214,14 @@ class SharkNormalValue : public SharkValue {
   {
     return _llvm_value;
   }
+
+  // Cloning
+ public:
+  SharkValue* clone() const;
+
+  // Comparison
+ public:
+  bool equal_to(SharkValue* other) const;
 
   // Type access
  public:
@@ -243,9 +261,11 @@ class SharkNormalValue : public SharkValue {
   void set_zero_checked(bool zero_checked);
 };
 
-inline SharkValue* SharkValue::create_generic(ciType* type, llvm::Value* value)
+inline SharkValue* SharkValue::create_generic(ciType*      type,
+                                              llvm::Value* value,
+                                              bool         zero_checked)
 {
-  return new SharkNormalValue(type, value);    
+  return new SharkNormalValue(type, value, zero_checked);
 }
 
 class SharkAddressValue : public SharkValue {
@@ -257,6 +277,14 @@ class SharkAddressValue : public SharkValue {
 
  private:
   int _bci;
+
+  // Cloning
+ public:
+  SharkValue* clone() const;
+
+  // Comparison
+ public:
+  bool equal_to(SharkValue* other) const;
 
   // Type access
  public:  

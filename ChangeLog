@@ -1,5 +1,50 @@
 2009-03-13  Gary Benson  <gbenson@redhat.com>
 
+	PR icedtea/296:
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::do_branch): New method, to handle
+	state propagation for blocks with one successor.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::emit_IR): Move state propagation to
+	the individual instructions.
+	(SharkTopLevelBlock::do_branch): New method, to handle
+	state propagation for blocks with one successor.
+	(SharkTopLevelBlock::do_goto): Use do_branch.
+	(SharkTopLevelBlock::do_jsr): Likewise.
+	(SharkTopLevelBlock::do_ret): Likewise.
+	(SharkTopLevelBlock::do_if): Add state propagation.
+	(SharkTopLevelBlock::do_switch): Copy the state for all
+	cases except the default.
+	(SharkTopLevelBlock::handle_exception): Copy the state for
+	all cases except the default (ie catch all/no handler).
+	(SharkTopLevelBlock::add_incoming): Fix up assertion.
+
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkState::equal_to): New method.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkState::equal_to): Likewise.
+	(SharkState::initialize): Clone values in locals and stack
+	rather than simply copying the pointers.
+
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
+	(SharkValue::clone): New method.
+	(SharkValue::equal_to): Likewise.
+	(SharkNormalValue::clone): Likewise.
+	(SharkNormalValue::equal_to): Likewise.
+	(SharkAddressValue::clone): Likewise.
+	(SharkAddressValue::equal_to): Likewise.
+	(SharkValue::create_generic): Add a zero_checked argument.
+	(SharkNormalValue::SharkNormalValue): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.cpp
+	(SharkValue::clone): New method.
+	(SharkValue::equal_to): Likewise.
+	(SharkNormalValue::clone): Likewise.
+	(SharkNormalValue::equal_to): Likewise.
+	(SharkAddressValue::clone): Likewise.
+	(SharkAddressValue::equal_to): Likewise.
+
+2009-03-13  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkState.hpp
 	(SharkEntryState): Moved from sharkFunction.cpp.
 	(SharkPHIState): Moved from sharkTopLevelBlock.cpp.

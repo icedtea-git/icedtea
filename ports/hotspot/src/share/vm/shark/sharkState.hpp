@@ -70,6 +70,7 @@ class SharkState : public ResourceObj {
   {
     return _method;
   }
+ protected:
   void set_method(llvm::Value* method)
   {
     _method = method;
@@ -127,6 +128,10 @@ class SharkState : public ResourceObj {
     assert(stack_depth() >= slots, "stack underrun");
     _sp -= slots;
   }
+
+  // Comparison
+ public:
+  bool equal_to(SharkState* other);
 
   // Copy and merge
  public:
