@@ -228,9 +228,11 @@ void SharkTopLevelBlock::add_incoming(SharkState* incoming_state)
   if (needs_phis()) {
     ((SharkPHIState *) entry_state())->add_incoming(incoming_state);
   }
-  else if (_entry_state != incoming_state) {
-    assert(_entry_state == NULL, "should be");
+  else if (_entry_state == NULL) {
     _entry_state = incoming_state;
+  }
+  else {
+    assert(entry_state()->equal_to(incoming_state), "should be");
   }
 }
 
@@ -324,21 +326,8 @@ void SharkTopLevelBlock::emit_IR()
 
   // If this block falls through to the next then it won't have been
   // terminated by a bytecode and we have to add the branch ourselves
-  if (falls_through()) {
-    builder()->CreateBr(successor(ciTypeFlow::FALL_THROUGH)->entry_block());
-  }
-
-  // Process the successor states if not already done
-  switch (bc()) {
-  case Bytecodes::_tableswitch:
-  case Bytecodes::_lookupswitch:
-    // done by do_switch()
-    break;
-
-  default:
-    for (int i = 0; i < num_successors(); i++)
-      successor(i)->add_incoming(current_state());
-  }
+  if (falls_through())
+    do_branch(ciTypeFlow::FALL_THROUGH);
 }
 
 SharkTopLevelBlock* SharkTopLevelBlock::bci_successor(int bci) const
@@ -506,7 +495,7 @@ void SharkTopLevelBlock::handle_exception(Value* exception, bool attempt_catch)
           LLVMValue::jint_constant(i),
           handler->entry_block());
 
-        handler->add_incoming(current_state());
+        handler->add_incoming(current_state()->copy());
       }
 
       builder()->SetInsertPoint(no_handler);
@@ -861,23 +850,38 @@ void SharkTopLevelBlock::do_athrow()
 
 void SharkTopLevelBlock::do_goto()
 {
-  builder()->CreateBr(successor(ciTypeFlow::GOTO_TARGET)->entry_block());
+  do_branch(ciTypeFlow::GOTO_TARGET);
 }
 
 void SharkTopLevelBlock::do_jsr()
 {
   push(SharkValue::address_constant(iter()->next_bci()));
-  builder()->CreateBr(successor(ciTypeFlow::GOTO_TARGET)->entry_block());
+  do_branch(ciTypeFlow::GOTO_TARGET);
 }
 
 void SharkTopLevelBlock::do_ret()
 {
   assert(local(iter()->get_index())->address_value() ==
          successor(ciTypeFlow::GOTO_TARGET)->start(), "should be");
-  builder()->CreateBr(successor(ciTypeFlow::GOTO_TARGET)->entry_block());
+  do_branch(ciTypeFlow::GOTO_TARGET);
 }
- 
-void SharkTopLevelBlock::do_if(ICmpInst::Predicate p, SharkValue *b, SharkValue *a)
+
+// All propagation of state from one block to the next (via
+// dest->add_incoming) is handled by the next three methods
+// (do_branch, do_if and do_switch) and by handle_exception.
+// Where control flow forks, each successor must have its
+// own copy of the state.
+
+void SharkTopLevelBlock::do_branch(int successor_index)
+{
+  SharkTopLevelBlock *dest = successor(successor_index);
+  builder()->CreateBr(dest->entry_block());
+  dest->add_incoming(current_state());
+}
+
+void SharkTopLevelBlock::do_if(ICmpInst::Predicate p,
+                               SharkValue*         b,
+                               SharkValue*         a)
 {
   Value *llvm_a, *llvm_b;
   if (a->is_jobject()) {
@@ -888,11 +892,16 @@ void SharkTopLevelBlock::do_if(ICmpInst::Predicate p, SharkValue *b, SharkValue 
     llvm_a = a->jint_value();
     llvm_b = b->jint_value();
   }
-                          
+
+  SharkTopLevelBlock *if_taken  = successor(ciTypeFlow::IF_TAKEN);
+  SharkTopLevelBlock *not_taken = successor(ciTypeFlow::IF_NOT_TAKEN);
+
   builder()->CreateCondBr(
     builder()->CreateICmp(p, llvm_a, llvm_b),
-    successor(ciTypeFlow::IF_TAKEN)->entry_block(),
-    successor(ciTypeFlow::IF_NOT_TAKEN)->entry_block());
+    if_taken->entry_block(), not_taken->entry_block());
+
+  if_taken->add_incoming(current_state());
+  not_taken->add_incoming(current_state()->copy());
 }
 
 void SharkTopLevelBlock::do_switch()
@@ -911,7 +920,7 @@ void SharkTopLevelBlock::do_switch()
       switchinst->addCase(
         LLVMValue::jint_constant(switch_key(i)),
         dest_block->entry_block());
-      dest_block->add_incoming(current_state());      
+      dest_block->add_incoming(current_state()->copy());      
     }
   }
 }

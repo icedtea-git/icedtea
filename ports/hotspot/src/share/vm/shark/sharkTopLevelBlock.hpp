@@ -211,6 +211,7 @@ class SharkTopLevelBlock : public SharkBlock {
   void do_zero_check(SharkValue* value);
   llvm::Value* lookup_for_ldc();
   llvm::Value* lookup_for_field_access();
+  void do_branch(int successor_index);
 
   // VM calls
  private:

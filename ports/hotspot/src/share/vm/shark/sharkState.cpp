@@ -69,18 +69,81 @@ void SharkState::initialize(const SharkState *state)
   _locals = NEW_RESOURCE_ARRAY(SharkValue*, max_locals());
   _stack  = NEW_RESOURCE_ARRAY(SharkValue*, max_stack());
 
-  if (state) {
-    memcpy(_locals, state->_locals, max_locals() * sizeof(SharkValue *));
-    memcpy(_stack,  state->_stack,  max_stack()  * sizeof(SharkValue *));
-    _sp = _stack + state->stack_depth();
-  }
-  else {
-    _sp = _stack;
+  NOT_PRODUCT(memset(_locals, 23, max_locals() * sizeof(SharkValue *)));
+  NOT_PRODUCT(memset(_stack,  23, max_stack()  * sizeof(SharkValue *)));
+  _sp = _stack;
 
-    NOT_PRODUCT(memset(_locals, 23, max_locals() * sizeof(SharkValue *)));
-    NOT_PRODUCT(memset(_stack,  23, max_stack()  * sizeof(SharkValue *)));
-  }
+  if (state) {
+    for (int i = 0; i < max_locals(); i++) {
+      SharkValue *value = state->local(i);
+      if (value)
+        value = value->clone();
+      set_local(i, value);
+    }
+
+    for (int i = state->stack_depth() - 1; i >= 0; i--) {
+      SharkValue *value = state->stack(i);
+      if (value)
+        value = value->clone();
+      push(value);
+    }
+  } 
 }
+
+bool SharkState::equal_to(SharkState *other)
+{
+  if (block() != other->block())
+    return false;
+
+  if (function() != other->function())
+    return false;
+
+  if (method() != other->method())
+    return false;
+
+  if (max_locals() != other->max_locals())
+    return false;
+
+  if (stack_depth() != other->stack_depth())
+    return false;
+
+  for (int i = 0; i < max_locals(); i++) {
+    SharkValue *value = local(i);
+    SharkValue *other_value = other->local(i);
+
+    if (value == NULL) {
+      if (other_value != NULL)
+        return false;
+    }
+    else {
+      if (other_value == NULL)
+        return false;
+
+      if (!value->equal_to(other_value))
+        return false;
+    }
+  }
+
+  for (int i = 0; i < stack_depth(); i++) {
+    SharkValue *value = stack(i);
+    SharkValue *other_value = other->stack(i);
+
+    if (value == NULL) {
+      if (other_value != NULL)
+        return false;
+    }
+    else {
+      if (other_value == NULL)
+        return false;
+
+      if (!value->equal_to(other_value))
+        return false;
+    }
+  }
+
+  return true;
+}
+
 void SharkState::merge(SharkState* other,
                        BasicBlock* other_block,
                        BasicBlock* this_block)

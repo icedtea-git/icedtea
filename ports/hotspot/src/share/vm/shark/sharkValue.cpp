@@ -28,6 +28,30 @@
 
 using namespace llvm;
 
+// Cloning
+
+SharkValue* SharkNormalValue::clone() const
+{
+  return SharkValue::create_generic(type(), generic_value(), zero_checked());
+}
+SharkValue* SharkAddressValue::clone() const
+{
+  return SharkValue::address_constant(address_value());
+}
+
+// Comparison
+
+bool SharkNormalValue::equal_to(SharkValue *other) const
+{
+  return (this->type()          == other->type() &&
+          this->generic_value() == other->generic_value() &&
+          this->zero_checked()  == other->zero_checked());
+}
+bool SharkAddressValue::equal_to(SharkValue *other) const
+{
+  return (this->address_value() == other->address_value());
+}
+
 // Type access
 
 ciType* SharkValue::type() const
@@ -189,7 +213,7 @@ Value* SharkNormalValue::generic_value() const
 }
 Value* SharkAddressValue::generic_value() const
 {
-  return LLVMValue::intptr_constant(_bci);
+  return LLVMValue::intptr_constant(address_value());
 }
 
 Value* SharkValue::intptr_value(SharkBuilder* builder) const
@@ -211,7 +235,7 @@ void SharkNormalValue::addIncoming(SharkValue *value, BasicBlock* block)
 }
 void SharkAddressValue::addIncoming(SharkValue *value, BasicBlock* block)
 {
-  assert(_bci == value->address_value(), "should be");
+  assert(this->equal_to(value), "should be");
 }
 
 // Repeated null and divide-by-zero check removal
