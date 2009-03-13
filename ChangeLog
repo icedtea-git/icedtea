@@ -1,3 +1,25 @@
+2009-03-13  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
+	(SharkValue): Moved virtual method bodies to sharkValue.cpp.
+	(SharkValue::is_address): Renamed from is_returnAddress.
+	(SharkValue::address_value): Renamed from returnAddress_value.
+	(SharkValue::address_constant): Renamed from create_returnAddress.
+	(SharkNormalValue): Renamed from SharkComputableValue, and moved
+	virtual method bodies to sharkValue.cpp.
+	(SharkAddressValue): Renamed from SharkReturnAddressValue, and
+	moved virtual method bodies to sharkValue.cpp.
+	(SharkAddressValue::is_address): Renamed from is_returnAddress.
+	(SharkAddressValue::address_value): Renamed from returnAddress_value.
+	* ports/hotspot/src/share/vm/shark/sharkValue.cpp: New file.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkPHIState::SharkPHIState): s/create_returnAddress/address_constant/
+	(SharkTopLevelBlock::do_jsr): Likewise.
+	(SharkTopLevelBlock::do_ret): s/returnAddress_value/address_value/
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+	
 2009-03-12  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
