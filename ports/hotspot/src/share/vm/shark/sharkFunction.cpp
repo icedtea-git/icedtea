@@ -89,65 +89,6 @@ class SharkEntryState : public SharkState {
   }
 };
 
-class SharkEntryState : public SharkState {
- public:
-  SharkEntryState(SharkTopLevelBlock* block, llvm::Value* method)
-    : SharkState(block, block->function(), method)
-  {
-    char name[18];
-
-    // Local variables
-    for (int i = 0; i < max_locals(); i++) {
-      ciType *type = block->local_type_at_entry(i);
-
-      SharkValue *value = NULL;
-      switch (type->basic_type()) {
-      case T_INT:
-      case T_LONG:
-      case T_FLOAT:
-      case T_DOUBLE:
-      case T_OBJECT:
-      case T_ARRAY:
-        if (i < function()->arg_size()) {
-          snprintf(name, sizeof(name), "local_%d_", i);
-          value = SharkValue::create_generic(
-            type,
-            builder()->CreateLoad(
-              function()->CreateAddressOfFrameEntry(
-                function()->locals_slots_offset()
-                + max_locals() - type->size() - i,
-                SharkType::to_stackType(type)),
-              name));
-        }
-        else {
-          Unimplemented();
-        }
-        break;
-      
-      case ciTypeFlow::StateVector::T_BOTTOM:
-        break;
-
-      case ciTypeFlow::StateVector::T_LONG2:
-      case ciTypeFlow::StateVector::T_DOUBLE2:
-        break;
-
-      default:
-        ShouldNotReachHere();
-      }
-      set_local(i, value);
-    }
-
-    // Non-static methods have a guaranteed non-null receiver
-    if (!function()->target()->is_static()) {
-      assert(local(0)->is_jobject(), "should be");
-      local(0)->set_zero_checked(true);
-    }
-
-    // Expression stack
-    assert(!block->stack_depth_at_entry(), "entry block shouldn't have stack");
-  }
-};
-
 void SharkFunction::initialize()
 {
   // Emit the entry point

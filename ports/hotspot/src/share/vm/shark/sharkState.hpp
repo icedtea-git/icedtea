@@ -25,6 +25,7 @@
 
 class SharkBlock;
 class SharkFunction;
+class SharkTopLevelBlock;
 
 class SharkState : public ResourceObj {
  public:
@@ -144,4 +145,22 @@ class SharkState : public ResourceObj {
   void decache_for_VM_call();
   void cache_after_VM_call();
   void decache_for_trap();
+};
+
+// SharkEntryState objects are used to manage the state
+// that the method will be entered with.
+class SharkEntryState : public SharkState {
+ public:
+  SharkEntryState(SharkTopLevelBlock* block, llvm::Value* method);
+};
+
+// SharkPHIState objects are used to manage the entry state
+// for blocks with more than one entry path or for blocks
+// entered from blocks that will be compiled later.
+class SharkPHIState : public SharkState {
+ public:
+  SharkPHIState(SharkTopLevelBlock* block);
+
+ public:
+  void add_incoming(SharkState* incoming_state); 
 };

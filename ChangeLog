@@ -1,5 +1,20 @@
 2009-03-13  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkEntryState): Moved from sharkFunction.cpp.
+	(SharkPHIState): Moved from sharkTopLevelBlock.cpp.
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkEntryState::SharkEntryState): Moved from sharkFunction.cpp.
+	(SharkPHIState::SharkPHIState): Moved from sharkTopLevelBlock.cpp.
+	(SharkPHIState::add_incoming): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkEntryState): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkPHIState): Likewise.
+
+2009-03-13  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
 	(SharkValue): Moved virtual method bodies to sharkValue.cpp.
 	(SharkValue::is_address): Renamed from is_returnAddress.
