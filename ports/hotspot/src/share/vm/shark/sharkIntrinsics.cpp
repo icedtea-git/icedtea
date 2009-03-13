@@ -173,10 +173,10 @@ void SharkIntrinsics::do_Math_minmax(SharkState *state, ICmpInst::Predicate p)
   phi->addIncoming(b, return_b);
 
   // Push the result
-  SharkValue *result = SharkValue::create_jint(phi);
-  if (sa->zero_checked() && sb->zero_checked())
-    result->set_zero_checked(true);
-  state->push(result);
+  state->push(
+    SharkValue::create_jint(
+      phi,
+      sa->zero_checked() && sb->zero_checked()));
 }
 
 void SharkIntrinsics::do_Math_1to1(SharkState *state, Constant *function)
@@ -219,34 +219,34 @@ void SharkIntrinsics::do_Object_getClass(SharkState *state)
     SharkType::klass_type(),
     "klass_part");
 
-  SharkValue *result = SharkValue::create_jobject(
-    builder->CreateValueOfStructEntry(
-      klass_part,
-      in_ByteSize(Klass::java_mirror_offset_in_bytes()),
-      SharkType::oop_type(),
-      "java_mirror"));
-
-  result->set_zero_checked(true);
-  state->push(result);
+  state->push(
+    SharkValue::create_jobject(
+      builder->CreateValueOfStructEntry(
+        klass_part,
+        in_ByteSize(Klass::java_mirror_offset_in_bytes()),
+        SharkType::oop_type(),
+        "java_mirror"),
+      true));
 }
 
 void SharkIntrinsics::do_System_currentTimeMillis(SharkState *state)
 {
   state->push(
     SharkValue::create_jlong(
-      state->builder()->CreateCall(SharkRuntime::current_time_millis())));
+      state->builder()->CreateCall(SharkRuntime::current_time_millis()),
+      false));
   state->push(NULL);
 }
 
 void SharkIntrinsics::do_Thread_currentThread(SharkState *state, Value *thread)
 {
-  SharkValue *result = SharkValue::create_jobject(
-    state->builder()->CreateValueOfStructEntry(
-      thread, JavaThread::threadObj_offset(),
-      SharkType::jobject_type(),
-      "threadObj"));
-  result->set_zero_checked(true);
-  state->push(result);
+  state->push(
+    SharkValue::create_jobject(
+      state->builder()->CreateValueOfStructEntry(
+        thread, JavaThread::threadObj_offset(),
+        SharkType::jobject_type(),
+        "threadObj"),
+      true));
 }
 
 void SharkIntrinsics::do_Unsafe_compareAndSwapInt(SharkState *state)
@@ -279,6 +279,9 @@ void SharkIntrinsics::do_Unsafe_compareAndSwapInt(SharkState *state)
   Value *result = builder->CreateCmpxchgInt(x, addr, e);
 
   // Push the result
-  state->push(SharkValue::create_jint(builder->CreateIntCast(
-    builder->CreateICmpEQ(result, e), SharkType::jint_type(), true)));
+  state->push(
+    SharkValue::create_jint(
+      builder->CreateIntCast(
+        builder->CreateICmpEQ(result, e), SharkType::jint_type(), true),
+      false));
 }

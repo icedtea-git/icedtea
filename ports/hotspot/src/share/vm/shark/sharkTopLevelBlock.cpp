@@ -444,7 +444,7 @@ void SharkTopLevelBlock::handle_exception(Value* exception, bool attempt_catch)
     // we may be about to make.
     while (xstack_depth())
       pop();
-    push(SharkValue::create_jobject(exception));
+    push(SharkValue::create_jobject(exception, true));
 
     int *indexes = NEW_RESOURCE_ARRAY(int, num_exceptions());
     bool has_catch_all = false;
@@ -718,7 +718,7 @@ void SharkTopLevelBlock::do_arraylength()
   SharkValue *array = pop();
   check_null(array);
   Value *length = builder()->CreateArrayLength(array->jarray_value());
-  push(SharkValue::create_jint(length));
+  push(SharkValue::create_jint(length, false));
 }
 
 void SharkTopLevelBlock::do_aload(BasicType basic_type)
@@ -748,11 +748,11 @@ void SharkTopLevelBlock::do_aload(BasicType basic_type)
   case T_CHAR:
   case T_SHORT:
   case T_INT:
-    push(SharkValue::create_jint(value));
+    push(SharkValue::create_jint(value, false));
     break;
 
   case T_LONG:
-    push(SharkValue::create_jlong(value));
+    push(SharkValue::create_jlong(value, false));
     break;
 
   case T_FLOAT:
@@ -764,7 +764,7 @@ void SharkTopLevelBlock::do_aload(BasicType basic_type)
     break;
     
   case T_OBJECT:
-    push(SharkValue::create_generic(element_type, value));
+    push(SharkValue::create_generic(element_type, value, false));
     break;
 
   default:
@@ -1400,7 +1400,7 @@ void SharkTopLevelBlock::do_instance_check()
     builder()->CreateUnreachable();
 
     builder()->SetInsertPoint(success);
-    push(SharkValue::create_generic(klass, object));
+    push(SharkValue::create_generic(klass, object, false));
   }
   else {
     push(
@@ -1408,7 +1408,7 @@ void SharkTopLevelBlock::do_instance_check()
         builder()->CreateIntCast(
           builder()->CreateICmpEQ(
             result, LLVMValue::jint_constant(IC_IS_INSTANCE)),
-          SharkType::jint_type(), false)));
+          SharkType::jint_type(), false), false));
   }
 }
 
@@ -1597,9 +1597,7 @@ void SharkTopLevelBlock::do_new()
     object = slow_object;
   }
 
-  SharkValue *result = SharkValue::create_jobject(object);
-  result->set_zero_checked(true);
-  push(result);
+  push(SharkValue::create_jobject(object, true));
 }
 
 void SharkTopLevelBlock::do_newarray()
@@ -1611,11 +1609,10 @@ void SharkTopLevelBlock::do_newarray()
     LLVMValue::jint_constant(type),
     pop()->jint_value());
 
-  SharkValue *result = SharkValue::create_generic(
+  push(SharkValue::create_generic(
     ciArrayKlass::make(ciType::make(type)),
-    function()->CreateGetVMResult());
-  result->set_zero_checked(true);
-  push(result);
+    function()->CreateGetVMResult(),
+    true));
 }
 
 void SharkTopLevelBlock::do_anewarray()
@@ -1634,10 +1631,8 @@ void SharkTopLevelBlock::do_anewarray()
     LLVMValue::jint_constant(iter()->get_klass_index()),
     pop()->jint_value());
 
-  SharkValue *result = SharkValue::create_generic(
-    array_klass, function()->CreateGetVMResult());
-  result->set_zero_checked(true);
-  push(result);
+  push(SharkValue::create_generic(
+    array_klass, function()->CreateGetVMResult(), true));
 }
 
 void SharkTopLevelBlock::do_multianewarray()
@@ -1672,10 +1667,8 @@ void SharkTopLevelBlock::do_multianewarray()
   for (int i = 0; i < ndims; i++)
     pop();
 
-  SharkValue *result = SharkValue::create_generic(
-    array_klass, function()->CreateGetVMResult());
-  result->set_zero_checked(true);
-  push(result);
+  push(SharkValue::create_generic(
+    array_klass, function()->CreateGetVMResult(), true));
 }
 
 void SharkTopLevelBlock::do_monitorenter()

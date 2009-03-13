@@ -1,5 +1,49 @@
 2009-03-13  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
+	(SharkValue::create_generic): Make zero_checked argument mandatory.
+	(SharkValue::create_jint): Fixups for the above.
+	(SharkValue::create_jlong): Likewise.
+	(SharkValue::create_jfloat): Likewise.
+	(SharkValue::create_jdouble): Likewise.
+	(SharkValue::create_jobject): Likewise.
+	(SharkValue::jint_constant): Likewise.
+	(SharkValue::jlong_constant): Likewise.
+	(SharkValue::null): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkState::merge): Likewise.
+	(SharkState::cache_after_Java_call): Likewise.
+	(SharkEntryState::SharkEntryState): Likewise.
+	(SharkPHIState::SharkPHIState): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::do_ldc): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse_bytecode): Likewise.
+	(SharkBlock::do_div_or_rem): Likewise.
+	(SharkBlock::do_field_access): Likewise.
+	(SharkBlock::do_lcmp): Likewise.
+	(SharkBlock::do_fcmp): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::handle_exception): Likewise.
+	(SharkTopLevelBlock::do_arraylength): Likewise.
+	(SharkTopLevelBlock::do_aload): Likewise.
+	(SharkTopLevelBlock::do_instance_check): Likewise.
+	(SharkTopLevelBlock::do_new): Likewise.
+	(SharkTopLevelBlock::do_newarray): Likewise.
+	(SharkTopLevelBlock::do_anewarray): Likewise.
+	(SharkTopLevelBlock::do_multianewarray): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkCacher::process_stack_slot): Likewise.
+	(SharkCacher::process_local_slot): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.cpp
+	(SharkIntrinsics::do_Math_minmax): Likewise.
+	(SharkIntrinsics::do_Object_getClass): Likewise.
+	(SharkIntrinsics::do_System_currentTimeMillis): Likewise.
+	(SharkIntrinsics::do_Thread_currentThread): Likewise.
+	(SharkIntrinsics::do_Unsafe_compareAndSwapInt): Likewise.
+
+2009-03-13  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp
 	(SharkInlinerHelper::is_inlinable): An ior or lor of two
 	known non-zero values creates a known non-zero value.

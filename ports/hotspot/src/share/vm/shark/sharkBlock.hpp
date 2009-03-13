@@ -239,7 +239,7 @@ class SharkBlock : public ResourceObj {
   {
     SharkValue *value = SharkValue::from_ciConstant(iter()->get_constant());
     if (value == NULL)
-      value = SharkValue::create_jobject(lookup_for_ldc());
+      value = SharkValue::create_jobject(lookup_for_ldc(), true);
     push(value);
   }
 

@@ -173,11 +173,14 @@ void SharkState::merge(SharkState* other,
     ciType *this_type = this_value->type();
     assert(this_type == other_value->type(), "should be");
 
+    bool this_checked = this_value->zero_checked();
+    assert(this_checked == other_value->zero_checked(), "should be");
+
     snprintf(name, sizeof(name), "local_%d_", i);
     phi = builder()->CreatePHI(SharkType::to_stackType(this_type), name);
     phi->addIncoming(this_value->generic_value(), this_block);
     phi->addIncoming(other_value->generic_value(), other_block);
-    set_local(i, SharkValue::create_generic(this_type, phi));
+    set_local(i, SharkValue::create_generic(this_type, phi, this_checked));
   }
 
   // Expression stack
@@ -192,11 +195,14 @@ void SharkState::merge(SharkState* other,
     ciType *this_type = this_value->type();
     assert(this_type == other_value->type(), "should be");
 
+    bool this_checked = this_value->zero_checked();
+    assert(this_checked == other_value->zero_checked(), "should be");
+
     snprintf(name, sizeof(name), "stack_%d_", i);
     phi = builder()->CreatePHI(SharkType::to_stackType(this_type), name);
     phi->addIncoming(this_value->generic_value(), this_block);
     phi->addIncoming(other_value->generic_value(), other_block);
-    set_stack(i, SharkValue::create_generic(this_type, phi));
+    set_stack(i, SharkValue::create_generic(this_type, phi, this_checked));
   }
 }
 
@@ -224,7 +230,7 @@ void SharkState::cache_after_Java_call(ciMethod* callee)
       type = callee->return_type();
     }
 
-    push(SharkValue::create_generic(type, NULL));
+    push(SharkValue::create_generic(type, NULL, false));
     if (type->is_two_word())
       push(NULL);
   }
@@ -275,7 +281,8 @@ SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
               function()->locals_slots_offset()
               + max_locals() - type->size() - i,
               SharkType::to_stackType(type)),
-            name));
+            name),
+          i == 0 && !function()->target()->is_static());
       }
       else {
         Unimplemented();
@@ -293,12 +300,6 @@ SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
       ShouldNotReachHere();
     }
     set_local(i, value);
-  }
-
-  // Non-static methods have a guaranteed non-null receiver
-  if (!function()->target()->is_static()) {
-    assert(local(0)->is_jobject(), "should be");
-    local(0)->set_zero_checked(true);
   }
 
   // Expression stack
@@ -333,7 +334,9 @@ SharkPHIState::SharkPHIState(SharkTopLevelBlock* block)
     case T_ARRAY:
       snprintf(name, sizeof(name), "local_%d_", i);
       value = SharkValue::create_generic(
-        type, builder()->CreatePHI(SharkType::to_stackType(type), name));
+        type,
+        builder()->CreatePHI(SharkType::to_stackType(type), name),
+        false);
       break;
 
     case T_ADDRESS:
@@ -371,7 +374,9 @@ SharkPHIState::SharkPHIState(SharkTopLevelBlock* block)
     case T_ARRAY:
       snprintf(name, sizeof(name), "stack_%d_", i);
       value = SharkValue::create_generic(
-        type, builder()->CreatePHI(SharkType::to_stackType(type), name));
+        type, 
+        builder()->CreatePHI(SharkType::to_stackType(type), name),
+        false);
       break;
 
     case T_ADDRESS:
