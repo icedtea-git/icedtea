@@ -1,5 +1,11 @@
 2009-03-13  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp
+	(SharkInlinerHelper::is_inlinable): An ior or lor of two
+	known non-zero values creates a known non-zero value.
+
+2009-03-13  Gary Benson  <gbenson@redhat.com>
+
 	PR icedtea/296:
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
 	(SharkTopLevelBlock::do_branch): New method, to handle
