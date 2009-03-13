@@ -62,8 +62,7 @@ class SharkPHIState : public SharkState {
         break;
   
       case T_ADDRESS:
-        value = SharkValue::create_returnAddress(
-          type->as_return_address()->bci());
+        value = SharkValue::address_constant(type->as_return_address()->bci());
         break;
   
       case ciTypeFlow::StateVector::T_BOTTOM:
@@ -101,8 +100,7 @@ class SharkPHIState : public SharkState {
         break;
   
       case T_ADDRESS:
-        value = SharkValue::create_returnAddress(
-          type->as_return_address()->bci());
+        value = SharkValue::address_constant(type->as_return_address()->bci());
         break;
   
       case ciTypeFlow::StateVector::T_LONG2:
@@ -981,13 +979,13 @@ void SharkTopLevelBlock::do_goto()
 
 void SharkTopLevelBlock::do_jsr()
 {
-  push(SharkValue::create_returnAddress(iter()->next_bci()));
+  push(SharkValue::address_constant(iter()->next_bci()));
   builder()->CreateBr(successor(ciTypeFlow::GOTO_TARGET)->entry_block());
 }
 
 void SharkTopLevelBlock::do_ret()
 {
-  assert(local(iter()->get_index())->returnAddress_value() ==
+  assert(local(iter()->get_index())->address_value() ==
          successor(ciTypeFlow::GOTO_TARGET)->start(), "should be");
   builder()->CreateBr(successor(ciTypeFlow::GOTO_TARGET)->entry_block());
 }

@@ -348,6 +348,12 @@ sharkType.hpp                           ciType.hpp
 sharkType.hpp                           globalDefinitions.hpp
 sharkType.hpp                           llvmHeaders.hpp
 
+sharkValue.cpp                          ciType.hpp
+sharkValue.cpp                          llvmHeaders.hpp
+sharkValue.cpp                          llvmValue.hpp
+sharkValue.cpp                          sharkBuilder.hpp
+sharkValue.cpp                          sharkValue.hpp
+
 sharkValue.hpp                          allocation.hpp
 sharkValue.hpp                          ciType.hpp
 sharkValue.hpp                          llvmHeaders.hpp

@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,25 +23,37 @@
  *
  */
 
+// Items on the stack and in local variables are tracked using
+// SharkValue objects.  There are two types, SharkNormalValue
+// and SharkAddressValue, but no code outside this file should
+// ever refer to those directly.  The split is because of the
+// way JSRs are handled: the typeflow pass expands them into
+// multiple copies, so the return addresses pushed by jsr and
+// popped by ret only exist at compile time.  Having separate
+// classes for these allows us to check that our jsr handling
+// is correct, via assertions.
+
+class SharkBuilder;
+
 class SharkValue : public ResourceObj {
  protected:
   SharkValue() {}
 
   // Type access
  public:
-  virtual ciType* type() const
-  {
-    ShouldNotCallThis();
-  }
+  virtual BasicType basic_type() const = 0;
+  virtual ciType*   type()       const;
 
-  virtual BasicType basic_type() const
-  {
-    ShouldNotCallThis();
-  }
-  virtual int size() const
-  {
-    ShouldNotCallThis();
-  }
+  virtual bool is_jint()    const;
+  virtual bool is_jlong()   const;
+  virtual bool is_jfloat()  const;
+  virtual bool is_jdouble() const;
+  virtual bool is_jobject() const;
+  virtual bool is_jarray()  const;
+  virtual bool is_address() const;
+
+  virtual int size() const = 0;
+
   bool is_one_word() const
   {
     return size() == 1;
@@ -51,67 +63,45 @@ class SharkValue : public ResourceObj {
     return size() == 2;
   }
 
-  virtual bool is_jint() const
+  // Typed conversion from SharkValues
+ public:
+  virtual llvm::Value* jint_value()    const;
+  virtual llvm::Value* jlong_value()   const;
+  virtual llvm::Value* jfloat_value()  const;
+  virtual llvm::Value* jdouble_value() const;
+  virtual llvm::Value* jobject_value() const;
+  virtual llvm::Value* jarray_value()  const;
+  virtual int          address_value() const;
+
+  // Typed conversion to SharkValues
+ public:
+  static SharkValue* create_jint(llvm::Value* value)
   {
-    return false;
+    assert(value->getType() == SharkType::jint_type(), "should be");
+    return create_generic(ciType::make(T_INT), value);
   }
-  virtual bool is_jlong() const
+  static SharkValue* create_jlong(llvm::Value* value)
   {
-    return false;
+    assert(value->getType() == SharkType::jlong_type(), "should be");
+    return create_generic(ciType::make(T_LONG), value);
   }
-  virtual bool is_jfloat() const
+  static SharkValue* create_jfloat(llvm::Value* value)
   {
-    return false;
+    assert(value->getType() == SharkType::jfloat_type(), "should be");
+    return create_generic(ciType::make(T_FLOAT), value);
   }
-  virtual bool is_jdouble() const
+  static SharkValue* create_jdouble(llvm::Value* value)
   {
-    return false;
+    assert(value->getType() == SharkType::jdouble_type(), "should be");
+    return create_generic(ciType::make(T_DOUBLE), value);
   }
-  virtual bool is_jobject() const
+  static SharkValue* create_jobject(llvm::Value* value)
   {
-    return false;
-  }
-  virtual bool is_jarray() const
-  {
-    return false;
-  }
-  virtual bool is_returnAddress() const
-  {
-    return false;
+    assert(value->getType() == SharkType::jobject_type(), "should be");
+    return create_generic(ciType::make(T_OBJECT), value);
   }
 
-  // Typed conversions to LLVM values
- public:
-  virtual llvm::Value* jint_value() const
-  {
-    ShouldNotCallThis();
-  }
-  virtual llvm::Value* jlong_value() const
-  {
-    ShouldNotCallThis();
-  }
-  virtual llvm::Value* jfloat_value() const
-  {
-    ShouldNotCallThis();
-  }
-  virtual llvm::Value* jdouble_value() const
-  {
-    ShouldNotCallThis();
-  }
-  virtual llvm::Value* jobject_value() const
-  {
-    ShouldNotCallThis();
-  }
-  virtual llvm::Value* jarray_value() const
-  {
-    ShouldNotCallThis();
-  }
-  virtual int returnAddress_value() const
-  {
-    ShouldNotCallThis();
-  }
-  
-  // Constants of various types
+  // Typed conversion from constants of various types
  public:
   static SharkValue* jint_constant(jint value)
   {
@@ -139,34 +129,7 @@ class SharkValue : public ResourceObj {
   {
     return create_jobject(LLVMValue::null());
   }
-
-  // Typed conversion from LLVM values
- public:
-  static SharkValue* create_jint(llvm::Value* value)
-  {
-    assert(value->getType() == SharkType::jint_type(), "should be");
-    return create_generic(ciType::make(T_INT), value);
-  }
-  static SharkValue* create_jlong(llvm::Value* value)
-  {
-    assert(value->getType() == SharkType::jlong_type(), "should be");
-    return create_generic(ciType::make(T_LONG), value);
-  }
-  static SharkValue* create_jfloat(llvm::Value* value)
-  {
-    assert(value->getType() == SharkType::jfloat_type(), "should be");
-    return create_generic(ciType::make(T_FLOAT), value);
-  }
-  static SharkValue* create_jdouble(llvm::Value* value)
-  {
-    assert(value->getType() == SharkType::jdouble_type(), "should be");
-    return create_generic(ciType::make(T_DOUBLE), value);
-  }
-  static SharkValue* create_jobject(llvm::Value* value)
-  {
-    assert(value->getType() == SharkType::jobject_type(), "should be");
-    return create_generic(ciType::make(T_OBJECT), value);
-  }
+  static inline SharkValue* address_constant(int bci);
 
   // Typed conversion from HotSpot ciConstants
  public:
@@ -203,50 +166,32 @@ class SharkValue : public ResourceObj {
 
     default:
       tty->print_cr("Unhandled type %s", type2name(value.basic_type()));
+      ShouldNotReachHere();
     }
-    ShouldNotReachHere();
   }
 
-  // Typed "conversion" from return address
+  // Type-losing conversions -- use with care!
  public:
-  static inline SharkValue* create_returnAddress(int bci);
+  virtual llvm::Value* generic_value() const = 0;
+  virtual llvm::Value* intptr_value(SharkBuilder* builder) const;
 
-  // Type-losing conversions, use with care
- public:
   static inline SharkValue* create_generic(ciType* type, llvm::Value* value);
-  virtual llvm::Value* generic_value() const
-  {
-    ShouldNotCallThis();
-  }
-  virtual llvm::Value* intptr_value(llvm::IRBuilder<>* builder) const
-  {
-    ShouldNotCallThis();
-  }
 
   // Phi-style stuff
  public:
-  virtual void addIncoming(SharkValue *value, llvm::BasicBlock* block)
-  {
-    ShouldNotCallThis();
-  }
+  virtual void addIncoming(SharkValue *value, llvm::BasicBlock* block) = 0;
 
   // Repeated null and divide-by-zero check removal
  public:
-  virtual bool zero_checked() const
-  {
-    ShouldNotCallThis();
-  }
-  virtual void set_zero_checked(bool zero_checked) 
-  {
-    ShouldNotCallThis();
-  }
+  virtual bool zero_checked() const;
+  virtual void set_zero_checked(bool zero_checked);
 };
 
-class SharkComputableValue : public SharkValue {
+class SharkNormalValue : public SharkValue {
   friend class SharkValue;
   
  protected:
-  SharkComputableValue(ciType* type, llvm::Value* value)
+  SharkNormalValue(ciType* type, llvm::Value* value)
     : _type(type), _llvm_value(value), _zero_checked(false) {}
 
  private:
@@ -262,123 +207,52 @@ class SharkComputableValue : public SharkValue {
 
   // Type access
  public:
-  ciType* type() const
-  {
-    return _type;
-  }
-
- public:  
-  BasicType basic_type() const
-  {
-    return type()->basic_type();
-  }
-  int size() const
-  {
-    return type()->size();
-  }
+  ciType*   type()       const;
+  BasicType basic_type() const;
+  int       size()       const;
 
  public:
-  bool is_jint() const
-  {
-    return llvm_value()->getType() == SharkType::jint_type();
-  }
-  bool is_jlong() const
-  {
-    return llvm_value()->getType() == SharkType::jlong_type();
-  }
-  bool is_jfloat() const
-  {
-    return llvm_value()->getType() == SharkType::jfloat_type();
-  }
-  bool is_jdouble() const
-  {
-    return llvm_value()->getType() == SharkType::jdouble_type();
-  }
-  bool is_jobject() const
-  {
-    return llvm_value()->getType() == SharkType::jobject_type();
-  }
-  bool is_jarray() const
-  {
-    return basic_type() == T_ARRAY;
-  }
+  bool is_jint()    const;
+  bool is_jlong()   const;
+  bool is_jfloat()  const;
+  bool is_jdouble() const;
+  bool is_jobject() const;
+  bool is_jarray()  const;
 
   // Typed conversions to LLVM values
  public:
-  llvm::Value* jint_value() const
-  {
-    assert(is_jint(), "should be");
-    return llvm_value();
-  }
-  llvm::Value* jlong_value() const
-  {
-    assert(is_jlong(), "should be");
-    return llvm_value();
-  }
-  llvm::Value* jfloat_value() const
-  {
-    assert(is_jfloat(), "should be");
-    return llvm_value();
-  }
-  llvm::Value* jdouble_value() const
-  {
-    assert(is_jdouble(), "should be");
-    return llvm_value();
-  }
-  llvm::Value* jobject_value() const
-  {
-    assert(is_jobject(), "should be");
-    return llvm_value();
-  }
-  llvm::Value* jarray_value() const
-  {
-    assert(is_jarray(), "should be");
-    return llvm_value();
-  }
+  llvm::Value* jint_value()    const;
+  llvm::Value* jlong_value()   const;
+  llvm::Value* jfloat_value()  const;
+  llvm::Value* jdouble_value() const;
+  llvm::Value* jobject_value() const;
+  llvm::Value* jarray_value()  const;
 
   // Type-losing conversions, use with care
  public:
-  llvm::Value* generic_value() const
-  {
-    return llvm_value();
-  }
-  llvm::Value* intptr_value(llvm::IRBuilder<>* builder) const
-  {
-    assert(is_jobject(), "should be");
-    return builder->CreatePtrToInt(llvm_value(), SharkType::intptr_type());
-  }
+  llvm::Value* generic_value() const;
+  llvm::Value* intptr_value(SharkBuilder* builder) const;
 
   // Wrapped PHINodes
  public:
-  void addIncoming(SharkValue *value, llvm::BasicBlock* block)
-  {
-    assert(llvm::isa<llvm::PHINode>(generic_value()), "should be");
-    ((llvm::PHINode *) generic_value())->addIncoming(
-      value->generic_value(), block);
-  }
+  void addIncoming(SharkValue *value, llvm::BasicBlock* block);
 
   // Repeated null and divide-by-zero check removal
  public:
-  bool zero_checked() const
-  {
-    return _zero_checked;
-  }
-  void set_zero_checked(bool zero_checked)
-  {
-    _zero_checked = zero_checked;
-  }
+  bool zero_checked() const;
+  void set_zero_checked(bool zero_checked);
 };
 
 inline SharkValue* SharkValue::create_generic(ciType* type, llvm::Value* value)
 {
-  return new SharkComputableValue(type, value);    
+  return new SharkNormalValue(type, value);    
 }
 
-class SharkReturnAddressValue : public SharkValue {
+class SharkAddressValue : public SharkValue {
   friend class SharkValue;
 
  protected:
-  SharkReturnAddressValue(int bci)
+  SharkAddressValue(int bci)
     : _bci(bci) {}
 
  private:
@@ -386,44 +260,24 @@ class SharkReturnAddressValue : public SharkValue {
 
   // Type access
  public:  
-  BasicType basic_type() const
-  {
-    return T_ADDRESS;
-  }
-  int size() const
-  {
-    return 1;
-  }
+  BasicType basic_type() const;
+  int       size()       const;
+  bool      is_address() const;
 
+  // Typed conversion from SharkValues
  public:
-  bool is_returnAddress() const
-  {
-    return true;
-  }
+  int address_value() const;
 
-  // Typed "conversion"
+  // Type-losing conversion -- use with care!
  public:
-  int returnAddress_value() const
-  {
-    return _bci;
-  }
-
-  // Type-losing "conversion", use with care
- public:
-  llvm::Value* generic_value() const
-  {
-    return LLVMValue::intptr_constant(_bci);
-  }
+  llvm::Value* generic_value() const;
 
   // Phi-style stuff
  public:
-  void addIncoming(SharkValue *value, llvm::BasicBlock* block)
-  {
-    assert(_bci == value->returnAddress_value(), "should be");
-  }
+  void addIncoming(SharkValue *value, llvm::BasicBlock* block);
 };
 
-inline SharkValue* SharkValue::create_returnAddress(int bci)
+inline SharkValue* SharkValue::address_constant(int bci)
 {
-  return new SharkReturnAddressValue(bci);
+  return new SharkAddressValue(bci);
 }
