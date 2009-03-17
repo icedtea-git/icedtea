@@ -25,26 +25,16 @@
 
 package java.io;
 
-import java.io.Closeable;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.nio.file.FileRef;
+import java.nio.file.attribute.Attributes;
 import java.nio.channels.Channels;
-
+import java.util.Scanner;
 import java.util.Collections;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
-
-
-import java.nio.file.FileRef;
-
-import java.nio.file.attribute.Attributes;
-
-import java.util.Scanner;
 
 /**
  * {@note experimental}
@@ -155,8 +145,13 @@ public final class Inputs {
      * Suppose we want to open a connection to a resource identified by a URI,
      * and read all bytes:
      * <pre>
-     *   URI uri = ...
-     *   byte[] content = InputOutput.readAllBytes(uri.toURL().openStream());
+     *   byte[] content;
+     *   InputStream in = uri.toURL().openStream();
+     *   try {
+     *       content = Inputs.readAllBytes(in);
+     *   } finally {
+     *       Inputs.closeUnchecked(in);
+     *   }
      * </pre>
      *
      * <p> On return, the input stream will be at end of stream.

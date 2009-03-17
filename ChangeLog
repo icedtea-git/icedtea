@@ -1,3 +1,22 @@
+2009-03-17  Andrew John Hughes  <ahughes@redhat.com>
+
+	* overlays/nio2/openjdk/jdk/src/share/classes/java/nio/file/attribute/NamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/LinuxNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/SolarisNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/src/windows/classes/sun/nio/fs/WindowsNamedAttributeView.java,
+	* overlays/nio2/openjdk/jdk/test/java/nio/file/attribute/NamedAttributeView/Basic.java:
+	Removed; in b50 (renamed as in b99).
+	* patches/security/icedtea-6721753.patch: Removed; in b50.
+	* Makefile.am: Remove security patch.
+	* overlays/nio2/openjdk/jdk/src/share/classes/java/io/Inputs.java,
+	* overlays/nio2/openjdk/jdk/src/share/classes/java/io/Outputs.java,
+	* overlays/nio2/openjdk/jdk/src/share/demo/nio/ZipFileSystem/com/sun/nio/zipfs/ZipFileSystem.java:
+	Updated to nio2 b99.
+	* patches/icedtea-nio2.patch: Recreated against b50.
+	* patches/icedtea-pr261.patch: Likewise.
+
 2009-03-06  Andrew John Hughes  <ahughes@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/make/mksample/nio/file/Makefile,

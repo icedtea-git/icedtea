@@ -31,26 +31,16 @@
 package com.sun.nio.zipfs;
 
 import java.io.Closeable;
+import java.nio.file.*;
+import java.nio.file.attribute.*;
+import java.nio.file.spi.*;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.DirectoryStream.Filter;
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Pattern;
-
-import java.nio.file.ClosedFileSystemException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileRef;
-import java.nio.file.FileStore;
-import java.nio.file.FileSystem;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.WatchService;
-
-import java.nio.file.attribute.UserPrincipalLookupService;
-
-import java.nio.file.spi.FileSystemProvider;
 
 public class ZipFileSystem extends FileSystem {
 
@@ -77,27 +67,27 @@ public class ZipFileSystem extends FileSystem {
         this.defaultdir = defaultDir;
     }
 
-
+    @Override
     public FileSystemProvider provider() {
         return provider;
     }
 
-
+    @Override
     public String getSeparator() {
         return "/";
     }
 
-
+    @Override
     public boolean isOpen() {
         return open;
     }
 
-
+    @Override
     public boolean isReadOnly() {
         return true;
     }
 
-
+    @Override
     public void close() throws IOException {
         closeLock.writeLock().lock();
         URI root = null;
@@ -142,7 +132,7 @@ public class ZipFileSystem extends FileSystem {
         return closeableObjects.add(obj);
     }
 
-
+    @Override
     public Iterable<Path> getRootDirectories() {
         try {
             begin();
@@ -164,7 +154,7 @@ public class ZipFileSystem extends FileSystem {
         return zipFile;
     }
 
-
+    @Override
     public ZipFilePath getPath(String path) {
 
         if (path == null) {
@@ -182,17 +172,17 @@ public class ZipFileSystem extends FileSystem {
         }
     }
 
-
+    @Override
     public UserPrincipalLookupService getUserPrincipalLookupService() {
         return null;
     }
 
-
+    @Override
     public WatchService newWatchService() {
         throw new UnsupportedOperationException();
     }
 
-
+    @Override
     public Iterable<FileStore> getFileStores() {
         try {
             begin();
@@ -235,7 +225,7 @@ public class ZipFileSystem extends FileSystem {
             }
         }
 
-
+        @Override
         public synchronized boolean hasNext() {
             if (next != null) {
                 return true;
@@ -266,45 +256,36 @@ public class ZipFileSystem extends FileSystem {
     private static final Set<String> supportedFileAttributeViews =
         Collections.unmodifiableSet(new HashSet(Arrays.asList("basic", "zip", "jar")));
 
-
+    @Override
     public Set<String> supportedFileAttributeViews() {
         return supportedFileAttributeViews;
     }
 
-
+    @Override
     public String toString() {
         return getZipFileSystemFile();
     }
 
+    @Override
+    public PathMatcher getPathMatcher(String syntaxAndInput) {
+        int pos = syntaxAndInput.indexOf(':');
+        if (pos <= 0 || pos == syntaxAndInput.length())
+            throw new IllegalArgumentException();
+        String syntax = syntaxAndInput.substring(0, pos);
+        String input = syntaxAndInput.substring(pos+1);
 
-    public PathMatcher getNameMatcher(String syntax, String expr) {
         if (syntax.equalsIgnoreCase("glob")) {
-             // Temporary
-             String regex = sun.nio.fs.Globs.toRegexPattern(expr);
-             final Pattern pattern = Pattern.compile(regex,
-                 (Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-             final DirectoryStream.Filter<Path> filter =
-                new DirectoryStream.Filter<Path>() {
-
-                    public boolean accept(Path entry)  {
-                        return pattern.matcher(entry.getName().toString()).matches();
-                    }
-                };
-
+            // FIXME
             return new PathMatcher() {
-
+                @Override
                 public boolean matches(Path path) {
-                    // match on file name only
-                    Path name = path.getName();
-                    if (name == null)
-                        return false;
-                    return filter.accept(name);
+                    return true;
                 }};
         }
         if (syntax.equalsIgnoreCase("regex")) {
-            final Pattern pattern = Pattern.compile(expr);
+            final Pattern pattern = Pattern.compile(input);
             return new PathMatcher() {
-
+                @Override
                 public boolean matches(Path path) {
                     // match on file name only
                     Path name = path.getName();

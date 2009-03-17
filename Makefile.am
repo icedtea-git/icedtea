@@ -1840,7 +1840,6 @@ ICEDTEA_PATCHES = \
         patches/security/icedtea-6497740.patch \
         patches/security/icedtea-6588160.patch \
         patches/security/icedtea-6592792.patch \
-        patches/security/icedtea-6721753.patch \
         patches/security/icedtea-6726779.patch \
         patches/security/icedtea-6733959.patch \
         patches/security/icedtea-6734167.patch \

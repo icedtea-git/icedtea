@@ -25,25 +25,15 @@
 
 package java.io;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.nio.file.FileRef;
+import static java.nio.file.StandardOpenOption.*;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.util.Arrays;
 import java.util.List;
-
-import java.nio.file.FileRef;
-
-import static java.nio.file.StandardOpenOption.CREATE;
-import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
-import static java.nio.file.StandardOpenOption.WRITE;
 
 /**
  * {@note experimental}
@@ -92,11 +82,14 @@ public final class Outputs {
     public static void write(FileRef file, byte[] bytes, int off, int len)
         throws IOException
     {
+        int end = off + len;
+        if ((off | len | end | (bytes.length - end)) < 0)
+            throw new IndexOutOfBoundsException();
         WritableByteChannel wbc = file.newByteChannel(WRITE, CREATE, TRUNCATE_EXISTING);
         try {
             int pos = off;
-            while (pos < len) {
-                int size = Math.min(len-pos, 8192);
+            while (pos < end) {
+                int size = Math.min(end-pos, 8192);
                 ByteBuffer bb = ByteBuffer.wrap(bytes, pos, size);
                 int n = wbc.write(bb);
                 pos += n;
@@ -215,6 +208,9 @@ public final class Outputs {
     public static void write(File file, byte[] bytes, int off, int len)
         throws IOException
     {
+        int end = off + len;
+        if ((off | len | end | (bytes.length - end)) < 0)
+            throw new IndexOutOfBoundsException();
         FileOutputStream out = new FileOutputStream(file);
         try {
             out.write(bytes, off, len);
