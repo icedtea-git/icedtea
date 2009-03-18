@@ -1,6 +1,11 @@
 2009-03-18  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Replace IcedTea6 with IcedTea7.
+
+2009-03-18  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Enable new PR39408 patch when bug is
 	found in gjavah by configure.
 	* acinclude.m4:

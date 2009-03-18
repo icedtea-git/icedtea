@@ -2094,10 +2094,10 @@ stamps/overlay.stamp: stamps/patch.stamp
 	if ! test "x$(WITH_CACAO)" = "xno"; then \
 	  echo "JDK_DERIVATIVE_NAME=$${icedtea_version}" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
-	  echo "PRODUCT_NAME=IcedTea6" \
+	  echo "PRODUCT_NAME=IcedTea7" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
 	else \
-	  echo "JDK_DERIVATIVE_NAME=IcedTea6 $${icedtea_version}" \
+	  echo "JDK_DERIVATIVE_NAME=IcedTea7 $${icedtea_version}" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
 	fi
 	if [ -n "$(PKGVERSION)" ]; then \
