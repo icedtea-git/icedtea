@@ -1,4 +1,4 @@
-AC_DEFUN([SET_ARCH_DIRS],
+ AC_DEFUN([SET_ARCH_DIRS],
 [
   case "${host}" in
     x86_64-*-*)
@@ -1172,4 +1172,51 @@ AC_DEFUN([AC_CHECK_FOR_ICEDTEA],
   AC_SUBST(SYSTEM_ICEDTEA_DIR)
 ])
 
-
+AC_DEFUN([IT_CP39408_JAVAH],[
+AC_CACHE_CHECK([if $JAVAH exhibits Classpath bug 39408], it_cv_cp39408_javah, [
+SUPERCLASS=Test.java
+SUBCLASS=TestImpl.java
+SUB=$(echo $SUBCLASS|sed 's#\.java##')
+SUBHEADER=$(echo $SUBCLASS|sed 's#\.java#.h#')
+mkdir tmp.$$
+cd tmp.$$
+cat << \EOF > $SUPERCLASS
+/* [#]line __oline__ "configure" */
+public class Test 
+{
+  public static final int POTATO = 0;
+  public static final int CABBAGE = 1;
+}
+EOF
+cat << \EOF > $SUBCLASS
+/* [#]line __oline__ "configure" */
+public class TestImpl
+  extends Test
+{
+  public native void doStuff();
+}
+EOF
+if $JAVAC $JAVACFLAGS $SUBCLASS >/dev/null 2>&1; then
+  if $JAVAH -classpath . $SUB > /dev/null 2>&1; then
+    if cat $SUBHEADER | grep POTATO > /dev/null 2>&1; then
+      it_cv_cp39408_javah=no;
+    else
+      it_cv_cp39408_javah=yes;
+    fi
+  else
+    AC_MSG_ERROR([The Java header generator $JAVAH failed])
+    echo "configure: failed program was:" >&AC_FD_CC
+    cat $SUBCLASS >&AC_FD_CC
+  fi
+else
+  AC_MSG_ERROR([The Java compiler $JAVAC failed])
+  echo "configure: failed program was:" >&AC_FD_CC
+  cat $SUBCLASS >&AC_FD_CC
+fi
+rm -f $SUBCLASS $SUPERCLASS $SUBHEADER *.class
+cd ..
+rmdir tmp.$$
+])
+AM_CONDITIONAL([CP39408_JAVAH], test x"${it_cv_cp39408_javah}" = "xyes")
+AC_PROVIDE([$0])dnl
+])

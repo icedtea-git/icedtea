@@ -1,5 +1,13 @@
 2009-03-17  Andrew John Hughes  <ahughes@redhat.com>
 
+	* acinclude.m4:
+	(IT_CP39408_JAVAH): New test for Classpath
+	bug 39408.
+	* configure.ac: Enable new test.  Result
+	as yet unused.
+
+2009-03-17  Andrew John Hughes  <ahughes@redhat.com>
+
 	* overlays/nio2/openjdk/jdk/src/share/classes/java/nio/file/attribute/NamedAttributeView.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/AbstractNamedAttributeView.java,
