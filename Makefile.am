@@ -2164,6 +2164,10 @@ ICEDTEA_ECJ_PATCHES = patches/ecj/icedtea.patch \
 	patches/ecj/icedtea-jopt.patch \
 	patches/ecj/icedtea-sbcs.patch
 
+if CP39408_JAVAH
+ICEDTEA_ECJ_PATCHES += patches/ecj/icedtea-pr39408.patch
+endif
+
 stamps/patch-ecj.stamp: stamps/clone-ecj.stamp
 	mkdir -p stamps; \
 	rm -f stamps/patch-ecj.stamp.tmp ; \

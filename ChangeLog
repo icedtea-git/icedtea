@@ -1,3 +1,15 @@
+2009-03-18  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Enable new PR39408 patch when bug is
+	found in gjavah by configure.
+	* acinclude.m4:
+	(IT_CP39408_JAVAH): Add classpath specification
+	to JAVAC invocation to handle buggy ecjs.
+	* patches/ecj/icedtea-pr39408.patch:
+	New patch to fix build failure when PR39408
+	is present in gjavah.
+
 2009-03-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:

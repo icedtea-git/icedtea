@@ -1196,7 +1196,7 @@ public class TestImpl
   public native void doStuff();
 }
 EOF
-if $JAVAC $JAVACFLAGS $SUBCLASS >/dev/null 2>&1; then
+if $JAVAC -cp . $JAVACFLAGS $SUBCLASS >/dev/null 2>&1; then
   if $JAVAH -classpath . $SUB > /dev/null 2>&1; then
     if cat $SUBHEADER | grep POTATO > /dev/null 2>&1; then
       it_cv_cp39408_javah=no;
