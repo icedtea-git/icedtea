@@ -1,0 +1,86 @@
+diff -Nru src.orig/native/vm/sun_misc_Unsafe.c src/native/vm/sun_misc_Unsafe.c
+--- src.orig/native/vm/sun_misc_Unsafe.c	2009-03-19 17:31:38.000000000 +0000
++++ src/native/vm/sun_misc_Unsafe.c	2009-03-19 17:34:57.000000000 +0000
+@@ -104,14 +104,8 @@
+ 	{ "putDouble",              "(JD)V",                                                      (void *) (intptr_t) &Java_sun_misc_Unsafe_putDouble__JD                  },
+ 	{ "objectFieldOffset",      "(Ljava/lang/reflect/Field;)J",                               (void *) (intptr_t) &Java_sun_misc_Unsafe_objectFieldOffset              },
+ 	{ "allocateMemory",         "(J)J",                                                       (void *) (intptr_t) &Java_sun_misc_Unsafe_allocateMemory                 },
+-#if 0
+-	/* OpenJDK 7 */
+ 	{ "setMemory",              "(Ljava/lang/Object;JJB)V",                                   (void *) (intptr_t) &Java_sun_misc_Unsafe_setMemory                      },
+ 	{ "copyMemory",             "(Ljava/lang/Object;JLjava/lang/Object;JJ)V",                 (void *) (intptr_t) &Java_sun_misc_Unsafe_copyMemory                     },
+-#else
+-	{ "setMemory",              "(JJB)V",                                                     (void *) (intptr_t) &Java_sun_misc_Unsafe_setMemory                      },
+-	{ "copyMemory",             "(JJJ)V",                                                     (void *) (intptr_t) &Java_sun_misc_Unsafe_copyMemory                     },
+-#endif
+ 	{ "freeMemory",             "(J)V",                                                       (void *) (intptr_t) &Java_sun_misc_Unsafe_freeMemory                     },
+ 	{ "staticFieldOffset",      "(Ljava/lang/reflect/Field;)J",                               (void *) (intptr_t) &Java_sun_misc_Unsafe_staticFieldOffset              },
+ 	{ "staticFieldBase",        "(Ljava/lang/reflect/Field;)Ljava/lang/Object;",              (void *) (intptr_t) &Java_sun_misc_Unsafe_staticFieldBase                },
+@@ -758,7 +752,6 @@
+ }
+ 
+ 
+-#if 0
+ /* OpenJDK 7 */
+ 
+ /*
+@@ -816,59 +809,6 @@
+ 
+ 	system_memcpy(dest, src, length);
+ }
+-#else
+-/*
+- * Class:     sun/misc/Unsafe
+- * Method:    setMemory
+- * Signature: (JJB)V
+- */
+-JNIEXPORT void JNICALL Java_sun_misc_Unsafe_setMemory(JNIEnv *env, sun_misc_Unsafe *this, int64_t address, int64_t bytes, int32_t value)
+-{
+-	size_t  length;
+-	void   *p;
+-
+-	length = (size_t) bytes;
+-
+-	if ((length != (uint64_t) bytes) || (bytes < 0)) {
+-		exceptions_throw_illegalargumentexception();
+-		return;
+-	}
+-
+-	p = (void *) (intptr_t) address;
+-
+-	/* XXX Not sure this is correct. */
+-
+-	system_memset(p, value, length);
+-}
+-
+-
+-/*
+- * Class:     sun/misc/Unsafe
+- * Method:    copyMemory
+- * Signature: (JJJ)V
+- */
+-JNIEXPORT void JNICALL Java_sun_misc_Unsafe_copyMemory(JNIEnv *env, sun_misc_Unsafe *this, int64_t srcAddress, int64_t destAddress, int64_t bytes)
+-{
+-	size_t  length;
+-	void   *src;
+-	void   *dest;
+-
+-	if (bytes == 0)
+-		return;
+-
+-	length = (size_t) bytes;
+-
+-	if ((length != (uint64_t) bytes) || (bytes < 0)) {
+-		exceptions_throw_illegalargumentexception();
+-		return;
+-	}
+-
+-	src  = (void *) (intptr_t) srcAddress;
+-	dest = (void *) (intptr_t) destAddress;
+-
+-	system_memcpy(dest, src, length);
+-}
+-#endif
+ 
+ 
+ /*

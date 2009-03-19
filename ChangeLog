@@ -1,5 +1,22 @@
 2009-03-19  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-cacao-ignore-jdi-tests.patch:
+	Removed; replaced by exclude list.
+	* patches/icedtea-cacao-ignore-tests.patch,
+	* patches/icedtea-cacao.patch:
+	Moved to cacao subdirectory.
+	* Makefile.am:
+	Bump CACAO to 0.99.4, fix CACAO for OpenJDK7,
+	update target to jdk_only.
+	* patches/cacao/ignore-tests.patch: Moved.
+	* patches/cacao/launcher.patch: Updated.
+	* patches/cacao/openjdk7.patch: Fix CACAO 0.99.4
+	to work with OpenJDK7.
+	* test/jtreg/excludelist.jdk.cacao.jtx:
+	Replacement exclude list for CACAO JDI tests.
+
+2009-03-19  Andrew John Hughes  <ahughes@redhat.com>
+
 	* acinclude.m4:
 	Cleanup options so only --enable-shark is
 	needed to build Shark.

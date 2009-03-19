@@ -2,8 +2,8 @@ OPENJDK_DATE = 05_mar_2009
 OPENJDK_MD5SUM = a451251ebdd9a219b16429369fa72e2a
 OPENJDK_VERSION = b50
 
-CACAO_VERSION = 0.99.3
-CACAO_MD5SUM = 80de3ad344c1a20c086ec5f1390bd1b8
+CACAO_VERSION = 0.99.4
+CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
 
 NETBEANS_PROFILER_MD5SUM = 786ab31817cbd902a7211cd6a6161750
 VISUALVM_MD5SUM = a289739f4a5bcdb9a2c642cfcc1e83fe
@@ -1290,6 +1290,7 @@ JTREG_SRCS = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
 	$(top_srcdir)/test/jtreg/README \
 	$(top_srcdir)/test/jtreg/META-INF/MANIFEST.MF \
 	$(top_srcdir)/test/jtreg/excludelist.jdk.jtx \
+	$(top_srcdir)/test/jtreg/excludelist.jdk.cacao.jtx \
 	$(top_srcdir)/test/jtreg/JavaTest.cmdMgrs.lst \
 	$(top_srcdir)/test/jtreg/excludelist.langtools.jtx 
 
@@ -1310,6 +1311,7 @@ PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulsea
 EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/hotspot/default/*.patch \
 	$(top_srcdir)/patches/ecj/*.patch \
+	$(top_srcdir)/patches/cacao/*.patch \
 	$(top_srcdir)/patches/security/*.patch \
 	$(top_srcdir)/patches/xrender/*.patch \
 	tools-copy contrib ports extra overlays \
@@ -1839,9 +1841,8 @@ endif
 
 if WITH_CACAO
 ICEDTEA_PATCHES += \
-	patches/icedtea-cacao.patch \
-	patches/icedtea-cacao-ignore-jdi-tests.patch \
-	patches/icedtea-cacao-ignore-tests.patch
+	patches/cacao/launcher.patch \
+	patches/cacao/ignore-tests.patch
 endif
 
 if ENABLE_PULSE_JAVA
@@ -1915,6 +1916,9 @@ if !USE_SYSTEM_CACAO
 	  $(TAR) xf $(CACAO_SRC_ZIP) -C cacao ; \
 	  dir=$$(basename cacao/cacao-*) ; \
 	  ln -s $$dir cacao/cacao ; \
+	  cd cacao/cacao ; \
+	  $(PATCH) -l -p0 < $(abs_top_srcdir)/patches/cacao/openjdk7.patch ; \
+	  cd .. ; \
 	fi
 endif
 endif
@@ -2326,8 +2330,8 @@ endif
 endif
 
 if WITH_CACAO
-  ICEDTEA_BUILD_TARGET=j2se_only
-  ICEDTEA_DEBUG_BUILD_TARGET=j2se_fastdebug_only
+  ICEDTEA_BUILD_TARGET=jdk_only
+  ICEDTEA_DEBUG_BUILD_TARGET=jdk_fastdebug_only
 else
   ICEDTEA_BUILD_TARGET=
   ICEDTEA_DEBUG_BUILD_TARGET=debug_build
@@ -2770,7 +2774,7 @@ if !USE_SYSTEM_CACAO
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
 	  --with-java-runtime-library-classes=$(abs_top_builddir)/lib/rt \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
-	make install
+	make -j$(PARALLEL_JOBS) install
 endif
 endif
 	mkdir -p stamps
@@ -2942,10 +2946,13 @@ check-langtools: stamps/jtreg.stamp
 
 check-jdk: stamps/jtreg.stamp
 	mkdir -p test/jdk/JTwork test/jdk/JTreport
+if WITH_CACAO
+	CACAO_EXCLUDE="-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.jdk.cacao.jtx"
+endif
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
 		-s -jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
-		$(ICEDTEA_JTREG_OPTIONS) \
+		$(ICEDTEA_JTREG_OPTIONS) $(CACAO_EXCLUDE) \
 		-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.jdk.jtx \
 		`pwd`/openjdk/jdk/test \
 	    | tee test/$@.log
