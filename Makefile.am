@@ -1295,33 +1295,8 @@ JTREG_SRCS = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
 
 PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulseaudio/*.java \
 	$(top_srcdir)/pulseaudio/src/java/META-INF/services/javax.sound.sampled.spi.MixerProvider \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_UnderflowListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_PlaybackStartedListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_OverflowListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_StateListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_MovedListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_WriteListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_ReadListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_State.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_CorkListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Operation_State.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_LatencyUpdateListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.h \
-	$(top_srcdir)/pulseaudio/src/native/jni-common.c \
-	$(top_srcdir)/pulseaudio/src/native/jni-common.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_Format.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_SuspendedListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream_UpdateTimingInfoListener.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Operation.c \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Operation.h \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioStreamVolumeControl.c \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c \
-	$(top_srcdir)/pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.h \
+	$(top_srcdir)/pulseaudio/src/native/*.h \
+	$(top_srcdir)/pulseaudio/src/native/*.c \
 	$(top_srcdir)/pulseaudio/TODO \
 	$(top_srcdir)/pulseaudio/README \
 	$(top_srcdir)/pulseaudio/testsounds/README \
@@ -1332,7 +1307,11 @@ PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulsea
 	$(top_srcdir)/pulseaudio/AUTHORS \
 	$(top_srcdir)/pulseaudio/COPYING
 
-EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/icedtea-*.patch \
+EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
+	$(top_srcdir)/patches/hotspot/default/*.patch \
+	$(top_srcdir)/patches/ecj/*.patch \
+	$(top_srcdir)/patches/security/*.patch \
+	$(top_srcdir)/patches/xrender/*.patch \
 	tools-copy contrib ports extra overlays \
 	javaws.png javaws.desktop visualvm.desktop \
 	jconsole.desktop policytool.desktop \
@@ -2114,10 +2093,10 @@ stamps/overlay.stamp: stamps/patch.stamp
 	sed -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
 	  openjdk/jdk/make/common/shared/Defs.gmk; \
 	cp -r $(abs_top_srcdir)/overlays/openjdk/* openjdk/
-	chmod -R ug+w openjdk 
 if ENABLE_NIO2
 	cp -r $(abs_top_srcdir)/overlays/nio2/openjdk/* openjdk/
 endif
+	chmod -R ug+w openjdk 
 	touch stamps/overlay.stamp
 
 # OpenJDK ecj Source Preparation Targets
