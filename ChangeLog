@@ -1,3 +1,7 @@
+2009-03-09  Tomas Hurka  <tomas.hurka@sun.com>
+
+	* Makefile.am: Updated visualvm to version 1.1.1.
+
 2009-03-07  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-version.patch: Identify as IcedTea when Cacao is used
