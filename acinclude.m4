@@ -714,21 +714,35 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
     esac
   ],
   [
-    case "${host}" in
-      i?86-*-*) ;;
-      sparc*-*-*) ;;
-      x86_64-*-*) ;;
-      *)
-        if test "x${WITH_CACAO}" != xno; then
-          use_zero=no
-        else
-          use_zero=yes
-        fi
-        ;;
-    esac
+    if test "x${use_shark}" = "xyes"; then
+      use_zero=yes;
+    else
+      case "${host}" in
+        i?86-*-*) ;;
+        sparc*-*-*) ;;
+        x86_64-*-*) ;;
+        *)
+          if test "x${WITH_CACAO}" != xno; then
+            use_zero=no
+          else
+            use_zero=yes
+          fi
+          ;;
+      esac
+    fi
   ])
   AC_MSG_RESULT($use_zero)
   AM_CONDITIONAL(ZERO_BUILD, test "x${use_zero}" = xyes)
+
+  use_core=no
+  if test "x${WITH_CACAO}" != "xno"; then
+    use_core=yes;
+  elif test "x${use_zero}" = "xyes"; then
+    if test "x${use_shark}" = "xno"; then
+      use_core=yes;
+    fi
+  fi
+  AM_CONDITIONAL(CORE_BUILD, test "x${use_core}" = xyes)
 
   ZERO_LIBARCH=
   ZERO_BITSPERWORD=
@@ -789,7 +803,7 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
   AC_CONFIG_FILES([ergo.c])
 ])
 
-AC_DEFUN([SET_CORE_OR_SHARK_BUILD],
+AC_DEFUN([SET_SHARK_BUILD],
 [
   AC_MSG_CHECKING(whether to use the Shark JIT)
   shark_selected=no
@@ -804,20 +818,12 @@ AC_DEFUN([SET_CORE_OR_SHARK_BUILD],
     esac
   ])
 
-  use_core=no
   use_shark=no
-  if test "x${WITH_CACAO}" != "xno"; then
-    use_core=yes
-  elif test "x${use_zero}" = "xyes"; then
-    if test "x${shark_selected}" = "xyes"; then
+  if test "x${shark_selected}" = "xyes"; then
       use_shark=yes
-    else
-      use_core=yes
-    fi
   fi
   AC_MSG_RESULT($use_shark)
 
-  AM_CONDITIONAL(CORE_BUILD, test "x${use_core}" = xyes)
   AM_CONDITIONAL(SHARK_BUILD, test "x${use_shark}" = xyes)
 ])
 

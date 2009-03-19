@@ -1,3 +1,12 @@
+2009-03-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	Cleanup options so only --enable-shark is
+	needed to build Shark.
+	* configure.ac: Reorder for above.
+	* patches/hotspot/default/icedtea-shark.patch:
+	Recreated against b50/HSb15.
+
 2009-03-09  Tomas Hurka  <tomas.hurka@sun.com>
 
 	* Makefile.am: Updated visualvm to version 1.1.1.
