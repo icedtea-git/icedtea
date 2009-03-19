@@ -1,3 +1,14 @@
+2009-03-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* ChangeLog,
+	* ports/hotspot/src/share/vm/includeDB_shark,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp,
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp:
+	Cleanup Shark merge duplication.
+	
 2009-03-13  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
@@ -254,13 +265,6 @@
 	(SharkRuntime::resolve_get_put): Likewise.
 	(SharkRuntime::resolve_invoke): Likewise.
 	(SharkRuntime::resolve_get_put_C): Likewise.
-	(SharkRuntime::resolve_invoke_C): Likewise.
-	(SharkRuntime::uncommon_trap_C): s/index/trap_request/.
-	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
-	(SharkRuntime::_resolve_get_put): Removed.
-	(SharkRuntime::_resolve_invoke): Likewise.
-	(SharkRuntime::initialize): Removed initialization for the above.
-	(SharkRuntime::resolve_get_put_C): Removed.
 	(SharkRuntime::resolve_invoke_C): Likewise.
 	(SharkRuntime::uncommon_trap_C): s/index/trap_request/.
 
