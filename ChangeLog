@@ -1,9 +1,12 @@
 2009-03-07  Matthias Klose  <doko@ubuntu.com>
 
-	* Makefile.am (icedtea.stamp, icedtea-debug.stamp): Create target dirs.
 	* patches/icedtea-version.patch: Identify as IcedTea when Cacao is used
 	as JVM.
 
+2009-03-07  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (icedtea.stamp, icedtea-debug.stamp): Create target dirs.
+	
 2009-03-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* ChangeLog,

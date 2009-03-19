@@ -25,14 +25,21 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/s
      static {
          init();
      }
-@@ -82,8 +88,17 @@
+@@ -81,12 +87,26 @@
+         /* First line: platform version. */
          ps.println(launcher_name + " version \"" + java_version + "\"");
  
++        String java_vm_name    = System.getProperty("java.vm.name");
++
          /* Second line: runtime version (ie, libraries). */
 -        ps.println(java_runtime_name + " (build " +
 -                           java_runtime_version + ")");
 +	StringBuilder sb = new StringBuilder();
-+	sb.append(java_runtime_name);
++	if (java_vm_name.toLowerCase().startsWith("cacao")) {
++	    sb.append("IcedTea Runtime Environment");
++	} else {
++	    sb.append(java_runtime_name);
++	}
 +	if (jdk_derivative_name.length() > 0) {
 +	    sb.append(" (").append(jdk_derivative_name).append(")");
 +	}
@@ -44,7 +51,10 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/s
 +	ps.println(sb.toString());
  
          /* Third line: JVM information. */
-         String java_vm_name    = System.getProperty("java.vm.name");
+-        String java_vm_name    = System.getProperty("java.vm.name");
+         String java_vm_version = System.getProperty("java.vm.version");
+         String java_vm_info    = System.getProperty("java.vm.info");
+         ps.println(java_vm_name + " (build " + java_vm_version + ", " +
 --- openjdk/jdk/make/java/version/Makefile.~1~	2008-11-25 01:01:15.000000000 -0800
 +++ openjdk/jdk/make/java/version/Makefile	2009-02-20 09:03:56.000000000 -0800
 @@ -39,6 +39,8 @@
