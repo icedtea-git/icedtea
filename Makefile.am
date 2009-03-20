@@ -1,6 +1,4 @@
-OPENJDK_DATE = 05_mar_2009
 OPENJDK_MD5SUM = a451251ebdd9a219b16429369fa72e2a
-OPENJDK_VERSION = b50
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
@@ -1516,7 +1514,7 @@ CACIOCAVALLO_HG_URL = http://hg.openjdk.java.net/caciocavallo/jdk7/
 BSD_HG_URL = http://hg.openjdk.java.net/bsd-port/bsd-port
 NIO2_HG_URL = http://hg.openjdk.java.net/nio/nio/
 
-OPENJDK_URL = http://www.java.net/download/openjdk/jdk7/promoted/$(OPENJDK_VERSION)/
+OPENJDK_URL = http://hg.openjdk.java.net/icedtea/jdk7/archive/
 
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
@@ -1524,7 +1522,7 @@ else
 if USE_HG
   OPENJDK_SRC_ZIP = 
 else
-  OPENJDK_SRC_ZIP = openjdk-7-ea-src-$(OPENJDK_VERSION)-$(OPENJDK_DATE).zip
+  OPENJDK_SRC_ZIP = tip.tar.gz
 endif
 endif
 
