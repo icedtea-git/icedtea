@@ -1,3 +1,8 @@
+2009-03-20  Andrew John Hughes  <ahughes@redhat.com>
+
+	* NEWS: Add release date for 1.9.
+	* configure.ac: Bump to 1.9 proper.
+
 2009-03-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-cacao-ignore-jdi-tests.patch:

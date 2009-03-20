@@ -1,4 +1,4 @@
-New in release 1.9 (XXXX-XX-XX)
+New in release 1.9 (2009-03-20)
 
 - Security fixes for:
   CVE-2008-5360 - Temporary files have guessable file names.
@@ -12,11 +12,7 @@ New in release 1.9 (XXXX-XX-XX)
   CVE-2008-5357 - Truetype Font processing vulnerability.
   CVE-2008-5352 - Jar200 Decompression buffer overflow.
   CVE-2008-5358 - Buffer Overflow in GIF image processing.
-- Updated to OpenJDK b14 build.
-- Upgraded to new OpenJDK7 Hotspot 14. The old OpenJDK6 Hotspot 11 can
-  still be configured --with-hotspot-build=original but future versions
-  will drop support for the old version and only support HS14. Zero
-  and Shark have been forward ported to HS14 (from HS12).
+- Updated to OpenJDK7 b50 build.
 - XRender pipeline support: Java2D are noticably faster and running over a 
   remote X connection feels like it is all local. Build by default
   (disable with --disable-xrender). Runtime enabled by running java
@@ -24,7 +20,7 @@ New in release 1.9 (XXXX-XX-XX)
 - IcedTeaPlugin now supports HTTPS sites and adds a user prompt for
   untrusted https certificates.
 - Use the ALSA 'default' device. Makes Java play nicer with PulseAudio.
-- VisualVM integration has been removed.
+- VisualVM integration updated to 1.1.1
 - Gervill soft synthesizer integration updated to latest CVS version.
 - Integrated jtreg upgraded to 4_0-src-b02-15_oct_2008.
 - make check runs much faster now. jtreg -samevm support has been
