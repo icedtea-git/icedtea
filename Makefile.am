@@ -1741,8 +1741,7 @@ else
 endif
 
 ICEDTEA_FSG_PATCHES = \
-	patches/icedtea-idl.patch \
-	patches/icedtea-jscheme.patch
+	patches/icedtea-idl.patch 
 
 ICEDTEA_PATCHES = \
 	patches/icedtea-version.patch \
@@ -1806,7 +1805,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-javac-debuginfo.patch \
 	patches/icedtea-xjc.patch \
 	patches/icedtea-renderer-crossing.patch \
-	patches/icedtea-snmp.patch \
 	patches/icedtea-tests-jdk.patch \
 	patches/icedtea-stroker-finish.patch \
 	patches/icedtea-alsa-default-device.patch \
@@ -1826,7 +1824,6 @@ ICEDTEA_PATCHES = \
         patches/security/icedtea-6766136.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch \
 	patches/icedtea-demo-swingapplet.patch \
-	patches/icedtea-java2d-dasher.patch \
 	patches/icedtea-jvmtiEnv.patch \
 	patches/icedtea-xml-encodinginfo.patch \
 	patches/icedtea-cc-interp-backedge.patch \

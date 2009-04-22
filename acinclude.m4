@@ -1164,7 +1164,8 @@ AC_DEFUN([AC_CHECK_FOR_ICEDTEA],
                 SYSTEM_ICEDTEA_DIR=
               ])
   if test -z "${SYSTEM_ICEDTEA_DIR}"; then
-    for dir in /usr/lib/jvm/java-icedtea /usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk ; do
+    for dir in /usr/lib/jvm/java-icedtea /usr/lib/jvm/java-openjdk \
+               /usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk ; do
        if test -d $dir; then
          SYSTEM_ICEDTEA_DIR=$dir
 	 break

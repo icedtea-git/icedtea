@@ -1,27 +1,6 @@
---- openjdk/jdk/make/common/shared/Platform.gmk.orig	2008-10-27 11:44:47.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Platform.gmk	2008-10-27 11:52:17.000000000 +0100
-@@ -191,6 +191,9 @@
-   OS_VERSION := $(shell uname -r)
-   # Arch and OS name/version
-   mach := $(shell uname -m)
-+  ifneq (,$(wildcard /usr/bin/dpkg-architecture))
-+    mach := $(shell (dpkg-architecture -qDEB_BUILD_ARCH_CPU 2>/dev/null || echo $(mach)) | sed 's/powerpc$$/ppc/;s/hppa/parisc/')
-+  endif
-   archExpr = case "$(mach)" in \
-                 i[3-9]86) \
-                     echo i586 \
-@@ -204,6 +207,9 @@
-                 sparc*) \
-                     echo sparc \
-                     ;; \
-+                arm*) \
-+                    echo arm \
-+                    ;; \
-                 *) \
-                     echo $(mach) \
-                     ;; \
---- openjdk/corba/make/common/shared/Platform.gmk.orig	2008-10-27 11:44:47.000000000 +0100
-+++ openjdk/corba/make/common/shared/Platform.gmk	2008-10-27 11:53:01.000000000 +0100
+diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/common/shared/Platform.gmk
+--- openjdk.orig/corba/make/common/shared/Platform.gmk	2009-04-14 20:38:17.000000000 +0100
++++ openjdk/corba/make/common/shared/Platform.gmk	2009-04-15 15:29:14.000000000 +0100
 @@ -181,6 +181,9 @@
    OS_VERSION := $(shell uname -r)
    # Arch and OS name/version
@@ -33,6 +12,29 @@
                  i[3-9]86) \
                      echo i586 \
 @@ -194,6 +197,9 @@
+                 sparc*) \
+                     echo sparc \
+                     ;; \
++                arm*) \
++                    echo arm \
++                    ;; \
+                 *) \
+                     echo $(mach) \
+                     ;; \
+diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/common/shared/Platform.gmk
+--- openjdk.orig/jdk/make/common/shared/Platform.gmk	2009-04-14 20:38:17.000000000 +0100
++++ openjdk/jdk/make/common/shared/Platform.gmk	2009-04-15 15:29:14.000000000 +0100
+@@ -152,6 +152,9 @@
+   PLATFORM = linux
+   # Arch and OS name/version
+   mach := $(shell uname -m)
++  ifneq (,$(wildcard /usr/bin/dpkg-architecture))
++    mach := $(shell (dpkg-architecture -qDEB_BUILD_ARCH_CPU 2>/dev/null || echo $(mach)) | sed 's/powerpc$$/ppc/;s/hppa/parisc/')
++  endif
+   archExpr = case "$(mach)" in \
+                 i[3-9]86) \
+                     echo i586 \
+@@ -165,6 +168,9 @@
                  sparc*) \
                      echo sparc \
                      ;; \

@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/sun/java/pack/Makefile
---- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2009-01-27 00:55:08.000000000 +0000
-+++ openjdk/jdk/make/com/sun/java/pack/Makefile	2009-01-27 01:18:13.000000000 +0000
+--- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2009-04-15 18:50:47.000000000 +0100
++++ openjdk/jdk/make/com/sun/java/pack/Makefile	2009-04-15 18:59:31.000000000 +0100
 @@ -75,12 +75,12 @@
  	     $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
  	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
@@ -40,21 +40,9 @@ diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/
  ifdef MT
  	$(MT) /manifest $(TEMPDIR)/unpack200$(EXE_SUFFIX).manifest /outputresource:$(TEMPDIR)/unpack200$(EXE_SUFFIX);#1
  endif
-diff -Nru openjdk.orig/jdk/make/common/shared/Sanity.gmk openjdk/jdk/make/common/shared/Sanity.gmk
---- openjdk.orig/jdk/make/common/shared/Sanity.gmk	2009-01-22 08:46:11.000000000 +0000
-+++ openjdk/jdk/make/common/shared/Sanity.gmk	2009-01-27 01:16:47.000000000 +0000
-@@ -1343,7 +1343,7 @@
- ifdef ALSA_VERSION_CHECK
- $(ALSA_VERSION_CHECK): $(ALSA_VERSION_CHECK).c
- 	@$(prep-target)
--	@$(CC) -lasound -o $@ $<
-+	@$(CC) -o $@ $< -lasound
- 
- $(ALSA_VERSION_CHECK).c:
- 	@$(prep-target)
 diff -Nru openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile openjdk/jdk/make/javax/sound/jsoundalsa/Makefile
---- openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile	2009-01-22 08:46:12.000000000 +0000
-+++ openjdk/jdk/make/javax/sound/jsoundalsa/Makefile	2009-01-27 01:16:47.000000000 +0000
+--- openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile	2009-03-20 11:58:37.000000000 +0000
++++ openjdk/jdk/make/javax/sound/jsoundalsa/Makefile	2009-04-15 18:59:31.000000000 +0100
 @@ -65,7 +65,7 @@
  	$(MIDIFILES_export) \
  	$(PORTFILES_export)

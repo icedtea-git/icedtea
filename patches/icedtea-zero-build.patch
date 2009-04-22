@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common/Defs-linux.gmk
---- openjdk.orig/corba/make/common/Defs-linux.gmk	2008-09-01 01:34:18.000000000 +0100
-+++ openjdk/corba/make/common/Defs-linux.gmk	2008-09-01 01:37:11.000000000 +0100
+--- openjdk.orig/corba/make/common/Defs-linux.gmk	2009-04-14 18:31:10.000000000 +0100
++++ openjdk/corba/make/common/Defs-linux.gmk	2009-04-14 20:29:27.000000000 +0100
 @@ -99,8 +99,16 @@
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
@@ -21,8 +21,8 @@ diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/commo
  # Add in platform specific optimizations for all opt levels
  CC_HIGHEST_OPT += $(_OPT_$(ARCH))
 diff -Nru openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk openjdk/corba/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk	2008-09-01 01:34:18.000000000 +0100
-+++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	2008-09-01 01:37:11.000000000 +0100
+--- openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk	2009-04-14 18:31:09.000000000 +0100
++++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	2009-04-14 20:29:27.000000000 +0100
 @@ -70,6 +70,11 @@
    else
      CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
@@ -44,8 +44,8 @@ diff -Nru openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk openjdk/corba/m
    SHARED_LIBRARY_FLAG = -shared -mimpure-text
    SUN_COMP_VER := $(shell $(CC) --verbose 2>&1 )
 diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/common/shared/Platform.gmk
---- openjdk.orig/corba/make/common/shared/Platform.gmk	2008-08-14 08:39:29.000000000 +0100
-+++ openjdk/corba/make/common/shared/Platform.gmk	2008-09-01 01:37:11.000000000 +0100
+--- openjdk.orig/corba/make/common/shared/Platform.gmk	2009-03-20 11:54:59.000000000 +0000
++++ openjdk/corba/make/common/shared/Platform.gmk	2009-04-14 20:29:27.000000000 +0100
 @@ -202,6 +202,11 @@
    ARCH_FAMILY := $(ARCH)
  
@@ -58,10 +58,40 @@ diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/
    ifeq ($(ARCH), sparc)
      # Linux sparc build can be either 32-bit or 64-bit.
      #   Default to 32, but allow explicit setting to 32 or 64.
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2009-04-14 18:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2009-04-14 20:29:27.000000000 +0100
+@@ -98,7 +98,11 @@
+    #define VMTYPE COMPILER1_PRESENT("Client")   \
+                   COMPILER2_PRESENT("Server")
+ #else
++#ifdef ZERO
++  #define VMTYPE "Zero"
++#else
+   #define VMTYPE "Core"
++#endif // ZERO
+ #endif // COMPILER1 || COMPILER2
+ #endif // TIERED
+ #endif // KERNEL
+@@ -146,10 +150,14 @@
+                  WINDOWS_ONLY("windows")         \
+                  SOLARIS_ONLY("solaris")
+ 
++#ifdef ZERO
++#define CPU      ZERO_LIBARCH
++#else
+ #define CPU      IA32_ONLY("x86")                \
+                  IA64_ONLY("ia64")               \
+                  AMD64_ONLY("amd64")             \
+                  SPARC_ONLY("sparc")
++#endif // ZERO
+ 
+ const char *Abstract_VM_Version::vm_platform_string() {
+   return OS "-" CPU;
 diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
---- openjdk.orig/jdk/make/common/Defs-linux.gmk	2008-09-01 01:34:18.000000000 +0100
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2008-09-01 01:37:11.000000000 +0100
-@@ -113,8 +113,16 @@
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2009-04-14 18:31:10.000000000 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2009-04-14 20:29:27.000000000 +0100
+@@ -116,8 +116,16 @@
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
  LDFLAGS_COMMON_sparc    += -m32 -mcpu=v9
@@ -78,12 +108,12 @@ diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/De
 +  LDFLAGS_COMMON        += $(LDFLAGS_COMMON_$(ARCH))
 +endif
  
- #
- # Selection of warning messages
+ # If this is a --hash-style=gnu system, use --hash-style=both
+ #   The gnu .hash section won't work on some Linux systems like SuSE 10.
 diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2008-09-01 01:34:18.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2008-09-01 01:38:18.000000000 +0100
-@@ -68,6 +68,11 @@
+--- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2009-04-14 18:31:09.000000000 +0100
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-04-14 20:32:47.000000000 +0100
+@@ -66,6 +66,11 @@
    else
      CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
    endif
@@ -91,22 +121,14 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/
 +    # zero
 +    REQUIRED_CC_VER = 3.2
 +    REQUIRED_GCC_VER = 3.2.*
-+  else
-   ifneq ("$(findstring sparc,$(ARCH))", "")
-     # sparc or sparcv9
-     REQUIRED_CC_VER = 4.0
-@@ -86,6 +91,7 @@
-       endif
-     endif
-   endif
 +  endif
    # Option used to create a shared library
    SHARED_LIBRARY_FLAG = -shared -mimpure-text
    SUN_COMP_VER := $(shell $(CC) --verbose 2>&1 )
 diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/common/shared/Platform.gmk
---- openjdk.orig/jdk/make/common/shared/Platform.gmk	2008-08-14 08:42:49.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Platform.gmk	2008-09-01 01:37:11.000000000 +0100
-@@ -208,6 +208,11 @@
+--- openjdk.orig/jdk/make/common/shared/Platform.gmk	2009-04-14 15:55:52.000000000 +0100
++++ openjdk/jdk/make/common/shared/Platform.gmk	2009-04-14 20:29:27.000000000 +0100
+@@ -173,6 +173,11 @@
    ARCH_FAMILY := $(ARCH)
  
    # Linux builds may be 32-bit or 64-bit data model.
@@ -119,8 +141,8 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/comm
      # Linux sparc build can be either 32-bit or 64-bit.
      #   Default to 32, but allow explicit setting to 32 or 64.
 diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax/sound/SoundDefs.gmk
---- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2008-08-14 08:42:49.000000000 +0100
-+++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2008-09-01 01:37:11.000000000 +0100
+--- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2009-03-20 11:58:37.000000000 +0000
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2009-04-14 20:29:27.000000000 +0100
 @@ -55,21 +55,25 @@
  
  endif # PLATFORM solaris
@@ -163,8 +185,8 @@ diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax
  
  # files needed for MIDI i/o
 diff -Nru openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
---- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2008-08-14 08:43:23.000000000 +0100
-+++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2008-09-01 01:37:11.000000000 +0100
+--- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2009-03-20 11:58:43.000000000 +0000
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2009-04-14 20:29:27.000000000 +0100
 @@ -38,6 +38,7 @@
  #define X_SPARCV9       3
  #define X_IA64          4
@@ -173,32 +195,3 @@ diff -Nru openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h open
  
  // **********************************
  // Make sure you set X_PLATFORM and X_ARCH defines correctly.
---- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	Thu Jun 19 17:05:23 2008 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	Fri Jun 20 10:29:14 2008 +0100
-@@ -98,7 +98,11 @@
-    #define VMTYPE COMPILER1_PRESENT("Client")   \
-                   COMPILER2_PRESENT("Server")
- #else
-+#ifdef ZERO
-+  #define VMTYPE "Zero"
-+#else
-   #define VMTYPE "Core"
-+#endif // ZERO
- #endif // COMPILER1 || COMPILER2
- #endif // TIERED
- #endif // KERNEL
-@@ -143,10 +143,14 @@ const char* Abstract_VM_Version::vm_rele
-                  WINDOWS_ONLY("windows")         \
-                  SOLARIS_ONLY("solaris")
- 
-+#ifdef ZERO
-+#define CPU      ZERO_LIBARCH
-+#else
- #define CPU      IA32_ONLY("x86")                \
-                  IA64_ONLY("ia64")               \
-                  AMD64_ONLY("amd64")             \
-                  SPARC_ONLY("sparc")
-+#endif // ZERO
- 
- const char *Abstract_VM_Version::vm_platform_string() {
-   return OS "-" CPU;

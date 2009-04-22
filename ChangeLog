@@ -1,3 +1,24 @@
+2009-04-16  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-java2d-dasher.patch,
+	* patches/icedtea-jscheme.patch,
+	* patches/icedtea-snmp.patch:
+	Dropped, first two upstream, default of
+	no binary plugs makes third obsolete.
+	* Makefile.am: Updated.
+	* acinclude.m4: Find IcedTea on F10.
+	* patches/ecj/icedtea.patch,
+	* patches/icedtea-alpha-fixes.patch,
+	* patches/icedtea-arch.patch,
+	* patches/icedtea-doc-headers.patch,
+	* patches/icedtea-gcc-suffix.patch,
+	* patches/icedtea-libraries.patch,
+	* patches/icedtea-linker-libs-order.patch,
+	* patches/icedtea-tests-jdk.patch,
+	* patches/icedtea-uname.patch,
+	* patches/icedtea-zero-build.patch:
+	Recreated.
+
 2009-03-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Switch to IcedTea

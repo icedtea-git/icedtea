@@ -1,5 +1,6 @@
---- openjdk/jdk/make/common/shared/Compiler-gcc.gmk~	2007-08-02 09:17:53.000000000 +0200
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2007-08-08 16:30:52.857814544 +0200
+diff -Nru openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk openjdk/corba/make/common/shared/Compiler-gcc.gmk
+--- openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk	2009-03-20 11:54:59.000000000 +0000
++++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	2009-04-14 17:54:35.000000000 +0100
 @@ -58,17 +58,17 @@
  ifeq ($(PLATFORM), linux)
  
@@ -22,9 +23,10 @@
    endif
    ifneq ("$(findstring sparc,$(ARCH))", "")
      # sparc or sparcv9
---- openjdk/corba/make/common/shared/Compiler-gcc.gmk~	2008-01-14 14:05:43.738465508 +0100
-+++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	2008-01-14 14:19:33.640984398 +0100
-@@ -58,17 +58,17 @@
+diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
+--- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2009-04-14 15:55:52.000000000 +0100
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-04-14 17:54:35.000000000 +0100
+@@ -54,17 +54,17 @@
  ifeq ($(PLATFORM), linux)
  
    # Settings specific to Linux
@@ -44,5 +46,5 @@
 -    CXX            = $(COMPILER_PATH)g++
 +    CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
    endif
-   ifneq ("$(findstring sparc,$(ARCH))", "")
-     # sparc or sparcv9
+   # Option used to create a shared library
+   SHARED_LIBRARY_FLAG = -shared -mimpure-text

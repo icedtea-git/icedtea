@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
---- openjdk.orig/jdk/make/docs/Makefile	2009-02-11 00:49:35.000000000 +0000
-+++ openjdk/jdk/make/docs/Makefile	2009-02-11 00:55:31.000000000 +0000
-@@ -77,34 +77,19 @@
+--- openjdk.orig/jdk/make/docs/Makefile	2009-04-14 15:55:52.000000000 +0100
++++ openjdk/jdk/make/docs/Makefile	2009-04-15 23:13:07.000000000 +0100
+@@ -78,34 +78,19 @@
  
  TAGS = $(IGNORED_TAGS:%=-tag %:X) $(TAG_JLS3)
  
@@ -43,7 +43,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  
  #
  # Variables used by domapidocs target
-@@ -116,12 +101,11 @@
+@@ -117,12 +102,11 @@
                      -doctitle $(DOMAPI_JAVADOCTITLE)          \
                      -windowtitle $(DOMAPI_JAVADOCWINDOWTITLE) \
                      -header $(DOMAPI_JAVADOCHEADER)           \
@@ -57,7 +57,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  DOMAPI_GROUPNAME = "Packages"
  DOMAPI_REGEXP = "com.sun.java.browser.dom:org.w3c.dom*"
  # DOMAPI_PKGS is located in NON_CORE_PKGS.gmk
-@@ -135,13 +119,12 @@
+@@ -136,13 +120,12 @@
                      -doctitle $(MIRROR_JAVADOCTITLE)            \
                      -windowtitle $(MIRROR_JAVADOCWINDOWTITLE)   \
                      -header $(MIRROR_JAVADOCHEADER)             \
@@ -72,7 +72,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  MIRROR_GROUPNAME = "Packages"
  MIRROR_OVERVIEW = $(IMPORTSRCDIR)/com/sun/mirror/overview.html
  MIRROR_REGEXP = "com.sun.mirror.*"
-@@ -159,12 +142,11 @@
+@@ -160,12 +143,11 @@
                      -doctitle $(DOCLETAPI_JAVADOCTITLE)          \
                      -windowtitle $(DOCLETAPI_JAVADOCWINDOWTITLE) \
                      -header $(DOCLETAPI_JAVADOCHEADER)           \
@@ -86,7 +86,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  DOCLETAPI_GROUPNAME = "Packages"
  DOCLETAPI_REGEXP = "com.sun.javadoc"
  DOCLETAPI_LINKOPT = -linkoffline ../../../../api $(DOCSDIR)/api/
-@@ -178,8 +160,7 @@
+@@ -179,8 +161,7 @@
  		    -encoding ascii			        \
                      -nonavbar                                   \
                      -noindex                                    \
@@ -96,7 +96,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  # TAGLETAPI_FILE is located in NON_CORE_PKGS.gmk
  
  #
-@@ -196,6 +177,7 @@
+@@ -197,6 +178,7 @@
                     -windowtitle $(JDI_WINDOWTITLE)               \
                     -doctitle $(JDI_DOCTITLE)                     \
                     -header $(JDI_HEADER)                         \
@@ -104,31 +104,44 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                     -linkoffline ../../../../api $(DOCSDIR)/api/     \
                     -overview $(JPDA_SOURCEPATH)/jdi-overview.html
  JDI_WINDOWTITLE = "Java Debug Interface"
-@@ -220,6 +202,7 @@
+@@ -204,9 +186,6 @@
+ JDI_HEADER      = "Java Debug Interface"
+ # JDI_PKGS is located in NON_CORE_PKGS.gmk
+ 
+-# Variables used by security components
+-SECURITYAPI_JAVADOCBOTTOM = '<font size="-1"><a href="http://bugs.sun.com/services/bugreport/index.jsp">Report a bug or request a feature.</a><br>Copyright $(THIS_YEAR) Sun Microsystems, Inc. All Rights Reserved. Use is subject to license terms.</font>'
+-
+ #
+ # Variables used by JAAS target
+ #
+@@ -224,7 +203,7 @@
                     -windowtitle $(JAAS_WINDOWTITLE)              \
                     -doctitle $(JAAS_DOCTITLE)                    \
                     -header $(JAAS_JAVADOCHEADER)                 \
-+                   -bottom $(JAVADOCBOTTOM)             	\
+-                   -bottom $(SECURITYAPI_JAVADOCBOTTOM)                      \
++                   -bottom $(JAVADOCBOTTOM)                      \
                     -linkoffline ../../../../../api $(DOCSDIR)/api/	 \
                     -overview $(TOPDIR)/src/share/classes/com/sun/security/auth/jaas-overview.html
  JAAS_WINDOWTITLE = "Java Authentication and Authorization Service "
-@@ -242,6 +225,7 @@
+@@ -247,7 +226,7 @@
                     -windowtitle $(JGSS_WINDOWTITLE)             \
                     -doctitle $(JGSS_DOCTITLE)                   \
                     -header $(JGSS_JAVADOCHEADER)                \
-+                   -bottom $(JAVADOCBOTTOM)             	\
+-                   -bottom $(SECURITYAPI_JAVADOCBOTTOM)                      \
++                   -bottom $(JAVADOCBOTTOM)                      \
                     -linkoffline ../../../../../api $(DOCSDIR)/api/ \
                     -overview $(JGSS_SOURCEPATH)/com/sun/security/jgss/jgss-overview.html
  
-@@ -265,6 +249,7 @@
+@@ -271,7 +250,7 @@
                     -windowtitle $(SMARTCARDIO_WINDOWTITLE)             \
                     -doctitle $(SMARTCARDIO_DOCTITLE)                   \
                     -header $(SMARTCARDIO_JAVADOCHEADER)                \
-+                   -bottom $(JAVADOCBOTTOM)             	\
+-                   -bottom $(SECURITYAPI_JAVADOCBOTTOM)                      \
++                   -bottom $(JAVADOCBOTTOM)                      \
                     -linkoffline ../../../../../api $(DOCSDIR)/api/
  
  SMARTCARDIO_WINDOWTITLE = "Java Smart Card I/O"
-@@ -309,6 +294,7 @@
+@@ -316,6 +295,7 @@
                     -windowtitle $(HTTPSERVER_WINDOWTITLE)             \
                     -doctitle $(HTTPSERVER_DOCTITLE)                   \
                     -header $(HTTPSERVER_JAVADOCHEADER)                \
@@ -136,7 +149,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                     -linkoffline ../../../../../api $(DOCSDIR)/api/
  
  HTTPSERVER_WINDOWTITLE = "Java HTTP Server"
-@@ -338,6 +324,7 @@
+@@ -351,6 +331,7 @@
                       -windowtitle $(MGMT_WINDOWTITLE)              \
                       -doctitle $(MGMT_DOCTITLE)                    \
                       -header $(MGMT_HEADER)                        \
@@ -144,7 +157,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  		     -linkoffline ../../../../api $(DOCSDIR)/api/  \
                       -overview $(MGMT_SOURCEPATH)/com/sun/management/mgmt-overview.html
  MGMT_WINDOWTITLE = "Monitoring and Management Interface for the Java Platform"
-@@ -359,6 +346,7 @@
+@@ -372,6 +353,7 @@
                     -windowtitle $(ATTACH_WINDOWTITLE)               	\
                     -doctitle $(ATTACH_DOCTITLE)                     	\
                     -header $(ATTACH_HEADER)                         	\
@@ -152,7 +165,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  		   -linkoffline ../../../../api $(DOCSDIR)/api/
  ATTACH_WINDOWTITLE = "Attach API"
  ATTACH_DOCTITLE    = "Attach API"
-@@ -379,6 +367,7 @@
+@@ -392,6 +374,7 @@
                     -windowtitle $(JCONSOLE_WINDOWTITLE)               	\
                     -doctitle $(JCONSOLE_DOCTITLE)                     	\
                     -header $(JCONSOLE_HEADER)                         	\
@@ -160,7 +173,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  		   -linkoffline ../../../../api $(DOCSDIR)/api/
  JCONSOLE_WINDOWTITLE = "JConsole API"
  JCONSOLE_DOCTITLE    = "JConsole API"
-@@ -394,7 +383,7 @@
+@@ -407,7 +390,7 @@
                      -doctitle $(TREEAPI_JAVADOCTITLE)            \
                      -windowtitle $(TREEAPI_JAVADOCWINDOWTITLE)   \
                      -header $(TREEAPI_JAVADOCHEADER)             \
@@ -169,7 +182,7 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
                      -group $(TREEAPI_GROUPNAME) $(TREEAPI_REGEXP) 
  #
  #	            -overview $(TREEAPI_OVERVIEW)
-@@ -402,7 +391,6 @@
+@@ -415,7 +398,6 @@
  TREEAPI_JAVADOCTITLE = 'Compiler Tree API'
  TREEAPI_JAVADOCWINDOWTITLE = 'Compiler Tree API'
  TREEAPI_JAVADOCHEADER = '<strong>Compiler Tree API</strong>'
