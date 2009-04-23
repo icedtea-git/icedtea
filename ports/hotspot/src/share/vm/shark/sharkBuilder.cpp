@@ -28,6 +28,38 @@
 
 using namespace llvm;
 
+#ifdef ARM
+/*
+ * ARM lacks atomic operation implementation in LLVM
+ * http://llvm.org/bugs/show_bug.cgi?id=3877
+ * 
+ * These two functions zero_cmpxchg_int_fn and zero_cmpxchg_ptr_fn
+ * are defined so that they can be inserted into llvm as a workaround to
+ * make shark reroute all atomic calls back to the implementation in zero. 
+ * The actual insertion are done in SharkBuilder::init_external_functions().
+ */
+
+extern "C" {
+  jint zero_cmpxchg_int_fn(volatile jint *ptr,
+                           jint          *oldval,
+                           jint          *newval)
+  {
+    return Atomic::cmpxchg(*newval,
+                           ptr,
+                           *oldval);
+  }
+
+  intptr_t* zero_cmpxchg_ptr_fn(volatile void* ptr,
+                                intptr_t*      oldval,
+                                intptr_t*      newval)
+  { 
+    return (intptr_t *) Atomic::cmpxchg_ptr((void *) newval,
+                                                     ptr,
+                                            (void *) oldval);
+  }
+};
+#endif
+
 SharkBuilder::SharkBuilder(SharkCompiler* compiler)
   : IRBuilder<>(),
     _compiler(compiler)
@@ -81,7 +113,14 @@ void SharkBuilder::init_external_functions()
   params.push_back(SharkType::jint_type());
   type = FunctionType::get(SharkType::jint_type(), params, false);
   set_llvm_cmpxchg_int_fn(
+#ifdef ARM
+    make_function(
+      (intptr_t) zero_cmpxchg_int_fn,
+      type,
+      "zero_cmpxchg_int_fn"));
+#else
     module()->getOrInsertFunction("llvm.atomic.cmp.swap.i32", type));
+#endif
 
   params.clear();
   params.push_back(PointerType::getUnqual(SharkType::intptr_type()));
@@ -89,8 +128,15 @@ void SharkBuilder::init_external_functions()
   params.push_back(SharkType::intptr_type());
   type = FunctionType::get(SharkType::intptr_type(), params, false);
   set_llvm_cmpxchg_ptr_fn(
+#ifdef ARM
+    make_function(
+      (intptr_t) zero_cmpxchg_ptr_fn,
+      type,
+      "zero_cmpxchg_ptr_fn"));
+#else
     module()->getOrInsertFunction(
       "llvm.atomic.cmp.swap.i" LP64_ONLY("64") NOT_LP64("32"), type));
+#endif
 
   params.clear();
   for (int i = 0; i < 5; i++)
