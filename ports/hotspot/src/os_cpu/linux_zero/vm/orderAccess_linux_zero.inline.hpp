@@ -23,6 +23,25 @@
  *
  */
 
+#ifdef ARM
+
+/* 
+ * ARM Kernel helper for memory barrier. 
+ * Using __asm __volatile ("":::"memory") does not work reliable on ARM
+ * and gcc __sync_synchronize(); implementation does not use the kernel
+ * helper for all gcc versions so it is unreliable to use as well. 
+ */
+typedef void (__kernel_dmb_t) (void);
+#define __kernel_dmb (*(__kernel_dmb_t *) 0xffff0fa0)
+
+#define FULL_MEM_BARRIER __kernel_dmb()
+#define READ_MEM_BARRIER __kernel_dmb()
+#define WRITE_MEM_BARRIER __kernel_dmb()
+
+#else // ARM
+
+#define FULL_MEM_BARRIER __sync_synchronize()
+
 #ifdef PPC
 
 #define READ_MEM_BARRIER __asm __volatile ("isync":::"memory")
@@ -39,6 +58,7 @@
 
 #endif // PPC
 
+#endif // ARM
 
 
 inline void OrderAccess::loadload()   { acquire(); }
@@ -58,7 +78,7 @@ inline void OrderAccess::release()
 
 inline void OrderAccess::fence()
 {
-  __sync_synchronize();
+  FULL_MEM_BARRIER;
 }
 
 inline jbyte    OrderAccess::load_acquire(volatile jbyte*   p) { jbyte data = *p; acquire(); return data; }

@@ -1,6 +1,20 @@
 2009-04-23 Xerxes Rånby <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::init_external_functions): Use memory address to
+	kernel helper __kernel_dmb on arm for memory barrier.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp
+	(__kernel_dmb_t): New type.
+	(__kernel_dmb): New macro.
+	(FULL_MEM_BARRIER): New macro that uses __kernel_dmb on arm
+	and __sync_synchronize on all other architectures.
+	(READ_MEM_BARRIER): Updated to use __kernel_dmb on arm.
+	(WRITE_MEM_BARRIER): Likewise.
+	(OrderAccess::fence): Updated to use FULL_MEM_BARRIER.
+
+2009-04-23 Xerxes Rånby <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
 	(zero_cmpxchg_int_fn): New function.
 	(zero_cmpxchg_ptr_fn): Likewise.
 	(SharkBuilder::init_external_functions): Use the above on arm.

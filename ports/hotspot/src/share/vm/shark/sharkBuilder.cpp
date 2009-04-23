@@ -138,12 +138,26 @@ void SharkBuilder::init_external_functions()
       "llvm.atomic.cmp.swap.i" LP64_ONLY("64") NOT_LP64("32"), type));
 #endif
 
+ /* 
+  *  The five booleans passed to llvm.memory.barrier are used like this:
+  *  The first four arguments enables a specific barrier in this order:
+  *  load-load, load-store, store-load and store-store.
+  *  The fith argument specifies that the barrier applies to io or device
+  *  or uncached memory.
+  */
   params.clear();
   for (int i = 0; i < 5; i++)
     params.push_back(Type::Int1Ty);
   type = FunctionType::get(Type::VoidTy, params, false);
   set_llvm_memory_barrier_fn(
+#ifdef ARM
+    make_function(
+      0xffff0fa0, // __kernel_dmb
+      type,
+      "__kernel_dmb"));
+#else
     module()->getOrInsertFunction("llvm.memory.barrier", type));
+#endif
 
   params.clear();
   params.push_back(SharkType::jdouble_type());
