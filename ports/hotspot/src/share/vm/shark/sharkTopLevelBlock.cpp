@@ -28,19 +28,14 @@
 
 using namespace llvm;
 
-int SharkTopLevelBlock::scan_for_traps()
+void SharkTopLevelBlock::scan_for_traps()
 {
-  // If typeflow got one then we're already done
-  if (ciblock()->has_trap()) {
-    return Deoptimization::make_trap_request(
-      Deoptimization::Reason_unloaded,
-      Deoptimization::Action_reinterpret,
-      ciblock()->trap_index());
-  }
+  // If typeflow found a trap then don't scan past it
+  int limit_bci = ciblock()->has_trap() ? ciblock()->trap_bci() : limit();
 
-  // Scan the bytecode
+  // Scan the bytecode for traps that are always hit
   iter()->reset_to_bci(start());
-  while (iter()->next_bci() < limit()) {
+  while (iter()->next_bci() < limit_bci) {
     iter()->next();
 
     ciField *field;
@@ -62,9 +57,11 @@ int SharkTopLevelBlock::scan_for_traps()
       // If the bytecode does not match the field then bail out to
       // the interpreter to throw an IncompatibleClassChangeError
       if (is_field == field->is_static()) {
-        return Deoptimization::make_trap_request(
-                 Deoptimization::Reason_unhandled,
-                 Deoptimization::Action_none);
+        set_trap(
+          Deoptimization::make_trap_request(
+            Deoptimization::Reason_unhandled,
+            Deoptimization::Action_none), bci());
+        return;
       }
 
       // If this is a getfield or putfield then there won't be a
@@ -96,9 +93,11 @@ int SharkTopLevelBlock::scan_for_traps()
       // set up otherwise.
       if (bc() == Bytecodes::_invokevirtual && !method->is_final_method()) {
         if (!method->holder()->is_linked()) {
-          return Deoptimization::make_trap_request(
-            Deoptimization::Reason_uninitialized,
-            Deoptimization::Action_reinterpret);
+          set_trap(
+            Deoptimization::make_trap_request(
+              Deoptimization::Reason_uninitialized,
+              Deoptimization::Action_reinterpret), bci());
+          return;
         }
         break;
       }
@@ -112,13 +111,24 @@ int SharkTopLevelBlock::scan_for_traps()
     if (index != -1) {
       if (!target()->holder()->is_cache_entry_resolved(
              Bytes::swap_u2(index), bc())) {
-        return Deoptimization::make_trap_request(
-          Deoptimization::Reason_uninitialized,
-          Deoptimization::Action_reinterpret);
+        set_trap(
+          Deoptimization::make_trap_request(
+            Deoptimization::Reason_uninitialized,
+            Deoptimization::Action_reinterpret), bci());
+        return;
       }
     }
   }
-  return TRAP_NO_TRAPS;
+  
+  // Trap if typeflow trapped (and we didn't before)
+  if (ciblock()->has_trap()) {
+    set_trap(
+      Deoptimization::make_trap_request(
+        Deoptimization::Reason_unloaded,
+        Deoptimization::Action_reinterpret,
+        ciblock()->trap_index()), ciblock()->trap_bci());
+    return;
+  }
 }
 
 SharkState* SharkTopLevelBlock::entry_state()
@@ -163,13 +173,14 @@ void SharkTopLevelBlock::enter(SharkTopLevelBlock* predecessor,
   if (!entered()) {
     _entered = true;
 
+    scan_for_traps();
     if (!has_trap()) {
       for (int i = 0; i < num_successors(); i++) {
         successor(i)->enter(this, false);
       }
-      for (int i = 0; i < num_exceptions(); i++) {
-        exception(i)->enter(this, true);
-      }
+    }
+    for (int i = 0; i < num_exceptions(); i++) {
+      exception(i)->enter(this, true);
     }
   }
 }
@@ -215,25 +226,12 @@ void SharkTopLevelBlock::emit_IR()
 {
   builder()->SetInsertPoint(entry_block());
 
-  // Handle traps
-  if (has_trap()) {
-    iter()->force_bci(start());
-
-    current_state()->decache_for_trap();
-    builder()->CreateCall2(
-      SharkRuntime::uncommon_trap(),
-      thread(),
-      LLVMValue::jint_constant(trap_request()));
-    builder()->CreateRetVoid();
-    return;
-  }
-
   // Parse the bytecode
   parse_bytecode(start(), limit());
 
   // If this block falls through to the next then it won't have been
   // terminated by a bytecode and we have to add the branch ourselves
-  if (falls_through())
+  if (falls_through() && !has_trap())
     do_branch(ciTypeFlow::FALL_THROUGH);
 }
 
@@ -476,6 +474,16 @@ void SharkTopLevelBlock::add_safepoint()
 
   builder()->SetInsertPoint(safepointed);
   current_state()->merge(orig_state, orig_block, safepointed_block);
+}
+
+void SharkTopLevelBlock::do_trap(int trap_request)
+{
+  current_state()->decache_for_trap();
+  builder()->CreateCall2(
+    SharkRuntime::uncommon_trap(),
+    thread(),
+    LLVMValue::jint_constant(trap_request));
+  builder()->CreateRetVoid();
 }
 
 void SharkTopLevelBlock::call_register_finalizer(Value *receiver)

@@ -233,6 +233,13 @@ class SharkBlock : public ResourceObj {
  protected:
   virtual void add_safepoint();
 
+  // Traps
+ protected:
+  virtual bool has_trap();
+  virtual int  trap_request();
+  virtual int  trap_bci();
+  virtual void do_trap(int trap_request);
+
   // ldc*
  private:
   void do_ldc()

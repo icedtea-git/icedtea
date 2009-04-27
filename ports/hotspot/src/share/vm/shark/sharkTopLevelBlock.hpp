@@ -32,8 +32,8 @@ class SharkTopLevelBlock : public SharkBlock {
                  function->thread()),
       _function(function),
       _ciblock(ciblock),
-      _trap_request(TRAP_UNCHECKED),
       _entered(false),
+      _has_trap(false),
       _needs_phis(false),
       _entry_state(NULL),
       _entry_block(NULL) {}
@@ -106,26 +106,36 @@ class SharkTopLevelBlock : public SharkBlock {
 
   // Traps
  private:
-  enum {
-    TRAP_UNCHECKED = 232323, // > any constant pool index
-    TRAP_NO_TRAPS
-  };
-  int _trap_request;
+  bool _has_trap;
+  int  _trap_request;
+  int  _trap_bci;
 
- public:
-  int trap_request()
+  void set_trap(int trap_request, int trap_bci)
   {
-    if (_trap_request == TRAP_UNCHECKED)
-      _trap_request = scan_for_traps();
-    return _trap_request;
-  }
-  bool has_trap()
-  {
-    return trap_request() != TRAP_NO_TRAPS;
+    assert(!has_trap(), "shouldn't have");
+    _has_trap     = true;
+    _trap_request = trap_request;
+    _trap_bci     = trap_bci;
   }
 
  private:
-  int scan_for_traps();
+  bool has_trap()
+  {
+    return _has_trap;
+  }
+  int trap_request()
+  {
+    assert(has_trap(), "should have");
+    return _trap_request;
+  }
+  int trap_bci()
+  {
+    assert(has_trap(), "should have");
+    return _trap_bci;
+  }
+
+ private:
+  void scan_for_traps();
 
   // Entry state
  private:
@@ -292,6 +302,10 @@ class SharkTopLevelBlock : public SharkBlock {
   // Safepoints
  private:
   void add_safepoint();
+
+  // Traps
+ private:
+  void do_trap(int trap_request);
 
   // Returns
  private:

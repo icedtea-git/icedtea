@@ -1,5 +1,36 @@
 2009-04-27  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::has_trap): New method.
+	(SharkBlock::trap_request): Likewise.
+	(SharkBlock::trap_bci): Likewise.
+	(SharkBlock::do_trap): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::has_trap): New method.
+	(SharkBlock::trap_request): Likewise.
+	(SharkBlock::trap_bci): Likewise.
+	(SharkBlock::do_trap): Likewise.
+	(SharkBlock::parse_bytecode): Handle traps.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::_has_trap): New field.
+	(SharkTopLevelBlock::_trap_bci): Likewise.
+	(SharkTopLevelBlock::has-trap): Updated.
+	(SharkTopLevelBlock::trap_request): Likewise.
+	(SharkTopLevelBlock::set_trap): New method.
+	(SharkTopLevelBlock::trap_bci): Likewise.
+	(SharkTopLevelBlock::do_trap): Likewise.
+	(SharkTopLevelBlock::scan_for_traps): New prototype.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): Store trap_bci along
+	with trap_request, and don't assume that traps found by
+	typeflow are the first traps in the block.
+	(SharkTopLevelBlock::enter): Scan for traps, and always
+	enter exception sucessors.
+	(SharkTopLevelBlock::emit_IR): Remove old trap handling.
+	(SharkTopLevelBlock::do_trap): New method.
+	
+2009-04-27  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkState.hpp
 	(SharkState::SharkState): Add explicit block argument.
 	(SharkState::copy): Pass block to constructor.

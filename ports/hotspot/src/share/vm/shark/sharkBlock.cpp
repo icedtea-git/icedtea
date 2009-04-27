@@ -46,6 +46,11 @@ void SharkBlock::parse_bytecode(int start, int limit)
     if (SharkTraceBytecodes)
       tty->print_cr("%4d: %s", bci(), Bytecodes::name(bc()));
     
+    if (has_trap() && trap_bci() == bci()) {
+      do_trap(trap_request());
+      return;
+    }
+
     if (UseLoopSafepoints) {
       // XXX if a lcmp is followed by an if_?? then C2 maybe-inserts
       // the safepoint before the lcmp rather than before the if.
@@ -1134,6 +1139,26 @@ void SharkBlock::do_zero_check(SharkValue* value)
 }
 
 void SharkBlock::add_safepoint()
+{
+  ShouldNotCallThis();
+}
+
+bool SharkBlock::has_trap()
+{
+  return false;
+}
+
+int SharkBlock::trap_request()
+{
+  ShouldNotCallThis();
+}
+
+int SharkBlock::trap_bci()
+{
+  ShouldNotCallThis();
+}
+
+void SharkBlock::do_trap(int trap_request)
 {
   ShouldNotCallThis();
 }
