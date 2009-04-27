@@ -38,8 +38,8 @@ SharkState::SharkState(SharkBlock*    block,
   initialize(NULL);
 }
 
-SharkState::SharkState(const SharkState* state)
-  : _block(state->block()),
+SharkState::SharkState(SharkBlock* block, const SharkState* state)
+  : _block(block),
     _function(state->function()),
     _method(state->method())
 {

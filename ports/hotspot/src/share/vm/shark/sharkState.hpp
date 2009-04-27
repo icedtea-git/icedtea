@@ -32,7 +32,7 @@ class SharkState : public ResourceObj {
   SharkState(SharkBlock*    block,
              SharkFunction* function = NULL,
              llvm::Value*   method = NULL);
-  SharkState(const SharkState* state);
+  SharkState(SharkBlock* block, const SharkState* state);
 
  private:
   void initialize(const SharkState* state);
@@ -137,7 +137,7 @@ class SharkState : public ResourceObj {
  public:
   SharkState* copy() const
   {
-    return new SharkState(this);
+    return new SharkState(block(), this);
   }
   void merge(SharkState*       other,
              llvm::BasicBlock* other_block,

@@ -1,3 +1,14 @@
+2009-04-27  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkState::SharkState): Add explicit block argument.
+	(SharkState::copy): Pass block to constructor.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkState::SharkState): Add explicit block argument.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::initial_current_state): Pass block to
+	SharkState constructor.
+
 2009-04-23 Xerxes Rånby <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
