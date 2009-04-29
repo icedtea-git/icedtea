@@ -1,3 +1,12 @@
+2009-04-29  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): Trap on ldc and ldc_w
+	when the constant is unresolved.
+	(SharkTopLevelBlock::lookup_for_ldc): Rewritten.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp
+	(SharkConstantPool::java_mirror): Add a comment.
+
 2009-04-28  Gary Benson  <gbenson@redhat.com>
 
 	* patches/hotspot/default/icedtea-shark.patch

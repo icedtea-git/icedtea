@@ -46,6 +46,17 @@ void SharkTopLevelBlock::scan_for_traps()
     int index = -1;
 
     switch (bc()) {
+    case Bytecodes::_ldc:
+    case Bytecodes::_ldc_w:
+      if (iter()->is_unresolved_string() || iter()->is_unresolved_klass()) {
+        set_trap(
+          Deoptimization::make_trap_request(
+            Deoptimization::Reason_uninitialized,
+            Deoptimization::Action_reinterpret), bci());
+        return;
+      }
+      break;
+      
     case Bytecodes::_getfield:
     case Bytecodes::_getstatic:
     case Bytecodes::_putfield:
@@ -579,69 +590,33 @@ void SharkTopLevelBlock::release_locked_monitors()
 
 Value *SharkTopLevelBlock::lookup_for_ldc()
 {
+  int index = iter()->get_constant_index();
+  constantTag tag = target()->holder()->constant_pool_tag_at(index);
+
   SharkConstantPool constants(this);
+  Value *entry = constants.object_at(index);
 
-  BasicBlock *resolved       = function()->CreateBlock("resolved");
-  BasicBlock *resolved_class = function()->CreateBlock("resolved_class");
-  BasicBlock *unresolved     = function()->CreateBlock("unresolved");
-  BasicBlock *unknown        = function()->CreateBlock("unknown");
-  BasicBlock *done           = function()->CreateBlock("done");
+  Value *klass_part;
+  switch (tag.value()) {
+  case JVM_CONSTANT_String:
+    return entry;
 
-  SwitchInst *switchinst = builder()->CreateSwitch(
-    constants.tag_at(iter()->get_constant_index()),
-    unknown, 5);
+  case JVM_CONSTANT_Class:
+    klass_part = builder()->CreateAddressOfStructEntry(
+      entry,
+      in_ByteSize(klassOopDesc::klass_part_offset_in_bytes()),
+      SharkType::klass_type(),
+      "klass_part");
+    // XXX FIXME: We need a memory barrier before this load
+    return builder()->CreateValueOfStructEntry(
+      klass_part,
+      in_ByteSize(Klass::java_mirror_offset_in_bytes()),
+      SharkType::oop_type(),
+      "java_mirror");
 
-  switchinst->addCase(
-    LLVMValue::jbyte_constant(JVM_CONSTANT_String), resolved);
-  switchinst->addCase(
-    LLVMValue::jbyte_constant(JVM_CONSTANT_Class), resolved_class);
-  switchinst->addCase(
-    LLVMValue::jbyte_constant(JVM_CONSTANT_UnresolvedString), unresolved);
-  switchinst->addCase(
-    LLVMValue::jbyte_constant(JVM_CONSTANT_UnresolvedClass), unresolved);
-  switchinst->addCase(
-    LLVMValue::jbyte_constant(JVM_CONSTANT_UnresolvedClassInError),
-    unresolved);
-
-  builder()->SetInsertPoint(resolved);
-  Value *resolved_value = constants.object_at(iter()->get_constant_index());
-  builder()->CreateBr(done);
-
-  builder()->SetInsertPoint(resolved_class);
-  Value *resolved_class_value
-    = constants.object_at(iter()->get_constant_index());
-  resolved_class_value
-    = builder()->CreatePtrToInt(resolved_class_value,
-                                SharkType::intptr_type());
-  resolved_class_value
-    = (builder()->CreateAdd
-       (resolved_class_value,
-        (LLVMValue::intptr_constant
-         (klassOopDesc::klass_part_offset_in_bytes()
-          + Klass::java_mirror_offset_in_bytes()))));
-  // XXX FIXME: We need a memory barrier before this load.
-  resolved_class_value
-    = (builder()->CreateLoad
-       (builder()->CreateIntToPtr
-        (resolved_class_value,
-         PointerType::getUnqual(SharkType::jobject_type()))));
-  builder()->CreateBr(done);
-
-  builder()->SetInsertPoint(unresolved);
-  builder()->CreateUnimplemented(__FILE__, __LINE__);
-  Value *unresolved_value = LLVMValue::null();
-  builder()->CreateBr(done);
-
-  builder()->SetInsertPoint(unknown);
-  builder()->CreateShouldNotReachHere(__FILE__, __LINE__);
-  builder()->CreateUnreachable();
-
-  builder()->SetInsertPoint(done);
-  PHINode *phi = builder()->CreatePHI(SharkType::jobject_type(), "constant");
-  phi->addIncoming(resolved_value, resolved);
-  phi->addIncoming(resolved_class_value, resolved_class);
-  phi->addIncoming(unresolved_value, unresolved);
-  return phi;
+  default:
+    ShouldNotReachHere();
+  }
 }
 
 Value* SharkTopLevelBlock::lookup_for_field_access()

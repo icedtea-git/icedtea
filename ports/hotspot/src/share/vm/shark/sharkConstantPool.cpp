@@ -116,6 +116,7 @@ Value *SharkConstantPool::java_mirror()
     SharkType::klass_type(),
     "klass_part");
 
+  // XXX should there be a memory barrier before this load?
   return builder()->CreateValueOfStructEntry(
     klass_part,
     in_ByteSize(Klass::java_mirror_offset_in_bytes()),
