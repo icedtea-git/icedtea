@@ -220,7 +220,7 @@ Value* SharkFunction::CreateBuildFrame()
   int stack_words   = max_stack();
   int frame_words   = header_words + monitor_words + stack_words;
 
-  _oopmap_frame_size = frame_words + extra_locals;
+  _extended_frame_size = frame_words + locals_words;
 
   // Update the stack pointer
   Value *zero_stack_pointer = builder()->CreateSub(
@@ -233,7 +233,7 @@ Value* SharkFunction::CreateBuildFrame()
   _frame = builder()->CreateIntToPtr(
     zero_stack_pointer,
     PointerType::getUnqual(
-      ArrayType::get(SharkType::intptr_type(), frame_words + locals_words)),
+      ArrayType::get(SharkType::intptr_type(), extended_frame_size())),
     "frame");
   int offset = 0;
 
@@ -277,7 +277,7 @@ Value* SharkFunction::CreateBuildFrame()
   _locals_slots_offset = offset;  
   offset += locals_words;
 
-  assert(offset == frame_words + locals_words, "should do");
+  assert(offset == extended_frame_size(), "should do");
   return fp;
 }
 

@@ -28,12 +28,11 @@
 
 using namespace llvm;
 
-SharkState::SharkState(SharkBlock*    block,
-                       SharkFunction* function,
-                       llvm::Value*   method)
+SharkState::SharkState(SharkBlock* block, SharkFunction* function)
   : _block(block),
     _function(function),
-    _method(method)
+    _method(NULL),
+    _frame_cache(NULL)
 {
   initialize(NULL);
 }
@@ -41,7 +40,8 @@ SharkState::SharkState(SharkBlock*    block,
 SharkState::SharkState(SharkBlock* block, const SharkState* state)
   : _block(block),
     _function(state->function()),
-    _method(state->method())
+    _method(state->method()),
+    _frame_cache(NULL)
 {
   initialize(state);
 }
@@ -69,7 +69,13 @@ void SharkState::initialize(const SharkState *state)
         value = value->clone();
       push(value);
     }
+
+    if (state->frame_cache())
+      _frame_cache = state->frame_cache()->copy();
   } 
+  else if (function()) {
+    _frame_cache = new SharkFrameCache(function());
+  }
 }
 
 bool SharkState::equal_to(SharkState *other)
@@ -89,6 +95,7 @@ bool SharkState::equal_to(SharkState *other)
   if (stack_depth() != other->stack_depth())
     return false;
 
+  // Local variables
   for (int i = 0; i < max_locals(); i++) {
     SharkValue *value = local(i);
     SharkValue *other_value = other->local(i);
@@ -106,6 +113,7 @@ bool SharkState::equal_to(SharkState *other)
     }
   }
 
+  // Expression stack
   for (int i = 0; i < stack_depth(); i++) {
     SharkValue *value = stack(i);
     SharkValue *other_value = other->stack(i);
@@ -121,6 +129,19 @@ bool SharkState::equal_to(SharkState *other)
       if (!value->equal_to(other_value))
         return false;
     }
+  }
+
+  // Frame cache
+  if (frame_cache() == NULL) {
+    if (other->frame_cache() != NULL)
+      return false;
+  }
+  else {
+    if (other->frame_cache() == NULL)
+      return false;
+
+    if (!frame_cache()->equal_to(other->frame_cache()))
+      return false;
   }
 
   return true;
@@ -167,12 +188,16 @@ void SharkState::merge(SharkState* other,
         builder(), other_value, other_block, this_block, name));
     }
   }
+
+  // Frame cache
+  frame_cache()->merge(other->frame_cache());
 }
 
 void SharkState::decache_for_Java_call(ciMethod* callee)
 {
   assert(function() && method(), "you cannot decache here");
-  SharkJavaCallDecacher(function(), block()->bci(), callee).scan(this);
+  SharkJavaCallDecacher(
+    function(), frame_cache(), block()->bci(), callee).scan(this);
   pop(callee->arg_size());
 }
 
@@ -197,31 +222,31 @@ void SharkState::cache_after_Java_call(ciMethod* callee)
     if (type->is_two_word())
       push(NULL);
   }
-  SharkJavaCallCacher(function(), block()->bci(), callee).scan(this);
+  SharkJavaCallCacher(function(), frame_cache(), callee).scan(this);
 }
 
 void SharkState::decache_for_VM_call()
 {
   assert(function() && method(), "you cannot decache here");
-  SharkVMCallDecacher(function(), block()->bci()).scan(this);
+  SharkVMCallDecacher(function(), frame_cache(), block()->bci()).scan(this);
 }
 
 void SharkState::cache_after_VM_call()
 {
   assert(function() && method(), "you cannot cache here");
-  SharkVMCallCacher(function(), block()->bci()).scan(this);
+  SharkVMCallCacher(function(), frame_cache()).scan(this);
 }
 
 void SharkState::decache_for_trap()
 {
   assert(function() && method(), "you cannot decache here");
-  SharkTrapDecacher(function(), block()->bci()).scan(this);
+  SharkTrapDecacher(function(), frame_cache(), block()->bci()).scan(this);
 }
 
 SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
-  : SharkState(block, block->function(), method)
+  : SharkState(block, block->function())
 {
-  char name[18];
+  assert(!block->stack_depth_at_entry(), "entry block shouldn't have stack");
 
   // Local variables
   for (int i = 0; i < max_locals(); i++) {
@@ -235,21 +260,11 @@ SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
     case T_DOUBLE:
     case T_OBJECT:
     case T_ARRAY:
-      if (i < function()->arg_size()) {
-        snprintf(name, sizeof(name), "local_%d_", i);
-        value = SharkValue::create_generic(
-          type,
-          builder()->CreateLoad(
-            function()->CreateAddressOfFrameEntry(
-              function()->locals_slots_offset()
-              + max_locals() - type->size() - i,
-              SharkType::to_stackType(type)),
-            name),
-          i == 0 && !function()->target()->is_static());
+      if (i >= function()->arg_size()) {
+        ShouldNotReachHere();
       }
-      else {
-        Unimplemented();
-      }
+      value = SharkValue::create_generic(
+        type, NULL, i == 0 && !function()->target()->is_static());
       break;
     
     case ciTypeFlow::StateVector::T_BOTTOM:
@@ -264,9 +279,7 @@ SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
     }
     set_local(i, value);
   }
-
-  // Expression stack
-  assert(!block->stack_depth_at_entry(), "entry block shouldn't have stack");
+  SharkFunctionEntryCacher(function(), frame_cache(), method).scan(this);  
 }
 
 SharkPHIState::SharkPHIState(SharkTopLevelBlock* block)

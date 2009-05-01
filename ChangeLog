@@ -1,3 +1,68 @@
+2009-05-01  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkFrameCache.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkFrameCache.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::_oopmap_frame_size): Removed field.
+	(SharkFunction::_extended_frame_size): New field.
+	(SharkFunction::extended_frame_size): New method.
+	(SharkFunction::oopmap_frame_size): Updated for the above.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::CreateBuildFrame): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkState::SharkState): Remove optional method argument.
+	(SharkState::_frame_cache): New field.
+	(SharkState::frame_cache): New method.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkState::SharkState): Remove optional method argument.
+	(SharkState::initialize): Initialize frame cache.
+	(SharkState::equal_to): Compare frame cache.
+	(SharkState::merge): Merge frame cache.
+	(SharkState::decache_for_Java_call): Pass frame cache.
+	(SharkState::cache_after_Java_call): Likewise.
+	(SharkState::decache_for_VM_call): Likewise.
+	(SharkState::cache_after_VM_call): Likewise.
+	(SharkState::decache_for_trap): Likewise.
+	(SharkEntryState::SharkEntryState): Don't load initial local
+	variables directly, populate the state with dummy values and
+	use a SharkFunctionEntryCacher to perform the loads.
+
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp
+	(SharkCacherDecacher::SharkCacherDecacher): Remove bci argument,
+	and add frame cache argument.
+	(SharkCacherDecacher::_frame_cache): New field.
+	(SharkCacherDecacher::frame_cache): New method.
+	(SharkCacherDecacher::_bci): Removed field.
+	(SharkCacherDecacher::bci): Removed method.
+	(SharkDecacher::SharkDecacher): Add frame cache argument.
+	(SharkDecacher::_bci): New field.
+	(SharkDecacher::bci): New method.
+	(SharkDecacher::write_value_to_frame): New method.
+	(SharkJavaCallDecacher::SharkJavaCallDecacher): Add frame cache.
+	(SharkVMCallDecacher::SharkVMCallDecacher): Likewise.
+	(SharkTrapDecacher::SharkTrapDecacher): Likewise.
+	(SharkCacher::SharkCacher): Likewise.
+	(SharkDecacher::process_method_slot): Made virtual.
+	(SharkDecacher::local_slot_needs_read): Likewise.
+	(SharkDecacher::read_value_from_frame): New method.
+	(SharkJavaCallCacher::SharkJavaCallDecacher): Add frame cache.
+	(SharkVMCallCacher::SharkVMCallDecacher): Likewise.
+	(SharkFunctionEntryCacher): New class.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::process_stack_slot): Use write_value_to_frame.
+	(SharkDecacher::process_method_slot): Likewise.
+	(SharkDecacher::process_local_slot): Likewise.
+	(SharkCacher::process_stack_slot): Use read_value_from_frame.
+	(SharkCacher::process_method_slot): Likewise.
+	(SharkCacher::process_local_slot): Likewise.
+	(SharkFunctionEntryCacher::process_method_slot): New method.
+	(SharkDecacher::write_value_to_frame): Likewise.
+	(SharkDecacher::read_value_from_frame): Likewise.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
 2009-04-29  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp

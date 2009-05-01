@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,26 +33,27 @@
 //     - SharkCacher
 //       - SharkJavaCallCacher
 //       - SharkVMCallCacher
+//       - SharkFunctionEntryCacher
 
 class SharkCacherDecacher : public SharkStateScanner {
  protected:
-  SharkCacherDecacher(SharkFunction* function, int bci)
-    : SharkStateScanner(function), _bci(bci) {}
+  SharkCacherDecacher(SharkFunction* function, SharkFrameCache* frame_cache)
+    : SharkStateScanner(function), _frame_cache(frame_cache) {}
+
+ private:
+  SharkFrameCache* _frame_cache;
+
+ protected:
+  SharkFrameCache* frame_cache() const
+  {
+    return _frame_cache;
+  }
 
  protected:
   SharkBuilder* builder() const
   {
     return function()->builder();
   }  
-
- private:
-  int _bci;
-  
- protected:
-  int bci() const
-  {
-    return _bci;
-  }
 
   // Helper
  protected:
@@ -66,8 +67,17 @@ class SharkCacherDecacher : public SharkStateScanner {
 
 class SharkDecacher : public SharkCacherDecacher {
  protected:
-  SharkDecacher(SharkFunction* function, int bci)
-    : SharkCacherDecacher(function, bci) {}
+  SharkDecacher(SharkFunction* function, SharkFrameCache* frame_cache, int bci)
+    : SharkCacherDecacher(function, frame_cache), _bci(bci) {}
+
+ private:
+  int _bci;
+  
+ protected:
+  int bci() const
+  {
+    return _bci;
+  }
 
  private:
   DebugInformationRecorder* debug_info() const
@@ -171,12 +181,21 @@ class SharkDecacher : public SharkCacherDecacher {
       return Location::normal;
     return Location::invalid;
   }
+
+  // Writer helper
+ protected:
+  void write_value_to_frame(const llvm::Type* type,
+                            llvm::Value*      value,
+                            int               offset);
 };
 
 class SharkJavaCallDecacher : public SharkDecacher {
  public:
-  SharkJavaCallDecacher(SharkFunction* function, int bci, ciMethod* callee)
-    : SharkDecacher(function, bci), _callee(callee) {}
+  SharkJavaCallDecacher(SharkFunction*   function,
+                        SharkFrameCache* frame_cache,
+                        int              bci,
+                        ciMethod*        callee)
+    : SharkDecacher(function, frame_cache, bci), _callee(callee) {}
 
  private:
   ciMethod* _callee;
@@ -220,8 +239,10 @@ class SharkJavaCallDecacher : public SharkDecacher {
 
 class SharkVMCallDecacher : public SharkDecacher {
  public:
-  SharkVMCallDecacher(SharkFunction* function, int bci)
-    : SharkDecacher(function, bci) {}
+  SharkVMCallDecacher(SharkFunction*   function,
+                      SharkFrameCache* frame_cache,
+                      int              bci)
+    : SharkDecacher(function, frame_cache, bci) {}
 
   // Stack slot helpers
  protected:
@@ -256,8 +277,10 @@ class SharkVMCallDecacher : public SharkDecacher {
 
 class SharkTrapDecacher : public SharkDecacher {
  public:
-  SharkTrapDecacher(SharkFunction* function, int bci)
-    : SharkDecacher(function, bci) {}
+  SharkTrapDecacher(SharkFunction*   function,
+                    SharkFrameCache* frame_cache,
+                    int              bci)
+    : SharkDecacher(function, frame_cache, bci) {}
 
   // Stack slot helpers
  protected:
@@ -292,14 +315,14 @@ class SharkTrapDecacher : public SharkDecacher {
 
 class SharkCacher : public SharkCacherDecacher {
  protected:
-  SharkCacher(SharkFunction* function, int bci)
-    : SharkCacherDecacher(function, bci) {}
+  SharkCacher(SharkFunction* function, SharkFrameCache* frame_cache)
+    : SharkCacherDecacher(function, frame_cache) {}
 
   // Callbacks
  protected:
   void process_stack_slot(int index, SharkValue** value, int offset);
 
-  void process_method_slot(llvm::Value** value, int offset);
+  virtual void process_method_slot(llvm::Value** value, int offset);
 
   void process_local_slot(int index, SharkValue** value, int offset);
 
@@ -309,16 +332,22 @@ class SharkCacher : public SharkCacherDecacher {
 
   // Local slot helper
  protected:
-  bool local_slot_needs_read(int index, SharkValue* value)
+  virtual bool local_slot_needs_read(int index, SharkValue* value)
   {
     return value && value->is_jobject();
   }
+
+  // Writer helper
+ protected:
+  llvm::Value* read_value_from_frame(const llvm::Type* type, int offset);
 };
 
 class SharkJavaCallCacher : public SharkCacher {
  public:
-  SharkJavaCallCacher(SharkFunction* function, int bci, ciMethod* callee)
-    : SharkCacher(function, bci), _callee(callee) {}
+  SharkJavaCallCacher(SharkFunction*   function,
+                      SharkFrameCache* frame_cache,
+                      ciMethod*        callee)
+    : SharkCacher(function, frame_cache), _callee(callee) {}
 
  private:
   ciMethod* _callee;
@@ -340,13 +369,48 @@ class SharkJavaCallCacher : public SharkCacher {
 
 class SharkVMCallCacher : public SharkCacher {
  public:
-  SharkVMCallCacher(SharkFunction* function, int bci)
-    : SharkCacher(function, bci) {}
+  SharkVMCallCacher(SharkFunction* function, SharkFrameCache* frame_cache)
+    : SharkCacher(function, frame_cache) {}
 
   // Stack slot helper
  protected:
   bool stack_slot_needs_read(int index, SharkValue* value)
   {
     return value && value->is_jobject();
+  }
+};
+
+class SharkFunctionEntryCacher : public SharkCacher {
+ public:
+  SharkFunctionEntryCacher(SharkFunction*   function,
+                           SharkFrameCache* frame_cache,
+                           llvm::Value*     method)
+    : SharkCacher(function, frame_cache), _method(method) {}
+
+ private:
+  llvm::Value* _method;
+
+ private:
+  llvm::Value* method() const
+  {
+    return _method;
+  }
+
+  // Method slot callback
+ protected:
+  void process_method_slot(llvm::Value** value, int offset);
+
+  // Stack slot helper
+ protected:
+  bool stack_slot_needs_read(int index, SharkValue* value)
+  {
+    ShouldNotReachHere(); // entry block shouldn't have stack
+  }
+
+  // Local slot helper
+ protected:
+  virtual bool local_slot_needs_read(int index, SharkValue* value)
+  {
+    return value != NULL;
   }
 };

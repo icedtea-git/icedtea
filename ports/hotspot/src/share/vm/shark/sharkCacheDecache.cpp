@@ -59,11 +59,10 @@ void SharkDecacher::process_stack_slot(int          index,
 
   // Write the value to the frame if necessary
   if (stack_slot_needs_write(index, value)) {
-    builder()->CreateStore(
+    write_value_to_frame(
+      SharkType::to_stackType(value->basic_type()),
       value->generic_value(),
-      function()->CreateAddressOfFrameEntry(
-        adjusted_offset(value, offset),
-        SharkType::to_stackType(value->basic_type())));
+      adjusted_offset(value, offset));
   }
 
   // Record the value in the oopmap if necessary
@@ -104,11 +103,11 @@ void SharkDecacher::process_exception_slot(int offset)
 void SharkDecacher::process_method_slot(llvm::Value** value, int offset)
 {
   // Decache the method pointer
-  builder()->CreateStore(
+  write_value_to_frame(
+    SharkType::methodOop_type(),
     *value,
-    function()->CreateAddressOfFrameEntry(
-      offset,
-      SharkType::methodOop_type()));
+    offset);
+
   oopmap()->set_oop(slot2reg(offset));  
 }
 
@@ -134,11 +133,10 @@ void SharkDecacher::process_local_slot(int          index,
 
   // Write the value to the frame if necessary
   if (local_slot_needs_write(index, value)) {
-    builder()->CreateStore(
+    write_value_to_frame(
+      SharkType::to_stackType(value->basic_type()),
       value->generic_value(),
-      function()->CreateAddressOfFrameEntry(
-        adjusted_offset(value, offset),
-        SharkType::to_stackType(value->basic_type())));
+      adjusted_offset(value, offset));
   }
 
   // Record the value in the oopmap if necessary
@@ -177,10 +175,9 @@ void SharkCacher::process_stack_slot(int          index,
   if (stack_slot_needs_read(index, value)) {
     *addr = SharkValue::create_generic(
       value->type(),
-      builder()->CreateLoad(
-        function()->CreateAddressOfFrameEntry(
-          adjusted_offset(value, offset),
-          SharkType::to_stackType(value->basic_type()))),
+      read_value_from_frame(
+        SharkType::to_stackType(value->basic_type()),
+        adjusted_offset(value, offset)),
       value->zero_checked());
   }
 }
@@ -188,10 +185,14 @@ void SharkCacher::process_stack_slot(int          index,
 void SharkCacher::process_method_slot(llvm::Value** value, int offset)
 {
   // Cache the method pointer
-  *value = builder()->CreateLoad(
-    function()->CreateAddressOfFrameEntry(
-      offset,
-      SharkType::methodOop_type()));
+  *value = read_value_from_frame(SharkType::methodOop_type(), offset);
+}
+
+void SharkFunctionEntryCacher::process_method_slot(llvm::Value** value,
+                                                   int           offset)
+{
+  // "Cache" the method pointer
+  *value = method();
 }
 
 void SharkCacher::process_local_slot(int          index,
@@ -204,10 +205,28 @@ void SharkCacher::process_local_slot(int          index,
   if (local_slot_needs_read(index, value)) {
     *addr = SharkValue::create_generic(
       value->type(),
-      builder()->CreateLoad(
-        function()->CreateAddressOfFrameEntry(
-          adjusted_offset(value, offset),
-          SharkType::to_stackType(value->basic_type()))),
+      read_value_from_frame(
+        SharkType::to_stackType(value->basic_type()),
+        adjusted_offset(value, offset)),
       value->zero_checked());
   }
+}
+
+void SharkDecacher::write_value_to_frame(const llvm::Type* type,
+                                         llvm::Value*      value,
+                                         int               offset)
+{
+  if (frame_cache()->value(offset) != value) {
+    builder()->CreateStore(
+      value,
+      function()->CreateAddressOfFrameEntry(offset, type));
+  }
+}
+
+Value* SharkCacher::read_value_from_frame(const llvm::Type* type, int offset)
+{
+  Value *result = builder()->CreateLoad(
+    function()->CreateAddressOfFrameEntry(offset, type));
+  frame_cache()->set_value(offset, result);
+  return result;
 }

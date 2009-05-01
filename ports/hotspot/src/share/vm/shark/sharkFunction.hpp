@@ -253,7 +253,7 @@ class SharkFunction : public StackObj {
   }
 
  private:
-  int _oopmap_frame_size;
+  int _extended_frame_size;
   int _stack_slots_offset;
   int _monitors_slots_offset;
   int _exception_slot_offset;
@@ -262,9 +262,13 @@ class SharkFunction : public StackObj {
   int _locals_slots_offset;
 
  public:
+  int extended_frame_size() const
+  {
+    return _extended_frame_size;
+  }
   int oopmap_frame_size() const
   {
-    return _oopmap_frame_size;
+    return extended_frame_size() - arg_size();
   }
   int stack_slots_offset() const
   {

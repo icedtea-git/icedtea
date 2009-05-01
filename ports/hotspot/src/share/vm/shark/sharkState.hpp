@@ -29,21 +29,20 @@ class SharkTopLevelBlock;
 
 class SharkState : public ResourceObj {
  public:
-  SharkState(SharkBlock*    block,
-             SharkFunction* function = NULL,
-             llvm::Value*   method = NULL);
+  SharkState(SharkBlock* block, SharkFunction* function = NULL);
   SharkState(SharkBlock* block, const SharkState* state);
 
  private:
   void initialize(const SharkState* state);
 
  private:
-  SharkBlock*    _block;
-  SharkFunction* _function;
-  llvm::Value*   _method;
-  SharkValue**   _locals;
-  SharkValue**   _stack;
-  SharkValue**   _sp;
+  SharkBlock*      _block;
+  SharkFunction*   _function;
+  llvm::Value*     _method;
+  SharkFrameCache* _frame_cache;
+  SharkValue**     _locals;
+  SharkValue**     _stack;
+  SharkValue**     _sp;
 
  public:
   SharkBlock *block() const
@@ -53,6 +52,10 @@ class SharkState : public ResourceObj {
   SharkFunction *function() const
   {
     return _function;
+  }
+  SharkFrameCache *frame_cache() const
+  {
+    return _frame_cache;
   }
   
  public:
