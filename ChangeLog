@@ -473,6 +473,12 @@
 
 2009-05-04  Mark Wielaard  <mjw@redhat.com>
 
+	* Makefile.am (ICEDTEA_PATCHES): Add icedtea-freetypeversion.patch.
+	* patches/icedtea-freetypeversion.patch: New patch.
+	* HACKING: Document new patch.
+
+2009-05-04  Mark Wielaard  <mjw@redhat.com>
+
 	* Makefile.am (icedtea.stamp): Strip client probes from hotspot.stp
 	when client not available (ENABLE_SYSTEMTAP only).
 	(icedtea-debug.stamp): Likewise.

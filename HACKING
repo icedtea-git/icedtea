@@ -19,6 +19,7 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-debuginfo.patch: Add -g option to build to generate debugging information.
 * icedtea-demos.patch: Fix building of JVMTI demo.
 * icedtea-float-double-trailing-zeros.patch: Remove trailing zeros from Double/Float (PR29/30)
+* icedtea-freetypeversion.patch: freetype backend only requires 2.2.1.
 * icedtea-fonts.patch: Add Fedora fontconfig.
 * icedtea-gcc-suffix.patch: Append $(GCC_SUFFIX) to end of 'gcc' binary name.
 * icedtea-graphics.patch: Fix word wrap in JTextArea (PR57/S6593649)

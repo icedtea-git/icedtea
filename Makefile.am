@@ -2003,6 +2003,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jpegclasses.patch \
 	patches/icedtea-uname.patch \
 	patches/icedtea-ia64-fdlibm.patch \
+	patches/icedtea-freetypeversion.patch \
 	patches/icedtea-fonts.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-ptracefix.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-trapsfix.patch \
