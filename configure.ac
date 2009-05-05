@@ -580,6 +580,9 @@ fi
 if test "x${USE_SYSTEM_CACAO_TRUE}" = x; then
   AC_MSG_ERROR([cannot build with system cacao as additional vm])
 fi
+if test "x${ADD_ZERO_BUILD_TRUE}" = x && test "x${abs_top_builddir}" = "x${abs_top_srcdir}"; then
+  AC_MSG_ERROR([build of additional zero/shark VM requires build with srcdir != builddir])
+fi
 
 if test "x${ZERO_BUILD_TRUE}" = x || test "x${ADD_ZERO_BUILD_TRUE}" = x; then
   dnl Check for libffi headers and libraries.
