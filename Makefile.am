@@ -3075,6 +3075,7 @@ IcedTeaPlugin.o: IcedTeaPlugin.cc
 	$(CXX) $(CXXFLAGS) \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
 	  -DPLUGIN_VERSION="\"$$plugin_version\"" \
+	  -DMOZILLA_VERSION_COLLAPSED="$(MOZILLA_VERSION_COLLAPSED)" \
 	  $(GTK_CFLAGS) \
 	  $(XULRUNNER_CFLAGS) \
 	  -fPIC -c -o $@ $<

@@ -3788,7 +3788,11 @@ IcedTeaPluginFactory::StartAppletviewer ()
     }
   PLUGIN_DEBUG_TWO ("created output fifo:", out_pipe_name);
 
+#if MOZILLA_VERSION_COLLAPSED < 1090100
   result = applet_viewer_process->Run (PR_FALSE, args, numArgs, nsnull);
+#else
+  result = applet_viewer_process->Run (PR_FALSE, args, numArgs);
+#endif
   PLUGIN_CHECK_RETURN ("run process", result);
 
   out_to_appletviewer = g_io_channel_new_file (out_pipe_name,
