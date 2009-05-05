@@ -1,3 +1,9 @@
+2009-05-05  Lillian Angel  <langel@redhat.com>
+
+	Fixes BZ#313
+	* Makefile.am
+	(hotspot): Fixes paths and creates server directory before copy.
+
 2009-05-05  Matthias Klose  <doko@ubuntu.com>
 
 	* configure.ac: Building --with-additional-vms=zero and

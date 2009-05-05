@@ -2757,14 +2757,16 @@ stamps/icedtea-ecj.stamp: stamps/bootstrap-directory-symlink-ecj.stamp \
 	mkdir -p stamps
 	touch stamps/icedtea-ecj.stamp
 
-SERVER_DIR = hotspot/import/jre/lib/$(BUILD_ARCH_DIR)/server
+SERVER_DIR = hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server
 hotspot:
 	rm -f stamps/bootstrap-directory-symlink-ecj.stamp
 	rm -f stamps/icedtea-ecj.stamp
 	rm -f stamps/icedtea-against-ecj.stamp
 	$(ARCH_PREFIX) $(MAKE) hotspot-helper
+	mkdir -p \
+	   $(ECJ_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
 	cp $(ECJ_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
-	   $(ECJ_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(BUILD_ARCH_DIR)/server
+	   $(ECJ_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
 	@echo "Hotspot is served:" $(ECJ_BUILD_OUTPUT_DIR)/j2sdk-image
 
 hotspot-helper: stamps/bootstrap-directory-symlink-ecj.stamp \
