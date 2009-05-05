@@ -41,7 +41,19 @@ SharkCompiler::SharkCompiler()
   ModuleProvider *module_provider = new ExistingModuleProvider(module());
   _memory_manager = new SharkMemoryManager();
   _execution_engine = ExecutionEngine::createJIT(
+#if SHARK_LLVM_VERSION >= 26
+   /*
+    * LLVM 26 introduced a more fine-grained control to set the optimization
+    * level when creating the LLVM JIT.
+    * The optimization level are now specified with a enum instead of a bool.
+    * CodeGenOpt::None = bool true; a fast JIT with reduced optimization.
+    * CodeGenOpt::Default = bool false; a non-fast JIT with optimization.
+    * CodeGenOpt::Aggressive = a new non-fast JIT with best optimization.
+    */
+    module_provider, NULL, memory_manager(), CodeGenOpt::Default);
+#else
     module_provider, NULL, memory_manager(), false);
+#endif
 
   // Initialize Shark components that need it
   SharkType::initialize();

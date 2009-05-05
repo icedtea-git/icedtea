@@ -1,5 +1,11 @@
 2009-05-05 Xerxes Rånby <xerxes@zafena.se>
 
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::SharkCompiler): Use bool or enum to set
+	JIT optimization dependent on the llvm version.
+ 
+2009-05-05 Xerxes Rånby <xerxes@zafena.se>
+
 	* configure.ac (LLVM_CFLAGS): Remove LLVM svn suffix from
 	SHARK_LLVM_VERSION.
 
