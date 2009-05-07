@@ -1,4 +1,18 @@
-OPENJDK_MD5SUM = a451251ebdd9a219b16429369fa72e2a
+OPENJDK_CHANGESET = 4264c2fe6649
+CORBA_CHANGESET = 61116c9789b9
+JAXP_CHANGESET = ae890d80d5df
+JAXWS_CHANGESET = 41a66a42791b
+JDK_CHANGESET = 111759f6793e
+LANGTOOLS_CHANGESET = 2c0076945b1a
+HOTSPOT_CHANGESET = ce2272390558
+
+OPENJDK_MD5SUM = 5a8079dc55a46ae3750fdf7ca0ac0c7e
+CORBA_MD5SUM = f4cad920654b2e26cb10096ef36a6fbd
+JAXP_MD5SUM = 3356a4449fffd71c19aaae98deb04e88
+JAXWS_MD5SUM = c45f0c75b7c2a0091f697e0c83f85e3f
+JDK_MD5SUM = 23b1790a8ca14c91cbed0b5843027d54
+LANGTOOLS_MD5SUM = 51735120c48db8ccaf11296ab5b73c5e
+HOTSPOT_MD5SUM = 94f6a0f2ccf1b79b0950f6f74a73214e
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
@@ -1505,7 +1519,7 @@ dist-openjdk: stamps/extract-cacao.stamp
 
 # Download OpenJDK sources.
 
-HOTSPOT_URL = http://hg.openjdk.java.net/jdk7/hotspot/hotspot/archive/
+OPENJDK_HOTSPOT_URL = http://hg.openjdk.java.net/jdk7/hotspot/hotspot
 
 OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
 CVMI_HG_URL = http://hg.openjdk.java.net/cvmi/cvmi/
@@ -1514,22 +1528,48 @@ CACIOCAVALLO_HG_URL = http://hg.openjdk.java.net/caciocavallo/jdk7/
 BSD_HG_URL = http://hg.openjdk.java.net/bsd-port/bsd-port
 NIO2_HG_URL = http://hg.openjdk.java.net/nio/nio/
 
-OPENJDK_URL = http://hg.openjdk.java.net/icedtea/jdk7/archive/
+OPENJDK_URL = http://hg.openjdk.java.net/icedtea/jdk7
+CORBA_URL = http://hg.openjdk.java.net/icedtea/jdk7/corba
+JAXP_URL = http://hg.openjdk.java.net/icedtea/jdk7/jaxp
+JAXWS_URL = http://hg.openjdk.java.net/icedtea/jdk7/jaxws
+JDK_URL = http://hg.openjdk.java.net/icedtea/jdk7/jdk
+LANGTOOLS_URL = http://hg.openjdk.java.net/icedtea/jdk7/langtools
+HOTSPOT_URL = http://hg.openjdk.java.net/icedtea/jdk7/hotspot
 
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
 else
 if USE_HG
   OPENJDK_SRC_ZIP = 
+  CORBA_SRC_ZIP =
+  JAXP_SRC_ZIP =
+  JAXWS_SRC_ZIP =
+  JDK_SRC_ZIP =
+  LANGTOOLS_SRC_ZIP =
+  HOTSPOT_SRC_ZIP =
 else
-  OPENJDK_SRC_ZIP = tip.tar.gz
+  OPENJDK_SRC_ZIP = openjdk.tar.gz
+  CORBA_SRC_ZIP = corba.tar.gz
+  JAXP_SRC_ZIP = jaxp.tar.gz
+  JAXWS_SRC_ZIP = jaxws.tar.gz
+  JDK_SRC_ZIP = jdk.tar.gz
+  LANGTOOLS_SRC_ZIP = langtools.tar.gz
+  HOTSPOT_SRC_ZIP = hotspot.tar.gz
 endif
 endif
 
 if USE_ALT_HOTSPOT_SRC_ZIP
   HOTSPOT_SRC_ZIP = $(ALT_HOTSPOT_SRC_ZIP)
+endif
+
+if WITH_ALT_HSBUILD
+  HS_MD5SUM = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`" 
+  HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`" 
+  HS_URL = $(OPENJDK_HOTSPOT_URL)
 else
-  HOTSPOT_SRC_ZIP = hotspot.tar.gz
+  HS_MD5SUM = $(HOTSPOT_MD5SUM) 
+  HS_CHANGESET = $(HOTSPOT_CHANGESET) 
+  HS_URL = $(HOTSPOT_URL)
 endif
 
 CACAO_BASE_URL = http://www.complang.tuwien.ac.at
@@ -1574,8 +1614,53 @@ else
 	  then \
 	    mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(OPENJDK_URL)$(OPENJDK_SRC_ZIP) -O $(OPENJDK_SRC_ZIP); \
-	fi
+	  $(WGET) $(OPENJDK_URL)/archive/$(OPENJDK_CHANGESET).tar.gz -O $(OPENJDK_SRC_ZIP); \
+	fi ; \
+	if ! echo "$(CORBA_MD5SUM)  $(CORBA_SRC_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ $(CORBA_SRC_ZIP) ] ; \
+	  then \
+	    mv $(CORBA_SRC_ZIP) $(CORBA_SRC_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(CORBA_URL)/archive/$(CORBA_CHANGESET).tar.gz -O $(CORBA_SRC_ZIP); \
+	fi ; \
+	if ! echo "$(JAXP_MD5SUM)  $(JAXP_SRC_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ $(JAXP_SRC_ZIP) ] ; \
+	  then \
+	    mv $(JAXP_SRC_ZIP) $(JAXP_SRC_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(JAXP_URL)/archive/$(JAXP_CHANGESET).tar.gz -O $(JAXP_SRC_ZIP); \
+	fi ; \
+	if ! echo "$(JAXWS_MD5SUM)  $(JAXWS_SRC_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ $(JAXWS_SRC_ZIP) ] ; \
+	  then \
+	    mv $(JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(JAXWS_URL)/archive/$(JAXWS_CHANGESET).tar.gz -O $(JAXWS_SRC_ZIP); \
+	fi ; \
+	if ! echo "$(JDK_MD5SUM)  $(JDK_SRC_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ $(JDK_SRC_ZIP) ] ; \
+	  then \
+	    mv $(JDK_SRC_ZIP) $(JDK_SRC_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(JDK_URL)/archive/$(JDK_CHANGESET).tar.gz -O $(JDK_SRC_ZIP); \
+	fi ; \
+	if ! echo "$(LANGTOOLS_MD5SUM)  $(LANGTOOLS_SRC_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ $(LANGTOOLS_SRC_ZIP) ] ; \
+	  then \
+	    mv $(LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(LANGTOOLS_URL)/archive/$(LANGTOOLS_CHANGESET).tar.gz -O $(LANGTOOLS_SRC_ZIP); \
+	fi ;
 endif
 endif
 endif
@@ -1584,21 +1669,15 @@ endif
 endif
 endif
 endif
-if WITH_ALT_HSBUILD
-	hotspot_md5sum="`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) \
-	  $(abs_top_srcdir)/hotspot.map`" ; \
-	if ! echo "$${hotspot_md5sum}  $(HOTSPOT_SRC_ZIP)" \
+	if ! echo "$(HS_MD5SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
 	then \
 	  if [ $(HOTSPOT_SRC_ZIP) ] ; \
 	  then \
 	    mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
 	  fi ; \
-	  changeset="`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) \
-	    $(abs_top_srcdir)/hotspot.map`" ; \
-	  $(WGET) $(HOTSPOT_URL)$${changeset}.tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
+	  $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
 	fi
-endif
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
 if USE_ALT_CACAO_SRC_ZIP
@@ -1872,6 +1951,7 @@ else
 	      *.zip) $(UNZIP) -q $(OPENJDK_SRC_ZIP) ;; \
 	      *.tar.*) $(TAR) xf $(OPENJDK_SRC_ZIP) ;; \
 	    esac; \
+	    mv jdk7-$(OPENJDK_CHANGESET) openjdk ; \
 	    if test "x${HSBUILD}" != "xdefault"; then \
 	      rm -rf openjdk/hotspot ; \
 	    fi ; \
@@ -1880,21 +1960,85 @@ else
 	    false; \
 	  fi; \
 	fi; 
-endif
-if WITH_ALT_HSBUILD
-	if test -e ${HOTSPOT_SRC_ZIP} ; \
-	then \
-	  if ! test -d openjdk/hotspot ; \
+	if [ ! -z $(CORBA_SRC_ZIP) ] ; then \
+	  if test -e ${CORBA_SRC_ZIP} ; \
 	  then \
-	    case "$(HOTSPOT_SRC_ZIP)" in \
-	      *.zip) $(UNZIP) -q $(HOTSPOT_SRC_ZIP) ;; \
-	      *.tar.*) $(TAR) xf $(HOTSPOT_SRC_ZIP) ;; \
-	    esac; \
-	    mv hotspot-$$($(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) \
-	      $(abs_top_srcdir)/hotspot.map) openjdk/hotspot ; \
+	    if ! test -d openjdk/corba ; \
+	    then \
+	      case "$(CORBA_SRC_ZIP)" in \
+	        *.zip) $(UNZIP) -q $(CORBA_SRC_ZIP) ;; \
+	        *.tar.*) $(TAR) xf $(CORBA_SRC_ZIP) ;; \
+	      esac; \
+	      mv corba-$(CORBA_CHANGESET) openjdk/corba ; \
+	    fi ; \
+	  fi ; \
+	fi
+	if [ ! -z $(JAXP_SRC_ZIP) ] ; then \
+	  if test -e ${JAXP_SRC_ZIP} ; \
+	  then \
+	    if ! test -d openjdk/jaxp ; \
+	    then \
+	      case "$(JAXP_SRC_ZIP)" in \
+	        *.zip) $(UNZIP) -q $(JAXP_SRC_ZIP) ;; \
+	        *.tar.*) $(TAR) xf $(JAXP_SRC_ZIP) ;; \
+	      esac; \
+	      mv jaxp-$(JAXP_CHANGESET) openjdk/jaxp ; \
+	    fi ; \
+	  fi ; \
+	fi
+	if [ ! -z $(JAXWS_SRC_ZIP) ] ; then \
+	  if test -e ${JAXWS_SRC_ZIP} ; \
+	  then \
+	    if ! test -d openjdk/jaxws ; \
+	    then \
+	      case "$(JAXWS_SRC_ZIP)" in \
+	        *.zip) $(UNZIP) -q $(JAXWS_SRC_ZIP) ;; \
+	        *.tar.*) $(TAR) xf $(JAXWS_SRC_ZIP) ;; \
+	      esac; \
+	      mv jaxws-$(JAXWS_CHANGESET) openjdk/jaxws ; \
+	    fi ; \
+	  fi ; \
+	fi
+	if [ ! -z $(JDK_SRC_ZIP) ] ; then \
+	  if test -e ${JDK_SRC_ZIP} ; \
+	  then \
+	    if ! test -d openjdk/jdk ; \
+	    then \
+	      case "$(JDK_SRC_ZIP)" in \
+	        *.zip) $(UNZIP) -q $(JDK_SRC_ZIP) ;; \
+	        *.tar.*) $(TAR) xf $(JDK_SRC_ZIP) ;; \
+	      esac; \
+	      mv jdk-$(JDK_CHANGESET) openjdk/jdk ; \
+	    fi ; \
+	  fi ; \
+	fi
+	if [ ! -z $(LANGTOOLS_SRC_ZIP) ] ; then \
+	  if test -e ${LANGTOOLS_SRC_ZIP} ; \
+	  then \
+	    if ! test -d openjdk/hotspot ; \
+	    then \
+	      case "$(LANGTOOLS_SRC_ZIP)" in \
+	        *.zip) $(UNZIP) -q $(LANGTOOLS_SRC_ZIP) ;; \
+	        *.tar.*) $(TAR) xf $(LANGTOOLS_SRC_ZIP) ;; \
+	      esac; \
+	      mv langtools-$(LANGTOOLS_CHANGESET) openjdk/langtools ; \
+	    fi ; \
 	  fi ; \
 	fi
 endif
+	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
+	  if test -e ${HOTSPOT_SRC_ZIP} ; \
+	  then \
+	    if ! test -d openjdk/hotspot ; \
+	    then \
+	      case "$(HOTSPOT_SRC_ZIP)" in \
+	        *.zip) $(UNZIP) -q $(HOTSPOT_SRC_ZIP) ;; \
+	        *.tar.*) $(TAR) xf $(HOTSPOT_SRC_ZIP) ;; \
+	      esac; \
+	      mv hotspot-$(HS_CHANGESET) openjdk/hotspot ; \
+	    fi ; \
+	  fi ; \
+	fi
 	chmod -R ug+w openjdk 
 	sh $(srcdir)/fsg.sh ; 
 	find openjdk -name '*.java' \

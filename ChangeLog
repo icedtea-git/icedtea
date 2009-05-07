@@ -1,3 +1,9 @@
+2009-05-07  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Support downloading and extracting from
+	the forest repositories rather than one megatarball.
+
 2009-04-16  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-java2d-dasher.patch,
