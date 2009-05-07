@@ -1,6 +1,20 @@
 2009-05-07  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Support replacing the zips for CORBA,
+	JAXP, JAXWS, JDK and langtools.
+	* acinclude.m4:
+	(WITH_CORBA_SRC_ZIP): Added.
+	(WITH_JAXP_SRC_ZIP): Likewise.
+	(WITH_JAXWS_SRC_ZIP): Likewise.
+	(WITH_JDK_SRC_ZIP): Likewise.
+	(WITH_LANGTOOLS_SRC_ZIP): Likewise.
+	* configure.ac:
+	Include new macros.
+	
+2009-05-07  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Support downloading and extracting from
 	the forest repositories rather than one megatarball.
 

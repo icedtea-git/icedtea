@@ -1572,6 +1572,26 @@ else
   HS_URL = $(HOTSPOT_URL)
 endif
 
+if USE_ALT_CORBA_SRC_ZIP
+  CORBA_SRC_ZIP = $(ALT_CORBA_SRC_ZIP)
+endif
+
+if USE_ALT_JAXP_SRC_ZIP
+  JAXP_SRC_ZIP = $(ALT_JAXP_SRC_ZIP)
+endif
+
+if USE_ALT_JAXWS_SRC_ZIP
+  JAXWS_SRC_ZIP = $(ALT_JAXWS_SRC_ZIP)
+endif
+
+if USE_ALT_JDK_SRC_ZIP
+  JDK_SRC_ZIP = $(ALT_JDK_SRC_ZIP)
+endif
+
+if USE_ALT_LANGTOOLS_SRC_ZIP
+  LANGTOOLS_SRC_ZIP = $(ALT_LANGTOOLS_SRC_ZIP)
+endif
+
 CACAO_BASE_URL = http://www.complang.tuwien.ac.at
 CACAO_URL = $(CACAO_BASE_URL)/cacaojvm/download/cacao-$(CACAO_VERSION)/
 

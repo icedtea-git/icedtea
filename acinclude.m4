@@ -1031,6 +1031,91 @@ AC_DEFUN([WITH_HOTSPOT_SRC_ZIP],
   AC_SUBST(ALT_HOTSPOT_SRC_ZIP)
 ])
 
+AC_DEFUN([WITH_CORBA_SRC_ZIP],
+[
+  AC_MSG_CHECKING(for a CORBA source zip)
+  AC_ARG_WITH([corba-src-zip],
+              [AS_HELP_STRING(--with-corba-src-zip,specify the location of the corba source zip)],
+  [
+    ALT_CORBA_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_CORBA_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_CORBA_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_CORBA_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_CORBA_SRC_ZIP})
+  AC_SUBST(ALT_CORBA_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_JAXP_SRC_ZIP],
+[
+  AC_MSG_CHECKING(for a JAXP source zip)
+  AC_ARG_WITH([jaxp-src-zip],
+              [AS_HELP_STRING(--with-jaxp-src-zip,specify the location of the jaxp source zip)],
+  [
+    ALT_JAXP_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_JAXP_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_JAXP_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_JAXP_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_JAXP_SRC_ZIP})
+  AC_SUBST(ALT_JAXP_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_JAXWS_SRC_ZIP],
+[
+  AC_MSG_CHECKING(for a JAXWS source zip)
+  AC_ARG_WITH([jaxws-src-zip],
+              [AS_HELP_STRING(--with-jaxws-src-zip,specify the location of the jaxws source zip)],
+  [
+    ALT_JAXWS_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_JAXWS_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_JAXWS_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_JAXWS_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_JAXWS_SRC_ZIP})
+  AC_SUBST(ALT_JAXWS_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_JDK_SRC_ZIP],
+[
+  AC_MSG_CHECKING(for a JDK source zip)
+  AC_ARG_WITH([jdk-src-zip],
+              [AS_HELP_STRING(--with-jdk-src-zip,specify the location of the jdk source zip)],
+  [
+    ALT_JDK_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_JDK_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_JDK_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_JDK_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_JDK_SRC_ZIP})
+  AC_SUBST(ALT_JDK_SRC_ZIP)
+])
+
+AC_DEFUN([WITH_LANGTOOLS_SRC_ZIP],
+[
+  AC_MSG_CHECKING(for a langtools source zip)
+  AC_ARG_WITH([langtools-src-zip],
+              [AS_HELP_STRING(--with-langtools-src-zip,specify the location of the langtools source zip)],
+  [
+    ALT_LANGTOOLS_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_LANGTOOLS_SRC_ZIP, test x = x)
+  ],
+  [ 
+    ALT_LANGTOOLS_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_LANGTOOLS_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_LANGTOOLS_SRC_ZIP})
+  AC_SUBST(ALT_LANGTOOLS_SRC_ZIP)
+])
+
 AC_DEFUN([ENABLE_HG],
 [
   AC_MSG_CHECKING(whether to retrieve the source code from Mercurial)
