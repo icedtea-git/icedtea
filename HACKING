@@ -4,12 +4,6 @@ Patches
 PRx denotes bug x in the IcedTea bug database (http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=x)
 Sx denotes bug x in the Sun bug database (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=x)
 
-The following patches are applied early in the build to meet the Free Software guidelines and are also
-included in the tarball resulting from the dist-openjdk-fsg target:
-
-* icedtea-idl.patch: Fix IDL licenses (PR141/S6695776).
-* icedtea-jscheme.patch: Replace use of jscheme.jar with Java alternative (PR140/S6695776).
-
 The fsg.sh script is also run to delete certain files with dubious licensing and/or only occuring
 in binary format.
 
@@ -170,6 +164,12 @@ The following patches are to support Xrender pipeline (-Dsun.java2d.xrender):
 
 Obsolete Patches
 ================
+
+The following patches were applied early in the build to meet the Free Software guidelines and are also
+included in the tarball resulting from the dist-openjdk-fsg target:
+
+* icedtea-idl.patch: Fix IDL licenses (PR141/S6565364).
+* icedtea-jscheme.patch: Replace use of jscheme.jar with Java alternative (PR140/S6695776).
 
 The following patches were previously applied, but have been made obsolete by
 changes to the OpenJDK code base and/or changes within IcedTea:

@@ -1,133 +1,6 @@
-diff -Nru openjdk.orig/jaxws/src/share/classes/javax/xml/bind/ContextFinder.java openjdk/jaxws/src/share/classes/javax/xml/bind/ContextFinder.java
---- openjdk.orig/jaxws/src/share/classes/javax/xml/bind/ContextFinder.java	2008-12-02 15:25:05.000000000 +0000
-+++ openjdk/jaxws/src/share/classes/javax/xml/bind/ContextFinder.java	2008-12-02 15:29:09.000000000 +0000
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
-+ * Copyright 2005-2008 Sun Microsystems, Inc.  All Rights Reserved.
-  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-  *
-  * This code is free software; you can redistribute it and/or modify it
-@@ -128,12 +128,7 @@
-         throws JAXBException
-     {
-         try {
--            Class spiClass;
--            if (classLoader == null) {
--                spiClass = Class.forName(className);
--            } else {
--                spiClass = classLoader.loadClass(className);
--            }
-+            Class spiClass = safeLoadClass(className,classLoader);
- 
-             /*
-              * javax.xml.bind.context.factory points to a class which has a
-@@ -205,11 +200,7 @@
-         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-         Class spi;
-         try {
--            logger.fine("Trying to load "+className);
--            if (cl != null)
--                spi = cl.loadClass(className);
--            else
--                spi = Class.forName(className);
-+            spi = safeLoadClass(className,cl);
-         } catch (ClassNotFoundException e) {
-             throw new JAXBException(e);
-         }
-@@ -483,4 +474,31 @@
-      * For this reason, we have to hard-code the class name into the API.
-      */
-     private static final String PLATFORM_DEFAULT_FACTORY_CLASS = "com.sun.xml.internal.bind.v2.ContextFactory";
-+
-+    /**
-+     * Loads the class, provided that the calling thread has an access to the class being loaded.
-+     */
-+    private static Class safeLoadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-+        logger.fine("Trying to load "+className);
-+        try {
-+            // make sure that the current thread has an access to the package of the given name.
-+            SecurityManager s = System.getSecurityManager();
-+            if (s != null) {
-+                int i = className.lastIndexOf('.');
-+                if (i != -1) {
-+                    s.checkPackageAccess(className.substring(0,i));
-+                }
-+            }
-+
-+            if (classLoader == null)
-+                return Class.forName(className);
-+            else
-+                return classLoader.loadClass(className);
-+        } catch (SecurityException se) {
-+            // anyone can access the platform default factory class without permission
-+            if (PLATFORM_DEFAULT_FACTORY_CLASS.equals(className))
-+                return Class.forName(className);
-+            throw se;
-+        }
-+    }
- }
-diff -Nru openjdk.orig/jaxws/src/share/classes/javax/xml/ws/spi/FactoryFinder.java openjdk/jaxws/src/share/classes/javax/xml/ws/spi/FactoryFinder.java
---- openjdk.orig/jaxws/src/share/classes/javax/xml/ws/spi/FactoryFinder.java	2008-12-02 15:25:04.000000000 +0000
-+++ openjdk/jaxws/src/share/classes/javax/xml/ws/spi/FactoryFinder.java	2008-12-02 15:29:09.000000000 +0000
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2005-2006 Sun Microsystems, Inc.  All Rights Reserved.
-+ * Copyright 2005-2008 Sun Microsystems, Inc.  All Rights Reserved.
-  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-  *
-  * This code is free software; you can redistribute it and/or modify it
-@@ -47,12 +47,7 @@
-                                       ClassLoader classLoader)
-     {
-         try {
--            Class spiClass;
--            if (classLoader == null) {
--                spiClass = Class.forName(className);
--            } else {
--                spiClass = classLoader.loadClass(className);
--            }
-+            Class spiClass = safeLoadClass(className, classLoader);
-             return spiClass.newInstance();
-         } catch (ClassNotFoundException x) {
-             throw new WebServiceException(
-@@ -152,4 +147,33 @@
- 
-         return newInstance(fallbackClassName, classLoader);
-     }
-+
-+
-+    private static final String PLATFORM_DEFAULT_FACTORY_CLASS = "com.sun.xml.internal.ws.spi.ProviderImpl";
-+
-+    /**
-+     * Loads the class, provided that the calling thread has an access to the class being loaded.
-+     */
-+    private static Class safeLoadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-+        try {
-+            // make sure that the current thread has an access to the package of the given name.
-+            SecurityManager s = System.getSecurityManager();
-+            if (s != null) {
-+                int i = className.lastIndexOf('.');
-+                if (i != -1) {
-+                    s.checkPackageAccess(className.substring(0,i));
-+                }
-+            }
-+
-+            if (classLoader == null)
-+                return Class.forName(className);
-+            else
-+                return classLoader.loadClass(className);
-+        } catch (SecurityException se) {
-+            // anyone can access the platform default factory class without permission
-+            if (PLATFORM_DEFAULT_FACTORY_CLASS.equals(className))
-+                return Class.forName(className);
-+            throw se;
-+        }
-+    }
- }
 diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security openjdk/jdk/src/share/lib/security/java.security
---- openjdk.orig/jdk/src/share/lib/security/java.security	2008-11-20 08:44:48.000000000 +0000
-+++ openjdk/jdk/src/share/lib/security/java.security	2008-12-02 15:29:09.000000000 +0000
+--- openjdk.orig/jdk/src/share/lib/security/java.security	2009-03-30 17:23:07.000000000 +0100
++++ openjdk/jdk/src/share/lib/security/java.security	2009-05-12 23:41:24.000000000 +0100
 @@ -127,7 +127,7 @@
  # passed to checkPackageAccess unless the
  # corresponding RuntimePermission ("accessClassInPackage."+package) has
@@ -138,8 +11,8 @@ diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security openjdk/jdk/src/
  #
  # List of comma-separated packages that start with or equal this string
 diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security-solaris openjdk/jdk/src/share/lib/security/java.security-solaris
---- openjdk.orig/jdk/src/share/lib/security/java.security-solaris	2008-11-20 08:44:48.000000000 +0000
-+++ openjdk/jdk/src/share/lib/security/java.security-solaris	2008-12-02 15:29:09.000000000 +0000
+--- openjdk.orig/jdk/src/share/lib/security/java.security-solaris	2009-03-30 17:23:07.000000000 +0100
++++ openjdk/jdk/src/share/lib/security/java.security-solaris	2009-05-12 23:41:24.000000000 +0100
 @@ -128,7 +128,7 @@
  # passed to checkPackageAccess unless the
  # corresponding RuntimePermission ("accessClassInPackage."+package) has
@@ -150,8 +23,8 @@ diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security-solaris openjdk/
  #
  # List of comma-separated packages that start with or equal this string
 diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security-windows openjdk/jdk/src/share/lib/security/java.security-windows
---- openjdk.orig/jdk/src/share/lib/security/java.security-windows	2008-11-20 08:44:48.000000000 +0000
-+++ openjdk/jdk/src/share/lib/security/java.security-windows	2008-12-02 15:29:09.000000000 +0000
+--- openjdk.orig/jdk/src/share/lib/security/java.security-windows	2009-03-30 17:23:07.000000000 +0100
++++ openjdk/jdk/src/share/lib/security/java.security-windows	2009-05-12 23:41:24.000000000 +0100
 @@ -128,7 +128,7 @@
  # passed to checkPackageAccess unless the
  # corresponding RuntimePermission ("accessClassInPackage."+package) has
@@ -163,7 +36,7 @@ diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security-windows openjdk/
  # List of comma-separated packages that start with or equal this string
 diff -Nru openjdk.orig/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java
 --- openjdk.orig/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java	2008-12-02 15:29:09.000000000 +0000
++++ openjdk/jdk/test/com/sun/org/apache/xml/internal/ws/server/Test.java	2009-05-12 23:41:24.000000000 +0100
 @@ -0,0 +1,65 @@
 +/*
 + *  @test

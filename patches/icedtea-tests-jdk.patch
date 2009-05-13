@@ -1,18 +1,6 @@
-diff -Nru openjdk.orig/jdk/test/javax/print/attribute/PSCopiesFlavorTest.java openjdk/jdk/test/javax/print/attribute/PSCopiesFlavorTest.java
---- openjdk.orig/jdk/test/javax/print/attribute/PSCopiesFlavorTest.java	2008-11-14 04:33:18.000000000 +0000
-+++ openjdk/jdk/test/javax/print/attribute/PSCopiesFlavorTest.java	2008-11-14 23:09:15.000000000 +0000
-@@ -38,6 +38,8 @@
- 
-        DocFlavor flavor = DocFlavor.INPUT_STREAM.POSTSCRIPT;
-        PrintService ps = PrintServiceLookup.lookupDefaultPrintService();
-+       if (ps == null)
-+	 return; // No printers available
-        if (!(ps.isDocFlavorSupported(flavor))) {
-            System.out.println("unsupported flavor :" + flavor);
-            return;
 diff -Nru openjdk.orig/jdk/test/sun/tools/native2ascii/NativeErrors.java openjdk/jdk/test/sun/tools/native2ascii/NativeErrors.java
---- openjdk.orig/jdk/test/sun/tools/native2ascii/NativeErrors.java	2008-11-14 04:33:14.000000000 +0000
-+++ openjdk/jdk/test/sun/tools/native2ascii/NativeErrors.java	2008-11-14 23:20:31.000000000 +0000
+--- openjdk.orig/jdk/test/sun/tools/native2ascii/NativeErrors.java	2009-05-12 23:26:50.000000000 +0100
++++ openjdk/jdk/test/sun/tools/native2ascii/NativeErrors.java	2009-05-12 23:28:57.000000000 +0100
 @@ -89,8 +89,8 @@
          }
          //System.out.println("received: " + errorReceived);

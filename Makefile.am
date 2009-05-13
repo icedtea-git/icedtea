@@ -1563,12 +1563,12 @@ if USE_ALT_HOTSPOT_SRC_ZIP
 endif
 
 if WITH_ALT_HSBUILD
-  HS_MD5SUM = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`" 
-  HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`" 
+  HS_MD5SUM = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+  HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
   HS_URL = $(OPENJDK_HOTSPOT_URL)
 else
-  HS_MD5SUM = $(HOTSPOT_MD5SUM) 
-  HS_CHANGESET = $(HOTSPOT_CHANGESET) 
+  HS_MD5SUM = $(HOTSPOT_MD5SUM)
+  HS_CHANGESET = $(HOTSPOT_CHANGESET)
   HS_URL = $(HOTSPOT_URL)
 endif
 
@@ -1688,7 +1688,6 @@ endif
 endif
 endif
 endif
-endif
 	if ! echo "$(HS_MD5SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
 	then \
@@ -1698,6 +1697,7 @@ endif
 	  fi ; \
 	  $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
 	fi
+endif
 if WITH_CACAO
 if !USE_SYSTEM_CACAO
 if USE_ALT_CACAO_SRC_ZIP
@@ -1839,8 +1839,7 @@ else
   SHARK_PATCH =
 endif
 
-ICEDTEA_FSG_PATCHES = \
-	patches/icedtea-idl.patch 
+ICEDTEA_FSG_PATCHES = 
 
 ICEDTEA_PATCHES = \
 	patches/icedtea-version.patch \
@@ -1912,15 +1911,9 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-pr261.patch \
 	patches/icedtea-doc-headers.patch \
 	$(ZERO_PATCHES_COND) \
-        patches/security/icedtea-6484091.patch \
-        patches/security/icedtea-6497740.patch \
-        patches/security/icedtea-6588160.patch \
         patches/security/icedtea-6592792.patch \
-        patches/security/icedtea-6726779.patch \
         patches/security/icedtea-6733959.patch \
-        patches/security/icedtea-6734167.patch \
         patches/security/icedtea-6755943.patch \
-        patches/security/icedtea-6766136.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch \
 	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-jvmtiEnv.patch \

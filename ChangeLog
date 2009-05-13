@@ -1,3 +1,25 @@
+2009-05-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-idl.patch,
+	* patches/security/icedtea-6484091.patch,
+	* patches/security/icedtea-6497740.patch,
+	* patches/security/icedtea-6588160.patch,
+	* patches/security/icedtea-6726779.patch,
+	* patches/security/icedtea-6734167.patch,
+	* patches/security/icedtea-6766136.patch:
+	Removed, applied upstream in b51-b58.
+	* HACKING: Updated.
+	* Makefile.am: Remove obsolete patches,
+	fix bad spacing on some variables.
+	* patches/icedtea-libraries.patch,
+	* patches/icedtea-rhino.patch,
+	* patches/icedtea-security-updates.patch,
+	* patches/icedtea-tests-jdk.patch,
+	* patches/security/icedtea-6592792.patch,
+	* patches/security/icedtea-6733959.patch,
+	* patches/xrender/icedtea-001.patch:
+	Recreated against b58.
+
 2009-05-07  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
