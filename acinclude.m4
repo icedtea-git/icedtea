@@ -1312,3 +1312,111 @@ rmdir tmp.$$
 AM_CONDITIONAL([CP39408_JAVAH], test x"${it_cv_cp39408_javah}" = "xyes")
 AC_PROVIDE([$0])dnl
 ])
+
+AC_DEFUN([FIND_BCEL_JAR],
+[
+  AC_MSG_CHECKING([for bytecode engineering library (BCEL)])
+  AC_ARG_WITH([bcel],
+              [AS_HELP_STRING(--with-bcel,specify location of the bcel jar)],
+  [
+    case "${withval}" in
+      yes)
+	BCEL_JAR=yes
+        ;;
+      no)
+        BCEL_JAR=no
+        ;;
+      *)
+        BCEL_JAR="${withval}"
+	;;
+     esac
+  ],
+  [
+    BCEL_JAR=yes
+  ])
+  if test x"${BCEL_JAR}" = "xyes"; then
+    if test -e "/usr/share/bcel/lib/bcel.jar"; then
+      BCEL_JAR="/usr/share/bcel/lib/bcel.jar"
+    elif test -e "/usr/share/java/bcel.jar"; then
+      BCEL_JAR="/usr/share/java/bcel.jar"
+    fi
+  fi
+  if ! test -f "${BCEL_JAR}"; then
+      AC_MSG_RESULT([not found])
+      AC_MSG_ERROR("A BCEL jar ${BCEL_JAR} was not found.")
+  fi
+  AC_MSG_RESULT(${BCEL_JAR})
+  AC_SUBST(BCEL_JAR)
+])
+
+AC_DEFUN([FIND_XPP3_JAR],
+[
+  AC_MSG_CHECKING([for XML Pull Parser 3 (XPP3)])
+  AC_ARG_WITH([xpp3],
+              [AS_HELP_STRING(--with-xpp3,specify location of the xpp3 jar)],
+  [
+    case "${withval}" in
+      yes)
+	XPP3_JAR=yes
+        ;;
+      no)
+        XPP3_JAR=no
+        ;;
+      *)
+        XPP3_JAR="${withval}"
+	;;
+     esac
+  ],
+  [
+    XPP3_JAR=yes
+  ])
+  if test x"${XPP3_JAR}" = "xyes"; then
+    if test -e "/usr/share/xpp3/lib/xpp3.jar"; then
+      XPP3_JAR="/usr/share/xpp3/lib/xpp3.jar"
+    elif test -e "/usr/share/java/xpp3.jar"; then
+      XPP3_JAR="/usr/share/java/xpp3.jar"
+    fi
+  fi
+  if ! test -f "${XPP3_JAR}"; then
+      AC_MSG_RESULT([not found])
+      AC_MSG_ERROR("A XPP3 jar ${XPP3_JAR} was not found.")
+  fi
+  AC_MSG_RESULT(${XPP3_JAR})
+  AC_SUBST(XPP3_JAR)
+])
+
+AC_DEFUN([FIND_JIBX_DIR],
+[
+  AC_MSG_CHECKING([for JIBX])
+  AC_ARG_WITH([jibx],
+              [AS_HELP_STRING(--with-jibx,specify location of the jibx jars)],
+  [
+    case "${withval}" in
+      yes)
+	JIBX_DIR=yes
+        ;;
+      no)
+        JIBX_DIR=no
+        ;;
+      *)
+        JIBX_DIR="${withval}"
+	;;
+     esac
+  ],
+  [
+    JIBX_DIR=yes
+  ])
+  if test x"${JIBX_DIR}" = "xyes"; then
+    if test -e "/usr/share/jibx/lib/jibx-run.jar"; then
+      JIBX_DIR=/usr/share/jibx/lib
+    elif test -e "/usr/share/java/jibx-run.jar"; then
+      JIBX_DIR=/usr/share/java
+    fi
+  fi
+  if ! test -d "${JIBX_DIR}"; then
+      AC_MSG_RESULT([not found])
+      AC_MSG_ERROR("A JIBX jar directory ${JIBX_JAR} was not found.")
+  fi
+  AC_MSG_RESULT(${JIBX_DIR})
+  AC_SUBST(JIBX_DIR)
+])

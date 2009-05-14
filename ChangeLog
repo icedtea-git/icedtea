@@ -1,6 +1,22 @@
 2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(OPENJDK_VERSION): Added back.
+	(ALT_JIBX_LIBS_PATH): Point to our jibx
+	directory.
+	(extra.stamp): Use OpenJDK source files
+	rather than (possibly non-existant) rt.jar.
+	(jibx.stamp): Add symlinks to JIBX JAR files.
+	* acinclude.m4:
+	(FIND_BCEL_JAR): New macro.
+	(FIND_XPP3_JAR): Likewise.
+	(FIND_JIBX_DIR): Likewise.
+	* configure.ac:
+	Include new macros for finding Nimbus dependencies.
+
+2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Update list of generated files.
 	* generated/sun/awt/X11/XAWTIcon32_java_icon16_png.java,
 	* generated/sun/awt/X11/XAWTIcon32_java_icon24_png.java,

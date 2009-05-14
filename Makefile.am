@@ -1,3 +1,5 @@
+OPENJDK_VERSION = b58
+
 OPENJDK_CHANGESET = 4264c2fe6649
 CORBA_CHANGESET = 61116c9789b9
 JAXP_CHANGESET = ae890d80d5df
@@ -1443,7 +1445,8 @@ ICEDTEA_ENV = \
 	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
 	"JAVAC=" \
 	"RHINO_JAR=$(RHINO_JAR)" \
-	"DISTRIBUTION_ID=$(DIST_ID)"
+	"DISTRIBUTION_ID=$(DIST_ID)" \
+	"ALT_JIBX_LIBS_PATH=$(abs_top_builddir)/jibx"
 
 if WITH_CACAO
 ICEDTEA_ENV += \
@@ -1520,7 +1523,8 @@ ICEDTEA_ENV_ECJ = \
 	"RHINO_JAR=$(RHINO_JAR)" \
 	"JAR_KNOWS_ATFILE=$(JAR_KNOWS_ATFILE)" \
 	"JAR_KNOWS_J_OPTIONS=$(JAR_KNOWS_J_OPTIONS)" \
-	"JAR_ACCEPTS_STDIN_LIST=$(JAR_ACCEPTS_STDIN_LIST)"
+	"JAR_ACCEPTS_STDIN_LIST=$(JAR_ACCEPTS_STDIN_LIST)" \
+	"ALT_JIBX_LIBS_PATH=$(abs_top_builddir)/jibx"
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
@@ -2533,7 +2537,7 @@ NETX_RESOURCE_DIR=openjdk/jdk/src/share/classes/net/sourceforge/jnlp/resources
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	$(ICEDTEAPLUGIN_TARGET) extra-lib/about.jar stamps/cacao.stamp \
+	$(ICEDTEAPLUGIN_TARGET) stamps/jibx.stamp stamps/cacao.stamp \
 	stamps/pulse-java.stamp stamps/visualvm.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
@@ -2592,7 +2596,7 @@ endif
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	$(ICEDTEAPLUGIN_TARGET) extra-lib/about.jar stamps/cacao.stamp \
+	$(ICEDTEAPLUGIN_TARGET) stamps/jibx.stamp stamps/cacao.stamp \
 	stamps/pulse-java.stamp stamps/visualvm.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
@@ -2675,7 +2679,7 @@ endif
 	touch stamps/native-ecj.stamp
 
 stamps/icedtea-ecj.stamp: stamps/bootstrap-directory-symlink-ecj.stamp \
-	stamps/hotspot-tools.stamp stamps/plugs.stamp \
+	stamps/hotspot-tools.stamp stamps/plugs.stamp stamps/jibx.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp stamps/cacao.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
@@ -2922,13 +2926,17 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
 	    -source 1.5 \
-	    -sourcepath extra -cp $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar \
-	    -bootclasspath \'\' @extra-source-files.txt ; \
+	    -sourcepath $(abs_top_srcdir)/extra \
+	    -bootclasspath \
+	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
+	    @extra-source-files.txt ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
             -source 1.5 \
-            -sourcepath extra -cp $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar \
-            -bootclasspath \'\' @extra-source-files.txt ; \
+	    -sourcepath $(abs_top_srcdir)/extra \
+	    -bootclasspath \
+	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
+	    @extra-source-files.txt ; \
 	fi
 	cp -r $(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources \
 	  extra-lib/net/sourceforge/jnlp/about	
@@ -2949,6 +2957,15 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net ; \
 	fi
+
+stamps/jibx.stamp: extra-lib/about.jar
+	mkdir $(abs_top_builddir)/jibx
+	ln -s $(BCEL_JAR) $(abs_top_builddir)/jibx
+	ln -s $(XPP3_JAR) $(abs_top_builddir)/jibx
+	ln -s $(JIBX_DIR)/jibx-bind.jar $(abs_top_builddir)/jibx
+	ln -s $(JIBX_DIR)/jibx-run.jar $(abs_top_builddir)/jibx
+	mkdir -p stamps
+	touch $@
 
 stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
 if WITH_CACAO
@@ -3302,6 +3319,8 @@ icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
 icedtea-debug: stamps/icedtea-debug.stamp
 
 icedtea-ecj: stamps/icedtea-ecj.stamp
+
+jibx: stamps/jibx.stamp
 
 native-ecj: stamps/native-ecj.stamp
 
