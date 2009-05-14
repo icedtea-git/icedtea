@@ -1,5 +1,11 @@
 2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
 
+	* configure.ac:
+	Turn --with-icedtea on by default.
+	Only this build works at present for b58.
+	
+2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Add support for DISABLE_NIMBUS, correct
 	use of bootclasspath/sourcepath in extra-files.stamp

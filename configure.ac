@@ -50,7 +50,7 @@ AC_ARG_WITH([icedtea],
           fi
         ],
         [
-          with_icedtea=false
+          with_icedtea=true
         ])
 AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" = true)
 AC_MSG_RESULT(${with_icedtea})
