@@ -1420,3 +1420,20 @@ AC_DEFUN([FIND_JIBX_DIR],
   AC_MSG_RESULT(${JIBX_DIR})
   AC_SUBST(JIBX_DIR)
 ])
+
+AC_DEFUN([AC_CHECK_ENABLE_NIMBUS],
+[
+  AC_MSG_CHECKING(whether to build the Nimbus L'n'F)
+  AC_ARG_ENABLE([nimbus],
+	      [AS_HELP_STRING(--enable-nimbus,build the Nimbus L'n'F [[default=yes]])],
+  [
+    ENABLE_NIMBUS="${enableval}"
+  ],
+  [
+    ENABLE_NIMBUS=yes
+  ])
+
+  AC_MSG_RESULT(${ENABLE_NIMBUS})
+  AM_CONDITIONAL(ENABLE_NIMBUS, test x"${ENABLE_NIMBUS}" = "xyes")
+  AC_SUBST(ENABLE_NIMBUS)
+])

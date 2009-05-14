@@ -1,6 +1,17 @@
 2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Add support for DISABLE_NIMBUS, correct
+	use of bootclasspath/sourcepath in extra-files.stamp
+	* acinclude.m4:
+	(AC_CHECK_ENABLE_NIMBUS): New macro.
+	* configure.ac:
+	Enable --disable-nimbus, only search for JIBX
+	and dependencies when enabled.
+
+2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(OPENJDK_VERSION): Added back.
 	(ALT_JIBX_LIBS_PATH): Point to our jibx
 	directory.

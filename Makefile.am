@@ -1446,11 +1446,16 @@ ICEDTEA_ENV = \
 	"JAVAC=" \
 	"RHINO_JAR=$(RHINO_JAR)" \
 	"DISTRIBUTION_ID=$(DIST_ID)" \
-	"ALT_JIBX_LIBS_PATH=$(abs_top_builddir)/jibx"
+	"ALT_JIBX_LIBS_PATH=$(JIBX_DEPS_DIR)"
 
 if WITH_CACAO
 ICEDTEA_ENV += \
 	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO_IMPORT_PATH)"
+endif
+
+if !ENABLE_NIMBUS
+ICEDTEA_ENV += \
+	"DISABLE_NIMBUS=true"
 endif
 
 if !ENABLE_OPTIMIZATIONS
@@ -1524,7 +1529,7 @@ ICEDTEA_ENV_ECJ = \
 	"JAR_KNOWS_ATFILE=$(JAR_KNOWS_ATFILE)" \
 	"JAR_KNOWS_J_OPTIONS=$(JAR_KNOWS_J_OPTIONS)" \
 	"JAR_ACCEPTS_STDIN_LIST=$(JAR_ACCEPTS_STDIN_LIST)" \
-	"ALT_JIBX_LIBS_PATH=$(abs_top_builddir)/jibx"
+	"DISABLE_NIMBUS=true"
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
@@ -2881,13 +2886,13 @@ stamps/rt-class-files.stamp: rt-source-files.txt
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt \
 	    -source 1.5 \
 	    -sourcepath \
-	      '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
+	      '$(OPENJDK_SOURCEPATH_DIRS):$(ABS_SOURCE_DIRS)' \
 	    -bootclasspath \'\' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
             -source 1.5 \
             -sourcepath \
-	      '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
+	      '$(OPENJDK_SOURCEPATH_DIRS):$(ABS_SOURCE_DIRS)' \
             -bootclasspath \'\' @$< ; \
 	fi
 	mkdir -p stamps
@@ -2926,16 +2931,16 @@ stamps/extra-class-files.stamp: extra-source-files.txt \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
 	    -source 1.5 \
-	    -sourcepath $(abs_top_srcdir)/extra \
-	    -bootclasspath \
-	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
+	    -sourcepath \
+	       $(abs_top_srcdir)/extra:$(OPENJDK_SOURCEPATH_DIRS):$(ABS_SOURCE_DIRS)' \
+	    -bootclasspath \'\' \
 	    @extra-source-files.txt ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
             -source 1.5 \
-	    -sourcepath $(abs_top_srcdir)/extra \
-	    -bootclasspath \
-	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
+	    -sourcepath \
+	       $(abs_top_srcdir)/extra:$(OPENJDK_SOURCEPATH_DIRS):$(ABS_SOURCE_DIRS)' \
+	    -bootclasspath \'\' \
 	    @extra-source-files.txt ; \
 	fi
 	cp -r $(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources \
@@ -2959,11 +2964,14 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 	fi
 
 stamps/jibx.stamp: extra-lib/about.jar
-	mkdir $(abs_top_builddir)/jibx
-	ln -s $(BCEL_JAR) $(abs_top_builddir)/jibx
-	ln -s $(XPP3_JAR) $(abs_top_builddir)/jibx
-	ln -s $(JIBX_DIR)/jibx-bind.jar $(abs_top_builddir)/jibx
-	ln -s $(JIBX_DIR)/jibx-run.jar $(abs_top_builddir)/jibx
+if ENABLE_NIMBUS
+	JIBX_DEPS_DIR=$(abs_top_builddir)/jibx
+	mkdir $(JIBX_DEPS_DIR)
+	ln -s $(BCEL_JAR) $(JIBX_DEPS_DIR)
+	ln -s $(XPP3_JAR) $(JIBX_DEPS_DIR)
+	ln -s $(JIBX_DIR)/jibx-bind.jar $(JIBX_DEPS_DIR)
+	ln -s $(JIBX_DIR)/jibx-run.jar $(JIBX_DEPS_DIR)
+endif
 	mkdir -p stamps
 	touch $@
 
