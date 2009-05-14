@@ -832,6 +832,43 @@ GENERATED_FILES = generated/com/sun/java/swing/plaf/gtk/resources/gtk_it.java \
 	generated/sun/awt/X11/XIMStatusDrawCallbackStruct.java \
 	generated/sun/awt/X11/XWMHints.java \
 	generated/sun/awt/X11/XCirculateEvent.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_bw16_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_bw24_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_bw32_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_bw48_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_interim16_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_interim24_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_interim32_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_interim48_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_yellow16_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_yellow24_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_yellow32_png.java \
+	generated/sun/awt/X11/XAWTIcon32_security_icon_yellow48_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_bw16_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_bw24_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_bw32_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_bw48_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_interim16_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_interim24_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_interim32_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_interim48_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_yellow16_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_yellow24_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_yellow32_png.java \
+	generated/sun/awt/X11/XAWTIcon64_security_icon_yellow48_png.java \
+	generated/sun/awt/X11/XkbAccessXNotifyEvent.java \
+	generated/sun/awt/X11/XkbActionMessageEvent.java \
+	generated/sun/awt/X11/XkbAnyEvent.java \
+	generated/sun/awt/X11/XkbBellNotifyEvent.java \
+	generated/sun/awt/X11/XkbCompatMapNotifyEvent.java \
+	generated/sun/awt/X11/XkbControlsNotifyEvent.java \
+	generated/sun/awt/X11/XkbEvent.java \
+	generated/sun/awt/X11/XkbExtensionDeviceNotifyEvent.java \
+	generated/sun/awt/X11/XkbIndicatorNotifyEvent.java \
+	generated/sun/awt/X11/XkbMapNotifyEvent.java \
+	generated/sun/awt/X11/XkbNamesNotifyEvent.java \
+	generated/sun/awt/X11/XkbNewKeyboardNotifyEvent.java \
+	generated/sun/awt/X11/XkbStateNotifyEvent.java \
 	generated/sun/awt/resources/awt_sv.java \
 	generated/sun/awt/resources/awt_fr.java \
 	generated/sun/awt/resources/awt.java \

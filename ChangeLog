@@ -1,3 +1,57 @@
+2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Update list of generated files.
+	* generated/sun/awt/X11/XAWTIcon32_java_icon16_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_java_icon24_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_java_icon32_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_java_icon48_png.java:
+	Update.
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_bw16_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_bw24_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_bw32_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_bw48_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_interim16_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_interim24_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_interim32_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_interim48_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_yellow16_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_yellow24_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_yellow32_png.java,
+	* generated/sun/awt/X11/XAWTIcon32_security_icon_yellow48_png.java:
+	Add new generated files.
+	* generated/sun/awt/X11/XAWTIcon64_java_icon16_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_java_icon24_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_java_icon32_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_java_icon48_png.java:
+	Updated.
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_bw16_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_bw24_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_bw32_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_bw48_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_interim16_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_interim24_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_interim32_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_interim48_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_yellow16_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_yellow24_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_yellow32_png.java,
+	* generated/sun/awt/X11/XAWTIcon64_security_icon_yellow48_png.java,
+	* generated/sun/awt/X11/XkbAccessXNotifyEvent.java,
+	* generated/sun/awt/X11/XkbActionMessageEvent.java,
+	* generated/sun/awt/X11/XkbAnyEvent.java,
+	* generated/sun/awt/X11/XkbBellNotifyEvent.java,
+	* generated/sun/awt/X11/XkbCompatMapNotifyEvent.java,
+	* generated/sun/awt/X11/XkbControlsNotifyEvent.java,
+	* generated/sun/awt/X11/XkbEvent.java,
+	* generated/sun/awt/X11/XkbExtensionDeviceNotifyEvent.java,
+	* generated/sun/awt/X11/XkbIndicatorNotifyEvent.java,
+	* generated/sun/awt/X11/XkbMapNotifyEvent.java,
+	* generated/sun/awt/X11/XkbNamesNotifyEvent.java,
+	* generated/sun/awt/X11/XkbNewKeyboardNotifyEvent.java,
+	* generated/sun/awt/X11/XkbStateNotifyEvent.java:
+	Add new generated files.
+
 2009-05-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-idl.patch,
