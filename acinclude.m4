@@ -1264,7 +1264,7 @@ AC_DEFUN([AC_CHECK_FOR_ICEDTEA],
   AC_SUBST(SYSTEM_ICEDTEA_DIR)
 ])
 
-AC_DEFUN([IT_CP39408_JAVAH],[
+AC_DEFUN([IT_JAVAH],[
 AC_CACHE_CHECK([if $JAVAH exhibits Classpath bug 39408], it_cv_cp39408_javah, [
 SUPERCLASS=Test.java
 SUBCLASS=TestImpl.java
@@ -1305,11 +1305,21 @@ else
   echo "configure: failed program was:" >&AC_FD_CC
   cat $SUBCLASS >&AC_FD_CC
 fi
+])
+AC_CACHE_CHECK([if $JAVAH exhibits Classpath bug 40188], it_cv_cp40188_javah, [
+  if test -e $SUBHEADER ; then
+    if cat $SUBHEADER | grep TestImpl_POTATO > /dev/null 2>&1; then
+      it_cv_cp40188_javah=no;
+    else
+      it_cv_cp40188_javah=yes;
+    fi
+  fi
+])
 rm -f $SUBCLASS $SUPERCLASS $SUBHEADER *.class
 cd ..
 rmdir tmp.$$
-])
 AM_CONDITIONAL([CP39408_JAVAH], test x"${it_cv_cp39408_javah}" = "xyes")
+AM_CONDITIONAL([CP40188_JAVAH], test x"${it_cv_cp40188_javah}" = "xyes")
 AC_PROVIDE([$0])dnl
 ])
 

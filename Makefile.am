@@ -49,6 +49,10 @@ PULSE_JAVA_JAVA_SRCDIR =
 PULSE_JAVA_CLASS_DIR =
 endif
 
+if ENABLE_NIMBUS
+JIBX_DEPS_DIR=$(abs_top_builddir)/jibx
+endif
+
 # Top-Level Targets
 # =================
 
@@ -2338,15 +2342,20 @@ stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
 	mkdir -p stamps
 	touch stamps/ports-ecj.stamp
 
-# Patch OpenJDK for plug replacements and ecj.
+# Patch OpenJDK for ecj/gcj builds.
 ICEDTEA_ECJ_PATCHES = patches/ecj/icedtea.patch \
 	patches/ecj/icedtea-hotspot-$(HSBUILD).patch \
 	patches/ecj/icedtea-spp.patch \
 	patches/ecj/icedtea-jopt.patch \
-	patches/ecj/icedtea-sbcs.patch
+	patches/ecj/icedtea-sbcs.patch \
+	patches/ecj/icedtea-dyn.patch
 
 if CP39408_JAVAH
 ICEDTEA_ECJ_PATCHES += patches/ecj/icedtea-pr39408.patch
+endif
+
+if CP40188_JAVAH
+ICEDTEA_ECJ_PATCHES += patches/ecj/icedtea-pr40188.patch
 endif
 
 stamps/patch-ecj.stamp: stamps/clone-ecj.stamp
@@ -2684,7 +2693,7 @@ endif
 	touch stamps/native-ecj.stamp
 
 stamps/icedtea-ecj.stamp: stamps/bootstrap-directory-symlink-ecj.stamp \
-	stamps/hotspot-tools.stamp stamps/plugs.stamp stamps/jibx.stamp \
+	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports-ecj.stamp stamps/patch-ecj.stamp stamps/cacao.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
@@ -2965,7 +2974,6 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 
 stamps/jibx.stamp: extra-lib/about.jar
 if ENABLE_NIMBUS
-	JIBX_DEPS_DIR=$(abs_top_builddir)/jibx
 	mkdir $(JIBX_DEPS_DIR)
 	ln -s $(BCEL_JAR) $(JIBX_DEPS_DIR)
 	ln -s $(XPP3_JAR) $(JIBX_DEPS_DIR)

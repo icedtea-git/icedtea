@@ -50,7 +50,7 @@ AC_ARG_WITH([icedtea],
           fi
         ],
         [
-          with_icedtea=true
+          with_icedtea=false
         ])
 AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" = true)
 AC_MSG_RESULT(${with_icedtea})
@@ -269,7 +269,7 @@ else
   AC_CONFIG_FILES([javap], [chmod +x javap])
 fi
 fi
-IT_CP39408_JAVAH
+IT_JAVAH
 FIND_RHINO_JAR
 WITH_OPENJDK_SRC_ZIP
 WITH_HOTSPOT_SRC_ZIP
