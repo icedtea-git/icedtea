@@ -1,3 +1,10 @@
+2009-04-23 Xerxes Rånby <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(zero_cmpxchg_int_fn): New function.
+	(zero_cmpxchg_ptr_fn): Likewise.
+	(SharkBuilder::init_external_functions): Use the above on arm.
+
 2009-03-23  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp:
