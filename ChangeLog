@@ -1,5 +1,11 @@
 2009-05-19  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Update build to b59 and changesets/md5sums
+	to current IcedTea forest tip.
+
+2009-05-19  Andrew John Hughes  <ahughes@redhat.com>
+
 	* HACKING: Updated with new ecj patches.
 	* Makefile.am: Move JIBX_DEPS_DIR definition
 	to top level, remove jibx.stamp from ecj build.
