@@ -1205,24 +1205,24 @@ void SharkTopLevelBlock::do_call()
 
 void SharkTopLevelBlock::do_instance_check()
 {
-  // Leave the object on the stack until after all the VM calls
-  assert(xstack(0)->is_jobject(), "should be");
-  
-  ciKlass *klass = NULL;
-  if (bc() == Bytecodes::_checkcast) {
-    bool will_link;
-    klass = iter()->get_klass(will_link);
-    if (!will_link) {
-      // XXX why is this not typeflow's responsibility?
-      NOT_PRODUCT(warning("unresolved checkcast in %s", function()->name()));
-      klass = (ciKlass *) xstack(0)->type();
-    }
+  constantTag tag =
+    target()->holder()->constant_pool_tag_at(iter()->get_klass_index());
+  if (!tag.is_klass()) {
+    assert(tag.is_unresolved_klass(), "should be");
+    do_trapping_instance_check();
   }
+  else {
+    do_full_instance_check();
+  }
+}
+
+void SharkTopLevelBlock::do_full_instance_check()
+{ 
+  bool will_link;
+  ciKlass *klass = iter()->get_klass(will_link);
+  assert(will_link, "should do");
 
   BasicBlock *not_null      = function()->CreateBlock("not_null");
-  BasicBlock *fast_path     = function()->CreateBlock("fast_path");
-  BasicBlock *slow_path     = function()->CreateBlock("slow_path");
-  BasicBlock *got_klass     = function()->CreateBlock("got_klass");
   BasicBlock *subtype_check = function()->CreateBlock("subtype_check");
   BasicBlock *is_instance   = function()->CreateBlock("is_instance");
   BasicBlock *not_instance  = function()->CreateBlock("not_instance");
@@ -1235,9 +1235,12 @@ void SharkTopLevelBlock::do_instance_check()
     IC_NOT_INSTANCE,
   };
 
+  // Pop the object off the stack
+  Value *object = pop()->jobject_value();
+  
   // Null objects aren't instances of anything
   builder()->CreateCondBr(
-    builder()->CreateICmpEQ(xstack(0)->jobject_value(), LLVMValue::null()),
+    builder()->CreateICmpEQ(object, LLVMValue::null()),
     merge2, not_null);
   BasicBlock *null_block = builder()->GetInsertBlock();
   SharkState *null_state = current_state()->copy();
@@ -1245,42 +1248,11 @@ void SharkTopLevelBlock::do_instance_check()
   // Get the class we're checking against
   builder()->SetInsertPoint(not_null);
   SharkConstantPool constants(this);
-  Value *tag = constants.tag_at(iter()->get_klass_index());
-  builder()->CreateCondBr(
-    builder()->CreateOr(
-      builder()->CreateICmpEQ(
-        tag, LLVMValue::jbyte_constant(JVM_CONSTANT_UnresolvedClass)),
-      builder()->CreateICmpEQ(
-        tag, LLVMValue::jbyte_constant(JVM_CONSTANT_UnresolvedClassInError))),
-    slow_path, fast_path);
-
-  // The fast path
-  builder()->SetInsertPoint(fast_path);
-  BasicBlock *fast_block = builder()->GetInsertBlock();
-  SharkState *fast_state = current_state()->copy();
-  Value *fast_klass = constants.object_at(iter()->get_klass_index());
-  builder()->CreateBr(got_klass);
-
-  // The slow path
-  builder()->SetInsertPoint(slow_path);
-  call_vm(
-    SharkRuntime::resolve_klass(),
-    LLVMValue::jint_constant(iter()->get_klass_index()));
-  Value *slow_klass = function()->CreateGetVMResult();
-  BasicBlock *slow_block = builder()->GetInsertBlock();  
-  builder()->CreateBr(got_klass);
-
-  // We have the class to test against
-  builder()->SetInsertPoint(got_klass);
-  current_state()->merge(fast_state, fast_block, slow_block);
-  PHINode *check_klass = builder()->CreatePHI(
-    SharkType::jobject_type(), "check_klass");
-  check_klass->addIncoming(fast_klass, fast_block);
-  check_klass->addIncoming(slow_klass, slow_block);
+  Value *check_klass = constants.object_at(iter()->get_klass_index());
 
   // Get the class of the object being tested
   Value *object_klass = builder()->CreateValueOfStructEntry(
-    xstack(0)->jobject_value(), in_ByteSize(oopDesc::klass_offset_in_bytes()),
+    object, in_ByteSize(oopDesc::klass_offset_in_bytes()),
     SharkType::jobject_type(),
     "object_klass");
 
@@ -1322,9 +1294,6 @@ void SharkTopLevelBlock::do_instance_check()
   result->addIncoming(LLVMValue::jint_constant(IC_IS_NULL), null_block);
   result->addIncoming(nonnull_result, nonnull_block);
 
-  // We can finally pop the object!
-  Value *object = pop()->jobject_value();
-
   // Handle the result
   if (bc() == Bytecodes::_checkcast) {
     BasicBlock *failure = function()->CreateBlock("failure");
@@ -1349,6 +1318,34 @@ void SharkTopLevelBlock::do_instance_check()
           builder()->CreateICmpEQ(
             result, LLVMValue::jint_constant(IC_IS_INSTANCE)),
           SharkType::jint_type(), false), false));
+  }
+}
+
+void SharkTopLevelBlock::do_trapping_instance_check()
+{
+  BasicBlock *not_null = function()->CreateBlock("not_null");
+  BasicBlock *is_null  = function()->CreateBlock("null");
+
+  // Leave the object on the stack so it's there if we trap
+  builder()->CreateCondBr(
+    builder()->CreateICmpEQ(xstack(0)->jobject_value(), LLVMValue::null()),
+    is_null, not_null);
+  SharkState *saved_state = current_state()->copy();
+
+  // If it's not null then we need to trap
+  builder()->SetInsertPoint(not_null);
+  set_current_state(saved_state->copy());
+  do_trap(
+    Deoptimization::make_trap_request(
+      Deoptimization::Reason_uninitialized,
+      Deoptimization::Action_reinterpret));
+
+  // If it's null then we're ok
+  builder()->SetInsertPoint(is_null);
+  set_current_state(saved_state);
+  if (bc() == Bytecodes::_instanceof) {
+    pop();
+    push(SharkValue::jint_constant(0));
   }
 }
 

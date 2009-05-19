@@ -37,7 +37,6 @@ Constant* SharkRuntime::_newarray;
 Constant* SharkRuntime::_anewarray;
 Constant* SharkRuntime::_multianewarray;
 Constant* SharkRuntime::_register_finalizer;
-Constant* SharkRuntime::_resolve_klass;
 Constant* SharkRuntime::_safepoint;
 Constant* SharkRuntime::_throw_ArrayIndexOutOfBoundsException;
 Constant* SharkRuntime::_throw_NullPointerException;
@@ -93,10 +92,6 @@ void SharkRuntime::initialize(SharkBuilder* builder)
     (intptr_t) new_instance_C,
     FunctionType::get(Type::VoidTy, params, false),
     "SharkRuntime__new_instance");
-  _resolve_klass = builder->make_function(
-    (intptr_t) resolve_klass_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__resolve_klass");
 
   params.clear();
   params.push_back(SharkType::thread_type());
@@ -369,13 +364,6 @@ JRT_ENTRY(void, SharkRuntime::register_finalizer_C(JavaThread* thread,
   assert(object->is_oop(), "should be");
   assert(object->klass()->klass_part()->has_finalizer(), "should have");
   instanceKlass::register_finalizer(instanceOop(object), CHECK);
-}
-JRT_END
-
-JRT_ENTRY(void, SharkRuntime::resolve_klass_C(JavaThread* thread, int index))
-{
-  klassOop klass = method(thread)->constants()->klass_at(index, CHECK);
-  thread->set_vm_result(klass);
 }
 JRT_END
 

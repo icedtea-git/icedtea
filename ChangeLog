@@ -1,3 +1,23 @@
+2009-04-28  Gary Benson  <gbenson@redhat.com>
+
+	* patches/hotspot/default/icedtea-shark.patch
+	(ciInstanceKlass::constant_pool_tag_at): New method.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::do_full_instance_check): New method.
+	(SharkTopLevelBlock::do_trapping_instance_check): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::do_instance_check): Split.
+	(SharkTopLevelBlock::do_full_instance_check): New method.
+	(SharkTopLevelBlock::do_trapping_instance_check): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp
+	(SharkRuntime::_resolve_klass): Removed.
+	(SharkRuntime::resolve_klass): Likewise.
+	(SharkRuntime::resolve_klass_C): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::_resolve_klass): Likewise.
+	(SharkRuntime::resolve_klass_C): Likewise.
+	(SharkRuntime::initialize): Removed _resolve_klass init.
+
 2009-04-27  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp

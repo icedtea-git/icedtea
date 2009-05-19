@@ -1,12 +1,21 @@
 diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.cpp openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.cpp
---- openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	2009-03-05 08:25:32.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	2009-03-19 14:32:38.000000000 +0000
-@@ -548,3 +548,14 @@
+--- openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	2009-05-19 16:10:18.000000000 +0100
+@@ -548,3 +548,23 @@
    }
    return impl;
  }
 +
 +#ifdef SHARK
++// ------------------------------------------------------------------
++// ciInstanceKlass::constant_pool_tag_at
++//
++// What is in this constant pool slot?
++constantTag ciInstanceKlass::constant_pool_tag_at(int index) {
++  VM_ENTRY_MARK;
++  return get_instanceKlass()->constants()->tag_at(index);
++}
++ 
 +// ------------------------------------------------------------------
 +// ciInstanceKlass::is_cache_entry_resolved
 +//
@@ -17,21 +26,24 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.cpp openjdk/hotsp
 +}
 +#endif // SHARK
 diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.hpp openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.hpp
---- openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	2009-03-05 08:25:32.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	2009-03-19 14:32:38.000000000 +0000
-@@ -198,4 +198,9 @@
+--- openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	2009-05-19 16:11:21.000000000 +0100
+@@ -198,4 +198,12 @@
    // What kind of ciObject is this?
    bool is_instance_klass() { return true; }
    bool is_java_klass()     { return true; }
 +
 +#ifdef SHARK
-+  // Is this entry in the constant pool cache resolved?
-+  bool is_cache_entry_resolved(int index, Bytecodes::Code opcode);
++ // What is in this constant pool slot?
++ constantTag constant_pool_tag_at(int index);
++
++ // Is this entry in the constant pool cache resolved?
++ bool is_cache_entry_resolved(int index, Bytecodes::Code opcode);
 +#endif // SHARK
  };
 diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciMethod.cpp openjdk/hotspot/src/share/vm/ci/ciMethod.cpp
---- openjdk.orig/hotspot/src/share/vm/ci/ciMethod.cpp	2009-03-05 08:25:32.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/ci/ciMethod.cpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/ci/ciMethod.cpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/ci/ciMethod.cpp	2009-05-19 16:07:37.000000000 +0100
 @@ -56,9 +56,9 @@
    _liveness           = NULL;
    _bcea = NULL;
@@ -98,8 +110,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciMethod.cpp openjdk/hotspot/src/
  
  // ------------------------------------------------------------------
 diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciMethod.hpp openjdk/hotspot/src/share/vm/ci/ciMethod.hpp
---- openjdk.orig/hotspot/src/share/vm/ci/ciMethod.hpp	2009-03-05 08:25:32.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/ci/ciMethod.hpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/ci/ciMethod.hpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/ci/ciMethod.hpp	2009-05-19 16:07:37.000000000 +0100
 @@ -69,7 +69,7 @@
  
    // Optional liveness analyzer.
@@ -110,8 +122,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciMethod.hpp openjdk/hotspot/src/
  #endif
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp openjdk/hotspot/src/share/vm/code/nmethod.cpp
---- openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp	2009-03-05 08:25:32.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/code/nmethod.cpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/code/nmethod.cpp	2009-05-19 16:07:37.000000000 +0100
 @@ -65,6 +65,11 @@
    assert(compiler() != NULL, "must be");
    return compiler()->is_c2();
@@ -150,8 +162,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp openjdk/hotspot/src
      tty->print("(nm) ");
    }
 diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.hpp openjdk/hotspot/src/share/vm/code/nmethod.hpp
---- openjdk.orig/hotspot/src/share/vm/code/nmethod.hpp	2009-03-05 08:25:32.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/code/nmethod.hpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/code/nmethod.hpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/code/nmethod.hpp	2009-05-19 16:07:37.000000000 +0100
 @@ -318,6 +318,7 @@
  
    bool is_compiled_by_c1() const;
@@ -161,8 +173,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.hpp openjdk/hotspot/src
    // boundaries for different parts
    address code_begin         () const             { return _entry_point; }
 diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/abstractCompiler.hpp openjdk/hotspot/src/share/vm/compiler/abstractCompiler.hpp
---- openjdk.orig/hotspot/src/share/vm/compiler/abstractCompiler.hpp	2009-03-05 08:25:32.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/compiler/abstractCompiler.hpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/compiler/abstractCompiler.hpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/compiler/abstractCompiler.hpp	2009-05-19 16:07:37.000000000 +0100
 @@ -45,18 +45,26 @@
    // Missing feature tests
    virtual bool supports_native()                 { return true; }
@@ -192,8 +204,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/abstractCompiler.hpp openjd
  
    // Customization
 diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.cpp openjdk/hotspot/src/share/vm/compiler/compileBroker.cpp
---- openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.cpp	2009-03-05 08:25:32.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/compiler/compileBroker.cpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.cpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/compiler/compileBroker.cpp	2009-05-19 16:07:37.000000000 +0100
 @@ -554,6 +554,14 @@
  #endif
  #endif // COMPILER2
@@ -210,8 +222,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.cpp openjdk/h
    _task_free_list = NULL;
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/memory/cardTableModRefBS.hpp openjdk/hotspot/src/share/vm/memory/cardTableModRefBS.hpp
---- openjdk.orig/hotspot/src/share/vm/memory/cardTableModRefBS.hpp	2009-03-05 08:25:33.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/memory/cardTableModRefBS.hpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/memory/cardTableModRefBS.hpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/memory/cardTableModRefBS.hpp	2009-05-19 16:07:37.000000000 +0100
 @@ -44,6 +44,7 @@
    friend class VMStructs;
    friend class CardTableRS;
@@ -221,9 +233,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/memory/cardTableModRefBS.hpp openjdk
    // For debugging.
    friend class GuaranteeNotModClosure;
 diff -Nru openjdk.orig/hotspot/src/share/vm/oops/methodOop.cpp openjdk/hotspot/src/share/vm/oops/methodOop.cpp
---- openjdk.orig/hotspot/src/share/vm/oops/methodOop.cpp	2009-03-05 08:25:34.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/oops/methodOop.cpp	2009-03-19 14:32:38.000000000 +0000
-@@ -727,10 +727,14 @@
+--- openjdk.orig/hotspot/src/share/vm/oops/methodOop.cpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/oops/methodOop.cpp	2009-05-19 16:07:37.000000000 +0100
+@@ -738,10 +738,14 @@
    }
  
    OrderAccess::storestore();
@@ -239,8 +251,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/oops/methodOop.cpp openjdk/hotspot/s
  }
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp openjdk/hotspot/src/share/vm/runtime/deoptimization.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp	2009-03-05 08:25:35.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/deoptimization.cpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/deoptimization.cpp	2009-05-19 16:07:37.000000000 +0100
 @@ -229,6 +229,7 @@
  
    }
@@ -316,8 +328,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp openjdk/h
 -#endif // COMPILER2
 +#endif // COMPILER2 || SHARK
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.cpp openjdk/hotspot/src/share/vm/runtime/globals.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/globals.cpp	2009-03-05 08:25:35.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/globals.cpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/runtime/globals.cpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/globals.cpp	2009-05-19 16:07:37.000000000 +0100
 @@ -176,6 +176,18 @@
    #define C2_NOTPRODUCT_FLAG_STRUCT(type, name, value, doc) { #type, XSTR(name), &name, "{C2 notproduct}", DEFAULT },
  #endif
@@ -348,8 +360,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.cpp openjdk/hotspot/
  };
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp openjdk/hotspot/src/share/vm/runtime/globals.hpp
---- openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp	2009-03-19 14:27:37.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp	2009-05-19 01:11:05.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2009-05-19 16:07:37.000000000 +0100
 @@ -22,7 +22,7 @@
   *
   */
@@ -360,8 +372,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp openjdk/hotspot/
  define_pd_global(bool, UseTLAB,                      false);
  define_pd_global(bool, CICompileOSR,                 false);
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vframeArray.cpp openjdk/hotspot/src/share/vm/runtime/vframeArray.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/vframeArray.cpp	2009-03-05 08:25:35.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/vframeArray.cpp	2009-03-19 14:32:38.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/runtime/vframeArray.cpp	2009-05-14 18:57:58.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vframeArray.cpp	2009-05-19 16:07:37.000000000 +0100
 @@ -64,6 +64,11 @@
        assert(monitor->owner() == NULL || (!monitor->owner()->is_unlocked() && !monitor->owner()->has_bias_pattern()), "object must be null or locked, and unbiased");
        BasicObjectLock* dest = _monitors->at(index);
@@ -387,8 +399,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vframeArray.cpp openjdk/hots
    }
    if (ProfileInterpreter) {
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2009-03-19 14:27:37.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2009-03-19 14:34:18.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2009-05-19 01:11:05.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2009-05-19 16:07:37.000000000 +0100
 @@ -94,6 +94,9 @@
  #ifdef TIERED
    #define VMTYPE "Server"

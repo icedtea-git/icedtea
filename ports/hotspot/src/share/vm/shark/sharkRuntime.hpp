@@ -37,7 +37,6 @@ class SharkRuntime : public AllStatic {
   static llvm::Constant* _anewarray;
   static llvm::Constant* _multianewarray;
   static llvm::Constant* _register_finalizer;
-  static llvm::Constant* _resolve_klass;
   static llvm::Constant* _safepoint;
   static llvm::Constant* _throw_ArrayIndexOutOfBoundsException;
   static llvm::Constant* _throw_NullPointerException;
@@ -75,10 +74,6 @@ class SharkRuntime : public AllStatic {
   {
     return _register_finalizer;
   }
-  static llvm::Constant* resolve_klass()
-  {
-    return _resolve_klass;
-  }
   static llvm::Constant* safepoint()
   {
     return _safepoint;
@@ -110,7 +105,6 @@ class SharkRuntime : public AllStatic {
 
   static void register_finalizer_C(JavaThread* thread, oop object);
 
-  static void resolve_klass_C(JavaThread* thread, int index);
   static void throw_ArrayIndexOutOfBoundsException_C(JavaThread* thread,
                                                      const char* file,
                                                      int         line,
