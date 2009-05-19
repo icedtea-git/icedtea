@@ -250,8 +250,40 @@ SharkTopLevelBlock* SharkTopLevelBlock::bci_successor(int bci) const
 
 void SharkTopLevelBlock::do_zero_check(SharkValue *value)
 {
-  BasicBlock *zero     = function()->CreateBlock("zero");
-  BasicBlock *not_zero = function()->CreateBlock("not_zero");
+  if (value->is_phi() && value->as_phi()->all_incomers_zero_checked()) {
+    function()->add_deferred_zero_check(this, value);
+  }
+  else {
+    BasicBlock *continue_block = function()->CreateBlock("not_zero");
+    SharkState *saved_state = current_state();
+    set_current_state(saved_state->copy());
+    zero_check_value(value, continue_block);
+    builder()->SetInsertPoint(continue_block);
+    set_current_state(saved_state);
+  }
+
+  value->set_zero_checked(true);
+}
+
+void SharkTopLevelBlock::do_deferred_zero_check(SharkValue* value,
+                                                int         bci,
+                                                SharkState* saved_state,
+                                                BasicBlock* continue_block)
+{
+  if (value->as_phi()->all_incomers_zero_checked()) {
+    builder()->CreateBr(continue_block);
+  }
+  else {
+    iter()->force_bci(start());
+    set_current_state(saved_state);  
+    zero_check_value(value, continue_block);
+  }
+}
+
+void SharkTopLevelBlock::zero_check_value(SharkValue* value,
+                                          BasicBlock* continue_block)
+{
+  BasicBlock *zero_block = builder()->CreateBlock(continue_block, "zero");
 
   Value *a, *b;
   switch (value->basic_type()) {
@@ -276,10 +308,10 @@ void SharkTopLevelBlock::do_zero_check(SharkValue *value)
     ShouldNotReachHere();
   }
 
-  builder()->CreateCondBr(builder()->CreateICmpNE(a, b), not_zero, zero);
+  builder()->CreateCondBr(
+    builder()->CreateICmpNE(a, b), continue_block, zero_block);
 
-  builder()->SetInsertPoint(zero);
-  SharkState *saved_state = current_state()->copy();
+  builder()->SetInsertPoint(zero_block);
   if (value->is_jobject()) {
     call_vm_nocheck(
       SharkRuntime::throw_NullPointerException(),
@@ -290,11 +322,6 @@ void SharkTopLevelBlock::do_zero_check(SharkValue *value)
     builder()->CreateUnimplemented(__FILE__, __LINE__);
   } 
   handle_exception(function()->CreateGetPendingException());
-  set_current_state(saved_state);  
-
-  builder()->SetInsertPoint(not_zero);
-
-  value->set_zero_checked(true);
 }
 
 void SharkTopLevelBlock::check_bounds(SharkValue* array, SharkValue* index)
@@ -402,7 +429,7 @@ void SharkTopLevelBlock::handle_exception(Value* exception, bool attempt_catch)
           LLVMValue::jint_constant(i),
           handler->entry_block());
 
-        handler->add_incoming(current_state()->copy());
+        handler->add_incoming(current_state());
       }
 
       builder()->SetInsertPoint(no_handler);
@@ -776,8 +803,6 @@ void SharkTopLevelBlock::do_ret()
 // All propagation of state from one block to the next (via
 // dest->add_incoming) is handled by the next three methods
 // (do_branch, do_if and do_switch) and by handle_exception.
-// Where control flow forks, each successor must have its
-// own copy of the state.
 
 void SharkTopLevelBlock::do_branch(int successor_index)
 {
@@ -808,7 +833,7 @@ void SharkTopLevelBlock::do_if(ICmpInst::Predicate p,
     if_taken->entry_block(), not_taken->entry_block());
 
   if_taken->add_incoming(current_state());
-  not_taken->add_incoming(current_state()->copy());
+  not_taken->add_incoming(current_state());
 }
 
 void SharkTopLevelBlock::do_switch()
@@ -827,7 +852,7 @@ void SharkTopLevelBlock::do_switch()
       switchinst->addCase(
         LLVMValue::jint_constant(switch_key(i)),
         dest_block->entry_block());
-      dest_block->add_incoming(current_state()->copy());      
+      dest_block->add_incoming(current_state());      
     }
   }
 }

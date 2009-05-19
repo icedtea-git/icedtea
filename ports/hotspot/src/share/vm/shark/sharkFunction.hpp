@@ -23,8 +23,10 @@
  *
  */
 
-class SharkTopLevelBlock;
 class SharkMonitor;
+class SharkTopLevelBlock;
+
+class DeferredZeroCheck;
 
 class SharkFunction : public StackObj {
  public:
@@ -44,16 +46,17 @@ class SharkFunction : public StackObj {
   void initialize();
 
  private:
-  SharkCompiler*       _compiler;
-  const char*          _name;
-  ciTypeFlow*          _flow;
-  ciBytecodeStream*    _iter;
-  MacroAssembler*      _masm;
-  llvm::Function*      _function;
-  SharkTopLevelBlock** _blocks;
-  llvm::Value*         _base_pc;
-  llvm::Value*         _thread;
-  int                  _monitor_count;
+  SharkCompiler*                    _compiler;
+  const char*                       _name;
+  ciTypeFlow*                       _flow;
+  ciBytecodeStream*                 _iter;
+  MacroAssembler*                   _masm;
+  llvm::Function*                   _function;
+  SharkTopLevelBlock**              _blocks;
+  llvm::Value*                      _base_pc;
+  llvm::Value*                      _thread;
+  int                               _monitor_count;
+  GrowableArray<DeferredZeroCheck*> _deferred_zero_checks;
 
  public:  
   SharkCompiler* compiler() const
@@ -95,6 +98,10 @@ class SharkFunction : public StackObj {
   int monitor_count() const
   {
     return _monitor_count;
+  }
+  GrowableArray<DeferredZeroCheck*>* deferred_zero_checks()
+  {
+    return &_deferred_zero_checks;
   }
 
  public:
@@ -333,4 +340,12 @@ class SharkFunction : public StackObj {
     builder()->CreateStore(LLVMValue::null(), addr);
     return result;
   }
+
+  // Deferred zero checks
+ public:
+  void add_deferred_zero_check(SharkTopLevelBlock* block,
+                               SharkValue*         value);
+
+ private:
+  void do_deferred_zero_checks();
 };

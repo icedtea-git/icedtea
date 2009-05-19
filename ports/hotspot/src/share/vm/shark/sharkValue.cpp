@@ -34,9 +34,32 @@ SharkValue* SharkNormalValue::clone() const
 {
   return SharkValue::create_generic(type(), generic_value(), zero_checked());
 }
+SharkValue* SharkPHIValue::clone() const
+{
+  return SharkValue::create_phi(type(), (PHINode *) generic_value(), this);
+}
 SharkValue* SharkAddressValue::clone() const
 {
   return SharkValue::address_constant(address_value());
+}
+
+// Casting
+
+bool SharkValue::is_phi() const
+{
+  return false;
+}
+bool SharkPHIValue::is_phi() const
+{
+  return true;
+}
+SharkPHIValue* SharkValue::as_phi()
+{
+  ShouldNotCallThis();
+}
+SharkPHIValue* SharkPHIValue::as_phi()
+{
+  return this;
 }
 
 // Comparison
@@ -225,17 +248,49 @@ Value* SharkNormalValue::intptr_value(SharkBuilder* builder) const
   return builder->CreatePtrToInt(jobject_value(), SharkType::intptr_type());
 }
 
-// Phi-style stuff
+// Phi-style stuff for SharkPHIState::add_incoming
 
-void SharkNormalValue::addIncoming(SharkValue *value, BasicBlock* block)
+void SharkValue::addIncoming(SharkValue *value, BasicBlock* block)
 {
-  assert(llvm::isa<llvm::PHINode>(generic_value()), "should be");
+  ShouldNotCallThis();
+}
+void SharkPHIValue::addIncoming(SharkValue *value, BasicBlock* block)
+{
+  assert(!is_clone(), "shouldn't be");
   ((llvm::PHINode *) generic_value())->addIncoming(
       value->generic_value(), block);
+  if (!value->zero_checked())
+    _all_incomers_zero_checked = false;
 }
 void SharkAddressValue::addIncoming(SharkValue *value, BasicBlock* block)
 {
   assert(this->equal_to(value), "should be");
+}
+
+// Phi-style stuff for SharkState::merge
+
+SharkValue* SharkNormalValue::merge(SharkBuilder* builder,
+                                    SharkValue*   other,
+                                    BasicBlock*   other_block,
+                                    BasicBlock*   this_block,
+                                    const char*   name)
+{
+  assert(type() == other->type(), "should be");
+  assert(zero_checked() == other->zero_checked(), "should be");
+
+  PHINode *phi = builder->CreatePHI(SharkType::to_stackType(type()), name);
+  phi->addIncoming(this->generic_value(), this_block);
+  phi->addIncoming(other->generic_value(), other_block);
+  return SharkValue::create_generic(type(), phi, zero_checked());
+}
+SharkValue* SharkAddressValue::merge(SharkBuilder* builder,
+                                     SharkValue*   other,
+                                     BasicBlock*   other_block,
+                                     BasicBlock*   this_block,
+                                     const char*   name)
+{
+  assert(this->equal_to(other), "should be");
+  return this;
 }
 
 // Repeated null and divide-by-zero check removal

@@ -1,3 +1,41 @@
+2009-03-23  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp:
+	(SharkFunction::_deferred_zero_checks): New field.
+	(SharkFunction::deferred_zero_checks): New method.
+	(SharkFunction::add_deferred_zero_check): Likewise.
+	(SharkFunction::do_deferred_zero_checks): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp:
+	(SharkFunction::DeferredZeroCheck): New class.
+	(SharkFunction::add_deferred_zero_check): New method.
+	(SharkFunction::do_deferred_zero_checks): Likewise.
+	(SharkFunction::initialize): Do deferred zero checks
+	after parsing blocks.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkBlock::zero_check_value): New method.
+	(SharkBlock::do_deferred_zero_check): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkBlock::do_zero_check): Defer ambiguous zero checks.
+	(SharkBlock::zero_check_value): New method.
+	(SharkBlock::do_deferred_zero_check): Likewise.
+	(SharkTopLevelBlock::handle_exception): Don't copy state.
+	(SharkTopLevelBlock::do_if): Likewise.
+	(SharkTopLevelBlock::do_switch): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
+	(SharkPHIValue): New class.
+	(SharkValue::is_phi): New method.
+	(SharkValue::as_phi): Likewise.
+	(SharkValue::create_phi): Likewise.
+	(SharkValue::merge): Likewise.
+	(SharkNormalValue::merge): Likewise.
+	(SharkAddressValue::merge): Likewise.
+	
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkPHIState::SharkPHIState): Create SharkPHIValues.
+	(SharkState::merge): Defer to SharkValue::merge.
+
 2009-05-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

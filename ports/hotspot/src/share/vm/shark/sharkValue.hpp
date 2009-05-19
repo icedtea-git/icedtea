@@ -24,7 +24,9 @@
  */
 
 // Items on the stack and in local variables are tracked using
-// SharkValue objects.  There are two types, SharkNormalValue
+// SharkValue objects.
+// 
+// All SharkValues are one of two core types, SharkNormalValue
 // and SharkAddressValue, but no code outside this file should
 // ever refer to those directly.  The split is because of the
 // way JSRs are handled: the typeflow pass expands them into
@@ -32,8 +34,14 @@
 // popped by ret only exist at compile time.  Having separate
 // classes for these allows us to check that our jsr handling
 // is correct, via assertions.
+// 
+// There is one more type, SharkPHIValue, which is a subclass
+// of SharkNormalValue with a couple of extra methods.  Use of
+// SharkPHIValue outside of this file is acceptable, so long
+// as it is obtained via SharkValue::as_phi().
 
 class SharkBuilder;
+class SharkPHIValue;
 
 class SharkValue : public ResourceObj {
  protected:
@@ -42,6 +50,11 @@ class SharkValue : public ResourceObj {
   // Cloning
  public:
   virtual SharkValue* clone() const = 0;
+
+  // Casting
+ public:
+  virtual bool           is_phi() const;
+  virtual SharkPHIValue* as_phi();
 
   // Comparison
  public:
@@ -180,10 +193,18 @@ class SharkValue : public ResourceObj {
   static inline SharkValue* create_generic(ciType*      type,
                                            llvm::Value* value,
                                            bool         zero_checked);
+  static inline SharkValue* create_phi(ciType*              type,
+                                       llvm::PHINode*       phi,
+                                       const SharkPHIValue* parent = NULL);
 
   // Phi-style stuff
  public:
-  virtual void addIncoming(SharkValue *value, llvm::BasicBlock* block) = 0;
+  virtual void addIncoming(SharkValue* value, llvm::BasicBlock* block);
+  virtual SharkValue* merge(SharkBuilder*     builder,
+                            SharkValue*       other,
+                            llvm::BasicBlock* other_block,
+                            llvm::BasicBlock* this_block,
+                            const char*       name) = 0;
 
   // Repeated null and divide-by-zero check removal
  public:
@@ -245,9 +266,13 @@ class SharkNormalValue : public SharkValue {
   llvm::Value* generic_value() const;
   llvm::Value* intptr_value(SharkBuilder* builder) const;
 
-  // Wrapped PHINodes
+  // Phi-style stuff
  public:
-  void addIncoming(SharkValue *value, llvm::BasicBlock* block);
+  SharkValue* merge(SharkBuilder*     builder,
+                    SharkValue*       other,
+                    llvm::BasicBlock* other_block,
+                    llvm::BasicBlock* this_block,
+                    const char*       name);
 
   // Repeated null and divide-by-zero check removal
  public:
@@ -255,12 +280,51 @@ class SharkNormalValue : public SharkValue {
   void set_zero_checked(bool zero_checked);
 };
 
-inline SharkValue* SharkValue::create_generic(ciType*      type,
-                                              llvm::Value* value,
-                                              bool         zero_checked)
-{
-  return new SharkNormalValue(type, value, zero_checked);
-}
+class SharkPHIValue : public SharkNormalValue {
+  friend class SharkValue;
+
+ protected:
+  SharkPHIValue(ciType* type, llvm::PHINode* phi, const SharkPHIValue *parent)
+    : SharkNormalValue(type, phi, parent && parent->zero_checked()),
+      _parent(parent),
+      _all_incomers_zero_checked(true) {}
+
+ private:
+  const SharkPHIValue* _parent;
+  bool                 _all_incomers_zero_checked;
+
+ private:
+  const SharkPHIValue* parent() const
+  {
+    return _parent;
+  }
+  bool is_clone() const
+  {
+    return parent() != NULL;
+  }
+
+ public:
+  bool all_incomers_zero_checked() const
+  {
+    if (is_clone())
+      return parent()->all_incomers_zero_checked();
+
+    return _all_incomers_zero_checked;
+  }
+
+  // Cloning
+ public:
+  SharkValue* clone() const;
+
+  // Casting
+ public:
+  bool           is_phi() const;
+  SharkPHIValue* as_phi();
+
+  // Phi-style stuff
+ public:
+  void addIncoming(SharkValue *value, llvm::BasicBlock* block);
+};
 
 class SharkAddressValue : public SharkValue {
   friend class SharkValue;
@@ -297,7 +361,28 @@ class SharkAddressValue : public SharkValue {
   // Phi-style stuff
  public:
   void addIncoming(SharkValue *value, llvm::BasicBlock* block);
+  SharkValue* merge(SharkBuilder*     builder,
+                    SharkValue*       other,
+                    llvm::BasicBlock* other_block,
+                    llvm::BasicBlock* this_block,
+                    const char*       name);
 };
+
+// SharkValue methods that can't be declared above
+
+inline SharkValue* SharkValue::create_generic(ciType*      type,
+                                              llvm::Value* value,
+                                              bool         zero_checked)
+{
+  return new SharkNormalValue(type, value, zero_checked);
+}
+
+inline SharkValue* SharkValue::create_phi(ciType*              type,
+                                          llvm::PHINode*       phi,
+                                          const SharkPHIValue* parent)
+{
+  return new SharkPHIValue(type, phi, parent);
+}
 
 inline SharkValue* SharkValue::address_constant(int bci)
 {

@@ -130,14 +130,11 @@ void SharkState::merge(SharkState* other,
                        BasicBlock* other_block,
                        BasicBlock* this_block)
 {
-  PHINode *phi;
-  char name[18];
-
   // Method
   Value *this_method = this->method();
   Value *other_method = other->method();
   if (this_method != other_method) {
-    phi = builder()->CreatePHI(SharkType::methodOop_type(), "method");
+    PHINode *phi = builder()->CreatePHI(SharkType::methodOop_type(), "method");
     phi->addIncoming(this_method, this_block);
     phi->addIncoming(other_method, other_block);
     set_method(phi);
@@ -149,20 +146,12 @@ void SharkState::merge(SharkState* other,
     SharkValue *this_value = this->local(i);
     SharkValue *other_value = other->local(i);
     assert((this_value == NULL) == (other_value == NULL), "should be");
-    if (this_value == other_value)
-      continue;
-
-    ciType *this_type = this_value->type();
-    assert(this_type == other_value->type(), "should be");
-
-    bool this_checked = this_value->zero_checked();
-    assert(this_checked == other_value->zero_checked(), "should be");
-
-    snprintf(name, sizeof(name), "local_%d_", i);
-    phi = builder()->CreatePHI(SharkType::to_stackType(this_type), name);
-    phi->addIncoming(this_value->generic_value(), this_block);
-    phi->addIncoming(other_value->generic_value(), other_block);
-    set_local(i, SharkValue::create_generic(this_type, phi, this_checked));
+    if (this_value != NULL) {
+      char name[18];
+      snprintf(name, sizeof(name), "local_%d_", i);
+      set_local(i, this_value->merge(
+        builder(), other_value, other_block, this_block, name));
+    }
   }
 
   // Expression stack
@@ -171,20 +160,12 @@ void SharkState::merge(SharkState* other,
     SharkValue *this_value = this->stack(i);
     SharkValue *other_value = other->stack(i);
     assert((this_value == NULL) == (other_value == NULL), "should be");
-    if (this_value == other_value)
-      continue;
-
-    ciType *this_type = this_value->type();
-    assert(this_type == other_value->type(), "should be");
-
-    bool this_checked = this_value->zero_checked();
-    assert(this_checked == other_value->zero_checked(), "should be");
-
-    snprintf(name, sizeof(name), "stack_%d_", i);
-    phi = builder()->CreatePHI(SharkType::to_stackType(this_type), name);
-    phi->addIncoming(this_value->generic_value(), this_block);
-    phi->addIncoming(other_value->generic_value(), other_block);
-    set_stack(i, SharkValue::create_generic(this_type, phi, this_checked));
+    if (this_value != NULL) {
+      char name[18];
+      snprintf(name, sizeof(name), "stack_%d_", i);
+      set_stack(i, this_value->merge(
+        builder(), other_value, other_block, this_block, name));
+    }
   }
 }
 
@@ -315,10 +296,8 @@ SharkPHIState::SharkPHIState(SharkTopLevelBlock* block)
     case T_OBJECT:
     case T_ARRAY:
       snprintf(name, sizeof(name), "local_%d_", i);
-      value = SharkValue::create_generic(
-        type,
-        builder()->CreatePHI(SharkType::to_stackType(type), name),
-        false);
+      value = SharkValue::create_phi(
+        type, builder()->CreatePHI(SharkType::to_stackType(type), name));
       break;
 
     case T_ADDRESS:
@@ -355,10 +334,8 @@ SharkPHIState::SharkPHIState(SharkTopLevelBlock* block)
     case T_OBJECT:
     case T_ARRAY:
       snprintf(name, sizeof(name), "stack_%d_", i);
-      value = SharkValue::create_generic(
-        type, 
-        builder()->CreatePHI(SharkType::to_stackType(type), name),
-        false);
+      value = SharkValue::create_phi(
+        type, builder()->CreatePHI(SharkType::to_stackType(type), name));
       break;
 
     case T_ADDRESS:

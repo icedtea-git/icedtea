@@ -185,10 +185,20 @@ class SharkTopLevelBlock : public SharkBlock {
 
   // Helpers
  private:
-  void do_zero_check(SharkValue* value);
   llvm::Value* lookup_for_ldc();
   llvm::Value* lookup_for_field_access();
   void do_branch(int successor_index);
+
+  // Zero checks
+ private:
+  void do_zero_check(SharkValue* value);
+  void zero_check_value(SharkValue* value, llvm::BasicBlock* continue_block);
+
+ public:
+  void do_deferred_zero_check(SharkValue*       value,
+                              int               bci,
+                              SharkState*       saved_state,
+                              llvm::BasicBlock* continue_block);
 
   // VM calls
  private:

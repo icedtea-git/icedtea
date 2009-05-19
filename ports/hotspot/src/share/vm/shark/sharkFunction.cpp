@@ -123,6 +123,7 @@ void SharkFunction::initialize()
 
     block(i)->emit_IR();
   }
+  do_deferred_zero_checks();
 
   // Dump the bitcode, if requested
   if (SharkPrintBitcodeOf != NULL) {
@@ -306,4 +307,81 @@ SharkMonitor* SharkFunction::monitor(Value *index) const
   return new SharkMonitor(
     this,
     builder()->CreateGEP(monitors_slots(), indexes, indexes + 2));
+}
+
+class DeferredZeroCheck : public ResourceObj {
+ public:
+  DeferredZeroCheck(SharkTopLevelBlock* block, SharkValue* value)
+    : _block(block),
+      _value(value),
+      _bci(block->bci()),
+      _state(block->current_state()->copy()),
+      _check_block(builder()->GetInsertBlock()),
+      _continue_block(function()->CreateBlock("not_zero"))
+  {
+    builder()->SetInsertPoint(continue_block());
+  }
+
+ private:
+  SharkTopLevelBlock* _block;
+  SharkValue*         _value;
+  int                 _bci;
+  SharkState*         _state;
+  BasicBlock*         _check_block;
+  BasicBlock*         _continue_block;
+  
+ public:
+  SharkTopLevelBlock* block() const
+  {
+    return _block;
+  }
+  SharkValue* value() const
+  {
+    return _value;
+  }
+  int bci() const
+  {
+    return _bci;
+  } 
+  SharkState* state() const
+  {
+    return _state;
+  } 
+  BasicBlock* check_block() const
+  {
+    return _check_block;
+  }
+  BasicBlock* continue_block() const
+  {
+    return _continue_block;
+  }
+
+ public:
+  SharkBuilder* builder() const
+  {
+    return block()->builder();
+  }
+  SharkFunction* function() const
+  {
+    return block()->function();
+  }
+
+ public:
+  void process() const
+  {
+    builder()->SetInsertPoint(check_block());
+    block()->do_deferred_zero_check(value(), bci(), state(), continue_block());
+  }
+};
+
+void SharkFunction::add_deferred_zero_check(SharkTopLevelBlock* block,
+                                            SharkValue*         value)
+{
+  deferred_zero_checks()->append(new DeferredZeroCheck(block, value));
+}
+
+void SharkFunction::do_deferred_zero_checks()
+{
+  for (int i = 0; i < deferred_zero_checks()->length(); i++)
+    deferred_zero_checks()->at(i)->process();
 }
