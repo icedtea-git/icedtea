@@ -542,6 +542,7 @@ if test "x${SHARK_BUILD_TRUE}" = x; then
   LLVM_CFLAGS=`$LLVM_CONFIG --cflags $llvm_components | \
     sed -e 's/-O.//g' | sed -e 's/-fomit-frame-pointer//g' | \
     sed -e 's/-D_DEBUG//g'`
+  LLVM_CFLAGS="$LLVM_CFLAGS -DSHARK_LLVM_VERSION=`$LLVM_CONFIG --version | sed 's/\.//;s/svn.*//'`"
   LLVM_LDFLAGS=`$LLVM_CONFIG --ldflags $llvm_components`
   LLVM_LIBS=`$LLVM_CONFIG --libs $llvm_components`
 fi
