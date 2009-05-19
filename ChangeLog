@@ -9,6 +9,15 @@
 	* configure.ac (LLVM_CFLAGS): Remove LLVM svn suffix from
 	SHARK_LLVM_VERSION.
 
+2009-04-29  Matthias Klose  <doko@ubuntu.com>
+	    Xerxes Rånby  <xerxes@zafena.se>
+
+	* configure.am (LLVM_CFLAGS): Add SHARK_LLVM_VERSION.
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.cpp,
+	ports/hotspot/src/share/vm/shark/sharkMemoryManager.hpp: New
+	methods getDlsymTable, SetDlsymTable, allocateSpace, dependent
+	on the llvm version.
+
 2009-05-01  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkFrameCache.hpp: New file.

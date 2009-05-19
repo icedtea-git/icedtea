@@ -90,3 +90,24 @@ void SharkMemoryManager::deallocateMemForFunction(const Function* F)
 {
   return mm()->deallocateMemForFunction(F);
 }
+
+#if SHARK_LLVM_VERSION >= 26
+void* SharkMemoryManager::getDlsymTable() const
+{
+  return mm()->getDlsymTable();
+}
+
+void SharkMemoryManager::SetDlsymTable(void *ptr)
+{
+  mm()->SetDlsymTable(ptr);
+}
+
+#endif
+
+#if SHARK_LLVM_VERSION >= 25
+unsigned char *SharkMemoryManager::allocateSpace(intptr_t Size,
+                                                 unsigned int Alignment)
+{
+  return mm()->allocateSpace(Size, Alignment);
+}
+#endif

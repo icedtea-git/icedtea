@@ -71,7 +71,16 @@ class SharkMemoryManager : public llvm::JITMemoryManager {
                          unsigned char* TableStart,
                          unsigned char* TableEnd,
                          unsigned char* FrameRegister);
+#if SHARK_LLVM_VERSION >= 26
+  void* getDlsymTable() const;
+  void SetDlsymTable(void *ptr);
+#endif
   void setMemoryWritable();
   void setMemoryExecutable();
   void deallocateMemForFunction(const llvm::Function* F);
+
+#if SHARK_LLVM_VERSION >= 25
+  unsigned char *allocateSpace(intptr_t Size,
+			       unsigned int Alignment);
+#endif
 };
