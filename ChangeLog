@@ -1,3 +1,8 @@
+2009-05-20  Lillian Angel  <langel@redhat.com>
+
+	* rt/net/sourceforge/jnlp/tools/JarSigner.java: Move creation of 
+	certs outside of loop, so it is not reset during each iteration. 
+
 2009-05-15  Deepak Bhole  <dbhole@redhat.com>
 
 	* Makefile.am: Wire in new plugin build.

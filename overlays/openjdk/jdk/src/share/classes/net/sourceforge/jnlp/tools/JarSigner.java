@@ -199,12 +199,12 @@ public class JarSigner implements CertVerifier {
     public void verifyJars(List<JARDesc> jars, ResourceTracker tracker)
     throws Exception {
 
+	certs = new ArrayList<CertPath>();
         for (int i = 0; i < jars.size(); i++) {
 
             JARDesc jar = (JARDesc) jars.get(i);
             verifiedJars = new ArrayList<String>();
             unverifiedJars = new ArrayList<String>();
-            certs = new ArrayList<CertPath>();
 
             try {
                 
