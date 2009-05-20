@@ -1,3 +1,12 @@
+2009-05-20  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(IT_XULRUNNER_VERSION): New macro.
+	* configure.ac:
+	Move XULRunner version check to its
+	own macro and only execute when the plugin
+	is turned on.
+
 2009-05-05  Deepak Bhole <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Add conditional compilation block.
