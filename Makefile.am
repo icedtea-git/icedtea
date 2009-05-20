@@ -2601,6 +2601,11 @@ if WITH_VISUALVM
 	cp -r netbeans/nbbuild/netbeans_visualvm/profiler3 \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm	
 endif
+if ENABLE_SYSTEMTAP
+	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
+	cp $(abs_top_builddir)/tapset/*.stp \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset
+endif
 	cp $(NETX_RESOURCE_DIR)/about.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib

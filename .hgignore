@@ -33,6 +33,7 @@ platform_zero
 jvm.cfg
 ergo.c
 hotspot-tools/
+tapset/hotspot.stp
 test/hotspot
 test/jdk
 test/langtools

@@ -412,6 +412,23 @@ if test "x${ENABLE_SYSTEMTAP}" = xyes; then
 AC_CHECK_HEADER([sys/sdt.h], [SDT_H_FOUND='yes'],
                 [SDT_H_FOUND='no';
                    AC_MSG_ERROR([systemtap support needs sys/sdt.h header])])
+
+  AC_MSG_CHECKING([for absolute java home install dir])
+  AC_ARG_WITH([abs-install-dir],
+	      [AS_HELP_STRING([--with-abs-install-dir], 
+			      [The absolute path where the j2sdk-image dir will be installed])],
+	      [if test "x${withval}" = x; then
+		 ABS_JAVA_HOME_DIR="`pwd`/openjdk/build/${BUILD_OS_DIR}-${BUILD_ARCH_DIR}/j2sdk-image"
+	       else
+		 ABS_JAVA_HOME_DIR="${withval}"
+	       fi], [ABS_JAVA_HOME_DIR="`pwd`/openjdk/build/${BUILD_OS_DIR}-${BUILD_ARCH_DIR}/j2sdk-image"])
+  AC_MSG_RESULT([${ABS_JAVA_HOME_DIR}])
+  ABS_CLIENT_LIBJVM_SO="${ABS_JAVA_HOME_DIR}/jre/lib/${INSTALL_ARCH_DIR}/client/libjvm.so"
+  ABS_SERVER_LIBJVM_SO="${ABS_JAVA_HOME_DIR}/jre/lib/${INSTALL_ARCH_DIR}/server/libjvm.so"
+  AC_SUBST(ABS_JAVA_HOME_DIR)
+  AC_SUBST(ABS_CLIENT_LIBJVM_SO)
+  AC_SUBST(ABS_SERVER_LIBJVM_SO)
+  AC_CONFIG_FILES([tapset/hotspot.stp])
 fi
 
 dnl Check for libpng headers and libraries.

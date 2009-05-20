@@ -1,0 +1,429 @@
+/* hotspot systemtap tapset.
+   Copyright (C) 2009, Red Hat Inc.
+
+This file is part of IcedTea.
+
+IcedTea is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+IcedTea is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with IcedTea; see the file COPYING.  If not, write to the
+Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301 USA.
+*/
+
+/*
+ Currently only works with full path in process probes below.
+ When things don't seem to work look if the correct
+ jre/lib/[arch]/[client|server]/libjvm.so is used
+ and exists under @ABS_JAVA_HOME_DIR@/.
+ This version of hotspot.stp has been configured to instrument the
+ libjvm.so for arch @INSTALL_ARCH_DIR@ installed at:
+ @ABS_CLIENT_LIBJVM_SO@
+ @ABS_SERVER_LIBJVM_SO@
+ 
+ Each probe defines the probe name and a full probestr which consists
+ of the probe name and between brackets all argument names and values.
+ */
+
+/* hotspot.gc_begin
+ * Triggeres when a system wide garbage collection begins.
+ * Sets is_full if this is a full garbage collect.
+ */
+probe hotspot.gc_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__begin")
+{
+  name = "gc_begin";
+  is_full = $arg1;
+  probestr = sprintf("%s(is_full=%d)", name, is_full);
+}
+
+/* hotspot.gc_end
+   Triggers when a system wide garbage collection ends.
+   Has no arguments.
+ */
+probe hotspot.gc_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__begin")
+{
+  name = "gc_end";
+  probestr = name;
+}
+
+
+/* hotspot.mem_pool_gc_begin
+   Triggers when a memory pool collection begins.
+   Sets manager to the manager name that controls this memory pool
+   (e.g. 'Copy' or 'MarkSweepCompact'), pool to the pool name (e.g.
+   'Code Cache', 'Eden Space', 'Survivor Space', 'Tenured Gen', or
+   'Perm Gen'), initial to the initial byte size of the pool, used
+   to the number bytes in use, committed to the number of committed
+   pages and max to the maximum size of the pool.
+ */
+probe hotspot.mem_pool_gc_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("mem__pool__gc__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("mem__pool__gc__begin")
+{
+  name = "mem_pool_gc_begin";
+  manager = user_string_n($arg1, $arg2);
+  pool = user_string_n($arg3, $arg4);
+  initial = $arg5;
+  used = $arg6;
+  committed = $arg7;
+  max = $arg8;
+  probestr = sprintf("%s(manager='%s',pool='%s',initial=%d,used=%d,committed=%d,max=%d)",
+                     name, manager, pool, initial, used, committed, max);
+}
+
+/* hotspot.mem_pool_gc_end
+   Triggers when a memory pool collection ends.
+   Sets manager to the manager name that controls this memory pool
+   (e.g. 'Copy' or 'MarkSweepCompact'), pool to the pool name (e.g.
+   'Code Cache', 'Eden Space', 'Survivor Space', 'Tenured Gen', or
+   'Perm Gen'), initial to the initial byte size of the pool, used
+   to the number bytes in use, committed to the number of committed
+   pages and max to the maximum size of the pool.
+ */
+probe hotspot.mem_pool_gc_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("mem__pool__gc__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("mem__pool__gc__end")
+{
+  name = "mem_pool_gc_end";
+  manager = user_string_n($arg1, $arg2);
+  pool = user_string_n($arg3, $arg4);
+  initial = $arg5;
+  used = $arg6;
+  committed = $arg7;
+  max = $arg8;
+  probestr = sprintf("%s(manager='%s',pool='%s',initial=%d,used=%d,committed=%d,max=%d)",
+                     name, manager, pool, initial, used, committed, max);
+}
+
+/* hotspot.object_alloc (extended probe)
+   Triggers whenever an object is allocated.
+   Sets thread_id to the current thread id, class to the class name
+   of the object allocated, and size to the size of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+ */
+probe hotspot.object_alloc =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("object__alloc"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("object__alloc")
+{
+  name = "object_alloc";
+  thread_id = $arg1;
+  class = user_string_n($arg2, $arg3);
+  size = $arg3;
+  probestr = sprintf("%s(thread_id=%d,class='%s',size=0x%x)",
+                     name, thread_id, class, size);
+}
+
+/* hotspot.vm_init_begin
+   Triggers at the beginning of the virtual machine initialization.
+   Has no arguments
+ */
+probe hotspot.vm_init_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vm__init__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vm__init__begin")
+{
+  name = "vm_init_begin";
+  probestr = name;
+}
+
+/* hotspot.vm_init_end
+   Triggers at the end of the virtual machine initialization.
+   Has no arguments.
+ */
+probe hotspot.vm_init_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vm__init__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vm__init__end")
+{
+  name = "vm_init_end";
+  probestr = name;
+}
+
+/* hotspot.vm_shutdown
+   Triggers at the shutdown of the virtual machine initialization.
+   Has no arguments.
+ */
+probe hotspot.vm_shutdown =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vm__shutdown"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vm__shutdown")
+{
+  name = "vm_shutdown";
+  probestr = name;
+}
+
+/* hotspot.thread_start
+   Triggers when a java thread is started.
+   Sets name to the name of the thread, id to the java thread id,
+   native_id to the os thread number and is_daemon if the thread
+   is a daemon thread.
+ */
+probe hotspot.thread_start =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__start"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__start")
+{
+  name = "thread_start";
+  thread_name = user_string_n($arg1, $arg2);
+  id = $arg3;
+  native_id = $arg4;
+  is_daemon = $arg5;
+  probestr = sprintf("%s(thread_name='%s',id=%d,native_id=%d,is_daemon=%d)",
+                     name, thread_name, id, native_id, is_daemon);
+}
+
+/* hotspot.thread_stop
+   Triggers when a java thread stops.
+   Sets name to the name of the thread, id to the java thread id,
+   native_id to the os thread number and is_daemon if the thread
+   is a daemon thread.
+ */
+probe hotspot.thread_stop =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__stop"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__stop")
+{
+  name = "thread_stop";
+  thread_name = user_string_n($arg1, $arg2);
+  id = $arg3;
+  native_id = $arg4;
+  is_daemon = $arg5;
+  probestr = sprintf("%s(thread_name='%s',id=%d,native_id=%d,is_daemon=%d)",
+                     name, thread_name, id, native_id, is_daemon);
+}
+
+/* hotspot.class_loaded
+   Triggers when a class is loaded.
+   Sets name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class and is_shared if the
+   class was loaded from a shared archive.
+ */
+probe hotspot.class_loaded =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("class__loaded"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("class__loaded")
+{
+  name = "class_loaded";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  is_shared = $arg4;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,is_shared=%d)",
+                     name, class, classloader_id, is_shared);
+}
+
+/* hotspot.class_unloaded
+   Triggers when a class is unloaded.
+   Sets name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class and is_shared if the
+   class was loaded from a shared archive.
+ */
+probe hotspot.class_unloaded =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("class__unloaded"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("class__unloaded")
+{
+  name = "class_unloaded";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  is_shared = $arg4;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,is_shared=%d)",
+                     name, class, classloader_id, is_shared);
+}
+
+/* hotspot.method_compile_begin
+   Triggers when a method is being compiled.
+   Sets compiler to the name of the compiler (e.g. 'C1' or 'C2'),
+   class to the name of the class, method to the name of the method,
+   and sig to the signature string of the method.
+*/
+probe hotspot.method_compile_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("method__compile__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("method__compile__begin")
+{
+  name = "method_compile_begin";
+  compiler = user_string_n($arg1, $arg2);
+  class = user_string_n($arg3, $arg4);
+  method = user_string_n($arg5, $arg6);
+  sig = user_string_n($arg7, $arg8);
+  probestr = name . "(compiler='" . compiler . "',class='" . class
+           . "',method='" . method . "',sig='" . sig . "')";
+}
+
+/* hotspot.method_compile_end
+   Triggers when a method has been compiled.
+   Sets compiler to the name of the compiler (e.g. 'C1' or 'C2'),
+   class to the name of the class, method to the name of the method,
+   and sig to the signature string of the method.
+*/
+probe hotspot.method_compile_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("method__compile__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("method__compile__end")
+{
+  name = "method_compile_end";
+  compiler = user_string_n($arg1, $arg2);
+  class = user_string_n($arg3, $arg4);
+  method = user_string_n($arg5, $arg6);
+  sig = user_string_n($arg7, $arg8);
+  probestr = name . "(compiler='" . compiler . "',class='" . class
+           . "',method='" . method . "',sig='" . sig . "')";
+}
+
+/* hotspot.monitor_wait (extended probe)
+   Triggers when a thread enters Object.wait().
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor, class to the class name of the object and
+   timeout to the number of ms given (or zero for waiting indefinitely).
+   Needs -XX:+ExtendedDTraceProbes.
+ */
+probe hotspot.monitor_wait =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__wait"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__wait")
+{
+  name = "monitor_wait";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  timeout = $arg5;
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s',timeout=%d)",
+                     name, thread_id, id, class, timeout);
+}
+
+/* hotspot.monitor_waited (extended probe)
+   Triggers when a thread exits Object.wait().
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+ */
+probe hotspot.monitor_waited =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__waited"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__waited")
+{
+  name = "monitor_waited";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+/* Doesn't resolve atm.
+   hotspot.monitor_notify (extended probe)
+   Triggers when a thread calls Object.notify().
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+probe hotspot.monitor_notify =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__notify"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__notify")
+{
+  name = "monitor_notify";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+ */
+
+/* hotspot.monitor_notifyAll (extended probe)
+   Triggers when a thread calls Object.notifyAll().
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+ */
+probe hotspot.monitor_notifyAll =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__notifyAll"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__notifyAll")
+{
+  name = "monitor_notifyAll";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+/* hotspot.monitor_contended_enter (extended probe)
+   Triggers when a thread tries to acquire a monitor (syncronized block)
+   which is currently held by another thread (that other thread will
+   exit the monitor triggering hotspot.monitor_contended_exit at a
+   later time).
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+ */
+probe hotspot.monitor_contended_enter =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__contended__enter"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__contended__enter")
+{
+  name = "monitor_contended_enter";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+/* hotspot.monitor_contended_enter (extended probe)
+   Triggers when a thread acquires a contended monotor (after
+   hotspot.monitor_contended_enter has been triggered on this thread,
+   and the other thread triggered a hotspot.monitor_contended_exit).
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+ */
+probe hotspot.monitor_contended_entered =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__contended__entered"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__contended__entered")
+{
+  name = "monitor_contended_entered";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+/* hotspot.monitor_contended_exit (extended probe)
+   Triggers when a thread tries to exit a monitor (synchronized block)
+   that another thread wants to enter (the other thread has triggered
+   hotspot.monitor_contended_enter).
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+ */
+probe hotspot.monitor_contended_exit =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__contended__exit"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__contended__exit")
+{
+  name = "monitor_contended_exit";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+// Doesn't work yet.
+// method__entry
+// method__return
+
+// Missing
+// compiled__method__load
+// compiled__method__unload
+
+// Extra private probes
+// hashtable__new_entry
+
+// safepoint__begin
+// safepoint__end
+
+// cms__initmark__begin
+// cms__initmark__end
+// cms__remark__begin
+// cms__remark__end
