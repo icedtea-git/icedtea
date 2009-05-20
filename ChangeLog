@@ -1,5 +1,15 @@
 2009-05-20  Andrew John Hughes  <ahughes@redhat.com>
 
+	* HACKING: Updated.
+	
+2009-05-08 Gary Benson <gbenson@redhat.com>
+
+	* Makefile.am: Always apply Zero and Shark patches.
+	* patches/icedtea-test-atomic-operations.patch: Only test on Zero.
+	* HACKING: Updated. 
+
+2009-05-20  Andrew John Hughes  <ahughes@redhat.com>
+
 	* acinclude.m4:
 	(IT_XULRUNNER_VERSION): New macro.
 	* configure.ac:
