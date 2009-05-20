@@ -549,7 +549,39 @@ else
   fi
 fi
 
-if test "x${ZERO_BUILD_TRUE}" = x; then
+AC_MSG_CHECKING(for --with-additional-vms)
+AC_ARG_WITH(additional-vms,
+            AC_HELP_STRING([--with-additional-vms=vm1,vm2,...], [build additional virtual machines. Valid value is a colon separated string with the backend names `cacao', `zero' and `shark'.]),
+[
+if test x$with_additional_vms != x
+then
+  for vm in `echo $with_additional_vms | sed 's/,/ /g'`; do
+    case "x$vm" in
+      xcacao) add_vm_cacao=yes;;
+      xzero)  add_vm_zero=yes;;
+      xshark) add_vm_shark=yes;;
+      *) AC_MSG_ERROR([proper usage is --with-additional-vms=vm1,vm2,...])
+    esac
+  done
+fi])
+AC_MSG_RESULT($with_additional_vms)
+
+AM_CONDITIONAL(ADD_CACAO_BUILD, test x$add_vm_cacao != x)
+AM_CONDITIONAL(ADD_ZERO_BUILD,  test x$add_vm_zero  != x || test x$add_vm_shark != x)
+AM_CONDITIONAL(ADD_SHARK_BUILD, test x$add_vm_shark != x)
+AM_CONDITIONAL(BUILD_CACAO, test x$add_vm_cacao != x || test "x${WITH_CACAO}" = xyes)
+
+if test "x${WITH_CACAO}" = xyes && test "x${ADD_CACAO_BUILD_TRUE}" = x; then
+  AC_MSG_ERROR([additional vm is the default vm])
+fi
+if test "x${ZERO_BUILD_TRUE}" = x && test "x${ADD_ZERO_BUILD_TRUE}" = x; then
+  AC_MSG_ERROR([additional vm is the default vm])
+fi
+if test "x${USE_SYSTEM_CACAO_TRUE}" = x; then
+  AC_MSG_ERROR([cannot build with system cacao as additional vm])
+fi
+
+if test "x${ZERO_BUILD_TRUE}" = x || test "x${ADD_ZERO_BUILD_TRUE}" = x; then
   dnl Check for libffi headers and libraries.
   PKG_CHECK_MODULES(LIBFFI, libffi,[LIBFFI_FOUND=yes],[LIBFFI_FOUND=no])
   if test "x${LIBFFI_FOUND}" = xno
@@ -567,7 +599,7 @@ fi
 AC_SUBST(LIBFFI_CFLAGS)
 AC_SUBST(LIBFFI_LIBS)
 
-if test "x${SHARK_BUILD_TRUE}" = x; then
+if test "x${SHARK_BUILD_TRUE}" = x || test "x${ADD_SHARK_BUILD_TRUE}" = x; then
   FIND_TOOL([LLVM_CONFIG], [llvm-config])
   llvm_components="engine nativecodegen"
   LLVM_CFLAGS=`$LLVM_CONFIG --cflags $llvm_components | \
@@ -580,5 +612,9 @@ fi
 AC_SUBST(LLVM_CFLAGS)
 AC_SUBST(LLVM_LDFLAGS)
 AC_SUBST(LLVM_LIBS)
+
+# Arguments passed to configure.
+AC_SUBST(CONFIGURE_ARGS)
+CONFIGURE_ARGS="$ac_configure_args"
 
 AC_OUTPUT

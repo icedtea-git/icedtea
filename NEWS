@@ -6,6 +6,10 @@ New in release 1.10 (XXXX-XX-XX)
   tapset that can be used to dynamically trace execution of java
   applications at runtime. See the tapset/hotspot.stp file for
   documentation of the various trace points and arguments available.
+- Allow building of other virtual machines besides the default VM. Additional
+  virtual machines on architectures where hotspot is available are cacao
+  and zero (or shark), and cacao, where zero (or shark) is available. It's
+  not possible to build cacao as the default VM, and zero as additional VM.
 
 New in release 1.9 (2009-03-20)
 

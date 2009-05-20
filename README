@@ -183,3 +183,21 @@ This requires the systemtap-sdt-devel package as build dependency and
 optionally the systemtap package at run time when the user want to use
 the tapset to trace java programs. The probes have zero overhead when
 not used and can safely be compiled in even when not used at runtime.
+
+Support for additional VMs
+==========================
+
+Although IcedTea can be built multiple times to use a different virtual
+machine, addtional VM's can be built without building the other components
+multiple times.
+
+On architectures where hotspot is available, use 
+   --with-additional-vms=cacao,zero  (or shark instead of zero)
+on architectures where only zero (or shark) is available, use
+   --with-additional-vms=cacao  
+to build the additional VM's.  It's not possible to build cacao as the 
+default VM, and zero as additional VM.
+
+If the build was configured with --with-additional-vms, the additional VM's
+are available by calling the java with the option `-cacao' or `-zero' (for
+shark as well), or by calling the java tools with `-J-<vm name>'.

@@ -1,3 +1,20 @@
+2009-05-01  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/cacao/launcher.patch: Create new thread depending on the
+	current VM.
+	* Makefile.am (ICEDTEA_PATCHES): Apply unconditionally.
+	(icedtea-against-icedtea): Add dependencies on stamps/add-cacao.stamp,
+	stamps/add-zero.stamp.
+	(icedtea-debug-against-icedtea): Add dependencies on
+	stamps/add-cacao-debug.stamp, stamps/add-zero-debug.stamp.
+	(stamps/add-{cacao,zero}{,-debug}.stamp: New.
+	(clean, stamps/download.stamp, clean-download, stamps/extract.stamp
+	stamps/cacao.stamp): Use BUILD_CACAO instead of WITH_CACAO.
+	(stamps/icedtea.stamp, stamps/icedtea-debug.stamp): Add VM aliases
+	for cacao and zero when configured as ZERO_BUILD or WITH_CACAO.
+	* configure.ac: New option --with-additional-vms=, new conditionals
+	ADD_CACAO_BUILD, ADD_ZERO_BUILD, ADD_SHARK_BUILD, BUILD_CACAO.
+
 2009-05-04  Mark Wielaard  <mjw@redhat.com>
 
 	* Makefile.am (icedtea.stamp): Strip client probes from hotspot.stp

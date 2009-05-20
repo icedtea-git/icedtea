@@ -75,8 +75,13 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports clean-pulse-java
 if ENABLE_PLUGIN
 	rm -f IcedTeaPlugin.o IcedTeaPlugin.so
 endif
+if BUILD_CACAO
 	rm -rf cacao
+endif
 	rm -f jni-common.o
+if ADD_ZERO_BUILD
+	rm -rf zerovm
+endif
 if BUILD_NATIVE_ECJ
 	rm -f native-ecj
 endif
@@ -1748,7 +1753,7 @@ endif
 	  $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
 	fi
 endif
-if WITH_CACAO
+if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 if USE_ALT_CACAO_SRC_ZIP
 else
@@ -1826,7 +1831,7 @@ clean-extract:
 clean-download:
 	rm -f stamps/download.stamp
 	rm -f $(OPENJDK_SRC_ZIP)
-if WITH_CACAO
+if BUILD_CACAO
 	rm -f $(CACAO_SRC_ZIP)
 endif
 if WITH_VISUALVM
@@ -1969,6 +1974,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jvmtiEnv.patch \
 	patches/icedtea-xml-encodinginfo.patch \
 	patches/icedtea-cc-interp-backedge.patch \
+	patches/cacao/launcher.patch \
 	$(DISTRIBUTION_PATCHES)
 
 if WITH_RHINO
@@ -1978,7 +1984,6 @@ endif
 
 if WITH_CACAO
 ICEDTEA_PATCHES += \
-	patches/cacao/launcher.patch \
 	patches/cacao/ignore-tests.patch
 endif
 
@@ -2114,7 +2119,7 @@ endif
 	touch stamps/extract.stamp
 
 stamps/extract-cacao.stamp: stamps/extract.stamp
-if WITH_CACAO
+if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 	if ! test -d cacao ; \
 	then \
@@ -2607,6 +2612,12 @@ endif
 	cp $(NETX_RESOURCE_DIR)/about.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
+if ZERO_BUILD
+	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+endif
+if WITH_CACAO
+	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+endif
 if ENABLE_SYSTEMTAP
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
@@ -2678,6 +2689,12 @@ endif
 	cp $(NETX_RESOURCE_DIR)/default.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib
+if ZERO_BUILD
+	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
+if WITH_CACAO
+	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
 if ENABLE_SYSTEMTAP
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
@@ -2703,11 +2720,15 @@ clean-icedtea: stamps/download.stamp
 
 icedtea-against-icedtea: \
 	stamps/bootstrap-directory-symlink.stamp \
-	stamps/icedtea.stamp
+	stamps/icedtea.stamp \
+	stamps/add-cacao.stamp \
+	stamps/add-zero.stamp
 
 icedtea-debug-against-icedtea: \
 	stamps/bootstrap-directory-symlink.stamp \
-	stamps/icedtea-debug.stamp
+	stamps/icedtea-debug.stamp \
+	stamps/add-cacao-debug.stamp \
+	stamps/add-zero-debug.stamp
 
 # OpenJDK ecj Targets
 # ===================
@@ -3012,10 +3033,10 @@ endif
 	touch $@
 
 stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
-if WITH_CACAO
+if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao && \
-	./configure \
+	$(ARCH_PREFIX) ./configure \
 	  --host=$(host_alias) \
 	  --build=$(build_alias) \
 	  --target=$(target_alias) \
@@ -3024,7 +3045,7 @@ if !USE_SYSTEM_CACAO
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
 	  --with-java-runtime-library-classes=$(abs_top_builddir)/lib/rt \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
-	make -j$(PARALLEL_JOBS) install
+	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
 endif
 endif
 	mkdir -p stamps
@@ -3153,6 +3174,114 @@ if ENABLE_PULSE_JAVA
 endif
 
 # end of pulse-java
+
+# targets for additional VMs
+
+BUILD_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+
+stamps/add-cacao.stamp: stamps/icedtea.stamp stamps/cacao.stamp
+if ADD_CACAO_BUILD
+	mkdir -p $(BUILD_JRE_ARCH_DIR)/cacao
+	install -m 644 cacao/install/lib/libjvm.so \
+		$(BUILD_JRE_ARCH_DIR)/cacao/
+	install -m 644 cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/server/libjsig.so \
+		$(BUILD_JRE_ARCH_DIR)/cacao/
+	install -m 644 cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/server/Xusage.txt \
+		$(BUILD_JRE_ARCH_DIR)/cacao/
+	printf -- '-cacao KNOWN\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+else
+	printf -- '-cacao ERROR\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+endif
+	touch $@
+
+stamps/add-cacao-debug.stamp: stamps/icedtea-debug.stamp stamps/cacao.stamp
+if ADD_CACAO_BUILD
+	mkdir -p $(BUILD_DEBUG_JRE_ARCH_DIR)/cacao
+	install -m 644 cacao/install/lib/libjvm.so \
+		$(BUILD_DEBUG_JRE_ARCH_DIR)/cacao/
+	install -m 644 cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/server/libjsig.so \
+		$(BUILD_DEBUG_JRE_ARCH_DIR)/cacao/
+	install -m 644 cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/server/Xusage.txt \
+		$(BUILD_DEBUG_JRE_ARCH_DIR)/cacao/
+	printf -- '-cacao KNOWN\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+else
+	printf -- '-cacao ERROR\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
+	touch $@
+
+
+# configure script arguments, quoted in single quotes
+CONFIGURE_ARGS = @CONFIGURE_ARGS@
+ADD_ZERO_CONFIGURE_ARGS = \
+	--with-openjdk \
+	--with-openjdk-home=$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+	--enable-zero
+if ADD_SHARK_BUILD
+ADD_ZERO_CONFIGURE_ARGS += \
+	--enable-shark
+endif
+ADD_ZERO_CONFIGURE_ARGS += \
+	--disable-docs \
+	$(filter-out '--with-gcj-home=% '--with-ecj=% \
+			'--with-java=% '--with-javah=% \
+			'--with-rmic=% '--with-additional-vms=% \
+			'--with-icedtea '--with-icedtea-home=% \
+			'--with-openjdk '--with-openjdk-home=% , \
+		$(CONFIGURE_ARGS))
+
+ADD_ZERO_EXTRA_BUILD_ENV = \
+	BUILD_LANGTOOLS=false ALT_LANGTOOLS_DIST=$(ICEDTEA_BUILD_DIR)/langtools/dist \
+	BUILD_JAXP=false      ALT_JAXP_DIST=$(ICEDTEA_BUILD_DIR)/jaxp/dist \
+	BUILD_JAXWS=false     ALT_JAXWS_DIST=$(ICEDTEA_BUILD_DIR)/jaxws/dist \
+	BUILD_CORBA=false     ALT_CORBA_DIST=$(ICEDTEA_BUILD_DIR)/corba/dist \
+	BUILD_JDK=false
+
+stamps/add-zero.stamp: stamps/icedtea.stamp
+if ADD_ZERO_BUILD
+	mkdir -p zerovm
+
+	for v in $(ICEDTEA_ENV); do case $$v in PATH=*) ;; *) unset $${v%%=*}; esac; done; \
+	cd zerovm && \
+	    $(ADD_ZERO_EXTRA_BUILD_ENV) \
+		$(ARCH_PREFIX) $(abs_top_srcdir)/configure $(ADD_ZERO_CONFIGURE_ARGS)
+
+	for v in $(ICEDTEA_ENV); do case $$v in PATH=*) ;; *) unset $${v%%=*}; esac; done; \
+	$(ADD_ZERO_EXTRA_BUILD_ENV) \
+		$(ARCH_PREFIX) $(MAKE) -C zerovm $(ICEDTEA_BUILD_TARGET)
+
+	mkdir -p $(BUILD_JRE_ARCH_DIR)/zero
+	cp -a zerovm/openjdk/build/$(OS_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
+		$(BUILD_JRE_ARCH_DIR)/zero/
+	printf -- '-zero KNOWN\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+else
+	printf -- '-zero ERROR\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+endif
+	touch $@
+
+stamps/add-zero-debug.stamp: stamps/icedtea-debug.stamp
+if ADD_ZERO_BUILD
+	mkdir -p zerovm
+
+	for v in $(ICEDTEA_ENV); do case $$v in PATH=*) ;; *) unset $${v%%=*}; esac; done; \
+	cd zerovm && \
+	    $(ADD_ZERO_EXTRA_BUILD_ENV) \
+		$(ARCH_PREFIX) $(abs_top_srcdir)/configure $(ADD_ZERO_CONFIGURE_ARGS)
+
+	for v in $(ICEDTEA_ENV); do case $$v in PATH=*) ;; *) unset $${v%%=*}; esac; done; \
+	$(ADD_ZERO_EXTRA_BUILD_ENV) \
+		$(ARCH_PREFIX) $(MAKE) -C zerovm $(ICEDTEA_DEBUG_BUILD_TARGET)
+
+	mkdir -p $(BUILD_DEBUG_JRE_ARCH_DIR)/zero
+	cp -a zerovm/openjdk/build/$(OS_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
+		$(BUILD_DEBUG_JRE_ARCH_DIR)/zero/
+	printf -- '-zero KNOWN\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+else
+	printf -- '-zero ERROR\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
+	touch $@
+
+# end additional VMs
 
 # jtreg
 

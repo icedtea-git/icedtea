@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
---- openjdk.orig/jdk/make/docs/Makefile	2009-03-19 16:10:56.000000000 +0000
-+++ openjdk/jdk/make/docs/Makefile	2009-03-19 16:12:59.000000000 +0000
+--- openjdk.orig/jdk/make/docs/Makefile	2009-05-19 01:11:05.000000000 +0100
++++ openjdk/jdk/make/docs/Makefile	2009-05-20 20:17:49.000000000 +0100
 @@ -36,7 +36,7 @@
  ifeq ($(ARCH_DATA_MODEL),64)
    MAX_VM_MEMORY = 1024
@@ -11,15 +11,43 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  
  #
 diff -Nru openjdk.orig/jdk/src/share/bin/java.c openjdk/jdk/src/share/bin/java.c
---- openjdk.orig/jdk/src/share/bin/java.c	2009-03-19 16:10:56.000000000 +0000
-+++ openjdk/jdk/src/share/bin/java.c	2009-03-19 16:18:16.000000000 +0000
-@@ -1873,7 +1873,8 @@
+--- openjdk.orig/jdk/src/share/bin/java.c	2009-05-19 01:11:05.000000000 +0100
++++ openjdk/jdk/src/share/bin/java.c	2009-05-20 20:22:14.000000000 +0100
+@@ -175,6 +175,8 @@
+   InvocationFunctions ifn;
+ } JavaMainArgs;
+ 
++#define JNI_VERSION_CACAO 0xcaca0000
++
+ /*
+  * Entry point.
+  */
+@@ -1871,6 +1873,8 @@
+ 
+     { /* Create a new thread to create JVM and invoke main method */
+       JavaMainArgs args;
++      struct JDK1_1InitArgs cacao_args;
++      int jvm_init_rv;
+       int rslt;
+ 
+       args.argc = argc;
+@@ -1879,7 +1883,18 @@
        args.classname = classname;
        args.ifn = *ifn;
  
 -      rslt = ContinueInNewThread0(JavaMain, threadStackSize, (void*)&args);
-+      /*rslt = ContinueInNewThread0(JavaMain, threadStackSize, (void*)&args);*/
-+      rslt = JavaMain((void*)&args);
++      memset((void*)&cacao_args, 0, sizeof(cacao_args));
++      cacao_args.version = JNI_VERSION_CACAO;
++
++      jvm_init_rv = ifn.GetDefaultJavaVMInitArgs(&cacao_args);
++      if (_launcher_debug)
++          printf("using cacao as VM: %s\n", (jvm_init_rv == 0) ? "yes" : "no");
++
++      if (jvm_init_rv == 0)
++          return JavaMain((void*)&args);
++      else
++          return ContinueInNewThread0(JavaMain, threadStackSize, (void*)&args);
++
        /* If the caller has deemed there is an error we
         * simply return that, otherwise we return the value of
         * the callee

@@ -114,3 +114,20 @@ as the VM, use the --with-cacao option.  This will download CACAO
 --with-cacao-home=<dir> to point to an existing installation which use
 the Sun VM interface.
 
+Building additional virtual machines
+------------------------------------
+
+Although IcedTea can be built multiple times to use a different virtual
+machine, addtional VM's can be built without building the other components
+multiple times.
+
+On architectures where hotspot is available, use
+   --with-additional-vms=cacao,zero  (or shark instead of zero)
+on architectures where only zero (or shark) is available, use
+   --with-additional-vms=cacao
+to build the additional VM's.  It's not possible to build cacao as the
+default VM, and zero as additional VM.
+
+The additional VM's are available by calling the java with the option
+`-cacao' or `-zero' (for shark as well), or by calling the java tools with
+`-J-<vm name>'.
