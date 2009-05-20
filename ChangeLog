@@ -1,3 +1,9 @@
+2009-04-29  Mark Wielaard  <mjw@redhat.com>
+
+	* README: Document systemtap support.
+	* INSTALL: Document build requirements for systemtap support.
+	* NEWS: Mention systemtap support.
+
 2009-04-29 Andrew John Hughes <ahughes@redhat.com>
 
 	* Makefile.am:

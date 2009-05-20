@@ -43,6 +43,15 @@ netbeans = 6.5
 
 For building the zero-assembler port (see below), you will need libffi.
 
+For building with systemtap support (--enable-systemtap), you will need
+systemtap-sdt-devel (available since systemtap 0.9.5). This also needs
+the --with-abs-install-dir configure option to make sure the hotspot.stp.in
+tapset gets the correct installation location for the libjvm.so, it
+defaults to the root of the j2sdk-image build dir otherwise (but then
+you cannot move that to another location without adjusting the paths
+in the tapset/hotspot.stp file. For example:
+ --enable-systemtap --with-abs-install-dir=/usr/lib/jvm/java-1.6.0-openjdk
+
 See ./configure --help if you need to override the defaults.
 
 To bootstrap IcedTea with ecj:

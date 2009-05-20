@@ -1,5 +1,12 @@
 New in release 1.10 (XXXX-XX-XX)
 
+- Static trace support through systemtap.
+  When given the configure option --enable-systemtap IcedTea will build
+  hotspot with the dtrace static markers enabled and install an hotspot
+  tapset that can be used to dynamically trace execution of java
+  applications at runtime. See the tapset/hotspot.stp file for
+  documentation of the various trace points and arguments available.
+
 New in release 1.9 (2009-03-20)
 
 - Security fixes for:
