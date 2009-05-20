@@ -1,3 +1,9 @@
+2009-05-04  Mark Wielaard  <mjw@redhat.com>
+
+	* Makefile.am (icedtea.stamp): Strip client probes from hotspot.stp
+	when client not available (ENABLE_SYSTEMTAP only).
+	(icedtea-debug.stamp): Likewise.
+
 2009-04-29  Mark Wielaard  <mjw@redhat.com>
 
 	* README: Document systemtap support.
