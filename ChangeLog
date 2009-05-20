@@ -1,3 +1,11 @@
+2009-03-27  Mark Wielaard  <mjw@redhat.com>
+
+	* patches/icedtea-systemtap.patch: New patch.
+	* configure.ac: Add AC_ARG_ENABLE systemtap and AC_CHECK_HEADER
+	for sys/sdt.h when --enable-systemtap given.
+	* Makefile.am: Add patches/icedtea-systemtap.patch to
+	ICEDTEA_PATCHES if ENABLE_SYSTEMTAP.
+
 2009-04-24  Lillian Angel  <langel@redhat.com>
 
 	Fixes #497191

@@ -183,6 +183,14 @@ AC_ARG_ENABLE([nio2],
 AM_CONDITIONAL([ENABLE_NIO2], [test x$ENABLE_NIO2 = xyes])
 AC_MSG_RESULT(${ENABLE_NIO2})
 
+AC_MSG_CHECKING([whether to include SystemTap tracing support])
+AC_ARG_ENABLE([systemtap],
+	      [AS_HELP_STRING([--enable-systemtap],
+	      		      [Enable inclusion of SystemTap trace support])],
+	      [ENABLE_SYSTEMTAP="${enableval}"], [ENABLE_SYSTEMTAP='no'])
+AM_CONDITIONAL([ENABLE_SYSTEMTAP], [test x$ENABLE_SYSTEMTAP = xyes])
+AC_MSG_RESULT(${ENABLE_SYSTEMTAP})
+
 AC_MSG_CHECKING([how many parallel build jobs to execute])
 AC_ARG_WITH([parallel-jobs],
 	[AS_HELP_STRING([--with-parallel-jobs],
@@ -398,6 +406,12 @@ then
     AC_MSG_ERROR([Could not find Xrender extension - \
 Try installing libXrender-devel or configure --disable-xrender.])
   fi
+fi
+
+if test "x${ENABLE_SYSTEMTAP}" = xyes; then
+AC_CHECK_HEADER([sys/sdt.h], [SDT_H_FOUND='yes'],
+                [SDT_H_FOUND='no';
+                   AC_MSG_ERROR([systemtap support needs sys/sdt.h header])])
 fi
 
 dnl Check for libpng headers and libraries.

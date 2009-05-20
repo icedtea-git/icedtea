@@ -2004,6 +2004,10 @@ if ENABLE_NIO2
 ICEDTEA_PATCHES += patches/icedtea-nio2.patch
 endif
 
+if ENABLE_SYSTEMTAP
+ICEDTEA_PATCHES += patches/icedtea-systemtap.patch
+endif
+
 stamps/extract.stamp: stamps/download.stamp
 if OPENJDK_SRC_DIR_FOUND
 	cp -a $(OPENJDK_SRC_DIR) openjdk
