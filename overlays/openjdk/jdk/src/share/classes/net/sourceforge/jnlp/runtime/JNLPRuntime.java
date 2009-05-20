@@ -94,6 +94,9 @@ public class JNLPRuntime {
     /** mutex to wait on, for initialization */
     public static Object initMutex = new Object();
 
+    /** set to true if this is a webstart application. */
+    private static boolean isWebstartApplication; 
+
     /**
      * Returns whether the JNLP runtime environment has been
      * initialized.  Once initialized, some properties such as the
@@ -112,10 +115,14 @@ public class JNLPRuntime {
      * initialized, methods that alter the runtime can only be
      * called by the exit class.<p>
      *
+     * @param isApplication is true if a webstart application is being initialized
+     *
      * @throws IllegalStateException if the runtime was previously initialized
      */
-    public static void initialize() throws IllegalStateException {
+    public static void initialize(boolean isApplication) throws IllegalStateException {
         checkInitialized();
+     
+        isWebstartApplication = isApplication;
 
         if (headless == false)
             checkHeadless();
@@ -146,6 +153,14 @@ public class JNLPRuntime {
         }
 
         initialized = true;
+    }
+
+    /**
+     * Returns true if a webstart application has been initialized, and false
+     * for a plugin applet.
+     */
+    public static boolean isWebstartApplication() {
+        return isWebstartApplication;
     }
 
     /**
@@ -265,8 +280,9 @@ public class JNLPRuntime {
         if (isHeadless())
             return null;
 
-        File baseDir = InstallDialog.getInstallDir();
-        if (baseDir == null)
+        String homeDir = System.getProperty("user.home");
+	File baseDir = new File(homeDir + "/.netx/");
+	if (homeDir == null || !baseDir.mkdir())
             return null;
 
         props.setProperty("basedir", baseDir.toString());
@@ -285,14 +301,14 @@ public class JNLPRuntime {
         checkExitClass();
         security.setExitClass(exitClass);
     }
-
+    
     /**
      * Disables applets from calling exit.
      * 
      * Once disabled, exit cannot be re-enabled for the duration of the JVM instance
      */
     public static void disableExit() {
-      security.disableExit();
+    	security.disableExit();
     }
 
     /**

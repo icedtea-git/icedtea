@@ -85,7 +85,7 @@ PRThread* current_thread ();
 // #14 0x0153fdbf in ProxyJNIEnv::CallObjectMethod (env=0xa8b8040, obj=0x9dad690, methodID=0xa0ed070) at ProxyJNI.cpp:641
 
 // timeout (in seconds) for various calls to java side
-#define TIMEOUT 20
+#define TIMEOUT 180
 
 #define NOT_IMPLEMENTED() \
   PLUGIN_DEBUG_1ARG ("NOT IMPLEMENTED: %s\n", __PRETTY_FUNCTION__)
@@ -588,7 +588,7 @@ char const* TYPES[10] = { "Object",
   PLUGIN_DEBUG_0ARG ("RECEIVE VALUE 1\n");                                             \
   ResultContainer *resultC;                                              \
   factory->result_map.Get(reference, &resultC);                         \
-  while (resultC->returnValue == "" && \
+  while (resultC->returnValue.IsVoid() == PR_TRUE && \
 	     resultC->errorOccurred == PR_FALSE)            \
     {                                                                      \
       PROCESS_PENDING_EVENTS_REF (reference);                                   \
@@ -607,7 +607,7 @@ char const* TYPES[10] = { "Object",
   PLUGIN_DEBUG_0ARG("RECEIVE SIZE 1\n");                                 \
   ResultContainer *resultC;                                              \
   factory->result_map.Get(reference, &resultC);                         \
-  while (resultC->returnValue == "" && \
+  while (resultC->returnValue.IsVoid() == PR_TRUE && \
 	     resultC->errorOccurred == PR_FALSE) \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
@@ -631,7 +631,7 @@ char const* TYPES[10] = { "Object",
   PLUGIN_DEBUG_0ARG("RECEIVE STRING 1\n");                                 \
   ResultContainer *resultC;                                              \
   factory->result_map.Get(reference, &resultC);                         \
-  while (resultC->returnValue == "" && \
+  while (resultC->returnValue.IsVoid() == PR_TRUE && \
 	     resultC->errorOccurred == PR_FALSE)  \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
@@ -655,7 +655,7 @@ char const* TYPES[10] = { "Object",
   PLUGIN_DEBUG_0ARG("RECEIVE STRING UCS 1\n");                                 \
   ResultContainer *resultC;                                              \
   factory->result_map.Get(reference, &resultC);                         \
-  while (resultC->returnValueUCS.IsEmpty() && \
+  while (resultC->returnValueUCS.IsVoid() == PR_TRUE && \
 	     resultC->errorOccurred == PR_FALSE) \
     {                                                           \
       PROCESS_PENDING_EVENTS_REF (reference);                        \
@@ -855,6 +855,8 @@ ResultContainer::ResultContainer ()
 	returnIdentifier = -1;
 	returnValue.Truncate();
 	returnValueUCS.Truncate();
+	returnValue.SetIsVoid(PR_TRUE);
+	returnValueUCS.SetIsVoid(PR_TRUE);
 	errorMessage.Truncate();
 	errorOccurred = PR_FALSE;
 
@@ -877,6 +879,8 @@ ResultContainer::Clear()
 	returnIdentifier = -1;
 	returnValue.Truncate();
 	returnValueUCS.Truncate();
+	returnValue.SetIsVoid(PR_TRUE);
+	returnValueUCS.SetIsVoid(PR_TRUE);
 	errorMessage.Truncate();
 	errorOccurred = PR_FALSE;
 
@@ -1007,6 +1011,7 @@ private:
   nsresult StartAppletviewer ();
   void ProcessMessage();
   void ConsumeMsgFromJVM();
+  nsresult GetProxyInfo(const char* siteAddr, char** proxyScheme, char** proxyHost, char** proxyPort);
   nsCOMPtr<IcedTeaEventSink> sink;
   nsCOMPtr<nsISocketTransport> transport;
   nsCOMPtr<nsIProcess> applet_viewer_process;
@@ -1792,7 +1797,7 @@ IcedTeaPluginFactory::GetJavaEnabled (PRBool* aJavaEnabled)
 NS_IMETHODIMP
 IcedTeaPluginFactory::Show (void)
 {
-  nsCString msg("showconsole");
+  nsCString msg("plugin showconsole");
   this->SendMessageToAppletViewer(msg);
   return NS_OK;
 }
@@ -1800,7 +1805,7 @@ IcedTeaPluginFactory::Show (void)
 NS_IMETHODIMP
 IcedTeaPluginFactory::Hide (void)
 {
-  nsCString msg("hideconsole");
+  nsCString msg("plugin hideconsole");
   this->SendMessageToAppletViewer(msg);
   return NS_OK;
 }
@@ -2658,6 +2663,96 @@ IcedTeaPluginInstance::GetJavaObject (jobject* object)
   return factory->GetJavaObject (instance_identifier, object);
 }
 
+#include <nsIDNSRecord.h>
+#include <nsIDNSService.h>
+#include <nsIHttpAuthManager.h>
+#include <nsIProxyInfo.h>
+#include <nsIProtocolProxyService.h>
+#include <nsILoginManager.h>
+#include <nsILoginInfo.h>
+
+/** 
+ *
+ * Returns the proxy information for the given url
+ *
+ * The proxy query part of this function can be made much smaller by using 
+ * nsIPluginManager2::FindProxyForURL() .. however, because we need to parse 
+ * the return components in various ways, it is easier to query 
+ * nsIProtocolProxyService directly
+ *
+ * @param siteAddr The URL to check
+ * @param  proxyScheme Return parameter containing the proxy URI scheme (http/socks/etc.)
+ * @param proxyHost Return parameter containing the proxy host
+ * @param proxyPort Return parameter containing the proxy port
+ */
+
+NS_IMETHODIMP
+IcedTeaPluginFactory::GetProxyInfo(const char* siteAddr, char** proxyScheme, char** proxyHost, char** proxyPort)
+{
+  nsresult rv;
+
+  // Initialize service variables
+  nsCOMPtr<nsIProtocolProxyService> proxy_svc = do_GetService(NS_PROTOCOLPROXYSERVICE_CONTRACTID, &rv);
+
+  if (!proxy_svc) {
+	  printf("Cannot initialize proxy service\n");
+	  return rv;
+  }
+
+  nsCOMPtr<nsIIOService> io_svc = do_GetService(NS_IOSERVICE_CONTRACTID, &rv);
+
+  if (NS_FAILED(rv) || !io_svc) {
+    printf("Cannot initialize io service\n");
+    return NS_ERROR_FAILURE;
+  }
+
+  // uri which needs to be accessed
+  nsCOMPtr<nsIURI> uri;
+  io_svc->NewURI(nsCString(siteAddr), NULL, NULL, getter_AddRefs(uri));
+
+  // find the proxy address if any
+  nsCOMPtr<nsIProxyInfo> info;
+  proxy_svc->Resolve(uri, 0, getter_AddRefs(info));
+
+  // if there is no proxy found, return immediately
+  if (!info) {
+     PLUGIN_DEBUG_1ARG("%s does not need a proxy\n", siteAddr);
+	 return NS_ERROR_FAILURE;
+  }
+
+  // if proxy info is available, extract it
+  nsCString phost;
+  PRInt32 pport;
+  nsCString ptype;
+
+  info->GetHost(phost);
+  info->GetPort(&pport);
+  info->GetType(ptype);
+
+  // resolve the proxy address to an IP
+  nsCOMPtr<nsIDNSService> dns_svc = do_GetService(NS_DNSSERVICE_CONTRACTID, &rv);
+
+  if (!dns_svc) {
+      printf("Cannot initialize DNS service\n");
+      return rv;
+  }
+
+  nsCOMPtr<nsIDNSRecord> record;
+  dns_svc->Resolve(phost, 0U, getter_AddRefs(record));
+
+  // TODO: Add support for multiple ips
+  nsDependentCString ipAddr;
+  record->GetNextAddrAsString(ipAddr);
+
+  // pack information in return variables
+  snprintf(*proxyScheme, sizeof(char)*32, "%s", ptype.get());
+  snprintf(*proxyHost, sizeof(char)*64, "%s", ipAddr.get());
+  snprintf(*proxyPort, sizeof(char)*8, "%d", pport);
+
+  PLUGIN_DEBUG_4ARG("Proxy info for %s: %s %s %s\n", siteAddr, *proxyScheme, *proxyHost, *proxyPort);
+
+  return NS_OK;
+}
 
 NS_IMETHODIMP
 IcedTeaPluginInstance::GetCookie(const char* siteAddr, char** cookieString) 
@@ -2677,8 +2772,8 @@ IcedTeaPluginInstance::GetCookie(const char* siteAddr, char** cookieString)
     return NS_ERROR_FAILURE;
   }
 
-  nsIURI *uri;
-  io_svc->NewURI(nsCString(siteAddr), NULL, NULL, &uri);
+  nsCOMPtr<nsIURI> uri;
+  io_svc->NewURI(nsCString(siteAddr), NULL, NULL, getter_AddRefs(uri));
 
   nsCOMPtr<nsICookieService> cookie_svc = do_GetService(NS_COOKIESERVICE_CONTRACTID, &rv);
 
@@ -2902,6 +2997,13 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
   nsDependentCSubstring prefix(pch, strlen(pch));
   pch = strtok (NULL, " ");
   PRUint32 identifier = nsDependentCSubstring(pch, strlen(pch)).ToInteger (&conversionResult);
+
+  /* Certain prefixes may not have an identifier. if they don't. we have a command here */
+  nsDependentCSubstring command;
+  if (NS_FAILED(conversionResult)) {
+    command.Rebind(pch, strlen(pch));
+  }
+
   PRUint32 reference = -1;
 
   if (strstr(message.get(), "reference") != NULL) {
@@ -2910,8 +3012,11 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 	  reference = nsDependentCSubstring(pch, strlen(pch)).ToInteger (&conversionResult);
   }
 
-  pch = strtok (NULL, " ");
-  nsDependentCSubstring command(pch, strlen(pch));
+  if (command.Length() == 0) {
+    pch = strtok (NULL, " ");
+    command.Rebind(pch, strlen(pch));
+  }
+
   pch = strtok (NULL, " ");
 
   nsDependentCSubstring rest("", 0);
@@ -3251,7 +3356,8 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
           
 		   ResultContainer *resultC;
 		   result_map.Get(reference, &resultC);
-		   resultC->returnValue = rest; 
+		   resultC->returnValue = rest;
+		   resultC->returnValue.SetIsVoid(PR_FALSE);
            PLUGIN_DEBUG_1ARG ("PLUGIN GOT RETURN VALUE: %s\n", resultC->returnValue.get());
         }
       else if (command == "GetStringUTFChars")
@@ -3339,11 +3445,55 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 		  ResultContainer *resultC;
 		  result_map.Get(reference, &resultC);
 		  resultC->returnValueUCS = returnValueUCS;
+		  resultC->returnValueUCS.SetIsVoid(PR_FALSE);
 
         }
       // Do nothing for: SetStaticField, SetField, ExceptionClear,
       // DeleteGlobalRef, DeleteLocalRef
     }
+	else if (prefix == "plugin")
+    {
+
+        if (command == "PluginProxyInfo") {
+
+          nsresult rv;
+          nsCOMPtr<nsINetUtil> net_util = do_GetService(NS_NETUTIL_CONTRACTID, &rv);
+
+          if (!net_util)
+            printf("Error instantiating NetUtil service.\n");
+
+          // decode the url
+          nsDependentCSubstring url;
+          net_util->UnescapeString(rest, 0, url);
+
+          char* proxyScheme = (char*) malloc(sizeof(char)*32);
+          char* proxyHost = (char*) malloc(sizeof(char)*64);
+          char* proxyPort = (char*) malloc(sizeof(char)*8);
+
+          nsCString proxyInfo("plugin PluginProxyInfo ");
+
+          // get proxy info
+          if (GetProxyInfo(((nsCString) url).get(), &proxyScheme, &proxyHost, &proxyPort) == NS_OK)
+          {
+              proxyInfo += proxyScheme;
+              proxyInfo += " ";
+              proxyInfo += proxyHost;
+              proxyInfo += " ";
+              proxyInfo += proxyPort;
+
+              PLUGIN_DEBUG_4ARG("Proxy for %s is %s %s %s\n", ((nsCString) url).get(), proxyScheme, proxyHost, proxyPort);
+          } else {
+              PLUGIN_DEBUG_1ARG("No suitable proxy found for %s\n", ((nsCString) url).get());
+          }
+
+          // send back what we found
+          SendMessageToAppletViewer (proxyInfo);
+
+		  // free allocated memory
+          delete proxyScheme, proxyHost, proxyPort;
+
+		}
+	}
 }
 
 void IcedTeaPluginFactory::ProcessMessage ()

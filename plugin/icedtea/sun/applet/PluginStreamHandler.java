@@ -134,7 +134,7 @@ public class PluginStreamHandler {
     	    		long b4 = new Date().getTime();
 
     				String s = read();
-
+                    
     	    		long after = new Date().getTime();
 
     	    		totalWait += (after - b4);
@@ -228,7 +228,12 @@ public class PluginStreamHandler {
     
 		if (msgComponents.length < 2)
 			return;
-	
+
+        if (msgComponents[0].startsWith("plugin")) {
+            handlePluginMessage(message);
+            return;
+        }
+
     	// type and identifier are guaranteed to be there
     	String type = msgComponents[0];
     	final int identifier = Integer.parseInt(msgComponents[1]);
@@ -297,6 +302,17 @@ public class PluginStreamHandler {
     	}
     }
 
+    private void handlePluginMessage(String message) {
+        if (message.equals("plugin showconsole")) {
+            showConsole();
+        } else if (message.equals("plugin hideconsole")) {
+            hideConsole();            
+        } else {
+            // else this is something that was specifically requested
+            finishCallRequest(message);
+        }
+    }
+
     public void postCallRequest(PluginCallRequest request) {
         synchronized(queue) {
    			queue.post(request);
@@ -321,6 +337,8 @@ public class PluginStreamHandler {
 
     			while (!request.serviceable(message)) {
 
+     				PluginDebug.debug(request + " cannot service " + message);
+    			    
     				// something is very wrong.. we have a message to 
     				// process, but no one to service it
     				if (count >= size) {
@@ -382,10 +400,6 @@ public class PluginStreamHandler {
                 AppletSecurityContextManager.dumpStore(0);
                 PluginDebug.debug("APPLETVIEWER: exiting appletviewer");
                 System.exit(0);
-            } else if (message.equals("showconsole")) {
-                showConsole();
-            } else if (message.equals("hideconsole")) {
-                hideConsole();            
             }
     	} catch (IOException e) {
     	       e.printStackTrace();

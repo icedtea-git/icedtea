@@ -20,6 +20,7 @@ package net.sourceforge.jnlp.runtime;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -344,24 +345,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
 				//user does not trust this publisher
 				if (!js.getAlreadyTrustPublisher()) {
-					if (!js.getRootInCacerts()) { //root cert is not in cacerts
-						boolean b = SecurityWarningDialog.showCertWarningDialog(
-							SecurityWarningDialog.AccessType.UNVERIFIED, file, js);
-						if (!b)
-							throw new LaunchException(null, null, R("LSFatal"), 
-								R("LCLaunching"), R("LNotVerified"), "");
-					} else if (js.getRootInCacerts()) { //root cert is in cacerts
-						boolean b = false;
-						if (js.noSigningIssues())
-							b = SecurityWarningDialog.showCertWarningDialog(
-									SecurityWarningDialog.AccessType.VERIFIED, file, js);
-						else if (!js.noSigningIssues())
-							b = SecurityWarningDialog.showCertWarningDialog(
-									SecurityWarningDialog.AccessType.SIGNING_ERROR, file, js);
-						if (!b)
-							throw new LaunchException(null, null, R("LSFatal"),
-								R("LCLaunching"), R("LCancelOnUserRequest"), "");
-					}
+				    checkTrustWithUser(js);
 				} else {
 					/**
 					 * If the user trusts this publisher (i.e. the publisher's certificate
@@ -377,6 +361,27 @@ public class JNLPClassLoader extends URLClassLoader {
 		}
 
         activateJars(initialJars);
+    }
+
+    private void checkTrustWithUser(JarSigner js) throws LaunchException {
+        if (!js.getRootInCacerts()) { //root cert is not in cacerts
+            boolean b = SecurityWarningDialog.showCertWarningDialog(
+                SecurityWarningDialog.AccessType.UNVERIFIED, file, js);
+            if (!b)
+                throw new LaunchException(null, null, R("LSFatal"), 
+                    R("LCLaunching"), R("LNotVerified"), "");
+        } else if (js.getRootInCacerts()) { //root cert is in cacerts
+            boolean b = false;
+            if (js.noSigningIssues())
+                b = SecurityWarningDialog.showCertWarningDialog(
+                        SecurityWarningDialog.AccessType.VERIFIED, file, js);
+            else if (!js.noSigningIssues())
+                b = SecurityWarningDialog.showCertWarningDialog(
+                        SecurityWarningDialog.AccessType.SIGNING_ERROR, file, js);
+            if (!b)
+                throw new LaunchException(null, null, R("LSFatal"),
+                    R("LCLaunching"), R("LCancelOnUserRequest"), "");
+        }
     }
 
     /**
@@ -505,8 +510,49 @@ public class JNLPClassLoader extends URLClassLoader {
                             
                             JarFile jarFile = new JarFile(localFile);
                             Enumeration e = jarFile.entries();
-                            while (e.hasMoreElements())
-                                jarEntries.add(((JarEntry) e.nextElement()).getName());
+                            while (e.hasMoreElements()) {
+                                
+                                JarEntry je = (JarEntry) e.nextElement();
+                                
+                                // another jar in my jar? it is more likely than you think  
+                                if (je.getName().endsWith(".jar")) {
+                                    // We need to extract that jar so that it can be loaded 
+                                    // (inline loading with "jar:..!/..." path will not work 
+                                    // with standard classloader methods)
+
+                                    String extractedJarLocation = localFile.getParent() + "/" + je.getName();
+                                    FileOutputStream extractedJar = new FileOutputStream(extractedJarLocation);
+                                    InputStream is = jarFile.getInputStream(je);
+
+                                    byte[] bytes = new byte[1024];
+                                    int read = is.read(bytes);
+                                    while (read > 0) {
+                                        extractedJar.write(bytes, 0, read);
+                                        read = is.read(bytes);
+                                    }
+
+                                    is.close();
+                                    extractedJar.close();
+
+                                    JarSigner signer = new JarSigner();
+                                    signer.verifyJar(extractedJarLocation);
+
+                                    if (signer.anyJarsSigned() && !signer.getAlreadyTrustPublisher()) {
+                                        checkTrustWithUser(signer);
+                                    }
+
+                                    try {
+                                        addURL(new URL("file://" + extractedJarLocation));
+                                    } catch (MalformedURLException mfue) {
+                                        if (JNLPRuntime.isDebug())
+                                            System.err.println("Unable to add extracted nested jar to classpath");
+
+                                        mfue.printStackTrace();
+                                    }
+                                }
+
+                                jarEntries.add(je.getName());
+                            }
 
                         }
 

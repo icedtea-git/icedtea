@@ -331,6 +331,22 @@ public class Launcher {
             throw launchError(new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LNotApplication"), R("LNotApplicationInfo")));
 
         try {
+            final int preferredWidth = 500;
+            final int preferredHeight = 400;
+            JNLPSplashScreen splashScreen = null;
+            URL splashImageURL = file.getInformation().getIconLocation(
+                    IconDesc.SPLASH, preferredWidth, preferredHeight);
+            if (splashImageURL != null) {
+                ResourceTracker resourceTracker = new ResourceTracker(true);
+                resourceTracker.addResource(splashImageURL, "SPLASH", file.getFileVersion(), updatePolicy);
+                splashScreen = new JNLPSplashScreen(resourceTracker, null, null);
+                splashScreen.setSplashImageURL(splashImageURL);
+                if (splashScreen.isSplashScreenValid()) {
+                    splashScreen.setVisible(true);
+                }
+            }
+
+
             ApplicationInstance app = createApplication(file);
             app.initialize();
 
@@ -360,6 +376,13 @@ public class Launcher {
 
             // required to make some apps work right
             Thread.currentThread().setContextClassLoader(app.getClassLoader());
+
+            if (splashScreen != null) {
+                if (splashScreen.isSplashScreenValid()) {
+                    splashScreen.setVisible(false);
+                }
+                splashScreen.dispose();
+            }
 
             main.invoke(null, new Object[] { args } );
 

@@ -218,7 +218,6 @@ public class JarSigner implements CertVerifier {
 
                 String localFile = jarFile.getAbsolutePath();
                 boolean result = verifyJar(localFile);
-                checkTrustedCerts();
 
                 if (!result) {
                     //allVerified is true until we encounter a problem
@@ -241,6 +240,10 @@ public class JarSigner implements CertVerifier {
         boolean hasUnsignedEntry = false;
         JarInputStream jis = null;
 
+        // certs could be uninitialized if one calls this method directly
+        if (certs == null)
+            certs = new ArrayList<CertPath>();
+        
         try {
             jis = new JarInputStream(new FileInputStream(jarName), true);
             Vector<JarEntry> entriesVec = new Vector<JarEntry>();
@@ -352,6 +355,9 @@ public class JarSigner implements CertVerifier {
             }
         }
 
+        // check if the certs added above are in the trusted path
+        checkTrustedCerts();
+        
         //anySigned does not guarantee that all files were signed.
         return anySigned && !(hasUnsignedEntry || hasExpiredCert
                               || badKeyUsage || badExtendedKeyUsage || badNetscapeCertType

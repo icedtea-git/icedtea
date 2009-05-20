@@ -106,7 +106,7 @@ public class JNLPFile {
             // null values will still work, and app can set defaults later
         }
     }
-
+    
     /**
      * Empty stub, allowing child classes to override the constructor
      */

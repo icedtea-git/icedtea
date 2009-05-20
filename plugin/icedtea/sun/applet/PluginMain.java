@@ -67,15 +67,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.Socket;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Properties;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import net.sourceforge.jnlp.security.VariableX509TrustManager;
 
@@ -212,6 +214,10 @@ public class PluginMain
 		    System.err.println("Unable to set SSLSocketfactory (may _prevent_ access to sites that should be trusted)! Continuing anyway...");
 		    e.printStackTrace();
 		}
+        
+		// plug in a custom authenticator and proxy selector
+        Authenticator.setDefault(new CustomAuthenticator());
+        ProxySelector.setDefault(new PluginProxySelector());
 	}
 
     static boolean messageAvailable() {
@@ -220,6 +226,26 @@ public class PluginMain
 
     static String getMessage() {
     	return streamHandler.getMessage();
+    }
+    
+    static class CustomAuthenticator extends Authenticator {
+        
+        public PasswordAuthentication getPasswordAuthentication() {
+
+            // No security check is required here, because the only way to 
+            // set parameters for which auth info is needed 
+            // (Authenticator:requestPasswordAuthentication()), has a security 
+            // check
+
+            String type = this.getRequestorType() == RequestorType.PROXY ? "proxy" : "web"; 
+
+            // request auth info from user
+            PasswordAuthenticationDialog pwDialog = new PasswordAuthenticationDialog();
+            PasswordAuthentication auth = pwDialog.askUser(this.getRequestingHost(), this.getRequestingPort(), this.getRequestingPrompt(), type);
+            
+            // send it along
+            return auth;
+        }
     }
 
     /**
@@ -264,7 +290,9 @@ public class PluginMain
         @Override
         public void write(byte[] buf, int off, int len) {
             logFile.write(buf, off, len);
-            super.write(buf, off, len);
+
+            if (!redirectStreams)
+                super.write(buf, off, len);
         }
 
         @Override

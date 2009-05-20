@@ -42,6 +42,7 @@ public class NetxPanel extends AppletViewerPanel
     private boolean exitOnFailure = true;
     private AppletInstance appInst = null;
     private String cookieStr;
+    private boolean appletAlive;
 
     public NetxPanel(URL documentURL, Hashtable atts)
     {
@@ -54,6 +55,7 @@ public class NetxPanel extends AppletViewerPanel
         this(documentURL, atts);
         this.exitOnFailure = exitOnFailure;
         this.cookieStr = cookieStr;
+        this.appletAlive = true;
     }
 
     //Overriding to use Netx classloader. You might need to relax visibility
@@ -76,7 +78,7 @@ public class NetxPanel extends AppletViewerPanel
     			    if (JNLPRuntime.isDebug())
     			        System.out.println("initializing JNLPRuntime...");
 
-    				JNLPRuntime.initialize();
+    				JNLPRuntime.initialize(false);
     			} else {
     			    if (JNLPRuntime.isDebug())
     			        System.out.println("JNLPRuntime already initialized");
@@ -121,10 +123,11 @@ public class NetxPanel extends AppletViewerPanel
     			validate();
     		}
     	} catch (Exception e) {
+    	    this.appletAlive = false;
     		e.printStackTrace();
     	}
     }
-    
+
     // Reminder: Relax visibility in sun.applet.AppletPanel
     protected synchronized void createAppletThread() {
     	handler = new Thread(this);
@@ -138,6 +141,10 @@ public class NetxPanel extends AppletViewerPanel
     
     public ClassLoader getAppletClassLoader() {
         return appInst.getClassLoader();
+    }
+    
+    public boolean isAlive() {
+        return handler.isAlive() && this.appletAlive;
     }
 }
 

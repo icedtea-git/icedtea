@@ -1,5 +1,5 @@
-/* VoidPluginCallRequest -- represent Java-to-JavaScript requests
-   Copyright (C) 2008  Red Hat
+/* PluginProxyInfoRequest -- Object representing a request for proxy information from the browser
+   Copyright (C) 2009  Red Hat
 
 This file is part of IcedTea.
 
@@ -35,26 +35,51 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-
 package sun.applet;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 
-public class PluginCallRequestFactory {
+/**
+ * This class represents a request object for proxy information for a given URI
+ */
 
-	public PluginCallRequest getPluginCallRequest(String id, String message, String returnString) {
+public class PluginProxyInfoRequest extends PluginCallRequest {
+    
+    URI internal = null;
 
-		if (id == "member") {
-			return new GetMemberPluginCallRequest(message, returnString);
-		} else if (id == "void") {
-			return new VoidPluginCallRequest(message, returnString);
-		} else if (id == "window") {
-			return new GetWindowPluginCallRequest(message, returnString);
-		} else if (id == "proxyinfo") {
-            return new PluginProxyInfoRequest(message, returnString);
-        } else {
-			throw new RuntimeException ("Unknown plugin call request type requested from factory");
-		}
-		
-	}
+    public PluginProxyInfoRequest(String message, String returnString) {
+        super(message, returnString);
+    }
+    
+    public void parseReturn(String proxyInfo) {
 
+        // try to parse the proxy information. If things go wrong, do nothing .. 
+        // this will keep internal = null which forces a direct connection
+
+    	PluginDebug.debug ("PluginProxyInfoRequest GOT: " + proxyInfo);
+    	String[] messageComponents = proxyInfo.split(" ");
+
+    	try {
+    	    internal = new URI(messageComponents[2], null, messageComponents[3], Integer.parseInt(messageComponents[4]), null, null, null);
+    	} catch (Exception e) {
+    	    // do nothing
+    	}
+
+        setDone(true);
+    }
+
+    /**
+     * Returns whether the given message is serviceable by this object
+     * 
+     * @param message The message to service
+     * @return boolean indicating if message is serviceable
+     */
+    public boolean serviceable(String message) {
+    	return message.startsWith("plugin PluginProxyInfo");
+    }
+
+    public URI getObject() {
+    	return this.internal;
+    }
 }

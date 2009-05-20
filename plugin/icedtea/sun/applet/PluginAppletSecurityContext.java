@@ -248,7 +248,7 @@ public class PluginAppletSecurityContext {
 		// an applet will be loaded at some point, we should make it the SM 
 		// that JNLPRuntime will try to install
 		if (System.getSecurityManager() == null) {
-			JNLPRuntime.initialize();
+			JNLPRuntime.initialize(/* isApplication */ false);
 		}
 
 		JNLPRuntime.disableExit();
@@ -1001,7 +1001,7 @@ public class PluginAppletSecurityContext {
 		PluginDebug.debug("target = " + target + " jsSrc=" + jsSrc + " classSrc=" + classSrc);
 		
 		// if src is not a file and class loader does not map to the same base, UniversalBrowserRead (BrowserReadPermission) must be set
-		if (jsSrc != "file://" && !classSrc.equals(jsSrc)) {
+		if (!jsSrc.equals("file://") && !jsSrc.equals("[System]") && !classSrc.equals(jsSrc)) {
 			acc.checkPermission(new BrowserReadPermission());
 		}
 	}

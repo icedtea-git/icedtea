@@ -110,9 +110,12 @@ public class DefaultDownloadIndicator implements DownloadIndicator {
         frame.pack();
 
         if (!frame.isVisible()) {
-            Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-            frame.setLocation(screen.width/2-frame.getWidth()/2,
-                              screen.height/2-frame.getHeight()/2);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(frame.getGraphicsConfiguration());
+            Dimension screen = new Dimension(screenSize.width - insets.left , 
+                    screenSize.height - insets.top);
+            frame.setLocation(screen.width-frame.getWidth(),
+                              screen.height-frame.getHeight());
         }
 
         frame.show();

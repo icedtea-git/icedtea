@@ -1,3 +1,102 @@
+2009-05-13  Omair Majid  <omajid@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/JNLPSplashScreen.java: New file. This new class
+	is responsible for displaying the splash screen.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/Launcher.java (launchApplication): Show a splash
+	screen if specified in the JNLP file while loading the remote jars.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/cache/DefaultDownloadIndicator.java (getListener):
+	Reposition the frame at the bottom right corner of the screen.
+
+2009-05-13  Lillian Angel  <langel@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java
+	(PluginAppletSecurityContext): Added comment.	
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java
+	(checkPermission): Fixed style.
+
+2009-05-11  Lillian Angel  <langel@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPRuntime.java
+	(getDefaultBaseDir): Added check for home dir. Return null if homeDir
+	not found in system properties.
+
+2009-05-11  Lillian Angel  <langel@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPRuntime.java
+	(getDefaultBaseDir): Added null check.
+
+2009-05-11  Lillian Angel  <langel@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPRuntime.java
+	(getDefaultBaseDir): Set basedir for netx applications to ~/.netx,
+	rather than asking. Now consistant with the plugin.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/InstallDialog.java: Removed.
+
+2009-05-06  Lillian Angel  <langel@redhat.com>
+
+	Fixes bz#498108
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/NetxPanel.java
+	(runLoader): Pass false to JNLPRuntime.initialize, since this is an 
+	applet.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java
+	(PluginAppletSecurityContext): Likewise.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/Boot.java
+	(run): Pass true to JNLPRuntime.initialize, since this 
+	is a webstart app.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPRuntime.java
+	(initialize): Added new parameter isApplication, which is used to set
+	global static variable isWebstartApplication.
+	(isWebstartApplication): New accessor function.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java:
+	(checkPermission): Added call to JNLPRuntime.isWebstartApplication so
+	the check is bypassed if the permissions are to be checked for
+	a webstart application. 
+
+2009-04-30  Deepak Bhole  <dbhole@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java: Forgo
+	permission check if JS source is [System] (i.e. Mozilla 
+	extension/chrome).
+
+2009-04-23  Deepak Bhole  <dbhole@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Handle nested
+	jars.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/runtime/JNLPPolicy.java: Use site address when
+	checking for policy against CodeSource.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/tools/JarSigner.java: Handle nested
+	jars.
+
+2009-04-10  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Fix rhbz478561 (freeze with empty string return from
+	Java side).
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java: Bump max workers
+	from 3 to 20, limiting initial to 3, and growing if/when needed.
+
+2009-04-02  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Incremented timeout to 3 minutes. Added functions to
+	process proxy and auth info requests (the latter is unused).
+	* plugin/icedtea/sun/applet/PasswordAuthenticationDialog.java: New file.
+	Displays a username/password input dialog to users for sites and proxies
+	requiring http auth.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Fix wait mechanism to 
+	detect applet initialization failures correctly. Add support for
+	requesting proxy information from the browser.
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java: Add support for
+	PluginProxyInfoRequest objects.
+	* plugin/icedtea/sun/applet/PluginMain.java: Wire in custom authenticator
+	and proxy selector.
+	* plugin/icedtea/sun/applet/PluginProxyInfoRequest.java: New file. Object
+	representing proxy information request from browser.
+	* plugin/icedtea/sun/applet/PluginProxySelector.java: Custom proxy
+	selector that requests information from browser and uses it.
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java: Improve handling
+	code for "plugin specific" messages on the wire.
+	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/NetxPanel.java: Add support for improved
+	initialization failure detection.
+
 2009-05-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* HACKING: Updated.

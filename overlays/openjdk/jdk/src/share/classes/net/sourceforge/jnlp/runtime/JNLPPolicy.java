@@ -65,7 +65,8 @@ public class JNLPPolicy extends Policy {
         		PermissionCollection clPermissions = cl.getPermissions(source);
         		
         		// systempolicy permissions need to be accounted for as well
-        		Enumeration e = systemPolicy.getPermissions(source).elements();
+        		CodeSource appletCS = new CodeSource(JNLPRuntime.getApplication().getJNLPFile().getSourceLocation(), (java.security.cert.Certificate[]) null);
+        		Enumeration e = systemPolicy.getPermissions(appletCS).elements();
                 while (e.hasMoreElements())
                     clPermissions.add((Permission) e.nextElement());
 

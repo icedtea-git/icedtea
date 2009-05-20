@@ -17,17 +17,32 @@
 
 package net.sourceforge.jnlp.runtime;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
-import java.security.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
 
-import net.sourceforge.jnlp.*;
-import net.sourceforge.jnlp.cache.*;
-import net.sourceforge.jnlp.runtime.*;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+
+import net.sourceforge.jnlp.AppletDesc;
+import net.sourceforge.jnlp.ApplicationDesc;
+import net.sourceforge.jnlp.JNLPFile;
+import net.sourceforge.jnlp.LaunchException;
+import net.sourceforge.jnlp.Launcher;
+import net.sourceforge.jnlp.ParseException;
+import net.sourceforge.jnlp.PropertyDesc;
+import net.sourceforge.jnlp.ResourcesDesc;
+import net.sourceforge.jnlp.cache.UpdatePolicy;
+import net.sourceforge.jnlp.security.VariableX509TrustManager;
 import net.sourceforge.jnlp.security.viewer.CertificateViewer;
-import net.sourceforge.jnlp.services.*;
-import net.sourceforge.jnlp.util.*;
+import net.sourceforge.jnlp.services.ServiceUtil;
 
 /**
  * This is the main entry point for the JNLP client.  The main
@@ -153,6 +168,20 @@ public final class Boot implements PrivilegedAction {
 
         if (null != getOption("-noupdate"))
             JNLPRuntime.setDefaultUpdatePolicy(UpdatePolicy.NEVER);
+        
+        // wire in custom authenticator
+        try {
+            SSLSocketFactory sslSocketFactory;
+            SSLContext context = SSLContext.getInstance("SSL");
+            TrustManager[] trust = new TrustManager[] { VariableX509TrustManager.getInstance() };
+            context.init(null, trust, null);
+            sslSocketFactory = context.getSocketFactory();
+            
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslSocketFactory);
+        } catch (Exception e) {
+            System.err.println("Unable to set SSLSocketfactory (may _prevent_ access to sites that should be trusted)! Continuing anyway...");
+            e.printStackTrace();
+        }
 
         // do in a privileged action to clear the security context of
         // the Boot13 class, which doesn't have any privileges in
@@ -168,7 +197,7 @@ public final class Boot implements PrivilegedAction {
     public Object run() {
         JNLPRuntime.setBaseDir(getBaseDir());
         JNLPRuntime.setSecurityEnabled(null == getOption("-nosecurity"));
-        JNLPRuntime.initialize();
+        JNLPRuntime.initialize(true);
 
         try {
             new Launcher().launch(getFile());

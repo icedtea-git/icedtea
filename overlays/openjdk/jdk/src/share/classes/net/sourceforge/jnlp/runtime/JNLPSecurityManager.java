@@ -103,7 +103,7 @@ class JNLPSecurityManager extends SecurityManager {
 
     /** listener installs the app's classloader on the event dispatch thread */
     private ContextUpdater contextListener = new ContextUpdater();
-
+    
     /** Sets whether or not exit is allowed (in the context of the plugin, this is always false) */
     private boolean exitAllowed = true;
 
@@ -255,13 +255,14 @@ class JNLPSecurityManager extends SecurityManager {
      */
     public void checkPermission(Permission perm) {
         String name = perm.getName();
-        
+
         // Enable this manually -- it'll produce too much output for -verbose
         // otherwise.
-//		if (true)
-//			System.out.println("Checking permission: " + perm.toString());
-        if ("setPolicy".equals(name) ||
-            "setSecurityManager".equals(name))
+	//	if (true)
+	//  	  System.out.println("Checking permission: " + perm.toString());
+
+        if (!JNLPRuntime.isWebstartApplication() && 
+	      ("setPolicy".equals(name) || "setSecurityManager".equals(name)))
             throw new SecurityException(R("RCantReplaceSM"));
 
         try {
@@ -279,7 +280,7 @@ class JNLPSecurityManager extends SecurityManager {
 			try {
 				super.checkPermission(perm);
 			} catch (SecurityException se) {
-				
+
 				//This section is a special case for dealing with SocketPermissions.
 				if (JNLPRuntime.isDebug())
 					System.err.println("Requesting permission: " + perm.toString());
@@ -440,12 +441,13 @@ class JNLPSecurityManager extends SecurityManager {
      * behave normally, and the exit class can always exit the JVM.
      */
     public void checkExit(int status) {
+
     	// applets are not allowed to exit, but the plugin main class (primordial loader) is
         Class stack[] = getClassContext();
         if (!exitAllowed) {
-	  for (int i=0; i < stack.length; i++)
-	    if (stack[i].getClassLoader() != null)
-	      throw new AccessControlException("Applets may not call System.exit()");
+        	for (int i=0; i < stack.length; i++)
+        		if (stack[i].getClassLoader() != null)
+        			throw new AccessControlException("Applets may not call System.exit()");
         }
 
     	super.checkExit(status);
@@ -482,6 +484,7 @@ class JNLPSecurityManager extends SecurityManager {
     protected void disableExit() {
     	exitAllowed = false;
     }
+    
 }
 
 

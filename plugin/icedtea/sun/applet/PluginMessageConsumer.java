@@ -35,7 +35,6 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-
 package sun.applet;
 
 import java.util.ArrayList;
@@ -45,17 +44,19 @@ import sun.applet.AppletSecurity;
 
 class PluginMessageConsumer {
 
-	int MAX_WORKERS = 3;
+	int MAX_WORKERS = 20;
 	LinkedList<String> readQueue = new LinkedList<String>();
 	ArrayList<PluginMessageHandlerWorker> workers = new ArrayList<PluginMessageHandlerWorker>();
 	PluginStreamHandler streamHandler = null;
+	AppletSecurity as;
 
 	public PluginMessageConsumer(PluginStreamHandler streamHandler) {
 		
-		AppletSecurity as = new AppletSecurity();
+		as = new AppletSecurity();
 		this.streamHandler = streamHandler;
 
-		for (int i=0; i < MAX_WORKERS; i++) {
+		// create some workers at the start...
+		for (int i=0; i < 3; i++) {
 			PluginDebug.debug("Creating worker " + i);
 			PluginMessageHandlerWorker worker = new PluginMessageHandlerWorker(streamHandler, i, as);
 			worker.start();
@@ -96,6 +97,19 @@ class PluginMessageConsumer {
 					return worker;
 				}
 			}
+			
+			// If we have less than MAX_WORKERS, create a new worker
+			if (workers.size() < MAX_WORKERS) {
+			    PluginDebug.debug("Cannot find free worker, creating worker " + workers.size());
+			    PluginMessageHandlerWorker worker = new PluginMessageHandlerWorker(streamHandler, workers.size(), as);
+			    worker.start();
+			    workers.add(worker);
+			    worker.busy();
+			    return worker;
+			} else {
+			    // else wait
+			}
+
 			Thread.yield();
 		}
 
