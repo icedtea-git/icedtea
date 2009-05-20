@@ -1,3 +1,12 @@
+2009-05-03  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ICEDTEA_PATCHES): Apply icedtea-cacao conditionally
+	on BUILD_CACAO.
+	(ADD_ZERO_EXTRA_BUILD_ENV): Filter out cacao patches passed in
+	DISTRIBUTION_PATCHES.
+	(stamps/add-zero.stamp, stamps/add-zero-debug.stamp): Remove obsolete
+	unset commands.
+	
 2009-05-01  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/cacao/launcher.patch: Create new thread depending on the
