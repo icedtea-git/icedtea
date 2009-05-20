@@ -1,3 +1,10 @@
+2009-04-24  Lillian Angel  <langel@redhat.com>
+
+	Fixes #497191
+	* Makefile.am
+	(NETBEANS_PROFILER_MD5SUM): Updated.
+	(stamps/nbplatform.stamp): Fixed to build on amd64 properly.
+
 2009-05-05 Xerxes Rånby <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
