@@ -1,6 +1,16 @@
 AC_INIT([icedtea], [1.10-pre], [distro-pkg-dev@openjdk.java.net])
-AM_INIT_AUTOMAKE([1.10 tar-pax foreign])
+AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
 AC_CONFIG_FILES([Makefile])
+
+# Older automake doesn't generate these correctly
+abs_top_builddir=`pwd -P`
+AC_SUBST(abs_top_builddir)
+abs_top_srcdir=`dirname $0`
+cd $abs_top_srcdir
+abs_top_srcdir=`pwd`
+cd $abs_top_builddir
+AC_SUBST(abs_top_srcdir)
+
 AC_CANONICAL_HOST
 
 AC_PREFIX_DEFAULT([bootstrap])
@@ -551,7 +561,7 @@ fi
 
 AC_MSG_CHECKING(for --with-additional-vms)
 AC_ARG_WITH(additional-vms,
-            AC_HELP_STRING([--with-additional-vms=vm1,vm2,...], [build additional virtual machines. Valid value is a colon separated string with the backend names `cacao', `zero' and `shark'.]),
+            AC_HELP_STRING([--with-additional-vms=vm-list], [build additional virtual machines. Valid value is a comma separated string with the backend names `cacao', `zero' and `shark'.]),
 [
 if test x$with_additional_vms != x
 then

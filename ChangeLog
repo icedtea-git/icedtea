@@ -1,3 +1,12 @@
+2009-05-04  Mark Wielaard  <mjw@redhat.com>
+
+	* autogen.sh: Lower requirements to autoconf 2.59 and automake 1.9.6.
+	* configure.ac (AM_INIT_AUTOMAKE): Require 1.9 or higher.
+	(abs_top_builddir): Explicitly define.
+	(abs_top_srcdir): Likewise.
+	(additional-vms): Rewrite help string and description.
+	* missing: Remove generated file (autogen.sh).
+
 2009-05-05  Lillian Angel  <langel@redhat.com>
 
 	Fixes BZ#313

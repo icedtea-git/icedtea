@@ -8,10 +8,10 @@ HAVE_AUTOCONF=false
 
 for AUTOCONF in autoconf autoconf259; do
     if ${AUTOCONF} --version > /dev/null 2>&1; then
-        AUTOCONF_VERSION=`${AUTOCONF} --version | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
+        AUTOCONF_VERSION=`${AUTOCONF} --version | head -1 | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
 #        echo ${AUTOCONF_VERSION}
         case ${AUTOCONF_VERSION} in
-            2.6[1-9]* )
+            2.59* | 2.6[0-9]* )
                 HAVE_AUTOCONF=true
                 break;
                 ;;
@@ -25,7 +25,7 @@ HAVE_AUTOHEADER=false
 
 for AUTOHEADER in autoheader autoheader259; do
     if ${AUTOHEADER} --version > /dev/null 2>&1; then
-        AUTOHEADER_VERSION=`${AUTOHEADER} --version | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
+        AUTOHEADER_VERSION=`${AUTOHEADER} --version | head -1 | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
 #        echo ${AUTOHEADER_VERSION}
         case ${AUTOHEADER_VERSION} in
             2.59* | 2.6[0-9]* )
@@ -42,7 +42,7 @@ HAVE_AUTORECONF=false
 
 for AUTORECONF in autoreconf; do
     if ${AUTORECONF} --version > /dev/null 2>&1; then
-        AUTORECONF_VERSION=`${AUTORECONF} --version | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
+        AUTORECONF_VERSION=`${AUTORECONF} --version | head -1 | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
 #        echo ${AUTORECONF_VERSION}
         case ${AUTORECONF_VERSION} in
             2.59* | 2.6[0-9]* )
@@ -55,7 +55,7 @@ done
 
 if test ${HAVE_AUTOCONF} = false; then
     echo "No proper autoconf was found."
-    echo "You must have autoconf 2.61 or later installed."
+    echo "You must have autoconf 2.59 or later installed."
     exit 1
 fi
 
@@ -80,10 +80,10 @@ HAVE_ACLOCAL=false
 
 for ACLOCAL in aclocal aclocal-1.10; do
     if ${ACLOCAL} --version > /dev/null 2>&1; then
-        ACLOCAL_VERSION=`${ACLOCAL} --version | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
+        ACLOCAL_VERSION=`${ACLOCAL} --version | head -1 | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
 #        echo ${ACLOCAL_VERSION}
         case ${ACLOCAL_VERSION} in
-            1.1[0-9]* )
+            1.9.[6-9] | 1.1[0-9]* )
                 HAVE_ACLOCAL=true
                 break;
                 ;;
@@ -97,10 +97,10 @@ HAVE_AUTOMAKE=false
 
 for AUTOMAKE in automake automake-1.10; do
     if ${AUTOMAKE} --version > /dev/null 2>&1; then
-        AUTOMAKE_VERSION=`${AUTOMAKE} --version | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
+        AUTOMAKE_VERSION=`${AUTOMAKE} --version | head -1 | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
 #        echo ${AUTOMAKE_VERSION}
         case ${AUTOMAKE_VERSION} in
-            1.1[0-9]* )
+            1.9.[6-9] | 1.1[0-9]* )
                 HAVE_AUTOMAKE=true
                 break;
                 ;;
@@ -110,13 +110,13 @@ done
 
 if test ${HAVE_ACLOCAL} = false; then
     echo "No proper aclocal was found."
-    echo "You must have automake 1.10 or later installed."
+    echo "You must have automake 1.9.6 or later installed."
     exit 1
 fi
 
 if test ${HAVE_AUTOMAKE} = false; then
     echo "No proper automake was found."
-    echo "You must have automake 1.10 or later installed."
+    echo "You must have automake 1.9.6 or later installed."
     exit 1
 fi
 
