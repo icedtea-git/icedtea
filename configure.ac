@@ -161,6 +161,14 @@ AC_ARG_ENABLE([liveconnect],
 AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
 AC_MSG_RESULT(${enable_plugin})
 
+AC_MSG_CHECKING([whether to build the new experimental browser plugin based on npruntime])
+AC_ARG_ENABLE([npplugin],
+              [AS_HELP_STRING([--enable-npplugin],
+                              [Enable compilation of browser plugin (automatically disables default plugin)])],
+              [enable_npplugin="${enableval}"], [enable_npplugin="no"])
+AM_CONDITIONAL(ENABLE_NPPLUGIN, test "x${enable_npplugin}" = "xyes")
+AC_MSG_RESULT(${enable_npplugin})
+
 AC_MSG_CHECKING([whether to include PulseAudio support])
 AC_ARG_ENABLE([pulse-java],
               [AS_HELP_STRING([--enable-pulse-java],
@@ -509,6 +517,21 @@ then
   PKG_CHECK_MODULES(GTK, gtk+-2.0)
   IT_XULRUNNER_VERSION
 fi
+if test "x${enable_npplugin}" = "xyes"
+then
+  PKG_CHECK_MODULES(MOZILLA, \
+    mozilla-plugin libxul-unstable)
+  PKG_CHECK_MODULES(GTK, gtk+-2.0)
+  PKG_CHECK_MODULES(GLIB, glib-2.0)
+
+  AC_SUBST(MOZILLA_CFLAGS)
+  AC_SUBST(MOZILLA_LIBS)
+  AC_SUBST(GLIB_CFLAGS)
+  AC_SUBST(GLIB_LIBS)
+  AC_SUBST(GTK_CFLAGS)
+  AC_SUBST(GTK_LIBS)
+fi
+
 
 AC_MSG_CHECKING(for --with-additional-vms)
 AC_ARG_WITH(additional-vms,

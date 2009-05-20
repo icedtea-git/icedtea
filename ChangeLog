@@ -1,3 +1,37 @@
+2009-05-15  Deepak Bhole  <dbhole@redhat.com>
+
+	* Makefile.am: Wire in new plugin build.
+	* configure.ac: Wire in new plugin (switch --enable-npplugin).
+	* IcedTeaNPPlugin.cc: New file - based on GCJ Web Plugin.
+	* plugin/icedteanp/netscape/javascript/JSException.java: New file, copied
+	from the IcedTea plugin Java backend.
+	* plugin/icedteanp/netscape/javascript/JSObject.java: Same.
+	* plugin/icedteanp/netscape/javascript/JSProxy.java: Same.
+	* plugin/icedteanp/netscape/javascript/JSRunnable.java: Same.
+	* plugin/icedteanp/netscape/javascript/JSUtil.java: Same.
+	* plugin/icedteanp/sun/applet/AppletSecurityContextManager.java: Same.
+	* plugin/icedteanp/sun/applet/GetMemberPluginCallRequest.java: Same.
+	* plugin/icedteanp/sun/applet/GetWindowPluginCallRequest.java: Same.
+	* plugin/icedteanp/sun/applet/JavaConsole.java: Same.
+	* plugin/icedteanp/sun/applet/PasswordAuthenticationDialog.java: Same.
+	* plugin/icedteanp/sun/applet/PluginAppletSecurityContext.java: Same.
+	* plugin/icedteanp/sun/applet/PluginAppletViewer.java: Same.
+	* plugin/icedteanp/sun/applet/PluginCallRequest.java: Same.
+	* plugin/icedteanp/sun/applet/PluginCallRequestFactory.java: Same.
+	* plugin/icedteanp/sun/applet/PluginClassLoader.java: Same.
+	* plugin/icedteanp/sun/applet/PluginDebug.java: Same.
+	* plugin/icedteanp/sun/applet/PluginException.java: Same.
+	* plugin/icedteanp/sun/applet/PluginMain.java: Same.
+	* plugin/icedteanp/sun/applet/PluginMessageConsumer.java: Same.
+	* plugin/icedteanp/sun/applet/PluginMessageHandlerWorker.java: Same.
+	* plugin/icedteanp/sun/applet/PluginObjectStore.java: Same.
+	* plugin/icedteanp/sun/applet/PluginProxyInfoRequest.java: Same.
+	* plugin/icedteanp/sun/applet/PluginProxySelector.java: Same.
+	* plugin/icedteanp/sun/applet/PluginStreamHandler.java: Same.
+	* plugin/icedteanp/sun/applet/RequestQueue.java: Same.
+	* plugin/icedteanp/sun/applet/TestEnv.java: Same.
+	* plugin/icedteanp/sun/applet/VoidPluginCallRequest.java: Same.
+
 2009-05-13  Omair Majid  <omajid@redhat.com>
 
 	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/JNLPSplashScreen.java: New file. This new class
