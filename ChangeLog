@@ -1,3 +1,10 @@
+2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Cleanup Makefile, make sure JNLP classes
+	are included in rt-closed.jar and use this
+	as the classpath when building extra-files.
+
 2009-05-20  Lillian Angel  <langel@redhat.com>
 
 	* rt/net/sourceforge/jnlp/tools/JarSigner.java: Move creation of 

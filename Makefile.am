@@ -1955,7 +1955,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-zero.patch \
 	patches/icedtea-ia64-bugfix.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-parisc-opt.patch
+	patches/hotspot/$(HSBUILD)/icedtea-parisc-opt.patch \
         patches/security/icedtea-6592792.patch \
         patches/security/icedtea-6733959.patch \
         patches/security/icedtea-6755943.patch \
@@ -2982,10 +2982,12 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt sun ; \
+	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt sun \
+	    -C lib/rt net ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt sun ; \
+	    -C lib/rt javax $(LIVECONNECT_DIR) -C lib/rt sun \
+	    -C lib/rt net ; \
 	fi
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
@@ -2997,22 +2999,21 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 extra-source-files.txt:
 	find $(abs_top_srcdir)/extra -name '*.java' | sort > $@
 
-stamps/extra-class-files.stamp: extra-source-files.txt \
-	bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
+stamps/extra-class-files.stamp: extra-source-files.txt stamps/plugs.stamp
 	mkdir -p extra-lib
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
 	    -source 1.5 \
-	    -sourcepath \
-	       $(abs_top_srcdir)/extra:$(OPENJDK_SOURCEPATH_DIRS):$(ABS_SOURCE_DIRS)' \
+	    -sourcepath $(abs_top_srcdir)/extra \
+	    -classpath $(ICEDTEA_RT) \
 	    -bootclasspath \'\' \
 	    @extra-source-files.txt ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
             -source 1.5 \
-	    -sourcepath \
-	       $(abs_top_srcdir)/extra:$(OPENJDK_SOURCEPATH_DIRS):$(ABS_SOURCE_DIRS)' \
+	    -sourcepath $(abs_top_srcdir)/extra \
+	    -classpath $(ICEDTEA_RT) \
 	    -bootclasspath \'\' \
 	    @extra-source-files.txt ; \
 	fi
@@ -3564,8 +3565,6 @@ hotspot-tools: stamps/hotspot-tools.stamp
 hotspot-ports: stamps/ports.stamp
 
 tools-class-files: stamps/tools-class-files.stamp
-
-hotspot-ports: stamps/ports.stamp
 
 hotspot-ports-ecj: stamps/ports-ecj.stamp
 
