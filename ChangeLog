@@ -1,5 +1,11 @@
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
+	* acinclude.m4:
+	Search same directories when using
+	--with-openjdk as --with-icedtea.
+
+2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
 	* generated/java/nio/channels/AlreadyBoundException.java,
 	* generated/sun/awt/X11/generator/sizer.64.c,
 	* generated/sun/awt/X11/generator/sizes.64:
