@@ -1,5 +1,10 @@
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
+	* generated/javax/swing/plaf/nimbus/NimbusDefaults.java:
+	Remove @Override annotations which cause ecj to spew.
+
+2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/icedtea-pregenerated-nimbus.patch:
 	Also patch the Nimbus Makefile to not set
 	CLASSES_INIT and thus avoid invoking the
@@ -9,7 +14,7 @@
 
 	* patches/ecj/icedtea-pr39408.patch:
 	Updated to put the file in the state
-	where PR40188 is present so that gcj 4.3
+	where PR40188 is present so that gcj 4.3/4.4
 	builds work.
 
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>

@@ -1237,7 +1237,6 @@ final class NimbusDefaults {
         /**
          * @inheritDoc
          */
-        @Override
         public Object createValue(UIDefaults defaults) {
             Font f = defaults.getFont(parentKey);
             if (f != null) {
@@ -1309,7 +1308,6 @@ final class NimbusDefaults {
                     insets, canvasSize, inverted, cacheMode, maxH, maxV);
         }
 
-        @Override
         public Object createValue(UIDefaults table) {
             try {
                 Class c;
@@ -1663,7 +1661,7 @@ final class NimbusDefaults {
             this.uiResource = uiResource;
         }
 
-        @Override
+
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof DerivedColorKey)) return false;
@@ -1679,7 +1677,7 @@ final class NimbusDefaults {
             return true;
         }
 
-        @Override
+
         public int hashCode() {
             int result = super.hashCode();
             result = 31 * result + uiDefaultParentName.hashCode();
@@ -1699,7 +1697,7 @@ final class NimbusDefaults {
      * Listener to update derived colors on UIManager Defaults changes
      */
     private class DefaultsListener implements PropertyChangeListener {
-        @Override
+
         public void propertyChange(PropertyChangeEvent evt) {
             Object src = evt.getSource();
             String key = evt.getPropertyName();
@@ -1758,7 +1756,6 @@ final class NimbusDefaults {
             this.painterKey = painterKey;
         }
         
-        @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
             if (painter == null) {
                 painter = (Painter)UIManager.get(painterKey);
@@ -1779,12 +1776,10 @@ final class NimbusDefaults {
             g.translate(-x, -y);
         }
 
-        @Override
         public Insets getBorderInsets(Component c) {
             return (Insets)insets.clone();
         }
 
-        @Override
         public boolean isBorderOpaque() {
             return false;
         }
