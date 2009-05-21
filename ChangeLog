@@ -1,5 +1,16 @@
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-stop-nimbus-generation.patch:
+	Renamed.
+	* Makefile.am:
+	Turn on DISABLE_NIMBUS unless generating files.
+	To still build, apply the pregenerated-nimbus patch.
+	* patches/icedtea-pregenerated-nimbus.patch:
+	Turns the make/javax/swing/plaf/nimbus subdirectory
+	back on.
+
+2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Update list of generated files with
 	Nimbus source.

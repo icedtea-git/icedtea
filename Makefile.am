@@ -1560,7 +1560,7 @@ ICEDTEA_ENV += \
 	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO_IMPORT_PATH)"
 endif
 
-if !ENABLE_NIMBUS
+if !ENABLE_NIMBUS_GENERATION
 ICEDTEA_ENV += \
 	"DISABLE_NIMBUS=true"
 endif
@@ -2099,7 +2099,7 @@ ICEDTEA_PATCHES += patches/icedtea-systemtap.patch
 endif
 
 if !ENABLE_NIMBUS_GENERATION
-ICEDTEA_PATCHES += patches/icedtea-stop-nimbus-generation.patch
+ICEDTEA_PATCHES += patches/icedtea-pregenerated-nimbus.patch
 endif
 
 stamps/extract.stamp: stamps/download.stamp
