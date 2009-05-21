@@ -26,6 +26,8 @@
 #include "incls/_precompiled.incl"
 #include "incls/_sharkCompiler.cpp.incl"
 
+#include <fnmatch.h>
+
 using namespace llvm;
 
 SharkCompiler::SharkCompiler()

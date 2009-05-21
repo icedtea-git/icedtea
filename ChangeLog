@@ -1,3 +1,8 @@
+2009-05-21  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp:
+	Fix for x86 debug builds.
+
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* HACKING: Updated.
