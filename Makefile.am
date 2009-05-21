@@ -1495,6 +1495,11 @@ ICEDTEA_ENV += \
 	"ALT_JAR_CMD=$(ALT_JAR_CMD)"
 endif
 
+if !ENABLE_NIMBUS_GENERATION
+ICEDTEA_ENV += \
+	"GENSRCDIR=$(abs_top_builddir)/generated"
+endif
+
 env:
 	@echo 'unset JAVA_HOME'
 	@echo 'export $(ICEDTEA_ENV)'
@@ -2005,6 +2010,10 @@ endif
 
 if ENABLE_SYSTEMTAP
 ICEDTEA_PATCHES += patches/icedtea-systemtap.patch
+endif
+
+if !ENABLE_NIMBUS_GENERATION
+ICEDTEA_PATCHES += patches/icedtea-stop-nimbus-generation.patch
 endif
 
 stamps/extract.stamp: stamps/download.stamp
@@ -3039,11 +3048,13 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 
 stamps/jibx.stamp: extra-lib/about.jar
 if ENABLE_NIMBUS
+if ENABLE_NIMBUS_GENERATION
 	mkdir $(JIBX_DEPS_DIR)
 	ln -s $(BCEL_JAR) $(JIBX_DEPS_DIR)
 	ln -s $(XPP3_JAR) $(JIBX_DEPS_DIR)
 	ln -s $(JIBX_DIR)/jibx-bind.jar $(JIBX_DEPS_DIR)
 	ln -s $(JIBX_DIR)/jibx-run.jar $(JIBX_DEPS_DIR)
+endif
 endif
 	mkdir -p stamps
 	touch $@

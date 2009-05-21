@@ -1,0 +1,14 @@
+diff -Nru openjdk.orig/jdk/make/tools/Makefile openjdk/jdk/make/tools/Makefile
+--- openjdk.orig/jdk/make/tools/Makefile	2009-05-18 22:14:05.000000000 +0100
++++ openjdk/jdk/make/tools/Makefile	2009-05-21 12:35:38.000000000 +0100
+@@ -53,10 +53,6 @@
+   spp                       \
+   CharsetMapping
+ 
+-ifndef DISABLE_NIMBUS
+-  SUBDIRS += swing-nimbus
+-endif
+-
+ all build clean clobber::
+ 	$(SUBDIRS-loop)
+ 

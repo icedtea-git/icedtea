@@ -1498,3 +1498,20 @@ AC_LANG_POP([C++])
 
 AC_SUBST(MOZILLA_VERSION_COLLAPSED, $xulrunner_cv_collapsed_version)
 ])
+
+AC_DEFUN([AC_CHECK_ENABLE_NIMBUS_GENERATION],
+[
+  AC_MSG_CHECKING(whether to generate the Nimbus source files using JIBX)
+  AC_ARG_ENABLE([nimbus-generation],
+	      [AS_HELP_STRING(--enable-nimbus-generation,generate the Nimbus source with JIBX [[default=yes]])],
+  [
+    ENABLE_NIMBUS_GENERATION="${enableval}"
+  ],
+  [
+    ENABLE_NIMBUS_GENERATION=yes
+  ])
+
+  AC_MSG_RESULT(${ENABLE_NIMBUS_GENERATION})
+  AM_CONDITIONAL(ENABLE_NIMBUS_GENERATION, test x"${ENABLE_NIMBUS_GENERATION}" = "xyes")
+  AC_SUBST(ENABLE_NIMBUS_GENERATION)
+])

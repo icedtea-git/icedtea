@@ -1,6 +1,108 @@
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Apply patch and use our generated source directory
+	when ENABLE_NIMBUS_GENERATION is not enabled.  Symlink
+	JIBX when it is.
+	* acinclude.m4:
+	(AC_CHECK_ENABLE_NIMBUS_GENERATION): New macro.
+	* configure.ac:
+	Turn on ENABLE_NIMBUS_GENERATION and only check for
+	JIBX when this is enabled.
+	* generated/javax/swing/plaf/nimbus/ArrowButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/ButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/CheckBoxMenuItemPainter.java,
+	* generated/javax/swing/plaf/nimbus/CheckBoxPainter.java,
+	* generated/javax/swing/plaf/nimbus/ComboBoxComboBoxArrowButtonEditableState.java,
+	* generated/javax/swing/plaf/nimbus/ComboBoxComboBoxArrowButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/ComboBoxComboBoxTextFieldPainter.java,
+	* generated/javax/swing/plaf/nimbus/ComboBoxEditableState.java,
+	* generated/javax/swing/plaf/nimbus/ComboBoxPainter.java,
+	* generated/javax/swing/plaf/nimbus/DesktopIconPainter.java,
+	* generated/javax/swing/plaf/nimbus/DesktopPanePainter.java,
+	* generated/javax/swing/plaf/nimbus/EditorPanePainter.java,
+	* generated/javax/swing/plaf/nimbus/FileChooserPainter.java,
+	* generated/javax/swing/plaf/nimbus/FormattedTextFieldPainter.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneCloseButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneCloseButtonWindowNotFocusedState.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneIconifyButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneIconifyButtonWindowNotFocusedState.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneMaximizeButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneMaximizeButtonWindowMaximizedState.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneMaximizeButtonWindowNotFocusedState.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneMenuButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePaneInternalFrameTitlePaneMenuButtonWindowNotFocusedState.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePanePainter.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameInternalFrameTitlePaneWindowFocusedState.java,
+	* generated/javax/swing/plaf/nimbus/InternalFramePainter.java,
+	* generated/javax/swing/plaf/nimbus/InternalFrameWindowFocusedState.java,
+	* generated/javax/swing/plaf/nimbus/MenuBarMenuPainter.java,
+	* generated/javax/swing/plaf/nimbus/MenuBarPainter.java,
+	* generated/javax/swing/plaf/nimbus/MenuItemPainter.java,
+	* generated/javax/swing/plaf/nimbus/MenuPainter.java,
+	* generated/javax/swing/plaf/nimbus/NimbusDefaults.java,
+	* generated/javax/swing/plaf/nimbus/OptionPaneOptionPaneMessageAreaOptionPaneLabelPainter.java,
+	* generated/javax/swing/plaf/nimbus/OptionPaneOptionPaneMessageAreaPainter.java,
+	* generated/javax/swing/plaf/nimbus/OptionPanePainter.java,
+	* generated/javax/swing/plaf/nimbus/PasswordFieldPainter.java,
+	* generated/javax/swing/plaf/nimbus/PopupMenuPainter.java,
+	* generated/javax/swing/plaf/nimbus/PopupMenuSeparatorPainter.java,
+	* generated/javax/swing/plaf/nimbus/ProgressBarFinishedState.java,
+	* generated/javax/swing/plaf/nimbus/ProgressBarIndeterminateState.java,
+	* generated/javax/swing/plaf/nimbus/ProgressBarPainter.java,
+	* generated/javax/swing/plaf/nimbus/RadioButtonMenuItemPainter.java,
+	* generated/javax/swing/plaf/nimbus/RadioButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/ScrollBarPainter.java,
+	* generated/javax/swing/plaf/nimbus/ScrollBarScrollBarButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/ScrollBarScrollBarThumbPainter.java,
+	* generated/javax/swing/plaf/nimbus/ScrollBarScrollBarTrackPainter.java,
+	* generated/javax/swing/plaf/nimbus/ScrollPanePainter.java,
+	* generated/javax/swing/plaf/nimbus/SeparatorPainter.java,
+	* generated/javax/swing/plaf/nimbus/SliderArrowShapeState.java,
+	* generated/javax/swing/plaf/nimbus/SliderPainter.java,
+	* generated/javax/swing/plaf/nimbus/SliderSliderThumbArrowShapeState.java,
+	* generated/javax/swing/plaf/nimbus/SliderSliderThumbPainter.java,
+	* generated/javax/swing/plaf/nimbus/SliderSliderTrackArrowShapeState.java,
+	* generated/javax/swing/plaf/nimbus/SliderSliderTrackPainter.java,
+	* generated/javax/swing/plaf/nimbus/SpinnerPainter.java,
+	* generated/javax/swing/plaf/nimbus/SpinnerPanelSpinnerFormattedTextFieldPainter.java,
+	* generated/javax/swing/plaf/nimbus/SpinnerSpinnerNextButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/SpinnerSpinnerPreviousButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/SplitPanePainter.java,
+	* generated/javax/swing/plaf/nimbus/SplitPaneSplitPaneDividerPainter.java,
+	* generated/javax/swing/plaf/nimbus/SplitPaneSplitPaneDividerVerticalState.java,
+	* generated/javax/swing/plaf/nimbus/SplitPaneVerticalState.java,
+	* generated/javax/swing/plaf/nimbus/TabbedPanePainter.java,
+	* generated/javax/swing/plaf/nimbus/TabbedPaneTabbedPaneTabAreaPainter.java,
+	* generated/javax/swing/plaf/nimbus/TabbedPaneTabbedPaneTabPainter.java,
+	* generated/javax/swing/plaf/nimbus/TableEditorPainter.java,
+	* generated/javax/swing/plaf/nimbus/TableHeaderPainter.java,
+	* generated/javax/swing/plaf/nimbus/TableHeaderTableHeaderRendererPainter.java,
+	* generated/javax/swing/plaf/nimbus/TableHeaderTableHeaderRendererSortedState.java,
+	* generated/javax/swing/plaf/nimbus/TextAreaNotInScrollPaneState.java,
+	* generated/javax/swing/plaf/nimbus/TextAreaPainter.java,
+	* generated/javax/swing/plaf/nimbus/TextFieldPainter.java,
+	* generated/javax/swing/plaf/nimbus/TextPanePainter.java,
+	* generated/javax/swing/plaf/nimbus/ToggleButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/ToolBarButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/ToolBarEastState.java,
+	* generated/javax/swing/plaf/nimbus/ToolBarNorthState.java,
+	* generated/javax/swing/plaf/nimbus/ToolBarPainter.java,
+	* generated/javax/swing/plaf/nimbus/ToolBarSouthState.java,
+	* generated/javax/swing/plaf/nimbus/ToolBarToggleButtonPainter.java,
+	* generated/javax/swing/plaf/nimbus/ToolBarWestState.java,
+	* generated/javax/swing/plaf/nimbus/ToolTipPainter.java,
+	* generated/javax/swing/plaf/nimbus/TreeCellEditorPainter.java,
+	* generated/javax/swing/plaf/nimbus/TreePainter.java,
+	* generated/javax/swing/plaf/nimbus/TreeTreeCellPainter.java:
+	Add generated Nimbus files.
+	* patches/icedtea-stop-nimbus-generation.patch:
+	Turn off building Nimbus tool when --disable-nimbus-generation
+	is given.
+
+2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Cleanup Makefile, make sure JNLP classes
 	are included in rt-closed.jar and use this
 	as the classpath when building extra-files.
