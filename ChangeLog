@@ -5,6 +5,10 @@
 	* generated/sun/awt/X11/generator/sizes.64:
 	Added missing generated files.
 
+2009-05-21  Lillian Angel  <langel@redhat.com>
+
+	* .hgignore: Updated.
+
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
