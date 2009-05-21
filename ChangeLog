@@ -1,5 +1,12 @@
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
+	* generated/java/nio/channels/AlreadyBoundException.java,
+	* generated/sun/awt/X11/generator/sizer.64.c,
+	* generated/sun/awt/X11/generator/sizes.64:
+	Added missing generated files.
+
+2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Bump JDK changeset/md5sum to include aph's
 	LCMS patch.
