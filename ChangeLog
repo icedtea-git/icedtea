@@ -1,5 +1,11 @@
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Bump JDK changeset/md5sum to include aph's
+	LCMS patch.
+
+2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
 	* generated/javax/swing/plaf/nimbus/NimbusDefaults.java:
 	Remove @Override annotations which cause ecj to spew.
 
