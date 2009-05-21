@@ -1,6 +1,14 @@
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Update list of generated files with
+	Nimbus source.
+	* acinclude.m4:
+	Turn off Nimbus source code generation by default.
+
+2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Apply patch and use our generated source directory
 	when ENABLE_NIMBUS_GENERATION is not enabled.  Symlink
 	JIBX when it is.
