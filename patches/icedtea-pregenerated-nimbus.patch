@@ -12,3 +12,15 @@ diff -Nru openjdk.orig/jdk/make/javax/swing/plaf/Makefile openjdk/jdk/make/javax
  
  # Nimbus is handled in its own directory
  AUTO_JAVA_PRUNE = nimbus
+diff -Nru openjdk.orig/jdk/make/javax/swing/plaf/nimbus/Makefile openjdk/jdk/make/javax/swing/plaf/nimbus/Makefile
+--- openjdk.orig/jdk/make/javax/swing/plaf/nimbus/Makefile	2009-05-08 16:10:44.000000000 +0100
++++ openjdk/jdk/make/javax/swing/plaf/nimbus/Makefile	2009-05-21 17:12:39.000000000 +0100
+@@ -44,8 +44,6 @@
+ #
+ # Rules
+ #
+-CLASSES_INIT = $(NIMBUS_GENSRC_DIR)
+-
+ include $(BUILDDIR)/common/Classes.gmk
+ 
+ $(NIMBUS_GENSRC_DIR): $(NIMBUS_SKIN_FILE) $(NIMBUS_GENERATOR_JAR)
