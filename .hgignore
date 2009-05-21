@@ -3,6 +3,7 @@ syntax: glob
 
 syntax: regexp
 configure
+missing
 aclocal.m4
 autom4te.cache
 cacao
@@ -461,6 +462,20 @@ rt/netscape/javascript/JSObject.java
 rt/netscape/javascript/JSProxy.java
 rt/netscape/javascript/JSRunnable.java
 rt/netscape/javascript/JSUtil.java
+rt/com/sun/net/httpserver/Authenticator.java
+rt/com/sun/net/httpserver/BasicAuthenticator.java
+rt/com/sun/net/httpserver/Filter.java
+rt/com/sun/net/httpserver/Headers.java
+rt/com/sun/net/httpserver/HttpContext.java
+rt/com/sun/net/httpserver/HttpExchange.java
+rt/com/sun/net/httpserver/HttpHandler.java
+rt/com/sun/net/httpserver/HttpPrincipal.java
+rt/com/sun/net/httpserver/HttpServer.java
+rt/com/sun/net/httpserver/HttpsConfigurator.java
+rt/com/sun/net/httpserver/HttpsExchange.java
+rt/com/sun/net/httpserver/HttpsParameters.java
+rt/com/sun/net/httpserver/HttpsServer.java
+rt/com/sun/net/httpserver/package-info.java
 generated/sun/awt/X11/generator/sizer.32.orig
 pulseaudio/bin
 pulseaudio/.*\.o
@@ -468,3 +483,8 @@ pulseaudio/src/native/org_.*.h
 pulseaudio/.*jar
 pulse-java.jar
 hotspot.tar.gz
+corba.tar.gz
+jaxp.tar.gz
+jaxws.tar.gz
+jdk.tar.gz
+langtools.tar.gz
