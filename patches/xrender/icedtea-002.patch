@@ -10,10 +10,9 @@ diff -Nru openjdk.orig/jdk/make/sun/xawt/Makefile openjdk/jdk/make/sun/xawt/Make
                     $(LDFLAGS_COMMON) $(AWT_RUNPATH) $(OTHER_LDFLAGS) -lXtst -lXi
  
  ifeq  ($(PLATFORM), solaris)
-diff -Nru openjdk.orig/jdk/make/sun/xawt/mapfile-vers openjdk/jdk/make/sun/xawt/mapfile-vers
---- openjdk.orig/jdk/make/sun/xawt/mapfile-vers	2009-01-18 01:30:31.000000000 +0000
-+++ openjdk/jdk/make/sun/xawt/mapfile-vers	2009-01-18 01:48:17.000000000 +0000
-@@ -316,6 +316,13 @@
+--- openjdk/jdk/make/sun/xawt/mapfile-vers.orig	2009-05-22 22:09:17.215916337 +0200
++++ openjdk/jdk/make/sun/xawt/mapfile-vers	2009-05-22 22:11:26.919916611 +0200
+@@ -334,6 +334,15 @@
          Java_sun_java2d_opengl_GLXSurfaceData_initOps;
          Java_sun_java2d_opengl_GLXSurfaceData_initPbuffer;
  
@@ -22,13 +21,20 @@ diff -Nru openjdk.orig/jdk/make/sun/xawt/mapfile-vers openjdk/jdk/make/sun/xawt/
 +        Java_sun_java2d_x11_XSurfaceData_XResetClip;
 +        Java_sun_java2d_x11_XSurfaceData_XSetClip;
 +        Java_sun_java2d_x11_XSurfaceData_flushNativeSurface;
++       Java_sun_java2d_x11_XSurfaceData_isDrawableValid;
++        Java_sun_java2d_x11_XSurfaceData_setInvalid;
 +        Java_sun_java2d_x11_XSurfaceData_XSetGraphicsExposures;
 +
          Java_sun_java2d_x11_X11PMBlitBgLoops_nativeBlitBg;
          Java_sun_java2d_x11_X11PMBlitLoops_nativeBlit;
          Java_sun_java2d_x11_X11PMBlitLoops_updateBitmask;
-@@ -338,16 +345,10 @@
- 	Java_sun_java2d_x11_X11SurfaceData_isDrawableValid;
+@@ -351,21 +360,13 @@
+ 	Java_sun_java2d_x11_X11Renderer_XFillRect;
+ 	Java_sun_java2d_x11_X11Renderer_XFillRoundRect;
+         Java_sun_java2d_x11_X11Renderer_devCopyArea;
+-        Java_sun_java2d_x11_X11SurfaceData_setInvalid;
+         Java_sun_java2d_x11_X11SurfaceData_initIDs;
+-	Java_sun_java2d_x11_X11SurfaceData_isDrawableValid;
          Java_sun_java2d_x11_X11SurfaceData_isDgaAvailable;
  	Java_sun_java2d_x11_X11SurfaceData_isShmPMAvailable;
 -        Java_sun_java2d_x11_X11SurfaceData_initOps;
