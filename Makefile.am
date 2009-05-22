@@ -3138,7 +3138,7 @@ if ENABLE_NIMBUS_GENERATION
 	ln -s $(JIBX_DIR)/jibx-run.jar $(JIBX_DEPS_DIR)
 else
 	mkdir -p $(BUILD_OUTPUT_DIR)/gensrc/javax/swing/plaf
-	cp -a $(abs_topbuilddir)/generated/javax/swing/plaf/nimbus \
+	cp -a $(abs_top_builddir)/generated/javax/swing/plaf/nimbus \
 	  $(BUILD_OUTPUT_DIR)/gensrc/javax/swing/plaf
 endif
 endif

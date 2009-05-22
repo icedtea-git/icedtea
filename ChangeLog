@@ -1,3 +1,7 @@
+2009-05-22  Lillian Angel  <langel@redhat.com>
+
+	* Makefile.am: Fixed typo.
+
 2009-05-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
