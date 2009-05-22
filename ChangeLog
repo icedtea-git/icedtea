@@ -1,5 +1,11 @@
 2009-05-22  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/xrender/icedtea-002.patch: Correct rebase. Add
+	Java_sun_java2d_x11_XSurfaceData_isDrawableValid and
+	Java_sun_java2d_x11_XSurfaceData_setInvalid back.
+
+2009-05-22  Mark Wielaard  <mark@klomp.org>
+
 	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp:
 	Define InlineSmallCode, using x86 value to begin with.
 
