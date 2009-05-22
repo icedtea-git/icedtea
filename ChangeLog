@@ -1,5 +1,14 @@
 2009-05-22  Mark Wielaard  <mark@klomp.org>
 
+	* Makefile.am(ICEDTEA_PATCHES): patches/icedtea-samejvm-safe.patch
+	added.
+	* patches/icedtea-samejvm-safe.patch: Add packages that are
+	samejvm-safe to TEST.ROOT.
+	* test/jtreg/excludelist.jdk.jtx: Add java/awt/FontClass/CreateFont
+	tests. Hangs jtreg test suite.
+
+2009-05-22  Mark Wielaard  <mark@klomp.org>
+
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/*,
 	overlays/openjdk/jdk/test/com/sun/media/sound/*:
 	Import Gervill fixes from CVS. See CHANGES.txt:
