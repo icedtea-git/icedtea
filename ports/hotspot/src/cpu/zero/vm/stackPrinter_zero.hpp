@@ -181,7 +181,7 @@ class ZeroStackPrinter {
               }
             }
             else {
-              snprintf(_buf, _buflen, "%s[%d]",
+              snprintf(_buf, _buflen, "%s[" INTPTR_FORMAT "]",
                        top_frame ? "stack_word" : "local",
                        istate->stack_base() - addr - 1);
               field = _buf;
@@ -230,7 +230,7 @@ class ZeroStackPrinter {
             }
           }
           else {
-            snprintf(_buf, _buflen, "%s[%d]",
+            snprintf(_buf, _buflen, "%s[" INTPTR_FORMAT "]",
                      top_frame ? "stack_word" : "local",
                      stack_base - addr - 1);
             field = _buf;

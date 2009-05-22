@@ -112,3 +112,5 @@ class ConcreteRegisterImpl : public AbstractRegisterImpl {
   static const int max_gpr;
   static const int max_fpr;
 };
+
+CONSTANT_REGISTER_DECLARATION(Register, noreg, (-1));

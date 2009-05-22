@@ -60,6 +60,12 @@ void MacroAssembler::advance(int bytes)
   sync();
 }
 
+RegisterOrConstant MacroAssembler::delayed_value_impl(intptr_t* delayed_value_addr,
+						      Register tmpl, int offset) 
+{
+  Unimplemented();
+}
+
 static void _UnimplementedStub()
 {
   report_unimplemented(__FILE__, __LINE__);

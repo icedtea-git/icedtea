@@ -28,4 +28,7 @@
 class InterpreterMacroAssembler : public MacroAssembler {
  public:
   InterpreterMacroAssembler(CodeBuffer* code) : MacroAssembler(code) {}
+  RegisterOrConstant delayed_value_impl(intptr_t* delayed_value_addr, Register tmp, int offset) {
+    Unimplemented();
+  }
 };

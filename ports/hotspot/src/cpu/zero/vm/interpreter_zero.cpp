@@ -46,6 +46,11 @@ address InterpreterGenerator::generate_abstract_entry()
   return UnimplementedEntry();
 }
 
+address InterpreterGenerator::generate_method_handle_entry()
+{
+  return UnimplementedEntry();
+}
+
 int AbstractInterpreter::size_activation(methodOop method,
                                          int tempcount,
                                          int popframe_extra_args,

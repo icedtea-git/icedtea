@@ -1,5 +1,32 @@
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp:
+	(delayed_value_impl(intptr_t,Register,int)): Add stub.
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp:
+	(delayed_value_impl(intptr_t,Register,int)): Declared.
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp:
+	Handle Interpreter::method_handle.
+	* ports/hotspot/src/cpu/zero/vm/interp_masm_zero.hpp:
+	(delayed_value_impl(intptr_t,Register,int)): Add stub.
+	* ports/hotspot/src/cpu/zero/vm/interpreterGenerator_zero.hpp:
+	(generate_method_handle_entry()): Declared.
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.cpp:
+	(generate_method_handle_entry()): Add stub.
+	* ports/hotspot/src/cpu/zero/vm/jni_zero.h:
+	Define jlong depending on whether _LP64 is defined,
+	as with format specifier in globalDefinitions.
+	* ports/hotspot/src/cpu/zero/vm/methodHandles_zero.cpp:
+	Empty class required by invokedynamic support.
+	* ports/hotspot/src/cpu/zero/vm/register_zero.hpp:
+	Declare noreg.
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp:
+	Use INTPTR_FORMAT instead of %d for pointers to compile on 64-bit
+	platforms.
+	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp:
+	Define HeapBaseMinAddress as 2G (copied from x86_64).
+
+2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
 	* acinclude.m4:
 	Search same directories when using
 	--with-openjdk as --with-icedtea.

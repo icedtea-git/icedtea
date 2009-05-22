@@ -28,5 +28,10 @@
 #define JNICALL
 
 typedef int jint;
-typedef long long jlong;
 typedef signed char jbyte;
+
+#ifdef _LP64
+typedef long jlong;
+#else
+typedef long long jlong;
+#endif

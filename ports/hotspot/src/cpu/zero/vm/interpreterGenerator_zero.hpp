@@ -35,3 +35,4 @@
   address generate_math_entry(AbstractInterpreter::MethodKind kind);
   address generate_empty_entry();
   address generate_accessor_entry();
+  address generate_method_handle_entry();

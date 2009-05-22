@@ -751,6 +751,10 @@ address AbstractInterpreterGenerator::generate_method_entry(
     entry_point = ((InterpreterGenerator*)this)->generate_abstract_entry();
     break;
 
+  case Interpreter::method_handle:
+    entry_point = ((InterpreterGenerator*)this)->generate_method_handle_entry();
+    break;
+
   case Interpreter::java_lang_math_sin:
   case Interpreter::java_lang_math_cos:
   case Interpreter::java_lang_math_tan:
