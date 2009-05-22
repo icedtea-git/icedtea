@@ -521,7 +521,7 @@ public class SoftMainMixer {
                         cur_registeredMixers = null;
                     }
                 }
-                
+
                 if(!buffers[CHANNEL_MONO].isSilent())
                 {
                     float[] mono = buffers[CHANNEL_MONO].array();
@@ -572,7 +572,7 @@ public class SoftMainMixer {
             if (voicestatus[i].active)
                 if (voicestatus[i].channelmixer == null)
                     voicestatus[i].processAudioLogic(buffers);
-        
+
         if(!buffers[CHANNEL_MONO].isSilent())
         {
             float[] mono = buffers[CHANNEL_MONO].array();

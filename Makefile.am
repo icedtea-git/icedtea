@@ -2034,6 +2034,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-alsa-default-device.patch \
 	patches/icedtea-linker-libs-order.patch \
 	patches/icedtea-testenv.patch \
+	patches/icedtea-samejvm-safe.patch \
 	patches/icedtea-pr261.patch \
 	patches/icedtea-doc-headers.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-bytecodeInterpreter.patch \

@@ -803,7 +803,7 @@ public class SoftVoice extends VoiceStatus {
             if (rightdry != null)
                 mixAudioStream(rightdry, left, last_out_mixer_left,
                         out_mixer_left);
-        } else {            
+        } else {
             if(rightdry == null && 
                     last_out_mixer_left == last_out_mixer_right &&
                     out_mixer_left == out_mixer_right)
@@ -822,7 +822,7 @@ public class SoftVoice extends VoiceStatus {
             }
         }
 
-        if (rightdry == null) {            
+        if (rightdry == null) {
             mixAudioStream(leftdry, eff1, last_out_mixer_effect1,
                     out_mixer_effect1);
             mixAudioStream(leftdry, eff2, last_out_mixer_effect2,

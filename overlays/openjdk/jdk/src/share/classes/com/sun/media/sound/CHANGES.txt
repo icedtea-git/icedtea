@@ -1,3 +1,16 @@
+6823446: Gervill SoftLowFrequencyOscillator fails when freq is set to 0 cent or 8.1758 Hz.
+6823445: Gervill SoftChannel/ResetAllControllers jtreg test fails after portamento fix from last merge. 
+6821030: Merge OpenJDK Gervill with upstream sources, Q1CY2009
+
+  - Fix: Notes get stuck on when we overflow the synthesizer with rapid note on/off messages.
+         JTreg test has been created:
+            test/com/sun/media/sound/SoftChannel/NoteOverFlowTest
+  - Fix: Portamento controller reset to wrong value in SoftChannel.resetAllControllers.
+         This caused incorrect glider effect in some midi files.
+         For example in TuningApplet1 in TET-7 keyboard,
+         when note was pressed for first time a glider effect could be heard.
+  - Fix: Delay modulation calculation in SoftChorus.LFODelay where incorrect.
+  - Fix: Removed unnecessary volatile keywords in SoftChorus.
   - Fix: Throw IllegalArgumentException Exception on
          invalid soundbank to:
          SoftSynthesizer.unloadAllInstruments(Soundbank soundbank)
