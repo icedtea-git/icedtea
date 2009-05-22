@@ -1,3 +1,8 @@
+2009-05-22  Andrew John Hughes  <ahughes@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp:
+	Define InlineSmallCode, using x86 value to begin with.
+
 2009-05-22  Lillian Angel  <langel@redhat.com>
 
 	* Makefile.am: Fixed typo.
