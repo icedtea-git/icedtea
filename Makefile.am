@@ -1581,11 +1581,6 @@ ICEDTEA_ENV += \
 	"ALT_JAR_CMD=$(ALT_JAR_CMD)"
 endif
 
-if !ENABLE_NIMBUS_GENERATION
-ICEDTEA_ENV += \
-	"GENSRCDIR=$(abs_top_builddir)/generated"
-endif
-
 env:
 	@echo 'unset JAVA_HOME'
 	@echo 'export $(ICEDTEA_ENV)'
@@ -3140,6 +3135,10 @@ if ENABLE_NIMBUS_GENERATION
 	ln -s $(XPP3_JAR) $(JIBX_DEPS_DIR)
 	ln -s $(JIBX_DIR)/jibx-bind.jar $(JIBX_DEPS_DIR)
 	ln -s $(JIBX_DIR)/jibx-run.jar $(JIBX_DEPS_DIR)
+else
+	mkdir -p $(BUILD_OUTPUT_DIR)/gensrc/javax/swing/plaf
+	cp -a $(abs_topbuilddir)/generated/javax/swing/plaf/nimbus \
+	  $(BUILD_OUTPUT_DIR)/gensrc/javax/swing/plaf
 endif
 endif
 	mkdir -p stamps
