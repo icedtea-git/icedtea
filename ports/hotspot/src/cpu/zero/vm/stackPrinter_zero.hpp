@@ -116,6 +116,12 @@ class ZeroStackPrinter {
               value = istate->method()->name_and_sig_as_C_string(_buf,_buflen);
               field = "istate->_method";
             }
+            else if (is_valid && !strcmp(field, "_bcp") && istate->bcp()) {
+              snprintf(_buf, _buflen, PTR_FORMAT " (bci %d)", istate->bcp(),
+                       istate->method()->bci_from(istate->bcp()));
+              value = _buf;
+              field = "istate->_bcp";
+            }
             else {
               snprintf(_buf, _buflen, "%sistate->%s",
                        field[strlen(field) - 1] == ')' ? "(": "", field);

@@ -1,5 +1,11 @@
 2009-05-22  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
+	Include interpreterRuntime.hpp and scopeDesc.hpp.
+	(ZeroStackPrinter::print_word): Decode bcx to get bci.
+
+2009-05-22  Gary Benson  <gbenson@redhat.com>
+
 	* patches/icedtea-zero.patch
 	(vmError.cpp): Don't include interpreterRuntime.hpp here.
 	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
