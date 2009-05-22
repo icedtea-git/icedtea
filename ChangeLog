@@ -1,3 +1,17 @@
+2009-05-22  Omair Majid  <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/JNLPFile.java (parse): Fix comment to reflect 
+	that the element can be either 'java' or 'j2se'.
+	* netx/net/sourceforge/jnlp/JREDesc.java: Fix comment to reflect a 'java'
+	element. New private variable vmArgs to keep track of 'java-vm-args'.
+	(JREDesc): Modify to take in an additional parameter vmArgs and store it in
+	vmArgs.
+	(getVMArgs): New function. Return the value of 'java-vm-args' attribute.
+	* netx/net/sourceforge/jnlp/Parser.java: Fix comments to reflect either a
+	'java' or 'j2se' element.
+	(getResourceDesc): Treat 'java' element identically to 'j2se' element.
+	(getJRE): Read in the value of the 'java-vm-args' attribute. 
+
 2009-07-30  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp:

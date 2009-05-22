@@ -505,7 +505,7 @@ public class JNLPFile {
             sourceLocation = parser.getFileLocation();
 
             info = parser.getInfo(root);
-            resources = parser.getResources(root, false); // false == not a j2se resources section
+            resources = parser.getResources(root, false); // false == not a j2se/java resources section
             launchType = parser.getLauncher(root);
             security = parser.getSecurity(root);
         }

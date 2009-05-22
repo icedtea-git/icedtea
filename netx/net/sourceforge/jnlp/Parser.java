@@ -186,7 +186,7 @@ class Parser {
      * node (jnlp or j2se).
      *
      * @param parent the parent node (either jnlp or j2se)
-     * @param j2se true if the resources are located under a j2se node
+     * @param j2se true if the resources are located under a j2se or java node
      * @throws ParseException if the JNLP file is invalid
      */
     public List getResources(Node parent, boolean j2se) throws ParseException {
@@ -208,7 +208,7 @@ class Parser {
      * Returns the ResourcesDesc element at the specified node.
      *
      * @param node the resources node
-     * @param j2se true if the resources are located under a j2se node
+     * @param j2se true if the resources are located under a j2se or java node
      * @throws ParseException if the JNLP file is invalid
      */
     public ResourcesDesc getResourcesDesc(Node node, boolean j2se) throws ParseException {
@@ -231,7 +231,7 @@ class Parser {
                 if (!isTrustedEnvironment())
                     throw new ParseException(R("PUntrustedNative"));
 
-            if ("j2se".equals(name)) {
+            if ("j2se".equals(name) || "java".equals(name)) {
                 if (getChildNode(root, "component-desc") != null)
                     if (strict)
                         throw new ParseException(R("PExtensionHasJ2SE"));
@@ -273,12 +273,13 @@ class Parser {
     /**
      * Returns the JRE element at the specified node.
      *
-     * @param node the j2se node 
+     * @param node the j2se/java node 
      * @throws ParseException if the JNLP file is invalid
      */
     public JREDesc getJRE(Node node) throws ParseException {
         Version version = getVersion(node, "version", null);
         URL location = getURL(node, "href", base);
+        String vmArgs = getAttribute(node, "java-vm-args",null);
         String initialHeap = getAttribute(node, "initial-heap-size", null);
         String maxHeap = getAttribute(node, "max-heap-size", null);
         List resources = getResources(node, true);
@@ -286,7 +287,7 @@ class Parser {
         // require version attribute
         getRequiredAttribute(node, "version", null);
 
-        return new JREDesc(version, location, initialHeap, maxHeap, resources);
+        return new JREDesc(version, location, vmArgs, initialHeap, maxHeap, resources);
     }
 
     /**

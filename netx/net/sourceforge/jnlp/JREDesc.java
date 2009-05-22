@@ -22,7 +22,7 @@ import java.net.*;
 import java.util.*;
 
 /**
- * The J2SE element.
+ * The J2SE/Java element.
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
  * @version $Revision: 1.5 $
@@ -41,6 +41,9 @@ public class JREDesc {
     /** maximum head size */
     private long maximumHeapSize;
 
+    /** args to pass to the vm */
+    private String vmArgs;
+    
     /** list of ResourceDesc objects */
     private List resources;
 
@@ -55,9 +58,12 @@ public class JREDesc {
      * @param maximumHeadSize maximum head size
      * @param resources list of ResourceDesc objects
      */
-    public JREDesc(Version version, URL location, String initialHeapSize, String maximumHeapSize, List resources) {
+    public JREDesc(Version version, URL location, 
+            String vmArgs, String initialHeapSize, 
+            String maximumHeapSize, List resources) {
         this.version = version;
         this.location = location;
+        this.vmArgs = vmArgs;
         this.initialHeapSize = heapToLong(initialHeapSize);
         this.maximumHeapSize = heapToLong(maximumHeapSize);
         this.resources = resources;
@@ -109,6 +115,13 @@ public class JREDesc {
         return resources;
     }
 
+    /**
+     * Returns the additional arguments to pass to the Java VM
+     */
+    public String getVMArgs() {
+        return vmArgs;
+    }
+    
     /**
      * Convert a heap size description string to a long value
      * indicating the heap min/max size.
