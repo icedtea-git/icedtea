@@ -1,3 +1,10 @@
+2009-05-22  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Copy over Nimbus source files manually
+	rather than using generated as GENSRC
+	to avoid conflicts with IcedTea6.
+	
 2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
