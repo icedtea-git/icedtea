@@ -1,3 +1,8 @@
+2009-05-23  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (LIVECONNECT_DIR): Add -C lib/rt net.
+	(rt-closed.jar): Don't unconditionally add -C lib/rt net.
+
 2009-05-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp:
