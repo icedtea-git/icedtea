@@ -1,0 +1,11 @@
+--- openjdk/jdk/make/common/shared/Defs-versions.gmk.orig	2009-05-23 23:41:57.000000000 +0200
++++ openjdk/jdk/make/common/shared/Defs-versions.gmk	2009-05-23 23:42:04.000000000 +0200
+@@ -192,7 +192,7 @@
+ # Generic
+ REQUIRED_ANT_VER          = 1.6.3
+ REQUIRED_BOOT_VER         = 1.5
+-REQUIRED_FREETYPE_VERSION = 2.3.0
++REQUIRED_FREETYPE_VERSION = 2.2.1
+ REQUIRED_MAKE_VER         = 3.78
+ REQUIRED_UNZIP_VER        = 5.12
+ REQUIRED_ZIP_VER          = 2.2
