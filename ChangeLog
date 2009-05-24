@@ -1,3 +1,13 @@
+2009-05-24  Mark Wielaard  <mark@klomp.org>
+
+	* configure.ac (JNLP_ABOUT_NEEDED): New check.
+	* Makefile.am (JNLP_ABOUT_TARGET): Set to extra-lib/about.jar
+	when needed.
+	(stamps/icedtea.stamp): Depend on JNLP_ABOUT_TARGET. Only copy
+	about.jar and jnlp resources when needed.
+	(stamps/icedtea-debug.stamp): Likewise.
+	(stamps/jibx.stamp): Don't depend on extra-lib/about.jar.
+
 2009-05-23  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am (LIVECONNECT_DIR): Add -C lib/rt net.

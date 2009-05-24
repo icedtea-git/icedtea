@@ -27,17 +27,20 @@ ICEDTEAPLUGIN_CLEAN = clean-IcedTeaNPPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaNPPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 LIVECONNECT_DIR = -C lib/rt netscape -C lib/rt net
+JNLP_ABOUT_TARGET = extra-lib/about.jar 
 else
 if ENABLE_PLUGIN
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 LIVECONNECT_DIR = -C lib/rt netscape -C lib/rt net
+JNLP_ABOUT_TARGET = extra-lib/about.jar 
 else
 ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
 PLUGIN_PATCH = patches/icedtea-plugin.patch
 LIVECONNECT_DIR =
+JNLP_ABOUT_TARGET = 
 endif
 endif
 
@@ -2651,7 +2654,7 @@ NETX_RESOURCE_DIR=openjdk/jdk/src/share/classes/net/sourceforge/jnlp/resources
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	$(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) \
+	$(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) $(JNLP_ABOUT_TARGET) \
 	stamps/jibx.stamp stamps/cacao.stamp \
 	stamps/pulse-java.stamp stamps/visualvm.stamp
 	$(ARCH_PREFIX) $(MAKE) \
@@ -2704,12 +2707,14 @@ if WITH_VISUALVM
 	cp -r netbeans/nbbuild/netbeans_visualvm/profiler3 \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm	
 endif
+if JNLP_ABOUT_NEEDED
 	cp $(NETX_RESOURCE_DIR)/about.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
 	cp $(NETX_RESOURCE_DIR)/about.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
+endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
@@ -2735,7 +2740,7 @@ endif
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	$(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) \
+	$(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) $(JNLP_ABOUT_TARGET) \
 	stamps/jibx.stamp stamps/cacao.stamp \
 	stamps/pulse-java.stamp stamps/visualvm.stamp
 	$(ARCH_PREFIX) $(MAKE) \
@@ -2788,12 +2793,14 @@ if WITH_VISUALVM
 	cp -r netbeans/nbbuild/netbeans_visualvm/profiler3 \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm
 endif
+if JNLP_ABOUT_NEEDED
 	cp $(NETX_RESOURCE_DIR)/default.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib
 	cp $(NETX_RESOURCE_DIR)/default.jnlp \
 	  extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib
+endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
@@ -3127,7 +3134,7 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net ; \
 	fi
 
-stamps/jibx.stamp: extra-lib/about.jar
+stamps/jibx.stamp:
 if ENABLE_NIMBUS
 if ENABLE_NIMBUS_GENERATION
 	mkdir $(JIBX_DEPS_DIR)

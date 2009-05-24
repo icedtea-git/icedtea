@@ -169,6 +169,8 @@ AC_ARG_ENABLE([npplugin],
 AM_CONDITIONAL(ENABLE_NPPLUGIN, test "x${enable_npplugin}" = "xyes")
 AC_MSG_RESULT(${enable_npplugin})
 
+AM_CONDITIONAL(JNLP_ABOUT_NEEDED, test "x${enable_npplugin}" = "xyes" -o "x${enable_plugin}" = "xyes")
+
 AC_MSG_CHECKING([whether to include PulseAudio support])
 AC_ARG_ENABLE([pulse-java],
               [AS_HELP_STRING([--enable-pulse-java],
