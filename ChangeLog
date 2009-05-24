@@ -1,5 +1,10 @@
 2009-05-24  Mark Wielaard  <mark@klomp.org>
 
+	* patches/xrender/icedtea-001.patch: Initialize X11SurfaceData
+	implicitly, not explicitly.
+
+2009-05-24  Mark Wielaard  <mark@klomp.org>
+
 	* configure.ac (JNLP_ABOUT_NEEDED): New check.
 	* Makefile.am (JNLP_ABOUT_TARGET): Set to extra-lib/about.jar
 	when needed.

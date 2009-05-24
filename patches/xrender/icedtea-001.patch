@@ -185,8 +185,9 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsDevice.java op
          }
      }
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java openjdk/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java
---- openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java	2009-05-13 00:06:49.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java	2009-05-13 01:02:29.000000000 +0100
+diff -r 827a93c4d06a src/solaris/classes/sun/awt/X11GraphicsEnvironment.java
+--- openjdk/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java	Thu May 14 10:58:07 2009 -0700
++++ openjdk/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java	Sun May 24 22:35:35 2009 +0200
 @@ -48,9 +48,9 @@
  import sun.font.Font2D;
  import sun.font.FontManager;
@@ -200,7 +201,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.ja
  
  /**
   * This is an implementation of a GraphicsEnvironment object for the
-@@ -175,19 +175,43 @@
+@@ -175,19 +175,45 @@
                                  "pipeline (GLX 1.3 not available)");
                          }
                      }
@@ -222,7 +223,9 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.ja
 +                            XRSurfaceData.initXRSurfaceData();
 +                        }else
 +                        {
-+                        	X11SurfaceData.initX11SurfaceData();
++                            // X11SurfaceData.initX11SurfaceData();
++                            // Don't initialize here the X11SurfaceData
++                            // static initializer will do it for us later.
 +                        }
                  }
 -
@@ -248,7 +251,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.ja
  
      private static native boolean initGLX();
  
-@@ -198,6 +222,15 @@
+@@ -198,6 +224,15 @@
      public static boolean isGLXVerbose() {
          return glxVerbose;
      }
@@ -264,7 +267,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.ja
  
      /**
       * Checks if Shared Memory extension can be used.
-@@ -1119,4 +1152,14 @@
+@@ -1119,4 +1154,14 @@
  
      public void paletteChanged() {
      }
@@ -365,8 +368,8 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/UnixSurfaceManagerFact
          }
      }
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java openjdk/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java
---- openjdk.orig/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	2009-05-13 00:06:49.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	2009-05-13 01:02:29.000000000 +0100
+--- openjdk/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	Thu May 14 10:58:07 2009 -0700
++++ openjdk/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	Sun May 24 22:35:22 2009 +0200
 @@ -42,10 +42,7 @@
  import java.awt.image.Raster;
  import java.awt.peer.ComponentPeer;
@@ -388,11 +391,13 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.jav
      protected native void initSurface(int depth, int width, int height,
                                        long drawable);
      native boolean isDrawableValid();
-@@ -199,7 +196,10 @@
-     protected static TextPipe x11textpipe;
+@@ -200,6 +197,13 @@
      protected static boolean dgaAvailable;
  
--    static {
+     static {
++        initX11SurfaceData();
++    }
++
 +    public static void initX11SurfaceData()
 +    {
 +    	if(!X11GraphicsEnvironment.isX11SurfaceDataInitialized())
@@ -400,7 +405,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.jav
          if (!GraphicsEnvironment.isHeadless()) {
              // If a screen magnifier is present, don't attempt to use DGA
              String magPresent = (String) java.security.AccessController.doPrivileged
-@@ -233,9 +233,12 @@
+@@ -233,9 +237,12 @@
                  X11PMBlitLoops.register();
                  X11PMBlitBgLoops.register();
              }
@@ -415,7 +420,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.jav
      /**
       * Returns true if we can use DGA on any of the screens
       */
-@@ -631,7 +634,7 @@
+@@ -632,7 +639,7 @@
      {
          // assert SunToolkit.isAWTLockHeldByCurrentThread();
  
