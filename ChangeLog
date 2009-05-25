@@ -1,3 +1,10 @@
+2009-05-25  Omair Majid  <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/resources/Messages.properties: Add
+	RUnexpected to show generic unexpected information.
+	* netx/net/sourceforge/jnlp/runtime/Boot.java (run): Show more
+	information about the fatal exception.
+
 2009-05-22  Omair Majid  <omajid@redhat.com>
 
 	* netx/net/sourceforge/jnlp/JNLPFile.java (parse): Fix comment to reflect 

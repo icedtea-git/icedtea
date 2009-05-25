@@ -209,7 +209,8 @@ public final class Boot implements PrivilegedAction {
             if (JNLPRuntime.isDebug())
                 ex.printStackTrace();
 
-            fatalError(ex.getMessage());
+            fatalError(JNLPRuntime.getMessage("RUnexpected", 
+                        new Object[] {ex.toString(), ex.getStackTrace()[0]} ));
         }
 
         return null;
