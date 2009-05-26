@@ -10,9 +10,8 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
  endif
  
  #
-diff -Nru openjdk.orig/jdk/src/share/bin/java.c openjdk/jdk/src/share/bin/java.c
---- openjdk.orig/jdk/src/share/bin/java.c	2009-05-19 01:11:05.000000000 +0100
-+++ openjdk/jdk/src/share/bin/java.c	2009-05-20 20:22:14.000000000 +0100
+--- openjdk/jdk/src/share/bin/java.c.orig	2009-05-26 21:16:09.000000000 +0000
++++ openjdk/jdk/src/share/bin/java.c	2009-05-26 21:29:41.000000000 +0000
 @@ -175,6 +175,8 @@
    InvocationFunctions ifn;
  } JavaMainArgs;
@@ -22,7 +21,7 @@ diff -Nru openjdk.orig/jdk/src/share/bin/java.c openjdk/jdk/src/share/bin/java.c
  /*
   * Entry point.
   */
-@@ -1871,6 +1873,8 @@
+@@ -1875,6 +1877,8 @@
  
      { /* Create a new thread to create JVM and invoke main method */
        JavaMainArgs args;
@@ -31,7 +30,7 @@ diff -Nru openjdk.orig/jdk/src/share/bin/java.c openjdk/jdk/src/share/bin/java.c
        int rslt;
  
        args.argc = argc;
-@@ -1879,7 +1883,18 @@
+@@ -1883,7 +1887,17 @@
        args.classname = classname;
        args.ifn = *ifn;
  
@@ -39,9 +38,8 @@ diff -Nru openjdk.orig/jdk/src/share/bin/java.c openjdk/jdk/src/share/bin/java.c
 +      memset((void*)&cacao_args, 0, sizeof(cacao_args));
 +      cacao_args.version = JNI_VERSION_CACAO;
 +
-+      jvm_init_rv = ifn.GetDefaultJavaVMInitArgs(&cacao_args);
-+      if (_launcher_debug)
-+          printf("using cacao as VM: %s\n", (jvm_init_rv == 0) ? "yes" : "no");
++      jvm_init_rv = ifn->GetDefaultJavaVMInitArgs(&cacao_args);
++      JLI_TraceLauncher("using cacao as VM: %s\n", (jvm_init_rv == 0) ? "yes" : "no");
 +
 +      if (jvm_init_rv == 0)
 +          return JavaMain((void*)&args);
