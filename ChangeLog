@@ -3,7 +3,7 @@
 	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp
 	(SharkDecacher::location_type): New method.
 	(SharkDecacher::stack_location_type): Use the above.
-	(SharkDecacher::local_location_type): Use the above.
+	(SharkDecacher::local_location_type): Likewise.
 
 2009-05-22  Gary Benson  <gbenson@redhat.com>
 
