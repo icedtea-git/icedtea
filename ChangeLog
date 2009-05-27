@@ -1,6 +1,12 @@
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Allow setting of some zip files and not
+	others.
+	
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Fix endif placement.
 
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
