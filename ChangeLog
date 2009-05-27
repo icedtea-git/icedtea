@@ -1,6 +1,11 @@
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Fix endif placement.
+
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Add support for IcedTea project and make this
 	the default.  Update download URLs to be relative
 	to the IcedTea project URL.  Always include javax.script

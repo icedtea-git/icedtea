@@ -1786,14 +1786,6 @@ if WITH_HGREV
 else
 	$(HG) fclone $(ICEDTEA_HG_URL) openjdk;
 endif
-endif
-endif
-endif
-endif
-endif
-endif
-endif
-endif
 else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -1858,6 +1850,14 @@ else
 	  fi ; \
 	  $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
 	fi
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
 endif
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
@@ -2936,7 +2936,6 @@ ICEDTEA_COPY_DIRS = \
 	sun/awt/ \
 	javax/net/ssl \
 	javax/script
-endif
 
 stamps/copy-source-files.stamp: stamps/overlay.stamp
 	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
