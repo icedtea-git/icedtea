@@ -151,6 +151,46 @@ class SharkDecacher : public SharkCacherDecacher {
   {
     return new LocationValue(slot2loc(offset, type));
   }
+  static Location::Type location_type(SharkValue** addr, bool maybe_two_word)
+  {
+    // low addresses this end
+    //                           Type       32-bit    64-bit
+    //   ----------------------------------------------------
+    //   stack[0]    local[3]    jobject    oop       oop
+    //   stack[1]    local[2]    NULL       normal    lng
+    //   stack[2]    local[1]    jlong      normal    invalid
+    //   stack[3]    local[0]    jint       normal    normal
+    //
+    // high addresses this end
+    
+    SharkValue *value = *addr;
+    if (value) {
+      if (value->is_jobject())
+        return Location::oop;
+#ifdef _LP64
+      if (value->is_two_word())
+        return Location::invalid;
+#endif // _LP64
+      return Location::normal;
+    }
+    else {
+      if (maybe_two_word) {
+        value = *(addr - 1);
+        if (value && value->is_two_word()) {
+#ifdef _LP64
+          if (value->is_jlong())
+            return Location::lng;
+          if (value->is_jdouble())
+            return Location::dbl;
+          ShouldNotReachHere();
+#else
+          return Location::normal;
+#endif // _LP64
+        }
+      }
+      return Location::invalid;
+    }
+  }
 
   // Stack slot helpers
  protected:
@@ -160,9 +200,7 @@ class SharkDecacher : public SharkCacherDecacher {
 
   static Location::Type stack_location_type(int index, SharkValue** addr)
   {
-    if (addr[0] && addr[0]->is_jobject())
-      return Location::oop;
-    return Location::normal;
+    return location_type(addr, *addr == NULL);
   }
 
   // Local slot helpers
@@ -173,13 +211,7 @@ class SharkDecacher : public SharkCacherDecacher {
 
   static Location::Type local_location_type(int index, SharkValue** addr)
   {
-    if (addr[0] && addr[0]->is_jobject())
-      return Location::oop;
-    if (addr[0])
-      return Location::normal;
-    if (index > 0 && addr[-1] && addr[-1]->is_two_word())
-      return Location::normal;
-    return Location::invalid;
+    return location_type(addr, index > 0);
   }
 
   // Writer helper
