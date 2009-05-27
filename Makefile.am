@@ -59,7 +59,7 @@ PULSE_JAVA_JAVA_SRCDIR =
 PULSE_JAVA_CLASS_DIR =
 endif
 
-if ENABLE_NIMBUS
+if ENABLE_NIMBUS_GENERATION
 JIBX_DEPS_DIR=$(abs_top_builddir)/jibx
 endif
 
@@ -1568,7 +1568,7 @@ ICEDTEA_ENV += \
 	"DISABLE_NIMBUS=true"
 endif
 
-if !ENABLE_OPTIMIZATIONS
+if DISABLE_OPTIMIZATIONS
 ICEDTEA_ENV += \
 	"NO_OPTIMIZATIONS=true" \
 	"CC_NO_OPT=-O0 -g"
@@ -1646,7 +1646,7 @@ ICEDTEA_ENV_ECJ += \
 	"ALT_HOTSPOT_IMPORT_PATH=$(CACAO_IMPORT_PATH)"
 endif
 
-if !ENABLE_OPTIMIZATIONS
+if DISABLE_OPTIMIZATIONS
 ICEDTEA_ENV_ECJ += \
 	"NO_OPTIMIZATIONS=true" \
 	"CC_NO_OPT=-O0 -g"
@@ -2098,8 +2098,10 @@ if ENABLE_SYSTEMTAP
 ICEDTEA_PATCHES += patches/icedtea-systemtap.patch
 endif
 
+if ENABLE_NIMBUS
 if !ENABLE_NIMBUS_GENERATION
 ICEDTEA_PATCHES += patches/icedtea-pregenerated-nimbus.patch
+endif
 endif
 
 stamps/extract.stamp: stamps/download.stamp

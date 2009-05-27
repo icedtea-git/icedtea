@@ -1,3 +1,24 @@
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Replace !ENABLE_OPTIMIZATIONS with DISABLE_OPTIMIZATIONS
+	for clarity, only apply the Nimbus generation patch when
+	ENABLE_NIMBUS is on but ENABLE_NIMBUS_GENERATION is off.
+	* acinclude.m4:
+	(DISABLE_OPTIMIZATIONS): Renamed from ENABLE_OPTIMIZATIONS
+	for clarity, and added result message on all paths.
+	(AC_CHECK_ENABLE_NIMBUS_GENERATION): Correct message to
+	represent current default of no.
+	(IT_CHECK_ADDITIONAL_VMS): Refactored to provide output on
+	all paths and moved from configure.ac.
+	* configure.ac:
+	Replace additional-vms code with call to IT_CHECK_ADDITIONAL_VMS
+	macro.
+	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp:
+	Remove InlineSmallCode and...
+	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp:
+	...add it here, only needed for Shark builds.
+
 2009-05-26  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/cacao/launcher.patch: Update for OpenJDK 7.

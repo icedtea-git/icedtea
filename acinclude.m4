@@ -665,27 +665,26 @@ AC_DEFUN([FIND_PULSEAUDIO],
   AC_SUBST(PULSEAUDIO_BIN)
 ])
 
-AC_DEFUN([ENABLE_OPTIMIZATIONS],
+AC_DEFUN([DISABLE_OPTIMIZATIONS],
 [
-  AC_MSG_CHECKING(whether to disable optimizations)
+  AC_MSG_CHECKING([whether to disable optimizations and build with -O0 -g])
   AC_ARG_ENABLE([optimizations],
                 [AS_HELP_STRING(--disable-optimizations,build with -O0 -g [[default=no]])],
   [
     case "${enableval}" in
       no)
-        AC_MSG_RESULT([yes, building with -O0 -g])
-        enable_optimizations=no
+        disable_optimizations=yes
         ;;
       *)
-        AC_MSG_RESULT([no])
-        enable_optimizations=yes
+        disable_optimizations=no
         ;;
     esac
   ],
   [
-    enable_optimizations=yes
+    disable_optimizations=no
   ])
-  AM_CONDITIONAL([ENABLE_OPTIMIZATIONS], test x"${enable_optimizations}" = "xyes")
+  AC_MSG_RESULT([$disable_optimizations])
+  AM_CONDITIONAL([DISABLE_OPTIMIZATIONS], test x"${disable_optimizations}" = "xyes")
 ])
 
 AC_DEFUN([FIND_TOOL],
@@ -1506,7 +1505,7 @@ AC_DEFUN([AC_CHECK_ENABLE_NIMBUS_GENERATION],
 [
   AC_MSG_CHECKING(whether to generate the Nimbus source files using JIBX)
   AC_ARG_ENABLE([nimbus-generation],
-	      [AS_HELP_STRING(--enable-nimbus-generation,generate the Nimbus source with JIBX [[default=yes]])],
+	      [AS_HELP_STRING(--enable-nimbus-generation,generate the Nimbus source with JIBX [[default=no]])],
   [
     ENABLE_NIMBUS_GENERATION="${enableval}"
   ],
@@ -1517,4 +1516,47 @@ AC_DEFUN([AC_CHECK_ENABLE_NIMBUS_GENERATION],
   AC_MSG_RESULT(${ENABLE_NIMBUS_GENERATION})
   AM_CONDITIONAL(ENABLE_NIMBUS_GENERATION, test x"${ENABLE_NIMBUS_GENERATION}" = "xyes")
   AC_SUBST(ENABLE_NIMBUS_GENERATION)
+])
+
+AC_DEFUN([IT_CHECK_ADDITIONAL_VMS],
+[
+AC_MSG_CHECKING([for additional virtual machines to build])
+AC_ARG_WITH(additional-vms,
+            AC_HELP_STRING([--with-additional-vms=vm-list],
+	    [build additional virtual machines. Valid value is a comma separated string with the backend names `cacao', `zero' and `shark'.]),
+[
+if test "x${withval}" != x ; then
+  with_additional_vms=${withval}
+  for vm in `echo ${with_additional_vms} | sed 's/,/ /g'`; do
+    case "x$vm" in
+      xcacao) add_vm_cacao=yes;;
+      xzero)  add_vm_zero=yes;;
+      xshark) add_vm_shark=yes;;
+      *) AC_MSG_ERROR([proper usage is --with-additional-vms=vm1,vm2,...])
+    esac
+  done
+fi])
+
+if test "x${with_additional_vms}" = x; then
+   with_additional_vms="none";
+fi
+AC_MSG_RESULT($with_additional_vms)
+
+AM_CONDITIONAL(ADD_CACAO_BUILD, test x$add_vm_cacao != x)
+AM_CONDITIONAL(ADD_ZERO_BUILD,  test x$add_vm_zero  != x || test x$add_vm_shark != x)
+AM_CONDITIONAL(ADD_SHARK_BUILD, test x$add_vm_shark != x)
+AM_CONDITIONAL(BUILD_CACAO, test x$add_vm_cacao != x || test "x${WITH_CACAO}" = xyes)
+
+if test "x${WITH_CACAO}" = xyes && test "x${ADD_CACAO_BUILD_TRUE}" = x; then
+  AC_MSG_ERROR([additional vm is the default vm])
+fi
+if test "x${ZERO_BUILD_TRUE}" = x && test "x${ADD_ZERO_BUILD_TRUE}" = x; then
+  AC_MSG_ERROR([additional vm is the default vm])
+fi
+if test "x${USE_SYSTEM_CACAO_TRUE}" = x; then
+  AC_MSG_ERROR([cannot build with system cacao as additional vm])
+fi
+if test "x${ADD_ZERO_BUILD_TRUE}" = x && test "x${abs_top_builddir}" = "x${abs_top_srcdir}"; then
+  AC_MSG_ERROR([build of additional zero/shark VM requires build with srcdir != builddir])
+fi
 ])
