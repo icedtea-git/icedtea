@@ -1,6 +1,17 @@
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Add support for IcedTea project and make this
+	the default.  Update download URLs to be relative
+	to the IcedTea project URL.  Always include javax.script
+	in copy dirs (conditional is an artefact of IcedTea6 merge).
+	* acinclude.m4:
+	(WITH_PROJECT): Add support for IcedTea and make it the
+	default.
+
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Replace !ENABLE_OPTIMIZATIONS with DISABLE_OPTIMIZATIONS
 	for clarity, only apply the Nimbus generation patch when
 	ENABLE_NIMBUS is on but ENABLE_NIMBUS_GENERATION is off.

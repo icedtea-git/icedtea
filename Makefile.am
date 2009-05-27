@@ -1677,6 +1677,7 @@ dist-openjdk: stamps/extract-cacao.stamp
 
 OPENJDK_HOTSPOT_URL = http://hg.openjdk.java.net/jdk7/hotspot/hotspot
 
+ICEDTEA_HG_URL = http://hg.openjdk.java.net/icedtea/jdk7
 OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
 CVMI_HG_URL = http://hg.openjdk.java.net/cvmi/cvmi/
 CLOSURES_HG_URL = http://hg.openjdk.java.net/closures/closures/
@@ -1684,13 +1685,13 @@ CACIOCAVALLO_HG_URL = http://hg.openjdk.java.net/caciocavallo/jdk7/
 BSD_HG_URL = http://hg.openjdk.java.net/bsd-port/bsd-port
 NIO2_HG_URL = http://hg.openjdk.java.net/nio/nio/
 
-OPENJDK_URL = http://hg.openjdk.java.net/icedtea/jdk7
-CORBA_URL = http://hg.openjdk.java.net/icedtea/jdk7/corba
-JAXP_URL = http://hg.openjdk.java.net/icedtea/jdk7/jaxp
-JAXWS_URL = http://hg.openjdk.java.net/icedtea/jdk7/jaxws
-JDK_URL = http://hg.openjdk.java.net/icedtea/jdk7/jdk
-LANGTOOLS_URL = http://hg.openjdk.java.net/icedtea/jdk7/langtools
-HOTSPOT_URL = http://hg.openjdk.java.net/icedtea/jdk7/hotspot
+OPENJDK_URL = $(ICEDTEA_HG_URL)
+CORBA_URL = $(ICEDTEA_HG_URL)/corba
+JAXP_URL = $(ICEDTEA_HG_URL)/jaxp
+JAXWS_URL = $(ICEDTEA_HG_URL)/jaxws
+JDK_URL = $(ICEDTEA_HG_URL)/jdk
+LANGTOOLS_URL = $(ICEDTEA_HG_URL)/langtools
+HOTSPOT_URL = $(ICEDTEA_HG_URL)/hotspot
 
 if USE_ALT_OPENJDK_SRC_ZIP
   OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
@@ -1776,11 +1777,22 @@ else
 if USE_NIO2
 	hg fclone $(NIO2_HG_URL) openjdk;
 else
+if USE_JDK7
+	hg fclone $(OPENJDK_HG_URL) openjdk;
+else
 if USE_HG
 if WITH_HGREV
-	$(HG) fclone -r $(HGREV) $(OPENJDK_HG_URL) openjdk;
+	$(HG) fclone -r $(HGREV) $(ICEDTEA_HG_URL) openjdk;
 else
-	$(HG) fclone $(OPENJDK_HG_URL) openjdk;
+	$(HG) fclone $(ICEDTEA_HG_URL) openjdk;
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
 endif
 else
 	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
@@ -1837,13 +1849,6 @@ else
 	  fi ; \
 	  $(WGET) $(LANGTOOLS_URL)/archive/$(LANGTOOLS_CHANGESET).tar.gz -O $(LANGTOOLS_SRC_ZIP); \
 	fi ;
-endif
-endif
-endif
-endif
-endif
-endif
-endif
 	if ! echo "$(HS_MD5SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
 	then \
@@ -2929,10 +2934,7 @@ ICEDTEA_COPY_DIRS = \
 	java/util \
 	java/rmi \
 	sun/awt/ \
-	javax/net/ssl
-
-if WITH_ALT_HSBUILD
-ICEDTEA_COPY_DIRS += \
+	javax/net/ssl \
 	javax/script
 endif
 

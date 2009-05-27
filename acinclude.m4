@@ -889,7 +889,7 @@ AC_DEFUN([ENABLE_HG],
 [
   AC_MSG_CHECKING(whether to retrieve the source code from Mercurial)
   AC_ARG_ENABLE([hg],
-                [AS_HELP_STRING(--enable-hg,download source code from Mercurial [[default=no]])],
+                [AS_HELP_STRING(--enable-hg,download source code from Mercurial [[default=depends on project]])],
   [
     case "${enableval}" in
       no)
@@ -902,7 +902,7 @@ AC_DEFUN([ENABLE_HG],
   ],
   [
     case "${project}" in
-      jdk7)
+      icedtea)
         enable_hg=no
         ;;
       *)
@@ -946,14 +946,14 @@ AC_DEFUN([WITH_PROJECT],
 [
   AC_MSG_CHECKING(which OpenJDK project is being used)
   AC_ARG_WITH([project],
-              [AS_HELP_STRING(--with-project,choose the OpenJDK project to use: jdk7 closures cvmi caciocavallo bsd nio2 [[default=jdk7]])],
+              [AS_HELP_STRING(--with-project,choose the OpenJDK project to use: icedtea jdk7 closures cvmi caciocavallo bsd nio2 [[default=icedtea]])],
   [
     case "${withval}" in
       yes)
-	project=jdk7
+	project=icedtea
         ;;
       no)
-	project=jdk7
+	AC_MSG_ERROR([argument passed to --with-project should be a supported OpenJDK project (see help)])
 	;;
       *)
         project=${withval}
@@ -961,7 +961,7 @@ AC_DEFUN([WITH_PROJECT],
     esac
   ],
   [
-    project=jdk7
+    project=icedtea
   ])
   AC_MSG_RESULT([${project}])
   AC_SUBST(PROJECT_NAME, $project)
@@ -970,6 +970,7 @@ AC_DEFUN([WITH_PROJECT],
   AM_CONDITIONAL([USE_CACIOCAVALLO], test x"${project}" = "xcaciocavallo")
   AM_CONDITIONAL([USE_BSD], test x"${project}" = "xbsd")
   AM_CONDITIONAL([USE_NIO2], test x"${project}" = "xnio2")
+  AM_CONDITIONAL([USE_JDK7], test x"${project}" = "xjdk7")
 ])
 
 AC_DEFUN([AC_CHECK_WITH_GCJ],
