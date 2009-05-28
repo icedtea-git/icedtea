@@ -21,17 +21,6 @@ diff -Nru openjdk.orig/jaxp/make/Makefile openjdk/jaxp/make/Makefile
  endif
  
  # Default target and expected 'do everything' target
-diff -Nru openjdk.orig/jaxws/make/build.xml openjdk/jaxws/make/build.xml
---- openjdk.orig/jaxws/make/build.xml	2008-09-25 08:41:11.000000000 +0100
-+++ openjdk/jaxws/make/build.xml	2008-09-26 20:58:44.000000000 +0100
-@@ -100,6 +100,7 @@
-              memoryMaximumSize="${javac.memoryMaximumSize}"
-              target="${javac.target}"
-              excludes="com/sun/tools/internal/txw2/**">
-+	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${plugs}/jre/lib/tools.jar:${plugs}/jre/lib/rt-closed.jar"/>
-          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
-          <compilerarg line="${javac.version.opt}"/>
-          <compilerarg line="${javac.no.jdk.warnings}"/>
 diff -Nru openjdk.orig/jaxws/make/Makefile openjdk/jaxws/make/Makefile
 --- openjdk.orig/jaxws/make/Makefile	2008-09-25 08:41:11.000000000 +0100
 +++ openjdk/jaxws/make/Makefile	2008-09-26 20:58:44.000000000 +0100
