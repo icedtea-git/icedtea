@@ -1,6 +1,11 @@
 2009-05-28  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::do_return): Always call add_safepoint.
+
+2009-05-28  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
 	(SharkTopLevelBlock::ExceptionAction): New enum.
 	(SharkTopLevelBlock::check_pending_exception): Replace
 	boolean attempt_catch argument with an ExceptionAction.
@@ -10,7 +15,7 @@
 	(SharkTopLevelBlock::release_lock): Likewise.
 	(SharkTopLevelBlock::call_vm_nocheck): Removed.
 
-	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
 	(SharkTopLevelBlock::check_pending_exception): Replace
 	boolean attempt_catch argument with an ExceptionAction.
 	(SharkTopLevelBlock::handle_exception): Likewise.

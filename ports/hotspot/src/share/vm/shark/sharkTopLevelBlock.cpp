@@ -720,8 +720,7 @@ void SharkTopLevelBlock::do_return(BasicType type)
 {
   if (target()->intrinsic_id() == vmIntrinsics::_Object_init)
     call_register_finalizer(local(0)->jobject_value());
-  else
-    add_safepoint();
+  add_safepoint();
   handle_return(type, NULL);
 }
 
