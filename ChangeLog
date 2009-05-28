@@ -1,5 +1,12 @@
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Bump changeset to include NIO2 fix
+	(/etc/mtab --> /proc/mounts).
+	See PR339.
+	
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	* overlays/openjdk/jdk/src/share/classes/javax/jnlp/BasicService.java,
 	* overlays/openjdk/jdk/src/share/classes/javax/jnlp/ClipboardService.java,
 	* overlays/openjdk/jdk/src/share/classes/javax/jnlp/DownloadService.java,
