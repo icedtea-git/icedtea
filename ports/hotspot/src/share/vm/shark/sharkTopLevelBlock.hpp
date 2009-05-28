@@ -236,98 +236,75 @@ class SharkTopLevelBlock : public SharkBlock {
                               int               bci,
                               SharkState*       saved_state,
                               llvm::BasicBlock* continue_block);
+  // Exceptions
+  enum ExceptionAction {
+    EX_CHECK_NONE,     // don't check for pending exceptions
+    EX_CHECK_NO_CATCH, // if there is a pending exception then throw it
+    EX_CHECK_FULL      // if there is a pending exception then catch it
+  };                   //   if it has a handler or throw it otherwise
+  void check_pending_exception(ExceptionAction action);
+  void handle_exception(llvm::Value* exception, ExceptionAction action);
 
   // VM calls
  private:
-  llvm::CallInst* call_vm_nocheck(llvm::Constant* callee,
-                                  llvm::Value**   args_start,
-                                  llvm::Value**   args_end)
+  llvm::CallInst* call_vm(llvm::Constant* callee,
+                          llvm::Value**   args_start,
+                          llvm::Value**   args_end,
+                          ExceptionAction ea)
   {
     current_state()->decache_for_VM_call();
     function()->set_last_Java_frame();
     llvm::CallInst *res = builder()->CreateCall(callee, args_start, args_end);
     function()->reset_last_Java_frame();
     current_state()->cache_after_VM_call();
-    return res;
-  }
-
-  llvm::CallInst* call_vm(llvm::Constant* callee,
-                          llvm::Value**   args_start,
-                          llvm::Value**   args_end)
-  {
-    llvm::CallInst* res = call_vm_nocheck(callee, args_start, args_end);
-    check_pending_exception();
+    if (ea != EX_CHECK_NONE)
+      check_pending_exception(ea);
     return res;
   }
 
  public:
-  llvm::CallInst* call_vm(llvm::Constant* callee)
+  llvm::CallInst* call_vm(llvm::Constant* callee,
+                          ExceptionAction ea)
   {
     llvm::Value *args[] = {thread()};
-    return call_vm(callee, args, args + 1);
-  }
-  llvm::CallInst* call_vm(llvm::Constant* callee,
-                          llvm::Value*    arg1)
-  {
-    llvm::Value *args[] = {thread(), arg1};
-    return call_vm(callee, args, args + 2);
+    return call_vm(callee, args, args + 1, ea);
   }
   llvm::CallInst* call_vm(llvm::Constant* callee,
                           llvm::Value*    arg1,
-                          llvm::Value*    arg2)
+                          ExceptionAction ea)
   {
-    llvm::Value *args[] = {thread(), arg1, arg2};
-    return call_vm(callee, args, args + 3);
+    llvm::Value *args[] = {thread(), arg1};
+    return call_vm(callee, args, args + 2, ea);
   }
   llvm::CallInst* call_vm(llvm::Constant* callee,
                           llvm::Value*    arg1,
                           llvm::Value*    arg2,
-                          llvm::Value*    arg3)
-  {
-    llvm::Value *args[] = {thread(), arg1, arg2, arg3};
-    return call_vm(callee, args, args + 4);
-  }
-
-  llvm::CallInst* call_vm_nocheck(llvm::Constant* callee)
-  {
-    llvm::Value *args[] = {thread()};
-    return call_vm_nocheck(callee, args, args + 1);
-  }
-  llvm::CallInst* call_vm_nocheck(llvm::Constant* callee,
-                                  llvm::Value*    arg1)
-  {
-    llvm::Value *args[] = {thread(), arg1};
-    return call_vm_nocheck(callee, args, args + 2);
-  }
-  llvm::CallInst* call_vm_nocheck(llvm::Constant* callee,
-                                  llvm::Value*    arg1,
-                                  llvm::Value*    arg2)
+                          ExceptionAction ea)
   {
     llvm::Value *args[] = {thread(), arg1, arg2};
-    return call_vm_nocheck(callee, args, args + 3);
+    return call_vm(callee, args, args + 3, ea);
   }
-  llvm::CallInst* call_vm_nocheck(llvm::Constant* callee,
-                                  llvm::Value*    arg1,
-                                  llvm::Value*    arg2,
-                                  llvm::Value*    arg3)
+  llvm::CallInst* call_vm(llvm::Constant* callee,
+                          llvm::Value*    arg1,
+                          llvm::Value*    arg2,
+                          llvm::Value*    arg3,
+                          ExceptionAction ea)
   {
     llvm::Value *args[] = {thread(), arg1, arg2, arg3};
-    return call_vm_nocheck(callee, args, args + 4);
+    return call_vm(callee, args, args + 4, ea);
   }
 
   // Synchronization
  private:
-  void acquire_lock(llvm::Value* lockee);
-  void release_lock();
+  void acquire_lock(llvm::Value* lockee, ExceptionAction ea);
+  void release_lock(ExceptionAction ea);
 
  public:
   void acquire_method_lock();
 
-  // Error checking
+  // Bounds checks
  private:
   void check_bounds(SharkValue* array, SharkValue* index);
-  void check_pending_exception(bool attempt_catch = true);
-  void handle_exception(llvm::Value* exception, bool attempt_catch = true);
 
   // Safepoints
  private:

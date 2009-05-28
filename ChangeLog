@@ -1,6 +1,40 @@
 2009-05-28  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::ExceptionAction): New enum.
+	(SharkTopLevelBlock::check_pending_exception): Replace
+	boolean attempt_catch argument with an ExceptionAction.
+	(SharkTopLevelBlock::handle_exception): Likewise.
+	(SharkTopLevelBlock::call_vm): Add an ExceptionAction argument.
+	(SharkTopLevelBlock::acquire_lock): Likewise.
+	(SharkTopLevelBlock::release_lock): Likewise.
+	(SharkTopLevelBlock::call_vm_nocheck): Removed.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::check_pending_exception): Replace
+	boolean attempt_catch argument with an ExceptionAction.
+	(SharkTopLevelBlock::handle_exception): Likewise.
+	(SharkTopLevelBlock::call_vm): Add an ExceptionAction argument.
+	(SharkTopLevelBlock::acquire_lock): Likewise.
+	(SharkTopLevelBlock::release_lock): Likewise.
+	(SharkTopLevelBlock::zero_check_value): Updated.
+	(SharkTopLevelBlock::check_bounds): Likewise.
+	(SharkTopLevelBlock::add_safepoint): Likewise.
+	(SharkTopLevelBlock::call_register_finalizer): Likewise.
+	(SharkTopLevelBlock::handle_return): Likewise.
+	(SharkTopLevelBlock::do_athrow): Likewise.
+	(SharkTopLevelBlock::do_call): Likewise.
+	(SharkTopLevelBlock::do_new): Likewise.
+	(SharkTopLevelBlock::do_newarray): Likewise.
+	(SharkTopLevelBlock::do_anewarray): Likewise.
+	(SharkTopLevelBlock::do_multianewarray): Likewise.
+	(SharkTopLevelBlock::acquire_method_lock): Likewise.
+	(SharkTopLevelBlock::do_monitorenter): Likewise.
+	(SharkTopLevelBlock::do_monitorexit): Likewise.
+
+2009-05-28  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
 	(SharkTopLevelBlock::is_private_copy): Renamed as...
 	(SharkTopLevelBlock::is_backedge_copy): New method.
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp

@@ -294,15 +294,16 @@ void SharkTopLevelBlock::zero_check_value(SharkValue* value,
 
   builder()->SetInsertPoint(zero_block);
   if (value->is_jobject()) {
-    call_vm_nocheck(
+    call_vm(
       SharkRuntime::throw_NullPointerException(),
       builder()->pointer_constant(__FILE__),
-      LLVMValue::jint_constant(__LINE__));
+      LLVMValue::jint_constant(__LINE__),
+      EX_CHECK_NONE);
   }
   else {
     builder()->CreateUnimplemented(__FILE__, __LINE__);
   } 
-  handle_exception(function()->CreateGetPendingException());
+  handle_exception(function()->CreateGetPendingException(), EX_CHECK_FULL);
 }
 
 void SharkTopLevelBlock::check_bounds(SharkValue* array, SharkValue* index)
@@ -318,19 +319,22 @@ void SharkTopLevelBlock::check_bounds(SharkValue* array, SharkValue* index)
 
   builder()->SetInsertPoint(out_of_bounds);
   SharkState *saved_state = current_state()->copy();
-  call_vm_nocheck(
+  call_vm(
     SharkRuntime::throw_ArrayIndexOutOfBoundsException(),
     builder()->pointer_constant(__FILE__),
     LLVMValue::jint_constant(__LINE__),
-    index->jint_value());
-  handle_exception(function()->CreateGetPendingException());
+    index->jint_value(),
+    EX_CHECK_NONE);
+  handle_exception(function()->CreateGetPendingException(), EX_CHECK_FULL);
   set_current_state(saved_state);  
 
   builder()->SetInsertPoint(in_bounds);
 }
 
-void SharkTopLevelBlock::check_pending_exception(bool attempt_catch)
+void SharkTopLevelBlock::check_pending_exception(ExceptionAction action)
 {
+  assert(action != EX_CHECK_NONE, "shouldn't be");
+
   BasicBlock *exception    = function()->CreateBlock("exception");
   BasicBlock *no_exception = function()->CreateBlock("no_exception");
 
@@ -345,15 +349,16 @@ void SharkTopLevelBlock::check_pending_exception(bool attempt_catch)
   builder()->SetInsertPoint(exception);
   builder()->CreateStore(LLVMValue::null(), pending_exception_addr);
   SharkState *saved_state = current_state()->copy();
-  handle_exception(pending_exception, attempt_catch);
+  handle_exception(pending_exception, action);
   set_current_state(saved_state);
 
   builder()->SetInsertPoint(no_exception);
 }
 
-void SharkTopLevelBlock::handle_exception(Value* exception, bool attempt_catch)
+void SharkTopLevelBlock::handle_exception(Value*          exception,
+                                          ExceptionAction action)
 {
-  if (attempt_catch && num_exceptions() != 0) {
+  if (action == EX_CHECK_FULL && num_exceptions() != 0) {
     // Clear the stack and push the exception onto it.
     // We do this now to protect it across the VM call
     // we may be about to make.
@@ -392,11 +397,11 @@ void SharkTopLevelBlock::handle_exception(Value* exception, bool attempt_catch)
           LLVMValue::jint_constant(indexes[i]),
           builder()->CreateStructGEP(options, i));
 
-      Value *index = call_vm_nocheck(
+      Value *index = call_vm(
         SharkRuntime::find_exception_handler(),
         builder()->CreateStructGEP(options, 0),
-        LLVMValue::jint_constant(num_options));
-      check_pending_exception(false);
+        LLVMValue::jint_constant(num_options),
+        EX_CHECK_NO_CATCH);
 
       // Jump to the exception handler, if found
       BasicBlock *no_handler = function()->CreateBlock("no_handler");
@@ -451,7 +456,7 @@ void SharkTopLevelBlock::add_safepoint()
     do_safepoint, safepointed);
 
   builder()->SetInsertPoint(do_safepoint);
-  call_vm(SharkRuntime::safepoint());
+  call_vm(SharkRuntime::safepoint(), EX_CHECK_FULL);
   BasicBlock *safepointed_block = builder()->GetInsertBlock();  
   builder()->CreateBr(safepointed);
 
@@ -504,7 +509,7 @@ void SharkTopLevelBlock::call_register_finalizer(Value *receiver)
     do_call, done);
 
   builder()->SetInsertPoint(do_call);
-  call_vm(SharkRuntime::register_finalizer(), receiver);
+  call_vm(SharkRuntime::register_finalizer(), receiver, EX_CHECK_FULL);
   BasicBlock *branch_block = builder()->GetInsertBlock();  
   builder()->CreateBr(done);
 
@@ -527,7 +532,7 @@ void SharkTopLevelBlock::handle_return(BasicType type, Value* exception)
     // If we're returning with an exception then that exception
     // takes priority and the release_lock one will be ignored.
     while (num_monitors())
-      release_lock();
+      release_lock(EX_CHECK_NONE);
 
     // Reload the exception we're throwing
     if (exception)
@@ -724,7 +729,7 @@ void SharkTopLevelBlock::do_athrow()
 {
   SharkValue *exception = pop();
   check_null(exception);
-  handle_exception(exception->jobject_value());
+  handle_exception(exception->jobject_value(), EX_CHECK_FULL);
 }
 
 void SharkTopLevelBlock::do_goto()
@@ -1137,7 +1142,7 @@ void SharkTopLevelBlock::do_call()
   current_state()->cache_after_Java_call(method);
 
   // Check for pending exceptions
-  check_pending_exception();
+  check_pending_exception(EX_CHECK_FULL);
 }
 
 void SharkTopLevelBlock::do_instance_check()
@@ -1451,7 +1456,8 @@ void SharkTopLevelBlock::do_new()
   // The slow path
   call_vm(
     SharkRuntime::new_instance(),
-    LLVMValue::jint_constant(iter()->get_klass_index()));
+    LLVMValue::jint_constant(iter()->get_klass_index()),
+    EX_CHECK_FULL);
   slow_object = function()->CreateGetVMResult();
   got_slow = builder()->GetInsertBlock();
 
@@ -1481,7 +1487,8 @@ void SharkTopLevelBlock::do_newarray()
   call_vm(
     SharkRuntime::newarray(),
     LLVMValue::jint_constant(type),
-    pop()->jint_value());
+    pop()->jint_value(),
+    EX_CHECK_FULL);
 
   push(SharkValue::create_generic(
     ciArrayKlass::make(ciType::make(type)),
@@ -1503,7 +1510,8 @@ void SharkTopLevelBlock::do_anewarray()
   call_vm(
     SharkRuntime::anewarray(),
     LLVMValue::jint_constant(iter()->get_klass_index()),
-    pop()->jint_value());
+    pop()->jint_value(),
+    EX_CHECK_FULL);
 
   push(SharkValue::create_generic(
     array_klass, function()->CreateGetVMResult(), true));
@@ -1535,7 +1543,8 @@ void SharkTopLevelBlock::do_multianewarray()
     SharkRuntime::multianewarray(),
     LLVMValue::jint_constant(iter()->get_klass_index()),
     LLVMValue::jint_constant(ndims),
-    builder()->CreateStructGEP(dimensions, 0));
+    builder()->CreateStructGEP(dimensions, 0),
+    EX_CHECK_FULL);
 
   // Now we can pop the dimensions off the stack
   for (int i = 0; i < ndims; i++)
@@ -1550,28 +1559,27 @@ void SharkTopLevelBlock::acquire_method_lock()
   iter()->force_bci(start()); // for the decache in acquire_lock
   if (target()->is_static()) {
     SharkConstantPool constants(this);
-    acquire_lock(constants.java_mirror());
+    acquire_lock(constants.java_mirror(), EX_CHECK_NO_CATCH);
   }
   else {
-    acquire_lock(local(0)->jobject_value());
+    acquire_lock(local(0)->jobject_value(), EX_CHECK_NO_CATCH);
   }
-  check_pending_exception(false);
 }
 
 void SharkTopLevelBlock::do_monitorenter()
 {
   SharkValue *lockee = pop();
   check_null(lockee);
-  acquire_lock(lockee->jobject_value());
+  acquire_lock(lockee->jobject_value(), EX_CHECK_FULL);
 }
 
 void SharkTopLevelBlock::do_monitorexit()
 {
   pop(); // don't need this (monitors are block structured)
-  release_lock();
+  release_lock(EX_CHECK_FULL);
 }
 
-void SharkTopLevelBlock::acquire_lock(Value *lockee)
+void SharkTopLevelBlock::acquire_lock(Value *lockee, ExceptionAction ea)
 {
   BasicBlock *try_recursive = function()->CreateBlock("try_recursive");
   BasicBlock *got_recursive = function()->CreateBlock("got_recursive");
@@ -1645,7 +1653,7 @@ void SharkTopLevelBlock::acquire_lock(Value *lockee)
 
   // It's not a recursive case so we need to drop into the runtime
   builder()->SetInsertPoint(not_recursive);
-  call_vm_nocheck(SharkRuntime::monitorenter(), monitor_addr);
+  call_vm(SharkRuntime::monitorenter(), monitor_addr, ea);
   BasicBlock *acquired_slow = builder()->GetInsertBlock();
   builder()->CreateBr(lock_acquired);  
 
@@ -1654,7 +1662,7 @@ void SharkTopLevelBlock::acquire_lock(Value *lockee)
   current_state()->merge(fast_state, acquired_fast, acquired_slow);
 }
 
-void SharkTopLevelBlock::release_lock()
+void SharkTopLevelBlock::release_lock(ExceptionAction ea)
 {
   BasicBlock *not_recursive = function()->CreateBlock("not_recursive");
   BasicBlock *released_fast = function()->CreateBlock("released_fast");
@@ -1697,7 +1705,7 @@ void SharkTopLevelBlock::release_lock()
 
   // Need to drop into the runtime to release this one
   builder()->SetInsertPoint(slow_path);
-  call_vm_nocheck(SharkRuntime::monitorexit(), monitor_addr);
+  call_vm(SharkRuntime::monitorexit(), monitor_addr, ea);
   BasicBlock *released_slow = builder()->GetInsertBlock();
   builder()->CreateBr(lock_released);  
 
