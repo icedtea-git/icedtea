@@ -1,5 +1,12 @@
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	* acinclude.m4:
+	Search java-icedtea last not first.  It's
+	from the old 1.7 packages on Fedora (and can
+	be empty), so should be our last choice.
+	
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Bump changeset to include NIO2 fix
 	(/etc/mtab --> /proc/mounts).
