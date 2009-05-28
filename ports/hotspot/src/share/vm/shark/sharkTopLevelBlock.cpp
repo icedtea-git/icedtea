@@ -201,7 +201,7 @@ void SharkTopLevelBlock::initialize()
   char name[28];
   snprintf(name, sizeof(name),
            "bci_%d%s",
-           start(), is_private_copy() ? "_private_copy" : "");
+           start(), is_backedge_copy() ? "_backedge_copy" : "");
   _entry_block = function()->CreateBlock(name);
 }
 

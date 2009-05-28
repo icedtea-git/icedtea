@@ -58,7 +58,7 @@ class SharkTopLevelBlock : public SharkBlock {
   {
     return ciblock()->pre_order();
   }
-  bool is_private_copy() const
+  bool is_backedge_copy() const
   {
     return ciblock()->is_backedge_copy();
   }

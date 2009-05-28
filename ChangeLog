@@ -1,3 +1,11 @@
+2009-05-28  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::is_private_copy): Renamed as...
+	(SharkTopLevelBlock::is_backedge_copy): New method.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::initialize): Use the above.
+
 2009-05-27  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
