@@ -329,7 +329,7 @@ diff -Nru openjdk-ecj.orig/jaxws/make/build.xml openjdk-ecj/jaxws/make/build.xml
 -             excludes="com/sun/tools/internal/txw2/**">
 +             excludes="com/sun/tools/internal/txw2/**"
 + 	     source="1.5">
-+	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${boot.java.home}/jre/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar:${boot.java.home}/jre/lib/rt-system.jar"/>
++	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar:${boot.java.home}/jre/lib/rt-system.jar"/>
           <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
           <compilerarg line="${javac.version.opt}"/>
           <compilerarg line="${javac.no.jdk.warnings}"/>

@@ -1,5 +1,13 @@
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/ecj/icedtea.patch:
+	Fix for PR338. The path to tools.jar was
+	wrong in the jaxws patch (jre/lib/tools.jar
+	rather than lib/tools.jar).  For some reason,
+	only Debian/Ubuntu users get hit by this.
+
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	* acinclude.m4:
 	Search java-icedtea last not first.  It's
 	from the old 1.7 packages on Fedora (and can
