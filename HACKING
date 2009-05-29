@@ -72,6 +72,7 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-includedb.patch: Add missing include files. (S6793825, mostly applied in b47)
 * icedtea-xml-encodinginfo.patch: Fix possible StackOverflowError in EncodingInfo (PR295).
 * cacao/launcher.patch: For the 'java' command, create new thread depending on the current VM.
+* icedtea-cacao-no-mmap-first-page.patch: Don't mmap the first memory page.
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 

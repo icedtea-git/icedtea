@@ -2084,7 +2084,8 @@ endif
 
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
-	patches/cacao/launcher.patch
+	patches/cacao/launcher.patch \
+	patches/cacao/no-mmap-first-page.patch
 endif
 
 if WITH_CACAO
