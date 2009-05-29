@@ -3588,7 +3588,7 @@ jtregcheck: jtreg check-hotspot check-langtools check-jdk
 	  $(jtreg_processes); \
 	fi
 
-#check-local: jtregcheck
+check-local: jtregcheck
 
 # VisualVM
 
