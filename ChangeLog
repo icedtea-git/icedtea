@@ -1,3 +1,9 @@
+2009-05-29  Xerxes Rånby  <xerxes@zafena.se>
+
+	* Makefile.am (CACAO_SRC_ZIP): changed to download the .tar.bz2
+	file that matches the CACAO_MD5SUM.
+	(stamps/extract-cacao.stamp): explicit unpack .tar.bz2 using tar xjf.
+
 2009-05-29  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-fonts.patch: Update fontconfig for Ubuntu.

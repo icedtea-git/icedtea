@@ -1769,7 +1769,7 @@ CACAO_URL = $(CACAO_BASE_URL)/cacaojvm/download/cacao-$(CACAO_VERSION)/
 if USE_ALT_CACAO_SRC_ZIP
   CACAO_SRC_ZIP = $(ALT_CACAO_SRC_ZIP)
 else
-  CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.gz
+  CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 endif
 
 stamps/download.stamp: stamps/hgforest.stamp
@@ -2236,7 +2236,7 @@ if !USE_SYSTEM_CACAO
 	if ! test -d cacao ; \
 	then \
 	  mkdir cacao ; \
-	  $(TAR) xf $(CACAO_SRC_ZIP) -C cacao ; \
+	  $(TAR) xjf $(CACAO_SRC_ZIP) -C cacao ; \
 	  dir=$$(basename cacao/cacao-*) ; \
 	  ln -s $$dir cacao/cacao ; \
 	  cd cacao/cacao ; \
