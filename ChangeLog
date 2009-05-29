@@ -1,5 +1,13 @@
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Remove netx target as conflicts with
+	directory when building in the source tree.
+	* configure.ac:
+	Bump to 1.10 proper.
+
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	* NEWS:
 	Add IcedTea7 1.10 release notes.
 	* README:

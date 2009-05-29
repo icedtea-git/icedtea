@@ -3739,8 +3739,6 @@ clean: distclean-local
 
 jtreg: stamps/jtreg.stamp
 
-netx: stamps/netx.stamp
-
 netx-dist: stamps/netx-dist.stamp
 
 liveconnect: stamps/liveconnect.stamp
