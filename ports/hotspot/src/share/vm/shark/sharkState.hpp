@@ -45,6 +45,7 @@ class SharkState : public ResourceObj {
   SharkValue**     _sp;
   int              _num_monitors;
   llvm::Value*     _oop_tmp;
+  bool             _has_safepointed;
 
  public:
   SharkBlock *block() const
@@ -159,6 +160,17 @@ class SharkState : public ResourceObj {
   void set_oop_tmp(llvm::Value* oop_tmp)
   {
     _oop_tmp = oop_tmp;
+  }
+
+  // Safepointed status
+ public:
+  bool has_safepointed() const
+  {
+    return _has_safepointed;
+  }
+  void set_has_safepointed(bool has_safepointed)
+  {
+    _has_safepointed = has_safepointed;
   }
 
   // Comparison

@@ -1,3 +1,34 @@
+2009-05-29  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkState::_has_safepointed): New field.
+	(SharkState::has_safepointed): New method.
+	(SharkState::set_has_safepointed): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkState::SharkState): Initialize the above.
+	(SharkState::equal_to): Compare the above.
+	(SharkState::merge): Merge the above.
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::add_safepoint): Replaced with...
+	(SharkBlock::maybe_add_safepoint): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::add_safepoint): Replaced with...
+	(SharkBlock::maybe_add_safepoint): New method.
+	(SharkBlock::parse_bytecode): Updated for above.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::add_safepoint): Replaced with...
+	(SharkTopLevelBlock::maybe_add_safepoint): New method.
+	(SharkTopLevelBlock::call_vm): Mark that a safepoint check
+	has occurred if a full VM call is made.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::add_safepoint): Replaced with...
+	(SharkTopLevelBlock::maybe_add_safepoint): New method.
+	(SharkTopLevelBlock::do_return): Updated for above.
+	(SharkTopLevelBlock::do_call): Mark that a safepoint check
+	has occurred if a non-inlined Java call is made.
+
 2009-05-28  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp

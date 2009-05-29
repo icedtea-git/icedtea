@@ -74,24 +74,24 @@ void SharkBlock::parse_bytecode(int start, int limit)
       case Bytecodes::_if_icmpgt:
       case Bytecodes::_if_icmpge:
         if (iter()->get_dest() <= bci())
-          add_safepoint();
+          maybe_add_safepoint();
         break;
 
       case Bytecodes::_goto_w:
         if (iter()->get_far_dest() <= bci())
-          add_safepoint();
+          maybe_add_safepoint();
         break;
 
       case Bytecodes::_tableswitch:
       case Bytecodes::_lookupswitch:
         if (switch_default_dest() <= bci()) {
-          add_safepoint();
+          maybe_add_safepoint();
           break;
         }
         int len = switch_table_length();
         for (int i = 0; i < len; i++) {
           if (switch_dest(i) <= bci()) {
-            add_safepoint();
+            maybe_add_safepoint();
             break;
           }
         }
@@ -1138,7 +1138,7 @@ void SharkBlock::do_zero_check(SharkValue* value)
   ShouldNotCallThis();
 }
 
-void SharkBlock::add_safepoint()
+void SharkBlock::maybe_add_safepoint()
 {
   ShouldNotCallThis();
 }

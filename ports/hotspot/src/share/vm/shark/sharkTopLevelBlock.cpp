@@ -435,8 +435,11 @@ void SharkTopLevelBlock::handle_exception(Value*          exception,
   handle_return(T_VOID, exception);
 }
 
-void SharkTopLevelBlock::add_safepoint()
+void SharkTopLevelBlock::maybe_add_safepoint()
 {
+  if (current_state()->has_safepointed())
+    return;
+
   BasicBlock *orig_block = builder()->GetInsertBlock();
   SharkState *orig_state = current_state()->copy();
 
@@ -462,6 +465,8 @@ void SharkTopLevelBlock::add_safepoint()
 
   builder()->SetInsertPoint(safepointed);
   current_state()->merge(orig_state, orig_block, safepointed_block);
+
+  current_state()->set_has_safepointed(true);
 }
 
 void SharkTopLevelBlock::do_trap(int trap_request)
@@ -720,7 +725,7 @@ void SharkTopLevelBlock::do_return(BasicType type)
 {
   if (target()->intrinsic_id() == vmIntrinsics::_Object_init)
     call_register_finalizer(local(0)->jobject_value());
-  add_safepoint();
+  maybe_add_safepoint();
   handle_return(type, NULL);
 }
 
@@ -1142,6 +1147,9 @@ void SharkTopLevelBlock::do_call()
 
   // Check for pending exceptions
   check_pending_exception(EX_CHECK_FULL);
+
+  // Mark that a safepoint check has occurred
+  current_state()->set_has_safepointed(true);
 }
 
 void SharkTopLevelBlock::do_instance_check()

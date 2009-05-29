@@ -33,7 +33,8 @@ SharkState::SharkState(SharkBlock* block, SharkFunction* function)
     _function(function),
     _method(NULL),
     _oop_tmp(NULL),
-    _frame_cache(NULL)
+    _frame_cache(NULL),
+    _has_safepointed(false)
 {
   initialize(NULL);
 }
@@ -43,7 +44,8 @@ SharkState::SharkState(SharkBlock* block, const SharkState* state)
     _function(state->function()),
     _method(state->method()),
     _oop_tmp(state->oop_tmp()),
-    _frame_cache(NULL)
+    _frame_cache(NULL),
+    _has_safepointed(state->has_safepointed())
 {
   initialize(state);
 }
@@ -103,6 +105,9 @@ bool SharkState::equal_to(SharkState *other)
     return false;
 
   if (num_monitors() != other->num_monitors())
+    return false;
+
+  if (has_safepointed() != other->has_safepointed())
     return false;
 
   // Local variables
@@ -215,6 +220,9 @@ void SharkState::merge(SharkState* other,
 
   // Frame cache
   frame_cache()->merge(other->frame_cache());
+
+  // Safepointed status
+  set_has_safepointed(this->has_safepointed() && other->has_safepointed());
 }
 
 void SharkState::decache_for_Java_call(ciMethod* callee)
