@@ -1,5 +1,10 @@
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-liveconnect-dist.patch:
+	Recreated with netx.patch applied.
+
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Only distribute liveconnect code when
 	either plugin is enabled.  Rename netx in the

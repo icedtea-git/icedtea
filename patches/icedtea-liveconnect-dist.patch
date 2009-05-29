@@ -1,6 +1,6 @@
-diff -Nru openjdk2.orig/jdk/make/common/internal/Defs-liveconnect.gmk openjdk2/jdk/make/common/internal/Defs-liveconnect.gmk
---- openjdk2.orig/jdk/make/common/internal/Defs-liveconnect.gmk	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk2/jdk/make/common/internal/Defs-liveconnect.gmk	2009-05-28 09:18:45.000000000 +0100
+diff -Nru openjdk.orig/jdk/make/common/internal/Defs-liveconnect.gmk openjdk/jdk/make/common/internal/Defs-liveconnect.gmk
+--- openjdk.orig/jdk/make/common/internal/Defs-liveconnect.gmk	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/jdk/make/common/internal/Defs-liveconnect.gmk	2009-05-29 16:49:35.000000000 +0100
 @@ -0,0 +1,27 @@
 +#
 +# Copyright 2009 Red Hat, Inc.  All Rights Reserved.
@@ -29,12 +29,12 @@ diff -Nru openjdk2.orig/jdk/make/common/internal/Defs-liveconnect.gmk openjdk2/j
 +
 +IMPORT_TOOLS_PACKAGES +=
 +
-diff -Nru openjdk2.orig/jdk/make/common/internal/ImportComponents.gmk openjdk2/jdk/make/common/internal/ImportComponents.gmk
---- openjdk2.orig/jdk/make/common/internal/ImportComponents.gmk	2009-05-29 02:09:27.000000000 +0100
-+++ openjdk2/jdk/make/common/internal/ImportComponents.gmk	2009-05-29 02:11:58.000000000 +0100
-@@ -46,6 +46,9 @@
- ifndef JAXWS_DIST
-   include $(BUILDDIR)/common/internal/Defs-jaxws.gmk
+diff -Nru openjdk.orig/jdk/make/common/internal/ImportComponents.gmk openjdk/jdk/make/common/internal/ImportComponents.gmk
+--- openjdk.orig/jdk/make/common/internal/ImportComponents.gmk	2009-05-29 16:48:26.000000000 +0100
++++ openjdk/jdk/make/common/internal/ImportComponents.gmk	2009-05-29 16:50:02.000000000 +0100
+@@ -49,6 +49,9 @@
+ ifndef NETX_DIST
+   include $(BUILDDIR)/common/internal/Defs-netx.gmk
  endif
 +ifndef LIVECONNECT_DIST
 +  include $(BUILDDIR)/common/internal/Defs-liveconnect.gmk
@@ -42,20 +42,20 @@ diff -Nru openjdk2.orig/jdk/make/common/internal/ImportComponents.gmk openjdk2/j
  
  # Clean up these lists so empty lists are empty
  IMPORT_TOOLS_PACKAGES := $(strip $(IMPORT_TOOLS_PACKAGES))
-@@ -157,6 +160,7 @@
- $(call import-one-classes,CORBA_DIST,$1)
+@@ -162,6 +165,7 @@
  $(call import-one-classes,JAXP_DIST,$1)
  $(call import-one-classes,JAXWS_DIST,$1)
+ $(call import-one-classes,NETX_DIST,$1)
 +$(call import-one-classes,LIVECONNECT_DIST,$1)
  endef
  
  # Clean up import files
-diff -Nru openjdk2.orig/jdk/make/common/shared/Defs.gmk openjdk2/jdk/make/common/shared/Defs.gmk
---- openjdk2.orig/jdk/make/common/shared/Defs.gmk	2009-05-29 02:09:27.000000000 +0100
-+++ openjdk2/jdk/make/common/shared/Defs.gmk	2009-05-29 02:12:06.000000000 +0100
-@@ -344,6 +344,11 @@
+diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/shared/Defs.gmk
+--- openjdk.orig/jdk/make/common/shared/Defs.gmk	2009-05-29 16:48:26.000000000 +0100
++++ openjdk/jdk/make/common/shared/Defs.gmk	2009-05-29 16:49:35.000000000 +0100
+@@ -349,6 +349,11 @@
  else
-   JAXWS_DIST =
+   NETX_DIST =
  endif
 +ifdef ALT_LIVECONNECT_DIST
 +  LIVECONNECT_DIST := $(call FullPath,$(ALT_LIVECONNECT_DIST))
