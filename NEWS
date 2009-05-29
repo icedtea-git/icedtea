@@ -1,5 +1,7 @@
-New in release 1.10 (XXXX-XX-XX)
+New in release 1.10 (2009-05-29)
 
+- Updated to OpenJDK7 b59 build via IcedTea forest.  Now includes
+  SCTP and Nimbus Swing look and feel.
 - Static trace support through systemtap.
   When given the configure option --enable-systemtap IcedTea will build
   hotspot with the dtrace static markers enabled and install an hotspot
@@ -10,6 +12,28 @@ New in release 1.10 (XXXX-XX-XX)
   virtual machines on architectures where hotspot is available are cacao
   and zero (or shark), and cacao, where zero (or shark) is available. It's
   not possible to build cacao as the default VM, and zero as additional VM.
+- New options --enable-nimbus and --enable-nimbus-generation.  The default
+  is that the first is on but the second is off, so Nimbus is built but
+  without needing to generate the files using JIBX (http://jibx.sourceforge.net/).
+- VisualVM updated to 1.1.1.
+- Many build fixes, notably to make netx/the plugin work.  IcedTea7 now
+  avoids the binary plug mechanism in favour of using the same method as
+  CORBA, JAXP, JAXWS and langtools to import the plugin/netx code.
+- Several web browser plugin and javaws support fixes:
+  - Fixed security handling to prevent access denials when there is a site
+  specific exception in the policy file
+  - Allow extensions (chrome) to run Java code with full permissions
+  - Added non-trusted SSL support to WebStart (javaws)
+  - Added proxy support
+  - Other improvements that were breaking specific sites (tag parser fix,
+    nested jar support, etc.)
+  - Added JVM Console (used by http://chrispederick.com/work/web-developer/)
+  - Experimental new plugin enabled by --enable-npplugin.
+  - Original plugin is now enabled by --enable-plugin, not --enable-liveconnect.
+- LCMS security fixes.
+- Many build improvements.
+- Many zero/shark jtreg fixes.
+- Other bug fixes.
 
 New in release 1.9 (2009-03-20)
 
@@ -55,6 +79,7 @@ New in release 1.9 (2009-03-20)
   or hg revision (--with-openjdk-src-dir or --with-hg-revision).
 - Many other Plugin, Zero, Shark and PulseAudio bug fixes.
 - Build clean up.
+- Updated to CACAO 0.99.4.
 
 New in release 1.8 (2008-11-20)
 

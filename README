@@ -5,23 +5,12 @@ The IcedTea project provides a harness to build the source code from
 openjdk.java.net using Free Software tools and dependencies.
 
 IcedTea addresses two problems: it eliminates the build requirement on
-proprietary build tools and it provides replacements for the
-"encumbered binary plugs".
+proprietary build tools and it provides implementations of Java Web Start
+and the browser plugin which are missing from OpenJDK.  It also provides
+support for additional architectures via Zero/Shark.
 
-These plugs are described at http://openjdk.java.net: "Not all of the
-source code that makes up the JDK is available under an open-source
-license. In order to build an OpenJDK binary from source code, you
-must first download and install one or more of the following files
-from which the build process will copy over 'binary plugs' for these
-encumbered components."
-
-This project uses code from GNU Classpath, code generated during a
-build of the openjdk.java.net source code, and stub code written by
-Red Hat, to provide Free Software replacements for these encumbered
-binary plugs.
-
-IcedTea also provides build scripts and patches that allow the source
-code from openjdk.java.net to be built with IcedTea itself.
+IcedTea also provides build scripts and patches that fix a number of issues
+which are as yet unresolved upstream.
 
 See INSTALL for build instructions.
 
@@ -56,16 +45,6 @@ before depending upon IcedTea.  IcedTea provides autotools support, a
 portable interpreter for ppc and ppc64 support, plugin support and Web
 Start support.
 
-How the Stub Replacements were Produced
----------------------------------------
-
-To produce the plug replacements, we began by satisfying as many
-undefined references as possible using code from a completed build of
-the source code from openjdk.java.net.  Then we supplemented the
-resultant tree with more replacement code from GNU Classpath.
-Following that, we fixed each remaining build error by creating the
-simplest possible stub code.
-
 A Note About License Headers
 ----------------------------
 
@@ -85,57 +64,32 @@ license header.  Instances are:
    openjdk/jdk/src/share/classes/**/resources/*.properties
 
 
-gcjwebplugin
-============
+Web Browser Plugin support
+===========================
 
-gcjwebplugin provides basic support for running applets in
-Mozilla-based web browsers.  It does not support applet/Javascript
-communication (LiveConnect) and support for signed applets needs
-further testing.  The current applet security manager may be too
-strict and may require tuning to allow otherwise-legitimate calls by
-untrusted applets.
+The default web browser plugin has LiveConnect support. It will only
+build against a recent version of XULRunner, such as that available in
+Fedora Rawhide as of 2008-05-16.  The required development headers are
+provided by the xulrunner-devel package.
 
-gcjwebplugin itself is a shared object, gcjwebplugin.so, built from a
-single source file, gcjwebplugin.cc.  The IcedTea adaptation of
-gcjwebplugin communicates through named pipes with a modified version
-of IcedTea's appletviewer.  Two source files,
-openjdk/jdk/src/share/classes/sun/applet/PluginAppletViewer.java,
-openjdk/jdk/src/share/classes/sun/applet/PluginMain.java are added to
-rt.jar and tools.jar to provide gcjwebplugin with an interface into
-the appletviewer code.  This support code is provided in
-patches/icedtea-webservices.patch.
+A new plugin is being developed to support the new Mozilla API changes. It can 
+be enabled with the option --enable-npplugin, and it is based on gcjwebplugin.
+At the moment there is no liveconnect support for it.
 
-If the option --enable-netx-plugin is passed to configure, this will
-make all applets run through NetX security instead of the default
-security manager. This feature is experimental, and is not enabled by
-default. Note that if --disable-gcjwebplugin is used, --enable-netx-plugin
-will not work.
+NetX
+====
 
-Experimental LiveConnect support
-================================
+NetX provides a drop-in replacement for javaws (Java Web Start). Since
+upstream NetX is dormant, we will be hosting and modifying the sources
+in the IcedTea repository, particularly in the netx/net/sourceforge/jnlp
+directory.
 
-The configure option --enable-liveconnect enables experimental
-LiveConnect support, implemented by IcedTeaPlugin.cc and
-patches/icedtea-liveconnect.patch.  Currently IcedTeaPlugin.cc will
-only build against a very recent version of XULRunner, such as that
-available in Fedora Rawhide as of 2008-02-23.  The required
-development headers are provided by the xulrunner-devel package.
+The NetX sources are built into rt.jar using the same method as
+CORBA, JAXWS, JAXP and langtools.
 
-To run IcedTeaPlugin you'll need to add
-/usr/lib/xulrunner-sdk-1.9pre/sdk/lib/ to LD_LIBRARY_PATH.
-
-Experimental LiveConnect support
-================================
-
-The configure option --enable-liveconnect enables experimental
-LiveConnect support, implemented by IcedTeaPlugin.cc and
-patches/icedtea-liveconnect.patch.  Currently IcedTeaPlugin.cc will
-only build against a very recent version of XULRunner, such as that
-available in Fedora Rawhide as of 2008-02-23.  The required
-development headers are provided by the xulrunner-devel package.
-
-To run IcedTeaPlugin you'll need to add
-/usr/lib/xulrunner-sdk-1.9pre/sdk/lib/ to LD_LIBRARY_PATH.
+IcedTea's NetX currently supports verification of signed jars, trusted
+certificate storing, system certificate store checking, and provides
+the services specified by the jnlp API.
 
 NetX
 ====
@@ -157,12 +111,11 @@ CACAO as VM
 The --with-cacao configure option replaces the libjvm.so from Sun's
 HotSpot with the one from the CACAO VM.  This enables the usage of
 IcedTea on architectures which are not supported by the HotSpot VM,
-besides the HotSpot zero port.  In contrast to the HotSpot zero port,
+besides the HotSpot zero port.  In contrast to the HotSpot Zero port,
 CACAO provides a Just-In-Time compiler for various architectures.
 
 The environment variable CACAO_CONFIGURE_ARGS can be used to pass
 additional arguments to the cacao configure.
-
 
 PulseAudio Mixer
 ================

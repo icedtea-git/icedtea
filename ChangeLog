@@ -1,5 +1,15 @@
 2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	* NEWS:
+	Add IcedTea7 1.10 release notes.
+	* README:
+	Updated.  Remove notes on binary plugs which
+	are no longer an issue.  Highlight the addition
+	of javaws, plugin and additional architecture support
+	by IcedTea.
+
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/icedtea-liveconnect-dist.patch:
 	Recreated with netx.patch applied.
 
