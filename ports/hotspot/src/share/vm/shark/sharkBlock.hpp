@@ -231,7 +231,7 @@ class SharkBlock : public ResourceObj {
 
   // Safepoints
  protected:
-  virtual void maybe_add_safepoint();
+  virtual void maybe_add_backedge_safepoint();
 
   // Traps
  protected:

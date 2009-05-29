@@ -469,6 +469,51 @@ void SharkTopLevelBlock::maybe_add_safepoint()
   current_state()->set_has_safepointed(true);
 }
 
+void SharkTopLevelBlock::maybe_add_backedge_safepoint()
+{
+  if (current_state()->has_safepointed())
+    return;
+
+  for (int i = 0; i < num_successors(); i++) {
+    if (successor(i)->can_reach(this)) {
+      maybe_add_safepoint();
+      break;
+    }
+  }
+}
+
+bool SharkTopLevelBlock::can_reach(SharkTopLevelBlock* other)
+{
+  for (int i = 0; i < function()->block_count(); i++)
+    function()->block(i)->_can_reach_visited = false;
+
+  return can_reach_helper(other);
+}
+
+bool SharkTopLevelBlock::can_reach_helper(SharkTopLevelBlock* other)
+{
+  if (this == other)
+    return true;
+
+  if (_can_reach_visited)
+    return false;
+  _can_reach_visited = true;
+  
+  if (!has_trap()) {
+    for (int i = 0; i < num_successors(); i++) {
+      if (successor(i)->can_reach_helper(other))
+        return true;
+    }
+  }
+
+  for (int i = 0; i < num_exceptions(); i++) {
+    if (exception(i)->can_reach_helper(other))
+      return true;
+  }
+
+  return false;
+}
+
 void SharkTopLevelBlock::do_trap(int trap_request)
 {
   current_state()->decache_for_trap();

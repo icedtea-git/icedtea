@@ -311,6 +311,14 @@ class SharkTopLevelBlock : public SharkBlock {
   // Safepoints
  private:
   void maybe_add_safepoint();
+  void maybe_add_backedge_safepoint();
+
+  // Loop safepoint removal
+ private:
+  bool _can_reach_visited;
+
+  bool can_reach(SharkTopLevelBlock* other);
+  bool can_reach_helper(SharkTopLevelBlock* other);
 
   // Traps
  private:
