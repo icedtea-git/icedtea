@@ -154,8 +154,8 @@ AM_CONDITIONAL(WITH_VISUALVM, test "x${enable_visualvm}" = "xyes")
 AC_MSG_RESULT(${enable_visualvm})
 
 AC_MSG_CHECKING([whether to build the LiveConnect plugin])
-AC_ARG_ENABLE([liveconnect],
-              [AS_HELP_STRING([--disable-liveconnect],
+AC_ARG_ENABLE([plugin],
+              [AS_HELP_STRING([--disable-plugin],
                               [Disable compilation of browser plugin])],
               [enable_plugin="${enableval}"], [enable_plugin="yes"])
 AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")

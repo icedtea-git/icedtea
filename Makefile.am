@@ -84,7 +84,8 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports clean-pulse-java
 	rm -rf stamps
 	rm -f rt-source-files.txt \
 	  hotspot-tools-source-files.txt \
-	  extra-source-files.txt
+	  extra-source-files.txt \
+	  netx-source-files.txt
 	rm -rf bootstrap
 	rm -rf lib
 	rm -rf extra-lib
@@ -94,6 +95,7 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports clean-pulse-java
 	rm -rf rt/netscape
 	rm -rf visualvm
 	rm -rf netbeans
+	rm -rf netx.build
 if ENABLE_PLUGIN
 	rm -f IcedTeaPlugin.o IcedTeaPlugin.so
 endif
@@ -1493,7 +1495,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	IcedTeaPlugin.cc \
 	IcedTeaNPPlugin.cc \
 	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
-	plugin hotspot.map autogen.sh
+	plugin $(top_srcdir)/netx hotspot.map autogen.sh
 
 # The Binary plugs directory is called jdk1.7.0 for historical reasons. The
 # name is completely irrelevant; only contains the plugs to build IcedTea.
@@ -1568,7 +1570,7 @@ ICEDTEA_ENV = \
 	"RHINO_JAR=$(RHINO_JAR)" \
 	"DISTRIBUTION_ID=$(DIST_ID)" \
 	"ALT_JIBX_LIBS_PATH=$(JIBX_DEPS_DIR)" \
-	"ALT_NETX_DIST=$(abs_top_builddir)/netx" \
+	"ALT_NETX_DIST=$(abs_top_builddir)/netx.build" \
 	"ALT_LIVECONNECT_DIST=$(abs_top_builddir)"
 
 if WITH_CACAO
@@ -1652,7 +1654,7 @@ ICEDTEA_ENV_ECJ = \
 	"JAR_KNOWS_J_OPTIONS=$(JAR_KNOWS_J_OPTIONS)" \
 	"JAR_ACCEPTS_STDIN_LIST=$(JAR_ACCEPTS_STDIN_LIST)" \
 	"DISABLE_NIMBUS=true" \
-	"ALT_NETX_DIST=$(abs_top_builddir)/netx" \
+	"ALT_NETX_DIST=$(abs_top_builddir)/netx.build" \
 	"ALT_LIVECONNECT_DIST=$(abs_top_builddir)"
 
 if WITH_CACAO
@@ -2125,6 +2127,14 @@ ICEDTEA_PATCHES += patches/icedtea-pregenerated-nimbus.patch
 endif
 endif
 
+if ENABLE_PLUGIN
+ICEDTEA_PATCHES += patches/icedtea-liveconnect-dist.patch
+else
+if ENABLE_NPPLUGIN
+ICEDTEA_PATCHES += patches/icedtea-liveconnect-dist.patch
+endif
+endif
+
 stamps/extract.stamp: stamps/download.stamp
 if OPENJDK_SRC_DIR_FOUND
 	cp -a $(OPENJDK_SRC_DIR) openjdk
@@ -2304,12 +2314,13 @@ if ENABLE_NPPLUGIN
 	cp -a $(abs_top_srcdir)/plugin/icedteanp/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
 	mkdir -p rt
 	cp -a $(abs_top_srcdir)/plugin/icedteanp/netscape rt/
-endif
+else
 if ENABLE_PLUGIN
 	cp -a $(abs_top_srcdir)/plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
 	mkdir -p rt
 	cp -a $(abs_top_srcdir)/plugin/icedtea/netscape rt/
 	chmod -R ug+w rt 
+endif
 endif
 
 clean-patch:
@@ -3156,9 +3167,9 @@ netx-source-files.txt:
 	find $(abs_top_srcdir)/netx -name '*.java' | sort > $@
 
 stamps/netx.stamp: netx-source-files.txt stamps/hotspot-tools.stamp
-	mkdir -p $(abs_top_builddir)/netx
+	mkdir -p $(abs_top_builddir)/netx.build
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g \
-	    -d $(abs_top_builddir)/netx \
+	    -d $(abs_top_builddir)/netx.build \
             -source 1.5 \
 	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
 	    -sourcepath $(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS): \
@@ -3168,13 +3179,15 @@ stamps/netx.stamp: netx-source-files.txt stamps/hotspot-tools.stamp
 	touch stamps/netx.stamp
 
 stamps/netx-dist.stamp: stamps/netx.stamp
-	(cd $(abs_top_builddir)/netx ; \
+	(cd $(abs_top_builddir)/netx.build ; \
 	 mkdir -p lib ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar cf lib/classes.jar javax/jnlp net ; \
-	 cd $(abs_top_srcdir)/netx ; \
-	 $(ICEDTEA_BOOT_DIR)/bin/jar uf $(abs_top_builddir)/netx/lib/classes.jar \
+	 cp -a $(abs_top_srcdir)/netx src; \
+	 find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
+	 cd src ; \
+	 $(ICEDTEA_BOOT_DIR)/bin/jar uf $(abs_top_builddir)/netx.build/lib/classes.jar \
 	  `find . -type f -not -name '*.java'` ; \
-	 $(ZIP) -qr $(abs_top_builddir)/netx/lib/src.zip javax net )
+	 $(ZIP) -qr $(abs_top_builddir)/netx.build/lib/src.zip javax net )
 	mkdir -p stamps
 	touch stamps/netx-dist.stamp
 
@@ -3575,7 +3588,7 @@ jtregcheck: jtreg check-hotspot check-langtools check-jdk
 	  $(jtreg_processes); \
 	fi
 
-check-local: jtregcheck
+#check-local: jtregcheck
 
 # VisualVM
 

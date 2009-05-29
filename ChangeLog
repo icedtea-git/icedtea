@@ -1,3 +1,18 @@
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Only distribute liveconnect code when
+	either plugin is enabled.  Rename netx in the
+	build directory to netx.build to avoid conflicts.
+	Make sure netx is in EXTRA_DIST and build is cleaned up
+	fully.
+	* configure.ac:
+	Rename --enable-liveconnect to --enable-plugin.
+	* patches/icedtea-liveconnect-dist.patch:
+	Split from icedtea-netx.patch to enable conditional use.
+	* patches/icedtea-netx.patch:
+	Recreated without liveconnect distribution.
+
 2009-05-29  Xerxes Rånby  <xerxes@zafena.se>
 
 	* Makefile.am (CACAO_SRC_ZIP): changed to download the .tar.bz2
