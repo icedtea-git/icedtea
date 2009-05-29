@@ -21,6 +21,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
+
 /**
  * The J2SE/Java element.
  *
@@ -36,10 +38,10 @@ public class JREDesc {
     private URL location;
 
     /** inital heap size */
-    private long initialHeapSize;
+    private String initialHeapSize;
 
     /** maximum head size */
-    private long maximumHeapSize;
+    private String maximumHeapSize;
 
     /** args to pass to the vm */
     private String vmArgs;
@@ -60,12 +62,14 @@ public class JREDesc {
      */
     public JREDesc(Version version, URL location, 
             String vmArgs, String initialHeapSize, 
-            String maximumHeapSize, List resources) {
+            String maximumHeapSize, List resources) throws ParseException {
         this.version = version;
         this.location = location;
         this.vmArgs = vmArgs;
-        this.initialHeapSize = heapToLong(initialHeapSize);
-        this.maximumHeapSize = heapToLong(maximumHeapSize);
+        checkHeapSize(initialHeapSize);
+        this.initialHeapSize = initialHeapSize;
+        checkHeapSize(maximumHeapSize);
+        this.maximumHeapSize = maximumHeapSize;
         this.resources = resources;
     }
 
@@ -97,14 +101,14 @@ public class JREDesc {
     /**
      * Returns the maximum heap size in bytes.
      */
-    public long getMaximumHeapSize() {
+    public String getMaximumHeapSize() {
         return maximumHeapSize;
     }
 
     /**
      * Returns the initial heap size in bytes.
      */
-    public long getInitialHeapSize() {
+    public String getInitialHeapSize() {
         return initialHeapSize;
     }
 
@@ -123,12 +127,38 @@ public class JREDesc {
     }
     
     /**
-     * Convert a heap size description string to a long value
-     * indicating the heap min/max size.
+     * Check for valid heap size string
+     * @throws ParseException if heapSize is invalid
      */
-    static private long heapToLong(String heapSize) {
+    static private void checkHeapSize(String heapSize) throws ParseException {
         // need to implement for completeness even though not used in netx
-        return -1;
+        if (heapSize == null) {
+            return;
+        }
+        
+        boolean lastCharacterIsDigit = true;
+        // the last character must be 0-9 or k/K/m/M
+        char lastChar = Character.toLowerCase(heapSize.charAt(heapSize.length()-1));
+        if ((lastChar < '0' || lastChar > '9')) {
+            lastCharacterIsDigit = false;
+            if (lastChar != 'k' && lastChar!= 'm' ) {
+                throw new ParseException(JNLPRuntime.getMessage("PBadHeapSize",new Object[] {heapSize}));
+            }
+        }
+        
+        int indexOfLastDigit = heapSize.length() - 1;
+        if (!lastCharacterIsDigit) {
+            indexOfLastDigit = indexOfLastDigit - 1;
+        }
+        
+        String size = heapSize.substring(0,indexOfLastDigit);
+        try {
+            // check that the number is a number!
+            Integer.valueOf(size);
+        } catch (NumberFormatException numberFormat) {
+            throw new ParseException(JNLPRuntime.getMessage("PBadHeapSize", new Object[] {heapSize}), numberFormat);
+        }
+              
     }
 
 }
