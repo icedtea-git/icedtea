@@ -1,5 +1,9 @@
 2009-05-29  Matthias Klose  <doko@ubuntu.com>
 
+	* patches/icedtea-fonts.patch: Update fontconfig for Ubuntu.
+
+2009-05-29  Matthias Klose  <doko@ubuntu.com>
+
 	* patches/icedtea-cacao-no-mmap-first-page.patch: New.
 	* Makefile.am (ICEDTEA_PATCHES): Apply above patch.
 	* HACKING: Update.
