@@ -2113,10 +2113,6 @@ ICEDTEA_PATCHES += \
 	patches/icedtea-javafiles.patch
 endif
 
-if ENABLE_NIO2
-ICEDTEA_PATCHES += patches/icedtea-nio2.patch
-endif
-
 if ENABLE_SYSTEMTAP
 ICEDTEA_PATCHES += patches/icedtea-systemtap.patch
 endif
@@ -2436,9 +2432,6 @@ stamps/overlay.stamp: stamps/patch.stamp
 	sed -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
 	  openjdk/jdk/make/common/shared/Defs.gmk; \
 	cp -r $(abs_top_srcdir)/overlays/openjdk/* openjdk/
-if ENABLE_NIO2
-	cp -r $(abs_top_srcdir)/overlays/nio2/openjdk/* openjdk/
-endif
 	chmod -R ug+w openjdk 
 	touch stamps/overlay.stamp
 
