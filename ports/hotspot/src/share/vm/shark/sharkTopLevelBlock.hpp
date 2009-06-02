@@ -237,28 +237,34 @@ class SharkTopLevelBlock : public SharkBlock {
                               SharkState*       saved_state,
                               llvm::BasicBlock* continue_block);
   // Exceptions
-  enum ExceptionAction {
-    EX_CHECK_NONE,     // don't check for pending exceptions
-    EX_CHECK_NO_CATCH, // if there is a pending exception then throw it
-    EX_CHECK_FULL      // if there is a pending exception then catch it
-  };                   //   if it has a handler or throw it otherwise
-  void check_pending_exception(ExceptionAction action);
-  void handle_exception(llvm::Value* exception, ExceptionAction action);
+  enum ExceptionActionMask {
+    // The actual bitmasks that things test against
+    EAM_CHECK         = 1, // whether to check for pending exceptions
+    EAM_HANDLE        = 2, // whether to attempt to handle pending exceptions
+    EAM_MONITOR_FUDGE = 4, // whether the monitor count needs adjusting
+
+    // More convenient values for passing
+    EX_CHECK_NONE     = 0,
+    EX_CHECK_NO_CATCH = EAM_CHECK,
+    EX_CHECK_FULL     = EAM_CHECK | EAM_HANDLE
+  };
+  void check_pending_exception(int action);
+  void handle_exception(llvm::Value* exception, int action);
 
   // VM calls
  private:
   llvm::CallInst* call_vm(llvm::Constant* callee,
                           llvm::Value**   args_start,
                           llvm::Value**   args_end,
-                          ExceptionAction ea)
+                          int             exception_action)
   {
     current_state()->decache_for_VM_call();
     function()->set_last_Java_frame();
     llvm::CallInst *res = builder()->CreateCall(callee, args_start, args_end);
     function()->reset_last_Java_frame();
     current_state()->cache_after_VM_call();
-    if (ea != EX_CHECK_NONE) {
-      check_pending_exception(ea);
+    if (exception_action) {
+      check_pending_exception(exception_action);
       current_state()->set_has_safepointed(true);
     }
     return res;
@@ -266,40 +272,40 @@ class SharkTopLevelBlock : public SharkBlock {
 
  public:
   llvm::CallInst* call_vm(llvm::Constant* callee,
-                          ExceptionAction ea)
+                          int             exception_action)
   {
     llvm::Value *args[] = {thread()};
-    return call_vm(callee, args, args + 1, ea);
+    return call_vm(callee, args, args + 1, exception_action);
   }
   llvm::CallInst* call_vm(llvm::Constant* callee,
                           llvm::Value*    arg1,
-                          ExceptionAction ea)
+                          int             exception_action)
   {
     llvm::Value *args[] = {thread(), arg1};
-    return call_vm(callee, args, args + 2, ea);
+    return call_vm(callee, args, args + 2, exception_action);
   }
   llvm::CallInst* call_vm(llvm::Constant* callee,
                           llvm::Value*    arg1,
                           llvm::Value*    arg2,
-                          ExceptionAction ea)
+                          int             exception_action)
   {
     llvm::Value *args[] = {thread(), arg1, arg2};
-    return call_vm(callee, args, args + 3, ea);
+    return call_vm(callee, args, args + 3, exception_action);
   }
   llvm::CallInst* call_vm(llvm::Constant* callee,
                           llvm::Value*    arg1,
                           llvm::Value*    arg2,
                           llvm::Value*    arg3,
-                          ExceptionAction ea)
+                          int             exception_action)
   {
     llvm::Value *args[] = {thread(), arg1, arg2, arg3};
-    return call_vm(callee, args, args + 4, ea);
+    return call_vm(callee, args, args + 4, exception_action);
   }
 
   // Synchronization
  private:
-  void acquire_lock(llvm::Value* lockee, ExceptionAction ea);
-  void release_lock(ExceptionAction ea);
+  void acquire_lock(llvm::Value* lockee, int exception_action);
+  void release_lock(int exception_action);
 
  public:
   void acquire_method_lock();

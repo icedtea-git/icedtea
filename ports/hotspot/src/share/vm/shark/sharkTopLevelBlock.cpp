@@ -331,9 +331,9 @@ void SharkTopLevelBlock::check_bounds(SharkValue* array, SharkValue* index)
   builder()->SetInsertPoint(in_bounds);
 }
 
-void SharkTopLevelBlock::check_pending_exception(ExceptionAction action)
+void SharkTopLevelBlock::check_pending_exception(int action)
 {
-  assert(action != EX_CHECK_NONE, "shouldn't be");
+  assert(action & EAM_CHECK, "should be");
 
   BasicBlock *exception    = function()->CreateBlock("exception");
   BasicBlock *no_exception = function()->CreateBlock("no_exception");
@@ -349,16 +349,23 @@ void SharkTopLevelBlock::check_pending_exception(ExceptionAction action)
   builder()->SetInsertPoint(exception);
   builder()->CreateStore(LLVMValue::null(), pending_exception_addr);
   SharkState *saved_state = current_state()->copy();
-  handle_exception(pending_exception, action);
+  if (action & EAM_MONITOR_FUDGE) {
+    // The top monitor is marked live, but the exception was thrown
+    // while setting it up or tearing it down.  We need to mark it
+    // dead before we enter any exception handlers as they will not
+    // expect it to be there.
+    set_num_monitors(num_monitors() - 1);
+    action ^= EAM_MONITOR_FUDGE;
+  }
+  handle_exception(pending_exception, action); 
   set_current_state(saved_state);
 
   builder()->SetInsertPoint(no_exception);
 }
 
-void SharkTopLevelBlock::handle_exception(Value*          exception,
-                                          ExceptionAction action)
+void SharkTopLevelBlock::handle_exception(Value* exception, int action)
 {
-  if (action == EX_CHECK_FULL && num_exceptions() != 0) {
+  if (action & EAM_HANDLE && num_exceptions() != 0) {
     // Clear the stack and push the exception onto it.
     // We do this now to protect it across the VM call
     // we may be about to make.
@@ -1631,7 +1638,7 @@ void SharkTopLevelBlock::do_monitorexit()
   release_lock(EX_CHECK_FULL);
 }
 
-void SharkTopLevelBlock::acquire_lock(Value *lockee, ExceptionAction ea)
+void SharkTopLevelBlock::acquire_lock(Value *lockee, int exception_action)
 {
   BasicBlock *try_recursive = function()->CreateBlock("try_recursive");
   BasicBlock *got_recursive = function()->CreateBlock("got_recursive");
@@ -1705,7 +1712,9 @@ void SharkTopLevelBlock::acquire_lock(Value *lockee, ExceptionAction ea)
 
   // It's not a recursive case so we need to drop into the runtime
   builder()->SetInsertPoint(not_recursive);
-  call_vm(SharkRuntime::monitorenter(), monitor_addr, ea);
+  call_vm(
+    SharkRuntime::monitorenter(), monitor_addr,
+    exception_action | EAM_MONITOR_FUDGE);
   BasicBlock *acquired_slow = builder()->GetInsertBlock();
   builder()->CreateBr(lock_acquired);  
 
@@ -1714,7 +1723,7 @@ void SharkTopLevelBlock::acquire_lock(Value *lockee, ExceptionAction ea)
   current_state()->merge(fast_state, acquired_fast, acquired_slow);
 }
 
-void SharkTopLevelBlock::release_lock(ExceptionAction ea)
+void SharkTopLevelBlock::release_lock(int exception_action)
 {
   BasicBlock *not_recursive = function()->CreateBlock("not_recursive");
   BasicBlock *released_fast = function()->CreateBlock("released_fast");
@@ -1757,7 +1766,9 @@ void SharkTopLevelBlock::release_lock(ExceptionAction ea)
 
   // Need to drop into the runtime to release this one
   builder()->SetInsertPoint(slow_path);
-  call_vm(SharkRuntime::monitorexit(), monitor_addr, ea);
+  call_vm(
+    SharkRuntime::monitorexit(), monitor_addr,
+    exception_action | EAM_MONITOR_FUDGE);
   BasicBlock *released_slow = builder()->GetInsertBlock();
   builder()->CreateBr(lock_released);  
 
