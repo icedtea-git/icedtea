@@ -1,6 +1,11 @@
 2009-06-02  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::call_vm): Bugfix.
+
+2009-06-02  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
 	(SharkTopLevelBlock::ExceptionAction): Replaced with...
 	(SharkTopLevelBlock::ExceptionActionMask): New enum.
 	(SharkTopLevelBlock::check_pending_exception): Changed type

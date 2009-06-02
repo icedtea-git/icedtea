@@ -263,7 +263,7 @@ class SharkTopLevelBlock : public SharkBlock {
     llvm::CallInst *res = builder()->CreateCall(callee, args_start, args_end);
     function()->reset_last_Java_frame();
     current_state()->cache_after_VM_call();
-    if (exception_action) {
+    if (exception_action & EAM_CHECK) {
       check_pending_exception(exception_action);
       current_state()->set_has_safepointed(true);
     }
