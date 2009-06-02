@@ -351,9 +351,8 @@ void SharkTopLevelBlock::check_pending_exception(int action)
   SharkState *saved_state = current_state()->copy();
   if (action & EAM_MONITOR_FUDGE) {
     // The top monitor is marked live, but the exception was thrown
-    // while setting it up or tearing it down.  We need to mark it
-    // dead before we enter any exception handlers as they will not
-    // expect it to be there.
+    // while setting it up so we need to mark it dead before we enter
+    // any exception handlers as they will not expect it to be there.
     set_num_monitors(num_monitors() - 1);
     action ^= EAM_MONITOR_FUDGE;
   }
@@ -1766,9 +1765,7 @@ void SharkTopLevelBlock::release_lock(int exception_action)
 
   // Need to drop into the runtime to release this one
   builder()->SetInsertPoint(slow_path);
-  call_vm(
-    SharkRuntime::monitorexit(), monitor_addr,
-    exception_action | EAM_MONITOR_FUDGE);
+  call_vm(SharkRuntime::monitorexit(), monitor_addr, exception_action);
   BasicBlock *released_slow = builder()->GetInsertBlock();
   builder()->CreateBr(lock_released);  
 
