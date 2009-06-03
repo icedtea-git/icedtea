@@ -1,5 +1,12 @@
 2009-06-03  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp:
+	Updated copyright year.
+	* ports/hotspot/src/cpu/zero/vm/relocInfo_zero.cpp:
+	Likewise.
+
+2009-06-03  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp
 	(MacroAssembler::store_oop): New method.
 	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp
