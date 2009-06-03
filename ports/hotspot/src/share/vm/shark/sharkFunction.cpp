@@ -33,8 +33,8 @@ using namespace llvm;
 void SharkFunction::initialize()
 {
   // Emit the entry point
-  SharkEntry *entry = (SharkEntry *) masm()->pc();
-  masm()->advance(sizeof(SharkEntry));
+  SharkEntry *entry =
+    (SharkEntry *) builder()->code_buffer()->malloc(sizeof(SharkEntry));
 
   // Create the function
   _function = builder()->CreateFunction(name());
@@ -45,8 +45,9 @@ void SharkFunction::initialize()
   Function::arg_iterator ai = function()->arg_begin();
   Argument *method = ai++;
   method->setName("method");
-  _base_pc = ai++;
-  _base_pc->setName("base_pc");
+  Argument *base_pc = ai++;
+  base_pc->setName("base_pc");
+  builder()->code_buffer()->set_base_pc(base_pc);
   _thread = ai++;
   _thread->setName("thread");
 

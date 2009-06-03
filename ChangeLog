@@ -1,5 +1,45 @@
 2009-06-03  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkCodeBuffer.hpp:
+	New file.
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::_code_buffer): New field.
+	(SharkBuilder::code_buffer): New method.
+	(SharkBuilder::set_code_buffer): Likewise.
+	(SharkBuilder::code_buffer_address): Likewise.
+	(SharkBuilder::CreateInlineOop): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::compile_method):  Use a SharkCodeBuffer
+	instead of a normal CodeBuffer and MacroAssembler, and
+	hook it into the SharkBuilder.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::SharkFunction): Removed masm argument
+	and initialization.
+	(SharkFunction::_masm): Removed.
+	(SharkFunction::_base_pc): Likewise.
+	(SharkFunction::masm): Likewise.
+	(SharkFunction::base_pc): Likewise.
+	(SharkFunction::create_unique_pc_offset): Likewise.
+	(SharkFunction::CreateAddressOfCodeBufferEntry): Likewise.
+	(SharkFunction::CreateAddressOfOopInCodeBuffer): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Use the new code to allocate
+	the SharkEntry, and set the base_pc for the SharkCodeBuffer.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::get_direct_callee): Use new code.
+
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::start_frame): Use new code.
+	(SharkDecacher::start_stack): Likewise.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
+2009-06-03  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp:
 	Updated copyright year.
 	* ports/hotspot/src/cpu/zero/vm/relocInfo_zero.cpp:

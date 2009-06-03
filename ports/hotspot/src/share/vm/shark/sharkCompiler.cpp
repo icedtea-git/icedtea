@@ -115,14 +115,16 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   env->debug_info()->set_oopmaps(&oopmaps);
   env->set_dependencies(new Dependencies(env));
 
-  // Create the CodeBuffer and MacroAssembler
-  CodeBuffer cb("Shark", 256 * K, 64 * K);
-  cb.initialize_oop_recorder(env->oop_recorder());
-  MacroAssembler *masm = new MacroAssembler(&cb);
+  // Create the code buffer and hook it into the builder
+  SharkCodeBuffer cb(env->oop_recorder());
+  builder()->set_code_buffer(&cb);
 
-  // Compile the method into the CodeBuffer
+  // Compile the method
   ciBytecodeStream iter(target);
-  SharkFunction function(this, name, flow, &iter, masm);
+  SharkFunction function(this, name, flow, &iter);
+
+  // Unhook the code buffer
+  builder()->set_code_buffer(NULL);  
 
   // Install the method into the VM
   CodeOffsets offsets;
@@ -138,7 +140,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
                        entry_bci,
                        &offsets,
                        0,
-                       &cb,
+                       cb.cb(),
                        0,
                        &oopmaps,
                        &handler_table,

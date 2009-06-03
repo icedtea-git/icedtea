@@ -107,6 +107,7 @@ sharkBuilder.hpp                        debug.hpp
 sharkBuilder.hpp                        llvmHeaders.hpp
 sharkBuilder.hpp                        llvmValue.hpp
 sharkBuilder.hpp                        sizes.hpp
+sharkBuilder.hpp                        sharkCodeBuffer.hpp
 sharkBuilder.hpp                        sharkCompiler.hpp
 sharkBuilder.hpp                        sharkType.hpp
 sharkBuilder.hpp                        sharkValue.hpp
@@ -128,10 +129,13 @@ sharkCacheDecache.hpp                   sharkFrameCache.hpp
 sharkCacheDecache.hpp                   sharkFunction.hpp
 sharkCacheDecache.hpp                   sharkStateScanner.hpp
 
+sharkCodeBuffer.hpp                     allocation.hpp
+sharkCodeBuffer.hpp                     codeBuffer.hpp
+sharkCodeBuffer.hpp                     llvmHeaders.hpp
+
 sharkCompiler.cpp                       abstractCompiler.hpp
 sharkCompiler.cpp                       ciEnv.hpp
 sharkCompiler.cpp                       ciMethod.hpp
-sharkCompiler.cpp                       codeBuffer.hpp
 sharkCompiler.cpp                       debug.hpp
 sharkCompiler.cpp                       debugInfoRec.hpp
 sharkCompiler.cpp                       dependencies.hpp
@@ -141,6 +145,7 @@ sharkCompiler.cpp                       oopMap.hpp
 sharkCompiler.cpp                       oopRecorder.hpp
 sharkCompiler.cpp                       shark_globals.hpp
 sharkCompiler.cpp                       sharkBuilder.hpp
+sharkCompiler.cpp                       sharkCodeBuffer.hpp
 sharkCompiler.cpp                       sharkCompiler.hpp
 sharkCompiler.cpp                       sharkEntry.hpp
 sharkCompiler.cpp                       sharkFunction.hpp

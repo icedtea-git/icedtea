@@ -895,10 +895,10 @@ Value *SharkTopLevelBlock::get_callee(CallType    call_type,
 // invokevirtual is direct in some circumstances.
 Value *SharkTopLevelBlock::get_direct_callee(ciMethod* method)
 {
-  return builder()->CreateLoad(
-    builder()->CreateBitCast(
-      function()->CreateAddressOfOopInCodeBuffer(method),
-      PointerType::getUnqual(SharkType::methodOop_type())), "callee");
+  return builder()->CreateBitCast(
+    builder()->CreateInlineOop(method),
+    SharkType::methodOop_type(),
+    "callee");
 }
 
 // Non-direct virtual calls are handled here

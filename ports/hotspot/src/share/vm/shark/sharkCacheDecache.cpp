@@ -31,7 +31,7 @@ using namespace llvm;
 void SharkDecacher::start_frame()
 {
   // Start recording the debug information
-  _pc_offset = function()->create_unique_pc_offset();
+  _pc_offset = builder()->code_buffer()->create_unique_offset();
   _oopmap = new OopMap(
     oopmap_slot_munge(function()->oopmap_frame_size()),
     oopmap_slot_munge(function()->arg_size()));
@@ -119,7 +119,7 @@ void SharkDecacher::process_pc_slot(int offset)
 {
   // Record the PC
   builder()->CreateStore(
-    function()->CreateAddressOfCodeBufferEntry(pc_offset()),
+    builder()->code_buffer_address(pc_offset()),
     function()->CreateAddressOfFrameEntry(offset));
 }
   

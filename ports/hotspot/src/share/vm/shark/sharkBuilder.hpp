@@ -360,4 +360,35 @@ class SharkBuilder : public llvm::IRBuilder<> {
       LLVMValue::intptr_constant(~(s - 1)),
       name);
   }
+
+  // CodeBuffer interface
+ private:
+  SharkCodeBuffer* _code_buffer;
+
+ public:
+  SharkCodeBuffer* code_buffer() const
+  {
+    return _code_buffer;
+  }
+  void set_code_buffer(SharkCodeBuffer* code_buffer)
+  {
+    _code_buffer = code_buffer;
+  }
+
+ public:
+  llvm::Value* code_buffer_address(int offset)
+  {
+    return CreateAdd(
+      code_buffer()->base_pc(), LLVMValue::intptr_constant(offset));
+  }
+
+ public:
+  llvm::Value* CreateInlineOop(ciObject* object, const char* name = "")
+  {
+    return CreateLoad(
+      CreateIntToPtr(
+        code_buffer_address(code_buffer()->inline_oop(object)),
+        llvm::PointerType::getUnqual(SharkType::jobject_type())),
+      name);
+  }
 };

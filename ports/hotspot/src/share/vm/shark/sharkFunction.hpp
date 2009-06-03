@@ -32,13 +32,11 @@ class SharkFunction : public StackObj {
   SharkFunction(SharkCompiler*    compiler,
                 const char*       name,
                 ciTypeFlow*       flow,
-                ciBytecodeStream* iter,
-                MacroAssembler*   masm)
+                ciBytecodeStream* iter)
     : _compiler(compiler),
       _name(name),
       _flow(flow),
-      _iter(iter),
-      _masm(masm)
+      _iter(iter)
   { initialize(); }
 
  private:
@@ -49,10 +47,8 @@ class SharkFunction : public StackObj {
   const char*                       _name;
   ciTypeFlow*                       _flow;
   ciBytecodeStream*                 _iter;
-  MacroAssembler*                   _masm;
   llvm::Function*                   _function;
   SharkTopLevelBlock**              _blocks;
-  llvm::Value*                      _base_pc;
   llvm::Value*                      _thread;
   int                               _max_monitors;
   GrowableArray<DeferredZeroCheck*> _deferred_zero_checks;
@@ -74,10 +70,6 @@ class SharkFunction : public StackObj {
   {
     return _iter;
   }
-  MacroAssembler* masm() const
-  {
-    return _masm;
-  }
   llvm::Function* function() const
   {
     return _function;
@@ -85,10 +77,6 @@ class SharkFunction : public StackObj {
   SharkTopLevelBlock* block(int i) const
   {
     return _blocks[i];
-  }
-  llvm::Value* base_pc() const
-  {
-    return _base_pc;
   }
   llvm::Value* thread() const
   {
@@ -135,28 +123,6 @@ class SharkFunction : public StackObj {
   ciMethod* target() const
   {
     return flow()->method();
-  }
-
-  // CodeBuffer interface
- public:
-  int create_unique_pc_offset() const
-  {
-    int offset = masm()->offset();
-    masm()->advance(1);
-    return offset;
-  }
-  llvm::Value* CreateAddressOfCodeBufferEntry(int offset) const
-  {
-    return builder()->CreateAdd(base_pc(), LLVMValue::intptr_constant(offset));
-  }
-  llvm::Value* CreateAddressOfOopInCodeBuffer(ciObject* object) const
-  {
-    masm()->align(BytesPerWord);
-    int offset = masm()->offset();
-    masm()->store_oop(object->encoding());
-    return builder()->CreateIntToPtr(
-      CreateAddressOfCodeBufferEntry(offset),
-      llvm::PointerType::getUnqual(SharkType::jobject_type()));
   }
 
   // Block management
