@@ -1,0 +1,21 @@
+
+# HG changeset patch
+# User Stefan Ring <stefan@complang.tuwien.ac.at>
+# Date 1243985748 -7200
+# Node ID 5fdb98095047abf89f3d3298417499c2c06f8d56
+# Parent 2d848ae770f5b7bfc59cf007ceae36f97adccc03
+* src/vm/options.c (options_xx): Don't clutter output with warning (print to
+stderr instead).
+
+--- cacao/cacao/src/vmcore/options.c	Wed Apr 22 11:20:27 2009 +0200
++++ cacao/cacao/src/vmcore/options.c	Wed Jun 03 01:35:48 2009 +0200
+@@ -816,7 +816,7 @@
+ #endif
+ 
+ 		default:
+-			printf("Unknown -XX option: %s\n", name);
++			fprintf(stderr, "Unknown -XX option: %s\n", name);
+ 			break;
+ 		}
+ 	}
+

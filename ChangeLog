@@ -1,3 +1,11 @@
+2009-06-03  Xerxes Rånby  <xerxes@zafena.se>
+	    Stefan Ring  <stefan@complang.tuwien.ac.at>
+
+	* patches/cacao/native-resolve.patch: New.
+	* patches/cacao/xxoption-warning.patch: Likewise.
+	* Makefile.am (ICEDTEA_PATCHES): Apply above patches.
+	* HACKING: Update.
+
 2009-05-30  Mark Wielaard  <mark@klomp.org>
 
 	* configure.ac (enable-nio2): Removed.
