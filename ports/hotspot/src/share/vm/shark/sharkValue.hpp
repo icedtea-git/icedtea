@@ -146,45 +146,6 @@ class SharkValue : public ResourceObj {
   }
   static inline SharkValue* address_constant(int bci);
 
-  // Typed conversion from HotSpot ciConstants
- public:
-  static SharkValue* from_ciConstant(ciConstant value)
-  {
-    switch (value.basic_type()) {
-    case T_BOOLEAN:
-      return SharkValue::jint_constant(value.as_boolean());
-
-    case T_BYTE:
-      return SharkValue::jint_constant(value.as_byte());
-
-    case T_CHAR:
-      return SharkValue::jint_constant(value.as_char());
-
-    case T_SHORT:
-      return SharkValue::jint_constant(value.as_short());
-
-    case T_INT:
-      return SharkValue::jint_constant(value.as_int());
-
-    case T_LONG:
-      return SharkValue::jlong_constant(value.as_long());
-      
-    case T_FLOAT:
-      return SharkValue::jfloat_constant(value.as_float());
-      
-    case T_DOUBLE:
-      return SharkValue::jdouble_constant(value.as_double());
-      
-    case T_OBJECT:
-    case T_ARRAY:
-      return NULL;
-
-    default:
-      tty->print_cr("Unhandled type %s", type2name(value.basic_type()));
-      ShouldNotReachHere();
-    }
-  }
-
   // Type-losing conversions -- use with care!
  public:
   virtual llvm::Value* generic_value() const = 0;

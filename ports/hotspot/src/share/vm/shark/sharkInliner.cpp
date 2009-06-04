@@ -267,7 +267,7 @@ bool SharkInlinerHelper::is_inlinable()
   ResourceMark rm;
   initialize_for_check();
 
-  SharkValue *sv;
+  SharkConstant *sc;
   bool a, b, c, d;
 
   iter()->reset_to_bci(0);
@@ -323,11 +323,11 @@ bool SharkInlinerHelper::is_inlinable()
     case Bytecodes::_ldc:
     case Bytecodes::_ldc_w:
     case Bytecodes::_ldc2_w:
-      sv = SharkValue::from_ciConstant(iter()->get_constant());
-      if (sv == NULL)
+      sc = SharkConstant::for_ldc(iter());
+      if (!sc->is_loaded())
         return false;
-      push(sv->zero_checked());
-      if (sv->is_two_word())
+      push(sc->is_nonzero());
+      if (sc->is_two_word())
         push(false);
       break;
 
@@ -753,9 +753,9 @@ bool SharkInlinerHelper::do_field_access(bool is_get, bool is_field)
   if (is_get) {
     bool result_pushed = false;
     if (field->is_constant()) {
-      SharkValue *value = SharkValue::from_ciConstant(field->constant_value());
-      if (value != NULL) {
-        push(value->zero_checked());
+      SharkConstant *sc = SharkConstant::for_field(iter());
+      if (sc->is_loaded()) {
+        push(sc->is_nonzero());
         result_pushed = true;
       }
     }

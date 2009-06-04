@@ -1,3 +1,32 @@
+2009-06-04  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkConstant.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkConstant.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::lookup_for_ldc): Removed.
+	(SharkBlock::do_ldc): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse_bytecode): Use new code for ldc and friends.
+	(SharkBlock::do_field_access): Use new code for constant fields.
+	(SharkBlock::lookup_for_ldc): Removed.
+
+	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp
+	(SharkInlinerHelper::is_inlinable): Use new code for ldc and friends.
+	(SharkInlinerHelper::do_field_access): Use new code for constant fields.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::lookup_for_ldc): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): Use new code to for ldc and
+	constant field traps.
+	(SharkTopLevelBlock::lookup_for_ldc): Removed.
+
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
+	(SharkValue::from_ciConstant): Removed.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
 2009-06-03  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkCodeBuffer.hpp:

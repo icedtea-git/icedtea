@@ -222,7 +222,6 @@ class SharkTopLevelBlock : public SharkBlock {
 
   // Helpers
  private:
-  llvm::Value* lookup_for_ldc();
   llvm::Value* lookup_for_field_access();
   void do_branch(int successor_index);
 

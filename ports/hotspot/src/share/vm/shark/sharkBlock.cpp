@@ -163,7 +163,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
     case Bytecodes::_ldc:
     case Bytecodes::_ldc_w:
     case Bytecodes::_ldc2_w:
-      do_ldc();
+      push(SharkConstant::for_ldc(iter())->value(builder()));
       break;
 
     case Bytecodes::_iload_0:
@@ -996,7 +996,9 @@ void SharkBlock::do_field_access(bool is_get, bool is_field)
     object = value->generic_value();
   }
   if (is_get && field->is_constant()) {
-    value = SharkValue::from_ciConstant(field->constant_value());
+    SharkConstant *constant = SharkConstant::for_field(iter());
+    if (constant->is_loaded())
+      value = constant->value(builder());
   }
   if (!is_get || value == NULL) {
     if (!is_field)
@@ -1159,11 +1161,6 @@ int SharkBlock::trap_bci()
 }
 
 void SharkBlock::do_trap(int trap_request)
-{
-  ShouldNotCallThis();
-}
-
-Value* SharkBlock::lookup_for_ldc()
 {
   ShouldNotCallThis();
 }

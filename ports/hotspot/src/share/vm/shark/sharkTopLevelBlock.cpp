@@ -48,7 +48,7 @@ void SharkTopLevelBlock::scan_for_traps()
     switch (bc()) {
     case Bytecodes::_ldc:
     case Bytecodes::_ldc_w:
-      if (iter()->is_unresolved_string() || iter()->is_unresolved_klass()) {
+      if (!SharkConstant::for_ldc(iter())->is_loaded()) {
         set_trap(
           Deoptimization::make_trap_request(
             Deoptimization::Reason_uninitialized,
@@ -80,10 +80,9 @@ void SharkTopLevelBlock::scan_for_traps()
       if (is_field)
         break;
 
-      // There won't be a pool access if this is a getstatic that
-      // resolves to a handled constant either
+      // There won't be a pool access if this is a constant getstatic
       if (bc() == Bytecodes::_getstatic && field->is_constant()) {
-        if (SharkValue::from_ciConstant(field->constant_value()))
+        if (SharkConstant::for_field(iter())->is_loaded())
           break;
       }
 
@@ -607,37 +606,6 @@ void SharkTopLevelBlock::handle_return(BasicType type, Value* exception)
   }
 
   builder()->CreateRetVoid();
-}
-
-Value *SharkTopLevelBlock::lookup_for_ldc()
-{
-  int index = iter()->get_constant_index();
-  constantTag tag = target()->holder()->constant_pool_tag_at(index);
-
-  SharkConstantPool constants(this);
-  Value *entry = constants.object_at(index);
-
-  Value *klass_part;
-  switch (tag.value()) {
-  case JVM_CONSTANT_String:
-    return entry;
-
-  case JVM_CONSTANT_Class:
-    klass_part = builder()->CreateAddressOfStructEntry(
-      entry,
-      in_ByteSize(klassOopDesc::klass_part_offset_in_bytes()),
-      SharkType::klass_type(),
-      "klass_part");
-    // XXX FIXME: We need a memory barrier before this load
-    return builder()->CreateValueOfStructEntry(
-      klass_part,
-      in_ByteSize(Klass::java_mirror_offset_in_bytes()),
-      SharkType::oop_type(),
-      "java_mirror");
-
-  default:
-    ShouldNotReachHere();
-  }
 }
 
 Value* SharkTopLevelBlock::lookup_for_field_access()

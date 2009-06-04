@@ -202,7 +202,6 @@ class SharkBlock : public ResourceObj {
   // Helpers
  protected:
   virtual void do_zero_check(SharkValue* value);
-  virtual llvm::Value* lookup_for_ldc();
   virtual llvm::Value* lookup_for_field_access();
 
   // Leaf calls
@@ -239,16 +238,6 @@ class SharkBlock : public ResourceObj {
   virtual int  trap_request();
   virtual int  trap_bci();
   virtual void do_trap(int trap_request);
-
-  // ldc*
- private:
-  void do_ldc()
-  {
-    SharkValue *value = SharkValue::from_ciConstant(iter()->get_constant());
-    if (value == NULL)
-      value = SharkValue::create_jobject(lookup_for_ldc(), true);
-    push(value);
-  }
 
   // arraylength
  protected:
