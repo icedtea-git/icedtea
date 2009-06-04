@@ -1002,7 +1002,7 @@ void SharkBlock::do_field_access(bool is_get, bool is_field)
   }
   if (!is_get || value == NULL) {
     if (!is_field)
-      object = lookup_for_field_access();
+      object = builder()->CreateInlineOop(field->holder());
 
     BasicType   basic_type = field->type()->basic_type();
     const Type *stack_type = SharkType::to_stackType(basic_type);
@@ -1161,11 +1161,6 @@ int SharkBlock::trap_bci()
 }
 
 void SharkBlock::do_trap(int trap_request)
-{
-  ShouldNotCallThis();
-}
-
-Value* SharkBlock::lookup_for_field_access()
 {
   ShouldNotCallThis();
 }

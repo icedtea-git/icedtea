@@ -220,9 +220,8 @@ class SharkTopLevelBlock : public SharkBlock {
  public:
   void emit_IR();
 
-  // Helpers
+  // Branch helpers
  private:
-  llvm::Value* lookup_for_field_access();
   void do_branch(int successor_index);
 
   // Zero checks

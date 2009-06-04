@@ -74,20 +74,6 @@ void SharkTopLevelBlock::scan_for_traps()
             Deoptimization::Action_none), bci());
         return;
       }
-
-      // If this is a getfield or putfield then there won't be a
-      // pool access and we're done
-      if (is_field)
-        break;
-
-      // There won't be a pool access if this is a constant getstatic
-      if (bc() == Bytecodes::_getstatic && field->is_constant()) {
-        if (SharkConstant::for_field(iter())->is_loaded())
-          break;
-      }
-
-      // Continue to the check
-      index = iter()->get_field_index();
       break;
 
     case Bytecodes::_invokevirtual:
@@ -606,17 +592,6 @@ void SharkTopLevelBlock::handle_return(BasicType type, Value* exception)
   }
 
   builder()->CreateRetVoid();
-}
-
-Value* SharkTopLevelBlock::lookup_for_field_access()
-{
-  SharkConstantPool constants(this);
-  Value *cache = constants.cache_entry_at(iter()->get_field_index());
-
-  return builder()->CreateValueOfStructEntry(
-   cache, ConstantPoolCacheEntry::f1_offset(),
-   SharkType::jobject_type(),
-   "object");
 }
 
 void SharkTopLevelBlock::do_arraylength()

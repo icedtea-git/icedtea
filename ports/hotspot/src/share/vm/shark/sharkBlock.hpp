@@ -202,7 +202,6 @@ class SharkBlock : public ResourceObj {
   // Helpers
  protected:
   virtual void do_zero_check(SharkValue* value);
-  virtual llvm::Value* lookup_for_field_access();
 
   // Leaf calls
  protected:

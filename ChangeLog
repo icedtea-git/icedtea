@@ -1,5 +1,22 @@
 2009-06-04  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::lookup_for_field_access): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::do_field_access): Inline receiver for static fields.
+	(SharkBlock::lookup_for_field_access): Removed.
+
+	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp
+	(SharkInlinerHelper::do_field_access): Allow static fields.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkBlock::lookup_for_field_access): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): Removed static field traps.
+	(SharkBlock::lookup_for_field_access): Removed.
+
+2009-06-04  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkConstant.hpp: New file.
 	* ports/hotspot/src/share/vm/shark/sharkConstant.cpp: Likewise.
 

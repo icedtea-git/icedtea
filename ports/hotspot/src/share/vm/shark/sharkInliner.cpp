@@ -760,12 +760,8 @@ bool SharkInlinerHelper::do_field_access(bool is_get, bool is_field)
       }
     }
 
-    if (!result_pushed) {
-      if (!is_field)
-        return false;
-
+    if (!result_pushed)
       push(false);
-    }
 
     if (field->type()->is_two_word())
       push(false);
