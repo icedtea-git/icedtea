@@ -1,3 +1,8 @@
+2009-06-05  Omair Majid  <omajid@redhat.com>
+
+	* patches/icedtea-webstart.patch: Make javax.jnlp package visible to
+	javac.
+
 2009-06-12  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-liveconnect.patch: Make netscape.javascript package
