@@ -1563,14 +1563,14 @@ void SharkTopLevelBlock::do_multianewarray()
 
 void SharkTopLevelBlock::acquire_method_lock()
 {
+  Value *lockee;
+  if (target()->is_static())
+    lockee = builder()->CreateInlineOop(target()->holder()->java_mirror());
+  else
+    lockee = local(0)->jobject_value();
+
   iter()->force_bci(start()); // for the decache in acquire_lock
-  if (target()->is_static()) {
-    SharkConstantPool constants(this);
-    acquire_lock(constants.java_mirror(), EX_CHECK_NO_CATCH);
-  }
-  else {
-    acquire_lock(local(0)->jobject_value(), EX_CHECK_NO_CATCH);
-  }
+  acquire_lock(lockee, EX_CHECK_NO_CATCH);
 }
 
 void SharkTopLevelBlock::do_monitorenter()
