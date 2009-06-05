@@ -2089,7 +2089,9 @@ ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
 	patches/cacao/no-mmap-first-page.patch \
 	patches/cacao/native-resolve.patch \
-	patches/cacao/xxoption-warning.patch
+	patches/cacao/xxoption-warning.patch \
+	patches/cacao/no-strict-aliasing.patch \
+	patches/cacao/openjdk7.patch
 endif
 
 if WITH_CACAO
@@ -2248,7 +2250,6 @@ if !USE_SYSTEM_CACAO
 	  dir=$$(basename cacao/cacao-*) ; \
 	  ln -s $$dir cacao/cacao ; \
 	  cd cacao/cacao ; \
-	  $(PATCH) -l -p0 < $(abs_top_srcdir)/patches/cacao/openjdk7.patch ; \
 	  cd .. ; \
 	fi
 endif

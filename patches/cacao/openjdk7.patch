@@ -1,6 +1,6 @@
 diff -Nru src.orig/native/vm/sun_misc_Unsafe.c src/native/vm/sun_misc_Unsafe.c
---- src.orig/native/vm/sun_misc_Unsafe.c	2009-03-19 17:31:38.000000000 +0000
-+++ src/native/vm/sun_misc_Unsafe.c	2009-03-19 17:34:57.000000000 +0000
+--- cacao/cacao/src.orig/native/vm/sun_misc_Unsafe.c	2009-03-19 17:31:38.000000000 +0000
++++ cacao/cacao/src/native/vm/sun_misc_Unsafe.c		2009-03-19 17:34:57.000000000 +0000
 @@ -104,14 +104,8 @@
  	{ "putDouble",              "(JD)V",                                                      (void *) (intptr_t) &Java_sun_misc_Unsafe_putDouble__JD                  },
  	{ "objectFieldOffset",      "(Ljava/lang/reflect/Field;)J",                               (void *) (intptr_t) &Java_sun_misc_Unsafe_objectFieldOffset              },

@@ -71,10 +71,6 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-cc-interp-backedge.patch: Remove some duplicated code in DO_BACKEDGE_CHECKS.
 * icedtea-includedb.patch: Add missing include files. (S6793825, mostly applied in b47)
 * icedtea-xml-encodinginfo.patch: Fix possible StackOverflowError in EncodingInfo (PR295).
-* cacao/launcher.patch: For the 'java' command, create new thread depending on the current VM.
-* cacao/no-mmap-first-page.patch: Don't mmap the first memory page.
-* cacao/native-resolve.patch: Changes CACAO resolution order for native methods. (cacao PR128).
-* cacao/xxoption-warning.patch: Makes CACAO print warnings to stderr (cacao PR128).
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
@@ -141,6 +137,13 @@ The following patches are only applied to the icedtea-ecj bootstrap tree in Iced
 The following patches are only applied when building with the CACAO virtual machine:
 
 * cacao/ignore-tests.patch: Ignore tests known to fail on CACAO.
+* cacao/launcher.patch: For the 'java' command, create new thread depending on the current VM.
+* cacao/no-mmap-first-page.patch: Don't mmap the first memory page.
+* cacao/native-resolve.patch: Changes CACAO resolution order for native methods. (cacao PR128).
+* cacao/xxoption-warning.patch: Makes CACAO print warnings to stderr (cacao PR128).
+* cacao/openjdk7.patch: Turn on java.c functions for OpenJDK7.
+* cacao/no-strict-aliasing.patch: Turn off strict aliasing which causes an issue with the verifier
+  				  when building with GCC 4.4 (cacao PR129).
 
 The following patches are to support Xrender pipeline (-Dsun.java2d.xrender):
 

@@ -1,3 +1,14 @@
+2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* HACKING: Updated.
+	* Makefile.am:
+	Add new patch, move openjdk7 patch to be
+	with others.
+	* patches/cacao/no-strict-aliasing.patch:
+	New patch to fix CACAO build on GCC 4.4 (see PR129).
+	* patches/cacao/openjdk7.patch:
+	Fixed paths to match other patches.
+
 2009-06-03  Xerxes Rånby  <xerxes@zafena.se>
 	    Stefan Ring  <stefan@complang.tuwien.ac.at>
 

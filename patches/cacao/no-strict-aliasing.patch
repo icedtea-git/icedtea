@@ -1,0 +1,12 @@
+diff -ur cacao-0.99.4.orig/configure cacao-0.99.4/configure
+--- cacao.orig/cacao/configure		2009-03-16 12:44:25.000000000 +0100
++++ cacao/cacao/configure		2009-06-05 17:58:48.000000000 +0200
+@@ -2825,7 +2825,7 @@
+ 
+ 
+ if test x"$CFLAGS" = "x"; then
+-    OPT_CFLAGS="-g -O2"
++    OPT_CFLAGS="-g -O2 -fno-strict-aliasing"
+ else
+     OPT_CFLAGS=$CFLAGS
+ fi
