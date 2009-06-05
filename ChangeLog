@@ -1,5 +1,14 @@
 2009-06-05  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::do_full_instance_check): Add class argument.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::do_instance_check): Removed constant pool check.
+	(SharkTopLevelBlock::do_full_instance_check): Removed constant
+	pool lookup.
+
+2009-06-05  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
 	(SharkTopLevelBlock::acquire_method_lock): Removed constant
 	pool lookup.

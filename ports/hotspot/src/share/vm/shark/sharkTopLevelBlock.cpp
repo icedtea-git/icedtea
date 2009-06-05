@@ -1166,23 +1166,17 @@ void SharkTopLevelBlock::do_call()
 
 void SharkTopLevelBlock::do_instance_check()
 {
-  constantTag tag =
-    target()->holder()->constant_pool_tag_at(iter()->get_klass_index());
-  if (!tag.is_klass()) {
-    assert(tag.is_unresolved_klass(), "should be");
-    do_trapping_instance_check();
-  }
-  else {
-    do_full_instance_check();
-  }
-}
-
-void SharkTopLevelBlock::do_full_instance_check()
-{ 
   bool will_link;
   ciKlass *klass = iter()->get_klass(will_link);
-  assert(will_link, "should do");
 
+  if (will_link)
+    do_full_instance_check(klass);
+  else
+    do_trapping_instance_check();
+}
+
+void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass)
+{ 
   BasicBlock *not_null      = function()->CreateBlock("not_null");
   BasicBlock *subtype_check = function()->CreateBlock("subtype_check");
   BasicBlock *is_instance   = function()->CreateBlock("is_instance");
@@ -1208,8 +1202,7 @@ void SharkTopLevelBlock::do_full_instance_check()
 
   // Get the class we're checking against
   builder()->SetInsertPoint(not_null);
-  SharkConstantPool constants(this);
-  Value *check_klass = constants.object_at(iter()->get_klass_index());
+  Value *check_klass = builder()->CreateInlineOop(klass);
 
   // Get the class of the object being tested
   Value *object_klass = builder()->CreateValueOfStructEntry(
