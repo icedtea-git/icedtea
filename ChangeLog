@@ -1,3 +1,15 @@
+2009-06-06  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::do_optimized_instance_check): New method.
+	(SharkTopLevelBlock::do_full_instance_check): Add class argument.	
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::do_instance_check): Add compile time type
+	checks.
+	(SharkTopLevelBlock::do_optimized_instance_check): New method.
+	(SharkTopLevelBlock::do_trapping_instance_check): Update the
+	object with the new class if its a checkcast that passes.
+
 2009-06-05  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp

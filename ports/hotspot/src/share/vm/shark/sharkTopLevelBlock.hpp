@@ -386,8 +386,9 @@ class SharkTopLevelBlock : public SharkBlock {
 
   // checkcast and instanceof
  private:
+  void do_optimized_instance_check();
   void do_full_instance_check(ciKlass* klass);
-  void do_trapping_instance_check();
+  void do_trapping_instance_check(ciKlass* klass);
 
   void do_instance_check();
 

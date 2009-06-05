@@ -1166,15 +1166,55 @@ void SharkTopLevelBlock::do_call()
 
 void SharkTopLevelBlock::do_instance_check()
 {
+  // Get the class we're checking against
   bool will_link;
-  ciKlass *klass = iter()->get_klass(will_link);
+  ciKlass *check_klass = iter()->get_klass(will_link);
 
+  // If the class we're checking against is java.lang.Object
+  // then this is a no brainer.  Apparently this can happen
+  // in reflective code...
+  if (check_klass == function()->env()->Object_klass()) {
+    do_optimized_instance_check();
+    return;
+  }
+  
+  // Get the class of the object we're checking
+  ciKlass *object_klass = xstack(0)->type()->as_klass();
+
+  // If the classes are defined enough now then we
+  // don't need a runtime check.  NB opto's code for
+  // this (GraphKit::static_subtype_check) says we
+  // cannot trust static interface types yet, hence
+  // the extra check
+  if (!object_klass->is_interface()) {
+    if (object_klass == check_klass) {
+      do_optimized_instance_check();
+      return;
+    }
+
+    if (object_klass->is_loaded() && check_klass->is_loaded()) {
+      if (object_klass->is_subtype_of(check_klass)) {
+        do_optimized_instance_check();
+        return;
+      }
+    }
+  }
+
+  // Need to check this one at runtime
   if (will_link)
-    do_full_instance_check(klass);
+    do_full_instance_check(check_klass);
   else
-    do_trapping_instance_check();
+    do_trapping_instance_check(check_klass);
 }
-
+                
+void SharkTopLevelBlock::do_optimized_instance_check()
+{
+  if (bc() == Bytecodes::_instanceof) {
+    pop();
+    push(SharkValue::jint_constant(1));
+  }
+}
+    
 void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass)
 { 
   BasicBlock *not_null      = function()->CreateBlock("not_null");
@@ -1275,7 +1315,7 @@ void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass)
   }
 }
 
-void SharkTopLevelBlock::do_trapping_instance_check()
+void SharkTopLevelBlock::do_trapping_instance_check(ciKlass* klass)
 {
   BasicBlock *not_null = function()->CreateBlock("not_null");
   BasicBlock *is_null  = function()->CreateBlock("null");
@@ -1297,7 +1337,10 @@ void SharkTopLevelBlock::do_trapping_instance_check()
   // If it's null then we're ok
   builder()->SetInsertPoint(is_null);
   set_current_state(saved_state);
-  if (bc() == Bytecodes::_instanceof) {
+  if (bc() == Bytecodes::_checkcast) {
+    push(SharkValue::create_generic(klass, pop()->jobject_value(), false));    
+  }
+  else {
     pop();
     push(SharkValue::jint_constant(0));
   }
