@@ -1,3 +1,9 @@
+2009-06-05  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::do_new): Removed constant pool lookup.
+	(SharkTopLevelBlock::scan_for_traps): Add traps for new.
+
 2009-06-04  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp

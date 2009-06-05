@@ -40,6 +40,7 @@ void SharkTopLevelBlock::scan_for_traps()
 
     ciField *field;
     ciMethod *method;
+    ciInstanceKlass *klass;
     bool will_link;
     bool is_field;
 
@@ -98,6 +99,30 @@ void SharkTopLevelBlock::scan_for_traps()
 
       // Continue to the check
       index = iter()->get_method_index();
+      break;
+
+    case Bytecodes::_new:
+      klass = iter()->get_klass(will_link)->as_instance_klass();
+      assert(will_link, "typeflow responsibility");
+
+      // Bail out if the class is unloaded
+      if (iter()->is_unresolved_klass() || !klass->is_initialized()) {
+        set_trap(
+          Deoptimization::make_trap_request(
+            Deoptimization::Reason_uninitialized,
+            Deoptimization::Action_reinterpret), bci());
+        return;
+      }
+
+      // Bail out if the class cannot be instantiated
+      if (klass->is_abstract() || klass->is_interface() ||
+          klass->name() == ciSymbol::java_lang_Class()) {
+        set_trap(
+          Deoptimization::make_trap_request(
+            Deoptimization::Reason_unhandled,
+            Deoptimization::Action_reinterpret), bci());
+        return;
+      }
       break;
     }
 
@@ -1291,7 +1316,6 @@ void SharkTopLevelBlock::do_new()
   ciInstanceKlass* klass = iter()->get_klass(will_link)->as_instance_klass();
   assert(will_link, "typeflow responsibility");
 
-  BasicBlock *tlab_alloc          = NULL;
   BasicBlock *got_tlab            = NULL;
   BasicBlock *heap_alloc          = NULL;
   BasicBlock *retry               = NULL;
@@ -1310,33 +1334,22 @@ void SharkTopLevelBlock::do_new()
   Value *slow_object = NULL;
   Value *object      = NULL;
 
-  SharkConstantPool constants(this);
-
   // The fast path
   if (!Klass::layout_helper_needs_slow_path(klass->layout_helper())) {
     if (UseTLAB) {
-      tlab_alloc        = function()->CreateBlock("tlab_alloc");
       got_tlab          = function()->CreateBlock("got_tlab");
+      heap_alloc        = function()->CreateBlock("heap_alloc");
     }
-    heap_alloc          = function()->CreateBlock("heap_alloc");
     retry               = function()->CreateBlock("retry");
     got_heap            = function()->CreateBlock("got_heap");
     initialize          = function()->CreateBlock("initialize");
     slow_alloc_and_init = function()->CreateBlock("slow_alloc_and_init");
     push_object         = function()->CreateBlock("push_object");
 
-    builder()->CreateCondBr(
-      builder()->CreateICmpEQ(
-        constants.tag_at(iter()->get_klass_index()),
-        LLVMValue::jbyte_constant(JVM_CONSTANT_Class)),
-      UseTLAB ? tlab_alloc : heap_alloc, slow_alloc_and_init);
-    
     size_t size_in_bytes = klass->size_helper() << LogHeapWordSize;
 
     // Thread local allocation
     if (UseTLAB) {
-      builder()->SetInsertPoint(tlab_alloc);
-
       Value *top_addr = builder()->CreateAddressOfStructEntry(
         thread(), Thread::tlab_top_offset(),
         PointerType::getUnqual(SharkType::intptr_type()),
@@ -1361,11 +1374,11 @@ void SharkTopLevelBlock::do_new()
 
       builder()->CreateStore(new_top, top_addr);
       builder()->CreateBr(initialize);
+
+      builder()->SetInsertPoint(heap_alloc);
     }
 
     // Heap allocation
-    builder()->SetInsertPoint(heap_alloc);
-
     Value *top_addr = builder()->CreateIntToPtr(
 	builder()->pointer_constant(Universe::heap()->top_addr()),
       PointerType::getUnqual(SharkType::intptr_type()),
@@ -1438,7 +1451,7 @@ void SharkTopLevelBlock::do_new()
     builder()->CreateStore(LLVMValue::intptr_constant(mark), mark_addr);
 
     // Set the class
-    Value *rtklass = constants.object_at(iter()->get_klass_index());
+    Value *rtklass = builder()->CreateInlineOop(klass);
     builder()->CreateStore(rtklass, klass_addr);
     got_fast = builder()->GetInsertBlock();
 
