@@ -1,3 +1,14 @@
+2009-06-08  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::get_virtual_callee): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): Catch invokeinterface
+	edge case.
+	(SharkTopLevelBlock::get_interface_callee): Removed code to
+	handle invokeinterface edge case.
+	(SharkTopLevelBlock::get_virtual_callee): Removed.	
+
 2009-06-06  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp

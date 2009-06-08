@@ -97,6 +97,16 @@ void SharkTopLevelBlock::scan_for_traps()
       method = iter()->get_method(will_link);
       assert(will_link, "typeflow responsibility");
 
+      // Handle the case where we encounter an invokeinterface but
+      // should really have an invokevirtual since the resolved
+      // method is a virtual method in java.lang.Object.  This is
+      // a legal corner case in the spec, and while javac does not
+      // generate this code there's no reason a compliant Java
+      // compiler should not.  See cpCacheOop.cpp and
+      // interpreterRuntime.cpp for more details.
+      if (method->holder() == function()->env()->Object_klass())
+        Unimplemented();
+
       // Continue to the check
       index = iter()->get_method_index();
       break;
@@ -900,107 +910,19 @@ Value *SharkTopLevelBlock::get_virtual_callee(SharkValue* receiver,
     "callee");
 }
 
-// Interpreter-style virtual call lookup
-Value* SharkTopLevelBlock::get_virtual_callee(Value *cache,
-                                              SharkValue *receiver)
-{
-  BasicBlock *final      = function()->CreateBlock("final");
-  BasicBlock *not_final  = function()->CreateBlock("not_final");
-  BasicBlock *got_callee = function()->CreateBlock("got_callee");
-
-  Value *flags = builder()->CreateValueOfStructEntry(
-    cache, ConstantPoolCacheEntry::flags_offset(),
-    SharkType::intptr_type(),
-    "flags");
-
-  const int mask = 1 << ConstantPoolCacheEntry::vfinalMethod;
-  builder()->CreateCondBr(
-    builder()->CreateICmpNE(
-      builder()->CreateAnd(flags, LLVMValue::intptr_constant(mask)),
-      LLVMValue::intptr_constant(0)),
-    final, not_final);
-
-  // For final methods f2 is the actual address of the method
-  builder()->SetInsertPoint(final);
-  Value *final_callee = builder()->CreateValueOfStructEntry(
-    cache, ConstantPoolCacheEntry::f2_offset(),
-    SharkType::methodOop_type(),
-    "final_callee");
-  builder()->CreateBr(got_callee);
-
-  // For non-final methods f2 is the index into the vtable
-  builder()->SetInsertPoint(not_final);
-  Value *klass = builder()->CreateValueOfStructEntry(
-    receiver->jobject_value(),
-    in_ByteSize(oopDesc::klass_offset_in_bytes()),
-    SharkType::jobject_type(),
-    "klass");
-
-  Value *index = builder()->CreateValueOfStructEntry(
-    cache, ConstantPoolCacheEntry::f2_offset(),
-    SharkType::intptr_type(),
-    "index");
-
-  Value *nonfinal_callee = builder()->CreateLoad(
-    builder()->CreateArrayAddress(
-      klass,
-      SharkType::methodOop_type(),
-      vtableEntry::size() * wordSize,
-      in_ByteSize(instanceKlass::vtable_start_offset() * wordSize),
-      index),
-    "nonfinal_callee");
-  builder()->CreateBr(got_callee);
-
-  builder()->SetInsertPoint(got_callee);
-  PHINode *callee = builder()->CreatePHI(
-    SharkType::methodOop_type(), "callee");
-  callee->addIncoming(final_callee, final);
-  callee->addIncoming(nonfinal_callee, not_final);
-
-  return callee;
-}
-
-// Interpreter-style interface call lookup
+// Interface calls are handled here
 Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver)
 {
   SharkConstantPool constants(this);
   Value *cache = constants.cache_entry_at(iter()->get_method_index());
 
-  BasicBlock *hacky      = function()->CreateBlock("hacky");
-  BasicBlock *normal     = function()->CreateBlock("normal");
   BasicBlock *loop       = function()->CreateBlock("loop");
   BasicBlock *got_null   = function()->CreateBlock("got_null");
   BasicBlock *not_null   = function()->CreateBlock("not_null");
   BasicBlock *next       = function()->CreateBlock("next");
   BasicBlock *got_entry  = function()->CreateBlock("got_entry");
-  BasicBlock *got_callee = function()->CreateBlock("got_callee");
-
-  Value *flags = builder()->CreateValueOfStructEntry(
-    cache, ConstantPoolCacheEntry::flags_offset(),
-    SharkType::intptr_type(),
-    "flags");
-
-  const int mask = 1 << ConstantPoolCacheEntry::methodInterface;
-  builder()->CreateCondBr(
-    builder()->CreateICmpNE(
-      builder()->CreateAnd(flags, LLVMValue::intptr_constant(mask)),
-      LLVMValue::intptr_constant(0)),
-    hacky, normal);
-
-  // Workaround for the case where we encounter an invokeinterface,
-  // but should really have an invokevirtual since the resolved
-  // method is a virtual method in java.lang.Object. This is a
-  // corner case in the spec but is presumably legal, and while
-  // javac does not generate this code there's no reason it could
-  // not be produced by a compliant java compiler.  See
-  // cpCacheOop.cpp for more details.
-  builder()->SetInsertPoint(hacky);
-  Value *hacky_callee = get_virtual_callee(cache, receiver);
-  BasicBlock *got_hacky = builder()->GetInsertBlock();
-  builder()->CreateBr(got_callee);
 
   // Locate the receiver's itable
-  builder()->SetInsertPoint(normal);
   Value *object_klass = builder()->CreateValueOfStructEntry(
     receiver->jobject_value(), in_ByteSize(oopDesc::klass_offset_in_bytes()),
     SharkType::jobject_type(),
@@ -1038,11 +960,12 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver)
     SharkType::jobject_type(),
     "iklass");
 
+  BasicBlock *loop_entry = builder()->GetInsertBlock();
   builder()->CreateBr(loop);
   builder()->SetInsertPoint(loop);
   PHINode *itable_entry_addr = builder()->CreatePHI(
     SharkType::intptr_type(), "itable_entry_addr");
-  itable_entry_addr->addIncoming(itable_start, normal);
+  itable_entry_addr->addIncoming(itable_start, loop_entry);
 
   Value *itable_entry = builder()->CreateIntToPtr(
     itable_entry_addr, SharkType::itableOffsetEntry_type(), "itable_entry");
@@ -1091,7 +1014,7 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver)
     SharkType::intptr_type(),
     "index");
 
-  Value *normal_callee = builder()->CreateLoad(
+  return builder()->CreateLoad(
     builder()->CreateIntToPtr(
       builder()->CreateAdd(
         builder()->CreateAdd(
@@ -1106,17 +1029,7 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver)
         LLVMValue::intptr_constant(
           itableMethodEntry::method_offset_in_bytes())),
       PointerType::getUnqual(SharkType::methodOop_type())),
-    "normal_callee");
-  BasicBlock *got_normal = builder()->GetInsertBlock();
-  builder()->CreateBr(got_callee);
-
-  builder()->SetInsertPoint(got_callee);
-  PHINode *callee = builder()->CreatePHI(
-    SharkType::methodOop_type(), "callee");
-  callee->addIncoming(hacky_callee, got_hacky);
-  callee->addIncoming(normal_callee, got_normal);
-
-  return callee;
+    "callee");
 } 
 
 void SharkTopLevelBlock::do_call()
