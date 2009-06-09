@@ -1,3 +1,18 @@
+2009-06-09  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::get_interface_callee): New argument.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): Update traps for
+	invokeinterface.
+	(SharkTopLevelBlock::get_callee): Pass method to
+	get_interface_callee. 
+	(SharkTopLevelBlock::get_interface_callee): Removed constant
+	pool lookup.
+
+	* patches/hotspot/default/icedtea-shark.patch
+	(ciMethod::itable_index): New method.
+
 2009-06-08  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp

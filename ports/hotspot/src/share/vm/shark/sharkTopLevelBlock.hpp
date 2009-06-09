@@ -383,7 +383,7 @@ class SharkTopLevelBlock : public SharkBlock {
 
   llvm::Value* get_direct_callee(ciMethod* method);
   llvm::Value* get_virtual_callee(SharkValue* receiver, ciMethod* method);
-  llvm::Value* get_interface_callee(SharkValue* receiver);
+  llvm::Value* get_interface_callee(SharkValue* receiver, ciMethod* method);
 
   void do_call();
 

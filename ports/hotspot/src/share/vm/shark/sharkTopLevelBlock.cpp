@@ -107,8 +107,14 @@ void SharkTopLevelBlock::scan_for_traps()
       if (method->holder() == function()->env()->Object_klass())
         Unimplemented();
 
-      // Continue to the check
-      index = iter()->get_method_index();
+      // Bail out if the holder is unloaded
+      if (!method->holder()->is_linked()) {
+        set_trap(
+          Deoptimization::make_trap_request(
+            Deoptimization::Reason_uninitialized,
+            Deoptimization::Action_reinterpret), bci());
+          return;
+      }
       break;
 
     case Bytecodes::_new:
@@ -873,7 +879,7 @@ Value *SharkTopLevelBlock::get_callee(CallType    call_type,
   case CALL_VIRTUAL:
     return get_virtual_callee(receiver, method);
   case CALL_INTERFACE:
-    return get_interface_callee(receiver);
+    return get_interface_callee(receiver, method);
   default:
     ShouldNotReachHere();
   } 
@@ -911,11 +917,9 @@ Value *SharkTopLevelBlock::get_virtual_callee(SharkValue* receiver,
 }
 
 // Interface calls are handled here
-Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver)
+Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver,
+                                                ciMethod*   method)
 {
-  SharkConstantPool constants(this);
-  Value *cache = constants.cache_entry_at(iter()->get_method_index());
-
   BasicBlock *loop       = function()->CreateBlock("loop");
   BasicBlock *got_null   = function()->CreateBlock("got_null");
   BasicBlock *not_null   = function()->CreateBlock("not_null");
@@ -955,11 +959,7 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver)
       itable_start, BytesPerLong, itable_start_name);
 
   // Locate this interface's entry in the table
-  Value *iklass = builder()->CreateValueOfStructEntry(
-    cache, ConstantPoolCacheEntry::f1_offset(),
-    SharkType::jobject_type(),
-    "iklass");
-
+  Value *iklass = builder()->CreateInlineOop(method->holder());
   BasicBlock *loop_entry = builder()->GetInsertBlock();
   builder()->CreateBr(loop);
   builder()->SetInsertPoint(loop);
@@ -1009,11 +1009,6 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver)
   offset =
     builder()->CreateIntCast(offset, SharkType::intptr_type(), false);
 
-  Value *index = builder()->CreateValueOfStructEntry(
-    cache, ConstantPoolCacheEntry::f2_offset(),
-    SharkType::intptr_type(),
-    "index");
-
   return builder()->CreateLoad(
     builder()->CreateIntToPtr(
       builder()->CreateAdd(
@@ -1022,10 +1017,8 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver)
             builder()->CreatePtrToInt(
               object_klass, SharkType::intptr_type()),
             offset),
-          builder()->CreateShl(
-            index,
-            LLVMValue::intptr_constant(
-              exact_log2(itableMethodEntry::size() * wordSize)))),
+          LLVMValue::intptr_constant(
+            method->itable_index() * itableMethodEntry::size() * wordSize)),
         LLVMValue::intptr_constant(
           itableMethodEntry::method_offset_in_bytes())),
       PointerType::getUnqual(SharkType::methodOop_type())),
