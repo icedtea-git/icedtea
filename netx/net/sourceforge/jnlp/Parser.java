@@ -1,4 +1,5 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
+// Copyright (C) 2009 Red Hat, Inc.
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -435,6 +436,15 @@ class Parser {
                     throw new ParseException(R("PSharing"));
                 addInfo(info, child, null, Boolean.TRUE);
             }
+            if ("association".equals(name)) {
+                addInfo(info, child, null, getAssociation(child));
+            }
+            if ("shortcut".equals(name)) {
+                addInfo(info, child, null, getShortcut(child));
+            }
+            if ("related-content".equals(name)) {
+                addInfo(info, child, null, getRelatedContent(child));
+            }
 
             child = child.getNextSibling();
         }
@@ -643,6 +653,110 @@ class Parser {
         return new InstallerDesc(main);
     }
 
+    /**
+     * Returns the association descriptor.
+     */
+    public AssociationDesc getAssociation(Node node) throws ParseException {
+        String[] extensions = getRequiredAttribute(node, "extensions", null).split(" ");
+        String mimeType = getRequiredAttribute(node, "mime-type", null);
+
+        return new AssociationDesc(mimeType, extensions);
+    }
+    
+    /**
+     * Returns the shortcut descriptor.
+     */
+    public ShortcutDesc getShortcut(Node node) throws ParseException {
+        
+        String online = getAttribute(node, "online", "true");
+        boolean shortcutIsOnline = Boolean.valueOf(online);
+        
+        boolean showOnDesktop = false;
+        MenuDesc menu = null;
+        
+        // step through the elements
+        Node child = node.getFirstChild();
+        while (child != null) {
+            String name = child.getNodeName();
+
+            if ("desktop".equals(name)) {
+                if (showOnDesktop && strict) {
+                    throw new ParseException(R("PTwoDesktops"));
+                }
+                showOnDesktop = true;
+            } else if ("menu".equals(name)){
+                if (menu != null && strict) {
+                    throw new ParseException(R("PTwoMenus"));
+                }
+                menu = getMenu(child);
+            }
+            
+            child = child.getNextSibling();
+        }
+        
+        ShortcutDesc shortcut = new ShortcutDesc(shortcutIsOnline, showOnDesktop);
+        if (menu != null) {
+            shortcut.addMenu(menu);
+        }
+        return shortcut;
+    }
+    
+    /**
+     * Returns the menu descriptor.
+     */
+    public MenuDesc getMenu(Node node) {
+        String subMenu = getAttribute(node, "submenu", null);
+        
+        return new MenuDesc(subMenu);
+    }
+
+    
+    /**
+     * Returns the related-content descriptor.
+     */
+    public RelatedContentDesc getRelatedContent(Node node) throws ParseException {
+        
+        getRequiredAttribute(node, "href", null);
+        URL location = getURL(node, "href", base);
+        
+        String title = null;
+        String description = null;
+        IconDesc icon = null;
+        
+        // step through the elements
+        Node child = node.getFirstChild();
+        while (child != null) {
+            String name = child.getNodeName();
+            
+            if ("title".equals(name)) {
+                if (title != null && strict) {
+                    throw new ParseException(R("PTwoTitles"));
+                }
+                title = getSpanText(child);
+            } else if ("description".equals(name)) {
+                if (description != null && strict) {
+                    throw new ParseException(R("PTwoDescriptions"));
+                }
+                description = getSpanText(child);
+            } else if ("icon".equals(name)) {
+                if (icon != null && strict) {
+                    throw new ParseException(R("PTwoIcons"));
+                }
+                icon = getIcon(child);
+            }
+            
+            child = child.getNextSibling();
+        }
+        
+        RelatedContentDesc relatedContent = new RelatedContentDesc(location);
+        relatedContent.setDescription(description);
+        relatedContent.setIconDesc(icon);
+        relatedContent.setTitle(title);
+        
+        return relatedContent;
+        
+    }
+    
     // other methods
 
     /**

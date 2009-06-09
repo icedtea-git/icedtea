@@ -1,3 +1,46 @@
+2009-06-09  Omair Majid  <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/AssociationDesc.java: New file.
+	(AssociationDesc): New function. Create an association descriptor.
+	(getExtensions): New function. Get the extensions for this association.
+	(getMimeType): New function. Get the mimetype for this association.
+	(checkMimeType): New function.
+	* netx/net/sourceforge/jnlp/InformationDesc.java
+	(getAssociations): New function. Get the associations.
+	(getShortcut): New function. Get the shortcut.
+	(getRelatedContents): New function. Get the related-contents.
+	* netx/net/sourceforge/jnlp/MenuDesc.java: New file.
+	(MenuDesc): New function.
+	(getSubMenu): New function. Get the submenu for this menu descriptor.
+	* netx/net/sourceforge/jnlp/Parser.java
+	(getInformationDesc): Parse "assocation", "shortcut" and
+	"related-content" elements.
+	(getAssociation): New function. Parse the association node to create a 
+	AssociationDesc.
+	(getShortcut): New function. Parse the shortcut node to create a
+	ShortcutDesc.
+	(getMenu): New function. Parse a menu node to create a MenuDesc.
+	(getRelatedContent): New function. Parse a related-content node to create a
+	RelatedContentDesc.
+	* netx/net/sourceforge/jnlp/RelatedContentDesc.java
+	(RelatedContentDesc): New function.
+	(setTitle): New function. Set the title of this content.
+	(getTitle): New function. Get the title of this content.
+	(setDescription): New function. Set the description of this content.
+	(getDescription): New function. Get the description of this content.
+	(getLocation): New function. Get the location of this content.
+	(setIconDesc): New function. Set the icon descriptor for this content.
+	(getIcon): Get the icon descriptor for this content.
+	* netx/net/sourceforge/jnlp/ShortcutDesc.java
+	(ShortcutDesc): New function. Initialize requiresOnline and onDesktop.
+	(isOnline): New function. Return true if the shortcut is online only.
+	(onDesktop): New function. Return true if the shortcut should be placed on
+	the desktop.
+	(addMenu): New function. Add a menu descriptor for this shortcut.
+	(getMenu): New function. Return the menu descriptor for this shortcut.
+	* netx/net/sourceforge/jnlp/resources/Messages.properties:
+	Add PTwoDesktops, PTwoMenus, PTwoTitle and PTwoIcons.
+
 2009-05-29  Omair Majid  <omajid@redhat.com>
 
 	* netx/net/sourceforge/jnlp/JREDesc.java:

@@ -1,4 +1,5 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
+// Copyright (C) 2009 Red Hat, Inc.
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -199,6 +200,32 @@ public class InformationDesc {
         return null != getItem("sharing-allowed");
     }
 
+    /**
+     * Returns the associations specified in the JNLP file
+     */
+    public AssociationDesc[] getAssociations() {
+        List associations = getItems("association");
+        
+        return (AssociationDesc[]) associations.toArray(new AssociationDesc[associations.size()]);
+    }
+    
+    /**
+     * Returns the shortcut specified by this JNLP file
+     */
+    public ShortcutDesc getShortcut() {
+        return (ShortcutDesc) getItem("shortcut");
+    }
+    
+    /**
+     * Returns the related-contents specified by this JNLP file
+     */
+    public RelatedContentDesc[] getRelatedContents() {
+        List relatedContents = getItems("related-content");
+        
+        return (RelatedContentDesc[]) relatedContents.toArray(
+                new RelatedContentDesc[relatedContents.size()]);
+    }
+    
     /**
      * Returns the last item matching the specified key.
      */
