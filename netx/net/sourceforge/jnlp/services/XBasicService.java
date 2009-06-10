@@ -17,14 +17,21 @@
 
 package net.sourceforge.jnlp.services;
 
-import java.io.*;
-import java.net.*;
-import javax.jnlp.*;
-import javax.swing.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import net.sourceforge.jnlp.*;
-import net.sourceforge.jnlp.runtime.*;
-import net.sourceforge.jnlp.util.*;
+import javax.jnlp.BasicService;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import net.sourceforge.jnlp.InformationDesc;
+import net.sourceforge.jnlp.JARDesc;
+import net.sourceforge.jnlp.JNLPFile;
+import net.sourceforge.jnlp.Launcher;
+import net.sourceforge.jnlp.runtime.ApplicationInstance;
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import net.sourceforge.jnlp.util.PropertiesFile;
 
 /**
  * The BasicService JNLP service.
@@ -81,7 +88,60 @@ class XBasicService implements BasicService {
      * Return true if the Environment is Offline
      */
     public boolean isOffline() {
-        return false;
+        
+        URL url = findFirstURLFromJNLPFile();
+        
+        try {
+            url.openConnection().getInputStream().close();
+            return false;
+        } catch (IOException exception) {
+            return true;
+        }
+    }
+
+    /**
+     * Return the first URL from the jnlp file
+     * Or a default URL if no url found in JNLP file
+     */
+    private URL findFirstURLFromJNLPFile() {
+        
+        ApplicationInstance app = JNLPRuntime.getApplication();
+        
+        if (app != null) {
+            JNLPFile jnlpFile = app.getJNLPFile();
+            
+            URL sourceURL = jnlpFile.getSourceLocation();
+            if (sourceURL != null) {
+                return sourceURL;
+            }
+            
+            URL codeBaseURL = jnlpFile.getCodeBase();
+            if (codeBaseURL != null) {
+                return codeBaseURL;
+            }
+    
+            InformationDesc informationDesc = jnlpFile.getInformation();
+            URL homePage = informationDesc.getHomepage();
+            if (homePage != null) {
+                return homePage;
+            }
+            
+            JARDesc[] jarDescs = jnlpFile.getResources().getJARs();
+            for (JARDesc jarDesc: jarDescs) {
+                return jarDesc.getLocation();
+            }
+        }
+        
+        // this section is only reached if the jnlp file has no jars.
+        // that doesnt seem very likely.
+        URL arbitraryURL;
+        try {
+            arbitraryURL = new URL("http://icedtea.classpath.org");
+        } catch (MalformedURLException malformedURL) {
+            throw new RuntimeException(malformedURL);
+        }
+        
+        return arbitraryURL;
     }
 
     /**

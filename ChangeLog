@@ -1,3 +1,10 @@
+2009-06-10  Omair Majid  <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/services/XBasicService.java
+	(isOffline): Check if the system is offline by retrieving data from a URL.
+	(findFirstURLFromJNLPFile): New function. Obtain a URL from the JNLP file.
+	As a last resort, return an arbitrary known URL. 
+
 2009-06-09  Omair Majid  <omajid@redhat.com>
 
 	* netx/net/sourceforge/jnlp/AssociationDesc.java: New file.
