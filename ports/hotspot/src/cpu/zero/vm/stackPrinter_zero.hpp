@@ -23,6 +23,9 @@
  *
  */
 
+#include <interpreterRuntime.hpp>
+#include <scopeDesc.hpp>
+
 class ZeroStackPrinter {
  private:
   outputStream* _st;
@@ -190,15 +193,26 @@ class ZeroStackPrinter {
         }
       }
       if (frame->is_shark_frame()) {
+        SharkFrame *sf = frame->as_shark_frame();
+        methodOop method = sf->method();
+          
         if (word == SharkFrame::pc_off) {
           field = "pc";
+          if (method->is_oop()) {
+            nmethod *code = method->code();
+            address pc = sf->pc();
+            if (code->pc_desc_at(pc)) {
+              SimpleScopeDesc ssd(code, pc);
+              snprintf(_buf, _buflen, PTR_FORMAT " (bci %d)", pc, ssd.bci());
+              value = _buf;
+            }
+          }
         }
         else if (word == SharkFrame::unextended_sp_off) {
           field = "unextended_sp";
         }
         else if (word == SharkFrame::method_off) {
           field = "method";
-          methodOop method = ((SharkFrame *) frame)->method();
           if (method->is_oop())
             value = method->name_and_sig_as_C_string(_buf, _buflen);
         }

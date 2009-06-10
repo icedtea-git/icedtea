@@ -151,14 +151,13 @@
  class ParkEvent ;
 --- openjdk/hotspot/src/share/vm/utilities/vmError.cpp.orig	2008-12-03 19:33:25.000000000 +0000
 +++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2008-12-03 19:40:11.000000000 +0000
-@@ -25,6 +25,11 @@
+@@ -25,6 +25,10 @@
  # include "incls/_precompiled.incl"
  # include "incls/_vmError.cpp.incl"
  
 +# ifdef ZERO
-+# include <interpreterRuntime.hpp>
 +# include <stackPrinter_zero.hpp>
-+# endif //
++# endif // ZERO
 +
  // List of environment variables that should be reported in error log file.
  const char *env_list[] = {
