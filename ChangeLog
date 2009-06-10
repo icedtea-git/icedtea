@@ -1,5 +1,11 @@
 2009-06-09  Gary Benson  <gbenson@redhat.com>
 
+	* patches/hotspot/default/icedtea-shark.patch
+	(ciInstanceKlass::is_cache_entry_resolved): Removed.
+	(ciInstanceKlass::constant_pool_tag_at): Likewise.
+
+2009-06-09  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
 	(SharkTopLevelBlock::scan_for_traps): Removed unused code.
 
