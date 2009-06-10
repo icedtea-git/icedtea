@@ -44,8 +44,6 @@ void SharkTopLevelBlock::scan_for_traps()
     bool will_link;
     bool is_field;
 
-    int index = -1;
-
     switch (bc()) {
     case Bytecodes::_ldc:
     case Bytecodes::_ldc_w:
@@ -140,18 +138,6 @@ void SharkTopLevelBlock::scan_for_traps()
         return;
       }
       break;
-    }
-
-    // If we found a constant pool access on this bytecode then check it
-    if (index != -1) {
-      if (!target()->holder()->is_cache_entry_resolved(
-             Bytes::swap_u2(index), bc())) {
-        set_trap(
-          Deoptimization::make_trap_request(
-            Deoptimization::Reason_uninitialized,
-            Deoptimization::Action_reinterpret), bci());
-        return;
-      }
     }
   }
   

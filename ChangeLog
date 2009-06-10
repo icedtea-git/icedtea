@@ -1,5 +1,15 @@
 2009-06-09  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): Removed unused code.
+
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.hpp: Removed.
+	* ports/hotspot/src/share/vm/shark/sharkConstantPool.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.	
+
+2009-06-09  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
 	(SharkTopLevelBlock::get_interface_callee): New argument.
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
