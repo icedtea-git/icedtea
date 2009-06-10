@@ -21,6 +21,7 @@ import java.io.*;
 import java.awt.*;
 import java.text.*;
 import java.util.*;
+import java.util.List;
 import java.security.*;
 import javax.jnlp.*;
 
@@ -96,7 +97,14 @@ public class JNLPRuntime {
 
     /** set to true if this is a webstart application. */
     private static boolean isWebstartApplication; 
+    
+    /** set to false to indicate another JVM should not be spawned, even if necessary */
+    private static boolean forksAllowed = true;
 
+    /** contains the arguments passed to the jnlp runtime */
+    private static List<String> initialArguments;
+
+    
     /**
      * Returns whether the JNLP runtime environment has been
      * initialized.  Once initialized, some properties such as the
@@ -429,6 +437,18 @@ public class JNLPRuntime {
     }
 
     /**
+     * Returns true if the current runtime will fork
+     */
+    public static boolean getForksAllowed() {
+        return forksAllowed;
+    }
+    
+    public static void setForksAllowed(boolean value) {
+        checkInitialized();
+        forksAllowed = value;
+    }
+    
+    /**
      * Throws an exception if called when the runtime is
      * already initialized.
      */
@@ -491,6 +511,19 @@ public class JNLPRuntime {
         }
     }
 
+
+    public static void setInitialArgments(List<String> args) {
+        checkInitialized();
+        SecurityManager securityManager = System.getSecurityManager();
+        if (securityManager != null)
+            securityManager.checkPermission(new AllPermission());
+        initialArguments = args;
+    }
+    
+    public static List<String> getInitialArguments() {
+        return initialArguments;
+    }
+    
 }
 
 

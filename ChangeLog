@@ -1,5 +1,42 @@
 2009-06-10  Omair Majid  <omajid@redhat.com>
 
+	* netx/net/sourceforge/jnlp/JNLPFile.java
+	(needsNewJVM): New function. Returns true if the JNLP file requires 
+	creating a new JVM.
+	(getNewVMArgs): New function. Returns arguments to pass to the new JVM.
+	* netx/net/sourceforge/jnlp/JREDesc.java
+	(getVMArgs): Fix javadoc to reflect that return value can be null.
+	* netx/net/sourceforge/jnlp/Launcher.java
+	(launchExternal): Modify to take in arguments to pass to the JVM and 
+	arguments to pass to Netx. Try to use the local file to launch this 
+	instance if possible.
+	(launchExternal): Delegate to new launchExternal.
+	(launchExternal): New method. Take in arguments to pass to the JVM and 
+	arguments to pass to Netx. Launch Netx with the with the appropriate 
+	arguments.
+	(launchApplication): If needed, launch a new JVM and pass along the Netx 
+	arguments.
+	* netx/net/sourceforge/jnlp/Parser.java:
+	(getJRE): Call checkVMArgs to check 'java-vm-args' for security. If that 
+	fails, assume 'java-vm-args' is null.
+	(checkVMArgs): New method. Check that the vmArgs variable contains safe 
+	arguments only.
+	(getValidVMArguments): New method.
+	(getValidStartingVMArguments): New method.
+	* netx/net/sourceforge/jnlp/resources/Messages.properties: Add BXnofork.
+	* netx/net/sourceforge/jnlp/runtime/Boot/java:
+	Add -Xnofork to helpMessage
+	(main): Check for '-Xnofork'. Set initial arguments.
+	* netx/net/sourceforge/jnlp/runtime/JNLPRuntime.java:
+	Add forksAllowed to store whether creating a new JVM is allowed. Add
+	initialArguments to store the arguments to Netx.
+	(getForksAllowed): New function. Check if creating a new JVM is allowed.
+	(setForksAllowed): New function. Set whether creating a JVM is allowed.
+	(setInitialArguments): New function. Store the arguments passed to Netx.
+	(getInitialArguments): New function. Return the arguments passed to Netx. 
+
+2009-06-10  Omair Majid  <omajid@redhat.com>
+
 	* netx/net/sourceforge/jnlp/services/XBasicService.java
 	(isOffline): Check if the system is offline by retrieving data from a URL.
 	(findFirstURLFromJNLPFile): New function. Obtain a URL from the JNLP file.

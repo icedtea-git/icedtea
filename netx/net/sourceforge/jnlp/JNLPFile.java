@@ -17,12 +17,19 @@
 
 package net.sourceforge.jnlp;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
-import net.sourceforge.jnlp.cache.*;
-import net.sourceforge.jnlp.runtime.*;
+import net.sourceforge.jnlp.cache.ResourceTracker;
+import net.sourceforge.jnlp.cache.UpdatePolicy;
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 /**
  * Provides methods to access the information in a Java Network
@@ -518,6 +525,50 @@ public class JNLPFile {
 
             throw new RuntimeException(ex.toString());
         }
+    }
+
+    /**
+     * 
+     * @return true if the JNLP file specifies things that can only be 
+     * applied on a new vm (eg: different max heap memory)
+     */
+    public boolean needsNewVM() {
+        
+        if (getNewVMArgs().size() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     *  @return a list of args to pass to the new 
+     *  JVM based on this JNLP file
+     */
+    public List<String> getNewVMArgs() {
+        
+        List<String> newVMArgs = new LinkedList<String>();
+        
+        JREDesc[] jres = getResources().getJREs();
+        for (int jreIndex = 0; jreIndex < jres.length; jreIndex++) {
+            String initialHeapSize = jres[jreIndex].getInitialHeapSize();
+            if (initialHeapSize != null) {
+                newVMArgs.add("-Xms" + initialHeapSize);
+            }
+            
+            String maxHeapSize = jres[jreIndex].getMaximumHeapSize();
+            if (maxHeapSize != null) {
+                newVMArgs.add("-Xmx" + maxHeapSize);
+            }
+            
+            String vmArgsFromJre = jres[jreIndex].getVMArgs();
+            if (vmArgsFromJre != null) {
+                String[] args = vmArgsFromJre.split(" ");
+                newVMArgs.addAll(Arrays.asList(args));
+            }
+        }
+        
+        return newVMArgs;
     }
 
 }

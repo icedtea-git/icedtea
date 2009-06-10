@@ -24,6 +24,7 @@ import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -116,6 +117,7 @@ public final class Boot implements PrivilegedAction {
         + "  -headless             "+R("BOHeadless")+"\n"
         + "  -strict               "+R("BOStrict")+"\n"
         + "  -umask=value          "+R("BOUmask")+"\n"
+        + "  -Xnofork              "+R("BXnofork")+"\n"
         + "  -help                 "+R("BOHelp")+"\n";
 
     private static final String doubleArgs = "-basedir -jnlp -arg -param -property -update";
@@ -169,6 +171,10 @@ public final class Boot implements PrivilegedAction {
         if (null != getOption("-noupdate"))
             JNLPRuntime.setDefaultUpdatePolicy(UpdatePolicy.NEVER);
         
+        if (null != getOption("-Xnofork")) {
+            JNLPRuntime.setForksAllowed(false);
+        }
+        
         // wire in custom authenticator
         try {
             SSLSocketFactory sslSocketFactory;
@@ -183,12 +189,13 @@ public final class Boot implements PrivilegedAction {
             e.printStackTrace();
         }
 
+        JNLPRuntime.setInitialArgments(Arrays.asList(argsIn));
+        
         // do in a privileged action to clear the security context of
         // the Boot13 class, which doesn't have any privileges in
         // JRE1.3; JRE1.4 works without Boot13 or this PrivilegedAction.
         AccessController.doPrivileged(new Boot());
 
-        args = null; // might save a couple bytes...
     }
 
     /**

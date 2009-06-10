@@ -17,16 +17,27 @@
 
 package net.sourceforge.jnlp;
 
-import java.applet.*;
+import java.applet.Applet;
 import java.awt.Container;
-import java.io.*;
-import java.net.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.jar.JarFile;
-import java.lang.reflect.*;
 
-import net.sourceforge.jnlp.cache.*;
-import net.sourceforge.jnlp.runtime.*;
-import net.sourceforge.jnlp.util.*;
+import net.sourceforge.jnlp.cache.CacheUtil;
+import net.sourceforge.jnlp.cache.ResourceTracker;
+import net.sourceforge.jnlp.cache.UpdatePolicy;
+import net.sourceforge.jnlp.runtime.AppThreadGroup;
+import net.sourceforge.jnlp.runtime.AppletInstance;
+import net.sourceforge.jnlp.runtime.ApplicationInstance;
+import net.sourceforge.jnlp.runtime.JNLPClassLoader;
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import net.sourceforge.jnlp.util.Reflect;
 
 /**
  * Launches JNLPFiles either in the foreground or background.<p>
@@ -238,44 +249,67 @@ public class Launcher {
      * application's output is sent to the system out and it's
      * standard input channel is closed.
      *
+     * @param vmArgs the arguments to pass to the new JVM. Can be empty but
+     *        must not be null.
      * @param file the JNLP file to launch
+     * @param javawsArgs the arguments to pass to the javaws command. Can be
+     *        an empty list but must not be null.
      * @throws LaunchException if there was an exception 
      */
-    public void launchExternal(JNLPFile file) throws LaunchException {
-        if (file.getSourceLocation() != null)
-            launchExternal(file.getSourceLocation());
-        else if (file.getFileLocation() != null)
-            launchExternal(file.getFileLocation());
+    public void launchExternal(List<String> vmArgs, JNLPFile file, List<String> javawsArgs) throws LaunchException {
+        List<String> updatedArgs = new LinkedList<String>(javawsArgs);
+        
+        if (file.getFileLocation() != null)
+            updatedArgs.add(file.getFileLocation().toString());
+        else if (file.getSourceLocation() != null)
+            updatedArgs.add(file.getFileLocation().toString());
         else
             launchError(new LaunchException(file, null, R("LSFatal"), R("LCExternalLaunch"), R("LNullLocation"), R("LNullLocationInfo")));
+        
+        launchExternal(vmArgs, updatedArgs);
+        
+    }
+    
+    /**
+     * Launches the JNLP file in a new JVM instance.  The launched
+     * application's output is sent to the system out and it's
+     * standard input channel is closed.
+     *
+     * @param url the URL of the JNLP file to launch
+     * @throws LaunchException if there was an exception 
+     */
+    public void launchExternal(URL url) throws LaunchException {
+        List<String> javawsArgs = new LinkedList<String>();
+        javawsArgs.add(url.toString());
+        launchExternal(new LinkedList<String>(), javawsArgs);       
     }
 
     /**
      * Launches the JNLP file at the specified location in a new JVM
      * instance.  The launched application's output is sent to the
      * system out and it's standard input channel is closed.
-     *
-     * @param location the URL of the JNLP file to launch
+     * @param vmArgs the arguments to pass to the jvm
+     * @param javawsArgs the arguments to pass to javaws (aka Netx)
      * @throws LaunchException if there was an exception 
      */
-    public void launchExternal(URL location) throws LaunchException {
+    public void launchExternal(List<String> vmArgs, List<String> javawsArgs) throws LaunchException {
         try {
-            URL cs = Launcher.class.getProtectionDomain().getCodeSource().getLocation();
-            if (JNLPRuntime.isDebug())
-                System.out.println("netx.jar path: "+cs.getPath());
 
-            File netxFile = new File(cs.getPath());
-            if (!netxFile.exists())
-                throw launchError(new LaunchException(null, null, R("LSFatal"), R("LCExternalLaunch"), R("LNetxJarMissing"), R("LNetxJarMissingInfo")));
-
-            String command[] = {
-                "javaw",
-                "-jar",
-                netxFile.toString(),
-                "-jnlp",
-                location.toString(),
-                "-verbose",
-            };
+            List<String> commands = new LinkedList<String>();
+            
+            String pathToWebstartBinary = System.getProperty("java.home") + 
+                                      File.separatorChar + 
+                                      "bin" + 
+                                      File.separatorChar + 
+                                      "javaws";
+            commands.add(pathToWebstartBinary);
+            // use -Jargument format to pass arguments to the JVM through the launcher
+            for (String arg: vmArgs) {
+                commands.add("-J" + arg);
+            }
+            commands.addAll(javawsArgs);
+            
+            String[] command = commands.toArray(new String[] {});
 
             Process p = Runtime.getRuntime().exec(command);
             new StreamEater(p.getErrorStream()).start();
@@ -331,6 +365,15 @@ public class Launcher {
             throw launchError(new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LNotApplication"), R("LNotApplicationInfo")));
 
         try {
+            
+            if (JNLPRuntime.getForksAllowed() && file.needsNewVM()) {
+                List<String> netxArguments = new LinkedList<String>();
+                netxArguments.add("-Xnofork");
+                netxArguments.addAll(JNLPRuntime.getInitialArguments());
+                launchExternal(file.getNewVMArgs(), netxArguments);
+                return null;
+            }
+            
             final int preferredWidth = 500;
             final int preferredHeight = 400;
             JNLPSplashScreen splashScreen = null;

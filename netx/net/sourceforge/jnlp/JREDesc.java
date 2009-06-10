@@ -121,6 +121,7 @@ public class JREDesc {
 
     /**
      * Returns the additional arguments to pass to the Java VM
+     * Can be null
      */
     public String getVMArgs() {
         return vmArgs;
