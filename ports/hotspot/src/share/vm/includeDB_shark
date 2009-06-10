@@ -193,7 +193,6 @@ sharkFunction.cpp                       shark_globals.hpp
 sharkFunction.cpp                       sharkBuilder.hpp
 sharkFunction.cpp                       sharkEntry.hpp
 sharkFunction.cpp                       sharkFunction.hpp
-sharkFunction.cpp                       sharkMonitor.hpp
 sharkFunction.cpp                       sharkState.inline.hpp
 sharkFunction.cpp                       sharkTopLevelBlock.hpp
 
@@ -240,19 +239,6 @@ sharkMemoryManager.hpp                  sharkEntry.hpp
 sharkMemoryManager.cpp                  llvmHeaders.hpp
 sharkMemoryManager.cpp                  sharkEntry.hpp
 sharkMemoryManager.cpp                  sharkMemoryManager.hpp
-
-sharkMonitor.cpp                        llvmHeaders.hpp
-sharkMonitor.cpp                        llvmValue.hpp
-sharkMonitor.cpp                        sharkMonitor.hpp
-sharkMonitor.cpp                        sharkRuntime.hpp
-sharkMonitor.cpp                        sharkState.inline.hpp
-sharkMonitor.cpp                        sharkTopLevelBlock.hpp
-
-sharkMonitor.hpp                        allocation.hpp
-sharkMonitor.hpp                        llvmHeaders.hpp
-sharkMonitor.hpp                        llvmValue.hpp
-sharkMonitor.hpp                        sharkBuilder.hpp
-sharkMonitor.hpp                        sharkFunction.hpp
 
 sharkRuntime.cpp                        biasedLocking.hpp
 sharkRuntime.cpp                        deoptimization.hpp
@@ -326,7 +312,6 @@ sharkTopLevelBlock.hpp                  llvmHeaders.hpp
 sharkTopLevelBlock.hpp                  sharkBlock.hpp
 sharkTopLevelBlock.hpp                  sharkBuilder.hpp
 sharkTopLevelBlock.hpp                  sharkFunction.hpp
-sharkTopLevelBlock.hpp                  sharkMonitor.hpp
 sharkTopLevelBlock.hpp                  sharkState.inline.hpp
 sharkTopLevelBlock.hpp                  sharkValue.hpp
 

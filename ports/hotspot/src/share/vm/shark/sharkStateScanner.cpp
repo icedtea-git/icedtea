@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -45,18 +45,19 @@ void SharkStateScanner::scan(SharkState* state)
   end_stack();
 
   // Monitors
-  start_monitors(function()->monitor_count());
-  for (int i = 0; i < function()->monitor_count(); i++) {
+  start_monitors(state->num_monitors());
+  for (int i = 0; i < state->num_monitors(); i++) {
     process_monitor(
       i,
-      function()->monitors_slots_offset() +
-        i * frame::interpreter_frame_monitor_size());
+      function()->monitor_offset(i),
+      function()->monitor_object_offset(i));
   }
   end_monitors();
 
   // Frame header
   start_frame_header();
-  process_exception_slot(function()->exception_slot_offset());
+  process_oop_tmp_slot(
+    state->oop_tmp_addr(), function()->oop_tmp_slot_offset());
   process_method_slot(state->method_addr(), function()->method_slot_offset());
   process_pc_slot(function()->pc_slot_offset());
   end_frame_header();

@@ -43,6 +43,8 @@ class SharkState : public ResourceObj {
   SharkValue**     _locals;
   SharkValue**     _stack;
   SharkValue**     _sp;
+  int              _num_monitors;
+  llvm::Value*     _oop_tmp;
 
  public:
   SharkBlock *block() const
@@ -62,6 +64,7 @@ class SharkState : public ResourceObj {
   inline SharkBuilder* builder() const;
   inline int max_locals() const;
   inline int max_stack() const;
+  inline int max_monitors() const;
 
   // Method
  public:
@@ -130,6 +133,32 @@ class SharkState : public ResourceObj {
   {
     assert(stack_depth() >= slots, "stack underrun");
     _sp -= slots;
+  }
+
+  // Monitors
+ public:
+  int num_monitors() const
+  {
+    return _num_monitors;
+  }
+  void set_num_monitors(int num_monitors)
+  {
+    _num_monitors = num_monitors;
+  }
+
+  // Temporary oop slot
+ public:
+  llvm::Value** oop_tmp_addr()
+  {
+    return &_oop_tmp;
+  }
+  llvm::Value* oop_tmp() const
+  {
+    return _oop_tmp;
+  }
+  void set_oop_tmp(llvm::Value* oop_tmp)
+  {
+    _oop_tmp = oop_tmp;
   }
 
   // Comparison

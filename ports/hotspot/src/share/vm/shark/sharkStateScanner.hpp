@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -54,11 +54,11 @@ class SharkStateScanner : public StackObj {
   virtual void end_stack()                                                   {}
 
   virtual void start_monitors(int num_monitors)                              {}
-  virtual void process_monitor(int index, int offset)                        {}
+  virtual void process_monitor(int index, int box_offset, int obj_offset)    {}
   virtual void end_monitors()                                                {}
 
   virtual void start_frame_header()                                          {}
-  virtual void process_exception_slot(int offset)                            {}
+  virtual void process_oop_tmp_slot(llvm::Value** value, int offset)         {}
   virtual void process_method_slot(llvm::Value** value, int offset)          {}
   virtual void process_pc_slot(int offset)                                   {}
   virtual void end_frame_header()                                            {}

@@ -205,34 +205,6 @@ void SharkTopLevelBlock::initialize()
   _entry_block = function()->CreateBlock(name);
 }
 
-void SharkTopLevelBlock::acquire_method_lock()
-{
-  Value *object;
-  if (target()->is_static()) {
-    SharkConstantPool constants(this);
-    object = constants.java_mirror();
-  }
-  else {
-    object = local(0)->jobject_value();
-  }
-  iter()->force_bci(start()); // for the decache
-  function()->monitor(0)->acquire(this, object);
-  check_pending_exception(false);
-}
-
-void SharkTopLevelBlock::release_method_lock()
-{
-  function()->monitor(0)->release(this);
-
-  // We neither need nor want to check for pending exceptions here.
-  // This method is only called by handle_return, which copes with
-  // them implicitly:
-  //  - if a value is being returned then we just carry on as normal;
-  //    the caller will see the pending exception and handle it.
-  //  - if an exception is being thrown then that exception takes
-  //    priority and ours will be ignored.
-}
-
 void SharkTopLevelBlock::emit_IR()
 {
   builder()->SetInsertPoint(entry_block());
@@ -544,15 +516,25 @@ void SharkTopLevelBlock::handle_return(BasicType type, Value* exception)
 {
   assert (exception == NULL || type == T_VOID, "exception OR result, please");
 
-  if (exception)
-    builder()->CreateStore(exception, function()->exception_slot());
+  if (num_monitors()) {
+    // Protect our exception across possible monitor release decaches
+    if (exception)
+      set_oop_tmp(exception);
 
-  release_locked_monitors();
-  if (target()->is_synchronized())
-    release_method_lock();
-  
+    // We don't need to check for exceptions thrown here.  If
+    // we're returning a value then we just carry on as normal:
+    // the caller will see the pending exception and handle it.
+    // If we're returning with an exception then that exception
+    // takes priority and the release_lock one will be ignored.
+    while (num_monitors())
+      release_lock();
+
+    // Reload the exception we're throwing
+    if (exception)
+      exception = get_oop_tmp();
+  }
+
   if (exception) {
-    exception = builder()->CreateLoad(function()->exception_slot());
     builder()->CreateStore(exception, function()->pending_exception_address());
   }
 
@@ -566,26 +548,6 @@ void SharkTopLevelBlock::handle_return(BasicType type, Value* exception)
   }
 
   builder()->CreateRetVoid();
-}
-
-void SharkTopLevelBlock::release_locked_monitors()
-{
-  int base = target()->is_synchronized();
-  for (int i = function()->monitor_count() - 1; i >= base; i--) {
-    BasicBlock *locked   = function()->CreateBlock("locked");
-    BasicBlock *unlocked = function()->CreateBlock("unlocked");
-
-    Value *object = function()->monitor(i)->object();
-    builder()->CreateCondBr(
-      builder()->CreateICmpNE(object, LLVMValue::null()),
-      locked, unlocked);
-    
-    builder()->SetInsertPoint(locked);
-    builder()->CreateUnimplemented(__FILE__, __LINE__);
-    builder()->CreateUnreachable();
-
-    builder()->SetInsertPoint(unlocked);
-  }
 }
 
 Value *SharkTopLevelBlock::lookup_for_ldc()
@@ -1583,102 +1545,166 @@ void SharkTopLevelBlock::do_multianewarray()
     array_klass, function()->CreateGetVMResult(), true));
 }
 
+void SharkTopLevelBlock::acquire_method_lock()
+{
+  iter()->force_bci(start()); // for the decache in acquire_lock
+  if (target()->is_static()) {
+    SharkConstantPool constants(this);
+    acquire_lock(constants.java_mirror());
+  }
+  else {
+    acquire_lock(local(0)->jobject_value());
+  }
+  check_pending_exception(false);
+}
+
 void SharkTopLevelBlock::do_monitorenter()
 {
   SharkValue *lockee = pop();
   check_null(lockee);
-  Value *object = lockee->jobject_value();
-
-  // Find a free monitor, or one already allocated for this object
-  BasicBlock *loop_top    = function()->CreateBlock("loop_top");
-  BasicBlock *loop_iter   = function()->CreateBlock("loop_iter");
-  BasicBlock *loop_check  = function()->CreateBlock("loop_check");
-  BasicBlock *no_monitor  = function()->CreateBlock("no_monitor");
-  BasicBlock *got_monitor = function()->CreateBlock("got_monitor");
-
-  BasicBlock *entry_block = builder()->GetInsertBlock();
-  builder()->CreateBr(loop_check);
-
-  builder()->SetInsertPoint(loop_check);
-  PHINode *index = builder()->CreatePHI(SharkType::jint_type(), "index");
-  index->addIncoming(
-    LLVMValue::jint_constant(function()->monitor_count() - 1), entry_block);
-  builder()->CreateCondBr(
-    builder()->CreateICmpUGE(index, LLVMValue::jint_constant(0)),
-    loop_top, no_monitor);
-
-  builder()->SetInsertPoint(loop_top);
-  SharkMonitor* monitor = function()->monitor(index);
-  Value *smo = monitor->object();
-  builder()->CreateCondBr(
-    builder()->CreateOr(
-      builder()->CreateICmpEQ(smo, LLVMValue::null()),
-      builder()->CreateICmpEQ(smo, object)),
-    got_monitor, loop_iter);
-
-  builder()->SetInsertPoint(loop_iter);
-  index->addIncoming(
-    builder()->CreateSub(index, LLVMValue::jint_constant(1)), loop_iter);
-  builder()->CreateBr(loop_check);
-
-  builder()->SetInsertPoint(no_monitor);
-  builder()->CreateShouldNotReachHere(__FILE__, __LINE__);
-  builder()->CreateUnreachable();
-
-  // Acquire the lock
-  builder()->SetInsertPoint(got_monitor);
-  monitor->acquire(this, object);
-  check_pending_exception();
+  acquire_lock(lockee->jobject_value());
 }
 
 void SharkTopLevelBlock::do_monitorexit()
 {
-  SharkValue *lockee = pop();
-  // The monitorexit can't throw an NPE because the verifier checks
-  // that the monitor operations are block structured before we
-  // compile.
-  // check_null(lockee);
-  Value *object = lockee->jobject_value();
+  pop(); // don't need this (monitors are block structured)
+  release_lock();
+}
 
-  // Find the monitor associated with this object
-  BasicBlock *loop_top    = function()->CreateBlock("loop_top");
-  BasicBlock *loop_iter   = function()->CreateBlock("loop_iter");
-  BasicBlock *loop_check  = function()->CreateBlock("loop_check");
-  BasicBlock *no_monitor  = function()->CreateBlock("no_monitor");
-  BasicBlock *got_monitor = function()->CreateBlock("got_monitor");
+void SharkTopLevelBlock::acquire_lock(Value *lockee)
+{
+  BasicBlock *try_recursive = function()->CreateBlock("try_recursive");
+  BasicBlock *got_recursive = function()->CreateBlock("got_recursive");
+  BasicBlock *not_recursive = function()->CreateBlock("not_recursive");
+  BasicBlock *acquired_fast = function()->CreateBlock("acquired_fast");
+  BasicBlock *lock_acquired = function()->CreateBlock("lock_acquired");
 
-  BasicBlock *entry_block = builder()->GetInsertBlock();
-  builder()->CreateBr(loop_check);
+  int monitor = num_monitors();
+  Value *monitor_addr        = function()->monitor_addr(monitor);
+  Value *monitor_object_addr = function()->monitor_object_addr(monitor);
+  Value *monitor_header_addr = function()->monitor_header_addr(monitor);
 
-  builder()->SetInsertPoint(loop_check);
-  PHINode *index = builder()->CreatePHI(SharkType::jint_type(), "index");
-  index->addIncoming(
-    LLVMValue::jint_constant(function()->monitor_count() - 1), entry_block);
+  // Store the object and mark the slot as live
+  builder()->CreateStore(lockee, monitor_object_addr);
+  set_num_monitors(monitor + 1);
+
+  // Try a simple lock
+  Value *mark_addr = builder()->CreateAddressOfStructEntry(
+    lockee, in_ByteSize(oopDesc::mark_offset_in_bytes()),
+    PointerType::getUnqual(SharkType::intptr_type()),
+    "mark_addr");
+
+  Value *mark = builder()->CreateLoad(mark_addr, "mark");
+  Value *disp = builder()->CreateOr(
+    mark, LLVMValue::intptr_constant(markOopDesc::unlocked_value), "disp");
+  builder()->CreateStore(disp, monitor_header_addr);
+
+  Value *lock = builder()->CreatePtrToInt(
+    monitor_header_addr, SharkType::intptr_type());
+  Value *check = builder()->CreateCmpxchgPtr(lock, mark_addr, disp);
   builder()->CreateCondBr(
-    builder()->CreateICmpUGE(index, LLVMValue::jint_constant(0)),
-    loop_top, no_monitor);
+    builder()->CreateICmpEQ(disp, check),
+    acquired_fast, try_recursive);
 
-  builder()->SetInsertPoint(loop_top);
-  SharkMonitor* monitor = function()->monitor(index);
-  Value *smo = monitor->object();
+  // Locking failed, but maybe this thread already owns it
+  builder()->SetInsertPoint(try_recursive);
+  Value *addr = builder()->CreateAnd(
+    disp,
+    LLVMValue::intptr_constant(~markOopDesc::lock_mask_in_place));
+
+  // NB we use the entire stack, but JavaThread::is_lock_owned()
+  // uses a more limited range.  I don't think it hurts though...
+  Value *stack_limit = builder()->CreateValueOfStructEntry(
+    function()->thread(), Thread::stack_base_offset(),
+    SharkType::intptr_type(),
+    "stack_limit");
+
+  assert(sizeof(size_t) == sizeof(intptr_t), "should be");
+  Value *stack_size = builder()->CreateValueOfStructEntry(
+    function()->thread(), Thread::stack_size_offset(),
+    SharkType::intptr_type(),
+    "stack_size");
+
+  Value *stack_start =
+    builder()->CreateSub(stack_limit, stack_size, "stack_start");
+
   builder()->CreateCondBr(
-    builder()->CreateICmpEQ(smo, object),
-    got_monitor, loop_iter);
+    builder()->CreateAnd(
+      builder()->CreateICmpUGE(addr, stack_start),
+      builder()->CreateICmpULT(addr, stack_limit)),
+    got_recursive, not_recursive);
 
-  builder()->SetInsertPoint(loop_iter);
-  index->addIncoming(
-    builder()->CreateSub(index, LLVMValue::jint_constant(1)), loop_iter);
-  builder()->CreateBr(loop_check);
+  builder()->SetInsertPoint(got_recursive);
+  builder()->CreateStore(LLVMValue::intptr_constant(0), monitor_header_addr);
+  builder()->CreateBr(acquired_fast);
 
-  builder()->SetInsertPoint(no_monitor);
-  builder()->CreateShouldNotReachHere(__FILE__, __LINE__);
-  builder()->CreateUnreachable();
+  // Create an edge for the state merge
+  builder()->SetInsertPoint(acquired_fast);
+  SharkState *fast_state = current_state()->copy();
+  builder()->CreateBr(lock_acquired);
 
-  // Release the lock
-  builder()->SetInsertPoint(got_monitor);
-  monitor->release(this);
-  // The monitorexit can't throw an NPE because the verifier checks
-  // that the monitor operations are block structured before we
-  // compile.
-  // check_pending_exception();
+  // It's not a recursive case so we need to drop into the runtime
+  builder()->SetInsertPoint(not_recursive);
+  call_vm_nocheck(SharkRuntime::monitorenter(), monitor_addr);
+  BasicBlock *acquired_slow = builder()->GetInsertBlock();
+  builder()->CreateBr(lock_acquired);  
+
+  // All done
+  builder()->SetInsertPoint(lock_acquired);
+  current_state()->merge(fast_state, acquired_fast, acquired_slow);
+}
+
+void SharkTopLevelBlock::release_lock()
+{
+  BasicBlock *not_recursive = function()->CreateBlock("not_recursive");
+  BasicBlock *released_fast = function()->CreateBlock("released_fast");
+  BasicBlock *slow_path     = function()->CreateBlock("slow_path");
+  BasicBlock *lock_released = function()->CreateBlock("lock_released");
+
+  int monitor = num_monitors() - 1;
+  Value *monitor_addr        = function()->monitor_addr(monitor);
+  Value *monitor_object_addr = function()->monitor_object_addr(monitor);
+  Value *monitor_header_addr = function()->monitor_header_addr(monitor);
+
+  // If it is recursive then we're already done
+  Value *disp = builder()->CreateLoad(monitor_header_addr);
+  builder()->CreateCondBr(
+    builder()->CreateICmpEQ(disp, LLVMValue::intptr_constant(0)),
+    released_fast, not_recursive);
+
+  // Try a simple unlock
+  builder()->SetInsertPoint(not_recursive);
+
+  Value *lock = builder()->CreatePtrToInt(
+    monitor_header_addr, SharkType::intptr_type());
+
+  Value *lockee = builder()->CreateLoad(monitor_object_addr);
+
+  Value *mark_addr = builder()->CreateAddressOfStructEntry(
+    lockee, in_ByteSize(oopDesc::mark_offset_in_bytes()),
+    PointerType::getUnqual(SharkType::intptr_type()),
+    "mark_addr");
+
+  Value *check = builder()->CreateCmpxchgPtr(disp, mark_addr, lock);
+  builder()->CreateCondBr(
+    builder()->CreateICmpEQ(lock, check),
+    released_fast, slow_path);
+
+  // Create an edge for the state merge
+  builder()->SetInsertPoint(released_fast);
+  SharkState *fast_state = current_state()->copy();
+  builder()->CreateBr(lock_released);  
+
+  // Need to drop into the runtime to release this one
+  builder()->SetInsertPoint(slow_path);
+  call_vm_nocheck(SharkRuntime::monitorexit(), monitor_addr);
+  BasicBlock *released_slow = builder()->GetInsertBlock();
+  builder()->CreateBr(lock_released);  
+
+  // All done
+  builder()->SetInsertPoint(lock_released);
+  current_state()->merge(fast_state, released_fast, released_slow);
+
+  // The object slot is now dead
+  set_num_monitors(monitor);
 }

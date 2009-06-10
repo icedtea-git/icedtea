@@ -37,3 +37,8 @@ inline int SharkState::max_stack() const
 {
   return block()->max_stack();
 }
+
+inline int SharkState::max_monitors() const
+{
+  return function()->max_monitors();
+}

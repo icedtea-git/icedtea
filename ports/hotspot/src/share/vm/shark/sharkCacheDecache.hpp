@@ -122,9 +122,9 @@ class SharkDecacher : public SharkCacherDecacher {
   void process_stack_slot(int index, SharkValue** value, int offset);
 
   void start_monitors(int num_monitors);
-  void process_monitor(int index, int offset);
+  void process_monitor(int index, int box_offset, int obj_offset);
 
-  void process_exception_slot(int offset);
+  void process_oop_tmp_slot(llvm::Value** value, int offset);
   void process_method_slot(llvm::Value** value, int offset);
   void process_pc_slot(int offset);
   
@@ -354,6 +354,7 @@ class SharkCacher : public SharkCacherDecacher {
  protected:
   void process_stack_slot(int index, SharkValue** value, int offset);
 
+  void process_oop_tmp_slot(llvm::Value** value, int offset);
   virtual void process_method_slot(llvm::Value** value, int offset);
 
   void process_local_slot(int index, SharkValue** value, int offset);

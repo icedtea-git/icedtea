@@ -189,6 +189,33 @@ class SharkTopLevelBlock : public SharkBlock {
     return current_state()->method();
   }
 
+  // Temporary oop storage
+ public:
+  void set_oop_tmp(llvm::Value* value)
+  {
+    assert(value, "value must be non-NULL (will be reset by get_oop_tmp)");
+    assert(!current_state()->oop_tmp(), "oop_tmp gets and sets must match");
+    current_state()->set_oop_tmp(value);
+  }
+  llvm::Value* get_oop_tmp()
+  {
+    llvm::Value* value = current_state()->oop_tmp();
+    assert(value, "oop_tmp gets and sets must match");
+    current_state()->set_oop_tmp(NULL);
+    return value;
+  }
+
+  // Monitors
+ private:
+  int num_monitors()
+  {
+    return current_state()->num_monitors();
+  }
+  int set_num_monitors(int num_monitors)
+  {
+    current_state()->set_num_monitors(num_monitors);
+  }
+
   // Code generation
  public:
   void emit_IR();
@@ -288,10 +315,13 @@ class SharkTopLevelBlock : public SharkBlock {
     return call_vm_nocheck(callee, args, args + 4);
   }
 
-  // Whole-method synchronization
+  // Synchronization
+ private:
+  void acquire_lock(llvm::Value* lockee);
+  void release_lock();
+
  public:
-  void acquire_method_lock();  
-  void release_method_lock();  
+  void acquire_method_lock();
 
   // Error checking
  private:
@@ -311,7 +341,6 @@ class SharkTopLevelBlock : public SharkBlock {
  private:
   void call_register_finalizer(llvm::Value* receiver);
   void handle_return(BasicType type, llvm::Value* exception);
-  void release_locked_monitors();
 
   // arraylength
  private:

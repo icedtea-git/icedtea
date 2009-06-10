@@ -82,11 +82,8 @@ void SharkDecacher::start_monitors(int num_monitors)
   _monarray = new GrowableArray<MonitorValue*>(num_monitors);
 }
 
-void SharkDecacher::process_monitor(int index, int box_offset)
+void SharkDecacher::process_monitor(int index, int box_offset, int obj_offset)
 {
-  int obj_offset =
-    box_offset + (BasicObjectLock::obj_offset_in_bytes() >> LogBytesPerWord);
-
   oopmap()->set_oop(slot2reg(obj_offset));
 
   monarray()->append(new MonitorValue(
@@ -94,13 +91,20 @@ void SharkDecacher::process_monitor(int index, int box_offset)
     slot2loc(box_offset, Location::normal)));
 }
 
-void SharkDecacher::process_exception_slot(int offset)
+void SharkDecacher::process_oop_tmp_slot(Value** value, int offset)
 {
-  // Record the exception slot
-  oopmap()->set_oop(slot2reg(offset));
+  // Decache the temporary oop slot
+  if (*value) {
+    write_value_to_frame(
+      SharkType::oop_type(),
+      *value,
+      offset);
+
+    oopmap()->set_oop(slot2reg(offset));
+  }
 }
 
-void SharkDecacher::process_method_slot(llvm::Value** value, int offset)
+void SharkDecacher::process_method_slot(Value** value, int offset)
 {
   // Decache the method pointer
   write_value_to_frame(
@@ -182,14 +186,20 @@ void SharkCacher::process_stack_slot(int          index,
   }
 }
 
-void SharkCacher::process_method_slot(llvm::Value** value, int offset)
+void SharkCacher::process_oop_tmp_slot(Value** value, int offset)
+{
+  // Cache the temporary oop
+  if (*value)
+    *value = read_value_from_frame(SharkType::oop_type(), offset);
+}
+
+void SharkCacher::process_method_slot(Value** value, int offset)
 {
   // Cache the method pointer
   *value = read_value_from_frame(SharkType::methodOop_type(), offset);
 }
 
-void SharkFunctionEntryCacher::process_method_slot(llvm::Value** value,
-                                                   int           offset)
+void SharkFunctionEntryCacher::process_method_slot(Value** value, int offset)
 {
   // "Cache" the method pointer
   *value = method();
@@ -212,9 +222,9 @@ void SharkCacher::process_local_slot(int          index,
   }
 }
 
-void SharkDecacher::write_value_to_frame(const llvm::Type* type,
-                                         llvm::Value*      value,
-                                         int               offset)
+void SharkDecacher::write_value_to_frame(const Type* type,
+                                         Value*      value,
+                                         int         offset)
 {
   if (frame_cache()->value(offset) != value) {
     builder()->CreateStore(
@@ -223,7 +233,7 @@ void SharkDecacher::write_value_to_frame(const llvm::Type* type,
   }
 }
 
-Value* SharkCacher::read_value_from_frame(const llvm::Type* type, int offset)
+Value* SharkCacher::read_value_from_frame(const Type* type, int offset)
 {
   Value *result = builder()->CreateLoad(
     function()->CreateAddressOfFrameEntry(offset, type));

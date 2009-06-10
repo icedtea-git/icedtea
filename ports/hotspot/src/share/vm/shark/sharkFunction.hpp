@@ -23,7 +23,6 @@
  *
  */
 
-class SharkMonitor;
 class SharkTopLevelBlock;
 
 class DeferredZeroCheck;
@@ -55,7 +54,7 @@ class SharkFunction : public StackObj {
   SharkTopLevelBlock**              _blocks;
   llvm::Value*                      _base_pc;
   llvm::Value*                      _thread;
-  int                               _monitor_count;
+  int                               _max_monitors;
   GrowableArray<DeferredZeroCheck*> _deferred_zero_checks;
 
  public:  
@@ -95,9 +94,9 @@ class SharkFunction : public StackObj {
   {
     return _thread;
   }
-  int monitor_count() const
+  int max_monitors() const
   {
-    return _monitor_count;
+    return _max_monitors;
   }
   GrowableArray<DeferredZeroCheck*>* deferred_zero_checks()
   {
@@ -215,29 +214,6 @@ class SharkFunction : public StackObj {
   llvm::Value* CreateAddressOfFrameEntry(int               offset,
                                          const llvm::Type* type = NULL,
                                          const char*       name = "") const;
- public:
-  llvm::Value* exception_slot() const
-  {
-    return CreateAddressOfFrameEntry(
-      exception_slot_offset(),
-      SharkType::oop_type(),
-      "exception_slot");
-  }
-  llvm::Value* monitors_slots() const
-  {
-    return CreateAddressOfFrameEntry(
-      monitors_slots_offset(),
-      llvm::ArrayType::get(SharkType::monitor_type(), monitor_count()),
-      "monitors");
-  }
-
- public:
-  SharkMonitor* monitor(int index) const
-  {
-    return monitor(LLVMValue::jint_constant(index));
-  }
-  SharkMonitor* monitor(llvm::Value* index) const;
-
  private:
   llvm::Value* CreateBuildFrame();
 
@@ -256,7 +232,7 @@ class SharkFunction : public StackObj {
   int _extended_frame_size;
   int _stack_slots_offset;
   int _monitors_slots_offset;
-  int _exception_slot_offset;
+  int _oop_tmp_slot_offset;
   int _method_slot_offset;
   int _pc_slot_offset;
   int _locals_slots_offset;
@@ -274,13 +250,9 @@ class SharkFunction : public StackObj {
   {
     return _stack_slots_offset;
   }
-  int monitors_slots_offset() const
+  int oop_tmp_slot_offset() const
   {
-    return _monitors_slots_offset;
-  }
-  int exception_slot_offset() const
-  {
-    return _exception_slot_offset;
+    return _oop_tmp_slot_offset;
   }
   int method_slot_offset() const
   {
@@ -293,6 +265,49 @@ class SharkFunction : public StackObj {
   int locals_slots_offset() const
   {
     return _locals_slots_offset;
+  }
+
+  // Monitors
+ public:
+  int monitor_offset(int index) const
+  {
+    assert(index >= 0 && index < max_monitors(), "invalid monitor index");
+    return _monitors_slots_offset +
+      (max_monitors() - 1 - index) * frame::interpreter_frame_monitor_size();
+  }
+  int monitor_object_offset(int index) const
+  {
+    return monitor_offset(index) +
+      (BasicObjectLock::obj_offset_in_bytes() >> LogBytesPerWord);
+  }
+  int monitor_header_offset(int index) const
+  {
+    return monitor_offset(index) +
+      ((BasicObjectLock::lock_offset_in_bytes() +
+        BasicLock::displaced_header_offset_in_bytes()) >> LogBytesPerWord);
+  }
+
+ public:
+  llvm::Value* monitor_addr(int index) const
+  {
+    return CreateAddressOfFrameEntry(
+      monitor_offset(index),
+      SharkType::monitor_type(),
+      "monitor");
+  }
+  llvm::Value* monitor_object_addr(int index) const
+  {
+    return CreateAddressOfFrameEntry(
+      monitor_object_offset(index),
+      SharkType::oop_type(),
+      "object_addr");
+  }
+  llvm::Value* monitor_header_addr(int index) const
+  {
+    return CreateAddressOfFrameEntry(
+      monitor_header_offset(index),
+      SharkType::intptr_type(),
+      "displaced_header_addr");
   }
 
   // VM interface

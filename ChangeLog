@@ -1,5 +1,103 @@
 2009-05-27  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::_monitor_count): Removed.
+	(SharkFunction::_max_monitors): New field.
+	(SharkFunction::monitor_count): Removed.
+	(SharkFunction::max_monitors): New method.
+	(SharkFunction::_exception_slot_offset): Removed.
+	(SharkFunction::exception_slot): Likewise.
+	(SharkFunction::_oop_tmp_slot_offset): New field.
+	(SharkFunction::oop_tmp_slot_offset): New method.
+	(SharkFunction::monitors_slots): Removed.
+	(SharkFunction::monitors_slots_offset): Likewise.
+	(SharkFunction::monitor_offset): New method.
+	(SharkFunction::monitor_object_offset): Likewise.
+	(SharkFunction::monitor_header_offset): Likewise.
+	(SharkFunction::monitor_addr): Likewise.
+	(SharkFunction::monitor_object_addr): Likewise.
+	(SharkFunction::monitor_header_addr): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Renamed _monitor_count as _max_monitors.
+	(SharkFunction::CreateBuildFrame): Renamed _monitor_count as
+	_max_monitors, remove monitor initialization, remove exception
+	pointer and add temporary oop slot.
+	(SharkFunction::monitor): Removed.
+
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkState::_num_monitors): New field.
+	(SharkState::max_monitors): New method.
+	(SharkState::num_monitors): Likewise.
+	(SharkState::set_num_monitors): Likewise.
+	(SharkState::_oop_tmp): New field.
+	(SharkState::oop_tmp_addr): New method.
+	(SharkState::oop_tmp): Likewise.
+	(SharkState::set_oop_tmp): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp
+	(SharkState::max_monitors): New method.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkState::SharkState): Initialize oop_tmp.
+	(SharkState::initialize): Initialize num_monitors.
+	(SharkPHIState::SharkPHIState): Likewise.
+	(SharkState::equal_to): Also check oop_tmp and num_monitors.
+	(SharkPHIState::add_incoming): Likewise.
+	(SharkState::merge): Also merge oop_tmp and check num_monitors.
+
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.hpp
+	(SharkStateScanner::process_monitor): New argument.
+	(SharkStateScanner::process_oop_tmp_slot): New method.
+	(SharkStateScanner::process_exception_slot): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.cpp
+	(SharkStateScanner::scan): Replace monitor scanning, remove
+	exception slot, and add temporary oop slot.
+	
+ 	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp
+	(SharkDecacher::process_monitor): New argument.
+	(SharkDecacher::process_oop_tmp_slot): New method.
+	(SharkCacher::process_oop_tmp_slot): Likewise.
+	(SharkDecacher::process_exception_slot): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::process_monitor): New argument.
+	(SharkDecacher::process_oop_tmp_slot): New method.
+	(SharkCacher::process_oop_tmp_slot): Likewise.
+	(SharkDecacher::process_exception_slot): Removed.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::set_oop_tmp): New method.
+	(SharkTopLevelBlock::get_oop_tmp): Likewise.
+	(SharkTopLevelBlock::num_monitors): Likewise.
+	(SharkTopLevelBlock::set_num_monitors): Likewise.
+	(SharkTopLevelBlock::release_method_lock): Removed.
+	(SharkTopLevelBlock::release_locked_monitors): Likewise.
+	(SharkTopLevelBlock::acquire_lock): New method.
+	(SharkTopLevelBlock::release_lock): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::acquire_method_lock): Rewritten.
+	(SharkTopLevelBlock::release_method_lock): Removed.
+	(SharkTopLevelBlock::release_locked_monitors): Likewise.
+	(SharkTopLevelBlock::handle_return): New monitor release code.
+	(SharkTopLevelBlock::do_monitorenter): Rewritten.
+	(SharkTopLevelBlock::do_monitorexit): Likewise.
+	(SharkTopLevelBlock::acquire_lock): New method.
+	(SharkTopLevelBlock::release_lock): Likewise.
+
+	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp
+	(SharkFrame::Layout): Replaced exception slot with oop_tmp slot.
+ 	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp
+	(ZeroStackPrinter::print_word): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.hpp: Removed.
+	* ports/hotspot/src/share/vm/shark/sharkMonitor.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
+	* patches/hotspot/default/icedtea-shark.patch
+	(vframeArrayElement::fill_in): Remove workaround for
+	unused but recorded monitors.
+	(vframeArrayElement::unpack_on_stack): Likewise.
+
+2009-05-27  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp
 	(SharkDecacher::location_type): New method.
 	(SharkDecacher::stack_location_type): Use the above.

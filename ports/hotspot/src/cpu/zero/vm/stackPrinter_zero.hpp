@@ -222,8 +222,8 @@ class ZeroStackPrinter {
           if (method->is_oop())
             value = method->name_and_sig_as_C_string(_buf, _buflen);
         }
-        else if (word == SharkFrame::exception_off) {
-          field = "exception";
+        else if (word == SharkFrame::oop_tmp_off) {
+          field = "oop_tmp";
         }
         else {
           SharkFrame *sf = (SharkFrame *) frame;

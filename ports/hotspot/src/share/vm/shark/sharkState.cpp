@@ -32,6 +32,7 @@ SharkState::SharkState(SharkBlock* block, SharkFunction* function)
   : _block(block),
     _function(function),
     _method(NULL),
+    _oop_tmp(NULL),
     _frame_cache(NULL)
 {
   initialize(NULL);
@@ -41,6 +42,7 @@ SharkState::SharkState(SharkBlock* block, const SharkState* state)
   : _block(block),
     _function(state->function()),
     _method(state->method()),
+    _oop_tmp(state->oop_tmp()),
     _frame_cache(NULL)
 {
   initialize(state);
@@ -76,6 +78,8 @@ void SharkState::initialize(const SharkState *state)
   else if (function()) {
     _frame_cache = new SharkFrameCache(function());
   }
+
+  set_num_monitors(state ? state->num_monitors() : 0);
 }
 
 bool SharkState::equal_to(SharkState *other)
@@ -89,10 +93,16 @@ bool SharkState::equal_to(SharkState *other)
   if (method() != other->method())
     return false;
 
+  if (oop_tmp() != other->oop_tmp())
+    return false;
+
   if (max_locals() != other->max_locals())
     return false;
 
   if (stack_depth() != other->stack_depth())
+    return false;
+
+  if (num_monitors() != other->num_monitors())
     return false;
 
   // Local variables
@@ -160,6 +170,20 @@ void SharkState::merge(SharkState* other,
     phi->addIncoming(other_method, other_block);
     set_method(phi);
   }
+
+  // Temporary oop slot
+  Value *this_oop_tmp = this->oop_tmp();
+  Value *other_oop_tmp = other->oop_tmp();
+  if (this_oop_tmp != other_oop_tmp) {
+    assert(this_oop_tmp && other_oop_tmp, "can't merge NULL with non-NULL");
+    PHINode *phi = builder()->CreatePHI(SharkType::oop_type(), "oop_tmp");
+    phi->addIncoming(this_oop_tmp, this_block);
+    phi->addIncoming(other_oop_tmp, other_block);
+    set_oop_tmp(phi);
+  }
+
+  // Monitors
+  assert(this->num_monitors() == other->num_monitors(), "should be");
 
   // Local variables
   assert(this->max_locals() == other->max_locals(), "should be");
@@ -365,6 +389,9 @@ SharkPHIState::SharkPHIState(SharkTopLevelBlock* block)
     push(value);
   }
 
+  // Monitors
+  set_num_monitors(block->ciblock()->monitor_count());
+
   builder()->SetInsertPoint(saved_insert_point);    
 }
 
@@ -389,4 +416,10 @@ void SharkPHIState::add_incoming(SharkState* incoming_state)
     if (stack(i))
       stack(i)->addIncoming(incoming_state->stack(i), predecessor);
   }    
+
+  // Monitors
+  assert(num_monitors() == incoming_state->num_monitors(), "should be");
+
+  // Temporary oop slot
+  assert(oop_tmp() == incoming_state->oop_tmp(), "should be");  
 }

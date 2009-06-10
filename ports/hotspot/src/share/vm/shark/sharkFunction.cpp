@@ -53,15 +53,16 @@ void SharkFunction::initialize()
   // Create the list of blocks
   set_block_insertion_point(NULL);
   _blocks = NEW_RESOURCE_ARRAY(SharkTopLevelBlock*, flow()->block_count());
-  for (int i = 0; i < block_count(); i++)
-    {
-      ciTypeFlow::Block *b = flow()->pre_order_at(i);
-      // Work around a bug in pre_order_at() that does not return the
-      // correct pre-ordering.  If pre_order_at() were correct this
-      // line could simply be:
-      // _blocks[i] = new SharkTopLevelBlock(this, b);
-      _blocks[b->pre_order()] = new SharkTopLevelBlock(this, b);
-    }
+  for (int i = 0; i < block_count(); i++) {
+    ciTypeFlow::Block *b = flow()->pre_order_at(i);
+
+    // Work around a bug in pre_order_at() that does not return
+    // the correct pre-ordering.  If pre_order_at() were correct
+    // this line could simply be:
+    // _blocks[i] = new SharkTopLevelBlock(this, b);
+    _blocks[b->pre_order()] = new SharkTopLevelBlock(this, b);
+  }
+
   // Walk the tree from the start block to determine which
   // blocks are entered and which blocks require phis
   SharkTopLevelBlock *start_block = block(0);
@@ -75,11 +76,11 @@ void SharkFunction::initialize()
   }
 
   // Initialize the monitors
-  _monitor_count = 0;  
+  _max_monitors = 0;  
   if (target()->is_synchronized() || target()->uses_monitors()) {
     for (int i = 0; i < block_count(); i++)
-      _monitor_count = MAX2(
-        _monitor_count, block(i)->ciblock()->monitor_count());
+      _max_monitors = MAX2(
+        _max_monitors, block(i)->ciblock()->monitor_count());
   }
   
   // Create the method preamble
@@ -216,7 +217,7 @@ Value* SharkFunction::CreateBuildFrame()
   int locals_words  = max_locals();
   int extra_locals  = locals_words - arg_size();
   int header_words  = SharkFrame::header_words;
-  int monitor_words = monitor_count()*frame::interpreter_frame_monitor_size();
+  int monitor_words = max_monitors()*frame::interpreter_frame_monitor_size();
   int stack_words   = max_stack();
   int frame_words   = header_words + monitor_words + stack_words;
 
@@ -242,19 +243,11 @@ Value* SharkFunction::CreateBuildFrame()
   offset += stack_words;
 
   // Monitors
-  if (monitor_count()) {
-    _monitors_slots_offset = offset; 
-
-    for (int i = 0; i < monitor_count(); i++) {
-      if (i != 0 || !target()->is_synchronized())
-        monitor(i)->mark_free();
-    }
-  }
+  _monitors_slots_offset = offset; 
   offset += monitor_words;
 
-  // Exception pointer
-  _exception_slot_offset = offset++;
-  builder()->CreateStore(LLVMValue::null(), exception_slot());
+  // Temporary oop slot
+  _oop_tmp_slot_offset = offset++;
 
   // Method pointer
   _method_slot_offset = offset++;
@@ -295,18 +288,6 @@ Value* SharkFunction::CreateAddressOfFrameEntry(int               offset,
       result, PointerType::getUnqual(type), name);
   }
   return result;
-}
-
-SharkMonitor* SharkFunction::monitor(Value *index) const
-{
-  Value *indexes[] = {
-    LLVMValue::jint_constant(0),
-    builder()->CreateSub(
-      LLVMValue::jint_constant(monitor_count() - 1), index),
-  };
-  return new SharkMonitor(
-    this,
-    builder()->CreateGEP(monitors_slots(), indexes, indexes + 2));
 }
 
 class DeferredZeroCheck : public ResourceObj {
