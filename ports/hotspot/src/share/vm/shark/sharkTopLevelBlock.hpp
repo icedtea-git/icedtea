@@ -358,6 +358,11 @@ class SharkTopLevelBlock : public SharkBlock {
 
   // if*
  private:
+  void do_if_helper(llvm::ICmpInst::Predicate p,
+                    llvm::Value*              b,
+                    llvm::Value*              a,
+                    SharkState*               if_taken_state,
+                    SharkState*               not_taken_state);
   void do_if(llvm::ICmpInst::Predicate p, SharkValue* b, SharkValue* a);
 
   // tableswitch and lookupswitch
@@ -386,11 +391,12 @@ class SharkTopLevelBlock : public SharkBlock {
 
   // checkcast and instanceof
  private:
-  void do_optimized_instance_check();
+  bool static_subtype_check(ciKlass* check_klass, ciKlass* object_klass);
   void do_full_instance_check(ciKlass* klass);
   void do_trapping_instance_check(ciKlass* klass);
 
   void do_instance_check();
+  bool maybe_do_instanceof_if();
 
   // new and *newarray
  private:

@@ -772,8 +772,11 @@ void SharkTopLevelBlock::do_ret()
 }
 
 // All propagation of state from one block to the next (via
-// dest->add_incoming) is handled by the next three methods
-// (do_branch, do_if and do_switch) and by handle_exception.
+// dest->add_incoming) is handled by these methods:
+//   do_branch
+//   do_if_helper
+//   do_switch
+//   handle_exception
 
 void SharkTopLevelBlock::do_branch(int successor_index)
 {
@@ -795,16 +798,24 @@ void SharkTopLevelBlock::do_if(ICmpInst::Predicate p,
     llvm_a = a->jint_value();
     llvm_b = b->jint_value();
   }
+  do_if_helper(p, llvm_b, llvm_a, current_state(), current_state());
+}
 
+void SharkTopLevelBlock::do_if_helper(ICmpInst::Predicate p,
+                                      Value*              b,
+                                      Value*              a,
+                                      SharkState*         if_taken_state,
+                                      SharkState*         not_taken_state)
+{
   SharkTopLevelBlock *if_taken  = successor(ciTypeFlow::IF_TAKEN);
   SharkTopLevelBlock *not_taken = successor(ciTypeFlow::IF_NOT_TAKEN);
 
   builder()->CreateCondBr(
-    builder()->CreateICmp(p, llvm_a, llvm_b),
+    builder()->CreateICmp(p, a, b),
     if_taken->entry_block(), not_taken->entry_block());
 
-  if_taken->add_incoming(current_state());
-  not_taken->add_incoming(current_state());
+  if_taken->add_incoming(if_taken_state);
+  not_taken->add_incoming(not_taken_state);
 }
 
 void SharkTopLevelBlock::do_switch()
@@ -1164,40 +1175,48 @@ void SharkTopLevelBlock::do_call()
   current_state()->set_has_safepointed(true);
 }
 
+bool SharkTopLevelBlock::static_subtype_check(ciKlass* check_klass,
+                                              ciKlass* object_klass)
+{
+  // If the class we're checking against is java.lang.Object
+  // then this is a no brainer.  Apparently this can happen
+  // in reflective code...
+  if (check_klass == function()->env()->Object_klass())
+    return true;
+
+  // Perform a subtype check.  NB in opto's code for this
+  // (GraphKit::static_subtype_check) it says that static
+  // interface types cannot be trusted, and if opto can't
+  // trust them then I assume we can't either.
+  if (!object_klass->is_interface()) {
+    if (object_klass == check_klass)
+      return true;
+
+    if (object_klass->is_loaded() && check_klass->is_loaded()) {
+      if (object_klass->is_subtype_of(check_klass))
+        return true;
+    }
+  }
+
+  return false;
+}
+  
 void SharkTopLevelBlock::do_instance_check()
 {
   // Get the class we're checking against
   bool will_link;
   ciKlass *check_klass = iter()->get_klass(will_link);
 
-  // If the class we're checking against is java.lang.Object
-  // then this is a no brainer.  Apparently this can happen
-  // in reflective code...
-  if (check_klass == function()->env()->Object_klass()) {
-    do_optimized_instance_check();
-    return;
-  }
-  
   // Get the class of the object we're checking
   ciKlass *object_klass = xstack(0)->type()->as_klass();
 
-  // If the classes are defined enough now then we
-  // don't need a runtime check.  NB opto's code for
-  // this (GraphKit::static_subtype_check) says we
-  // cannot trust static interface types yet, hence
-  // the extra check
-  if (!object_klass->is_interface()) {
-    if (object_klass == check_klass) {
-      do_optimized_instance_check();
-      return;
+  // Can we optimize this check away?
+  if (static_subtype_check(check_klass, object_klass)) {
+    if (bc() == Bytecodes::_instanceof) {
+      pop();
+      push(SharkValue::jint_constant(1));
     }
-
-    if (object_klass->is_loaded() && check_klass->is_loaded()) {
-      if (object_klass->is_subtype_of(check_klass)) {
-        do_optimized_instance_check();
-        return;
-      }
-    }
+    return;
   }
 
   // Need to check this one at runtime
@@ -1207,14 +1226,69 @@ void SharkTopLevelBlock::do_instance_check()
     do_trapping_instance_check(check_klass);
 }
                 
-void SharkTopLevelBlock::do_optimized_instance_check()
+bool SharkTopLevelBlock::maybe_do_instanceof_if()
 {
-  if (bc() == Bytecodes::_instanceof) {
-    pop();
-    push(SharkValue::jint_constant(1));
+  // Get the class we're checking against
+  bool will_link;
+  ciKlass *check_klass = iter()->get_klass(will_link);
+
+  // If the class is unloaded then the instanceof
+  // cannot possibly succeed.
+  if (!will_link)
+    return false;
+
+  // Keep a copy of the object we're checking
+  SharkValue *old_object = xstack(0);
+  
+  // Get the class of the object we're checking
+  ciKlass *object_klass = old_object->type()->as_klass();
+
+  // If the instanceof can be optimized away at compile time
+  // then any subsequent checkcasts will be too so we handle
+  // it normally.
+  if (static_subtype_check(check_klass, object_klass))
+    return false;
+
+  // Perform the instance check
+  do_full_instance_check(check_klass);
+  Value *result = pop()->jint_value();
+
+  // Create the casted object
+  SharkValue *new_object = SharkValue::create_generic(
+    check_klass, old_object->jobject_value(), old_object->zero_checked());
+
+  // Create two copies of the current state, one with the
+  // original object and one with all instances of the
+  // original object replaced with the new, casted object.
+  SharkState *new_state = current_state();
+  SharkState *old_state = new_state->copy();
+  new_state->replace_all(old_object, new_object);
+
+  // Perform the check-and-branch
+  switch (iter()->next_bc()) {
+  case Bytecodes::_ifeq:
+    // branch if not an instance
+    do_if_helper(
+      ICmpInst::ICMP_EQ,
+      LLVMValue::jint_constant(0), result,
+      old_state, new_state);
+    break;
+
+  case Bytecodes::_ifne:
+    // branch if an instance
+    do_if_helper(
+      ICmpInst::ICMP_NE,
+      LLVMValue::jint_constant(0), result,
+      new_state, old_state);
+    break;
+
+  default:
+    ShouldNotReachHere();
   }
+
+  return true;
 }
-    
+
 void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass)
 { 
   BasicBlock *not_null      = function()->CreateBlock("not_null");
@@ -1238,7 +1312,6 @@ void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass)
     builder()->CreateICmpEQ(object, LLVMValue::null()),
     merge2, not_null);
   BasicBlock *null_block = builder()->GetInsertBlock();
-  SharkState *null_state = current_state()->copy();
 
   // Get the class we're checking against
   builder()->SetInsertPoint(not_null);
@@ -1282,7 +1355,6 @@ void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass)
   
   // Second merge
   builder()->SetInsertPoint(merge2);
-  current_state()->merge(null_state, null_block, nonnull_block);
   PHINode *result = builder()->CreatePHI(
     SharkType::jint_type(), "result");
   result->addIncoming(LLVMValue::jint_constant(IC_IS_NULL), null_block);

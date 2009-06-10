@@ -825,8 +825,38 @@ void SharkBlock::parse_bytecode(int start, int limit)
       do_call();
       break;
 
-    case Bytecodes::_checkcast:
     case Bytecodes::_instanceof:
+      // This is a very common construct:
+      //
+      //  if (object instanceof Klass) {
+      //    something = (Klass) object;
+      //    ...
+      //  }
+      //
+      // which gets compiled to something like this:
+      //
+      //  28: aload 9
+      //  30: instanceof <Class Klass>
+      //  33: ifeq 52
+      //  36: aload 9
+      //  38: checkcast <Class Klass>
+      //
+      // Handling both bytecodes at once allows us
+      // to eliminate the checkcast.
+      if (iter()->next_bci() < limit &&
+          (iter()->next_bc() == Bytecodes::_ifeq ||
+           iter()->next_bc() == Bytecodes::_ifne) &&
+          (!UseLoopSafepoints ||
+           iter()->next_get_dest() > iter()->next_bci())) {
+        if (maybe_do_instanceof_if()) {
+          iter()->next();
+          if (SharkTraceBytecodes)
+            tty->print_cr("%4d: %s", bci(), Bytecodes::name(bc()));
+          break;
+        }
+      }
+      // fall through
+    case Bytecodes::_checkcast:
       do_instance_check();
       break;
 
@@ -1221,6 +1251,11 @@ void SharkBlock::do_call()
 }
 
 void SharkBlock::do_instance_check()
+{
+  ShouldNotCallThis();
+}
+
+bool SharkBlock::maybe_do_instanceof_if()
 {
   ShouldNotCallThis();
 }

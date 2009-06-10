@@ -326,6 +326,7 @@ class SharkBlock : public ResourceObj {
   // checkcast and instanceof
  protected:
   virtual void do_instance_check();
+  virtual bool maybe_do_instanceof_if();
 
   // new and *newarray
  protected:

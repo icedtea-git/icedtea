@@ -187,6 +187,10 @@ class SharkState : public ResourceObj {
              llvm::BasicBlock* other_block,
              llvm::BasicBlock* this_block);
 
+  // Value replacement
+ public:
+  void replace_all(SharkValue* old_value, SharkValue* new_value);
+
   // Cache and decache
  public:
   void decache_for_Java_call(ciMethod* callee);

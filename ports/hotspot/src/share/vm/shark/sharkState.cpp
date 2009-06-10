@@ -225,6 +225,21 @@ void SharkState::merge(SharkState* other,
   set_has_safepointed(this->has_safepointed() && other->has_safepointed());
 }
 
+void SharkState::replace_all(SharkValue* old_value, SharkValue* new_value)
+{
+  // Local variables
+  for (int i = 0; i < max_locals(); i++) {
+    if (local(i) == old_value)
+      set_local(i, new_value);
+  }
+
+  // Expression stack
+  for (int i = 0; i < stack_depth(); i++) {
+    if (stack(i) == old_value)
+      set_stack(i, new_value);
+  }
+}
+
 void SharkState::decache_for_Java_call(ciMethod* callee)
 {
   assert(function() && method(), "you cannot decache here");

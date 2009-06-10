@@ -1,5 +1,34 @@
 2009-06-06  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::maybe_do_instanceof_if): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::maybe_do_instanceof_if): New method.
+	(SharkBlock::parse_bytecode): Use the above for
+	instanceof immediately followed by ifeq or ifne.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::do_if_helper): New method.
+	(SharkTopLevelBlock::static_subtype_check): Likewise.
+	(SharkTopLevelBlock::maybe_do_instanceof_if): Likewise.
+	(SharkTopLevelBlock::do_optimized_instance_check): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::do_if_helper): New method.
+	(SharkTopLevelBlock::do_if): Use the above.
+	(SharkTopLevelBlock::static_subtype_check): New method.
+	(SharkTopLevelBlock::do_instance_check): Use the above.
+	(SharkTopLevelBlock::maybe_do_instanceof_if): New method.
+	(SharkTopLevelBlock::do_optimized_instance_check): Removed.
+	(SharkTopLevelBlock::do_full_instance_check): Removed
+	now-unnecessary state copy and merge.
+
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkState::replace_all): New method.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkState::replace_all): Likewise.
+
+2009-06-06  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
 	(SharkTopLevelBlock::do_optimized_instance_check): New method.
 	(SharkTopLevelBlock::do_full_instance_check): Add class argument.	
