@@ -1,3 +1,9 @@
+2009-06-10  Andrew John Hughes  <ahughes@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp:
+	Replace PTR_FORMAT with %p as pointer is of type
+	unsigned char*.
+
 2009-06-10  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp

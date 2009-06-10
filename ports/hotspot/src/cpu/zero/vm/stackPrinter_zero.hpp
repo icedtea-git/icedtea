@@ -117,7 +117,7 @@ class ZeroStackPrinter {
               field = "istate->_method";
             }
             else if (is_valid && !strcmp(field, "_bcp") && istate->bcp()) {
-              snprintf(_buf, _buflen, PTR_FORMAT " (bci %d)", istate->bcp(),
+              snprintf(_buf, _buflen, "%p (bci %d)", istate->bcp(),
                        istate->method()->bci_from(istate->bcp()));
               value = _buf;
               field = "istate->_bcp";
@@ -209,7 +209,7 @@ class ZeroStackPrinter {
             address pc = sf->pc();
             if (code->pc_desc_at(pc)) {
               SimpleScopeDesc ssd(code, pc);
-              snprintf(_buf, _buflen, PTR_FORMAT " (bci %d)", pc, ssd.bci());
+              snprintf(_buf, _buflen, "%p (bci %d)", pc, ssd.bci());
               value = _buf;
             }
           }
