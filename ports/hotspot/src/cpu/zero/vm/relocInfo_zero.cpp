@@ -48,7 +48,8 @@ address Relocation::pd_get_address_from_code()
 
 address* Relocation::pd_address_in_code()
 {
-  Unimplemented();
+  // Relocations in Shark are just stored directly
+  return (address *) addr();
 }
 
 int Relocation::pd_breakpoint_size()

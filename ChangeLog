@@ -1,3 +1,33 @@
+2009-06-03  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp
+	(MacroAssembler::store_oop): New method.
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp
+	(MacroAssembler::store_oop): Likewise.
+
+	* ports/hotspot/src/cpu/zero/vm/relocInfo_zero.cpp
+	(Relocation::pd_address_in_code): Implement.
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::compile_method): Create CodeBuffer
+	with space for relocations.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::code_offset): Renamed as...
+	(SharkFunction::create_unique_pc_offset): New method.
+	(SharkFunction::CreateAddressOfCodeBufferEntry): Likewise.
+	(SharkFunction::CreateAddressOfOopInCodeBuffer): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::start_frame): Updated to use new offset code.
+	(SharkDecacher::start_stack): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): Direct calls need no
+	checking.
+	(SharkTopLevelBlock::get_direct_callee): Replace constant
+	pool lookup with oop load from CodeBuffer.
+
 2009-06-02  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp

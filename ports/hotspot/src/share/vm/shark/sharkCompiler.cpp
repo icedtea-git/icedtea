@@ -116,8 +116,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   env->set_dependencies(new Dependencies(env));
 
   // Create the CodeBuffer and MacroAssembler
-  BufferBlob *bb = BufferBlob::create("shark_temp", 256 * K);
-  CodeBuffer cb(bb->instructions_begin(), bb->instructions_size());
+  CodeBuffer cb("Shark", 256 * K, 64 * K);
   cb.initialize_oop_recorder(env->oop_recorder());
   MacroAssembler *masm = new MacroAssembler(&cb);
 
@@ -148,9 +147,6 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
                        env->comp_level(),
                        false,
                        false);
-
-  // Free the BufferBlob
-  BufferBlob::free(bb);
 }
 
 

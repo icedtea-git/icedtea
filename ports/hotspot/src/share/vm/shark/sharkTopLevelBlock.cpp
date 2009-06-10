@@ -91,27 +91,25 @@ void SharkTopLevelBlock::scan_for_traps()
       index = iter()->get_field_index();
       break;
 
-    case Bytecodes::_invokespecial:
-    case Bytecodes::_invokestatic:
     case Bytecodes::_invokevirtual:
-    case Bytecodes::_invokeinterface:
       method = iter()->get_method(will_link);
       assert(will_link, "typeflow responsibility");
 
-      // If this is a non-final invokevirtual then there won't
-      // be a pool access.  We do need to check that its holder
-      // is linked, however, because its vtable won't have been
-      // set up otherwise.
-      if (bc() == Bytecodes::_invokevirtual && !method->is_final_method()) {
-        if (!method->holder()->is_linked()) {
-          set_trap(
-            Deoptimization::make_trap_request(
-              Deoptimization::Reason_uninitialized,
-              Deoptimization::Action_reinterpret), bci());
+      // If this is a non-final invokevirtual then we need to
+      // check that its holder is linked, because its vtable
+      // won't have been set up otherwise.
+      if (!method->is_final_method() && !method->holder()->is_linked()) {
+        set_trap(
+          Deoptimization::make_trap_request(
+            Deoptimization::Reason_uninitialized,
+            Deoptimization::Action_reinterpret), bci());
           return;
-        }
-        break;
       }
+      break;
+
+    case Bytecodes::_invokeinterface:
+      method = iter()->get_method(will_link);
+      assert(will_link, "typeflow responsibility");
 
       // Continue to the check
       index = iter()->get_method_index();
@@ -897,15 +895,10 @@ Value *SharkTopLevelBlock::get_callee(CallType    call_type,
 // invokevirtual is direct in some circumstances.
 Value *SharkTopLevelBlock::get_direct_callee(ciMethod* method)
 {
-  SharkConstantPool constants(this);
-  Value *cache = constants.cache_entry_at(iter()->get_method_index());
-  return builder()->CreateValueOfStructEntry(
-    cache,
-    bc() == Bytecodes::_invokevirtual ?
-      ConstantPoolCacheEntry::f2_offset() :
-      ConstantPoolCacheEntry::f1_offset(),
-    SharkType::methodOop_type(),
-    "callee");
+  return builder()->CreateLoad(
+    builder()->CreateBitCast(
+      function()->CreateAddressOfOopInCodeBuffer(method),
+      PointerType::getUnqual(SharkType::methodOop_type())), "callee");
 }
 
 // Non-direct virtual calls are handled here

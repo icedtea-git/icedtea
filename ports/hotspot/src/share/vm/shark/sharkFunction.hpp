@@ -137,6 +137,28 @@ class SharkFunction : public StackObj {
     return flow()->method();
   }
 
+  // CodeBuffer interface
+ public:
+  int create_unique_pc_offset() const
+  {
+    int offset = masm()->offset();
+    masm()->advance(1);
+    return offset;
+  }
+  llvm::Value* CreateAddressOfCodeBufferEntry(int offset) const
+  {
+    return builder()->CreateAdd(base_pc(), LLVMValue::intptr_constant(offset));
+  }
+  llvm::Value* CreateAddressOfOopInCodeBuffer(ciObject* object) const
+  {
+    masm()->align(BytesPerWord);
+    int offset = masm()->offset();
+    masm()->store_oop(object->encoding());
+    return builder()->CreateIntToPtr(
+      CreateAddressOfCodeBufferEntry(offset),
+      llvm::PointerType::getUnqual(SharkType::jobject_type()));
+  }
+
   // Block management
  private:
   llvm::BasicBlock* _block_insertion_point;
@@ -216,17 +238,6 @@ class SharkFunction : public StackObj {
                                          const char*       name = "") const;
  private:
   llvm::Value* CreateBuildFrame();
-
-  // OopMap support
- public:
-  // Every time a new, distinct pc is required, an extra byte is
-  // emitted into the codebuffer
-  int code_offset() const
-  {
-    int offset = masm()->offset();
-    masm()->advance(1); // keeps PCs unique
-    return offset;
-  }
 
  private:
   int _extended_frame_size;
