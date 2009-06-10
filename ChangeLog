@@ -1,3 +1,19 @@
+2009-06-10  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::CallType): Removed.
+	(SharkTopLevelBlock::get_call_type): Likewise.
+	(SharkTopLevelBlock::get_callee): Likewise.
+	(SharkTopLevelBlock::improve_virtual_call): New method.
+	(SharkTopLevelBlock::get_virtual_callee): Updated.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): Updated call traps.
+	(SharkTopLevelBlock::get_call_type): Removed.
+	(SharkTopLevelBlock::get_callee): Likewise.
+	(SharkTopLevelBlock::improve_virtual_call): New method.
+	(SharkTopLevelBlock::get_virtual_callee): Updated.
+	(SharkTopLevelBlock::do_call): Replaced callee selection.
+
 2009-06-09  Gary Benson  <gbenson@redhat.com>
 
 	* patches/hotspot/default/icedtea-shark.patch

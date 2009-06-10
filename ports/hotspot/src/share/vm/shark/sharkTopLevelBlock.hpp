@@ -371,18 +371,12 @@ class SharkTopLevelBlock : public SharkBlock {
 
   // invoke*
  private:
-  enum CallType {
-    CALL_DIRECT,
-    CALL_VIRTUAL,
-    CALL_INTERFACE
-  };
-  CallType get_call_type(ciMethod* method);
-  llvm::Value* get_callee(CallType    call_type,
-                          ciMethod*   method,
-                          SharkValue* receiver);
-
+  ciMethod* improve_virtual_call(ciMethod*        caller,
+                                 ciInstanceKlass* klass,
+                                 ciMethod*        dest_method,
+                                 ciType*          receiver_type);
   llvm::Value* get_direct_callee(ciMethod* method);
-  llvm::Value* get_virtual_callee(SharkValue* receiver, ciMethod* method);
+  llvm::Value* get_virtual_callee(SharkValue* receiver, int vtable_index);
   llvm::Value* get_interface_callee(SharkValue* receiver, ciMethod* method);
 
   void do_call();

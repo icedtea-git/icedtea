@@ -75,37 +75,13 @@ void SharkTopLevelBlock::scan_for_traps()
       }
       break;
 
+    case Bytecodes::_invokestatic:
+    case Bytecodes::_invokespecial:
     case Bytecodes::_invokevirtual:
-      method = iter()->get_method(will_link);
-      assert(will_link, "typeflow responsibility");
-
-      // If this is a non-final invokevirtual then we need to
-      // check that its holder is linked, because its vtable
-      // won't have been set up otherwise.
-      if (!method->is_final_method() && !method->holder()->is_linked()) {
-        set_trap(
-          Deoptimization::make_trap_request(
-            Deoptimization::Reason_uninitialized,
-            Deoptimization::Action_reinterpret), bci());
-          return;
-      }
-      break;
-
     case Bytecodes::_invokeinterface:
       method = iter()->get_method(will_link);
       assert(will_link, "typeflow responsibility");
 
-      // Handle the case where we encounter an invokeinterface but
-      // should really have an invokevirtual since the resolved
-      // method is a virtual method in java.lang.Object.  This is
-      // a legal corner case in the spec, and while javac does not
-      // generate this code there's no reason a compliant Java
-      // compiler should not.  See cpCacheOop.cpp and
-      // interpreterRuntime.cpp for more details.
-      if (method->holder() == function()->env()->Object_klass())
-        Unimplemented();
-
-      // Bail out if the holder is unloaded
       if (!method->holder()->is_linked()) {
         set_trap(
           Deoptimization::make_trap_request(
@@ -841,39 +817,78 @@ void SharkTopLevelBlock::do_switch()
   }
 }
 
-// Figure out what type of call this is.
-//  - Direct calls are where the callee is fixed.
-//  - Interface and Virtual calls require lookup at runtime.
-// NB some invokevirtuals can be resolved to direct calls.
-SharkTopLevelBlock::CallType SharkTopLevelBlock::get_call_type(ciMethod* method)
+ciMethod* SharkTopLevelBlock::improve_virtual_call(ciMethod*   caller,
+                                              ciInstanceKlass* klass,
+                                              ciMethod*        dest_method,
+                                              ciType*          receiver_type)
 {
-  if (bc() == Bytecodes::_invokeinterface)
-    return CALL_INTERFACE;
-  else if (bc() == Bytecodes::_invokevirtual && !method->is_final_method())
-    return CALL_VIRTUAL;
-  else
-    return CALL_DIRECT;
+  // If the method is obviously final then we are already done
+  if (dest_method->can_be_statically_bound())
+    return dest_method;
+
+  // Array methods are all inherited from Object and are monomorphic
+  if (receiver_type->is_array_klass() &&
+      dest_method->holder() == function()->env()->Object_klass())
+    return dest_method;
+
+  // All other interesting cases are instance classes
+  if (!receiver_type->is_instance_klass())
+    return NULL;
+
+  // Attempt to improve the receiver
+  ciInstanceKlass* actual_receiver = klass;
+  ciInstanceKlass *improved_receiver = receiver_type->as_instance_klass();
+  if (improved_receiver->is_loaded() &&
+      improved_receiver->is_initialized() &&
+      !improved_receiver->is_interface() &&
+      improved_receiver->is_subtype_of(actual_receiver)) {
+    actual_receiver = improved_receiver;
+  }
+
+  // Attempt to find a monomorphic target for this call using
+  // class heirachy analysis.  
+  ciInstanceKlass *calling_klass = caller->holder();
+  ciMethod* monomorphic_target =
+    dest_method->find_monomorphic_target(calling_klass, klass, actual_receiver);
+  if (monomorphic_target != NULL) {
+    assert(!monomorphic_target->is_abstract(), "shouldn't be");
+
+    // Opto has a bunch of type checking here that I don't
+    // understand.  It's to inhibit casting in one direction,
+    // possibly because objects in Opto can have inexact
+    // types, but I can't even tell which direction it
+    // doesn't like.  For now I'm going to block *any* cast.
+    if (monomorphic_target != dest_method) {
+#ifndef PRODUCT
+      tty->print_cr("found monomorphic target, but inhibited cast:");
+      tty->print("  dest_method = ");
+      dest_method->print_short_name(tty);
+      tty->cr();
+      tty->print("  monomorphic_target = ");
+      monomorphic_target->print_short_name(tty);
+      tty->cr();
+#endif // !PRODUCT
+      monomorphic_target = NULL;
+    }
+  }
+
+  // Replace the virtual call with a direct one.  This makes
+  // us dependent on that target method not getting overridden
+  // by dynamic class loading.
+  if (monomorphic_target != NULL) {
+    function()->env()->dependencies()->assert_unique_concrete_method(
+      actual_receiver, monomorphic_target);
+    return monomorphic_target;
+  }
+
+  // Because Opto distinguishes exact types from inexact ones
+  // it can perform a further optimization to replace calls
+  // with non-monomorphic targets if the receiver has an exact
+  // type.  We don't mark types this way, so we can't do this.
+
+  return NULL;
 }
 
-Value *SharkTopLevelBlock::get_callee(CallType    call_type,
-                                      ciMethod*   method,
-                                      SharkValue* receiver)
-{
-  switch (call_type) {
-  case CALL_DIRECT:
-    return get_direct_callee(method);
-  case CALL_VIRTUAL:
-    return get_virtual_callee(receiver, method);
-  case CALL_INTERFACE:
-    return get_interface_callee(receiver, method);
-  default:
-    ShouldNotReachHere();
-  } 
-}
-
-// Direct calls can be made when the callee is fixed.
-// invokestatic and invokespecial are always direct;
-// invokevirtual is direct in some circumstances.
 Value *SharkTopLevelBlock::get_direct_callee(ciMethod* method)
 {
   return builder()->CreateBitCast(
@@ -882,9 +897,8 @@ Value *SharkTopLevelBlock::get_direct_callee(ciMethod* method)
     "callee");
 }
 
-// Non-direct virtual calls are handled here
 Value *SharkTopLevelBlock::get_virtual_callee(SharkValue* receiver,
-                                              ciMethod*   method)
+                                              int vtable_index)
 {
   Value *klass = builder()->CreateValueOfStructEntry(
     receiver->jobject_value(),
@@ -898,11 +912,10 @@ Value *SharkTopLevelBlock::get_virtual_callee(SharkValue* receiver,
       SharkType::methodOop_type(),
       vtableEntry::size() * wordSize,
       in_ByteSize(instanceKlass::vtable_start_offset() * wordSize),
-      LLVMValue::intptr_constant(method->vtable_index())),
+      LLVMValue::intptr_constant(vtable_index)),
     "callee");
 }
 
-// Interface calls are handled here
 Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver,
                                                 ciMethod*   method)
 {
@@ -1013,31 +1026,78 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver,
 
 void SharkTopLevelBlock::do_call()
 {
-  bool will_link;
-  ciMethod *method = iter()->get_method(will_link);
-  assert(will_link, "typeflow responsibility");
+  // Set frequently used booleans
+  bool is_static = bc() == Bytecodes::_invokestatic;
+  bool is_virtual = bc() == Bytecodes::_invokevirtual;
+  bool is_interface = bc() == Bytecodes::_invokeinterface;
 
-  // Figure out what type of call this is
-  CallType call_type = get_call_type(method);
+  // Find the method being called
+  bool will_link;
+  ciMethod *dest_method = iter()->get_method(will_link);
+  assert(will_link, "typeflow responsibility");
+  assert(dest_method->is_static() == is_static, "must match bc");
+
+  // Find the class of the method being called.  Note
+  // that the superclass check in the second assertion
+  // is to cope with a hole in the spec that allows for
+  // invokeinterface instructions where the resolved
+  // method is a virtual method in java.lang.Object.
+  // javac doesn't generate code like that, but there's
+  // no reason a compliant Java compiler might not.
+  ciInstanceKlass *holder_klass  = dest_method->holder();
+  assert(holder_klass->is_loaded(), "scan_for_traps responsibility");
+  assert(holder_klass->is_interface() ||
+         holder_klass->super() == NULL ||
+         !is_interface, "must match bc");
+  ciKlass *holder = iter()->get_declared_method_holder();
+  ciInstanceKlass *klass =
+    ciEnv::get_instance_klass_for_declared_method_holder(holder);
 
   // Find the receiver in the stack.  We do this before
   // trying to inline because the inliner can only use
   // zero-checked values, not being able to perform the
   // check itself.
   SharkValue *receiver = NULL;
-  if (bc() != Bytecodes::_invokestatic) {
-    receiver = xstack(method->arg_size() - 1);
+  if (!is_static) {
+    receiver = xstack(dest_method->arg_size() - 1);
     check_null(receiver);
   }
 
+  // Try to improve non-direct calls
+  bool call_is_virtual = is_virtual || is_interface;
+  ciMethod *call_method = dest_method;
+  if (call_is_virtual) {
+    ciMethod *optimized_method = improve_virtual_call(
+      target(), klass, dest_method, receiver->type());
+    if (optimized_method) {
+      call_method = optimized_method;
+      call_is_virtual = false;
+    }
+  }
+
   // Try to inline the call
-  if (call_type == CALL_DIRECT) {
-    if (SharkInliner::attempt_inline(method, current_state(), thread()))
+  if (!call_is_virtual) {
+    if (SharkInliner::attempt_inline(call_method, current_state(), thread()))
       return;
   }
 
   // Find the method we are calling
-  Value *callee = get_callee(call_type, method, receiver);
+  Value *callee;
+  if (call_is_virtual) {
+    if (is_virtual) {
+      int vtable_index = call_method->resolve_vtable_index(
+        target()->holder(), klass);
+      assert(vtable_index >= 0, "should be");
+      callee = get_virtual_callee(receiver, vtable_index);
+    }
+    else {
+      assert(is_interface, "should be");
+      callee = get_interface_callee(receiver, call_method);
+    }
+  }
+  else {
+    callee = get_direct_callee(call_method);
+  }
 
   // Load the SharkEntry from the callee
   Value *base_pc = builder()->CreateValueOfStructEntry(
@@ -1056,9 +1116,9 @@ void SharkTopLevelBlock::do_call()
     "entry_point");
 
   // Make the call
-  current_state()->decache_for_Java_call(method);
+  current_state()->decache_for_Java_call(call_method);
   builder()->CreateCall3(entry_point, callee, base_pc, thread());
-  current_state()->cache_after_Java_call(method);
+  current_state()->cache_after_Java_call(call_method);
 
   // Check for pending exceptions
   check_pending_exception(EX_CHECK_FULL);
