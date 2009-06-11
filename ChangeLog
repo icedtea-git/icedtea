@@ -1,3 +1,8 @@
+2009-06-11  Andrew John Hughes  <ahughes@redhat.com>
+
+	* configure.ac:
+	Bump to 1.11-pre.
+
 2009-06-10  Andrew John Hughes  <ahughes@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp:
