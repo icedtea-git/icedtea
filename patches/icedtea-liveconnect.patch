@@ -67,3 +67,20 @@ diff -Nru openjdk.orig/jdk/make/sun/plugin/Makefile openjdk/jdk/make/sun/plugin/
 +JAVA_ARGS = "{ \"sun.applet.PluginMain\" }"
 +include $(BUILDDIR)/common/Program.gmk
 +
+--- openjdk/jdk/make/docs/NON_CORE_PKGS.gmk.orig	2009-06-10 17:48:57.000000000 -0400
++++ openjdk/jdk/make/docs/NON_CORE_PKGS.gmk	2009-06-10 17:49:59.000000000 -0400
+@@ -82,11 +82,14 @@
+ TREEAPI_PKGS 	 = com.sun.source.tree \
+ 		   com.sun.source.util
+ 
++JAVASCRIPT_PKGS  = netscape.javascript
++
+ SMARTCARDIO_PKGS = javax.smartcardio
+ 
+ # non-core packages in rt.jar
+ NON_CORE_PKGS    = $(DOMAPI_PKGS) \
+                    $(MGMT_PKGS) \
++                   $(JAVASCRIPT_PKGS) \
+                    $(JAAS_PKGS) \
+                    $(JGSS_PKGS) \
+                    $(OLD_JSSE_PKGS) \
