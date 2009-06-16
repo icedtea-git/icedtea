@@ -1,20 +1,20 @@
-OPENJDK_VERSION = b59
+OPENJDK_VERSION = b60
 
-OPENJDK_CHANGESET = 0d76c4da605f
-CORBA_CHANGESET = e9ba2b962ddf
-JAXP_CHANGESET = 748976d69503
-JAXWS_CHANGESET = faac46e2e60f
-JDK_CHANGESET = 3d024b86523a
-LANGTOOLS_CHANGESET = 0f653be1a42f
-HOTSPOT_CHANGESET = aa0c48844632
+OPENJDK_CHANGESET = 472c21584cfd
+CORBA_CHANGESET = e906b16a12a9
+JAXP_CHANGESET = f1ac756616ea
+JAXWS_CHANGESET = 55ffcbca5f46
+JDK_CHANGESET = 1a01c90431a7
+LANGTOOLS_CHANGESET = 522520757dd3
+HOTSPOT_CHANGESET = 86092459c54d
 
-OPENJDK_MD5SUM = 51beb96e5d6bc4b875b4316f4ef724d7
-CORBA_MD5SUM = 13b64a402845a469cae31e04ffc5ee80
-JAXP_MD5SUM = 18c922319545d7e907a2d6cbb265865d
-JAXWS_MD5SUM = b2c0a779e349f82427a78485ef53321b
-JDK_MD5SUM = 16f6bbc35c99de1996b545b6b500f668
-LANGTOOLS_MD5SUM = ccad721f71ab49a61bbf684039b4d55d
-HOTSPOT_MD5SUM = c40c25a481a1c33ac15a89812a0b9f8c
+OPENJDK_MD5SUM = 9f5e15067cf5207760a83cea8ba41da8
+CORBA_MD5SUM = 7f00e0b5d16046d116cd53c9f43c7122
+JAXP_MD5SUM = 2de0ec54014eb7f25c811e40fc2e3e3f
+JAXWS_MD5SUM = 9c0131755eefaa929ca8e47abe21cc58
+JDK_MD5SUM = 1fd637880521f3e2c274a1db8bfed89b
+LANGTOOLS_MD5SUM = e7c0ac7a9d67d361cc64fc15312d4a85
+HOTSPOT_MD5SUM = 18c922319545d7e907a2d6cbb265865d
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
@@ -1571,7 +1571,9 @@ ICEDTEA_ENV = \
 	"DISTRIBUTION_ID=$(DIST_ID)" \
 	"ALT_JIBX_LIBS_PATH=$(JIBX_DEPS_DIR)" \
 	"ALT_NETX_DIST=$(abs_top_builddir)/netx.build" \
-	"ALT_LIVECONNECT_DIST=$(abs_top_builddir)"
+	"ALT_LIVECONNECT_DIST=$(abs_top_builddir)" \
+	"DEBUG_CLASSFILES=true" \
+	"DEBUG_BINARIES=true"
 
 if WITH_CACAO
 ICEDTEA_ENV += \
@@ -1655,7 +1657,9 @@ ICEDTEA_ENV_ECJ = \
 	"JAR_ACCEPTS_STDIN_LIST=$(JAR_ACCEPTS_STDIN_LIST)" \
 	"DISABLE_NIMBUS=true" \
 	"ALT_NETX_DIST=$(abs_top_builddir)/netx.build" \
-	"ALT_LIVECONNECT_DIST=$(abs_top_builddir)"
+	"ALT_LIVECONNECT_DIST=$(abs_top_builddir)" \
+	"DEBUG_CLASSFILES=true" \
+	"DEBUG_BINARIES=true"
 
 if WITH_CACAO
 ICEDTEA_ENV_ECJ += \
@@ -1997,8 +2001,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-copy-plugs.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-text-relocations.patch \
 	patches/icedtea-graphics.patch \
-	patches/icedtea-debuginfo.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-debuginfo.patch \
 	patches/icedtea-ssl.patch \
 	$(PLUGIN_PATCH) \
 	patches/icedtea-webstart.patch \
@@ -2051,7 +2053,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-lc_ctype.patch \
 	patches/icedtea-messageutils.patch \
-	patches/icedtea-javac-debuginfo.patch \
 	patches/icedtea-xjc.patch \
 	patches/icedtea-renderer-crossing.patch \
 	patches/icedtea-tests-jdk.patch \

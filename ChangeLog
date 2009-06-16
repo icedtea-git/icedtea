@@ -1,5 +1,17 @@
 2009-06-11  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/hotspot/default/icedtea-debuginfo.patch,
+	* patches/icedtea-debuginfo.patch,
+	* patches/icedtea-javac-debuginfo.patch:
+	Removed, replaced by aph's upstream patches.
+	* Makefile.am:
+	Bump to b60, turn on DEBUG_CLASSFILES and DEBUG_BINARIES.
+	* patches/ecj/icedtea.patch,
+	* patches/hotspot/default/icedtea-zero-build.patch:
+	Rerolled.
+
+2009-06-11  Andrew John Hughes  <ahughes@redhat.com>
+
 	* configure.ac:
 	Bump to 1.11-pre.
 

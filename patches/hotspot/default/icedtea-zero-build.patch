@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
---- openjdk.orig/hotspot/make/defs.make	2008-11-22 00:11:18.000000000 +0000
-+++ openjdk/hotspot/make/defs.make	2008-11-29 02:14:15.000000000 +0000
+--- openjdk.orig/hotspot/make/defs.make	2009-03-30 17:15:27.000000000 +0100
++++ openjdk/hotspot/make/defs.make	2009-06-15 17:09:12.000000000 +0100
 @@ -192,13 +192,14 @@
  
    # Use uname output for SRCARCH, but deal with platform differences. If ARCH
@@ -29,8 +29,8 @@ diff -Nru openjdk.orig/hotspot/make/defs.make openjdk/hotspot/make/defs.make
  
  # Required make macro settings for all platforms
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/buildtree.make openjdk/hotspot/make/linux/makefiles/buildtree.make
---- openjdk.orig/hotspot/make/linux/makefiles/buildtree.make	2008-11-22 00:11:18.000000000 +0000
-+++ openjdk/hotspot/make/linux/makefiles/buildtree.make	2008-11-29 02:14:15.000000000 +0000
+--- openjdk.orig/hotspot/make/linux/makefiles/buildtree.make	2009-03-30 17:15:27.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/buildtree.make	2009-06-15 17:09:12.000000000 +0100
 @@ -321,6 +321,7 @@
  DATA_MODE/sparcv9 = 64
  DATA_MODE/amd64   = 64
@@ -40,8 +40,8 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/buildtree.make openjdk/hotsp
  JAVA_FLAG/32 = -d32
  JAVA_FLAG/64 = -d64
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/defs.make openjdk/hotspot/make/linux/makefiles/defs.make
---- openjdk.orig/hotspot/make/linux/makefiles/defs.make	2008-11-29 01:55:52.000000000 +0000
-+++ openjdk/hotspot/make/linux/makefiles/defs.make	2008-11-29 02:14:15.000000000 +0000
+--- openjdk.orig/hotspot/make/linux/makefiles/defs.make	2009-06-15 17:03:36.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/defs.make	2009-06-15 17:09:12.000000000 +0100
 @@ -37,6 +37,18 @@
    ARCH_DATA_MODEL ?= 32
  endif
@@ -62,8 +62,8 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/defs.make openjdk/hotspot/ma
  ifeq ($(ARCH), ia64)
    ARCH_DATA_MODEL = 64
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
---- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2008-11-29 01:55:52.000000000 +0000
-+++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-11-29 02:14:15.000000000 +0000
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2009-06-15 17:03:36.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2009-06-15 17:09:12.000000000 +0100
 @@ -56,6 +56,9 @@
  VM_PICFLAG/AOUT   =
  VM_PICFLAG        = $(VM_PICFLAG/$(LINK_INTO))
@@ -74,7 +74,7 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  CFLAGS += $(VM_PICFLAG)
  CFLAGS += -fno-rtti
  CFLAGS += -fno-exceptions
-@@ -72,6 +75,7 @@
+@@ -68,6 +71,7 @@
  ARCHFLAG/ia64    =
  ARCHFLAG/sparc   = -m32 -mcpu=v9
  ARCHFLAG/sparcv9 = -m64 -mcpu=v9
@@ -83,8 +83,8 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  CFLAGS     += $(ARCHFLAG)
  AOUT_FLAGS += $(ARCHFLAG)
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/sa.make openjdk/hotspot/make/linux/makefiles/sa.make
---- openjdk.orig/hotspot/make/linux/makefiles/sa.make	2008-11-22 00:11:18.000000000 +0000
-+++ openjdk/hotspot/make/linux/makefiles/sa.make	2008-11-29 02:14:15.000000000 +0000
+--- openjdk.orig/hotspot/make/linux/makefiles/sa.make	2009-03-30 17:15:27.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/sa.make	2009-06-15 17:09:12.000000000 +0100
 @@ -52,10 +52,10 @@
  SA_PROPERTIES = $(SA_CLASSDIR)/sa.properties
  
@@ -99,10 +99,10 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/sa.make openjdk/hotspot/make
  	fi
  
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/saproc.make openjdk/hotspot/make/linux/makefiles/saproc.make
---- openjdk.orig/hotspot/make/linux/makefiles/saproc.make	2008-11-22 00:11:18.000000000 +0000
-+++ openjdk/hotspot/make/linux/makefiles/saproc.make	2008-11-29 02:14:15.000000000 +0000
-@@ -44,10 +44,10 @@
- DEST_SAPROC = $(JDK_LIBDIR)/$(LIBSAPROC)
+--- openjdk.orig/hotspot/make/linux/makefiles/saproc.make	2009-06-15 14:57:37.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/saproc.make	2009-06-15 17:09:12.000000000 +0100
+@@ -49,10 +49,10 @@
+ endif
  
  # if $(AGENT_DIR) does not exist, we don't build SA
 -# also, we don't build SA on Itanium.
@@ -115,8 +115,8 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/saproc.make openjdk/hotspot/
  	fi
  
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
---- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2008-11-29 01:55:52.000000000 +0000
-+++ openjdk/hotspot/make/linux/makefiles/vm.make	2008-11-29 02:14:15.000000000 +0000
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2009-06-15 17:03:36.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/vm.make	2009-06-15 17:09:12.000000000 +0100
 @@ -158,6 +158,9 @@
  
    LIBS_VM                  += $(LIBS)
