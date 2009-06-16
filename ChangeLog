@@ -1,5 +1,10 @@
 2009-06-16  Omair Majid  <omajid@redhat.com>
 
+	* netx/javax/jnlp/SingleInstanceListener.java: New file.
+	* netx/javax/jnlp/SingleInstanceService.java: New file.
+
+2009-06-16  Omair Majid  <omajid@redhat.com>
+
 	* netx/net/sourceforge/jnlp/services/ServiceUtil.java:
 	(invoke): Throw the original exception that caused the problem.
 
