@@ -159,12 +159,25 @@ public class ServiceUtil {
                 }
             };
 
-            Object result = AccessController.doPrivileged(invoker);
+            try {
+                Object result = AccessController.doPrivileged(invoker);
 
-            if (JNLPRuntime.isDebug())
-                System.err.println("        result: "+result);
+                if (JNLPRuntime.isDebug())
+                    System.err.println("        result: "+result);
 
-            return result;
+                return result;
+            } catch (PrivilegedActionException e) {
+                // Any exceptions thrown by the actual methods are wrapped by a 
+                // InvocationTargetException, which is further wrapped by the 
+                // PrivilegedActionException. Lets unwrap them to make the 
+                // proxy transparent to the callers
+                if (e.getCause() instanceof InvocationTargetException) {
+                    throw e.getCause().getCause();
+                } else {
+                    throw e.getCause();
+                }
+            }
+
         }
     };
 
