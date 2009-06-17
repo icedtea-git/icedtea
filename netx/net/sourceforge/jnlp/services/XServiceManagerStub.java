@@ -45,6 +45,7 @@ public class XServiceManagerStub implements ServiceManagerStub {
 	private static String serviceNames[] = {
         "javax.jnlp.BasicService", // required
         "javax.jnlp.DownloadService", // required
+        "javax.jnlp.ExtendedService",
         "javax.jnlp.ExtensionInstallerService", // required
         "javax.jnlp.PersistenceService",
         "javax.jnlp.FileOpenService",
@@ -56,6 +57,7 @@ public class XServiceManagerStub implements ServiceManagerStub {
     private static Object services[] = {
         ServiceUtil.createPrivilegedProxy(BasicService.class, new XBasicService()),
         ServiceUtil.createPrivilegedProxy(DownloadService.class, new XDownloadService()),
+        ServiceUtil.createPrivilegedProxy(ExtendedService.class, new XExtendedService()),
         ServiceUtil.createPrivilegedProxy(ExtensionInstallerService.class, new XExtensionInstallerService()),
         ServiceUtil.createPrivilegedProxy(PersistenceService.class, new XPersistenceService()),
         ServiceUtil.createPrivilegedProxy(FileOpenService.class, new XFileOpenService()),

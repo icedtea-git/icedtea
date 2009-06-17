@@ -1,3 +1,11 @@
+2009-06-17  Omair Majid  <omajid@redhat.com>
+
+	*  * netx/javax/jnlp/ExtendedService.java: New file.
+	* netx/net/sourceforge/jnlp/services/XExtendedService.java: New file.
+	* netx/net/sourceforge/jnlp/services/XServiceManagerStub.java: Add 
+	ExtendedService to serviceNames. Create a proxy for XExtendedService to 
+	provide ExtendedService.
+
 2009-06-17  Deepak Bhole  <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Fix race condition that led to segfault.
