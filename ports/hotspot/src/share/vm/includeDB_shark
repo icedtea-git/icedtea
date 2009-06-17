@@ -120,14 +120,12 @@ sharkCacheDecache.cpp                   debugInfoRec.hpp
 sharkCacheDecache.cpp                   llvmValue.hpp
 sharkCacheDecache.cpp                   sharkBuilder.hpp
 sharkCacheDecache.cpp                   sharkCacheDecache.hpp
-sharkCacheDecache.cpp                   sharkFrameCache.hpp
 sharkCacheDecache.cpp                   sharkFunction.hpp
 sharkCacheDecache.cpp                   sharkState.inline.hpp
 
 sharkCacheDecache.hpp                   ciMethod.hpp
 sharkCacheDecache.hpp                   debugInfoRec.hpp
 sharkCacheDecache.hpp                   sharkBuilder.hpp
-sharkCacheDecache.hpp                   sharkFrameCache.hpp
 sharkCacheDecache.hpp                   sharkFunction.hpp
 sharkCacheDecache.hpp                   sharkStateScanner.hpp
 
@@ -173,15 +171,6 @@ sharkConstant.hpp                       sharkValue.hpp
 sharkEntry.cpp                          sharkEntry.hpp
 
 sharkEntry.hpp                          llvmHeaders.hpp
-
-sharkFrameCache.cpp                     allocation.hpp
-sharkFrameCache.cpp                     llvmHeaders.hpp
-sharkFrameCache.cpp                     sharkFrameCache.hpp
-sharkFrameCache.cpp                     sharkFunction.hpp
-
-sharkFrameCache.hpp                     allocation.hpp
-sharkFrameCache.hpp                     llvmHeaders.hpp
-sharkFrameCache.hpp                     sharkFunction.hpp
 
 sharkFunction.cpp                       allocation.hpp
 sharkFunction.cpp                       ciTypeFlow.hpp
@@ -260,7 +249,6 @@ sharkState.cpp                          ciType.hpp
 sharkState.cpp                          ciTypeFlow.hpp
 sharkState.cpp                          sharkBuilder.hpp
 sharkState.cpp                          sharkCacheDecache.hpp
-sharkState.cpp                          sharkFrameCache.hpp
 sharkState.cpp                          sharkState.inline.hpp
 sharkState.cpp                          sharkTopLevelBlock.hpp
 sharkState.cpp                          sharkType.hpp
@@ -270,11 +258,11 @@ sharkState.hpp                          allocation.hpp
 sharkState.hpp                          ciMethod.hpp
 sharkState.hpp                          llvmHeaders.hpp
 sharkState.hpp                          sharkBuilder.hpp
-sharkState.hpp                          sharkFrameCache.hpp
 sharkState.hpp                          sharkValue.hpp
 
 sharkState.inline.hpp                   sharkBlock.hpp
 sharkState.inline.hpp                   sharkBuilder.hpp
+sharkState.inline.hpp                   sharkFunction.hpp
 sharkState.inline.hpp                   sharkState.hpp
 
 sharkStateScanner.cpp                   sharkState.inline.hpp

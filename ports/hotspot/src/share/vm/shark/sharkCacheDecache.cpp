@@ -225,17 +225,12 @@ void SharkDecacher::write_value_to_frame(const Type* type,
                                          Value*      value,
                                          int         offset)
 {
-  if (frame_cache()->value(offset) != value) {
-    builder()->CreateStore(
-      value,
-      function()->CreateAddressOfFrameEntry(offset, type));
-  }
+  builder()->CreateStore(
+    value, function()->CreateAddressOfFrameEntry(offset, type));
 }
 
 Value* SharkCacher::read_value_from_frame(const Type* type, int offset)
 {
-  Value *result = builder()->CreateLoad(
+  return builder()->CreateLoad(
     function()->CreateAddressOfFrameEntry(offset, type));
-  frame_cache()->set_value(offset, result);
-  return result;
 }

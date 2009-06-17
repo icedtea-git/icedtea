@@ -37,17 +37,8 @@
 
 class SharkCacherDecacher : public SharkStateScanner {
  protected:
-  SharkCacherDecacher(SharkFunction* function, SharkFrameCache* frame_cache)
-    : SharkStateScanner(function), _frame_cache(frame_cache) {}
-
- private:
-  SharkFrameCache* _frame_cache;
-
- protected:
-  SharkFrameCache* frame_cache() const
-  {
-    return _frame_cache;
-  }
+  SharkCacherDecacher(SharkFunction* function)
+    : SharkStateScanner(function) {}
 
  protected:
   SharkBuilder* builder() const
@@ -67,8 +58,8 @@ class SharkCacherDecacher : public SharkStateScanner {
 
 class SharkDecacher : public SharkCacherDecacher {
  protected:
-  SharkDecacher(SharkFunction* function, SharkFrameCache* frame_cache, int bci)
-    : SharkCacherDecacher(function, frame_cache), _bci(bci) {}
+  SharkDecacher(SharkFunction* function, int bci)
+    : SharkCacherDecacher(function), _bci(bci) {}
 
  private:
   int _bci;
@@ -223,11 +214,8 @@ class SharkDecacher : public SharkCacherDecacher {
 
 class SharkJavaCallDecacher : public SharkDecacher {
  public:
-  SharkJavaCallDecacher(SharkFunction*   function,
-                        SharkFrameCache* frame_cache,
-                        int              bci,
-                        ciMethod*        callee)
-    : SharkDecacher(function, frame_cache, bci), _callee(callee) {}
+  SharkJavaCallDecacher(SharkFunction* function, int bci, ciMethod* callee)
+    : SharkDecacher(function, bci), _callee(callee) {}
 
  private:
   ciMethod* _callee;
@@ -271,10 +259,8 @@ class SharkJavaCallDecacher : public SharkDecacher {
 
 class SharkVMCallDecacher : public SharkDecacher {
  public:
-  SharkVMCallDecacher(SharkFunction*   function,
-                      SharkFrameCache* frame_cache,
-                      int              bci)
-    : SharkDecacher(function, frame_cache, bci) {}
+  SharkVMCallDecacher(SharkFunction* function, int bci)
+    : SharkDecacher(function, bci) {}
 
   // Stack slot helpers
  protected:
@@ -309,10 +295,8 @@ class SharkVMCallDecacher : public SharkDecacher {
 
 class SharkTrapDecacher : public SharkDecacher {
  public:
-  SharkTrapDecacher(SharkFunction*   function,
-                    SharkFrameCache* frame_cache,
-                    int              bci)
-    : SharkDecacher(function, frame_cache, bci) {}
+  SharkTrapDecacher(SharkFunction* function, int bci)
+    : SharkDecacher(function, bci) {}
 
   // Stack slot helpers
  protected:
@@ -347,8 +331,8 @@ class SharkTrapDecacher : public SharkDecacher {
 
 class SharkCacher : public SharkCacherDecacher {
  protected:
-  SharkCacher(SharkFunction* function, SharkFrameCache* frame_cache)
-    : SharkCacherDecacher(function, frame_cache) {}
+  SharkCacher(SharkFunction* function)
+    : SharkCacherDecacher(function) {}
 
   // Callbacks
  protected:
@@ -377,10 +361,8 @@ class SharkCacher : public SharkCacherDecacher {
 
 class SharkJavaCallCacher : public SharkCacher {
  public:
-  SharkJavaCallCacher(SharkFunction*   function,
-                      SharkFrameCache* frame_cache,
-                      ciMethod*        callee)
-    : SharkCacher(function, frame_cache), _callee(callee) {}
+  SharkJavaCallCacher(SharkFunction* function, ciMethod* callee)
+    : SharkCacher(function), _callee(callee) {}
 
  private:
   ciMethod* _callee;
@@ -402,8 +384,8 @@ class SharkJavaCallCacher : public SharkCacher {
 
 class SharkVMCallCacher : public SharkCacher {
  public:
-  SharkVMCallCacher(SharkFunction* function, SharkFrameCache* frame_cache)
-    : SharkCacher(function, frame_cache) {}
+  SharkVMCallCacher(SharkFunction* function)
+    : SharkCacher(function) {}
 
   // Stack slot helper
  protected:
@@ -415,10 +397,8 @@ class SharkVMCallCacher : public SharkCacher {
 
 class SharkFunctionEntryCacher : public SharkCacher {
  public:
-  SharkFunctionEntryCacher(SharkFunction*   function,
-                           SharkFrameCache* frame_cache,
-                           llvm::Value*     method)
-    : SharkCacher(function, frame_cache), _method(method) {}
+  SharkFunctionEntryCacher(SharkFunction* function, llvm::Value* method)
+    : SharkCacher(function), _method(method) {}
 
  private:
   llvm::Value* _method;

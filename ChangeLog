@@ -1,3 +1,41 @@
+2009-06-17  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp
+	(SharkCacherDecacher::SharkCacherDecacher): Remove frame cache code.
+	(SharkCacherDecacher::_frame_cache): Removed.
+	(SharkCacherDecacher::frame_cache): Likewise.
+	(SharkDecacher::SharkDecacher): Removed frame cache code.
+	(SharkJavaCallDecacher::SharkJavaCallDecacher): Likewise.
+	(SharkVMCallDecacher::SharkVMCallDecacher): Likewise.
+	(SharkTrapDecacher::SharkTrapDecacher): Likewise.
+	(SharkCacher::SharkCacher): Likewise.
+	(SharkJavaCallCacher::SharkJavaCallCcacher): Likewise.
+	(SharkVMCallCacher::SharkVMCallCacher): Likewise.
+	(SharkFunctionEntryCacher::SharkFunctionEntryCacher): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::write_value_to_frame): Remove frame cache code.
+	(SharkDecacher::read_value_from_frame): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkState::_frame_cache): Removed.
+	(SharkState::frame_cache): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkState::SharkState): Remove frame cache code.
+	(SharkState::initialize): Likewise.
+	(SharkState::equal_to): Likewise.
+	(SharkState::merge): Likewise.
+	(SharkState::decache_for_Java_call): Likewise.
+	(SharkState::cache_after_Java_call): Likewise.
+	(SharkState::decache_for_VM_call): Likewise.
+	(SharkState::cache_after_VM_call): Likewise.
+	(SharkState::decache_for_trap): Likewise.
+	(SharkEntryState::SharkEntryState): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkFrameCache.hpp: Removed.
+	* ports/hotspot/src/share/vm/shark/sharkFrameCache.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.	
+
 2009-07-26  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

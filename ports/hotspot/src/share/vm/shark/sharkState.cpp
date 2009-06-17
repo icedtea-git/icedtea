@@ -33,7 +33,6 @@ SharkState::SharkState(SharkBlock* block, SharkFunction* function)
     _function(function),
     _method(NULL),
     _oop_tmp(NULL),
-    _frame_cache(NULL),
     _has_safepointed(false)
 {
   initialize(NULL);
@@ -44,7 +43,6 @@ SharkState::SharkState(SharkBlock* block, const SharkState* state)
     _function(state->function()),
     _method(state->method()),
     _oop_tmp(state->oop_tmp()),
-    _frame_cache(NULL),
     _has_safepointed(state->has_safepointed())
 {
   initialize(state);
@@ -73,13 +71,7 @@ void SharkState::initialize(const SharkState *state)
         value = value->clone();
       push(value);
     }
-
-    if (state->frame_cache())
-      _frame_cache = state->frame_cache()->copy();
   } 
-  else if (function()) {
-    _frame_cache = new SharkFrameCache(function());
-  }
 
   set_num_monitors(state ? state->num_monitors() : 0);
 }
@@ -146,19 +138,6 @@ bool SharkState::equal_to(SharkState *other)
     }
   }
 
-  // Frame cache
-  if (frame_cache() == NULL) {
-    if (other->frame_cache() != NULL)
-      return false;
-  }
-  else {
-    if (other->frame_cache() == NULL)
-      return false;
-
-    if (!frame_cache()->equal_to(other->frame_cache()))
-      return false;
-  }
-
   return true;
 }
 
@@ -218,9 +197,6 @@ void SharkState::merge(SharkState* other,
     }
   }
 
-  // Frame cache
-  frame_cache()->merge(other->frame_cache());
-
   // Safepointed status
   set_has_safepointed(this->has_safepointed() && other->has_safepointed());
 }
@@ -243,8 +219,7 @@ void SharkState::replace_all(SharkValue* old_value, SharkValue* new_value)
 void SharkState::decache_for_Java_call(ciMethod* callee)
 {
   assert(function() && method(), "you cannot decache here");
-  SharkJavaCallDecacher(
-    function(), frame_cache(), block()->bci(), callee).scan(this);
+  SharkJavaCallDecacher(function(), block()->bci(), callee).scan(this);
   pop(callee->arg_size());
 }
 
@@ -269,25 +244,25 @@ void SharkState::cache_after_Java_call(ciMethod* callee)
     if (type->is_two_word())
       push(NULL);
   }
-  SharkJavaCallCacher(function(), frame_cache(), callee).scan(this);
+  SharkJavaCallCacher(function(), callee).scan(this);
 }
 
 void SharkState::decache_for_VM_call()
 {
   assert(function() && method(), "you cannot decache here");
-  SharkVMCallDecacher(function(), frame_cache(), block()->bci()).scan(this);
+  SharkVMCallDecacher(function(), block()->bci()).scan(this);
 }
 
 void SharkState::cache_after_VM_call()
 {
   assert(function() && method(), "you cannot cache here");
-  SharkVMCallCacher(function(), frame_cache()).scan(this);
+  SharkVMCallCacher(function()).scan(this);
 }
 
 void SharkState::decache_for_trap()
 {
   assert(function() && method(), "you cannot decache here");
-  SharkTrapDecacher(function(), frame_cache(), block()->bci()).scan(this);
+  SharkTrapDecacher(function(), block()->bci()).scan(this);
 }
 
 SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
@@ -326,7 +301,7 @@ SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
     }
     set_local(i, value);
   }
-  SharkFunctionEntryCacher(function(), frame_cache(), method).scan(this);  
+  SharkFunctionEntryCacher(function(), method).scan(this);  
 }
 
 SharkPHIState::SharkPHIState(SharkTopLevelBlock* block)
