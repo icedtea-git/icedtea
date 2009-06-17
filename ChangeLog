@@ -1,6 +1,23 @@
 2009-06-17  Omair Majid  <omajid@redhat.com>
 
-	*  * netx/javax/jnlp/ExtendedService.java: New file.
+	* netx/net/sourceforge/jnlp/runtime/Boot.java: Remove aboutFile.
+	(getAboutFile): Get path from JNLPRuntime.
+	(getBaseDir): Fix comments.
+	* netx/net/sourceforge/jnlp/runtime/JNLPRuntime.java Add HOME_DIR, 
+	NETXRC_FILE, NETX_DIR, SECURITY_DIR, CERTIFICATES_FILE, LOCKS_DIR, 
+	JAVA_HOME_DIR, and NETX_ABOUT_FILE.
+	(getDefaultBaseDir): Remove calls to loadWindowIcon and isHeadless()
+	because they are unused. Use HOME_DIR and NETX_DIR. Be prepared for
+	existing NETX_DIR.
+	(getProperties): Use NETXRC_FILE instead of hardcoded file name.
+	* netx/net/sourceforge/jnlp/security/SecurityUtil.java
+	Remove homeDir, certDir and certFile.
+	(getTrustedCertsFilename): Use HOME_DIR and CERTIFICATES_FILE.
+	(checkTrustedCertsFile): Find parent directory from certFile.
+
+2009-06-17  Omair Majid  <omajid@redhat.com>
+
+	* netx/javax/jnlp/ExtendedService.java: New file.
 	* netx/net/sourceforge/jnlp/services/XExtendedService.java: New file.
 	* netx/net/sourceforge/jnlp/services/XServiceManagerStub.java: Add 
 	ExtendedService to serviceNames. Create a proxy for XExtendedService to 

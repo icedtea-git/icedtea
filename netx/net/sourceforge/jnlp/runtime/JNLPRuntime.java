@@ -104,6 +104,34 @@ public class JNLPRuntime {
     /** contains the arguments passed to the jnlp runtime */
     private static List<String> initialArguments;
 
+    /** User's home directory */
+    public static final String HOME_DIR = System.getProperty("user.home");
+
+    /** the ~/.netxrc file containing netx settings */
+    public static final String NETXRC_FILE = HOME_DIR + File.separator + ".netxrc";
+
+    /** the ~/.netx directory containing user-specific data */
+    public static final String NETX_DIR = HOME_DIR + File.separator + ".netx";
+
+    /** the ~/.netx/security directory containing security related information */
+    public static final String SECURITY_DIR = NETX_DIR + File.separator + "security";
+
+    /** the ~/.netx/security/trusted.certs file containing trusted certificates */
+    public static final String CERTIFICATES_FILE = SECURITY_DIR + File.separator + "trusted.certs";
+
+    /**
+     * the ~/.netx/locks/ directory containing locks for single instance
+     * applications
+     */
+    public static final String LOCKS_DIR = NETX_DIR + File.separator + "locks";
+
+    public static final String JAVA_HOME_DIR = System.getProperty("java.home");
+    
+    /** the JNLP file to open to display the network-based about window */
+    public static final String NETX_ABOUT_FILE = JAVA_HOME_DIR + File.separator + "lib"
+            + File.separator + "about.jnlp";
+
+    
     
     /**
      * Returns whether the JNLP runtime environment has been
@@ -279,18 +307,13 @@ public class JNLPRuntime {
     public static File getDefaultBaseDir() {
         PropertiesFile props = JNLPRuntime.getProperties();
 
-        loadWindowIcon();
-
         String baseStr = props.getProperty("basedir");
         if (baseStr != null)
             return new File(baseStr);
 
-        if (isHeadless())
-            return null;
-
-        String homeDir = System.getProperty("user.home");
-	File baseDir = new File(homeDir + "/.netx/");
-	if (homeDir == null || !baseDir.mkdir())
+        String homeDir = HOME_DIR;
+        File baseDir = new File(NETX_DIR);
+        if (homeDir == null || (!baseDir.isDirectory() && !baseDir.mkdir()))
             return null;
 
         props.setProperty("basedir", baseDir.toString());
@@ -332,8 +355,7 @@ public class JNLPRuntime {
      * properties file.
      */
     public static PropertiesFile getProperties() {
-        File netxrc = new File(System.getProperty("user.home"), ".netxrc");
-
+        File netxrc = new File(NETXRC_FILE);
         return new PropertiesFile(netxrc);
     }
 

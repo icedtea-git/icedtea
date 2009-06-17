@@ -42,21 +42,20 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.security.KeyStore;
 
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
+
 public class SecurityUtil {
 
-	private static String homeDir = null;
-	private static final String certDir = "/.netx/security/";
-	private static final String certFile = "trusted.certs";
 	private static final char[] password = "changeit".toCharArray();
 	
 	public static String getTrustedCertsFilename() throws Exception{
 		
-		homeDir = System.getProperty("user.home");
+		String homeDir = JNLPRuntime.HOME_DIR;
 		
 		if (homeDir == null) {
 			throw new Exception("Could not access home directory");
 		} else {
-			return homeDir + certDir + certFile;
+			return JNLPRuntime.CERTIFICATES_FILE;
 		}
 	}
 	
@@ -90,7 +89,7 @@ public class SecurityUtil {
 		
 		//file does not exist
 		if (!certFile.isFile()) {
-			File dir = new File(homeDir+certDir);
+			File dir = certFile.getAbsoluteFile().getParentFile();
 			boolean madeDir = false;
 			if (!dir.isDirectory()) {
 				madeDir = dir.mkdirs();

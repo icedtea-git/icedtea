@@ -67,10 +67,6 @@ public final class Boot implements PrivilegedAction {
 
     private static final String version = "0.5";
 
-    /** the JNLP file to open to display the network-based about window */
-    private static final String aboutFile = 
-        System.getProperty("java.home") + "/lib/about.jnlp";
-
     /** the text to display before launching the about link */
     private static final String aboutMessage = ""
         + "netx v"+version+" - (C)2001-2003 Jon A. Maxwell (jmaxwell@users.sourceforge.net)\n"
@@ -234,8 +230,8 @@ public final class Boot implements PrivilegedAction {
      */
     private static String getAboutFile() {
 
-        if (new File(aboutFile).exists())
-            return aboutFile;
+        if (new File(JNLPRuntime.NETX_ABOUT_FILE).exists())
+            return JNLPRuntime.NETX_ABOUT_FILE;
         else
             return null;
     }
@@ -424,9 +420,9 @@ public final class Boot implements PrivilegedAction {
 
     /**
      * Return the base dir.  If the base dir parameter is not set
-     * the value is read from the "${user.home}/.netxrc" file (as
-     * defined by JNLPRuntime).  If that file does not exist, an
-     * install dialog is displayed to select the base directory.
+     * the value is read from JNLPRuntime.NETX_ABOUT_FILE file.
+     * If that file does not exist, an install dialog is displayed 
+     * to select the base directory.
      */
     private static File getBaseDir() {
         if (getOption("-basedir") != null) {
@@ -438,7 +434,7 @@ public final class Boot implements PrivilegedAction {
             return basedir;
         }
 
-        // check .netxrc, display dialog
+        // check .netxrc
         File basedir = JNLPRuntime.getDefaultBaseDir();
         if (basedir == null)
             fatalError(R("BNoBase"));
