@@ -1065,6 +1065,7 @@ private:
   gpointer window_handle;
   guint32 window_width;
   guint32 window_height;
+  PRBool is_active;
   // FIXME: nsCOMPtr.
   IcedTeaPluginFactory* factory;
   PRUint32 instance_identifier;
@@ -2447,6 +2448,7 @@ IcedTeaPluginInstance::Destroy ()
   nsCString destroyMessage (instanceIdentifierPrefix);
   destroyMessage += "destroy";
   factory->SendMessageToAppletViewer (destroyMessage);
+  is_active = PR_FALSE;
 
   return NS_OK;
 }
@@ -2475,7 +2477,9 @@ IcedTeaPluginInstance::SetWindow (nsPluginWindow* aWindow)
            long startTime = get_time_in_s();
            PRBool timedOut = PR_FALSE;
 
-           while (initialized == PR_FALSE && this->fatalErrorOccurred == PR_FALSE) 
+           while (initialized == PR_FALSE && 
+                  this->fatalErrorOccurred == PR_FALSE && 
+                  this->is_active == PR_FALSE) 
            {
                PROCESS_PENDING_EVENTS;
 
@@ -2638,7 +2642,9 @@ IcedTeaPluginInstance::GetJavaObject (jobject* object)
 
       long startTime = get_time_in_s();
       PRBool timedOut = PR_FALSE;
-      while (initialized == PR_FALSE && this->fatalErrorOccurred == PR_FALSE) 
+      while (initialized == PR_FALSE && 
+             this->fatalErrorOccurred == PR_FALSE && 
+             this->is_active == PR_FALSE) 
       {
           PROCESS_PENDING_EVENTS;
 
@@ -4115,6 +4121,7 @@ IcedTeaPluginInstance::IcedTeaPluginInstance (IcedTeaPluginFactory* factory)
   liveconnect_window (0),
   initialized(PR_FALSE),
   fatalErrorOccurred(PR_FALSE),
+  is_active(PR_TRUE),
   instanceIdentifierPrefix ("")
 {
   PLUGIN_TRACE_INSTANCE ();
@@ -4134,6 +4141,7 @@ IcedTeaPluginInstance::GetWindow ()
 
   nsresult result;
   PLUGIN_DEBUG_1ARG ("HERE 22: %d\n", liveconnect_window);
+
   // principalsArray, numPrincipals and securitySupports
   // are ignored by GetWindow.  See:
   //
@@ -4144,6 +4152,16 @@ IcedTeaPluginInstance::GetWindow ()
   if (factory->proxyEnv != NULL)
     {
       PLUGIN_DEBUG_2ARG ("HERE 23: %d, %p\n", liveconnect_window, current_thread ());
+
+      // there is a bad race condition here where if the instance is active, 
+      // this code remains active after destruction.. so double check
+	  if (is_active != PR_TRUE)
+	  {
+		  PLUGIN_DEBUG_1ARG("Plugin %d is no longer active. Bypassing \
+                             GetWindow request.\n", instance_identifier);
+		  return;
+	  }
+
       result = factory->liveconnect->GetWindow(factory->proxyEnv,
                                                this,
                                                NULL, 0, NULL,

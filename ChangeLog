@@ -1,3 +1,12 @@
+2009-06-17  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Fix race condition that led to segfault.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Fix a host of race
+	conditions brought about by the multi stage asynchronous initialization
+	design.
+	* netx/net/sourceforge/jnlp/NetxPanel.java: Account for case where handler
+	may be null due to an error above.
+
 2009-06-16  Omair Majid  <omajid@redhat.com>
 
 	* netx/javax/jnlp/SingleInstanceListener.java: New file.

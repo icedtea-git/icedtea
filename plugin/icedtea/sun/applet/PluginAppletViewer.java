@@ -145,6 +145,8 @@ import com.sun.jndi.toolkit.url.UrlUtil;
       */
      private static String defaultSaveFile = "Applet.ser";
      
+     private static enum PAV_INIT_STATUS {PRE_INIT, ACTIVE, INACTIVE};
+
      /**
       * The panel in which the applet is being displayed.
       */
@@ -168,17 +170,23 @@ import com.sun.jndi.toolkit.url.UrlUtil;
  
      int identifier;
  
-     private static HashMap<Integer, PluginParseRequest> requests = new HashMap();
+     private static HashMap<Integer, PluginParseRequest> requests = 
+         new HashMap();
  
      // Instance identifier -> PluginAppletViewer object.
-     private static HashMap<Integer, PluginAppletViewer> applets = new HashMap();
+     private static HashMap<Integer, PluginAppletViewer> applets = 
+         new HashMap();
      
      private static PluginStreamHandler streamhandler;
      
      private static PluginCallRequestFactory requestFactory;
      
-     private static HashMap<Integer, String> siteCookies = new HashMap<Integer,String>();
-     
+     private static HashMap<Integer, String> siteCookies = 
+         new HashMap<Integer,String>();
+
+     private static HashMap<Integer, PAV_INIT_STATUS> status = 
+         new HashMap<Integer,PAV_INIT_STATUS>();
+
      private double proposedHeightFactor;
      private double proposedWidthFactor;
 
@@ -312,7 +320,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
  	Applet a;
     while ((a = panel.getApplet()) == null && ((NetxPanel) panel).isAlive()) {
    	 try {
-   		 Thread.sleep(2000);
+   		 Thread.sleep(1000);
    		 PluginDebug.debug("Waiting for applet to initialize... ");
    	 } catch (InterruptedException ie) {
    		 ie.printStackTrace();
@@ -328,7 +336,8 @@ import com.sun.jndi.toolkit.url.UrlUtil;
     PluginDebug.debug("Applet initialized");
 
     // Applet initialized. Find out it's classloader and add it to the list
-    String codeBase = doc.getProtocol() + "://" + doc.getHost();
+    String portComponent = doc.getPort() != -1 ? ":" + doc.getPort() : "";
+    String codeBase = doc.getProtocol() + "://" + doc.getHost() + portComponent;
 
     if (atts.get("codebase") != null) {
     	try {
@@ -373,6 +382,21 @@ import com.sun.jndi.toolkit.url.UrlUtil;
         		 // may happen in independent threads
         		 
         		 synchronized(requests) {
+
+                     // Check if we should proceed with init 
+                     // (=> no if destroy was called after tag, but before 
+                     // handle)
+                     if (status.containsKey(identifier) &&
+                         status.get(identifier).equals(PAV_INIT_STATUS.INACTIVE)) {
+
+                         PluginDebug.debug("Inactive flag set. Refusing to initialize instance " + identifier);
+                         requests.remove(identifier);
+                         return;
+
+                     }
+
+        		     status.put(identifier, PAV_INIT_STATUS.PRE_INIT);
+        		     
         			 PluginParseRequest request = requests.get(identifier);
         			 if (request == null) {
         				 request = new PluginParseRequest();
@@ -393,6 +417,17 @@ import com.sun.jndi.toolkit.url.UrlUtil;
         						 new StringReader(request.tag),
         						 new URL(request.documentbase));
         				 requests.remove(identifier);
+        				 
+        				 // Panel initialization cannot be aborted mid-way. 
+        				 // Once it is initialized, double check to see if this 
+        				 // panel needs to stay around..
+        				 if (status.get(identifier).equals(PAV_INIT_STATUS.INACTIVE)) {
+        				     PluginDebug.debug("Inactive flag set. Destroying applet instance " + identifier);
+        				     applets.get(identifier).handleMessage(-1, "destroy");
+        				 } else {
+        				     status.put(identifier, PAV_INIT_STATUS.ACTIVE);
+        				 }
+
         			 } else {
         				 PluginDebug.debug ("REQUEST HANDLE NOT SET: " + request.handle + ". BYPASSING");
         			 }
@@ -400,6 +435,21 @@ import com.sun.jndi.toolkit.url.UrlUtil;
         		 
              } else if (message.startsWith("handle")) {
             	 synchronized(requests) {
+            	     
+            	     // Check if we should proceed with init 
+            	     // (=> no if destroy was called after handle, but before 
+            	     // tag)
+            	     if (status.containsKey(identifier) &&
+                         status.get(identifier).equals(PAV_INIT_STATUS.INACTIVE)) {
+
+            	         PluginDebug.debug("Inactive flag set. Refusing to initialize instance " + identifier);
+            	         requests.remove(identifier);
+            	         return;
+
+            	     }
+
+            	     status.put(identifier, PAV_INIT_STATUS.PRE_INIT);
+
             		 PluginParseRequest request = requests.get(identifier);
             		 if (request == null) {
             			 request = new PluginParseRequest();
@@ -418,6 +468,17 @@ import com.sun.jndi.toolkit.url.UrlUtil;
             			 requests.remove(identifier);
             			 PluginDebug.debug ("REQUEST HANDLE, DONE PARSING " +
             					 Thread.currentThread());
+
+                         // Panel initialization cannot be aborted mid-way. 
+                         // Once it is initialized, double check to see if this 
+                         // panel needs to stay around..
+                         if (status.get(identifier).equals(PAV_INIT_STATUS.INACTIVE)) {
+                             PluginDebug.debug("Inactive flag set. Destroying applet instance " + identifier);
+                             applets.get(identifier).handleMessage(-1, "destroy");
+                         } else {
+                             status.put(identifier, PAV_INIT_STATUS.ACTIVE);
+                         }
+
             		 } else {
             			 PluginDebug.debug ("REQUEST TAG NOT SET: " + request.tag + ". BYPASSING");
             		 }
@@ -433,12 +494,57 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                  // Always set the cookie -- even if it is null
                  siteCookies.put(identifier, cookieStr);
              } else {
-                 PluginDebug.debug ("HANDLING MESSAGE " + message + " instance " + identifier + " " + Thread.currentThread());
+                 PluginDebug.debug ("Handling message: " + message + " instance " + identifier + " " + Thread.currentThread());
+
+                 // Destroy may be called while initialization is still going 
+                 // on. We therefore special case it.
+                 if (!applets.containsKey(identifier) && message.equals("destroy")) {
+
+                     // Set the status to inactive right away. Doesn't matter if it 
+                     // gets clobbered during init. due to a race. That is what the 
+                     // double check below is for.  
+                     PluginDebug.debug("Destroy called during initialization. Delaying destruction.");
+                     status.put(identifier, PAV_INIT_STATUS.INACTIVE);
+
+                     // We have set the flags. We now lock what stage 1 and 2 
+                     // lock on, and force a synchronous status check+action. 
+                     synchronized (requests) {
+                         // re-check (inside lock) if the applet is 
+                         // initialized at this point. 
+                         if (applets.containsKey(identifier)) {
+                             PluginDebug.debug("Init done. destroying normally.");
+                             applets.get(identifier).handleMessage(reference, message);
+                         } else {
+                         }
+                     } // unlock
+
+                     // we're done here
+                     return;
+                 }
+
+                 // For messages other than destroy, wait till initialization finishes
+                 while (!applets.containsKey(identifier) && 
+                         (
+                           !status.containsKey(identifier) || 
+                            status.get(identifier).equals(PAV_INIT_STATUS.PRE_INIT)
+                         )
+                        );
+                 
+                 // don't bother processing further for inactive applets
+                 if (status.get(identifier).equals(PAV_INIT_STATUS.INACTIVE))
+                     return;
+
                  applets.get(identifier).handleMessage(reference, message);
              }
          } catch (Exception e) {
-             throw new RuntimeException("Failed to handle message: " + message + " " +
-                                         Thread.currentThread(), e);
+
+             // If an exception happened during pre-init, we need to update status
+             if (status.get(identifier).equals(PAV_INIT_STATUS.PRE_INIT))
+                 status.put(identifier, PAV_INIT_STATUS.INACTIVE);
+
+             throw new RuntimeException("Failed to handle message: " + 
+                     message + " for instance " + identifier + " " +  
+                     Thread.currentThread(), e);
          }
      }
  
@@ -487,6 +593,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 			}
          } else if (message.startsWith("destroy")) {
              dispose();
+             status.put(identifier, PAV_INIT_STATUS.INACTIVE);
          } else if (message.startsWith("GetJavaObject")) {
              // FIXME: how do we determine what security context this
              // object should belong to?
@@ -1291,26 +1398,28 @@ import com.sun.jndi.toolkit.url.UrlUtil;
       * the last applet.
       */
      void appletClose() {
- 
- 	// The caller thread is event dispatch thread, so
- 	// spawn a new thread to avoid blocking the event queue
- 	// when calling appletShutdown.
- 	//
- 	final AppletPanel p = panel;
- 
- 	new Thread(new Runnable()
- 	{
- 	    public void run()
- 	    {
-     		appletShutdown(p);
- 		appletPanels.removeElement(p);
- 		dispose();
- 
- 		if (countApplets() == 0) {
- 		    appletSystemExit();
- 		}
- 	    }
- 	}).start();
+
+         // The caller thread is event dispatch thread, so
+         // spawn a new thread to avoid blocking the event queue
+         // when calling appletShutdown.
+         //
+         final AppletPanel p = panel;
+
+         new Thread(new Runnable()
+         {
+             public void run()
+             {
+                 appletShutdown(p);
+                 appletPanels.removeElement(p);
+                 dispose();
+
+                 if (countApplets() == 0) {
+                     appletSystemExit();
+                 }
+             }
+         }).start();
+
+         status.put(identifier, PAV_INIT_STATUS.INACTIVE);
      }
  
      /**

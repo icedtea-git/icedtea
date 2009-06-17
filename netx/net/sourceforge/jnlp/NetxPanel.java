@@ -144,7 +144,7 @@ public class NetxPanel extends AppletViewerPanel
     }
     
     public boolean isAlive() {
-        return handler.isAlive() && this.appletAlive;
+        return handler != null && handler.isAlive() && this.appletAlive;
     }
 }
 
