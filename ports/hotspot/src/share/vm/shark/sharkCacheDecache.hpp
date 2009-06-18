@@ -40,12 +40,6 @@ class SharkCacherDecacher : public SharkStateScanner {
   SharkCacherDecacher(SharkFunction* function)
     : SharkStateScanner(function) {}
 
- protected:
-  SharkBuilder* builder() const
-  {
-    return function()->builder();
-  }  
-
   // Helper
  protected:
   static int adjusted_offset(SharkValue* value, int offset)
@@ -68,12 +62,6 @@ class SharkDecacher : public SharkCacherDecacher {
   int bci() const
   {
     return _bci;
-  }
-
- private:
-  DebugInformationRecorder* debug_info() const
-  {
-    return function()->debug_info();
   }
 
  private:
@@ -109,7 +97,7 @@ class SharkDecacher : public SharkCacherDecacher {
  protected:
   void start_frame();
 
-  void start_stack(int num_slots, int max_slots);
+  void start_stack(int stack_depth);
   void process_stack_slot(int index, SharkValue** value, int offset);
 
   void start_monitors(int num_monitors);
@@ -119,7 +107,7 @@ class SharkDecacher : public SharkCacherDecacher {
   void process_method_slot(llvm::Value** value, int offset);
   void process_pc_slot(int offset);
   
-  void start_locals(int num_locals);
+  void start_locals();
   void process_local_slot(int index, SharkValue** value, int offset);
 
   void end_frame();

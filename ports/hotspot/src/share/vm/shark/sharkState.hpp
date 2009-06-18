@@ -23,44 +23,31 @@
  *
  */
 
-class SharkBlock;
-class SharkFunction;
-class SharkTopLevelBlock;
-
-class SharkState : public ResourceObj {
+class SharkState : public SharkTargetInvariants {
  public:
-  SharkState(SharkBlock* block, SharkFunction* function = NULL);
-  SharkState(SharkBlock* block, const SharkState* state);
+  SharkState(const SharkTargetInvariants* parent)
+    : SharkTargetInvariants(parent),
+      _method(NULL),
+      _oop_tmp(NULL),
+      _has_safepointed(false) { initialize(NULL); }
+
+  SharkState(const SharkState* state)
+    : SharkTargetInvariants(state),
+      _method(state->_method),
+      _oop_tmp(state->_oop_tmp),
+      _has_safepointed(state->_has_safepointed) { initialize(state); }
 
  private:
   void initialize(const SharkState* state);
 
  private:
-  SharkBlock*      _block;
-  SharkFunction*   _function;
-  llvm::Value*     _method;
-  SharkValue**     _locals;
-  SharkValue**     _stack;
-  SharkValue**     _sp;
-  int              _num_monitors;
-  llvm::Value*     _oop_tmp;
-  bool             _has_safepointed;
-
- public:
-  SharkBlock *block() const
-  {
-    return _block;
-  }
-  SharkFunction *function() const
-  {
-    return _function;
-  }
-  
- public:
-  inline SharkBuilder* builder() const;
-  inline int max_locals() const;
-  inline int max_stack() const;
-  inline int max_monitors() const;
+  llvm::Value* _method;
+  SharkValue** _locals;
+  SharkValue** _stack;
+  SharkValue** _sp;
+  int          _num_monitors;
+  llvm::Value* _oop_tmp;
+  bool         _has_safepointed;
 
   // Method
  public:
@@ -125,11 +112,6 @@ class SharkState : public ResourceObj {
     assert(stack_depth() > 0, "stack underrun");
     return *(--_sp);
   }
-  void pop(int slots)
-  {
-    assert(stack_depth() >= slots, "stack underrun");
-    _sp -= slots;
-  }
 
   // Monitors
  public:
@@ -176,7 +158,7 @@ class SharkState : public ResourceObj {
  public:
   SharkState* copy() const
   {
-    return new SharkState(block(), this);
+    return new SharkState(this);
   }
   void merge(SharkState*       other,
              llvm::BasicBlock* other_block,
@@ -185,15 +167,9 @@ class SharkState : public ResourceObj {
   // Value replacement
  public:
   void replace_all(SharkValue* old_value, SharkValue* new_value);
-
-  // Cache and decache
- public:
-  void decache_for_Java_call(ciMethod* callee);
-  void cache_after_Java_call(ciMethod* callee);
-  void decache_for_VM_call();
-  void cache_after_VM_call();
-  void decache_for_trap();
 };
+
+class SharkTopLevelBlock;
 
 // SharkEntryState objects are used to manage the state
 // that the method will be entered with.
@@ -208,6 +184,15 @@ class SharkEntryState : public SharkState {
 class SharkPHIState : public SharkState {
  public:
   SharkPHIState(SharkTopLevelBlock* block);
+
+ private:
+  SharkTopLevelBlock* _block;
+
+ private:
+  SharkTopLevelBlock* block() const
+  {
+    return _block;
+  }
 
  public:
   void add_incoming(SharkState* incoming_state); 

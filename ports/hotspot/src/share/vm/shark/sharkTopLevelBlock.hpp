@@ -26,10 +26,7 @@
 class SharkTopLevelBlock : public SharkBlock {
  public:
   SharkTopLevelBlock(SharkFunction* function, ciTypeFlow::Block* ciblock)
-    : SharkBlock(function->builder(),
-                 function->target(),
-                 function->iter(),
-                 function->thread()),
+    : SharkBlock(function),
       _function(function),
       _ciblock(ciblock),
       _entered(false),
@@ -205,6 +202,14 @@ class SharkTopLevelBlock : public SharkBlock {
     return value;
   }
 
+  // Cache and decache
+ private:
+  void decache_for_Java_call(ciMethod* callee);
+  void cache_after_Java_call(ciMethod* callee);
+  void decache_for_VM_call();
+  void cache_after_VM_call();
+  void decache_for_trap();
+
   // Monitors
  private:
   int num_monitors()
@@ -256,11 +261,11 @@ class SharkTopLevelBlock : public SharkBlock {
                           llvm::Value**   args_end,
                           int             exception_action)
   {
-    current_state()->decache_for_VM_call();
+    decache_for_VM_call();
     function()->set_last_Java_frame();
     llvm::CallInst *res = builder()->CreateCall(callee, args_start, args_end);
     function()->reset_last_Java_frame();
-    current_state()->cache_after_VM_call();
+    cache_after_VM_call();
     if (exception_action & EAM_CHECK) {
       check_pending_exception(exception_action);
       current_state()->set_has_safepointed(true);

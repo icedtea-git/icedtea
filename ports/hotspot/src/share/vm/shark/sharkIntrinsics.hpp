@@ -23,19 +23,33 @@
  *
  */
 
-class SharkIntrinsics : public AllStatic {
+class SharkIntrinsics : public SharkTargetInvariants {
  public:
   static bool is_intrinsic(ciMethod* target);
-  static void inline_intrinsic(ciMethod*    target,
-                               SharkState*  state,
-                               llvm::Value* thread);
+  static void inline_intrinsic(ciMethod* target, SharkState* state);
 
  private:
-  static void do_Math_minmax(SharkState* state, llvm::ICmpInst::Predicate p);
-  static void do_Math_1to1(SharkState* state, llvm::Constant* function);
-  static void do_Math_2to1(SharkState* state, llvm::Constant* function);
-  static void do_Object_getClass(SharkState* state);
-  static void do_System_currentTimeMillis(SharkState* state);
-  static void do_Thread_currentThread(SharkState* state, llvm::Value* thread);
-  static void do_Unsafe_compareAndSwapInt(SharkState* state);
+  SharkIntrinsics(SharkState* state, ciMethod* target)
+    : SharkTargetInvariants(state, target), _state(state) {}
+
+ private:
+  SharkState* _state;
+
+ private:
+  SharkState* state() const
+  {
+    return _state;
+  }
+
+ private:
+  void do_intrinsic();
+
+ private:
+  void do_Math_minmax(llvm::ICmpInst::Predicate p);
+  void do_Math_1to1(llvm::Constant* function);
+  void do_Math_2to1(llvm::Constant* function);
+  void do_Object_getClass();
+  void do_System_currentTimeMillis();
+  void do_Thread_currentThread();
+  void do_Unsafe_compareAndSwapInt();
 };

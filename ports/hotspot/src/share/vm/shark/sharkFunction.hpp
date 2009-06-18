@@ -24,105 +24,46 @@
  */
 
 class SharkTopLevelBlock;
-
 class DeferredZeroCheck;
 
-class SharkFunction : public StackObj {
+class SharkFunction : public SharkTargetInvariants {
  public:
-  SharkFunction(SharkCompiler*    compiler,
-                const char*       name,
-                ciTypeFlow*       flow,
-                ciBytecodeStream* iter)
-    : _compiler(compiler),
-      _name(name),
-      _flow(flow),
-      _iter(iter)
-  { initialize(); }
+  SharkFunction(SharkCompiler* compiler,
+                ciEnv*         env,
+                ciTypeFlow*    flow,
+                const char*    name)
+    : SharkTargetInvariants(compiler, env, flow), _name(name) { initialize(); }
 
  private:
   void initialize();
 
  private:
-  SharkCompiler*                    _compiler;
   const char*                       _name;
-  ciTypeFlow*                       _flow;
-  ciBytecodeStream*                 _iter;
   llvm::Function*                   _function;
   SharkTopLevelBlock**              _blocks;
-  llvm::Value*                      _thread;
-  int                               _max_monitors;
   GrowableArray<DeferredZeroCheck*> _deferred_zero_checks;
 
- public:  
-  SharkCompiler* compiler() const
-  {
-    return _compiler;
-  }
+ public:
   const char* name() const
   {
     return _name;
-  }
-  ciTypeFlow* flow() const
-  {
-    return _flow;
-  }
-  ciBytecodeStream* iter() const
-  {
-    return _iter;
-  }
+  }  
   llvm::Function* function() const
   {
     return _function;
-  }
-  SharkTopLevelBlock* block(int i) const
-  {
-    return _blocks[i];
-  }
-  llvm::Value* thread() const
-  {
-    return _thread;
-  }
-  int max_monitors() const
-  {
-    return _max_monitors;
-  }
-  GrowableArray<DeferredZeroCheck*>* deferred_zero_checks()
-  {
-    return &_deferred_zero_checks;
-  }
-
- public:
-  SharkBuilder* builder() const
-  {
-    return compiler()->builder();
-  }
-  int arg_size() const
-  {
-    return target()->arg_size();
   }
   int block_count() const
   {
     return flow()->block_count();
   }
-  DebugInformationRecorder *debug_info() const
+  SharkTopLevelBlock* block(int i) const
   {
-    return env()->debug_info();
+    assert(i < block_count(), "should be");
+    return _blocks[i];
   }
-  ciEnv* env() const
+  GrowableArray<DeferredZeroCheck*>* deferred_zero_checks()
   {
-    return flow()->env();
-  }
-  int max_locals() const
-  {
-    return flow()->max_locals();
-  }
-  int max_stack() const
-  {
-    return flow()->max_stack();
-  }
-  ciMethod* target() const
-  {
-    return flow()->method();
+    return &_deferred_zero_checks;
   }
 
   // Block management

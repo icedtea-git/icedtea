@@ -191,6 +191,49 @@ void SharkTopLevelBlock::initialize()
   _entry_block = function()->CreateBlock(name);
 }
 
+void SharkTopLevelBlock::decache_for_Java_call(ciMethod *callee)
+{
+  SharkJavaCallDecacher(function(), bci(), callee).scan(current_state());
+  for (int i = 0; i < callee->arg_size(); i++)
+    xpop();
+}
+
+void SharkTopLevelBlock::cache_after_Java_call(ciMethod *callee)
+{
+  if (callee->return_type()->size()) {
+    ciType *type;
+    switch (callee->return_type()->basic_type()) {
+    case T_BOOLEAN:
+    case T_BYTE:
+    case T_CHAR:
+    case T_SHORT:
+      type = ciType::make(T_INT);
+      break;
+
+    default:
+      type = callee->return_type();
+    }
+
+    push(SharkValue::create_generic(type, NULL, false));
+  }
+  SharkJavaCallCacher(function(), callee).scan(current_state());
+}
+
+void SharkTopLevelBlock::decache_for_VM_call()
+{
+  SharkVMCallDecacher(function(), bci()).scan(current_state());
+}
+
+void SharkTopLevelBlock::cache_after_VM_call()
+{
+  SharkVMCallCacher(function()).scan(current_state());
+}
+
+void SharkTopLevelBlock::decache_for_trap()
+{
+  SharkTrapDecacher(function(), bci()).scan(current_state());
+}
+
 void SharkTopLevelBlock::emit_IR()
 {
   builder()->SetInsertPoint(entry_block());
@@ -508,7 +551,7 @@ bool SharkTopLevelBlock::can_reach_helper(SharkTopLevelBlock* other)
 
 void SharkTopLevelBlock::do_trap(int trap_request)
 {
-  current_state()->decache_for_trap();
+  decache_for_trap();
   builder()->CreateCall2(
     SharkRuntime::uncommon_trap(),
     thread(),
@@ -828,7 +871,7 @@ ciMethod* SharkTopLevelBlock::improve_virtual_call(ciMethod*   caller,
 
   // Array methods are all inherited from Object and are monomorphic
   if (receiver_type->is_array_klass() &&
-      dest_method->holder() == function()->env()->Object_klass())
+      dest_method->holder() == java_lang_Object_klass())
     return dest_method;
 
   // All other interesting cases are instance classes
@@ -876,7 +919,7 @@ ciMethod* SharkTopLevelBlock::improve_virtual_call(ciMethod*   caller,
   // us dependent on that target method not getting overridden
   // by dynamic class loading.
   if (monomorphic_target != NULL) {
-    function()->env()->dependencies()->assert_unique_concrete_method(
+    dependencies()->assert_unique_concrete_method(
       actual_receiver, monomorphic_target);
     return monomorphic_target;
   }
@@ -1077,7 +1120,7 @@ void SharkTopLevelBlock::do_call()
 
   // Try to inline the call
   if (!call_is_virtual) {
-    if (SharkInliner::attempt_inline(call_method, current_state(), thread()))
+    if (SharkInliner::attempt_inline(call_method, current_state()))
       return;
   }
 
@@ -1116,9 +1159,9 @@ void SharkTopLevelBlock::do_call()
     "entry_point");
 
   // Make the call
-  current_state()->decache_for_Java_call(call_method);
+  decache_for_Java_call(call_method);
   builder()->CreateCall3(entry_point, callee, base_pc, thread());
-  current_state()->cache_after_Java_call(call_method);
+  cache_after_Java_call(call_method);
 
   // Check for pending exceptions
   check_pending_exception(EX_CHECK_FULL);
@@ -1133,7 +1176,7 @@ bool SharkTopLevelBlock::static_subtype_check(ciKlass* check_klass,
   // If the class we're checking against is java.lang.Object
   // then this is a no brainer.  Apparently this can happen
   // in reflective code...
-  if (check_klass == function()->env()->Object_klass())
+  if (check_klass == java_lang_Object_klass())
     return true;
 
   // Perform a subtype check.  NB in opto's code for this
@@ -1690,13 +1733,13 @@ void SharkTopLevelBlock::acquire_lock(Value *lockee, int exception_action)
   // NB we use the entire stack, but JavaThread::is_lock_owned()
   // uses a more limited range.  I don't think it hurts though...
   Value *stack_limit = builder()->CreateValueOfStructEntry(
-    function()->thread(), Thread::stack_base_offset(),
+    thread(), Thread::stack_base_offset(),
     SharkType::intptr_type(),
     "stack_limit");
 
   assert(sizeof(size_t) == sizeof(intptr_t), "should be");
   Value *stack_size = builder()->CreateValueOfStructEntry(
-    function()->thread(), Thread::stack_size_offset(),
+    thread(), Thread::stack_size_offset(),
     SharkType::intptr_type(),
     "stack_size");
 

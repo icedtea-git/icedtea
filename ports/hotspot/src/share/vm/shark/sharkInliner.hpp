@@ -25,9 +25,7 @@
 
 class SharkInliner : public AllStatic {
  public:
-  static bool attempt_inline(ciMethod*    target,
-                             SharkState*  state,
-                             llvm::Value* thread);
+  static bool attempt_inline(ciMethod* target, SharkState* state);
                       
  private:
   static bool may_be_inlinable(ciMethod* target);

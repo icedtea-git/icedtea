@@ -75,67 +75,71 @@ bool SharkIntrinsics::is_intrinsic(ciMethod *target)
   return false;
 }
 
-void SharkIntrinsics::inline_intrinsic(ciMethod*   target,
-                                       SharkState* state,
-                                       Value*      thread)
+void SharkIntrinsics::inline_intrinsic(ciMethod *target, SharkState *state)
 {
-  switch (target->intrinsic_id()) {
+  SharkIntrinsics intrinsic(state, target);
+  intrinsic.do_intrinsic();
+}
+
+void SharkIntrinsics::do_intrinsic()
+{
+  switch (target()->intrinsic_id()) {
     // java.lang.Math
   case vmIntrinsics::_min:
-    do_Math_minmax(state, llvm::ICmpInst::ICMP_SLE);
+    do_Math_minmax(llvm::ICmpInst::ICMP_SLE);
     break;
   case vmIntrinsics::_max:
-    do_Math_minmax(state, llvm::ICmpInst::ICMP_SGE);
+    do_Math_minmax(llvm::ICmpInst::ICMP_SGE);
     break;
   case vmIntrinsics::_dabs:
-    do_Math_1to1(state, SharkRuntime::fabs());
+    do_Math_1to1(SharkRuntime::fabs());
     break;
   case vmIntrinsics::_dsin:
-    do_Math_1to1(state, state->builder()->llvm_sin_fn());
+    do_Math_1to1(builder()->llvm_sin_fn());
     break;
   case vmIntrinsics::_dcos:
-    do_Math_1to1(state, state->builder()->llvm_cos_fn());
+    do_Math_1to1(builder()->llvm_cos_fn());
     break;
   case vmIntrinsics::_dtan:
-    do_Math_1to1(state, SharkRuntime::tan());
+    do_Math_1to1(SharkRuntime::tan());
     break;
   case vmIntrinsics::_datan2:
-    do_Math_2to1(state, SharkRuntime::atan2());
+    do_Math_2to1(SharkRuntime::atan2());
     break;
   case vmIntrinsics::_dsqrt:
-    do_Math_1to1(state, state->builder()->llvm_sqrt_fn());
+    do_Math_1to1(builder()->llvm_sqrt_fn());
     break;
   case vmIntrinsics::_dlog:
-    do_Math_1to1(state, state->builder()->llvm_log_fn());
+    do_Math_1to1(builder()->llvm_log_fn());
     break;
   case vmIntrinsics::_dlog10:
-    do_Math_1to1(state, state->builder()->llvm_log10_fn());
+    do_Math_1to1(builder()->llvm_log10_fn());
     break;
   case vmIntrinsics::_dpow:
-    do_Math_2to1(state, state->builder()->llvm_pow_fn());
+    do_Math_2to1(builder()->llvm_pow_fn());
     break;
   case vmIntrinsics::_dexp:
-    do_Math_1to1(state, state->builder()->llvm_exp_fn());
+    do_Math_1to1(builder()->llvm_exp_fn());
     break;
 
     // java.lang.Object
   case vmIntrinsics::_getClass:
-    do_Object_getClass(state);
+    do_Object_getClass();
     break;
 
     // java.lang.System
   case vmIntrinsics::_currentTimeMillis:
-    do_System_currentTimeMillis(state);
+    do_System_currentTimeMillis();
     break;
 
     // java.lang.Thread
   case vmIntrinsics::_currentThread:
-    do_Thread_currentThread(state, thread);
+    do_Thread_currentThread();
     break;
     
     // sun.misc.Unsafe
   case vmIntrinsics::_compareAndSwapInt:
-    do_Unsafe_compareAndSwapInt(state);
+    do_Unsafe_compareAndSwapInt();
     break;
 
   default:
@@ -143,85 +147,83 @@ void SharkIntrinsics::inline_intrinsic(ciMethod*   target,
   }
 }
 
-void SharkIntrinsics::do_Math_minmax(SharkState *state, ICmpInst::Predicate p)
+void SharkIntrinsics::do_Math_minmax(ICmpInst::Predicate p)
 {
-  SharkBuilder *builder = state->builder();
-
   // Pop the arguments
-  SharkValue *sb = state->pop();
-  SharkValue *sa = state->pop();
+  SharkValue *sb = state()->pop();
+  SharkValue *sa = state()->pop();
   Value *a = sa->jint_value();
   Value *b = sb->jint_value();  
 
   // Perform the test
-  BasicBlock *ip       = builder->GetBlockInsertionPoint();
-  BasicBlock *return_a = builder->CreateBlock(ip, "return_a");
-  BasicBlock *return_b = builder->CreateBlock(ip, "return_b");
-  BasicBlock *done     = builder->CreateBlock(ip, "done");
+  BasicBlock *ip       = builder()->GetBlockInsertionPoint();
+  BasicBlock *return_a = builder()->CreateBlock(ip, "return_a");
+  BasicBlock *return_b = builder()->CreateBlock(ip, "return_b");
+  BasicBlock *done     = builder()->CreateBlock(ip, "done");
 
-  builder->CreateCondBr(builder->CreateICmp(p, a, b), return_a, return_b);
+  builder()->CreateCondBr(builder()->CreateICmp(p, a, b), return_a, return_b);
 
-  builder->SetInsertPoint(return_a);
-  builder->CreateBr(done);
+  builder()->SetInsertPoint(return_a);
+  builder()->CreateBr(done);
 
-  builder->SetInsertPoint(return_b);
-  builder->CreateBr(done);
+  builder()->SetInsertPoint(return_b);
+  builder()->CreateBr(done);
 
-  builder->SetInsertPoint(done);
-  PHINode *phi = builder->CreatePHI(a->getType(), "result");
+  builder()->SetInsertPoint(done);
+  PHINode *phi = builder()->CreatePHI(a->getType(), "result");
   phi->addIncoming(a, return_a);
   phi->addIncoming(b, return_b);
 
   // Push the result
-  state->push(
+  state()->push(
     SharkValue::create_jint(
       phi,
       sa->zero_checked() && sb->zero_checked()));
 }
 
-void SharkIntrinsics::do_Math_1to1(SharkState *state, Constant *function)
+void SharkIntrinsics::do_Math_1to1(Constant *function)
 {
-  SharkValue *empty = state->pop();
+  SharkValue *empty = state()->pop();
   assert(empty == NULL, "should be");
-  state->push(
+  state()->push(
     SharkValue::create_jdouble(
-      state->builder()->CreateCall(function, state->pop()->jdouble_value())));
-  state->push(NULL);
+      builder()->CreateCall(
+        function, state()->pop()->jdouble_value())));
+  state()->push(NULL);
 }
 
-void SharkIntrinsics::do_Math_2to1(SharkState *state, Constant *function)
+void SharkIntrinsics::do_Math_2to1(Constant *function)
 {
-  SharkValue *empty = state->pop();
+  SharkValue *empty = state()->pop();
   assert(empty == NULL, "should be");
-  Value *y = state->pop()->jdouble_value();
-  empty = state->pop();
+  Value *y = state()->pop()->jdouble_value();
+  empty = state()->pop();
   assert(empty == NULL, "should be");
-  Value *x = state->pop()->jdouble_value();
+  Value *x = state()->pop()->jdouble_value();
 
-  state->push(
-    SharkValue::create_jdouble(state->builder()->CreateCall2(function, x, y)));
-  state->push(NULL);
+  state()->push(
+    SharkValue::create_jdouble(
+      builder()->CreateCall2(function, x, y)));
+  state()->push(NULL);
 }
 
-void SharkIntrinsics::do_Object_getClass(SharkState *state)
+void SharkIntrinsics::do_Object_getClass()
 {
-  SharkBuilder *builder = state->builder();
-
-  Value *klass = builder->CreateValueOfStructEntry(
-    state->pop()->jobject_value(),
+  Value *klass = builder()->CreateValueOfStructEntry(
+    state()->pop()->jobject_value(),
     in_ByteSize(oopDesc::klass_offset_in_bytes()),
     SharkType::jobject_type(),
     "klass");
 
-  Value *klass_part = builder->CreateAddressOfStructEntry(
+  Value *klass_part = builder()->CreateAddressOfStructEntry(
     klass,
     in_ByteSize(klassOopDesc::klass_part_offset_in_bytes()),
     SharkType::klass_type(),
     "klass_part");
 
-  state->push(
+  state()->push(
     SharkValue::create_jobject(
-      builder->CreateValueOfStructEntry(
+      builder()->CreateValueOfStructEntry(
         klass_part,
         in_ByteSize(Klass::java_mirror_offset_in_bytes()),
         SharkType::oop_type(),
@@ -229,59 +231,57 @@ void SharkIntrinsics::do_Object_getClass(SharkState *state)
       true));
 }
 
-void SharkIntrinsics::do_System_currentTimeMillis(SharkState *state)
+void SharkIntrinsics::do_System_currentTimeMillis()
 {
-  state->push(
+  state()->push(
     SharkValue::create_jlong(
-      state->builder()->CreateCall(SharkRuntime::current_time_millis()),
+      builder()->CreateCall(SharkRuntime::current_time_millis()),
       false));
-  state->push(NULL);
+  state()->push(NULL);
 }
 
-void SharkIntrinsics::do_Thread_currentThread(SharkState *state, Value *thread)
+void SharkIntrinsics::do_Thread_currentThread()
 {
-  state->push(
+  state()->push(
     SharkValue::create_jobject(
-      state->builder()->CreateValueOfStructEntry(
-        thread, JavaThread::threadObj_offset(),
+      builder()->CreateValueOfStructEntry(
+        thread(), JavaThread::threadObj_offset(),
         SharkType::jobject_type(),
         "threadObj"),
       true));
 }
 
-void SharkIntrinsics::do_Unsafe_compareAndSwapInt(SharkState *state)
+void SharkIntrinsics::do_Unsafe_compareAndSwapInt()
 {
-  SharkBuilder *builder = state->builder();
-
   // Pop the arguments
-  Value *x      = state->pop()->jint_value();
-  Value *e      = state->pop()->jint_value();
-  SharkValue *empty = state->pop();
+  Value *x      = state()->pop()->jint_value();
+  Value *e      = state()->pop()->jint_value();
+  SharkValue *empty = state()->pop();
   assert(empty == NULL, "should be");
-  Value *offset = state->pop()->jlong_value();
-  Value *object = state->pop()->jobject_value();
-  Value *unsafe = state->pop()->jobject_value();
+  Value *offset = state()->pop()->jlong_value();
+  Value *object = state()->pop()->jobject_value();
+  Value *unsafe = state()->pop()->jobject_value();
 
   // Convert the offset
-  offset = builder->CreateCall(
+  offset = builder()->CreateCall(
     SharkRuntime::unsafe_field_offset_to_byte_offset(),
     offset);
 
   // Locate the field
-  Value *addr = builder->CreateIntToPtr(
-    builder->CreateAdd(
-      builder->CreatePtrToInt(object, SharkType::intptr_type()),
-      builder->CreateIntCast(offset, SharkType::intptr_type(), true)),
+  Value *addr = builder()->CreateIntToPtr(
+    builder()->CreateAdd(
+      builder()->CreatePtrToInt(object, SharkType::intptr_type()),
+      builder()->CreateIntCast(offset, SharkType::intptr_type(), true)),
     PointerType::getUnqual(SharkType::jint_type()),
     "addr");
 
   // Perform the operation
-  Value *result = builder->CreateCmpxchgInt(x, addr, e);
+  Value *result = builder()->CreateCmpxchgInt(x, addr, e);
 
   // Push the result
-  state->push(
+  state()->push(
     SharkValue::create_jint(
-      builder->CreateIntCast(
-        builder->CreateICmpEQ(result, e), SharkType::jint_type(), true),
+      builder()->CreateIntCast(
+        builder()->CreateICmpEQ(result, e), SharkType::jint_type(), true),
       false));
 }

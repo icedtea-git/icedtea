@@ -1,3 +1,156 @@
+2009-06-18  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkInvariants.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkInvariants.cpp: Likewise.
+	
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction): Made a subclass of SharkTargetInvariants.
+	(SharkFunction::SharkFunction): Updated constructor.
+	(SharkFunction::_compiler): Removed.
+	(SharkFunction::_flow): Likewise.
+	(SharkFunction::_iter): Likewise.
+	(SharkFunction::_thread): Likewise.
+	(SharkFunction::_max_monitors): Likewise.
+	(SharkFunction::compiler): Likewise.
+	(SharkFunction::flow): Likewise.
+	(SharkFunction::iter): Likewise.
+	(SharkFunction::thread): Likewise.
+	(SharkFunction::max_monitors): Likewise.
+	(SharkFunction::builder): Likewise.
+	(SharkFunction::arg_size): Likewise.
+	(SharkFunction::debug_info): Likewise.
+	(SharkFunction::env): Likewise.
+	(SharkFunction::max_locals): Likewise.
+	(SharkFunction::max_stack): Likewise.
+	(SharkFunction::target): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::initialize): Updated.
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock): Made a subclass of SharkTargetInvariants.
+	(SharkBlock::SharkBlock): Updated constructors.
+	(SharkBlock::_builder): Removed.
+	(SharkBlock::_target): Likewise.
+	(SharkBlock::_thread): Likewise.
+	(SharkBlock::builder): Likewise.
+	(SharkBlock::target): Likewise.
+	(SharkBlock::thread): Likewise.
+	(SharkBlock::max_locals): Likewise.
+	(SharkBlock::max_stack): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::initial_current_state): Use SharkState::copy.
+
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkState): Made a subclass of SharkTargetInvariants.
+	(SharkState::SharkState): Updated constructors.
+	(SharkState::_block): Removed.
+	(SharkState::_function): Likewise.
+	(SharkState::block): Likewise.
+	(SharkState::function): Likewise.
+	(SharkState::builder): Likewise.
+	(SharkState::max_locals): Likewise.
+	(SharkState::max_stack): Likewise.
+	(SharkState::max_monitors): Likewise.
+	(SharkState::pop): Likewise.
+	(SharkState::copy): Updated.
+	(SharkState::decache_for_Java_call): Moved to SharkTopLevelBlock.
+	(SharkState::cache_after_Java_call): Likewise.
+	(SharkState::decache_for_VM_call): Likewise.
+	(SharkState::cache_after_VM_call): Likewise.
+	(SharkState::decache_for_trap): Likewise.
+	(SharkPHIState::_block): New field.
+	(SharkPHIState::block): New method.
+	* ports/hotspot/src/share/vm/shark/sharkState.inline.hpp: Removed.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkState::equal_to): Updated.
+	(SharkState::decache_for_Java_call): Moved to SharkTopLevelBlock.
+	(SharkState::cache_after_Java_call): Likewise.
+	(SharkState::decache_for_VM_call): Likewise.
+	(SharkState::cache_after_VM_call): Likewise.
+	(SharkState::decache_for_trap): Likewise.
+	(SharkEntryState::SharkEntryState): Updated.
+	(SharkPHIState::SharkPHIState): Likewise.
+	(SharkPHIState::add_incoming): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.hpp
+	(SharkStateScanner): Made a subclass of SharkTargetInvariants.
+	(SharkStateScanner::SharkStateScanner): Updated constructor.
+	(SharkStateScanner::start_stack): Updated arguments.
+	(SharkStateScanner::start_locals): Likewise.
+	(SharkStateScanner::stack_integrity_checks): Made non-static.
+	(SharkStateScanner::locals_integrity_checks): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.cpp
+	(SharkStateScanner::scan): Updated.
+	(SharkStateScanner::locals_integrity_checks): Likewise.
+	
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp
+	(SharkCacherDecacher::builder): Removed.
+	(SharkDecacher::debug_info): Likewise.
+	(SharkDecacher::start_stack): Updated arguments.
+	(SharkDecacher::start_locals): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::start_frame): Updated.
+	(SharkDecacher::start_stack): Likewise..
+	(SharkDecacher::start_locals): Likewise.
+	(SharkDecacher::end_frame): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkInliner.hpp
+	(SharkInliner::attempt_inline): Removed thread argument.
+	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp
+	(SharkInlineBlock): Made a subclass of SharkTargetInvariants.
+	(SharkInlineBlock::SharkInlineBlock): Updated constructor.
+	(SharkInlinerHelper::SharkInlinerHelper): Likewise.
+	(SharkInlinerHelper::_thread): Removed.
+	(SharkInlinerHelper::thread): Likewise.
+	(SharkInlinerHelper::do_inline): Updated.
+	(SharkInliner::attempt_inline): Updated.
+
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.hpp
+	(SharkIntrinsics): Made a subclass of SharkTargetInvariants.
+	(SharkIntrinsics::inline_intrinsic): Updated arguments.
+	(SharkIntrinsics::SharkIntrinsics): New method.
+	(SharkIntrinsics::_state): New field.
+	(SharkIntrinsics::state): New method.
+	(SharkIntrinsics::do_intrinsic): Likewise.
+	(SharkIntrinsics::do_Math_minmax): Updated arguments.
+	(SharkIntrinsics::do_Math_1to1): Likewise.
+	(SharkIntrinsics::do_Math_2to1): Likewise.
+	(SharkIntrinsics::do_Object_getClass): Likewise.
+	(SharkIntrinsics::do_System_currentTimeMillis): Likewise.
+	(SharkIntrinsics::do_Thread_currentThread): Likewise.
+	(SharkIntrinsics::do_Unsafe_compareAndSwapInt): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.cpp
+	(SharkIntrinsics::inline_intrinsic): Updated.
+	(SharkIntrinsics::do_intrinsic): New method.
+	(SharkIntrinsics::do_Math_minmax): Updated.
+	(SharkIntrinsics::do_Math_1to1): Likewise.
+	(SharkIntrinsics::do_Math_2to1): Likewise.
+	(SharkIntrinsics::do_Object_getClass): Likewise.
+	(SharkIntrinsics::do_System_currentTimeMillis): Likewise.
+	(SharkIntrinsics::do_Thread_currentThread): Likewise.
+	(SharkIntrinsics::do_Unsafe_compareAndSwapInt): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::SharkTopLevelBlock): Updated constructor.
+	(SharkTopLevelBlock::decache_for_Java_call): Moved from SharkState.
+	(SharkTopLevelBlock::cache_after_Java_call): Likewise.
+	(SharkTopLevelBlock::decache_for_VM_call): Likewise.
+	(SharkTopLevelBlock::cache_after_VM_call): Likewise.
+	(SharkTopLevelBlock::decache_for_trap): Likewise.
+	(SharkTopLevelBlock::call_vm): Updated.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::decache_for_Java_call): Moved from SharkState.
+	(SharkTopLevelBlock::cache_after_Java_call): Likewise.
+	(SharkTopLevelBlock::decache_for_VM_call): Likewise.
+	(SharkTopLevelBlock::cache_after_VM_call): Likewise.
+	(SharkTopLevelBlock::decache_for_trap): Likewise.
+	(SharkTopLevelBlock::do_trap): Updated.
+	(SharkTopLevelBlock::improve_virtual_call): Likewise.
+	(SharkTopLevelBlock::do_call): Likewise.
+	(SharkTopLevelBlock::acquire_lock): Likewise.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.	
+
 2009-06-17  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp

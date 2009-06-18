@@ -28,26 +28,6 @@
 
 using namespace llvm;
 
-SharkState::SharkState(SharkBlock* block, SharkFunction* function)
-  : _block(block),
-    _function(function),
-    _method(NULL),
-    _oop_tmp(NULL),
-    _has_safepointed(false)
-{
-  initialize(NULL);
-}
-
-SharkState::SharkState(SharkBlock* block, const SharkState* state)
-  : _block(block),
-    _function(state->function()),
-    _method(state->method()),
-    _oop_tmp(state->oop_tmp()),
-    _has_safepointed(state->has_safepointed())
-{
-  initialize(state);
-}
-
 void SharkState::initialize(const SharkState *state)
 {
   _locals = NEW_RESOURCE_ARRAY(SharkValue*, max_locals());
@@ -78,10 +58,7 @@ void SharkState::initialize(const SharkState *state)
 
 bool SharkState::equal_to(SharkState *other)
 {
-  if (block() != other->block())
-    return false;
-
-  if (function() != other->function())
+  if (target() != other->target())
     return false;
 
   if (method() != other->method())
@@ -216,57 +193,8 @@ void SharkState::replace_all(SharkValue* old_value, SharkValue* new_value)
   }
 }
 
-void SharkState::decache_for_Java_call(ciMethod* callee)
-{
-  assert(function() && method(), "you cannot decache here");
-  SharkJavaCallDecacher(function(), block()->bci(), callee).scan(this);
-  pop(callee->arg_size());
-}
-
-void SharkState::cache_after_Java_call(ciMethod* callee)
-{
-  assert(function() && method(), "you cannot cache here");
-  if (callee->return_type()->size()) {
-    ciType *type;
-    switch (callee->return_type()->basic_type()) {
-    case T_BOOLEAN:
-    case T_BYTE:
-    case T_CHAR:
-    case T_SHORT:
-      type = ciType::make(T_INT);
-      break;
-
-    default:
-      type = callee->return_type();
-    }
-
-    push(SharkValue::create_generic(type, NULL, false));
-    if (type->is_two_word())
-      push(NULL);
-  }
-  SharkJavaCallCacher(function(), callee).scan(this);
-}
-
-void SharkState::decache_for_VM_call()
-{
-  assert(function() && method(), "you cannot decache here");
-  SharkVMCallDecacher(function(), block()->bci()).scan(this);
-}
-
-void SharkState::cache_after_VM_call()
-{
-  assert(function() && method(), "you cannot cache here");
-  SharkVMCallCacher(function()).scan(this);
-}
-
-void SharkState::decache_for_trap()
-{
-  assert(function() && method(), "you cannot decache here");
-  SharkTrapDecacher(function(), block()->bci()).scan(this);
-}
-
 SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
-  : SharkState(block, block->function())
+  : SharkState(block)
 {
   assert(!block->stack_depth_at_entry(), "entry block shouldn't have stack");
 
@@ -282,11 +210,10 @@ SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
     case T_DOUBLE:
     case T_OBJECT:
     case T_ARRAY:
-      if (i >= function()->arg_size()) {
+      if (i >= arg_size()) {
         ShouldNotReachHere();
       }
-      value = SharkValue::create_generic(
-        type, NULL, i == 0 && !function()->target()->is_static());
+      value = SharkValue::create_generic(type, NULL, i == 0 && !is_static());
       break;
     
     case ciTypeFlow::StateVector::T_BOTTOM:
@@ -301,11 +228,11 @@ SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
     }
     set_local(i, value);
   }
-  SharkFunctionEntryCacher(function(), method).scan(this);  
+  SharkFunctionEntryCacher(block->function(), method).scan(this);  
 }
 
 SharkPHIState::SharkPHIState(SharkTopLevelBlock* block)
-  : SharkState(block, block->function())
+  : SharkState(block), _block(block)
 {
   BasicBlock *saved_insert_point = builder()->GetInsertBlock();
   builder()->SetInsertPoint(block->entry_block());
@@ -407,7 +334,7 @@ void SharkPHIState::add_incoming(SharkState* incoming_state)
   }
 
   // Expression stack
-  int stack_depth = ((SharkTopLevelBlock *) block())->stack_depth_at_entry();
+  int stack_depth = block()->stack_depth_at_entry();
   assert(stack_depth == incoming_state->stack_depth(), "should be");
   for (int i = 0; i < stack_depth; i++) {
     assert((stack(i) == NULL) == (incoming_state->stack(i) == NULL), "oops");

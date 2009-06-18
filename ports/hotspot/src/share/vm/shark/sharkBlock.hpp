@@ -25,61 +25,32 @@
 
 class SharkState;
 
-class SharkBlock : public ResourceObj {
- public:
-  SharkBlock(SharkBuilder*     builder,
-             ciMethod*         target,
-             ciBytecodeStream* iter,
-             llvm::Value*      thread)
-    : _builder(builder),
-      _target(target),
-      _iter(iter),
-      _current_state(NULL),
-      _thread(thread) {}
+class SharkBlock : public SharkTargetInvariants {
+ protected:
+  SharkBlock(const SharkTargetInvariants* parent)
+    : SharkTargetInvariants(parent),
+      _iter(target()),
+      _current_state(NULL) {}
+
+  SharkBlock(const SharkCompileInvariants* parent, ciMethod* target)
+    : SharkTargetInvariants(parent, target),
+      _iter(target),
+      _current_state(NULL) {}
 
  private:
-  SharkBuilder*     _builder;
-  ciMethod*         _target;
-  ciBytecodeStream* _iter;
-  SharkState*       _current_state;
-  llvm::Value*      _thread;
+  ciBytecodeStream _iter;
+  SharkState*      _current_state;
 
  public:
-  SharkBuilder* builder() const
+  ciBytecodeStream* iter()
   {
-    return _builder;
+    return &_iter;
   }
-  ciMethod* target() const
-  {
-    return _target;
-  }
-  ciBytecodeStream* iter() const
-  {
-    return _iter;
-  }
-  llvm::Value* thread() const
-  {
-    return _thread;
-  }
-
-  // Target properties
- public:
-  int max_locals() const
-  {
-    return target()->max_locals();
-  }
-  int max_stack() const
-  {
-    return target()->max_stack();
-  }  
-  
-  // Bytecode stream
- public:
-  Bytecodes::Code bc() const
+  Bytecodes::Code bc()
   {
     return iter()->cur_bc();
   }
-  int bci() const
+  int bci()
   {
     return iter()->cur_bci();
   }

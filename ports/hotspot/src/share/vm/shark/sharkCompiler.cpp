@@ -120,8 +120,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   builder()->set_code_buffer(&cb);
 
   // Compile the method
-  ciBytecodeStream iter(target);
-  SharkFunction function(this, name, flow, &iter);
+  SharkFunction function(this, env, flow, name);
 
   // Unhook the code buffer
   builder()->set_code_buffer(NULL);  

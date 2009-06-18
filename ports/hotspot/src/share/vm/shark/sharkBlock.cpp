@@ -888,7 +888,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
 
 SharkState* SharkBlock::initial_current_state()
 {
-  return new SharkState(this, entry_state());
+  return entry_state()->copy();
 }
 
 int SharkBlock::switch_default_dest()

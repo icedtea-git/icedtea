@@ -23,22 +23,16 @@
  *
  */
 
-inline SharkBuilder* SharkState::builder() const
-{
-  return block()->builder();
-}  
-  
-inline int SharkState::max_locals() const
-{
-  return block()->max_locals();
-}
+#include "incls/_precompiled.incl"
+#include "incls/_sharkInvariants.cpp.incl"
 
-inline int SharkState::max_stack() const
+int SharkTargetInvariants::count_monitors()
 {
-  return block()->max_stack();
-}
-
-inline int SharkState::max_monitors() const
-{
-  return function()->max_monitors();
+  int result = 0;
+  if (is_synchronized() || target()->has_monitor_bytecodes()) {
+    for (int i = 0; i < flow()->block_count(); i++) {
+      result = MAX2(result, flow()->pre_order_at(i)->monitor_count());
+    }
+  }
+  return result;
 }

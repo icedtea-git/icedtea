@@ -25,10 +25,10 @@
 
 class SharkState;
 
-class SharkStateScanner : public StackObj {
+class SharkStateScanner : public SharkTargetInvariants {
  protected:
   SharkStateScanner(SharkFunction* function)
-    : _function(function) {}
+    : SharkTargetInvariants(function), _function(function) {}
 
  private:
   SharkFunction* _function;
@@ -49,7 +49,7 @@ class SharkStateScanner : public StackObj {
  protected:
   virtual void start_frame()                                                 {}
 
-  virtual void start_stack(int num_slots, int max_slots)                     {}
+  virtual void start_stack(int stack_depth)                                  {}
   virtual void process_stack_slot(int index, SharkValue** value, int offset) {}
   virtual void end_stack()                                                   {}
 
@@ -63,7 +63,7 @@ class SharkStateScanner : public StackObj {
   virtual void process_pc_slot(int offset)                                   {}
   virtual void end_frame_header()                                            {}
   
-  virtual void start_locals(int num_locals)                                  {}
+  virtual void start_locals()                                                {}
   virtual void process_local_slot(int index, SharkValue** value, int offset) {}
   virtual void end_locals()                                                  {}
 
@@ -71,6 +71,6 @@ class SharkStateScanner : public StackObj {
 
   // Integrity checks
  private:
-  static void stack_integrity_checks(SharkState* state) PRODUCT_RETURN;
-  static void locals_integrity_checks(SharkState* state) PRODUCT_RETURN;
+  void stack_integrity_checks(SharkState* state) PRODUCT_RETURN;
+  void locals_integrity_checks(SharkState* state) PRODUCT_RETURN;
 };

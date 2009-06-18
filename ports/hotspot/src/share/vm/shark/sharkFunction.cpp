@@ -39,7 +39,7 @@ void SharkFunction::initialize()
   // Create the function
   _function = builder()->CreateFunction(name());
   entry->set_llvm_function(function());
-  compiler()->memory_manager()->set_entry_for_function(function(), entry);
+  memory_manager()->set_entry_for_function(function(), entry);
 
   // Get our arguments
   Function::arg_iterator ai = function()->arg_begin();
@@ -48,12 +48,13 @@ void SharkFunction::initialize()
   Argument *base_pc = ai++;
   base_pc->setName("base_pc");
   builder()->code_buffer()->set_base_pc(base_pc);
-  _thread = ai++;
-  _thread->setName("thread");
+  Argument *thread = ai++;
+  thread->setName("thread");
+  set_thread(thread);
 
   // Create the list of blocks
   set_block_insertion_point(NULL);
-  _blocks = NEW_RESOURCE_ARRAY(SharkTopLevelBlock*, flow()->block_count());
+  _blocks = NEW_RESOURCE_ARRAY(SharkTopLevelBlock*, block_count());
   for (int i = 0; i < block_count(); i++) {
     ciTypeFlow::Block *b = flow()->pre_order_at(i);
 
@@ -76,14 +77,6 @@ void SharkFunction::initialize()
       block(i)->initialize();
   }
 
-  // Initialize the monitors
-  _max_monitors = 0;  
-  if (target()->is_synchronized() || target()->uses_monitors()) {
-    for (int i = 0; i < block_count(); i++)
-      _max_monitors = MAX2(
-        _max_monitors, block(i)->ciblock()->monitor_count());
-  }
-  
   // Create the method preamble
   set_block_insertion_point(&function()->front());
   builder()->SetInsertPoint(CreateBlock());
@@ -98,7 +91,7 @@ void SharkFunction::initialize()
 
   // Lock if necessary
   SharkState *entry_state = new SharkEntryState(start_block, method);
-  if (target()->is_synchronized()) {
+  if (is_synchronized()) {
     SharkTopLevelBlock *locker =
       new SharkTopLevelBlock(this, start_block->ciblock());
     locker->add_incoming(entry_state);
@@ -291,10 +284,11 @@ Value* SharkFunction::CreateAddressOfFrameEntry(int               offset,
   return result;
 }
 
-class DeferredZeroCheck : public ResourceObj {
+class DeferredZeroCheck : public SharkTargetInvariants {
  public:
   DeferredZeroCheck(SharkTopLevelBlock* block, SharkValue* value)
-    : _block(block),
+    : SharkTargetInvariants(block),
+      _block(block),
       _value(value),
       _bci(block->bci()),
       _state(block->current_state()->copy()),
@@ -339,10 +333,6 @@ class DeferredZeroCheck : public ResourceObj {
   }
 
  public:
-  SharkBuilder* builder() const
-  {
-    return block()->builder();
-  }
   SharkFunction* function() const
   {
     return block()->function();

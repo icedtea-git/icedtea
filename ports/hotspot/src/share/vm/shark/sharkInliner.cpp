@@ -30,11 +30,8 @@ using namespace llvm;
 
 class SharkInlineBlock : public SharkBlock {
  public:
-  SharkInlineBlock(ciMethod*         target,
-                   SharkState*       state,
-                   ciBytecodeStream* iter,
-                   Value*            thread)
-    : SharkBlock(state->builder(), target, iter, thread),
+  SharkInlineBlock(ciMethod* target, SharkState* state)
+    : SharkBlock(state, target),
       _outer_state(state),
       _entry_state(new SharkState(this))
   {
@@ -80,17 +77,15 @@ class SharkInlineBlock : public SharkBlock {
 
 class SharkInlinerHelper : public StackObj {
  public:
-  SharkInlinerHelper(ciMethod* target, SharkState* entry_state, Value* thread)
+  SharkInlinerHelper(ciMethod* target, SharkState* entry_state)
     : _target(target),
       _entry_state(entry_state),
-      _iter(target),
-      _thread(thread) {}
+      _iter(target) {}
 
  private:
   ciBytecodeStream _iter;
   SharkState*      _entry_state;
   ciMethod*        _target;
-  Value*           _thread;
   
  public:
   ciBytecodeStream* iter()
@@ -104,10 +99,6 @@ class SharkInlinerHelper : public StackObj {
   ciMethod* target() const
   {
     return _target;
-  }
-  Value* thread() const
-  {
-    return _thread;
   }
 
  public:
@@ -207,8 +198,7 @@ class SharkInlinerHelper : public StackObj {
  public:
   void do_inline()
   {
-    (new SharkInlineBlock(
-           target(), entry_state(), iter(), thread()))->emit_IR();
+    (new SharkInlineBlock(target(), entry_state()))->emit_IR();
   }
 };
 
@@ -770,17 +760,15 @@ bool SharkInlinerHelper::do_field_access(bool is_get, bool is_field)
   return true;
 }
 
-bool SharkInliner::attempt_inline(ciMethod*   target,
-                                  SharkState* state,
-                                  Value*      thread)
+bool SharkInliner::attempt_inline(ciMethod *target, SharkState *state)
 {
   if (SharkIntrinsics::is_intrinsic(target)) {
-    SharkIntrinsics::inline_intrinsic(target, state, thread);
+    SharkIntrinsics::inline_intrinsic(target, state);
     return true;
   }
 
   if (may_be_inlinable(target)) {
-    SharkInlinerHelper inliner(target, state, thread);
+    SharkInlinerHelper inliner(target, state);
     if (inliner.is_inlinable()) {
       inliner.do_inline();
       return true;

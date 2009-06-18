@@ -34,20 +34,20 @@ void SharkDecacher::start_frame()
   _pc_offset = builder()->code_buffer()->create_unique_offset();
   _oopmap = new OopMap(
     oopmap_slot_munge(function()->oopmap_frame_size()),
-    oopmap_slot_munge(function()->arg_size()));
+    oopmap_slot_munge(arg_size()));
   debug_info()->add_safepoint(pc_offset(), oopmap());
 }
 
-void SharkDecacher::start_stack(int num_slots, int max_slots)
+void SharkDecacher::start_stack(int stack_depth)
 {
   // Create the array we'll record our stack slots in
-  _exparray = new GrowableArray<ScopeValue*>(num_slots);
+  _exparray = new GrowableArray<ScopeValue*>(stack_depth);
 
   // Set the stack pointer
   function()->CreateStoreZeroStackPointer(
     builder()->CreatePtrToInt(
       function()->CreateAddressOfFrameEntry(
-        function()->stack_slots_offset() + max_slots - num_slots),
+        function()->stack_slots_offset() + max_stack() - stack_depth),
       SharkType::intptr_type()));
 }
 
@@ -123,10 +123,10 @@ void SharkDecacher::process_pc_slot(int offset)
     function()->CreateAddressOfFrameEntry(offset));
 }
   
-void SharkDecacher::start_locals(int num_locals)
+void SharkDecacher::start_locals()
 {
   // Create the array we'll record our local variables in
-  _locarray = new GrowableArray<ScopeValue*>(num_locals);}
+  _locarray = new GrowableArray<ScopeValue*>(max_locals());}
 
 void SharkDecacher::process_local_slot(int          index,
                                        SharkValue** addr,
@@ -158,7 +158,7 @@ void SharkDecacher::end_frame()
   // Record the scope
   debug_info()->describe_scope(
     pc_offset(),
-    function()->target(),
+    target(),
     bci(),
     debug_info()->create_scope_values(locarray()),
     debug_info()->create_scope_values(exparray()),

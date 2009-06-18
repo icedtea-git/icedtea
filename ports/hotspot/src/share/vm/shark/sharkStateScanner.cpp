@@ -34,13 +34,13 @@ void SharkStateScanner::scan(SharkState* state)
 
   // Expression stack
   stack_integrity_checks(state);
-  start_stack(state->stack_depth(), state->max_stack());
+  start_stack(state->stack_depth());
   for (int i = state->stack_depth() - 1; i >= 0; i--) {
     process_stack_slot(
       i,
       state->stack_addr(i),
       function()->stack_slots_offset() +
-        i + state->max_stack() - state->stack_depth());
+        i + max_stack() - state->stack_depth());
   }
   end_stack();
 
@@ -64,12 +64,12 @@ void SharkStateScanner::scan(SharkState* state)
 
   // Local variables
   locals_integrity_checks(state);
-  start_locals(state->max_locals());
-  for (int i = 0; i < state->max_locals(); i++) {
+  start_locals();
+  for (int i = 0; i < max_locals(); i++) {
     process_local_slot(
       i,
       state->local_addr(i),
-      function()->locals_slots_offset() + state->max_locals() - 1 - i);
+      function()->locals_slots_offset() + max_locals() - 1 - i);
   }
   end_locals();
 
@@ -92,7 +92,7 @@ void SharkStateScanner::stack_integrity_checks(SharkState* state)
   
 void SharkStateScanner::locals_integrity_checks(SharkState* state)
 {
-  for (int i = 0; i < state->max_locals(); i++) {
+  for (int i = 0; i < max_locals(); i++) {
     if (state->local(i)) {
       if (state->local(i)->is_two_word())
         assert(state->local(i + 1) == NULL, "should be");
