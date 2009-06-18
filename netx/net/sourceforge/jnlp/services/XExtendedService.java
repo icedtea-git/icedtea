@@ -32,7 +32,6 @@ import net.sourceforge.jnlp.security.SecurityWarningDialog;
  */
 public class XExtendedService implements ExtendedService {
 
-    @Override
     public FileContents openFile(File file) throws IOException {
 
         if (ServiceUtil.checkAccess(SecurityWarningDialog.AccessType.READ_FILE)) {
@@ -44,7 +43,6 @@ public class XExtendedService implements ExtendedService {
 
     }
 
-    @Override
     public FileContents[] openFiles(File[] files) throws IOException {
         FileContents[] contents = new FileContents[files.length];
         for (int i = 0; i < files.length; i++) {

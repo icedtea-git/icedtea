@@ -1,3 +1,9 @@
+2009-06-18  Mark Wielaard  <mark@klomp.org>
+
+	* netx/net/sourceforge/jnlp/services/XExtendedService.java
+	(openFile): Remove @Override of interface method.
+	(openFiles): Likewise.
+
 2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-webstart.patch,
