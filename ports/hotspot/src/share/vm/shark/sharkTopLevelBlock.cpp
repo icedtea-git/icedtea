@@ -902,15 +902,15 @@ ciMethod* SharkTopLevelBlock::improve_virtual_call(ciMethod*   caller,
     // types, but I can't even tell which direction it
     // doesn't like.  For now I'm going to block *any* cast.
     if (monomorphic_target != dest_method) {
-#ifndef PRODUCT
-      tty->print_cr("found monomorphic target, but inhibited cast:");
-      tty->print("  dest_method = ");
-      dest_method->print_short_name(tty);
-      tty->cr();
-      tty->print("  monomorphic_target = ");
-      monomorphic_target->print_short_name(tty);
-      tty->cr();
-#endif // !PRODUCT
+      if (SharkPerformanceWarnings) {
+        warning("found monomorphic target, but inhibited cast:");
+        tty->print("  dest_method = ");
+        dest_method->print_short_name(tty);
+        tty->cr();
+        tty->print("  monomorphic_target = ");
+        monomorphic_target->print_short_name(tty);
+        tty->cr();
+      }
       monomorphic_target = NULL;
     }
   }
