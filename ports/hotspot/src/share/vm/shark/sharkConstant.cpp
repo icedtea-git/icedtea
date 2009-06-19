@@ -30,7 +30,16 @@ using namespace llvm;
 
 SharkConstant* SharkConstant::for_ldc(ciBytecodeStream *iter)
 {
-  return new SharkConstant(iter->get_constant(), NULL);
+  ciConstant constant = iter->get_constant();
+  ciType *type = NULL;
+  if (constant.basic_type() == T_OBJECT) {
+    ciEnv *env = ciEnv::current();
+    if (constant.as_object()->is_klass())
+      type = env->Class_klass();
+    else
+      type = env->String_klass();
+  }
+  return new SharkConstant(constant, type);
 }
 
 SharkConstant* SharkConstant::for_field(ciBytecodeStream *iter)
@@ -97,6 +106,7 @@ SharkConstant::SharkConstant(ciConstant constant, ciType *type)
   // have yet to be created.  We need to spot the unloaded
   // objects (which differ between ldc* and get*, thanks!)
   ciObject *object = constant.as_object();
+  assert(type != NULL, "shouldn't be");
   if (object->is_klass()) {
     // The constant returned for a klass is the ciKlass
     // for the entry, but we want the java_mirror.
@@ -114,7 +124,7 @@ SharkConstant::SharkConstant(ciConstant constant, ciType *type)
 
   _value       = NULL;
   _object      = object;
-  _type        = type ? type : ciType::make(T_OBJECT);
+  _type        = type;
   _is_loaded   = true;
   _is_nonzero  = true;
   _is_two_word = false;

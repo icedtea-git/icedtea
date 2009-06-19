@@ -1,5 +1,11 @@
 2009-06-19  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkConstant.cpp
+	(SharkConstant::for_ldc): Set type for object constants.
+	(SharkConstant::SharkConstant): Updated.
+
+2009-06-19  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp
 	(SharkCompiler::compile): Removed.
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
