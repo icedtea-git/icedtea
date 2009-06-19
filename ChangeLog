@@ -1,3 +1,13 @@
+2009-06-19  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp
+	(SharkEntry::_llvm_function): Removed.
+	(SharkEntry::llvm_function): Likewise.
+	(SharkEntry::set_llvm_function): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Removed call to set_llvm_function.
+
 2009-06-18  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp

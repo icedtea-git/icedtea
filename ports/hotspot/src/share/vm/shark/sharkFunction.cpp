@@ -38,7 +38,6 @@ void SharkFunction::initialize()
 
   // Create the function
   _function = builder()->CreateFunction(name());
-  entry->set_llvm_function(function());
   memory_manager()->set_entry_for_function(function(), entry);
 
   // Get our arguments
