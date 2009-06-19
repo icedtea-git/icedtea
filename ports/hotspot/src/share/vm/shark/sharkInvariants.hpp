@@ -93,10 +93,6 @@ class SharkCompileInvariants : public ResourceObj {
   {
     return compiler()->builder();
   }
-  SharkMemoryManager* memory_manager() const
-  {
-    return compiler()->memory_manager();
-  }  
   DebugInformationRecorder* debug_info() const
   {
     return env()->debug_info();

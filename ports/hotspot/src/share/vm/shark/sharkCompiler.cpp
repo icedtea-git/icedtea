@@ -91,7 +91,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
 #endif // !PRODUCT
 
   if (SharkOnlyCompile != NULL) {
-    if (strcmp(SharkOnlyCompile, name)) {
+    if (fnmatch(SharkOnlyCompile, name, 0)) {
       env->record_method_not_compilable("does not match SharkOnlyCompile");
       return;
     }
@@ -102,8 +102,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   if (env->failing())
     return;
   if (SharkPrintTypeflowOf != NULL) {
-    if (!strcmp(SharkPrintTypeflowOf, name) ||
-	!strcmp(SharkPrintTypeflowOf, "*"))
+    if (!fnmatch(SharkPrintTypeflowOf, name, 0))
       flow->print_on(tty);
   }
 
@@ -119,12 +118,46 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   SharkCodeBuffer cb(env->oop_recorder());
   builder()->set_code_buffer(&cb);
 
-  // Compile the method
-  SharkFunction function(this, env, flow, name);
+  // Emit the entry point
+  SharkEntry *entry = (SharkEntry *) cb.malloc(sizeof(SharkEntry));
+  
+  // Build the LLVM IR for the method
+  Function *function = SharkFunction::build(this, env, flow, name);
+  if (SharkPrintBitcodeOf != NULL) {
+    if (!fnmatch(SharkPrintBitcodeOf, name, 0))
+      function->dump();
+  }
 
   // Unhook the code buffer
   builder()->set_code_buffer(NULL);  
 
+  // Compile to native code
+#ifndef PRODUCT
+#ifdef X86
+  if (SharkPrintAsmOf != NULL) {
+    std::vector<const char*> args;
+    args.push_back(""); // program name
+    if (!fnmatch(SharkPrintAsmOf, name, 0))
+      args.push_back("-debug-only=x86-emitter");
+    else
+      args.push_back("-debug-only=none");
+    args.push_back(0);  // terminator
+    cl::ParseCommandLineOptions(args.size() - 1, (char **) &args[0]);
+  }
+#endif // X86
+#endif // !PRODUCT
+  memory_manager()->set_entry_for_function(function, entry);
+  module()->getFunctionList().push_back(function);
+  entry->set_entry_point(
+    (ZeroEntry::method_entry_t)
+      execution_engine()->getPointerToFunction(function));
+
+  // Register generated code for profiling, etc
+  if (JvmtiExport::should_post_dynamic_code_generated()) {
+    JvmtiExport::post_dynamic_code_generated(
+      name, entry->code_start(), entry->code_limit());
+  }
+  
   // Install the method into the VM
   CodeOffsets offsets;
   offsets.set_value(CodeOffsets::Deopt, 0);
@@ -148,31 +181,10 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
                        env->comp_level(),
                        false,
                        false);
-}
 
-
-ZeroEntry::method_entry_t SharkCompiler::compile(const char* name,
-                                                 Function*   function)
-{
-  // Dump the generated code, if requested
-#ifndef PRODUCT
-#ifdef X86
-  if (SharkPrintAsmOf != NULL) {
-    std::vector<const char*> args;
-    args.push_back(""); // program name
-    if (!fnmatch(SharkPrintAsmOf, name, 0))
-      args.push_back("-debug-only=x86-emitter");
-    else
-      args.push_back("-debug-only=none");
-    args.push_back(0);  // terminator
-    cl::ParseCommandLineOptions(args.size() - 1, (char **) &args[0]);
-  }
-#endif // X86
-#endif // !PRODUCT
-
-  // Compile to native code
-  return (ZeroEntry::method_entry_t)
-    execution_engine()->getPointerToFunction(function);
+  // Print statistics, if requested
+  if (SharkTraceInstalls)
+    entry->print_statistics(name);
 }
 
 const char* SharkCompiler::methodname(const ciMethod* target)

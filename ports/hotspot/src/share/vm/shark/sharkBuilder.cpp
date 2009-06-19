@@ -176,16 +176,6 @@ void SharkBuilder::init_external_functions()
   set_llvm_pow_fn(module()->getOrInsertFunction("llvm.pow.f64", type));  
 }
 
-Function *SharkBuilder::CreateFunction(const char *name)
-{
-  Function *function = Function::Create(
-      SharkType::entry_point_type(),
-      GlobalVariable::InternalLinkage,
-      name);
-  module()->getFunctionList().push_back(function);
-  return function;
-}
-
 CallInst* SharkBuilder::CreateDump(llvm::Value* value)
 {
   Constant *const_name;

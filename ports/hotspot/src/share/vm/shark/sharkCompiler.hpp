@@ -72,9 +72,6 @@ class SharkCompiler : public AbstractCompiler {
     return _execution_engine;
   }
 
- public:
-  ZeroEntry::method_entry_t compile(const char* name, llvm::Function* func);
-
   // Helper
  private:
   static const char* methodname(const ciMethod* target);

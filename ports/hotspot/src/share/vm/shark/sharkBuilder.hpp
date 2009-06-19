@@ -46,10 +46,6 @@ class SharkBuilder : public llvm::IRBuilder<> {
     return compiler()->execution_engine();
   }
 
-  // Function creation
- public:
-  llvm::Function *CreateFunction(const char *name = "func");
-
   // Helpers for creating basic blocks
   // NB don't use unless SharkFunction::CreateBlock is unavailable
  public:

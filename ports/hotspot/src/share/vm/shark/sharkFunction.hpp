@@ -28,26 +28,31 @@ class DeferredZeroCheck;
 
 class SharkFunction : public SharkTargetInvariants {
  public:
+  static llvm::Function* build(SharkCompiler* compiler,
+                               ciEnv*         env,
+                               ciTypeFlow*    flow,
+                               const char*    name)
+  {
+    SharkFunction function(compiler, env, flow, name);
+    return function.function();
+  }
+
+ private:
   SharkFunction(SharkCompiler* compiler,
                 ciEnv*         env,
                 ciTypeFlow*    flow,
                 const char*    name)
-    : SharkTargetInvariants(compiler, env, flow), _name(name) { initialize(); }
+    : SharkTargetInvariants(compiler, env, flow) { initialize(name); }
 
  private:
-  void initialize();
+  void initialize(const char* name);
 
  private:
-  const char*                       _name;
   llvm::Function*                   _function;
   SharkTopLevelBlock**              _blocks;
   GrowableArray<DeferredZeroCheck*> _deferred_zero_checks;
 
  public:
-  const char* name() const
-  {
-    return _name;
-  }  
   llvm::Function* function() const
   {
     return _function;

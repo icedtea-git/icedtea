@@ -1,5 +1,35 @@
 2009-06-19  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp
+	(SharkCompiler::compile): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::compile_method): Moved all non-IR-emission
+	code from SharkFunction::initialize, and the IR-to-native
+	code from SharkCompiler::compile, here.  Also changed all
+	debug options that take a method name to use fnmatch.
+	(SharkCompiler::compile): Removed.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::_name): Removed.
+	(SharkFunction::_name): Likewise.
+	(SharkFunction::initialize): Receive name in argument.
+	(SharkFunction::SharkFunction): Updated.
+	(SharkFunction::build): New method.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Receive name in argument,
+	and moved all code not relating to emitting the function's
+	IR to SharkCompiler::compile_method.
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::CreateFunction): Removed.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::CreateFunction): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkInvariants.hpp
+	(SharkCompileInvariants::memory_manager): Removed.
+
+2009-06-19  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp
 	(SharkEntry::_llvm_function): Removed.
 	(SharkEntry::llvm_function): Likewise.

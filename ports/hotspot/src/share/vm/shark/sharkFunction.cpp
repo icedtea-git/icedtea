@@ -26,19 +26,15 @@
 #include "incls/_precompiled.incl"
 #include "incls/_sharkFunction.cpp.incl"
 
-#include <fnmatch.h>
-
 using namespace llvm;
 
-void SharkFunction::initialize()
+void SharkFunction::initialize(const char *name)
 {
-  // Emit the entry point
-  SharkEntry *entry =
-    (SharkEntry *) builder()->code_buffer()->malloc(sizeof(SharkEntry));
-
   // Create the function
-  _function = builder()->CreateFunction(name());
-  memory_manager()->set_entry_for_function(function(), entry);
+  _function = Function::Create(
+    SharkType::entry_point_type(),
+    GlobalVariable::InternalLinkage,
+    name);
 
   // Get our arguments
   Function::arg_iterator ai = function()->arg_begin();
@@ -118,25 +114,6 @@ void SharkFunction::initialize()
     block(i)->emit_IR();
   }
   do_deferred_zero_checks();
-
-  // Dump the bitcode, if requested
-  if (SharkPrintBitcodeOf != NULL) {
-    if (!fnmatch(SharkPrintBitcodeOf, name(), 0))
-      function()->dump();
-  }
-
-  // Compile to native code
-  entry->set_entry_point(compiler()->compile(name(), function()));
-
-  // Register generated code for profiling, etc
-  if (JvmtiExport::should_post_dynamic_code_generated()) {
-    JvmtiExport::post_dynamic_code_generated(
-      name(), entry->code_start(), entry->code_limit());
-  }
-
-  // Print statistics, if requested
-  if (SharkTraceInstalls)
-    entry->print_statistics(name());
 }
 
 void SharkFunction::CreateInitZeroStack()
