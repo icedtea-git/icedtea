@@ -37,11 +37,19 @@ class LLVMValue : public AllStatic {
   {
     return llvm::ConstantInt::get(SharkType::jlong_type(), value, true);
   }
+#if SHARK_LLVM_VERSION >= 26
+  static llvm::Constant* jfloat_constant(jfloat value)
+#else
   static llvm::ConstantFP* jfloat_constant(jfloat value)
+#endif
   {
     return llvm::ConstantFP::get(SharkType::jfloat_type(), value);
   }
+#if SHARK_LLVM_VERSION >= 26
+  static llvm::Constant* jdouble_constant(jdouble value)
+#else
   static llvm::ConstantFP* jdouble_constant(jdouble value)
+#endif
   {
     return llvm::ConstantFP::get(SharkType::jdouble_type(), value);
   }

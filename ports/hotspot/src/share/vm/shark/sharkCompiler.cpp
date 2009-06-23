@@ -38,6 +38,12 @@ SharkCompiler::SharkCompiler()
 
   // Create the builder to build our functions
   _builder = new SharkBuilder(this);
+
+#if SHARK_LLVM_VERSION >= 26
+  // If we have a native target, initialize it to ensure it is linked in and
+  // usable by the JIT.
+  InitializeNativeTarget();
+#endif
   
   // Create the JIT
   ModuleProvider *module_provider = new ExistingModuleProvider(module());

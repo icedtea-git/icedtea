@@ -1,3 +1,25 @@
+2009-06-23  Xerxes Rånby  <xerxes@zafena.se>
+
+	PR icedtea/353
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp
+	Include llvm/Support/Threading.h and llvm/Target/TargetSelect.h
+	used by llvm_start_multithreaded() and InitializeNativeTarget()
+	when llvm version are 2.6 or later.
+	* ports/hotspot/src/share/vm/shark/llvmValue.hpp
+	(jfloat_constant): Return llvm::Constant* when llvm
+	version are 2.6 or later to handle llvm r73431 API change.
+	(jdouble_constant): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse_bytecode): Updated to use CreateFAdd
+	CreateFSub, CreateFMul and CreateFNeg for jfloat and jdouble
+	when llvm version are 2.6 or later.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::SharkCompiler): Call InitializeNativeTarget() to
+	link in native target when llvm version are 2.6 or later.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Call llvm_start_multithreaded() to
+	initialize llvm mutex guards when llvm version are 2.6 or later.
+
 2009-06-19  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkConstant.cpp

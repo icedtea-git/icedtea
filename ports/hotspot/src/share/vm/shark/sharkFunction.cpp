@@ -30,6 +30,12 @@ using namespace llvm;
 
 void SharkFunction::initialize(const char *name)
 {
+
+#if SHARK_LLVM_VERSION >= 26
+  // Initialize llvm mutex guards
+  llvm_start_multithreaded();
+#endif
+
   // Create the function
   _function = Function::Create(
     SharkType::entry_point_type(),
