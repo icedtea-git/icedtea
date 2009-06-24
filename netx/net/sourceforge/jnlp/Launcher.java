@@ -590,7 +590,7 @@ public class Launcher {
             return app;
         }
         catch (Exception ex) {
-            throw new LaunchException(file, ex, R("LSFatal"), R("LCInit"), R("LInitApplet"), R("LInitAppletInfo"));
+            throw new LaunchException(file, ex, R("LSFatal"), R("LCInit"), R("LInitApplication"), R("LInitApplicationInfo"));
         }
     }
 

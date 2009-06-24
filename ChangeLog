@@ -1,5 +1,11 @@
 2009-06-24  Omair Majid  <omajid@redhat.com>
 
+	* netx/net/sourceforge/jnlp/Launcher.java
+	(createApplication): Fix messages to refer to application instead of
+	applet.
+
+2009-06-24  Omair Majid  <omajid@redhat.com>
+
 	* netx/net/sourceforge/jnlp/Launcher.java (launchApplication): Check for any 
 	existing single instance.  Dont start a second instance.
 	* netx/net/sourceforge/jnlp/resources/Messages.properties: Add RNoLockDir.
