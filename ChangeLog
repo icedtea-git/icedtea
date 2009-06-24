@@ -1,3 +1,7 @@
+2009-06-24  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/cacao/no-strict-aliasing.patch: Apply for configure.ac.
+
 2009-06-11  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/hotspot/default/icedtea-debuginfo.patch,
