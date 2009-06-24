@@ -101,7 +101,7 @@ public class CertWarningPane extends SecurityDialogUI {
 		try {
 			if ((certVerifier instanceof HttpsCertVerifier) && 
 			     (c instanceof X509Certificate))
-			   name = getCN(((X509Certificate)c)
+			   name = SecurityUtil.getCN(((X509Certificate)c)
                                         .getSubjectX500Principal().getName());
 			else if (file instanceof PluginBridge)
 				name = file.getTitle();
@@ -112,7 +112,7 @@ public class CertWarningPane extends SecurityDialogUI {
 
 		try {
 			if (c instanceof X509Certificate) {
-				publisher = getCN(((X509Certificate)c)
+				publisher = SecurityUtil.getCN(((X509Certificate)c)
 					.getSubjectX500Principal().getName());
 			}
 		} catch (Exception e) {
@@ -234,24 +234,6 @@ public class CertWarningPane extends SecurityDialogUI {
 
 	protected String htmlWrap (String s) {
         return "<html>"+s+"</html>";
-    }
-
-
-    /**
-     * Extracts the CN field from a Certificate principal string.
-     */
-    private String getCN(String principal) {
-        int start = principal.indexOf("CN=");
-        int end = principal.indexOf(",", start);
-
-        if (end == -1) {
-            end = principal.length();
-        }
-
-        if (start >= 0)
-            return principal.substring(start+3, end);
-        else
-            return principal;
     }
 
 	private class MoreInfoButtonListener implements ActionListener {

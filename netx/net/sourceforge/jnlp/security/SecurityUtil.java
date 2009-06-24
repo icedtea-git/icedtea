@@ -63,20 +63,106 @@ public class SecurityUtil {
 		return password;
 	}
 	
-	public static String getCN(String principal) {
+    /**
+     * Extracts the CN field from a Certificate principal string. Or, if it
+     * can't find that, return the principal unmodified.
+     * 
+     * This is a simple (and hence 'wrong') version. See
+     * http://www.ietf.org/rfc/rfc2253.txt for all the gory details.
+     */
+    public static String getCN(String principal) {
+
+        /*
+         * FIXME Incomplete
+         * 
+         * This does not implement RFC 2253 completely
+         * 
+         * Issues:
+         * - rfc2253 talks about utf8, java uses utf16.
+         * - theoretically, java should have dealt with all byte encodings
+         *   so we shouldnt even see cases like \FF
+         * - if the above is wrong, then we need to deal with cases like 
+         *   \FF\FF
+         */
+
         int start = principal.indexOf("CN=");
-        int end = principal.indexOf(",", start);
-
-		if (end == -1) {
-			end = principal.length();
-		}
-
-        if (start >= 0)
-            return principal.substring(start+3, end);
-        else
+        if (start == -1) {
             return principal;
+        }
+
+        StringBuilder commonName = new StringBuilder();
+
+        boolean inQuotes = false;
+        boolean escaped = false;
+
+        /*
+         * bit 0 = high order bit. bit 1 = low order bit
+         */
+        char[] hexBits = null;
+
+        for (int i = start + 3; i < principal.length(); i++) {
+            char ch = principal.charAt(i);
+            switch (ch) {
+            case '"':
+                if (escaped) {
+                    commonName.append(ch);
+                    escaped = false;
+                } else {
+                    inQuotes = !inQuotes;
+                }
+                break;
+
+            case '\\':
+                if (escaped) {
+                    commonName.append(ch);
+                    escaped = false;
+                } else {
+                    escaped = true;
+                }
+                break;
+
+            case ',':
+                /* fall through */
+            case ';':
+                /* fall through */
+            case '+':
+                if (escaped || inQuotes) {
+                    commonName.append(ch);
+                    if (escaped) {
+                        escaped = false;
+                    }
+                } else {
+                    return commonName.toString();
+                }
+                break;
+
+            default:
+                if (escaped && isHexDigit(ch)) {
+                    hexBits = new char[2];
+                    hexBits[0] = ch;
+                } else if (hexBits != null) {
+                    if (!isHexDigit(ch)) {
+                        /* error parsing */
+                        return "";
+                    }
+                    hexBits[1] = ch;
+                    commonName.append((char) Integer.parseInt(new String(hexBits), 16));
+                    hexBits = null;
+                } else {
+                    commonName.append(ch);
+                }
+                escaped = false;
+            }
+        }
+
+        return commonName.toString();
+
     }
-	
+
+    private static boolean isHexDigit(char ch) {
+        return ((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f'));
+    }
+
 	/**
 	 * Checks the user's home directory to see if the trusted.certs file exists.
 	 * If it does not exist, it tries to create an empty keystore.

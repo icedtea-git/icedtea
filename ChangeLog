@@ -1,5 +1,24 @@
 2009-06-24  Omair Majid  <omajid@redhat.com>
 
+	* netx/net/sourceforge/jnlp/security/CertWarningPane.java
+	(installComponents): Call SecurityUtil.getCN instead of getCN.
+	(getCN): Removed.
+	* netx/net/sourceforge/jnlp/security/CertsInfoPane.java
+	(buildTree): Call SecurityUtil.getCN instead of getCN.
+	(populateTable): Likewise.
+	(getCN): Removed.
+	* netx/net/sourceforge/jnlp/security/SecurityUtil.java
+	(getCN): Follow RFC 2253 partially and understand escaping.
+	(isHexDigit): New function.
+	* netx/net/sourceforge/jnlp/security/SingleCertInfoPane.java
+	(buildTree): Call SecurityUtil.getCN instead of getCN.
+	(populateTable): Likewise.
+	* netx/net/sourceforge/jnlp/tools/KeyTool.java:
+	(doPrintEntry): Call SecurityUtil.getCN instead of getCN.
+	(getCN): Removed. 
+
+2009-06-24  Omair Majid  <omajid@redhat.com>
+
 	* netx/net/sourceforge/jnlp/Launcher.java
 	(createApplication): Fix messages to refer to application instead of
 	applet.

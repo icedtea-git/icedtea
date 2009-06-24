@@ -55,9 +55,9 @@ public class SingleCertInfoPane extends CertsInfoPane {
 	protected void buildTree() {
 		X509Certificate cert = ((SecurityWarningDialog)optionPane).getCert();
 		String subjectString = 
-			getCN(cert.getSubjectX500Principal().getName());
+			SecurityUtil.getCN(cert.getSubjectX500Principal().getName());
 		String issuerString = 
-			getCN(cert.getIssuerX500Principal().getName());
+			SecurityUtil.getCN(cert.getIssuerX500Principal().getName());
 
 		DefaultMutableTreeNode top = new DefaultMutableTreeNode(subjectString 
 				+ " (" + issuerString + ")");
@@ -72,7 +72,7 @@ public class SingleCertInfoPane extends CertsInfoPane {
 		certNames = new String[1];
 		certsData = new ArrayList<String[][]>();
 		certsData.add(parseCert(c));
-		certNames[0] = getCN(c.getSubjectX500Principal().getName())
-		+ " (" + getCN(c.getIssuerX500Principal().getName()) + ")";
+		certNames[0] = SecurityUtil.getCN(c.getSubjectX500Principal().getName())
+		+ " (" + SecurityUtil.getCN(c.getIssuerX500Principal().getName()) + ")";
 	}
 }

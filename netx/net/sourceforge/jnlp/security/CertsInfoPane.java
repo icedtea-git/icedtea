@@ -91,9 +91,9 @@ public class CertsInfoPane extends SecurityDialogUI {
 		X509Certificate firstCert = 
 			((X509Certificate)firstPath.getCertificates().get(0));
 		String subjectString = 
-			getCN(firstCert.getSubjectX500Principal().getName());
+			SecurityUtil.getCN(firstCert.getSubjectX500Principal().getName());
 		String issuerString = 
-			getCN(firstCert.getIssuerX500Principal().getName());
+			SecurityUtil.getCN(firstCert.getIssuerX500Principal().getName());
 
 		DefaultMutableTreeNode top =
 			new DefaultMutableTreeNode(subjectString 
@@ -105,9 +105,9 @@ public class CertsInfoPane extends SecurityDialogUI {
 			X509Certificate secondCert = 
 				((X509Certificate)firstPath.getCertificates().get(1));
 			subjectString = 
-				getCN(secondCert.getSubjectX500Principal().getName());
+				SecurityUtil.getCN(secondCert.getSubjectX500Principal().getName());
 			issuerString = 
-				getCN(secondCert.getIssuerX500Principal().getName());
+				SecurityUtil.getCN(secondCert.getIssuerX500Principal().getName());
 			top.add(new DefaultMutableTreeNode(subjectString 
 				+ " (" + issuerString + ")"));
 		}
@@ -129,8 +129,8 @@ public class CertsInfoPane extends SecurityDialogUI {
 
             X509Certificate c = (X509Certificate) certs.get(0).getCertificates().get(i);
             certsData.add(parseCert(c));
-            certNames[i] = getCN(c.getSubjectX500Principal().getName())
-				+ " (" + getCN(c.getIssuerX500Principal().getName()) + ")";
+            certNames[i] = SecurityUtil.getCN(c.getSubjectX500Principal().getName())
+				+ " (" + SecurityUtil.getCN(c.getIssuerX500Principal().getName()) + ")";
         }
 	}
 	
@@ -233,23 +233,6 @@ public class CertsInfoPane extends SecurityDialogUI {
 		optionPane.add(mainPane, BorderLayout.CENTER);
 		optionPane.add(buttonPane, BorderLayout.SOUTH);
 	}
-
-	/**
-	 * Extracts the CN field from a Certificate principal string.
-	 */
-	protected String getCN(String principal) {
-        int start = principal.indexOf("CN=");
-        int end = principal.indexOf(",", start);
-
-		if (end == -1) {
-			end = principal.length();
-		}
-
-        if (start >= 0)
-            return principal.substring(start+3, end);
-        else
-            return principal;
-    }
 
 	/**
 	 * Copies the currently selected certificate to the system Clipboard.

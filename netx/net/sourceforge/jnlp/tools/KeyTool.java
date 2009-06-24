@@ -176,30 +176,13 @@ public class KeyTool {
 
 			out.println("Alias: " + alias);
 			out.println("Date Created: " + usercerts.getCreationDate(alias));
-			out.println("Subject: " + getCN(((X509Certificate)usercerts
+			out.println("Subject: " + SecurityUtil.getCN(((X509Certificate)usercerts
 				.getCertificate(alias)).getSubjectX500Principal().getName()));
 			out.println("Certificate fingerprint (MD5): "
 					+ getCertFingerPrint("MD5", cert));
 			out.println();
 		}
 	}
-
-	/**
-	 * Extracts the CN field from a Certificate principal string.
-	 */
-	private String getCN(String principal) {
-		int start = principal.indexOf("CN=");
-		int end = principal.indexOf(",", start);
-
-		if (end == -1) {
-			end = principal.length();
-		}
-
-		if (start >= 0)
-			return principal.substring(start+3, end);
-		else
-			return principal;
-    }
 
     /**
      * Gets the requested finger print of the certificate.
