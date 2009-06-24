@@ -51,7 +51,8 @@ public class XServiceManagerStub implements ServiceManagerStub {
         "javax.jnlp.FileOpenService",
         "javax.jnlp.FileSaveService",
         "javax.jnlp.ClipboardService",
-        "javax.jnlp.PrintService"
+        "javax.jnlp.PrintService",
+        "javax.jnlp.SingleInstanceService"
     };
 
     private static Object services[] = {
@@ -63,7 +64,8 @@ public class XServiceManagerStub implements ServiceManagerStub {
         ServiceUtil.createPrivilegedProxy(FileOpenService.class, new XFileOpenService()),
         ServiceUtil.createPrivilegedProxy(FileSaveService.class, new XFileSaveService()),
         ServiceUtil.createPrivilegedProxy(ClipboardService.class, new XClipboardService()),
-        ServiceUtil.createPrivilegedProxy(PrintService.class, new XPrintService())
+        ServiceUtil.createPrivilegedProxy(PrintService.class, new XPrintService()),
+        ServiceUtil.createPrivilegedProxy(ExtendedSingleInstanceService.class, new XSingleInstanceService())
     };
 
 

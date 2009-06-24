@@ -17,12 +17,29 @@
 
 package net.sourceforge.jnlp.services;
 
-import java.lang.reflect.*;
-import java.security.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 
-import javax.jnlp.*;
+import javax.jnlp.BasicService;
+import javax.jnlp.ClipboardService;
+import javax.jnlp.DownloadService;
+import javax.jnlp.ExtensionInstallerService;
+import javax.jnlp.FileOpenService;
+import javax.jnlp.FileSaveService;
+import javax.jnlp.PersistenceService;
+import javax.jnlp.PrintService;
+import javax.jnlp.ServiceManager;
+import javax.jnlp.SingleInstanceService;
+import javax.jnlp.UnavailableServiceException;
 
-import net.sourceforge.jnlp.runtime.*;
+import net.sourceforge.jnlp.JNLPFile;
+import net.sourceforge.jnlp.runtime.ApplicationInstance;
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
 import net.sourceforge.jnlp.security.SecurityWarningDialog;
 
 /**
@@ -110,6 +127,25 @@ public class ServiceUtil {
         return (PrintService) getService("javax.jnlp.PrintService");
     }
 
+    /**
+     * Returns the SingleInstanceService reference, or null if the service is
+     * unavailable.
+     */
+    public static SingleInstanceService getSingleInstanceService() {
+        return (SingleInstanceService) getService("javax.jnlp.SingleInstanceService");
+    }
+    
+    /**
+     * Checks that this application (represented by the jnlp) isnt already running
+     * @param jnlpFile the {@link JNLPFile} that specifies the application
+     * 
+     * @throws InstanceExistsException if an instance of this application already exists
+     */
+    public static void checkExistingSingleInstance(JNLPFile jnlpFile) {
+        ExtendedSingleInstanceService esis = (ExtendedSingleInstanceService) getSingleInstanceService();
+        esis.checkSingleInstanceRunning(jnlpFile);
+    }
+    
     /**
      * Returns the service, or null instead of an UnavailableServiceException
      */

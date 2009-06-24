@@ -37,6 +37,8 @@ import net.sourceforge.jnlp.runtime.AppletInstance;
 import net.sourceforge.jnlp.runtime.ApplicationInstance;
 import net.sourceforge.jnlp.runtime.JNLPClassLoader;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import net.sourceforge.jnlp.services.InstanceExistsException;
+import net.sourceforge.jnlp.services.ServiceUtil;
 import net.sourceforge.jnlp.util.Reflect;
 
 /**
@@ -365,6 +367,12 @@ public class Launcher {
             throw launchError(new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LNotApplication"), R("LNotApplicationInfo")));
 
         try {
+            
+            try {
+                ServiceUtil.checkExistingSingleInstance(file);
+            } catch (InstanceExistsException e) {
+                return null;
+            }
             
             if (JNLPRuntime.getForksAllowed() && file.needsNewVM()) {
                 List<String> netxArguments = new LinkedList<String>();

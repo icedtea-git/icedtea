@@ -104,6 +104,9 @@ public class JNLPRuntime {
     /** contains the arguments passed to the jnlp runtime */
     private static List<String> initialArguments;
 
+    /** Username */
+    public static final String USER = System.getProperty("user.name");
+
     /** User's home directory */
     public static final String HOME_DIR = System.getProperty("user.home");
 
@@ -119,12 +122,17 @@ public class JNLPRuntime {
     /** the ~/.netx/security/trusted.certs file containing trusted certificates */
     public static final String CERTIFICATES_FILE = SECURITY_DIR + File.separator + "trusted.certs";
 
+    /** the /tmp/ directory used for temporary files */
+    public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
+
     /**
-     * the ~/.netx/locks/ directory containing locks for single instance
+     * the /tmp/$USER/netx/locks/ directory containing locks for single instance
      * applications
      */
-    public static final String LOCKS_DIR = NETX_DIR + File.separator + "locks";
+    public static final String LOCKS_DIR = TMP_DIR + File.separator + USER + File.separator
+            + "netx" + File.separator + "locks";
 
+    /** the java.home directory */
     public static final String JAVA_HOME_DIR = System.getProperty("java.home");
     
     /** the JNLP file to open to display the network-based about window */
