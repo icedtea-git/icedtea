@@ -72,7 +72,7 @@ class Parser {
 
 
     /** the supported JNLP file versions */
-    private static Version supportedVersions = new Version("1.0");
+    private static Version supportedVersions = new Version("1.0 1.5 6.0");
 
     // fix: some descriptors need to use the jnlp file at a later
     // date and having file ref lets us pass it to their
