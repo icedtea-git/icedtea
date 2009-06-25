@@ -290,11 +290,6 @@ JRT_ENTRY(void, SharkRuntime::monitorexit_C(JavaThread*      thread,
     THROW(vmSymbols::java_lang_IllegalMonitorStateException());
   }
   ObjectSynchronizer::slow_exit(object(), lock->lock(), thread);
-
-  // Free entry. This must be done here, since a pending exception
-  // might be installed on exit. If it is not cleared, the exception
-  // handling code will try to unlock the monitor again.
-  lock->set_obj(NULL); 
 }
 JRT_END
   

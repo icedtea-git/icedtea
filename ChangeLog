@@ -1,3 +1,8 @@
+2009-06-25  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::monitorexit_C): Remove unnecessary lock clear.
+
 2009-06-23  Matthias Klose  <doko@ubuntu.com>
 
 	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp: Fix header location.
