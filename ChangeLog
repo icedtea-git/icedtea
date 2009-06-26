@@ -1,3 +1,12 @@
+2009-06-26  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::SharkCompiler): Moved LLVM multithreading
+	initialization from SharkFunction::initialize.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Moved LLVM multithreading
+	initialization to SharkCompiler::SharkCompiler.
+
 2009-06-25  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp

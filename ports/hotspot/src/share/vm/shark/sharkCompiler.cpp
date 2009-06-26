@@ -33,6 +33,15 @@ using namespace llvm;
 SharkCompiler::SharkCompiler()
   : AbstractCompiler()
 {
+#if SHARK_LLVM_VERSION >= 26
+  // Make LLVM safe for multithreading.  We only make LLVM calls from
+  // the compiler thread, but if LLVM leaves stubs to be rewritten on
+  // execution then it's possible for Java threads to be making LLVM
+  // calls at the same time we are.
+  if (!llvm_start_multithreaded()) 
+    warning("llvm_start_multithreaded() failed");
+#endif
+
   // Create a module to build our functions into
   _module = new Module("shark");
 
