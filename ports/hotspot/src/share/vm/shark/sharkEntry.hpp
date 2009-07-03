@@ -43,7 +43,4 @@ class SharkEntry : public ZeroEntry {
   {
     _code_limit = code_limit;
   }
-  
- public:
-  void print_statistics(const char* name) const PRODUCT_RETURN;
 };

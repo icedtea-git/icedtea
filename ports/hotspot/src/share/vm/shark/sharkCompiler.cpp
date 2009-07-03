@@ -166,12 +166,12 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   entry->set_entry_point(
     (ZeroEntry::method_entry_t)
       execution_engine()->getPointerToFunction(function));
+  address code_start = entry->code_start();
+  address code_limit = entry->code_limit();
 
   // Register generated code for profiling, etc
-  if (JvmtiExport::should_post_dynamic_code_generated()) {
-    JvmtiExport::post_dynamic_code_generated(
-      name, entry->code_start(), entry->code_limit());
-  }
+  if (JvmtiExport::should_post_dynamic_code_generated())
+    JvmtiExport::post_dynamic_code_generated(name, code_start, code_limit);
   
   // Install the method into the VM
   CodeOffsets offsets;
@@ -198,8 +198,11 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
                        false);
 
   // Print statistics, if requested
-  if (SharkTraceInstalls)
-    entry->print_statistics(name);
+  if (SharkTraceInstalls) {
+    tty->print_cr(
+      " [%p-%p): %s (%d bytes code)",
+      code_start, code_limit, name, code_limit - code_start);
+  }
 }
 
 const char* SharkCompiler::methodname(const ciMethod* target)

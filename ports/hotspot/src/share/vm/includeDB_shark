@@ -167,8 +167,6 @@ sharkConstant.hpp                       ciStreams.hpp
 sharkConstant.hpp                       sharkBuilder.hpp
 sharkConstant.hpp                       sharkValue.hpp
 
-sharkEntry.cpp                          sharkEntry.hpp
-
 sharkEntry.hpp                          llvmHeaders.hpp
 
 sharkFunction.cpp                       allocation.hpp
