@@ -336,10 +336,10 @@ class Parser {
 
         Node dload[] = getChildNodes(node, "ext-download");
         for (int i=0; i < dload.length; i++) {
-            boolean lazy = "lazy".equals(getAttribute(node, "download", "eager"));
+            boolean lazy = "lazy".equals(getAttribute(dload[i], "download", "eager"));
 
-            ext.addPart(getRequiredAttribute(node, "ext-part", null),
-                        getAttribute(node, "part", null),
+            ext.addPart(getRequiredAttribute(dload[i], "ext-part", null),
+                        getAttribute(dload[i], "part", null),
                         lazy);
         }
 

@@ -1,5 +1,10 @@
 2009-07-07  Omair Majid  <omajid@redhat.com>
 
+	* netx/net/sourceforge/jnlp/Parser.java
+	(getExtension): Fix typo in node name.
+
+2009-07-07  Omair Majid  <omajid@redhat.com>
+
 	* netx/net/sourceforge/jnlp/resources/Messages.properties: Add
 	RNestedJarExtration.
 	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java
