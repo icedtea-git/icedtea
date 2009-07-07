@@ -521,6 +521,10 @@ public class JNLPClassLoader extends URLClassLoader {
                                     // with standard classloader methods)
 
                                     String extractedJarLocation = localFile.getParent() + "/" + je.getName();
+                                    File parentDir = new File(extractedJarLocation).getParentFile();
+                                    if (!parentDir.isDirectory() && !parentDir.mkdirs()) {
+                                        throw new RuntimeException(R("RNestedJarExtration"));
+                                    }
                                     FileOutputStream extractedJar = new FileOutputStream(extractedJarLocation);
                                     InputStream is = jarFile.getInputStream(je);
 
