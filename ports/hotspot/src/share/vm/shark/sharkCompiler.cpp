@@ -43,7 +43,15 @@ SharkCompiler::SharkCompiler()
 #endif
 
   // Create a module to build our functions into
+#if SHARK_LLVM_VERSION >= 26
+  // LLVM 2.6 and later requires passing a LLVMContext during module
+  // creation. The LLVM API getGlobalContext() returns a LLVMContext that
+  // can be used safely as long as the shark compiler stays single threaded
+  // and only uses one module.
+  _module = new Module("shark", getGlobalContext());
+#else
   _module = new Module("shark");
+#endif
 
   // Create the builder to build our functions
   _builder = new SharkBuilder(this);

@@ -32,6 +32,9 @@
 #include <llvm/DerivedTypes.h>
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
 #include <llvm/Instructions.h>
+#if SHARK_LLVM_VERSION >= 26
+#include <llvm/LLVMContext.h>
+#endif
 #include <llvm/Module.h>
 #include <llvm/ModuleProvider.h>
 #include <llvm/Support/IRBuilder.h>
