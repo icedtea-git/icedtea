@@ -1,3 +1,12 @@
+2009-07-08  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::pointer_constant): Pass the LLVMContext returned
+	from getGlobalContext() to the new GlobalVariable constructor
+	when llvm version are 2.6 or later to handle LLVM API change.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::CreateDump): Likewise.
+
 2009-07-07  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp

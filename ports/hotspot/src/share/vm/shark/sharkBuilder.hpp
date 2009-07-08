@@ -174,7 +174,14 @@ class SharkBuilder : public llvm::IRBuilder<> {
     char name[128];
     snprintf(name, sizeof name - 1, "pointer_constant_%p", ptr);
 
-    GlobalVariable *value = new GlobalVariable(SharkType::intptr_type(),
+    GlobalVariable *value = new GlobalVariable(
+#if SHARK_LLVM_VERSION >= 26
+      // LLVM 2.6 requires a LLVMContext during GlobalVariable construction.
+      // getGlobalConext() returns one that can be used as long as the shark
+      // compiler are single-threaded.
+      getGlobalContext(),
+#endif
+      SharkType::intptr_type(),
       false, GlobalValue::ExternalLinkage,
       NULL, name, module());
     execution_engine()->addGlobalMapping(value, const_cast<void*>(ptr));

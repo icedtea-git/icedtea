@@ -187,6 +187,12 @@ CallInst* SharkBuilder::CreateDump(llvm::Value* value)
   Value *name = CreatePtrToInt(
     CreateStructGEP(
       new GlobalVariable(
+#if SHARK_LLVM_VERSION >= 26
+        // LLVM 2.6 requires a LLVMContext during GlobalVariable construction.
+        // getGlobalConext() returns one that can be used as long as the shark
+        // compiler are single-threaded.
+        getGlobalContext(),
+#endif
         const_name->getType(),
         true, GlobalValue::InternalLinkage,
         const_name, "dump", module()),
