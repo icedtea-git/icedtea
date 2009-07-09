@@ -1,3 +1,15 @@
+2009-07-09  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::SharkBuilder):  Pass the LLVMContext returned
+	from getGlobalContext() to the new IRBuilder constructor
+	when llvm version are 2.6 or later to handle LLVM API change.
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.cpp:
+	New methods allocateGlobal, setPoisonMemory, dependent on the
+	llvm version.
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.hpp:
+	Likewise.
+ 
 2009-07-08  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp

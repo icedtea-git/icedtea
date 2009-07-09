@@ -92,6 +92,11 @@ void SharkMemoryManager::deallocateMemForFunction(const Function* F)
 }
 
 #if SHARK_LLVM_VERSION >= 26
+uint8_t* SharkMemoryManager::allocateGlobal(uintptr_t Size, unsigned int Alignment)
+{
+  return mm()->allocateGlobal(Size, Alignment);
+}
+
 void* SharkMemoryManager::getDlsymTable() const
 {
   return mm()->getDlsymTable();
@@ -100,6 +105,11 @@ void* SharkMemoryManager::getDlsymTable() const
 void SharkMemoryManager::SetDlsymTable(void *ptr)
 {
   mm()->SetDlsymTable(ptr);
+}
+
+void SharkMemoryManager::setPoisonMemory(bool poison)
+{
+  mm()->setPoisonMemory(poison);
 }
 
 #endif

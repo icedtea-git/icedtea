@@ -74,6 +74,8 @@ class SharkMemoryManager : public llvm::JITMemoryManager {
 #if SHARK_LLVM_VERSION >= 26
   void* getDlsymTable() const;
   void SetDlsymTable(void *ptr);
+  void setPoisonMemory(bool);
+  uint8_t* allocateGlobal(uintptr_t, unsigned int);
 #endif
   void setMemoryWritable();
   void setMemoryExecutable();

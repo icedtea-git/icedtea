@@ -61,7 +61,14 @@ extern "C" {
 #endif
 
 SharkBuilder::SharkBuilder(SharkCompiler* compiler)
+#if SHARK_LLVM_VERSION >= 26
+  // LLVM 2.6 requires a LLVMContext during IRBuilder construction.
+  // getGlobalConext() returns one that can be used as long as the shark
+  // compiler are single-threaded.
+  : IRBuilder<>(getGlobalContext()),
+#else
   : IRBuilder<>(),
+#endif
     _compiler(compiler)
 {
   init_external_functions();
