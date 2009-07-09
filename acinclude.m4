@@ -1561,3 +1561,104 @@ if test "x${ADD_ZERO_BUILD_TRUE}" = x && test "x${abs_top_builddir}" = "x${abs_t
   AC_MSG_ERROR([build of additional zero/shark VM requires build with srcdir != builddir])
 fi
 ])
+
+AC_DEFUN([IT_LIBRARY_CHECK],[
+AC_CACHE_CHECK([if java.io.PrintStream is missing the 1.5 constructors (PR40616)], it_cv_cp40616, [
+CLASS=Test.java
+mkdir tmp.$$
+cd tmp.$$
+cat << \EOF > $CLASS
+/* [#]line __oline__ "configure" */
+public class Test 
+{
+  public static void main(String[] args)
+  throws Exception
+  {
+    new java.io.PrintStream(new java.io.File("bluh"), "UTF-8");
+  }
+}
+EOF
+if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1; then
+  it_cv_cp40616=no;
+else
+  it_cv_cp40616=yes;
+fi
+])
+rm -f $CLASS *.class
+cd ..
+rmdir tmp.$$
+AM_CONDITIONAL([CP40616], test x"${it_cv_cp40616}" = "xyes")
+AC_PROVIDE([$0])dnl
+])
+
+AC_DEFUN([IT_SCANNER_CHECK],[
+AC_CACHE_CHECK([if java.util.Scanner is missing], it_cv_cp30436, [
+CLASS=Test.java
+BYTECODE=$(echo $CLASS|sed 's#\.java##')
+mkdir tmp.$$
+cd tmp.$$
+cat << \EOF > $CLASS
+/* [#]line __oline__ "configure" */
+public class Test 
+{
+  public static void main(String[] args)
+  throws Exception
+  {
+    new java.util.Scanner("Hello");
+  }
+}
+EOF
+if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1; then
+  if $JAVA -classpath . $BYTECODE 2>&1 | grep 'Exception'; then
+      it_cv_cp30436=yes;
+  else
+      it_cv_cp30436=no;
+  fi
+else
+  it_cv_cp30436=yes;
+fi
+])
+rm -f $CLASS *.class
+cd ..
+rmdir tmp.$$
+AM_CONDITIONAL([LACKS_JAVA_UTIL_SCANNER], test x"${it_cv_cp30436}" = "xyes")
+AC_PROVIDE([$0])dnl
+])
+
+AC_DEFUN([IT_PR40630_CHECK],[
+if test "x${it_cv_cp30436}" = "xno"; then
+  AC_CACHE_CHECK([if java.util.Scanner exhibits Classpath bug 40630], it_cv_cp40630, [
+  CLASS=Test.java
+  mkdir tmp.$$
+  cd tmp.$$
+  cat << \EOF > $CLASS
+  /* [#]line __oline__ "configure" */
+public class Test 
+{
+  public static void main(String[] args)
+  throws Exception
+  {
+    Scanner s = new Scanner("Blah\nBlah\n\nBlah\n\n");
+    for (int i = 0; i < 5; ++i)
+      s.nextLine();
+    s.hasNextLine();
+  }
+}
+EOF
+  if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1; then
+    if $JAVA -classpath . $CLASS 2>&1 | grep 'Exception'; then
+      it_cv_cp40630=yes;
+    else
+      it_cv_cp40630=no;
+    fi
+  else
+    it_cv_cp40630=yes;
+  fi
+  ])
+  rm -f $CLASS *.class
+  cd ..
+  rmdir tmp.$$
+fi
+AM_CONDITIONAL([CP40630], test x"${it_cv_cp40630}" = "xyes")
+AC_PROVIDE([$0])dnl
+])

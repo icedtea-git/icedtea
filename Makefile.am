@@ -1,20 +1,20 @@
-OPENJDK_VERSION = b60
+OPENJDK_VERSION = b63
 
-OPENJDK_CHANGESET = 472c21584cfd
-CORBA_CHANGESET = e906b16a12a9
-JAXP_CHANGESET = f1ac756616ea
-JAXWS_CHANGESET = 55ffcbca5f46
-JDK_CHANGESET = 1a01c90431a7
-LANGTOOLS_CHANGESET = 522520757dd3
-HOTSPOT_CHANGESET = 86092459c54d
+OPENJDK_CHANGESET = 57f7e028c7ad
+CORBA_CHANGESET = d20e45cd539f
+JAXP_CHANGESET = ae449e9c04c1
+JAXWS_CHANGESET = 5b9e8315aab2
+JDK_CHANGESET = 6388560a8d7e
+LANGTOOLS_CHANGESET = 5c2c81120555
+HOTSPOT_CHANGESET = 32c83fb84370
 
-OPENJDK_MD5SUM = 9f5e15067cf5207760a83cea8ba41da8
-CORBA_MD5SUM = 7f00e0b5d16046d116cd53c9f43c7122
-JAXP_MD5SUM = 2de0ec54014eb7f25c811e40fc2e3e3f
-JAXWS_MD5SUM = 9c0131755eefaa929ca8e47abe21cc58
-JDK_MD5SUM = 1fd637880521f3e2c274a1db8bfed89b
-LANGTOOLS_MD5SUM = e7c0ac7a9d67d361cc64fc15312d4a85
-HOTSPOT_MD5SUM = 18c922319545d7e907a2d6cbb265865d
+OPENJDK_MD5SUM = 01a2fe09452d8579fb251120e37dc45a
+CORBA_MD5SUM = 865e397135e2b9f8e4a256b4146b6852
+JAXP_MD5SUM = 008c8971c40aca1759dd0129a025f9b8
+JAXWS_MD5SUM = 86d18ba378cb83a2bd33b334c7bd610e
+JDK_MD5SUM = 68b034a7d0906a0f7b471e080b45407a
+LANGTOOLS_MD5SUM = 5ff432cec3ddf86ae5dbd147da1a7f92
+HOTSPOT_MD5SUM = a97947d03665b39b806ddcf2e48b9fc8
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
@@ -1567,6 +1567,7 @@ ICEDTEA_ENV = \
 	"ALT_PARALLEL_COMPILE_JOBS=$(PARALLEL_JOBS)" \
 	"HOTSPOT_BUILD_JOBS=$(PARALLEL_JOBS)" \
 	"JAVAC=" \
+	"ANT_RESPECT_JAVA_HOME=TRUE" \
 	"RHINO_JAR=$(RHINO_JAR)" \
 	"DISTRIBUTION_ID=$(DIST_ID)" \
 	"ALT_JIBX_LIBS_PATH=$(JIBX_DEPS_DIR)" \
@@ -2479,9 +2480,7 @@ stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
 # Patch OpenJDK for ecj/gcj builds.
 ICEDTEA_ECJ_PATCHES = patches/ecj/icedtea.patch \
 	patches/ecj/icedtea-hotspot-$(HSBUILD).patch \
-	patches/ecj/icedtea-spp.patch \
 	patches/ecj/icedtea-jopt.patch \
-	patches/ecj/icedtea-sbcs.patch \
 	patches/ecj/icedtea-dyn.patch
 
 if CP39408_JAVAH
@@ -2490,6 +2489,25 @@ endif
 
 if CP40188_JAVAH
 ICEDTEA_ECJ_PATCHES += patches/ecj/icedtea-pr40188.patch
+endif
+
+if CP40616
+ICEDTEA_ECJ_PATCHES += patches/ecj/icedtea-pr40616.patch
+endif
+
+# Patches for when java.util.Scanner is missing
+# or has the bug #40630 (all these classes rely
+# on Scanner#hasNextLine() looping behaviour)
+SCANNER_PATCHES = patches/ecj/icedtea-spp.patch \
+	patches/ecj/icedtea-sbcs.patch \
+	patches/ecj/icedtea-dbcs.patch
+
+if LACKS_JAVA_UTIL_SCANNER
+ICEDTEA_ECJ_PATCHES += $(SCANNER_PATCHES)
+else
+if CP40630
+ICEDTEA_ECJ_PATCHES += $(SCANNER_PATCHES)
+endif
 endif
 
 stamps/patch-ecj.stamp: stamps/clone-ecj.stamp

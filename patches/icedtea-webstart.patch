@@ -1,17 +1,67 @@
-diff -c openjdk.orig/jdk/make/launchers/Makefile openjdk/jdk/make/launchers/Makefile
---- openjdk.orig/jdk/make/launchers/Makefile	2008-06-29 09:45:56.000000000 -0400
-+++ openjdk/jdk/make/launchers/Makefile	2008-06-29 09:47:01.000000000 -0400
+diff -Nru openjdk.orig/jdk/make/launchers/Makefile openjdk/jdk/make/launchers/Makefile
+--- openjdk.orig/jdk/make/launchers/Makefile	2009-06-30 14:05:45.000000000 +0100
++++ openjdk/jdk/make/launchers/Makefile	2009-06-30 17:09:40.000000000 +0100
 @@ -67,6 +67,7 @@
  $(call make-launcher, javadoc, com.sun.tools.javadoc.Main, , )
  $(call make-launcher, javah, com.sun.tools.javah.Main, , )
- $(call make-launcher, javap, sun.tools.javap.Main, , )
+ $(call make-launcher, javap, com.sun.tools.javap.Main, , )
 +$(call make-launcher, javaws, net.sourceforge.jnlp.runtime.Boot, , )
  $(call make-launcher, jconsole, sun.tools.jconsole.JConsole, \
    -J-Djconsole.showOutputViewer, )
  $(call make-launcher, jdb, com.sun.tools.example.debug.tty.TTY, , )
-diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java
---- openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2008-01-12 15:53:45.000000000 -0500
-+++ openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2008-02-04 11:51:20.000000000 -0500
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java
+--- openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java	2009-06-30 16:45:46.000000000 +0100
++++ openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java	2009-06-30 17:09:09.000000000 +0100
+@@ -67,7 +67,7 @@
+     /**
+      * The applet (if loaded).
+      */
+-    Applet applet;
++    protected Applet applet;
+ 
+     /**
+      * Applet will allow initialization.  Should be
+@@ -116,7 +116,7 @@
+     /**
+      * The thread for the applet.
+      */
+-    Thread handler;
++    protected Thread handler;
+ 
+ 
+     /**
+@@ -161,7 +161,8 @@
+      * Creates a thread to run the applet. This method is called
+      * each time an applet is loaded and reloaded.
+      */
+-    synchronized void createAppletThread() {
++	//Overridden by NetxPanel.
++    protected synchronized void createAppletThread() {
+         // Create a thread group for the applet, and start a new
+         // thread to load the applet.
+         String nm = "applet-" + getCode();
+@@ -305,7 +306,7 @@
+     /**
+      * Get an event from the queue.
+      */
+-    synchronized AppletEvent getNextEvent() throws InterruptedException {
++    protected synchronized AppletEvent getNextEvent() throws InterruptedException {
+         while (queue == null || queue.isEmpty()) {
+             wait();
+         }
+@@ -694,7 +695,8 @@
+      * applet event processing so that it can be gracefully interrupted from
+      * things like HotJava.
+      */
+-    private void runLoader() {
++	//Overridden by NetxPanel.
++    protected void runLoader() {
+         if (status != APPLET_DISPOSE) {
+             showAppletStatus("notdisposed");
+             return;
+diff -Nru openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java
+--- openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2009-06-30 16:45:46.000000000 +0100
++++ openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2009-06-30 17:09:09.000000000 +0100
 @@ -42,25 +42,25 @@
   *
   * @author      Arthur van Hoff
@@ -67,53 +117,3 @@ diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java o
          if(debug) {
              t.printStackTrace();
              debug(s);
-diff -urN openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java
---- openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java	2008-03-26 04:58:12.000000000 -0400
-+++ openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java	2008-04-07 21:55:56.000000000 -0400
-@@ -68,7 +68,7 @@
-     /**
-      * The applet (if loaded).
-      */
--    Applet applet;
-+    protected Applet applet;
- 
-     /**
-      * Applet will allow initialization.  Should be
-@@ -117,7 +117,7 @@
-     /**
-      * The thread for the applet.
-      */
--    Thread handler;
-+    protected Thread handler;
- 
- 
-     /**
-@@ -162,7 +162,8 @@
-      * Creates a thread to run the applet. This method is called
-      * each time an applet is loaded and reloaded.
-      */
--    synchronized void createAppletThread() {
-+	//Overridden by NetxPanel.
-+    protected synchronized void createAppletThread() {
-         // Create a thread group for the applet, and start a new
-         // thread to load the applet.
-         String nm = "applet-" + getCode();
-@@ -306,7 +307,7 @@
-     /**
-      * Get an event from the queue.
-      */
--    synchronized AppletEvent getNextEvent() throws InterruptedException {
-+    protected synchronized AppletEvent getNextEvent() throws InterruptedException {
-         while (queue == null || queue.isEmpty()) {
-             wait();
-         }
-@@ -695,7 +696,8 @@
-      * applet event processing so that it can be gracefully interrupted from
-      * things like HotJava.
-      */
--    private void runLoader() {
-+	//Overridden by NetxPanel.
-+    protected void runLoader() {
-         if (status != APPLET_DISPOSE) {
-             showAppletStatus("notdisposed");
-             return;

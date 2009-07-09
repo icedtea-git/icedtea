@@ -1,3 +1,27 @@
+2009-07-09  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Bump to b63 and latest IcedTea changesets.
+	Add ANT_RESPECT_JAVA_HOME for Gentoo ant support.
+	Support patches for PR40616 and PR40630.  Only
+	apply Scanner patches when needed.
+	* acinclude.m4:
+	(IT_LIBRARY_CHECK): Check for PR40616, missing
+	PrintStream constructors in GCJ.
+	(IT_SCANNER_CHECK): Check for PR30436, missing
+	java.util.Scanner class.
+	(IT_PR40630_CHECK): Check for PR40630, broken
+	java.util.Scanner#hasNextLine().
+	* configure.ac: Apply new macros.
+	* patches/ecj/icedtea-dbcs.patch: Replace java.util.Scanner
+	in GenerateDBCS.
+	* patches/ecj/icedtea-sbcs.patch,
+	* patches/ecj/icedtea.patch,
+	* patches/hotspot/default/icedtea-shark.patch,
+	* patches/icedtea-libraries.patch,
+	* patches/icedtea-liveconnect.patch,
+	* patches/icedtea-webstart.patch: Recreated.
+
 2009-06-24  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/cacao/no-strict-aliasing.patch: Apply for configure.ac.
