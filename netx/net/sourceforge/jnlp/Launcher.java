@@ -23,6 +23,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.LinkedList;
@@ -425,8 +427,7 @@ public class Launcher {
             Method main = mainClass.getDeclaredMethod("main", new Class[] {String[].class} );
             String args[] = file.getApplication().getArguments();
 
-            // required to make some apps work right
-            Thread.currentThread().setContextClassLoader(app.getClassLoader());
+            setContextClassLoaderForAllThreads(app.getClassLoader());
 
             if (splashScreen != null) {
                 if (splashScreen.isSplashScreenValid()) {
@@ -445,6 +446,45 @@ public class Launcher {
         catch (Exception ex) {
             throw launchError(new LaunchException(file, ex, R("LSFatal"), R("LCLaunching"), R("LCouldNotLaunch"), R("LCouldNotLaunchInfo")));
         }
+    }
+
+    /**
+     * Set the classloader as the context classloader for all threads. This is
+     * required to make some applications work. For example, an application that
+     * provides a custom Swing LnF may ask the swing thread to load resources
+     * from their JNLP, which would only work if the Swing thread knows about
+     * the JNLPClassLoader.
+     * 
+     * @param classLoader the classloader to set as the context classloader
+     */
+    private void setContextClassLoaderForAllThreads(ClassLoader classLoader) {
+        ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+        ThreadGroup root;
+        
+        root = Thread.currentThread().getThreadGroup();
+        while (root.getParent() != null) {
+            root = root.getParent();
+        }
+
+        /* be prepared for change in thread size */
+        int threadCountGuess = threadBean.getThreadCount();
+        Thread[] threads;
+        do {
+            threadCountGuess = threadCountGuess * 2;
+            threads = new Thread[threadCountGuess];
+            root.enumerate(threads, true);
+        } while (threads[threadCountGuess-1] != null);
+        
+        
+        for (Thread thread: threads) {
+            if (thread != null) {
+                if (JNLPRuntime.isDebug()) {
+                    System.err.println("Setting " + classLoader + " as the classloader for thread " + thread.getName());
+                }
+                thread.setContextClassLoader(classLoader);
+            }
+        }
+        
     }
 
     /** 
