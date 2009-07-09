@@ -1,0 +1,15 @@
+diff -Nru openjdk-ecj.orig/jdk/make/tools/src/build/tools/charsetmapping/GenerateEUC_TW.java openjdk-ecj/jdk/make/tools/src/build/tools/charsetmapping/GenerateEUC_TW.java
+--- openjdk-ecj.orig/jdk/make/tools/src/build/tools/charsetmapping/GenerateEUC_TW.java	2009-07-02 12:04:10.000000000 +0100
++++ openjdk-ecj/jdk/make/tools/src/build/tools/charsetmapping/GenerateEUC_TW.java	2009-07-02 12:13:09.000000000 +0100
+@@ -36,8 +36,10 @@
+ public class GenerateEUC_TW {
+ 
+     public static void genEUC_TW(String args[]) throws Exception {
++        FileOutputStream fos =
++            new FileOutputStream(new File(args[1], "EUC_TWMapping.java"));
+         genClass(new FileInputStream(new File(args[0], "euc_tw.map")),
+-                 new PrintStream(new File(args[1], "EUC_TWMapping.java"), "ISO-8859-1"),
++                 new PrintStream(fos, false, "ISO-8859-1"),
+                  getCopyright(new File(args[3])));
+     }
+ 

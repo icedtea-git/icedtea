@@ -1,5 +1,10 @@
 2009-07-09  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/ecj/icedtea-pr40616.patch:
+	Add missing patch.
+
+2009-07-09  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Bump to b63 and latest IcedTea changesets.
 	Add ANT_RESPECT_JAVA_HOME for Gentoo ant support.
