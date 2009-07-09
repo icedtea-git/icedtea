@@ -68,10 +68,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Authenticator;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.PasswordAuthentication;
 import java.net.ProxySelector;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Properties;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -218,6 +219,9 @@ public class PluginMain
 		// plug in a custom authenticator and proxy selector
         Authenticator.setDefault(new CustomAuthenticator());
         ProxySelector.setDefault(new PluginProxySelector());
+        
+        CookieManager ckManager = new CookieManager(new PluginCookieStore(), null);
+        CookieHandler.setDefault(ckManager);
 	}
 
     static boolean messageAvailable() {

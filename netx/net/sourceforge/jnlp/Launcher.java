@@ -335,10 +335,10 @@ public class Launcher {
             JNLPFile file = null;
 
             try {
-                file = new JNLPFile(location, null, true, updatePolicy); // strict
+                file = new JNLPFile(location, true, updatePolicy); // strict
             }
             catch (ParseException ex) {
-                file = new JNLPFile(location, null, false, updatePolicy);
+                file = new JNLPFile(location, false, updatePolicy);
 
                 // only here if strict failed but lax did not fail 
                 LaunchException lex = 
@@ -389,7 +389,7 @@ public class Launcher {
                     IconDesc.SPLASH, preferredWidth, preferredHeight);
             if (splashImageURL != null) {
                 ResourceTracker resourceTracker = new ResourceTracker(true);
-                resourceTracker.addResource(splashImageURL, "SPLASH", file.getFileVersion(), updatePolicy);
+                resourceTracker.addResource(splashImageURL, file.getFileVersion(), updatePolicy);
                 splashScreen = new JNLPSplashScreen(resourceTracker, null, null);
                 splashScreen.setSplashImageURL(splashImageURL);
                 if (splashScreen.isSplashScreenValid()) {

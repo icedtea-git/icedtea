@@ -276,7 +276,7 @@ public final class Boot implements PrivilegedAction {
         
         boolean strict = (null != getOption("-strict"));
 
-        JNLPFile file = new JNLPFile(url, null, strict);
+        JNLPFile file = new JNLPFile(url, strict);
 
         // add in extra params from command line
         addProperties(file);

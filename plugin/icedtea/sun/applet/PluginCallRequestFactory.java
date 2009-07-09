@@ -51,6 +51,8 @@ public class PluginCallRequestFactory {
 			return new GetWindowPluginCallRequest(message, returnString);
 		} else if (id == "proxyinfo") {
             return new PluginProxyInfoRequest(message, returnString);
+        }  else if (id == "cookieinfo") {
+            return new PluginCookieInfoRequest(message, returnString);
         } else {
 			throw new RuntimeException ("Unknown plugin call request type requested from factory");
 		}

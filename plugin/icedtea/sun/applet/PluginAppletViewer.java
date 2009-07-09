@@ -84,6 +84,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.SocketPermission;
@@ -180,9 +181,6 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      private static PluginStreamHandler streamhandler;
      
      private static PluginCallRequestFactory requestFactory;
-     
-     private static HashMap<Integer, String> siteCookies = 
-         new HashMap<Integer,String>();
 
      private static HashMap<Integer, PAV_INIT_STATUS> status = 
          new HashMap<Integer,PAV_INIT_STATUS>();
@@ -226,7 +224,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          AccessController.doPrivileged(new PrivilegedAction() {
              public Object run() {
             	 	try {
-            	 		panel = new NetxPanel(doc, siteCookies.get(identifier), atts, false);
+            	 		panel = new NetxPanel(doc, atts, false);
             	 		AppletViewerPanel.debug("Using NetX panel");
             	 		PluginDebug.debug(atts.toString());
             	 	} catch (Exception ex) {
@@ -483,16 +481,6 @@ import com.sun.jndi.toolkit.url.UrlUtil;
             			 PluginDebug.debug ("REQUEST TAG NOT SET: " + request.tag + ". BYPASSING");
             		 }
             	 }
-             } else if (message.startsWith("cookie")) {
-                 
-                 int cookieStrIndex = message.indexOf(" ");
-                 String cookieStr = null;
-
-                 if (cookieStrIndex > 0)
-                     cookieStr = message.substring(cookieStrIndex);
-
-                 // Always set the cookie -- even if it is null
-                 siteCookies.put(identifier, cookieStr);
              } else {
                  PluginDebug.debug ("Handling message: " + message + " instance " + identifier + " " + Thread.currentThread());
 
@@ -842,7 +830,6 @@ import com.sun.jndi.toolkit.url.UrlUtil;
       * applets on this page.
       */
      public Enumeration getApplets() {
- 	AppletSecurity security = (AppletSecurity)System.getSecurityManager();
  	Vector v = new Vector();
  	SocketPermission panelSp =
  	    new SocketPermission(panel.getCodeBase().getHost(), "connect");
@@ -896,7 +883,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
  	    // streamhandler.pluginOutputStream has been closed.
  	}
      }
- 
+     
      public long getWindow() {
     	 PluginDebug.debug ("STARTING getWindow");
     	 PluginCallRequest request = requestFactory.getPluginCallRequest("window",
@@ -1113,6 +1100,40 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          return request.getObject();
      }
  
+     public static Object requestPluginCookieInfo(URI uri) {
+
+         PluginCallRequest request;
+         try
+         {
+             String encodedURI = UrlUtil.encode(uri.toString(), "UTF-8"); 
+             request = requestFactory.getPluginCallRequest("cookieinfo",
+                               "plugin PluginCookieInfo " + encodedURI, 
+                               "plugin PluginCookieInfo " + encodedURI);
+
+         } catch (UnsupportedEncodingException e)
+         {
+             e.printStackTrace();
+             return null;
+         }
+
+         streamhandler.postCallRequest(request);
+         streamhandler.write(request.getMessage());
+         try {
+             PluginDebug.debug ("wait cookieinfo request 1");
+             synchronized(request) {
+                 PluginDebug.debug ("wait cookieinfo request 2");
+                 while (request.isDone() == false)
+                     request.wait();
+                 PluginDebug.debug ("wait cookieinfo request 3");
+             }
+         } catch (InterruptedException e) {
+             throw new RuntimeException("Interrupted waiting for cookieinfo request.",
+                                        e);
+         }
+         PluginDebug.debug (" Cookieinfo DONE");
+         return request.getObject();
+     }
+
      public static Object requestPluginProxyInfo(URI uri) {
 
          String requestURI = null;
@@ -1623,10 +1644,6 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      public static void parse(int identifier, long handle, Reader in, URL url)
          throws IOException {
          
-         // wait until cookie is set (even if cookie is null, it needs to be 
-         // "set" to that first
-         while (!siteCookies.containsKey(identifier));
-
     	 final int fIdentifier = identifier;
     	 final long fHandle = handle;
     	 final Reader fIn = in;

@@ -1012,6 +1012,7 @@ private:
   void ProcessMessage();
   void ConsumeMsgFromJVM();
   nsresult GetProxyInfo(const char* siteAddr, char** proxyScheme, char** proxyHost, char** proxyPort);
+  nsresult GetCookieInfo(const char* siteAddr, char** cookieString);
   nsCOMPtr<IcedTeaEventSink> sink;
   nsCOMPtr<nsISocketTransport> transport;
   nsCOMPtr<nsIProcess> applet_viewer_process;
@@ -1070,7 +1071,6 @@ private:
   IcedTeaPluginFactory* factory;
   PRUint32 instance_identifier;
   nsCString instanceIdentifierPrefix;
-  nsresult GetCookie(const char* siteAddr, char** cookieString);
 };
 
 
@@ -2380,16 +2380,6 @@ IcedTeaPluginInstance::Initialize (nsIPluginInstancePeer* aPeer)
 	  encodedAppletTag += tagMessage.get()[i];
   }
 
-  nsCString cookieInfo(instanceIdentifierPrefix);
-  cookieInfo += "cookie ";
-
-  char* cookieString;
-  if (GetCookie(documentbase, &cookieString) == NS_OK)
-  {
-	  cookieInfo += cookieString;
-  }
-
-  factory->SendMessageToAppletViewer (cookieInfo);
   factory->SendMessageToAppletViewer (encodedAppletTag);
 
   // Set back-pointer to peer instance.
@@ -2760,8 +2750,15 @@ IcedTeaPluginFactory::GetProxyInfo(const char* siteAddr, char** proxyScheme, cha
   return NS_OK;
 }
 
+/** 
+ * Returns the cookie information for the given url
+ *
+ * @param siteAddr The URI to check (must be decoded)
+ * @return cookieString The cookie string for the given URI
+ */
+
 NS_IMETHODIMP
-IcedTeaPluginInstance::GetCookie(const char* siteAddr, char** cookieString) 
+IcedTeaPluginFactory::GetCookieInfo(const char* siteAddr, char** cookieString) 
 {
 
   nsresult rv;
@@ -3497,6 +3494,35 @@ IcedTeaPluginFactory::HandleMessage (nsCString const& message)
 
 		  // free allocated memory
           delete proxyScheme, proxyHost, proxyPort;
+
+		} else if (command == "PluginCookieInfo") 
+        {
+
+          nsresult rv;
+          nsCOMPtr<nsINetUtil> net_util = do_GetService(NS_NETUTIL_CONTRACTID, &rv);
+
+          if (!net_util)
+            printf("Error instantiating NetUtil service.\n");
+
+          // decode the url
+          nsDependentCSubstring url;
+          net_util->UnescapeString(rest, 0, url);
+
+          nsCString cookieInfo("plugin PluginCookieInfo ");
+          cookieInfo += rest;
+          cookieInfo += " ";
+
+          char* cookieString;
+          if (GetCookieInfo(((nsCString) url).get(), &cookieString) == NS_OK)
+          {
+              cookieInfo += cookieString;
+              PLUGIN_DEBUG_2ARG("Cookie for %s is %s\n", ((nsCString) url).get(), cookieString);
+          } else {
+              PLUGIN_DEBUG_1ARG("No cookie found for %s\n", ((nsCString) url).get());
+          }
+
+          // send back what we found
+          SendMessageToAppletViewer (cookieInfo);
 
 		}
 	}

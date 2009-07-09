@@ -1,3 +1,19 @@
+2009-07-09  Deepak Bhole  <dbhole@redhat.com>
+
+	* IcedTeaPlugin.cc: Add suppport for cookie info requests from applets.
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Rework cookie support
+	to make it dynamic.
+	* plugin/icedtea/sun/applet/PluginMain.java: Wire in custom cookie store
+	that dynamically requests cookie information from C++ side.
+	* netx/net/sourceforge/jnlp/JNLPFile.java: Remove old cookie handling code.
+	* netx/net/sourceforge/jnlp/Launcher.java: Same.
+	* netx/net/sourceforge/jnlp/NetxPanel.java: Same.
+	* netx/net/sourceforge/jnlp/PluginBridge.java: Same.
+	* netx/net/sourceforge/jnlp/cache/CacheUtil.java: Same.
+	* netx/net/sourceforge/jnlp/cache/Resource.java: Same.
+	* netx/net/sourceforge/jnlp/cache/ResourceTracker.java: Same.
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Same.
+
 2009-07-07  Omair Majid  <omajid@redhat.com>
 
 	* netx/net/sourceforge/jnlp/Parser.java

@@ -43,7 +43,7 @@ public class PluginBridge extends JNLPFile
     String[] cache_ex_jars = new String[0];
     Hashtable atts;
 
-    public PluginBridge(URL codebase, String cookieStr, URL documentBase, String jar, String main,
+    public PluginBridge(URL codebase, URL documentBase, String jar, String main,
                         int width, int height, Hashtable atts)
     throws Exception
     {
@@ -104,7 +104,6 @@ public class PluginBridge extends JNLPFile
         else
             security = null;
         
-        this.cookieStr = cookieStr;
     }
 
     public String getTitle()

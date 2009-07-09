@@ -75,9 +75,9 @@ public class CacheUtil {
      * @param version the version, or null
      * @return either the location in the cache or the original location
      */
-    public static URL getCachedResource(URL location, String cookieStr, Version version, UpdatePolicy policy) {
+    public static URL getCachedResource(URL location, Version version, UpdatePolicy policy) {
         ResourceTracker rt = new ResourceTracker();
-        rt.addResource(location, cookieStr, version, policy);
+        rt.addResource(location, version, policy);
         try {
             File f = rt.getCacheFile(location);
             return f.toURL();

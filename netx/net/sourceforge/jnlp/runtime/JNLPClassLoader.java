@@ -234,11 +234,11 @@ public class JNLPClassLoader extends URLClassLoader {
      * @param location the file's location
      * @param policy the update policy to use when downloading resources
      */
-    public static JNLPClassLoader getInstance(URL location, String cookieStr, UpdatePolicy policy) throws IOException, ParseException, LaunchException {
+    public static JNLPClassLoader getInstance(URL location, UpdatePolicy policy) throws IOException, ParseException, LaunchException {
         JNLPClassLoader loader = (JNLPClassLoader) urlToLoader.get(location);
 
         if (loader == null)
-            loader = getInstance(new JNLPFile(location, cookieStr, false, policy), policy);
+            loader = getInstance(new JNLPFile(location, false, policy), policy);
 
         return loader;
     }
@@ -256,7 +256,7 @@ public class JNLPClassLoader extends URLClassLoader {
 		//if (ext != null) {
         	for (int i=0; i < ext.length; i++) {
             	try {
-               		JNLPClassLoader loader = getInstance(ext[i].getLocation(), ext[i].getCookieStr(), updatePolicy);
+               		JNLPClassLoader loader = getInstance(ext[i].getLocation(), updatePolicy);
                 	loaderList.add(loader);
             	}
             	catch (Exception ex) {
@@ -314,7 +314,6 @@ public class JNLPClassLoader extends URLClassLoader {
                 initialJars.add(jars[i]); // regardless of part
 
             tracker.addResource(jars[i].getLocation(),
-                                file.getCookieStr(),
                                 jars[i].getVersion(), 
                                 jars[i].isCacheable() ? JNLPRuntime.getDefaultUpdatePolicy() : UpdatePolicy.FORCE
                                );
@@ -780,8 +779,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
                             available.add(desc);
 
-                            tracker.addResource(desc.getLocation(), 
-                                    file.getCookieStr(),
+                            tracker.addResource(desc.getLocation(),
                                     desc.getVersion(), 
                                     JNLPRuntime.getDefaultUpdatePolicy()
                             );

@@ -68,9 +68,6 @@ public class Resource {
     /** the remote location of the resource */
     URL location;
     
-    /** cookie string to send with the resource request */
-    String cookieStr;
-
     /** the local file downloaded to */
     File localFile;
 
@@ -98,20 +95,19 @@ public class Resource {
     /**
      * Create a resource.
      */
-    private Resource(URL location, String cookieStr, UpdatePolicy updatePolicy, Version requestVersion) {
+    private Resource(URL location, UpdatePolicy updatePolicy, Version requestVersion) {
         this.location = location;
         this.requestVersion = requestVersion;
         this.updatePolicy = updatePolicy;
-        this.cookieStr = cookieStr;
     }
 
     /**
      * Return a shared Resource object representing the given
      * location and version.
      */
-    public static Resource getResource(URL location, String cookieStr, UpdatePolicy updatePolicy, Version requestVersion) {
+    public static Resource getResource(URL location, UpdatePolicy updatePolicy, Version requestVersion) {
         synchronized (resources) {
-            Resource resource = new Resource(location, cookieStr, updatePolicy, requestVersion);
+            Resource resource = new Resource(location, updatePolicy, requestVersion);
 
             int index = resources.indexOf(resource);
             if (index >= 0) { // return existing object
@@ -132,13 +128,6 @@ public class Resource {
      */
     public URL getLocation() {
         return location;
-    }
-    
-    /**
-     * Returns the cookie string associated with this resource
-     */
-    public String getCookieStr() {
-        return cookieStr;
     }
 
     /**
