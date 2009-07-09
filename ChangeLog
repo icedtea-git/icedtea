@@ -1,3 +1,11 @@
+2009-07-09  Omair Majid  <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/cache/ResourceTracker.java:
+	(downloadResource): Accept and download content with pack200 or gzip
+	compression and uncompress it on the fly.
+	(initializeResource): Accept content with pack200 or gzip compression.
+	(getVersionedResourceURL): Add javadoc.
+
 2009-07-09  Deepak Bhole  <dbhole@redhat.com>
 
 	* IcedTeaPlugin.cc: Add support for cookie info requests from applets.

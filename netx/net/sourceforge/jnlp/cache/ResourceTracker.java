@@ -17,14 +17,30 @@
 
 package net.sourceforge.jnlp.cache;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Pack200;
+import java.util.jar.Pack200.Unpacker;
+import java.util.zip.GZIPInputStream;
 
-import net.sourceforge.jnlp.*;
-import net.sourceforge.jnlp.event.*;
-import net.sourceforge.jnlp.runtime.*;
-import net.sourceforge.jnlp.util.*;
+import net.sourceforge.jnlp.Version;
+import net.sourceforge.jnlp.event.DownloadEvent;
+import net.sourceforge.jnlp.event.DownloadListener;
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import net.sourceforge.jnlp.util.WeakList;
 
 /**
  * This class tracks the downloading of various resources of a
@@ -598,7 +614,9 @@ public class ResourceTracker {
     }
 
     /**
-     * Downloads an resource to a file.
+     * Downloads a resource to a file, uncompressing it if required
+     * 
+     * @param resource the resource to download
      */
     private void downloadResource(Resource resource) {
         resource.fireDownloadEvent(); // fire DOWNLOADING
@@ -606,9 +624,34 @@ public class ResourceTracker {
         try {
             // create out second in case in does not exist
             URLConnection con = getVersionedResourceURL(resource).openConnection();
+            con.addRequestProperty("Accept-Encoding", "pack200-gzip, gzip");
+            
+            con.connect();
+
+            /*
+             * We dont really know what we are downloading. If we ask for
+             * foo.jar, the server might send us foo.jar.pack.gz or foo.jar.gz
+             * instead. So we save the file with the appropriate extension
+             */
+            URL downloadLocation = resource.location;
+
+            String contentEncoding = con.getContentEncoding();
+
+            if (JNLPRuntime.isDebug()) {
+                System.err.println("Content encoding for " + resource.location + ": "
+                        + contentEncoding);
+            }
+
+            if (contentEncoding != null) {
+                if (contentEncoding.equals("gzip")) {
+                    downloadLocation = new URL(downloadLocation.toString() + ".gz");
+                } else if (contentEncoding.equals("pack200-gzip")) {
+                    downloadLocation = new URL(downloadLocation.toString() + ".pack.gz");
+                }
+            }
 
             InputStream in = new BufferedInputStream(con.getInputStream());
-            OutputStream out = CacheUtil.getOutputStream(resource.location, resource.downloadVersion);
+            OutputStream out = CacheUtil.getOutputStream(downloadLocation, resource.downloadVersion);
             byte buf[] = new byte[1024];
             int rlen;
 
@@ -623,7 +666,45 @@ public class ResourceTracker {
             // explicitly close the URLConnection.
             if (con instanceof HttpURLConnection)
                 ((HttpURLConnection)con).disconnect();
+            
+            /*
+             * If the file was compressed, uncompress it.
+             */
+            if (contentEncoding != null) {
+                if (contentEncoding.equals("gzip")) {
+                    GZIPInputStream gzInputStream = new GZIPInputStream(new FileInputStream(CacheUtil
+                            .getCacheFile(downloadLocation, resource.downloadVersion)));
+                    InputStream inputStream = new BufferedInputStream(gzInputStream);
 
+                    BufferedOutputStream outputStream = new BufferedOutputStream(
+                            new FileOutputStream(CacheUtil.getCacheFile(resource.location,
+                                    resource.downloadVersion)));
+
+                    while (-1 != (rlen = inputStream.read(buf))) {
+                        outputStream.write(buf, 0, rlen);
+                    }
+
+                    outputStream.close();
+                    inputStream.close();
+                    gzInputStream.close();
+                    
+                } else if (contentEncoding.equals("pack200-gzip")) {
+                    GZIPInputStream gzInputStream = new GZIPInputStream(new FileInputStream(
+                            CacheUtil.getCacheFile(downloadLocation, resource.downloadVersion)));
+                    InputStream inputStream = new BufferedInputStream(gzInputStream);
+
+                    JarOutputStream outputStream = new JarOutputStream(new FileOutputStream(
+                            CacheUtil.getCacheFile(resource.location, resource.downloadVersion)));
+
+                    Unpacker unpacker = Pack200.newUnpacker();
+                    unpacker.unpack(inputStream, outputStream);
+
+                    outputStream.close();
+                    inputStream.close();
+                    gzInputStream.close();
+                }
+            }
+            
             resource.changeStatus(DOWNLOADING, DOWNLOADED);
             synchronized(lock) {
                 lock.notifyAll(); // wake up wait's to check for completion
@@ -654,6 +735,7 @@ public class ResourceTracker {
 
             // connect
             URLConnection connection = getVersionedResourceURL(resource).openConnection(); // this won't change so should be okay unsynchronized
+            connection.addRequestProperty("Accept-Encoding", "pack200-gzip, gzip");
 
             int size = connection.getContentLength();
             boolean current = CacheUtil.isCurrent(resource.location, resource.requestVersion, connection) && resource.getUpdatePolicy() != UpdatePolicy.FORCE;
@@ -698,8 +780,10 @@ public class ResourceTracker {
         }
     }
 
-    
- 
+    /**
+     * Returns the versioned url for a resource
+     * @param resource the resource to get the url for 
+     */
     private URL getVersionedResourceURL(Resource resource) {
         String actualLocation = resource.location.getProtocol() + "://"
                 + resource.location.getHost();
