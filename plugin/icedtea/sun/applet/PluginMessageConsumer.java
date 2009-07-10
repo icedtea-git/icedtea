@@ -99,7 +99,7 @@ class PluginMessageConsumer {
 			}
 			
 			// If we have less than MAX_WORKERS, create a new worker
-			if (workers.size() < MAX_WORKERS) {
+			if (workers.size() <= MAX_WORKERS) {
 			    PluginDebug.debug("Cannot find free worker, creating worker " + workers.size());
 			    PluginMessageHandlerWorker worker = new PluginMessageHandlerWorker(streamHandler, workers.size(), as);
 			    worker.start();

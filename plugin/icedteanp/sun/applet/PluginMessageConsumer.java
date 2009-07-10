@@ -44,7 +44,7 @@ import sun.applet.AppletSecurity;
 
 class PluginMessageConsumer {
 
-	int MAX_WORKERS = 30;
+	int MAX_WORKERS = 20;
 	LinkedList<String> readQueue = new LinkedList<String>();
 	ArrayList<PluginMessageHandlerWorker> workers = new ArrayList<PluginMessageHandlerWorker>();
 	PluginStreamHandler streamHandler = null;

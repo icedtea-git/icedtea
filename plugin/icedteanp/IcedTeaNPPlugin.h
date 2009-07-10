@@ -1,5 +1,6 @@
-/* VoidPluginCallRequest -- represent Java-to-JavaScript requests
-   Copyright (C) 2008  Red Hat
+/* IcedTeaNPPlugin.h
+
+   Copyright (C) 2009  Red Hat
 
 This file is part of IcedTea.
 
@@ -35,28 +36,55 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
+#ifndef __ICEDTEANPPLUGIN_H__
+#define	__ICEDTEANPPLUGIN_H__
 
-package sun.applet;
+// Netscape plugin API includes.
+#include <npapi.h>
+#include <npupp.h>
+#include <nsThreadUtils.h>
 
+// GLib includes.
+#include <glib.h>
+#include <glib/gstdio.h>
 
-public class PluginCallRequestFactory {
+// GTK includes.
+#include <gtk/gtk.h>
 
-	public PluginCallRequest getPluginCallRequest(String id, String message, String returnString) {
+#include "IcedTeaPluginUtils.h"
+#include "IcedTeaPluginRequestProcessor.h"
 
-		if (id == "member") {
-			return new GetMemberPluginCallRequest(message, returnString);
-		} else if (id == "void") {
-			return new VoidPluginCallRequest(message, returnString);
-		} else if (id == "window") {
-			return new GetWindowPluginCallRequest(message, returnString);
-		} else if (id == "proxyinfo") {
-            return new PluginProxyInfoRequest(message, returnString);
-        }  else if (id == "cookieinfo") {
-            return new PluginCookieInfoRequest(message, returnString);
-        } else {
-			throw new RuntimeException ("Unknown plugin call request type requested from factory");
-		}
-		
-	}
+// Browser function table.
+extern NPNetscapeFuncs browser_functions;
 
-}
+// messages to the java side
+extern MessageBus* plugin_to_java_bus;
+
+// messages from the java side
+extern MessageBus* java_to_plugin_bus;
+
+// internal messages (e.g ones that need processing in main thread)
+extern MessageBus* internal_bus;
+
+// subscribes to plugin_to_java_bus and sends messages over the link
+extern JavaMessageSender java_request_processor;
+
+// processes requests made to the plugin
+extern PluginRequestProcessor plugin_request_processor;
+
+/* Given an instance pointer, return its id */
+void get_instance_from_id(int id, NPP& instance);
+
+/* Given an instance id, return its pointer */
+int get_id_from_instance(NPP* instance);
+
+/* Sends a message to the appletviewer */
+void plugin_send_message_to_appletviewer (gchar const* message);
+
+/* Returns a scriptable npobject */
+NPObject* get_scriptable_object(NPP instance);
+
+/* Creates a new scriptable plugin object and returns it */
+NPObject* allocate_scriptable_object(NPP npp, NPClass *aClass);
+
+#endif	/* __ICEDTEANPPLUGIN_H__ */

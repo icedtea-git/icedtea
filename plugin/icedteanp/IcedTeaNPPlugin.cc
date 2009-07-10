@@ -1,5 +1,6 @@
-/* gcjwebplugin.cc -- web browser plugin to execute Java applets
+/* IcedTeaNPPlugin.cc -- web browser plugin to execute Java applets
    Copyright (C) 2003, 2004, 2006, 2007  Free Software Foundation, Inc.
+   Copyright (C) 2009 Red Hat
 
 This file is part of GNU Classpath.
 
@@ -39,22 +40,12 @@ exception statement from your version. */
 #include <dlfcn.h>
 #include <errno.h>
 #include <libgen.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-// Netscape plugin API includes.
-#include <npapi.h>
-#include <npupp.h>
-
-// GLib includes.
-#include <glib.h>
-#include <glib/gstdio.h>
-
-// GTK includes.
-#include <gtk/gtk.h>
 
 // Documentbase retrieval includes.
 #include <nsIPluginInstance.h>
@@ -76,6 +67,9 @@ exception statement from your version. */
 #include <nsStringAPI.h>
 #include <nsServiceManagerUtils.h>
 
+// Liveconnect extension
+ #include "IcedTeaScriptablePluginObject.h"
+#include "IcedTeaNPPlugin.h"
 
 // Debugging macros.
 #define PLUGIN_DEBUG(message)                                           \
@@ -101,6 +95,7 @@ exception statement from your version. */
 // Plugin information passed to about:plugins.
 #define PLUGIN_NAME "IcedTea NPR Web Browser Plugin (using IcedTea)"
 #define PLUGIN_DESC "The " PLUGIN_NAME PLUGIN_VERSION " executes Java applets."
+
 #define PLUGIN_MIME_DESC                                               \
   "application/x-java-vm:class,jar:IcedTea;"                           \
   "application/x-java-applet:class,jar:IcedTea;"                       \
@@ -134,7 +129,9 @@ exception statement from your version. */
   "application/x-java-bean;version=1.4.2:class,jar:IcedTea;"           \
   "application/x-java-bean;version=1.5:class,jar:IcedTea;"             \
   "application/x-java-bean;version=1.6:class,jar:IcedTea;"             \
-  "application/x-java-bean;jpi-version=1.6.0_00:class,jar:IcedTea;"
+  "application/x-java-bean;jpi-version=1.6.0_00:class,jar:IcedTea;"    \
+  "application/x-java-vm-npruntime::IcedTea;"
+
 #define PLUGIN_URL NS_INLINE_PLUGIN_CONTRACTID_PREFIX NS_JVM_MIME_TYPE
 #define PLUGIN_MIME_TYPE "application/x-java-vm"
 #define PLUGIN_FILE_EXTS "class,jar,zip"
@@ -143,63 +140,8 @@ exception statement from your version. */
 #define FAILURE_MESSAGE "gcjwebplugin error: Failed to run %s." \
   "  For more detail rerun \"firefox -g\" in a terminal window."
 
-static int plugin_debug = 1;
-
-#define PLUGIN_DEBUG_0ARG(str) \
-  do                                        \
-  {                                         \
-    if (plugin_debug)                       \
-    {                                       \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", g_thread_self ()); \
-      fprintf(stderr, str);                \
-    }                                       \
-  } while (0)
-
-#define PLUGIN_DEBUG_1ARG(str, arg1) \
-  do                                        \
-  {                                         \
-    if (plugin_debug)                       \
-    {                                       \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", g_thread_self ()); \
-      fprintf(stderr, str, arg1);          \
-    }                                       \
-  } while (0)
-
-#define PLUGIN_DEBUG_2ARG(str, arg1, arg2)  \
-  do                                        \
-  {                                         \
-    if (plugin_debug)                       \
-    {                                       \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", g_thread_self ()); \
-      fprintf(stderr, str, arg1, arg2);    \
-    }                                       \
-  } while (0)
-
-#define PLUGIN_DEBUG_3ARG(str, arg1, arg2, arg3) \
-  do                                           \
-  {                                            \
-    if (plugin_debug)                          \
-    {                                          \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", g_thread_self ()); \
-      fprintf(stderr, str, arg1, arg2, arg3); \
-    }                                          \
-  } while (0)
-
-#define PLUGIN_DEBUG_4ARG(str, arg1, arg2, arg3, arg4) \
-  do                                                 \
-  {                                                  \
-    if (plugin_debug)                                \
-    {                                                \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", g_thread_self ()); \
-      fprintf(stderr, str, arg1, arg2, arg3, arg4); \
-    }                                                \
-  } while (0)
-
 // Documentbase retrieval required definition.
 static NS_DEFINE_IID (kIPluginTagInfo2IID, NS_IPLUGINTAGINFO2_IID);
-
-// Browser function table.
-static NPNetscapeFuncs browserFunctions;
 
 // Data directory for plugin.
 static gchar* data_directory = NULL;
@@ -232,6 +174,20 @@ gboolean jvm_up = FALSE;
 // called once.
 gboolean initialized = false;
 
+// browser functions into mozilla
+NPNetscapeFuncs browser_functions;
+
+// Various message buses carrying information to/from Java, and internally
+MessageBus* plugin_to_java_bus = new MessageBus();
+MessageBus* java_to_plugin_bus = new MessageBus();
+MessageBus* internal_bus = new MessageBus();
+
+// Processor for plugin requests
+PluginRequestProcessor* plugin_req_proc = new PluginRequestProcessor();
+
+// Sends messages to Java over the bus
+JavaMessageSender* java_req_proc = new JavaMessageSender();
+
 GQuark ITNP_PLUGIN_ERROR = g_quark_from_string("IcedTeaNPPlugin");
 
 // GCJPluginData stores all the data associated with a single plugin
@@ -255,6 +211,9 @@ struct GCJPluginData
   guint32 window_width;
   // The last plugin window height sent to us by the browser.
   guint32 window_height;
+
+  // The scriptable plugin object
+  NPObject* scriptable_plugin_object;
 };
 
 // Documentbase retrieval type-punning union.
@@ -282,7 +241,6 @@ static gboolean plugin_out_pipe_callback (GIOChannel* source,
 static NPError plugin_start_appletviewer (GCJPluginData* data);
 static gchar* plugin_create_applet_tag (int16 argc, char* argn[],
                                         char* argv[]);
-static void plugin_send_message_to_appletviewer (gchar const* message);
 static void plugin_stop_appletviewer ();
 // Uninitialize GCJPluginData structure
 static void plugin_data_destroy (NPP instance);
@@ -292,7 +250,7 @@ void get_proxy_info(const char* siteAddr, char** proxy_scheme, char** proxy_host
 void decode_url(const gchar* url, gchar** decoded_url);
 void consume_message(gchar* message);
 void start_jvm_if_needed();
-static void appletviewer_monitor(GPid pid, gint status, gpointer data); 
+static void appletviewer_monitor(GPid pid, gint status, gpointer data);
 
 // Global instance counter.
 // Mutex to protect plugin_instance_counter.
@@ -342,6 +300,8 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
   gchar* tag_message = NULL;
   gchar* cookie_info = NULL;
 
+  NPObject* npPluginObj = NULL;
+
   if (!instance)
     {
       PLUGIN_ERROR ("Browser-provided instance pointer is NULL.");
@@ -387,7 +347,7 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
     {
       PLUGIN_ERROR ("Documentbase retrieval failed."
                     " Browser not Mozilla-based?");
-      goto cleanup_appletviewer_mutex;
+      //goto cleanup_appletviewer_mutex;
     }
 
   // Send applet tag message to appletviewer.
@@ -412,7 +372,7 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
       g_sprintf(cookie_info, "instance %d cookie", instance_counter);
     }
 
-  plugin_send_message_to_appletviewer (cookie_info); 
+  plugin_send_message_to_appletviewer (cookie_info);
 
   g_mutex_unlock (data->appletviewer_mutex);
 
@@ -422,7 +382,17 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
 
   // Set back-pointer to owner instance.
   data->owner = instance;
+
+  printf("Creating scriptable object..");
+  npPluginObj = get_scriptable_object(instance);
+
+  data->scriptable_plugin_object = npPluginObj;
+
   instance->pdata = data;
+
+  java_to_plugin_bus->subscribe(plugin_req_proc);
+  plugin_to_java_bus->subscribe(java_req_proc);
+
   goto cleanup_done;
 
  cleanup_appletviewer_mutex:
@@ -436,7 +406,7 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
   // cleanup_data:
   // Eliminate back-pointer to plugin instance.
   data->owner = NULL;
-  (*browserFunctions.memfree) (data);
+  (*browser_functions.memfree) (data);
   data = NULL;
 
   // Initialization failed so return a NULL pointer for the browser
@@ -467,7 +437,7 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
 void start_jvm_if_needed()
 {
 
-  // This is asynchronized function. It must 
+  // This is asynchronized function. It must
   // have exclusivity when running.
 
   GMutex *vm_start_mutex = g_mutex_new();
@@ -486,12 +456,12 @@ void start_jvm_if_needed()
 
   NPError np_error = NPERR_NO_ERROR;
   GCJPluginData* data = NULL;
-  
+
   // Create appletviewer-to-plugin pipe which we refer to as the input
   // pipe.
 
   // in_pipe_name
-  in_pipe_name = g_strdup_printf ("%s/icedteanp-appletviewer-to-plugin", 
+  in_pipe_name = g_strdup_printf ("%s/icedteanp-appletviewer-to-plugin",
                                          data_directory);
   if (!in_pipe_name)
     {
@@ -518,7 +488,7 @@ void start_jvm_if_needed()
   // output pipe.
 
   // out_pipe_name
-  out_pipe_name = g_strdup_printf ("%s/icedteanp-plugin-to-appletviewer", 
+  out_pipe_name = g_strdup_printf ("%s/icedteanp-plugin-to-appletviewer",
                                          data_directory);
 
   if (!out_pipe_name)
@@ -544,7 +514,7 @@ void start_jvm_if_needed()
   // there are multiple applets in the same page.  We may need to
   // change this behaviour if we find pages with multiple applets that
   // rely on being run in the same VM.
- 
+
   np_error = plugin_start_appletviewer (data);
 
   // Create plugin-to-appletviewer channel.  The default encoding for
@@ -563,7 +533,7 @@ void start_jvm_if_needed()
         }
       else
         PLUGIN_ERROR ("Failed to create output channel");
-        
+
       np_error = NPERR_GENERIC_ERROR;
       goto cleanup_out_to_appletviewer;
     }
@@ -590,7 +560,7 @@ void start_jvm_if_needed()
         }
       else
         PLUGIN_ERROR ("Failed to create input channel");
-        
+
       np_error = NPERR_GENERIC_ERROR;
       goto cleanup_in_from_appletviewer;
     }
@@ -671,7 +641,12 @@ GCJ_GetValue (NPP instance, NPPVariable variable, void* value)
         *bool_value = PR_TRUE;
       }
       break;
-
+    case NPPVpluginScriptableNPObject:
+      {
+         GCJPluginData *data = (GCJPluginData*) instance->pdata;
+         *(NPObject **)value = data->scriptable_plugin_object;
+      }
+      break;
     default:
       PLUGIN_ERROR ("Unknown plugin value requested.");
       np_error = NPERR_GENERIC_ERROR;
@@ -720,7 +695,7 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
     {
       id = GPOINTER_TO_INT(id_ptr);
     }
-  
+
   GCJPluginData* data = (GCJPluginData*) instance->pdata;
 
   // Simply return if we receive a NULL window.
@@ -959,7 +934,7 @@ plugin_data_new (GCJPluginData** data)
   PLUGIN_DEBUG ("plugin_data_new");
 
   *data = (GCJPluginData*)
-    (*browserFunctions.memalloc) (sizeof (struct GCJPluginData));
+    (*browser_functions.memalloc) (sizeof (struct GCJPluginData));
 
   // appletviewer_alive is false until the applet viewer is spawned.
   if (*data)
@@ -1089,10 +1064,10 @@ plugin_in_pipe_callback (GIOChannel* source,
             }
           else
             PLUGIN_ERROR ("Failed to read line from input channel");
-        } else 
-            {
-                consume_message(message);
-            }
+        } else
+        {
+          consume_message(message);
+        }
 
       g_free (message);
       message = NULL;
@@ -1118,6 +1093,7 @@ void consume_message(gchar* message) {
   if (g_str_has_prefix (message, "instance"))
     {
 
+	  GCJPluginData* data;
       gchar** parts = g_strsplit (message, " ", -1);
       guint parts_sz = g_strv_length (parts);
 
@@ -1125,13 +1101,15 @@ void consume_message(gchar* message) {
       NPP instance = (NPP) g_hash_table_lookup(id_to_instance_map,
                                          GINT_TO_POINTER(instance_id));
 
-      if (!instance)
+      if (instance_id > 0 && !instance)
         {
           PLUGIN_DEBUG_2ARG("Instance %d is not active. Refusing to consume message \"%s\"\n", instance_id, message);
           return;
         }
-
-      GCJPluginData* data = (GCJPluginData*) instance->pdata;
+      else if (instance)
+        {
+           data = (GCJPluginData*) instance->pdata;
+        }
 
       if (g_str_has_prefix (parts[2], "url"))
         {
@@ -1143,7 +1121,7 @@ void consume_message(gchar* message) {
           PLUGIN_DEBUG_TWO ("plugin_in_pipe_callback: URL target", parts[4]);
 
           NPError np_error =
-            (*browserFunctions.geturl) (data->owner, decoded_url, parts[4]);
+            (*browser_functions.geturl) (data->owner, decoded_url, parts[4]);
 
 
           if (np_error != NPERR_NO_ERROR)
@@ -1163,20 +1141,35 @@ void consume_message(gchar* message) {
           // join the rest
           gchar* status_message = g_strjoinv(" ", parts);
           PLUGIN_DEBUG_TWO ("plugin_in_pipe_callback: setting status", status_message);
-          (*browserFunctions.status) (data->owner, status_message);
+          (*browser_functions.status) (data->owner, status_message);
 
           g_free(status_message);
           status_message = NULL;
-        } 
+        }
+      else if (g_str_has_prefix (parts[1], "internal"))
+    	{
+    	  internal_bus->post(message);
+    	}
+      else
+        {
+          // All other messages are posted to the bus, and subscribers are
+          // expected to take care of them. They better!
+
+    	  java_to_plugin_bus->post(message);
+        }
 
         g_strfreev (parts);
         parts = NULL;
+    }
+  else if (g_str_has_prefix (message, "context"))
+    {
+	      java_to_plugin_bus->post(message);
     }
   else if (g_str_has_prefix (message, "plugin "))
     {
       // internal plugin related message
       gchar** parts = g_strsplit (message, " ", 3);
-      if (g_str_has_prefix(parts[1], "PluginProxyInfo")) 
+      if (g_str_has_prefix(parts[1], "PluginProxyInfo"))
       {
         gchar* proxy_scheme = (gchar*) malloc(sizeof(gchar)*32);
         gchar* proxy_host = (gchar*) malloc(sizeof(gchar)*64);
@@ -1193,7 +1186,7 @@ void consume_message(gchar* message) {
         if (error->code == 0)
           {
             proxy_info = g_strconcat (proxy_info, proxy_scheme, " ", proxy_host, " ", proxy_port, NULL);
-          } 
+          }
 
         PLUGIN_DEBUG_1ARG("Proxy info: %s\n", proxy_info);
         plugin_send_message_to_appletviewer(proxy_info);
@@ -1216,6 +1209,18 @@ void consume_message(gchar* message) {
     }
 }
 
+void get_instance_from_id(int id, NPP& instance)
+{
+    instance = (NPP) g_hash_table_lookup(id_to_instance_map,
+                                       GINT_TO_POINTER(id));
+}
+
+int get_id_from_instance(NPP* instance)
+{
+    return GPOINTER_TO_INT(g_hash_table_lookup(instance_to_id_map,
+                                                   instance));
+}
+
 void decode_url(const gchar* url, gchar** decoded_url)
 {
     // There is no GLib function to decode urls, so we fallback to Mozilla's
@@ -1226,7 +1231,7 @@ void decode_url(const gchar* url, gchar** decoded_url)
 
     if (!net_util)
         printf("Error instantiating NetUtil service.\n");
-    
+
     nsDependentCSubstring unescaped_url;
     net_util->UnescapeString(nsCString(url), 0, unescaped_url);
 
@@ -1503,7 +1508,7 @@ plugin_create_applet_tag (int16 argc, char* argn[], char* argv[])
 
 // plugin_send_message_to_appletviewer must be called while holding
 // data->appletviewer_mutex.
-static void
+void
 plugin_send_message_to_appletviewer (gchar const* message)
 {
   PLUGIN_DEBUG ("plugin_send_message_to_appletviewer");
@@ -1533,7 +1538,7 @@ plugin_send_message_to_appletviewer (gchar const* message)
             }
           else
             PLUGIN_ERROR ("Failed to write bytes to output channel");
-        }            
+        }
 
       if (g_io_channel_flush (out_to_appletviewer, &channel_error)
           != G_IO_STATUS_NORMAL)
@@ -1652,7 +1657,7 @@ plugin_stop_appletviewer ()
   PLUGIN_DEBUG ("plugin_stop_appletviewer return");
 }
 
-static void appletviewer_monitor(GPid pid, gint status, gpointer data) 
+static void appletviewer_monitor(GPid pid, gint status, gpointer data)
 {
     PLUGIN_DEBUG ("appletviewer_monitor");
     jvm_up = FALSE;
@@ -1692,7 +1697,7 @@ plugin_data_destroy (NPP instance)
   // cleanup_data:
   // Eliminate back-pointer to plugin instance.
   tofree->owner = NULL;
-  (*browserFunctions.memfree) (tofree);
+  (*browser_functions.memfree) (tofree);
   tofree = NULL;
 
   PLUGIN_DEBUG ("plugin_data_destroy return");
@@ -1713,7 +1718,7 @@ NPError
 NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
 {
   PLUGIN_DEBUG ("NP_Initialize");
-  
+
   if (initialized)
     return NPERR_NO_ERROR;
   else if ((browserTable == NULL) || (pluginTable == NULL))
@@ -1722,7 +1727,7 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
 
       return NPERR_INVALID_FUNCTABLE_ERROR;
     }
-  
+
   // Ensure that the major version of the plugin API that the browser
   // expects is not more recent than the major version of the API that
   // we've implemented.
@@ -1735,7 +1740,7 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
 
   // Ensure that the plugin function table we've received is large
   // enough to store the number of functions that we may provide.
-  if (pluginTable->size < sizeof (NPPluginFuncs))      
+  if (pluginTable->size < sizeof (NPPluginFuncs))
     {
       PLUGIN_ERROR ("Invalid plugin function table.");
 
@@ -1752,22 +1757,48 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
     }
 
   // Store in a local table the browser functions that we may use.
-  browserFunctions.version = browserTable->version;
-  browserFunctions.size = browserTable->size;
-  browserFunctions.posturl = browserTable->posturl;
-  browserFunctions.geturl = browserTable->geturl;
-  browserFunctions.geturlnotify = browserTable->geturlnotify;
-  browserFunctions.requestread = browserTable->requestread;
-  browserFunctions.newstream = browserTable->newstream;
-  browserFunctions.write = browserTable->write;
-  browserFunctions.destroystream = browserTable->destroystream;
-  browserFunctions.status = browserTable->status;
-  browserFunctions.uagent = browserTable->uagent;
-  browserFunctions.memalloc = browserTable->memalloc;
-  browserFunctions.memfree = browserTable->memfree;
-  browserFunctions.memflush = browserTable->memflush;
-  browserFunctions.reloadplugins = browserTable->reloadplugins;
-  browserFunctions.getvalue = browserTable->getvalue;
+  browser_functions.size                    = browserTable->size;
+  browser_functions.version                 = browserTable->version;
+  browser_functions.geturlnotify            = browserTable->geturlnotify;
+  browser_functions.geturl                  = browserTable->geturl;
+  browser_functions.posturlnotify           = browserTable->posturlnotify;
+  browser_functions.posturl                 = browserTable->posturl;
+  browser_functions.requestread             = browserTable->requestread;
+  browser_functions.newstream               = browserTable->newstream;
+  browser_functions.write                   = browserTable->write;
+  browser_functions.destroystream           = browserTable->destroystream;
+  browser_functions.status                  = browserTable->status;
+  browser_functions.uagent                  = browserTable->uagent;
+  browser_functions.memalloc                = browserTable->memalloc;
+  browser_functions.memfree                 = browserTable->memfree;
+  browser_functions.memflush                = browserTable->memflush;
+  browser_functions.reloadplugins           = browserTable->reloadplugins;
+  browser_functions.getJavaEnv              = browserTable->getJavaEnv;
+  browser_functions.getJavaPeer             = browserTable->getJavaPeer;
+  browser_functions.getvalue                = browserTable->getvalue;
+  browser_functions.setvalue                = browserTable->setvalue;
+  browser_functions.invalidaterect          = browserTable->invalidaterect;
+  browser_functions.invalidateregion        = browserTable->invalidateregion;
+  browser_functions.forceredraw             = browserTable->forceredraw;
+  browser_functions.getstringidentifier     = browserTable->getstringidentifier;
+  browser_functions.getstringidentifiers    = browserTable->getstringidentifiers;
+  browser_functions.getintidentifier        = browserTable->getintidentifier;
+  browser_functions.identifierisstring      = browserTable->identifierisstring;
+  browser_functions.utf8fromidentifier      = browserTable->utf8fromidentifier;
+  browser_functions.intfromidentifier       = browserTable->intfromidentifier;
+  browser_functions.createobject            = browserTable->createobject;
+  browser_functions.retainobject            = browserTable->retainobject;
+  browser_functions.releaseobject           = browserTable->releaseobject;
+  browser_functions.invoke                  = browserTable->invoke;
+  browser_functions.invokeDefault           = browserTable->invokeDefault;
+  browser_functions.evaluate                = browserTable->evaluate;
+  browser_functions.getproperty             = browserTable->getproperty;
+  browser_functions.setproperty             = browserTable->setproperty;
+  browser_functions.removeproperty          = browserTable->removeproperty;
+  browser_functions.hasproperty             = browserTable->hasproperty;
+  browser_functions.hasmethod               = browserTable->hasmethod;
+  browser_functions.releasevariantvalue     = browserTable->releasevariantvalue;
+  browser_functions.setexception            = browserTable->setexception;
 
   // Return to the browser the plugin functions that we implement.
   pluginTable->version = (NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR;
@@ -2003,4 +2034,38 @@ NP_Shutdown (void)
   PLUGIN_DEBUG ("NP_Shutdown return");
 
   return NPERR_NO_ERROR;
+}
+
+NPObject*
+get_scriptable_object(NPP instance)
+{
+
+	NPObject* scriptable_object;
+
+	NPClass* np_class = new NPClass();
+	np_class->structVersion = NP_CLASS_STRUCT_VERSION;
+	np_class->allocate = allocate_scriptable_object;
+	np_class->deallocate = IcedTeaScriptablePluginObject::deAllocate;
+	np_class->invalidate = IcedTeaScriptablePluginObject::invalidate;
+	np_class->hasMethod = IcedTeaScriptablePluginObject::hasMethod;
+	np_class->invoke = IcedTeaScriptablePluginObject::invoke;
+	np_class->invokeDefault = IcedTeaScriptablePluginObject::invokeDefault;
+	np_class->hasProperty = IcedTeaScriptablePluginObject::hasProperty;
+	np_class->getProperty = IcedTeaScriptablePluginObject::getProperty;
+	np_class->setProperty = IcedTeaScriptablePluginObject::setProperty;
+	np_class->removeProperty = IcedTeaScriptablePluginObject::removeProperty;
+	np_class->enumerate = IcedTeaScriptablePluginObject::enumerate;
+	np_class->construct = IcedTeaScriptablePluginObject::construct;
+
+	scriptable_object = browser_functions.createobject(instance, np_class);
+	PLUGIN_DEBUG_1ARG("Returning new scriptable class: %p\n", scriptable_object);
+
+	return scriptable_object;
+}
+
+NPObject*
+allocate_scriptable_object(NPP npp, NPClass *aClass)
+{
+	PLUGIN_DEBUG_0ARG("Allocating new scriptable object\n");
+	return new IcedTeaScriptablePluginObject(npp);
 }

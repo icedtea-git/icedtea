@@ -1,5 +1,6 @@
-/* VoidPluginCallRequest -- represent Java-to-JavaScript requests
-   Copyright (C) 2008  Red Hat
+/* IcedTeaScriptablePluginObject.h
+
+   Copyright (C) 2009  Red Hat
 
 This file is part of IcedTea.
 
@@ -35,28 +36,52 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
+#ifndef __ICEDTEASCRIPTABLEPLUGINOBJECT_H_
+#define __ICEDTEASCRIPTABLEPLUGINOBJECT_H_
 
-package sun.applet;
+#include "npupp.h"
 
+/**
+ * IcedTeaScriptablePluginObject, an extended NPObject that implements
+ * static functions whose pointers are supplied to NPClass.
+ */
 
-public class PluginCallRequestFactory {
+class IcedTeaScriptablePluginObject: public NPObject
+{
 
-	public PluginCallRequest getPluginCallRequest(String id, String message, String returnString) {
+    private:
+    	NPP instance;
 
-		if (id == "member") {
-			return new GetMemberPluginCallRequest(message, returnString);
-		} else if (id == "void") {
-			return new VoidPluginCallRequest(message, returnString);
-		} else if (id == "window") {
-			return new GetWindowPluginCallRequest(message, returnString);
-		} else if (id == "proxyinfo") {
-            return new PluginProxyInfoRequest(message, returnString);
-        }  else if (id == "cookieinfo") {
-            return new PluginCookieInfoRequest(message, returnString);
-        } else {
-			throw new RuntimeException ("Unknown plugin call request type requested from factory");
-		}
-		
-	}
+    public:
+        IcedTeaScriptablePluginObject(NPP instance);
 
-}
+        static void deAllocate(NPObject *npobj);
+
+        static void invalidate(NPObject *npobj);
+
+        static bool hasMethod(NPObject *npobj, NPIdentifier name);
+
+        static bool invoke(NPObject *npobj, NPIdentifier name,
+                const NPVariant *args, uint32_t argCount, NPVariant *result);
+
+        static bool invokeDefault(NPObject *npobj, const NPVariant *args,
+                uint32_t argCount, NPVariant *result);
+
+        static bool hasProperty(NPObject *npobj, NPIdentifier name);
+
+        static bool getProperty(NPObject *npobj, NPIdentifier name,
+                NPVariant *result);
+
+        static bool setProperty(NPObject *npobj, NPIdentifier name,
+                const NPVariant *value);
+
+        static bool removeProperty(NPObject *npobj, NPIdentifier name);
+
+        static bool enumerate(NPObject *npobj, NPIdentifier **value,
+                uint32_t *count);
+
+        static bool construct(NPObject *npobj, const NPVariant *args,
+                uint32_t argCount, NPVariant *result);
+};
+
+#endif /* __ICEDTEASCRIPTABLEPLUGINOBJECT_H_ */

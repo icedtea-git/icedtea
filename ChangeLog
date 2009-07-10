@@ -1,3 +1,41 @@
+2009-07-10  Deepak Bhole  <dbhole@redhat.com>
+
+	* Makefile.am: Update makefile to pick up plugin C++ files from new
+	location.
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java  : Minor typo fix.
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc: New file. Processes
+	requests from JS/C++ side to JavaSide.
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.h: New file. Header for
+	IcedTeaJavaRequestProcessor.cc.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc: Modified to work with the new
+	MessageBus archtecture for the new plugin. Also, moved from top level 
+	directory.
+	* plugin/icedteanp/IcedTeaNPPlugin.h: New file. Header for
+	IcedTeaNPPlugin.cc.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc: New file. Processes 
+    plugin data requests from Java side.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.h: new file. Header for
+	IcedTeaPluginRequestProcessor.cc.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc: New file. Utility functions for
+	the rest of the plugin code.
+	* plugin/icedteanp/IcedTeaPluginUtils.h: New file. Header for
+	IcedTeaPluginUtils.cc.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.cc: New file. Scriptable
+	object that extends NPObject and implements hooks from NPClass.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.h: New file. Header for
+	IcedTeaScriptablePluginObject.h
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java: Sync with current
+	plugin.
+	* plugin/icedteanp/sun/applet/PluginAppletSecurityContext.java: Same.
+	* plugin/icedteanp/sun/applet/PluginAppletViewer.java: Same.
+	* plugin/icedteanp/sun/applet/PluginCallRequestFactory.java: Same.
+	* plugin/icedteanp/sun/applet/PluginCookieInfoRequest.java: Same
+	* plugin/icedteanp/sun/applet/PluginCookieStore.java: Same.
+	* plugin/icedteanp/sun/applet/PluginMain.java: Same.
+	* plugin/icedteanp/sun/applet/PluginMessageConsumer.java: Same.
+	* netx/net/sourceforge/jnlp/tools/JarSigner.java: Use JarFile instead of
+	JarInputstream when verifying jars.
+
 2009-07-09  Omair Majid  <omajid@redhat.com>
 
 	* netx/net/sourceforge/jnlp/Launcher.java

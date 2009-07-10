@@ -1,5 +1,6 @@
-/* VoidPluginCallRequest -- represent Java-to-JavaScript requests
-   Copyright (C) 2008  Red Hat
+/* IcedTeaJavaRequestProcessor.h
+
+   Copyright (C) 2009  Red Hat
 
 This file is part of IcedTea.
 
@@ -35,28 +36,72 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
+#ifndef ICEDTEAJAVAREQUEST_H_
+#define ICEDTEAJAVAREQUEST_H_
 
-package sun.applet;
+#include <errno.h>
+#include <stdlib.h>
+#include <vector>
 
+#include "IcedTeaNPPlugin.h"
+#include "IcedTeaPluginUtils.h"
 
-public class PluginCallRequestFactory {
+/*
+ * This struct holds data specific to a Java operation requested by the plugin
+ */
+typedef struct java_request
+{
+    // Instance id  (if applicable)
+    int instance;
 
-	public PluginCallRequest getPluginCallRequest(String id, String message, String returnString) {
+    // Context id (if applicable)
+    int context;
 
-		if (id == "member") {
-			return new GetMemberPluginCallRequest(message, returnString);
-		} else if (id == "void") {
-			return new VoidPluginCallRequest(message, returnString);
-		} else if (id == "window") {
-			return new GetWindowPluginCallRequest(message, returnString);
-		} else if (id == "proxyinfo") {
-            return new PluginProxyInfoRequest(message, returnString);
-        }  else if (id == "cookieinfo") {
-            return new PluginCookieInfoRequest(message, returnString);
-        } else {
-			throw new RuntimeException ("Unknown plugin call request type requested from factory");
-		}
-		
-	}
+    // request specific data
+    std::vector<std::string>* data;
 
-}
+    // source of the request
+    std::string* source;
+
+} JavaRequest;
+
+/*
+ * This struct holds data specific to a Java operation requested by the plugin
+ */
+typedef struct java_result_data
+{
+	// Return identifier (if applicable)
+    int return_identifier;
+
+    // Return string (if applicable)
+    std::string* return_string;
+
+    // Return wide/mb string (if applicable)
+    std::wstring* return_wstring;
+
+    // Error message (if an error occurred)
+    std::string* error_msg;
+
+    // Boolean indicating if an error occurred
+    bool error_occured;
+
+} JavaResultData;
+
+class JavaRequestProcessor : BusSubscriber
+{
+    private:
+    	// instance and references are constant throughout this objects
+    	// lifecycle
+    	int instance;
+    	int reference;
+    	bool result_ready;
+    	JavaResultData* result;
+
+    public:
+    	JavaRequestProcessor();
+    	~JavaRequestProcessor();
+    	virtual bool newMessageOnBus(const char* message);
+    	JavaResultData* getString(JavaRequest* request_data);
+};
+
+#endif /* ICEDTEAJAVAREQUESTPROCESSOR_H_ */

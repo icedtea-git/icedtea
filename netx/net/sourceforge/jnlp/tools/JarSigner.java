@@ -199,7 +199,7 @@ public class JarSigner implements CertVerifier {
     public void verifyJars(List<JARDesc> jars, ResourceTracker tracker)
     throws Exception {
 
-	certs = new ArrayList<CertPath>();
+        certs = new ArrayList<CertPath>();
         for (int i = 0; i < jars.size(); i++) {
 
             JARDesc jar = (JARDesc) jars.get(i);
@@ -238,24 +238,27 @@ public class JarSigner implements CertVerifier {
     public boolean verifyJar(String jarName) throws Exception {
         boolean anySigned = false;
         boolean hasUnsignedEntry = false;
-        JarInputStream jis = null;
+        JarFile jarFile = null;
 
         // certs could be uninitialized if one calls this method directly
         if (certs == null)
             certs = new ArrayList<CertPath>();
         
         try {
-            jis = new JarInputStream(new FileInputStream(jarName), true);
+            jarFile = new JarFile(jarName, true);
             Vector<JarEntry> entriesVec = new Vector<JarEntry>();
             byte[] buffer = new byte[8192];
 
             JarEntry je;
-            while ((je = jis.getNextJarEntry()) != null) {
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                je = entries.nextElement();
                 entriesVec.addElement(je);
-                InputStream is = null;
+
+                InputStream is = jarFile.getInputStream(je);
                 try {
                     int n;
-                    while ((n = jis.read(buffer, 0, buffer.length)) != -1) {
+                    while ((n = is.read(buffer, 0, buffer.length)) != -1) {
                         // we just read. this will throw a SecurityException
                         // if  a signature/digest check fails.
                     }
@@ -266,9 +269,7 @@ public class JarSigner implements CertVerifier {
                 }
             }
 
-            Manifest man = jis.getManifest();
-
-            if (man != null) {
+            if (jarFile.getManifest() != null) {
                 if (verbose) System.out.println();
                 Enumeration<JarEntry> e = entriesVec.elements();
 
@@ -350,8 +351,8 @@ public class JarSigner implements CertVerifier {
             e.printStackTrace();
             throw e;
         } finally { // close the resource
-            if (jis != null) {
-                jis.close();
+            if (jarFile != null) {
+                jarFile.close();
             }
         }
 

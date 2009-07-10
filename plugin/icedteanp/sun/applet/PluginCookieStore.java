@@ -1,5 +1,5 @@
-/* VoidPluginCallRequest -- represent Java-to-JavaScript requests
-   Copyright (C) 2008  Red Hat
+/* PluginCookieStore -- Storage for cookie information
+   Copyright (C) 2009  Red Hat
 
 This file is part of IcedTea.
 
@@ -35,28 +35,39 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-
 package sun.applet;
 
+import java.net.HttpCookie;
+import java.net.URI;
+import java.util.List;
 
-public class PluginCallRequestFactory {
+import sun.net.www.protocol.http.InMemoryCookieStore;
 
-	public PluginCallRequest getPluginCallRequest(String id, String message, String returnString) {
+public class PluginCookieStore extends InMemoryCookieStore 
+{
+    public List<HttpCookie> get(URI uri)
+    {
+        List<HttpCookie> cookies;
 
-		if (id == "member") {
-			return new GetMemberPluginCallRequest(message, returnString);
-		} else if (id == "void") {
-			return new VoidPluginCallRequest(message, returnString);
-		} else if (id == "window") {
-			return new GetWindowPluginCallRequest(message, returnString);
-		} else if (id == "proxyinfo") {
-            return new PluginProxyInfoRequest(message, returnString);
-        }  else if (id == "cookieinfo") {
-            return new PluginCookieInfoRequest(message, returnString);
-        } else {
-			throw new RuntimeException ("Unknown plugin call request type requested from factory");
-		}
-		
-	}
+        // Try to fetch it from the plugin, but if something goes 
+        // wrong, fall back. Don't crash!
+        try
+        {
+            cookies = (List<HttpCookie>) PluginAppletViewer.requestPluginCookieInfo(uri);
 
+            // If cookies is null, something went wrong. Fall back.
+            if (cookies == null) throw new NullPointerException("Null cookie");
+
+        } catch (Exception e)
+        {
+            PluginDebug.debug("Unable to fetch cookie information from plugin. " +
+            		          "Falling back to default.");
+            e.printStackTrace();
+            cookies = super.get(uri);
+        }
+
+        PluginDebug.debug("Returning cookies " + cookies + " for site: " + uri);
+        
+        return cookies;
+    }
 }
