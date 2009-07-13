@@ -95,7 +95,7 @@ public class Resource {
     /**
      * Create a resource.
      */
-    private Resource(URL location, UpdatePolicy updatePolicy, Version requestVersion) {
+    private Resource(URL location, Version requestVersion, UpdatePolicy updatePolicy) {
         this.location = location;
         this.requestVersion = requestVersion;
         this.updatePolicy = updatePolicy;
@@ -105,9 +105,9 @@ public class Resource {
      * Return a shared Resource object representing the given
      * location and version.
      */
-    public static Resource getResource(URL location, UpdatePolicy updatePolicy, Version requestVersion) {
+    public static Resource getResource(URL location, Version requestVersion, UpdatePolicy updatePolicy) {
         synchronized (resources) {
-            Resource resource = new Resource(location, updatePolicy, requestVersion);
+            Resource resource = new Resource(location, requestVersion, updatePolicy);
 
             int index = resources.indexOf(resource);
             if (index >= 0) { // return existing object

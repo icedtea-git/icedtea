@@ -168,7 +168,7 @@ public class ResourceTracker {
         if (location == null)
             throw new IllegalArgumentException("location==null");
 
-        Resource resource = Resource.getResource(location, updatePolicy, version);
+        Resource resource = Resource.getResource(location, version, updatePolicy);
         boolean downloaded = false;
 
         synchronized (resources) {

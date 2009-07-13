@@ -51,6 +51,7 @@ import net.sourceforge.jnlp.ParseException;
 import net.sourceforge.jnlp.PluginBridge;
 import net.sourceforge.jnlp.ResourcesDesc;
 import net.sourceforge.jnlp.SecurityDesc;
+import net.sourceforge.jnlp.Version;
 import net.sourceforge.jnlp.cache.CacheUtil;
 import net.sourceforge.jnlp.cache.ResourceTracker;
 import net.sourceforge.jnlp.cache.UpdatePolicy;
@@ -232,13 +233,15 @@ public class JNLPClassLoader extends URLClassLoader {
      * location. 
      *
      * @param location the file's location
+     * @param version the file's version
      * @param policy the update policy to use when downloading resources
      */
-    public static JNLPClassLoader getInstance(URL location, UpdatePolicy policy) throws IOException, ParseException, LaunchException {
+    public static JNLPClassLoader getInstance(URL location, Version version, UpdatePolicy policy)
+            throws IOException, ParseException, LaunchException {
         JNLPClassLoader loader = (JNLPClassLoader) urlToLoader.get(location);
 
         if (loader == null)
-            loader = getInstance(new JNLPFile(location, false, policy), policy);
+            loader = getInstance(new JNLPFile(location, version, false, policy), policy);
 
         return loader;
     }
@@ -256,7 +259,7 @@ public class JNLPClassLoader extends URLClassLoader {
 		//if (ext != null) {
         	for (int i=0; i < ext.length; i++) {
             	try {
-               		JNLPClassLoader loader = getInstance(ext[i].getLocation(), updatePolicy);
+               		JNLPClassLoader loader = getInstance(ext[i].getLocation(), ext[i].getVersion(), updatePolicy);
                 	loaderList.add(loader);
             	}
             	catch (Exception ex) {

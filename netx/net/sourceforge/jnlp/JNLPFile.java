@@ -138,21 +138,36 @@ public class JNLPFile {
      * @throws ParseException if the JNLP file was invalid
      */
     public JNLPFile(URL location, boolean strict) throws IOException, ParseException {
-        this(location, strict, JNLPRuntime.getDefaultUpdatePolicy());
+        this(location, (Version) null, strict);
+    }
+    
+    /**
+     * Create a JNLPFile from a URL and a Version checking for updates using 
+     * the default policy.
+     *
+     * @param location the location of the JNLP file
+     * @param version the version of the JNLP file
+     * @param strict whether to enforce the spec when 
+     * @throws IOException if an IO exception occurred
+     * @throws ParseException if the JNLP file was invalid
+     */
+    public JNLPFile(URL location, Version version, boolean strict) throws IOException, ParseException {
+        this(location, version, strict, JNLPRuntime.getDefaultUpdatePolicy());
     }
 
     /**
-     * Create a JNLPFile from a URL checking for updates using the
-     * specified policy.
+     * Create a JNLPFile from a URL and a version, checking for updates 
+     * using the specified policy.
      *
      * @param location the location of the JNLP file
+     * @param version the version of the JNLP file
      * @param strict whether to enforce the spec when 
      * @param policy the update policy
      * @throws IOException if an IO exception occurred
      * @throws ParseException if the JNLP file was invalid
      */
-    public JNLPFile(URL location, boolean strict, UpdatePolicy policy) throws IOException, ParseException {
-        Node root = Parser.getRootNode(openURL(location, policy));
+    public JNLPFile(URL location, Version version, boolean strict, UpdatePolicy policy) throws IOException, ParseException {
+        Node root = Parser.getRootNode(openURL(location, version, policy));
         parse(root, strict, location);
 
         this.fileLocation = location;
@@ -186,13 +201,13 @@ public class JNLPFile {
      * Open the jnlp file URL from the cache if there, otherwise
      * download to the cache.  Called from constructor.
      */
-    private static InputStream openURL(URL location, UpdatePolicy policy) throws IOException {
+    private static InputStream openURL(URL location, Version version, UpdatePolicy policy) throws IOException {
         if (location == null || policy == null)
             throw new IllegalArgumentException(R("NullParameter"));
 
         try {
             ResourceTracker tracker = new ResourceTracker(false); // no prefetch
-            tracker.addResource(location, null/*version*/, policy);
+            tracker.addResource(location, version , policy);
 
             return tracker.getInputStream(location);
         }

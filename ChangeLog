@@ -1,3 +1,25 @@
+2009-07-13  Omair Majid  <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/JNLPFile.java
+	(JNLPFile): Delegate to the Version-based constructor.
+	(JNLPFile): New constructor.
+	(JNLPFile): Modified to take an additional version argument used in
+	downloading the JNLP file.
+	(openURL): Take an additional version argument and use when downloading 
+	the URL.
+	* netx/net/sourceforge/jnlp/Launcher.java
+	(toFile): Use the new JNLPFile constructor.
+	* netx/net/sourceforge/jnlp/cache/Resource.java
+	(Resource): Rearrange argument order.
+	(getResource): Likewise. Fix parameters to constructor.
+	* netx/net/sourceforge/jnlp/cache/ResourceTracker.java
+	(addResource): Fix arguments to Resource.getResource.
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java
+	(getInstance): Take additional version argument and use it when creating a
+	JNLPFile.
+	(initializeExtensions): Use the extension version when requesting a 
+	JNLPClassLoader.
+
 2009-07-10  Deepak Bhole  <dbhole@redhat.com>
 
 	* Makefile.am: Update makefile to pick up plugin C++ files from new
