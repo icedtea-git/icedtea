@@ -1,20 +1,20 @@
-OPENJDK_VERSION = b63
+OPENJDK_VERSION = b64
 
-OPENJDK_CHANGESET = 57f7e028c7ad
-CORBA_CHANGESET = d20e45cd539f
-JAXP_CHANGESET = ae449e9c04c1
-JAXWS_CHANGESET = 5b9e8315aab2
-JDK_CHANGESET = 6388560a8d7e
-LANGTOOLS_CHANGESET = 5c2c81120555
-HOTSPOT_CHANGESET = 32c83fb84370
+OPENJDK_CHANGESET = 269c1ec4435d
+CORBA_CHANGESET = 047dd27fddb6
+JAXP_CHANGESET = a10eec7a1edf
+JAXWS_CHANGESET = d1788e8fd315
+JDK_CHANGESET = d799a225c668
+LANGTOOLS_CHANGESET = d8f23a81d46f
+HOTSPOT_CHANGESET = ba36394eb84b
 
-OPENJDK_MD5SUM = 01a2fe09452d8579fb251120e37dc45a
-CORBA_MD5SUM = 865e397135e2b9f8e4a256b4146b6852
-JAXP_MD5SUM = 008c8971c40aca1759dd0129a025f9b8
-JAXWS_MD5SUM = 86d18ba378cb83a2bd33b334c7bd610e
-JDK_MD5SUM = 68b034a7d0906a0f7b471e080b45407a
-LANGTOOLS_MD5SUM = 5ff432cec3ddf86ae5dbd147da1a7f92
-HOTSPOT_MD5SUM = a97947d03665b39b806ddcf2e48b9fc8
+OPENJDK_MD5SUM = 377e7f1139d876175dd85629220213c9
+CORBA_MD5SUM = 203e6eb0231ae7848a501ee40fcc256d
+JAXP_MD5SUM = b57ed800ab149e44d4d53525cf58e9a7
+JAXWS_MD5SUM = 768509b4a24dc8e3b060e68e71081f48
+JDK_MD5SUM = dab8727958b03ff1b7992a50545479c3
+LANGTOOLS_MD5SUM = bf1a06f7d30febfb332658b6d7ef5fa5
+HOTSPOT_MD5SUM = 1ffa3dd169e18e9679c56b13c04a0de9
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
@@ -2037,7 +2037,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-override-redirect-metacity.patch \
 	patches/icedtea-shark-build.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-shark-build.patch \
-	patches/icedtea-toolkit.patch \
 	patches/icedtea-security-updates.patch \
 	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-mbeanintrospector.patch \
@@ -2053,7 +2052,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-arch.patch \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-lc_ctype.patch \
-	patches/icedtea-messageutils.patch \
 	patches/icedtea-xjc.patch \
 	patches/icedtea-renderer-crossing.patch \
 	patches/icedtea-tests-jdk.patch \

@@ -1,3 +1,15 @@
+2009-07-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-messageutils.patch,
+	* patches/icedtea-toolkit.patch:
+	Dropped, committed upstream by Lillian.
+	* Makefile.am: Bump to b64.
+	* patches/ecj/icedtea-dbcs.patch,
+	* patches/ecj/icedtea.patch,
+	* patches/icedtea-linker-libs-order.patch,
+	* patches/icedtea-webstart.patch:
+	Recreated.
+
 2009-07-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/ecj/icedtea-pr40616.patch:
