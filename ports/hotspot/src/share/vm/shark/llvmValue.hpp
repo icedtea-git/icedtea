@@ -39,20 +39,26 @@ class LLVMValue : public AllStatic {
   }
 #if SHARK_LLVM_VERSION >= 26
   static llvm::Constant* jfloat_constant(jfloat value)
+  {
+    return llvm::getGlobalContext().getConstantFP(SharkType::jfloat_type(), value); 
+  }
 #else
   static llvm::ConstantFP* jfloat_constant(jfloat value)
-#endif
   {
     return llvm::ConstantFP::get(SharkType::jfloat_type(), value);
   }
+#endif
 #if SHARK_LLVM_VERSION >= 26
   static llvm::Constant* jdouble_constant(jdouble value)
+  {
+    return llvm::getGlobalContext().getConstantFP(SharkType::jdouble_type(), value);
+  }
 #else
   static llvm::ConstantFP* jdouble_constant(jdouble value)
-#endif
   {
     return llvm::ConstantFP::get(SharkType::jdouble_type(), value);
   }
+#endif
   static llvm::ConstantPointerNull* null()
   {
     return llvm::ConstantPointerNull::get(SharkType::jobject_type());
