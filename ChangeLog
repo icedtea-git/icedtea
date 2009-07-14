@@ -1,3 +1,71 @@
+2009-07-10  Deepak Bhole  <dbhole@redhat.com>
+
+	* Makefile.am: Fix npplugin build.
+	* plugin/icedteanp/java/netscape/javascript/JSException.java: Moved from
+	the plugin/icedteanp/netscape/javascript/ hierarchy.
+	* plugin/icedteanp/java/netscape/javascript/JSObject.java: Same.
+	* plugin/icedteanp/java/netscape/javascript/JSProxy.java: Same.
+	* plugin/icedteanp/java/netscape/javascript/JSRunnable.java: Same.
+	* plugin/icedteanp/java/netscape/javascript/JSUtil.java: Same.
+	* plugin/icedteanp/java/sun/applet/AppletSecurityContextManager.java:
+	Moved from the plugin/icedteanp/sun/applet hierarchy.
+	* plugin/icedteanp/java/sun/applet/GetMemberPluginCallRequest.java: Same.
+	* plugin/icedteanp/java/sun/applet/GetWindowPluginCallRequest.java: Same.
+	* plugin/icedteanp/java/sun/applet/JavaConsole.java: Same.
+	* plugin/icedteanp/java/sun/applet/PasswordAuthenticationDialog.java:
+	Same.
+	* plugin/icedteanp/java/sun/applet/PluginAppletSecurityContext.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginCallRequest.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginCallRequestFactory.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginClassLoader.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginCookieInfoRequest.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginCookieStore.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginDebug.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginException.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginMain.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginMessageConsumer.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginMessageHandlerWorker.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginObjectStore.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginProxyInfoRequest.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginProxySelector.java: Same.
+	* plugin/icedteanp/java/sun/applet/PluginStreamHandler.java: Same.
+	* plugin/icedteanp/java/sun/applet/RequestQueue.java: Same.
+	* plugin/icedteanp/java/sun/applet/TestEnv.java: Same.
+	* plugin/icedteanp/java/sun/applet/VoidPluginCallRequest.java: Same.
+	* plugin/icedteanp/netscape/javascript/JSException.java: Moved to
+	the plugin/icedteanp/java/netscape/javascript/ heirarchy.
+	* plugin/icedteanp/netscape/javascript/JSObject.java: Same.
+	* plugin/icedteanp/netscape/javascript/JSProxy.java: Same.
+	* plugin/icedteanp/netscape/javascript/JSRunnable.java: Same.
+	* plugin/icedteanp/netscape/javascript/JSUtil.java: Same.
+	* plugin/icedteanp/sun/applet/AppletSecurityContextManager.java: Moved to
+	the plugin/icedteanp/java/sun/applet/ heirarchy.
+	* plugin/icedteanp/sun/applet/GetMemberPluginCallRequest.java: Same.
+	* plugin/icedteanp/sun/applet/GetWindowPluginCallRequest.java: Same.
+	* plugin/icedteanp/sun/applet/JavaConsole.java: Same.
+	* plugin/icedteanp/sun/applet/PasswordAuthenticationDialog.java: Same.
+	* plugin/icedteanp/sun/applet/PluginAppletSecurityContext.java: Same.
+	* plugin/icedteanp/sun/applet/PluginAppletViewer.java: Same.
+	* plugin/icedteanp/sun/applet/PluginCallRequest.java: Same.
+	* plugin/icedteanp/sun/applet/PluginCallRequestFactory.java: Same.
+	* plugin/icedteanp/sun/applet/PluginClassLoader.java: Same.
+	* plugin/icedteanp/sun/applet/PluginCookieInfoRequest.java: Same.
+	* plugin/icedteanp/sun/applet/PluginCookieStore.java: Same.
+	* plugin/icedteanp/sun/applet/PluginDebug.java: Same.
+	* plugin/icedteanp/sun/applet/PluginException.java: Same.
+	* plugin/icedteanp/sun/applet/PluginMain.java: Same.
+	* plugin/icedteanp/sun/applet/PluginMessageConsumer.java: Same.
+	* plugin/icedteanp/sun/applet/PluginMessageHandlerWorker.java: Same.
+	* plugin/icedteanp/sun/applet/PluginObjectStore.java: Same.
+	* plugin/icedteanp/sun/applet/PluginProxyInfoRequest.java: Same.
+	* plugin/icedteanp/sun/applet/PluginProxySelector.java: Same.
+	* plugin/icedteanp/sun/applet/PluginStreamHandler.java: Same.
+	* plugin/icedteanp/sun/applet/RequestQueue.java: Same.
+	* plugin/icedteanp/sun/applet/TestEnv.java: Same.
+	* plugin/icedteanp/sun/applet/VoidPluginCallRequest.java: Same.
+
+
 2009-07-13  Omair Majid  <omajid@redhat.com>
 
 	* netx/net/sourceforge/jnlp/JNLPFile.java
