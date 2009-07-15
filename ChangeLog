@@ -1,3 +1,17 @@
+2009-07-15  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/llvmValue.hpp
+	(jbyte_constant): Handle LLVM 2.6 svn r75703 API change.
+	llvm::ConstantInt::get have been moved to
+	llvm::LLVMContext::getConstantInt.
+	(jint_constant): Likewise.
+	(jlong_constant): Likewise.
+	(intptr_constant): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::CreateMemoryBarrier): Likewise.
+	(SharkBuilder::CreateDump): llvm::ConstantArray::get have been
+	moved to llvm::LLVMContext::getConstantArray.
+ 
 2009-07-14  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/llvmValue.hpp

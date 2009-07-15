@@ -27,15 +27,27 @@ class LLVMValue : public AllStatic {
  public:
   static llvm::ConstantInt* jbyte_constant(jbyte value)
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::getGlobalContext().getConstantInt(SharkType::jbyte_type(), value, true);
+#else
     return llvm::ConstantInt::get(SharkType::jbyte_type(), value, true);
+#endif
   }
   static llvm::ConstantInt* jint_constant(jint value)
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::getGlobalContext().getConstantInt(SharkType::jint_type(), value, true);
+#else
     return llvm::ConstantInt::get(SharkType::jint_type(), value, true);
+#endif
   }
   static llvm::ConstantInt* jlong_constant(jlong value)
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::getGlobalContext().getConstantInt(SharkType::jlong_type(), value, true);
+#else
     return llvm::ConstantInt::get(SharkType::jlong_type(), value, true);
+#endif
   }
 #if SHARK_LLVM_VERSION >= 26
   static llvm::Constant* jfloat_constant(jfloat value)
@@ -67,6 +79,10 @@ class LLVMValue : public AllStatic {
  public:
   static llvm::ConstantInt* intptr_constant(intptr_t value)
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::getGlobalContext().getConstantInt(SharkType::intptr_type(), value, false);
+#else
     return llvm::ConstantInt::get(SharkType::intptr_type(), value, false);
+#endif
   }
 };

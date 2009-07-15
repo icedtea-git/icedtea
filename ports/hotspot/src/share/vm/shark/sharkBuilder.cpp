@@ -187,9 +187,15 @@ CallInst* SharkBuilder::CreateDump(llvm::Value* value)
 {
   Constant *const_name;
   if (value->hasName())
+#if SHARK_LLVM_VERSION >= 26
+    const_name = getGlobalContext().getConstantArray(value->getName());
+  else
+    const_name = getGlobalContext().getConstantArray("unnamed_value");
+#else
     const_name = ConstantArray::get(value->getName());
   else
     const_name = ConstantArray::get("unnamed_value");
+#endif
 
   Value *name = CreatePtrToInt(
     CreateStructGEP(
@@ -260,10 +266,18 @@ CallInst* SharkBuilder::CreateShouldNotReachHere(const char* file, int line)
 CallInst *SharkBuilder::CreateMemoryBarrier(BarrierFlags flags)
 {
   Value *args[] = {
+#if SHARK_LLVM_VERSION >= 26
+    getGlobalContext().getConstantInt(Type::Int1Ty, (flags & BARRIER_LOADLOAD) ? 1 : 0),
+    getGlobalContext().getConstantInt(Type::Int1Ty, (flags & BARRIER_LOADSTORE) ? 1 : 0),
+    getGlobalContext().getConstantInt(Type::Int1Ty, (flags & BARRIER_STORELOAD) ? 1 : 0),
+    getGlobalContext().getConstantInt(Type::Int1Ty, (flags & BARRIER_STORESTORE) ? 1 : 0),
+    getGlobalContext().getConstantInt(Type::Int1Ty, 0)};
+#else
     ConstantInt::get(Type::Int1Ty, (flags & BARRIER_LOADLOAD) ? 1 : 0),
     ConstantInt::get(Type::Int1Ty, (flags & BARRIER_LOADSTORE) ? 1 : 0),
     ConstantInt::get(Type::Int1Ty, (flags & BARRIER_STORELOAD) ? 1 : 0),
     ConstantInt::get(Type::Int1Ty, (flags & BARRIER_STORESTORE) ? 1 : 0),
     ConstantInt::get(Type::Int1Ty, 0)};
+#endif
   return CreateCall(llvm_memory_barrier_fn(), args, args + 5);
 }
