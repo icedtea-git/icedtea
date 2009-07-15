@@ -2501,7 +2501,8 @@ SCANNER_PATCHES = patches/ecj/icedtea-spp.patch \
 	patches/ecj/icedtea-dbcs.patch
 
 if LACKS_JAVA_UTIL_SCANNER
-ICEDTEA_ECJ_PATCHES += $(SCANNER_PATCHES)
+ICEDTEA_ECJ_PATCHES += $(SCANNER_PATCHES) \
+	patches/ecj/icedtea-euctw.patch
 else
 if CP40630
 ICEDTEA_ECJ_PATCHES += $(SCANNER_PATCHES)
