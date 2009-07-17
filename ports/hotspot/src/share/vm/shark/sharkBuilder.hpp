@@ -156,6 +156,9 @@ class SharkBuilder : public llvm::IRBuilder<> {
 
   llvm::Constant* pointer_constant(const void *ptr)
   {
+#if SHARK_LLVM_VERSION >= 25 || !defined(AMD64)
+    return LLVMValue::intptr_constant((intptr_t) ptr);
+#else
     // Create a pointer constant that points at PTR.  We do this by
     // creating a GlobalVariable mapped at PTR.  This is a workaround
     // for http://www.llvm.org/bugs/show_bug.cgi?id=2920
@@ -175,18 +178,13 @@ class SharkBuilder : public llvm::IRBuilder<> {
     snprintf(name, sizeof name - 1, "pointer_constant_%p", ptr);
 
     GlobalVariable *value = new GlobalVariable(
-#if SHARK_LLVM_VERSION >= 26
-      // LLVM 2.6 requires a LLVMContext during GlobalVariable construction.
-      // getGlobalConext() returns one that can be used as long as the shark
-      // compiler are single-threaded.
-      getGlobalContext(),
-#endif
       SharkType::intptr_type(),
       false, GlobalValue::ExternalLinkage,
       NULL, name, module());
     execution_engine()->addGlobalMapping(value, const_cast<void*>(ptr));
 
     return ConstantExpr::getPtrToInt(value, SharkType::intptr_type());
+#endif // SHARK_LLVM_VERSION >= 25 || !AMD64
   }
 
   // Helper for making pointers
