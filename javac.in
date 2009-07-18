@@ -4,7 +4,7 @@ use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
 use constant STRIP_ARGS => qw(-Werror);
 
 my @bcoption;
-push @bcoption, '-bootclasspath', glob '@SYSTEM_GCJ_DIR@/jre/lib/rt.jar'
+push @bcoption, '-bootclasspath', glob '@SYSTEM_JDK_DIR@/jre/lib/rt.jar'
     unless grep {$_ eq '-bootclasspath'} @ARGV;
 
 # Work around ecj's inability to handle duplicate command-line

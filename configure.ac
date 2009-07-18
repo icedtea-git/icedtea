@@ -47,24 +47,6 @@ AC_CHECK_WITH_HOTSPOT_BUILD
 AC_PATH_TOOL([LINUX32],[linux32])
 AC_CHECK_GCC_VERSION
 
-AC_MSG_CHECKING([whether to build using an existing installation of IcedTea])
-AC_ARG_WITH([icedtea],
-        [AS_HELP_STRING([--with-icedtea],
-                        [build IcedTea with system-installed IcedTea])],
-        [
-          if test "x${withval}" != xno
-          then
-            with_icedtea=true
-          else
-            with_icedtea=false
-          fi
-        ],
-        [
-          with_icedtea=false
-        ])
-AM_CONDITIONAL(WITH_ICEDTEA, test "${with_icedtea}" = true)
-AC_MSG_RESULT(${with_icedtea})
-
 AC_MSG_CHECKING([for a NetBeans installation])
 AC_ARG_WITH([netbeans-home],
            [AS_HELP_STRING([--with-netbeans-home],
@@ -100,24 +82,6 @@ AC_ARG_WITH([netbeans-home],
             ])
 AC_MSG_RESULT([${SYSTEM_NETBEANS_DIR}])
 AC_SUBST(SYSTEM_NETBEANS_DIR)
-
-AC_MSG_CHECKING([whether to build using an existing installation of OpenJDK])
-AC_ARG_WITH([openjdk],
-        [AS_HELP_STRING([--with-openjdk],
-                        [build IcedTea with system-installed OpenJDK])],
-        [
-          if test "x${withval}" != xno
-          then
-            with_openjdk=true
-          else
-            with_openjdk=false
-          fi
-        ],
-        [
-          with_openjdk=false
-        ])
-AM_CONDITIONAL(WITH_OPENJDK, test "${with_openjdk}" = true)
-AC_MSG_RESULT(${with_openjdk})
 
 AC_MSG_CHECKING(for Ant home directory)
 AC_ARG_WITH([ant-home],
@@ -247,52 +211,27 @@ AC_SUBST(DIST_ID)
 SET_ARCH_DIRS
 SET_OS_DIRS
 
-if test "${with_openjdk}" = true
-then
-  AC_CHECK_FOR_OPENJDK
-  JAVA=$SYSTEM_OPENJDK_DIR/bin/java
-  AC_SUBST(JAVA)
-  JAVAC=${SYSTEM_OPENJDK_DIR}/bin/javac
-  AC_SUBST(JAVAC)
-  JAVAH=${SYSTEM_OPENJDK_DIR}/bin/javah
-  AC_SUBST(JAVAH)
-  JAR=${SYSTEM_OPENJDK_DIR}/bin/jar
-  AC_SUBST(JAR)
-  RMIC=${SYSTEM_OPENJDK_DIR}/bin/rmic
-  AC_SUBST(RMIC)
-else
-if test "${with_icedtea}" = true
-then
-  AC_CHECK_FOR_ICEDTEA
-  JAVA=$SYSTEM_ICEDTEA_DIR/bin/java
-  AC_SUBST(JAVA)
-  JAVAC=${SYSTEM_ICEDTEA_DIR}/bin/javac
-  AC_SUBST(JAVAC)
-  JAVAH=${SYSTEM_ICEDTEA_DIR}/bin/javah
-  AC_SUBST(JAVAH)
-  JAR=${SYSTEM_ICEDTEA_DIR}/bin/jar
-  AC_SUBST(JAR)
-  RMIC=${SYSTEM_ICEDTEA_DIR}/bin/rmic
-  AC_SUBST(RMIC)
-else
-  AC_CHECK_FOR_GCJ_JDK
-  FIND_JAVA
-  FIND_JAVAC
-  FIND_JAVAH
-  FIND_JAR
-  FIND_RMIC
+IT_CHECK_IF_BOOTSTRAPPING
+IT_CHECK_FOR_JDK
+FIND_JAVA
+FIND_JAVAC
+FIND_JAVAH
+FIND_JAR
+FIND_RMIC
+if test "x$enable_bootstrap" = "xyes"; then
   FIND_ECJ_JAR
   FIND_XALAN2_JAR
   FIND_XALAN2_SERIALIZER_JAR
   FIND_XERCES2_JAR
-  AC_CONFIG_FILES([javac], [chmod +x javac])
-  AC_CONFIG_FILES([javap], [chmod +x javap])
 fi
-fi
+AC_CONFIG_FILES([javac], [chmod +x javac])
+AC_CONFIG_FILES([javap], [chmod +x javap])
+
 IT_JAVAH
 IT_LIBRARY_CHECK
 IT_SCANNER_CHECK
 IT_PR40630_CHECK
+
 FIND_RHINO_JAR
 WITH_OPENJDK_SRC_ZIP
 WITH_HOTSPOT_SRC_ZIP
@@ -303,6 +242,7 @@ WITH_JDK_SRC_ZIP
 WITH_LANGTOOLS_SRC_ZIP
 WITH_OPENJDK_SRC_DIR
 WITH_ALT_JAR_BINARY
+
 AC_CHECK_ENABLE_CACAO
 AC_CHECK_WITH_CACAO_HOME
 AC_CHECK_WITH_CACAO_SRC_ZIP

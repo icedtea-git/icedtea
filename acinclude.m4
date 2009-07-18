@@ -91,42 +91,46 @@ AC_DEFUN([SET_OS_DIRS],
 
 AC_DEFUN([FIND_JAVAC],
 [
-  user_specified_javac=
+  JAVAC=${SYSTEM_JDK_DIR}/bin/javac
+  IT_FIND_JAVAC
+  IT_FIND_ECJ
 
-  CLASSPATH_WITH_ECJ
-  CLASSPATH_WITH_JAVAC
-
-  if test "x${ECJ}" = x && test "x${JAVAC}" = x && test "x${user_specified_javac}" != xecj; then
-      AC_MSG_ERROR([cannot find javac, try --with-ecj])
+  if test "x${JAVAC}" = x; then
+      AC_MSG_ERROR([cannot find a Java compiler, try --with-javac or --with-ecj])
   fi
+  AC_SUBST(JAVAC)
 ])
 
-AC_DEFUN([CLASSPATH_WITH_ECJ],
+AC_DEFUN([IT_FIND_ECJ],
 [
   AC_ARG_WITH([ecj],
 	      [AS_HELP_STRING(--with-ecj,bytecode compilation with ecj)],
   [
     if test "x${withval}" != x && test "x${withval}" != xyes && test "x${withval}" != xno; then
-      CLASSPATH_CHECK_ECJ(${withval})
+      IT_CHECK_ECJ(${withval})
     else
       if test "x${withval}" != xno; then
-        CLASSPATH_CHECK_ECJ
+        IT_CHECK_ECJ
       fi
     fi
-    user_specified_javac=ecj
   ],
   [ 
-    CLASSPATH_CHECK_ECJ
+    IT_CHECK_ECJ
   ])
-  JAVAC="${ECJ} -nowarn"
-  AC_SUBST(JAVAC)
+  if test "x${JAVAC}" = "x"; then
+    if test "x{ECJ}" != "x"; then
+      JAVAC="${ECJ} -nowarn"
+    fi
+  fi
 ])
 
-AC_DEFUN([CLASSPATH_CHECK_ECJ],
+AC_DEFUN([IT_CHECK_ECJ],
 [
   if test "x$1" != x; then
     if test -f "$1"; then
+      AC_MSG_CHECKING(for ecj)
       ECJ="$1"
+      AC_MSG_RESULT(${ECJ})
     else
       AC_PATH_PROG(ECJ, "$1")
     fi
@@ -144,31 +148,31 @@ AC_DEFUN([CLASSPATH_CHECK_ECJ],
   fi
 ])
 
-AC_DEFUN([CLASSPATH_WITH_JAVAC],
+AC_DEFUN([IT_FIND_JAVAC],
 [
   AC_ARG_WITH([javac],
 	      [AS_HELP_STRING(--with-javac,bytecode compilation with javac)],
   [
     if test "x${withval}" != x && test "x${withval}" != xyes && test "x${withval}" != xno; then
-      CLASSPATH_CHECK_JAVAC(${withval})
+      IT_CHECK_JAVAC(${withval})
     else
       if test "x${withval}" != xno; then
-        CLASSPATH_CHECK_JAVAC
+        IT_CHECK_JAVAC(${JAVAC})
       fi
     fi
-    user_specified_javac=javac
   ],
   [ 
-    CLASSPATH_CHECK_JAVAC
+    IT_CHECK_JAVAC(${JAVAC})
   ])
-  AC_SUBST(JAVAC)
 ])
 
-AC_DEFUN([CLASSPATH_CHECK_JAVAC],
+AC_DEFUN([IT_CHECK_JAVAC],
 [
   if test "x$1" != x; then
     if test -f "$1"; then
+      AC_MSG_CHECKING(for javac)
       JAVAC="$1"
+      AC_MSG_RESULT(${JAVAC})
     else
       AC_PATH_PROG(JAVAC, "$1")
     fi
@@ -179,20 +183,18 @@ AC_DEFUN([CLASSPATH_CHECK_JAVAC],
 
 AC_DEFUN([FIND_JAVA],
 [
+  AC_MSG_CHECKING(for java)
   AC_ARG_WITH([java],
               [AS_HELP_STRING(--with-java,specify location of the 1.5 java vm)],
   [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(java)
-      JAVA="${withval}"
-      AC_MSG_RESULT(${withval})
-    else
-      AC_PATH_PROG(JAVA, "${withval}")
-    fi
+    JAVA="${withval}"
   ],
   [
-    JAVA=
+    JAVA=${SYSTEM_JDK_DIR}/bin/java
   ])
+  if ! test -f "${JAVA}"; then
+    AC_PATH_PROG(JAVA, "${JAVA}")
+  fi
   if test -z "${JAVA}"; then
     AC_PATH_PROG(JAVA, "gij")
   fi
@@ -202,6 +204,7 @@ AC_DEFUN([FIND_JAVA],
   if test -z "${JAVA}"; then
     AC_MSG_ERROR("A 1.5-compatible Java VM is required.")
   fi
+  AC_MSG_RESULT(${JAVA})
   AC_SUBST(JAVA)
 ])
 
@@ -277,20 +280,18 @@ AC_DEFUN([AC_CHECK_GCC_VERSION],
 
 AC_DEFUN([FIND_JAVAH],
 [
+  AC_MSG_CHECKING(for javah)
   AC_ARG_WITH([javah],
-              [AS_HELP_STRING(--with-javah,specify location of the javah)],
+              [AS_HELP_STRING(--with-javah,specify location of the Java header generator)],
   [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(for javah)
-      JAVAH="${withval}"
-      AC_MSG_RESULT(${withval})
-    else
-      AC_PATH_PROG(JAVAH, "${withval}")
-    fi
+    JAVAH="${withval}"
   ],
   [
-    JAVAH=
+    JAVAH=${SYSTEM_JDK_DIR}/bin/javah
   ])
+  if ! test -f "${JAVAH}"; then
+    AC_PATH_PROG(JAVAH, "${JAVAH}")
+  fi
   if test -z "${JAVAH}"; then
     AC_PATH_PROG(JAVAH, "gjavah")
   fi
@@ -298,27 +299,26 @@ AC_DEFUN([FIND_JAVAH],
     AC_PATH_PROG(JAVAH, "javah")
   fi
   if test -z "${JAVAH}"; then
-    AC_MSG_ERROR("javah was not found.")
+    AC_MSG_ERROR("A Java header generator was not found.")
   fi
+  AC_MSG_RESULT(${JAVAH})
   AC_SUBST(JAVAH)
 ])
 
 AC_DEFUN([FIND_JAR],
 [
+  AC_MSG_CHECKING(for jar)
   AC_ARG_WITH([jar],
-              [AS_HELP_STRING(--with-jar,specify location of the jar)],
+              [AS_HELP_STRING(--with-jar,specify location of the Java archive tool (jar))],
   [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(for jar)
-      JAR="${withval}"
-      AC_MSG_RESULT(${withval})
-    else
-      AC_PATH_PROG(JAR, "${withval}")
-    fi
+    JAR="${withval}"
   ],
   [
-    JAR=
+    JAR=${SYSTEM_JDK_DIR}/bin/jar
   ])
+  if ! test -f "${JAR}"; then
+    AC_PATH_PROG(JAR, "${JAR}")
+  fi
   if test -z "${JAR}"; then
     AC_PATH_PROG(JAR, "gjar")
   fi
@@ -326,8 +326,9 @@ AC_DEFUN([FIND_JAR],
     AC_PATH_PROG(JAR, "jar")
   fi
   if test -z "${JAR}"; then
-    AC_MSG_ERROR("jar was not found.")
+    AC_MSG_ERROR("No Java archive tool was found.")
   fi
+  AC_MSG_RESULT(${JAR})
   AC_MSG_CHECKING([whether jar supports @<file> argument])
   touch _config.txt
   cat >_config.list <<EOF
@@ -366,20 +367,18 @@ EOF
 
 AC_DEFUN([FIND_RMIC],
 [
+  AC_MSG_CHECKING(for rmic)
   AC_ARG_WITH([rmic],
-              [AS_HELP_STRING(--with-rmic,specify location of the rmic)],
+              [AS_HELP_STRING(--with-rmic,specify location of the RMI compiler)],
   [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(for rmic)
-      RMIC="${withval}"
-      AC_MSG_RESULT(${withval})
-    else
-      AC_PATH_PROG(RMIC, "${withval}")
-    fi
+    RMIC="${withval}"
   ],
   [
-    RMIC=
+    RMIC=${SYSTEM_JDK_DIR}/bin/rmic
   ])
+  if ! test -f "${RMIC}"; then
+    AC_PATH_PROG(RMIC, "${RMIC}")
+  fi
   if test -z "${RMIC}"; then
     AC_PATH_PROG(RMIC, "grmic")
   fi
@@ -387,8 +386,9 @@ AC_DEFUN([FIND_RMIC],
     AC_PATH_PROG(RMIC, "rmic")
   fi
   if test -z "${RMIC}"; then
-    AC_MSG_ERROR("rmic was not found.")
+    AC_MSG_ERROR("An RMI compiler was not found.")
   fi
+  AC_MSG_RESULT(${RMIC})
   AC_SUBST(RMIC)
 ])
 
@@ -1155,116 +1155,67 @@ AC_DEFUN([AC_CHECK_WITH_HG_REVISION],
   AM_CONDITIONAL(WITH_HGREV, test "x${HGREV}" != "x")
 ])
 
-AC_DEFUN([AC_CHECK_FOR_GCJ_JDK],
+AC_DEFUN([IT_CHECK_IF_BOOTSTRAPPING],
 [
-  AC_MSG_CHECKING([for a GCJ JDK home directory])
-  AC_ARG_WITH([gcj-home],
-	      [AS_HELP_STRING([--with-gcj-home],
-                              [gcj home directory \
-                               (default is /usr/lib/jvm/java-gcj or /usr/lib/jvm/gcj-jdk)])],
-              [
-                if test "x${withval}" = xyes
-                then
-                  SYSTEM_GCJ_DIR=
-                elif test "x${withval}" = xno
-                then
-	          SYSTEM_GCJ_DIR=
-	        else
-                  SYSTEM_GCJ_DIR=${withval}
-                fi
-              ],
-              [
-	        SYSTEM_GCJ_DIR=
-              ])
-  if test -z "${SYSTEM_GCJ_DIR}"; then
-    for dir in /usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk /usr/lib/jvm/cacao ; do
-       if test -d $dir; then
-         SYSTEM_GCJ_DIR=$dir
-	 break
-       fi
-    done
-  fi
-  AC_MSG_RESULT(${SYSTEM_GCJ_DIR})
-  if ! test -d "${SYSTEM_GCJ_DIR}"; then
-    AC_MSG_ERROR("A GCJ JDK home directory could not be found.")
-  fi
-  AC_SUBST(SYSTEM_GCJ_DIR)
+  AC_MSG_CHECKING([whether to build a bootstrap version first])
+  AC_ARG_ENABLE([bootstrap],
+                [AS_HELP_STRING(--disable-bootstrap, don't build a bootstrap version [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+	enable_bootstrap=no
+        ;;
+      *)
+        enable_bootstrap=yes
+        ;;
+    esac
+  ],
+  [
+        enable_bootstrap=yes
+  ])
+  AC_MSG_RESULT([${enable_bootstrap}])
+  AM_CONDITIONAL([BOOTSTRAPPING], test x"${enable_bootstrap}" = "xyes")
 ])
 
-AC_DEFUN([AC_CHECK_FOR_OPENJDK],
+AC_DEFUN([IT_CHECK_FOR_JDK],
 [
-  AC_MSG_CHECKING([for an existing OpenJDK installation])
-  AC_ARG_WITH([openjdk-home],
-              [AS_HELP_STRING([--with-openjdk-home],
-                              [OpenJDK home directory \
-                               (default is /usr/lib/jvm/java-openjdk)])],
+  AC_MSG_CHECKING([for a JDK home directory])
+  AC_ARG_WITH([jdk-home],
+	      [AS_HELP_STRING([--with-jdk-home],
+                              [jdk home directory \
+                               (default is first predefined JDK found)])],
               [
                 if test "x${withval}" = xyes
                 then
-                  SYSTEM_OPENJDK_DIR=
+                  SYSTEM_JDK_DIR=
                 elif test "x${withval}" = xno
                 then
-	          SYSTEM_OPENJDK_DIR=
+	          SYSTEM_JDK_DIR=
 	        else
-                  SYSTEM_OPENJDK_DIR=${withval}
+                  SYSTEM_JDK_DIR=${withval}
                 fi
               ],
               [
-                SYSTEM_OPENJDK_DIR=
+	        SYSTEM_JDK_DIR=
               ])
-  if test -z "${SYSTEM_OPENJDK_DIR}"; then
-    for dir in /usr/lib/jvm/java-openjdk /usr/lib/jvm/icedtea6 \
-    	       /usr/lib/jvm/java-6-openjdk /usr/lib/jvm/openjdk \
-	       /usr/lib/jvm/java-icedtea; do
+  if test -z "${SYSTEM_JDK_DIR}"; then
+    if test "x${enable_bootstrap}" = "xyes"; then
+      BOOTSTRAP_VMS="/usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk /usr/lib/jvm/cacao";
+    fi
+    for dir in ${BOOTSTRAP_VMS} /usr/lib/jvm/java-openjdk \
+    	       /usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk \
+	       /usr/lib/jvm/openjdk /usr/lib/jvm/java-icedtea ; do
        if test -d $dir; then
-         SYSTEM_OPENJDK_DIR=$dir
+         SYSTEM_JDK_DIR=$dir
 	 break
        fi
     done
   fi
-  AC_MSG_RESULT(${SYSTEM_OPENJDK_DIR})
-  if ! test -d "${SYSTEM_OPENJDK_DIR}"; then
-    AC_MSG_ERROR("An OpenJDK home directory could not be found.")
+  AC_MSG_RESULT(${SYSTEM_JDK_DIR})
+  if ! test -d "${SYSTEM_JDK_DIR}"; then
+    AC_MSG_ERROR("A JDK JDK home directory could not be found.")
   fi
-  AC_SUBST(SYSTEM_OPENJDK_DIR)
-])
-
-AC_DEFUN([AC_CHECK_FOR_ICEDTEA],
-[
-  AC_MSG_CHECKING(for an existing IcedTea installation)
-  AC_ARG_WITH([icedtea-home],
-              [AS_HELP_STRING([--with-icedtea-home],
-                              [IcedTea home directory \
-                               (default is /usr/lib/jvm/java-icedtea)])],
-              [
-                if test "x${withval}" = xyes
-                then
-                  SYSTEM_ICEDTEA_DIR=
-                elif test "x${withval}" = xno
-                then
-	          SYSTEM_ICEDTEA_DIR=
-	        else
-                  SYSTEM_ICEDTEA_DIR=${withval}
-                fi
-              ],
-              [
-                SYSTEM_ICEDTEA_DIR=
-              ])
-  if test -z "${SYSTEM_ICEDTEA_DIR}"; then
-    for dir in /usr/lib/jvm/java-openjdk /usr/lib/jvm/icedtea6 \
-    	       /usr/lib/jvm/java-6-openjdk /usr/lib/jvm/openjdk \
-	       /usr/lib/jvm/java-icedtea; do
-       if test -d $dir; then
-         SYSTEM_ICEDTEA_DIR=$dir
-	 break
-       fi
-    done
-  fi
-  AC_MSG_RESULT(${SYSTEM_ICEDTEA_DIR})
-  if ! test -d "${SYSTEM_ICEDTEA_DIR}"; then
-    AC_MSG_ERROR("An IcedTea home directory could not be found.")
-  fi
-  AC_SUBST(SYSTEM_ICEDTEA_DIR)
+  AC_SUBST(SYSTEM_JDK_DIR)
 ])
 
 AC_DEFUN([IT_JAVAH],[

@@ -1,3 +1,30 @@
+2009-07-17  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Remove use of WITH_OPENJDK, WITH_ICEDTEA
+	and SYSTEM_GCJ_DIR replacing with BOOTSTRAPPING
+	and SYSTEM_JDK_DIR as appropriate.
+	* acinclude.m4:
+	(FIND_JAVAC): Search for generic 'javac' first.
+	(IT_FIND_ECJ): Only use ecj as javac if JAVA is unset.
+	(FIND_JAVAH): Try javah in SYSTEM_JDK_DIR before searching.
+	(FIND_JAR): Likewise for jar.
+	(FIND_RMIC): Likewise for rmic.
+	(IT_CHECK_IF_BOOTSTRAPPING): Allow bootstrapping to be disabled.
+	Replaces --with-icedtea/--with-openjdk.
+	(IT_CHECK_FOR_JDK): Find JDK to use.  Replaces --with-gcj-jdk,
+	--with-icedtea-home, --with-openjdk-home.  At present, only checks
+	for gcj jdks if not bootstrapping.
+	(AC_CHECK_FOR_OPENJDK): Removed.
+	(AC_CHECK_FOR_ICEDTEA): Removed.
+	(AC_CHECK_FOR_GCJ_JDK): Removed.
+	* configure.ac:
+	Remove --with-icedtea and --with-openjdk.  Always check
+	for a JDK and then allow individual binaries to be overridden
+	by --with-x.
+	* javac.in:
+	Replace SYSTEM_GCJ_DIR with SYSTEM_JDK_DIR.
+
 2009-07-15  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

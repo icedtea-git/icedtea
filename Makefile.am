@@ -1630,7 +1630,7 @@ ICEDTEA_ENV_ECJ = \
 	"BOOTCLASSPATH_CLS_RT=-bootclasspath \
 	  $(ICEDTEA_CLS_DIR_ECJ):$(ICEDTEA_RT)" \
 	"BOOTCLASSPATH_CLS=-bootclasspath $(ICEDTEA_CLS_DIR_ECJ)" \
-	"BOOTCLASSPATH_RT_LIBGCJ=-bootclasspath $(ICEDTEA_RT):$(SYSTEM_GCJ_DIR)/jre/lib/rt.jar" \
+	"BOOTCLASSPATH_RT_LIBGCJ=-bootclasspath $(ICEDTEA_RT):$(SYSTEM_JDK_DIR)/jre/lib/rt.jar" \
 	"CLASSPATH=" \
 	"LD_LIBRARY_PATH=" \
 	"GENSRCDIR=$(abs_top_builddir)/generated" \
@@ -2577,20 +2577,14 @@ clean-bootstrap-directory:
 	rm -f stamps/bootstrap-directory.stamp
 	rm -rf bootstrap/icedtea
 
-if WITH_OPENJDK
-  BOOTSTRAP_DIRECTORY_STAMP =
-  ICEDTEA_HOME = $(SYSTEM_OPENJDK_DIR)
-  INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink.stamp
-else
-if WITH_ICEDTEA
-  BOOTSTRAP_DIRECTORY_STAMP =
-  ICEDTEA_HOME = $(SYSTEM_ICEDTEA_DIR)
-  INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink.stamp
-else
+if BOOTSTRAPPING
   BOOTSTRAP_DIRECTORY_STAMP = stamps/bootstrap-directory.stamp
   ICEDTEA_HOME = $(abs_top_builddir)/bootstrap/icedtea
   INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink-ecj.stamp
-endif
+else
+  BOOTSTRAP_DIRECTORY_STAMP =
+  ICEDTEA_HOME = $(SYSTEM_JDK_DIR)
+  INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink.stamp
 endif
 
 # bootstrap/jdk1.6.0 to bootstrap/icedtea symlink.
@@ -2629,9 +2623,9 @@ stamps/bootstrap-directory-ecj.stamp: stamps/native-ecj.stamp
 	  bootstrap/ecj/lib/endorsed/xalan-j2-serializer.jar
 	ln -sf $(XERCES2_JAR) bootstrap/ecj/lib/endorsed/xerces-j2.jar
 	mkdir -p bootstrap/ecj/jre/lib; \
-	ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/rt.jar \
+	ln -sf $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
 	  bootstrap/ecj/jre/lib/rt-system.jar; \
-	ln -sf $(SYSTEM_GCJ_DIR)/jre/lib/$(JRE_ARCH_DIR) \
+	ln -sf $(SYSTEM_JDK_DIR)/jre/lib/$(JRE_ARCH_DIR) \
 	  bootstrap/ecj/jre/lib/; \
 	if ! test -d bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
 	  then \
@@ -2639,11 +2633,11 @@ stamps/bootstrap-directory-ecj.stamp: stamps/native-ecj.stamp
 	    bootstrap/ecj/jre/lib/$(INSTALL_ARCH_DIR); \
 	fi; \
 	mkdir -p bootstrap/ecj/include; \
-	for i in $(SYSTEM_GCJ_DIR)/include/*; do \
+	for i in $(SYSTEM_JDK_DIR)/include/*; do \
 	  test -r $$i | continue; \
 	  i=`basename $$i`; \
 	  rm -f bootstrap/ecj/include/$$i; \
-	  ln -s $(SYSTEM_GCJ_DIR)/include/$$i bootstrap/ecj/include/$$i; \
+	  ln -s $(SYSTEM_JDK_DIR)/include/$$i bootstrap/ecj/include/$$i; \
 	done; \
 	if test -f $(abs_top_builddir)/bootstrap/jdk1.7.0/lib/tools.jar ; \
 	then \
@@ -2680,14 +2674,10 @@ clean-bootstrap-directory-symlink-ecj:
 # OpenJDK Targets
 # ===============
 
-if WITH_ICEDTEA
-  MEMORY_LIMIT = -J-Xmx1024m
-else
-if WITH_OPENJDK
-  MEMORY_LIMIT = -J-Xmx512m
-else
+if BOOTSTRAPPING
   MEMORY_LIMIT =
-endif
+else
+  MEMORY_LIMIT = -J-Xmx1024m
 endif
 
 if WITH_CACAO
