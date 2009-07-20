@@ -1516,26 +1516,35 @@ fi
 AC_DEFUN([IT_LIBRARY_CHECK],[
 AC_CACHE_CHECK([if java.io.PrintStream is missing the 1.5 constructors (PR40616)], it_cv_cp40616, [
 CLASS=Test.java
+BYTECODE=$(echo $CLASS|sed 's#\.java##')
 mkdir tmp.$$
 cd tmp.$$
 cat << \EOF > $CLASS
 /* [#]line __oline__ "configure" */
+import java.io.File;
+import java.io.PrintStream;
+
 public class Test 
 {
   public static void main(String[] args)
   throws Exception
   {
-    new java.io.PrintStream(new java.io.File("bluh"), "UTF-8");
+    PrintStream p = new PrintStream(new File("bluh"), "UTF-8");
+    p.close();
   }
 }
 EOF
 if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1; then
-  it_cv_cp40616=no;
+  if $JAVA -classpath . $BYTECODE >/dev/null 2>&1; then
+    it_cv_cp40616=no;
+  else
+    it_cv_cp40616=yes;
+  fi
 else
   it_cv_cp40616=yes;
 fi
 ])
-rm -f $CLASS *.class
+rm -f $CLASS *.class bluh
 cd ..
 rmdir tmp.$$
 AM_CONDITIONAL([CP40616], test x"${it_cv_cp40616}" = "xyes")
@@ -1560,7 +1569,7 @@ public class Test
 }
 EOF
 if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1; then
-  if $JAVA -classpath . $BYTECODE 2>&1 | grep 'Exception'; then
+  if $JAVA -classpath . $BYTECODE 2>&1 | grep 'Exception' >/dev/null 2>&1; then
       it_cv_cp30436=yes;
   else
       it_cv_cp30436=no;
