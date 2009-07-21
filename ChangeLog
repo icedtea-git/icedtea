@@ -1,3 +1,24 @@
+2009-07-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(AC_FIND_JAVAC): Check whether we are using
+	ecj or javac.  Don't fail if no JAVAC is found
+	as ecj.jar can still be used.
+	(IT_FIND_ECJ): Drop -nowarn.
+	(FIND_ECJ_JAR): Only fail if there is no other
+	compiler found.  Communalise message output.
+	(IT_LIBRARY_CHECK): Quote output so array brackets
+	are not lost.
+	(IT_SCANNER_CHECK): Likewise, and use return value
+	of javac not grep.
+	(IT_CP_40630): Likewise, and correct bug with classname.
+	(IT_USING_ECJ): Work out whether javac is ecj or not.
+	* javac.in:
+	Move ecj opt generation to a subroutine so it is only
+	performed when needed.  Run @JAVAC@ rather than @ECJ@
+	and vary arguments as needed depending on @USING_ECJ@.
+	Use same warning settings as GNU Classpath.
+
 2009-07-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:

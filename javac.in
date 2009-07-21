@@ -3,44 +3,60 @@ use strict;
 use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
 use constant STRIP_ARGS => qw(-Werror);
 
+my $ECJ_WARNINGS="-warn:-deprecation,serial,unusedImport";
+my $JAVAC_WARNINGS="-Xlint:unchecked,cast,divzero,empty,finally,overrides";
+
 my @bcoption;
 push @bcoption, '-bootclasspath', glob '@SYSTEM_JDK_DIR@/jre/lib/rt.jar'
     unless grep {$_ eq '-bootclasspath'} @ARGV;
 
 # Work around ecj's inability to handle duplicate command-line
 # options.
-
-my @new_args = @ARGV;
-
-for my $opt (NO_DUP_ARGS) 
+sub gen_ecj_opts
 {
-    my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
-    if (@indices > 1) {
-        shift @indices;    # keep last instance only
-        splice @new_args, $_, 2 for @indices;
+    my @new_args = @{$_[0]};
+
+    for my $opt (NO_DUP_ARGS) 
+    {
+	my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
+	if (@indices > 1) {
+	    shift @indices;    # keep last instance only
+	    splice @new_args, $_, 2 for @indices;
+	}
     }
-}
 
-for my $opt (STRIP_ARGS) 
-{
-    my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
-    splice @new_args, $_, 1 for @indices;
-}
+    for my $opt (STRIP_ARGS) 
+    {
+	my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
+	splice @new_args, $_, 1 for @indices;
+    }
 
-my @CLASSPATH = ('@ECJ_JAR@');
-push @CLASSPATH, split /:/, $ENV{CLASSPATH} if exists $ENV{CLASSPATH};
-$ENV{CLASSPATH} = join ':', @CLASSPATH;
+    return @new_args;
+}
 
 if ( -e "@abs_top_builddir@/native-ecj" )
 {
-    exec '@abs_top_builddir@/native-ecj', '-1.5', '-nowarn', @bcoption, @new_args ;
+    my @ecj_args = gen_ecj_opts( \@ARGV );
+    exec '@abs_top_builddir@/native-ecj', '-1.5', $ECJ_WARNINGS, @bcoption, @ecj_args ;
 }
-elsif ( -e "@ECJ@" )
+elsif ( -e "@JAVAC@" )
 {
-    exec '@ECJ@', '-1.5', '-nowarn', @bcoption, @new_args ;
+    if ("@USING_ECJ@" eq "yes")
+    {
+	my @ecj_args = gen_ecj_opts( \@ARGV );
+	exec '@JAVAC@', '-1.5', $ECJ_WARNINGS, @bcoption, @ecj_args ;
+    }
+    else
+    {
+	exec '@JAVAC@', $JAVAC_WARNINGS, @ARGV ;
+    }
 }
 else
 {
+    my @ecj_args = gen_ecj_opts( \@ARGV );
+    my @CLASSPATH = ('@ECJ_JAR@');
+    push @CLASSPATH, split /:/, $ENV{"CLASSPATH"} if exists $ENV{"CLASSPATH"};
+    $ENV{"CLASSPATH"} = join ':', @CLASSPATH;
     exec '@JAVA@', 'org.eclipse.jdt.internal.compiler.batch.Main', '-1.5',
-    '-nowarn', @bcoption, @new_args;
+    $ECJ_WARNINGS, @bcoption, @ecj_args;
 }

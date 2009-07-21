@@ -94,10 +94,8 @@ AC_DEFUN([FIND_JAVAC],
   JAVAC=${SYSTEM_JDK_DIR}/bin/javac
   IT_FIND_JAVAC
   IT_FIND_ECJ
+  IT_USING_ECJ
 
-  if test "x${JAVAC}" = x; then
-      AC_MSG_ERROR([cannot find a Java compiler, try --with-javac or --with-ecj])
-  fi
   AC_SUBST(JAVAC)
 ])
 
@@ -119,7 +117,7 @@ AC_DEFUN([IT_FIND_ECJ],
   ])
   if test "x${JAVAC}" = "x"; then
     if test "x{ECJ}" != "x"; then
-      JAVAC="${ECJ} -nowarn"
+      JAVAC="${ECJ}"
     fi
   fi
 ])
@@ -229,41 +227,37 @@ AC_DEFUN([WITH_OPENJDK_SRC_DIR],
 
 AC_DEFUN([FIND_ECJ_JAR],
 [
+  AC_MSG_CHECKING([for an ecj JAR file])
   AC_ARG_WITH([ecj-jar],
               [AS_HELP_STRING(--with-ecj-jar,specify location of the ECJ jar)],
   [
     if test -f "${withval}"; then
-      AC_MSG_CHECKING(for an ecj jar)
       ECJ_JAR="${withval}"
-      AC_MSG_RESULT(${withval})
     fi
   ],
   [
     ECJ_JAR=
   ])
   if test -z "${ECJ_JAR}"; then
-    AC_MSG_CHECKING(for eclipse-ecj.jar)
     if test -e "/usr/share/java/eclipse-ecj.jar"; then
       ECJ_JAR=/usr/share/java/eclipse-ecj.jar
-      AC_MSG_RESULT(${ECJ_JAR})
     elif test -e "/usr/share/java/ecj.jar"; then
       ECJ_JAR=/usr/share/java/ecj.jar
-      AC_MSG_RESULT(${ECJ_JAR})
     elif test -e "/usr/share/eclipse-ecj-3.3/lib/ecj.jar"; then
       ECJ_JAR=/usr/share/eclipse-ecj-3.3/lib/ecj.jar
-      AC_MSG_RESULT(${ECJ_JAR})
     elif test -e "/usr/share/eclipse-ecj-3.2/lib/ecj.jar"; then
       ECJ_JAR=/usr/share/eclipse-ecj-3.2/lib/ecj.jar
-      AC_MSG_RESULT(${ECJ_JAR})
     elif test -e "/usr/share/eclipse-ecj-3.1/lib/ecj.jar"; then
       ECJ_JAR=/usr/share/eclipse-ecj-3.1/lib/ecj.jar
-      AC_MSG_RESULT(${ECJ_JAR})
     else
-      AC_MSG_RESULT(no)
+      ECJ_JAR=no
     fi
   fi
-  if test -z "${ECJ_JAR}"; then
-    AC_MSG_ERROR("A ECJ jar was not found.")
+  AC_MSG_RESULT(${ECJ_JAR})
+  if test "x${ECJ_JAR}" = "xno"; then
+    if test "x${JAVAC}" = "x"; then
+      AC_MSG_ERROR("No compiler or ecj JAR file was found.")
+    fi
   fi
   AC_SUBST(ECJ_JAR)
 ])
@@ -1520,7 +1514,7 @@ BYTECODE=$(echo $CLASS|sed 's#\.java##')
 mkdir tmp.$$
 cd tmp.$$
 cat << \EOF > $CLASS
-/* [#]line __oline__ "configure" */
+[/* [#]line __oline__ "configure" */
 import java.io.File;
 import java.io.PrintStream;
 
@@ -1532,10 +1526,10 @@ public class Test
     PrintStream p = new PrintStream(new File("bluh"), "UTF-8");
     p.close();
   }
-}
+}]
 EOF
-if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1; then
-  if $JAVA -classpath . $BYTECODE >/dev/null 2>&1; then
+if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1 ; then
+  if $JAVA -classpath . $BYTECODE >/dev/null 2>&1 ; then
     it_cv_cp40616=no;
   else
     it_cv_cp40616=yes;
@@ -1558,7 +1552,7 @@ BYTECODE=$(echo $CLASS|sed 's#\.java##')
 mkdir tmp.$$
 cd tmp.$$
 cat << \EOF > $CLASS
-/* [#]line __oline__ "configure" */
+[/* [#]line __oline__ "configure" */
 public class Test 
 {
   public static void main(String[] args)
@@ -1566,13 +1560,13 @@ public class Test
   {
     new java.util.Scanner("Hello");
   }
-}
+}]
 EOF
 if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1; then
-  if $JAVA -classpath . $BYTECODE 2>&1 | grep 'Exception' >/dev/null 2>&1; then
-      it_cv_cp30436=yes;
-  else
+  if $JAVA -classpath . $BYTECODE; >/dev/null 2>&1; then
       it_cv_cp30436=no;
+  else
+      it_cv_cp30436=yes;
   fi
 else
   it_cv_cp30436=yes;
@@ -1584,15 +1578,17 @@ rmdir tmp.$$
 AM_CONDITIONAL([LACKS_JAVA_UTIL_SCANNER], test x"${it_cv_cp30436}" = "xyes")
 AC_PROVIDE([$0])dnl
 ])
-
 AC_DEFUN([IT_PR40630_CHECK],[
 if test "x${it_cv_cp30436}" = "xno"; then
   AC_CACHE_CHECK([if java.util.Scanner exhibits Classpath bug 40630], it_cv_cp40630, [
   CLASS=Test.java
+  BYTECODE=$(echo $CLASS|sed 's#\.java##')
   mkdir tmp.$$
   cd tmp.$$
   cat << \EOF > $CLASS
-  /* [#]line __oline__ "configure" */
+[/* [#]line __oline__ "configure" */
+import java.util.Scanner;
+
 public class Test 
 {
   public static void main(String[] args)
@@ -1603,13 +1599,13 @@ public class Test
       s.nextLine();
     s.hasNextLine();
   }
-}
+}]
 EOF
   if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1; then
-    if $JAVA -classpath . $CLASS 2>&1 | grep 'Exception'; then
-      it_cv_cp40630=yes;
-    else
+    if $JAVA -classpath . $BYTECODE > /dev/null 2>&1; then
       it_cv_cp40630=no;
+    else
+      it_cv_cp40630=yes;
     fi
   else
     it_cv_cp40630=yes;
@@ -1620,5 +1616,18 @@ EOF
   rmdir tmp.$$
 fi
 AM_CONDITIONAL([CP40630], test x"${it_cv_cp40630}" = "xyes")
+AC_PROVIDE([$0])dnl
+])
+
+AC_DEFUN([IT_USING_ECJ],[
+AC_CACHE_CHECK([if we are using ecj as javac], it_cv_ecj, [
+if $JAVAC -version 2>&1| grep '^Eclipse' >/dev/null ; then
+  it_cv_ecj=yes;
+else
+  it_cv_ecj=no;
+fi
+])
+USING_ECJ=$it_cv_ecj
+AC_SUBST(USING_ECJ)
 AC_PROVIDE([$0])dnl
 ])
