@@ -1,6 +1,12 @@
 2009-07-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
+	Replace use of /dev/null with AS_MESSAGE_LOG_FD,
+	so output is logged to config.log.
+
+2009-07-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
 	(AC_FIND_JAVAC): Check whether we are using
 	ecj or javac.  Don't fail if no JAVAC is found
 	as ecj.jar can still be used.

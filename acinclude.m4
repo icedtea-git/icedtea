@@ -328,7 +328,7 @@ AC_DEFUN([FIND_JAR],
   cat >_config.list <<EOF
 _config.txt
 EOF
-  if $JAR cf _config.jar @_config.list 2>/dev/null; then
+  if $JAR cf _config.jar @_config.list 2>&AS_MESSAGE_LOG_FD; then
     JAR_KNOWS_ATFILE=1
     AC_MSG_RESULT(yes)
   else
@@ -336,7 +336,7 @@ EOF
     AC_MSG_RESULT(no)
   fi
   AC_MSG_CHECKING([whether jar supports stdin file arguments])
-  if cat _config.list | $JAR cf@ _config.jar 2>/dev/null; then
+  if cat _config.list | $JAR cf@ _config.jar 2>&AS_MESSAGE_LOG_FD; then
     JAR_ACCEPTS_STDIN_LIST=1
     AC_MSG_RESULT(yes)
   else
@@ -345,7 +345,7 @@ EOF
   fi
   rm -f _config.list _config.jar
   AC_MSG_CHECKING([whether jar supports -J options at the end])
-  if $JAR cf _config.jar _config.txt -J-Xmx896m 2>/dev/null; then
+  if $JAR cf _config.jar _config.txt -J-Xmx896m 2>&AS_MESSAGE_LOG_FD; then
     JAR_KNOWS_J_OPTIONS=1
     AC_MSG_RESULT(yes)
   else
@@ -1236,9 +1236,9 @@ public class TestImpl
   public native void doStuff();
 }
 EOF
-if $JAVAC -cp . $JAVACFLAGS $SUBCLASS >/dev/null 2>&1; then
-  if $JAVAH -classpath . $SUB > /dev/null 2>&1; then
-    if cat $SUBHEADER | grep POTATO > /dev/null 2>&1; then
+if $JAVAC -cp . $JAVACFLAGS $SUBCLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+  if $JAVAH -classpath . $SUB >&AS_MESSAGE_LOG_FD 2>&1; then
+    if cat $SUBHEADER | grep POTATO >&AS_MESSAGE_LOG_FD 2>&1; then
       it_cv_cp39408_javah=no;
     else
       it_cv_cp39408_javah=yes;
@@ -1256,7 +1256,7 @@ fi
 ])
 AC_CACHE_CHECK([if $JAVAH exhibits Classpath bug 40188], it_cv_cp40188_javah, [
   if test -e $SUBHEADER ; then
-    if cat $SUBHEADER | grep TestImpl_POTATO > /dev/null 2>&1; then
+    if cat $SUBHEADER | grep TestImpl_POTATO >&AS_MESSAGE_LOG_FD 2>&1; then
       it_cv_cp40188_javah=no;
     else
       it_cv_cp40188_javah=yes;
@@ -1528,8 +1528,8 @@ public class Test
   }
 }]
 EOF
-if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1 ; then
-  if $JAVA -classpath . $BYTECODE >/dev/null 2>&1 ; then
+if $JAVAC -cp . $JAVACFLAGS $CLASS >&AS_MESSAGE_LOG_FD 2>&1 ; then
+  if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1 ; then
     it_cv_cp40616=no;
   else
     it_cv_cp40616=yes;
@@ -1562,8 +1562,8 @@ public class Test
   }
 }]
 EOF
-if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1; then
-  if $JAVA -classpath . $BYTECODE; >/dev/null 2>&1; then
+if $JAVAC -cp . $JAVACFLAGS $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+  if $JAVA -classpath . $BYTECODE; >&AS_MESSAGE_LOG_FD 2>&1; then
       it_cv_cp30436=no;
   else
       it_cv_cp30436=yes;
@@ -1601,8 +1601,8 @@ public class Test
   }
 }]
 EOF
-  if $JAVAC -cp . $JAVACFLAGS $CLASS >/dev/null 2>&1; then
-    if $JAVA -classpath . $BYTECODE > /dev/null 2>&1; then
+  if $JAVAC -cp . $JAVACFLAGS $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+    if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
       it_cv_cp40630=no;
     else
       it_cv_cp40630=yes;
@@ -1621,7 +1621,7 @@ AC_PROVIDE([$0])dnl
 
 AC_DEFUN([IT_USING_ECJ],[
 AC_CACHE_CHECK([if we are using ecj as javac], it_cv_ecj, [
-if $JAVAC -version 2>&1| grep '^Eclipse' >/dev/null ; then
+if $JAVAC -version 2>&1| grep '^Eclipse' >&AS_MESSAGE_LOG_FD ; then
   it_cv_ecj=yes;
 else
   it_cv_ecj=no;
