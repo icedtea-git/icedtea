@@ -1,4 +1,4 @@
-/* IcedTeaNPPlugin.h
+/* IcedTeaRunnable.h
 
    Copyright (C) 2009  Red Hat
 
@@ -36,66 +36,67 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-#ifndef __ICEDTEANPPLUGIN_H__
-#define	__ICEDTEANPPLUGIN_H__
+#ifndef __ICEDTEARUNNABLE_H__
+#define __ICEDTEARUNNABLE_H__
 
-// Netscape plugin API includes.
-#include <npapi.h>
-#include <npupp.h>
-#include <nsThreadUtils.h>
+#define MOZILLA 1
+#if MOZILLA
 
-// GLib includes.
-#include <glib.h>
-#include <glib/gstdio.h>
+#include <nsIRunnable.h>
+#include <string>
 
-// GTK includes.
-#include <gtk/gtk.h>
+/*
+ * This struct holds the result from the main-thread dispatched method
+ */
+typedef struct result_data
+{
+	// Return identifier (if applicable)
+    int return_identifier;
 
-#include "IcedTeaPluginUtils.h"
-#include "IcedTeaPluginRequestProcessor.h"
+    // Return string (if applicable)
+    std::string* return_string;
 
-// Queue processing threads
-static pthread_t plugin_request_processor_thread1;
-static pthread_t plugin_request_processor_thread2;
-static pthread_t plugin_request_processor_thread3;
+    // Return wide/mb string (if applicable)
+    std::wstring* return_wstring;
 
-// debug switch
-extern int plugin_debug;
+    // Error message (if an error occurred)
+    std::string* error_msg;
 
-// Browser function table.
-extern NPNetscapeFuncs browser_functions;
+    // Boolean indicating if an error occurred
+    bool error_occured;
 
-// messages to the java side
-extern MessageBus* plugin_to_java_bus;
+    // If this result is ready
+    bool result_ready;
 
-// messages from the java side
-extern MessageBus* java_to_plugin_bus;
+} ResultData;
 
-// internal messages (e.g ones that need processing in main thread)
-//extern MessageBus* internal_bus;
+class IcedTeaRunnable : public nsIRunnable
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIRUNNABLE
 
-// subscribes to plugin_to_java_bus and sends messages over the link
-extern JavaMessageSender java_request_processor;
+  IcedTeaRunnable ();
 
-// processes requests made to the plugin
-extern PluginRequestProcessor plugin_request_processor;
+  ~IcedTeaRunnable ();
+};
 
-/* Given an instance pointer, return its id */
-void get_instance_from_id(int id, NPP& instance);
+class IcedTeaRunnableMethod : public IcedTeaRunnable
+{
+public:
 
-/* Given an instance id, return its pointer */
-int get_id_from_instance(NPP* instance);
+  typedef void* (*Method) (void*, ResultData*);
 
-/* Sends a message to the appletviewer */
-void plugin_send_message_to_appletviewer(gchar const* message);
+  IcedTeaRunnableMethod (Method, void* thread_data, ResultData* result);
+  NS_IMETHOD Run ();
 
-/* Returns a scriptable npobject */
-NPObject* get_scriptable_object(NPP instance);
+  ~IcedTeaRunnableMethod ();
 
-/* Creates a new scriptable plugin object and returns it */
-NPObject* allocate_scriptable_object(NPP npp, NPClass *aClass);
+  Method method;
+  void* thread_data;
+  ResultData* result;
+};
 
-/* SIGUSR1 handler */
-void sigusr1handler();
+#endif /* MOZILLA */
 
-#endif	/* __ICEDTEANPPLUGIN_H__ */
+#endif /* __ICEDTEARUNNABLE_H__ */

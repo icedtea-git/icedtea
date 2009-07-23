@@ -44,6 +44,11 @@ exception statement from your version. */
  * information, script execution and variable get/set
  */
 
+// Initialize static members used by the queue processing framework
+pthread_mutex_t message_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t syn_write_mutex = PTHREAD_MUTEX_INITIALIZER;
+std::vector< std::vector<std::string>* >* message_queue = new std::vector< std::vector<std::string>* >();
+
 /**
  * Given the window pointer, returns the instance associated with it
  *
@@ -55,18 +60,18 @@ NPP
 getInstanceFromMemberPtr(void* member_ptr)
 {
 
-	NPP instance = NULL;
-	PLUGIN_DEBUG_1ARG("getInstanceFromMemberPtr looking for %p\n", member_ptr);
+    NPP instance = NULL;
+    PLUGIN_DEBUG_1ARG("getInstanceFromMemberPtr looking for %p\n", member_ptr);
 
-	std::map<void*, NPP>::iterator iterator = instance_map->find(member_ptr);
+    std::map<void*, NPP>::iterator iterator = instance_map->find(member_ptr);
 
-	if (iterator != instance_map->end())
-	{
-		instance = instance_map->find(member_ptr)->second;
-		PLUGIN_DEBUG_2ARG("getInstanceFromMemberPtr found %p. Instance = %p\n", member_ptr, instance);
-	}
+    if (iterator != instance_map->end())
+    {
+        instance = instance_map->find(member_ptr)->second;
+        PLUGIN_DEBUG_2ARG("getInstanceFromMemberPtr found %p. Instance = %p\n", member_ptr, instance);
+    }
 
-	return instance;
+    return instance;
 }
 
 /**
@@ -79,8 +84,8 @@ getInstanceFromMemberPtr(void* member_ptr)
 void
 storeInstanceID(void* member_ptr, NPP instance)
 {
-	PLUGIN_DEBUG_2ARG("Storing instance %p with key %p\n", instance, member_ptr);
-	instance_map->insert(std::make_pair(member_ptr, instance));
+    PLUGIN_DEBUG_2ARG("Storing instance %p with key %p\n", instance, member_ptr);
+    instance_map->insert(std::make_pair(member_ptr, instance));
 }
 
 /**
@@ -91,8 +96,10 @@ storeInstanceID(void* member_ptr, NPP instance)
 
 PluginRequestProcessor::PluginRequestProcessor()
 {
-	this->pendingRequests = new std::map<pthread_t, uintmax_t>();
-	instance_map = new std::map<void*, NPP>();
+    this->pendingRequests = new std::map<pthread_t, uintmax_t>();
+    instance_map = new std::map<void*, NPP>();
+
+    internal_req_ref_counter = 0;
 }
 
 /**
@@ -103,11 +110,13 @@ PluginRequestProcessor::PluginRequestProcessor()
 
 PluginRequestProcessor::~PluginRequestProcessor()
 {
-	if (pendingRequests)
-		delete pendingRequests;
+    PLUGIN_DEBUG_0ARG("PluginRequestProcessor::~PluginRequestProcessor\n");
 
-	if (instance_map)
-		delete instance_map;
+    if (pendingRequests)
+        delete pendingRequests;
+
+    if (instance_map)
+        delete instance_map;
 
 }
 
@@ -121,66 +130,49 @@ PluginRequestProcessor::~PluginRequestProcessor()
 bool
 PluginRequestProcessor::newMessageOnBus(const char* message)
 {
-	PLUGIN_DEBUG_1ARG("PluginRequestProcessor processing %s\n", message);
+    PLUGIN_DEBUG_1ARG("PluginRequestProcessor processing %s\n", message);
 
-	std::string type;
-	std::string command;
-	int counter = 0;
+    std::string type;
+    std::string command;
+    int counter = 0;
 
-	std::vector<std::string>* message_parts = IcedTeaPluginUtilities::strSplit(message, " ");
+    std::vector<std::string>* message_parts = IcedTeaPluginUtilities::strSplit(message, " ");
 
-	std::vector<std::string>::iterator the_iterator;
-	the_iterator = message_parts->begin();
+    std::vector<std::string>::iterator the_iterator;
+    the_iterator = message_parts->begin();
 
-	IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::newMessageOnBus:", message_parts);
+    IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::newMessageOnBus:", message_parts);
 
-	// Prioritize internal requests
-	if (message_parts->at(0) == "internal")
-	{
-		if (message_parts->at(1) == "SendMember")
-		{
-			// first item is length, and it is radix 10
-			int length = strtol(message_parts->at(3).c_str(), NULL, 10);
+    type = message_parts->at(0);
+    command = message_parts->at(2);
 
-			std::vector<std::string*>* send_string_req = new std::vector<std::string*>();
-			std::string* member_name = new std::string();
+    if (type == "instance")
+    {
+        if (command == "GetWindow")
+        {
+            // Window can be queried from the main thread only. And this call
+            // returns immediately, so we do it in the same thread.
+            this->sendWindow(message_parts);
+            return true;
+        } else if (command == "GetMember" ||
+                   command == "SetMember" ||
+                   command == "ToString")
+        {
 
-			// pack parent id and member name
-			send_string_req->push_back(&(message_parts->at(0)));
-			IcedTeaPluginUtilities::getUTF8String(length, 4 /* start at */, message_parts, member_name);
-			send_string_req->push_back(member_name);
+        	// Update queue synchronously
+        	pthread_mutex_lock(&message_queue_mutex);
+            message_queue->push_back(message_parts);
+            pthread_mutex_unlock(&message_queue_mutex);
 
-			// make the internal request
-			this->_sendMember(send_string_req);
+            return true;
+        }
 
-			// free the memory
-			delete send_string_req;
-			delete message_parts;
+    }
 
-			return true; // request processed
-		}
-	}
+    delete message_parts;
 
-	type = message_parts->at(0);
-	command = message_parts->at(2);
-
-	if (type == "instance")
-	{
-		if (command == "GetWindow")
-		{
-			// Window can be queried from the main thread only. And this call
-			// returns immediately, so we do it in the same thread.
-			this->sendWindow(message_parts);
-			return true;
-		} else if (command == "GetMember")
-		{
-			this->dispatch(&sendMember, message_parts, NULL);
-			return true;
-		}
-	}
-
-	// If we got here, it means we couldn't process the message. Let the caller know.
-	return false;
+    // If we got here, it means we couldn't process the message. Let the caller know.
+    return false;
 }
 
 /**
@@ -198,16 +190,27 @@ PluginRequestProcessor::newMessageOnBus(const char* message)
 
 void PluginRequestProcessor::dispatch(void* func_ptr (void*), std::vector<std::string>* message_parts, std::string* src)
 {
-	pthread_t thread;
-	ThreadData* tdata = new ThreadData();
+    pthread_t thread;
+    int tries = 0;
+    ThreadData* tdata = new ThreadData();
 
-	IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::dispatch:", message_parts);
+    IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::dispatch:", message_parts);
 
-	tdata->source = src;
-	tdata->message_parts = message_parts;
+    tdata->source = src;
+    tdata->message_parts = message_parts;
 
-	pthread_create (&thread, NULL, func_ptr, (void*) tdata);
-	uintmax_t start_time = (uintmax_t) time(NULL);
+    printf("Threads MAX=%ld, Thread data=%p\n", sysconf(_SC_THREAD_THREADS_MAX), tdata);
+    while (pthread_create (&thread, NULL, func_ptr, (void*) tdata) == 11 && tries++ < 100)
+    {
+        printf("Couldn't create thread. Sleeping and then retrying. TC=%d\n", thread_count);
+        usleep(1000000);
+    }
+    uintmax_t start_time = (uintmax_t) time(NULL);
+    pthread_mutex_lock(&tc_mutex);
+    thread_count++;
+    pthread_mutex_unlock(&tc_mutex);
+
+    PLUGIN_DEBUG_2ARG("pthread %p created. Thread count=%d\n", thread, thread_count);
 }
 
 /**
@@ -219,38 +222,210 @@ void PluginRequestProcessor::dispatch(void* func_ptr (void*), std::vector<std::s
 void
 PluginRequestProcessor::sendWindow(std::vector<std::string>* message_parts)
 {
-	std::string type;
-	std::string command;
-	std::string* response;
-	std::string* window_ptr_str;
-	int id;
+    std::string type;
+    std::string command;
+    std::string* response;
+    std::string* window_ptr_str;
+    static NPObject* window_ptr;
+    int id;
 
-	type = message_parts->at(0);
-	id = atoi(message_parts->at(1).c_str());
-	command = message_parts->at(2);
+    type = message_parts->at(0);
+    id = atoi(message_parts->at(1).c_str());
+    command = message_parts->at(2);
 
-	NPP instance;
-	get_instance_from_id(id, instance);
+    NPP instance;
+    get_instance_from_id(id, instance);
 
-	static NPObject *window_ptr;
-	browser_functions.getvalue(instance, NPNVWindowNPObject, &window_ptr);
-	PLUGIN_DEBUG_3ARG("ID=%d, Instance=%p, WindowPTR = %p\n", id, instance, window_ptr);
+    browser_functions.getvalue(instance, NPNVWindowNPObject, &window_ptr);
+    PLUGIN_DEBUG_3ARG("ID=%d, Instance=%p, WindowPTR = %p\n", id, instance, window_ptr);
 
-	window_ptr_str = IcedTeaPluginUtilities::JSIDToString(window_ptr);
+    window_ptr_str = IcedTeaPluginUtilities::JSIDToString(window_ptr);
 
-	// We need the context 0 for backwards compatibility with the Java side
-	response = IcedTeaPluginUtilities::constructMessagePrefix(0);
-	*response += " JavaScriptGetWindow ";
-	*response += *window_ptr_str;
+    // We need the context 0 for backwards compatibility with the Java side
+    response = IcedTeaPluginUtilities::constructMessagePrefix(0);
+    *response += " JavaScriptGetWindow ";
+    *response += *window_ptr_str;
 
-	plugin_to_java_bus->post(response->c_str());
+    plugin_to_java_bus->post(response->c_str());
 
-	delete response;
-	delete window_ptr_str;
-	delete message_parts;
+    delete response;
+    delete window_ptr_str;
+    delete message_parts;
 
-	// store the instance pointer for future reference
-	storeInstanceID(window_ptr, instance);
+    // store the instance pointer for future reference
+    storeInstanceID(window_ptr, instance);
+}
+
+/**
+ * Sends the string value of the requested variable
+ *
+ * @param message_parts The request message.
+ */
+void
+PluginRequestProcessor::sendString(std::vector<std::string>* message_parts)
+{
+    std::string variant_ptr;
+    NPVariant* variant;
+    std::string* variant_string;
+    std::string* variant_string_id;
+    JavaRequestProcessor* java_request;
+    JavaResultData* java_result;
+    std::string* response;
+    int instance;
+
+    instance = atoi(message_parts->at(1).c_str());
+    variant_ptr = message_parts->at(3);
+
+    variant = (NPVariant*) IcedTeaPluginUtilities::stringToJSID(variant_ptr);
+    variant_string = IcedTeaPluginUtilities::NPVariantToString(*variant);
+
+    java_request = new JavaRequestProcessor();
+    java_result = java_request->newString(*variant_string);
+
+    if (java_result->error_occured)
+    {
+        printf("Unable to process NewString request. Error occurred: %s\n", java_result->error_msg);
+        //goto cleanup;
+    }
+
+    variant_string_id = java_result->return_string;
+
+    // We need the context 0 for backwards compatibility with the Java side
+    response = IcedTeaPluginUtilities::constructMessagePrefix(instance);
+    *response += " JavaScriptToString ";
+    *response += *variant_string_id;
+
+    plugin_to_java_bus->post(response->c_str());
+
+    cleanup:
+    delete java_request;
+    delete response;
+    delete variant_string;
+    delete message_parts;
+
+    pthread_mutex_lock(&tc_mutex);
+    thread_count--;
+    pthread_mutex_unlock(&tc_mutex);
+}
+
+/**
+ * Sets variable to given value
+ *
+ * @param message_parts The request message.
+ */
+
+void
+PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
+{
+    std::string valueID;
+    std::string propertyNameID;
+    std::string* property_name = new std::string();
+    std::string* value = new std::string();
+    std::string* type = new std::string();
+    std::string* value_variant_ptr_str;
+    std::vector<std::string*>* internal_request_params = new std::vector<std::string*>();
+
+    NPObject* member;
+    nsCOMPtr<nsIRunnable> event;
+    ResultData* rdata = new ResultData();
+
+    JavaRequestProcessor* java_request;
+    JavaResultData* java_result;
+
+    IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::_setMember - ", message_parts);
+
+    member = reinterpret_cast <NPObject*> (IcedTeaPluginUtilities::stringToJSID(message_parts->at(3)));
+    propertyNameID = message_parts->at(4);
+    valueID = message_parts->at(5);
+
+    java_request = new JavaRequestProcessor();
+    java_result = java_request->getString(propertyNameID);
+
+    // the result we want is in result_string (assuming there was no error)
+    if (java_result->error_occured)
+    {
+        printf("Unable to get member name for setMember. Error occurred: %s\n", java_result->error_msg);
+        goto cleanup;
+    }
+
+    // Copy into local variable before disposing the object
+    property_name->append(*(java_result->return_string));
+    delete java_request;
+
+    // Based on the value ID, find the type and string value
+    // FIXME: Complex java objects not yet peered
+
+    java_request = new JavaRequestProcessor();
+    java_result = java_request->getClassName(valueID);
+
+    // the result we want is in result_string (assuming there was no error)
+    if (java_result->error_occured)
+    {
+        printf("Unable to get class name for setMember. Error occurred: %s\n", java_result->error_msg);
+        goto cleanup;
+    }
+
+    // Copy into local variable before disposing the object
+    type->append(*(java_result->return_string));
+    delete java_request;
+
+    java_request = new JavaRequestProcessor();
+    java_result = java_request->getToStringValue(valueID);
+
+    // the result we want is in result_string (assuming there was no error)
+    if (java_result->error_occured)
+    {
+        printf("Unable to get value for setMember. Error occurred: %s\n", java_result->error_msg);
+        goto cleanup;
+    }
+
+    value->append(*(java_result->return_string));
+
+    internal_request_params->push_back(IcedTeaPluginUtilities::JSIDToString(member));
+    internal_request_params->push_back(property_name);
+    internal_request_params->push_back(type);
+    internal_request_params->push_back(value);
+
+    rdata->result_ready = false;
+    event = new IcedTeaRunnableMethod(&_setMember, (void*) internal_request_params, rdata);
+    NS_DispatchToMainThread(event, 0);
+
+    cleanup:
+    delete message_parts;
+    delete java_request;
+
+    // property_name, type and value are deleted by _setMember
+    pthread_mutex_lock(&tc_mutex);
+    thread_count--;
+    pthread_mutex_unlock(&tc_mutex);
+}
+
+void
+convertToNPVariant(std::string value, std::string type, NPVariant* result_variant)
+{
+    if (type == "java.lang.Byte" ||
+        type == "java.lang.Char" ||
+        type == "java.lang.Short" ||
+        type == "java.lang.Integer") {
+        int i = atoi(value.c_str());
+        INT32_TO_NPVARIANT(i, *result_variant);
+    } else if (type == "java.lang.Long" ||
+               type == "java.lang.Double" ||
+               type == "java.lang.Float")
+    {
+        double d = atof(value.c_str());
+        DOUBLE_TO_NPVARIANT(d, *result_variant);
+    } else if (type == "java.lang.Boolean")
+    {
+        bool b = (value == "true");
+        BOOLEAN_TO_NPVARIANT(b, *result_variant);
+    } else if (type == "java.lang.String")
+    {
+        STRINGZ_TO_NPVARIANT(value.c_str(), *result_variant);
+    } else if (type.substr(0,1) == "[")
+    {
+        // FIXME: Set up object peering
+    }
 }
 
 /**
@@ -261,160 +436,299 @@ PluginRequestProcessor::sendWindow(std::vector<std::string>* message_parts)
  * does whatever it can seperately, and then makes an internal request that
  * causes _sendMember to do the rest of the work.
  *
- * @param tdata A ThreadData structure holding information needed by this function.
- */
-
-void*
-sendMember(void* tdata)
-{
-	// member initialization
-	std::vector<std::string>* message_parts;
-	std::vector<std::string>* compound_data;
-	JavaRequestProcessor* java_request;
-	JavaRequest* java_request_data;
-	std::string* member_id = new std::string();
-	std::string* parent_id = new std::string();
-	std::string* member_name_utf = new std::string();
-	std::string* internal_request = new std::string();
-	int id;
-
-	/** Data extraction **/
-
-	// extract data passed from parent thread
-	ThreadData *data;
-	data = (ThreadData*) tdata;
-	message_parts = data->message_parts;
-
-	// debug printout of parent thread data
-	IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::getMember:", message_parts);
-
-	// store info in local variables for easy access
-	id = atoi(message_parts->at(1).c_str());
-	*parent_id += message_parts->at(3);
-	*member_id += message_parts->at(4);
-
-	/** Request data from Java **/
-
-	// create a compound request data structure to pass to getString
-	compound_data = new std::vector<std::string>();
-	compound_data->push_back(*member_id);
-
-	// make a new request for getString, to get the name of the identifier
-	java_request = new JavaRequestProcessor();
-	java_request_data = new JavaRequest();
-	java_request_data->instance = id;
-	java_request_data->data = compound_data;
-	java_request_data->source = data->source != NULL ? data->source : new std::string("file://");
-	JavaResultData* result = java_request->getString(java_request_data);
-
-	// the result we want is in result_string (assuming there was no error)
-	if (result->error_occured)
-	{
-		printf("Unable to process getMember request. Error occurred: %s\n", result->error_msg);
-		goto cleanup;
-	}
-
-	/** Make an internal request for the main thread to handle**/
-    IcedTeaPluginUtilities::convertStringToUTF8(result->return_string, member_name_utf);
-
-    // Ask main thread to do the send
-    *internal_request = "internal SendMember ";
-    *internal_request += *parent_id;
-    *internal_request += " ";
-    *internal_request += *member_name_utf;
-
-    java_to_plugin_bus->post(internal_request->c_str());
-
-	// Now be a good citizen and help keep the heap free of garbage
-	cleanup:
-	delete data; // thread data that caller allocated for us
-	delete java_request; // request object
-	delete java_request_data; // request data
-	delete member_id; // member id string
-	delete compound_data; // compound data object
-	delete message_parts; // message_parts vector that was allocated by the caller
-	delete internal_request; // delete the string that held the internal request data
-}
-
-/**
- * Given the parent id and the member name, sends the member pointer to Java.
- *
- * @param message_parts Vector containing the parent pointer and member name
+ * @param message_parts The request message
  */
 
 void
-PluginRequestProcessor::_sendMember(std::vector<std::string*>* message_parts)
+PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
 {
-	std::string* member_ptr_str;
-	std::string* member;
-	std::string* parent;
+    // member initialization
+    std::vector<std::string>* args;
+    JavaRequestProcessor* java_request;
+    JavaResultData* java_result;
+    ResultData* member_data;
+    std::string* member_id = new std::string();
+    std::string* parent_id = new std::string();
+    std::string* jsObjectClassID = new std::string();
+    std::string* jsObjectConstructorID = new std::string();
+    std::string* response = new std::string();
+    nsCOMPtr<nsIRunnable> event;
 
-	NPObject *window_ptr;
-	NPVariant member_ptr;
-	NPP instance;
-	NPIdentifier identifier;
-	std::string* response;
+    std::vector<std::string*>* internal_request_params = new std::vector<std::string*>();
+    int method_id;
+    int instance;
+    long reference;
 
-	IcedTeaPluginUtilities::printStringPtrVector(" - ", message_parts);
+    // debug printout of parent thread data
+    IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::getMember:", message_parts);
 
-	parent = message_parts->at(0);
-	member = message_parts->at(1);
+    // store info in local variables for easy access
+    instance = atoi(message_parts->at(1).c_str());
+    *parent_id += message_parts->at(3);
+    *member_id += message_parts->at(4);
 
-	std::cout << "MEMBER=" << *member << std::endl;
+    /** Request data from Java **/
 
-	// Get the corresponding windowId
-	identifier = browser_functions.getstringidentifier(member->c_str());
+    // make a new request for getString, to get the name of the identifier
+    java_request = new JavaRequestProcessor();
+    java_result = java_request->getString(*member_id);
 
-	// Get the window pointer
-	window_ptr = reinterpret_cast <NPObject*> (IcedTeaPluginUtilities::stringToJSID(parent->c_str()));
-
-	// Get the associated instance
-	instance = getInstanceFromMemberPtr(window_ptr);
-
-	printf("[2] Instance=%p, window=%p, identifier=%p -- %s::%s\n", instance, window_ptr, identifier, parent->c_str(), member->c_str());
-
-	// Get the NPVariant corresponding to this member
-    browser_functions.getproperty(instance, window_ptr, identifier, &member_ptr);
-
-    PLUGIN_DEBUG_4ARG("[3] Instance=%p, window=%p, identifier=%p, variant=%p\n", instance, window_ptr, identifier, &member_ptr);
-
-    if (NPVARIANT_IS_VOID(member_ptr))
+    // the result we want is in result_string (assuming there was no error)
+    if (java_result->error_occured)
     {
-        printf("VOID %d\n", member_ptr);
-    }
-    else if (NPVARIANT_IS_NULL(member_ptr))
-    {
-        printf("NULL\n", member_ptr);
-    }
-    else if (NPVARIANT_IS_BOOLEAN(member_ptr))
-    {
-        printf("BOOL: %d\n", NPVARIANT_TO_BOOLEAN(member_ptr));
-    }
-    else if (NPVARIANT_IS_INT32(member_ptr))
-    {
-        printf("INT32: %d\n", NPVARIANT_TO_INT32(member_ptr));
-    }
-    else if (NPVARIANT_IS_DOUBLE(member_ptr))
-    {
-        printf("DOUBLE: %f\n", NPVARIANT_TO_DOUBLE(member_ptr));
-    }
-    else if (NPVARIANT_IS_STRING(member_ptr))
-    {
-        printf("STRING: %s\n", NPVARIANT_TO_STRING(member_ptr).utf8characters);
-    }
-    else
-    {
-        printf("OBJ: %p\n", NPVARIANT_TO_OBJECT(member_ptr));
+        printf("Unable to process getMember request. Error occurred: %s\n", java_result->error_msg);
+        //goto cleanup;
     }
 
-    member_ptr_str = IcedTeaPluginUtilities::JSIDToString(&member_ptr);
+    /** Make an internal request for the main thread to handle, to get the member pointer **/
+
+    reference = internal_req_ref_counter++;
+
+    internal_request_params->push_back(parent_id);
+    internal_request_params->push_back(java_result->return_string);
+
+    member_data = new ResultData();
+    member_data->result_ready = false;
+
+    event = new IcedTeaRunnableMethod(&_getMember, (void*) internal_request_params, member_data);
+    NS_DispatchToMainThread(event, 0);
+
+    while (!member_data->result_ready) // wait till ready
+    {
+        usleep(2000);
+    }
+
+    PLUGIN_DEBUG_1ARG("Member PTR after internal request: %s\n", member_data->return_string->c_str());
+
+    internal_req_ref_counter--;
+
+    delete java_request;
+    java_request = new JavaRequestProcessor();
+    java_result = java_request->findClass("netscape.javascript.JSObject");
+
+    // the result we want is in result_string (assuming there was no error)
+    if (java_result->error_occured)
+    {
+        printf("Unable to process getMember request. Error occurred: %s\n", java_result->error_msg);
+        //goto cleanup;
+    }
+
+    *jsObjectClassID += *(java_result->return_string);
+
+    // We have the result. Free the request memory
+    delete java_request;
+
+    java_request = new JavaRequestProcessor();
+
+    args = new std::vector<std::string>();
+    std::string longArg = "J";
+    args->push_back(longArg);
+
+    java_result = java_request->getMethodID(
+            *(jsObjectClassID),
+            browser_functions.getstringidentifier("<init>"),
+            *args);
+
+    // the result we want is in result_string (assuming there was no error)
+    if (java_result->error_occured)
+    {
+        printf("Unable to process getMember request. Error occurred: %s\n", java_result->error_msg);
+        //goto cleanup;
+    }
+
+    *jsObjectConstructorID += *(java_result->return_string);
+
+    delete args;
+    delete java_request;
+
+    // We have the method id. Now create a new object.
+
+    java_request = new JavaRequestProcessor();
+    args = new std::vector<std::string>();
+    args->push_back(*(member_data->return_string));
+    java_result = java_request->newObject(*jsObjectClassID,
+                                          *jsObjectConstructorID,
+                                          *args);
+
+    // the result we want is in result_string (assuming there was no error)
+    if (java_result->error_occured)
+    {
+        printf("Unable to process getMember request. Error occurred: %s\n", java_result->error_msg);
+        //goto cleanup;
+    }
+
 
     response = IcedTeaPluginUtilities::constructMessagePrefix(0);
-    *response += " JavaScriptGetMember ";
-    *response += *member_ptr_str;
+    response->append(" JavaScriptGetMember ");
+    response->append(java_result->return_string->c_str());
+    plugin_to_java_bus->post(response->c_str());
 
-	plugin_to_java_bus->post(response->c_str());
 
-	delete member_ptr_str;
-	delete response;
+    // Now be a good citizen and help keep the heap free of garbage
+    cleanup:
+    delete args;
+    delete java_request; // request object
+    delete member_id; // member id string
+    delete message_parts; // message_parts vector that was allocated by the caller
+    delete internal_request_params; // delete the internal requests params vector
+    delete jsObjectClassID; // delete object that holds the jsobject
+    delete member_data->return_string;
+    delete member_data;
+
+    pthread_mutex_lock(&tc_mutex);
+    thread_count--;
+    pthread_mutex_unlock(&tc_mutex);
+}
+
+void*
+queue_processor(void* data)
+{
+
+    PluginRequestProcessor* processor = (PluginRequestProcessor*) data;
+    std::vector<std::string>* message_parts = NULL;
+    std::string command;
+
+    PLUGIN_DEBUG_1ARG("Queue processor initialized. Queue = %p\n", message_queue);
+
+    while (true)
+    {
+        pthread_mutex_lock(&message_queue_mutex);
+        if (message_queue->size() > 0)
+        {
+            message_parts = message_queue->front();
+            message_queue->erase(message_queue->begin());
+        }
+        pthread_mutex_unlock(&message_queue_mutex);
+
+        if (message_parts)
+        {
+            PLUGIN_DEBUG_0ARG("Processing engaged\n");
+
+            command = message_parts->at(2);
+
+            if (command == "GetMember")
+            {
+                processor->sendMember(message_parts);
+            } else if (command == "ToString")
+            {
+                processor->sendString(message_parts);
+            } else if (command == "SetMember")
+            {
+                processor->setMember(message_parts);
+            } else
+            {
+                // Nothing matched
+                IcedTeaPluginUtilities::printStringVector("Error: Unable to process message: ", message_parts);
+
+            }
+
+            PLUGIN_DEBUG_0ARG("Processing dis-engaged\n");
+        } else
+        {
+            usleep(20000);
+            pthread_testcancel();
+        }
+
+        message_parts = NULL;
+    }
+
+    PLUGIN_DEBUG_0ARG("Queue processing stopped.\n");
+}
+
+/******************************************
+ * Functions delegated to the main thread *
+ ******************************************/
+
+void*
+_setMember(void* data, ResultData* result)
+{
+    std::string* property_name;
+    std::string* value;
+    std::string* type;
+    std::string* response;
+    std::vector<std::string*>* message_parts = (std::vector<std::string*>*) data;
+
+    NPP instance;
+    NPVariant* value_variant = new NPVariant();
+    NPObject* member;
+    NPIdentifier property;
+
+    IcedTeaPluginUtilities::printStringPtrVector("PluginRequestProcessor::_setMember - ", message_parts);
+
+    member = reinterpret_cast <NPObject*> (IcedTeaPluginUtilities::stringToJSID(*(message_parts->at(0))));
+    property_name = message_parts->at(1);
+    type = message_parts->at(2);
+    value = message_parts->at(3);
+
+    instance = getInstanceFromMemberPtr(member);
+    convertToNPVariant(*value, *type, value_variant);
+
+    PLUGIN_DEBUG_4ARG("Setting %s on instance %p, object %p to value %s\n", property_name->c_str(), instance, member, value_variant);
+
+    property = browser_functions.getstringidentifier(property_name->c_str());
+    browser_functions.setproperty(instance, member, property, value_variant);
+
+    response = IcedTeaPluginUtilities::constructMessagePrefix(0);
+    response->append(" JavaScriptSetMember ");
+    plugin_to_java_bus->post(response->c_str());
+
+    // free memory
+    IcedTeaPluginUtilities::freeStringPtrVector(message_parts);
+    delete value_variant;
+    delete response;
+
+    result->result_ready = true;
+
+}
+
+void*
+_getMember(void* data, ResultData* result)
+{
+    std::string* parent_ptr_str;
+    std::string* member_name;
+
+    NPObject* parent_ptr;
+    NPVariant member_ptr;
+    std::string* member_ptr_str;
+    NPP instance;
+    NPIdentifier member_identifier;
+
+    std::vector<std::string*>* message_parts = (std::vector<std::string*>*) data;
+
+    IcedTeaPluginUtilities::printStringPtrVector("PluginRequestProcessor::_getMember - ", message_parts);
+
+    parent_ptr_str = message_parts->at(0);
+    member_name = message_parts->at(1);
+
+    // Get the corresponding windowId
+    member_identifier = browser_functions.getstringidentifier(member_name->c_str());
+
+    // Get the window pointer
+    parent_ptr = reinterpret_cast <NPObject*> (IcedTeaPluginUtilities::stringToJSID(parent_ptr_str->c_str()));
+
+    // Get the associated instance
+    instance = getInstanceFromMemberPtr(parent_ptr);
+
+    // Get the NPVariant corresponding to this member
+    PLUGIN_DEBUG_4ARG("Looking for %p %p %p (%s)\n", instance, parent_ptr, member_identifier,member_name->c_str());
+
+    if (!browser_functions.hasproperty(instance, parent_ptr, member_identifier))
+    {
+        printf("%s not found!\n", member_name->c_str());
+    }
+    browser_functions.getproperty(instance, parent_ptr, member_identifier, &member_ptr);
+
+    IcedTeaPluginUtilities::printNPVariant(member_ptr);
+    member_ptr_str = IcedTeaPluginUtilities::JSIDToString(NPVARIANT_TO_OBJECT(member_ptr));
+    PLUGIN_DEBUG_2ARG("Got variant %p (integer value = %s)\n", NPVARIANT_TO_OBJECT(member_ptr), member_ptr_str->c_str());
+
+    result->return_string = member_ptr_str;
+    result->result_ready = true;
+
+    // store member -> instance link
+    storeInstanceID(NPVARIANT_TO_OBJECT(member_ptr), instance);
+
+    PLUGIN_DEBUG_0ARG("_getMember returning.\n");
+
+    return result;
 }

@@ -1,3 +1,26 @@
+2009-07-23  Deepak Bhole  <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.c: Added support for
+	FindClass, GetClassName, GetMethodID, GetToStringValue, NewObject and 
+	NewStringUTF. Split the request wait code into a generic function.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc: Centralize debug output calls. Obey
+	the ICEDTEAPLUGIN_DEBUG flag. Support dynamic cookie fetching.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.c: Update multi-threaded
+	processing model. Support SetMember. Set up a dedicated message queue
+	processor (arbitrarily scalable).
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.h: Add function and
+	variable declerations as needed by the .cc file.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc: Use only long and long long for
+	memory address translation. Add additional utility methods.
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Update as needed by the .cc file.
+	* plugin/icedteanp/IcedTeaRunnable.h: New file. Represents a dispatchable
+	event, extends nsIRunnable.
+	* plugin/icedteanp/IcedTeaRunnable.h: New file. Header for
+	IcedTeaRunnable.cc.
+	* plugin/icedteanp/java/sun/applet/PluginAppletSecurityContext.java: Fix
+	signature handling to remove the need for return type. Add support for
+	GetToStringValue and GetClassName.
+
 2009-07-14  Deepak Bhole  <dbhole@redhat.com>
 
 	* Makefile.am: Fix npplugin build.

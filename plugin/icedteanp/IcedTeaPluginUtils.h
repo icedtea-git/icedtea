@@ -54,9 +54,6 @@ exception statement from your version. */
 #include <string>
 #include <vector>
 
-/* Debug output macros */
-static int plugin_debug = 1;
-
 #define PLUGIN_DEBUG_0ARG(str) \
   do                                        \
   {                                         \
@@ -175,6 +172,12 @@ class IcedTeaPluginUtilities
 
     	/* Prints contents of given string pointer vector */
     	static void printStringPtrVector(const char* prefix, std::vector<std::string*>* cv);
+
+    	static std::string* variantToClassName(NPVariant variant);
+
+    	static void printNPVariant(NPVariant variant);
+
+    	static std::string* NPVariantToString(NPVariant variant);
 };
 
 /*
@@ -225,10 +228,10 @@ class MessageBus
         /* Queued messages */
         std::queue<char*> msgQueue;
 
-        ~MessageBus();
-
     public:
     	MessageBus();
+
+        ~MessageBus();
 
         /* subscribe to this bus */
         void subscribe(BusSubscriber* b);

@@ -67,7 +67,8 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 			// Gather the results
 
 			// GetStringUTFChars
-			if (message_parts->at(4) == "GetStringUTFChars")
+			if (message_parts->at(4) == "GetStringUTFChars" ||
+				message_parts->at(4) == "GetToStringValue")
 			{
 				// first item is length, and it is radix 10
 				int length = strtol(message_parts->at(5).c_str(), NULL, 10);
@@ -81,6 +82,31 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 				int length = strtol(message_parts->at(5).c_str(), NULL, 10);
 
 				IcedTeaPluginUtilities::getUTF16LEString(length, 6 /* start at */, message_parts, result->return_wstring);
+				result_ready = true;
+			} else if (message_parts->at(4) == "FindClass")
+			{
+				result->return_identifier = atoi(message_parts->at(5).c_str());
+				result->return_string->append(message_parts->at(5)); // store it as a string as well, for easy access
+				result_ready = true;
+			} else if (message_parts->at(4) == "GetClassName")
+			{
+				result->return_identifier = atoi(message_parts->at(5).c_str());
+				result->return_string->append(message_parts->at(5));  // store it as a string as well, for easy access
+				result_ready = true;
+			} else if (message_parts->at(4) == "GetMethodID")
+			{
+				result->return_identifier = atoi(message_parts->at(5).c_str());
+				result->return_string->append(message_parts->at(5)); // store it as a string as well, for easy access
+				result_ready = true;
+			} else if (message_parts->at(4) == "NewObject")
+			{
+				result->return_identifier = atoi(message_parts->at(5).c_str());
+				result->return_string->append(message_parts->at(5)); // store it as a string as well, for easy access
+				result_ready = true;
+			} else if (message_parts->at(4) == "NewStringUTF")
+			{
+				result->return_identifier = atoi(message_parts->at(5).c_str());
+				result->return_string->append(message_parts->at(5));  // store it as a string as well, for easy access
 				result_ready = true;
 			}
 
@@ -119,6 +145,8 @@ JavaRequestProcessor::JavaRequestProcessor()
 
 JavaRequestProcessor::~JavaRequestProcessor()
 {
+    PLUGIN_DEBUG_0ARG("JavaRequestProcessor::~JavaRequestProcessor\n");
+
 	if (result)
 	{
 		if (result->error_msg)
@@ -134,32 +162,12 @@ JavaRequestProcessor::~JavaRequestProcessor()
 	}
 }
 
-/**
- * Given a string id, fetches the actual string from Java side
- *
- * @param request_data The JavaRequest struct containing request relevant information
- * @return A JavaResultData struct containing the result of the request
- */
-
-JavaResultData*
-JavaRequestProcessor::getString(JavaRequest* request_data)
+void
+JavaRequestProcessor::postAndWaitForResponse(std::string* message)
 {
-	std::string string_id;
-	std::string* message;
-
-	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
-	this->reference = IcedTeaPluginUtilities::getReference();
-
-	string_id = request_data->data->at(0);
-
-	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-
-    message->append(" GetStringUTFChars "); // get it in UTF8
-    message->append(string_id);
-
     struct timespec t;
     clock_gettime(CLOCK_REALTIME, &t);
-    t.tv_sec += 60; // 1 minute timeout
+    t.tv_sec += REQUESTTIMEOUT; // 1 minute timeout
 
     result_ready = false;
     java_to_plugin_bus->subscribe(this);
@@ -174,7 +182,7 @@ JavaRequestProcessor::getString(JavaRequest* request_data)
         bool timedout = false;
 
 		if (!result_ready && (curr_t.tv_sec < t.tv_sec))
-			sleep(1);
+			usleep(2000);
 		else
 			break;
 
@@ -187,9 +195,195 @@ JavaRequestProcessor::getString(JavaRequest* request_data)
     }
 
     java_to_plugin_bus->unSubscribe(this);
+}
+
+/**
+ * Given an object id, fetches the toString() value from Java
+ *
+ * @param object_id The ID of the object
+ * @return A JavaResultData struct containing the result of the request
+ */
+
+JavaResultData*
+JavaRequestProcessor::getToStringValue(std::string object_id)
+{
+	std::string* message;
+
+	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+	this->reference = IcedTeaPluginUtilities::getReference();
+
+	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+
+    message->append(" GetToStringValue "); // get it in UTF8
+    message->append(object_id);
+
+    postAndWaitForResponse(message);
+
 	IcedTeaPluginUtilities::releaseReference();
+    delete message;
+
+	return result;
+}
+
+/**
+ * Given a string id, fetches the actual string from Java side
+ *
+ * @param string_id The ID of the string
+ * @return A JavaResultData struct containing the result of the request
+ */
+
+JavaResultData*
+JavaRequestProcessor::getString(std::string string_id)
+{
+	std::string* message;
+
+	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+	this->reference = IcedTeaPluginUtilities::getReference();
+
+	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+
+    message->append(" GetStringUTFChars "); // get it in UTF8
+    message->append(string_id);
+
+    postAndWaitForResponse(message);
+
+	IcedTeaPluginUtilities::releaseReference();
+    delete message;
+
+	return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::findClass(std::string name)
+{
+	std::string* message;
+
+	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+	this->reference = IcedTeaPluginUtilities::getReference();
+
+	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+
+    message->append(" FindClass ");
+    message->append(name);
+
+    postAndWaitForResponse(message);
 
     delete message;
+
+	return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::getClassName(std::string ID)
+{
+	std::string* message;
+
+	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+	this->reference = IcedTeaPluginUtilities::getReference();
+
+	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+
+    message->append(" GetClassName ");
+    message->append(ID);
+
+    postAndWaitForResponse(message);
+
+    delete message;
+
+	return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::getMethodID(std::string objectID, NPIdentifier methodName,
+                                  std::vector<std::string> args)
+{
+	JavaRequestProcessor* java_request;
+	std::string* message;
+    std::string* signature;
+
+    signature = new std::string();
+    *signature += "(";
+
+    // FIXME: Need to determine how to extract array types and complex java objects
+    for (int i=0; i < args.size(); i++)
+    {
+    	*signature += args[i];
+    }
+
+    *signature += ")";
+
+	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+	this->reference = IcedTeaPluginUtilities::getReference();
+
+	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+	*message += " GetMethodID ";
+	*message += objectID;
+	*message += " ";
+	*message += browser_functions.utf8fromidentifier(methodName);
+	*message += " ";
+	*message += *signature;
+
+	postAndWaitForResponse(message);
+
+	IcedTeaPluginUtilities::releaseReference();
+	delete signature;
+	delete message;
+
+	return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::newObject(std::string objectID, std::string methodID,
+                                  std::vector<std::string> args)
+{
+	JavaRequestProcessor* java_request;
+	std::string* message;
+
+	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+	this->reference = IcedTeaPluginUtilities::getReference();
+
+	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+	*message += " NewObject ";
+	*message += objectID;
+	*message += " ";
+	*message += methodID;
+	*message += " ";
+
+	for (int i=0; i < args.size(); i++)
+	{
+		*message += args[i];
+		*message += " ";
+	}
+
+	postAndWaitForResponse(message);
+
+	IcedTeaPluginUtilities::releaseReference();
+	delete message;
+
+	return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::newString(std::string str)
+{
+	JavaRequestProcessor* java_request;
+	std::string* utf_string = new std::string();
+	std::string* message;
+
+	IcedTeaPluginUtilities::convertStringToUTF8(&str, utf_string);
+
+	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+	this->reference = IcedTeaPluginUtilities::getReference();
+
+	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+	message->append(" NewStringUTF ");
+	message->append(*utf_string);
+
+	postAndWaitForResponse(message);
+
+	IcedTeaPluginUtilities::releaseReference();
+	delete utf_string;
+	delete message;
 
 	return result;
 }

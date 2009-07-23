@@ -146,15 +146,17 @@ IcedTeaPluginUtilities::JSIDToString(void* id)
 	char* id_str = (char*) malloc(sizeof(char)*20); // max = long long = 8446744073709551615 == 19 chars
 
 	if (sizeof(void*) == sizeof(long long))
+	{
 		sprintf(id_str, "%llu", id);
-	else if (sizeof(void*) == sizeof(long))
-		sprintf(id_str, "%lu", id);
-	else // else addresses are int (32-bit)
-		sprintf(id_str, "%du", id);
+	}
+	else
+	{
+		sprintf(id_str, "%lu", id); // else use long
+	}
 
 	*result += id_str;
 
-	printf("Converting pointer %p to %s\n", id, id_str);
+	PLUGIN_DEBUG_2ARG("Converting pointer %p to %s\n", id, id_str);
 	free(id_str);
 
 	return result;
@@ -173,19 +175,15 @@ IcedTeaPluginUtilities::stringToJSID(std::string id_str)
 	void* ptr;
 	if (sizeof(void*) == sizeof(long long))
 	{
-		printf("Casting \"%s\" -- %llu\n", id_str.c_str(), atol(id_str.c_str()));
-		ptr = reinterpret_cast <void*> ((unsigned long) atol(id_str.c_str()));
-	} else if (sizeof(void*) == sizeof(long))
-	{
-		printf("Casting \"%s\" -- %lu\n", id_str.c_str(), atoi(id_str.c_str()));
-		ptr = reinterpret_cast <void*> ((unsigned int)  atoi(id_str.c_str()));
+		PLUGIN_DEBUG_2ARG("Casting (long long) \"%s\" -- %llu\n", id_str.c_str(), strtoull(id_str.c_str(), NULL, 0));
+		ptr = reinterpret_cast <void*> ((unsigned long long) strtoull(id_str.c_str(), NULL, 0));
 	} else
 	{
-		printf("Casting \"%s\" -- %du\n", id_str.c_str(), atoi(id_str.c_str()));
-		ptr = reinterpret_cast <void*> ((unsigned int)  atoi(id_str.c_str()));
+		PLUGIN_DEBUG_2ARG("Casting (long) \"%s\" -- %lu\n", id_str.c_str(), strtoul(id_str.c_str(), NULL, 0));
+		ptr = reinterpret_cast <void*> ((unsigned long)  strtoul(id_str.c_str(), NULL, 0));
 	}
 
-	printf("Casted: %p\n", ptr);
+	PLUGIN_DEBUG_1ARG("Casted: %p\n", ptr);
 
 	return ptr;
 }
@@ -444,6 +442,119 @@ IcedTeaPluginUtilities::printStringPtrVector(const char* prefix, std::vector<std
 	delete str;
 }
 
+std::string*
+IcedTeaPluginUtilities::variantToClassName(NPVariant variant)
+{
+
+	std::string* java_type = new std::string();
+
+	if (NPVARIANT_IS_VOID(variant))
+	{
+		*java_type += "V";
+	} else if (NPVARIANT_IS_BOOLEAN(variant))
+	{
+		*java_type += "Z";
+	} else if (NPVARIANT_IS_INT32(variant))
+	{
+		*java_type += "I";
+	} else if (NPVARIANT_IS_DOUBLE(variant))
+	{
+		*java_type += "D";
+	} else if (NPVARIANT_IS_STRING(variant))
+	{
+		*java_type += "Ljava/lang/String;";
+	} else if (NPVARIANT_IS_OBJECT(variant))
+	{
+		printf("** Unimplemented: IcedTeaPluginUtilities::variantToClassName(variant type=obj)\n");
+	} else if (NPVARIANT_IS_NULL(variant))
+	{
+		printf("** Unimplemented: IcedTeaPluginUtilities::variantToClassName(variant type=null)\n");
+	} else
+	{
+		printf("** Unimplemented: IcedTeaPluginUtilities::variantToClassName(variant type=unknown)\n");
+	}
+
+	return java_type;
+}
+
+void
+IcedTeaPluginUtilities::printNPVariant(NPVariant variant)
+{
+    if (NPVARIANT_IS_VOID(variant))
+    {
+    	PLUGIN_DEBUG_1ARG("VOID %d\n", variant);
+    }
+    else if (NPVARIANT_IS_NULL(variant))
+    {
+    	PLUGIN_DEBUG_1ARG("NULL\n", variant);
+    }
+    else if (NPVARIANT_IS_BOOLEAN(variant))
+    {
+    	PLUGIN_DEBUG_1ARG("BOOL: %d\n", NPVARIANT_TO_BOOLEAN(variant));
+    }
+    else if (NPVARIANT_IS_INT32(variant))
+    {
+    	PLUGIN_DEBUG_1ARG("INT32: %d\n", NPVARIANT_TO_INT32(variant));
+    }
+    else if (NPVARIANT_IS_DOUBLE(variant))
+    {
+    	PLUGIN_DEBUG_1ARG("DOUBLE: %f\n", NPVARIANT_TO_DOUBLE(variant));
+    }
+    else if (NPVARIANT_IS_STRING(variant))
+    {
+    	PLUGIN_DEBUG_1ARG("STRING: %s\n", NPVARIANT_TO_STRING(variant).utf8characters);
+    }
+    else
+    {
+    	PLUGIN_DEBUG_1ARG("OBJ: %p\n", NPVARIANT_TO_OBJECT(variant));
+    }
+}
+
+std::string*
+IcedTeaPluginUtilities::NPVariantToString(NPVariant variant)
+{
+	char* str = (char*) malloc(sizeof(char)*32); // enough for everything except string
+
+    if (NPVARIANT_IS_VOID(variant))
+    {
+        sprintf(str, "%p", variant);
+    }
+    else if (NPVARIANT_IS_NULL(variant))
+    {
+    	sprintf(str, "NULL");
+    }
+    else if (NPVARIANT_IS_BOOLEAN(variant))
+    {
+    	if (NPVARIANT_TO_BOOLEAN(variant))
+    		sprintf(str, "true");
+    	else
+    		sprintf(str, "false");
+    }
+    else if (NPVARIANT_IS_INT32(variant))
+    {
+    	sprintf(str, "%d", NPVARIANT_TO_INT32(variant));
+    }
+    else if (NPVARIANT_IS_DOUBLE(variant))
+    {
+    	sprintf(str, "%f", NPVARIANT_TO_DOUBLE(variant));;
+    }
+    else if (NPVARIANT_IS_STRING(variant))
+    {
+    	free(str);
+    	str = (char*) malloc(sizeof(char)*NPVARIANT_TO_STRING(variant).utf8length);
+    	sprintf(str, "%s", NPVARIANT_TO_STRING(variant).utf8characters);
+    }
+    else
+    {
+        sprintf(str, "[Object %p]", variant);
+    }
+
+    std::string* ret = new std::string(str);
+    free(str);
+
+    return ret;
+}
+
 /******************************************
  * Begin JavaMessageSender implementation *
  ******************************************
@@ -506,6 +617,8 @@ MessageBus::MessageBus()
 
 MessageBus::~MessageBus()
 {
+    PLUGIN_DEBUG_0ARG("MessageBus::~MessageBus\n");
+
 	int ret;
 
 	ret = pthread_mutex_destroy(&subscriber_mutex);

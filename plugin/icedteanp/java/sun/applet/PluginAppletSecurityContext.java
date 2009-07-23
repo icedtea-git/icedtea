@@ -118,6 +118,8 @@ class Signature {
 			return "double";
 
 		case SIGNATURE_ENDFUNC:
+			return null;
+
 		case SIGNATURE_FUNC:
 			return nextTypeName();
 
@@ -135,6 +137,10 @@ class Signature {
 		String elem;
 		while (currentIndex < signature.length()) {
 			elem = nextTypeName();
+			
+			if (elem == null) // end of signature
+				continue;
+			
 			// System.out.println ("NEXT TYPE: " + elem);
 			Class primitive = primitiveNameToType(elem);
 			if (primitive != null)
@@ -169,7 +175,7 @@ class Signature {
 				}
 			}
 		}
-		if (typeList.size() == 0) {
+		if (signature.length() < 2) {
 			throw new IllegalArgumentException("Invalid JNI signature '"
 					+ signature + "'");
 		}
@@ -218,7 +224,7 @@ class Signature {
 	}
 
 	public Class[] getClassArray() {
-		return typeList.subList(0, typeList.size() - 1).toArray(new Class[] {});
+		return typeList.subList(0, typeList.size()).toArray(new Class[] {});
 	}
 }
 
@@ -805,7 +811,25 @@ public class PluginAppletSecurityContext {
 				PluginDebug.debug("Java: GetStringChars: " + o);
 				PluginDebug.debug("  String BYTES: " + buf);
 				write(reference, "GetStringChars " + buf);
-			} else if (message.startsWith("NewArray")) {
+			} else if (message.startsWith("GetToStringValue")) {
+                String[] args = message.split(" ");
+                Integer objectID = parseCall(args[1], null, Integer.class);
+
+                String o = null;
+                byte[] b = null;
+                StringBuffer buf = null;
+                o = store.getObject(objectID).toString();
+                b = o.getBytes("UTF-8");
+                buf = new StringBuffer(b.length * 2);
+                buf.append(b.length);
+                for (int i = 0; i < b.length; i++)
+                    buf
+                            .append(" "
+                                    + Integer
+                                            .toString(((int) b[i]) & 0x0ff, 16));
+
+                write(reference, "GetToStringValue " + buf);
+            } else if (message.startsWith("NewArray")) {
 				String[] args = message.split(" ");
 				String type = parseCall(args[1], null, String.class);
 				Integer length = parseCall(args[2], null, Integer.class);
@@ -879,53 +903,49 @@ public class PluginAppletSecurityContext {
 
 				write(reference, "NewObject " + store.getIdentifier(ret));
 
-			} else if (message.startsWith("NewString")) {
-				PluginDebug.debug("MESSAGE: " + message);
-				String[] args = message.split(" ");
-				Integer strlength = parseCall(args[1], null, Integer.class);
-				int bytelength = 2 * strlength;
-				byte[] byteArray = new byte[bytelength];
-				String ret = null;
-				for (int i = 0; i < strlength; i++) {
-					int c = parseCall(args[2 + i], null, Integer.class);
-					PluginDebug.debug("char " + i + " " + c);
-					// Low.
-					byteArray[2 * i] = (byte) (c & 0x0ff);
-					// High.
-					byteArray[2 * i + 1] = (byte) ((c >> 8) & 0x0ff);
-				}
-				ret = new String(byteArray, 0, bytelength, "UTF-16LE");
-				PluginDebug.debug("NEWSTRING: " + ret);
-
-				// System.out.println ("NEWOBJ: CALLED: " + ret);
-				// System.out.println ("NEWOBJ: CALLED: " +
-				// store.getObject(ret));
-				store.reference(ret);
-				write(reference, "NewString " + store.getIdentifier(ret));
 			} else if (message.startsWith("NewStringUTF")) {
-				PluginDebug.debug("MESSAGE: " + message);
-				String[] args = message.split(" ");
-				byte[] byteArray = new byte[60];
-				String ret = null;
-				int i = 0;
-				int c = 0;
-				while (((byte) c) != 0) {
-					c = parseCall(args[1 + i], null, Integer.class);
-					byteArray[i] = (byte) c;
-					i++;
-					if (i == byteArray.length) {
-						byte[] newByteArray = new byte[2 * byteArray.length];
-						System.arraycopy(byteArray, 0, newByteArray, 0,
-								byteArray.length);
-						byteArray = newByteArray;
-					}
-				}
-				byteArray[i] = (byte) 0;
-				ret = new String(byteArray, "UTF-8");
-				PluginDebug.debug("NEWSTRINGUTF: " + ret);
+                PluginDebug.debug("MESSAGE: " + message);
+                String[] args = message.split(" ");
+                int length = new Integer(args[1]);
+                byte[] byteArray = new byte[length + 1];
+                String ret = null;
+                int i = 2;
+                int c = Integer.parseInt(args[i++], 16);
+                while (i < length) {
+                    byteArray[i-2] = (byte) c;
+                    c = Integer.parseInt(args[i++], 16);
+                }
 
-				store.reference(ret);
-				write(reference, "NewStringUTF " + store.getIdentifier(ret));
+                byteArray[i] = (byte) 0;
+                ret = new String(byteArray, "UTF-8");
+                PluginDebug.debug("NEWSTRINGUTF: " + ret);
+
+                store.reference(ret);
+                write(reference, "NewStringUTF " + store.getIdentifier(ret));
+			} else if (message.startsWith("NewString")) {
+                PluginDebug.debug("MESSAGE: " + message);
+                String[] args = message.split(" ");
+                Integer strlength = parseCall(args[1], null, Integer.class);
+                int bytelength = 2 * strlength;
+                byte[] byteArray = new byte[bytelength];
+                String ret = null;
+                for (int i = 0; i < strlength; i++) {
+                    int c = parseCall(args[2 + i], null, Integer.class);
+                    PluginDebug.debug("char " + i + " " + c);
+                    // Low.
+                    byteArray[2 * i] = (byte) (c & 0x0ff);
+                    // High.
+                    byteArray[2 * i + 1] = (byte) ((c >> 8) & 0x0ff);
+                }
+                ret = new String(byteArray, 0, bytelength, "UTF-16LE");
+                PluginDebug.debug("NEWSTRING: " + ret);
+
+                // System.out.println ("NEWOBJ: CALLED: " + ret);
+                // System.out.println ("NEWOBJ: CALLED: " +
+                // store.getObject(ret));
+                store.reference(ret);
+                write(reference, "NewString " + store.getIdentifier(ret));
+
 			} else if (message.startsWith("ExceptionOccurred")) {
 				PluginDebug.debug("EXCEPTION: " + throwable);
 				if (throwable != null)
@@ -952,7 +972,12 @@ public class PluginAppletSecurityContext {
 				Integer id = parseCall(args[1], null, Integer.class);
 				store.reference(store.getObject(id));
 				write(reference, "NewGlobalRef " + id);
-			}
+			} else if (message.startsWith("GetClassName")) {
+				String[] args = message.split(" ");
+				Integer objectID = parseCall(args[1], null, Integer.class);
+				Object o = (Object) store.getObject(objectID);
+				write(reference, "GetClassName " + o.getClass().getName());
+			} 
 		} catch (Throwable t) {
 			t.printStackTrace();
 			String msg = t.getCause() != null ? t.getCause().getMessage() : t.getMessage();
@@ -1018,8 +1043,8 @@ public class PluginAppletSecurityContext {
 		
 		prepopulateClass("netscape/javascript/JSObject");
 		classID = prepopulateClass("netscape/javascript/JSException");
-		prepopulateMethod(classID, "<init>", "(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;I)V");
-		prepopulateMethod(classID, "<init>", "(ILjava/lang/Object;)V");
+		prepopulateMethod(classID, "<init>", "(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;I)");
+		prepopulateMethod(classID, "<init>", "(ILjava/lang/Object;)");
 		prepopulateField(classID, "lineno");
 		prepopulateField(classID, "tokenIndex");
 		prepopulateField(classID, "source");
@@ -1028,51 +1053,51 @@ public class PluginAppletSecurityContext {
 		prepopulateField(classID, "wrappedException");
 		
 		classID = prepopulateClass("netscape/javascript/JSUtil");
-		prepopulateMethod(classID, "getStackTrace", "(Ljava/lang/Throwable;)Ljava/lang/String;");
+		prepopulateMethod(classID, "getStackTrace", "(Ljava/lang/Throwable;)");
 
 		prepopulateClass("java/lang/Object");
 		classID = prepopulateClass("java/lang/Class");
-		prepopulateMethod(classID, "getMethods", "()[Ljava/lang/reflect/Method;");
-		prepopulateMethod(classID, "getConstructors", "()[Ljava/lang/reflect/Constructor;");
-		prepopulateMethod(classID, "getFields", "()[Ljava/lang/reflect/Field;");
-		prepopulateMethod(classID, "getName", "()Ljava/lang/String;");
-		prepopulateMethod(classID, "isArray", "()Z");
-		prepopulateMethod(classID, "getComponentType", "()Ljava/lang/Class;");
-		prepopulateMethod(classID, "getModifiers", "()I");
+		prepopulateMethod(classID, "getMethods", "()");
+		prepopulateMethod(classID, "getConstructors", "()");
+		prepopulateMethod(classID, "getFields", "()");
+		prepopulateMethod(classID, "getName", "()");
+		prepopulateMethod(classID, "isArray", "()");
+		prepopulateMethod(classID, "getComponentType", "()");
+		prepopulateMethod(classID, "getModifiers", "()");
 		
 
 		classID = prepopulateClass("java/lang/reflect/Method");
-		prepopulateMethod(classID, "getName", "()Ljava/lang/String;");
-		prepopulateMethod(classID, "getParameterTypes", "()[Ljava/lang/Class;");
-		prepopulateMethod(classID, "getReturnType", "()Ljava/lang/Class;");
-		prepopulateMethod(classID, "getModifiers", "()I");
+		prepopulateMethod(classID, "getName", "()");
+		prepopulateMethod(classID, "getParameterTypes", "()");
+		prepopulateMethod(classID, "getReturnType", "()");
+		prepopulateMethod(classID, "getModifiers", "()");
 
 		classID = prepopulateClass("java/lang/reflect/Constructor");
-		prepopulateMethod(classID, "getParameterTypes", "()[Ljava/lang/Class;");
-		prepopulateMethod(classID, "getModifiers", "()I");
+		prepopulateMethod(classID, "getParameterTypes", "()");
+		prepopulateMethod(classID, "getModifiers", "()");
 		
 		classID = prepopulateClass("java/lang/reflect/Field");
-		prepopulateMethod(classID, "getName", "()Ljava/lang/String;");
-		prepopulateMethod(classID, "getType", "()Ljava/lang/Class;");
-		prepopulateMethod(classID, "getModifiers", "()I");
+		prepopulateMethod(classID, "getName", "()");
+		prepopulateMethod(classID, "getType", "()");
+		prepopulateMethod(classID, "getModifiers", "()");
 		
 		classID = prepopulateClass("java/lang/reflect/Array");
-		prepopulateMethod(classID, "newInstance", "(Ljava/lang/Class;I)Ljava/lang/Object;");
+		prepopulateMethod(classID, "newInstance", "(Ljava/lang/Class;I)");
 		
 		classID = prepopulateClass("java/lang/Throwable");
-		prepopulateMethod(classID, "toString", "()Ljava/lang/String;");
-		prepopulateMethod(classID, "getMessage", "()Ljava/lang/String;");
+		prepopulateMethod(classID, "toString", "()");
+		prepopulateMethod(classID, "getMessage", "()");
 		
 		classID = prepopulateClass("java/lang/System");
-		prepopulateMethod(classID, "identityHashCode", "(Ljava/lang/Object;)I");
+		prepopulateMethod(classID, "identityHashCode", "(Ljava/lang/Object;)");
 		
 		classID = prepopulateClass("java/lang/Boolean");
-		prepopulateMethod(classID, "booleanValue", "()D");
-		prepopulateMethod(classID, "<init>", "(Z)V");
+		prepopulateMethod(classID, "booleanValue", "()");
+		prepopulateMethod(classID, "<init>", "(Z)");
 
 		classID = prepopulateClass("java/lang/Double");
-		prepopulateMethod(classID, "doubleValue", "()D");
-		prepopulateMethod(classID, "<init>", "(D)V");
+		prepopulateMethod(classID, "doubleValue", "()");
+		prepopulateMethod(classID, "<init>", "(D)");
 
 		classID = prepopulateClass("java/lang/Void");
 		prepopulateField(classID, "TYPE");

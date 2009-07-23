@@ -48,6 +48,7 @@ exception statement from your version. */
 #include <npapi.h>
 #include <npupp.h>
 
+#include "IcedTeaRunnable.h"
 #include "IcedTeaPluginUtils.h"
 #include "IcedTeaJavaRequestProcessor.h"
 
@@ -61,22 +62,46 @@ typedef struct struct_thread_data
 	std::string* source;
 } ThreadData;
 
+
 /* Map holding window pointer<->instance relationships */
 static std::map<void*, NPP>* instance_map;
+
+/* Internal request reference counter */
+static long internal_req_ref_counter;
 
 // JS request processor methods
 static NPP getInstanceFromMemberPtr(void* member_ptr);
 static void storeInstanceID(void* member_ptr, NPP instance);
 static void* requestFromMainThread();
-static void* sendMember(void* tdata);
-static void* setMember(void* tdata);
 static void* getSlot(void* tdata);
 static void* setSlot(void* tdata);
 static void* eval(void* tdata);
 static void* removeMember(void* tdata);
 static void* call(void* tdata);
 static void* finalize(void* tdata);
-static void* toString(void* tdata);
+
+/* Given a value and type, performs the appropriate Java->JS type
+ * mapping and puts it in the given variant */
+
+static void convertToNPVariant(std::string value, std::string type, NPVariant* result_variant);
+
+// Internal methods that need to run in main thread
+void* _getMember(void* message_parts, ResultData* result);
+void* _setMember(void* message_parts, ResultData* result);
+
+static pthread_mutex_t tc_mutex = PTHREAD_MUTEX_INITIALIZER;
+static int thread_count = 0;
+
+void* queue_processor(void* data);
+
+/* Mutex to ensure that the request queue is accessed synchronously */
+extern pthread_mutex_t message_queue_mutex;
+
+/* Mutex to ensure synchronized writes */
+extern pthread_mutex_t syn_write_mutex;
+
+/* Queue for holding messages that get processed in a separate thread */
+extern std::vector< std::vector<std::string>* >* message_queue;
 
 /**
  * Processes requests made TO the plugin (by java or anyone else)
@@ -92,17 +117,23 @@ class PluginRequestProcessor : public BusSubscriber
     	void dispatch(void* func_ptr (void*), std::vector<std::string>* message, std::string* src);
 
     	/* Send main window pointer to Java */
-    	void sendWindow(std::vector<std::string>* message);
-
-    	/* Given parent id and member name, send member pointer to java */
-    	void _sendMember(std::vector<std::string*>* message_parts);
+    	void sendWindow(std::vector<std::string>* message_parts);
 
     public:
-    	PluginRequestProcessor(); /*Constructor */
+    	PluginRequestProcessor(); /* Constructor */
     	~PluginRequestProcessor(); /* Destructor */
 
     	/* Process new requests (if applicable) */
         virtual bool newMessageOnBus(const char* message);
+
+        /* Send member ID to Java */
+        void sendMember(std::vector<std::string>* message_parts);
+
+        /* Set member to given value */
+        void setMember(std::vector<std::string>* message_parts);
+
+        /* Send string value of requested object */
+        void sendString(std::vector<std::string>* message_parts);
 };
 
 #endif // __ICEDTEAPLUGINREQUESTPROCESSOR_H__

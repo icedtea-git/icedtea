@@ -46,6 +46,8 @@ exception statement from your version. */
 #include "IcedTeaNPPlugin.h"
 #include "IcedTeaPluginUtils.h"
 
+#define REQUESTTIMEOUT 60
+
 /*
  * This struct holds data specific to a Java operation requested by the plugin
  */
@@ -97,11 +99,41 @@ class JavaRequestProcessor : BusSubscriber
     	bool result_ready;
     	JavaResultData* result;
 
+    	/* Post message on bus and wait */
+    	void postAndWaitForResponse(std::string* message);
+
     public:
     	JavaRequestProcessor();
     	~JavaRequestProcessor();
     	virtual bool newMessageOnBus(const char* message);
-    	JavaResultData* getString(JavaRequest* request_data);
+
+    	/* Returns the toString() value, given an object identifier */
+    	JavaResultData* getToStringValue(std::string object_id);
+
+    	/* Returns the string, given the identifier */
+    	JavaResultData* getString(std::string string_id);
+
+    	/* Returns the method ID from Java side */
+    	JavaResultData* getMethodID1(NPObject* obj, NPIdentifier methodName,
+                        std::vector<NPVariant> args);
+
+    	/* Returns the method id */
+    	JavaResultData* getMethodID(std::string objectID, NPIdentifier methodName,
+                                    std::vector<std::string> args);
+
+    	/* Creates a new object */
+    	JavaResultData* newObject(std::string objectID, std::string methodID,
+                                    std::vector<std::string> args);
+
+    	/* Returns the class ID */
+    	JavaResultData* findClass(std::string name);
+
+    	/* Returns the type class name */
+    	JavaResultData* getClassName(std::string ID);
+
+    	/* Creates a new string in the Java store */
+    	JavaResultData* newString(std::string str);
+
 };
 
 #endif /* ICEDTEAJAVAREQUESTPROCESSOR_H_ */
