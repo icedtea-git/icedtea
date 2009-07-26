@@ -44,7 +44,7 @@
  XUSAGE=$(HS_SRC_DIR)/share/vm/Xusage.txt
  DOCS_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_docs
  C1_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler1
-+ifdef ICEDTEA_CORE_BUILD
++ifdef CORE_BUILD
 +C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_core
 +else
  C2_BASE_DIR=$(OUTPUTDIR)/$(VM_PLATFORM)_compiler2
@@ -55,7 +55,7 @@
  KERNEL_DIR=$(KERNEL_BASE_DIR)/$(VM_SUBDIR)
  
  # Misc files and generated files need to come from C1 or C2 area
-+ifdef ICEDTEA_CORE_BUILD
++ifdef CORE_BUILD
 +  MISC_DIR=$(C2_DIR)
 +  GEN_DIR=$(C2_BASE_DIR)/generated
 +else
@@ -93,7 +93,7 @@
  EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
  EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjsig.so
  EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.so
-+ifndef ICEDTEA_CORE_BUILD
++ifndef CORE_BUILD
  ifeq ($(ARCH_DATA_MODEL), 32)
    EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
    EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt

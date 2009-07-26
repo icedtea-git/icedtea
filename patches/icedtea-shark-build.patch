@@ -1,10 +1,10 @@
 diff -Nru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist/Makefile
---- openjdk.orig/jdk/make/java/redist/Makefile	2008-07-13 00:38:02.000000000 +0100
-+++ openjdk/jdk/make/java/redist/Makefile	2008-07-13 00:59:03.000000000 +0100
+--- openjdk.orig/jdk/make/java/redist/Makefile	2009-07-15 17:35:01.000000000 +0100
++++ openjdk/jdk/make/java/redist/Makefile	2009-07-23 23:45:17.000000000 +0100
 @@ -96,11 +96,13 @@
  
- # Hotspot client is only available on 32-bit builds
- ifndef ICEDTEA_CORE_BUILD
+ # Hotspot client is only available on 32-bit non-core builds
+ ifneq ($(CORE_BUILD), true)
 +ifndef ICEDTEA_SHARK_BUILD
  ifeq ($(ARCH_DATA_MODEL), 32)
    IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(JVM_NAME) \
@@ -15,28 +15,28 @@ diff -Nru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redis
  
  ifeq ($(PLATFORM), windows)
  #  Windows     vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  Windows
-@@ -161,6 +163,7 @@
+@@ -174,6 +176,7 @@
  endif 
  
- ifndef ICEDTEA_CORE_BUILD
+ ifneq ($(CORE_BUILD), true)
 +ifndef ICEDTEA_SHARK_BUILD
  ifeq ($(ARCH_DATA_MODEL), 32)
  
  IMPORT_LIST += $(LIB_LOCATION)/$(CLIENT_LOCATION)/$(LIBJSIG_NAME)
-@@ -191,6 +194,8 @@
+@@ -204,6 +207,8 @@
  
  endif # 32bit
  
 +endif # ICEDTEA_SHARK_BUILD
 +
- endif # ICEDTEA_CORE_BUILD
+ endif # CORE_BUILD
  
  #  NOT Windows ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ NOT Windows
 diff -Nru openjdk.orig/make/hotspot-rules.gmk openjdk/make/hotspot-rules.gmk
---- openjdk.orig/make/hotspot-rules.gmk	2008-07-13 00:38:02.000000000 +0100
-+++ openjdk/make/hotspot-rules.gmk	2008-07-13 00:59:03.000000000 +0100
+--- openjdk.orig/make/hotspot-rules.gmk	2009-07-15 17:35:01.000000000 +0100
++++ openjdk/make/hotspot-rules.gmk	2009-07-23 23:44:12.000000000 +0100
 @@ -75,6 +75,9 @@
- ifdef ICEDTEA_CORE_BUILD
+ ifeq ($(CORE_BUILD), true)
    HOTSPOT_TARGET := $(HOTSPOT_TARGET)core
  endif
 +ifdef ICEDTEA_SHARK_BUILD

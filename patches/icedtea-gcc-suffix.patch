@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk openjdk/corba/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk	2009-03-20 11:54:59.000000000 +0000
-+++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	2009-04-14 17:54:35.000000000 +0100
+--- openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk	2009-07-15 17:35:01.000000000 +0100
++++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	2009-07-23 16:16:30.000000000 +0100
 @@ -58,17 +58,17 @@
  ifeq ($(PLATFORM), linux)
  
@@ -21,11 +21,11 @@ diff -Nru openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk openjdk/corba/m
 -    CXX            = $(COMPILER_PATH)g++
 +    CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
    endif
-   ifneq ("$(findstring sparc,$(ARCH))", "")
-     # sparc or sparcv9
+   ifeq ($(ZERO_BUILD), true)
+     # zero
 diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2009-04-14 15:55:52.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-04-14 17:54:35.000000000 +0100
+--- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2009-03-30 23:08:42.000000000 +0100
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-07-23 16:16:30.000000000 +0100
 @@ -54,17 +54,17 @@
  ifeq ($(PLATFORM), linux)
  

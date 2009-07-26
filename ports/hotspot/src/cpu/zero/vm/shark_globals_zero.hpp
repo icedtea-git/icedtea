@@ -61,6 +61,3 @@ define_pd_global(uintx, MaxPermSize,                  64*M );
 define_pd_global(bool,  NeverActAsServerClassMachine, true );
 define_pd_global(uintx, DefaultMaxRAM,                1*G  );
 define_pd_global(bool,  CICompileOSR,                 true );
-
-/* Required for Shark on OpenJDK7 */
-define_pd_global(intx,  InlineSmallCode,      1000);

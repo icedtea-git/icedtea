@@ -1,3 +1,104 @@
+2009-07-26  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/hotspot/default/icedtea-core-build.patch,
+	* patches/hotspot/default/icedtea-static-libstdc++.patch,
+	* patches/hotspot/default/icedtea-zero-build.patch,
+	* patches/icedtea-arch.patch,
+	* patches/icedtea-linker-options.patch,
+	* patches/icedtea-signature-iterator.patch,
+	* patches/icedtea-zero.patch,
+	* platform_zero.in,
+	* ports/hotspot/make/linux/makefiles/zero.make,
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/assembler_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/bytecodeInterpreter_zero.inline.hpp,
+	* ports/hotspot/src/cpu/zero/vm/bytecodes_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/bytes_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/codeBuffer_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/copy_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreterGenerator_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/debug_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/deoptimizerFrame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/disassembler_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/dump_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/entryFrame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/entry_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/frame_zero.inline.hpp,
+	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/icBuffer_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/icache_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/icache_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/interp_masm_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/interpreterFrame_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/interpreterGenerator_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/interpreterRT_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/interpreter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/javaFrameAnchor_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/jniFastGetField_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/jniTypes_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/jni_zero.h,
+	* ports/hotspot/src/cpu/zero/vm/methodHandles_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/nativeInst_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/registerMap_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/register_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/register_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/relocInfo_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/relocInfo_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/sharedRuntime_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/stack_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/stubGenerator_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/vmStructs_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/vm_version_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/vmreg_zero.cpp,
+	* ports/hotspot/src/cpu/zero/vm/vmreg_zero.hpp,
+	* ports/hotspot/src/cpu/zero/vm/vmreg_zero.inline.hpp,
+	* ports/hotspot/src/cpu/zero/vm/vtableStubs_zero.cpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/atomic_linux_zero.inline.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/bytes_linux_zero.inline.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/prefetch_linux_zero.inline.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/threadLS_linux_zero.cpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/threadLS_linux_zero.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp,
+	* ports/hotspot/src/os_cpu/linux_zero/vm/vmStructs_linux_zero.hpp:
+	Removed.  Zero now upstream.
+	* Makefile.am:
+	Bump to b65.  Switch ICEDTEA_{CORE,ZERO}_BUILD to use true
+	not 'yes', and pass to build as CORE_BUILD and ZERO_BUILD.
+	Link files in cpu/zero/vm rather than zero directory (now
+	only used for Shark).  Remove unneeded patches and duplicate
+	ports-ecj target.
+	* acinclude.m4: Don't generate platform_zero.
+	* patches/cacao/arch.patch: Moved from patches/icedtea-arch.patch
+	and recreated.
+	* patches/hotspot/default/icedtea-core-zero-build.patch:
+	Use CORE_BUILD not ICEDTEA_CORE_BUILD.
+	* patches/hotspot/default/icedtea-shark-build.patch:
+	Recreated.  Depend on $(PLATFORM_FILE) to create platform_zero.
+	* patches/icedtea-core-build.patch,
+	* patches/icedtea-gcc-suffix.patch,
+	* patches/icedtea-libraries.patch,
+	* patches/icedtea-shark-build.patch,
+	* patches/icedtea-zero-build.patch:
+	Recreated.
+	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp:
+	Drop InlineSmallCode as in globals_zero.hpp upstream.
+	
 2009-07-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:

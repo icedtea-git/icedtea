@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common/Defs-linux.gmk
---- openjdk.orig/corba/make/common/Defs-linux.gmk	2009-04-15 16:23:02.000000000 +0100
-+++ openjdk/corba/make/common/Defs-linux.gmk	2009-04-15 16:38:16.000000000 +0100
+--- openjdk.orig/corba/make/common/Defs-linux.gmk	2009-07-24 00:15:26.000000000 +0100
++++ openjdk/corba/make/common/Defs-linux.gmk	2009-07-24 00:19:32.000000000 +0100
 @@ -92,9 +92,19 @@
  #    We need this frame pointer to make it easy to walk the stacks.
  #    This should be the default on X86, but ia64 and amd64 may not have this
@@ -22,8 +22,8 @@ diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/commo
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
 diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
---- openjdk.orig/jdk/make/common/Defs-linux.gmk	2009-04-15 16:23:02.000000000 +0100
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2009-04-15 16:38:16.000000000 +0100
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2009-07-24 00:15:28.000000000 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2009-07-24 00:19:32.000000000 +0100
 @@ -109,9 +109,19 @@
  #    We need this frame pointer to make it easy to walk the stacks.
  #    This should be the default on X86, but ia64 and amd64 may not have this
@@ -45,8 +45,8 @@ diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/De
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
 diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2009-04-15 16:23:02.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-04-15 16:39:22.000000000 +0100
+--- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2009-07-24 00:15:26.000000000 +0100
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-07-24 00:19:32.000000000 +0100
 @@ -71,6 +71,52 @@
      REQUIRED_CC_VER = 3.2
      REQUIRED_GCC_VER = 3.2.*
@@ -101,10 +101,10 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/
    SHARED_LIBRARY_FLAG = -shared -mimpure-text
    SUN_COMP_VER := $(shell $(CC) --verbose 2>&1 )
 diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax/sound/SoundDefs.gmk
---- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2009-04-15 16:23:02.000000000 +0100
-+++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2009-04-15 16:38:16.000000000 +0100
+--- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2009-07-15 17:35:01.000000000 +0100
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2009-07-24 00:19:32.000000000 +0100
 @@ -58,10 +58,54 @@
- ifdef ICEDTEA_ZERO_BUILD
+ ifeq ($(ZERO_BUILD), true)
    CPPFLAGS += -DX_ARCH=X_ZERO
  else
 +  ifeq ($(ARCH), alpha)
@@ -159,8 +159,8 @@ diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax
      CPPFLAGS += -DX_ARCH=X_SPARC
    endif # ARCH sparc
 diff -Nru openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
---- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2009-04-15 16:23:02.000000000 +0100
-+++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2009-04-15 16:38:16.000000000 +0100
+--- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2009-07-15 17:35:01.000000000 +0100
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2009-07-24 00:19:32.000000000 +0100
 @@ -33,12 +33,21 @@
  #define X_LINUX         3
  

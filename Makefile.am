@@ -1,20 +1,20 @@
-OPENJDK_VERSION = b64
+OPENJDK_VERSION = b65
 
-OPENJDK_CHANGESET = 269c1ec4435d
-CORBA_CHANGESET = 047dd27fddb6
-JAXP_CHANGESET = a10eec7a1edf
-JAXWS_CHANGESET = d1788e8fd315
-JDK_CHANGESET = d799a225c668
-LANGTOOLS_CHANGESET = d8f23a81d46f
-HOTSPOT_CHANGESET = ba36394eb84b
+OPENJDK_CHANGESET = 3f9b913a63a5
+CORBA_CHANGESET = 5bd83d1b2476
+JAXP_CHANGESET = 008c662e0ee9
+JAXWS_CHANGESET = 706c94322f68
+JDK_CHANGESET = 76242e1e7faf
+LANGTOOLS_CHANGESET = 7e0056ded28c
+HOTSPOT_CHANGESET = fa683fcb2628
 
-OPENJDK_MD5SUM = 377e7f1139d876175dd85629220213c9
-CORBA_MD5SUM = 203e6eb0231ae7848a501ee40fcc256d
-JAXP_MD5SUM = b57ed800ab149e44d4d53525cf58e9a7
-JAXWS_MD5SUM = 768509b4a24dc8e3b060e68e71081f48
-JDK_MD5SUM = dab8727958b03ff1b7992a50545479c3
-LANGTOOLS_MD5SUM = bf1a06f7d30febfb332658b6d7ef5fa5
-HOTSPOT_MD5SUM = 1ffa3dd169e18e9679c56b13c04a0de9
+OPENJDK_MD5SUM = 1b83ab007193ac11ace81777a9cf8b34
+CORBA_MD5SUM = c751d1140d3a5f777655b9b7cde41c9f
+JAXP_MD5SUM = 5832f64d5469985060f0c16fbcbce574
+JAXWS_MD5SUM = c23b0c5e2140feb224cc04d0f8bc2768
+JDK_MD5SUM = 013f095e5d95f8fe9afb07353670fbc7
+LANGTOOLS_MD5SUM = eca84cbe43c9f0314baa46917463b2cf
+HOTSPOT_MD5SUM = db12c9a6a0a61a1d783cd132aef59ba6
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
@@ -1517,12 +1517,12 @@ ICEDTEA_ENDORSED_DIR = \
 JDK_UPDATE_VERSION = 0
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
 if CORE_BUILD
-  ICEDTEA_CORE_BUILD = yes
+  ICEDTEA_CORE_BUILD = true
 else
   ICEDTEA_CORE_BUILD =
 endif
 if ZERO_BUILD
-  ICEDTEA_ZERO_BUILD = yes
+  ICEDTEA_ZERO_BUILD = true
 else
   ICEDTEA_ZERO_BUILD =
 endif
@@ -1549,8 +1549,8 @@ ICEDTEA_ENV = \
 	"ENDORSED=-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
 	"CLASSPATH=" \
 	"LD_LIBRARY_PATH=" \
-	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
-	"ICEDTEA_ZERO_BUILD=$(ICEDTEA_ZERO_BUILD)" \
+	"CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
+	"ZERO_BUILD=$(ICEDTEA_ZERO_BUILD)" \
 	"ICEDTEA_SHARK_BUILD=$(ICEDTEA_SHARK_BUILD)" \
 	"ZERO_LIBARCH=$(ZERO_LIBARCH)" \
 	"ZERO_BITSPERWORD=$(ZERO_BITSPERWORD)" \
@@ -1634,8 +1634,8 @@ ICEDTEA_ENV_ECJ = \
 	"CLASSPATH=" \
 	"LD_LIBRARY_PATH=" \
 	"GENSRCDIR=$(abs_top_builddir)/generated" \
-	"ICEDTEA_CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
-	"ICEDTEA_ZERO_BUILD=$(ICEDTEA_ZERO_BUILD)" \
+	"CORE_BUILD=$(ICEDTEA_CORE_BUILD)" \
+	"ZERO_BUILD=$(ICEDTEA_ZERO_BUILD)" \
 	"ICEDTEA_SHARK_BUILD=$(ICEDTEA_SHARK_BUILD)" \
 	"ZERO_LIBARCH=$(ZERO_LIBARCH)" \
 	"ZERO_BITSPERWORD=$(ZERO_BITSPERWORD)" \
@@ -1973,12 +1973,11 @@ endif
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
 	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
-		      $(abs_top_srcdir)/ports/hotspot/src/*cpu/* \
+		      $(abs_top_srcdir)/ports/hotspot/src/cpu/zero/vm/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'|sed "s#hotspot/build#hotspot/make#"); \
 	  ln -sfv $$target $$link; \
 	done
-	ln -sf $(abs_top_builddir)/platform_zero openjdk/hotspot/make/linux
 	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" \
 	  = "xno" ; then \
 	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR) ; \
@@ -2021,11 +2020,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
 	patches/icedtea-core-build.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-core-build.patch \
-	patches/icedtea-linker-options.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-static-libstdc++.patch \
 	patches/icedtea-zero-build.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
 	patches/icedtea-uname.patch \
@@ -2049,7 +2044,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-clean-crypto.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-shark.patch \
 	$(GCC_PATCH) \
-	patches/icedtea-arch.patch \
+	patches/cacao/arch.patch \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-lc_ctype.patch \
 	patches/icedtea-xjc.patch \
@@ -2063,9 +2058,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-pr261.patch \
 	patches/icedtea-doc-headers.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-bytecodeInterpreter.patch \
-	patches/icedtea-signature-iterator.patch \
 	patches/icedtea-test-atomic-operations.patch \
-	patches/icedtea-zero.patch \
 	patches/icedtea-ia64-bugfix.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-parisc-opt.patch \
         patches/security/icedtea-6592792.patch \
@@ -2452,28 +2445,6 @@ stamps/clone-ecj.stamp: stamps/overlay.stamp
 clean-clone-ecj:
 	rm -f stamps/clone-ecj.stamp
 	rm -rf openjdk-ecj
-
-# Link ports sources into tree
-stamps/ports-ecj.stamp: stamps/clone-ecj.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
-		      $(abs_top_srcdir)/ports/hotspot/src/*cpu/* \
-		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
-	  link=$$(dirname $$target | sed 's/^.*ports/openjdk-ecj/'|sed "s#hotspot/build#hotspot/make#"); \
-	  ln -sfv $$target $$link; \
-	done
-	ln -sf $(abs_top_builddir)/platform_zero openjdk-ecj/hotspot/make/linux
-	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" \
-	  = "xno"; then \
-	  mkdir -p openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR); \
-	  ln -sf $(abs_top_builddir)/jvm.cfg \
-	    openjdk-ecj/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg; \
-	fi
-	if ! test "x$(ICEDTEA_ZERO_BUILD)$(WITH_CACAO)" = "xno"; then \
-	  ln -sf $(abs_top_builddir)/ergo.c \
-	    openjdk-ecj/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
-	fi
-	mkdir -p stamps
-	touch stamps/ports-ecj.stamp
 
 # Patch OpenJDK for ecj/gcj builds.
 ICEDTEA_ECJ_PATCHES = patches/ecj/icedtea.patch \
@@ -2897,7 +2868,7 @@ endif
 
 stamps/icedtea-ecj.stamp: stamps/bootstrap-directory-symlink-ecj.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp stamps/netx-dist.stamp \
-	stamps/liveconnect.stamp stamps/ports-ecj.stamp stamps/patch-ecj.stamp \
+	stamps/liveconnect.stamp stamps/ports.stamp stamps/patch-ecj.stamp \
 	stamps/cacao.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
@@ -2922,7 +2893,7 @@ hotspot:
 
 hotspot-helper: stamps/bootstrap-directory-symlink-ecj.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports-ecj.stamp stamps/patch-ecj.stamp
+	stamps/ports.stamp stamps/patch-ecj.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_ECJ) \
 	  -C openjdk-ecj hotspot
@@ -3736,8 +3707,6 @@ hotspot-tools: stamps/hotspot-tools.stamp
 hotspot-ports: stamps/ports.stamp
 
 tools-class-files: stamps/tools-class-files.stamp
-
-hotspot-ports-ecj: stamps/ports-ecj.stamp
 
 clean: distclean-local
 
