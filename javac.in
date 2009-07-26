@@ -3,7 +3,7 @@ use strict;
 use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
 use constant STRIP_ARGS => qw(-Werror);
 
-my $ECJ_WARNINGS="-warn:-deprecation,serial,unusedImport";
+my $ECJ_WARNINGS="-warn:-deprecation,serial,unused,warningToken";
 my $JAVAC_WARNINGS="-Xlint:unchecked,cast,divzero,empty,finally,overrides";
 
 my @bcoption;
