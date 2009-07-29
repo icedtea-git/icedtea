@@ -43,6 +43,9 @@ public class IconDesc {
 
     /** splash icon */
     public static final Object SPLASH = "splash";
+    
+    /** destop shortcut icon */
+    public static final Object SHORTCUT = "shortcut";
 
 
     /** the location of the icon */

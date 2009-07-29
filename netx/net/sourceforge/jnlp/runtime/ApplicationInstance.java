@@ -25,6 +25,8 @@ import javax.swing.event.EventListenerList;
 
 import net.sourceforge.jnlp.*;
 import net.sourceforge.jnlp.event.*;
+import net.sourceforge.jnlp.security.SecurityWarningDialog.AccessType;
+import net.sourceforge.jnlp.services.ServiceUtil;
 import net.sourceforge.jnlp.util.*;
 
 /**
@@ -107,6 +109,32 @@ public class ApplicationInstance {
      */
     public void initialize() {
         installEnvironment();
+        addMenuAndDesktopEntries();
+    }
+
+    /**
+     * Creates menu and desktop entries if required by the jnlp file
+     */
+
+    private void addMenuAndDesktopEntries() {
+        XDesktopEntry entry = new XDesktopEntry(file);
+
+        if (file.getInformation().getShortcut().onDesktop()) {
+            if (ServiceUtil.checkAccess(this, AccessType.CREATE_DESTKOP_SHORTCUT)) {
+                entry.createDesktopShortcut();
+            }
+        }
+
+        if (file.getInformation().getShortcut().getMenu() != null) {
+            /*
+             * Sun's WebStart implementation doesnt seem to do anything under GNOME
+             */
+            if (JNLPRuntime.isDebug()) {
+                System.err.println("ApplicationInstance.addMenuAndDesktopEntries():"
+                        + " Adding menu entries NOT IMPLEMENTED");
+            }
+        }
+
     }
 
     /**

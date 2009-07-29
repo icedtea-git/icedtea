@@ -121,6 +121,9 @@ public class AccessWarningPane extends SecurityDialogUI {
 			case WRITE_FILE:
 				topLabelText = R("SFileWriteAccess");
 				break;
+			case CREATE_DESTKOP_SHORTCUT:
+			    topLabelText = R("SDesktopShortcut");
+			    break;
 			case CLIPBOARD_READ:
 				topLabelText = R("SClipboardReadAccess");
 				break;

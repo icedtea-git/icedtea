@@ -57,13 +57,6 @@ public class ServiceUtil {
     }
 
     /**
-     * Types of system access that may need permissions.
-     */
-    public static enum AccessType {
-        READ_FILE, WRITE_FILE, CLIPBOARD_READ, CLIPBOARD_WRITE, PRINTER
-    }
-
-    /**
      * Returns the BasicService reference, or null if the service is
      * unavailable.
      */
@@ -227,9 +220,29 @@ public class ServiceUtil {
      * @return true if the access was granted, false otherwise.
      */
     public static boolean checkAccess(SecurityWarningDialog.AccessType type,
+            Object... extras) {
+        return checkAccess(null, type, extras);
+    }    
+    
+    /**
+     * Returns whether the app requesting a service is signed. If the app is
+     * unsigned, the user is prompted with a dialog asking if the action
+     * should be allowed.
+     * @param app the application which is requesting the check. If null, the current
+     * application is used.
+     * @param type the type of access being requested
+     * @param extras extra Strings (usually) that are passed to the dialog for
+     * message formatting.
+     * @return true if the access was granted, false otherwise.
+     */
+    public static boolean checkAccess(ApplicationInstance app, 
+            SecurityWarningDialog.AccessType type,
     		Object... extras) {
 
-        ApplicationInstance app = JNLPRuntime.getApplication();
+        if (app == null) {
+            app = JNLPRuntime.getApplication();
+        }
+        
         if (app != null) {
             if (!app.isSigned()) {
             	final SecurityWarningDialog.AccessType tmpType = type;

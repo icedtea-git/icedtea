@@ -770,32 +770,6 @@ public class Launcher {
         }
     };
 
-    /**
-     * This class reads the output from a launched process and
-     * writes it to stdout.
-     */
-    private static class StreamEater extends Thread {
-        private InputStream stream;
-
-        StreamEater(InputStream stream) {
-            this.stream = new BufferedInputStream(stream);
-        }
-
-        public void run() {
-            try {
-                while (true) {
-                    int c = stream.read();
-                    if (c == -1)
-                        break;
-
-                    System.out.write(c);
-                }
-            }
-            catch (IOException ex) {
-            }
-        }
-    };
-
 }
 
 

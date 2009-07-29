@@ -27,6 +27,7 @@ import java.net.ServerSocket;
 
 import net.sourceforge.jnlp.JNLPFile;
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import net.sourceforge.jnlp.util.FileUtils;
 
 /**
  * This class represents a Lock for single instance jnlp applications
@@ -152,17 +153,7 @@ class SingleInstanceLock {
         }
         
         initialName = initialName + getCurrentDisplay();
-        String encodedName;
-
-        /*
-         * FIXME
-         * 
-         * Assuming safe characters are 'a-z','A-Z','0-9', '_', '.'
-         */
-
-        encodedName = initialName.replaceAll("[^a-zA-Z0-9.]", "_");
-
-        return encodedName;
+        return FileUtils.sanitizeFileName(initialName);
 
     }
 
