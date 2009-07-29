@@ -143,7 +143,7 @@ public class VariableX509TrustManager implements X509TrustManager {
      * @param authType The auth type algorithm
      * @param checkOnly Whether to "check only" i.e. no user prompt, or to prompt for permission 
      */
-    public void checkServerTrusted(X509Certificate[] chain, String authType, boolean checkOnly) throws CertificateException {
+    public synchronized void checkServerTrusted(X509Certificate[] chain, String authType, boolean checkOnly) throws CertificateException {
         try {
             checkAllManagers(chain, authType);
         } catch (CertificateException ce) {
