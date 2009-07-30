@@ -24,322 +24,150 @@
  */
 
 class SharkBuilder : public llvm::IRBuilder<> {
- public:
-  SharkBuilder(SharkCompiler* compiler);
+  friend class SharkCompileInvariants;
 
+ public:
+  SharkBuilder(llvm::Module* module, SharkCodeBuffer* code_buffer);
+
+  // The LLVM module and Shark code buffer we are building into.
  private:
-  SharkCompiler* _compiler;
-
- public:
-  SharkCompiler* compiler() const
-  {
-    return _compiler;
-  }
+  llvm::Module*    _module;
+  SharkCodeBuffer* _code_buffer;
 
  private:
   llvm::Module* module() const
   {
-    return compiler()->module();
+    return _module;
   }
-  llvm::ExecutionEngine* execution_engine() const
+ protected:
+  SharkCodeBuffer* code_buffer() const
   {
-    return compiler()->execution_engine();
+    return _code_buffer;
   }
 
-  // Helpers for creating basic blocks
-  // NB don't use unless SharkFunction::CreateBlock is unavailable
- public:
-  llvm::BasicBlock* GetBlockInsertionPoint() const
-  {
-    llvm::BasicBlock *cur = GetInsertBlock();
-
-    // BasicBlock::Create takes an insertBefore argument, so
-    // we need to find the block _after_ the current block
-    llvm::Function::iterator iter = cur->getParent()->begin();
-    llvm::Function::iterator end  = cur->getParent()->end();
-    while (iter != end) {
-      iter++;
-      if (&*iter == cur) {
-        iter++;
-        break;
-      }
-    }
-
-    if (iter == end)
-      return NULL;
-    else
-      return iter;
-  }
-  llvm::BasicBlock* CreateBlock(llvm::BasicBlock* ip, const char* name="") const
-  {
-    return llvm::BasicBlock::Create(name, GetInsertBlock()->getParent(), ip);
-  }
-  
-  // Helpers for accessing structures and arrays
+  // Helpers for accessing structures.
  public:
   llvm::Value* CreateAddressOfStructEntry(llvm::Value* base,
                                           ByteSize offset,
                                           const llvm::Type* type,
-                                          const char *name = "")
-  {
-    return CreateBitCast(CreateStructGEP(base, in_bytes(offset)), type, name);
-  }
-
+                                          const char *name = "");
   llvm::LoadInst* CreateValueOfStructEntry(llvm::Value* base,
                                            ByteSize offset,
                                            const llvm::Type* type,
-                                           const char *name = "")
-  {
-    return CreateLoad(
-      CreateAddressOfStructEntry(
-        base, offset, llvm::PointerType::getUnqual(type)),
-      name);
-  }
+                                           const char *name = "");
 
-  llvm::LoadInst* CreateArrayLength(llvm::Value* array)
-  {
-    return CreateValueOfStructEntry(
-      array, in_ByteSize(arrayOopDesc::length_offset_in_bytes()),
-      SharkType::jint_type(), "length");
-  }
-
+  // Helpers for accessing arrays.
+ public:
+  llvm::LoadInst* CreateArrayLength(llvm::Value* arrayoop);
   llvm::Value* CreateArrayAddress(llvm::Value*      arrayoop,
                                   const llvm::Type* element_type,
                                   int               element_bytes,
                                   ByteSize          base_offset,
                                   llvm::Value*      index,
-                                  const char*       name = "")
-  {
-    llvm::Value* offset = CreateIntCast(index, SharkType::intptr_type(), false);
-    if (element_bytes != 1)
-      offset = CreateShl(
-        offset,
-        LLVMValue::intptr_constant(exact_log2(element_bytes)));
-    offset = CreateAdd(
-      LLVMValue::intptr_constant(in_bytes(base_offset)), offset);
-
-    return CreateIntToPtr(
-      CreateAdd(CreatePtrToInt(arrayoop, SharkType::intptr_type()), offset),
-      llvm::PointerType::getUnqual(element_type),
-      name);
-  }
-
+                                  const char*       name = "");
   llvm::Value* CreateArrayAddress(llvm::Value* arrayoop,
                                   BasicType    basic_type,
                                   ByteSize     base_offset,
                                   llvm::Value* index,
-                                  const char*  name = "")
-  {
-    return CreateArrayAddress(
-      arrayoop,
-      SharkType::to_arrayType(basic_type),
-      type2aelembytes(basic_type),
-      base_offset, index, name);
-  }
-
+                                  const char*  name = "");
   llvm::Value* CreateArrayAddress(llvm::Value* arrayoop,
                                   BasicType    basic_type,
                                   llvm::Value* index,
-                                  const char*  name = "")
-  {
-    return CreateArrayAddress(
-      arrayoop, basic_type,
-      in_ByteSize(arrayOopDesc::base_offset_in_bytes(basic_type)),
-      index, name);
-  }
+                                  const char*  name = "");
 
-  // Helper for making function pointers
- public:
-  llvm::Constant* make_function(intptr_t                  addr,
-                                const llvm::FunctionType* sig,
-                                const char*               name);
-
-  llvm::Constant* pointer_constant(const void *ptr)
-  {
-#if SHARK_LLVM_VERSION >= 25 || !defined(AMD64)
-    return LLVMValue::intptr_constant((intptr_t) ptr);
-#else
-    // Create a pointer constant that points at PTR.  We do this by
-    // creating a GlobalVariable mapped at PTR.  This is a workaround
-    // for http://www.llvm.org/bugs/show_bug.cgi?id=2920
-
-    using namespace llvm;
-
-    // This might be useful but it returns a const pointer that can't
-    // be used for anything.  Go figure...
-//     {
-//       const GlobalValue *value
-// 	= execution_engine()->getGlobalValueAtAddress(const_cast<void*>(ptr));
-//       if (value)
-// 	return ConstantExpr::getPtrToInt(value, SharkType::intptr_type());
-//     }
-
-    char name[128];
-    snprintf(name, sizeof name - 1, "pointer_constant_%p", ptr);
-
-    GlobalVariable *value = new GlobalVariable(
-      SharkType::intptr_type(),
-      false, GlobalValue::ExternalLinkage,
-      NULL, name, module());
-    execution_engine()->addGlobalMapping(value, const_cast<void*>(ptr));
-
-    return ConstantExpr::getPtrToInt(value, SharkType::intptr_type());
-#endif // SHARK_LLVM_VERSION >= 25 || !AMD64
-  }
-
-  // Helper for making pointers
- public:
-  llvm::Constant* make_pointer(intptr_t addr, const llvm::Type* type)
-  {
-    return llvm::ConstantExpr::getIntToPtr(
-      LLVMValue::intptr_constant(addr),
-      llvm::PointerType::getUnqual(type));
-  }
-
-  // External functions (and intrinsics)
+  // Helpers for creating intrinsics and external functions.
  private:
-  llvm::Constant* _llvm_cmpxchg_int_fn;
-  llvm::Constant* _llvm_cmpxchg_ptr_fn;  
-  llvm::Constant* _llvm_memory_barrier_fn;
-  llvm::Constant* _llvm_memset_fn;  
-  llvm::Constant* _llvm_sin_fn;
-  llvm::Constant* _llvm_cos_fn;
-  llvm::Constant* _llvm_sqrt_fn;
-  llvm::Constant* _llvm_log_fn;
-  llvm::Constant* _llvm_log10_fn;
-  llvm::Constant* _llvm_pow_fn;
-  llvm::Constant* _llvm_exp_fn;
+  static const llvm::Type* make_type(char type, bool void_ok);
+  static const llvm::FunctionType* make_ftype(const char* params,
+                                              const char* ret);
+  llvm::Value* make_function(const char* name,
+                             const char* params,
+                             const char* ret);
+  llvm::Value* make_function(address     func,
+                             const char* params,
+                             const char* ret);
 
-  void set_llvm_cmpxchg_int_fn(llvm::Constant* llvm_cmpxchg_int_fn)
-  {
-    _llvm_cmpxchg_int_fn = llvm_cmpxchg_int_fn;
-  }
-  void set_llvm_cmpxchg_ptr_fn(llvm::Constant* llvm_cmpxchg_ptr_fn)
-  {
-    _llvm_cmpxchg_ptr_fn = llvm_cmpxchg_ptr_fn;
-  }
-  void set_llvm_memory_barrier_fn(llvm::Constant* llvm_memory_barrier_fn)
-  {
-    _llvm_memory_barrier_fn = llvm_memory_barrier_fn;
-  }
-  void set_llvm_memset_fn(llvm::Constant* llvm_memset_fn)
-  {
-    _llvm_memset_fn = llvm_memset_fn;
-  }
-  void set_llvm_sin_fn(llvm::Constant* llvm_sin_fn)
-  {
-    _llvm_sin_fn = llvm_sin_fn;
-  }
-  void set_llvm_cos_fn(llvm::Constant* llvm_cos_fn)
-  {
-    _llvm_cos_fn = llvm_cos_fn;
-  }
-  void set_llvm_sqrt_fn(llvm::Constant* llvm_sqrt_fn)
-  {
-    _llvm_sqrt_fn = llvm_sqrt_fn;
-  }
-  void set_llvm_log_fn(llvm::Constant* llvm_log_fn)
-  {
-    _llvm_log_fn = llvm_log_fn;
-  }
-  void set_llvm_log10_fn(llvm::Constant* llvm_log10_fn)
-  {
-    _llvm_log10_fn = llvm_log10_fn;
-  }
-  void set_llvm_pow_fn(llvm::Constant* llvm_pow_fn)
-  {
-    _llvm_pow_fn = llvm_pow_fn;
-  }
-  void set_llvm_exp_fn(llvm::Constant* llvm_exp_fn)
-  {
-    _llvm_exp_fn = llvm_exp_fn;
-  }
-
-  void init_external_functions();
-
- protected:
-  llvm::Constant* llvm_cmpxchg_int_fn() const
-  {
-    return _llvm_cmpxchg_int_fn;
-  }
-  llvm::Constant* llvm_cmpxchg_ptr_fn() const
-  {
-    return _llvm_cmpxchg_ptr_fn;
-  }
-  llvm::Constant* llvm_memory_barrier_fn() const
-  {
-    return _llvm_memory_barrier_fn;
-  }
-  llvm::Constant* llvm_memset_fn() const
-  {
-    return _llvm_memset_fn;
-  }
-
+  // Intrinsics and external functions, part 1: VM calls.
+  //   These are functions declared with JRT_ENTRY and JRT_EXIT,
+  //   macros which flip the thread from _thread_in_Java to
+  //   _thread_in_vm and back.  VM calls always safepoint, and can
+  //   therefore throw exceptions.  VM calls require of setup and
+  //   teardown, and must be called with SharkTopLevelBlock::call_vm.
  public:
-  llvm::Constant* llvm_sin_fn() const
-  {
-    return _llvm_sin_fn;
-  }
-  llvm::Constant* llvm_cos_fn() const
-  {
-    return _llvm_cos_fn;
-  }
-  llvm::Constant* llvm_sqrt_fn() const
-  {
-    return _llvm_sqrt_fn;
-  }
-  llvm::Constant* llvm_log_fn() const
-  {
-    return _llvm_log_fn;
-  }
-  llvm::Constant* llvm_log10_fn() const
-  {
-    return _llvm_log10_fn;
-  }
-  llvm::Constant* llvm_pow_fn() const
-  {
-    return _llvm_pow_fn;
-  }
-  llvm::Constant* llvm_exp_fn() const
-  {
-    return _llvm_exp_fn;
-  }
+  llvm::Value* find_exception_handler();
+  llvm::Value* monitorenter();
+  llvm::Value* monitorexit();
+  llvm::Value* new_instance();
+  llvm::Value* newarray();
+  llvm::Value* anewarray();
+  llvm::Value* multianewarray();
+  llvm::Value* register_finalizer();
+  llvm::Value* safepoint();
+  llvm::Value* throw_ArrayIndexOutOfBoundsException();
+  llvm::Value* throw_NullPointerException();
 
+  // Intrinsics and external functions, part 2: High-level non-VM calls.
+  //   These are called like normal functions.  The stack is not set
+  //   up for walking so they must not safepoint or throw exceptions,
+  //   or call anything that might.
  public:
-  llvm::CallInst* CreateDump(llvm::Value* value);
+  llvm::Value* f2i();
+  llvm::Value* f2l();
+  llvm::Value* d2i();
+  llvm::Value* d2l();
+  llvm::Value* is_subtype_of();
+  llvm::Value* current_time_millis();
+  llvm::Value* sin();
+  llvm::Value* cos();
+  llvm::Value* tan();
+  llvm::Value* atan2();
+  llvm::Value* sqrt();
+  llvm::Value* log();
+  llvm::Value* log10();
+  llvm::Value* pow();
+  llvm::Value* exp();
+  llvm::Value* fabs();
+  llvm::Value* unsafe_field_offset_to_byte_offset();
+
+  // Intrinsics and external functions, part 3: Uncommon trap.
+  //   This is a special case in that it is invoked like a non-VM
+  //   call but it does VM call stuff.  This is acceptable so long
+  //   as the method that calls uncommon_trap returns to its caller
+  //   immediately that uncommon_trap returns.
+ public:
+  llvm::Value* uncommon_trap();
+
+  // Intrinsics and external functions, part 4: Low-level non-VM calls.
+  //   These have the same caveats as the high-level non-VM calls
+  //   above.  They are not accessed directly; rather, you should
+  //   access them via the various Create* methods below.
+ private:
+  llvm::Value* cmpxchg_int();
+  llvm::Value* cmpxchg_ptr();
+  llvm::Value* memory_barrier();
+  llvm::Value* memset();
+  llvm::Value* unimplemented();
+  llvm::Value* should_not_reach_here();
+  llvm::Value* dump();  
+
+  // Public interface to low-level non-VM calls.
+ public:
+  llvm::CallInst* CreateCmpxchgInt(llvm::Value* exchange_value,
+                                   llvm::Value* dst,
+                                   llvm::Value* compare_value);
+  llvm::CallInst* CreateCmpxchgPtr(llvm::Value* exchange_value,
+                                   llvm::Value* dst,
+                                   llvm::Value* compare_value);
+  llvm::CallInst* CreateMemoryBarrier(int flags);
   llvm::CallInst* CreateMemset(llvm::Value* dst,
                                llvm::Value* value,
                                llvm::Value* len,
                                llvm::Value* align);
-  llvm::CallInst* CreateCmpxchgInt(llvm::Value* exchange_value,
-                                    llvm::Value* dst,
-                                    llvm::Value* compare_value);
-  llvm::CallInst* CreateCmpxchgPtr(llvm::Value* exchange_value,
-                                   llvm::Value* dst,
-                                   llvm::Value* compare_value);
-  llvm::CallInst* CreateShouldNotReachHere(const char* file, int line);  
   llvm::CallInst* CreateUnimplemented(const char* file, int line);  
-
-  // HotSpot memory barriers
- public:
-  void CreateUpdateBarrierSet(BarrierSet* bs, llvm::Value* field)
-  {
-    if (bs->kind() != BarrierSet::CardTableModRef) {
-      Unimplemented();
-    }
-
-    CreateStore(
-      LLVMValue::jbyte_constant(CardTableModRefBS::dirty_card),
-      CreateIntToPtr(
-        CreateAdd(
-          pointer_constant(((CardTableModRefBS *) bs)->byte_map_base),
-          CreateLShr(
-            CreatePtrToInt(field, SharkType::intptr_type()),
-            LLVMValue::intptr_constant(CardTableModRefBS::card_shift))),
-        llvm::PointerType::getUnqual(SharkType::jbyte_type())));
-  }
-
-  // Hardware memory barriers
+  llvm::CallInst* CreateShouldNotReachHere(const char* file, int line);  
+  NOT_PRODUCT(llvm::CallInst* CreateDump(llvm::Value* value));
+  
+  // Flags for CreateMemoryBarrier.
  public:
   enum BarrierFlags {
     BARRIER_LOADLOAD   = 1,
@@ -348,48 +176,20 @@ class SharkBuilder : public llvm::IRBuilder<> {
     BARRIER_STORESTORE = 8
   };
 
+  // HotSpot memory barriers
  public:
-  llvm::CallInst* CreateMemoryBarrier(BarrierFlags flags);
+  void CreateUpdateBarrierSet(BarrierSet* bs, llvm::Value* field);
 
-  // Alignment
+  // Helpers for accessing the code buffer.
  public:
-  llvm::Value* CreateAlign(llvm::Value* x, intptr_t s, const char* name = "")
-  {
-    assert(is_power_of_2(s), "should be");
-    return CreateAnd(
-      CreateAdd(x, LLVMValue::intptr_constant(s - 1)),
-      LLVMValue::intptr_constant(~(s - 1)),
-      name);
-  }
+  llvm::Value* code_buffer_address(int offset);
+  llvm::Value* CreateInlineOop(ciObject* object, const char* name = "");
 
-  // CodeBuffer interface
- private:
-  SharkCodeBuffer* _code_buffer;
-
+  // Helpers for creating basic blocks.
+  // NB don't use unless SharkFunction::CreateBlock is unavailable.
+  // XXX these are hacky and should be removed.
  public:
-  SharkCodeBuffer* code_buffer() const
-  {
-    return _code_buffer;
-  }
-  void set_code_buffer(SharkCodeBuffer* code_buffer)
-  {
-    _code_buffer = code_buffer;
-  }
-
- public:
-  llvm::Value* code_buffer_address(int offset)
-  {
-    return CreateAdd(
-      code_buffer()->base_pc(), LLVMValue::intptr_constant(offset));
-  }
-
- public:
-  llvm::Value* CreateInlineOop(ciObject* object, const char* name = "")
-  {
-    return CreateLoad(
-      CreateIntToPtr(
-        code_buffer_address(code_buffer()->inline_oop(object)),
-        llvm::PointerType::getUnqual(SharkType::jobject_type())),
-      name);
-  }
+  llvm::BasicBlock* GetBlockInsertionPoint() const;
+  llvm::BasicBlock* CreateBlock(llvm::BasicBlock* ip,
+                                const char*       name="") const;
 };

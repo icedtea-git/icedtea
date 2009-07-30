@@ -324,8 +324,10 @@ void SharkTopLevelBlock::zero_check_value(SharkValue* value,
   builder()->SetInsertPoint(zero_block);
   if (value->is_jobject()) {
     call_vm(
-      SharkRuntime::throw_NullPointerException(),
-      builder()->pointer_constant(__FILE__),
+      builder()->throw_NullPointerException(),
+      builder()->CreateIntToPtr(
+        LLVMValue::intptr_constant((intptr_t) __FILE__),
+        PointerType::getUnqual(SharkType::jbyte_type())),
       LLVMValue::jint_constant(__LINE__),
       EX_CHECK_NONE);
   }
@@ -349,8 +351,10 @@ void SharkTopLevelBlock::check_bounds(SharkValue* array, SharkValue* index)
   builder()->SetInsertPoint(out_of_bounds);
   SharkState *saved_state = current_state()->copy();
   call_vm(
-    SharkRuntime::throw_ArrayIndexOutOfBoundsException(),
-    builder()->pointer_constant(__FILE__),
+    builder()->throw_ArrayIndexOutOfBoundsException(),
+    builder()->CreateIntToPtr(
+      LLVMValue::intptr_constant((intptr_t) __FILE__),
+      PointerType::getUnqual(SharkType::jbyte_type())),
     LLVMValue::jint_constant(__LINE__),
     index->jint_value(),
     EX_CHECK_NONE);
@@ -433,7 +437,7 @@ void SharkTopLevelBlock::handle_exception(Value* exception, int action)
           builder()->CreateStructGEP(options, i));
 
       Value *index = call_vm(
-        SharkRuntime::find_exception_handler(),
+        builder()->find_exception_handler(),
         builder()->CreateStructGEP(options, 0),
         LLVMValue::jint_constant(num_options),
         EX_CHECK_NO_CATCH);
@@ -483,7 +487,8 @@ void SharkTopLevelBlock::maybe_add_safepoint()
 
   Value *state = builder()->CreateLoad(
     builder()->CreateIntToPtr(
-      builder()->pointer_constant(SafepointSynchronize::address_of_state()),
+      LLVMValue::intptr_constant(
+        (intptr_t) SafepointSynchronize::address_of_state()),
       PointerType::getUnqual(SharkType::jint_type())),
     "state");
 
@@ -494,7 +499,7 @@ void SharkTopLevelBlock::maybe_add_safepoint()
     do_safepoint, safepointed);
 
   builder()->SetInsertPoint(do_safepoint);
-  call_vm(SharkRuntime::safepoint(), EX_CHECK_FULL);
+  call_vm(builder()->safepoint(), EX_CHECK_FULL);
   BasicBlock *safepointed_block = builder()->GetInsertBlock();  
   builder()->CreateBr(safepointed);
 
@@ -553,7 +558,7 @@ void SharkTopLevelBlock::do_trap(int trap_request)
 {
   decache_for_trap();
   builder()->CreateCall2(
-    SharkRuntime::uncommon_trap(),
+    builder()->uncommon_trap(),
     thread(),
     LLVMValue::jint_constant(trap_request));
   builder()->CreateRetVoid();
@@ -594,7 +599,7 @@ void SharkTopLevelBlock::call_register_finalizer(Value *receiver)
     do_call, done);
 
   builder()->SetInsertPoint(do_call);
-  call_vm(SharkRuntime::register_finalizer(), receiver, EX_CHECK_FULL);
+  call_vm(builder()->register_finalizer(), receiver, EX_CHECK_FULL);
   BasicBlock *branch_block = builder()->GetInsertBlock();  
   builder()->CreateBr(done);
 
@@ -989,16 +994,19 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver,
     builder()->CreateIntCast(vtable_length, SharkType::intptr_type(), false);
 
   bool needs_aligning = HeapWordsPerLong > 1;
-  const char *itable_start_name = "itable_start";
   Value *itable_start = builder()->CreateAdd(
     vtable_start,
     builder()->CreateShl(
       vtable_length,
       LLVMValue::intptr_constant(exact_log2(vtableEntry::size() * wordSize))),
-    needs_aligning ? "" : itable_start_name);
-  if (needs_aligning)
-    itable_start = builder()->CreateAlign(
-      itable_start, BytesPerLong, itable_start_name);
+    needs_aligning ? "" : "itable_start");
+  if (needs_aligning) {
+    itable_start = builder()->CreateAnd(
+      builder()->CreateAdd(
+        itable_start, LLVMValue::intptr_constant(BytesPerLong - 1)),
+      LLVMValue::intptr_constant(~(BytesPerLong - 1)),
+      "itable_start");
+  }
 
   // Locate this interface's entry in the table
   Value *iklass = builder()->CreateInlineOop(method->holder());
@@ -1327,7 +1335,7 @@ void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass)
   builder()->CreateCondBr(
     builder()->CreateICmpNE(
       builder()->CreateCall2(
-        SharkRuntime::is_subtype_of(), check_klass, object_klass),
+        builder()->is_subtype_of(), check_klass, object_klass),
       LLVMValue::jbyte_constant(0)),
     is_instance, not_instance);
 
@@ -1483,13 +1491,13 @@ void SharkTopLevelBlock::do_new()
 
     // Heap allocation
     Value *top_addr = builder()->CreateIntToPtr(
-	builder()->pointer_constant(Universe::heap()->top_addr()),
+	LLVMValue::intptr_constant((intptr_t) Universe::heap()->top_addr()),
       PointerType::getUnqual(SharkType::intptr_type()),
       "top_addr");
 
     Value *end = builder()->CreateLoad(
       builder()->CreateIntToPtr(
-        builder()->pointer_constant(Universe::heap()->end_addr()),
+        LLVMValue::intptr_constant((intptr_t) Universe::heap()->end_addr()),
         PointerType::getUnqual(SharkType::intptr_type())),
       "end");
 
@@ -1565,7 +1573,7 @@ void SharkTopLevelBlock::do_new()
 
   // The slow path
   call_vm(
-    SharkRuntime::new_instance(),
+    builder()->new_instance(),
     LLVMValue::jint_constant(iter()->get_klass_index()),
     EX_CHECK_FULL);
   slow_object = function()->CreateGetVMResult();
@@ -1595,7 +1603,7 @@ void SharkTopLevelBlock::do_newarray()
   BasicType type = (BasicType) iter()->get_index();
 
   call_vm(
-    SharkRuntime::newarray(),
+    builder()->newarray(),
     LLVMValue::jint_constant(type),
     pop()->jint_value(),
     EX_CHECK_FULL);
@@ -1618,7 +1626,7 @@ void SharkTopLevelBlock::do_anewarray()
   }
 
   call_vm(
-    SharkRuntime::anewarray(),
+    builder()->anewarray(),
     LLVMValue::jint_constant(iter()->get_klass_index()),
     pop()->jint_value(),
     EX_CHECK_FULL);
@@ -1650,7 +1658,7 @@ void SharkTopLevelBlock::do_multianewarray()
   }
 
   call_vm(
-    SharkRuntime::multianewarray(),
+    builder()->multianewarray(),
     LLVMValue::jint_constant(iter()->get_klass_index()),
     LLVMValue::jint_constant(ndims),
     builder()->CreateStructGEP(dimensions, 0),
@@ -1764,7 +1772,7 @@ void SharkTopLevelBlock::acquire_lock(Value *lockee, int exception_action)
   // It's not a recursive case so we need to drop into the runtime
   builder()->SetInsertPoint(not_recursive);
   call_vm(
-    SharkRuntime::monitorenter(), monitor_addr,
+    builder()->monitorenter(), monitor_addr,
     exception_action | EAM_MONITOR_FUDGE);
   BasicBlock *acquired_slow = builder()->GetInsertBlock();
   builder()->CreateBr(lock_acquired);  
@@ -1817,7 +1825,7 @@ void SharkTopLevelBlock::release_lock(int exception_action)
 
   // Need to drop into the runtime to release this one
   builder()->SetInsertPoint(slow_path);
-  call_vm(SharkRuntime::monitorexit(), monitor_addr, exception_action);
+  call_vm(builder()->monitorexit(), monitor_addr, exception_action);
   BasicBlock *released_slow = builder()->GetInsertBlock();
   builder()->CreateBr(lock_released);  
 

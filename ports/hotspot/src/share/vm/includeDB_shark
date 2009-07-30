@@ -72,7 +72,6 @@ sharkBlock.cpp                          shark_globals.hpp
 sharkBlock.cpp                          sharkBlock.hpp
 sharkBlock.cpp                          sharkBuilder.hpp
 sharkBlock.cpp                          sharkConstant.hpp
-sharkBlock.cpp                          sharkRuntime.hpp
 sharkBlock.cpp                          sharkState.hpp
 sharkBlock.cpp                          sharkValue.hpp
 
@@ -149,7 +148,6 @@ sharkCompiler.cpp                       sharkCompiler.hpp
 sharkCompiler.cpp                       sharkEntry.hpp
 sharkCompiler.cpp                       sharkFunction.hpp
 sharkCompiler.cpp                       sharkMemoryManager.hpp
-sharkCompiler.cpp                       sharkRuntime.hpp
 
 sharkCompiler.hpp                       abstractCompiler.hpp
 sharkCompiler.hpp                       ciEnv.hpp
@@ -212,7 +210,6 @@ sharkIntrinsics.cpp                     ciMethod.hpp
 sharkIntrinsics.cpp                     llvmHeaders.hpp
 sharkIntrinsics.cpp                     shark_globals.hpp
 sharkIntrinsics.cpp                     sharkIntrinsics.hpp
-sharkIntrinsics.cpp                     sharkRuntime.hpp
 sharkIntrinsics.cpp                     sharkState.hpp
 sharkIntrinsics.cpp                     sharkValue.hpp
 
@@ -246,15 +243,12 @@ sharkRuntime.cpp                        biasedLocking.hpp
 sharkRuntime.cpp                        deoptimization.hpp
 sharkRuntime.cpp                        llvmHeaders.hpp
 sharkRuntime.cpp                        klassOop.hpp
-sharkRuntime.cpp                        sharkBuilder.hpp
 sharkRuntime.cpp                        sharkRuntime.hpp
-sharkRuntime.cpp                        sharkType.hpp
 sharkRuntime.cpp                        thread.hpp
 
 sharkRuntime.hpp                        allocation.hpp
 sharkRuntime.hpp                        llvmHeaders.hpp
 sharkRuntime.hpp                        klassOop.hpp
-sharkRuntime.hpp                        sharkBuilder.hpp
 sharkRuntime.hpp                        thread.hpp
 
 sharkState.cpp                          allocation.hpp
@@ -298,7 +292,6 @@ sharkTopLevelBlock.cpp                  sharkTopLevelBlock.hpp
 sharkTopLevelBlock.cpp                  sharkBuilder.hpp
 sharkTopLevelBlock.cpp                  sharkConstant.hpp
 sharkTopLevelBlock.cpp                  sharkInliner.hpp
-sharkTopLevelBlock.cpp                  sharkRuntime.hpp
 sharkTopLevelBlock.cpp                  sharkState.hpp
 sharkTopLevelBlock.cpp                  sharkValue.hpp
 

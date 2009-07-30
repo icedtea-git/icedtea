@@ -174,13 +174,6 @@ class SharkBlock : public SharkTargetInvariants {
  protected:
   virtual void do_zero_check(SharkValue* value);
 
-  // Leaf calls
- protected:
-  llvm::CallInst* call_vm_leaf(llvm::Constant* callee, llvm::Value* arg1)
-  {
-    return builder()->CreateCall(callee, arg1);
-  }
-
   // Zero checking
  protected:
   void check_null(SharkValue* object)

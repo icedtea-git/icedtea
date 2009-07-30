@@ -92,34 +92,34 @@ void SharkIntrinsics::do_intrinsic()
     do_Math_minmax(llvm::ICmpInst::ICMP_SGE);
     break;
   case vmIntrinsics::_dabs:
-    do_Math_1to1(SharkRuntime::fabs());
+    do_Math_1to1(builder()->fabs());
     break;
   case vmIntrinsics::_dsin:
-    do_Math_1to1(builder()->llvm_sin_fn());
+    do_Math_1to1(builder()->sin());
     break;
   case vmIntrinsics::_dcos:
-    do_Math_1to1(builder()->llvm_cos_fn());
+    do_Math_1to1(builder()->cos());
     break;
   case vmIntrinsics::_dtan:
-    do_Math_1to1(SharkRuntime::tan());
+    do_Math_1to1(builder()->tan());
     break;
   case vmIntrinsics::_datan2:
-    do_Math_2to1(SharkRuntime::atan2());
+    do_Math_2to1(builder()->atan2());
     break;
   case vmIntrinsics::_dsqrt:
-    do_Math_1to1(builder()->llvm_sqrt_fn());
+    do_Math_1to1(builder()->sqrt());
     break;
   case vmIntrinsics::_dlog:
-    do_Math_1to1(builder()->llvm_log_fn());
+    do_Math_1to1(builder()->log());
     break;
   case vmIntrinsics::_dlog10:
-    do_Math_1to1(builder()->llvm_log10_fn());
+    do_Math_1to1(builder()->log10());
     break;
   case vmIntrinsics::_dpow:
-    do_Math_2to1(builder()->llvm_pow_fn());
+    do_Math_2to1(builder()->pow());
     break;
   case vmIntrinsics::_dexp:
-    do_Math_1to1(builder()->llvm_exp_fn());
+    do_Math_1to1(builder()->exp());
     break;
 
     // java.lang.Object
@@ -181,7 +181,7 @@ void SharkIntrinsics::do_Math_minmax(ICmpInst::Predicate p)
       sa->zero_checked() && sb->zero_checked()));
 }
 
-void SharkIntrinsics::do_Math_1to1(Constant *function)
+void SharkIntrinsics::do_Math_1to1(Value *function)
 {
   SharkValue *empty = state()->pop();
   assert(empty == NULL, "should be");
@@ -192,7 +192,7 @@ void SharkIntrinsics::do_Math_1to1(Constant *function)
   state()->push(NULL);
 }
 
-void SharkIntrinsics::do_Math_2to1(Constant *function)
+void SharkIntrinsics::do_Math_2to1(Value *function)
 {
   SharkValue *empty = state()->pop();
   assert(empty == NULL, "should be");
@@ -235,7 +235,7 @@ void SharkIntrinsics::do_System_currentTimeMillis()
 {
   state()->push(
     SharkValue::create_jlong(
-      builder()->CreateCall(SharkRuntime::current_time_millis()),
+      builder()->CreateCall(builder()->current_time_millis()),
       false));
   state()->push(NULL);
 }
@@ -264,7 +264,7 @@ void SharkIntrinsics::do_Unsafe_compareAndSwapInt()
 
   // Convert the offset
   offset = builder()->CreateCall(
-    SharkRuntime::unsafe_field_offset_to_byte_offset(),
+    builder()->unsafe_field_offset_to_byte_offset(),
     offset);
 
   // Locate the field

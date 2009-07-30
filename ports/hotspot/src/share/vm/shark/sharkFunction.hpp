@@ -30,19 +30,21 @@ class SharkFunction : public SharkTargetInvariants {
  public:
   static llvm::Function* build(SharkCompiler* compiler,
                                ciEnv*         env,
+                               SharkBuilder*  builder,
                                ciTypeFlow*    flow,
                                const char*    name)
   {
-    SharkFunction function(compiler, env, flow, name);
+    SharkFunction function(compiler, env, builder, flow, name);
     return function.function();
   }
 
  private:
   SharkFunction(SharkCompiler* compiler,
                 ciEnv*         env,
+                SharkBuilder*  builder,
                 ciTypeFlow*    flow,
                 const char*    name)
-    : SharkTargetInvariants(compiler, env, flow) { initialize(name); }
+    : SharkTargetInvariants(compiler, env, builder, flow) { initialize(name); }
 
  private:
   void initialize(const char* name);

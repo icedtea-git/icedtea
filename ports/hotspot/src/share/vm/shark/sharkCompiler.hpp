@@ -23,8 +23,6 @@
  *
  */
 
-class SharkBuilder;
-
 class SharkCompiler : public AbstractCompiler {
  public:
   // Creation
@@ -50,7 +48,6 @@ class SharkCompiler : public AbstractCompiler {
   // LLVM interface
  private:
   llvm::Module*          _module;
-  SharkBuilder*          _builder;
   SharkMemoryManager*    _memory_manager;
   llvm::ExecutionEngine* _execution_engine;
 
@@ -58,10 +55,6 @@ class SharkCompiler : public AbstractCompiler {
   llvm::Module* module() const
   {
     return _module;
-  }
-  SharkBuilder* builder() const
-  {
-    return _builder;
   }
   SharkMemoryManager* memory_manager() const
   {

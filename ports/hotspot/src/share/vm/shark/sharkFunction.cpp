@@ -42,7 +42,7 @@ void SharkFunction::initialize(const char *name)
   method->setName("method");
   Argument *base_pc = ai++;
   base_pc->setName("base_pc");
-  builder()->code_buffer()->set_base_pc(base_pc);
+  code_buffer()->set_base_pc(base_pc);
   Argument *thread = ai++;
   thread->setName("thread");
   set_thread(thread);

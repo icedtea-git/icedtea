@@ -31,25 +31,30 @@
 
 class SharkCompileInvariants : public ResourceObj {
  protected:
-  SharkCompileInvariants(SharkCompiler* compiler, ciEnv* env)
+  SharkCompileInvariants(SharkCompiler* compiler,
+                         ciEnv*         env,
+                         SharkBuilder*  builder)
     : _compiler(compiler),
       _env(env),
+      _builder(builder),
       _thread(NULL) {}
 
   SharkCompileInvariants(const SharkCompileInvariants* parent)
     : _compiler(parent->_compiler),
       _env(parent->_env),
+      _builder(parent->_builder),
       _thread(parent->_thread) {}
 
  private:
   SharkCompiler* _compiler;
   ciEnv*         _env;
+  SharkBuilder*  _builder;
   llvm::Value*   _thread;
 
   // The SharkCompiler that is compiling this method.  Holds the
-  // classes that form the interface with LLVM (the builder, the
-  // module, the memory manager, etc) and provides the compile()
-  // method to convert LLVM functions to native code.
+  // classes that form the interface with LLVM (the module, the
+  // memory manager, etc) and provides the compile() method to
+  // convert LLVM functions to native code.
  protected:
   SharkCompiler* compiler() const
   {
@@ -71,6 +76,13 @@ class SharkCompileInvariants : public ResourceObj {
     return _env;
   }
 
+  // The SharkBuilder that is used to build LLVM IR.
+ protected:
+  SharkBuilder* builder() const
+  {
+    return _builder;
+  }
+
   // Pointer to this thread's JavaThread object.  This is not
   // available until a short way into SharkFunction creation
   // so a setter is required.  Assertions are used to enforce
@@ -89,10 +101,6 @@ class SharkCompileInvariants : public ResourceObj {
   
   // Objects that handle various aspects of the compilation.
  protected:
-  SharkBuilder* builder() const
-  {
-    return compiler()->builder();
-  }
   DebugInformationRecorder* debug_info() const
   {
     return env()->debug_info();
@@ -100,6 +108,10 @@ class SharkCompileInvariants : public ResourceObj {
   Dependencies* dependencies() const
   {
     return env()->dependencies();
+  }
+  SharkCodeBuffer* code_buffer() const
+  {
+    return builder()->code_buffer();
   }
 
   // That well-known class...
@@ -112,8 +124,11 @@ class SharkCompileInvariants : public ResourceObj {
 
 class SharkTargetInvariants : public SharkCompileInvariants {
  protected:
-  SharkTargetInvariants(SharkCompiler* compiler, ciEnv* env, ciTypeFlow* flow)
-    : SharkCompileInvariants(compiler, env),
+  SharkTargetInvariants(SharkCompiler* compiler,
+                        ciEnv*         env,
+                        SharkBuilder*  builder,
+                        ciTypeFlow*    flow)
+    : SharkCompileInvariants(compiler, env, builder),
       _target(flow->method()),
       _flow(flow),
       _max_monitors(count_monitors()) {}

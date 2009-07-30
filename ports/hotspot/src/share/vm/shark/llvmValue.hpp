@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -77,6 +77,14 @@ class LLVMValue : public AllStatic {
   }
 
  public:
+  static llvm::ConstantInt* bit_constant(int value)
+  {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::getGlobalContext().getConstantInt(llvm::Type::Int1Ty, value, false);
+#else
+    return llvm::ConstantInt::get(llvm::Type::Int1Ty, value, false);
+#endif
+  }
   static llvm::ConstantInt* intptr_constant(intptr_t value)
   {
 #if SHARK_LLVM_VERSION >= 26

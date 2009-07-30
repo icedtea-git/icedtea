@@ -46,8 +46,8 @@ class SharkIntrinsics : public SharkTargetInvariants {
 
  private:
   void do_Math_minmax(llvm::ICmpInst::Predicate p);
-  void do_Math_1to1(llvm::Constant* function);
-  void do_Math_2to1(llvm::Constant* function);
+  void do_Math_1to1(llvm::Value* function);
+  void do_Math_2to1(llvm::Value* function);
   void do_Object_getClass();
   void do_System_currentTimeMillis();
   void do_Thread_currentThread();

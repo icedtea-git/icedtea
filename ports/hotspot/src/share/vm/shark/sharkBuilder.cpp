@@ -28,39 +28,7 @@
 
 using namespace llvm;
 
-#ifdef ARM
-/*
- * ARM lacks atomic operation implementation in LLVM
- * http://llvm.org/bugs/show_bug.cgi?id=3877
- * 
- * These two functions zero_cmpxchg_int_fn and zero_cmpxchg_ptr_fn
- * are defined so that they can be inserted into llvm as a workaround to
- * make shark reroute all atomic calls back to the implementation in zero. 
- * The actual insertion are done in SharkBuilder::init_external_functions().
- */
-
-extern "C" {
-  jint zero_cmpxchg_int_fn(volatile jint *ptr,
-                           jint          *oldval,
-                           jint          *newval)
-  {
-    return Atomic::cmpxchg(*newval,
-                           ptr,
-                           *oldval);
-  }
-
-  intptr_t* zero_cmpxchg_ptr_fn(volatile void* ptr,
-                                intptr_t*      oldval,
-                                intptr_t*      newval)
-  { 
-    return (intptr_t *) Atomic::cmpxchg_ptr((void *) newval,
-                                                     ptr,
-                                            (void *) oldval);
-  }
-};
-#endif
-
-SharkBuilder::SharkBuilder(SharkCompiler* compiler)
+SharkBuilder::SharkBuilder(Module* module, SharkCodeBuffer* code_buffer)
 #if SHARK_LLVM_VERSION >= 26
   // LLVM 2.6 requires a LLVMContext during IRBuilder construction.
   // getGlobalConext() returns one that can be used as long as the shark
@@ -68,149 +36,480 @@ SharkBuilder::SharkBuilder(SharkCompiler* compiler)
   : IRBuilder<>(getGlobalContext()),
 #else
   : IRBuilder<>(),
-#endif
-    _compiler(compiler)
+#endif // SHARK_LLVM_VERSION >= 26
+    _module(module),
+    _code_buffer(code_buffer)
 {
-  init_external_functions();
 }
 
-Constant* SharkBuilder::make_function(intptr_t            addr,
-                                      const FunctionType* sig,
-                                      const char*         name)
+// Helpers for accessing structures
+Value* SharkBuilder::CreateAddressOfStructEntry(Value*      base,
+                                                ByteSize    offset,
+                                                const Type* type,
+                                                const char* name)
 {
-  Constant *func = make_pointer(addr, sig);
+  return CreateBitCast(CreateStructGEP(base, in_bytes(offset)), type, name);
+}
+
+LoadInst* SharkBuilder::CreateValueOfStructEntry(Value*      base,
+                                                 ByteSize    offset,
+                                                 const Type* type,
+                                                 const char* name)
+{
+  return CreateLoad(
+    CreateAddressOfStructEntry(
+      base, offset, PointerType::getUnqual(type)),
+    name);
+}
+
+// Helpers for accessing arrays
+
+LoadInst* SharkBuilder::CreateArrayLength(Value* arrayoop)
+{
+  return CreateValueOfStructEntry(
+    arrayoop, in_ByteSize(arrayOopDesc::length_offset_in_bytes()),
+    SharkType::jint_type(), "length");
+}
+
+Value* SharkBuilder::CreateArrayAddress(Value*      arrayoop,
+                                        const Type* element_type,
+                                        int         element_bytes,
+                                        ByteSize    base_offset,
+                                        Value*      index,
+                                        const char* name)
+{
+  Value* offset = CreateIntCast(index, SharkType::intptr_type(), false);
+  if (element_bytes != 1)
+    offset = CreateShl(
+      offset,
+      LLVMValue::intptr_constant(exact_log2(element_bytes)));
+  offset = CreateAdd(
+    LLVMValue::intptr_constant(in_bytes(base_offset)), offset);
+
+  return CreateIntToPtr(
+    CreateAdd(CreatePtrToInt(arrayoop, SharkType::intptr_type()), offset),
+    PointerType::getUnqual(element_type),
+    name);
+}
+
+Value* SharkBuilder::CreateArrayAddress(Value*      arrayoop,
+                                        BasicType   basic_type,
+                                        ByteSize    base_offset,
+                                        Value*      index,
+                                        const char* name)
+{
+  return CreateArrayAddress(
+    arrayoop,
+    SharkType::to_arrayType(basic_type),
+    type2aelembytes(basic_type),
+    base_offset, index, name);
+}
+
+Value* SharkBuilder::CreateArrayAddress(Value*      arrayoop,
+                                        BasicType   basic_type,
+                                        Value*      index,
+                                        const char* name)
+{
+  return CreateArrayAddress(
+    arrayoop, basic_type,
+    in_ByteSize(arrayOopDesc::base_offset_in_bytes(basic_type)),
+    index, name);
+}
+
+// Helpers for creating intrinsics and external functions.
+
+const Type* SharkBuilder::make_type(char type, bool void_ok)
+{
+  switch (type) {
+    // Primitive types
+  case 'c':
+    return SharkType::jbyte_type();
+  case 'i':
+    return SharkType::jint_type();
+  case 'l':
+    return SharkType::jlong_type();
+  case 'x':
+    return SharkType::intptr_type();
+  case 'f':
+    return SharkType::jfloat_type();
+  case 'd':
+    return SharkType::jdouble_type();
+
+    // Pointers to primitive types
+  case 'C':
+  case 'I':
+  case 'L':
+  case 'X':
+  case 'F':
+  case 'D':
+    return PointerType::getUnqual(make_type(tolower(type), false));
+    
+    // VM objects
+  case 'T':
+    return SharkType::thread_type();
+  case 'M':
+    return PointerType::getUnqual(SharkType::monitor_type());
+  case 'O':
+    return SharkType::oop_type();
+
+    // Miscellaneous
+  case 'v':
+    assert(void_ok, "should be");
+    return Type::VoidTy;
+  case '1':
+    return Type::Int1Ty;
+
+  default:
+    ShouldNotReachHere();
+  }
+}
+
+const FunctionType* SharkBuilder::make_ftype(const char* params,
+                                             const char* ret)
+{
+  std::vector<const Type*> param_types;
+  for (const char* c = params; *c; c++)
+    param_types.push_back(make_type(*c, false));
+
+  assert(strlen(ret) == 1, "should be");
+  const Type *return_type = make_type(*ret, true);
+
+  return FunctionType::get(return_type, param_types, false);
+}
+
+// Create an object representing an intrinsic or external function by
+// referencing the symbol by name.  This is the LLVM-style approach,
+// but it cannot be used on functions within libjvm.so its symbols
+// are not exported.  Note that you cannot make this work simply by
+// exporting the symbols, as some symbols have the same names as
+// symbols in the standard libraries (eg, atan2, fabs) and would
+// obscure them were they visible.
+Value* SharkBuilder::make_function(const char* name,
+                                   const char* params,
+                                   const char* ret)
+{
+  return module()->getOrInsertFunction(name, make_ftype(params, ret));
+}
+
+// Create an object representing an external function by inlining a
+// function pointer in the code.  This is not the LLVM way, but it's
+// the only way to access functions in libjvm.so and functions like
+// __kernel_dmb on ARM which is accessed via an absolute address.
+Value* SharkBuilder::make_function(address     func,
+                                   const char* params,
+                                   const char* ret)
+{
+  return CreateIntToPtr(
+    LLVMValue::intptr_constant((intptr_t) func),
+    PointerType::getUnqual(make_ftype(params, ret)));
+}
+
+// VM calls
+
+Value* SharkBuilder::find_exception_handler()
+{
+  return make_function(
+    (address) SharkRuntime::find_exception_handler, "TIi", "i");
+}
+
+Value* SharkBuilder::monitorenter()
+{
+  return make_function((address) SharkRuntime::monitorenter, "TM", "v");
+}
+
+Value* SharkBuilder::monitorexit()
+{
+  return make_function((address) SharkRuntime::monitorexit, "TM", "v");
+}
+
+Value* SharkBuilder::new_instance()
+{
+  return make_function((address) SharkRuntime::new_instance, "Ti", "v");
+}
+
+Value* SharkBuilder::newarray()
+{
+  return make_function((address) SharkRuntime::newarray, "Tii", "v");
+}
+
+Value* SharkBuilder::anewarray()
+{
+  return make_function((address) SharkRuntime::anewarray, "Tii", "v");
+}
+
+Value* SharkBuilder::multianewarray()
+{
+  return make_function((address) SharkRuntime::multianewarray, "TiiI", "v");
+}
+
+Value* SharkBuilder::register_finalizer()
+{
+  return make_function((address) SharkRuntime::register_finalizer, "TO", "v");
+}
+
+Value* SharkBuilder::safepoint()
+{
+  return make_function((address) SafepointSynchronize::block, "T", "v");
+}
+
+Value* SharkBuilder::throw_ArrayIndexOutOfBoundsException()
+{
+  return make_function(
+    (address) SharkRuntime::throw_ArrayIndexOutOfBoundsException, "TCii", "v");
+}
+
+Value* SharkBuilder::throw_NullPointerException()
+{
+  return make_function(
+    (address) SharkRuntime::throw_NullPointerException, "TCi", "v");
+}
+
+// High-level non-VM calls
+
+Value* SharkBuilder::f2i()
+{
+  return make_function((address) SharedRuntime::f2i, "f", "i");
+}
+
+Value* SharkBuilder::f2l()
+{
+  return make_function((address) SharedRuntime::f2l, "f", "l");
+}
+
+Value* SharkBuilder::d2i()
+{
+  return make_function((address) SharedRuntime::d2i, "d", "i");
+}
+
+Value* SharkBuilder::d2l()
+{
+  return make_function((address) SharedRuntime::d2l, "d", "l");
+}
+
+Value* SharkBuilder::is_subtype_of()
+{
+  return make_function((address) SharkRuntime::is_subtype_of, "OO", "c");
+}
+
+Value* SharkBuilder::current_time_millis()
+{
+  return make_function((address) os::javaTimeMillis, "", "l");
+}
+
+Value* SharkBuilder::sin()
+{
+  return make_function("llvm.sin.f64", "d", "d");
+}
+
+Value* SharkBuilder::cos()
+{
+  return make_function("llvm.cos.f64", "d", "d");
+}
+
+Value* SharkBuilder::tan()
+{
+  return make_function((address) ::tan, "d", "d");
+}
+
+Value* SharkBuilder::atan2()
+{
+  return make_function((address) ::atan2, "dd", "d");
+}
+
+Value* SharkBuilder::sqrt()
+{
+  return make_function("llvm.sqrt.f64", "d", "d");
+}
+
+Value* SharkBuilder::log()
+{
+  return make_function("llvm.log.f64", "d", "d");
+}
+
+Value* SharkBuilder::log10()
+{
+  return make_function("llvm.log10.f64", "d", "d");
+}
+
+Value* SharkBuilder::pow()
+{
+  return make_function("llvm.pow.f64", "dd", "d");
+}
+
+Value* SharkBuilder::exp()
+{
+  return make_function("llvm.exp.f64", "d", "d");
+}
+
+Value* SharkBuilder::fabs()
+{
+  return make_function((address) ::fabs, "d", "d");
+}
+
+Value* SharkBuilder::unsafe_field_offset_to_byte_offset()
+{
+  extern jlong Unsafe_field_offset_to_byte_offset(jlong field_offset);
+  return make_function((address) Unsafe_field_offset_to_byte_offset, "l", "l");
+}
+
+// Uncommon trap
+
+Value* SharkBuilder::uncommon_trap()
+{
+  return make_function((address) SharkRuntime::uncommon_trap, "Ti", "v");
+}
+
+// Low-level non-VM calls
+
+// The ARM-specific code here is to work around unimplemented
+// atomic exchange and memory barrier intrinsics in LLVM.
+//
+// Delegating to external functions for these would normally
+// incur a speed penalty, but Linux on ARM is a special case
+// in that atomic operations on that platform are handled by
+// external functions anyway.  It would be *preferable* for
+// the calls to be hidden away in LLVM, but it's not hurting
+// performance so having the calls here is acceptable.
+//
+// If you are building Shark on a platform without atomic
+// exchange and/or memory barrier intrinsics then it is only
+// acceptable to mimic this approach if your platform cannot
+// perform these operations without delegating to a function.
+
+#ifdef ARM
+static jint zero_cmpxchg_int(volatile jint *ptr, jint *oldval, jint newval)
+{
+  return Atomic::cmpxchg(*newval, ptr, *oldval);
+}
+#endif // ARM
+
+Value* SharkBuilder::cmpxchg_int()
+{
+  return make_function(
+#ifdef ARM
+    (address) zero_cmpxchg_int,
+#else
+    "llvm.atomic.cmp.swap.i32",
+#endif // ARM
+    "Iii", "i");
+}
+
+#ifdef ARM
+static intptr_t zero_cmpxchg_ptr(volatile intptr_t* ptr,
+                                 intptr_t*          oldval,
+                                 intptr_t*          newval)
+{
+  return Atomic::cmpxchg_ptr(*newval, ptr, *oldval);
+}
+#endif // ARM
+
+Value* SharkBuilder::cmpxchg_ptr()
+{
+  return make_function(
+#ifdef ARM
+    (address) zero_cmpxchg_ptr,
+#else
+    "llvm.atomic.cmp.swap.i" LP64_ONLY("64") NOT_LP64("32"),
+#endif // ARM
+    "Xxx", "x");
+}
+
+Value* SharkBuilder::memory_barrier()
+{
+  return make_function(
+#ifdef ARM
+    (address) 0xffff0fa0, // __kernel_dmb
+#else
+    "llvm.memory.barrier",
+#endif // ARM
+    "11111", "v");
+}
+
+Value* SharkBuilder::memset()
+{
+  return make_function("llvm.memset.i32", "Ccii", "v");
+}
+
+Value* SharkBuilder::unimplemented()
+{
+  return make_function((address) report_unimplemented, "Ci", "v");
+}
+
+Value* SharkBuilder::should_not_reach_here()
+{
+  return make_function((address) report_should_not_reach_here, "Ci", "v");
+}
+
+Value* SharkBuilder::dump()
+{
+  return make_function((address) SharkRuntime::dump, "Cx", "v");
+}
+
+// Public interface to low-level non-VM calls
+
+CallInst* SharkBuilder::CreateCmpxchgInt(Value* exchange_value,
+                                         Value* dst,
+                                         Value* compare_value)
+{
+  return CreateCall3(cmpxchg_int(), dst, compare_value, exchange_value);
+}
+
+CallInst* SharkBuilder::CreateCmpxchgPtr(Value* exchange_value,
+                                         Value* dst,
+                                         Value* compare_value)
+{
+  return CreateCall3(cmpxchg_ptr(), dst, compare_value, exchange_value);
+}
+
+CallInst *SharkBuilder::CreateMemoryBarrier(int flags)
+{
+  Value *args[] = {
+    LLVMValue::bit_constant((flags & BARRIER_LOADLOAD) ? 1 : 0),
+    LLVMValue::bit_constant((flags & BARRIER_LOADSTORE) ? 1 : 0),
+    LLVMValue::bit_constant((flags & BARRIER_STORELOAD) ? 1 : 0),
+    LLVMValue::bit_constant((flags & BARRIER_STORESTORE) ? 1 : 0),
+    LLVMValue::bit_constant(0)};
+
+  return CreateCall(memory_barrier(), args, args + 5);
+}
+
+CallInst* SharkBuilder::CreateMemset(Value* dst,
+                                     Value* value,
+                                     Value* len,
+                                     Value* align)
+{
+  return CreateCall4(memset(), dst, value, len, align);
+}
+
+CallInst* SharkBuilder::CreateUnimplemented(const char* file, int line)
+{
+  return CreateCall2(
+    unimplemented(),
+    CreateIntToPtr(
+      LLVMValue::intptr_constant((intptr_t) file),
+      PointerType::getUnqual(SharkType::jbyte_type())),
+    LLVMValue::jint_constant(line));
+}
+
+CallInst* SharkBuilder::CreateShouldNotReachHere(const char* file, int line)
+{
+  return CreateCall2(
+    should_not_reach_here(),
+    CreateIntToPtr(
+      LLVMValue::intptr_constant((intptr_t) file),
+      PointerType::getUnqual(SharkType::jbyte_type())),
+    LLVMValue::jint_constant(line));
+}
 
 #ifndef PRODUCT
-  ResourceMark rm;
-
-  // Use a trampoline to make dumped code more readable
-  Function *trampoline = (Function *) module()->getOrInsertFunction(name, sig);
-  SetInsertPoint(BasicBlock::Create("", trampoline));
-
-  Value **args = NEW_RESOURCE_ARRAY(Value*, trampoline->arg_size());
-  Function::arg_iterator ai = trampoline->arg_begin();
-  for (unsigned i = 0; i < trampoline->arg_size(); i++)
-    args[i] = ai++;
-
-  Value *result = CreateCall(func, args, args + trampoline->arg_size());
-  if (sig->getReturnType() == Type::VoidTy)
-    CreateRetVoid();
-  else
-    CreateRet(result);
-
-  func = trampoline;
-#endif // !PRODUCT
-
-  return func;
-}
-
-void SharkBuilder::init_external_functions()
+CallInst* SharkBuilder::CreateDump(Value* value)
 {
-  std::vector<const Type*> params;
-  params.push_back(PointerType::getUnqual(SharkType::jbyte_type()));
-  params.push_back(SharkType::jbyte_type());
-  params.push_back(SharkType::jint_type());
-  params.push_back(SharkType::jint_type());
-  FunctionType *type = FunctionType::get(Type::VoidTy, params, false);
-  set_llvm_memset_fn(module()->getOrInsertFunction("llvm.memset.i32", type));
-
-  params.clear();
-  params.push_back(PointerType::getUnqual(SharkType::jint_type()));
-  params.push_back(SharkType::jint_type());
-  params.push_back(SharkType::jint_type());
-  type = FunctionType::get(SharkType::jint_type(), params, false);
-  set_llvm_cmpxchg_int_fn(
-#ifdef ARM
-    make_function(
-      (intptr_t) zero_cmpxchg_int_fn,
-      type,
-      "zero_cmpxchg_int_fn"));
-#else
-    module()->getOrInsertFunction("llvm.atomic.cmp.swap.i32", type));
-#endif
-
-  params.clear();
-  params.push_back(PointerType::getUnqual(SharkType::intptr_type()));
-  params.push_back(SharkType::intptr_type());
-  params.push_back(SharkType::intptr_type());
-  type = FunctionType::get(SharkType::intptr_type(), params, false);
-  set_llvm_cmpxchg_ptr_fn(
-#ifdef ARM
-    make_function(
-      (intptr_t) zero_cmpxchg_ptr_fn,
-      type,
-      "zero_cmpxchg_ptr_fn"));
-#else
-    module()->getOrInsertFunction(
-      "llvm.atomic.cmp.swap.i" LP64_ONLY("64") NOT_LP64("32"), type));
-#endif
-
- /* 
-  *  The five booleans passed to llvm.memory.barrier are used like this:
-  *  The first four arguments enables a specific barrier in this order:
-  *  load-load, load-store, store-load and store-store.
-  *  The fith argument specifies that the barrier applies to io or device
-  *  or uncached memory.
-  */
-  params.clear();
-  for (int i = 0; i < 5; i++)
-    params.push_back(Type::Int1Ty);
-  type = FunctionType::get(Type::VoidTy, params, false);
-  set_llvm_memory_barrier_fn(
-#ifdef ARM
-    make_function(
-      0xffff0fa0, // __kernel_dmb
-      type,
-      "__kernel_dmb"));
-#else
-    module()->getOrInsertFunction("llvm.memory.barrier", type));
-#endif
-
-  params.clear();
-  params.push_back(SharkType::jdouble_type());
-  type = FunctionType::get(SharkType::jdouble_type(), params, false);
-  set_llvm_sin_fn  (module()->getOrInsertFunction("llvm.sin.f64",   type));
-  set_llvm_cos_fn  (module()->getOrInsertFunction("llvm.cos.f64",   type));
-  set_llvm_sqrt_fn (module()->getOrInsertFunction("llvm.sqrt.f64",  type));
-  set_llvm_log_fn  (module()->getOrInsertFunction("llvm.log.f64",   type));
-  set_llvm_log10_fn(module()->getOrInsertFunction("llvm.log10.f64", type));
-  set_llvm_exp_fn  (module()->getOrInsertFunction("llvm.exp.f64",   type));  
-
-  params.clear();
-  params.push_back(SharkType::jdouble_type());
-  params.push_back(SharkType::jdouble_type());
-  type = FunctionType::get(SharkType::jdouble_type(), params, false);
-  set_llvm_pow_fn(module()->getOrInsertFunction("llvm.pow.f64", type));  
-}
-
-CallInst* SharkBuilder::CreateDump(llvm::Value* value)
-{
-  Constant *const_name;
+  const char *name;
   if (value->hasName())
-#if SHARK_LLVM_VERSION >= 26
-    const_name = getGlobalContext().getConstantArray(value->getName());
+    // XXX this leaks, but it's only debug code
+    name = strdup(value->getName().c_str());
   else
-    const_name = getGlobalContext().getConstantArray("unnamed_value");
-#else
-    const_name = ConstantArray::get(value->getName());
-  else
-    const_name = ConstantArray::get("unnamed_value");
-#endif
-
-  Value *name = CreatePtrToInt(
-    CreateStructGEP(
-      new GlobalVariable(
-#if SHARK_LLVM_VERSION >= 26
-        // LLVM 2.6 requires a LLVMContext during GlobalVariable construction.
-        // getGlobalConext() returns one that can be used as long as the shark
-        // compiler are single-threaded.
-        getGlobalContext(),
-#endif
-        const_name->getType(),
-        true, GlobalValue::InternalLinkage,
-        const_name, "dump", module()),
-      0),
-    SharkType::intptr_type());
+    name = "unnamed_value";
 
   if (isa<PointerType>(value->getType()))
     value = CreatePtrToInt(value, SharkType::intptr_type());
@@ -219,65 +518,77 @@ CallInst* SharkBuilder::CreateDump(llvm::Value* value)
   else
     Unimplemented();
 
-  Value *args[] = {name, value};
-  return CreateCall2(SharkRuntime::dump(), name, value);
-}
-
-CallInst* SharkBuilder::CreateCmpxchgInt(Value* exchange_value,
-                                         Value* dst,
-                                         Value* compare_value)
-{
-  return CreateCall3(
-    llvm_cmpxchg_int_fn(), dst, compare_value, exchange_value);
-}
-
-CallInst* SharkBuilder::CreateCmpxchgPtr(Value* exchange_value,
-                                         Value* dst,
-                                         Value* compare_value)
-{
-  return CreateCall3(
-    llvm_cmpxchg_ptr_fn(), dst, compare_value, exchange_value);
-}
-
-CallInst* SharkBuilder::CreateMemset(Value* dst,
-                                     Value* value,
-                                     Value* len,
-                                     Value* align)
-{
-  return CreateCall4(llvm_memset_fn(), dst, value, len, align);
-}
-
-CallInst* SharkBuilder::CreateUnimplemented(const char* file, int line)
-{
   return CreateCall2(
-    SharkRuntime::unimplemented(),
-    pointer_constant(file),
-    LLVMValue::jint_constant(line));
+    dump(),
+    CreateIntToPtr(
+      LLVMValue::intptr_constant((intptr_t) name),
+      PointerType::getUnqual(SharkType::jbyte_type())),
+    value);
+}
+#endif // PRODUCT
+
+// HotSpot memory barriers
+
+void SharkBuilder::CreateUpdateBarrierSet(BarrierSet* bs, Value* field)
+{
+  if (bs->kind() != BarrierSet::CardTableModRef)
+    Unimplemented();
+
+  CreateStore(
+    LLVMValue::jbyte_constant(CardTableModRefBS::dirty_card),
+    CreateIntToPtr(
+      CreateAdd(
+        LLVMValue::intptr_constant(
+          (intptr_t) ((CardTableModRefBS *) bs)->byte_map_base),
+        CreateLShr(
+          CreatePtrToInt(field, SharkType::intptr_type()),
+          LLVMValue::intptr_constant(CardTableModRefBS::card_shift))),
+      PointerType::getUnqual(SharkType::jbyte_type())));
 }
 
-CallInst* SharkBuilder::CreateShouldNotReachHere(const char* file, int line)
+// Helpers for accessing the code buffer
+
+Value* SharkBuilder::code_buffer_address(int offset)
 {
-  return CreateCall2(
-    SharkRuntime::should_not_reach_here(),
-    pointer_constant(file),
-    LLVMValue::jint_constant(line));
+  return CreateAdd(
+    code_buffer()->base_pc(),
+    LLVMValue::intptr_constant(offset));
 }
 
-CallInst *SharkBuilder::CreateMemoryBarrier(BarrierFlags flags)
+Value* SharkBuilder::CreateInlineOop(ciObject* object, const char* name)
 {
-  Value *args[] = {
-#if SHARK_LLVM_VERSION >= 26
-    getGlobalContext().getConstantInt(Type::Int1Ty, (flags & BARRIER_LOADLOAD) ? 1 : 0),
-    getGlobalContext().getConstantInt(Type::Int1Ty, (flags & BARRIER_LOADSTORE) ? 1 : 0),
-    getGlobalContext().getConstantInt(Type::Int1Ty, (flags & BARRIER_STORELOAD) ? 1 : 0),
-    getGlobalContext().getConstantInt(Type::Int1Ty, (flags & BARRIER_STORESTORE) ? 1 : 0),
-    getGlobalContext().getConstantInt(Type::Int1Ty, 0)};
-#else
-    ConstantInt::get(Type::Int1Ty, (flags & BARRIER_LOADLOAD) ? 1 : 0),
-    ConstantInt::get(Type::Int1Ty, (flags & BARRIER_LOADSTORE) ? 1 : 0),
-    ConstantInt::get(Type::Int1Ty, (flags & BARRIER_STORELOAD) ? 1 : 0),
-    ConstantInt::get(Type::Int1Ty, (flags & BARRIER_STORESTORE) ? 1 : 0),
-    ConstantInt::get(Type::Int1Ty, 0)};
-#endif
-  return CreateCall(llvm_memory_barrier_fn(), args, args + 5);
+  return CreateLoad(
+    CreateIntToPtr(
+      code_buffer_address(code_buffer()->inline_oop(object)),
+      PointerType::getUnqual(SharkType::jobject_type())),
+    name);
 }
+
+// Helpers for creating basic blocks.
+
+BasicBlock* SharkBuilder::GetBlockInsertionPoint() const
+{
+  BasicBlock *cur = GetInsertBlock();
+
+  // BasicBlock::Create takes an insertBefore argument, so
+  // we need to find the block _after_ the current block
+  Function::iterator iter = cur->getParent()->begin();
+  Function::iterator end  = cur->getParent()->end();
+  while (iter != end) {
+    iter++;
+    if (&*iter == cur) {
+      iter++;
+      break;
+    }
+  }
+
+  if (iter == end)
+    return NULL;
+  else
+    return iter;
+}
+
+BasicBlock* SharkBuilder::CreateBlock(BasicBlock* ip, const char* name) const
+{
+  return BasicBlock::Create(name, GetInsertBlock()->getParent(), ip);
+}  

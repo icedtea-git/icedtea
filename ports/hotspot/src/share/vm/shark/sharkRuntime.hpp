@@ -24,94 +24,32 @@
  */
 
 class SharkRuntime : public AllStatic {
- public:
-  static void initialize(SharkBuilder* builder);
-
   // VM calls
- private:
-  static llvm::Constant* _find_exception_handler;
-  static llvm::Constant* _monitorenter;
-  static llvm::Constant* _monitorexit;
-  static llvm::Constant* _new_instance;
-  static llvm::Constant* _newarray;
-  static llvm::Constant* _anewarray;
-  static llvm::Constant* _multianewarray;
-  static llvm::Constant* _register_finalizer;
-  static llvm::Constant* _safepoint;
-  static llvm::Constant* _throw_ArrayIndexOutOfBoundsException;
-  static llvm::Constant* _throw_NullPointerException;
-
  public:
-  static llvm::Constant* find_exception_handler()
-  {
-    return _find_exception_handler;
-  }
-  static llvm::Constant* monitorenter()
-  {
-    return _monitorenter;
-  }
-  static llvm::Constant* monitorexit()
-  {
-    return _monitorexit;
-  }
-  static llvm::Constant* new_instance()
-  {
-    return _new_instance;
-  }
-  static llvm::Constant* newarray()
-  {
-    return _newarray;
-  }
-  static llvm::Constant* anewarray()
-  {
-    return _anewarray;
-  }
-  static llvm::Constant* multianewarray()
-  {
-    return _multianewarray;
-  }
-  static llvm::Constant* register_finalizer()
-  {
-    return _register_finalizer;
-  }
-  static llvm::Constant* safepoint()
-  {
-    return _safepoint;
-  }
-  static llvm::Constant* throw_ArrayIndexOutOfBoundsException()
-  {
-    return _throw_ArrayIndexOutOfBoundsException;
-  }
-  static llvm::Constant* throw_NullPointerException()
-  {
-    return _throw_NullPointerException;
-  }  
+  static int find_exception_handler(JavaThread* thread,
+                                    int*        indexes,
+                                    int         num_indexes);
 
- private:
-  static int find_exception_handler_C(JavaThread* thread,
-                                      int*        indexes,
-                                      int         num_indexes);
+  static void monitorenter(JavaThread* thread, BasicObjectLock* lock);
+  static void monitorexit(JavaThread* thread, BasicObjectLock* lock);
 
-  static void monitorenter_C(JavaThread* thread, BasicObjectLock* lock);
-  static void monitorexit_C(JavaThread* thread, BasicObjectLock* lock);
+  static void new_instance(JavaThread* thread, int index);
+  static void newarray(JavaThread* thread, BasicType type, int size);
+  static void anewarray(JavaThread* thread, int index, int size);
+  static void multianewarray(JavaThread* thread,
+                             int         index,
+                             int         ndims,
+                             int*        dims);
 
-  static void new_instance_C(JavaThread* thread, int index);
-  static void newarray_C(JavaThread* thread, BasicType type, int size);
-  static void anewarray_C(JavaThread* thread, int index, int size);
-  static void multianewarray_C(JavaThread* thread,
-                               int         index,
-                               int         ndims,
-                               int*        dims);
+  static void register_finalizer(JavaThread* thread, oop object);
 
-  static void register_finalizer_C(JavaThread* thread, oop object);
-
-  static void throw_ArrayIndexOutOfBoundsException_C(JavaThread* thread,
-                                                     const char* file,
-                                                     int         line,
-                                                     int         index);
-  static void throw_NullPointerException_C(JavaThread* thread,
-                                           const char* file,
-                                           int         line);
+  static void throw_ArrayIndexOutOfBoundsException(JavaThread* thread,
+                                                   const char* file,
+                                                   int         line,
+                                                   int         index);
+  static void throw_NullPointerException(JavaThread* thread,
+                                         const char* file,
+                                         int         line);
 
   // Helpers for VM calls
  private:
@@ -136,88 +74,9 @@ class SharkRuntime : public AllStatic {
     return *(thread->zero_stack()->sp() + offset);
   }  
 
-  // Leaf calls
- private:
-  static llvm::Constant* _f2i;
-  static llvm::Constant* _f2l;
-  static llvm::Constant* _d2i;
-  static llvm::Constant* _d2l;
-
- public:
-  static llvm::Constant* f2i()
-  {
-    return _f2i;
-  }  
-  static llvm::Constant* f2l()
-  {
-    return _f2l;
-  }  
-  static llvm::Constant* d2i()
-  {
-    return _d2i;
-  }  
-  static llvm::Constant* d2l()
-  {
-    return _d2l;
-  }  
-  
   // Non-VM calls
- private:
-  static llvm::Constant* _dump;
-  static llvm::Constant* _is_subtype_of;
-  static llvm::Constant* _should_not_reach_here;
-  static llvm::Constant* _unimplemented;
-  static llvm::Constant* _uncommon_trap;
-  static llvm::Constant* _current_time_millis;
-  static llvm::Constant* _fabs;
-  static llvm::Constant* _tan;
-  static llvm::Constant* _atan2;
-  static llvm::Constant* _unsafe_field_offset_to_byte_offset;
-
  public:
-  static llvm::Constant* dump()
-  {
-    return _dump;
-  }
-  static llvm::Constant* is_subtype_of()
-  {
-    return _is_subtype_of;
-  }
-  static llvm::Constant* should_not_reach_here()
-  {
-    return _should_not_reach_here;
-  }
-  static llvm::Constant* unimplemented()
-  {
-    return _unimplemented;
-  }
-  static llvm::Constant* uncommon_trap()
-  {
-    return _uncommon_trap;
-  }
-  static llvm::Constant* current_time_millis()
-  {
-    return _current_time_millis;
-  }
-  static llvm::Constant* fabs()
-  {
-    return _fabs;
-  }
-  static llvm::Constant* tan()
-  {
-    return _tan;
-  }
-  static llvm::Constant* atan2()
-  {
-    return _atan2;
-  }
-  static llvm::Constant* unsafe_field_offset_to_byte_offset()
-  {
-    return _unsafe_field_offset_to_byte_offset;
-  }  
-
- private:
-  static void dump_C(const char *name, intptr_t value);
-  static bool is_subtype_of_C(klassOop check_klass, klassOop object_klass); 
-  static void uncommon_trap_C(JavaThread* thread, int trap_request);
+  static void dump(const char *name, intptr_t value);
+  static bool is_subtype_of(klassOop check_klass, klassOop object_klass); 
+  static void uncommon_trap(JavaThread* thread, int trap_request);
 };

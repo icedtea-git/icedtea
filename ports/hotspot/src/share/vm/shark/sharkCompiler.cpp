@@ -53,9 +53,6 @@ SharkCompiler::SharkCompiler()
   _module = new Module("shark");
 #endif
 
-  // Create the builder to build our functions
-  _builder = new SharkBuilder(this);
-
 #if SHARK_LLVM_VERSION >= 26
   // If we have a native target, initialize it to ensure it is linked in and
   // usable by the JIT.
@@ -82,7 +79,6 @@ SharkCompiler::SharkCompiler()
 
   // Initialize Shark components that need it
   SharkType::initialize();
-  SharkRuntime::initialize(builder());
   mark_initialized();
 }
 
@@ -137,22 +133,19 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   env->debug_info()->set_oopmaps(&oopmaps);
   env->set_dependencies(new Dependencies(env));
 
-  // Create the code buffer and hook it into the builder
+  // Create the code buffer and builder
   SharkCodeBuffer cb(env->oop_recorder());
-  builder()->set_code_buffer(&cb);
+  SharkBuilder builder(module(), &cb);
 
   // Emit the entry point
   SharkEntry *entry = (SharkEntry *) cb.malloc(sizeof(SharkEntry));
   
   // Build the LLVM IR for the method
-  Function *function = SharkFunction::build(this, env, flow, name);
+  Function *function = SharkFunction::build(this, env, &builder, flow, name);
   if (SharkPrintBitcodeOf != NULL) {
     if (!fnmatch(SharkPrintBitcodeOf, name, 0))
       function->dump();
   }
-
-  // Unhook the code buffer
-  builder()->set_code_buffer(NULL);  
 
   // Compile to native code
 #ifndef PRODUCT

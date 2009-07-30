@@ -1,3 +1,79 @@
+2009-07-30  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp:
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp:
+	Moved everything except the actual methods called by
+	JIT-compiled code into SharkBuilder.
+	
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	Merged code to create LLVM callable objects for runtime
+	methods from SharkRuntime, and refactored it (and the
+	existing code to create LLVM callable objects for LLVM
+	intrinsics) to create such objects on the fly.
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp
+	(SharkCompiler::_builder): Removed.
+	(SharkCompiler::builder): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkInvariants.hpp
+	(SharkCompileInvariants::SharkCompileInvariants): Take a new
+	argument, builder, and store it.
+	(SharkCompileInvariants::builder): Updated.
+	(SharkCompileInvariants::code_buffer): New method.
+	(SharkTargetInvariants::SharkTargetInvariants): Take a new
+	argument, builder, and pass it along to SharkCompileInvariants
+	constructor.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::build): Take a new argument, builder, and pass
+	it along to SharkFunction consructor.
+	(SharkFunction::SharkFunction): Take a new argument, builder,
+	and pass it along to SharkTargetInvariants consructor.	
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::SharkCompiler): Remove builder creation and
+	SharkRuntime initialization.
+	(SharkCompiler::compile_method): Create builder and pass it
+	to SharkFunction::build.
+	
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse_bytecode): Updated for new style calls.
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.hpp
+	(SharkIntrinsics::do_Math_1to1): Likewise.
+	(SharkIntrinsics::do_Math_2to1): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.cpp
+	(SharkIntrinsics::do_intrinsic): Likewise.
+	(SharkIntrinsics::do_Math_1to1): Likewise.
+	(SharkIntrinsics::do_Math_2to1): Likewise.
+	(SharkIntrinsics::do_System_currentTimeMillis): Likewise.
+	(SharkIntrinsics::do_Unsafe_compareAndSwapInt): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::call_vm): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::zero_check_value): Likewise.
+	(SharkTopLevelBlock::check_bounds): Likewise.
+	(SharkTopLevelBlock::maybe_add_safepoint): Likewise.
+	(SharkTopLevelBlock::do_trap): Likewise.
+	(SharkTopLevelBlock::call_register_finalizer): Likewise.
+	(SharkTopLevelBlock::get_interface_callee): Likewise.
+	(SharkTopLevelBlock::do_new): Likewise.
+	(SharkTopLevelBlock::do_newarray): Likewise.
+	(SharkTopLevelBlock::do_anewarray): Likewise.
+	(SharkTopLevelBlock::do_multianewarray): Likewise.
+	(SharkTopLevelBlock::acquire_lock): Likewise.
+	(SharkTopLevelBlock::release_lock): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::start_frame): Updated for new style codebuffer access.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/llvmValue.hpp
+	(LLVMValue::bit_constant): New method.
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp
+	(SharkBlock::call_vm_leaf): Removed.
+	
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.	
+
 2009-07-17  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp

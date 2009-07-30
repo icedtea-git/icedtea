@@ -28,222 +28,9 @@
 
 using namespace llvm;
 
-// VM calls
-Constant* SharkRuntime::_find_exception_handler;
-Constant* SharkRuntime::_monitorenter;
-Constant* SharkRuntime::_monitorexit;
-Constant* SharkRuntime::_new_instance;
-Constant* SharkRuntime::_newarray;
-Constant* SharkRuntime::_anewarray;
-Constant* SharkRuntime::_multianewarray;
-Constant* SharkRuntime::_register_finalizer;
-Constant* SharkRuntime::_safepoint;
-Constant* SharkRuntime::_throw_ArrayIndexOutOfBoundsException;
-Constant* SharkRuntime::_throw_NullPointerException;
-
-// Leaf calls
-Constant* SharkRuntime::_f2i;
-Constant* SharkRuntime::_f2l;
-Constant* SharkRuntime::_d2i;
-Constant* SharkRuntime::_d2l;
-
-// Non-VM calls
-Constant* SharkRuntime::_dump;
-Constant* SharkRuntime::_is_subtype_of;
-Constant* SharkRuntime::_should_not_reach_here;
-Constant* SharkRuntime::_unimplemented;
-Constant* SharkRuntime::_uncommon_trap;
-Constant* SharkRuntime::_current_time_millis;
-Constant* SharkRuntime::_fabs;
-Constant* SharkRuntime::_tan;
-Constant* SharkRuntime::_atan2;
-Constant* SharkRuntime::_unsafe_field_offset_to_byte_offset;
-
-extern jlong Unsafe_field_offset_to_byte_offset(jlong field_offset);
-
-void SharkRuntime::initialize(SharkBuilder* builder)
-{
-  // VM calls
-  std::vector<const Type*> params;
-  params.push_back(SharkType::thread_type());
-  params.push_back(PointerType::getUnqual(SharkType::jint_type()));
-  params.push_back(SharkType::jint_type());
-  _find_exception_handler = builder->make_function(
-    (intptr_t) find_exception_handler_C,
-    FunctionType::get(SharkType::jint_type(), params, false),
-    "SharkRuntime__find_exception_handler");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  params.push_back(PointerType::getUnqual(SharkType::monitor_type()));
-  _monitorenter = builder->make_function(
-    (intptr_t) monitorenter_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__monitorenter");
-  _monitorexit = builder->make_function(
-    (intptr_t) monitorexit_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__monitorexit");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  params.push_back(SharkType::jint_type());
-  _new_instance = builder->make_function(
-    (intptr_t) new_instance_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__new_instance");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  params.push_back(SharkType::jint_type());
-  params.push_back(SharkType::jint_type());
-  _newarray = builder->make_function(
-    (intptr_t) newarray_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__newarray");
-  _anewarray = builder->make_function(
-    (intptr_t) anewarray_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__anewarray");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  params.push_back(SharkType::jint_type());
-  params.push_back(SharkType::jint_type());
-  params.push_back(PointerType::getUnqual(SharkType::jint_type()));
-  _multianewarray = builder->make_function(
-    (intptr_t) multianewarray_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__multianewarray");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  params.push_back(SharkType::oop_type());
-  _register_finalizer = builder->make_function(
-    (intptr_t) register_finalizer_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__register_finalizer");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  _safepoint = builder->make_function(
-    (intptr_t) SafepointSynchronize::block,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SafepointSynchronize__block");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  params.push_back(SharkType::intptr_type());
-  params.push_back(SharkType::jint_type());
-  params.push_back(SharkType::jint_type());
-  _throw_ArrayIndexOutOfBoundsException = builder->make_function(
-    (intptr_t) throw_ArrayIndexOutOfBoundsException_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__throw_ArrayIndexOutOfBoundsException");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  params.push_back(SharkType::intptr_type());
-  params.push_back(SharkType::jint_type());
-  _throw_NullPointerException = builder->make_function(
-    (intptr_t) throw_NullPointerException_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__throw_NullPointerException");
-
-  // Leaf calls
-  params.clear();
-  params.push_back(SharkType::jfloat_type());
-  _f2i = builder->make_function(
-    (intptr_t) SharedRuntime::f2i,
-    FunctionType::get(SharkType::jint_type(), params, false),
-    "SharedRuntime__f2i");  
-  _f2l = builder->make_function(
-    (intptr_t) SharedRuntime::f2l,
-    FunctionType::get(SharkType::jlong_type(), params, false),
-    "SharedRuntime__f2l");  
-
-  params.clear();
-  params.push_back(SharkType::jdouble_type());
-  _d2i = builder->make_function(
-    (intptr_t) SharedRuntime::d2i,
-    FunctionType::get(SharkType::jint_type(), params, false),
-    "SharedRuntime__d2i");  
-  _d2l = builder->make_function(
-    (intptr_t) SharedRuntime::d2l,
-    FunctionType::get(SharkType::jlong_type(), params, false),
-    "SharedRuntime__d2l");  
-  
-  // Non-VM calls
-  params.clear();
-  params.push_back(SharkType::intptr_type());
-  params.push_back(SharkType::intptr_type());
-  _dump = builder->make_function(
-    (intptr_t) dump_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__dump");
-
-  params.clear();
-  params.push_back(SharkType::oop_type());
-  params.push_back(SharkType::oop_type());
-  assert(sizeof(bool) == 1, "fix this");
-  _is_subtype_of = builder->make_function(
-    (intptr_t) is_subtype_of_C,
-    FunctionType::get(Type::Int8Ty, params, false),
-    "SharkRuntime__is_subtype_of");
-
-  params.clear();
-  params.push_back(SharkType::intptr_type());
-  params.push_back(SharkType::jint_type());
-  _should_not_reach_here = builder->make_function(
-    (intptr_t) report_should_not_reach_here,
-    FunctionType::get(Type::VoidTy, params, false),
-    "report_should_not_reach_here");
-  _unimplemented = builder->make_function(
-    (intptr_t) report_unimplemented,
-    FunctionType::get(Type::VoidTy, params, false),
-    "report_unimplemented");
-
-  params.clear();
-  params.push_back(SharkType::thread_type());
-  params.push_back(SharkType::jint_type());
-  _uncommon_trap = builder->make_function(
-    (intptr_t) uncommon_trap_C,
-    FunctionType::get(Type::VoidTy, params, false),
-    "SharkRuntime__uncommon_trap");
-
-  params.clear();
-  _current_time_millis = builder->make_function(
-    (intptr_t) os::javaTimeMillis,
-    FunctionType::get(SharkType::jlong_type(), params, false),
-    "os__javaTimeMillis");
-
-  params.clear();
-  params.push_back(SharkType::jdouble_type());
-  _fabs = builder->make_function(
-    (intptr_t) ::fabs,
-    FunctionType::get(SharkType::jdouble_type(), params, false),
-    "fabs");
-  _tan = builder->make_function(
-    (intptr_t) ::tan,
-    FunctionType::get(SharkType::jdouble_type(), params, false),
-    "tan");
-  params.push_back(SharkType::jdouble_type());
-  _atan2 = builder->make_function(
-    (intptr_t) ::atan2,
-    FunctionType::get(SharkType::jdouble_type(), params, false),
-    "atan2");
-
-  params.clear();
-  params.push_back(SharkType::jlong_type());
-  _unsafe_field_offset_to_byte_offset = builder->make_function(
-    (intptr_t) Unsafe_field_offset_to_byte_offset,
-    FunctionType::get(SharkType::jlong_type(), params, false),
-    "Unsafe_field_offset_to_byte_offset");
-}
-
-JRT_ENTRY(int, SharkRuntime::find_exception_handler_C(JavaThread* thread,
-                                                      int*        indexes,
-                                                      int         num_indexes))
+JRT_ENTRY(int, SharkRuntime::find_exception_handler(JavaThread* thread,
+                                                    int*        indexes,
+                                                    int         num_indexes))
 {
   constantPoolHandle pool(thread, method(thread)->constants());
   KlassHandle exc_klass(thread, ((oop) tos_at(thread, 0))->klass());
@@ -263,8 +50,8 @@ JRT_ENTRY(int, SharkRuntime::find_exception_handler_C(JavaThread* thread,
 }
 JRT_END
 
-JRT_ENTRY(void, SharkRuntime::monitorenter_C(JavaThread*      thread,
-                                             BasicObjectLock* lock))
+JRT_ENTRY(void, SharkRuntime::monitorenter(JavaThread*      thread,
+                                           BasicObjectLock* lock))
 {
   if (PrintBiasedLockingStatistics)
     Atomic::inc(BiasedLocking::slow_path_entry_count_addr());
@@ -281,8 +68,8 @@ JRT_ENTRY(void, SharkRuntime::monitorenter_C(JavaThread*      thread,
 }
 JRT_END
 
-JRT_ENTRY(void, SharkRuntime::monitorexit_C(JavaThread*      thread,
-                                            BasicObjectLock* lock))
+JRT_ENTRY(void, SharkRuntime::monitorexit(JavaThread*      thread,
+                                          BasicObjectLock* lock))
 {
   Handle object(thread, lock->obj());  
   assert(Universe::heap()->is_in_reserved_or_null(object()), "should be");
@@ -293,7 +80,7 @@ JRT_ENTRY(void, SharkRuntime::monitorexit_C(JavaThread*      thread,
 }
 JRT_END
   
-JRT_ENTRY(void, SharkRuntime::new_instance_C(JavaThread* thread, int index))
+JRT_ENTRY(void, SharkRuntime::new_instance(JavaThread* thread, int index))
 {
   klassOop k_oop = method(thread)->constants()->klass_at(index, CHECK);
   instanceKlassHandle klass(THREAD, k_oop);
@@ -323,18 +110,18 @@ JRT_ENTRY(void, SharkRuntime::new_instance_C(JavaThread* thread, int index))
 }
 JRT_END
 
-JRT_ENTRY(void, SharkRuntime::newarray_C(JavaThread* thread,
-                                         BasicType   type,
-                                         int         size))
+JRT_ENTRY(void, SharkRuntime::newarray(JavaThread* thread,
+                                       BasicType   type,
+                                       int         size))
 {
   oop obj = oopFactory::new_typeArray(type, size, CHECK);
   thread->set_vm_result(obj);
 }
 JRT_END
 
-JRT_ENTRY(void, SharkRuntime::anewarray_C(JavaThread* thread,
-                                          int         index,
-                                          int         size))
+JRT_ENTRY(void, SharkRuntime::anewarray(JavaThread* thread,
+                                        int         index,
+                                        int         size))
 {
   klassOop klass = method(thread)->constants()->klass_at(index, CHECK);
   objArrayOop obj = oopFactory::new_objArray(klass, size, CHECK);
@@ -342,10 +129,10 @@ JRT_ENTRY(void, SharkRuntime::anewarray_C(JavaThread* thread,
 }
 JRT_END
 
-JRT_ENTRY(void, SharkRuntime::multianewarray_C(JavaThread* thread,
-                                               int         index,
-                                               int         ndims,
-                                               int*        dims))
+JRT_ENTRY(void, SharkRuntime::multianewarray(JavaThread* thread,
+                                             int         index,
+                                             int         ndims,
+                                             int*        dims))
 {
   klassOop klass = method(thread)->constants()->klass_at(index, CHECK);
   oop obj = arrayKlass::cast(klass)->multi_allocate(ndims, dims, CHECK);
@@ -353,8 +140,8 @@ JRT_ENTRY(void, SharkRuntime::multianewarray_C(JavaThread* thread,
 }
 JRT_END
 
-JRT_ENTRY(void, SharkRuntime::register_finalizer_C(JavaThread* thread,
-                                                   oop         object))
+JRT_ENTRY(void, SharkRuntime::register_finalizer(JavaThread* thread,
+                                                 oop         object))
 {
   assert(object->is_oop(), "should be");
   assert(object->klass()->klass_part()->has_finalizer(), "should have");
@@ -362,7 +149,7 @@ JRT_ENTRY(void, SharkRuntime::register_finalizer_C(JavaThread* thread,
 }
 JRT_END
 
-JRT_ENTRY(void, SharkRuntime::throw_ArrayIndexOutOfBoundsException_C(
+JRT_ENTRY(void, SharkRuntime::throw_ArrayIndexOutOfBoundsException(
                                                      JavaThread* thread,
                                                      const char* file,
                                                      int         line,
@@ -377,9 +164,9 @@ JRT_ENTRY(void, SharkRuntime::throw_ArrayIndexOutOfBoundsException_C(
 }
 JRT_END
 
-JRT_ENTRY(void, SharkRuntime::throw_NullPointerException_C(JavaThread* thread,
-                                                           const char* file,
-                                                           int         line))
+JRT_ENTRY(void, SharkRuntime::throw_NullPointerException(JavaThread* thread,
+                                                         const char* file,
+                                                         int         line))
 {
   Exceptions::_throw_msg(
     thread, file, line, 
@@ -391,7 +178,7 @@ JRT_END
 // Non-VM calls
 // Nothing in these must ever GC!
 
-void SharkRuntime::dump_C(const char *name, intptr_t value)
+void SharkRuntime::dump(const char *name, intptr_t value)
 {
   oop valueOop = (oop) value;
   tty->print("%s = ", name);
@@ -404,12 +191,12 @@ void SharkRuntime::dump_C(const char *name, intptr_t value)
   tty->print_cr("");
 }
 
-bool SharkRuntime::is_subtype_of_C(klassOop check_klass, klassOop object_klass)
+bool SharkRuntime::is_subtype_of(klassOop check_klass, klassOop object_klass)
 {
   return object_klass->klass_part()->is_subtype_of(check_klass);
 }
 
-void SharkRuntime::uncommon_trap_C(JavaThread* thread, int trap_request)
+void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request)
 {
   // In C2, uncommon_trap_blob creates a frame, so all the various
   // deoptimization functions expect to find the frame of the method
