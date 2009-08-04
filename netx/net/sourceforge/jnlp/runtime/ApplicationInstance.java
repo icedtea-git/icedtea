@@ -109,7 +109,24 @@ public class ApplicationInstance {
      */
     public void initialize() {
         installEnvironment();
-        addMenuAndDesktopEntries();
+        
+        /*
+         * FIXME: Disable creating desktop entries for now
+         * 
+         * there are some major issues we need to work out before we can enable them
+         * 1. Playing nice with the altnatives system
+         *   - use the system preferred jdk (/usr/bin/javaws)
+         *   - dont assume what jdk javaws corresponds to
+         *   - make sure our shortcuts work with the sun jdk and vice versa 
+         *     (may not be possible since sun's javaws creates a launcher that
+         *     links to /usr/java/${ver}/bin/javaws)
+         *   - we should use the same options and arguments as sun's javaws
+         * 2. Make shortcuts work offline 
+         *   - make the cache updates and replacements work properly
+         *   - shortcuts should use the cache
+         *   
+         *  addMenuAndDesktopEntries();
+         */
     }
 
     /**

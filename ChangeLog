@@ -1,3 +1,8 @@
+2009-08-04  Omair Majid  <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/runtime/ApplicationInstance.java
+	(initialize): Disable creation of desktop shortcuts.
+
 2009-06-18  Mark Wielaard  <mark@klomp.org>
 
 	* netx/net/sourceforge/jnlp/services/XExtendedService.java
