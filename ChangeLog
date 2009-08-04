@@ -1,6 +1,6 @@
 2009-07-09  Deepak Bhole  <dbhole@redhat.com>
 
-	* IcedTeaPlugin.cc: Add suppport for cookie info requests from applets.
+	* IcedTeaPlugin.cc: Add support for cookie info requests from applets.
 	* plugin/icedtea/sun/applet/PluginAppletViewer.java: Rework cookie support
 	to make it dynamic.
 	* plugin/icedtea/sun/applet/PluginMain.java: Wire in custom cookie store
