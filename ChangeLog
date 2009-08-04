@@ -1,3 +1,9 @@
+2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-webstart.patch,
+	* patches/icedtea-liveconnect.patch:
+	Recreated against OpenJDK7.
+	
 2009-06-05  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-webstart.patch: Make javax.jnlp package visible to
