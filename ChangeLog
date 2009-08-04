@@ -1,5 +1,12 @@
 2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
 
+	* test/jtreg/com/sun/javatest/exec/FileTable.java,
+	* test/jtreg/com/sun/javatest/mrep/ConflictResolutionDialog.java,
+	* test/jtreg/com/sun/javatest/report/XMLReportMaker.java:
+	Remove more DOS line endings.
+
+2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+
 	* netx/net/sourceforge/jnlp/DefaultLaunchHandler.java,
 	* netx/net/sourceforge/jnlp/ExtensionDesc.java,
 	* netx/net/sourceforge/jnlp/JNLPFile.java,
