@@ -27,50 +27,32 @@ class LLVMValue : public AllStatic {
  public:
   static llvm::ConstantInt* jbyte_constant(jbyte value)
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::getGlobalContext().getConstantInt(SharkType::jbyte_type(), value, true);
-#else
     return llvm::ConstantInt::get(SharkType::jbyte_type(), value, true);
-#endif
   }
   static llvm::ConstantInt* jint_constant(jint value)
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::getGlobalContext().getConstantInt(SharkType::jint_type(), value, true);
-#else
     return llvm::ConstantInt::get(SharkType::jint_type(), value, true);
-#endif
   }
   static llvm::ConstantInt* jlong_constant(jlong value)
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::getGlobalContext().getConstantInt(SharkType::jlong_type(), value, true);
-#else
     return llvm::ConstantInt::get(SharkType::jlong_type(), value, true);
-#endif
   }
-#if SHARK_LLVM_VERSION >= 26
-  static llvm::Constant* jfloat_constant(jfloat value)
-  {
-    return llvm::getGlobalContext().getConstantFP(SharkType::jfloat_type(), value); 
-  }
-#else
   static llvm::ConstantFP* jfloat_constant(jfloat value)
   {
-    return llvm::ConstantFP::get(SharkType::jfloat_type(), value);
-  }
-#endif
 #if SHARK_LLVM_VERSION >= 26
-  static llvm::Constant* jdouble_constant(jdouble value)
-  {
-    return llvm::getGlobalContext().getConstantFP(SharkType::jdouble_type(), value);
-  }
+    return llvm::ConstantFP::get(llvm::getGlobalContext(), llvm::APFloat(value));
 #else
+    return llvm::ConstantFP::get(SharkType::jfloat_type(), value);
+#endif
+  }
   static llvm::ConstantFP* jdouble_constant(jdouble value)
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::ConstantFP::get(llvm::getGlobalContext(), llvm::APFloat(value));
+#else
     return llvm::ConstantFP::get(SharkType::jdouble_type(), value);
-  }
 #endif
+  }
   static llvm::ConstantPointerNull* null()
   {
     return llvm::ConstantPointerNull::get(SharkType::jobject_type());
@@ -79,18 +61,10 @@ class LLVMValue : public AllStatic {
  public:
   static llvm::ConstantInt* bit_constant(int value)
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::getGlobalContext().getConstantInt(llvm::Type::Int1Ty, value, false);
-#else
     return llvm::ConstantInt::get(llvm::Type::Int1Ty, value, false);
-#endif
   }
   static llvm::ConstantInt* intptr_constant(intptr_t value)
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::getGlobalContext().getConstantInt(SharkType::intptr_type(), value, false);
-#else
     return llvm::ConstantInt::get(SharkType::intptr_type(), value, false);
-#endif
   }
 };

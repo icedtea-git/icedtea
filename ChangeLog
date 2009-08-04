@@ -1,3 +1,9 @@
+2009-08-04  Matthias Klose  <doko@ubuntu.com>
+
+	* ports/hotspot/src/share/vm/shark/llvmValue.hpp: Adjust to rev 78061.
+	ConstantInt API moved back to the 2.5 API, ConstantFP partially moved
+	back to the 2.5 API.
+
 2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* test/jtreg/com/sun/javatest/exec/FileTable.java,
