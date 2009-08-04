@@ -1,3 +1,30 @@
+2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* netx/net/sourceforge/jnlp/DefaultLaunchHandler.java,
+	* netx/net/sourceforge/jnlp/ExtensionDesc.java,
+	* netx/net/sourceforge/jnlp/JNLPFile.java,
+	* netx/net/sourceforge/jnlp/LaunchException.java,
+	* netx/net/sourceforge/jnlp/LaunchHandler.java,
+	* netx/net/sourceforge/jnlp/Launcher.java,
+	* netx/net/sourceforge/jnlp/ParseException.java,
+	* netx/net/sourceforge/jnlp/Parser.java,
+	* netx/net/sourceforge/jnlp/cache/CacheEntry.java,
+	* netx/net/sourceforge/jnlp/cache/CacheUtil.java,
+	* netx/net/sourceforge/jnlp/cache/DefaultDownloadIndicator.java,
+	* netx/net/sourceforge/jnlp/cache/ResourceTracker.java,
+	* netx/net/sourceforge/jnlp/runtime/AppletEnvironment.java,
+	* netx/net/sourceforge/jnlp/runtime/AppletInstance.java,
+	* netx/net/sourceforge/jnlp/runtime/ApplicationInstance.java,
+	* netx/net/sourceforge/jnlp/runtime/Boot.java,
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java,
+	* netx/net/sourceforge/jnlp/runtime/JNLPRuntime.java,
+	* netx/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java,
+	* netx/net/sourceforge/jnlp/services/XBasicService.java,
+	* netx/net/sourceforge/jnlp/util/PropertiesFile.java,
+	* netx/net/sourceforge/jnlp/util/Reflect.java,
+	* netx/net/sourceforge/jnlp/util/WeakList.java:
+	Convert DOS line endings to UNIX.
+
 2009-08-04  Omair Majid  <omajid@redhat.com>
 
 	* netx/net/sourceforge/jnlp/runtime/ApplicationInstance.java
