@@ -3219,6 +3219,17 @@ if ENABLE_NPPLUGIN
 # is listed before -l options.  See:
 # http://developer.mozilla.org/en/docs/XPCOM_Glue
 IcedTeaNPPlugin.o: IcedTeaNPPlugin.cc
+
+NPPLUGIN_SRC=IcedTeaNPPlugin.cc IcedTeaScriptablePluginObject.cc \
+	IcedTeaJavaRequestProcessor.cc IcedTeaPluginRequestProcessor.cc \
+	IcedTeaPluginUtils.cc
+
+NPPLUGIN_OBJECTS=IcedTeaNPPlugin.o IcedTeaScriptablePluginObject.o \
+	IcedTeaJavaRequestProcessor.o IcedTeaPluginRequestProcessor.o \
+	IcedTeaPluginUtils.o
+
+IcedTeaNPPlugin_objects:
+	(cd plugin/icedteanp 
 	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
 	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
 	fi ; \
@@ -3231,18 +3242,24 @@ IcedTeaNPPlugin.o: IcedTeaNPPlugin.cc
 	  $(GLIB_CFLAGS) \
 	  $(GTK_CFLAGS) \
 	  $(MOZILLA_CFLAGS) \
-	  -fPIC -c -o $@ $<
-IcedTeaNPPlugin.so: IcedTeaNPPlugin.o
+	  -fPIC -c $(NPPLUGIN_SRC)
+	  )
+
+IcedTeaNPPlugin.so: IcedTeaNPPlugin_objects
+	(cd plugin/icedteanp 
 	$(CXX) $(CXXFLAGS) \
-	  $< \
+	  $(NPPLUGIN_OBJECTS) \
 	  $(GLIB_LIBS) \
 	  $(GTK_LIBS) \
 	  $(MOZILLA_LIBS)\
 	  -shared -o $@
+	)
 
 clean-IcedTeaNPPlugin:
-	rm -f IcedTeaNPPlugin.o
+	(cd plugin/icedteanp
+	rm -f $(NPPLUGIN_OBJECTS)
 	rm -f IcedTeaNPPlugin.so
+	)
 endif
 if ENABLE_PLUGIN
 # IcedTeaPlugin.so.
