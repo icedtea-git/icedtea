@@ -1,6 +1,12 @@
 2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Remove IcedTeaNPPlugin.cc from EXTRA_DIST
+	as now under plugin directory tree.
+	
+2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Remove unnecessary whitespace.
 	* acinclude.m4:
 	(IT_CHECK_ENABLE_WARNINGS): Add --enable-warnings

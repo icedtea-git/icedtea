@@ -1494,7 +1494,6 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	jconsole.desktop policytool.desktop \
 	$(JTREG_SRCS) \
 	IcedTeaPlugin.cc \
-	IcedTeaNPPlugin.cc \
 	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
 	plugin $(top_srcdir)/netx hotspot.map autogen.sh
 
