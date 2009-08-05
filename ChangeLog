@@ -1,3 +1,12 @@
+2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Add new CACAO patches.
+	* patches/cacao/version.patch:
+	Patch classfile version to 51 (Java 1.7).
+	* patches/cacao/versioninfo.patch:
+	Implement JVM_GetVersionInfo.
+
 2009-08-04  Matthias Klose  <doko@ubuntu.com>
 
 	* ports/hotspot/src/share/vm/shark/llvmValue.hpp: Adjust to rev 78061.

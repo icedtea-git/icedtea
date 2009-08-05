@@ -2085,7 +2085,9 @@ ICEDTEA_PATCHES += \
 	patches/cacao/native-resolve.patch \
 	patches/cacao/xxoption-warning.patch \
 	patches/cacao/no-strict-aliasing.patch \
-	patches/cacao/openjdk7.patch
+	patches/cacao/openjdk7.patch \
+	patches/cacao/version.patch \
+	patches/cacao/versioninfo.patch
 endif
 
 if WITH_CACAO

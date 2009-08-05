@@ -1,0 +1,24 @@
+diff -Nru cacao.orig/cacao/src/native/vm/openjdk/jvm.c cacao/cacao/src/native/vm/openjdk/jvm.c
+--- cacao.orig/cacao/src/native/vm/openjdk/jvm.c	2009-08-05 01:22:03.000000000 +0100
++++ cacao/cacao/src/native/vm/openjdk/jvm.c	2009-08-05 01:48:46.000000000 +0100
+@@ -3645,7 +3645,19 @@
+ 
+ void JVM_GetVersionInfo(JNIEnv* env, jvm_version_info* info, size_t info_size)
+ {
+-	log_println("JVM_GetVersionInfo: IMPLEMENT ME!");
++	TRACEJVMCALLS(("JVM_GetVersionInfo(env=%p, info=%p, info_size=%ld)", env, info, info_size));
++
++	memset(info, 0, sizeof(info_size));
++
++	int major = atoi(VERSION);
++	const char* minor_string = strchr(VERSION, '.');
++	int minor = atoi(++minor_string);
++	int micro = atoi(strchr(minor_string, '.') + 1);
++
++	info->jvm_version = (major << 24) | (minor << 16) | (micro << 8);
++	info->update_version = 0;
++	info->special_update_version = 0;
++	info->is_attachable = 0;
+ }
+ 
+ 
