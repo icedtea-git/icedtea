@@ -1,6 +1,18 @@
 2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Remove unnecessary whitespace.
+	* acinclude.m4:
+	(IT_CHECK_ENABLE_WARNINGS): Add --enable-warnings
+	option to turn javac warnings on and off.
+	* configure.ac:
+	Enable IT_CHECK_ENABLE_WARNINGS macro.
+	* javac.in:
+	Turn on warnings only when specified.
+
+2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Add new CACAO patches.
 	* patches/cacao/version.patch:
 	Patch classfile version to 51 (Java 1.7).

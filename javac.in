@@ -3,8 +3,18 @@ use strict;
 use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
 use constant STRIP_ARGS => qw(-Werror);
 
-my $ECJ_WARNINGS="-warn:-deprecation,serial,unused,warningToken";
-my $JAVAC_WARNINGS="-Xlint:unchecked,cast,divzero,empty,finally,overrides";
+my ($ECJ_WARNINGS, $JAVAC_WARNINGS);
+
+if ("@ENABLE_WARNINGS@" eq "yes")
+{
+    $ECJ_WARNINGS="-warn:-deprecation,serial,unused,warningToken";
+    $JAVAC_WARNINGS="-Xlint:unchecked,cast,divzero,empty,finally,overrides";
+}
+else
+{
+    $ECJ_WARNINGS="-nowarn";
+    $JAVAC_WARNINGS="-nowarn";
+}
 
 my @bcoption;
 push @bcoption, '-bootclasspath', glob '@SYSTEM_JDK_DIR@/jre/lib/rt.jar'

@@ -1630,3 +1630,20 @@ USING_ECJ=$it_cv_ecj
 AC_SUBST(USING_ECJ)
 AC_PROVIDE([$0])dnl
 ])
+
+AC_DEFUN([IT_CHECK_ENABLE_WARNINGS],
+[
+  AC_MSG_CHECKING(whether to enable Java compiler warnings)
+  AC_ARG_ENABLE([warnings],
+	      [AS_HELP_STRING(--enable-warnings,produce warnings from javac/ecj [[default=no]])],
+  [
+    ENABLE_WARNINGS="${enableval}"
+  ],
+  [
+    ENABLE_WARNINGS=no
+  ])
+
+  AC_MSG_RESULT(${ENABLE_WARNINGS})
+  AM_CONDITIONAL(ENABLE_WARNINGS, test x"${ENABLE_WARNINGS}" = "xyes")
+  AC_SUBST(ENABLE_WARNINGS)
+])

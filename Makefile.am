@@ -3232,7 +3232,7 @@ NPPLUGIN_OBJECTS=IcedTeaNPPlugin.o IcedTeaScriptablePluginObject.o \
 	IcedTeaPluginUtils.o
 
 IcedTeaNPPlugin_objects:
-	cd $(NPPLUGIN_DIR); \ 
+	cd $(NPPLUGIN_DIR); \
 	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
 	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
 	fi ; \
