@@ -166,6 +166,30 @@ public class SecurityDesc {
 
         return permissions;
     }
+    
+    /**
+     * Returns a PermissionCollection containing the sandbox permissions
+     */
+    public PermissionCollection getSandBoxPermissions() {
+        
+        Permissions permissions = new Permissions();
+
+        for (int i=0; i < sandboxPermissions.length; i++)
+            permissions.add(sandboxPermissions[i]);
+
+        if (downloadHost != null)
+            permissions.add(new SocketPermission(downloadHost,
+                                                 "connect, accept"));
+
+        // properties
+        PropertyDesc props[] = file.getResources().getProperties();
+        for (int i=0; i < props.length; i++) {
+            // should only allow jnlp.* properties if in sandbox?
+            permissions.add(new PropertyPermission(props[i].getKey(), "read,write"));
+        }
+
+        return permissions;
+    }
 
 }
 

@@ -1,15 +1,15 @@
 
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -66,7 +66,7 @@ import sun.misc.JarIndex;
  * security context when the classloader was created.
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
- * @version $Revision: 1.20 $ 
+ * @version $Revision: 1.20 $
  */
 public class JNLPClassLoader extends URLClassLoader {
 
@@ -115,29 +115,29 @@ public class JNLPClassLoader extends URLClassLoader {
 
     /** the security section */
     private SecurityDesc security;
-    
+
     /** Permissions granted by the user during runtime. */
     private ArrayList<Permission> runtimePermissions = new ArrayList<Permission>();
 
     /** all jars not yet part of classloader or active */
     private List available = new ArrayList();
 
-	/** all of the jar files that were verified */
-	private ArrayList<String> verifiedJars = null;
+        /** all of the jar files that were verified */
+        private ArrayList<String> verifiedJars = null;
 
-	/** all of the jar files that were not verified */
-	private ArrayList<String> unverifiedJars = null;
+        /** all of the jar files that were not verified */
+        private ArrayList<String> unverifiedJars = null;
 
-	/** the jarsigner tool to verify our jars */
-	private JarSigner js = null;
+        /** the jarsigner tool to verify our jars */
+        private JarSigner js = null;
 
-	private boolean signing = false;
-	
-	/** ArrayList containing jar indexes for various jars available to this classloader */
-	private ArrayList<JarIndex> jarIndexes = new ArrayList<JarIndex>();
-	
-	/** File entries in the jar files available to this classloader */
-	private TreeSet jarEntries = new TreeSet();
+        private boolean signing = false;
+
+        /** ArrayList containing jar indexes for various jars available to this classloader */
+        private ArrayList<JarIndex> jarIndexes = new ArrayList<JarIndex>();
+
+        /** File entries in the jar files available to this classloader */
+        private TreeSet jarEntries = new TreeSet();
 
     /**
      * Create a new JNLPClassLoader from the specified file.
@@ -167,41 +167,41 @@ public class JNLPClassLoader extends URLClassLoader {
     }
 
     private void setSecurity() {
-		/**
-		 * When we're trying to load an applet, file.getSecurity() will return
-		 * null since there is no jnlp file to specify permissions. We
-		 * determine security settings here, after trying to verify jars.
-		 */
-		if (file instanceof PluginBridge) {
-			if (signing == true) {
-				this.security = new SecurityDesc(file, 
-					SecurityDesc.ALL_PERMISSIONS,
-					file.getCodeBase().getHost());
-			} else {
-				this.security = new SecurityDesc(file, 
-					SecurityDesc.SANDBOX_PERMISSIONS, 
-					file.getCodeBase().getHost());
-			}
-		} else { //regular jnlp file
-			
-			/**
-			 * If the application is signed, then we set the SecurityDesc to the
-			 * <security> tag in the jnlp file. Note that if an application is
-			 * signed, but there is no <security> tag in the jnlp file, the
-			 * application will get sandbox permissions.
-			 * If the application is unsigned, we ignore the <security> tag and 
-			 * use a sandbox instead. 
-			 */
-			if (signing == true) {
-				this.security = file.getSecurity();
-			} else {
-				this.security = new SecurityDesc(file, 
-						SecurityDesc.SANDBOX_PERMISSIONS, 
-						file.getCodeBase().getHost());
-			}
-		}
+                /**
+                 * When we're trying to load an applet, file.getSecurity() will return
+                 * null since there is no jnlp file to specify permissions. We
+                 * determine security settings here, after trying to verify jars.
+                 */
+                if (file instanceof PluginBridge) {
+                        if (signing == true) {
+                                this.security = new SecurityDesc(file,
+                                        SecurityDesc.ALL_PERMISSIONS,
+                                        file.getCodeBase().getHost());
+                        } else {
+                                this.security = new SecurityDesc(file,
+                                        SecurityDesc.SANDBOX_PERMISSIONS,
+                                        file.getCodeBase().getHost());
+                        }
+                } else { //regular jnlp file
+
+                        /**
+                         * If the application is signed, then we set the SecurityDesc to the
+                         * <security> tag in the jnlp file. Note that if an application is
+                         * signed, but there is no <security> tag in the jnlp file, the
+                         * application will get sandbox permissions.
+                         * If the application is unsigned, we ignore the <security> tag and
+                         * use a sandbox instead.
+                         */
+                        if (signing == true) {
+                                this.security = file.getSecurity();
+                        } else {
+                                this.security = new SecurityDesc(file,
+                                                SecurityDesc.SANDBOX_PERMISSIONS,
+                                                file.getCodeBase().getHost());
+                        }
+                }
     }
-    
+
     /**
      * Returns a JNLP classloader for the specified JNLP file.
      *
@@ -215,12 +215,12 @@ public class JNLPClassLoader extends URLClassLoader {
         if (location != null)
             loader = (JNLPClassLoader) urlToLoader.get(location);
 
-		try {
-        	if (loader == null)
-            	loader = new JNLPClassLoader(file, policy);
-		} catch (LaunchException e) {
-			throw e;
-		}
+                try {
+                if (loader == null)
+                loader = new JNLPClassLoader(file, policy);
+                } catch (LaunchException e) {
+                        throw e;
+                }
 
         if (file.getInformation().isSharingAllowed())
             urlToLoader.put(location, loader);
@@ -230,7 +230,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
     /**
      * Returns a JNLP classloader for the JNLP file at the specified
-     * location. 
+     * location.
      *
      * @param location the file's location
      * @param version the file's version
@@ -256,17 +256,17 @@ public class JNLPClassLoader extends URLClassLoader {
 
         loaderList.add(this);
 
-		//if (ext != null) {
-        	for (int i=0; i < ext.length; i++) {
-            	try {
-               		JNLPClassLoader loader = getInstance(ext[i].getLocation(), ext[i].getVersion(), updatePolicy);
-                	loaderList.add(loader);
-            	}
-            	catch (Exception ex) {
-                	ex.printStackTrace();
-            	}
-        	}
-		//}
+                //if (ext != null) {
+                for (int i=0; i < ext.length; i++) {
+                try {
+                        JNLPClassLoader loader = getInstance(ext[i].getLocation(), ext[i].getVersion(), updatePolicy);
+                        loaderList.add(loader);
+                }
+                catch (Exception ex) {
+                        ex.printStackTrace();
+                }
+                }
+                //}
 
         loaders = (JNLPClassLoader[]) loaderList.toArray(new JNLPClassLoader[ loaderList.size()]);
     }
@@ -283,10 +283,10 @@ public class JNLPClassLoader extends URLClassLoader {
                                                        jars[i].getVersion());
 
             if (JNLPRuntime.isDebug()) {
-            	if (p == null)
-            		System.out.println("Unable to add permission for " + jars[i].getLocation());
-            	else
-            		System.out.println("Permission added: " + p.toString());
+                if (p == null)
+                        System.out.println("Unable to add permission for " + jars[i].getLocation());
+                else
+                        System.out.println("Permission added: " + p.toString());
             }
             if (p != null)
                 resourcePermissions.add(p);
@@ -299,14 +299,14 @@ public class JNLPClassLoader extends URLClassLoader {
      */
     void initializeResources() throws LaunchException {
         JARDesc jars[] = resources.getJARs();
-		if (jars == null || jars.length == 0)
-			return;
-		/*
-		if (jars == null || jars.length == 0) {
-			throw new LaunchException(null, null, R("LSFatal"),
-			                    R("LCInit"), R("LFatalVerification"), "No jars!");
-		}
-		*/
+                if (jars == null || jars.length == 0)
+                        return;
+                /*
+                if (jars == null || jars.length == 0) {
+                        throw new LaunchException(null, null, R("LSFatal"),
+                                            R("LCInit"), R("LFatalVerification"), "No jars!");
+                }
+                */
         List initialJars = new ArrayList();
 
         for (int i=0; i < jars.length; i++) {
@@ -317,7 +317,7 @@ public class JNLPClassLoader extends URLClassLoader {
                 initialJars.add(jars[i]); // regardless of part
 
             tracker.addResource(jars[i].getLocation(),
-                                jars[i].getVersion(), 
+                                jars[i].getVersion(),
                                 jars[i].isCacheable() ? JNLPRuntime.getDefaultUpdatePolicy() : UpdatePolicy.FORCE
                                );
         }
@@ -325,42 +325,42 @@ public class JNLPClassLoader extends URLClassLoader {
         if (strict)
             fillInPartJars(initialJars); // add in each initial part's lazy jars
 
-		if (JNLPRuntime.isVerifying()) {
+                if (JNLPRuntime.isVerifying()) {
 
-			JarSigner js;
-			waitForJars(initialJars); //download the jars first.
+                        JarSigner js;
+                        waitForJars(initialJars); //download the jars first.
 
-			try {
-				js = verifyJars(initialJars);
-			} catch (Exception e) {
-				//we caught an Exception from the JarSigner class.
-				//Note: one of these exceptions could be from not being able
-				//to read the cacerts or trusted.certs files.
-				e.printStackTrace();
-				throw new LaunchException(null, null, R("LSFatal"),
-					R("LCInit"), R("LFatalVerification"), R("LFatalVerificationInfo"));
-			}
+                        try {
+                                js = verifyJars(initialJars);
+                        } catch (Exception e) {
+                                //we caught an Exception from the JarSigner class.
+                                //Note: one of these exceptions could be from not being able
+                                //to read the cacerts or trusted.certs files.
+                                e.printStackTrace();
+                                throw new LaunchException(null, null, R("LSFatal"),
+                                        R("LCInit"), R("LFatalVerification"), R("LFatalVerificationInfo"));
+                        }
 
-			//Case when at least one jar has some signing
-			if (js.anyJarsSigned()){
-				signing = true;
+                        //Case when at least one jar has some signing
+                        if (js.anyJarsSigned()){
+                                signing = true;
 
-				//user does not trust this publisher
-				if (!js.getAlreadyTrustPublisher()) {
-				    checkTrustWithUser(js);
-				} else {
-					/**
-					 * If the user trusts this publisher (i.e. the publisher's certificate
-					 * is in the user's trusted.certs file), we do not show any dialogs.
-					 */
-				}
-			} else {
+                                //user does not trust this publisher
+                                if (!js.getAlreadyTrustPublisher()) {
+                                    checkTrustWithUser(js);
+                                } else {
+                                        /**
+                                         * If the user trusts this publisher (i.e. the publisher's certificate
+                                         * is in the user's trusted.certs file), we do not show any dialogs.
+                                         */
+                                }
+                        } else {
 
-				signing = false;
-				//otherwise this jar is simply unsigned -- make sure to ask
-				//for permission on certain actions
-			}
-		}
+                                signing = false;
+                                //otherwise this jar is simply unsigned -- make sure to ask
+                                //for permission on certain actions
+                        }
+                }
 
         activateJars(initialJars);
     }
@@ -370,7 +370,7 @@ public class JNLPClassLoader extends URLClassLoader {
             boolean b = SecurityWarningDialog.showCertWarningDialog(
                 SecurityWarningDialog.AccessType.UNVERIFIED, file, js);
             if (!b)
-                throw new LaunchException(null, null, R("LSFatal"), 
+                throw new LaunchException(null, null, R("LSFatal"),
                     R("LCLaunching"), R("LNotVerified"), "");
         } else if (js.getRootInCacerts()) { //root cert is in cacerts
             boolean b = false;
@@ -435,11 +435,29 @@ public class JNLPClassLoader extends URLClassLoader {
         // access w/o security dialog once we actually check certificates.
 
         // copy security permissions from SecurityDesc element
-		if (security != null) {
-        	Enumeration e = security.getPermissions().elements();
-        	while (e.hasMoreElements())
-            	result.add((Permission) e.nextElement());
-		}
+        if (security != null) {
+            // Security desc. is used only to track security settings for the
+            // application. However, an application may comprise of multiple
+            // jars, and as such, security must be evaluated on a per jar basis.
+
+            // set default perms
+            PermissionCollection permissions = security.getSandBoxPermissions();
+
+            // If more than default is needed, evaluate based on codesource
+            if (security.getSecurityType().equals(SecurityDesc.ALL_PERMISSIONS) ||
+                security.getSecurityType().equals(SecurityDesc.J2EE_PERMISSIONS)) {
+
+                 if (cs.getCodeSigners() != null) {
+                    permissions = security.getPermissions();
+                }
+            }
+
+            Enumeration<Permission> e = permissions.elements();
+            while (e.hasMoreElements())
+                result.add(e.nextElement());
+        }
+
+
 
         // add in permission to read the cached JAR files
         for (int i=0; i < resourcePermissions.size(); i++)
@@ -447,15 +465,15 @@ public class JNLPClassLoader extends URLClassLoader {
 
         // add in the permissions that the user granted.
         for (int i=0; i < runtimePermissions.size(); i++)
-        	result.add(runtimePermissions.get(i));
+                result.add(runtimePermissions.get(i));
 
         return result;
     }
 
     protected void addPermission(Permission p) {
-    	runtimePermissions.add(p);
+        runtimePermissions.add(p);
     }
-    
+
     /**
      * Adds to the specified list of JARS any other JARs that need
      * to be loaded at the same time as the JARs specified (ie, are
@@ -501,25 +519,25 @@ public class JNLPClassLoader extends URLClassLoader {
                         URL location = jar.getLocation(); // non-cacheable, use source location
                         if (localFile != null) {
                             location = localFile.toURL(); // cached file
-                            
-                            // This is really not the best way.. but we need some way for 
-                            // PluginAppletViewer::getCachedImageRef() to check if the image 
-                            // is available locally, and it cannot use getResources() because 
-                            // that prefetches the resource, which confuses MediaTracker.waitForAll() 
-                            // which does a wait(), waiting for notification (presumably 
+
+                            // This is really not the best way.. but we need some way for
+                            // PluginAppletViewer::getCachedImageRef() to check if the image
+                            // is available locally, and it cannot use getResources() because
+                            // that prefetches the resource, which confuses MediaTracker.waitForAll()
+                            // which does a wait(), waiting for notification (presumably
                             // thrown after a resource is fetched). This bug manifests itself
                             // particularly when using The FileManager applet from Webmin.
-                            
+
                             JarFile jarFile = new JarFile(localFile);
                             Enumeration e = jarFile.entries();
                             while (e.hasMoreElements()) {
-                                
+
                                 JarEntry je = (JarEntry) e.nextElement();
-                                
-                                // another jar in my jar? it is more likely than you think  
+
+                                // another jar in my jar? it is more likely than you think
                                 if (je.getName().endsWith(".jar")) {
-                                    // We need to extract that jar so that it can be loaded 
-                                    // (inline loading with "jar:..!/..." path will not work 
+                                    // We need to extract that jar so that it can be loaded
+                                    // (inline loading with "jar:..!/..." path will not work
                                     // with standard classloader methods)
 
                                     String extractedJarLocation = localFile.getParent() + "/" + je.getName();
@@ -564,7 +582,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
                         addURL(location);
 
-                        // there is currently no mechanism to cache files per 
+                        // there is currently no mechanism to cache files per
                         // instance.. so only index cached files
                         if (localFile != null) {
                             JarIndex index = JarIndex.getJarIndex(new JarFile(localFile.getAbsolutePath()), null);
@@ -636,11 +654,11 @@ public class JNLPClassLoader extends URLClassLoader {
      * calls.
      */
     protected File getNativeDir() {
-        nativeDir = new File(System.getProperty("java.io.tmpdir") 
-                             + File.separator + "netx-native-" 
+        nativeDir = new File(System.getProperty("java.io.tmpdir")
+                             + File.separator + "netx-native-"
                              + (new Random().nextInt() & 0xFFFF));
 
-        if (!nativeDir.mkdirs()) 
+        if (!nativeDir.mkdirs())
             return null;
         else
             return nativeDir;
@@ -703,16 +721,16 @@ public class JNLPClassLoader extends URLClassLoader {
     }
 
     /**
-	 * Verifies code signing of jars to be used.
-	 *
-	 * @param jars the jars to be verified.
-	 */
-	private JarSigner verifyJars(List<JARDesc> jars) throws Exception {
-	
-		js = new JarSigner();
-		js.verifyJars(jars, tracker);
-		return js;
-	}
+         * Verifies code signing of jars to be used.
+         *
+         * @param jars the jars to be verified.
+         */
+        private JarSigner verifyJars(List<JARDesc> jars) throws Exception {
+
+                js = new JarSigner();
+                js.verifyJars(jars, tracker);
+                return js;
+        }
 
     /**
      * Find the loaded class in this loader or any of its extension loaders.
@@ -765,7 +783,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
                 // Not found in external loader either. As a last resort, look in any available indexes
 
-                // Currently this loads jars directly from the site. We cannot cache it because this 
+                // Currently this loads jars directly from the site. We cannot cache it because this
                 // call is initiated from within the applet, which does not have disk read/write permissions
                 for (JarIndex index: jarIndexes) {
                     LinkedList<String> jarList = index.get(name.replace('.', '/'));
@@ -783,7 +801,7 @@ public class JNLPClassLoader extends URLClassLoader {
                             available.add(desc);
 
                             tracker.addResource(desc.getLocation(),
-                                    desc.getVersion(), 
+                                    desc.getVersion(),
                                     JNLPRuntime.getDefaultUpdatePolicy()
                             );
 
@@ -807,7 +825,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
                         }
 
-                        // If it still fails, let it error out                        
+                        // If it still fails, let it error out
                         result = loadClassExt(name);
                     }
                 }
@@ -891,7 +909,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
             if (loaders[i] == this)
                 e = super.findResources(name);
-            else 
+            else
                 e = loaders[i].findResources(name);
 
             while (e.hasMoreElements())
@@ -900,10 +918,10 @@ public class JNLPClassLoader extends URLClassLoader {
 
         return resources.elements();
     }
-    
+
     /**
      * Returns if the specified resource is available locally from a cached jar
-     * 
+     *
      * @param s The name of the resource
      * @return Whether or not the resource is available locally
      */
@@ -949,8 +967,8 @@ public class JNLPClassLoader extends URLClassLoader {
 
         fillInPartJars(jars);
 
-		
-		activateJars(jars);
+
+                activateJars(jars);
 
         return this;
     }
@@ -979,13 +997,13 @@ public class JNLPClassLoader extends URLClassLoader {
         return file.getFileLocation().toString();
     }
 
-	public boolean getSigning() {
-		return signing;
-	}
+        public boolean getSigning() {
+                return signing;
+        }
 
-	protected SecurityDesc getSecurity() {
-		return security;
-	}
+        protected SecurityDesc getSecurity() {
+                return security;
+        }
 }
 
 

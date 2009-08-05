@@ -58,6 +58,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import netscape.javascript.JSObjectCreatePermission;
 
 
 
@@ -1285,12 +1286,15 @@ public class PluginAppletSecurityContext {
 
 		CodeSource cs = new CodeSource((URL) null, (java.security.cert.Certificate  [])null);
 		
-		if (src != null) {
+		if (src != null && src.length() > 0) {
 			try {
 				cs = new CodeSource(new URL(src + "/"), (java.security.cert.Certificate[]) null);
 			} catch (MalformedURLException mfue) {
 				// do nothing
 			}
+		} else {
+		    JSObjectCreatePermission perm = new JSObjectCreatePermission();
+		    grantedPermissions.add(perm);
 		}
 
 		ProtectionDomain pd = new ProtectionDomain(cs, grantedPermissions, null, null);

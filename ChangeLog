@@ -1,3 +1,16 @@
+2009-08-05  Lillian Angel  <langel@redhat.com>
+
+	* plugin/icedtea/netscape/javascript/JSObject.java: Security patch
+	applied to disallow the ability to run unsigned code as 
+	signed under some cases.
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java:
+	Likewise.
+	* netx/net/sourceforge/jnlp/SecurityDesc.java: Likewise.
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Likewise.
+	* plugin/icedtea/netscape/javascript/JSObjectCreatePermission.java:
+	Likewise.
+	* netx/netscape/javascript/JSObjectCreatePermission.java: Likewise.
+
 2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
