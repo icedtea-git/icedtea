@@ -1,3 +1,11 @@
+2009-08-05  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Update md5sums and changeset IDs to include
+	security fixes.
+	* patches/security/icedtea-6592792.patch:
+	Remove fixes applied as part of 6657133
+
 2009-08-05  Lillian Angel  <langel@redhat.com>
 
 	* plugin/icedtea/netscape/javascript/JSObject.java: Security patch
