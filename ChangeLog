@@ -1,5 +1,10 @@
 2009-08-06  Matthias Klose  <doko@ubuntu.com>
 
+	* Makefile.am (ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Allow passing
+	as environment.
+	
+2009-08-06  Matthias Klose  <doko@ubuntu.com>
+
 	* Makefile.am (ICEDTEA_PATCHES): Make $(DISTRIBUTION_PATCHES) the
 	last patches in the list.
 
