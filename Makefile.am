@@ -2069,8 +2069,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-jvmtiEnv.patch \
 	patches/icedtea-xml-encodinginfo.patch \
 	patches/icedtea-cc-interp-backedge.patch \
-	patches/icedtea-netx.patch \
-	$(DISTRIBUTION_PATCHES)
+	patches/icedtea-netx.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -2129,6 +2128,8 @@ if ENABLE_NPPLUGIN
 ICEDTEA_PATCHES += patches/icedtea-liveconnect-dist.patch
 endif
 endif
+
+ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 
 stamps/extract.stamp: stamps/download.stamp
 if OPENJDK_SRC_DIR_FOUND
