@@ -50,6 +50,7 @@ defaults to the root of the j2sdk-image build dir otherwise (but then
 you cannot move that to another location without adjusting the paths
 in the tapset/hotspot.stp file. For example:
  --enable-systemtap --with-abs-install-dir=/usr/lib/jvm/java-1.6.0-openjdk
+(Java method tracing works starting with systemtap 0.9.9)
 
 See ./configure --help if you need to override the defaults.
 

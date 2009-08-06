@@ -409,13 +409,84 @@ probe hotspot.monitor_contended_exit =
                      name, thread_id, id, class);
 }
 
-// Doesn't work yet.
-// method__entry
-// method__return
+/* hotspot.method_entry (extended probe)
+   Triggers when a method is entered.
+   Sets thread_id to the current java thread id, class to the name of
+   the class, method to the name of the method, and sig to the
+   signature string of the method.
+   Needs -XX:+ExtendedDTraceProbes.
+*/
+probe hotspot.method_entry =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("method__entry"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("method__entry")
+{
+  name = "method_entry";
+  thread_id = $arg1;
+  class = user_string_n($arg2, $arg3);
+  method = user_string_n($arg4, $arg5);
+  sig = user_string_n($arg6, $arg7);
+  probestr = sprintf("%s(thread_id=%d,class='%s',method='%s',sig='%s')",
+		     name, thread_id, class, method, sig);
+}
 
-// Missing
-// compiled__method__load
-// compiled__method__unload
+/* hotspot.method_return (extended probe)
+   Triggers when a method returns.
+   Sets thread_id to the current java thread id, class to the name of
+   the class, method to the name of the method, and sig to the
+   signature string of the method.
+   Needs -XX:+ExtendedDTraceProbes.
+*/
+probe hotspot.method_return =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("method__return"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("method__return")
+{
+  name = "method_return";
+  thread_id = $arg1;
+  class = user_string_n($arg2, $arg3);
+  method = user_string_n($arg4, $arg5);
+  sig = user_string_n($arg6, $arg7);
+  probestr = sprintf("%s(thread_id=%d,class='%s',method='%s',sig='%s')",
+		     name, thread_id, class, method, sig);
+}
+
+/* hotspot.compiled_method_load
+   Triggers when a compiled method is loaded.
+   Sets class to the name of the class, method to the name of the
+   method, sig to the signature string of the method, code to the
+   address where the code is loaded and size to the number of bytes of
+   code.
+*/
+probe hotspot.compiled_method_load =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("compiled__method__load"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("compiled__method__load")
+{
+  name = "compiled_method_load";
+  class = user_string_n($arg1, $arg2);
+  method = user_string_n($arg3, $arg4);
+  sig = user_string_n($arg5, $arg6);
+  code = $arg7;
+  size = $arg8;
+  probestr = sprintf("%s(class='%s',method='%s',sig='%s',code=0x%x,size=%d)",
+		     name, class, method, sig, code, size);
+}
+
+/* hotspot.compiled_method_unload
+   Triggers when a compiled method is unloaded.
+   Sets class to the name of the class, method to the name of the
+   method, sig to the signature string of the method.
+*/
+probe hotspot.compiled_method_unload =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("compiled__method__unload"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("compiled__method__unload")
+{
+  name = "compiled_method_unload";
+  class = user_string_n($arg1, $arg2);
+  method = user_string_n($arg3, $arg4);
+  sig = user_string_n($arg5, $arg6);
+  probestr = sprintf("%s(class='%s',method='%s',sig='%s')",
+		     name, class, method, sig);
+}
+
 
 // Extra private probes
 // hashtable__new_entry

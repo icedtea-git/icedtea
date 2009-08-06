@@ -1,3 +1,13 @@
+2009-08-05  Mark Wielaard  <mjw@redhat.com>
+
+	* patches/icedtea-systemtap.patch: Remove workaround for nmethod.cpp.
+	* tapset/hotspot.stp.in: Add tapset functions for
+	hotspot.method_entry, hotspot.method_return,
+	hotspot.compiled_method_load and hotspot.compiled_method_unload.
+	* NEWS: Metion new support for java method tracing.
+	* INSTALL: Add that java method tracing support needs systemtap
+	0.9.9 or higher.
+
 2009-08-06  Andrew John Hughes  <ahughes@redhat.com>
 
 	* INSTALL:

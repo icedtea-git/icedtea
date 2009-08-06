@@ -17,6 +17,8 @@ New in release 1.11 (2009-08-06)
   artefacts still remain in this release; the supported behaviour
   is still the use of gcj jdk for a full bootstrap and icedtea
   for a quick build.
+- Added java method tracing using systemtap version 0.9.9+.
+- Added latest security fixes.
 
 New in release 1.10 (2009-05-29)
 

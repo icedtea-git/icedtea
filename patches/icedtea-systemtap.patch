@@ -9,24 +9,6 @@ diff -r 945bf7540697 make/linux/makefiles/dtrace.make
 +CFLAGS += -DDTRACE_ENABLED
 +
 +# It doesn't support HAVE_DTRACE_H though.
-diff -r 945bf7540697 src/share/vm/code/nmethod.cpp
---- openjdk/hotspot/src/share/vm/code/nmethod.cpp	Thu Jan 22 14:42:01 2009 -0800
-+++ openjdk/hotspot/src/share/vm/code/nmethod.cpp	Mon Feb 02 13:47:34 2009 +0100
-@@ -22,6 +22,14 @@
-  *
-  */
- 
-+#ifdef __GNUC__
-+// GCC seems to have some trouble with the inserted probes.
-+// error: _probe_compiled__method__unload causes a section type conflict
-+// error: compiled__method__unload_probe_name causes a section type conflict
-+// So disable probe insertion for now.
-+#undef DTRACE_ENABLED
-+#endif
-+
- # include "incls/_precompiled.incl"
- # include "incls/_nmethod.cpp.incl"
- 
 diff -r 945bf7540697 src/share/vm/prims/jni.cpp
 --- openjdk/hotspot/src/share/vm/prims/jni.cpp	Thu Jan 22 14:42:01 2009 -0800
 +++ openjdk/hotspot/src/share/vm/prims/jni.cpp	Mon Feb 02 13:47:34 2009 +0100
