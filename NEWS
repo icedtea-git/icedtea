@@ -1,3 +1,23 @@
+New in release 1.11 (2009-08-06)
+
+- Updated to OpenJDK7 b66 (Milestone 4), including
+  JSR 308: Annotations on Java types.
+- Updates/bug fixes for netx, Shark and the web plugin.
+- Zero is now provided in the upstream forest rather than in-tree.
+- The options
+  - --with-openjdk
+  - --with-icedtea
+  - --with-openjdk-home
+  - --with-icedtea-home
+  - --with-gcj-jdk
+  have been removed.  The JDK is now specified by --with-jdk-home
+  and whether or not do a full bootstrap or not is now decided
+  by --disable-bootstrap (the default is yes).  This is in preparation
+  for making the two stages independent of the JDK used, but some
+  artefacts still remain in this release; the supported behaviour
+  is still the use of gcj jdk for a full bootstrap and icedtea
+  for a quick build.
+
 New in release 1.10 (2009-05-29)
 
 - Updated to OpenJDK7 b59 build via IcedTea forest.  Now includes
