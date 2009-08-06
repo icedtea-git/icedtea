@@ -129,7 +129,7 @@ class IcedTeaPluginUtilities
 
     	/* Constructs message prefix with given context, reference and src */
     	static std::string* constructMessagePrefix(int context, int reference,
-    			                    char* address);
+    			                    const char* address);
 
     	/* Converts given pointer to a string representation */
     	static std::string* JSIDToString(void* id);
@@ -243,5 +243,12 @@ class MessageBus
            after this function returns) */
         void post(const char* message);
 };
+
+/*
+ * JNI map used for mediating between NPVariants and Java objects
+ *
+ *
+ *
+ */
 
 #endif // __ICEDTEAPLUGINUTILS_H__

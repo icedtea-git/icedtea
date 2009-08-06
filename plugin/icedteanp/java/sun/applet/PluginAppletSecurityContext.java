@@ -57,6 +57,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import sun.reflect.generics.repository.MethodRepository;
+
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 
@@ -199,7 +201,7 @@ class Signature {
 
 		return c;
 	}
-	
+
 	public static Class primitiveNameToType(String name) {
 		if (name.equals("void"))
 			return Void.TYPE;
@@ -335,7 +337,15 @@ public class PluginAppletSecurityContext {
 				Signature signature = parseCall(args[3], ((Class) store.getObject(classID)).getClassLoader(), Signature.class);
 				Object[] a = signature.getClassArray();
 
-				Class c = (Class) store.getObject(classID);
+				Class c;
+
+				if (message.startsWith("GetStaticMethodID") || 
+				    methodName.equals("<init>") || 
+				    methodName.equals("<clinit>"))
+					c = (Class) store.getObject(classID);
+				else
+					c = store.getObject(classID).getClass();
+
 				Method m = null;
 				Constructor cs = null;
 				Object o = null;
@@ -353,10 +363,13 @@ public class PluginAppletSecurityContext {
 					|| message.startsWith("GetFieldID")) {
 				String[] args = message.split(" ");
 				Integer classID = parseCall(args[1], null, Integer.class);
-				String fieldName = parseCall(args[2], null, String.class);
-				Signature signature = parseCall(args[3], ((Class) store.getObject(classID)).getClassLoader(), Signature.class);
+				Integer fieldID = parseCall(args[2], null, Integer.class);
+				String fieldName = (String) store.getObject(fieldID);
 
 				Class c = (Class) store.getObject(classID);
+
+				PluginDebug.debug("GetStaticFieldID/GetFieldID got class=" + c.getName());
+				
 				Field f = null;
 				f = c.getField(fieldName);
 
@@ -575,101 +588,61 @@ public class PluginAppletSecurityContext {
 				store.reference(c);
 
 				write(reference, "GetObjectClass " + store.getIdentifier(c));
-			} else if (message.startsWith("CallStaticMethod")) {
-				String[] args = message.split(" ");
-				Integer classID = parseCall(args[1], null, Integer.class);
-				Integer methodID = parseCall(args[2], null, Integer.class);
-
-				PluginDebug.debug("GETTING: " + methodID);
-				final Method m = (Method) store.getObject(methodID);
-				PluginDebug.debug("GOT: " + m);
-				Class[] argTypes = m.getParameterTypes();
-
-				Object[] arguments = new Object[argTypes.length];
-				for (int i = 0; i < argTypes.length; i++) {
-					arguments[i] = parseArgs(args[3 + i], argTypes[i]);
-					// System.out.println ("GOT ARG: " + argTypes[i] + " " +
-					// arguments[i]);
-				}
-
-				// System.out.println ("Calling " + m);
-
-				final Object[] fArguments = arguments;
-				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
-				Class c = (Class) store.getObject(classID);
-				checkPermission(src, c, acc);
-
-				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
-					public Object run() {
-						try {
-							return m.invoke(null, fArguments);
-						} catch (Throwable t) {
-							return t;
-						}
-					}
-				}, acc);
-
-				if (ret instanceof Throwable)
-					throw (Throwable) ret;
-
-				// if (ret != null)
-				// System.out.println ("RETURN VALUE: " + ret + " " +
-				// ret.getClass());
-				// else
-				// System.out.println ("RETURN VALUE: " + ret);
-				if (ret == null) {
-					write(reference, "CallStaticMethod void");
-				} else if (m.getReturnType() == Boolean.TYPE
-						|| m.getReturnType() == Byte.TYPE
-						|| m.getReturnType() == Short.TYPE
-						|| m.getReturnType() == Integer.TYPE
-						|| m.getReturnType() == Long.TYPE
-						|| m.getReturnType() == Float.TYPE
-						|| m.getReturnType() == Double.TYPE) {
-					write(reference, "CallStaticMethod " + ret);
-				} else if (m.getReturnType() == Character.TYPE) {
-					char ch = (Character) ret;
-					int high = (((int) ch) >> 8) & 0x0ff;
-					int low = ((int) ch) & 0x0ff;
-					write(reference, "CallStaticMethod " + low + "_" + high);
-				} else {
-					// Track returned object.
-					store.reference(ret);
-					write(reference, "CallStaticMethod "
-							+ store.getIdentifier(ret));
-				}
-			} else if (message.startsWith("CallMethod")) {
+			} else if (message.startsWith("CallMethod") ||
+					   message.startsWith("CallStaticMethod")) {
 				String[] args = message.split(" ");
 				Integer objectID = parseCall(args[1], null, Integer.class);
-				Integer methodID = parseCall(args[2], null, Integer.class);
+				String methodName = parseCall(args[2], null, String.class);
+				Object o = null;
+				Class c;
 
-				final Object o = (Object) store.getObject(objectID);
-				final Method m = (Method) store.getObject(methodID);
-				Class[] argTypes = m.getParameterTypes();
+				if (message.startsWith("CallMethod")) {
+					o = (Object) store.getObject(objectID);
+					c = o.getClass();
+				} else {
+					c = (Class) store.getObject(objectID);
+				}
 
-				Object[] arguments = new Object[argTypes.length];
-				for (int i = 0; i < argTypes.length; i++) {
-					arguments[i] = parseArgs(args[3 + i], argTypes[i]);
-					PluginDebug.debug("GOT ARG: " + argTypes[i] + " "
-							+ arguments[i]);
+				// length -3 to discard first 3, + 2 for holding object 
+				// and method name
+				Object[] arguments = new Object[args.length - 1];
+				arguments[0] = c;
+				arguments[1] = methodName;
+                for (int i = 0; i < args.length - 3; i++) {
+                    arguments[i+2] = store.getObject(parseCall(args[3 + i], null, Integer.class));
+                    PluginDebug.debug("GOT ARG: " + arguments[i]);
+                }
+
+                Object[] matchingMethodAndArgs = MethodOverloadResolver.getMatchingMethod(arguments);
+                
+                if (matchingMethodAndArgs == null) {
+                    write(reference, "Error: No suitable method with matching args found");
+                    return;
+                }
+
+				final Method m = (Method) matchingMethodAndArgs[0];
+				Object[] castedArgs = new Object[matchingMethodAndArgs.length - 1];
+				for (int i=0; i < castedArgs.length; i++) {
+				    castedArgs[i] = matchingMethodAndArgs[i+1];
 				}
 
 				String collapsedArgs = "";
-				for (String s : args) {
-					collapsedArgs += " " + s;
+				for (Object arg : castedArgs) {
+					collapsedArgs += " " + arg.toString();
 				}
 
 				PluginDebug.debug("Calling method " + m + " on object " + o
-						+ " with " + arguments);
+						+ " (" + c + ") with " + collapsedArgs);
 
 				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
-				checkPermission(src, o.getClass(), acc);
+				checkPermission(src, c, acc);
 
-				final Object[] fArguments = arguments;
+				final Object[] fArguments = castedArgs;
+				final Object callableObject = o;
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
 					public Object run() {
 						try {
-							return m.invoke(o, fArguments);
+							return m.invoke(callableObject, fArguments);
 						} catch (Throwable t) {
 							return t;
 						}
@@ -691,20 +664,36 @@ public class PluginAppletSecurityContext {
 						+ " of type " + retO);
 
 				if (ret == null) {
-					write(reference, "CallMethod void");
+					write(reference, "CallMethod literalreturn void");
 				} else if (m.getReturnType() == Boolean.TYPE
 						|| m.getReturnType() == Byte.TYPE
 						|| m.getReturnType() == Short.TYPE
 						|| m.getReturnType() == Integer.TYPE
 						|| m.getReturnType() == Long.TYPE
 						|| m.getReturnType() == Float.TYPE
-						|| m.getReturnType() == Double.TYPE) {
-					write(reference, "CallMethod " + ret);
-				} else if (m.getReturnType() == Character.TYPE) {
-					char ch = (Character) ret;
-					int high = (((int) ch) >> 8) & 0x0ff;
-					int low = ((int) ch) & 0x0ff;
-					write(reference, "CallMethod " + low + "_" + high);
+						|| m.getReturnType() == Double.TYPE
+						|| m.getReturnType() == Boolean.class
+                        || m.getReturnType() == Byte.class
+                        || m.getReturnType() == Short.class
+                        || m.getReturnType() == Integer.class
+                        || m.getReturnType() == Long.class
+                        || m.getReturnType() == Float.class
+                        || m.getReturnType() == Double.class) {
+					write(reference, "CallMethod literalreturn " + ret);
+				} else if (m.getReturnType() == Character.TYPE
+				        || m.getReturnType() == Character.class) {
+				    String s = new String(new char[] {(Character) ret});
+				    byte[] b = null;
+				    b = s.getBytes("UTF-8");
+				    StringBuffer buf = new StringBuffer(b.length * 2);
+				    buf.append(b.length);
+				    for (int i = 0; i < b.length; i++)
+				        buf
+				        .append(" "
+				                + Integer
+				                .toString(((int) b[i]) & 0x0ff, 16));
+					
+					write(reference, "CallMethod literalreturn " + buf);
 				} else {
 					// Track returned object.
 					store.reference(ret);
@@ -844,7 +833,57 @@ public class PluginAppletSecurityContext {
 
 				store.reference(newArray);
 				write(reference, "NewArray " + store.getIdentifier(newArray));
-			} else if (message.startsWith("NewObjectArray")) {
+			} else if (message.startsWith("HasMethod")) {
+                String[] args = message.split(" ");
+                Integer classNameID = parseCall(args[1], null, Integer.class);
+                Integer methodNameID = parseCall(args[2], null, Integer.class);
+                
+                Class c = (Class) store.getObject(classNameID);
+                String methodName = (String) store.getObject(methodNameID);
+
+                Method method = null;
+                Method[] classMethods = c.getMethods();
+                for (Method m: classMethods) {
+                	if (m.getName().equals(methodName)) {
+                		method = m;
+                		break;
+                	}
+                }
+                
+                int hasMethod = (method != null) ? 1 : 0; 
+
+                write(reference, "HasMethod " + hasMethod);
+            } else if (message.startsWith("HasPackage")) {
+                String[] args = message.split(" ");
+                Integer nameID = parseCall(args[1], null, Integer.class);
+                String pkgName = (String) store.getObject(nameID);
+
+                Package pkg = Package.getPackage(pkgName);
+                int hasPkg = (pkg != null) ? 1 : 0; 
+
+                write(reference, "HasPackage " + hasPkg);
+
+            } else if (message.startsWith("HasField")) {
+                String[] args = message.split(" ");
+                Integer classNameID = parseCall(args[1], null, Integer.class);
+                Integer fieldNameID = parseCall(args[2], null, Integer.class);
+                
+                Class c = (Class) store.getObject(classNameID);
+                String fieldName = (String) store.getObject(fieldNameID);
+
+                Field field = null;
+                Field[] classFields = c.getFields();
+                for (Field f: classFields) {
+                	if (f.getName().equals(fieldName)) {
+                		field = f;
+                		break;
+                	}
+                }
+
+                int hasField = (field != null) ? 1 : 0; 
+
+                write(reference, "HasField " + hasField);
+            } else if (message.startsWith("NewObjectArray")) {
 				String[] args = message.split(" ");
 				Integer length = parseCall(args[1], null, Integer.class);
 				Integer classID = parseCall(args[2], null, Integer.class);
@@ -907,16 +946,16 @@ public class PluginAppletSecurityContext {
                 PluginDebug.debug("MESSAGE: " + message);
                 String[] args = message.split(" ");
                 int length = new Integer(args[1]);
-                byte[] byteArray = new byte[length + 1];
+                byte[] byteArray = new byte[length];
                 String ret = null;
-                int i = 2;
-                int c = Integer.parseInt(args[i++], 16);
+                int i = 0;
+                int j = 2;
+                int c;
                 while (i < length) {
-                    byteArray[i-2] = (byte) c;
-                    c = Integer.parseInt(args[i++], 16);
+                    c = Integer.parseInt(args[j++], 16);
+                    byteArray[i++] = (byte) c;
                 }
 
-                byteArray[i] = (byte) 0;
                 ret = new String(byteArray, "UTF-8");
                 PluginDebug.debug("NEWSTRINGUTF: " + ret);
 
@@ -977,7 +1016,12 @@ public class PluginAppletSecurityContext {
 				Integer objectID = parseCall(args[1], null, Integer.class);
 				Object o = (Object) store.getObject(objectID);
 				write(reference, "GetClassName " + o.getClass().getName());
-			} 
+			} else if (message.startsWith("GetClassID")) {
+                String[] args = message.split(" ");
+                Integer objectID = parseCall(args[1], null, Integer.class);
+                store.reference(store.getObject(objectID).getClass());
+                write(reference, "GetClassID " + store.getIdentifier(store.getObject(objectID).getClass()));
+            }
 		} catch (Throwable t) {
 			t.printStackTrace();
 			String msg = t.getCause() != null ? t.getCause().getMessage() : t.getMessage();
@@ -988,7 +1032,7 @@ public class PluginAppletSecurityContext {
 				msg = "LiveConnectPermissionNeeded " + msg;
 			}
 
-			this.streamhandler.write("instance " + identifier + " reference " + reference + " Error " + msg);
+			write(reference, " Error " + msg);
 
 			// ExceptionOccured is only called after Callmethod() by mozilla. So
 			// for exceptions that are not related to CallMethod, we need a way

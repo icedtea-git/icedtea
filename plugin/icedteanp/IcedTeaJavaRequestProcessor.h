@@ -45,8 +45,9 @@ exception statement from your version. */
 
 #include "IcedTeaNPPlugin.h"
 #include "IcedTeaPluginUtils.h"
+#include "IcedTeaScriptablePluginObject.h"
 
-#define REQUESTTIMEOUT 60
+#define REQUESTTIMEOUT 20
 
 /*
  * This struct holds data specific to a Java operation requested by the plugin
@@ -72,6 +73,7 @@ typedef struct java_request
  */
 typedef struct java_result_data
 {
+
 	// Return identifier (if applicable)
     int return_identifier;
 
@@ -85,7 +87,7 @@ typedef struct java_result_data
     std::string* error_msg;
 
     // Boolean indicating if an error occurred
-    bool error_occured;
+    bool error_occurred;
 
 } JavaResultData;
 
@@ -102,10 +104,27 @@ class JavaRequestProcessor : BusSubscriber
     	/* Post message on bus and wait */
     	void postAndWaitForResponse(std::string* message);
 
+    	/* Creates a argument on java-side with appropriate type */
+    	int createJavaObjectFromVariant(NPVariant variant);
+
+    	// Call a method, static or otherwise, depending on supplied arg
+        JavaResultData* call(bool isStatic, std::string objectID,
+                             std::string methodName, const NPVariant* args,
+                             int numArgs);
+
     public:
     	JavaRequestProcessor();
     	~JavaRequestProcessor();
     	virtual bool newMessageOnBus(const char* message);
+
+    	/* Resets the results */
+    	void resetResult();
+
+    	/* Increments reference count by 1 */
+    	void addReference(std::string object_id);
+
+    	/* Decrements reference count by 1 */
+    	void deleteReference(std::string object_id);
 
     	/* Returns the toString() value, given an object identifier */
     	JavaResultData* getToStringValue(std::string object_id);
@@ -117,9 +136,36 @@ class JavaRequestProcessor : BusSubscriber
     	JavaResultData* getMethodID1(NPObject* obj, NPIdentifier methodName,
                         std::vector<NPVariant> args);
 
+    	/* Returns the field object */
+        JavaResultData* getField(std::string classID, std::string fieldName);
+
+        /* Returns the static field object */
+        JavaResultData* getStaticField(std::string classID, std::string fieldName);
+
+        /* Returns the field id */
+        JavaResultData* getFieldID(std::string classID, std::string fieldName);
+
+        /* Returns the static field id */
+    	JavaResultData* getStaticFieldID(std::string classID, std::string fieldName);
+
     	/* Returns the method id */
-    	JavaResultData* getMethodID(std::string objectID, NPIdentifier methodName,
+    	JavaResultData* getMethodID(std::string classID, NPIdentifier methodName,
                                     std::vector<std::string> args);
+
+        /* Returns the static method id */
+        JavaResultData* getStaticMethodID(std::string classID, NPIdentifier methodName,
+                                     std::vector<std::string> args);
+
+        /* Calls a static method */
+        JavaResultData* callStaticMethod(std::string classID, std::string methodName,
+                                         const NPVariant* args, int numArgs);
+
+        /* Calls a method on an instance */
+        JavaResultData* callMethod(std::string objectID, std::string methodName,
+								   const NPVariant* args, int numArgs);
+
+        /* Returns the class of the given object */
+        JavaResultData* getObjectClass(std::string objectID);
 
     	/* Creates a new object */
     	JavaResultData* newObject(std::string objectID, std::string methodID,
@@ -129,11 +175,25 @@ class JavaRequestProcessor : BusSubscriber
     	JavaResultData* findClass(std::string name);
 
     	/* Returns the type class name */
-    	JavaResultData* getClassName(std::string ID);
+    	JavaResultData* getClassName(std::string objectID);
+
+    	/* Returns the type class id */
+    	JavaResultData* getClassID(std::string objectID);
 
     	/* Creates a new string in the Java store */
     	JavaResultData* newString(std::string str);
 
+    	/* Check if package exists */
+    	JavaResultData* hasPackage(std::string package_name);
+
+        /* Check if method exists */
+        JavaResultData* hasMethod(std::string classID, std::string method_name);
+
+        /* Check if field exists */
+        JavaResultData* hasField(std::string classID, std::string method_name);
+
+        /* Returns the instance ID of the java applet */
+        JavaResultData* getAppletObjectInstance(std::string instanceID);
 };
 
 #endif /* ICEDTEAJAVAREQUESTPROCESSOR_H_ */

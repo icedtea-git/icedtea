@@ -59,6 +59,9 @@ static pthread_t plugin_request_processor_thread1;
 static pthread_t plugin_request_processor_thread2;
 static pthread_t plugin_request_processor_thread3;
 
+// Condition on which the queue processor waits
+extern pthread_cond_t cond_message_available;
+
 // debug switch
 extern int plugin_debug;
 
@@ -89,13 +92,10 @@ int get_id_from_instance(NPP* instance);
 /* Sends a message to the appletviewer */
 void plugin_send_message_to_appletviewer(gchar const* message);
 
-/* Returns a scriptable npobject */
+/* Returns an appropriate (package/object) scriptable npobject */
 NPObject* get_scriptable_object(NPP instance);
 
 /* Creates a new scriptable plugin object and returns it */
 NPObject* allocate_scriptable_object(NPP npp, NPClass *aClass);
-
-/* SIGUSR1 handler */
-void sigusr1handler();
 
 #endif	/* __ICEDTEANPPLUGIN_H__ */

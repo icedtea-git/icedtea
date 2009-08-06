@@ -1,3 +1,30 @@
+2009-08-06  Deepak Bhole  <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc: Handle error messages
+	from Java side. Add referencing/de-referencing support, and support for
+	fetching fields, invoking methods, and returning applet instances.
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.h: Decrease timeout to 20
+	seconds. Declare new functions created in the associated .cc file.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc: Add support for dynamic NPObject
+	creation per instance. Add a new global pthread_cond_t for message
+	availability.
+	* plugin/icedteanp/IcedTeaNPPlugin.h: Misc. changes related to the above
+	associated file.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc: Use condition based
+	wait for message availability, rather than periodic poll.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.h: Make
+	getInstanceFromMemberPtr and storeInstanceID global.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc: Force use of file:// src until
+	security subsystem is implemented.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.cc: Created skeletons for
+	Java and JavaPackage NPObjects, and implemented hasProperty, hasMethod,
+	getProperty and getMethod.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.h: Appropriate header
+	changes associated with the above.
+	* plugin/icedteanp/java/sun/applet/MethodOverloadResolver.java: New file.
+	Uses a cost-based approach to resolve overloaded methods when JavaScript
+	calls Java methods with potentially ambiguous type arguments.
+
 2009-10-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

@@ -85,7 +85,9 @@ IcedTeaPluginUtilities::constructMessagePrefix(int context)
 std::string*
 IcedTeaPluginUtilities::constructMessagePrefix(int context, int reference)
 {
-	std::string* result = new std::string();
+    // Until security is implemented, use file:// source for _everything_
+
+	/*std::string* result = new std::string();
 	char* context_str = itoa(context);
 	char* reference_str = itoa(reference);
 
@@ -97,7 +99,9 @@ IcedTeaPluginUtilities::constructMessagePrefix(int context, int reference)
 	free(context_str);
 	free(reference_str);
 
-	return result;
+	return result;*/
+
+    return IcedTeaPluginUtilities::constructMessagePrefix(context, reference, "file://");
 }
 
 /**
@@ -112,7 +116,7 @@ IcedTeaPluginUtilities::constructMessagePrefix(int context, int reference)
 
 std::string*
 IcedTeaPluginUtilities::constructMessagePrefix(int context, int reference,
-		                                       char* address)
+		                                       const char* address)
 {
 	std::string* result = new std::string();
 	char* context_str = itoa(context);

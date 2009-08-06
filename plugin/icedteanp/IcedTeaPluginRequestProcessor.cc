@@ -164,6 +164,9 @@ PluginRequestProcessor::newMessageOnBus(const char* message)
             message_queue->push_back(message_parts);
             pthread_mutex_unlock(&message_queue_mutex);
 
+            // Broadcast that a message is now available
+            pthread_cond_broadcast(&cond_message_available);
+
             return true;
         }
 
@@ -282,7 +285,7 @@ PluginRequestProcessor::sendString(std::vector<std::string>* message_parts)
     java_request = new JavaRequestProcessor();
     java_result = java_request->newString(*variant_string);
 
-    if (java_result->error_occured)
+    if (java_result->error_occurred)
     {
         printf("Unable to process NewString request. Error occurred: %s\n", java_result->error_msg);
         //goto cleanup;
@@ -342,7 +345,7 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
     java_result = java_request->getString(propertyNameID);
 
     // the result we want is in result_string (assuming there was no error)
-    if (java_result->error_occured)
+    if (java_result->error_occurred)
     {
         printf("Unable to get member name for setMember. Error occurred: %s\n", java_result->error_msg);
         goto cleanup;
@@ -359,7 +362,7 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
     java_result = java_request->getClassName(valueID);
 
     // the result we want is in result_string (assuming there was no error)
-    if (java_result->error_occured)
+    if (java_result->error_occurred)
     {
         printf("Unable to get class name for setMember. Error occurred: %s\n", java_result->error_msg);
         goto cleanup;
@@ -373,7 +376,7 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
     java_result = java_request->getToStringValue(valueID);
 
     // the result we want is in result_string (assuming there was no error)
-    if (java_result->error_occured)
+    if (java_result->error_occurred)
     {
         printf("Unable to get value for setMember. Error occurred: %s\n", java_result->error_msg);
         goto cleanup;
@@ -474,7 +477,7 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
     java_result = java_request->getString(*member_id);
 
     // the result we want is in result_string (assuming there was no error)
-    if (java_result->error_occured)
+    if (java_result->error_occurred)
     {
         printf("Unable to process getMember request. Error occurred: %s\n", java_result->error_msg);
         //goto cleanup;
@@ -507,7 +510,7 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
     java_result = java_request->findClass("netscape.javascript.JSObject");
 
     // the result we want is in result_string (assuming there was no error)
-    if (java_result->error_occured)
+    if (java_result->error_occurred)
     {
         printf("Unable to process getMember request. Error occurred: %s\n", java_result->error_msg);
         //goto cleanup;
@@ -530,7 +533,7 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
             *args);
 
     // the result we want is in result_string (assuming there was no error)
-    if (java_result->error_occured)
+    if (java_result->error_occurred)
     {
         printf("Unable to process getMember request. Error occurred: %s\n", java_result->error_msg);
         //goto cleanup;
@@ -551,7 +554,7 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
                                           *args);
 
     // the result we want is in result_string (assuming there was no error)
-    if (java_result->error_occured)
+    if (java_result->error_occurred)
     {
         printf("Unable to process getMember request. Error occurred: %s\n", java_result->error_msg);
         //goto cleanup;
@@ -587,6 +590,7 @@ queue_processor(void* data)
     PluginRequestProcessor* processor = (PluginRequestProcessor*) data;
     std::vector<std::string>* message_parts = NULL;
     std::string command;
+    pthread_mutex_t wait_mutex = PTHREAD_MUTEX_INITIALIZER; // This is needed for API compat. and is unused
 
     PLUGIN_DEBUG_1ARG("Queue processor initialized. Queue = %p\n", message_queue);
 
@@ -602,8 +606,6 @@ queue_processor(void* data)
 
         if (message_parts)
         {
-            PLUGIN_DEBUG_0ARG("Processing engaged\n");
-
             command = message_parts->at(2);
 
             if (command == "GetMember")
@@ -614,7 +616,10 @@ queue_processor(void* data)
                 processor->sendString(message_parts);
             } else if (command == "SetMember")
             {
+            	// write methods are synchronized
+            	pthread_mutex_lock(&syn_write_mutex);
                 processor->setMember(message_parts);
+                pthread_mutex_unlock(&syn_write_mutex);
             } else
             {
                 // Nothing matched
@@ -622,10 +627,9 @@ queue_processor(void* data)
 
             }
 
-            PLUGIN_DEBUG_0ARG("Processing dis-engaged\n");
         } else
         {
-            usleep(20000);
+        	pthread_cond_wait(&cond_message_available, &wait_mutex);
             pthread_testcancel();
         }
 

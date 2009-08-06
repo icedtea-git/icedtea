@@ -70,8 +70,8 @@ static std::map<void*, NPP>* instance_map;
 static long internal_req_ref_counter;
 
 // JS request processor methods
-static NPP getInstanceFromMemberPtr(void* member_ptr);
-static void storeInstanceID(void* member_ptr, NPP instance);
+extern NPP getInstanceFromMemberPtr(void* member_ptr);
+extern void storeInstanceID(void* member_ptr, NPP instance);
 static void* requestFromMainThread();
 static void* getSlot(void* tdata);
 static void* setSlot(void* tdata);

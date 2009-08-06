@@ -203,9 +203,6 @@ struct GCJPluginData
   guint32 window_width;
   // The last plugin window height sent to us by the browser.
   guint32 window_height;
-
-  // The scriptable plugin object
-  NPObject* scriptable_plugin_object;
 };
 
 // Documentbase retrieval type-punning union.
@@ -258,6 +255,8 @@ static GPid appletviewer_pid = -1;
 static guint appletviewer_watch_id = -1;
 
 int plugin_debug = getenv ("ICEDTEAPLUGIN_DEBUG") != NULL;
+
+pthread_cond_t cond_message_available = PTHREAD_COND_INITIALIZER;
 
 // Functions prefixed by GCJ_ are instance functions.  They are called
 // by the browser and operate on instances of GCJPluginData.
@@ -352,36 +351,20 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
 
   // Documentbase retrieval.
   documentbase = plugin_get_documentbase (instance);
-  if (!documentbase)
+  if (documentbase)
     {
-      PLUGIN_ERROR ("Documentbase retrieval failed."
-                    " Browser not Mozilla-based?");
-      //goto cleanup_appletviewer_mutex;
+      // => dummy plugin instantiation
+
+
+      // Send applet tag message to appletviewer.
+      applet_tag = plugin_create_applet_tag (argc, argn, argv);
+
+      tag_message = (gchar*) malloc(strlen(applet_tag)*sizeof(gchar) + 1024);
+      g_sprintf(tag_message, "instance %d tag %s %s", instance_counter, documentbase, applet_tag);
+
+      //plugin_send_message_to_appletviewer (data, data->instance_string);
+      plugin_send_message_to_appletviewer (tag_message);
     }
-
-  // Send applet tag message to appletviewer.
-  applet_tag = plugin_create_applet_tag (argc, argn, argv);
-
-  tag_message = (gchar*) malloc(strlen(applet_tag)*sizeof(gchar) + 1024);
-  g_sprintf(tag_message, "instance %d tag %s %s", instance_counter, documentbase, applet_tag);
-
-  //plugin_send_message_to_appletviewer (data, data->instance_string);
-  plugin_send_message_to_appletviewer (tag_message);
-
-  //send cookie information
-  char* cookie_string;
-  if (get_cookie_info(documentbase, &cookie_string) == NS_OK)
-    {
-      cookie_info = (gchar*) malloc(sizeof(cookie_string) + 1024);
-      g_sprintf(cookie_info, "instance %d cookie %s", instance_counter, cookie_string);
-    }
-  else
-    {
-      cookie_info = (gchar*) malloc(1024);
-      g_sprintf(cookie_info, "instance %d cookie", instance_counter);
-    }
-
-  plugin_send_message_to_appletviewer (cookie_info);
 
   g_mutex_unlock (data->appletviewer_mutex);
 
@@ -391,11 +374,6 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
 
   // Set back-pointer to owner instance.
   data->owner = instance;
-
-  printf("Creating scriptable object..");
-  npPluginObj = get_scriptable_object(instance);
-
-  data->scriptable_plugin_object = npPluginObj;
 
   instance->pdata = data;
 
@@ -430,6 +408,7 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
   documentbase = NULL;
 
   // store an identifier for this plugin
+  PLUGIN_DEBUG_2ARG("Mapping id instance_counter and instance %p", instance_counter, instance);
   g_hash_table_insert(instance_to_id_map, instance, GINT_TO_POINTER(instance_counter));
   g_hash_table_insert(id_to_instance_map, GINT_TO_POINTER(instance_counter), instance);
   instance_counter++;
@@ -481,7 +460,7 @@ void start_jvm_if_needed()
   // clean up any older pip
   unlink (in_pipe_name);
 
-  PLUGIN_DEBUG_1ARG ("GCJ_New: creating input fifo: %s", in_pipe_name);
+  PLUGIN_DEBUG_1ARG ("GCJ_New: creating input fifo: %s\n", in_pipe_name);
   if (mkfifo (in_pipe_name, 0700) == -1 && errno != EEXIST)
     {
       PLUGIN_ERROR_TWO ("Failed to create input pipe", strerror (errno));
@@ -649,8 +628,7 @@ GCJ_GetValue (NPP instance, NPPVariable variable, void* value)
       break;
     case NPPVpluginScriptableNPObject:
       {
-         GCJPluginData *data = (GCJPluginData*) instance->pdata;
-         *(NPObject **)value = data->scriptable_plugin_object;
+         *(NPObject **)value = get_scriptable_object(instance);
       }
       break;
     default:
@@ -685,7 +663,7 @@ GCJ_Destroy (NPP instance, NPSavedData** save)
 NPError
 GCJ_SetWindow (NPP instance, NPWindow* window)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_SetWindow");
+  PLUGIN_DEBUG_0ARG ("GCJ_SetWindow\n");
 
   if (instance == NULL)
     {
@@ -936,7 +914,7 @@ get_cookie_info(const char* siteAddr, char** cookieString)
 static void
 plugin_data_new (GCJPluginData** data)
 {
-  PLUGIN_DEBUG_0ARG ("plugin_data_new");
+  PLUGIN_DEBUG_0ARG ("plugin_data_new\n");
 
   *data = (GCJPluginData*)
     (*browser_functions.memalloc) (sizeof (struct GCJPluginData));
@@ -957,7 +935,7 @@ plugin_data_new (GCJPluginData** data)
 static gchar*
 plugin_get_documentbase (NPP instance)
 {
-  PLUGIN_DEBUG_0ARG ("plugin_get_documentbase");
+  PLUGIN_DEBUG_0ARG ("plugin_get_documentbase\n");
 
   nsIPluginInstance* xpcom_instance = NULL;
   nsIPluginInstancePeer* peer = NULL;
@@ -995,7 +973,7 @@ plugin_get_documentbase (NPP instance)
 
   if (!documentbase)
     {
-      PLUGIN_ERROR ("documentbase is NULL.");
+      // NULL => dummy instantiation for LiveConnect
       goto cleanup_plugintaginfo2;
     }
 
@@ -1021,7 +999,7 @@ plugin_display_failure_dialog ()
 {
   GtkWidget* dialog = NULL;
 
-  PLUGIN_DEBUG_0ARG ("plugin_display_failure_dialog");
+  PLUGIN_DEBUG_0ARG ("plugin_display_failure_dialog\n");
 
   dialog = gtk_message_dialog_new (NULL,
                                    GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1243,7 +1221,7 @@ void get_instance_from_id(int id, NPP& instance)
                                        GINT_TO_POINTER(id));
 }
 
-int get_id_from_instance(NPP* instance)
+int get_id_from_instance(NPP instance)
 {
     return GPOINTER_TO_INT(g_hash_table_lookup(instance_to_id_map,
                                                    instance));
@@ -1336,42 +1314,6 @@ void get_proxy_info(const char* siteAddr, char** proxy_scheme, char** proxy_host
 
   PLUGIN_DEBUG_4ARG("Proxy info for %s: %s %s %s\n", siteAddr, *proxy_scheme, *proxy_host, *proxy_port);
 }
-
-/*
-void get_cookie_info(const char* siteAddr, char** cookie_string)
-{
-	nsresult rv;
-	nsCOMPtr<nsIScriptSecurityManager> sec_man = do_GetService(
-			NS_SCRIPTSECURITYMANAGER_CONTRACTID, &rv);
-
-	if (!sec_man) {
-		return NS_ERROR_FAILURE;
-	}
-
-	nsCOMPtr<nsIIOService> io_svc = do_GetService(NS_IOSERVICE_CONTRACTID, &rv);
-
-	if (NS_FAILED(rv) || !io_svc) {
-		return NS_ERROR_FAILURE;
-	}
-
-	nsCOMPtr<nsIURI> uri;
-	io_svc->NewURI(nsCString(siteAddr), NULL, NULL, getter_AddRefs(uri));
-
-	nsCOMPtr<nsICookieService> cookie_svc = do_GetService(
-			NS_COOKIESERVICE_CONTRACTID, &rv);
-
-	if (NS_FAILED(rv) || !cookie_svc) {
-		return NS_ERROR_FAILURE;
-	}
-
-	rv = cookie_svc->GetCookieString(uri, NULL, cookieString);
-
-	if (NS_FAILED(rv) || !*cookieString) {
-		return NS_ERROR_FAILURE;
-	}
-
-	return NS_OK;
-}*/
 
 // plugin_out_pipe_callback is called when the appletviewer crashes or
 // is killed.  It may be called after data has been destroyed in which
@@ -2143,27 +2085,50 @@ NPObject*
 get_scriptable_object(NPP instance)
 {
 
-	NPObject* scriptable_object;
+    printf("Calling plugin_get_documentbase\n");
+    gchar* document_base = plugin_get_documentbase(instance);
+    NPObject* obj;
 
-	NPClass* np_class = new NPClass();
-	np_class->structVersion = NP_CLASS_STRUCT_VERSION;
-	np_class->allocate = allocate_scriptable_object;
-	np_class->deallocate = IcedTeaScriptablePluginObject::deAllocate;
-	np_class->invalidate = IcedTeaScriptablePluginObject::invalidate;
-	np_class->hasMethod = IcedTeaScriptablePluginObject::hasMethod;
-	np_class->invoke = IcedTeaScriptablePluginObject::invoke;
-	np_class->invokeDefault = IcedTeaScriptablePluginObject::invokeDefault;
-	np_class->hasProperty = IcedTeaScriptablePluginObject::hasProperty;
-	np_class->getProperty = IcedTeaScriptablePluginObject::getProperty;
-	np_class->setProperty = IcedTeaScriptablePluginObject::setProperty;
-	np_class->removeProperty = IcedTeaScriptablePluginObject::removeProperty;
-	np_class->enumerate = IcedTeaScriptablePluginObject::enumerate;
-	np_class->construct = IcedTeaScriptablePluginObject::construct;
+    if (!document_base) // dummy instance/package?
+    {
+        obj = IcedTeaScriptablePluginObject::get_scriptable_java_package_object(instance, "");
+    } else
+    {
+        JavaRequestProcessor java_request = JavaRequestProcessor();
+        JavaResultData* java_result;
+        std::string instance_id = std::string();
+        std::string applet_class_id = std::string();
 
-	scriptable_object = browser_functions.createobject(instance, np_class);
-	PLUGIN_DEBUG_1ARG("Returning new scriptable class: %p\n", scriptable_object);
+        int id = get_id_from_instance(instance);
+        gchar* id_str = g_strdup_printf ("%d", id);
 
-	return scriptable_object;
+        java_result = java_request.getAppletObjectInstance(id_str);
+
+        g_free(id_str);
+
+        if (java_result->error_occurred)
+        {
+            printf("Error: Unable to fetch applet instance id from Java side.\n");
+            return NULL;
+        }
+
+        instance_id.append(*(java_result->return_string));
+
+        java_request.resetResult();
+        java_result = java_request.getClassID(instance_id);
+
+        if (java_result->error_occurred)
+        {
+            printf("Error: Unable to fetch applet instance id from Java side.\n");
+            return NULL;
+        }
+
+        applet_class_id.append(*(java_result->return_string));
+
+        obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(instance, applet_class_id, instance_id);
+    }
+
+	return obj;
 }
 
 NPObject*

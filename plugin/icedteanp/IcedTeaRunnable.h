@@ -48,7 +48,7 @@ exception statement from your version. */
 /*
  * This struct holds the result from the main-thread dispatched method
  */
-typedef struct result_data
+typedef struct java_result
 {
 	// Return identifier (if applicable)
     int return_identifier;

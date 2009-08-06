@@ -41,6 +41,9 @@ exception statement from your version. */
 
 #include "npupp.h"
 
+#include "IcedTeaJavaRequestProcessor.h"
+#include "IcedTeaNPPlugin.h"
+
 /**
  * IcedTeaScriptablePluginObject, an extended NPObject that implements
  * static functions whose pointers are supplied to NPClass.
@@ -54,6 +57,107 @@ class IcedTeaScriptablePluginObject: public NPObject
 
     public:
         IcedTeaScriptablePluginObject(NPP instance);
+
+        static void deAllocate(NPObject *npobj);
+
+        static void invalidate(NPObject *npobj);
+
+        static bool hasMethod(NPObject *npobj, NPIdentifier name);
+
+        static bool invoke(NPObject *npobj, NPIdentifier name,
+                const NPVariant *args, uint32_t argCount, NPVariant *result);
+
+        static bool invokeDefault(NPObject *npobj, const NPVariant *args,
+                uint32_t argCount, NPVariant *result);
+
+        static bool hasProperty(NPObject *npobj, NPIdentifier name);
+
+        static bool getProperty(NPObject *npobj, NPIdentifier name,
+                NPVariant *result);
+
+        static bool setProperty(NPObject *npobj, NPIdentifier name,
+                const NPVariant *value);
+
+        static bool removeProperty(NPObject *npobj, NPIdentifier name);
+
+        static bool enumerate(NPObject *npobj, NPIdentifier **value,
+                uint32_t *count);
+
+        static bool construct(NPObject *npobj, const NPVariant *args,
+                uint32_t argCount, NPVariant *result);
+
+        static NPObject* get_scriptable_java_package_object(NPP instance, const NPUTF8* name);
+};
+
+NPObject* voidallocate_scriptable_jp_object(NPP npp, NPClass *aClass);
+
+class IcedTeaScriptableJavaPackageObject: public NPObject
+{
+
+    private:
+    	NPP instance;
+    	std::string* package_name;
+
+    public:
+    	IcedTeaScriptableJavaPackageObject(NPP instance);
+
+    	~IcedTeaScriptableJavaPackageObject();
+
+    	void setPackageName(const NPUTF8* name);
+
+    	std::string getPackageName();
+
+        static void deAllocate(NPObject *npobj);
+
+        static void invalidate(NPObject *npobj);
+
+        static bool hasMethod(NPObject *npobj, NPIdentifier name);
+
+        static bool invoke(NPObject *npobj, NPIdentifier name,
+                const NPVariant *args, uint32_t argCount, NPVariant *result);
+
+        static bool invokeDefault(NPObject *npobj, const NPVariant *args,
+                uint32_t argCount, NPVariant *result);
+
+        static bool hasProperty(NPObject *npobj, NPIdentifier name);
+
+        static bool getProperty(NPObject *npobj, NPIdentifier name,
+                NPVariant *result);
+
+        static bool setProperty(NPObject *npobj, NPIdentifier name,
+                const NPVariant *value);
+
+        static bool removeProperty(NPObject *npobj, NPIdentifier name);
+
+        static bool enumerate(NPObject *npobj, NPIdentifier **value,
+                uint32_t *count);
+
+        static bool construct(NPObject *npobj, const NPVariant *args,
+                uint32_t argCount, NPVariant *result);
+
+        static NPObject* get_scriptable_java_object(NPP instance, std::string class_id, std::string instance_id);
+};
+
+class IcedTeaScriptableJavaObject: public NPObject
+{
+
+    private:
+    	NPP instance;
+    	std::string* class_id;
+    	std::string* instance_id;
+
+    public:
+    	IcedTeaScriptableJavaObject(NPP instance);
+
+    	~IcedTeaScriptableJavaObject();
+
+    	void setClassIdentifier(std::string class_id);
+
+    	void setInstanceIdentifier(std::string instance_id);
+
+    	std::string getClassID() { return *class_id; }
+
+    	std::string getInstanceID() { return *instance_id; }
 
         static void deAllocate(NPObject *npobj);
 
