@@ -1,3 +1,8 @@
+2009-08-06  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ADD_ZERO_CONFIGURE_ARGS): Adjust for added/removed
+	configuration options.
+
 2009-08-06  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
