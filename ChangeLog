@@ -1,3 +1,8 @@
+2009-08-06  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Bump to b67.
+	
 2009-08-06  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Allow passing
