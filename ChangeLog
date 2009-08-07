@@ -1,3 +1,8 @@
+2009-08-07  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ADD_ZERO_CONFIGURE_ARGS): Add configure options
+	for --with-*-src-zip= if not specified.
+
 2009-08-06  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (ADD_ZERO_CONFIGURE_ARGS): Adjust for added/removed

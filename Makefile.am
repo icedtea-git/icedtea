@@ -3435,7 +3435,9 @@ ADD_ZERO_CONFIGURE_ARGS += \
 			'--with-java=% '--with-javah=% \
 			'--with-rmic=% '--with-additional-vms=% \
 			'--disable-bootstrap% '--enable-bootstrap% , \
-		$(CONFIGURE_ARGS))
+		$(CONFIGURE_ARGS)) \
+	$(foreach i, openjdk hotspot corba jaxp jaxws jdk langtools, \
+	  $(if $(findstring --with-$(i)-src-zip=, $(CONFIGURE_ARGS)),, --with-$(i)-src-zip=$(abs_top_builddir)/$(i).tar.gz))
 
 ADD_ZERO_EXTRA_BUILD_ENV = \
 	BUILD_LANGTOOLS=false ALT_LANGTOOLS_DIST=$(ICEDTEA_BUILD_DIR)/langtools/dist \
