@@ -1,3 +1,21 @@
+2009-08-07  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Bump to b68, remove additional -source option.
+	* generated/java/nio/channels/AcceptPendingException.java,
+	* generated/java/nio/channels/IllegalChannelGroupException.java,
+	* generated/java/nio/channels/InterruptedByTimeoutException.java,
+	* generated/java/nio/channels/ReadPendingException.java,
+	* generated/java/nio/channels/ShutdownChannelGroupException.java,
+	* generated/java/nio/channels/WritePendingException.java,
+	* generated/sun/nio/fs/UnixConstants.java:
+	Add generated files.
+	* javac.in: Update to build 1.7 code.
+	* patches/ecj/icedtea.patch: Remove patch removing use of 1.6
+	source and target options.
+	* patches/icedtea-clean-crypto.patch: Regenerated.
+	* patches/xrender/icedtea-007.patch: Remove non-ASCII characters.
+
 2009-08-07  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (ADD_ZERO_CONFIGURE_ARGS): Add configure options

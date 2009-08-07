@@ -139,7 +139,7 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitL
 +
 +    /**
 +     * Possible optimizations: 
-+     * - Nearest interpolation -> ExtraAlpha mit 1x1 maske durchführen
++     * - Nearest interpolation -> ExtraAlpha mit 1x1 maske durchfuehren
 +     * - Mehere Maskengroessen anlegen, und skalieren
 +     * - Ueberpruefen ob aktueller Maskeninhalt mit skalierung passen wuerde, bzw. nur so viel aendern bis passt (wenn bereich < maske)
 +     * - Aendering entweder mit 2 filLRects, oder nur 1 fillrect je nach groesse
@@ -249,7 +249,7 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitL
 +												     * integer only
 +												     */
 +		&& trx.getTranslateY() == (int) trx.getTranslateY() && (trx.getShearX() == 0 && trx.getShearY() == 0 // Only
-+															// "90°"
++															// "90 degrees"
 +															// rotation
 +		|| trx.getShearX() == -trx.getShearY())) && ((AlphaComposite) comp).getAlpha() == 1.0f; // No
 +													// ExtraAlpha!=1

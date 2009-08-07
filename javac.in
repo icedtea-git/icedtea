@@ -47,14 +47,14 @@ sub gen_ecj_opts
 if ( -e "@abs_top_builddir@/native-ecj" )
 {
     my @ecj_args = gen_ecj_opts( \@ARGV );
-    exec '@abs_top_builddir@/native-ecj', '-1.5', $ECJ_WARNINGS, @bcoption, @ecj_args ;
+    exec '@abs_top_builddir@/native-ecj', '-1.7', $ECJ_WARNINGS, @bcoption, @ecj_args ;
 }
 elsif ( -e "@JAVAC@" )
 {
     if ("@USING_ECJ@" eq "yes")
     {
 	my @ecj_args = gen_ecj_opts( \@ARGV );
-	exec '@JAVAC@', '-1.5', $ECJ_WARNINGS, @bcoption, @ecj_args ;
+	exec '@JAVAC@', '-1.7', $ECJ_WARNINGS, @bcoption, @ecj_args ;
     }
     else
     {
@@ -67,6 +67,6 @@ else
     my @CLASSPATH = ('@ECJ_JAR@');
     push @CLASSPATH, split /:/, $ENV{"CLASSPATH"} if exists $ENV{"CLASSPATH"};
     $ENV{"CLASSPATH"} = join ':', @CLASSPATH;
-    exec '@JAVA@', 'org.eclipse.jdt.internal.compiler.batch.Main', '-1.5',
+    exec '@JAVA@', 'org.eclipse.jdt.internal.compiler.batch.Main', '-1.7',
     $ECJ_WARNINGS, @bcoption, @ecj_args;
 }

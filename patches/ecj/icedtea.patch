@@ -761,20 +761,6 @@ diff -Nru openjdk-ecj.orig/jdk/src/share/native/sun/java2d/opengl/OGLContext.h o
  
  /**
   * Evaluates to true if the given capability bitmask is present for the
-diff -Nru openjdk-ecj.orig/langtools/make/build.properties openjdk-ecj/langtools/make/build.properties
---- openjdk-ecj.orig/langtools/make/build.properties	2009-06-30 14:25:18.000000000 +0100
-+++ openjdk-ecj/langtools/make/build.properties	2009-07-14 17:47:13.000000000 +0100
-@@ -32,8 +32,8 @@
- # boot.java.home = /opt/jdk/1.5.0 
- boot.java = ${boot.java.home}/bin/java
- boot.javac = ${boot.java.home}/bin/javac
--boot.javac.source = 6
--boot.javac.target = 6
-+boot.javac.source = 5
-+boot.javac.target = 5
- 
- # This is the JDK used to run the product version of the tools,
- # for example, for testing. If you're building a complete JDK, specify that.
 diff -Nru openjdk-ecj.orig/langtools/make/build.xml openjdk-ecj/langtools/make/build.xml
 --- openjdk-ecj.orig/langtools/make/build.xml	2009-06-30 14:25:18.000000000 +0100
 +++ openjdk-ecj/langtools/make/build.xml	2009-07-14 17:47:13.000000000 +0100

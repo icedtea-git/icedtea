@@ -1,20 +1,20 @@
-OPENJDK_VERSION = b67
+OPENJDK_VERSION = b68
 
-OPENJDK_CHANGESET = f24111620a51
-CORBA_CHANGESET = 1cb0098b53b2
-JAXP_CHANGESET = 45fc86d2aa5c
-JAXWS_CHANGESET = 73440eb34fb0
-JDK_CHANGESET = cd7d9265b4e6
-LANGTOOLS_CHANGESET = 14b1a8ede954
-HOTSPOT_CHANGESET = 87c6731ab8d1
+OPENJDK_CHANGESET = d8f0e9685212
+CORBA_CHANGESET = 4d8317ea0eec
+JAXP_CHANGESET = 216517ab5325
+JAXWS_CHANGESET = 4425f7c4fb5b
+JDK_CHANGESET = df6fceba2e80
+LANGTOOLS_CHANGESET = 95c1212b07e3
+HOTSPOT_CHANGESET = 91fcd98a5ae1
 
-OPENJDK_MD5SUM = f5cc1b21cf1a805528300bf931aa821e
-CORBA_MD5SUM = 00fa00a58b465cad40cab9ac05058c24
-JAXP_MD5SUM = 61230cee4199f91ed5675bcf2acad63d
-JAXWS_MD5SUM = fc9d2659fb875ece0e3a5e7894c1bbf8
-JDK_MD5SUM = 8e3fa808fcad7713635a21e127dd0f72
-LANGTOOLS_MD5SUM = a3b15bcf5b76b1639600250fc29c057b
-HOTSPOT_MD5SUM = d0632498485808fdf8f97ef1f388722d
+OPENJDK_MD5SUM = 8c3d681d0a90ec9adf00870f5e20d09f
+CORBA_MD5SUM = c1c9db96634876b2c522dc387dec3864
+JAXP_MD5SUM = 9a821849b2b9bdf2f8dc32168809a063
+JAXWS_MD5SUM = 2d9fbeb543ee7bcd6621a3f131649db2
+JDK_MD5SUM = 418d860925e69cca57253e62508234b6
+LANGTOOLS_MD5SUM = e29f65271621d80aa8a894fe13325f23
+HOTSPOT_MD5SUM = 88cc373d7d04a2c9c60fd9343a28818c
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
@@ -3006,14 +3006,12 @@ stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt \
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
-            -source 1.5 \
             -sourcepath \
 	      'hotspot-tools:$(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS)' \
             -bootclasspath \'\' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g \
 	    -d lib/hotspot-tools \
-	    -source 1.5 \
 	    -sourcepath \
 	      'hotspot-tools:$(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS)' \
 	    -bootclasspath \'\' @$< ; \
@@ -3058,13 +3056,11 @@ stamps/rt-class-files.stamp: rt-source-files.txt stamps/hotspot-tools.stamp
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
         then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt \
-	    -source 1.5 \
 	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
 	    -sourcepath '$(SOURCEPATH_DIRS)' \
 	    -bootclasspath \'\' @$< ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
-            -source 1.5 \
 	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
             -sourcepath '$(SOURCEPATH_DIRS)' \
             -bootclasspath \'\' @$< ; \
@@ -3103,14 +3099,12 @@ stamps/extra-class-files.stamp: extra-source-files.txt stamps/netx.stamp
 	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
 	then \
 	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
-	    -source 1.5 \
 	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
 	    -sourcepath $(abs_top_srcdir)/extra:$(SOURCEPATH_DIRS) \
 	    -bootclasspath \'\' \
 	    @extra-source-files.txt ; \
 	else \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
-            -source 1.5 \
 	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
 	    -sourcepath $(abs_top_srcdir)/extra:$(SOURCEPATH_DIRS) \
 	    -bootclasspath \'\' \
@@ -3147,7 +3141,6 @@ stamps/netx.stamp: netx-source-files.txt stamps/hotspot-tools.stamp
 	mkdir -p $(abs_top_builddir)/netx.build
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g \
 	    -d $(abs_top_builddir)/netx.build \
-            -source 1.5 \
 	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
 	    -sourcepath $(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS): \
 	    -bootclasspath \'\' \
