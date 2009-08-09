@@ -1109,28 +1109,6 @@ AC_DEFUN([WITH_LANGTOOLS_SRC_ZIP],
   AC_SUBST(ALT_LANGTOOLS_SRC_ZIP)
 ])
 
-AC_DEFUN([ENABLE_HG],
-[
-  AC_MSG_CHECKING(whether to retrieve the source code from Mercurial)
-  AC_ARG_ENABLE([hg],
-                [AS_HELP_STRING(--enable-hg,download source code from Mercurial [[default=no]])],
-  [
-    case "${enableval}" in
-      no)
-	enable_hg=no
-        ;;
-      *)
-        enable_hg=yes
-        ;;
-    esac
-  ],
-  [
-        enable_hg=no
-  ])
-  AC_MSG_RESULT([${enable_hg}])
-  AM_CONDITIONAL([USE_HG], test x"${enable_hg}" = "xyes")
-])
-
 AC_DEFUN([AC_CHECK_WITH_HG_REVISION],
 [
   AC_MSG_CHECKING([which Mercurial revision to use])

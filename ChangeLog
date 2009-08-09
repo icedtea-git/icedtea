@@ -1,5 +1,11 @@
 2009-08-07  Andrew John Hughes  <ahughes@redhat.com>
 
+	* acinclude.m4:
+	(ENABLE_HG): Remove duplicate from
+	IcedTea6 merge.
+
+2009-08-07  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Bump to b68, remove additional -source option.
 	* generated/java/nio/channels/AcceptPendingException.java,
