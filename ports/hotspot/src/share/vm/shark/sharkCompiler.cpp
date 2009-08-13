@@ -146,6 +146,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
     if (!fnmatch(SharkPrintBitcodeOf, name, 0))
       function->dump();
   }
+  entry->set_function(function);
 
   // Compile to native code
 #ifndef PRODUCT
@@ -204,6 +205,13 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
       " [%p-%p): %s (%d bytes code)",
       code_start, code_limit, name, code_limit - code_start);
   }
+}
+
+void SharkCompiler::free_compiled_method(address code)
+{
+  Function *function = ((SharkEntry *) code)->function();
+  execution_engine()->freeMachineCodeForFunction(function);
+  function->eraseFromParent();
 }
 
 const char* SharkCompiler::methodname(const ciMethod* target)

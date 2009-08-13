@@ -124,6 +124,20 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciMethod.hpp openjdk/hotspot/src/
    address       native_entry();
    address       interpreter_entry();
  
+diff -r 0d80af392e67 openjdk/hotspot/src/share/vm/code/nmethod.cpp
+--- openjdk/hotspot/src/share/vm/code/nmethod.cpp	Thu Jul 30 10:00:04 2009 +0100
++++ openjdk/hotspot/src/share/vm/code/nmethod.cpp	Fri Jul 31 15:39:43 2009 +0100
+@@ -1296,6 +1296,10 @@
+     ec = next;
+   }
+ 
++#ifdef SHARK
++  ((SharkCompiler *) compiler())->free_compiled_method(instructions_begin());
++#endif // SHARK
++  
+   ((CodeBlob*)(this))->flush();
+ 
+   CodeCache::free(this);
 diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp openjdk/hotspot/src/share/vm/code/nmethod.cpp
 --- openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp	2009-09-21 17:12:24.000000000 +0100
 +++ openjdk/hotspot/src/share/vm/code/nmethod.cpp	2009-09-23 12:40:53.000000000 +0100

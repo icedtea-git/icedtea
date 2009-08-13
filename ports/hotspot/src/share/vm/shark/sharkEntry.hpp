@@ -24,10 +24,9 @@
  */
 
 class SharkEntry : public ZeroEntry {
-  friend class SharkMemoryManager;
-
  private:
-  address _code_limit;
+  address         _code_limit;
+  llvm::Function* _function;
 
  public:
   address code_start() const
@@ -38,9 +37,18 @@ class SharkEntry : public ZeroEntry {
   {
     return _code_limit;
   }
- protected:
+  llvm::Function* function() const
+  {
+    return _function;
+  }
+
+ public:
   void set_code_limit(address code_limit)
   {
     _code_limit = code_limit;
+  }
+  void set_function(llvm::Function* function)
+  {
+    _function = function;
   }
 };

@@ -57,7 +57,7 @@ globals.cpp                             shark_globals.hpp
 llvmValue.hpp                           llvmHeaders.hpp
 llvmValue.hpp                           sharkType.hpp
 
-methodOop.cpp                           sharkEntry.hpp
+nmethod.cpp                             sharkCompiler.hpp
 
 shark_globals.cpp                       shark_globals.hpp
 

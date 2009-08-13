@@ -45,6 +45,9 @@ class SharkCompiler : public AbstractCompiler {
   // Compilation entry point for methods
   void compile_method(ciEnv* env, ciMethod* target, int entry_bci);
 
+  // Free compiled methods
+  void free_compiled_method(address code);
+
   // LLVM interface
  private:
   llvm::Module*          _module;

@@ -1,3 +1,22 @@
+2009-08-13  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp
+	(SharkEntry::_function): New field.
+	(SharkEntry::function): New method.
+	(SharkEntry::set_function): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp
+	(SharkCompiler::free_compiled_method): New method.	
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::free_compiled_method): New method.
+	(SharkCompiler::compile_method): Store a pointer to
+	the LLVM function in the method's SharkEntry.
+
+	* patches/hotspot/default/icedtea-shark.patch
+	(nmethod::flush): Add code to free Shark methods.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
 2009-10-28  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
