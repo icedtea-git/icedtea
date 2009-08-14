@@ -240,6 +240,24 @@ class SharkTopLevelBlock : public SharkBlock {
                               SharkState*       saved_state,
                               llvm::BasicBlock* continue_block);
   // Exceptions
+ private:
+  llvm::Value* pending_exception_address() const
+  {
+    return builder()->CreateAddressOfStructEntry(
+      thread(), Thread::pending_exception_offset(),
+      llvm::PointerType::getUnqual(SharkType::jobject_type()),
+      "pending_exception_addr");
+  }
+  llvm::LoadInst* get_pending_exception() const
+  {
+    return builder()->CreateLoad(
+      pending_exception_address(), "pending_exception");
+  }
+  void clear_pending_exception() const
+  {
+    builder()->CreateStore(LLVMValue::null(), pending_exception_address());
+  }
+ public:
   enum ExceptionActionMask {
     // The actual bitmasks that things test against
     EAM_CHECK         = 1, // whether to check for pending exceptions
@@ -254,6 +272,26 @@ class SharkTopLevelBlock : public SharkBlock {
   void check_pending_exception(int action);
   void handle_exception(llvm::Value* exception, int action);
 
+  // Frame anchor
+ private:
+  void set_last_Java_frame(llvm::Value* value) const
+  {
+    builder()->CreateStore(
+      value,
+      builder()->CreateAddressOfStructEntry(
+        thread(), JavaThread::last_Java_sp_offset(),
+        llvm::PointerType::getUnqual(SharkType::intptr_type()),
+        "last_Java_sp_addr"));
+  }
+  void set_last_Java_frame() const
+  {
+    set_last_Java_frame(function()->CreateLoadZeroFramePointer());
+  }
+  void reset_last_Java_frame() const
+  {
+    set_last_Java_frame(LLVMValue::intptr_constant(0));
+  }
+
   // VM calls
  private:
   llvm::CallInst* call_vm(llvm::Value*  callee,
@@ -262,9 +300,9 @@ class SharkTopLevelBlock : public SharkBlock {
                           int           exception_action)
   {
     decache_for_VM_call();
-    function()->set_last_Java_frame();
+    set_last_Java_frame();
     llvm::CallInst *res = builder()->CreateCall(callee, args_start, args_end);
-    function()->reset_last_Java_frame();
+    reset_last_Java_frame();
     cache_after_VM_call();
     if (exception_action & EAM_CHECK) {
       check_pending_exception(exception_action);
@@ -303,6 +341,19 @@ class SharkTopLevelBlock : public SharkBlock {
   {
     llvm::Value *args[] = {thread(), arg1, arg2, arg3};
     return call_vm(callee, args, args + 4, exception_action);
+  }
+
+  // VM call oop return handling
+ private:
+  llvm::LoadInst* get_vm_result() const
+  {
+    llvm::Value *addr = builder()->CreateAddressOfStructEntry(
+      thread(), JavaThread::vm_result_offset(),
+      llvm::PointerType::getUnqual(SharkType::jobject_type()),
+      "vm_result_addr");
+    llvm::LoadInst *result = builder()->CreateLoad(addr, "vm_result");
+    builder()->CreateStore(LLVMValue::null(), addr);
+    return result;
   }
 
   // Synchronization

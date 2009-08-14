@@ -334,7 +334,10 @@ void SharkTopLevelBlock::zero_check_value(SharkValue* value,
   else {
     builder()->CreateUnimplemented(__FILE__, __LINE__);
   } 
-  handle_exception(function()->CreateGetPendingException(), EX_CHECK_FULL);
+
+  Value *pending_exception = get_pending_exception();
+  clear_pending_exception();
+  handle_exception(pending_exception, EX_CHECK_FULL);
 }
 
 void SharkTopLevelBlock::check_bounds(SharkValue* array, SharkValue* index)
@@ -350,6 +353,7 @@ void SharkTopLevelBlock::check_bounds(SharkValue* array, SharkValue* index)
 
   builder()->SetInsertPoint(out_of_bounds);
   SharkState *saved_state = current_state()->copy();
+
   call_vm(
     builder()->throw_ArrayIndexOutOfBoundsException(),
     builder()->CreateIntToPtr(
@@ -358,7 +362,11 @@ void SharkTopLevelBlock::check_bounds(SharkValue* array, SharkValue* index)
     LLVMValue::jint_constant(__LINE__),
     index->jint_value(),
     EX_CHECK_NONE);
-  handle_exception(function()->CreateGetPendingException(), EX_CHECK_FULL);
+
+  Value *pending_exception = get_pending_exception();
+  clear_pending_exception();
+  handle_exception(pending_exception, EX_CHECK_FULL);
+
   set_current_state(saved_state);  
 
   builder()->SetInsertPoint(in_bounds);
@@ -371,16 +379,12 @@ void SharkTopLevelBlock::check_pending_exception(int action)
   BasicBlock *exception    = function()->CreateBlock("exception");
   BasicBlock *no_exception = function()->CreateBlock("no_exception");
 
-  Value *pending_exception_addr = function()->pending_exception_address();
-  Value *pending_exception = builder()->CreateLoad(
-    pending_exception_addr, "pending_exception");
-
+  Value *pending_exception = get_pending_exception();
   builder()->CreateCondBr(
     builder()->CreateICmpEQ(pending_exception, LLVMValue::null()),
     no_exception, exception);
 
   builder()->SetInsertPoint(exception);
-  builder()->CreateStore(LLVMValue::null(), pending_exception_addr);
   SharkState *saved_state = current_state()->copy();
   if (action & EAM_MONITOR_FUDGE) {
     // The top monitor is marked live, but the exception was thrown
@@ -389,6 +393,7 @@ void SharkTopLevelBlock::check_pending_exception(int action)
     set_num_monitors(num_monitors() - 1);
     action ^= EAM_MONITOR_FUDGE;
   }
+  clear_pending_exception();
   handle_exception(pending_exception, action); 
   set_current_state(saved_state);
 
@@ -630,7 +635,7 @@ void SharkTopLevelBlock::handle_return(BasicType type, Value* exception)
   }
 
   if (exception) {
-    builder()->CreateStore(exception, function()->pending_exception_address());
+    builder()->CreateStore(exception, pending_exception_address());
   }
 
   Value *result_addr = function()->CreatePopFrame(type2size[type]);
@@ -1576,7 +1581,7 @@ void SharkTopLevelBlock::do_new()
     builder()->new_instance(),
     LLVMValue::jint_constant(iter()->get_klass_index()),
     EX_CHECK_FULL);
-  slow_object = function()->CreateGetVMResult();
+  slow_object = get_vm_result();
   got_slow = builder()->GetInsertBlock();
 
   // Push the object
@@ -1608,10 +1613,8 @@ void SharkTopLevelBlock::do_newarray()
     pop()->jint_value(),
     EX_CHECK_FULL);
 
-  push(SharkValue::create_generic(
-    ciArrayKlass::make(ciType::make(type)),
-    function()->CreateGetVMResult(),
-    true));
+  ciArrayKlass *array_klass = ciArrayKlass::make(ciType::make(type));
+  push(SharkValue::create_generic(array_klass, get_vm_result(), true));
 }
 
 void SharkTopLevelBlock::do_anewarray()
@@ -1631,8 +1634,7 @@ void SharkTopLevelBlock::do_anewarray()
     pop()->jint_value(),
     EX_CHECK_FULL);
 
-  push(SharkValue::create_generic(
-    array_klass, function()->CreateGetVMResult(), true));
+  push(SharkValue::create_generic(array_klass, get_vm_result(), true));
 }
 
 void SharkTopLevelBlock::do_multianewarray()
@@ -1668,8 +1670,7 @@ void SharkTopLevelBlock::do_multianewarray()
   for (int i = 0; i < ndims; i++)
     pop();
 
-  push(SharkValue::create_generic(
-    array_klass, function()->CreateGetVMResult(), true));
+  push(SharkValue::create_generic(array_klass, get_vm_result(), true));
 }
 
 void SharkTopLevelBlock::acquire_method_lock()

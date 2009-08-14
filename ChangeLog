@@ -1,3 +1,32 @@
+2009-08-14  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::CreateStoreLastJavaSP): Removed.
+	(SharkFunction::set_last_Java_frame): Likewise.
+	(SharkFunction::reset_last_Java_frame): Likewise.
+	(SharkFunction::CreateGetVMResult): Likewise.
+	(SharkFunction::pending_exception_address): Likewise.
+	(SharkFunction::CreateGetPendingException): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::pending_exception_address): New method.
+	(SharkTopLevelBlock::get_pending_exception): Likewise.
+	(SharkTopLevelBlock::clear_pending_exception): Likewise.
+	(SharkTopLevelBlock::set_last_Java_frame): Likewise.
+	(SharkTopLevelBlock::reset_last_Java_frame): Likewise.
+	(SharkTopLevelBlock::get_vm_result): Likewise.
+	(SharkTopLevelBlock::call_vm): Updated.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::zero_check_value): Updated.
+	(SharkTopLevelBlock::check_bounds): Likewise.
+	(SharkTopLevelBlock::check_pending_exception): Likewise.
+	(SharkTopLevelBlock::handle_return): Likewise.
+	(SharkTopLevelBlock::do_new): Likewise.
+	(SharkTopLevelBlock::do_newarray): Likewise.
+	(SharkTopLevelBlock::do_anewarray): Likewise.
+	(SharkTopLevelBlock::do_multianewarray): Likewise.
+
 2009-08-13  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp

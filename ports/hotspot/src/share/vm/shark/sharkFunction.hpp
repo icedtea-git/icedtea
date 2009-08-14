@@ -124,12 +124,11 @@ class SharkFunction : public SharkTargetInvariants {
   {
     return builder()->CreateStore(value, zero_stack_pointer_addr());
   }
-
- private:
   llvm::LoadInst* CreateLoadZeroFramePointer(const char *name = "")
   {
     return builder()->CreateLoad(zero_frame_pointer_addr(), name);
   }
+ private:
   llvm::StoreInst* CreateStoreZeroFramePointer(llvm::Value* value)
   {
     return builder()->CreateStore(value, zero_frame_pointer_addr());
@@ -233,56 +232,6 @@ class SharkFunction : public SharkTargetInvariants {
       monitor_header_offset(index),
       SharkType::intptr_type(),
       "displaced_header_addr");
-  }
-
-  // VM interface
- private:
-  llvm::StoreInst* CreateStoreLastJavaSP(llvm::Value* value) const
-  {
-    return builder()->CreateStore(
-      value,
-      builder()->CreateAddressOfStructEntry(
-        thread(), JavaThread::last_Java_sp_offset(),
-        llvm::PointerType::getUnqual(SharkType::intptr_type()),
-        "last_Java_sp_addr"));
-  }
-
- public:
-  void set_last_Java_frame()
-  {
-    CreateStoreLastJavaSP(CreateLoadZeroFramePointer());
-  }
-  void reset_last_Java_frame()
-  {
-    CreateStoreLastJavaSP(LLVMValue::intptr_constant(0));
-  }
-
- public:
-  llvm::LoadInst* CreateGetVMResult() const
-  {
-    llvm::Value *addr = builder()->CreateAddressOfStructEntry(
-      thread(), JavaThread::vm_result_offset(),
-      llvm::PointerType::getUnqual(SharkType::jobject_type()),
-      "vm_result_addr");
-    llvm::LoadInst *result = builder()->CreateLoad(addr, "vm_result");
-    builder()->CreateStore(LLVMValue::null(), addr);
-    return result;
-  }
-
- public:
-  llvm::Value* pending_exception_address() const
-  {
-    return builder()->CreateAddressOfStructEntry(
-      thread(), Thread::pending_exception_offset(),
-      llvm::PointerType::getUnqual(SharkType::jobject_type()),
-      "pending_exception_addr");
-  }
-  llvm::LoadInst* CreateGetPendingException() const
-  {
-    llvm::Value *addr = pending_exception_address();
-    llvm::LoadInst *result = builder()->CreateLoad(addr, "pending_exception");
-    builder()->CreateStore(LLVMValue::null(), addr);
-    return result;
   }
 
   // Deferred zero checks
