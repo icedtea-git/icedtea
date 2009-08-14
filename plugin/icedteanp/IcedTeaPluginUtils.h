@@ -49,10 +49,16 @@ exception statement from your version. */
 #include <cstring>
 #include <iostream>
 #include <list>
+#include <map>
 #include <queue>
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include <npapi.h>
+#include <npupp.h>
+
+#include "IcedTeaNPPlugin.h"
 
 #define PLUGIN_DEBUG_0ARG(str) \
   do                                        \
@@ -104,6 +110,16 @@ exception statement from your version. */
     }                                                \
   } while (0)
 
+#define CHECK_JAVA_RESULT(result_data)                               \
+{                                                                    \
+    if (((JavaResultData*) result_data)->error_occurred)             \
+    {                                                                \
+        printf("Error: Error occurred on Java side: %s.\n",          \
+               ((JavaResultData*) result_data)->error_msg->c_str()); \
+        return;                                                      \
+    }                                                                \
+}
+
 /*
  * Misc. utility functions
  *
@@ -119,20 +135,26 @@ class IcedTeaPluginUtilities
         /* Mutex lock for updating reference count */
         static pthread_mutex_t reference_mutex;
 
+        /* Map holding window pointer<->instance relationships */
+        static std::map<void*, NPP>* instance_map;
+
     public:
 
     	/* Constructs message prefix with given context */
-    	static std::string* constructMessagePrefix(int context);
+    	static void constructMessagePrefix(int context,
+                                           std::string* result);
 
     	/* Constructs message prefix with given context and reference */
-    	static std::string* constructMessagePrefix(int context, int reference);
+    	static void constructMessagePrefix(int context, int reference,
+                                           std::string* result);
 
     	/* Constructs message prefix with given context, reference and src */
-    	static std::string* constructMessagePrefix(int context, int reference,
-    			                    const char* address);
+    	static void constructMessagePrefix(int context, int reference,
+                                           std::string address,
+                                           std::string* result);
 
     	/* Converts given pointer to a string representation */
-    	static std::string* JSIDToString(void* id);
+    	static void JSIDToString(void* id, std::string* result);
 
     	/* Converts the given string representation to a pointer */
     	static void* stringToJSID(std::string id_str);
@@ -143,8 +165,8 @@ class IcedTeaPluginUtilities
     	/* Decrements reference count */
     	static void releaseReference();
 
-    	/* Converts the given interget to char* array */
-    	static char* itoa(int i);
+    	/* Converts the given integer to a string */
+    	static void itoa(int i, std::string* result);
 
     	/* Frees the given vector and the strings that its contents point to */
     	static void freeStringPtrVector(std::vector<std::string*>* v);
@@ -178,6 +200,12 @@ class IcedTeaPluginUtilities
     	static void printNPVariant(NPVariant variant);
 
     	static std::string* NPVariantToString(NPVariant variant);
+
+    	static gchar* getSourceFromInstance(NPP instance);
+
+    	static void storeInstanceID(void* member_ptr, NPP instance);
+
+    	static NPP getInstanceFromMemberPtr(void* member_ptr);
 };
 
 /*
@@ -243,12 +271,5 @@ class MessageBus
            after this function returns) */
         void post(const char* message);
 };
-
-/*
- * JNI map used for mediating between NPVariants and Java objects
- *
- *
- *
- */
 
 #endif // __ICEDTEAPLUGINUTILS_H__

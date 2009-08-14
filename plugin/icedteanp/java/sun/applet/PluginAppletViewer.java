@@ -346,13 +346,23 @@ import com.sun.jndi.toolkit.url.UrlUtil;
     	}
     }
 
-    AppletSecurityContextManager.getSecurityContext(0).associateSrc(a.getClass().getClassLoader(), codeBase);
+    AppletSecurityContextManager.getSecurityContext(0).associateSrc(a.getClass().getClassLoader(), doc);
     
  	try {
  	    write("initialized");
  	} catch (IOException ioe) {
  		ioe.printStackTrace();
  	}
+ 	
+    // Panel initialization cannot be aborted mid-way. 
+    // Once it is initialized, double check to see if this 
+    // panel needs to stay around..
+    if (status.get(identifier).equals(PAV_INIT_STATUS.INACTIVE)) {
+        PluginDebug.debug("Inactive flag set. Destroying applet instance " + identifier);
+        applets.get(identifier).handleMessage(-1, "destroy");
+    } else {
+        status.put(identifier, PAV_INIT_STATUS.ACTIVE);
+    }
  	
      }
 
@@ -415,16 +425,6 @@ import com.sun.jndi.toolkit.url.UrlUtil;
         						 new StringReader(request.tag),
         						 new URL(request.documentbase));
         				 requests.remove(identifier);
-        				 
-        				 // Panel initialization cannot be aborted mid-way. 
-        				 // Once it is initialized, double check to see if this 
-        				 // panel needs to stay around..
-        				 if (status.get(identifier).equals(PAV_INIT_STATUS.INACTIVE)) {
-        				     PluginDebug.debug("Inactive flag set. Destroying applet instance " + identifier);
-        				     applets.get(identifier).handleMessage(-1, "destroy");
-        				 } else {
-        				     status.put(identifier, PAV_INIT_STATUS.ACTIVE);
-        				 }
 
         			 } else {
         				 PluginDebug.debug ("REQUEST HANDLE NOT SET: " + request.handle + ". BYPASSING");
@@ -466,16 +466,6 @@ import com.sun.jndi.toolkit.url.UrlUtil;
             			 requests.remove(identifier);
             			 PluginDebug.debug ("REQUEST HANDLE, DONE PARSING " +
             					 Thread.currentThread());
-
-                         // Panel initialization cannot be aborted mid-way. 
-                         // Once it is initialized, double check to see if this 
-                         // panel needs to stay around..
-                         if (status.get(identifier).equals(PAV_INIT_STATUS.INACTIVE)) {
-                             PluginDebug.debug("Inactive flag set. Destroying applet instance " + identifier);
-                             applets.get(identifier).handleMessage(-1, "destroy");
-                         } else {
-                             status.put(identifier, PAV_INIT_STATUS.ACTIVE);
-                         }
 
             		 } else {
             			 PluginDebug.debug ("REQUEST TAG NOT SET: " + request.tag + ". BYPASSING");
@@ -526,6 +516,8 @@ import com.sun.jndi.toolkit.url.UrlUtil;
              }
          } catch (Exception e) {
 
+             e.printStackTrace();
+             
              // If an exception happened during pre-init, we need to update status
              if (status.get(identifier).equals(PAV_INIT_STATUS.PRE_INIT))
                  status.put(identifier, PAV_INIT_STATUS.INACTIVE);
@@ -589,7 +581,8 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 
              // Wait for the panel to initialize
              // (happens in a separate thread)
-             while ((o = panel.getApplet()) == null && ((NetxPanel) panel).isAlive()) {
+             System.err.println("PANEL = " + panel);
+             while (panel == null || ((o = panel.getApplet()) == null && ((NetxPanel) panel).isAlive())) {
             	 try {
             		 Thread.sleep(2000);
             		 PluginDebug.debug("Waiting for applet to initialize...");
@@ -1075,12 +1068,18 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          // FIXME: convenience method for this long line.
     	 AppletSecurityContextManager.getSecurityContext(0).store(name);
          int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
-         AppletSecurityContextManager.getSecurityContext(0).store(args);
-         int argsID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(args);
+         
+         String argIDs = "";
+         for (Object arg : args)
+         {
+             AppletSecurityContextManager.getSecurityContext(0).store(arg);
+             argIDs += AppletSecurityContextManager.getSecurityContext(0).getIdentifier(arg) + " ";
+         }
+         argIDs = argIDs.trim();
  
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("member",
-        		 							"instance " + 0 + " Call " + internal + " " + nameID + " " + argsID, 
+        		 							"instance " + 0 + " Call " + internal + " " + nameID + " " + argIDs, 
         		 							"JavaScriptCall");
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());

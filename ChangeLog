@@ -1,3 +1,114 @@
+2009-08-14	Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc
+	(newMessageOnBus): Handle additional request types.
+	(postAndWaitForResponse): Modify parameter type and reset the result
+	before proceeding.
+	(getToStringValue): Remove all heap allocations and allocate on stack.
+	(getString): Same.
+	(deleteReference): Same.
+	(addReference): Same.
+	(findClass): Same.
+	(getClassName): Same.
+	(getClassID): Same.
+	(getFieldID): Same.
+	(getStaticFieldID): Same.
+	(getField): Same. Also, send the source to Java side.
+	(getStaticField): Same.
+	(getMethodID): Remove all heap allocations and allocate on stack.
+	(getStaticMethodID): Same.
+	(callStaticMethod): Same. Also, send the source to Java side.
+	(callMethod): Same.
+	(call): Same.
+	(getObjectClass): Remove all heap allocations and allocate on stack.
+	(newObject): Same. Also, send the source to Java side.
+	(newString): Remove all heap allocations and allocate on stack.
+	(hasPackage): Same.
+	(hasMethod): Same.
+	(hasField): Same.
+	(isInstanceOf): New method.
+	(getAppletObjectInstance): Remove all heap allocations and allocate on
+	stack.
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.h: Bump timeout to 120 to
+	allow for slower connections. Other misc. changes related to the .cc file
+	changes.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc: Moved GCJPluginData decleration to
+	the header file. Don't initialize message bus and request processors 
+	statically.
+	(GCJ_New): Initialize the buses and processors. Store source url in plugin
+	data struct.
+	(GCJ_Destroy): Cleanup source url pointer.
+	* plugin/icedteanp/IcedTeaNPPlugin.h: Moved GCJPluginData struct
+	decleration to here.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc
+	(getInstanceFromMemberPtr): Moved to plugin utils.
+	(storeInstanceID): Same.
+	(newMessageOnBus): Handle additional request types.
+	(dispatch): Remove unused method.
+	(sendWindow): Remove unnecessary heap allocations and use function stack
+	instead.
+	(eval): New function. Evaluates calls to JavaScript functions and returns
+	the result. Arrays are not yet handled.
+	(call): New function. Evaluates the given script and returns the result.
+	Arrays are not yet handled.
+	(sendString): Remove unnecessary heap allocations and use function stack
+	instead.
+	(setMember): Same.
+	(convertToNPVariant): New function. Narrows given java type to an
+	NPVariant as per type conversion specifications.
+	(sendMember): Remove unnecessary heap allocations and use function stack 
+    instead.
+	(storeVariantInJava): New function. Given an NPVariant, does the
+	appropriate conversion and saves it on the Java side. Arrays are not yet
+	handled.
+	(_eval): New function. Evaluates the script via NPN_Evaluate. Meant to be
+	run in the main thread.
+	(_call): New function. Invokes the function via NPN_Invoke. Meant to be run 
+	in the main thread.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.h: Appropriate changes as
+	necessitated by the above changes in the .cc.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc
+	(constructMessagePrefix): All versions of this functions changed to remove
+	heap allocation, and instead store result in a given pre-allocated parameter.
+	(getReference): Use an ever growing reference number, and cycle when
+	integer max approaches.
+	(releaseReference): Remove code so nothing is done for now.
+	(itoa): Store result in pre-allocated parameter, rather than on heap.
+	(getSourceFromInstance): Given an NPP instance, returns the assocated
+	source.
+	(storeInstanceID): Moved from IcedTeaPluginRequestProcessor. Associates an
+	NPObject with an instance.
+	(getInstanceFromMemberPtr): Moved from IcedTeaPluginRequestProcessor.
+	Given an NPObject, returns the associated instance.
+	(variantToClassName): Remove unused method.
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Appropriate changes as necessitated 
+	by the above changes in the .cc.
+	* plugin/icedteanp/IcedTeaRunnable.cc (IcedTeaRunnableMethod):  Change
+	result parameter type to void* so that caller/callee can use variable
+	formats.
+	* plugin/icedteanp/IcedTeaRunnable.h: Appropriate changes as necessitated
+	by the above changes in the .cc.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.cc: Call storeInstanceID
+	and getInstanceFromMemberPtr from plugin utils.
+	(IcedTeaScriptableJavaObject::getProperty): Get the source url and send it to
+	Java side when making the request.
+	(IcedTeaScriptableJavaObject::invoke): Same.
+	* plugin/icedteanp/java/netscape/javascript/JSObject.java: Merge
+	constructor access control fixes from older plugin.
+	* plugin/icedteanp/java/sun/applet/GetMemberPluginCallRequest.java: Handle
+	void and null return types.
+	* plugin/icedteanp/java/sun/applet/MethodOverloadResolver.java: Add an
+	additional test case for Boolean.
+	(getPrimitive): Handle java.lang.Boolean (minor bug fix).
+	* plugin/icedteanp/java/sun/applet/PluginAppletSecurityContext.java: Use
+	URLs when comparing source locations for security verification, rather
+	than String which return false negatives.
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java
+	(handleMessage): Set status to ACTIVE only after initialization finishes.
+	(AppletEventListener::appletStateChanged): Same.
+	* plugin/icedteanp/java/sun/applet/PluginCookieInfoRequest.java
+	(parseReturn): Handle improper cookies from firefox.
+
 2009-08-06  Deepak Bhole  <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc: Handle error messages

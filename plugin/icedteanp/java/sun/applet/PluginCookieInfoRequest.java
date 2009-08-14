@@ -91,15 +91,20 @@ public class PluginCookieInfoRequest extends PluginCallRequest {
 
     	        String cookie = cookies[i];
     	        cookie = cookie.trim();
-    	        String cookieName = cookie.substring(0, cookie.indexOf("="));
-    	        String cookieValue = cookie.substring(cookie.indexOf("=")+1);
+    	        String cookieName; 
+    	        String cookieValue; 
 
-    	        HttpCookie httpCookieObj = new HttpCookie(cookieName, cookieValue);
-    	        httpCookieObj.setPath(siteURI.getPath());
-    	        httpCookieObj.setVersion(0); // force v0
+    	        if (cookie.indexOf("=") > 0) {
+    	            cookieName = cookie.substring(0, cookie.indexOf("="));
+    	            cookieValue = cookie.substring(cookie.indexOf("=")+1);
 
-    	        PluginDebug.debug("Adding cookie info COOKIEN=" + cookieName + " and COOKIEV=" + cookieValue);
-    	        cookieObjects.add(httpCookieObj);
+    	            HttpCookie httpCookieObj = new HttpCookie(cookieName, cookieValue);
+    	            httpCookieObj.setPath(siteURI.getPath());
+    	            httpCookieObj.setVersion(0); // force v0
+
+    	            PluginDebug.debug("Adding cookie info COOKIEN=" + cookieName + " and COOKIEV=" + cookieValue);
+    	            cookieObjects.add(httpCookieObj);
+    	        }
     	    }
     	}
 

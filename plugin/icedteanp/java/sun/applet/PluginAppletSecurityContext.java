@@ -60,6 +60,7 @@ import java.util.List;
 import sun.reflect.generics.repository.MethodRepository;
 
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
+import netscape.javascript.JSObjectCreatePermission;
 
 
 
@@ -232,7 +233,7 @@ class Signature {
 
 public class PluginAppletSecurityContext {
 	
-	public static Hashtable<ClassLoader, String> classLoaders = new Hashtable<ClassLoader, String>();
+	public static Hashtable<ClassLoader, URL> classLoaders = new Hashtable<ClassLoader, URL>();
 
 	// FIXME: make private
 	public PluginObjectStore store = new PluginObjectStore();
@@ -260,8 +261,16 @@ public class PluginAppletSecurityContext {
 		}
 
 		JNLPRuntime.disableExit();
+		
+		URL u = null;
+		try {
+		    u = new URL("file://");
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		
 
-		this.classLoaders.put(liveconnectLoader, "file://");
+		this.classLoaders.put(liveconnectLoader, u);
 	}
 
 	private static <V> V parseCall(String s, ClassLoader cl, Class<V> c) {
@@ -300,7 +309,7 @@ public class PluginAppletSecurityContext {
 			return store.getObject(new Integer(s));
 	}
 
-	public void associateSrc(ClassLoader cl, String src) {
+	public void associateSrc(ClassLoader cl, URL src) {
 		PluginDebug.debug("Associating " + cl + " with " + src);
 		this.classLoaders.put(cl, src);
 	}
@@ -610,7 +619,7 @@ public class PluginAppletSecurityContext {
 				arguments[1] = methodName;
                 for (int i = 0; i < args.length - 3; i++) {
                     arguments[i+2] = store.getObject(parseCall(args[3 + i], null, Integer.class));
-                    PluginDebug.debug("GOT ARG: " + arguments[i]);
+                    PluginDebug.debug("GOT ARG: " + arguments[i+2]);
                 }
 
                 Object[] matchingMethodAndArgs = MethodOverloadResolver.getMatchingMethod(arguments);
@@ -954,7 +963,7 @@ public class PluginAppletSecurityContext {
                 while (i < length) {
                     c = Integer.parseInt(args[j++], 16);
                     byteArray[i++] = (byte) c;
-                }
+                } 
 
                 ret = new String(byteArray, "UTF-8");
                 PluginDebug.debug("NEWSTRINGUTF: " + ret);
@@ -1065,12 +1074,18 @@ public class PluginAppletSecurityContext {
 		if (target.getClassLoader() == null)
 			return;
 
-		String classSrc = this.classLoaders.get(target.getClassLoader());
+		URL classSrcURL = this.classLoaders.get(target.getClassLoader());
+		URL jsSrcURL = null;
+		try {
+		    jsSrcURL = new URL(jsSrc);
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 
-		PluginDebug.debug("target = " + target + " jsSrc=" + jsSrc + " classSrc=" + classSrc);
+		PluginDebug.debug("target = " + target + " jsSrc=" + jsSrc + " classSrc=" + classSrcURL);
 		
 		// if src is not a file and class loader does not map to the same base, UniversalBrowserRead (BrowserReadPermission) must be set
-		if (!jsSrc.equals("file://") && !jsSrc.equals("[System]") && !classSrc.equals(jsSrc)) {
+		if (!jsSrc.equals("file://") && !jsSrc.equals("[System]") && !classSrcURL.equals(jsSrcURL)) {
 			acc.checkPermission(new BrowserReadPermission());
 		}
 	}
@@ -1354,12 +1369,15 @@ public class PluginAppletSecurityContext {
 
 		CodeSource cs = new CodeSource((URL) null, (java.security.cert.Certificate  [])null);
 		
-		if (src != null) {
+		if (src != null && src.length() > 0) {
 			try {
 				cs = new CodeSource(new URL(src + "/"), (java.security.cert.Certificate[]) null);
 			} catch (MalformedURLException mfue) {
 				// do nothing
 			}
+		} else {
+		    JSObjectCreatePermission perm = new JSObjectCreatePermission();
+		    grantedPermissions.add(perm);
 		}
 
 		ProtectionDomain pd = new ProtectionDomain(cs, grantedPermissions, null, null);

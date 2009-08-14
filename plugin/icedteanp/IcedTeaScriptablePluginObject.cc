@@ -41,7 +41,7 @@ exception statement from your version. */
 IcedTeaScriptablePluginObject::IcedTeaScriptablePluginObject(NPP instance)
 {
 	this->instance = instance;
-	storeInstanceID(this, instance);
+	IcedTeaPluginUtilities::storeInstanceID(this, instance);
 }
 
 void
@@ -163,7 +163,7 @@ IcedTeaScriptablePluginObject::get_scriptable_java_package_object(NPP instance, 
 
     ((IcedTeaScriptableJavaPackageObject*) scriptable_object)->setPackageName(name);
 
-	storeInstanceID(scriptable_object, instance);
+    IcedTeaPluginUtilities::storeInstanceID(scriptable_object, instance);
 
 	return scriptable_object;
 }
@@ -253,7 +253,6 @@ IcedTeaScriptableJavaPackageObject::hasProperty(NPObject *npobj, NPIdentifier na
 	// No such package. Do we have a class with that name?
 	if (!hasProperty)
 	{
-		java_request->resetResult();
 		java_result = java_request->findClass(property_name);
 	}
 
@@ -290,13 +289,15 @@ IcedTeaScriptableJavaPackageObject::getProperty(NPObject *npobj, NPIdentifier na
 	{
 		PLUGIN_DEBUG_0ARG("Returning package object\n");
 		obj = IcedTeaScriptablePluginObject::get_scriptable_java_package_object(
-                                  getInstanceFromMemberPtr(npobj),
+                                  IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj),
                                   property_name.c_str());
 	}
 	else
 	{
 		PLUGIN_DEBUG_0ARG("Returning Java object\n");
-		obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(getInstanceFromMemberPtr(npobj), *(java_result->return_string), "0");
+		obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(
+		                IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj),
+		                *(java_result->return_string), "0");
 	}
 
 	OBJECT_TO_NPVARIANT(obj, *result);
@@ -368,7 +369,7 @@ IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(NPP instance, std
 	if (instance_id != "0")
 	    ((IcedTeaScriptableJavaObject*) scriptable_object)->setInstanceIdentifier(instance_id);
 
-	storeInstanceID(scriptable_object, instance);
+	IcedTeaPluginUtilities::storeInstanceID(scriptable_object, instance);
 
 	return scriptable_object;
 }
@@ -450,16 +451,22 @@ IcedTeaScriptableJavaObject::invoke(NPObject *npobj, NPIdentifier name, const NP
     std::string callee;
     std::string source;
 
+    NPP instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj);
+
     if (instance_id.length() == 0) // Static
     {
         printf("Calling static method\n");
         callee = ((IcedTeaScriptableJavaObject*) npobj)->getClassID();
-        java_result = java_request.callStaticMethod(callee, browser_functions.utf8fromidentifier(name), args, argCount);
+        java_result = java_request.callStaticMethod(
+                        IcedTeaPluginUtilities::getSourceFromInstance(instance),
+                        callee, browser_functions.utf8fromidentifier(name), args, argCount);
     } else
     {
         printf("Calling method normally\n");
         callee = ((IcedTeaScriptableJavaObject*) npobj)->getInstanceID();
-        java_result = java_request.callMethod(callee, browser_functions.utf8fromidentifier(name), args, argCount);
+        java_result = java_request.callMethod(
+                        IcedTeaPluginUtilities::getSourceFromInstance(instance),
+                        callee, browser_functions.utf8fromidentifier(name), args, argCount);
     }
 
     if (java_result->error_occurred)
@@ -509,7 +516,6 @@ IcedTeaScriptableJavaObject::invoke(NPObject *npobj, NPIdentifier name, const NP
         return_obj_instance_id.append(*(java_result->return_string));
 
         // Find out the class name first, because string is a special case
-        java_request.resetResult();
         java_result = java_request.getClassName(return_obj_instance_id);
 
         if (java_result->error_occurred)
@@ -522,7 +528,6 @@ IcedTeaScriptableJavaObject::invoke(NPObject *npobj, NPIdentifier name, const NP
         if (return_obj_class_name == "java.lang.String")
         {
             // String is a special case as NPVariant can handle it directly
-            java_request.resetResult();
             java_result = java_request.getString(return_obj_instance_id);
 
             if (java_result->error_occurred)
@@ -531,7 +536,7 @@ IcedTeaScriptableJavaObject::invoke(NPObject *npobj, NPIdentifier name, const NP
             }
 
             // needs to be on the heap
-            NPUTF8* return_str = (NPUTF8*) browser_functions.memalloc(sizeof(NPUTF8)*java_result->return_string->size() + 1);
+            NPUTF8* return_str = (NPUTF8*) malloc(sizeof(NPUTF8)*java_result->return_string->size() + 1);
             strcpy(return_str, java_result->return_string->c_str());
 
             PLUGIN_DEBUG_1ARG("Method call returned a string %s\n", return_str);
@@ -544,8 +549,6 @@ IcedTeaScriptableJavaObject::invoke(NPObject *npobj, NPIdentifier name, const NP
 
             // Else this is a regular class. Reference the class object so
             // we can construct an NPObject with it and the instance
-
-            java_request.resetResult();
             java_result = java_request.findClass(return_obj_class_name);
 
             if (java_result->error_occurred)
@@ -556,7 +559,9 @@ IcedTeaScriptableJavaObject::invoke(NPObject *npobj, NPIdentifier name, const NP
             return_obj_class_id.append(*(java_result->return_string));
 
             NPObject* obj;
-            obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(getInstanceFromMemberPtr(npobj), return_obj_class_id, return_obj_instance_id);
+            obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(
+                            IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj),
+                            return_obj_class_id, return_obj_instance_id);
 
             OBJECT_TO_NPVARIANT(obj, *result);
         }
@@ -609,12 +614,14 @@ IcedTeaScriptableJavaObject::getProperty(NPObject *npobj, NPIdentifier name, NPV
     std::string class_id = ((IcedTeaScriptableJavaObject*) npobj)->getClassID();
     std::string callee = ((IcedTeaScriptableJavaObject*) npobj)->getClassID();
 
-    java_result = java_request.getField(callee, browser_functions.utf8fromidentifier(name));
+    NPP instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj);
+    java_result = java_request.getField(
+                    IcedTeaPluginUtilities::getSourceFromInstance(instance),
+                    callee, browser_functions.utf8fromidentifier(name));
 
     std::string object_id = *(java_result->return_string);
 
     // get the class of this object
-    java_request.resetResult();
     java_result = java_request.getObjectClass(object_id);
 
     if (java_result->error_occurred)
@@ -622,7 +629,9 @@ IcedTeaScriptableJavaObject::getProperty(NPObject *npobj, NPIdentifier name, NPV
         return false;
     }
 
-    obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(getInstanceFromMemberPtr(npobj), *(java_result->return_string), object_id);
+    obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(
+                    IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj),
+                    *(java_result->return_string), object_id);
 
     OBJECT_TO_NPVARIANT(obj, *result);
 

@@ -54,6 +54,31 @@ exception statement from your version. */
 #include "IcedTeaPluginUtils.h"
 #include "IcedTeaPluginRequestProcessor.h"
 
+// GCJPluginData stores all the data associated with a single plugin
+// instance.  A separate plugin instance is created for each <APPLET>
+// tag.  For now, each plugin instance spawns its own applet viewer
+// process but this may need to change if we find pages containing
+// multiple applets that expect to be running in the same VM.
+struct GCJPluginData
+{
+  // A unique identifier for this plugin window.
+  gchar* instance_string;
+  // Mutex to protect appletviewer_alive.
+  GMutex* appletviewer_mutex;
+  // Back-pointer to the plugin instance to which this data belongs.
+  // This should not be freed but instead simply set to NULL.
+  NPP owner;
+  // The address of the plugin window.  This should not be freed but
+  // instead simply set to NULL.
+  gpointer window_handle;
+  // The last plugin window width sent to us by the browser.
+  guint32 window_width;
+  // The last plugin window height sent to us by the browser.
+  guint32 window_height;
+  // The source location for this instance
+  gchar* source;
+};
+
 // Queue processing threads
 static pthread_t plugin_request_processor_thread1;
 static pthread_t plugin_request_processor_thread2;

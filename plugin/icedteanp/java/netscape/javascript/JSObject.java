@@ -47,6 +47,10 @@
 package netscape.javascript;
 
 import java.applet.Applet;
+import java.security.AccessControlContext;
+import java.security.AccessControlException;
+import java.security.AccessController;
+import java.security.BasicPermission;
 
 import sun.applet.PluginAppletViewer;
 import sun.applet.PluginDebug;
@@ -102,13 +106,37 @@ public final class JSObject {
     /**
      * it is illegal to construct a JSObject manually
      */
-    // FIXME: make private!
     public JSObject(int jsobj_addr) {
-        PluginDebug.debug ("JSObject int CONSTRUCTOR");
-        internal = jsobj_addr;
+        this((long) jsobj_addr);
     }
 
     public JSObject(long jsobj_addr) {
+        
+        // See if the caller has permission
+        
+        try {
+            AccessController.getContext().checkPermission(new JSObjectCreatePermission());
+        } catch (AccessControlException ace) {
+            
+            // If not, only caller with JSObject.getWindow on the stack may 
+            // make this call unprivileged.
+            
+            // Although this check is inefficient, it should happen only once
+            // during applet init, so we look the other way
+
+            StackTraceElement[] stack =  Thread.currentThread().getStackTrace();
+            boolean mayProceed = false;
+            
+            for (int i=0; i < stack.length; i++) {
+                if (stack[i].getClassName().equals("netscape.javascript.JSObject") &&
+                    stack[i].getMethodName().equals("getWindow")) {
+                    mayProceed = true;
+                }
+            }
+
+            if (!mayProceed) throw ace;
+        }
+
         PluginDebug.debug ("JSObject long CONSTRUCTOR");
         internal = jsobj_addr;
     }
@@ -234,7 +262,7 @@ public final class JSObject {
         internal = ((PluginAppletViewer)
                     applet.getAppletContext()).getWindow();
         PluginDebug.debug ("GOT IT: " + internal);
-        return new JSObject(internal);
+        return new JSObject((long) internal);
     }
 
 
@@ -259,5 +287,4 @@ public final class JSObject {
 
         return false;
     }
-
 }

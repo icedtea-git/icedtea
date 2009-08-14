@@ -170,40 +170,17 @@ gboolean initialized = false;
 NPNetscapeFuncs browser_functions;
 
 // Various message buses carrying information to/from Java, and internally
-MessageBus* plugin_to_java_bus = new MessageBus();
-MessageBus* java_to_plugin_bus = new MessageBus();
+MessageBus* plugin_to_java_bus;
+MessageBus* java_to_plugin_bus;
 //MessageBus* internal_bus = new MessageBus();
 
 // Processor for plugin requests
-PluginRequestProcessor* plugin_req_proc = new PluginRequestProcessor();
+PluginRequestProcessor* plugin_req_proc;
 
 // Sends messages to Java over the bus
-JavaMessageSender* java_req_proc = new JavaMessageSender();
+JavaMessageSender* java_req_proc;
 
 GQuark ITNP_PLUGIN_ERROR = g_quark_from_string("IcedTeaNPPlugin");
-
-// GCJPluginData stores all the data associated with a single plugin
-// instance.  A separate plugin instance is created for each <APPLET>
-// tag.  For now, each plugin instance spawns its own applet viewer
-// process but this may need to change if we find pages containing
-// multiple applets that expect to be running in the same VM.
-struct GCJPluginData
-{
-  // A unique identifier for this plugin window.
-  gchar* instance_string;
-  // Mutex to protect appletviewer_alive.
-  GMutex* appletviewer_mutex;
-  // Back-pointer to the plugin instance to which this data belongs.
-  // This should not be freed but instead simply set to NULL.
-  NPP owner;
-  // The address of the plugin window.  This should not be freed but
-  // instead simply set to NULL.
-  gpointer window_handle;
-  // The last plugin window width sent to us by the browser.
-  guint32 window_width;
-  // The last plugin window height sent to us by the browser.
-  guint32 window_height;
-};
 
 // Documentbase retrieval type-punning union.
 typedef union
@@ -374,6 +351,10 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
 
   // Set back-pointer to owner instance.
   data->owner = instance;
+
+  // source of this instance
+  // don't use documentbase, it is cleared later
+  data->source = plugin_get_documentbase(instance);
 
   instance->pdata = data;
 
@@ -1715,6 +1696,9 @@ plugin_data_destroy (NPP instance)
   g_free (tofree->instance_string);
   tofree->instance_string = NULL;
 
+  g_free(tofree->source);
+  tofree->source = NULL;
+
   // cleanup_data:
   // Eliminate back-pointer to plugin instance.
   tofree->owner = NULL;
@@ -1907,10 +1891,14 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
 
   PLUGIN_DEBUG_0ARG ("NP_Initialize return\n");
 
+  plugin_req_proc = new PluginRequestProcessor();
+  java_req_proc = new JavaMessageSender();
+
+  java_to_plugin_bus = new MessageBus();
+  plugin_to_java_bus = new MessageBus();
+
   java_to_plugin_bus->subscribe(plugin_req_proc);
   plugin_to_java_bus->subscribe(java_req_proc);
-  //internal_bus->subscribe(java_req_proc);
-  //internal_bus->subscribe(plugin_req_proc);
 
   pthread_create (&plugin_request_processor_thread1, NULL, &queue_processor, (void*) plugin_req_proc);
   pthread_create (&plugin_request_processor_thread2, NULL, &queue_processor, (void*) plugin_req_proc);
@@ -2114,7 +2102,6 @@ get_scriptable_object(NPP instance)
 
         instance_id.append(*(java_result->return_string));
 
-        java_request.resetResult();
         java_result = java_request.getClassID(instance_id);
 
         if (java_result->error_occurred)

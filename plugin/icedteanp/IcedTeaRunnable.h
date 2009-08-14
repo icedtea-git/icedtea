@@ -48,7 +48,7 @@ exception statement from your version. */
 /*
  * This struct holds the result from the main-thread dispatched method
  */
-typedef struct java_result
+typedef struct result_data
 {
 	// Return identifier (if applicable)
     int return_identifier;
@@ -85,16 +85,16 @@ class IcedTeaRunnableMethod : public IcedTeaRunnable
 {
 public:
 
-  typedef void* (*Method) (void*, ResultData*);
+  typedef void* (*Method) (void*, void*);
 
-  IcedTeaRunnableMethod (Method, void* thread_data, ResultData* result);
+  IcedTeaRunnableMethod (Method, void* thread_data, void* result);
   NS_IMETHOD Run ();
 
   ~IcedTeaRunnableMethod ();
 
   Method method;
   void* thread_data;
-  ResultData* result;
+  void* result;
 };
 
 #endif /* MOZILLA */

@@ -47,7 +47,7 @@ exception statement from your version. */
 #include "IcedTeaPluginUtils.h"
 #include "IcedTeaScriptablePluginObject.h"
 
-#define REQUESTTIMEOUT 20
+#define REQUESTTIMEOUT 120
 
 /*
  * This struct holds data specific to a Java operation requested by the plugin
@@ -102,23 +102,23 @@ class JavaRequestProcessor : BusSubscriber
     	JavaResultData* result;
 
     	/* Post message on bus and wait */
-    	void postAndWaitForResponse(std::string* message);
+    	void postAndWaitForResponse(std::string message);
 
     	/* Creates a argument on java-side with appropriate type */
     	int createJavaObjectFromVariant(NPVariant variant);
 
     	// Call a method, static or otherwise, depending on supplied arg
-        JavaResultData* call(bool isStatic, std::string objectID,
-                             std::string methodName, const NPVariant* args,
-                             int numArgs);
+        JavaResultData* call(std::string source, bool isStatic,
+                             std::string objectID, std::string methodName,
+                             const NPVariant* args, int numArgs);
+
+        /* Resets the results */
+        void resetResult();
 
     public:
     	JavaRequestProcessor();
     	~JavaRequestProcessor();
     	virtual bool newMessageOnBus(const char* message);
-
-    	/* Resets the results */
-    	void resetResult();
 
     	/* Increments reference count by 1 */
     	void addReference(std::string object_id);
@@ -132,15 +132,15 @@ class JavaRequestProcessor : BusSubscriber
     	/* Returns the string, given the identifier */
     	JavaResultData* getString(std::string string_id);
 
-    	/* Returns the method ID from Java side */
-    	JavaResultData* getMethodID1(NPObject* obj, NPIdentifier methodName,
-                        std::vector<NPVariant> args);
-
     	/* Returns the field object */
-        JavaResultData* getField(std::string classID, std::string fieldName);
+        JavaResultData* getField(std::string source,
+                                 std::string classID,
+                                 std::string fieldName);
 
         /* Returns the static field object */
-        JavaResultData* getStaticField(std::string classID, std::string fieldName);
+        JavaResultData* getStaticField(std::string source,
+                                       std::string classID,
+                                       std::string fieldName);
 
         /* Returns the field id */
         JavaResultData* getFieldID(std::string classID, std::string fieldName);
@@ -157,19 +157,24 @@ class JavaRequestProcessor : BusSubscriber
                                      std::vector<std::string> args);
 
         /* Calls a static method */
-        JavaResultData* callStaticMethod(std::string classID, std::string methodName,
+        JavaResultData* callStaticMethod(std::string source,
+                                         std::string classID,
+                                         std::string methodName,
                                          const NPVariant* args, int numArgs);
 
         /* Calls a method on an instance */
-        JavaResultData* callMethod(std::string objectID, std::string methodName,
+        JavaResultData* callMethod(std::string source,
+                                   std::string objectID,
+                                   std::string methodName,
 								   const NPVariant* args, int numArgs);
 
         /* Returns the class of the given object */
         JavaResultData* getObjectClass(std::string objectID);
 
     	/* Creates a new object */
-    	JavaResultData* newObject(std::string objectID, std::string methodID,
-                                    std::vector<std::string> args);
+    	JavaResultData* newObject(std::string source,
+                                  std::string objectID, std::string methodID,
+                                  std::vector<std::string> args);
 
     	/* Returns the class ID */
     	JavaResultData* findClass(std::string name);
@@ -191,6 +196,9 @@ class JavaRequestProcessor : BusSubscriber
 
         /* Check if field exists */
         JavaResultData* hasField(std::string classID, std::string method_name);
+
+        /* Check if given object is instance of given class */
+        JavaResultData* isInstanceOf(std::string objectID, std::string classID);
 
         /* Returns the instance ID of the java applet */
         JavaResultData* getAppletObjectInstance(std::string instanceID);

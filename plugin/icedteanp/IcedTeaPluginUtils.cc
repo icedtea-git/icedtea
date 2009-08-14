@@ -50,6 +50,7 @@ exception statement from your version. */
 // Initialize static variables
 int IcedTeaPluginUtilities::reference = 0;
 pthread_mutex_t IcedTeaPluginUtilities::reference_mutex = PTHREAD_MUTEX_INITIALIZER;
+std::map<void*, NPP>* IcedTeaPluginUtilities::instance_map = new std::map<void*, NPP>();
 
 /**
  * Given a context number, constructs a message prefix to send to Java
@@ -58,19 +59,17 @@ pthread_mutex_t IcedTeaPluginUtilities::reference_mutex = PTHREAD_MUTEX_INITIALI
  * @return The string prefix (allocated on heap)
  */
 
-std::string*
-IcedTeaPluginUtilities::constructMessagePrefix(int context)
+void
+IcedTeaPluginUtilities::constructMessagePrefix(int context, std::string *result)
 {
-	std::string* result = new std::string();
-	char* context_str = itoa(context);
+	std::string context_str = std::string();
 
-	*result += "context ";
+	itoa(context, &context_str);
+
+	result->append("context ");
 	result->append(context_str);
-	*result += " reference -1";
+	result->append(" reference -1");
 
-	free(context_str);
-
-	return result;
 }
 
 /**
@@ -79,29 +78,24 @@ IcedTeaPluginUtilities::constructMessagePrefix(int context)
  *
  * @param context The context of the request
  * @param rerefence The reference number of the request
- * @return The string prefix (allocated on heap)
+ * @param result The message
  */
 
-std::string*
-IcedTeaPluginUtilities::constructMessagePrefix(int context, int reference)
+void
+IcedTeaPluginUtilities::constructMessagePrefix(int context, int reference, std::string* result)
 {
     // Until security is implemented, use file:// source for _everything_
 
-	/*std::string* result = new std::string();
-	char* context_str = itoa(context);
-	char* reference_str = itoa(reference);
+	std::string context_str = std::string();
+	std::string reference_str = std::string();
+
+	itoa(context, &context_str);
+	itoa(reference, &reference_str);
 
 	*result += "context ";
 	result->append(context_str);
 	*result += " reference ";
 	result->append(reference_str);
-
-	free(context_str);
-	free(reference_str);
-
-	return result;*/
-
-    return IcedTeaPluginUtilities::constructMessagePrefix(context, reference, "file://");
 }
 
 /**
@@ -111,42 +105,43 @@ IcedTeaPluginUtilities::constructMessagePrefix(int context, int reference)
  * @param context The context of the request
  * @param rerefence The reference number of the request
  * @param address The address for the script that made the request
- * @return The string prefix (allocated on heap)
+ * @param result The message
  */
 
-std::string*
+void
 IcedTeaPluginUtilities::constructMessagePrefix(int context, int reference,
-		                                       const char* address)
+		                                       std::string address,
+		                                       std::string* result)
 {
-	std::string* result = new std::string();
-	char* context_str = itoa(context);
-	char* reference_str = itoa(reference);
+	std::string context_str = std::string();
+	std::string reference_str = std::string();
+
+	itoa(context, &context_str);
+	itoa(reference, &reference_str);
 
 	*result += "context ";
 	result->append(context_str);
 	*result += " reference ";
 	result->append(reference_str);
-	*result += " src ";
-	result->append(address);
 
-	free(context_str);
-	free(reference_str);
-
-	return result;
+	if (address.length() > 0)
+	{
+	    *result += " src ";
+        result->append(address);
+	}
 }
 
 /**
  * Returns a string representation of a void pointer
  *
  * @param id The pointer
- * @return The string representation (Allocated on heap)
+ * @param result The string representation
  */
 
-std::string*
-IcedTeaPluginUtilities::JSIDToString(void* id)
+void
+IcedTeaPluginUtilities::JSIDToString(void* id, std::string* result)
 {
 
-	std::string* result = new std::string();
 	char* id_str = (char*) malloc(sizeof(char)*20); // max = long long = 8446744073709551615 == 19 chars
 
 	if (sizeof(void*) == sizeof(long long))
@@ -158,12 +153,10 @@ IcedTeaPluginUtilities::JSIDToString(void* id)
 		sprintf(id_str, "%lu", id); // else use long
 	}
 
-	*result += id_str;
+	result->append(id_str);
 
 	PLUGIN_DEBUG_2ARG("Converting pointer %p to %s\n", id, id_str);
 	free(id_str);
-
-	return result;
 }
 
 /**
@@ -201,6 +194,12 @@ int
 IcedTeaPluginUtilities::getReference()
 {
 	pthread_mutex_lock(&reference_mutex);
+
+	// If we are nearing the max, reset
+	if (reference > 0x7FFFFFFF - 10) {
+	    reference = 0;
+	}
+
 	reference++;
 	pthread_mutex_unlock(&reference_mutex);
 
@@ -215,25 +214,24 @@ IcedTeaPluginUtilities::getReference()
 void
 IcedTeaPluginUtilities::releaseReference()
 {
-	pthread_mutex_lock(&reference_mutex);
-	reference--;
-	pthread_mutex_unlock(&reference_mutex);
+    // do nothing for now
 }
 
 /**
  * Converts integer to char*
  *
  * @param i The integer to convert to ascii
- * @return The converted string (allocated on heap)
+ * @param result The resulting string
  */
-char*
-IcedTeaPluginUtilities::itoa(int i)
+void
+IcedTeaPluginUtilities::itoa(int i, std::string* result)
 {
 	// largest possible integer is 10 digits long
-	char* result = (char*) malloc(sizeof(char)*11);
-	sprintf(result, "%d", i);
+	char* int_str = (char*) malloc(sizeof(char)*11);
+	sprintf(int_str, "%d", i);
+	result->append(int_str);
 
-	return result;
+	free(int_str);
 }
 
 /**
@@ -332,16 +330,17 @@ IcedTeaPluginUtilities::convertStringToUTF8(std::string* str, std::string* utf_s
 {
 	std::ostringstream ostream;
 
-	char* length = itoa(str->length());
+	std::string length = std::string();
+	itoa(str->length(), &length);
+
 	ostream << length;
-	free(length);
 
 	// UTF-8 characters are 4-bytes max + space + '\0'
 	char* hex_value = (char*) malloc(sizeof(char)*10);
 
 	for (int i = 0; i < str->length(); i++)
 	{
-		sprintf(hex_value, " %x", (*str)[i]);
+		sprintf(hex_value, " %hx", str->at(i));
 		ostream << hex_value;
 	}
 
@@ -419,6 +418,54 @@ IcedTeaPluginUtilities::printStringVector(const char* prefix, std::vector<std::s
 	delete str;
 }
 
+gchar*
+IcedTeaPluginUtilities::getSourceFromInstance(NPP instance)
+{
+    GCJPluginData* data = (GCJPluginData*) instance->pdata;
+    return data->source;
+}
+
+
+/**
+ * Stores a window pointer <-> instance mapping
+ *
+ * @param member_ptr The pointer key
+ * @param instance The instance to associate with this pointer
+ */
+
+void
+IcedTeaPluginUtilities::storeInstanceID(void* member_ptr, NPP instance)
+{
+    PLUGIN_DEBUG_2ARG("Storing instance %p with key %p\n", instance, member_ptr);
+    instance_map->insert(std::make_pair(member_ptr, instance));
+}
+
+
+/**
+ * Given the window pointer, returns the instance associated with it
+ *
+ * @param member_ptr The pointer key
+ * @return The associated instance
+ */
+
+NPP
+IcedTeaPluginUtilities::getInstanceFromMemberPtr(void* member_ptr)
+{
+
+    NPP instance = NULL;
+    PLUGIN_DEBUG_1ARG("getInstanceFromMemberPtr looking for %p\n", member_ptr);
+
+    std::map<void*, NPP>::iterator iterator = instance_map->find(member_ptr);
+
+    if (iterator != instance_map->end())
+    {
+        instance = instance_map->find(member_ptr)->second;
+        PLUGIN_DEBUG_2ARG("getInstanceFromMemberPtr found %p. Instance = %p\n", member_ptr, instance);
+    }
+
+    return instance;
+}
+
 /*
  * Similar to printStringVector, but takes a vector of string pointers instead
  *
@@ -444,41 +491,6 @@ IcedTeaPluginUtilities::printStringPtrVector(const char* prefix, std::vector<std
 	PLUGIN_DEBUG_2ARG("%s %s\n", prefix, str->c_str());
 
 	delete str;
-}
-
-std::string*
-IcedTeaPluginUtilities::variantToClassName(NPVariant variant)
-{
-
-	std::string* java_type = new std::string();
-
-	if (NPVARIANT_IS_VOID(variant))
-	{
-		*java_type += "V";
-	} else if (NPVARIANT_IS_BOOLEAN(variant))
-	{
-		*java_type += "Z";
-	} else if (NPVARIANT_IS_INT32(variant))
-	{
-		*java_type += "I";
-	} else if (NPVARIANT_IS_DOUBLE(variant))
-	{
-		*java_type += "D";
-	} else if (NPVARIANT_IS_STRING(variant))
-	{
-		*java_type += "Ljava/lang/String;";
-	} else if (NPVARIANT_IS_OBJECT(variant))
-	{
-		printf("** Unimplemented: IcedTeaPluginUtilities::variantToClassName(variant type=obj)\n");
-	} else if (NPVARIANT_IS_NULL(variant))
-	{
-		printf("** Unimplemented: IcedTeaPluginUtilities::variantToClassName(variant type=null)\n");
-	} else
-	{
-		printf("** Unimplemented: IcedTeaPluginUtilities::variantToClassName(variant type=unknown)\n");
-	}
-
-	return java_type;
 }
 
 void

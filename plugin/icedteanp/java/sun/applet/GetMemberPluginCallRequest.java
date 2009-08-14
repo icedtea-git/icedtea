@@ -49,9 +49,10 @@ public class GetMemberPluginCallRequest extends PluginCallRequest {
     public void parseReturn(String message) {
     	PluginDebug.debug ("GetMEMBerparseReturn GOT: " + message);
         String[] args = message.split(" ");
-        // FIXME: add thread ID to messages to support multiple
-        // threads using the netscape.javascript package.
-        object = AppletSecurityContextManager.getSecurityContext(0).getObject(Integer.parseInt(args[1]));
+        // FIXME: Is it even possible to distinguish between null and void
+        // here?
+        if (args[1] != "null" && args[1] != "void")
+        	object = AppletSecurityContextManager.getSecurityContext(0).getObject(Integer.parseInt(args[1]));
         setDone(true);
     }
 

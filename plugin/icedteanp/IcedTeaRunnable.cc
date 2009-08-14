@@ -55,7 +55,7 @@ IcedTeaRunnable::Run ()
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-IcedTeaRunnableMethod::IcedTeaRunnableMethod (Method method, void* thread_data, ResultData* result)
+IcedTeaRunnableMethod::IcedTeaRunnableMethod (Method method, void* thread_data, void* result)
 : method (method),
   thread_data(thread_data),
   result(result)
@@ -69,6 +69,7 @@ IcedTeaRunnableMethod::~IcedTeaRunnableMethod ()
 NS_IMETHODIMP
 IcedTeaRunnableMethod::Run ()
 {
+    printf("Running method...\n");
     (*method) (thread_data, result);
     return NS_OK;
 }

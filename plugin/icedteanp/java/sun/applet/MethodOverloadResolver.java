@@ -138,6 +138,11 @@ public class MethodOverloadResolver {
         Object[] o14 = { fc.getClass(), "foo_noargs" };
         list.add(o14);
         
+        // method which takes a primitive bool, given a Boolean
+        String s15 = "foo_boolonly()";
+        Object[] o15 = { fc.getClass(), "foo_boolonly", new Boolean(true) };
+        list.add(o15);
+
         for (Object[] o : list) {
             Object[] methodAndArgs = getMatchingMethod(o);
             if (debugging)
@@ -312,6 +317,8 @@ public class MethodOverloadResolver {
             return java.lang.Float.TYPE;
         } else if (o instanceof java.lang.Double) {
             return java.lang.Double.TYPE;
+        } else if (o instanceof java.lang.Boolean) {
+            return java.lang.Boolean.TYPE;
         }
 
         return o.getClass();
@@ -408,16 +415,6 @@ public class MethodOverloadResolver {
 
 class FooClass {
 
-    // Normal, null => non primitive type
-    public void foo(Boolean b) {
-
-    }
-
-    // Class -> primitive
-    public void foo(boolean b) {
-
-    }
-
     // First type full match, second Class -> Primitive
     public void foo(Boolean b, int i) {
 
@@ -472,6 +469,8 @@ class FooClass {
     public void foo_int_only (int i) {}
     
     public void foo_noargs() {}
+
+    public void foo_boolonly(boolean b) {}
 }
 
 class BarClass1 {}

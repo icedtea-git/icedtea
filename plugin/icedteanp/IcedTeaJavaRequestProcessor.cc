@@ -111,7 +111,8 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
                     (message_parts->at(4) == "GetFieldID") ||
                     (message_parts->at(4) == "GetField") ||
                     (message_parts->at(4) == "GetStaticField") ||
-                    (message_parts->at(4) == "GetJavaObject"))
+                    (message_parts->at(4) == "GetJavaObject") ||
+                    (message_parts->at(4) == "IsInstanceOf"))
 			{
 				result->return_identifier = atoi(message_parts->at(5).c_str());
 				result->return_string->append(message_parts->at(5)); // store it as a string as well, for easy access
@@ -159,6 +160,8 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 
 JavaRequestProcessor::JavaRequestProcessor()
 {
+    PLUGIN_DEBUG_0ARG("JavaRequestProcessor constructor\n");
+
 	// caller frees this
 	result = new JavaResultData();
 	result->error_msg = new std::string();
@@ -212,15 +215,17 @@ JavaRequestProcessor::resetResult()
 }
 
 void
-JavaRequestProcessor::postAndWaitForResponse(std::string* message)
+JavaRequestProcessor::postAndWaitForResponse(std::string message)
 {
     struct timespec t;
     clock_gettime(CLOCK_REALTIME, &t);
     t.tv_sec += REQUESTTIMEOUT; // 1 minute timeout
 
-    result_ready = false;
+    // Clear the result
+    resetResult();
+
     java_to_plugin_bus->subscribe(this);
-    plugin_to_java_bus->post(message->c_str());
+    plugin_to_java_bus->post(message.c_str());
 
     // Wait for result to be filled in.
 	struct timespec curr_t;
@@ -247,7 +252,7 @@ JavaRequestProcessor::postAndWaitForResponse(std::string* message)
     	result->error_msg->append("Error: Timed out when waiting for response");
 
     	// Report error
-    	PLUGIN_DEBUG_1ARG("Error: Timed out when waiting for response to %s\n", message->c_str());
+    	PLUGIN_DEBUG_1ARG("Error: Timed out when waiting for response to %s\n", message.c_str());
     }
 
     java_to_plugin_bus->unSubscribe(this);
@@ -263,20 +268,19 @@ JavaRequestProcessor::postAndWaitForResponse(std::string* message)
 JavaResultData*
 JavaRequestProcessor::getToStringValue(std::string object_id)
 {
-	std::string* message;
+	std::string message = std::string();
 
 	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
 	this->reference = IcedTeaPluginUtilities::getReference();
 
-	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
 
-    message->append(" GetToStringValue "); // get it in UTF8
-    message->append(object_id);
+    message.append(" GetToStringValue "); // get it in UTF8
+    message.append(object_id);
 
     postAndWaitForResponse(message);
 
 	IcedTeaPluginUtilities::releaseReference();
-    delete message;
 
 	return result;
 }
@@ -291,20 +295,19 @@ JavaRequestProcessor::getToStringValue(std::string object_id)
 JavaResultData*
 JavaRequestProcessor::getString(std::string string_id)
 {
-	std::string* message;
+    std::string message = std::string();
 
 	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
 	this->reference = IcedTeaPluginUtilities::getReference();
 
-	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
 
-    message->append(" GetStringUTFChars "); // get it in UTF8
-    message->append(string_id);
+    message.append(" GetStringUTFChars "); // get it in UTF8
+    message.append(string_id);
 
     postAndWaitForResponse(message);
 
 	IcedTeaPluginUtilities::releaseReference();
-    delete message;
 
 	return result;
 }
@@ -318,20 +321,19 @@ JavaRequestProcessor::getString(std::string string_id)
 void
 JavaRequestProcessor::deleteReference(std::string object_id)
 {
-    std::string* message;
+    std::string message = std::string();
 
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
 
-    message->append(" DeleteLocalRef ");
-    message->append(object_id);
+    message.append(" DeleteLocalRef ");
+    message.append(object_id);
 
     postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
-    delete message;
 }
 
 /**
@@ -343,39 +345,36 @@ JavaRequestProcessor::deleteReference(std::string object_id)
 void
 JavaRequestProcessor::addReference(std::string object_id)
 {
-    std::string* message;
+    std::string message = std::string();
 
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
 
-    message->append(" NewGlobalRef ");
-    message->append(object_id);
+    message.append(" NewGlobalRef ");
+    message.append(object_id);
 
     postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
-    delete message;
 
 }
 
 JavaResultData*
 JavaRequestProcessor::findClass(std::string name)
 {
-	std::string* message;
+    std::string message = std::string();
 
 	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
 	this->reference = IcedTeaPluginUtilities::getReference();
 
-	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
 
-    message->append(" FindClass ");
-    message->append(name);
+    message.append(" FindClass ");
+    message.append(name);
 
     postAndWaitForResponse(message);
-
-    delete message;
 
 	return result;
 }
@@ -383,19 +382,17 @@ JavaRequestProcessor::findClass(std::string name)
 JavaResultData*
 JavaRequestProcessor::getClassName(std::string objectID)
 {
-	std::string* message;
+    std::string message = std::string();
 
 	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
 	this->reference = IcedTeaPluginUtilities::getReference();
 
-	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
 
-    message->append(" GetClassName ");
-    message->append(objectID);
+    message.append(" GetClassName ");
+    message.append(objectID);
 
     postAndWaitForResponse(message);
-
-    delete message;
 
 	return result;
 }
@@ -403,19 +400,17 @@ JavaRequestProcessor::getClassName(std::string objectID)
 JavaResultData*
 JavaRequestProcessor::getClassID(std::string objectID)
 {
-    std::string* message;
+    std::string message = std::string();
 
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
 
-    message->append(" GetClassID ");
-    message->append(objectID);
+    message.append(" GetClassID ");
+    message.append(objectID);
 
     postAndWaitForResponse(message);
-
-    delete message;
 
     return result;
 }
@@ -425,25 +420,24 @@ JavaRequestProcessor::getFieldID(std::string classID, std::string fieldName)
 {
 	JavaResultData* java_result;
 	JavaRequestProcessor* java_request = new JavaRequestProcessor();
-	std::string* message;
+	std::string message = std::string();
 
 	java_result = java_request->newString(fieldName);
 
 	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
 	this->reference = IcedTeaPluginUtilities::getReference();
 
-	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-	message->append(" GetFieldID ");
-	message->append(classID);
-	message->append(" ");
-	message->append(java_result->return_string->c_str());
+	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+	message.append(" GetFieldID ");
+	message.append(classID);
+	message.append(" ");
+	message.append(java_result->return_string->c_str());
 
 	postAndWaitForResponse(message);
 
 	IcedTeaPluginUtilities::releaseReference();
 
 	delete java_request;
-	delete message;
 
 	return result;
 }
@@ -453,81 +447,81 @@ JavaRequestProcessor::getStaticFieldID(std::string classID, std::string fieldNam
 {
     JavaResultData* java_result;
     JavaRequestProcessor* java_request = new JavaRequestProcessor();
-    std::string* message;
+    std::string message = std::string();
 
     java_result = java_request->newString(fieldName);
 
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-    message->append(" GetStaticFieldID ");
-    message->append(classID);
-    message->append(" ");
-    message->append(java_result->return_string->c_str());
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+    message.append(" GetStaticFieldID ");
+    message.append(classID);
+    message.append(" ");
+    message.append(java_result->return_string->c_str());
 
     postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
 
     delete java_request;
-    delete message;
 
     return result;
 }
 
 JavaResultData*
-JavaRequestProcessor::getField(std::string classID, std::string fieldName)
+JavaRequestProcessor::getField(std::string source,
+                               std::string classID,
+                               std::string fieldName)
 {
     JavaResultData* java_result;
     JavaRequestProcessor* java_request = new JavaRequestProcessor();
-    std::string* message;
+    std::string message = std::string();
 
     java_result = java_request->getFieldID(classID, fieldName);
 
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-    message->append(" GetField ");
-    message->append(classID);
-    message->append(" ");
-    message->append(java_result->return_string->c_str());
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, source, &message);
+    message.append(" GetField ");
+    message.append(classID);
+    message.append(" ");
+    message.append(java_result->return_string->c_str());
 
     postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
 
     delete java_request;
-    delete message;
 
     return result;
 }
 
 JavaResultData*
-JavaRequestProcessor::getStaticField(std::string classID, std::string fieldName)
+JavaRequestProcessor::getStaticField(std::string classID, std::string source,
+                                     std::string fieldName)
 {
     JavaResultData* java_result;
     JavaRequestProcessor* java_request = new JavaRequestProcessor();
-    std::string* message;
+    std::string message = std::string();
 
     java_result = java_request->getStaticFieldID(classID, fieldName);
 
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-    message->append(" GetStaticField ");
-    message->append(classID);
-    message->append(" ");
-    message->append(java_result->return_string->c_str());
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, source, &message);
+    message.append(" GetStaticField ");
+    message.append(classID);
+    message.append(" ");
+    message.append(java_result->return_string->c_str());
 
     postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
 
     delete java_request;
-    delete message;
 
     return result;
 }
@@ -537,7 +531,7 @@ JavaRequestProcessor::getMethodID(std::string classID, NPIdentifier methodName,
                                   std::vector<std::string> args)
 {
 	JavaRequestProcessor* java_request;
-	std::string* message;
+	std::string message = std::string();
     std::string* signature;
 
     signature = new std::string();
@@ -554,19 +548,18 @@ JavaRequestProcessor::getMethodID(std::string classID, NPIdentifier methodName,
 	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
 	this->reference = IcedTeaPluginUtilities::getReference();
 
-	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-	*message += " GetMethodID ";
-	*message += classID;
-	*message += " ";
-	*message += browser_functions.utf8fromidentifier(methodName);
-	*message += " ";
-	*message += *signature;
+	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+	message += " GetMethodID ";
+	message += classID;
+	message += " ";
+	message += browser_functions.utf8fromidentifier(methodName);
+	message += " ";
+	message += *signature;
 
 	postAndWaitForResponse(message);
 
 	IcedTeaPluginUtilities::releaseReference();
 	delete signature;
-	delete message;
 
 	return result;
 }
@@ -576,7 +569,7 @@ JavaRequestProcessor::getStaticMethodID(std::string classID, NPIdentifier method
                                   std::vector<std::string> args)
 {
     JavaRequestProcessor* java_request;
-    std::string* message;
+    std::string message = std::string();
     std::string* signature;
 
     signature = new std::string();
@@ -593,19 +586,18 @@ JavaRequestProcessor::getStaticMethodID(std::string classID, NPIdentifier method
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-    *message += " GetStaticMethodID ";
-    *message += classID;
-    *message += " ";
-    *message += browser_functions.utf8fromidentifier(methodName);
-    *message += " ";
-    *message += *signature;
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+    message += " GetStaticMethodID ";
+    message += classID;
+    message += " ";
+    message += browser_functions.utf8fromidentifier(methodName);
+    message += " ";
+    message += *signature;
 
     postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
     delete signature;
-    delete message;
 
     return result;
 }
@@ -697,13 +689,27 @@ JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
 		jsObjectConstructorID.append(*(java_result->return_string));
 		java_request.resetResult();
 
-		// We have class id and constructor ID. So we know we can create the object.. now create the string
+		// We have class id and constructor ID. So we know we can create the
+		// object.. now create the string that will be provided as the arg
 		java_result = java_request.newString(stringArg);
 
 		if (java_result->error_occurred) {
 			printf("Unable to create requested object\n");
 			return 0;
 		}
+
+		// Create the object
+		args.clear();
+		std::string arg = std::string();
+		arg.append(*(java_result->return_string));
+		args.push_back(arg);
+		java_result = java_request.newObject("[System]", jsObjectClassID, jsObjectConstructorID, args);
+
+        if (java_result->error_occurred) {
+            printf("Unable to create requested object\n");
+            return 0;
+        }
+
 
 		return java_result->return_identifier;
 
@@ -719,39 +725,43 @@ JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
 }
 
 JavaResultData*
-JavaRequestProcessor::callStaticMethod(std::string classID, std::string methodName,
-									   const NPVariant* args, int numArgs)
+JavaRequestProcessor::callStaticMethod(std::string source, std::string classID,
+                                       std::string methodName,
+                                       const NPVariant* args,
+                                       int numArgs)
 {
-    return call(true, classID, methodName, args, numArgs);
+    return call(source, true, classID, methodName, args, numArgs);
 }
 
 JavaResultData*
-JavaRequestProcessor::callMethod(std::string objectID, std::string methodName,
-                                       const NPVariant* args, int numArgs)
+JavaRequestProcessor::callMethod(std::string source,
+                                 std::string objectID, std::string methodName,
+                                 const NPVariant* args, int numArgs)
 {
-    return call(false, objectID, methodName, args, numArgs);
+    return call(source, false, objectID, methodName, args, numArgs);
 }
 
 JavaResultData*
-JavaRequestProcessor::call(bool isStatic, std::string objectID,
+JavaRequestProcessor::call(std::string source,
+                           bool isStatic, std::string objectID,
                            std::string methodName,
                            const NPVariant* args, int numArgs)
 {
-	std::string* message;
+    std::string message = std::string();
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, source, &message);
 
     if (isStatic)
-        *message += " CallStaticMethod ";
+        message += " CallStaticMethod ";
     else
-        *message += " CallMethod ";
+        message += " CallMethod ";
 
-    *message += objectID;
-    *message += " ";
-    *message += methodName;
-    *message += " ";
+    message += objectID;
+    message += " ";
+    message += methodName;
+    message += " ";
 
 	// First, we need to load the arguments into the java-side table
 	for (int i=0; i < numArgs; i++) {
@@ -760,21 +770,19 @@ JavaRequestProcessor::call(bool isStatic, std::string objectID,
 		{
 			result->error_occurred = true;
 			result->error_msg->append("Unable to create arguments");
-			delete message;
 			return result;
 		}
 
 		char* id = (char*) malloc(sizeof(char)*32);
 		sprintf(id, "%d", objectID);
-		*message += id;
-		*message += " ";
+		message += id;
+		message += " ";
 		free(id);
 	}
 
 	postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
-    delete message;
 
     return result;
 }
@@ -783,50 +791,49 @@ JavaResultData*
 JavaRequestProcessor::getObjectClass(std::string objectID)
 {
     JavaRequestProcessor* java_request;
-    std::string* message;
+    std::string message = std::string();
 
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-    *message += " GetObjectClass ";
-    *message += objectID;
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+    message += " GetObjectClass ";
+    message += objectID;
 
     postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
-    delete message;
 
     return result;
 }
 
 JavaResultData*
-JavaRequestProcessor::newObject(std::string objectID, std::string methodID,
-                                  std::vector<std::string> args)
+JavaRequestProcessor::newObject(std::string source, std::string objectID,
+                                std::string methodID,
+                                std::vector<std::string> args)
 {
 	JavaRequestProcessor* java_request;
-	std::string* message;
+	std::string message = std::string();
 
 	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
 	this->reference = IcedTeaPluginUtilities::getReference();
 
-	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-	*message += " NewObject ";
-	*message += objectID;
-	*message += " ";
-	*message += methodID;
-	*message += " ";
+	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, source, &message);
+	message += " NewObject ";
+	message += objectID;
+	message += " ";
+	message += methodID;
+	message += " ";
 
 	for (int i=0; i < args.size(); i++)
 	{
-		*message += args[i];
-		*message += " ";
+		message += args[i];
+		message += " ";
 	}
 
 	postAndWaitForResponse(message);
 
 	IcedTeaPluginUtilities::releaseReference();
-	delete message;
 
 	return result;
 }
@@ -835,21 +842,20 @@ JavaResultData*
 JavaRequestProcessor::newString(std::string str)
 {
 	std::string utf_string = std::string();
-	std::string* message;
+	std::string message = std::string();
 
 	IcedTeaPluginUtilities::convertStringToUTF8(&str, &utf_string);
 
 	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
 	this->reference = IcedTeaPluginUtilities::getReference();
 
-	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-	message->append(" NewStringUTF ");
-	message->append(utf_string);
+	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+	message.append(" NewStringUTF ");
+	message.append(utf_string);
 
 	postAndWaitForResponse(message);
 
 	IcedTeaPluginUtilities::releaseReference();
-	delete message;
 
 	return result;
 }
@@ -859,23 +865,22 @@ JavaRequestProcessor::hasPackage(std::string package_name)
 {
 	JavaResultData* java_result;
 	JavaRequestProcessor* java_request = new JavaRequestProcessor();
-	std::string* message;
+	std::string message = std::string();
 
 	java_result = java_request->newString(package_name);
 
 	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
 	this->reference = IcedTeaPluginUtilities::getReference();
 
-	message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-	message->append(" HasPackage ");
-	message->append(java_result->return_string->c_str());
+	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+	message.append(" HasPackage ");
+	message.append(java_result->return_string->c_str());
 
 	postAndWaitForResponse(message);
 
 	IcedTeaPluginUtilities::releaseReference();
 
 	delete java_request;
-	delete message;
 
 	return result;
 }
@@ -885,25 +890,24 @@ JavaRequestProcessor::hasMethod(std::string classID, std::string method_name)
 {
     JavaResultData* java_result;
     JavaRequestProcessor* java_request = new JavaRequestProcessor();
-    std::string* message;
+    std::string message = std::string();
 
     java_result = java_request->newString(method_name);
 
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-    message->append(" HasMethod ");
-    message->append(classID);
-    message->append(" ");
-    message->append(java_result->return_string->c_str());
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+    message.append(" HasMethod ");
+    message.append(classID);
+    message.append(" ");
+    message.append(java_result->return_string->c_str());
 
     postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
 
     delete java_request;
-    delete message;
 
     return result;
 }
@@ -912,26 +916,44 @@ JavaResultData*
 JavaRequestProcessor::hasField(std::string classID, std::string method_name)
 {
     JavaResultData* java_result;
-    JavaRequestProcessor* java_request = new JavaRequestProcessor();
-    std::string* message;
+    JavaRequestProcessor java_request = JavaRequestProcessor();
+    std::string message = std::string();
 
-    java_result = java_request->newString(method_name);
+    java_result = java_request.newString(method_name);
 
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
 
-    message = IcedTeaPluginUtilities::constructMessagePrefix(0, reference);
-    message->append(" HasField ");
-    message->append(classID);
-    message->append(" ");
-    message->append(java_result->return_string->c_str());
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+    message.append(" HasField ");
+    message.append(classID);
+    message.append(" ");
+    message.append(java_result->return_string->c_str());
 
     postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
 
-    delete java_request;
-    delete message;
+    return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::isInstanceOf(std::string objectID, std::string classID)
+{
+    std::string message = std::string();
+
+    this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+    this->reference = IcedTeaPluginUtilities::getReference();
+
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+    message.append(" IsInstanceOf ");
+    message.append(objectID);
+    message.append(" ");
+    message.append(classID);
+
+    postAndWaitForResponse(message);
+
+    IcedTeaPluginUtilities::releaseReference();
 
     return result;
 }
@@ -940,10 +962,11 @@ JavaResultData*
 JavaRequestProcessor::getAppletObjectInstance(std::string instanceID)
 {
     std::string message = std::string();
-    char* ref_str;
+    std::string ref_str = std::string();
 
+    this->instance = 0;
     this->reference = IcedTeaPluginUtilities::getReference();
-    ref_str = IcedTeaPluginUtilities::itoa(reference);
+    IcedTeaPluginUtilities::itoa(reference, &ref_str);
 
     message = "instance ";
     message += instanceID;
@@ -951,7 +974,7 @@ JavaRequestProcessor::getAppletObjectInstance(std::string instanceID)
     message += ref_str;
     message += " GetJavaObject";
 
-    postAndWaitForResponse(&message);
+    postAndWaitForResponse(message);
 
     IcedTeaPluginUtilities::releaseReference();
 

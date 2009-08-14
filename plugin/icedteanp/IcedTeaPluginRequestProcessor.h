@@ -62,20 +62,13 @@ typedef struct struct_thread_data
 	std::string* source;
 } ThreadData;
 
-
-/* Map holding window pointer<->instance relationships */
-static std::map<void*, NPP>* instance_map;
-
 /* Internal request reference counter */
 static long internal_req_ref_counter;
 
 // JS request processor methods
-extern NPP getInstanceFromMemberPtr(void* member_ptr);
-extern void storeInstanceID(void* member_ptr, NPP instance);
 static void* requestFromMainThread();
 static void* getSlot(void* tdata);
 static void* setSlot(void* tdata);
-static void* eval(void* tdata);
 static void* removeMember(void* tdata);
 static void* call(void* tdata);
 static void* finalize(void* tdata);
@@ -86,8 +79,10 @@ static void* finalize(void* tdata);
 static void convertToNPVariant(std::string value, std::string type, NPVariant* result_variant);
 
 // Internal methods that need to run in main thread
-void* _getMember(void* message_parts, ResultData* result);
-void* _setMember(void* message_parts, ResultData* result);
+void* _getMember(void* message_parts, void* result);
+void* _setMember(void* message_parts, void* result);
+void* _call(void* data, void* result);
+void* _eval(void* data, void* result);
 
 static pthread_mutex_t tc_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int thread_count = 0;
@@ -119,6 +114,9 @@ class PluginRequestProcessor : public BusSubscriber
     	/* Send main window pointer to Java */
     	void sendWindow(std::vector<std::string>* message_parts);
 
+    	/* Stores the variant on java side */
+    	void storeVariantInJava(NPVariant variant, std::string* result);
+
     public:
     	PluginRequestProcessor(); /* Constructor */
     	~PluginRequestProcessor(); /* Destructor */
@@ -134,6 +132,13 @@ class PluginRequestProcessor : public BusSubscriber
 
         /* Send string value of requested object */
         void sendString(std::vector<std::string>* message_parts);
+
+        /* Evaluate the given script */
+        void eval(std::vector<std::string>* message_parts);
+
+        /* Evaluate the given script */
+        void call(std::vector<std::string>* message_parts);
+
 };
 
 #endif // __ICEDTEAPLUGINREQUESTPROCESSOR_H__
