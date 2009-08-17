@@ -1,3 +1,8 @@
+2009-08-17  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Bump to b69.
+
 2009-08-07  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
