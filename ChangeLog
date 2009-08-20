@@ -1,3 +1,35 @@
+2009-08-20  Xerxes Rånby  <xerxes@zafena.se>
+
+	Adjust Shark to LLVM 2.6svn rev 79521.
+
+	* ports/hotspot/src/share/vm/shark/llvmValue.hpp
+	(LLVMValue::jfloat_constant): Push LLVMContexts through the
+	llvm::Type APIs to handle LLVM 2.6svn API change.
+	(LLVMValue::jdouble_constant): Likewise.
+	(LLVMValue::bit_constant): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp
+	(SharkType::initialize): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp
+	(SharkType::intptr_type): Likewise.
+	(SharkType::jboolean_type): Likewise.
+	(SharkType::jbyte_type): Likewise.
+	(SharkType::jchar_type): Likewise.
+	(SharkType::jshort_type): Likewise.
+	(SharkType::jint_type): Likewise.
+	(SharkType::jlong_type): Likewise.
+	(SharkType::jfloat_type): Likewise.
+	(SharkType::jdouble_type): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::make_type): Likewise.
+	(SharkBuilder::CreateBlock): Push LLVMContexts through the
+	BasicBlock::Create APIs to handle LLVM 2.6svn API change.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::CreateBlock): Likewise.
+
 2009-08-14  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp

@@ -31,8 +31,13 @@ class SharkType : public AllStatic {
  public:
   static const llvm::IntegerType* intptr_type()
   {
+#if SHARK_LLVM_VERSION >= 26
+    return LP64_ONLY(llvm::Type::getInt64Ty(llvm::getGlobalContext()))
+           NOT_LP64 (llvm::Type::getInt32Ty(llvm::getGlobalContext()));
+#else
     return LP64_ONLY(llvm::Type::Int64Ty)
            NOT_LP64 (llvm::Type::Int32Ty);
+#endif
   }
 
   // VM types
@@ -89,35 +94,67 @@ class SharkType : public AllStatic {
  public:
   static const llvm::IntegerType* jboolean_type()
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::Type::getInt8Ty(llvm::getGlobalContext());
+#else
     return llvm::Type::Int8Ty;
+#endif
   }
   static const llvm::IntegerType* jbyte_type()
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::Type::getInt8Ty(llvm::getGlobalContext());
+#else
     return llvm::Type::Int8Ty;
+#endif
   }
   static const llvm::IntegerType* jchar_type()
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::Type::getInt16Ty(llvm::getGlobalContext());
+#else
     return llvm::Type::Int16Ty;
+#endif
   }
   static const llvm::IntegerType* jshort_type()
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::Type::getInt16Ty(llvm::getGlobalContext());
+#else
     return llvm::Type::Int16Ty;
+#endif
   }
   static const llvm::IntegerType* jint_type()
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::Type::getInt32Ty(llvm::getGlobalContext());
+#else
     return llvm::Type::Int32Ty;
+#endif
   }
   static const llvm::IntegerType* jlong_type()
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::Type::getInt64Ty(llvm::getGlobalContext());
+#else
     return llvm::Type::Int64Ty;
+#endif
   }
   static const llvm::Type* jfloat_type()
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::Type::getFloatTy(llvm::getGlobalContext());
+#else
     return llvm::Type::FloatTy;
+#endif
   }
   static const llvm::Type* jdouble_type()
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::Type::getDoubleTy(llvm::getGlobalContext());
+#else
     return llvm::Type::DoubleTy;
+#endif
   }
   static const llvm::PointerType* jobject_type()
   {

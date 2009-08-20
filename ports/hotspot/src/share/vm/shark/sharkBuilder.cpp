@@ -155,9 +155,17 @@ const Type* SharkBuilder::make_type(char type, bool void_ok)
     // Miscellaneous
   case 'v':
     assert(void_ok, "should be");
+#if SHARK_LLVM_VERSION >= 26
+    return Type::getVoidTy(getGlobalContext());
+#else
     return Type::VoidTy;
+#endif
   case '1':
+#if SHARK_LLVM_VERSION >= 26
+    return Type::getInt1Ty(getGlobalContext());
+#else
     return Type::Int1Ty;
+#endif
 
   default:
     ShouldNotReachHere();
@@ -590,5 +598,9 @@ BasicBlock* SharkBuilder::GetBlockInsertionPoint() const
 
 BasicBlock* SharkBuilder::CreateBlock(BasicBlock* ip, const char* name) const
 {
+#if SHARK_LLVM_VERSION >= 26
+  return BasicBlock::Create(getGlobalContext(), name, GetInsertBlock()->getParent(), ip);
+#else
   return BasicBlock::Create(name, GetInsertBlock()->getParent(), ip);
+#endif
 }  

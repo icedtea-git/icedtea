@@ -45,35 +45,71 @@ void SharkType::initialize()
 {
   // VM types
   _cpCacheEntry_type = PointerType::getUnqual(
+#if SHARK_LLVM_VERSION >= 26
+    ArrayType::get(Type::getInt8Ty(getGlobalContext()), sizeof(ConstantPoolCacheEntry)));
+#else
     ArrayType::get(Type::Int8Ty, sizeof(ConstantPoolCacheEntry)));
-  
+#endif
+
   _itableOffsetEntry_type = PointerType::getUnqual(
+#if SHARK_LLVM_VERSION >= 26
+    ArrayType::get(Type::getInt8Ty(getGlobalContext()), itableOffsetEntry::size() * wordSize));
+#else
     ArrayType::get(Type::Int8Ty, itableOffsetEntry::size() * wordSize));
-  
+#endif
+
   _klass_type = PointerType::getUnqual(
+#if SHARK_LLVM_VERSION >= 26
+    ArrayType::get(Type::getInt8Ty(getGlobalContext()), sizeof(Klass)));
+#else
     ArrayType::get(Type::Int8Ty, sizeof(Klass)));
-  
+#endif
+
   _methodOop_type = PointerType::getUnqual(
+#if SHARK_LLVM_VERSION >= 26
+    ArrayType::get(Type::getInt8Ty(getGlobalContext()), sizeof(methodOopDesc)));
+#else
     ArrayType::get(Type::Int8Ty, sizeof(methodOopDesc)));
-  
+#endif
+
   _monitor_type = ArrayType::get(
+#if SHARK_LLVM_VERSION >= 26
+      Type::getInt8Ty(getGlobalContext()),
+#else
       Type::Int8Ty,
+#endif
       frame::interpreter_frame_monitor_size() * wordSize);
-  
+
   _oop_type = PointerType::getUnqual(
+#if SHARK_LLVM_VERSION >= 26
+    ArrayType::get(Type::getInt8Ty(getGlobalContext()), sizeof(oopDesc)));
+#else
     ArrayType::get(Type::Int8Ty, sizeof(oopDesc)));
+#endif
 
   _thread_type = PointerType::getUnqual(
+#if SHARK_LLVM_VERSION >= 26
+    ArrayType::get(Type::getInt8Ty(getGlobalContext()), sizeof(JavaThread)));
+#else
     ArrayType::get(Type::Int8Ty, sizeof(JavaThread)));
+#endif
 
   _zeroStack_type = PointerType::getUnqual(
+#if SHARK_LLVM_VERSION >= 26
+    ArrayType::get(Type::getInt8Ty(getGlobalContext()), sizeof(ZeroStack)));
+#else
     ArrayType::get(Type::Int8Ty, sizeof(ZeroStack)));
+#endif
 
   std::vector<const Type*> params;
   params.push_back(methodOop_type());
   params.push_back(intptr_type());
   params.push_back(thread_type());
+#if SHARK_LLVM_VERSION >= 26
+  _entry_point_type = FunctionType::get(Type::getVoidTy(getGlobalContext()), params, false);
+#else
   _entry_point_type = FunctionType::get(Type::VoidTy, params, false);
+#endif
 
   // Java types a) on the stack and in fields, and b) in arrays
   for (int i = 0; i < T_CONFLICT + 1; i++) {

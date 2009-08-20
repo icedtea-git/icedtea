@@ -89,7 +89,11 @@ class SharkFunction : public SharkTargetInvariants {
  public:
   llvm::BasicBlock* CreateBlock(const char* name = "") const
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::BasicBlock::Create(llvm::getGlobalContext(), name, function(), block_insertion_point());
+#else
     return llvm::BasicBlock::Create(name, function(), block_insertion_point());
+#endif
   }
 
   // Stack management

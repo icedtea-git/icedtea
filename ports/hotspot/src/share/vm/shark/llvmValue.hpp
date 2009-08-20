@@ -61,7 +61,11 @@ class LLVMValue : public AllStatic {
  public:
   static llvm::ConstantInt* bit_constant(int value)
   {
+#if SHARK_LLVM_VERSION >= 26
+    return llvm::ConstantInt::get(llvm::Type::getInt1Ty(llvm::getGlobalContext()), value, false);
+#else
     return llvm::ConstantInt::get(llvm::Type::Int1Ty, value, false);
+#endif
   }
   static llvm::ConstantInt* intptr_constant(intptr_t value)
   {
