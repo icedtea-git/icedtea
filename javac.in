@@ -19,6 +19,7 @@ else
 my @bcoption;
 push @bcoption, '-bootclasspath', glob '@SYSTEM_JDK_DIR@/jre/lib/rt.jar'
     unless grep {$_ eq '-bootclasspath'} @ARGV;
+my @ecj_parms = ($ECJ_WARNINGS, @bcoption);
 
 # Work around ecj's inability to handle duplicate command-line
 # options.
@@ -47,14 +48,14 @@ sub gen_ecj_opts
 if ( -e "@abs_top_builddir@/native-ecj" )
 {
     my @ecj_args = gen_ecj_opts( \@ARGV );
-    exec '@abs_top_builddir@/native-ecj', '-1.7', $ECJ_WARNINGS, @bcoption, @ecj_args ;
+    exec '@abs_top_builddir@/native-ecj', @ecj_parms, @ecj_args ;
 }
 elsif ( -e "@JAVAC@" )
 {
     if ("@USING_ECJ@" eq "yes")
     {
 	my @ecj_args = gen_ecj_opts( \@ARGV );
-	exec '@JAVAC@', '-1.7', $ECJ_WARNINGS, @bcoption, @ecj_args ;
+	exec '@JAVAC@', @ecj_parms, @ecj_args ;
     }
     else
     {
@@ -67,6 +68,5 @@ else
     my @CLASSPATH = ('@ECJ_JAR@');
     push @CLASSPATH, split /:/, $ENV{"CLASSPATH"} if exists $ENV{"CLASSPATH"};
     $ENV{"CLASSPATH"} = join ':', @CLASSPATH;
-    exec '@JAVA@', 'org.eclipse.jdt.internal.compiler.batch.Main', '-1.7',
-    $ECJ_WARNINGS, @bcoption, @ecj_args;
+    exec '@JAVA@', 'org.eclipse.jdt.internal.compiler.batch.Main', @ecj_parms, @ecj_args;
 }

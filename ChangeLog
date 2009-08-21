@@ -1,6 +1,24 @@
 2009-08-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Add variables for source, target and other
+	javac settings so they are standardised across
+	the build.  Set JAVA_HOME and JDK_HOME to ""
+	to avoid build failures.  Set QUIETLY to ""
+	to display HotSpot javac invocations. Remove
+	duplicate javac invocations now targets depend
+	on INITIAL_BOOTSTRAP_LINK_STAMP.
+	* javac.in:
+	Remove 1.7 setting.  Add ecj_parms so same
+	parameters are used for all ecj invocations.
+	* patches/ecj/icedtea-hotspot-default.patch:
+	Make SA_CLASSPATH contain the whole CLASSPATH
+	and use SA_TOOLS_JAR and SA_RT_JAR for the individual
+	files.
+
+2009-08-17  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Bump to b69.
 
 2009-08-07  Andrew John Hughes  <ahughes@redhat.com>

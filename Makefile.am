@@ -76,6 +76,11 @@ OPENJDK_SOURCEPATH_DIRS = \
 
 SOURCEPATH_DIRS = $(abs_top_builddir)/generated:$(OPENJDK_SOURCEPATH_DIRS)
 
+IT_LANGUAGE_SOURCE_VERSION=5
+IT_CLASS_TARGET_VERSION=5
+IT_JAVAC_SETTINGS=-g -encoding utf-8 $(JAVACFLAGS)
+IT_JAVACFLAGS=$(IT_JAVAC_SETTINGS) -source $(IT_LANGUAGE_SOURCE_VERSION) -target $(IT_CLASS_TARGET_VERSION)
+
 # Top-Level Targets
 # =================
 
@@ -1567,6 +1572,9 @@ ICEDTEA_ENV = \
 	ALT_PARALLEL_COMPILE_JOBS="$(PARALLEL_JOBS)" \
 	HOTSPOT_BUILD_JOBS="$(PARALLEL_JOBS)" \
 	JAVAC="" \
+	JAVA_HOME="" \
+	JDK_HOME="" \
+	QUIETLY="" \
 	ANT_RESPECT_JAVA_HOME="TRUE" \
 	RHINO_JAR="$(RHINO_JAR)" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
@@ -1651,6 +1659,9 @@ ICEDTEA_ENV_ECJ = \
 	ALT_PARALLEL_COMPILE_JOBS="$(PARALLEL_JOBS)" \
 	HOTSPOT_BUILD_JOBS="$(PARALLEL_JOBS)" \
 	JAVAC="" \
+	JAVA_HOME="" \
+	JDK_HOME="" \
+	QUIETLY="" \
 	RHINO_JAR="$(RHINO_JAR)" \
 	JAR_KNOWS_ATFILE="$(JAR_KNOWS_ATFILE)" \
 	JAR_KNOWS_J_OPTIONS="$(JAR_KNOWS_J_OPTIONS)" \
@@ -3003,19 +3014,11 @@ hotspot-tools-source-files.txt: stamps/generated.stamp \
 
 stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt \
 	$(INITIAL_BOOTSTRAP_LINK_STAMP)
-	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
-	then \
-	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/hotspot-tools \
-            -sourcepath \
-	      'hotspot-tools:$(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS)' \
-            -bootclasspath \'\' @$< ; \
-	else \
-	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g \
-	    -d lib/hotspot-tools \
-	    -sourcepath \
-	      'hotspot-tools:$(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS)' \
-	    -bootclasspath \'\' @$< ; \
-	fi
+	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) \
+	  -d lib/hotspot-tools \
+	  -sourcepath \
+	    'hotspot-tools:$(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS)' \
+	  -bootclasspath \'\' @$< ;
 	mkdir -p stamps
 	touch stamps/hotspot-tools-class-files.stamp
 
@@ -3028,17 +3031,10 @@ clean-hotspot-tools:
 # tools.jar
 bootstrap/jdk1.7.0/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/lib/
-	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
-        then \
-	  $(JAR) cf $@ -C lib/hotspot-tools com -C lib/hotspot-tools sun \
-	    -C lib/hotspot-tools org -C lib/hotspot-tools java \
-	    -C lib/hotspot-tools javax ; \
-	else \
-	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/hotspot-tools com \
-	    -C lib/hotspot-tools sun \
-            -C lib/hotspot-tools org -C lib/hotspot-tools java \
-            -C lib/hotspot-tools javax ; \
-	fi
+	$(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/hotspot-tools com \
+	  -C lib/hotspot-tools sun \
+          -C lib/hotspot-tools org -C lib/hotspot-tools java \
+          -C lib/hotspot-tools javax ;
 	if test -d bootstrap/ecj ; \
 	then \
 	  mkdir -p bootstrap/ecj/lib/; \
@@ -3053,18 +3049,10 @@ rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
 
 stamps/rt-class-files.stamp: rt-source-files.txt stamps/hotspot-tools.stamp
 	mkdir -p lib/rt
-	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
-        then \
-	  $(JAVAC) $(MEMORY_LIMIT) -g -d lib/rt \
-	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
-	    -sourcepath '$(SOURCEPATH_DIRS)' \
-	    -bootclasspath \'\' @$< ; \
-	else \
-	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d lib/rt \
-	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
-            -sourcepath '$(SOURCEPATH_DIRS)' \
-            -bootclasspath \'\' @$< ; \
-	fi
+	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) -d lib/rt \
+	  -classpath $(abs_top_builddir)/lib/hotspot-tools \
+          -sourcepath '$(SOURCEPATH_DIRS)' \
+          -bootclasspath \'\' @$< ;
 	mkdir -p stamps
 	touch stamps/rt-class-files.stamp
 
@@ -3076,14 +3064,8 @@ clean-rt:
 # rt-closed.jar.
 bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
-	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
-	then \
-	  $(JAR) cf $@ -C lib/rt com -C lib/rt java \
-	    -C lib/rt javax -C lib/rt sun ; \
-	else \
-	  $(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-	    -C lib/rt javax -C lib/rt sun ; \
-	fi
+	$(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
+	  -C lib/rt javax -C lib/rt sun ;
 	if test -d bootstrap/ecj/jre/lib ; \
 	then \
 	  cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
@@ -3096,20 +3078,11 @@ extra-source-files.txt:
 
 stamps/extra-class-files.stamp: extra-source-files.txt stamps/netx.stamp
 	mkdir -p extra-lib
-	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
-	then \
-	  $(JAVAC) $(MEMORY_LIMIT) -g -d extra-lib \
-	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
-	    -sourcepath $(abs_top_srcdir)/extra:$(SOURCEPATH_DIRS) \
-	    -bootclasspath \'\' \
-	    @extra-source-files.txt ; \
-	else \
-	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g -d extra-lib \
-	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
-	    -sourcepath $(abs_top_srcdir)/extra:$(SOURCEPATH_DIRS) \
-	    -bootclasspath \'\' \
-	    @extra-source-files.txt ; \
-	fi
+	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) -d extra-lib \
+	  -classpath $(abs_top_builddir)/lib/hotspot-tools \
+	  -sourcepath $(abs_top_srcdir)/extra:$(SOURCEPATH_DIRS) \
+	  -bootclasspath \'\' \
+	  @extra-source-files.txt ; \
 	cp -r $(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources \
 	  extra-lib/net/sourceforge/jnlp/about	
 	find extra-lib/net/sourceforge/jnlp/about -type f -exec chmod 640 '{}' ';' \
@@ -3139,7 +3112,7 @@ netx-source-files.txt:
 
 stamps/netx.stamp: netx-source-files.txt stamps/hotspot-tools.stamp
 	mkdir -p $(abs_top_builddir)/netx.build
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g \
+	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) \
 	    -d $(abs_top_builddir)/netx.build \
 	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
 	    -sourcepath $(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS): \
@@ -3308,12 +3281,7 @@ endif
 stamps/pulse-java-jar.stamp: stamps/pulse-java-class.stamp
 if ENABLE_PULSE_JAVA
 	mkdir -p $(PULSE_JAVA_CLASS_DIR);
-	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
-	then \
-	  $(JAR) cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .; \
-	else \
-	  $(ICEDTEA_BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .; \
-	fi
+	$(ICEDTEA_BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .;
 endif
 	mkdir -p stamps
 	touch stamps/pulse-java-jar.stamp
@@ -3321,22 +3289,11 @@ endif
 stamps/pulse-java-class.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
 if ENABLE_PULSE_JAVA
 	mkdir -p $(PULSE_JAVA_CLASS_DIR)
-	if ! test -d $(ICEDTEA_BOOT_DIR) ; \
-	then \
-		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-		 $(JAVAC) -g -d $(PULSE_JAVA_CLASS_DIR) \
-		-bootclasspath  \
-	        '$(OPENJDK_SOURCEPATH_DIRS):$(abs_top_builddir)/generated' \
-		org/classpath/icedtea/pulseaudio/*.java\
-		) \
-        else \
-		(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-		$(ICEDTEA_BOOT_DIR)/bin/javac -g -d $(PULSE_JAVA_CLASS_DIR)\
-		-bootclasspath \
-	        '$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar' \
-		org/classpath/icedtea/pulseaudio/*.java\
-		) \
-        fi
+	(cd $(PULSE_JAVA_JAVA_SRCDIR); \
+	 $(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d $(PULSE_JAVA_CLASS_DIR)\
+	 -bootclasspath '$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar' \
+	org/classpath/icedtea/pulseaudio/*.java\
+	)
 	cp  -r $(PULSE_JAVA_JAVA_SRCDIR)/META-INF $(PULSE_JAVA_CLASS_DIR)
 	chmod -R ug+w $(PULSE_JAVA_CLASS_DIR)/META-INF
 endif
@@ -3487,8 +3444,8 @@ endif
 stamps/jtreg.stamp: stamps/icedtea.stamp
 	rm -rf test/jtreg/classes
 	mkdir -p test/jtreg/classes
-	$(ICEDTEA_BOOT_DIR)/bin/javac -g -d test/jtreg/classes -source 1.5 \
-	   -encoding iso-8859-1 `find $(abs_top_srcdir)/test/jtreg/com -name '*.java'`
+	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d test/jtreg/classes \
+	   `find $(abs_top_srcdir)/test/jtreg/com -name '*.java'`
 	(cd $(abs_top_srcdir)/test/jtreg; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm $(abs_top_builddir)/test/jtreg.jar \
 	   META-INF/MANIFEST.MF \
