@@ -385,9 +385,9 @@ Value* SharkBuilder::uncommon_trap()
 // perform these operations without delegating to a function.
 
 #ifdef ARM
-static jint zero_cmpxchg_int(volatile jint *ptr, jint *oldval, jint newval)
+static jint zero_cmpxchg_int(volatile jint *ptr, jint oldval, jint newval)
 {
-  return Atomic::cmpxchg(*newval, ptr, *oldval);
+  return Atomic::cmpxchg(newval, ptr, oldval);
 }
 #endif // ARM
 
@@ -404,10 +404,10 @@ Value* SharkBuilder::cmpxchg_int()
 
 #ifdef ARM
 static intptr_t zero_cmpxchg_ptr(volatile intptr_t* ptr,
-                                 intptr_t*          oldval,
-                                 intptr_t*          newval)
+                                 intptr_t           oldval,
+                                 intptr_t           newval)
 {
-  return Atomic::cmpxchg_ptr(*newval, ptr, *oldval);
+  return Atomic::cmpxchg_ptr(newval, ptr, oldval);
 }
 #endif // ARM
 

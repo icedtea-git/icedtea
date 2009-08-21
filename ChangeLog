@@ -1,3 +1,11 @@
+2009-08-21  Xerxes Rånby  <xerxes@zafena.se>
+
+	*ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(zero_cmpxchg_int): Updated method to match current Shark
+	and LLVM atomic calling convention.
+	Fixes compilation error and logic for ARM.
+	(zero_cmpxchg_ptr): Likewise.
+
 2009-08-20  Xerxes Rånby  <xerxes@zafena.se>
 
 	Adjust Shark to LLVM 2.6svn rev 79521.
