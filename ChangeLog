@@ -1,5 +1,13 @@
 2009-08-25  Deepak Bhole <dbhole@redhat.com>
 
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java
+	(handleMessage): Wait until panel is set before pinging it for
+	life status.
+	(showStatus): Replace new lines with spaces, as the status is
+	on a single line anyway.
+
+2009-08-25  Deepak Bhole <dbhole@redhat.com>
+
 	* plugin/icedtea/sun/applet/PluginCookieInfoRequest.java
 	(parseReturn): Store cookie info as a string rather than a list of
 	HttpCookie objects.
