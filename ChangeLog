@@ -1,5 +1,18 @@
 2009-08-25  Deepak Bhole <dbhole@redhat.com>
 
+	* plugin/icedtea/sun/applet/PluginCookieInfoRequest.java
+	(parseReturn): Store cookie info as a string rather than a list of
+	HttpCookie objects.
+	(getObject): Return the new cookie string.
+	* plugin/icedtea/sun/applet/PluginCookieManager.java: New file, extends
+	CookieManager as is set as the default cookie manager for the plugin.
+	* plugin/icedtea/sun/applet/PluginCookieStore.java : Deleted. New design
+	uses a custom cookiemanager rather than just a custom store.
+	* plugin/icedtea/sun/applet/PluginMain.java
+	(init): Wire in the new cookie manager.
+
+2009-08-25  Deepak Bhole <dbhole@redhat.com>
+
 	* netx/net/sourceforge/jnlp/resources/Messages.properties: Add new
 	message key for CN name mismatches.
 	* netx/net/sourceforge/jnlp/security/HttpsCertVerifier.java

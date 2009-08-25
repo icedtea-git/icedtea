@@ -37,12 +37,6 @@ exception statement from your version. */
 
 package sun.applet;
 
-import java.net.HttpCookie;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.sun.jndi.toolkit.url.UrlUtil;
 
 /**
  * This class represents a request object for cookie information for a given URI
@@ -50,7 +44,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 
 public class PluginCookieInfoRequest extends PluginCallRequest {
 
-    List<HttpCookie> cookieObjects = new ArrayList<HttpCookie>();
+    String cookieString = new String();
 
     public PluginCookieInfoRequest(String message, String returnString) {
         super(message, returnString);
@@ -63,45 +57,11 @@ public class PluginCookieInfoRequest extends PluginCallRequest {
 
     	PluginDebug.debug ("PluginCookieInfoRequest GOT: " + cookieInfo);
 
-    	String encodedURI = cookieInfo.split(" ")[2];
-    	
     	// Skip the first 3 components. We are guaranteed 3 components, 
     	// so no index -1 to worry about
     	cookieInfo = cookieInfo.substring(cookieInfo.indexOf(' ')+1);
     	cookieInfo = cookieInfo.substring(cookieInfo.indexOf(' ')+1);
-    	cookieInfo = cookieInfo.substring(cookieInfo.indexOf(' ')+1);
-
-    	URI siteURI;
-    	try
-    	{
-    	    siteURI = new URI(UrlUtil.decode(encodedURI, "UTF-8"));
-    	} catch (Exception e)
-    	{
-    	    e.printStackTrace();
-    	    return;
-    	}
-
-    	if (cookieInfo != null && cookieInfo.length() > 0)
-    	{
-    	    String[] cookies = cookieInfo.split(";");
-
-    	    for (int i = 0; i < cookies.length; i++) 
-    	    {
-    	        ArrayList l = new ArrayList();
-
-    	        String cookie = cookies[i];
-    	        cookie = cookie.trim();
-    	        String cookieName = cookie.substring(0, cookie.indexOf("="));
-    	        String cookieValue = cookie.substring(cookie.indexOf("=")+1);
-
-    	        HttpCookie httpCookieObj = new HttpCookie(cookieName, cookieValue);
-    	        httpCookieObj.setPath(siteURI.getPath());
-    	        httpCookieObj.setVersion(0); // force v0
-
-    	        PluginDebug.debug("Adding cookie info COOKIEN=" + cookieName + " and COOKIEV=" + cookieValue);
-    	        cookieObjects.add(httpCookieObj);
-    	    }
-    	}
+    	cookieString = cookieInfo.substring(cookieInfo.indexOf(' ')+1);
 
         setDone(true);
     }
@@ -116,7 +76,7 @@ public class PluginCookieInfoRequest extends PluginCallRequest {
     	return message.startsWith(returnString);
     }
 
-    public List<HttpCookie> getObject() {
-    	return this.cookieObjects;
+    public String getObject() {
+    	return this.cookieString;
     }
 }
