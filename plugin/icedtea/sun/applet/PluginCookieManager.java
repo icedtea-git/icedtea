@@ -1,4 +1,4 @@
-/* PluginCookieStore -- Storage for cookie information
+/* PluginCookieManager -- Cookie manager for the plugin
    Copyright (C) 2009  Red Hat
 
 This file is part of IcedTea.
@@ -37,37 +37,52 @@ exception statement from your version. */
 
 package sun.applet;
 
+import java.io.IOException;
+import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-import sun.net.www.protocol.http.InMemoryCookieStore;
-
-public class PluginCookieStore extends InMemoryCookieStore 
+public class PluginCookieManager extends CookieManager 
 {
-    public List<HttpCookie> get(URI uri)
-    {
-        List<HttpCookie> cookies;
+    public Map<String, List<String>> get(URI uri,
+			Map<String, List<String>> requestHeaders) throws IOException {
+		// pre-condition check
+		if (uri == null || requestHeaders == null) {
+			throw new IllegalArgumentException("Argument is null");
+		}
 
-        // Try to fetch it from the plugin, but if something goes 
-        // wrong, fall back. Don't crash!
-        try
-        {
-            cookies = (List<HttpCookie>) PluginAppletViewer.requestPluginCookieInfo(uri);
+		Map<String, List<String>> cookieMap = new java.util.HashMap<String, List<String>>();
 
-            // If cookies is null, something went wrong. Fall back.
-            if (cookies == null) throw new NullPointerException("Null cookie");
+		String cookies = (String) PluginAppletViewer
+				.requestPluginCookieInfo(uri);
+		List<String> cookieHeader = new java.util.ArrayList<String>();
 
-        } catch (Exception e)
-        {
-            PluginDebug.debug("Unable to fetch cookie information from plugin. " +
-            		          "Falling back to default.");
-            e.printStackTrace();
-            cookies = super.get(uri);
+		if (cookies != null && cookies.length() > 0)
+			cookieHeader.add(cookies);
+		
+		// Add anything else that mozilla didn't add
+        for (HttpCookie cookie : getCookieStore().get(uri)) {
+            // apply path-matches rule (RFC 2965 sec. 3.3.4)
+            if (pathMatches(uri.getPath(), cookie.getPath())) {
+            	cookieHeader.add(cookie.toString());
+            }
         }
 
-        PluginDebug.debug("Returning cookies " + cookies + " for site: " + uri);
-        
-        return cookies;
+		cookieMap.put("Cookie", cookieHeader);
+		return Collections.unmodifiableMap(cookieMap);
+	}
+
+    private boolean pathMatches(String path, String pathToMatchWith) {
+        if (path == pathToMatchWith)
+            return true;
+        if (path == null || pathToMatchWith == null)
+            return false;
+        if (path.startsWith(pathToMatchWith))
+            return true;
+
+        return false;
     }
 }
