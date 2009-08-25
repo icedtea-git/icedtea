@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java openjdk/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java
---- openjdk.orig/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2008-11-06 08:45:01.000000000 +0000
-+++ openjdk/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2008-11-17 14:46:05.000000000 +0000
+--- openjdk.orig/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2009-08-24 15:09:16.000000000 +0100
++++ openjdk/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2009-08-24 15:15:58.000000000 +0100
 @@ -40,7 +40,7 @@
          InetAddress bogus = InetAddress.getByName("0.0.0.0");
          SocketChannel sc = SocketChannel.open();
@@ -10,21 +10,9 @@ diff -Nru openjdk.orig/jdk/test/java/nio/channels/SocketChannel/LocalAddress.jav
  
          //Test1: connect only
          sc.connect(saddr);
-diff -Nru openjdk.orig/jdk/test/java/nio/channels/SocketChannel/Shutdown.java openjdk/jdk/test/java/nio/channels/SocketChannel/Shutdown.java
---- openjdk.orig/jdk/test/java/nio/channels/SocketChannel/Shutdown.java	2008-11-06 08:45:01.000000000 +0000
-+++ openjdk/jdk/test/java/nio/channels/SocketChannel/Shutdown.java	2008-11-17 14:45:53.000000000 +0000
-@@ -35,7 +35,7 @@
- 
-     public static void main(String args[]) throws Exception {
-         InetSocketAddress sa = new InetSocketAddress(
--                                InetAddress.getByName(TestUtil.HOST), 23);
-+                                InetAddress.getByName(TestUtil.HOST), 7);
-         SocketChannel sc = SocketChannel.open(sa);
-         boolean before = sc.socket().isInputShutdown();
-         sc.socket().shutdownInput();
 diff -Nru openjdk.orig/jdk/test/java/nio/channels/TestUtil.java openjdk/jdk/test/java/nio/channels/TestUtil.java
---- openjdk.orig/jdk/test/java/nio/channels/TestUtil.java	2008-11-17 14:43:22.000000000 +0000
-+++ openjdk/jdk/test/java/nio/channels/TestUtil.java	2008-11-17 14:44:24.000000000 +0000
+--- openjdk.orig/jdk/test/java/nio/channels/TestUtil.java	2009-08-24 15:09:16.000000000 +0100
++++ openjdk/jdk/test/java/nio/channels/TestUtil.java	2009-08-24 15:15:58.000000000 +0100
 @@ -36,9 +36,9 @@
  
      // Test hosts used by the channels tests - change these when
@@ -39,8 +27,8 @@ diff -Nru openjdk.orig/jdk/test/java/nio/channels/TestUtil.java openjdk/jdk/test
  
      private TestUtil() { }
 diff -Nru openjdk.orig/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh openjdk/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh
---- openjdk.orig/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2008-11-06 08:45:08.000000000 +0000
-+++ openjdk/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2008-11-17 14:48:52.000000000 +0000
+--- openjdk.orig/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2009-03-30 17:23:12.000000000 +0100
++++ openjdk/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2009-08-24 15:15:58.000000000 +0100
 @@ -26,14 +26,14 @@
  
  # @test

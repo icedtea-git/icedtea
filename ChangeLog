@@ -1,4 +1,13 @@
-2009-08-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-24  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-graphics.patch:
+	Removed; applied upstream.
+	* Makefile.am: Bump to b70.
+	* patches/ecj/icedtea-sbcs.patch,
+	* patches/icedtea-testenv.patch:
+	Recreated.
+
+2009-08-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Add variables for source, target and other
