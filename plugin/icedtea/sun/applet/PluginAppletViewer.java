@@ -589,7 +589,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 
              // Wait for the panel to initialize
              // (happens in a separate thread)
-             while (panel == null || (o = panel.getApplet()) == null && ((NetxPanel) panel).isAlive()) {
+             while (panel == null || ((o = panel.getApplet()) == null && ((NetxPanel) panel).isAlive())) {
             	 try {
             		 Thread.sleep(2000);
             		 PluginDebug.debug("Waiting for applet to initialize...");

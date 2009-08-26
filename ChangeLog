@@ -1,3 +1,8 @@
+2009-08-26  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java
+	(handleMessage): Fix logic bug introduced in previous commit.
+
 2009-08-25  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedtea/sun/applet/PluginAppletViewer.java
