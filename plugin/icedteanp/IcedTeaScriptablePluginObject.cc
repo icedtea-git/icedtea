@@ -471,6 +471,9 @@ IcedTeaScriptableJavaObject::invoke(NPObject *npobj, NPIdentifier name, const NP
 
     if (java_result->error_occurred)
     {
+        // error message must be allocated on heap
+        char* error_msg = (char*) malloc(java_result->error_msg->length()*sizeof(char));
+        browser_functions.setexception(npobj, error_msg);
         return false;
     }
 
@@ -541,7 +544,6 @@ IcedTeaScriptableJavaObject::invoke(NPObject *npobj, NPIdentifier name, const NP
 
             PLUGIN_DEBUG_1ARG("Method call returned a string %s\n", return_str);
             STRINGZ_TO_NPVARIANT(return_str, *result);
-            printf("%p -- %p\n", return_str, result->value.stringValue.utf8characters);
 
             // delete string from java side, as it is no longer needed
             java_request.deleteReference(return_obj_instance_id);
@@ -663,6 +665,49 @@ bool
 IcedTeaScriptableJavaObject::construct(NPObject *npobj, const NPVariant *args, uint32_t argCount,
 	           NPVariant *result)
 {
-	printf ("** Unimplemented: IcedTeaScriptableJavaObject::construct %p\n", npobj);
-	return false;
+    NPUTF8* method_name = "";
+
+    // Extract arg type array
+    PLUGIN_DEBUG_1ARG("IcedTeaScriptableJavaObject::construct %s. Args follow.\n", ((IcedTeaScriptableJavaObject*) npobj)->getClassID().c_str());
+    for (int i=0; i < argCount; i++)
+    {
+        IcedTeaPluginUtilities::printNPVariant(args[i]);
+    }
+
+    JavaResultData* java_result;
+    JavaRequestProcessor java_request = JavaRequestProcessor();
+
+    NPObject* obj;
+    std::string class_id = ((IcedTeaScriptableJavaObject*) npobj)->getClassID();
+    NPP instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj);
+
+    java_result = java_request.newObject(
+                            IcedTeaPluginUtilities::getSourceFromInstance(instance),
+                            class_id,
+                            args,
+                            argCount);
+
+    if (java_result->error_occurred)
+    {
+        // error message must be allocated on heap
+        int length = java_result->error_msg->length();
+        char* error_msg = (char*) malloc((length+1)*sizeof(char));
+        strcpy(error_msg, java_result->error_msg->c_str());
+
+        browser_functions.setexception(npobj, error_msg);
+        return false;
+    }
+
+    std::string return_obj_instance_id = std::string();
+    std::string return_obj_class_id = class_id;
+    return_obj_instance_id.append(*(java_result->return_string));
+
+    obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(
+                                IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj),
+                                return_obj_class_id, return_obj_instance_id);
+
+    OBJECT_TO_NPVARIANT(obj, *result);
+
+    PLUGIN_DEBUG_0ARG("IcedTeaScriptableJavaObject::construct returning.\n");
+    return true;
 }

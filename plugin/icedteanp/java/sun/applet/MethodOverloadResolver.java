@@ -37,6 +37,7 @@ exception statement from your version. */
 
 package sun.applet;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -152,6 +153,7 @@ public class MethodOverloadResolver {
                     System.out.println("No match found.\n");
                 
         }
+        
     }
 
     /* 
@@ -217,6 +219,66 @@ public class MethodOverloadResolver {
                 lowestCost = methodCost;
             }
 
+        }
+
+        return ret;
+    }
+
+    public static Object[] getMatchingConstructor(Object[] callList) {
+        Object[] ret = null;
+        Class c = (Class) callList[0];
+
+        Constructor[] matchingConstructors = getMatchingConstructors(c, callList.length - 1);
+        
+        if (debugging)
+            System.out.println("getMatchingConstructor called with: " + printList(callList));
+
+        int lowestCost = Integer.MAX_VALUE;
+
+        ArrayList<Object> paramList = new ArrayList<Object>();
+
+        for (Constructor matchingConstructor : matchingConstructors) {
+
+            int constructorCost = 0;
+            Class[] paramTypes = matchingConstructor.getParameterTypes();
+            Object[] constructorAndArgs = new Object[paramTypes.length + 1];
+            constructorAndArgs[0] = matchingConstructor;
+
+            // Figure out which of the matched methods best represents what we
+            // want
+            for (int i = 0; i < paramTypes.length; i++) {
+                Class paramTypeClass = paramTypes[i];
+                Object suppliedParam = callList[i + 1];
+                Class suppliedParamClass = suppliedParam != null ? suppliedParam
+                        .getClass()
+                        : null;
+
+                Object[] costAndCastedObj = getCostAndCastedObject(
+                        suppliedParam, paramTypeClass);
+                constructorCost += (Integer) costAndCastedObj[0];
+                Object castedObj = paramTypeClass.isPrimitive() ? costAndCastedObj[1]
+                        : paramTypeClass.cast(costAndCastedObj[1]);
+                constructorAndArgs[i + 1] = castedObj;
+
+                Class castedObjClass = castedObj == null ? null : castedObj
+                        .getClass();
+                Boolean castedObjIsPrim = castedObj == null ? null : castedObj
+                        .getClass().isPrimitive();
+
+                if (debugging)
+                    System.out.println("Param " + i + " of constructor "
+                            + matchingConstructor + " has cost "
+                            + (Integer) costAndCastedObj[0]
+                            + " original param type " + suppliedParamClass
+                            + " casted to " + castedObjClass + " isPrimitive="
+                            + castedObjIsPrim + " value " + castedObj);
+            }
+
+            if ((constructorCost > 0 && constructorCost < lowestCost) || 
+                 paramTypes.length == 0) {
+                ret = constructorAndArgs;
+                lowestCost = constructorCost;
+            }
         }
 
         return ret;
@@ -299,6 +361,18 @@ public class MethodOverloadResolver {
         }
 
         return matchingMethods.toArray(new Method[0]);
+    }
+    
+    private static Constructor[] getMatchingConstructors(Class c, int paramCount) {
+        Constructor[] allConstructors = c.getConstructors();
+        ArrayList<Constructor> matchingConstructors = new ArrayList<Constructor>(5);
+        
+        for (Constructor cs: allConstructors) {
+            if (cs.getParameterTypes().length == paramCount)
+                matchingConstructors.add(cs);
+        }
+
+        return matchingConstructors.toArray(new Constructor[0]);
     }
 
     private static Class getPrimitive(Object o) {
@@ -415,20 +489,52 @@ public class MethodOverloadResolver {
 
 class FooClass {
 
-    // First type full match, second Class -> Primitive
-    public void foo(Boolean b, int i) {
+    public FooClass() {}
+    
+    public FooClass(Boolean b, int i) {}
 
-    }
+    public FooClass(Boolean b, Integer i) {}
 
-    // Full match
-    public void foo(Boolean b, Integer i) {
+    public FooClass(Boolean b, short s) {}
 
-    }
+    public FooClass(String s, int i) {}
 
-    // First type full match, second Class -> Primitive ambiguity
-    public void foo(Boolean b, short s) {
+    public FooClass(String s, Integer i) {}
 
-    }
+    public FooClass(java.lang.Number num) {}
+
+    public FooClass(java.lang.Integer integer) {}
+
+    public FooClass(long l) {}
+
+    public FooClass(double d) {}
+
+    public FooClass(float f) {}
+    
+    public FooClass(JSObject j) {}
+
+    public FooClass(BarClass1 b) {}
+
+    public FooClass(BarClass2 b) {}
+
+    public FooClass(String s) {}
+    
+    public FooClass(byte b) {}
+    
+    public FooClass(String s, Float f) {}
+    
+    public FooClass (int i) {}
+
+    public void FooClass() {}
+
+    public void FooClass(boolean b) {}
+
+    
+    public void foo(Boolean b, int i) {}
+
+    public void foo(Boolean b, Integer i) {}
+
+    public void foo(Boolean b, short s) {}
 
     public void foo_string_int(String s, int i) {}
 

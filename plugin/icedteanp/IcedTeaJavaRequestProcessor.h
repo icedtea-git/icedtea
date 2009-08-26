@@ -171,9 +171,14 @@ class JavaRequestProcessor : BusSubscriber
         /* Returns the class of the given object */
         JavaResultData* getObjectClass(std::string objectID);
 
-    	/* Creates a new object */
+    	/* Creates a new object with choosable constructor */
     	JavaResultData* newObject(std::string source,
-                                  std::string objectID, std::string methodID,
+                                  std::string classID,
+                                  const NPVariant* args, int numArgs);
+
+    	/* Creates a new object when constructor is undetermined */
+    	JavaResultData* newObjectWithConstructor(std::string source, std::string classID,
+                                  std::string methodID,
                                   std::vector<std::string> args);
 
     	/* Returns the class ID */

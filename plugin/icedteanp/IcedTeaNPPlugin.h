@@ -41,8 +41,15 @@ exception statement from your version. */
 
 // Netscape plugin API includes.
 #include <npapi.h>
-#include <npupp.h>
 #include <nsThreadUtils.h>
+
+#if MOZILLA_VERSION_COLLAPSED < 1090200
+#include <npupp.h>
+#else
+#include <npapi.h>
+#include <npruntime.h>
+#include <npfunctions.h>
+#endif
 
 // GLib includes.
 #include <glib.h>
@@ -112,7 +119,7 @@ extern PluginRequestProcessor plugin_request_processor;
 void get_instance_from_id(int id, NPP& instance);
 
 /* Given an instance id, return its pointer */
-int get_id_from_instance(NPP* instance);
+int get_id_from_instance(NPP instance);
 
 /* Sends a message to the appletviewer */
 void plugin_send_message_to_appletviewer(gchar const* message);

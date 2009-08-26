@@ -215,12 +215,12 @@ public class PluginMain
 		    System.err.println("Unable to set SSLSocketfactory (may _prevent_ access to sites that should be trusted)! Continuing anyway...");
 		    e.printStackTrace();
 		}
-        
+
 		// plug in a custom authenticator and proxy selector
         Authenticator.setDefault(new CustomAuthenticator());
         ProxySelector.setDefault(new PluginProxySelector());
         
-        CookieManager ckManager = new CookieManager(new PluginCookieStore(), null);
+        CookieManager ckManager = new PluginCookieManager();
         CookieHandler.setDefault(ckManager);
 	}
 

@@ -202,7 +202,7 @@ class Signature {
 
 		return c;
 	}
-
+	
 	public static Class primitiveNameToType(String name) {
 		if (name.equals("void"))
 			return Void.TYPE;
@@ -912,32 +912,93 @@ public class PluginAppletSecurityContext {
 				store.reference(newArray);
 				write(reference, "NewObjectArray "
 						+ store.getIdentifier(newArray));
-			} else if (message.startsWith("NewObject")) {
+			} else if (message.startsWith("NewObjectWithConstructor")) {
+
+                String[] args = message.split(" ");
+                Integer classID = parseCall(args[1], null, Integer.class);
+                Integer methodID = parseCall(args[2], null, Integer.class);
+
+                final Constructor m = (Constructor) store.getObject(methodID);
+                Class[] argTypes = m.getParameterTypes();
+
+                // System.out.println ("NEWOBJ: HERE1");
+                Object[] arguments = new Object[argTypes.length];
+                // System.out.println ("NEWOBJ: HERE2");
+                for (int i = 0; i < argTypes.length; i++) {
+                    arguments[i] = parseArgs(args[3 + i], argTypes[i]);
+                    // System.out.println ("NEWOBJ: GOT ARG: " + arguments[i]);
+                }
+
+                final Object[] fArguments = arguments;
+                AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
+
+                Class c = (Class) store.getObject(classID);
+                checkPermission(src, c, acc);
+
+                Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
+                    public Object run() {
+                        try {
+                            return m.newInstance(fArguments);
+                        } catch (Throwable t) {
+                            return t;
+                        }
+                    }
+                }, acc);
+
+                if (ret instanceof Throwable)
+                    throw (Throwable) ret;
+
+                store.reference(ret);
+
+                write(reference, "NewObject " + store.getIdentifier(ret));
+
+            } else if (message.startsWith("NewObject")) {
 				String[] args = message.split(" ");
 				Integer classID = parseCall(args[1], null, Integer.class);
-				Integer methodID = parseCall(args[2], null, Integer.class);
-
-				final Constructor m = (Constructor) store.getObject(methodID);
-				Class[] argTypes = m.getParameterTypes();
-
-				// System.out.println ("NEWOBJ: HERE1");
-				Object[] arguments = new Object[argTypes.length];
-				// System.out.println ("NEWOBJ: HERE2");
-				for (int i = 0; i < argTypes.length; i++) {
-					arguments[i] = parseArgs(args[3 + i], argTypes[i]);
-					// System.out.println ("NEWOBJ: GOT ARG: " + arguments[i]);
-				}
-
-				final Object[] fArguments = arguments;
-				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
-
 				Class c = (Class) store.getObject(classID);
+                final Constructor cons;
+                final Object[] fArguments;
+
+                Object[] arguments = new Object[args.length - 1];
+                arguments[0] = c;
+                for (int i = 0; i < args.length - 2; i++) {
+                    arguments[i + 1] = store.getObject(parseCall(args[2 + i],
+                            null, Integer.class));
+                    PluginDebug.debug("GOT ARG: " + arguments[i + 1]);
+                }
+
+                Object[] matchingConstructorAndArgs = MethodOverloadResolver
+                        .getMatchingConstructor(arguments);
+
+                if (matchingConstructorAndArgs == null) {
+                    write(reference,
+                            "Error: No suitable constructor with matching args found");
+                    return;
+                }
+
+                Object[] castedArgs = new Object[matchingConstructorAndArgs.length - 1];
+                for (int i = 0; i < castedArgs.length; i++) {
+                    castedArgs[i] = matchingConstructorAndArgs[i + 1];
+                }
+
+                cons = (Constructor) matchingConstructorAndArgs[0];
+                fArguments = castedArgs;
+
+                String collapsedArgs = "";
+                for (Object arg : fArguments) {
+                    collapsedArgs += " " + arg.toString();
+                }
+
+                PluginDebug.debug("Calling constructor on class " + c + 
+                                   " with " + collapsedArgs);
+
+                AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
 				checkPermission(src, c, acc);
 
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
 					public Object run() {
 						try {
-							return m.newInstance(fArguments);
+							return cons.newInstance(fArguments);
 						} catch (Throwable t) {
 							return t;
 						}
@@ -1084,10 +1145,13 @@ public class PluginAppletSecurityContext {
 
 		PluginDebug.debug("target = " + target + " jsSrc=" + jsSrc + " classSrc=" + classSrcURL);
 		
+		// NPRuntime does not allow cross-site calling. The code below is kept 
+		// in case that changes in the future..
+		
 		// if src is not a file and class loader does not map to the same base, UniversalBrowserRead (BrowserReadPermission) must be set
-		if (!jsSrc.equals("file://") && !jsSrc.equals("[System]") && !classSrcURL.equals(jsSrcURL)) {
-			acc.checkPermission(new BrowserReadPermission());
-		}
+		//if (!jsSrc.equals("file://") && !jsSrc.equals("[System]") && !classSrcURL.equals(jsSrcURL)) {
+		//	acc.checkPermission(new BrowserReadPermission());
+		//}
 	}
 
 	private void write(int reference, String message) {

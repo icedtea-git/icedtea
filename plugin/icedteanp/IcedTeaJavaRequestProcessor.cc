@@ -122,7 +122,6 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 			{
 			    result_ready = true; // nothing else to do
 			} else if ((message_parts->at(4) == "CallMethod") ||
-
 					   (message_parts->at(4) == "CallStaticMethod"))
 			{
 
@@ -656,8 +655,11 @@ JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
     else if (NPVARIANT_IS_STRING(variant))
     {
     	className = "java.lang.String";
-
+#if MOZILLA_VERSION_COLLAPSED < 1090200
     	stringArg += NPVARIANT_TO_STRING(variant).utf8characters;
+#else
+    	stringArg += NPVARIANT_TO_STRING(variant).UTF8Characters;
+#endif
     } else {
     	alreadyCreated = true;
     }
@@ -703,7 +705,7 @@ JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
 		std::string arg = std::string();
 		arg.append(*(java_result->return_string));
 		args.push_back(arg);
-		java_result = java_request.newObject("[System]", jsObjectClassID, jsObjectConstructorID, args);
+		java_result = java_request.newObjectWithConstructor("[System]", jsObjectClassID, jsObjectConstructorID, args);
 
         if (java_result->error_occurred) {
             printf("Unable to create requested object\n");
@@ -808,7 +810,46 @@ JavaRequestProcessor::getObjectClass(std::string objectID)
 }
 
 JavaResultData*
-JavaRequestProcessor::newObject(std::string source, std::string objectID,
+JavaRequestProcessor::newObject(std::string source, std::string classID,
+                                const NPVariant* args, int argCount)
+{
+    JavaRequestProcessor* java_request;
+    std::string message = std::string();
+
+    this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+    this->reference = IcedTeaPluginUtilities::getReference();
+
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, source, &message);
+    message += " NewObject ";
+    message += classID;
+    message += " ";
+
+    // First, we need to load the arguments into the java-side table
+    for (int i=0; i < argCount; i++) {
+        int objectID = createJavaObjectFromVariant(args[i]);
+        if (objectID == 0)
+        {
+            result->error_occurred = true;
+            result->error_msg->append("Unable to create arguments");
+            return result;
+        }
+
+        char* id = (char*) malloc(sizeof(char)*32);
+        sprintf(id, "%d", objectID);
+        message += id;
+        message += " ";
+        free(id);
+    }
+
+    postAndWaitForResponse(message);
+
+    IcedTeaPluginUtilities::releaseReference();
+
+    return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::newObjectWithConstructor(std::string source, std::string classID,
                                 std::string methodID,
                                 std::vector<std::string> args)
 {
@@ -819,8 +860,8 @@ JavaRequestProcessor::newObject(std::string source, std::string objectID,
 	this->reference = IcedTeaPluginUtilities::getReference();
 
 	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, source, &message);
-	message += " NewObject ";
-	message += objectID;
+	message += " NewObjectWithConstructor ";
+	message += classID;
 	message += " ";
 	message += methodID;
 	message += " ";
@@ -980,3 +1021,4 @@ JavaRequestProcessor::getAppletObjectInstance(std::string instanceID)
 
     return result;
 }
+

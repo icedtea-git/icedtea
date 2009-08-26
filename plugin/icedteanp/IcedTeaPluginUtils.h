@@ -56,7 +56,13 @@ exception statement from your version. */
 #include <vector>
 
 #include <npapi.h>
+
+#if MOZILLA_VERSION_COLLAPSED < 1090200
 #include <npupp.h>
+#else
+#include <npapi.h>
+#include <npruntime.h>
+#endif
 
 #include "IcedTeaNPPlugin.h"
 
@@ -201,7 +207,7 @@ class IcedTeaPluginUtilities
 
     	static std::string* NPVariantToString(NPVariant variant);
 
-    	static gchar* getSourceFromInstance(NPP instance);
+    	static const gchar* getSourceFromInstance(NPP instance);
 
     	static void storeInstanceID(void* member_ptr, NPP instance);
 

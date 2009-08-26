@@ -1,5 +1,86 @@
 2009-08-26  Deepak Bhole <dbhole@redhat.com>
 
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc
+	(createJavaObjectFromVariant): Add conditional compilation blocks to
+	handle new API along with old. Call renamed newObjectWithConstructor
+	function.
+	(newObject): New function. Creates an object based on the most optimum
+	cost with arbitrary arguments.
+	(newObjectWithConstructor): Renamed from newObject(). Also, take source as
+	an argument to provide to Java.
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.h: Change as per above .cc
+	file changes.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc: Include XPCOM specific headers only
+	if xulrunner version is < 1.9.2. Instantiate internal Mozilla objects only
+	if xulrunner < 1.9.2.
+	(GCJ_New): Correctly account for documentbase length when allocating tag
+	memory to prevent corruption.
+	(GCJ_Destroy): Remove old instance mappings when destroyed.
+	(GCJ_GetJavaClass): Remove unused method.
+	(get_cookie_info): Change object signature to include length result. Based
+	on xulrunner version, either use internal Mozilla API for fetching cookie
+	info, or use NPN_GetValueForURL.
+	(plugin_get_documentbase): Define for when xulrunner is >= 1.9.2.
+	(consume_message): Deal with single proxy URL rather than components.
+	Update to handle when xulrunner is >= 1.9.2
+	(get_proxy_info): Change signature to deal with single url rather than
+	components. Use NPN_GetValueForURL if xulrunner is >= 1.9.2.
+	(NP_Initialize): Add pointers for getvalueforurl and setvalueforurl in the
+	NPPluginFuncs table. Also, handle case for when browser provides the
+	plugin .so name as the link location rather than target location.
+	* plugin/icedteanp/IcedTeaNPPlugin.h: Include XPCOM specific headers only
+	if xulrunner version is < 1.9.2.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc
+	(eval): Use the new NPN_PluginThreadAsynCcall function to dispatch events
+	to main thread asynchronously.
+	(call): Same.
+	(setMember): Same.
+	(getMember): Same.
+	(storeVariantInJava): Handle changed API when xulrunner >= 1.9.2
+	(_setMember): Account for changes in the way that the callerpacks
+	arguments.
+	(_getMember): Same.
+	(_call): Same.
+	(_eval): Same.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.h: Include Mozilla
+	specific headers only if xulrunner is < 1.9.2. Remove old ThreadData
+	struct and add new AyncCallThreadData struct that contains results and
+	arguments.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc
+	(getSourceFromInstance): Provide null source location due to lack of a
+	secure way to get documentbase.
+	(printNPVariant): Account for change API in xulrunner 1.9.2.
+	(NPVariantToString): Same.
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Include Mozilla specific headers 
+	only if xulrunner is < 1.9.2.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.cc
+	(invoke): Pass exception over to JS engine.
+	(construct): Implement object construction.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.h: Include Mozilla
+	specific headers only if xulrunner is < 1.9.2.
+	* plugin/icedteanp/java/sun/applet/MethodOverloadResolver.java
+	(getMatchingConstructor): New method, returns a matching constructor based
+	on arguments.
+	(getMatchingConstructors): New helper method for getMatchingConstructor.
+	* plugin/icedteanp/java/sun/applet/PluginAppletSecurityContext.java
+	(handleMessage): Handle new type of call, "NewObjectWithConstructor".
+	(checkPermission): Disable checks for the time being, as NPRuntime does
+	not allow cross-site calling anyway.
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java
+	(setStatus): Remove newlines from status messages.
+	* plugin/icedteanp/sun/applet/PluginCookieInfoRequest.java
+	(parseReturn): Store cookie info as a string rather than a list of
+	HttpCookie objects.
+	(getObject): Return the new cookie string.
+	* plugin/icedteanp/sun/applet/PluginCookieManager.java: New file, extends
+	CookieManager as is set as the default cookie manager for the plugin.
+	* plugin/icedteanp/sun/applet/PluginCookieStore.java : Deleted. New design
+	uses a custom cookiemanager rather than just a custom store.
+	* plugin/icedteanp/sun/applet/PluginMain.java
+	(init): Wire in the new cookie manager.
+
+2009-08-26  Deepak Bhole <dbhole@redhat.com>
+
 	* plugin/icedtea/sun/applet/PluginAppletViewer.java
 	(handleMessage): Fix logic bug introduced in previous commit.
 

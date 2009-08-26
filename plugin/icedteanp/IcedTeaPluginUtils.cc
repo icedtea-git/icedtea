@@ -418,13 +418,22 @@ IcedTeaPluginUtilities::printStringVector(const char* prefix, std::vector<std::s
 	delete str;
 }
 
-gchar*
+const gchar*
 IcedTeaPluginUtilities::getSourceFromInstance(NPP instance)
 {
-    GCJPluginData* data = (GCJPluginData*) instance->pdata;
-    return data->source;
-}
+    // At the moment, src cannot be securely fetched via NPAPI
+    // See:
+    // http://www.mail-archive.com/chromium-dev@googlegroups.com/msg04872.html
 
+    // Since we use the insecure window.location.href attribute to compute
+    // source, we cannot use it to make security decisions. Therefore,
+    // instance associated source will always return empty
+
+    //GCJPluginData* data = (GCJPluginData*) instance->pdata;
+    //return (data->source) ? data->source : "";
+
+    return "http://null.null";
+}
 
 /**
  * Stores a window pointer <-> instance mapping
@@ -518,7 +527,11 @@ IcedTeaPluginUtilities::printNPVariant(NPVariant variant)
     }
     else if (NPVARIANT_IS_STRING(variant))
     {
+#if MOZILLA_VERSION_COLLAPSED < 1090200
     	PLUGIN_DEBUG_1ARG("STRING: %s\n", NPVARIANT_TO_STRING(variant).utf8characters);
+#else
+    	PLUGIN_DEBUG_1ARG("STRING: %s\n", NPVARIANT_TO_STRING(variant).UTF8Characters);
+#endif
     }
     else
     {
@@ -557,8 +570,13 @@ IcedTeaPluginUtilities::NPVariantToString(NPVariant variant)
     else if (NPVARIANT_IS_STRING(variant))
     {
     	free(str);
+#if MOZILLA_VERSION_COLLAPSED < 1090200
     	str = (char*) malloc(sizeof(char)*NPVARIANT_TO_STRING(variant).utf8length);
     	sprintf(str, "%s", NPVARIANT_TO_STRING(variant).utf8characters);
+#else
+        str = (char*) malloc(sizeof(char)*NPVARIANT_TO_STRING(variant).UTF8Length);
+        sprintf(str, "%s", NPVARIANT_TO_STRING(variant).UTF8Characters);
+#endif
     }
     else
     {

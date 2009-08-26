@@ -581,7 +581,6 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 
              // Wait for the panel to initialize
              // (happens in a separate thread)
-             System.err.println("PANEL = " + panel);
              while (panel == null || ((o = panel.getApplet()) == null && ((NetxPanel) panel).isAlive())) {
             	 try {
             		 Thread.sleep(2000);
@@ -869,6 +868,8 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      public void showStatus(String status) {
  	try {
              // FIXME: change to postCallRequest
+ 		// For statuses, we cannot have a newline
+  	    status = status.replace("\n", " ");
  	    write("status " + status);
  	} catch (IOException exception) {
  	    // Deliberately ignore IOException.  showStatus may be

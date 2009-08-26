@@ -46,7 +46,13 @@ exception statement from your version. */
 #include <time.h>
 
 #include <npapi.h>
+
+#if MOZILLA_VERSION_COLLAPSED < 1090200
 #include <npupp.h>
+#else
+#include <npapi.h>
+#include <npruntime.h>
+#endif
 
 #include "IcedTeaRunnable.h"
 #include "IcedTeaPluginUtils.h"
@@ -56,11 +62,12 @@ exception statement from your version. */
  * Data structure passed to functions called in a new thread.
  */
 
-typedef struct struct_thread_data
+typedef struct aync_call_thread_data
 {
-	std::vector<std::string>* message_parts;
-	std::string* source;
-} ThreadData;
+    std::vector<void*> parameters;
+	std::string result;
+	bool result_ready;
+} AyncCallThreadData;
 
 /* Internal request reference counter */
 static long internal_req_ref_counter;
@@ -79,10 +86,10 @@ static void* finalize(void* tdata);
 static void convertToNPVariant(std::string value, std::string type, NPVariant* result_variant);
 
 // Internal methods that need to run in main thread
-void* _getMember(void* message_parts, void* result);
-void* _setMember(void* message_parts, void* result);
-void* _call(void* data, void* result);
-void* _eval(void* data, void* result);
+void _getMember(void* data);
+void _setMember(void* data);
+void _call(void* data);
+void _eval(void* data);
 
 static pthread_mutex_t tc_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int thread_count = 0;
