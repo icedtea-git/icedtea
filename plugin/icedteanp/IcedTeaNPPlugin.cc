@@ -334,11 +334,8 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
 
   // Documentbase retrieval.
   documentbase = plugin_get_documentbase (instance);
-  if (documentbase)
+  if (documentbase && argc != 0)
     {
-      // => dummy plugin instantiation
-
-
       // Send applet tag message to appletviewer.
       applet_tag = plugin_create_applet_tag (argc, argn, argv);
 
@@ -347,6 +344,13 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
 
       //plugin_send_message_to_appletviewer (data, data->instance_string);
       plugin_send_message_to_appletviewer (tag_message);
+
+      data->is_applet_instance = true;
+    }
+
+  if (argc == 0)
+    {
+      data->is_applet_instance = false;
     }
 
   g_mutex_unlock (data->appletviewer_mutex);
@@ -1979,8 +1983,6 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
       filename[filename_size] = '\0';
   }
 
-  printf("FILENAME=%s\n", filename);
-
   if (!filename)
     {
       PLUGIN_ERROR ("Failed to create plugin shared object filename.");
@@ -2205,15 +2207,10 @@ NP_Shutdown (void)
 NPObject*
 get_scriptable_object(NPP instance)
 {
-
-    printf("Calling plugin_get_documentbase\n");
-    gchar* document_base = plugin_get_documentbase(instance);
     NPObject* obj;
+    GCJPluginData* data = (GCJPluginData*) instance->pdata;
 
-    if (!document_base) // dummy instance/package?
-    {
-        obj = IcedTeaScriptablePluginObject::get_scriptable_java_package_object(instance, "");
-    } else
+    if (data->is_applet_instance) // dummy instance/package?
     {
         JavaRequestProcessor java_request = JavaRequestProcessor();
         JavaResultData* java_result;
@@ -2246,6 +2243,10 @@ get_scriptable_object(NPP instance)
         applet_class_id.append(*(java_result->return_string));
 
         obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(instance, applet_class_id, instance_id);
+
+    } else
+    {
+        obj = IcedTeaScriptablePluginObject::get_scriptable_java_package_object(instance, "");
     }
 
 	return obj;

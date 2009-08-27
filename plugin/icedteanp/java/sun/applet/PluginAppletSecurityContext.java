@@ -1122,36 +1122,15 @@ public class PluginAppletSecurityContext {
 	/**
 	 * Checks if the calling script is allowed to access the specified class
 	 *  
-	 * See http://java.sun.com/j2se/1.3/docs/guide/plugin/security.html#liveconnect for details
-	 *  
 	 * @param jsSrc The source of the script
 	 * @param target The target class that the script is trying to access
 	 * @param acc AccessControlContext for this execution
 	 * @throws AccessControlException If the script has insufficient permissions
 	 */
 	public void checkPermission(String jsSrc, Class target, AccessControlContext acc) throws AccessControlException {
-
-		// target classloader == null => primordial loader. Allow this.
-		if (target.getClassLoader() == null)
-			return;
-
-		URL classSrcURL = this.classLoaders.get(target.getClassLoader());
-		URL jsSrcURL = null;
-		try {
-		    jsSrcURL = new URL(jsSrc);
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-
-		PluginDebug.debug("target = " + target + " jsSrc=" + jsSrc + " classSrc=" + classSrcURL);
-		
-		// NPRuntime does not allow cross-site calling. The code below is kept 
-		// in case that changes in the future..
-		
-		// if src is not a file and class loader does not map to the same base, UniversalBrowserRead (BrowserReadPermission) must be set
-		//if (!jsSrc.equals("file://") && !jsSrc.equals("[System]") && !classSrcURL.equals(jsSrcURL)) {
-		//	acc.checkPermission(new BrowserReadPermission());
-		//}
+	    // NPRuntime does not allow cross-site calling. We therefore always 
+	    // allow this, for the time being
+	    return;
 	}
 
 	private void write(int reference, String message) {

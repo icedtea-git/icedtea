@@ -1,3 +1,17 @@
+2009-08-27  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaNPPlugin.cc
+	(GCJ_New): Use arg count to determine whether or not a send an applet tag
+	to Java side. Set a new is_applet_instance variable in GCJPluginData.
+	(get_scriptable_object): Use the new is_applet_instance variable in
+	instance->pdata to determine what kind of object to return.
+	* plugin/icedteanp/IcedTeaNPPlugin.h: Add a new is_applet_instance bool to
+	GCJPluginData, which determines whether it is an applet instance or a
+	dummy one.
+	* plugin/icedteanp/java/sun/applet/PluginAppletSecurityContext.java
+	(checkPermission): Disable js src == class src check, as NPAPI does not
+	allow cross site scripting.
+
 2009-08-26  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc

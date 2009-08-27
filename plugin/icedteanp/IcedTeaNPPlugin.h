@@ -84,6 +84,8 @@ struct GCJPluginData
   guint32 window_height;
   // The source location for this instance
   gchar* source;
+  // If this is an actual applet instance, or a dummy instance for static calls
+  bool is_applet_instance;
 };
 
 // Queue processing threads
