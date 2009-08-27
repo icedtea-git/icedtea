@@ -253,11 +253,6 @@ then
   FIND_NETBEANS
 fi
 
-if test "x${enable_pulse_java}" = "xyes"
-then
-  FIND_PULSEAUDIO
-fi
-
 if test "x${ENABLE_NIMBUS}" = "xyes"
 then
   if test "x${ENABLE_NIMBUS_GENERATION}" = "xyes"

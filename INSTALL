@@ -33,7 +33,6 @@ rhino (can be disabled using --without-rhino)
 
 For building the PulseAudio based mixer, you will need
 pulseaudio-libs-devel >= 0.9.11
-pulseaudio >= 0.9.11
 
 For building VisualVM, you will need
 netbeans = 6.5

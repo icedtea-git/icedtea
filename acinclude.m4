@@ -650,15 +650,6 @@ AC_DEFUN([FIND_RHINO_JAR],
   AC_SUBST(RHINO_JAR)
 ])
 
-AC_DEFUN([FIND_PULSEAUDIO],
-[
-  AC_PATH_PROG(PULSEAUDIO_BIN, "pulseaudio")
-  if test -z "${PULSEAUDIO_BIN}"; then
-    AC_MSG_ERROR("pulseaudio was not found.")
-  fi
-  AC_SUBST(PULSEAUDIO_BIN)
-])
-
 AC_DEFUN([DISABLE_OPTIMIZATIONS],
 [
   AC_MSG_CHECKING([whether to disable optimizations and build with -O0 -g])

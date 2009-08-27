@@ -1,3 +1,8 @@
+2009-08-27  Matthias Klose  <doko@ubuntu.com>
+
+	* acinclude.m4, configure.ac (FIND_PULSEAUDIO): Remove.
+	* INSTALL: Don't require the pulseaudio binary.
+
 2009-08-24  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-graphics.patch:
