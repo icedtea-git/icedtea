@@ -216,6 +216,10 @@ SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
       value = SharkValue::create_generic(type, NULL, i == 0 && !is_static());
       break;
     
+    case ciTypeFlow::StateVector::T_NULL:
+      value = SharkValue::null();
+      break;
+      
     case ciTypeFlow::StateVector::T_BOTTOM:
       break;
 

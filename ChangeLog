@@ -1,3 +1,8 @@
+2009-08-28  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkEntryState::SharkEntryState): Handle T_NULL.
+
 2009-08-21  Xerxes Rånby  <xerxes@zafena.se>
 
 	*ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
