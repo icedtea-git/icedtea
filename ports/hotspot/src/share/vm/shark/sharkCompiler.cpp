@@ -90,7 +90,6 @@ void SharkCompiler::initialize()
 void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
 {
   assert(is_initialized(), "should be");
-  assert(entry_bci == InvocationEntryBci, "OSR is not supported");
 
   ResourceMark rm;
   const char *name = methodname(target);
@@ -117,7 +116,11 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   }
 
   // Do the typeflow analysis
-  ciTypeFlow *flow = target->get_flow_analysis();
+  ciTypeFlow *flow;
+  if (entry_bci == InvocationEntryBci)
+    flow = target->get_flow_analysis();
+  else
+    flow = target->get_osr_flow_analysis(entry_bci);
   if (env->failing())
     return;
   if (SharkPrintTypeflowOf != NULL) {

@@ -33,7 +33,7 @@ class SharkCompiler : public AbstractCompiler {
 
   // Missing feature tests
   bool supports_native() { return false; }
-  bool supports_osr()    { return false; }
+  bool supports_osr()    { return true; }
 
   // Customization
   bool needs_adapters()  { return false; }

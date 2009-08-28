@@ -30,6 +30,7 @@ using namespace llvm;
 
 const PointerType*  SharkType::_cpCacheEntry_type;
 const FunctionType* SharkType::_entry_point_type;
+const FunctionType* SharkType::_osr_entry_point_type;
 const PointerType*  SharkType::_itableOffsetEntry_type;
 const PointerType*  SharkType::_klass_type;
 const PointerType*  SharkType::_methodOop_type;
@@ -109,6 +110,17 @@ void SharkType::initialize()
   _entry_point_type = FunctionType::get(Type::getVoidTy(getGlobalContext()), params, false);
 #else
   _entry_point_type = FunctionType::get(Type::VoidTy, params, false);
+#endif
+
+  params.clear();
+  params.push_back(methodOop_type());
+  params.push_back(PointerType::getUnqual(jbyte_type()));
+  params.push_back(intptr_type());
+  params.push_back(thread_type());
+#if SHARK_LLVM_VERSION >= 26
+  _osr_entry_point_type = FunctionType::get(Type::getVoidTy(getGlobalContext()), params, false);
+#else
+  _osr_entry_point_type = FunctionType::get(Type::VoidTy, params, false);
 #endif
 
   // Java types a) on the stack and in fields, and b) in arrays

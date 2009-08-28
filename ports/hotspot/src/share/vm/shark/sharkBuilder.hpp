@@ -128,6 +128,7 @@ class SharkBuilder : public llvm::IRBuilder<> {
   llvm::Value* exp();
   llvm::Value* fabs();
   llvm::Value* unsafe_field_offset_to_byte_offset();
+  llvm::Value* osr_migration_end();
 
   // Intrinsics and external functions, part 3: Uncommon trap.
   //   This is a special case in that it is invoked like a non-VM

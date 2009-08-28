@@ -32,7 +32,7 @@ void SharkFunction::initialize(const char *name)
 {
   // Create the function
   _function = Function::Create(
-    SharkType::entry_point_type(),
+    entry_point_type(),
     GlobalVariable::InternalLinkage,
     name);
 
@@ -40,6 +40,11 @@ void SharkFunction::initialize(const char *name)
   Function::arg_iterator ai = function()->arg_begin();
   Argument *method = ai++;
   method->setName("method");
+  Argument *osr_buf = NULL;
+  if (is_osr()) {
+    osr_buf = ai++;
+    osr_buf->setName("osr_buf");
+  }
   Argument *base_pc = ai++;
   base_pc->setName("base_pc");
   code_buffer()->set_base_pc(base_pc);
@@ -62,8 +67,8 @@ void SharkFunction::initialize(const char *name)
 
   // Walk the tree from the start block to determine which
   // blocks are entered and which blocks require phis
-  SharkTopLevelBlock *start_block = block(0);
-  assert(start_block->start() == 0, "blocks out of order");
+  SharkTopLevelBlock *start_block = block(flow()->start_block_num());
+  assert(start_block->start() == flow()->start_bci(), "blocks out of order");
   start_block->enter();
 
   // Initialize all entered blocks
@@ -84,17 +89,28 @@ void SharkFunction::initialize(const char *name)
       SharkType::methodOop_type(),
       "method_slot")));
 
-  // Lock if necessary
-  SharkState *entry_state = new SharkEntryState(start_block, method);
-  if (is_synchronized()) {
-    SharkTopLevelBlock *locker =
-      new SharkTopLevelBlock(this, start_block->ciblock());
-    locker->add_incoming(entry_state);
+  // Create the entry state
+  SharkState *entry_state;
+  if (is_osr()) {
+    entry_state = new SharkOSREntryState(start_block, method, osr_buf);
 
-    set_block_insertion_point(start_block->entry_block());
-    locker->acquire_method_lock();
+    // Free the OSR buffer
+    builder()->CreateCall(builder()->osr_migration_end(), osr_buf);
+  }
+  else {
+    entry_state = new SharkNormalEntryState(start_block, method);
 
-    entry_state = locker->current_state();
+    // Lock if necessary
+    if (is_synchronized()) {
+      SharkTopLevelBlock *locker =
+        new SharkTopLevelBlock(this, start_block->ciblock());
+      locker->add_incoming(entry_state);
+    
+      set_block_insertion_point(start_block->entry_block());
+      locker->acquire_method_lock();
+    
+      entry_state = locker->current_state();
+    }
   }
 
   // Transition into the method proper

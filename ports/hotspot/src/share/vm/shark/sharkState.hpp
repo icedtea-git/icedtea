@@ -171,11 +171,21 @@ class SharkState : public SharkTargetInvariants {
 
 class SharkTopLevelBlock;
 
-// SharkEntryState objects are used to manage the state
-// that the method will be entered with.
-class SharkEntryState : public SharkState {
+// SharkNormalEntryState objects are used to create the state
+// that the method will be entered with for a normal invocation.
+class SharkNormalEntryState : public SharkState {
  public:
-  SharkEntryState(SharkTopLevelBlock* block, llvm::Value* method);
+  SharkNormalEntryState(SharkTopLevelBlock* block,
+                        llvm::Value*        method);
+};
+
+// SharkOSREntryState objects are used to create the state
+// that the method will be entered with for an OSR invocation.
+class SharkOSREntryState : public SharkState {
+ public:
+  SharkOSREntryState(SharkTopLevelBlock* block,
+                     llvm::Value*        method,
+                     llvm::Value*        osr_buf);
 };
 
 // SharkPHIState objects are used to manage the entry state

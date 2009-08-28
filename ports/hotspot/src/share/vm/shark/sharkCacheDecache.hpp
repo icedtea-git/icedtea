@@ -34,6 +34,8 @@
 //       - SharkJavaCallCacher
 //       - SharkVMCallCacher
 //       - SharkFunctionEntryCacher
+//         - SharkNormalEntryCacher
+//         - SharkOSREntryCacher
 
 class SharkCacherDecacher : public SharkStateScanner {
  protected:
@@ -329,7 +331,7 @@ class SharkCacher : public SharkCacherDecacher {
   void process_oop_tmp_slot(llvm::Value** value, int offset);
   virtual void process_method_slot(llvm::Value** value, int offset);
 
-  void process_local_slot(int index, SharkValue** value, int offset);
+  virtual void process_local_slot(int index, SharkValue** value, int offset);
 
   // Stack slot helper
  protected:
@@ -410,8 +412,47 @@ class SharkFunctionEntryCacher : public SharkCacher {
 
   // Local slot helper
  protected:
-  virtual bool local_slot_needs_read(int index, SharkValue* value)
+  bool local_slot_needs_read(int index, SharkValue* value)
   {
     return value != NULL;
   }
+};
+
+class SharkNormalEntryCacher : public SharkFunctionEntryCacher {
+ public:
+  SharkNormalEntryCacher(SharkFunction* function, llvm::Value* method)
+    : SharkFunctionEntryCacher(function, method) {}
+};
+
+class SharkOSREntryCacher : public SharkFunctionEntryCacher {
+ public:
+  SharkOSREntryCacher(SharkFunction* function,
+                      llvm::Value*   method,
+                      llvm::Value*   osr_buf)
+    : SharkFunctionEntryCacher(function, method),
+      _osr_buf(
+        builder()->CreateBitCast(
+          osr_buf,
+          llvm::PointerType::getUnqual(
+            llvm::ArrayType::get(
+              SharkType::intptr_type(),
+              max_locals() + max_monitors() * 2)))) {}
+
+ private:
+  llvm::Value* _osr_buf;
+
+ private:
+  llvm::Value* osr_buf() const
+  {
+    return _osr_buf;
+  }
+
+  // Callbacks
+ protected:
+  void process_monitor(int index, int box_offset, int obj_offset);
+  void process_local_slot(int index, SharkValue** value, int offset);
+
+  // Helper
+ private:
+  llvm::Value* CreateAddressOfOSRBufEntry(int offset, const llvm::Type* type);
 };

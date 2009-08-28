@@ -73,6 +73,20 @@ class SharkFunction : public SharkTargetInvariants {
     return &_deferred_zero_checks;
   }
 
+  // On-stack replacement
+ private:
+  bool is_osr() const
+  {
+    return flow()->is_osr_flow();
+  }
+  const llvm::FunctionType* entry_point_type() const
+  {
+    if (is_osr())
+      return SharkType::osr_entry_point_type();      
+    else
+      return SharkType::entry_point_type();
+  }
+
   // Block management
  private:
   llvm::BasicBlock* _block_insertion_point;

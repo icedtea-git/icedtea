@@ -185,6 +185,27 @@ void SharkCacher::process_stack_slot(int          index,
   }
 }
 
+void SharkOSREntryCacher::process_monitor(int index,
+                                          int box_offset,
+                                          int obj_offset)
+{
+  if (max_monitors() > 1)
+    Unimplemented();   // XXX which order will they be in?
+
+  // Copy the monitor from the OSR buffer to the frame
+  int src_offset = max_locals() + index * 2;
+  builder()->CreateStore(
+    builder()->CreateLoad(
+      CreateAddressOfOSRBufEntry(src_offset, SharkType::intptr_type())),
+    function()->CreateAddressOfFrameEntry(
+      box_offset, SharkType::intptr_type()));
+  builder()->CreateStore(
+    builder()->CreateLoad(
+      CreateAddressOfOSRBufEntry(src_offset + 1, SharkType::oop_type())),
+    function()->CreateAddressOfFrameEntry(
+      obj_offset, SharkType::oop_type()));
+}
+
 void SharkCacher::process_oop_tmp_slot(Value** value, int offset)
 {
   // Cache the temporary oop
@@ -217,6 +238,33 @@ void SharkCacher::process_local_slot(int          index,
       read_value_from_frame(
         SharkType::to_stackType(value->basic_type()),
         adjusted_offset(value, offset)),
+      value->zero_checked());
+  }
+}
+
+Value* SharkOSREntryCacher::CreateAddressOfOSRBufEntry(int         offset,
+                                                       const Type* type)
+{
+  Value *result = builder()->CreateStructGEP(osr_buf(), offset);
+  if (type != SharkType::intptr_type())
+    result = builder()->CreateBitCast(result, PointerType::getUnqual(type));
+  return result;
+}
+
+void SharkOSREntryCacher::process_local_slot(int          index,
+                                             SharkValue** addr,
+                                             int          offset)
+{
+  SharkValue *value = *addr;
+
+  // Read the value from the OSR buffer if necessary
+  if (local_slot_needs_read(index, value)) {
+    *addr = SharkValue::create_generic(
+      value->type(),
+      builder()->CreateLoad(
+        CreateAddressOfOSRBufEntry(
+          adjusted_offset(value, max_locals() - 1 - index),
+          SharkType::to_stackType(value->basic_type()))),
       value->zero_checked());
   }
 }

@@ -1,5 +1,49 @@
 2009-08-28  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::osr_migration_end): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::osr_migration_end): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp
+	(SharkType::_osr_entry_point_type): New field.
+	(SharkType::osr_entry_point_type): New method.
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp
+	(SharkType::_osr_entry_point_type): New field.
+	(SharkType::initialize): Initialize the above.
+	
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp
+	(SharkCacher::process_local_slot): Made virtual.
+	(SharkNormalEntryCacher): New class.
+	(SharkOSREntryCacher): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkOSREntryCacher::CreateAddressOfOSRBufEntry): New method.
+	(SharkOSREntryCacher::process_monitor): Likewise.
+	(SharkOSREntryCacher::process_local_slot): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp
+	(SharkEntryState): Renamed as...
+	(SharkNormalEntryState): ...this.
+	(SharkOSREntryState::SharkOSREntryState): New class.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp
+	(SharkEntryState::SharkEntryState): Renamed as...
+	(SharkNormalEntryState::SharkNormalEntryState): ...this.
+	(SharkOSREntryState::SharkOSREntryState): New method.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::is_osr): New method.
+	(SharkFunction::entry_point_type): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Handle OSR typeflows.
+	
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp
+	(SharkCompiler::supports_osr): Return true instead of false.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::compile_method): Remove method-isn't-OSR
+	assertion, and add code to generate OSR typeflows.
+
+2009-08-28  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkState.cpp
 	(SharkEntryState::SharkEntryState): Handle T_NULL.
 

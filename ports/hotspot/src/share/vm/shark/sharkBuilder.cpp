@@ -360,6 +360,11 @@ Value* SharkBuilder::unsafe_field_offset_to_byte_offset()
   return make_function((address) Unsafe_field_offset_to_byte_offset, "l", "l");
 }
 
+Value* SharkBuilder::osr_migration_end()
+{
+  return make_function((address) SharedRuntime::OSR_migration_end, "C", "v");
+}
+
 // Uncommon trap
 
 Value* SharkBuilder::uncommon_trap()

@@ -44,6 +44,7 @@ class SharkType : public AllStatic {
  private:
   static const llvm::PointerType*  _cpCacheEntry_type;
   static const llvm::FunctionType* _entry_point_type;
+  static const llvm::FunctionType* _osr_entry_point_type;
   static const llvm::PointerType*  _itableOffsetEntry_type;
   static const llvm::PointerType*  _klass_type;
   static const llvm::PointerType*  _methodOop_type;
@@ -60,6 +61,10 @@ class SharkType : public AllStatic {
   static const llvm::FunctionType* entry_point_type()
   {
     return _entry_point_type;
+  }
+  static const llvm::FunctionType* osr_entry_point_type()
+  {
+    return _osr_entry_point_type;
   }
   static const llvm::PointerType* itableOffsetEntry_type()
   {

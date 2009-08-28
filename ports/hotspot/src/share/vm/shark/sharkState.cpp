@@ -193,7 +193,8 @@ void SharkState::replace_all(SharkValue* old_value, SharkValue* new_value)
   }
 }
 
-SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
+SharkNormalEntryState::SharkNormalEntryState(SharkTopLevelBlock* block,
+                                             Value*              method)
   : SharkState(block)
 {
   assert(!block->stack_depth_at_entry(), "entry block shouldn't have stack");
@@ -232,7 +233,49 @@ SharkEntryState::SharkEntryState(SharkTopLevelBlock* block, Value* method)
     }
     set_local(i, value);
   }
-  SharkFunctionEntryCacher(block->function(), method).scan(this);  
+  SharkNormalEntryCacher(block->function(), method).scan(this);  
+}
+
+SharkOSREntryState::SharkOSREntryState(SharkTopLevelBlock* block,
+                                       Value*              method,
+                                       Value*              osr_buf)
+  : SharkState(block)
+{
+  assert(!block->stack_depth_at_entry(), "entry block shouldn't have stack");
+  set_num_monitors(block->ciblock()->monitor_count());
+
+  // Local variables
+  for (int i = 0; i < max_locals(); i++) {
+    ciType *type = block->local_type_at_entry(i);
+
+    SharkValue *value = NULL;
+    switch (type->basic_type()) {
+    case T_INT:
+    case T_LONG:
+    case T_FLOAT:
+    case T_DOUBLE:
+    case T_OBJECT:
+    case T_ARRAY:
+      value = SharkValue::create_generic(type, NULL, false);
+      break;
+    
+    case ciTypeFlow::StateVector::T_NULL:
+      value = SharkValue::null();
+      break;
+
+    case ciTypeFlow::StateVector::T_BOTTOM:
+      break;
+
+    case ciTypeFlow::StateVector::T_LONG2:
+    case ciTypeFlow::StateVector::T_DOUBLE2:
+      break;
+
+    default:
+      ShouldNotReachHere();
+    }
+    set_local(i, value);
+  }
+  SharkOSREntryCacher(block->function(), method, osr_buf).scan(this);
 }
 
 SharkPHIState::SharkPHIState(SharkTopLevelBlock* block)
