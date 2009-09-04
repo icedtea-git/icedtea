@@ -1,3 +1,12 @@
+2009-09-04  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::compile_method): Updated cast.
+
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp
+	(SharkEntry::code_start): Removed cast.
+
+
 2009-08-28  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp

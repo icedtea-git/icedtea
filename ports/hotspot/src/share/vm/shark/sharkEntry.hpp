@@ -31,7 +31,7 @@ class SharkEntry : public ZeroEntry {
  public:
   address code_start() const
   {
-    return (address) entry_point();
+    return entry_point();
   }
   address code_limit() const
   {

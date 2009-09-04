@@ -169,8 +169,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   memory_manager()->set_entry_for_function(function, entry);
   module()->getFunctionList().push_back(function);
   entry->set_entry_point(
-    (ZeroEntry::method_entry_t)
-      execution_engine()->getPointerToFunction(function));
+    (address) execution_engine()->getPointerToFunction(function));
   address code_start = entry->code_start();
   address code_limit = entry->code_limit();
 
