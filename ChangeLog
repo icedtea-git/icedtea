@@ -1,3 +1,20 @@
+2009-09-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* HACKING: Updated.
+	* Makefile.am:
+	Add two new patches.  Copy nss.cfg to jre/lib/security if
+	NSS is enabled.
+	* configure.ac:Check for NSS and set NSS_LIBDIR
+	and ENABLE_NSS if found.
+	* nss.cfg.in: Template for the nss configuration file.
+	* patches/icedtea-disable-intree-ec.patch: Turn off
+	the new EC provider in java.security as we don't build it.
+	* patches/icedtea-nss-6763530.patch:
+	Fix for Sun bug 6763530 which is triggered by newer
+	versions of NSS.
+	* patches/icedtea-nss-config.patch: Patch java.security
+	with the PCKS11 provider configuration.
+
 2009-09-11  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

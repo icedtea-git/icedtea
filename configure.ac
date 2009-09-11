@@ -141,6 +141,14 @@ AC_ARG_ENABLE([systemtap],
 AM_CONDITIONAL([ENABLE_SYSTEMTAP], [test x$ENABLE_SYSTEMTAP = xyes])
 AC_MSG_RESULT(${ENABLE_SYSTEMTAP})
 
+AC_MSG_CHECKING([whether to include elliptic curve cryptography support via NSS])
+AC_ARG_ENABLE([nss],
+	      [AS_HELP_STRING([--enable-nss],
+	      		      [Enable inclusion of NSS security provider])],
+	      [ENABLE_NSS="${enableval}"], [ENABLE_NSS='no'])
+AM_CONDITIONAL([ENABLE_NSS], [test x$ENABLE_NSS = xyes])
+AC_MSG_RESULT(${ENABLE_NSS})
+
 AC_MSG_CHECKING([how many parallel build jobs to execute])
 AC_ARG_WITH([parallel-jobs],
 	[AS_HELP_STRING([--with-parallel-jobs],
@@ -442,6 +450,18 @@ then
   AC_SUBST(GLIB_LIBS)
   AC_SUBST(GTK_CFLAGS)
   AC_SUBST(GTK_LIBS)
+fi
+
+if test "x${ENABLE_NSS}" = "xyes"
+then
+  PKG_CHECK_MODULES(NSS, nss, [NSS_FOUND=yes], [NSS_FOUND=no])
+  if test "x${NSS_FOUND}" = xno
+  then
+    AC_MSG_ERROR([Could not find NSS.  Either install it or configure using --disable-nss.])
+  fi
+  NSS_LIBDIR=`$PKG_CONFIG --variable=libdir nss`
+  AC_SUBST(NSS_LIBDIR)
+  AC_CONFIG_FILES([nss.cfg])
 fi
 
 if test "x${ZERO_BUILD_TRUE}" = x || test "x${ADD_ZERO_BUILD_TRUE}" = x; then

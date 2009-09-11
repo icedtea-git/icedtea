@@ -114,6 +114,8 @@ The following patches are only applied to OpenJDK in IcedTea:
   is broken in libgcj 4.3.
 * icedtea-override.patch: Remove @Override annotation in
   javax.management.AttributeValueExp (unsupported by ecj < 3.4).
+* icedtea-nss-config.patch: Add the NSS PKCS11 security provider. (PR356)
+* icedtea-nss-6763530.patch: Fix PKCS11 provider when used with newer version of NSS (>=3.12.3) (PR356, S6763530).
 
 The following patches are only applied to the icedtea-ecj bootstrap tree:
 

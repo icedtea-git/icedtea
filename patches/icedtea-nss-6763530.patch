@@ -1,0 +1,55 @@
+diff -r 1f83d4e42eda src/share/classes/sun/security/pkcs11/P11ECKeyFactory.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/pkcs11/P11ECKeyFactory.java	Mon Aug 31 12:55:15 2009 +0900
++++ openjdk/jdk/src/share/classes/sun/security/pkcs11/P11ECKeyFactory.java	Thu Sep 03 18:47:40 2009 +0100
+@@ -40,6 +40,8 @@
+ import sun.security.pkcs11.wrapper.*;
+ import static sun.security.pkcs11.wrapper.PKCS11Constants.*;
+ 
++import sun.security.util.DerValue;
++
+ /**
+  * EC KeyFactory implemenation.
+  *
+@@ -201,7 +203,14 @@
+ 
+     private PublicKey generatePublic(ECPoint point, ECParameterSpec params) throws PKCS11Exception {
+         byte[] encodedParams = ECParameters.encodeParameters(params);
+-        byte[] encodedPoint = ECParameters.encodePoint(point, params.getCurve());
++        DerValue pkECPoint = new DerValue(DerValue.tag_OctetString,
++                                          ECParameters.encodePoint(point, params.getCurve()));
++        byte[] encodedPoint = null;
++        try {
++          encodedPoint = pkECPoint.toByteArray();
++        } catch (IOException e) {
++          throw new IllegalArgumentException("Could not DER encode point", e);
++        }
+         CK_ATTRIBUTE[] attributes = new CK_ATTRIBUTE[] {
+             new CK_ATTRIBUTE(CKA_CLASS, CKO_PUBLIC_KEY),
+             new CK_ATTRIBUTE(CKA_KEY_TYPE, CKK_EC),
+diff -r 1f83d4e42eda src/share/classes/sun/security/pkcs11/P11Key.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/pkcs11/P11Key.java	Mon Aug 31 12:55:15 2009 +0900
++++ openjdk/jdk/src/share/classes/sun/security/pkcs11/P11Key.java	Thu Sep 03 18:47:40 2009 +0100
+@@ -44,6 +44,8 @@
+ import sun.security.pkcs11.wrapper.*;
+ import static sun.security.pkcs11.wrapper.PKCS11Constants.*;
+ 
++import sun.security.util.DerValue;
++
+ /**
+  * Key implementation classes.
+  *
+@@ -1014,10 +1016,13 @@
+             };
+             fetchAttributes(attributes);
+             try {
++                DerValue wECPoint = new DerValue(attributes[0].getByteArray());
++                if (wECPoint.getTag() != DerValue.tag_OctetString)
++                    throw new IOException("Unexpected tag: " + wECPoint.getTag());
+                 params = P11ECKeyFactory.decodeParameters
+                             (attributes[1].getByteArray());
+                 w = P11ECKeyFactory.decodePoint
+-                            (attributes[0].getByteArray(), params.getCurve());
++                    (wECPoint.getDataBytes(), params.getCurve());
+             } catch (Exception e) {
+                 throw new RuntimeException("Could not parse key values", e);
+             }
