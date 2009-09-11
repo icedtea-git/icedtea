@@ -1,3 +1,11 @@
+2009-09-11  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Bump to b71.  Turn on DISABLE_INTREE_EC to
+	prevent the intree EC provider being built.
+	* patches/hotspot/default/icedtea-params-cast-size_t.patch:
+	Regenerated.
+
 2009-08-27  Matthias Klose  <doko@ubuntu.com>
 
 	* acinclude.m4, configure.ac (FIND_PULSEAUDIO): Remove.
