@@ -399,7 +399,7 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
   documentbase = NULL;
 
   // store an identifier for this plugin
-  PLUGIN_DEBUG_2ARG("Mapping id instance_counter and instance %p", instance_counter, instance);
+  PLUGIN_DEBUG_2ARG("Mapping id %d and instance %p\n", instance_counter, instance);
   g_hash_table_insert(instance_to_id_map, instance, GINT_TO_POINTER(instance_counter));
   g_hash_table_insert(id_to_instance_map, GINT_TO_POINTER(instance_counter), instance);
   instance_counter++;
@@ -1285,8 +1285,10 @@ void get_instance_from_id(int id, NPP& instance)
 
 int get_id_from_instance(NPP instance)
 {
-    return GPOINTER_TO_INT(g_hash_table_lookup(instance_to_id_map,
-                                                   instance));
+    int id = GPOINTER_TO_INT(g_hash_table_lookup(instance_to_id_map,
+                                                       instance));
+    PLUGIN_DEBUG_2ARG("Returning id %d for instance %p\n", id, instance);
+    return id;
 }
 
 void decode_url(const gchar* url, gchar** decoded_url)
@@ -2242,7 +2244,7 @@ get_scriptable_object(NPP instance)
 
         applet_class_id.append(*(java_result->return_string));
 
-        obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(instance, applet_class_id, instance_id);
+        obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(instance, applet_class_id, instance_id, false);
 
     } else
     {

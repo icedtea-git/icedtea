@@ -316,14 +316,32 @@ import com.sun.jndi.toolkit.url.UrlUtil;
  	// Wait for the panel to initialize
     // (happens in a separate thread)
  	Applet a;
-    while ((a = panel.getApplet()) == null && ((NetxPanel) panel).isAlive()) {
-   	 try {
-   		 Thread.sleep(1000);
-   		 PluginDebug.debug("Waiting for applet to initialize... ");
-   	 } catch (InterruptedException ie) {
-   		 ie.printStackTrace();
-   	 }
+ 	
+ 	// Wait for panel to come alive
+ 	int maxWait = 5000; // wait 5 seconds max for panel to come alive
+ 	int wait = 0;
+ 	while ((panel == null) || (!((NetxPanel) panel).isAlive() && wait < maxWait)) {
+         try {
+             Thread.sleep(50);
+             wait += 50;
+         } catch (InterruptedException ie) {
+             ie.printStackTrace();
+         }
     }
+ 	
+    // Wait for the panel to initialize
+    // (happens in a separate thread)
+    while (panel.getApplet() == null &&
+           ((NetxPanel) panel).isAlive()) {
+        try {
+            Thread.sleep(50);
+            PluginDebug.debug("Waiting for applet to initialize...");
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+    }
+ 	
+    a = panel.getApplet();
 
     // Still null?
     if (panel.getApplet() == null) {
@@ -331,7 +349,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
     	return;
     }
 
-    PluginDebug.debug("Applet initialized");
+    PluginDebug.debug("Applet " + a.getClass() + " initialized");
 
     // Applet initialized. Find out it's classloader and add it to the list
     String portComponent = doc.getPort() != -1 ? ":" + doc.getPort() : "";
@@ -346,7 +364,8 @@ import com.sun.jndi.toolkit.url.UrlUtil;
     	}
     }
 
-    AppletSecurityContextManager.getSecurityContext(0).associateSrc(a.getClass().getClassLoader(), doc);
+    AppletSecurityContextManager.getSecurityContext(0).associateSrc(((NetxPanel) panel).getAppletClassLoader(), doc);
+    AppletSecurityContextManager.getSecurityContext(0).associateInstance(identifier, ((NetxPanel) panel).getAppletClassLoader());
     
  	try {
  	    write("initialized");
@@ -523,8 +542,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                  status.put(identifier, PAV_INIT_STATUS.INACTIVE);
 
              throw new RuntimeException("Failed to handle message: " + 
-                     message + " for instance " + identifier + " " +  
-                     Thread.currentThread(), e);
+                     message + " for instance " + identifier, e);
          }
      }
  
@@ -579,16 +597,31 @@ import com.sun.jndi.toolkit.url.UrlUtil;
              // object should belong to?
              Object o;
 
+             // Wait for panel to come alive
+             int maxWait = 5000; // wait 5 seconds max for panel to come alive
+             int wait = 0;
+             while ((panel == null) || (!((NetxPanel) panel).isAlive() && wait < maxWait)) {
+                  try {
+                      Thread.sleep(50);
+                      wait += 50;
+                  } catch (InterruptedException ie) {
+                      ie.printStackTrace();
+                  }
+             }
+             
              // Wait for the panel to initialize
              // (happens in a separate thread)
-             while (panel == null || ((o = panel.getApplet()) == null && ((NetxPanel) panel).isAlive())) {
-            	 try {
-            		 Thread.sleep(2000);
-            		 PluginDebug.debug("Waiting for applet to initialize...");
-            	 } catch (InterruptedException ie) {
-            		 ie.printStackTrace();
-            	 }
+             while (panel.getApplet() == null &&
+                    ((NetxPanel) panel).isAlive()) {
+                 try {
+                     Thread.sleep(50);
+                     PluginDebug.debug("Waiting for applet to initialize...");
+                 } catch (InterruptedException ie) {
+                     ie.printStackTrace();
+                 }
              }
+
+             PluginDebug.debug(panel + " -- " + panel.getApplet() + " -- " + ((NetxPanel) panel).isAlive());
 
              // Still null?
              if (panel.getApplet() == null) {
@@ -596,6 +629,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                  return;
              }
 
+             o = panel.getApplet();
              PluginDebug.debug ("Looking for object " + o + " panel is " + panel);
              AppletSecurityContextManager.getSecurityContext(0).store(o);
              PluginDebug.debug ("WRITING 1: " + "context 0 reference " + reference + " GetJavaObject "

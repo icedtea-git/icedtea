@@ -261,11 +261,11 @@ public class JavaConsole {
     private void printClassLoaders() {
         System.out.println(" ----");
         System.out.println("Available Classloaders: ");
-        Set<ClassLoader> loaders = PluginAppletSecurityContext.classLoaders.keySet();
-        for (ClassLoader loader: loaders) {
-            System.out.println(loader.getClass().getName() + "\n"
+        Set<String> loaders = PluginAppletSecurityContext.getLoaderInfo().keySet();
+        for (String loader: loaders) {
+            System.out.println(loader + "\n"
                     + "  codebase = " 
-                    + PluginAppletSecurityContext.classLoaders.get(loader));
+                    + PluginAppletSecurityContext.getLoaderInfo().get(loader));
         }
         System.out.println(" ----");
     }

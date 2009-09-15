@@ -94,7 +94,7 @@ class IcedTeaScriptablePluginObject: public NPObject
         static NPObject* get_scriptable_java_package_object(NPP instance, const NPUTF8* name);
 };
 
-NPObject* voidallocate_scriptable_jp_object(NPP npp, NPClass *aClass);
+NPObject* allocate_scriptable_jp_object(NPP npp, NPClass *aClass);
 
 class IcedTeaScriptableJavaPackageObject: public NPObject
 {
@@ -102,6 +102,8 @@ class IcedTeaScriptableJavaPackageObject: public NPObject
     private:
     	NPP instance;
     	std::string* package_name;
+
+        static std::map<std::string, NPObject*>* object_map;
 
     public:
     	IcedTeaScriptableJavaPackageObject(NPP instance);
@@ -140,7 +142,10 @@ class IcedTeaScriptableJavaPackageObject: public NPObject
         static bool construct(NPObject *npobj, const NPVariant *args,
                 uint32_t argCount, NPVariant *result);
 
-        static NPObject* get_scriptable_java_object(NPP instance, std::string class_id, std::string instance_id);
+        static NPObject* get_scriptable_java_object(NPP instance,
+                                                    std::string class_id,
+                                                    std::string instance_id,
+                                                    bool isArray);
 };
 
 class IcedTeaScriptableJavaObject: public NPObject
@@ -148,8 +153,13 @@ class IcedTeaScriptableJavaObject: public NPObject
 
     private:
     	NPP instance;
+    	bool isObjectArray;
     	std::string* class_id;
     	std::string* instance_id;
+
+    	static bool javaResultToNPVariant(NPObject *npobj,
+                                          JavaResultData* java_result,
+                                          NPVariant* variant);
 
     public:
     	IcedTeaScriptableJavaObject(NPP instance);
@@ -160,9 +170,15 @@ class IcedTeaScriptableJavaObject: public NPObject
 
     	void setInstanceIdentifier(std::string instance_id);
 
+    	void setIsArray(bool isArray);
+
     	std::string getClassID() { return *class_id; }
 
     	std::string getInstanceID() { return *instance_id; }
+
+    	NPP getInstance() { return instance; }
+
+    	bool isArray() { return isObjectArray; }
 
         static void deAllocate(NPObject *npobj);
 

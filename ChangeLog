@@ -1,3 +1,72 @@
+2009-09-15  Deepak Bhole  <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc
+	(newMessageOnBus): Handle certain callbacks in a more uniform manner.
+	(postAndWaitForResponse): Lower poll time to 200 us for more
+	responsiveness.
+	(findClass): Accept instance ID which is used for searching classes in
+	specific applet instance classloaders.
+	(getArrayLength): New function. Returns length of an array on Java side.
+	(getSlot): New function. Returns element at requested index in an array.
+	(setSlot): New function. Sets requested index in array to supplied value.
+	(getField): Accept object id.
+	(getStaticField): Fix parameter ordering for consistency.
+	(set): New function. Sets Java side fields to given value.
+	(setStaticField): New function. Sets value of a static field in a Java
+	object.
+	(setField): New function. Sets value of a static field in a class.
+	(createJavaObjectFromVariant): Handle void and null variants. Handle case
+	where object is already created.
+	(call): Use a string to store object id.
+	(newObject): Same.
+	(hasPackage): Accept instance id and pass it on.
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.h: Relevant changes as
+	needed by the updates to the .cc file.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc
+	(get_scriptable_object): Pass false for the new isArray arg to
+	get_scriptable_java_object.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc: Pass 0 as the
+	instance id to all findClass calls.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.cc: Reuse Java object
+	pointers.
+	(IcedTeaScriptableJavaPackageObject::hasProperty): Pass the instance id to
+	findClass.
+	(get_scriptable_java_object): Update code so that Java object pointers can
+	be reused.
+	(IcedTeaScriptableJavaObject::setIsArray): New function. Sets if this object 
+	represents an array.
+	(IcedTeaScriptableJavaObject::getIsArray): New function. Returns if this
+	object represents an array.
+	(IcedTeaScriptableJavaObject::hasMethod): Bypass "array indexes" passed to
+	the method.
+	(IcedTeaScriptableJavaObject::javaResultToNPVariant): Handle void and null
+	values correctly. Handle array objects.
+	(IcedTeaScriptableJavaObject::invoke): Set exceptions in JS engine if one
+	occurred on Java side.
+	(IcedTeaScriptableJavaObject::hasProperty): Handle array length and index
+	properties.
+	(IcedTeaScriptableJavaObject::getProperty): Same.
+	(IcedTeaScriptableJavaObject::setProperty): Add support for setting array
+	index values.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.h: Changes as
+	necessitated by changes to the .cc file.
+	* plugin/icedteanp/java/sun/applet/JavaConsole.java: Handle changed API in
+	PluginAppletSecurityContext.
+	* plugin/icedteanp/java/sun/applet/MethodOverloadResolver.java
+	(getMatchingMethod): Handle un-castable/deferred casts.
+	(getMatchingConstructor): Same.
+	(getNum): Fix handling for characters.
+	* plugin/icedteanp/java/sun/applet/PluginAppletSecurityContext.java
+	(associateInstance): New function. Associated a loader with an instance.
+	(getLoaderInfo): New function. Returns loader info in a map.
+	(handleMessage): Look for class in instance specific loaders as well.
+	Handle float/double precision upto 308 (E308 is max for double).
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java
+	(AppletEventListener::appletStateChanged): Fix race condition during
+	initialization.
+	(handleMessage): Fix race condition to handle GetJavaObject calls when
+	panel is still being initialized.
+
 2009-08-27  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaNPPlugin.cc

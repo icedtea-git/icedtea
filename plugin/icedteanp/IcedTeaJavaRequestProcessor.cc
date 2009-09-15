@@ -37,6 +37,7 @@ obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
 #include "IcedTeaJavaRequestProcessor.h"
+#include "IcedTeaScriptablePluginObject.h"
 
 /*
  * This class processes LiveConnect requests from JavaScript to Java.
@@ -109,8 +110,6 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
                     (message_parts->at(4) == "HasField") ||
                     (message_parts->at(4) == "GetStaticFieldID") ||
                     (message_parts->at(4) == "GetFieldID") ||
-                    (message_parts->at(4) == "GetField") ||
-                    (message_parts->at(4) == "GetStaticField") ||
                     (message_parts->at(4) == "GetJavaObject") ||
                     (message_parts->at(4) == "IsInstanceOf"))
 			{
@@ -122,7 +121,10 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 			{
 			    result_ready = true; // nothing else to do
 			} else if ((message_parts->at(4) == "CallMethod") ||
-					   (message_parts->at(4) == "CallStaticMethod"))
+					   (message_parts->at(4) == "CallStaticMethod") ||
+					   (message_parts->at(4) == "GetField") ||
+					   (message_parts->at(4) == "GetStaticField") ||
+	                   (message_parts->at(4) == "GetObjectArrayElement"))
 			{
 
 			    if (message_parts->at(5) == "literalreturn")
@@ -140,7 +142,20 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 			    }
 
 				result_ready = true;
-			}
+			} else if ((message_parts->at(4) == "GetArrayLength"))
+            {
+			    result->return_identifier = 0; // length is not an "identifier"
+			    result->return_string->append(message_parts->at(5));
+			    result_ready = true;
+            } else if ((message_parts->at(4) == "SetField") ||
+                       (message_parts->at(4) == "SetObjectArrayElement"))
+            {
+
+                // nothing to do
+
+                result->return_identifier = 0;
+                result_ready = true;
+            }
 
 			delete message_parts;
 			return true;
@@ -238,7 +253,7 @@ JavaRequestProcessor::postAndWaitForResponse(std::string message)
 			if (g_main_context_pending(NULL))
 				g_main_context_iteration(NULL, false);
 			else
-				usleep(2000);
+				usleep(200);
 		}
 		else
 			break;
@@ -361,9 +376,13 @@ JavaRequestProcessor::addReference(std::string object_id)
 }
 
 JavaResultData*
-JavaRequestProcessor::findClass(std::string name)
+JavaRequestProcessor::findClass(int plugin_instance_id,
+                                std::string name)
 {
     std::string message = std::string();
+    std::string plugin_instance_id_str = std::string();
+
+    IcedTeaPluginUtilities::itoa(plugin_instance_id, &plugin_instance_id_str);
 
 	this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
 	this->reference = IcedTeaPluginUtilities::getReference();
@@ -371,6 +390,8 @@ JavaRequestProcessor::findClass(std::string name)
 	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
 
     message.append(" FindClass ");
+    message.append(plugin_instance_id_str);
+    message.append(" ");
     message.append(name);
 
     postAndWaitForResponse(message);
@@ -410,6 +431,72 @@ JavaRequestProcessor::getClassID(std::string objectID)
     message.append(objectID);
 
     postAndWaitForResponse(message);
+
+    return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::getArrayLength(std::string objectID)
+{
+    std::string message = std::string();
+
+    this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+    this->reference = IcedTeaPluginUtilities::getReference();
+
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+
+    message.append(" GetArrayLength ");
+    message.append(objectID);
+
+    postAndWaitForResponse(message);
+
+    return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::getSlot(std::string objectID, std::string index)
+{
+    std::string message = std::string();
+    this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+    this->reference = IcedTeaPluginUtilities::getReference();
+
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+
+    message.append(" GetObjectArrayElement ");
+    message.append(objectID);
+    message.append(" ");
+    message.append(index);
+
+    postAndWaitForResponse(message);
+
+    return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::setSlot(std::string objectID,
+                              std::string index,
+                              NPVariant value)
+{
+    std::string id = std::string();
+    std::string message = std::string();
+
+    createJavaObjectFromVariant(value, &id);
+
+    this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+    this->reference = IcedTeaPluginUtilities::getReference();
+
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
+
+    message.append(" SetObjectArrayElement ");
+    message.append(objectID);
+    message.append(" ");
+    message.append(index);
+    message.append(" ");
+    message.append(id);
+
+    postAndWaitForResponse(message);
+
+    IcedTeaPluginUtilities::releaseReference();
 
     return result;
 }
@@ -471,6 +558,7 @@ JavaRequestProcessor::getStaticFieldID(std::string classID, std::string fieldNam
 JavaResultData*
 JavaRequestProcessor::getField(std::string source,
                                std::string classID,
+                               std::string objectID,
                                std::string fieldName)
 {
     JavaResultData* java_result;
@@ -484,7 +572,7 @@ JavaRequestProcessor::getField(std::string source,
 
     IcedTeaPluginUtilities::constructMessagePrefix(0, reference, source, &message);
     message.append(" GetField ");
-    message.append(classID);
+    message.append(objectID);
     message.append(" ");
     message.append(java_result->return_string->c_str());
 
@@ -498,7 +586,7 @@ JavaRequestProcessor::getField(std::string source,
 }
 
 JavaResultData*
-JavaRequestProcessor::getStaticField(std::string classID, std::string source,
+JavaRequestProcessor::getStaticField(std::string source, std::string classID,
                                      std::string fieldName)
 {
     JavaResultData* java_result;
@@ -523,6 +611,70 @@ JavaRequestProcessor::getStaticField(std::string classID, std::string source,
     delete java_request;
 
     return result;
+}
+
+
+JavaResultData*
+JavaRequestProcessor::set(std::string source,
+                          bool isStatic,
+                          std::string classID,
+                          std::string objectID,
+                          std::string fieldName,
+                          NPVariant value)
+{
+    JavaResultData* java_result;
+    JavaRequestProcessor java_request = JavaRequestProcessor();
+    std::string id = std::string();
+    std::string message = std::string();
+
+    createJavaObjectFromVariant(value, &id);
+
+    java_result = java_request.getFieldID(classID, fieldName);
+
+    this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
+    this->reference = IcedTeaPluginUtilities::getReference();
+
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, source, &message);
+
+    if (isStatic)
+    {
+        message.append(" SetStaticField ");
+        message.append(classID);
+    } else
+    {
+        message.append(" SetField ");
+        message.append(objectID);
+    }
+
+    message.append(" ");
+    message.append(java_result->return_string->c_str());
+    message.append(" ");
+    message.append(id);
+
+    postAndWaitForResponse(message);
+
+    IcedTeaPluginUtilities::releaseReference();
+
+    return result;
+}
+
+JavaResultData*
+JavaRequestProcessor::setStaticField(std::string source,
+                                     std::string classID,
+                                     std::string fieldName,
+                                     NPVariant value)
+{
+    return set(source, true, classID, "", fieldName, value);
+}
+
+JavaResultData*
+JavaRequestProcessor::setField(std::string source,
+                               std::string classID,
+                               std::string objectID,
+                               std::string fieldName,
+                               NPVariant value)
+{
+    return set(source, false, classID, objectID, fieldName, value);
 }
 
 JavaResultData*
@@ -601,8 +753,8 @@ JavaRequestProcessor::getStaticMethodID(std::string classID, NPIdentifier method
     return result;
 }
 
-int
-JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
+void
+JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant, std::string* id)
 {
 	JavaResultData* java_result;
 
@@ -619,10 +771,14 @@ JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
     if (NPVARIANT_IS_VOID(variant))
     {
     	PLUGIN_DEBUG_1ARG("VOID %d\n", variant);
+    	id->append("0");
+    	return; // no need to go further
     }
     else if (NPVARIANT_IS_NULL(variant))
     {
     	PLUGIN_DEBUG_1ARG("NULL\n", variant);
+    	id->append("0");
+    	return; // no need to go further
     }
     else if (NPVARIANT_IS_BOOLEAN(variant))
     {
@@ -648,7 +804,7 @@ JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
     	className = "java.lang.Double";
 
     	char* valueStr = (char*) malloc(sizeof(char)*1024);
-    	sprintf(valueStr, "%d", NPVARIANT_TO_DOUBLE(variant));
+    	sprintf(valueStr, "%f", NPVARIANT_TO_DOUBLE(variant));
     	stringArg += valueStr;
     	free(valueStr);
     }
@@ -660,17 +816,24 @@ JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
 #else
     	stringArg += NPVARIANT_TO_STRING(variant).UTF8Characters;
 #endif
-    } else {
+    }
+    else if (browser_functions.getproperty())
+    {
+
+    }
+    else
+    {
     	alreadyCreated = true;
     }
 
     if (!alreadyCreated) {
-		java_result = java_request.findClass(className.c_str());
+		java_result = java_request.findClass(0, className.c_str());
 
 		// the result we want is in result_string (assuming there was no error)
 		if (java_result->error_occurred) {
 			printf("Unable to find classid for %s\n", className.c_str());
-			return 0;
+			id->append("0");
+			return;
 		}
 
 		jsObjectClassID.append(*(java_result->return_string));
@@ -685,7 +848,8 @@ JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
 		// the result we want is in result_string (assuming there was no error)
 		if (java_result->error_occurred) {
 			printf("Unable to find string constructor for %s\n", className.c_str());
-			return 0;
+			id->append("0");
+            return;
 		}
 
 		jsObjectConstructorID.append(*(java_result->return_string));
@@ -697,7 +861,8 @@ JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
 
 		if (java_result->error_occurred) {
 			printf("Unable to create requested object\n");
-			return 0;
+			id->append("0");
+            return;
 		}
 
 		// Create the object
@@ -709,21 +874,25 @@ JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant)
 
         if (java_result->error_occurred) {
             printf("Unable to create requested object\n");
-            return 0;
+            id->append("0");
+            return;
         }
 
 
-		return java_result->return_identifier;
+		id->append(*(java_result->return_string));
 
+	} else {
+	    // Else already created
+
+	    std::string classId = std::string(((IcedTeaScriptableJavaObject*) NPVARIANT_TO_OBJECT(variant))->getClassID());
+	    std::string instanceId = std::string(((IcedTeaScriptableJavaObject*) NPVARIANT_TO_OBJECT(variant))->getInstanceID());
+
+	    if (instanceId.length() == 0)
+	        id->append(classId.c_str());
+	    else
+	        id->append(instanceId.c_str());
 	}
 
-    std::string classId = std::string(((IcedTeaScriptableJavaObject*) NPVARIANT_TO_OBJECT(variant))->getClassID());
-    std::string instanceId = std::string(((IcedTeaScriptableJavaObject*) NPVARIANT_TO_OBJECT(variant))->getInstanceID());
-
-    if (instanceId.length() == 0)
-    	return atoi(classId.c_str());
-    else
-    	return atoi(instanceId.c_str());
 }
 
 JavaResultData*
@@ -766,20 +935,19 @@ JavaRequestProcessor::call(std::string source,
     message += " ";
 
 	// First, we need to load the arguments into the java-side table
+    std::string id = std::string();
 	for (int i=0; i < numArgs; i++) {
-		int objectID = createJavaObjectFromVariant(args[i]);
-		if (objectID == 0)
+	    id.clear();
+		createJavaObjectFromVariant(args[i], &id);
+		if (id == "0")
 		{
 			result->error_occurred = true;
 			result->error_msg->append("Unable to create arguments");
 			return result;
 		}
 
-		char* id = (char*) malloc(sizeof(char)*32);
-		sprintf(id, "%d", objectID);
 		message += id;
 		message += " ";
-		free(id);
 	}
 
 	postAndWaitForResponse(message);
@@ -825,20 +993,19 @@ JavaRequestProcessor::newObject(std::string source, std::string classID,
     message += " ";
 
     // First, we need to load the arguments into the java-side table
+    std::string id = std::string();
     for (int i=0; i < argCount; i++) {
-        int objectID = createJavaObjectFromVariant(args[i]);
-        if (objectID == 0)
+        id.clear();
+        createJavaObjectFromVariant(args[i], &id);
+        if (id == "0")
         {
             result->error_occurred = true;
             result->error_msg->append("Unable to create arguments");
             return result;
         }
 
-        char* id = (char*) malloc(sizeof(char)*32);
-        sprintf(id, "%d", objectID);
         message += id;
         message += " ";
-        free(id);
     }
 
     postAndWaitForResponse(message);
@@ -902,11 +1069,14 @@ JavaRequestProcessor::newString(std::string str)
 }
 
 JavaResultData*
-JavaRequestProcessor::hasPackage(std::string package_name)
+JavaRequestProcessor::hasPackage(int plugin_instance_id,
+                                 std::string package_name)
 {
 	JavaResultData* java_result;
 	JavaRequestProcessor* java_request = new JavaRequestProcessor();
 	std::string message = std::string();
+	std::string plugin_instance_id_str = std::string();
+	IcedTeaPluginUtilities::itoa(plugin_instance_id, &plugin_instance_id_str);
 
 	java_result = java_request->newString(package_name);
 
@@ -915,6 +1085,8 @@ JavaRequestProcessor::hasPackage(std::string package_name)
 
 	IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
 	message.append(" HasPackage ");
+    message.append(plugin_instance_id_str);
+    message.append(" ");
 	message.append(java_result->return_string->c_str());
 
 	postAndWaitForResponse(message);

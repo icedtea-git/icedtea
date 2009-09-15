@@ -38,6 +38,7 @@ exception statement from your version. */
 
 #include <typeinfo>
 
+#include "IcedTeaScriptablePluginObject.h"
 #include "IcedTeaNPPlugin.h"
 #include "IcedTeaPluginRequestProcessor.h"
 
@@ -277,23 +278,23 @@ PluginRequestProcessor::call(std::vector<std::string>* message_parts)
     std::string char_class_id = std::string();
     std::string string_class_id = std::string();
 
-    java_result = java_request.findClass("java.lang.Number");
+    java_result = java_request.findClass(0, "java.lang.Number");
     CHECK_JAVA_RESULT(java_result);
     number_class_id.append(*(java_result->return_string));
 
-    java_result = java_request.findClass("java.lang.Boolean");
+    java_result = java_request.findClass(0, "java.lang.Boolean");
     CHECK_JAVA_RESULT(java_result);
     boolean_class_id.append(*(java_result->return_string));
 
-    java_result = java_request.findClass("java.lang.Byte");
+    java_result = java_request.findClass(0, "java.lang.Byte");
     CHECK_JAVA_RESULT(java_result);
     byte_class_id.append(*(java_result->return_string));
 
-    java_result = java_request.findClass("java.lang.Character");
+    java_result = java_request.findClass(0, "java.lang.Character");
     CHECK_JAVA_RESULT(java_result);
     char_class_id.append(*(java_result->return_string));
 
-    java_result = java_request.findClass("java.lang.String");
+    java_result = java_request.findClass(0, "java.lang.String");
     CHECK_JAVA_RESULT(java_result);
     string_class_id.append(*(java_result->return_string));
 
@@ -423,7 +424,7 @@ PluginRequestProcessor::call(std::vector<std::string>* message_parts)
             CHECK_JAVA_RESULT(java_result);
             class_id.append(*(java_result->return_string));
 
-            obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(instance, class_id, id);
+            obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(instance, class_id, id, false);
 
             OBJECT_TO_NPVARIANT(obj, *variant);
 
@@ -712,7 +713,7 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
 
     internal_req_ref_counter--;
 
-    java_result = java_request.findClass("netscape.javascript.JSObject");
+    java_result = java_request.findClass(0, "netscape.javascript.JSObject");
 
     // the result we want is in result_string (assuming there was no error)
     if (java_result->error_occurred)
@@ -872,7 +873,7 @@ PluginRequestProcessor::storeVariantInJava(NPVariant variant, std::string* resul
         else
             value_str = "false";
 
-        java_result = java_request.findClass("java.lang.Boolean");
+        java_result = java_request.findClass(0, "java.lang.Boolean");
         CHECK_JAVA_RESULT(java_result);
         boolean_classid.append(*(java_result->return_string));
 
@@ -901,7 +902,7 @@ PluginRequestProcessor::storeVariantInJava(NPVariant variant, std::string* resul
         std::string value_str = std::string();
         IcedTeaPluginUtilities::itoa(NPVARIANT_TO_INT32(variant), &value_str);
 
-        java_result = java_request.findClass("java.lang.Integer");
+        java_result = java_request.findClass(0, "java.lang.Integer");
         CHECK_JAVA_RESULT(java_result);
         integer_classid.append(*(java_result->return_string));
 
@@ -930,7 +931,7 @@ PluginRequestProcessor::storeVariantInJava(NPVariant variant, std::string* resul
         std::string value_str = std::string();
         IcedTeaPluginUtilities::itoa(NPVARIANT_TO_DOUBLE(variant), &value_str);
 
-        java_result = java_request.findClass("java.lang.Double");
+        java_result = java_request.findClass(0, "java.lang.Double");
         CHECK_JAVA_RESULT(java_result);
         double_classid.append(*(java_result->return_string));
 
@@ -963,7 +964,6 @@ PluginRequestProcessor::storeVariantInJava(NPVariant variant, std::string* resul
         result->append(*(java_result->return_string));
     } else {
 
-
         // Else it is a complex object
         if (typeid(IcedTeaScriptableJavaObject*) == typeid(NPVARIANT_TO_OBJECT(variant)))
         {
@@ -979,7 +979,7 @@ PluginRequestProcessor::storeVariantInJava(NPVariant variant, std::string* resul
             printf("Got NPObject %p\n", NPVARIANT_TO_OBJECT(variant));
             IcedTeaPluginUtilities::JSIDToString(NPVARIANT_TO_OBJECT(variant), &value_str);
 
-            java_result = java_request.findClass("netscape.javascript.JSObject");
+            java_result = java_request.findClass(0, "netscape.javascript.JSObject");
             CHECK_JAVA_RESULT(java_result);
             jsobject_classid.append(*(java_result->return_string));
 

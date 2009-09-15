@@ -53,11 +53,11 @@ import java.security.CodeSource;
 import java.security.Permissions;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-
-import sun.reflect.generics.repository.MethodRepository;
+import java.util.Map;
 
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
 import netscape.javascript.JSObjectCreatePermission;
@@ -233,7 +233,8 @@ class Signature {
 
 public class PluginAppletSecurityContext {
 	
-	public static Hashtable<ClassLoader, URL> classLoaders = new Hashtable<ClassLoader, URL>();
+	private static Hashtable<ClassLoader, URL> classLoaders = new Hashtable<ClassLoader, URL>();
+	private static Hashtable<Integer, ClassLoader> instanceClassLoaders = new Hashtable<Integer, ClassLoader>();
 
 	// FIXME: make private
 	public PluginObjectStore store = new PluginObjectStore();
@@ -310,12 +311,27 @@ public class PluginAppletSecurityContext {
 	}
 
 	public void associateSrc(ClassLoader cl, URL src) {
-		PluginDebug.debug("Associating " + cl + " with " + src);
-		this.classLoaders.put(cl, src);
+	    PluginDebug.debug("Associating " + cl + " with " + src);
+	    this.classLoaders.put(cl, src);
 	}
+	
+    public void associateInstance(Integer i, ClassLoader cl) {
+        PluginDebug.debug("Associating " + cl + " with instance " + i);
+        this.instanceClassLoaders.put(i, cl);
+    }
 
 	public static void setStreamhandler(PluginStreamHandler sh) {
 		streamhandler = sh;
+	}
+	
+	public static Map<String, String> getLoaderInfo() {
+	    Hashtable<String, String> map = new Hashtable<String, String>();
+
+	    for (ClassLoader loader : PluginAppletSecurityContext.classLoaders.keySet()) {
+	        map.put(loader.getClass().getName(), classLoaders.get(loader).toString());
+	    }
+
+	    return map;
 	}
 
 	public void handleMessage(int reference, String src, AccessControlContext callContext, String message) {
@@ -327,15 +343,31 @@ public class PluginAppletSecurityContext {
 				ClassLoader cl = null;
 				Class c = null;
 				cl = liveconnectLoader;
-				String className = message.substring("FindClass".length() + 1)
-						.replace('/', '.');
+				String[] args = message.split(" ");
+				Integer instance = new Integer(args[1]);
+				String className = args[2].replace('/', '.');
+				PluginDebug.debug("Searching for class " + className + " in " + cl);
 
 				try {
 					c = cl.loadClass(className);
 					store.reference(c);
 					write(reference, "FindClass " + store.getIdentifier(c));
 				} catch (ClassNotFoundException cnfe) {
-					write(reference, "FindClass 0");
+				    
+			        cl = this.instanceClassLoaders.get(instance);
+			        PluginDebug.debug("Not found. Looking in " + cl);
+			        
+                    if (instance != 0 && cl != null) {				    
+				        try {
+				            c = cl.loadClass(className);
+				            store.reference(c);
+				            write(reference, "FindClass " + store.getIdentifier(c));
+				        } catch (ClassNotFoundException cnfe2) {
+				            write(reference, "FindClass 0");
+				        }
+				    } else {
+				        write(reference, "FindClass 0");
+				    }
 				}
 
 			} else if (message.startsWith("GetStaticMethodID")
@@ -410,85 +442,40 @@ public class PluginAppletSecurityContext {
 				if (ret instanceof Throwable)
 					throw (Throwable) ret;
 
-				// System.out.println ("FIELD VALUE: " + ret);
-				if (ret == null) {
-					write(reference, "GetStaticField 0");
-				} else if (f.getType() == Boolean.TYPE
-						|| f.getType() == Byte.TYPE
-						|| f.getType() == Character.TYPE
-						|| f.getType() == Short.TYPE
-						|| f.getType() == Integer.TYPE
-						|| f.getType() == Long.TYPE
-						|| f.getType() == Float.TYPE
-						|| f.getType() == Double.TYPE) {
-					write(reference, "GetStaticField " + ret);
-				} else {
-					// Track returned object.
-					store.reference(ret);
-					write(reference, "GetStaticField "
-							+ store.getIdentifier(ret));
-				}
-			} else if (message.startsWith("SetStaticField")) {
+                if (ret == null) {
+                    write(reference, "GetStaticField literalreturn null");
+                } else if (f.getType() == Boolean.TYPE
+                        || f.getType() == Byte.TYPE
+                        || f.getType() == Short.TYPE
+                        || f.getType() == Integer.TYPE
+                        || f.getType() == Long.TYPE) {
+                    write(reference, "GetStaticField literalreturn " + ret);
+                } else if (f.getType() == Float.TYPE
+                		|| f.getType() == Double.TYPE) {
+                	write(reference, "GetStaticField literalreturn " + String.format("%308.308e", ret));
+                } else if (f.getType() == Character.TYPE) {
+                    write(reference, "GetStaticField literalreturn " + (int) (Character) ret);
+                } else {
+                    // Track returned object.
+                    store.reference(ret);
+                    write(reference, "GetStaticField " + store.getIdentifier(ret));
+                }
+			} else if (message.startsWith("SetStaticField") ||
+			           message.startsWith("SetField")) {
 				String[] args = message.split(" ");
-				String type = parseCall(args[1], null, String.class);
-				Integer classID = parseCall(args[2], null, Integer.class);
-				Integer fieldID = parseCall(args[3], null, Integer.class);
+				Integer classOrObjectID = parseCall(args[1], null, Integer.class);
+				Integer fieldID = parseCall(args[2], null, Integer.class);
+				Object value = store.getObject(parseCall(args[3], null, Integer.class));
 
-				Object value = null;
-				if (Signature.primitiveNameToType(type) != null) {
-					value = parseArgs(args[4], Signature
-							.primitiveNameToType(type));
-					// System.out.println ("HERE1: " + value);
-				} else {
-					value = parseArgs(args[3], Object.class);
-					// System.out.println ("HERE2: " + value);
-				}
-
-				final Class c = (Class) store.getObject(classID);
+				final Object o = store.getObject(classOrObjectID);
 				final Field f = (Field) store.getObject(fieldID);
 
-				final Object fValue = value;
+				final Object fValue = MethodOverloadResolver.getCostAndCastedObject(value, f.getType())[1];
+
 				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
-				checkPermission(src, c, acc);
-
-				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
-					public Object run() {
-						try {
-							f.set(c, fValue);
-						} catch (Throwable t) {
-							return t;
-						}
-						
-						return null;
-					}
-				}, acc);
-
-				if (ret instanceof Throwable)
-					throw (Throwable) ret;
-
-				write(reference, "SetStaticField");
-			} else if (message.startsWith("SetField")) {
-				String[] args = message.split(" ");
-				String type = parseCall(args[1], null, String.class);
-				Integer objectID = parseCall(args[2], null, Integer.class);
-				Integer fieldID = parseCall(args[3], null, Integer.class);
-
-				Object value = null;
-				if (Signature.primitiveNameToType(type) != null) {
-					value = parseArgs(args[4], Signature
-							.primitiveNameToType(type));
-					// System.out.println ("HERE1: " + value);
-				} else {
-					value = parseArgs(args[3], Object.class);
-					// System.out.println ("HERE2: " + value);
-				}
-
-				final Object o = (Object) store.getObject(objectID);
-				final Field f = (Field) store.getObject(fieldID);
-
-				final Object fValue = value;
-				AccessControlContext acc = callContext != null ? callContext : getClosedAccessControlContext();
-				checkPermission(src, o.getClass(), acc);
+				checkPermission(src, 
+				                message.startsWith("SetStaticField") ? (Class) o : o.getClass(), 
+				                acc);
 
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
 					public Object run() {
@@ -511,26 +498,45 @@ public class PluginAppletSecurityContext {
 				Integer arrayID = parseCall(args[1], null, Integer.class);
 				Integer index = parseCall(args[2], null, Integer.class);
 
-				Object[] o = (Object[]) store.getObject(arrayID);
-				Object ret = null;
+				Object ret = Array.get(store.getObject(arrayID), index);
+				Class retClass = store.getObject(arrayID).getClass().getComponentType(); // prevent auto-boxing influence
+				
+                if (ret == null) {
+                    write(reference, "GetObjectArrayElement literalreturn null");
+                } else if (retClass == Boolean.TYPE
+                        || retClass == Byte.TYPE
+                        || retClass == Short.TYPE
+                        || retClass== Integer.TYPE
+                        || retClass== Long.TYPE) {
+                    write(reference, "GetObjectArrayElement literalreturn " + ret);
+                } else if (retClass == Float.TYPE
+                		|| retClass == Double.TYPE) {
+                	write(reference, "GetObjectArrayElement literalreturn " + String.format("%308.308e", ret));                    
+                } else if (retClass == Character.TYPE) {
+                    write(reference, "GetObjectArrayElement literalreturn " + (int) (Character) ret);
+                } else {
+                    // Track returned object.
+                    store.reference(ret);
+                    write(reference, "GetObjectArrayElement " + store.getIdentifier(ret));
+                }				
 
-				ret = o[index];
-
-				// Track returned object.
-				store.reference(ret);
-				// System.out.println ("array element: " + index + " " + ret);
-				write(reference, "GetObjectArrayElement "
-						+ store.getIdentifier(ret));
 			} else if (message.startsWith("SetObjectArrayElement")) {
 				String[] args = message.split(" ");
 				Integer arrayID = parseCall(args[1], null, Integer.class);
 				Integer index = parseCall(args[2], null, Integer.class);
 				Integer objectID = parseCall(args[3], null, Integer.class);
 
-				Object[] o = (Object[]) store.getObject(arrayID);
-				Object toSet = (Object) store.getObject(objectID);
-
-				o[index] = toSet;
+				// Reflecting doesn't handle Integer -> char dynamic casting 
+				// very well in this case. Give it a little push...
+				if (store.getObject(arrayID).getClass().getComponentType().equals(java.lang.Character.class) ||
+				    store.getObject(arrayID).getClass().getComponentType().equals(java.lang.Character.TYPE))
+				{
+				    char c = (char) ((Integer) store.getObject(objectID)).intValue();
+				    System.err.println("Char array set to " + c + "(" + store.getObject(objectID) + ")");
+				    Array.set(store.getObject(arrayID), index, c);				    
+				} else {
+				    Array.set(store.getObject(arrayID), index, store.getObject(objectID));				    
+				}
 
 				write(reference, "SetObjectArrayElement");
 			} else if (message.startsWith("GetArrayLength")) {
@@ -570,23 +576,25 @@ public class PluginAppletSecurityContext {
 				if (ret instanceof Throwable)
 					throw (Throwable) ret;
 
-				// System.out.println ("FIELD VALUE: " + ret);
-				if (ret == null) {
-					write(reference, "GetField 0");
-				} else if (f.getType() == Boolean.TYPE
-						|| f.getType() == Byte.TYPE
-						|| f.getType() == Character.TYPE
-						|| f.getType() == Short.TYPE
-						|| f.getType() == Integer.TYPE
-						|| f.getType() == Long.TYPE
-						|| f.getType() == Float.TYPE
-						|| f.getType() == Double.TYPE) {
-					write(reference, "GetField " + ret);
-				} else {
-					// Track returned object.
-					store.reference(ret);
-					write(reference, "GetField " + store.getIdentifier(ret));
-				}
+                if (ret == null) {
+                    write(reference, "GetField literalreturn null");
+                } else if (f.getType() == Boolean.TYPE
+                        || f.getType() == Byte.TYPE
+                        || f.getType() == Short.TYPE
+                        || f.getType() == Integer.TYPE
+                        || f.getType() == Long.TYPE) {
+                    write(reference, "GetField literalreturn " + ret);
+                } else if (f.getType() == Float.TYPE
+                		|| f.getType() == Double.TYPE) {
+                	write(reference, "GetField literalreturn " + String.format("%308.308e", ret));
+                } else if (f.getType() == Character.TYPE) {
+                    write(reference, "GetField literalreturn " + (int) (Character) ret);
+                } else {
+                    // Track returned object.
+                    store.reference(ret);
+                    write(reference, "GetField " + store.getIdentifier(ret));
+                }
+
 			} else if (message.startsWith("GetObjectClass")) {
 				int oid = Integer.parseInt(message.substring("GetObjectClass"
 						.length() + 1));
@@ -648,6 +656,9 @@ public class PluginAppletSecurityContext {
 
 				final Object[] fArguments = castedArgs;
 				final Object callableObject = o;
+				// Set the method accessible prior to calling. See:
+				// http://forums.sun.com/thread.jspa?threadID=332001&start=15&tstart=0
+				m.setAccessible(true);
 				Object ret = AccessController.doPrivileged(new PrivilegedAction<Object> () {
 					public Object run() {
 						try {
@@ -665,44 +676,29 @@ public class PluginAppletSecurityContext {
 				if (ret == null) {
 					retO = "null";
 				} else {
-					retO = ret.getClass().toString();
+					retO = m.getReturnType().toString();
 				}
 
 				PluginDebug.debug("Calling " + m + " on " + o + " with "
 						+ collapsedArgs + " and that returned: " + ret
 						+ " of type " + retO);
 
-				if (ret == null) {
-					write(reference, "CallMethod literalreturn void");
+				if (m.getReturnType().equals(java.lang.Void.class) || 
+				    m.getReturnType().equals(java.lang.Void.TYPE)) {
+                    write(reference, "CallMethod literalreturn void");
+                } else if (ret == null) {
+					write(reference, "CallMethod literalreturn null");
 				} else if (m.getReturnType() == Boolean.TYPE
 						|| m.getReturnType() == Byte.TYPE
 						|| m.getReturnType() == Short.TYPE
 						|| m.getReturnType() == Integer.TYPE
-						|| m.getReturnType() == Long.TYPE
-						|| m.getReturnType() == Float.TYPE
-						|| m.getReturnType() == Double.TYPE
-						|| m.getReturnType() == Boolean.class
-                        || m.getReturnType() == Byte.class
-                        || m.getReturnType() == Short.class
-                        || m.getReturnType() == Integer.class
-                        || m.getReturnType() == Long.class
-                        || m.getReturnType() == Float.class
-                        || m.getReturnType() == Double.class) {
+						|| m.getReturnType() == Long.TYPE) {
 					write(reference, "CallMethod literalreturn " + ret);
-				} else if (m.getReturnType() == Character.TYPE
-				        || m.getReturnType() == Character.class) {
-				    String s = new String(new char[] {(Character) ret});
-				    byte[] b = null;
-				    b = s.getBytes("UTF-8");
-				    StringBuffer buf = new StringBuffer(b.length * 2);
-				    buf.append(b.length);
-				    for (int i = 0; i < b.length; i++)
-				        buf
-				        .append(" "
-				                + Integer
-				                .toString(((int) b[i]) & 0x0ff, 16));
-					
-					write(reference, "CallMethod literalreturn " + buf);
+                } else if (m.getReturnType() == Float.TYPE
+                		|| m.getReturnType() == Double.TYPE) {
+                	write(reference, "CallMethod literalreturn " + String.format("%308.308e", ret));  
+				} else if (m.getReturnType() == Character.TYPE) {
+					write(reference, "CallMethod literalreturn " +  (int) (Character) ret);
 				} else {
 					// Track returned object.
 					store.reference(ret);
@@ -864,7 +860,8 @@ public class PluginAppletSecurityContext {
                 write(reference, "HasMethod " + hasMethod);
             } else if (message.startsWith("HasPackage")) {
                 String[] args = message.split(" ");
-                Integer nameID = parseCall(args[1], null, Integer.class);
+                Integer instance = parseCall(args[1], null, Integer.class);
+                Integer nameID = parseCall(args[2], null, Integer.class);
                 String pkgName = (String) store.getObject(nameID);
 
                 Package pkg = Package.getPackage(pkgName);
@@ -1138,7 +1135,7 @@ public class PluginAppletSecurityContext {
 		streamhandler.write("context " + identifier + " reference " + reference
 				+ " " + message);
 	}
-	
+
 	public void prePopulateLCClasses() {
 		
 		int classID;

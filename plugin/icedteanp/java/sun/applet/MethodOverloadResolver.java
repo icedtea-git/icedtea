@@ -195,6 +195,9 @@ public class MethodOverloadResolver {
                 Object[] costAndCastedObj = getCostAndCastedObject(
                         suppliedParam, paramTypeClass);
                 methodCost += (Integer) costAndCastedObj[0];
+                
+                if ((Integer) costAndCastedObj[0] < 0) break;
+                
                 Object castedObj = paramTypeClass.isPrimitive() ? costAndCastedObj[1]
                         : paramTypeClass.cast(costAndCastedObj[1]);
                 methodAndArgs[i + 1] = castedObj;
@@ -256,6 +259,9 @@ public class MethodOverloadResolver {
                 Object[] costAndCastedObj = getCostAndCastedObject(
                         suppliedParam, paramTypeClass);
                 constructorCost += (Integer) costAndCastedObj[0];
+                
+                if ((Integer) costAndCastedObj[0] < 0) break;
+                
                 Object castedObj = paramTypeClass.isPrimitive() ? costAndCastedObj[1]
                         : paramTypeClass.cast(costAndCastedObj[1]);
                 constructorAndArgs[i + 1] = castedObj;
@@ -284,7 +290,7 @@ public class MethodOverloadResolver {
         return ret;
     }
 
-    private static Object[] getCostAndCastedObject(Object suppliedParam, Class paramTypeClass) {
+    public static Object[] getCostAndCastedObject(Object suppliedParam, Class paramTypeClass) {
         
         Object[] ret = new Object[2];
         Integer cost = new Integer(0);
@@ -341,7 +347,7 @@ public class MethodOverloadResolver {
             castedObj = (JSObject) suppliedParam; // FIXME: Arrays not yet handled
         } else {
             cost = Integer.MIN_VALUE; // Not allowed
-            castedObj = null;
+            castedObj = suppliedParam;
         }
         
         ret[0] = cost;
@@ -459,8 +465,8 @@ public class MethodOverloadResolver {
         }
 
         if (c.equals(java.lang.Character.class) ||
-                c.equals(java.lang.Character.TYPE)) {
-            return s.charAt(0);
+            c.equals(java.lang.Character.TYPE)) {
+            return (char) n.intValue();
         }
 
         return n;

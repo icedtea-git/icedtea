@@ -45,7 +45,6 @@ exception statement from your version. */
 
 #include "IcedTeaNPPlugin.h"
 #include "IcedTeaPluginUtils.h"
-#include "IcedTeaScriptablePluginObject.h"
 
 #define REQUESTTIMEOUT 120
 
@@ -105,12 +104,20 @@ class JavaRequestProcessor : BusSubscriber
     	void postAndWaitForResponse(std::string message);
 
     	/* Creates a argument on java-side with appropriate type */
-    	int createJavaObjectFromVariant(NPVariant variant);
+    	void createJavaObjectFromVariant(NPVariant variant, std::string* id);
 
     	// Call a method, static or otherwise, depending on supplied arg
         JavaResultData* call(std::string source, bool isStatic,
                              std::string objectID, std::string methodName,
                              const NPVariant* args, int numArgs);
+
+        // Set a static/non-static field to given value
+        JavaResultData* set(std::string source,
+                            bool isStatic,
+                            std::string classID,
+                            std::string objectID,
+                            std::string fieldName,
+                            NPVariant value);
 
         /* Resets the results */
         void resetResult();
@@ -135,12 +142,26 @@ class JavaRequestProcessor : BusSubscriber
     	/* Returns the field object */
         JavaResultData* getField(std::string source,
                                  std::string classID,
+                                 std::string objectID,
                                  std::string fieldName);
 
         /* Returns the static field object */
         JavaResultData* getStaticField(std::string source,
                                        std::string classID,
                                        std::string fieldName);
+
+        /* Sets the field object */
+        JavaResultData* setField(std::string source,
+                                 std::string classID,
+                                 std::string objectID,
+                                 std::string fieldName,
+                                 NPVariant value);
+
+        /* Sets the static field object */
+        JavaResultData* setStaticField(std::string source,
+                                       std::string classID,
+                                       std::string fieldName,
+                                       NPVariant value);
 
         /* Returns the field id */
         JavaResultData* getFieldID(std::string classID, std::string fieldName);
@@ -182,7 +203,8 @@ class JavaRequestProcessor : BusSubscriber
                                   std::vector<std::string> args);
 
     	/* Returns the class ID */
-    	JavaResultData* findClass(std::string name);
+    	JavaResultData* findClass(int plugin_instance_id,
+                                  std::string name);
 
     	/* Returns the type class name */
     	JavaResultData* getClassName(std::string objectID);
@@ -190,11 +212,23 @@ class JavaRequestProcessor : BusSubscriber
     	/* Returns the type class id */
     	JavaResultData* getClassID(std::string objectID);
 
+    	/* Returns the length of the array object. -1 if not found */
+    	JavaResultData* getArrayLength(std::string objectID);
+
+    	/* Returns the item at the given index for the array */
+    	JavaResultData* getSlot(std::string objectID, std::string index);
+
+        /* Sets the item at the given index to the given value */
+        JavaResultData* setSlot(std::string objectID,
+                                std::string index,
+                                NPVariant value);
+
     	/* Creates a new string in the Java store */
     	JavaResultData* newString(std::string str);
 
     	/* Check if package exists */
-    	JavaResultData* hasPackage(std::string package_name);
+    	JavaResultData* hasPackage(int plugin_instance_id,
+                                   std::string package_name);
 
         /* Check if method exists */
         JavaResultData* hasMethod(std::string classID, std::string method_name);
