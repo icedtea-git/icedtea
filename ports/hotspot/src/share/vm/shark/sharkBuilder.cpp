@@ -520,7 +520,11 @@ CallInst* SharkBuilder::CreateDump(Value* value)
   const char *name;
   if (value->hasName())
     // XXX this leaks, but it's only debug code
+#if SHARK_LLVM_VERSION >= 26
+    name = strdup(value->getName().str().c_str());
+#else
     name = strdup(value->getName().c_str());
+#endif
   else
     name = "unnamed_value";
 

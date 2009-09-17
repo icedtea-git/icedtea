@@ -1,3 +1,9 @@
+2009-09-17  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::CreateDump):
+	Make Shark debug code LLVM 2.6 API compatible.
+
 2009-09-04  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
