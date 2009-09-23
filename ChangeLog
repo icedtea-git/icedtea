@@ -1,3 +1,8 @@
+2009-09-23  Jon VanAlten  <jon.vanalten@redhat.com>
+
+	* Makefile.am:
+	Build PulseAudio class files into distinct subdirectory. 
+
 2009-09-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* HACKING: Updated.
