@@ -3295,7 +3295,7 @@ endif
 stamps/pulse-java-jar.stamp: stamps/pulse-java-class.stamp
 if ENABLE_PULSE_JAVA
 	mkdir -p $(PULSE_JAVA_CLASS_DIR);
-	$(ICEDTEA_BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .
+	$(ICEDTEA_BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .;
 endif
 	mkdir -p stamps
 	touch stamps/pulse-java-jar.stamp
