@@ -1,3 +1,8 @@
+2009-09-25  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp:
+	Replaced references to deoptimizer frame with fake stub frame.
+
 2009-09-17  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp

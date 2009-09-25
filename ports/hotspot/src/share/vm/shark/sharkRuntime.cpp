@@ -203,7 +203,7 @@ void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request)
   // being deopted one frame down on the stack.  Create a dummy frame
   // to mirror this.
   ZeroStack *stack = thread->zero_stack();
-  thread->push_zero_frame(DeoptimizerFrame::build(stack));
+  thread->push_zero_frame(FakeStubFrame::build(stack));
 
   // Initiate the trap
   thread->set_last_Java_frame();
@@ -223,7 +223,7 @@ void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request)
   }
 
   // Push another dummy frame
-  thread->push_zero_frame(DeoptimizerFrame::build(stack));
+  thread->push_zero_frame(FakeStubFrame::build(stack));
   
   // Fill in the skeleton frames
   thread->set_last_Java_frame();
@@ -241,7 +241,7 @@ void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request)
 #endif // CC_INTERP
 }
 
-DeoptimizerFrame* DeoptimizerFrame::build(ZeroStack* stack)
+FakeStubFrame* FakeStubFrame::build(ZeroStack* stack)
 {
   if (header_words > stack->available_words()) {
     Unimplemented();
@@ -251,8 +251,8 @@ DeoptimizerFrame* DeoptimizerFrame::build(ZeroStack* stack)
   intptr_t *fp = stack->sp();
   assert(fp - stack->sp() == next_frame_off, "should be");
 
-  stack->push(DEOPTIMIZER_FRAME);
+  stack->push(FAKE_STUB_FRAME);
   assert(fp - stack->sp() == frame_type_off, "should be");
 
-  return (DeoptimizerFrame *) fp;
+  return (FakeStubFrame *) fp;
 }
