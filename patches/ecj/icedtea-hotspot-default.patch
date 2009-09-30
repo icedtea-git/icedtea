@@ -1,7 +1,7 @@
 diff -Nru openjdk-ecj.orig/hotspot/make/linux/Makefile openjdk-ecj/hotspot/make/linux/Makefile
---- openjdk-ecj.orig/hotspot/make/linux/Makefile	2009-08-18 17:44:09.000000000 +0100
-+++ openjdk-ecj/hotspot/make/linux/Makefile	2009-08-18 18:56:52.000000000 +0100
-@@ -274,28 +274,24 @@
+--- openjdk-ecj.orig/hotspot/make/linux/Makefile	2009-09-28 13:20:29.000000000 +0100
++++ openjdk-ecj/hotspot/make/linux/Makefile	2009-09-28 16:06:27.000000000 +0100
+@@ -280,35 +280,30 @@
  
  $(TARGETS_C2):  $(SUBDIRS_C2)
  	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && $(MAKE) $(MFLAGS)
@@ -30,9 +30,16 @@ diff -Nru openjdk-ecj.orig/hotspot/make/linux/Makefile openjdk-ecj/hotspot/make/
  ifdef INSTALL
  	cd $(OSNAME)_$(BUILDARCH)_core/$(patsubst %core,%,$@) && $(MAKE) $(MFLAGS) install
  endif
+ 
+ $(TARGETS_ZERO):  $(SUBDIRS_ZERO)
+ 	cd $(OSNAME)_$(BUILDARCH)_zero/$(patsubst %zero,%,$@) && $(MAKE) $(MFLAGS)
+-	cd $(OSNAME)_$(BUILDARCH)_zero/$(patsubst %zero,%,$@) && ./test_gamma
+ ifdef INSTALL
+ 	cd $(OSNAME)_$(BUILDARCH)_zero/$(patsubst %zero,%,$@) && $(MAKE) $(MFLAGS) install
+ endif
 diff -Nru openjdk-ecj.orig/hotspot/make/linux/makefiles/sa.make openjdk-ecj/hotspot/make/linux/makefiles/sa.make
---- openjdk-ecj.orig/hotspot/make/linux/makefiles/sa.make	2009-08-18 17:35:29.000000000 +0100
-+++ openjdk-ecj/hotspot/make/linux/makefiles/sa.make	2009-08-18 19:54:42.000000000 +0100
+--- openjdk-ecj.orig/hotspot/make/linux/makefiles/sa.make	2009-09-22 20:05:24.000000000 +0100
++++ openjdk-ecj/hotspot/make/linux/makefiles/sa.make	2009-09-28 16:06:18.000000000 +0100
 @@ -38,7 +38,9 @@
  GENERATED = $(TOPDIR)/../generated
  

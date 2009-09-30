@@ -1,8 +1,8 @@
 diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/sun/java/pack/Makefile
---- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2009-07-14 17:28:33.000000000 +0100
-+++ openjdk/jdk/make/com/sun/java/pack/Makefile	2009-07-14 17:32:29.000000000 +0100
-@@ -75,12 +75,12 @@
- 	     $(ZIPOBJDIR)/infutil.$(OBJECT_SUFFIX) \
+--- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2009-09-21 18:42:07.000000000 +0100
++++ openjdk/jdk/make/com/sun/java/pack/Makefile	2009-09-21 18:47:23.000000000 +0100
+@@ -74,12 +74,12 @@
+ 	     $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
  	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
  
 -  OTHER_LDLIBS += -lz
@@ -16,7 +16,7 @@ diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/
  CXXFLAGS_DBG += -DFULL
  CXXFLAGS_OPT += -DPRODUCT
  CXXFLAGS_COMMON += -DFULL
-@@ -97,12 +97,11 @@
+@@ -96,12 +96,11 @@
    RES = $(OBJDIR)/$(PGRM).res
  else
    LDOUTPUT = -o #Have a space 
@@ -31,7 +31,7 @@ diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/
  endif
  endif #LINUX
  endif #PLATFORM
-@@ -145,7 +144,7 @@
+@@ -144,7 +143,7 @@
  
  $(UNPACK_EXE): $(UNPACK_EXE_FILES_o) updatefiles winres
  	$(prep-target)
@@ -42,7 +42,7 @@ diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/
  endif
 diff -Nru openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile openjdk/jdk/make/javax/sound/jsoundalsa/Makefile
 --- openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile	2009-03-30 17:23:03.000000000 +0100
-+++ openjdk/jdk/make/javax/sound/jsoundalsa/Makefile	2009-07-14 17:32:29.000000000 +0100
++++ openjdk/jdk/make/javax/sound/jsoundalsa/Makefile	2009-09-21 18:47:23.000000000 +0100
 @@ -65,7 +65,7 @@
  	$(MIDIFILES_export) \
  	$(PORTFILES_export)

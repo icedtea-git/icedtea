@@ -1,20 +1,20 @@
-OPENJDK_VERSION = b71
+OPENJDK_VERSION = b72
 
-OPENJDK_CHANGESET = 47425552fc70
-CORBA_CHANGESET = 109171aadcfa
-JAXP_CHANGESET = 6d4f2360ffe6
-JAXWS_CHANGESET = 75cfe6f615df
-JDK_CHANGESET = 2a1a7fb44226
-LANGTOOLS_CHANGESET = 70cd643d6217
-HOTSPOT_CHANGESET = 73abf11e8e61
+CORBA_CHANGESET = 5fdcfb25dbb4
+HOTSPOT_CHANGESET = c8155bc21432
+JAXP_CHANGESET = fe2e7f835dd2
+JAXWS_CHANGESET = 501b8988da30
+JDK_CHANGESET = c2cd86f82ed7
+LANGTOOLS_CHANGESET = 5a36337cc053
+OPENJDK_CHANGESET = 717f2b969919
 
-OPENJDK_MD5SUM = d0753b769317c497ae14d9ab089504f7
-CORBA_MD5SUM = 5cb4f5afbef00fd662c554b9dd7312a7
-JAXP_MD5SUM = 0203983e81a05e548f7fc7bed557bf2c
-JAXWS_MD5SUM = 07015564ab925a96cebf363814707d64
-JDK_MD5SUM = 9297009647ee6d3711fb59c3d3914404
-LANGTOOLS_MD5SUM = 70c0690c8ee523beb2a19dd1b7d2a9f9
-HOTSPOT_MD5SUM = 27eabf6067ac04edf002fad94671bbe1
+CORBA_MD5SUM = 5a9fef662129c05b2dd05c79a2685178
+HOTSPOT_MD5SUM = e5b21a7e5cc5cae315cd9aa158ee9858
+JAXP_MD5SUM = f4bd08cf016fefe31c4269b9d90edec0
+JAXWS_MD5SUM = 8d0729f5c4ddec47393e636e7d6a4914
+JDK_MD5SUM = 622268153bc097a5b91d76305eb0502d
+LANGTOOLS_MD5SUM = eadbaead19df2fbe039fd12593e97197
+OPENJDK_MD5SUM = b5d1f6fad70a2b6af7b011169fbd6da3
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
@@ -61,19 +61,15 @@ PULSE_JAVA_JAVA_SRCDIR =
 PULSE_JAVA_CLASS_DIR =
 endif
 
-if ENABLE_NIMBUS_GENERATION
-JIBX_DEPS_DIR=$(abs_top_builddir)/jibx
-endif
-
-SHARE = openjdk/jdk/src/share/classes
-SOLARIS = openjdk/jdk/src/solaris/classes
+JDK_SHARE = openjdk/jdk/src/share/classes
+JDK_SOLARIS = openjdk/jdk/src/solaris/classes
 LANGTOOLS = openjdk/langtools/src/share/classes
 JAXP = openjdk/jaxp/src/share/classes
 CORBA = openjdk/corba/src/share/classes
 JAXWS = openjdk/jaxws/src/share/classes
 
 OPENJDK_SOURCEPATH_DIRS = \
-        $(SHARE):$(SOLARIS):$(LANGTOOLS):$(JAXP):$(CORBA):$(JAXWS)
+        $(JDK_SHARE):$(JDK_SOLARIS):$(LANGTOOLS):$(JAXP):$(CORBA):$(JAXWS)
 
 SOURCEPATH_DIRS = $(abs_top_builddir)/generated:$(OPENJDK_SOURCEPATH_DIRS)
 
@@ -1555,11 +1551,9 @@ ICEDTEA_ENV = \
 	ENDORSED="-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
 	CLASSPATH="" \
 	LD_LIBRARY_PATH="" \
-	CORE_BUILD="$(ICEDTEA_CORE_BUILD)" \
 	ZERO_BUILD="$(ICEDTEA_ZERO_BUILD)" \
 	ICEDTEA_SHARK_BUILD="$(ICEDTEA_SHARK_BUILD)" \
 	ZERO_LIBARCH="$(ZERO_LIBARCH)" \
-	ZERO_BITSPERWORD="$(ZERO_BITSPERWORD)" \
 	ZERO_ENDIANNESS="$(ZERO_ENDIANNESS)" \
 	ZERO_ARCHDEF="$(ZERO_ARCHDEF)" \
 	ZERO_ARCHFLAG="$(ZERO_ARCHFLAG)" \
@@ -1579,7 +1573,6 @@ ICEDTEA_ENV = \
 	ANT_RESPECT_JAVA_HOME="TRUE" \
 	RHINO_JAR="$(RHINO_JAR)" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
-	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)" \
 	ALT_NETX_DIST="$(abs_top_builddir)/netx.build" \
 	ALT_LIVECONNECT_DIST="$(abs_top_builddir)" \
 	DEBUG_CLASSFILES="true" \
@@ -1589,11 +1582,6 @@ ICEDTEA_ENV = \
 if WITH_CACAO
 ICEDTEA_ENV += \
 	ALT_HOTSPOT_IMPORT_PATH="$(CACAO_IMPORT_PATH)"
-endif
-
-if !ENABLE_NIMBUS_GENERATION
-ICEDTEA_ENV += \
-	DISABLE_NIMBUS="true"
 endif
 
 if DISABLE_OPTIMIZATIONS
@@ -1643,11 +1631,9 @@ ICEDTEA_ENV_ECJ = \
 	CLASSPATH="" \
 	LD_LIBRARY_PATH="" \
 	GENSRCDIR="$(abs_top_builddir)/generated" \
-	CORE_BUILD="$(ICEDTEA_CORE_BUILD)" \
 	ZERO_BUILD="$(ICEDTEA_ZERO_BUILD)" \
 	ICEDTEA_SHARK_BUILD="$(ICEDTEA_SHARK_BUILD)" \
 	ZERO_LIBARCH="$(ZERO_LIBARCH)" \
-	ZERO_BITSPERWORD="$(ZERO_BITSPERWORD)" \
 	ZERO_ENDIANNESS="$(ZERO_ENDIANNESS)" \
 	ZERO_ARCHDEF="$(ZERO_ARCHDEF)" \
 	ZERO_ARCHFLAG="$(ZERO_ARCHFLAG)" \
@@ -2128,12 +2114,6 @@ if ENABLE_SYSTEMTAP
 ICEDTEA_PATCHES += patches/icedtea-systemtap.patch
 endif
 
-if ENABLE_NIMBUS
-if !ENABLE_NIMBUS_GENERATION
-ICEDTEA_PATCHES += patches/icedtea-pregenerated-nimbus.patch
-endif
-endif
-
 if ENABLE_PLUGIN
 ICEDTEA_PATCHES += patches/icedtea-liveconnect-dist.patch
 else
@@ -2471,7 +2451,7 @@ clean-clone-ecj:
 ICEDTEA_ECJ_PATCHES = patches/ecj/icedtea.patch \
 	patches/ecj/icedtea-hotspot-$(HSBUILD).patch \
 	patches/ecj/icedtea-jopt.patch \
-	patches/ecj/icedtea-dyn.patch
+	patches/ecj/icedtea-dyn.patch 
 
 if CP39408_JAVAH
 ICEDTEA_ECJ_PATCHES += patches/ecj/icedtea-pr39408.patch
@@ -2689,8 +2669,8 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
 	$(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) $(JNLP_ABOUT_TARGET) \
-	stamps/jibx.stamp stamps/cacao.stamp stamps/netx-dist.stamp \
-	stamps/liveconnect.stamp stamps/pulse-java.stamp stamps/visualvm.stamp
+	stamps/cacao.stamp stamps/netx-dist.stamp stamps/liveconnect.stamp \
+	stamps/pulse-java.stamp stamps/visualvm.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -2779,8 +2759,8 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink.stamp \
 	stamps/hotspot-tools.stamp stamps/plugs.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
 	$(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) $(JNLP_ABOUT_TARGET) \
-	stamps/jibx.stamp stamps/cacao.stamp stamps/netx-dist.stamp \
-	stamps/liveconnect.stamp stamps/pulse-java.stamp stamps/visualvm.stamp
+	stamps/cacao.stamp stamps/netx-dist.stamp stamps/liveconnect.stamp \
+	stamps/pulse-java.stamp stamps/visualvm.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -2957,38 +2937,18 @@ clean-tools-jar: clean-hotspot-tools
 	rm -f stamps/hotspot-tools.stamp
 	rm -f bootstrap/jdk1.7.0/lib/tools.jar
 
-# Sources copied from OpenJDK.
-ICEDTEA_COPY_DIRS = \
-	com/sun/jdi \
-	com/sun/jdi/connect \
-	com/sun/jdi/connect/spi \
-	com/sun/jdi/event \
-	com/sun/jdi/request \
-	com/sun/tools/jdi \
-	com/sun/net/httpserver \
-	java/io \
-	java/util \
-	java/rmi \
-	sun/awt/ \
-	javax/net/ssl \
-	javax/script
-
-stamps/copy-source-files.stamp: stamps/overlay.stamp
-	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
-	do \
-	  mkdir -p rt/$$copy_dir ; \
-	  cp -pPRf openjdk/jdk/src/share/classes/$$copy_dir/*.java \
-	    rt/$$copy_dir ; \
-	done
-	mkdir -p stamps
-	touch stamps/copy-source-files.stamp
-
-clean-copy:
-	rm -f stamps/copy-source-files.stamp
-	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
-	do \
-	  rm -rf rt/$$copy_dir ; \
-	done
+# Sources used from OpenJDK.
+ICEDTEA_BOOTSTRAP_DIRS = \
+	$(JDK_SHARE)/com/sun/jdi \
+	$(JDK_SHARE)/com/sun/tools/jdi \
+	$(JDK_SHARE)/com/sun/net/httpserver \
+	$(JDK_SHARE)/java/io \
+	$(JDK_SHARE)/java/util \
+	$(JDK_SHARE)/java/rmi \
+	$(JDK_SHARE)/sun/awt/ \
+	$(JDK_SHARE)/javax/net/ssl \
+	$(JDK_SHARE)/javax/script \
+	$(JAXWS)/javax/xml/bind
 
 # tools.jar class files.
 stamps/hotspot-tools-copy-source-files.stamp: stamps/overlay.stamp
@@ -3059,9 +3019,13 @@ bootstrap/jdk1.7.0/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	fi
 
 # rt-closed.jar class files.
-rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
+rt-source-files.txt: stamps/extract.stamp stamps/overlay.stamp
 	find $(abs_top_builddir)/rt -name '*.java' \
 	  | sort -u > $@
+	for dir in $(ICEDTEA_BOOTSTRAP_DIRS) ; \
+	do \
+	  find $(abs_top_builddir)/$$dir -name '*.java' >> $@; \
+	done
 
 stamps/rt-class-files.stamp: rt-source-files.txt stamps/hotspot-tools.stamp
 	mkdir -p lib/rt
@@ -3156,23 +3120,6 @@ stamps/liveconnect.stamp: stamps/hotspot-tools.stamp
 	fi
 	mkdir -p stamps
 	touch stamps/liveconnect.stamp
-
-stamps/jibx.stamp:
-if ENABLE_NIMBUS
-if ENABLE_NIMBUS_GENERATION
-	mkdir $(JIBX_DEPS_DIR)
-	ln -s $(BCEL_JAR) $(JIBX_DEPS_DIR)
-	ln -s $(XPP3_JAR) $(JIBX_DEPS_DIR)
-	ln -s $(JIBX_DIR)/jibx-bind.jar $(JIBX_DEPS_DIR)
-	ln -s $(JIBX_DIR)/jibx-run.jar $(JIBX_DEPS_DIR)
-else
-	mkdir -p $(BUILD_OUTPUT_DIR)/gensrc/javax/swing/plaf
-	cp -a $(abs_top_builddir)/generated/javax/swing/plaf/nimbus \
-	  $(BUILD_OUTPUT_DIR)/gensrc/javax/swing/plaf
-endif
-endif
-	mkdir -p stamps
-	touch $@
 
 stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
 if BUILD_CACAO
@@ -3646,8 +3593,6 @@ visualvm: stamps/visualvm.stamp
 
 nbplatform: stamps/nbplatform.stamp
 
-copy-source-files: stamps/copy-source-files.stamp
-
 download: stamps/download.stamp
 
 extract: stamps/extract.stamp
@@ -3663,8 +3608,6 @@ icedtea-against-ecj: stamps/icedtea-against-ecj.stamp
 icedtea-debug: stamps/icedtea-debug.stamp
 
 icedtea-ecj: stamps/icedtea-ecj.stamp
-
-jibx: stamps/jibx.stamp
 
 native-ecj: stamps/native-ecj.stamp
 

@@ -229,8 +229,6 @@ WITH_ALT_JAR_BINARY
 AC_CHECK_ENABLE_CACAO
 AC_CHECK_WITH_CACAO_HOME
 AC_CHECK_WITH_CACAO_SRC_ZIP
-AC_CHECK_ENABLE_NIMBUS
-AC_CHECK_ENABLE_NIMBUS_GENERATION
 DISABLE_OPTIMIZATIONS
 SET_SHARK_BUILD
 ENABLE_ZERO_BUILD
@@ -259,16 +257,6 @@ fi
 if test "x${enable_visualvm}" = "xyes"
 then
   FIND_NETBEANS
-fi
-
-if test "x${ENABLE_NIMBUS}" = "xyes"
-then
-  if test "x${ENABLE_NIMBUS_GENERATION}" = "xyes"
-  then
-    FIND_BCEL_JAR
-    FIND_XPP3_JAR
-    FIND_JIBX_DIR
-  fi
 fi
 
 dnl pkgconfig cannot be used to find these headers and libraries.

@@ -1,3 +1,27 @@
+2009-09-30  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-pregenerated-nimbus.patch:
+	No longer needed.
+	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp:
+	Removed, in upstream forest.
+	* Makefile.am: Bump to b72, remove JIBX Nimbus requirement
+	and don't copy OpenJDK source code.
+	* acinclude.m4:
+	(FIND_BCEL_JAR): Removed.
+	(FIND_XPP3_JAR): Removed.
+	(FIND_JIBX_DIR): Removed.
+	(AC_CHECK_ENABLE_NIMBUS): Removed.
+	(AC_CHECK_ENABLE_NIMBUS_GENERATION): Removed.
+	* configure.ac: Drop Nimbus/JIBX tests.
+	* patches/ecj/icedtea-hotspot-default.patch:
+	Don't run test_gamma on zero.
+	* patches/hotspot/default/icedtea-shark-build.patch,
+	* patches/hotspot/default/icedtea-shark.patch,
+	* patches/icedtea-libraries.patch,
+	* patches/icedtea-linker-libs-order.patch,
+	* patches/icedtea-shark-build.patch:
+	Updated due to b72 and Zero update.
+
 2009-09-23  Jon VanAlten  <jon.vanalten@redhat.com>
 
 	* Makefile.am:
