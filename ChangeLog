@@ -1,5 +1,10 @@
 2009-09-30  Andrew John Hughes  <ahughes@redhat.com>
 
+	* NEWS:
+	Updated.
+
+2009-09-30  Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/icedtea-pregenerated-nimbus.patch:
 	No longer needed.
 	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp:

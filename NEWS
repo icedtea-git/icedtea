@@ -1,3 +1,10 @@
+New in release 1.12 (2009-XX-XX)
+
+- Updated Zero with Gary's latest revisions
+- JIBX is no longer required to build Nimbus.
+- The NSS crypto. provider may be turned on with --enable-nss if
+  the NSS libraries and headers are available via pkg-config.
+
 New in release 1.11 (2009-08-06)
 
 - Updated to OpenJDK7 b66 (Milestone 4), including
