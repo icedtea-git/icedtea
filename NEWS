@@ -4,6 +4,11 @@ New in release 1.12 (2009-XX-XX)
 - JIBX is no longer required to build Nimbus.
 - The NSS crypto. provider may be turned on with --enable-nss if
   the NSS libraries and headers are available via pkg-config.
+- Makefile reorganisation:
+  * icedtea-ecj is now icedtea-boot and patches/ecj is now
+    patches/boot.
+  * The icedtea-against-icedtea target is now icedtea-stage2.
+    The icedtea-against-ecj target is now icedtea-stage1.
 
 New in release 1.11 (2009-08-06)
 

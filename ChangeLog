@@ -1,5 +1,10 @@
 2009-10-01  Andrew John Hughes  <ahughes@redhat.com>
 
+	* NEWS:
+	Updated with Makefile changes.
+	
+2009-10-01  Andrew John Hughes  <ahughes@redhat.com>
+
 	Reorganise Makefile and rename some
 	targets to better refer to the two stages
 	of the build (stage1/bootstrap and stage2/final).
