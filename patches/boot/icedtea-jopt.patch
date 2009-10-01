@@ -1,6 +1,6 @@
-diff -Nru openjdk-ecj.orig/corba/make/common/shared/Defs-java.gmk openjdk-ecj/corba/make/common/shared/Defs-java.gmk
---- openjdk-ecj.orig/corba/make/common/shared/Defs-java.gmk	2008-10-22 18:45:43.000000000 +0100
-+++ openjdk-ecj/corba/make/common/shared/Defs-java.gmk	2008-10-22 18:49:29.000000000 +0100
+diff -Nru openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk openjdk-boot/corba/make/common/shared/Defs-java.gmk
+--- openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk	2008-10-22 18:45:43.000000000 +0100
++++ openjdk-boot/corba/make/common/shared/Defs-java.gmk	2008-10-22 18:49:29.000000000 +0100
 @@ -75,7 +75,9 @@
  JAVAC_JVM_FLAGS    += $(JAVA_TOOLS_FLAGS:%=-J%)
  
@@ -11,9 +11,9 @@ diff -Nru openjdk-ecj.orig/corba/make/common/shared/Defs-java.gmk openjdk-ecj/co
  
  # JAVA_TOOLS_DIR is the default location to find Java tools to run, if
  #    langtools is not available.
-diff -Nru openjdk-ecj.orig/jdk/make/common/shared/Defs-java.gmk openjdk-ecj/jdk/make/common/shared/Defs-java.gmk
---- openjdk-ecj.orig/jdk/make/common/shared/Defs-java.gmk	2008-10-22 19:14:30.000000000 +0100
-+++ openjdk-ecj/jdk/make/common/shared/Defs-java.gmk	2008-10-22 19:15:00.000000000 +0100
+diff -Nru openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk openjdk-boot/jdk/make/common/shared/Defs-java.gmk
+--- openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk	2008-10-22 19:14:30.000000000 +0100
++++ openjdk-boot/jdk/make/common/shared/Defs-java.gmk	2008-10-22 19:15:00.000000000 +0100
 @@ -82,7 +82,9 @@
  JAVAC_JVM_FLAGS    += $(JAVA_TOOLS_FLAGS:%=-J%)
  

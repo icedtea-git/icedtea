@@ -1,6 +1,6 @@
-diff -Nru openjdk-ecj.orig/jdk/make/java/Makefile openjdk-ecj/jdk/make/java/Makefile
---- openjdk-ecj.orig/jdk/make/java/Makefile	2009-05-12 15:54:22.000000000 +0100
-+++ openjdk-ecj/jdk/make/java/Makefile	2009-05-18 20:54:22.000000000 +0100
+diff -Nru openjdk-boot.orig/jdk/make/java/Makefile openjdk-boot/jdk/make/java/Makefile
+--- openjdk-boot.orig/jdk/make/java/Makefile	2009-05-12 15:54:22.000000000 +0100
++++ openjdk-boot/jdk/make/java/Makefile	2009-05-18 20:54:22.000000000 +0100
 @@ -39,7 +39,7 @@
  # Others
  #    Note: java_crw_demo java_hprof_demo are demos but must be delivered built in sdk

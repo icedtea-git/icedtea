@@ -1,6 +1,6 @@
-diff -Nru openjdk-ecj.orig/jdk/make/tools/src/build/tools/spp/Spp.java openjdk-ecj/jdk/make/tools/src/build/tools/spp/Spp.java
---- openjdk-ecj.orig/jdk/make/tools/src/build/tools/spp/Spp.java	2008-09-11 08:44:09.000000000 +0100
-+++ openjdk-ecj/jdk/make/tools/src/build/tools/spp/Spp.java	2008-09-12 21:34:38.000000000 +0100
+diff -Nru openjdk-boot.orig/jdk/make/tools/src/build/tools/spp/Spp.java openjdk-boot/jdk/make/tools/src/build/tools/spp/Spp.java
+--- openjdk-boot.orig/jdk/make/tools/src/build/tools/spp/Spp.java	2008-09-11 08:44:09.000000000 +0100
++++ openjdk-boot/jdk/make/tools/src/build/tools/spp/Spp.java	2008-09-12 21:34:38.000000000 +0100
 @@ -25,6 +25,10 @@
  
  package build.tools.spp;

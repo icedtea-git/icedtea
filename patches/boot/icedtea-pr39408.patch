@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c openjdk/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c
---- openjdk-ecj.orig/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2009-03-18 16:25:52.000000000 +0000
-+++ openjdk-ecj/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2009-03-18 16:27:03.000000000 +0000
+--- openjdk-boot.orig/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2009-03-18 16:25:52.000000000 +0000
++++ openjdk-boot/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2009-03-18 16:27:03.000000000 +0000
 @@ -36,6 +36,14 @@
  #include "nio.h"
  #include "nio_util.h"

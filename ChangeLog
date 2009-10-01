@@ -1,3 +1,40 @@
+2009-10-01  Andrew John Hughes  <ahughes@redhat.com>
+
+	Reorganise Makefile and rename some
+	targets to better refer to the two stages
+	of the build (stage1/bootstrap and stage2/final).
+	* patches/ecj/icedtea-dbcs.patch,
+	* patches/ecj/icedtea-dyn.patch,
+	* patches/ecj/icedtea-euctw.patch,
+	* patches/ecj/icedtea-hotspot-default.patch,
+	* patches/ecj/icedtea-jopt.patch,
+	* patches/ecj/icedtea-pr39408.patch,
+	* patches/ecj/icedtea-pr40188.patch,
+	* patches/ecj/icedtea-pr40616.patch,
+	* patches/ecj/icedtea-sbcs.patch,
+	* patches/ecj/icedtea-spp.patch,
+	* patches/ecj/icedtea.patch: Moved to...
+	* Makefile.am:
+	Reorganise Makefile, change openjdk-ecj
+	to openjdk-boot and patches/ecj to patches/boot.
+	icedtea-against-icedtea is now icedtea-stage2.
+	icedtea-against-ecj is now icedtea-stage1.
+	Remove stage2 dependency on plugs.stamp and
+	hotspot-tools.stamp.  Move visualvm to a
+	complete separate target depended on by
+	icedtea-stage2.
+	* patches/boot/icedtea-dbcs.patch,
+	* patches/boot/icedtea-dyn.patch,
+	* patches/boot/icedtea-euctw.patch,
+	* patches/boot/icedtea-hotspot-default.patch,
+	* patches/boot/icedtea-jopt.patch,
+	* patches/boot/icedtea-pr39408.patch,
+	* patches/boot/icedtea-pr40188.patch,
+	* patches/boot/icedtea-pr40616.patch,
+	* patches/boot/icedtea-sbcs.patch,
+	* patches/boot/icedtea-spp.patch,
+	* patches/boot/icedtea.patch: here.
+
 2009-09-30  Andrew John Hughes  <ahughes@redhat.com>
 
 	* generated/javax/swing/plaf/nimbus/ArrowButtonPainter.java,
