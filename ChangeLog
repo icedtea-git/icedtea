@@ -1,5 +1,13 @@
 2009-10-01  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Fix alias renamed to 'native-boot' by
+	mistake.  The native-ecj target is the only
+	one actually related to ecj.  The others
+	were bootstrap targets.
+
+2009-10-01  Andrew John Hughes  <ahughes@redhat.com>
+
 	* NEWS:
 	Updated with Makefile changes.
 	

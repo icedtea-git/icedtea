@@ -2347,7 +2347,7 @@ icedtea-debug: stamps/icedtea-debug.stamp
 
 icedtea-boot: stamps/icedtea-boot.stamp
 
-native-boot: stamps/native-boot.stamp
+native-ecj: stamps/native-ecj.stamp
 
 patch-boot: stamps/patch-boot.stamp
 
