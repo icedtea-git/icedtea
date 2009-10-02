@@ -1,6 +1,12 @@
 2009-10-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	icedtea-against-boot target should be
+	icedtea-stage1.
+
+2009-10-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Create versioning.stamp so target is
 	not continually rerun.  Redo removal
 	of copy-source-files target which was

@@ -2338,7 +2338,7 @@ generated: stamps/generated.stamp
 
 icedtea: stamps/icedtea.stamp
 
-icedtea-against-boot: stamps/icedtea-against-boot.stamp
+icedtea-stage1: stamps/icedtea-stage1.stamp
 
 icedtea-debug: stamps/icedtea-debug.stamp
 
