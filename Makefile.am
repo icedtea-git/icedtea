@@ -192,6 +192,9 @@ PULSE_JAVA_JAVA_SRCDIR =
 PULSE_JAVA_CLASS_DIR =
 endif
 
+# This should not depend on bootstrapping
+# but on whether MEMORY_LIMIT is accepted
+# as an argument to javac
 if BOOTSTRAPPING
   MEMORY_LIMIT =
 else
@@ -204,6 +207,16 @@ if WITH_CACAO
 else
   ICEDTEA_BUILD_TARGET=
   ICEDTEA_DEBUG_BUILD_TARGET=debug_build
+endif
+
+if BOOTSTRAPPING
+  BOOTSTRAP_DIRECTORY_STAMP = stamps/bootstrap-directory-stage2.stamp
+  ICEDTEA_HOME = $(abs_top_builddir)/bootstrap/icedtea
+  INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink-stage1.stamp
+else
+  BOOTSTRAP_DIRECTORY_STAMP =
+  ICEDTEA_HOME = $(SYSTEM_JDK_DIR)
+  INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink-stage2.stamp
 endif
 
 # Patch list
@@ -651,6 +664,8 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 
 all-local: icedtea-stage2
 
+check-local: jtregcheck
+
 distclean-local: clean-copy clean-jtreg clean-jtreg-reports clean-pulse-java 
 	rm -rf stamps
 	rm -f rt-source-files.txt \
@@ -1051,6 +1066,7 @@ if !USE_SYSTEM_CACAO
 	fi
 endif
 endif
+	mkdir -p stamps
 	touch stamps/extract-cacao.stamp
 
 clean-extract-cacao:
@@ -1088,6 +1104,7 @@ stamps/generated.stamp: stamps/extract-cacao.stamp
 	  find $(abs_top_builddir)/generated -type f -exec chmod 640 '{}' ';' \
 	    -o -type d -exec chmod 750 '{}' ';'; \
 	fi
+	mkdir -p stamps
 	touch stamps/generated.stamp
 
 stamps/patch-fsg.stamp: stamps/generated.stamp
@@ -1260,10 +1277,13 @@ stamps/versioning.stamp: stamps/patch.stamp
 	fi ; \
 	sed -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
 	  openjdk/jdk/make/common/shared/Defs.gmk;
+	mkdir -p stamps
+	touch stamps/versioning.stamp
 
 stamps/overlay.stamp: stamps/versioning.stamp
 	cp -r $(abs_top_srcdir)/overlays/openjdk/* openjdk/
-	chmod -R ug+w openjdk 
+	chmod -R ug+w openjdk
+	mkdir -p stamps
 	touch stamps/overlay.stamp
 
 # OpenJDK boot Source Preparation Targets
@@ -1407,16 +1427,6 @@ stamps/bootstrap-directory-stage2.stamp: stamps/icedtea-stage1.stamp
 clean-bootstrap-directory-stage2:
 	rm -f stamps/bootstrap-directory-stage2.stamp
 	rm -rf bootstrap/icedtea
-
-if BOOTSTRAPPING
-  BOOTSTRAP_DIRECTORY_STAMP = stamps/bootstrap-directory-stage2.stamp
-  ICEDTEA_HOME = $(abs_top_builddir)/bootstrap/icedtea
-  INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink-stage1.stamp
-else
-  BOOTSTRAP_DIRECTORY_STAMP =
-  ICEDTEA_HOME = $(SYSTEM_JDK_DIR)
-  INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink-stage2.stamp
-endif
 
 # stage 1 symlink.
 stamps/bootstrap-directory-symlink-stage1.stamp: stamps/bootstrap-directory-stage1.stamp
@@ -1757,7 +1767,7 @@ stamps/netx.stamp: netx-source-files.txt stamps/hotspot-tools.stamp
 	    -sourcepath $(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS): \
 	    -bootclasspath \'\' \
 	    @netx-source-files.txt ;
-	mkdir -p $(abs_top_builddir)/stamps
+	mkdir -p stamps
 	touch stamps/netx.stamp
 
 stamps/netx-dist.stamp: stamps/netx.stamp
@@ -2023,6 +2033,7 @@ ADD_ZERO_EXTRA_BUILD_ENV = \
 	DISTRIBUTION_PATCHES='$(foreach p,$(DISTRIBUTION_PATCHES),$(if $(findstring cacao,$(p)),,$(p)))'
 
 stamps/add-zero.stamp: stamps/icedtea.stamp
+	mkdir -p stamps
 if ADD_ZERO_BUILD
 	mkdir -p zerovm
 
@@ -2043,6 +2054,7 @@ endif
 	touch $@
 
 stamps/add-zero-debug.stamp: stamps/icedtea-debug.stamp
+	mkdir -p stamps
 if ADD_ZERO_BUILD
 	mkdir -p zerovm
 
@@ -2157,8 +2169,6 @@ jtregcheck: jtreg check-hotspot check-langtools check-jdk
 	  $(jtreg_processes); \
 	fi
 
-check-local: jtregcheck
-
 # Support classes for non-OpenJDK bootstraps
 
 stamps/plugs.stamp: bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
@@ -2190,23 +2200,6 @@ ICEDTEA_BOOTSTRAP_DIRS = \
 	$(JDK_SHARE)/javax/net/ssl \
 	$(JDK_SHARE)/javax/script \
 	$(JAXWS)/javax/xml/bind
-
-stamps/copy-source-files.stamp: stamps/overlay.stamp
-	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
-	do \
-	  mkdir -p rt/$$copy_dir ; \
-	  cp -pPRf openjdk/jdk/src/share/classes/$$copy_dir/*.java \
-	    rt/$$copy_dir ; \
-	done
-	mkdir -p stamps
-	touch stamps/copy-source-files.stamp
-
-clean-copy:
-	rm -f stamps/copy-source-files.stamp
-	for copy_dir in $(ICEDTEA_COPY_DIRS) ; \
-	do \
-	  rm -rf rt/$$copy_dir ; \
-	done
 
 # tools.jar class files.
 stamps/hotspot-tools-copy-source-files.stamp: stamps/overlay.stamp
@@ -2277,9 +2270,13 @@ bootstrap/jdk1.7.0/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
 	fi
 
 # rt-closed.jar class files.
-rt-source-files.txt: stamps/extract.stamp stamps/copy-source-files.stamp
+rt-source-files.txt: stamps/extract.stamp
 	find $(abs_top_builddir)/rt -name '*.java' \
 	  | sort -u > $@
+	for dir in $(ICEDTEA_BOOTSTRAP_DIRS) ; \
+	do \
+	find $(abs_top_builddir)/$$dir -name '*.java' >> $@; \
+	done
 
 stamps/rt-class-files.stamp: rt-source-files.txt stamps/hotspot-tools.stamp
 	mkdir -p lib/rt

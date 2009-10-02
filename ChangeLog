@@ -1,4 +1,14 @@
-2009-10-01  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Create versioning.stamp so target is
+	not continually rerun.  Redo removal
+	of copy-source-files target which was
+	readded during the reorganisation.
+	Shift BOOTSTRAPPING conditional to top
+	with other conditionals.
+	
+2009-10-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Fix alias renamed to 'native-boot' by
