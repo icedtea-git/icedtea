@@ -1,3 +1,26 @@
+2009-08-25  Deepak Bhole <dbhole@redhat.com>
+
+	* netx/net/sourceforge/jnlp/resources/Messages.properties: Add new
+	message key for CN name mismatches.
+	* netx/net/sourceforge/jnlp/security/HttpsCertVerifier.java
+	(HttpsCertVerifier): Accept new parameters that indicate certificate trust
+	status, CN mismatch status, and the hostname.
+	(getAlreadyTrustPublisher): Use provided isTrusted boolean to get around
+	checkServerTrusted() synchronization.
+	(getDetails): Include details about CN mismatch.
+	(getNamesForCert): New private method. Returns all acceptable names for
+	a given X509Certificate.
+	(R): Overloaded the method to return messages that have 2 variables.
+	* netx/net/sourceforge/jnlp/security/VariableX509TrustManager.java: Extend
+	X509ExtendedTrustManager rather than X509TrustManager.
+	(checkClientTrusted): Overloaded method with one that takes a hostname.
+	(checkServerTrusted): Same. The new overloaded method also checks for CN
+	mismatch if the certificate is not explicitly trusted.
+	(isExplicitlyTrusted): Returns if the given certificate chain is part of
+	the local user trusted DB.
+	(askUser): Change parameters to accept information about trust, host match
+	status, and hostname.
+
 2009-08-25  Deepak Bhole  <dbhole@redhat.com>
 
 	* netx/net/sourceforge/jnlp/JNLPFile.java: Add a new key variable that is
