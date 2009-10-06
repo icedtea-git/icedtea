@@ -24,6 +24,7 @@ package net.sourceforge.jnlp;
 
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.List;
@@ -103,7 +104,10 @@ public class PluginBridge extends JNLPFile
                                         codebase.getHost());
         else
             security = null;
-        
+
+        this.uniqueKey = Calendar.getInstance().getTimeInMillis() + "-" +
+                         Math.abs(((new java.util.Random()).nextInt())) + "-" +
+                         documentBase;
     }
 
     public String getTitle()

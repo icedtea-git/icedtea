@@ -209,15 +209,45 @@ public class JNLPClassLoader extends URLClassLoader {
      * @param policy the update policy to use when downloading resources
      */
     public static JNLPClassLoader getInstance(JNLPFile file, UpdatePolicy policy) throws LaunchException {
+        JNLPClassLoader baseLoader = null;
         JNLPClassLoader loader = null;
-        URL location = file.getFileLocation();
+        String uniqueKey = file.getUniqueKey();
 
-        if (location != null)
-            loader = (JNLPClassLoader) urlToLoader.get(location);
+	if (uniqueKey != null)
+	    baseLoader = (JNLPClassLoader) urlToLoader.get(uniqueKey);
 
                 try {
-                if (loader == null)
-                loader = new JNLPClassLoader(file, policy);
+	    
+	    // If base loader is null, or the baseloader's file and this 
+	    // file is different, initialize a new loader
+	    if (baseLoader == null || 
+	        !baseLoader.getJNLPFile().getFileLocation().equals(file.getFileLocation())) {
+		        loader = new JNLPClassLoader(file, policy);
+		        // New loader init may have caused extentions to create a 
+	        // loader for this unique key. Check.
+		        JNLPClassLoader extLoader = (JNLPClassLoader) urlToLoader.get(uniqueKey);
+
+		        if (extLoader != null) {
+		            for (URL u : loader.getURLs())
+		                extLoader.addURL(u);
+
+		            loader = extLoader;
+		        }
+
+                // loader is now current + ext. But we also need to think of 
+                // the baseLoader
+		        if (baseLoader != null) {
+                    for (URL u : loader.getURLs())
+                        baseLoader.addURL(u);
+
+                    loader = baseLoader;
+                } 
+
+		    } else {
+		        // if key is same and locations match, this is the loader we want
+		        loader = baseLoader;
+		    }
+
                 } catch (LaunchException e) {
                         throw e;
                 }
@@ -236,12 +266,12 @@ public class JNLPClassLoader extends URLClassLoader {
      * @param version the file's version
      * @param policy the update policy to use when downloading resources
      */
-    public static JNLPClassLoader getInstance(URL location, Version version, UpdatePolicy policy)
+    public static JNLPClassLoader getInstance(URL location, String uniqueKey, Version version, UpdatePolicy policy)
             throws IOException, ParseException, LaunchException {
-        JNLPClassLoader loader = (JNLPClassLoader) urlToLoader.get(location);
+        JNLPClassLoader loader = (JNLPClassLoader) urlToLoader.get(uniqueKey);
 
-        if (loader == null)
-            loader = getInstance(new JNLPFile(location, version, false, policy), policy);
+        if (loader == null || !location.equals(loader.getJNLPFile().getFileLocation()))
+            loader = getInstance(new JNLPFile(location, uniqueKey, version, false, policy), policy);
 
         return loader;
     }

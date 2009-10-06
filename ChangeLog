@@ -1,4 +1,20 @@
-2009-08-14	Deepak Bhole <dbhole@redhat.com>
+2009-08-25  Deepak Bhole  <dbhole@redhat.com>
+
+	* netx/net/sourceforge/jnlp/JNLPFile.java: Add a new key variable that is
+	unique to each instance.
+	(JNLPFile): Existing constructor changed to generate a new key on call.
+	(JNLPFile): New constructor that takes a key. If called, sets the file's
+	key to it.
+	(getUniqueKey): Returns the unique key for the instance.
+	* netx/net/sourceforge/jnlp/PluginBridge.java: Generate new instance
+	specific unique key.
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java
+	(getInstance): Use unique instance keys to determine which classloader to
+	use, rather than using the URL.
+	(getInstance): Same.
+	(initializeExtensions): Provide unique key to getInstance.
+
+2009-08-14  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc
 	(newMessageOnBus): Handle additional request types.
@@ -56,14 +72,14 @@
 	(setMember): Same.
 	(convertToNPVariant): New function. Narrows given java type to an
 	NPVariant as per type conversion specifications.
-	(sendMember): Remove unnecessary heap allocations and use function stack 
+	(sendMember): Remove unnecessary heap allocations and use function stack
     instead.
 	(storeVariantInJava): New function. Given an NPVariant, does the
 	appropriate conversion and saves it on the Java side. Arrays are not yet
 	handled.
 	(_eval): New function. Evaluates the script via NPN_Evaluate. Meant to be
 	run in the main thread.
-	(_call): New function. Invokes the function via NPN_Invoke. Meant to be run 
+	(_call): New function. Invokes the function via NPN_Invoke. Meant to be run
 	in the main thread.
 	* plugin/icedteanp/IcedTeaPluginRequestProcessor.h: Appropriate changes as
 	necessitated by the above changes in the .cc.
@@ -81,7 +97,7 @@
 	(getInstanceFromMemberPtr): Moved from IcedTeaPluginRequestProcessor.
 	Given an NPObject, returns the associated instance.
 	(variantToClassName): Remove unused method.
-	* plugin/icedteanp/IcedTeaPluginUtils.h: Appropriate changes as necessitated 
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Appropriate changes as necessitated
 	by the above changes in the .cc.
 	* plugin/icedteanp/IcedTeaRunnable.cc (IcedTeaRunnableMethod):  Change
 	result parameter type to void* so that caller/callee can use variable
@@ -151,7 +167,7 @@
 	readded during the reorganisation.
 	Shift BOOTSTRAPPING conditional to top
 	with other conditionals.
-	
+
 2009-10-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
@@ -164,7 +180,7 @@
 
 	* NEWS:
 	Updated with Makefile changes.
-	
+
 2009-10-01  Andrew John Hughes  <ahughes@redhat.com>
 
 	Reorganise Makefile and rename some
@@ -324,7 +340,7 @@
 2009-09-23  Jon VanAlten  <jon.vanalten@redhat.com>
 
 	* Makefile.am:
-	Build PulseAudio class files into distinct subdirectory. 
+	Build PulseAudio class files into distinct subdirectory.
 
 2009-09-04  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -426,12 +442,12 @@
 
 	* Makefile.am:
 	Bump to b67.
-	
+
 2009-08-06  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (ICEDTEA_ENV, ICEDTEA_ENV_ECJ): Allow passing
 	as environment.
-	
+
 2009-08-06  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (ICEDTEA_PATCHES): Make $(DISTRIBUTION_PATCHES) the
@@ -488,7 +504,7 @@
 	* Makefile.am:
 	Remove IcedTeaNPPlugin.cc from EXTRA_DIST
 	as now under plugin directory tree.
-	
+
 2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
@@ -566,7 +582,7 @@
 	* patches/icedtea-webstart.patch,
 	* patches/icedtea-liveconnect.patch:
 	Recreated against OpenJDK7.
-	
+
 2009-06-05  Omair Majid  <omajid@redhat.com>
 
 	* patches/icedtea-webstart.patch: Make javax.jnlp package visible to
@@ -596,10 +612,10 @@
 	(checkAccess): New function.
 	(checkAccess): Add a new argument app.
 	* netx/net/sourceforge/jnlp/services/SingleInstanceLock.java
-	(getLockFileName): Call FileUtils.sanitizeFileName to sanitize the 
+	(getLockFileName): Call FileUtils.sanitizeFileName to sanitize the
 	filename.
 	* netx/net/sourceforge/jnlp/util/FileUtils.java: New file.
-	* netx/net/sourceforge/jnlp/util/XDesktopEntry.java: New file. 
+	* netx/net/sourceforge/jnlp/util/XDesktopEntry.java: New file.
 
 2009-07-29  Omair Majid  <omajid@redhat.com>
 

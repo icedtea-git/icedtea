@@ -23,6 +23,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -66,6 +67,9 @@ public class JNLPFile {
 
     /** the network location of this JNLP file */
     protected URL fileLocation;
+    
+    /** A key that uniquely identifies connected instances (main jnlp+ext) */
+    protected String uniqueKey = null;
 
     /** the URL used to resolve relative URLs in the file */
     protected URL codeBase;
@@ -171,6 +175,33 @@ public class JNLPFile {
         parse(root, strict, location);
 
         this.fileLocation = location;
+        
+        this.uniqueKey = Calendar.getInstance().getTimeInMillis() + "-" +
+                         Math.abs(((new java.util.Random()).nextInt())) + "-" +
+                         location;
+
+        if (JNLPRuntime.isDebug())
+            System.err.println("UNIQUEKEY=" + this.uniqueKey);
+    }
+
+    /**
+     * Create a JNLPFile from a URL, parent URLm a version and checking for 
+     * updates using the specified policy.
+     *
+     * @param location the location of the JNLP file
+     * @param uniqueKey A string that uniquely identifies connected instances
+     * @param version the version of the JNLP file
+     * @param strict whether to enforce the spec when 
+     * @param policy the update policy
+     * @throws IOException if an IO exception occurred
+     * @throws ParseException if the JNLP file was invalid
+     */
+    public JNLPFile(URL location, String uniqueKey, Version version, boolean strict, UpdatePolicy policy) throws IOException, ParseException {
+        this(location, version, strict, policy);
+        this.uniqueKey = uniqueKey;
+
+        if (JNLPRuntime.isDebug())
+            System.err.println("UNIQUEKEY (override) =" + this.uniqueKey);
     }
 
     /**
@@ -245,6 +276,13 @@ public class JNLPFile {
      */
     public URL getFileLocation() {
         return fileLocation;
+    }
+
+    /**
+     * Returns the location of the parent file if it exists, null otherwise
+     */
+    public String getUniqueKey() {
+        return uniqueKey;
     }
 
     /**
