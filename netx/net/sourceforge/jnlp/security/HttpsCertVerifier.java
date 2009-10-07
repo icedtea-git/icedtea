@@ -159,7 +159,7 @@ public class HttpsCertVerifier implements CertVerifier {
         
         
         // We use the specification from 
-        // http://java.sun.com/j2se/1.5.0/docs/api/java/security/cenetx/X509Certificate.html#getSubjectAlternativeNames()
+        // http://java.sun.com/j2se/1.5.0/docs/api/java/security/cert/X509Certificate.html#getSubjectAlternativeNames()
         // to determine the type of address
         int ALTNAME_DNS = 2;
         int ALTNAME_IP = 7;

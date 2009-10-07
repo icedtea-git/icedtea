@@ -1,3 +1,10 @@
+2009-10-08  Andrew John Hughes  <ahughes@redhat.com>
+
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java:
+	Synchronise whitespace with IcedTea6 copy.
+	* netx/net/sourceforge/jnlp/security/HttpsCertVerifier.java:
+	Fix find/replace error with cert being changed to cenetx.
+
 2009-09-15  Deepak Bhole  <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc
