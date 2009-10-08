@@ -1322,7 +1322,10 @@ AM_CONDITIONAL(BUILD_CACAO, test x$add_vm_cacao != x || test "x${WITH_CACAO}" = 
 if test "x${WITH_CACAO}" = xyes && test "x${ADD_CACAO_BUILD_TRUE}" = x; then
   AC_MSG_ERROR([additional vm is the default vm])
 fi
-if test "x${ZERO_BUILD_TRUE}" = x && test "x${ADD_ZERO_BUILD_TRUE}" = x; then
+if test "x${ZERO_BUILD_TRUE}" = x && test "x${ADD_ZERO_BUILD_TRUE}" = x && test "x${ADD_SHARK_BUILD_TRUE}" != x; then
+  AC_MSG_ERROR([additional vm is the default vm])
+fi
+if test "x${SHARK_BUILD_TRUE}" = x && test "x${ADD_SHARK_BUILD_TRUE}" = x; then
   AC_MSG_ERROR([additional vm is the default vm])
 fi
 if test "x${USE_SYSTEM_CACAO_TRUE}" = x; then

@@ -126,7 +126,10 @@ on architectures where only zero (or shark) is available, use
    --with-additional-vms=cacao
 to build the additional VM's.  It's not possible to build cacao as the
 default VM, and zero as additional VM.
+To build zero as the default VM and shark as an additional VM, use
+   --enable-zero --with-additional-vms=shark
 
 The additional VM's are available by calling the java with the option
-`-cacao' or `-zero' (for shark as well), or by calling the java tools with
-`-J-<vm name>'.
+`-cacao', `-zero' or `-shark', or by calling the java tools with
+`-J-<vm name>'. If the build was configured with '--enable-shark',
+use `-Xint' to just use the zero VM.
