@@ -37,15 +37,6 @@
           "Maximum bytecode size of methods to inline when using Shark")      \
                                                                               \
   /* compiler debugging */                                                    \
-  develop(uintx, SharkStartAt, 0,                                             \
-          "First method to consider when using Shark")                        \
-                                                                              \
-  develop(uintx, SharkStopAfter, max_uintx,                                   \
-          "Last method to consider when using Shark")                         \
-                                                                              \
-  develop(ccstr, SharkOnlyCompile, NULL,                                      \
-          "Only compile the specified method")                                \
-                                                                              \
   develop(ccstr, SharkPrintTypeflowOf, NULL,                                  \
           "Print the typeflow of the specified method")                       \
                                                                               \

@@ -94,27 +94,6 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
   ResourceMark rm;
   const char *name = methodname(target);
 
-#ifndef PRODUCT
-  // Skip methods if requested
-  static uintx methods_seen = 0;
-  methods_seen++;
-  if (methods_seen < SharkStartAt) {
-    env->record_method_not_compilable("methods_seen < SharkStartAt");
-    return;
-  }
-  else if (methods_seen > SharkStopAfter) {
-    while (true)
-      sleep(1);
-  }
-#endif // !PRODUCT
-
-  if (SharkOnlyCompile != NULL) {
-    if (fnmatch(SharkOnlyCompile, name, 0)) {
-      env->record_method_not_compilable("does not match SharkOnlyCompile");
-      return;
-    }
-  }
-
   // Do the typeflow analysis
   ciTypeFlow *flow;
   if (entry_bci == InvocationEntryBci)

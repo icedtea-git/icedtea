@@ -1,3 +1,10 @@
+2009-10-12  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp:
+	Removed SharkStartAt, SharkStopAfter and SharkOnlyCompile.
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp
+	(SharkCompiler::compile_method): Likewise.
+
 2009-09-25  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp:
