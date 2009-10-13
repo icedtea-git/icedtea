@@ -1,3 +1,7 @@
+2009-10-13  Mark Wielaard  <mjw@redhat.com>
+
+	* tapsets/hotspot.stp.in (hotspot.gc_end): Match gc__end, not begin.
+
 2010-05-05 Andrew John Hughes  <ahughes@redhat.com>
 
 	Bump to b89.

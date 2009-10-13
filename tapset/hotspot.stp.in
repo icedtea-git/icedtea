@@ -51,8 +51,8 @@ probe hotspot.gc_begin =
    Has no arguments.
  */
 probe hotspot.gc_end =
-  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__begin"),
-  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__begin")
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__end")
 {
   name = "gc_end";
   probestr = name;
