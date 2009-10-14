@@ -326,6 +326,43 @@ AC_CHECK_HEADER([sys/sdt.h], [SDT_H_FOUND='yes'],
                 [SDT_H_FOUND='no';
                    AC_MSG_ERROR([systemtap support needs sys/sdt.h header])])
 
+ AC_MSG_CHECKING([working sys/sdt.h and g++ support])
+ AC_LANG_SAVE
+ AC_LANG_CPLUSPLUS
+ AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+#include <sys/sdt.h>
+class ProbeClass
+{
+private:
+  int& ref;
+  const char *name;
+
+public:
+  ProbeClass(int& v, const char *n) : ref(v), name(n)
+  {
+    DTRACE_PROBE2(_test_, cons, name, ref);
+  }
+
+  void method(int min)
+  {
+    DTRACE_PROBE3(_test_, meth, name, ref, min);
+    ref -= min;
+  }
+
+  ~ProbeClass()
+  {
+    DTRACE_PROBE2(_test_, dest, name, ref);
+  }
+};
+]],
+[[
+  int i = 64;
+  DTRACE_PROBE1(_test_, call, i);
+  ProbeClass inst = ProbeClass(i, "call");
+  inst.method(24);
+]])], [AC_MSG_RESULT([yes])], [AC_MSG_ERROR([systemtap sdt.h or g++ too old])])
+  AC_LANG_RESTORE
+
   AC_MSG_CHECKING([for absolute java home install dir])
   AC_ARG_WITH([abs-install-dir],
 	      [AS_HELP_STRING([--with-abs-install-dir], 

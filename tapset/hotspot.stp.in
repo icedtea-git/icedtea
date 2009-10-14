@@ -311,12 +311,12 @@ probe hotspot.monitor_waited =
                      name, thread_id, id, class);
 }
 
-/* Doesn't resolve atm.
-   hotspot.monitor_notify (extended probe)
+/* hotspot.monitor_notify (extended probe)
    Triggers when a thread calls Object.notify().
    Sets thread_id to the current java thread, id to the unique id
    for this monitor and class to the class name of the object.
    Needs -XX:+ExtendedDTraceProbes.
+ */
 probe hotspot.monitor_notify =
   process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__notify"),
   process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__notify")
@@ -328,7 +328,6 @@ probe hotspot.monitor_notify =
   probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
                      name, thread_id, id, class);
 }
- */
 
 /* hotspot.monitor_notifyAll (extended probe)
    Triggers when a thread calls Object.notifyAll().
@@ -369,7 +368,7 @@ probe hotspot.monitor_contended_enter =
                      name, thread_id, id, class);
 }
 
-/* hotspot.monitor_contended_enter (extended probe)
+/* hotspot.monitor_contended_entered (extended probe)
    Triggers when a thread acquires a contended monotor (after
    hotspot.monitor_contended_enter has been triggered on this thread,
    and the other thread triggered a hotspot.monitor_contended_exit).

@@ -1,3 +1,15 @@
+2009-10-14  Mark Wielaard  <mjw@redhat.com>
+
+	* configure.ac: When enabling systemtap support check sys/sdt.h
+	and g++ are recent enough to allow probes in class constructors
+	and destructors.
+	* patches/icedtea-systemtap.patch: Enable compiling probes in
+	jni.cpp. Rewrite Set<prim>Field and SetStatic<prim>Field macros
+	to use DTRACE_PROBE interface directly instead of generating
+	dtrace implementation calls. Clean up dtrace.hpp.
+	* tapset/hotspot.stp.in: Enable hotspot.monitor_notify. Fix up
+	comments.
+
 2009-10-13  Mark Wielaard  <mjw@redhat.com>
 
 	* tapsets/hotspot.stp.in (hotspot.gc_end): Match gc__end, not begin.
