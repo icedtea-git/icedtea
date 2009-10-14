@@ -1,3 +1,30 @@
+2009-10-08  Andrew John Hughes  <ahughes@redhat.com>
+
+	* ChangeLog: Remove stray tab.
+	* Makefile.am: Bump to b73,
+	move CACAO URLs to top, add support
+	for new JAXP and JAXWS drop zips, remove
+	references to non-existent clean-shared-objects
+	and clean-copy targets, fix broken references to
+	bootstrap-directory-symlink-boot.stamp, update
+	build JDK with rt classes rather than creating a
+	separate rt-closed.jar, add additional copy
+	directories needed by gcj bootstrap.
+	* acinclude.m4:
+	(WITH_JAXP_DROP_ZIP): New options --with-jaxp-drop-zip
+	to specify location of the JAXP drop.
+	(WITH_JAF_DROP_ZIP): Likewise for JAF.
+	(WITH_JAXWS_DROP_ZIP): And JAXWS.
+	* configure.ac: Run new macros for drop zips.
+	* javac.in: Use local extended rt.jar rather than original.
+	* patches/boot/icedtea-jaxp-dependency.patch: Add the JAXP
+	classes to the classpath when building JAXWS (existing build
+	assumes com.sun.org.apache.xerces classes are in the boot JDK).
+	* patches/boot/icedtea.patch,
+	* patches/icedtea-alpha-fixes.patch,
+	* patches/icedtea-ant.patch:
+	Regenerated.
+
 2009-10-08  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (stamps/icedtea.stamp, stamps/icedtea-debug.stamp):
@@ -14204,7 +14231,7 @@
 	* Makefile.in: Regenerate.
 
 2008-01-07  Lillian Angel  <langel@redhat.com>
-	
+
 	Fixes Bug #92
 	* Makefile.am
 	(gcjwebplugin.so): Added check for ENABLE_PLUGIN.

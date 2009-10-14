@@ -1100,6 +1100,57 @@ AC_DEFUN([WITH_LANGTOOLS_SRC_ZIP],
   AC_SUBST(ALT_LANGTOOLS_SRC_ZIP)
 ])
 
+AC_DEFUN([WITH_JAXP_DROP_ZIP],
+[
+  AC_MSG_CHECKING(for a JAXP drop zip)
+  AC_ARG_WITH([jaxp-drop-zip],
+              [AS_HELP_STRING(--with-jaxp-drop-zip,specify the location of the JAXP drop zip)],
+  [
+    ALT_JAXP_DROP_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_JAXP_DROP_ZIP, test x = x)
+  ],
+  [ 
+    ALT_JAXP_DROP_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_JAXP_DROP_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_JAXP_DROP_ZIP})
+  AC_SUBST(ALT_JAXP_DROP_ZIP)
+])
+
+AC_DEFUN([WITH_JAF_DROP_ZIP],
+[
+  AC_MSG_CHECKING(for a JAF drop zip)
+  AC_ARG_WITH([jaf-drop-zip],
+              [AS_HELP_STRING(--with-jaf-drop-zip,specify the location of the JAF drop zip)],
+  [
+    ALT_JAF_DROP_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_JAF_DROP_ZIP, test x = x)
+  ],
+  [ 
+    ALT_JAF_DROP_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_JAF_DROP_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_JAF_DROP_ZIP})
+  AC_SUBST(ALT_JAF_DROP_ZIP)
+])
+
+AC_DEFUN([WITH_JAXWS_DROP_ZIP],
+[
+  AC_MSG_CHECKING(for a JAXWS drop zip)
+  AC_ARG_WITH([jaxws-drop-zip],
+              [AS_HELP_STRING(--with-jaxws-drop-zip,specify the location of the JAXWS drop zip)],
+  [
+    ALT_JAXWS_DROP_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_JAXWS_DROP_ZIP, test x = x)
+  ],
+  [ 
+    ALT_JAXWS_DROP_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_JAXWS_DROP_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_JAXWS_DROP_ZIP})
+  AC_SUBST(ALT_JAXWS_DROP_ZIP)
+])
+
 AC_DEFUN([AC_CHECK_WITH_HG_REVISION],
 [
   AC_MSG_CHECKING([which Mercurial revision to use])

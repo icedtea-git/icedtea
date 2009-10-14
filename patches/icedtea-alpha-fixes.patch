@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common/Defs-linux.gmk
---- openjdk.orig/corba/make/common/Defs-linux.gmk	2009-04-15 15:39:27.000000000 +0100
-+++ openjdk/corba/make/common/Defs-linux.gmk	2009-04-15 16:07:19.000000000 +0100
+--- openjdk.orig/corba/make/common/Defs-linux.gmk	2009-10-05 14:09:53.391582691 +0100
++++ openjdk/corba/make/common/Defs-linux.gmk	2009-10-06 09:39:43.273589275 +0100
 @@ -176,7 +176,8 @@
    CXXFLAGS_DBG	+= $(CC_LOWER_OPT)
  endif
@@ -12,8 +12,8 @@ diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/commo
  
  ifeq ($(ARCH_DATA_MODEL), 64)
 diff -Nru openjdk.orig/hotspot/agent/src/os/linux/Makefile openjdk/hotspot/agent/src/os/linux/Makefile
---- openjdk.orig/hotspot/agent/src/os/linux/Makefile	2009-04-15 15:39:27.000000000 +0100
-+++ openjdk/hotspot/agent/src/os/linux/Makefile	2009-04-15 16:07:19.000000000 +0100
+--- openjdk.orig/hotspot/agent/src/os/linux/Makefile	2009-10-05 14:09:52.722332564 +0100
++++ openjdk/hotspot/agent/src/os/linux/Makefile	2009-10-06 09:39:43.274588369 +0100
 @@ -40,7 +40,7 @@
  
  LIBS     = -lthread_db
@@ -23,7 +23,7 @@ diff -Nru openjdk.orig/hotspot/agent/src/os/linux/Makefile openjdk/hotspot/agent
  
  LIBSA = $(ARCH)/libsaproc.so
  
-@@ -65,7 +65,7 @@
+@@ -73,7 +73,7 @@
  	$(GCC) -shared $(LFLAGS_LIBSA) -o $(LIBSA) $(OBJS) $(LIBS)
  
  test.o: test.c
@@ -33,9 +33,9 @@ diff -Nru openjdk.orig/hotspot/agent/src/os/linux/Makefile openjdk/hotspot/agent
  test: test.o
  	$(GCC) -o test test.o -L$(ARCH) -lsaproc $(LIBS)
 diff -Nru openjdk.orig/hotspot/src/share/vm/oops/generateOopMap.cpp openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp
---- openjdk.orig/hotspot/src/share/vm/oops/generateOopMap.cpp	2009-04-14 15:55:46.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp	2009-04-15 16:07:19.000000000 +0100
-@@ -2113,7 +2113,7 @@
+--- openjdk.orig/hotspot/src/share/vm/oops/generateOopMap.cpp	2009-10-05 02:24:10.384274774 +0100
++++ openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp	2009-10-06 09:39:43.276589489 +0100
+@@ -2117,7 +2117,7 @@
    // We do not distinguish between different types of errors for verification
    // errors.  Let the verifier give a better message.
    const char *msg = "Illegal class file encountered. Try running with -Xverify:all";
@@ -44,32 +44,10 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/oops/generateOopMap.cpp openjdk/hots
  }
  
  //
-diff -Nru openjdk.orig/jaxp/make/build.properties openjdk/jaxp/make/build.properties
---- openjdk.orig/jaxp/make/build.properties	2009-03-20 11:55:58.000000000 +0000
-+++ openjdk/jaxp/make/build.properties	2009-04-15 16:07:19.000000000 +0100
-@@ -41,6 +41,6 @@
- 
- # JVM memory size
- javac.memoryInitialSize = 128m
--javac.memoryMaximumSize = 256m
-+javac.memoryMaximumSize = 512m
- 
- #------------------------------------------------------------
-diff -Nru openjdk.orig/jaxws/make/build.properties openjdk/jaxws/make/build.properties
---- openjdk.orig/jaxws/make/build.properties	2009-03-20 11:56:07.000000000 +0000
-+++ openjdk/jaxws/make/build.properties	2009-04-15 16:07:19.000000000 +0100
-@@ -41,6 +41,6 @@
- 
- # JVM memory size
- javac.memoryInitialSize = 128m
--javac.memoryMaximumSize = 256m
-+javac.memoryMaximumSize = 512m
- 
- #------------------------------------------------------------
 diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
---- openjdk.orig/jdk/make/common/Defs-linux.gmk	2009-04-15 15:39:27.000000000 +0100
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2009-04-15 16:07:19.000000000 +0100
-@@ -186,7 +186,8 @@
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2009-10-05 14:09:53.392583324 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2009-10-06 09:39:50.428589918 +0100
+@@ -194,7 +194,8 @@
    CXXFLAGS_DBG	+= $(CC_OPT/$(FASTDEBUG_OPTIMIZATION_LEVEL))
  endif
  

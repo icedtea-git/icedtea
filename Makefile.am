@@ -1,25 +1,27 @@
 # Dependencies
 
-OPENJDK_VERSION = b72
+OPENJDK_VERSION = b73
 
-CORBA_CHANGESET = 5fdcfb25dbb4
-HOTSPOT_CHANGESET = c8155bc21432
-JAXP_CHANGESET = fe2e7f835dd2
-JAXWS_CHANGESET = 501b8988da30
-JDK_CHANGESET = c2cd86f82ed7
-LANGTOOLS_CHANGESET = 5a36337cc053
-OPENJDK_CHANGESET = 717f2b969919
+CORBA_CHANGESET = bb1f254d2376
+HOTSPOT_CHANGESET = de2100353d9c
+JAXP_CHANGESET  = ca47845adba8
+JAXWS_CHANGESET = a85341f84531
+JDK_CHANGESET = 93da8a843f32
+LANGTOOLS_CHANGESET = 26651c0cabb7
+OPENJDK_CHANGESET = a580d2beece9
 
-CORBA_MD5SUM = 5a9fef662129c05b2dd05c79a2685178
-HOTSPOT_MD5SUM = e5b21a7e5cc5cae315cd9aa158ee9858
-JAXP_MD5SUM = f4bd08cf016fefe31c4269b9d90edec0
-JAXWS_MD5SUM = 8d0729f5c4ddec47393e636e7d6a4914
-JDK_MD5SUM = 622268153bc097a5b91d76305eb0502d
-LANGTOOLS_MD5SUM = eadbaead19df2fbe039fd12593e97197
-OPENJDK_MD5SUM = b5d1f6fad70a2b6af7b011169fbd6da3
+CORBA_MD5SUM = 80e4f10ff90ecd80b32a39dbe6f7fa77
+HOTSPOT_MD5SUM = efc9ee49fe1f10f9a6db2ec897e76937
+JAXP_MD5SUM = d2aa8cd7aaeeabfb9116f020921fb7ea
+JAXWS_MD5SUM = 0fa8f01a5baa8764106370321fdb3974
+JDK_MD5SUM = f127c5785e84443f869fb1695f786749
+LANGTOOLS_MD5SUM = 3b5f8641e805b22562452924d0bf4ea5
+OPENJDK_MD5SUM = 17bc02e01cfdb06ee06f01026e93b0a2
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
+CACAO_BASE_URL = http://www.complang.tuwien.ac.at
+CACAO_URL = $(CACAO_BASE_URL)/cacaojvm/download/cacao-$(CACAO_VERSION)/
 
 NETBEANS_PROFILER_URL = http://icedtea.classpath.org/visualvm/
 NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_release65_mod.tar.gz
@@ -28,6 +30,14 @@ NETBEANS_PROFILER_MD5SUM = a6756a62291ebea5c0e2431389b31380
 VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/127170/
 VISUALVM_SRC_ZIP = visualvm-111-src.tar.gz
 VISUALVM_MD5SUM = a289739f4a5bcdb9a2c642cfcc1e83fe
+
+DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
+JAXWS_DROP_ZIP = jdk7-jaxws-2009_09_28.zip
+JAXWS_DROP_MD5SUM = debb949440c5a15ce999cfefbbc56526
+JAF_DROP_ZIP = jdk7-jaf-2009_08_28.zip
+JAF_DROP_MD5SUM = eb8cb7a4a7f14e211fbe2354878a2472
+JAXP_DROP_ZIP = jdk7-jaxp-2009_09_28.zip
+JAXP_DROP_MD5SUM = 8800970d03bab1fff188dcfafc346f5d
 
 OPENJDK_HOTSPOT_URL = http://hg.openjdk.java.net/jdk7/hotspot/hotspot
 
@@ -46,9 +56,6 @@ JAXWS_URL = $(ICEDTEA_HG_URL)/jaxws
 JDK_URL = $(ICEDTEA_HG_URL)/jdk
 LANGTOOLS_URL = $(ICEDTEA_HG_URL)/langtools
 HOTSPOT_URL = $(ICEDTEA_HG_URL)/hotspot
-
-CACAO_BASE_URL = http://www.complang.tuwien.ac.at
-CACAO_URL = $(CACAO_BASE_URL)/cacaojvm/download/cacao-$(CACAO_VERSION)/
 
 JDK_SHARE = openjdk/jdk/src/share/classes
 JDK_SOLARIS = openjdk/jdk/src/solaris/classes
@@ -361,7 +368,8 @@ ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 ICEDTEA_BOOT_PATCHES = patches/boot/icedtea.patch \
 	patches/boot/icedtea-hotspot-$(HSBUILD).patch \
 	patches/boot/icedtea-jopt.patch \
-	patches/boot/icedtea-dyn.patch
+	patches/boot/icedtea-dyn.patch \
+	patches/boot/icedtea-jaxp-dependency.patch
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr39408.patch
@@ -456,7 +464,8 @@ ICEDTEA_ENV = \
 	ALT_LIVECONNECT_DIST="$(abs_top_builddir)" \
 	DEBUG_CLASSFILES="true" \
 	DEBUG_BINARIES="true" \
-	DISABLE_INTREE_EC="true"
+	DISABLE_INTREE_EC="true" \
+	ALT_DROPS_DIR="$(abs_top_builddir)/drops"
 
 if WITH_CACAO
 ICEDTEA_ENV += \
@@ -666,8 +675,10 @@ all-local: icedtea-stage2
 
 check-local: jtregcheck
 
-distclean-local: clean-copy clean-jtreg clean-jtreg-reports clean-pulse-java 
+distclean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
+ clean-clone clean-clone-boot clean-download
 	rm -rf stamps
+	rm -rf drops
 	rm -f rt-source-files.txt \
 	  hotspot-tools-source-files.txt \
 	  extra-source-files.txt \
@@ -675,8 +686,6 @@ distclean-local: clean-copy clean-jtreg clean-jtreg-reports clean-pulse-java
 	rm -rf bootstrap
 	rm -rf lib
 	rm -rf extra-lib
-	rm -rf openjdk-boot
-	rm -rf openjdk
 	rm -rf hotspot-tools
 	rm -rf rt/netscape
 	rm -rf visualvm
@@ -710,8 +719,8 @@ install:
 	clean-bootstrap-directory-symlink-stage2 clean-bootstrap-directory-stage1 \
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot clean-plugs \
-	clean-tools-jar clean-shared-objects clean-visualvm clean-nbplatform \
-	clean-copy clean-hotspot-tools clean-rt $(ICEDTEAPLUGIN_CLEAN) \
+	clean-tools-jar clean-visualvm clean-nbplatform \
+	clean-hotspot-tools clean-rt $(ICEDTEAPLUGIN_CLEAN) \
 	$(ICEDTEANPPLUGIN_CLEAN) hotspot hotspot-helper clean-extra clean-jtreg \
 	clean-jtreg-reports 
 
@@ -741,7 +750,63 @@ dist-openjdk-fsg: stamps/patch-fsg.stamp
 
 # Download OpenJDK sources.
 
-stamps/download.stamp: stamps/hgforest.stamp
+stamps/download-jaxp-drop.stamp:
+	mkdir -p drops
+if USE_ALT_JAXP_DROP_ZIP
+	ln -sf $(ALT_JAXP_DROP_ZIP) drops/$(JAXP_DROP_ZIP)
+endif
+	if ! echo "$(JAXP_DROP_MD5SUM)  drops/$(JAXP_DROP_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ -f drops/$(JAXP_DROP_ZIP) ] ; \
+	  then \
+	    mv drops/$(JAXP_DROP_ZIP) drops/$(JAXP_DROP_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(DROP_URL)/$(JAXP_DROP_ZIP) -O drops/$(JAXP_DROP_ZIP); \
+	fi ;
+	mkdir -p stamps
+	touch stamps/download-jaxp-drop.stamp
+
+stamps/download-jaf-drop.stamp:
+	mkdir -p drops
+if USE_ALT_JAF_DROP_ZIP
+	ln -sf $(ALT_JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP)
+endif
+	if ! echo "$(JAF_DROP_MD5SUM)  drops/$(JAF_DROP_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ -f drops/$(JAF_DROP_ZIP) ] ; \
+	  then \
+	    mv drops/$(JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(DROP_URL)/$(JAF_DROP_ZIP) -O drops/$(JAF_DROP_ZIP); \
+	fi ;
+	mkdir -p stamps
+	touch stamps/download-jaf-drop.stamp
+
+stamps/download-jaxws-drop.stamp:
+	mkdir -p drops
+if USE_ALT_JAXWS_DROP_ZIP
+	ln -sf $(ALT_JAXWS_DROP_ZIP) drops/$(JAXWS_DROP_ZIP)
+endif
+	if ! echo "$(JAXWS_DROP_MD5SUM)  drops/$(JAXWS_DROP_ZIP)" \
+	  | $(MD5SUM) --check ; \
+	then \
+	  if [ -f drops/$(JAXWS_DROP_ZIP) ] ; \
+	  then \
+	    mv drops/$(JAXWS_DROP_ZIP) drops/$(JAXWS_DROP_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(DROP_URL)/$(JAXWS_DROP_ZIP) -O drops/$(JAXWS_DROP_ZIP); \
+	fi ;
+	mkdir -p stamps
+	touch stamps/download-jaxws-drop.stamp
+
+stamps/download-drops.stamp: stamps/download-jaxp-drop.stamp \
+ stamps/download-jaxws-drop.stamp stamps/download-jaf-drop.stamp
+	mkdir -p stamps
+	touch stamps/download-drops.stamp
+
+stamps/download.stamp: stamps/hgforest.stamp stamps/download-drops.stamp
 if !OPENJDK_SRC_DIR_FOUND
 if USE_ALT_OPENJDK_SRC_ZIP
 else
@@ -884,7 +949,23 @@ endif
 	mkdir -p stamps
 	touch stamps/download.stamp
 
-clean-download:
+clean-download-jaxp-drop:
+	rm -f drops/$(JAXP_DROP_ZIP)
+	rm -f stamps/download-jaxp-drop.stamp
+
+clean-download-jaf-drop:
+	rm -f drops/$(JAF_DROP_ZIP)
+	rm -f stamps/download-jaf-drop.stamp
+
+clean-download-jaxws-drop:
+	rm -f drops/$(JAXWS_DROP_ZIP)
+	rm -f stamps/download-jaxws-drop.stamp
+
+clean-drops: clean-download-jaxp-drop clean-download-jaf-drop \
+ clean-download-jaxws-drop
+	rm -f stamps/download-drops.stamp
+
+clean-download: clean-drops
 	rm -f $(OPENJDK_SRC_ZIP)
 if BUILD_CACAO
 	rm -f $(CACAO_SRC_ZIP)
@@ -1377,8 +1458,9 @@ stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	  bootstrap/boot/lib/endorsed/xalan-j2-serializer.jar
 	ln -sf $(XERCES2_JAR) bootstrap/boot/lib/endorsed/xerces-j2.jar
 	mkdir -p bootstrap/boot/jre/lib; \
-	ln -sf $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
-	  bootstrap/boot/jre/lib/rt-system.jar; \
+	cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
+	  bootstrap/boot/jre/lib/rt.jar; \
+	chmod u+w bootstrap/boot/jre/lib/rt.jar; \
 	ln -sf $(SYSTEM_JDK_DIR)/jre/lib/$(JRE_ARCH_DIR) \
 	  bootstrap/boot/jre/lib/; \
 	if ! test -d bootstrap/boot/jre/lib/$(INSTALL_ARCH_DIR); \
@@ -1433,10 +1515,10 @@ stamps/bootstrap-directory-symlink-stage1.stamp: stamps/bootstrap-directory-stag
 	rm -f bootstrap/jdk1.6.0
 	ln -sf boot bootstrap/jdk1.6.0
 	mkdir -p stamps
-	touch stamps/bootstrap-directory-symlink-boot.stamp
+	touch stamps/bootstrap-directory-symlink-stage1.stamp
 
 clean-bootstrap-directory-symlink-stage1:
-	rm -f stamps/bootstrap-directory-symlink-boot.stamp
+	rm -f stamps/bootstrap-directory-symlink-stage1.stamp
 	rm -f bootstrap/jdk1.6.0
 
 # stage 2 symlink.
@@ -2201,8 +2283,7 @@ stamps/hotspot-tools.stamp: bootstrap/jdk1.7.0/lib/tools.jar
 	mkdir -p stamps
 	touch stamps/hotspot-tools.stamp
 
-clean-plugs: clean-plugs clean-shared-objects \
-	clean-copy clean-rt
+clean-plugs: clean-plugs clean-rt
 	rm -f stamps/plugs.stamp
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
@@ -2216,11 +2297,15 @@ ICEDTEA_BOOTSTRAP_DIRS = \
 	$(JDK_SHARE)/com/sun/tools/jdi \
 	$(JDK_SHARE)/com/sun/net/httpserver \
 	$(JDK_SHARE)/java/io \
+	$(JDK_SHARE)/java/security/cert \
 	$(JDK_SHARE)/java/util \
 	$(JDK_SHARE)/java/rmi \
-	$(JDK_SHARE)/sun/awt/ \
 	$(JDK_SHARE)/javax/net/ssl \
+	$(JDK_SHARE)/javax/rmi/ssl \
 	$(JDK_SHARE)/javax/script \
+	$(JDK_SHARE)/javax/security/auth/kerberos \
+	$(JDK_SHARE)/javax/security/sasl \
+	$(JDK_SHARE)/sun/awt/ \
 	$(JAXWS)/javax/xml/bind
 
 # tools.jar class files.
@@ -2316,13 +2401,13 @@ clean-rt:
 
 # rt-closed.jar.
 bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
-	mkdir -p bootstrap/jdk1.7.0/jre/lib
-	$(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/rt com -C lib/rt java \
-	  -C lib/rt javax -C lib/rt sun ;
 	if test -d bootstrap/boot/jre/lib ; \
 	then \
-	  cp bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-	    bootstrap/boot/jre/lib/rt.jar; \
+	  $(ICEDTEA_BOOT_DIR)/bin/jar uf bootstrap/boot/jre/lib/rt.jar \
+	     -C lib/rt com -C lib/rt java -C lib/rt javax -C lib/rt sun ; \
+	  mkdir -p bootstrap/jdk1.7.0/jre/lib ; \
+	  ln -sf ${abs_top_builddir}/bootstrap/boot/jre/lib/rt.jar \
+		bootstrap/jdk1.7.0/jre/lib/rt-closed.jar ; \
 	fi
 
 # Target Aliases
@@ -2351,6 +2436,14 @@ visualvm: stamps/visualvm.stamp
 nbplatform: stamps/nbplatform.stamp
 
 download: stamps/download.stamp
+
+download-drops: stamps/download-drops.stamp
+
+download-jaf-drop: stamps/download-jaf-drop.stamp
+
+download-jaxp-drop: stamps/download-jaxp-drop.stamp
+
+download-jaxws-drop: stamps/download-jaxws-drop.stamp
 
 extract: stamps/extract.stamp
 

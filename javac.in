@@ -17,7 +17,7 @@ else
 }
 
 my @bcoption;
-push @bcoption, '-bootclasspath', glob '@SYSTEM_JDK_DIR@/jre/lib/rt.jar'
+push @bcoption, '-bootclasspath', glob '@abs_top_builddir@/bootstrap/jdk1.6.0/jre/lib/rt.jar'
     unless grep {$_ eq '-bootclasspath'} @ARGV;
 my @ecj_parms = ($ECJ_WARNINGS, @bcoption);
 

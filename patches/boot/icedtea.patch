@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/corba/make/com/sun/corba/se/Makefile openjdk-boot/corba/make/com/sun/corba/se/Makefile
---- openjdk-boot.orig/corba/make/com/sun/corba/se/Makefile	2009-03-30 17:13:01.000000000 +0100
-+++ openjdk-boot/corba/make/com/sun/corba/se/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/corba/make/com/sun/corba/se/Makefile	2009-10-05 02:23:42.764274773 +0100
++++ openjdk-boot/corba/make/com/sun/corba/se/Makefile	2009-10-07 15:38:47.674613200 +0100
 @@ -42,7 +42,7 @@
  # the rmic iiop backend needs some classes that are part of the impl/util
  # package.  These classes use log wrappers, so they must be built after
@@ -12,7 +12,7 @@ diff -Nru openjdk-boot.orig/corba/make/com/sun/corba/se/Makefile openjdk-boot/co
  
 diff -Nru openjdk-boot.orig/corba/make/com/sun/corba/se/org/Makefile openjdk-boot/corba/make/com/sun/corba/se/org/Makefile
 --- openjdk-boot.orig/corba/make/com/sun/corba/se/org/Makefile	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk-boot/corba/make/com/sun/corba/se/org/Makefile	2009-07-14 17:47:13.000000000 +0100
++++ openjdk-boot/corba/make/com/sun/corba/se/org/Makefile	2009-10-07 15:38:47.675617951 +0100
 @@ -0,0 +1,38 @@
 +#
 +# Copyright 2001-2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -53,8 +53,8 @@ diff -Nru openjdk-boot.orig/corba/make/com/sun/corba/se/org/Makefile openjdk-boo
 +#
 +include $(BUILDDIR)/common/Classes.gmk
 diff -Nru openjdk-boot.orig/corba/make/common/Defs.gmk openjdk-boot/corba/make/common/Defs.gmk
---- openjdk-boot.orig/corba/make/common/Defs.gmk	2009-03-30 17:13:01.000000000 +0100
-+++ openjdk-boot/corba/make/common/Defs.gmk	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/corba/make/common/Defs.gmk	2009-10-05 02:23:42.789274774 +0100
++++ openjdk-boot/corba/make/common/Defs.gmk	2009-10-07 15:38:47.675617951 +0100
 @@ -53,6 +53,13 @@
  
  _OUTPUTDIR=$(TOPDIR)/build/$(PLATFORM)-$(ARCH)
@@ -88,8 +88,8 @@ diff -Nru openjdk-boot.orig/corba/make/common/Defs.gmk openjdk-boot/corba/make/c
  vpath %.java $(VPATH.java)
  vpath %.class $(CLASSBINDIR)
 diff -Nru openjdk-boot.orig/corba/make/common/Defs-linux.gmk openjdk-boot/corba/make/common/Defs-linux.gmk
---- openjdk-boot.orig/corba/make/common/Defs-linux.gmk	2009-07-14 17:37:18.000000000 +0100
-+++ openjdk-boot/corba/make/common/Defs-linux.gmk	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/corba/make/common/Defs-linux.gmk	2009-10-07 15:24:05.904817673 +0100
++++ openjdk-boot/corba/make/common/Defs-linux.gmk	2009-10-07 15:38:47.676817980 +0100
 @@ -276,7 +276,7 @@
  		    fi; \
  		  done)
@@ -100,25 +100,24 @@ diff -Nru openjdk-boot.orig/corba/make/common/Defs-linux.gmk openjdk-boot/corba/
  #
  # We want to privatize JVM symbols on Solaris. This is so the user can
 diff -Nru openjdk-boot.orig/corba/make/common/Rules.gmk openjdk-boot/corba/make/common/Rules.gmk
---- openjdk-boot.orig/corba/make/common/Rules.gmk	2009-03-30 23:07:09.000000000 +0100
-+++ openjdk-boot/corba/make/common/Rules.gmk	2009-07-14 17:47:13.000000000 +0100
-@@ -201,8 +201,10 @@
- 	  $(ECHO) "# Java sources to be compiled: (listed in file $(JAVA_SOURCE_LIST))"; \
+--- openjdk-boot.orig/corba/make/common/Rules.gmk	2009-10-05 02:23:42.791274645 +0100
++++ openjdk-boot/corba/make/common/Rules.gmk	2009-10-07 16:12:31.682568618 +0100
+@@ -187,7 +187,10 @@
+ 	@$(MKDIR) -p $(CLASSDESTDIR)
+ 	if [ -s $(JAVA_SOURCE_LIST) ] ; then \
  	  $(CAT) $(JAVA_SOURCE_LIST); \
- 	  $(ECHO) "# Running javac:"; \
--	  $(ECHO) $(JAVAC_CMD) $(JAVAC_PREFER_SOURCE) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
 -	  $(JAVAC_CMD) $(JAVAC_PREFER_SOURCE) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
-+	  $(ECHO) $(JAVAC_CMD) -bootclasspath $(ICEDTEA_RT):$(ABS_OUTPUTDIR)/corba/classes \
-+		 -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
-+	  $(JAVAC_CMD) -bootclasspath $(ICEDTEA_RT):$(ABS_OUTPUTDIR)/corba/classes \
-+		 -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
++ 	  $(ECHO) $(JAVAC_CMD) -bootclasspath $(ICEDTEA_RT):$(ABS_OUTPUTDIR)/corba/classes \
++ 		 -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
++ 	  $(JAVAC_CMD) -bootclasspath $(ICEDTEA_RT):$(ABS_OUTPUTDIR)/corba/classes \
++ 		 -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
  	fi
  	@$(java-vm-cleanup)
  
 diff -Nru openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk openjdk-boot/corba/make/common/shared/Defs-java.gmk
---- openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk	2009-03-30 23:07:09.000000000 +0100
-+++ openjdk-boot/corba/make/common/shared/Defs-java.gmk	2009-07-14 17:47:13.000000000 +0100
-@@ -120,31 +120,14 @@
+--- openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk	2009-10-05 02:23:42.794274731 +0100
++++ openjdk-boot/corba/make/common/shared/Defs-java.gmk	2009-10-07 15:38:47.679816586 +0100
+@@ -135,31 +135,14 @@
  JAVACFLAGS  += $(OTHER_JAVACFLAGS)
  
  # Needed for javah
@@ -157,8 +156,8 @@ diff -Nru openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk openjdk-boot/
  # Override of what javac to use (see deploy workspace)
  ifdef JAVAC
 diff -Nru openjdk-boot.orig/corba/make/org/omg/sources/Makefile openjdk-boot/corba/make/org/omg/sources/Makefile
---- openjdk-boot.orig/corba/make/org/omg/sources/Makefile	2009-03-30 17:13:01.000000000 +0100
-+++ openjdk-boot/corba/make/org/omg/sources/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/corba/make/org/omg/sources/Makefile	2009-10-05 02:23:42.806274729 +0100
++++ openjdk-boot/corba/make/org/omg/sources/Makefile	2009-10-07 15:38:47.680818473 +0100
 @@ -93,8 +93,6 @@
  POAHELHOLFILES =    $(POA_GENERATED_HELP_HOL_java:%=$(GENSRCDIR)/%)
  
@@ -236,8 +235,8 @@ diff -Nru openjdk-boot.orig/corba/make/org/omg/sources/Makefile openjdk-boot/cor
  pi.compile: $(PIGENERATEDFILES)
  
 diff -Nru openjdk-boot.orig/corba/make/sun/rmi/corbalogsources/Makefile openjdk-boot/corba/make/sun/rmi/corbalogsources/Makefile
---- openjdk-boot.orig/corba/make/sun/rmi/corbalogsources/Makefile	2009-03-30 23:07:09.000000000 +0100
-+++ openjdk-boot/corba/make/sun/rmi/corbalogsources/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/corba/make/sun/rmi/corbalogsources/Makefile	2009-10-05 02:23:42.812274414 +0100
++++ openjdk-boot/corba/make/sun/rmi/corbalogsources/Makefile	2009-10-07 15:38:47.681818474 +0100
 @@ -172,7 +172,6 @@
  ACTIVATIONFILES = $(com_sun_corba_se_spi_activation_java:%=$(GENSRCDIR)/%)
  
@@ -254,95 +253,57 @@ diff -Nru openjdk-boot.orig/corba/make/sun/rmi/corbalogsources/Makefile openjdk-
  
  portableactivation.idl.compile: $(PORTABLEACTIVATIONFILES)
  
-diff -Nru openjdk-boot.orig/jaxp/make/build.xml openjdk-boot/jaxp/make/build.xml
---- openjdk-boot.orig/jaxp/make/build.xml	2009-06-30 14:24:48.000000000 +0100
-+++ openjdk-boot/jaxp/make/build.xml	2009-07-14 17:47:13.000000000 +0100
-@@ -71,7 +71,10 @@
-       <mkdir dir="${build.toolclasses.dir}"/>
-       <javac srcdir="${make.tools.dir}/StripProperties"
- 		destdir="${build.toolclasses.dir}/"
--		classpath="${ant.home}/lib/ant.jar"/>
-+		classpath="${ant.home}/lib/ant.jar"
-+		fork="true"
-+		executable="${javac.executable}"
-+		source="1.5"/>
-       <taskdef name="pstrip"
- 		 classname="StripPropertiesTask"
- 		 classpath="${build.toolclasses.dir}/"/>
-@@ -87,7 +90,8 @@
+diff -Nru openjdk-boot.orig/jaxp/build.xml openjdk-boot/jaxp/build.xml
+--- openjdk-boot.orig/jaxp/build.xml	2009-10-05 02:24:21.770015267 +0100
++++ openjdk-boot/jaxp/build.xml	2009-10-07 16:39:42.444567810 +0100
+@@ -112,7 +112,8 @@
               memoryMaximumSize="${javac.memoryMaximumSize}"
- 	     source="${javac.source}"
+              source="${javac.source}"
+ 	     debug="${javac.debug}"
+-             target="${javac.target}">
++             target="${javac.target}"
++	     executable="${javac.executable}">
+             <compilerarg value="-J-Xbootclasspath/p:${javac.jar}"/>
+             <compilerarg line="${javac.version.opt} ${javac.lint.opts} ${javac.no.jdk.warnings}"/>
+             <src refid="src.dir.id"/>
+diff -Nru openjdk-boot.orig/jaxp/make/Makefile openjdk-boot/jaxp/make/Makefile
+--- openjdk-boot.orig/jaxp/make/Makefile	2009-10-07 15:24:04.171575396 +0100
++++ openjdk-boot/jaxp/make/Makefile	2009-10-07 15:43:16.588568762 +0100
+@@ -106,6 +106,7 @@
+ ifdef ALT_LANGTOOLS_DIST
+   ifdef ALT_BOOTDIR
+     ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
++    ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
+   endif
+   ANT_OPTIONS += -Dbootstrap.dir=$(ALT_LANGTOOLS_DIST)/bootstrap
+ else
+diff -Nru openjdk-boot.orig/jaxws/build.xml openjdk-boot/jaxws/build.xml
+--- openjdk-boot.orig/jaxws/build.xml	2009-10-05 02:24:35.787025014 +0100
++++ openjdk-boot/jaxws/build.xml	2009-10-07 15:46:46.606568793 +0100
+@@ -112,7 +112,8 @@
+              memoryMaximumSize="${javac.memoryMaximumSize}"
+              source="${javac.source}"
  	     debug="${javac.debug}"
 -             target="${javac.target}">
 +             target="${javac.target}"
 +             executable="${javac.executable}">
-          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
-          <compilerarg line="${javac.version.opt}"/>
-       </javac>
-diff -Nru openjdk-boot.orig/jaxp/make/Makefile openjdk-boot/jaxp/make/Makefile
---- openjdk-boot.orig/jaxp/make/Makefile	2009-07-14 17:37:17.000000000 +0100
-+++ openjdk-boot/jaxp/make/Makefile	2009-07-14 17:47:13.000000000 +0100
-@@ -92,7 +92,7 @@
- endif 
- 
- ifdef ALT_BOOTDIR
--  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
-+  ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
- endif
- 
- ifdef ALT_OUTPUTDIR
-diff -Nru openjdk-boot.orig/jaxws/make/build.properties openjdk-boot/jaxws/make/build.properties
---- openjdk-boot.orig/jaxws/make/build.properties	2009-07-14 17:37:18.000000000 +0100
-+++ openjdk-boot/jaxws/make/build.properties	2009-07-14 17:47:13.000000000 +0100
-@@ -37,7 +37,7 @@
- # set the following to -version to verify the versions of javac being used
- javac.version.opt = 
- # in time, there should be no exceptions to -Xlint:all
--javac.lint.opts = -Xlint:all,-unchecked,-deprecation,-fallthrough,-cast,-serial -Werror
-+javac.lint.opts = -Xlint:all,-unchecked,-deprecation,-fallthrough,-cast,-serial
- 
- # JVM memory size
- javac.memoryInitialSize = 128m
-diff -Nru openjdk-boot.orig/jaxws/make/build.xml openjdk-boot/jaxws/make/build.xml
---- openjdk-boot.orig/jaxws/make/build.xml	2009-06-30 14:24:56.000000000 +0100
-+++ openjdk-boot/jaxws/make/build.xml	2009-07-14 17:47:13.000000000 +0100
-@@ -93,7 +93,10 @@
-       <mkdir dir="${build.toolclasses.dir}"/>
-       <javac srcdir="${make.tools.dir}/StripProperties"
- 		destdir="${build.toolclasses.dir}/"
--		classpath="${ant.home}/lib/ant.jar"/>
-+		fork="true"
-+                executable="${javac.executable}"
-+		classpath="${ant.home}/lib/ant.jar"
-+		source="1.5"/>
-       <taskdef name="pstrip"
- 		 classname="StripPropertiesTask"
- 		 classpath="${build.toolclasses.dir}/"/>
-@@ -111,6 +114,7 @@
- 	     debug="${javac.debug}"
-              target="${javac.target}"
-              excludes="com/sun/tools/internal/txw2/**">
-+ 	 <compilerarg line="-bootclasspath ${build.dir}/../../jaxp/build/classes:${build.classes.dir}:../../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar:${boot.java.home}/jre/lib/rt-system.jar"/>
-          <compilerarg value="-J-Xbootclasspath/p:${bootstrap.dir}/lib/javac.jar"/>
-          <compilerarg line="${javac.version.opt}"/>
-          <compilerarg line="${javac.no.jdk.warnings}"/>
+             <compilerarg value="-J-Xbootclasspath/p:${javac.jar}"/>
+             <compilerarg line="${javac.version.opt} ${javac.lint.opts} ${javac.no.jdk.warnings}"/>
+             <src refid="src.dir.id"/>
 diff -Nru openjdk-boot.orig/jaxws/make/Makefile openjdk-boot/jaxws/make/Makefile
---- openjdk-boot.orig/jaxws/make/Makefile	2009-07-14 17:37:17.000000000 +0100
-+++ openjdk-boot/jaxws/make/Makefile	2009-07-14 17:47:13.000000000 +0100
-@@ -92,8 +92,8 @@
- endif 
- 
- ifdef ALT_BOOTDIR
--  ANT_OPTIONS += -Dplugs=$(ALT_BINARY_PLUGS_PATH)
--  ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
-+  ANT_OPTIONS += -Dboot.java.home=$(ALT_BOOTDIR)
-+  ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
- endif
- 
- ifdef ALT_OUTPUTDIR
+--- openjdk-boot.orig/jaxws/make/Makefile	2009-10-07 15:24:04.172573022 +0100
++++ openjdk-boot/jaxws/make/Makefile	2009-10-07 15:48:24.010585640 +0100
+@@ -107,6 +107,7 @@
+   ifdef ALT_BOOTDIR
+     ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
+     ANT_OPTIONS += -Dplugs=$(ALT_BINARY_PLUGS_PATH)
++    ANT_OPTIONS += -Djavac.executable=$(ALT_BOOTDIR)/bin/javac
+   endif
+   ANT_OPTIONS += -Dbootstrap.dir=$(ALT_LANGTOOLS_DIST)/bootstrap
+ else
 diff -Nru openjdk-boot.orig/jdk/make/common/BuildToolJar.gmk openjdk-boot/jdk/make/common/BuildToolJar.gmk
---- openjdk-boot.orig/jdk/make/common/BuildToolJar.gmk	2009-03-30 17:23:03.000000000 +0100
-+++ openjdk-boot/jdk/make/common/BuildToolJar.gmk	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/common/BuildToolJar.gmk	2009-10-05 02:26:27.187170082 +0100
++++ openjdk-boot/jdk/make/common/BuildToolJar.gmk	2009-10-07 15:38:47.709568471 +0100
 @@ -43,7 +43,8 @@
  	@$(prep-target)
  	@$(MKDIR) -p $(BUILDTOOLCLASSDIR)
@@ -354,8 +315,8 @@ diff -Nru openjdk-boot.orig/jdk/make/common/BuildToolJar.gmk openjdk-boot/jdk/ma
  	    -C $(BUILDTOOLCLASSDIR) $(PKGDIR) \
  	    $(BOOT_JAR_JFLAGS) || $(RM) $@
 diff -Nru openjdk-boot.orig/jdk/make/common/Release.gmk openjdk-boot/jdk/make/common/Release.gmk
---- openjdk-boot.orig/jdk/make/common/Release.gmk	2009-07-14 17:37:19.000000000 +0100
-+++ openjdk-boot/jdk/make/common/Release.gmk	2009-07-14 17:54:01.000000000 +0100
+--- openjdk-boot.orig/jdk/make/common/Release.gmk	2009-10-07 15:24:07.006566514 +0100
++++ openjdk-boot/jdk/make/common/Release.gmk	2009-10-07 15:38:47.711568544 +0100
 @@ -650,10 +650,21 @@
  RESOURCES_JAR=$(ABS_TEMPDIR)/resources-orig.jar
  $(RESOURCES_JAR): $(RES_JAR_FILELIST) $(JAR_MANIFEST_FILE)
@@ -417,8 +378,8 @@ diff -Nru openjdk-boot.orig/jdk/make/common/Release.gmk openjdk-boot/jdk/make/co
  	$(call copy-man-pages,$(JDK_IMAGE_DIR),$(JDK_MAN_PAGES))
  endif # !windows
 diff -Nru openjdk-boot.orig/jdk/make/common/Rules.gmk openjdk-boot/jdk/make/common/Rules.gmk
---- openjdk-boot.orig/jdk/make/common/Rules.gmk	2009-03-30 17:23:03.000000000 +0100
-+++ openjdk-boot/jdk/make/common/Rules.gmk	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/common/Rules.gmk	2009-10-05 02:26:27.196170409 +0100
++++ openjdk-boot/jdk/make/common/Rules.gmk	2009-10-07 15:38:47.712568265 +0100
 @@ -237,8 +237,9 @@
  	  $(ECHO) "# Java sources to be compiled: (listed in file $<)"; \
  	  $(CAT) $<.filtered; \
@@ -445,8 +406,8 @@ diff -Nru openjdk-boot.orig/jdk/make/common/Rules.gmk openjdk-boot/jdk/make/comm
  	@$(TOUCH) $@
  
 diff -Nru openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk openjdk-boot/jdk/make/common/shared/Defs-java.gmk
---- openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk	2009-07-14 17:37:18.000000000 +0100
-+++ openjdk-boot/jdk/make/common/shared/Defs-java.gmk	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk	2009-10-07 15:24:05.355571407 +0100
++++ openjdk-boot/jdk/make/common/shared/Defs-java.gmk	2009-10-07 15:38:47.713567987 +0100
 @@ -136,33 +136,22 @@
  JAVACFLAGS  += $(OTHER_JAVACFLAGS)
  
@@ -483,8 +444,8 @@ diff -Nru openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk openjdk-boot/jd
  
  # Override of what javac to use (see deploy workspace)
 diff -Nru openjdk-boot.orig/jdk/make/java/nio/Makefile openjdk-boot/jdk/make/java/nio/Makefile
---- openjdk-boot.orig/jdk/make/java/nio/Makefile	2009-07-14 17:37:18.000000000 +0100
-+++ openjdk-boot/jdk/make/java/nio/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/java/nio/Makefile	2009-10-07 15:24:06.305563660 +0100
++++ openjdk-boot/jdk/make/java/nio/Makefile	2009-10-07 15:38:47.713567987 +0100
 @@ -31,7 +31,7 @@
  PACKAGE = java.nio
  LIBRARY = nio
@@ -495,8 +456,8 @@ diff -Nru openjdk-boot.orig/jdk/make/java/nio/Makefile openjdk-boot/jdk/make/jav
  
  NIO_SRC = $(SHARE_SRC)/classes/java/nio
 diff -Nru openjdk-boot.orig/jdk/make/java/text/Makefile openjdk-boot/jdk/make/java/text/Makefile
---- openjdk-boot.orig/jdk/make/java/text/Makefile	2009-05-08 16:10:43.000000000 +0100
-+++ openjdk-boot/jdk/make/java/text/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/java/text/Makefile	2009-10-05 02:26:27.255175614 +0100
++++ openjdk-boot/jdk/make/java/text/Makefile	2009-10-07 15:38:47.714571480 +0100
 @@ -81,8 +81,8 @@
  		-sourcepath $(TEXT_SRCDIR) \
  		$(TEXT_SOURCES)
@@ -509,8 +470,8 @@ diff -Nru openjdk-boot.orig/jdk/make/java/text/Makefile openjdk-boot/jdk/make/ja
  		-spec $(UNICODEDATA)/UnicodeData.txt
  	@$(java-vm-cleanup)
 diff -Nru openjdk-boot.orig/jdk/make/Makefile openjdk-boot/jdk/make/Makefile
---- openjdk-boot.orig/jdk/make/Makefile	2009-05-08 16:10:43.000000000 +0100
-+++ openjdk-boot/jdk/make/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/Makefile	2009-10-05 02:26:27.150170023 +0100
++++ openjdk-boot/jdk/make/Makefile	2009-10-07 15:38:47.714571480 +0100
 @@ -239,7 +239,7 @@
  
  all build:: sanity-all post-sanity-all
@@ -521,8 +482,8 @@ diff -Nru openjdk-boot.orig/jdk/make/Makefile openjdk-boot/jdk/make/Makefile
  	$(SUBDIRS-loop)
  
 diff -Nru openjdk-boot.orig/jdk/make/sun/awt/FILES_export_unix.gmk openjdk-boot/jdk/make/sun/awt/FILES_export_unix.gmk
---- openjdk-boot.orig/jdk/make/sun/awt/FILES_export_unix.gmk	2009-05-08 16:10:44.000000000 +0100
-+++ openjdk-boot/jdk/make/sun/awt/FILES_export_unix.gmk	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/sun/awt/FILES_export_unix.gmk	2009-10-05 02:26:27.369170078 +0100
++++ openjdk-boot/jdk/make/sun/awt/FILES_export_unix.gmk	2009-10-07 15:38:47.714571480 +0100
 @@ -189,3 +189,5 @@
  	java/awt/dnd/DnDConstants.java \
  	sun/awt/CausedFocusEvent.java
@@ -530,8 +491,8 @@ diff -Nru openjdk-boot.orig/jdk/make/sun/awt/FILES_export_unix.gmk openjdk-boot/
 +EXPORTED_inner = \
 +    sun.java2d.opengl.OGLContext$$OGLContextCaps
 diff -Nru openjdk-boot.orig/jdk/make/sun/awt/Makefile openjdk-boot/jdk/make/sun/awt/Makefile
---- openjdk-boot.orig/jdk/make/sun/awt/Makefile	2009-05-08 16:10:44.000000000 +0100
-+++ openjdk-boot/jdk/make/sun/awt/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/sun/awt/Makefile	2009-10-05 02:26:27.370170084 +0100
++++ openjdk-boot/jdk/make/sun/awt/Makefile	2009-10-07 15:38:47.715565824 +0100
 @@ -401,10 +401,9 @@
  COMPILEFONTCONFIG_JARFILE = $(BUILDTOOLJARDIR)/compilefontconfig.jar
  
@@ -547,8 +508,8 @@ diff -Nru openjdk-boot.orig/jdk/make/sun/awt/Makefile openjdk-boot/jdk/make/sun/
  
  fontconfigs.clean :
 diff -Nru openjdk-boot.orig/jdk/make/sun/javazic/Makefile openjdk-boot/jdk/make/sun/javazic/Makefile
---- openjdk-boot.orig/jdk/make/sun/javazic/Makefile	2009-03-30 17:23:03.000000000 +0100
-+++ openjdk-boot/jdk/make/sun/javazic/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/sun/javazic/Makefile	2009-10-05 02:26:27.397170089 +0100
++++ openjdk-boot/jdk/make/sun/javazic/Makefile	2009-10-07 15:38:47.715565824 +0100
 @@ -62,7 +62,8 @@
  $(WORKDIR)/$(MAPFILE): $(BUILDTOOLJARDIR)/javazic.jar $(TZFILES)
  	$(RM) -r $(@D)
@@ -560,8 +521,8 @@ diff -Nru openjdk-boot.orig/jdk/make/sun/javazic/Makefile openjdk-boot/jdk/make/
  
  $(INSTALLDIR)/$(MAPFILE): $(WORKDIR)/$(MAPFILE)
 diff -Nru openjdk-boot.orig/jdk/make/sun/text/Makefile openjdk-boot/jdk/make/sun/text/Makefile
---- openjdk-boot.orig/jdk/make/sun/text/Makefile	2009-03-30 17:23:03.000000000 +0100
-+++ openjdk-boot/jdk/make/sun/text/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/sun/text/Makefile	2009-10-05 02:26:27.461169942 +0100
++++ openjdk-boot/jdk/make/sun/text/Makefile	2009-10-07 15:38:47.715565824 +0100
 @@ -85,8 +85,9 @@
  	$(BOOT_JAVAC_CMD) -d $(TEXT_CLASSES) \
  		-sourcepath $(TEXT_SRCDIR) \
@@ -575,8 +536,8 @@ diff -Nru openjdk-boot.orig/jdk/make/sun/text/Makefile openjdk-boot/jdk/make/sun
  		-spec $(UNICODEDATA)/UnicodeData.txt \
  		-language th
 diff -Nru openjdk-boot.orig/jdk/make/sun/xawt/Makefile openjdk-boot/jdk/make/sun/xawt/Makefile
---- openjdk-boot.orig/jdk/make/sun/xawt/Makefile	2009-07-14 17:37:19.000000000 +0100
-+++ openjdk-boot/jdk/make/sun/xawt/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/sun/xawt/Makefile	2009-10-07 15:24:07.253598085 +0100
++++ openjdk-boot/jdk/make/sun/xawt/Makefile	2009-10-07 15:38:47.716565825 +0100
 @@ -294,11 +294,7 @@
  
  TEMPDIR_CLASSES = $(TEMPDIR)/classes
@@ -614,8 +575,8 @@ diff -Nru openjdk-boot.orig/jdk/make/sun/xawt/Makefile openjdk-boot/jdk/make/sun
  	done
  	$(TOUCH) $@
 diff -Nru openjdk-boot.orig/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java openjdk-boot/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java
---- openjdk-boot.orig/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2009-07-14 17:36:40.000000000 +0100
-+++ openjdk-boot/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2009-10-07 15:23:51.404565029 +0100
++++ openjdk-boot/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2009-10-07 15:38:47.717563312 +0100
 @@ -647,9 +647,6 @@
              throws FileNotFoundException, IOException {
          BufferedReader in = new BufferedReader(new FileReader(theTemplateFileName));
@@ -635,8 +596,8 @@ diff -Nru openjdk-boot.orig/jdk/make/tools/src/build/tools/generatecharacter/Gen
                  if (plane == 0 && bLatin1 == false) {
              genCaseMapTableDeclaration(result);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/Double.java openjdk-boot/jdk/src/share/classes/java/lang/Double.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/Double.java	2009-07-14 17:36:32.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/Double.java	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/Double.java	2009-10-07 15:23:17.171575470 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/Double.java	2009-10-07 15:38:47.717563312 +0100
 @@ -76,7 +76,7 @@
       * {@code 0x1.fffffffffffffP+1023} and also equal to
       * {@code Double.longBitsToDouble(0x7fefffffffffffffL)}.
@@ -665,8 +626,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/Double.java openjdk-
      /**
       * Maximum exponent a finite {@code double} variable may have.
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/Float.java openjdk-boot/jdk/src/share/classes/java/lang/Float.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/Float.java	2009-07-14 17:36:32.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/Float.java	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/Float.java	2009-10-07 15:23:17.217575862 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/Float.java	2009-10-07 15:38:47.718563663 +0100
 @@ -76,7 +76,7 @@
       * {@code 0x1.fffffeP+127f} and also equal to
       * {@code Float.intBitsToFloat(0x7f7fffff)}.
@@ -695,8 +656,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/Float.java openjdk-b
      /**
       * Maximum exponent a finite {@code float} variable may have.  It
 diff -Nru openjdk-boot.orig/jdk/src/share/native/sun/java2d/opengl/OGLContext.h openjdk-boot/jdk/src/share/native/sun/java2d/opengl/OGLContext.h
---- openjdk-boot.orig/jdk/src/share/native/sun/java2d/opengl/OGLContext.h	2009-03-30 17:23:07.000000000 +0100
-+++ openjdk-boot/jdk/src/share/native/sun/java2d/opengl/OGLContext.h	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/jdk/src/share/native/sun/java2d/opengl/OGLContext.h	2009-10-05 02:26:33.493169843 +0100
++++ openjdk-boot/jdk/src/share/native/sun/java2d/opengl/OGLContext.h	2009-10-07 15:38:47.718563663 +0100
 @@ -27,6 +27,7 @@
  #define OGLContext_h_Included
  
@@ -762,9 +723,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/native/sun/java2d/opengl/OGLContext.h 
  /**
   * Evaluates to true if the given capability bitmask is present for the
 diff -Nru openjdk-boot.orig/langtools/make/build.xml openjdk-boot/langtools/make/build.xml
---- openjdk-boot.orig/langtools/make/build.xml	2009-06-30 14:25:18.000000000 +0100
-+++ openjdk-boot/langtools/make/build.xml	2009-07-14 17:47:13.000000000 +0100
-@@ -516,6 +516,7 @@
+--- openjdk-boot.orig/langtools/make/build.xml	2009-10-05 02:26:48.779920205 +0100
++++ openjdk-boot/langtools/make/build.xml	2009-10-07 15:38:47.719564153 +0100
+@@ -524,6 +524,7 @@
                         includeAntRuntime="no"
                         source="@{javac.source}"
                         target="@{javac.target}">
@@ -772,17 +733,17 @@ diff -Nru openjdk-boot.orig/langtools/make/build.xml openjdk-boot/langtools/make
                      <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
                      <compilerarg line="${javac.version.opt}"/>
                      <compilerarg line="-Xlint"/>
-@@ -532,6 +533,7 @@
+@@ -540,6 +541,7 @@
                         target="@{javac.target}"
-                        debug="${javac.debug}" 
+                        debug="${javac.debug}"
                         debuglevel="${javac.debuglevel}">
 +		    <compilerarg line="-bootclasspath @{classes.dir}:../../generated:${boot.java.home}/lib/tools.jar:${boot.java.home}/jre/lib/rt.jar:${boot.java.home}/jre/lib/rt-system.jar"/>
                      <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
                      <compilerarg value="-Xbootclasspath/p:@{classes.dir}"/>
                      <compilerarg line="${javac.no.jdk.warnings}"/>
 diff -Nru openjdk-boot.orig/langtools/make/Makefile openjdk-boot/langtools/make/Makefile
---- openjdk-boot.orig/langtools/make/Makefile	2009-07-14 17:37:17.000000000 +0100
-+++ openjdk-boot/langtools/make/Makefile	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/langtools/make/Makefile	2009-10-07 15:24:04.172573022 +0100
++++ openjdk-boot/langtools/make/Makefile	2009-10-07 15:38:47.719564153 +0100
 @@ -130,7 +130,7 @@
  
  ifdef ALT_BOOTDIR
@@ -793,8 +754,8 @@ diff -Nru openjdk-boot.orig/langtools/make/Makefile openjdk-boot/langtools/make/
  
  ifdef ALT_OUTPUTDIR
 diff -Nru openjdk-boot.orig/make/jdk-rules.gmk openjdk-boot/make/jdk-rules.gmk
---- openjdk-boot.orig/make/jdk-rules.gmk	2009-07-14 17:37:18.000000000 +0100
-+++ openjdk-boot/make/jdk-rules.gmk	2009-07-14 17:47:13.000000000 +0100
+--- openjdk-boot.orig/make/jdk-rules.gmk	2009-10-07 15:24:05.158577449 +0100
++++ openjdk-boot/make/jdk-rules.gmk	2009-10-07 15:38:47.719564153 +0100
 @@ -58,7 +58,7 @@
  endif
  

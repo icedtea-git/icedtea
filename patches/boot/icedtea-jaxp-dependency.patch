@@ -1,0 +1,26 @@
+diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.properties
+--- openjdk-boot.orig/jaxws/build.properties	2009-10-12 15:42:14.000000000 +0100
++++ openjdk-boot/jaxws/build.properties	2009-10-12 15:45:40.000000000 +0100
+@@ -58,6 +58,9 @@
+ build.dir=${output.dir}/build
+ build.classes.dir=${build.dir}/classes
+ 
++# JAXP built files
++jaxp.classes.dir=${output.dir}/../jaxp/build/classes
++
+ # Distributed results
+ dist.dir=${output.dir}/dist
+ dist.lib.dir=${dist.dir}/lib
+diff -Nru openjdk-boot.orig/jaxws/build.xml openjdk-boot/jaxws/build.xml
+--- openjdk-boot.orig/jaxws/build.xml	2009-10-12 15:20:51.000000000 +0100
++++ openjdk-boot/jaxws/build.xml	2009-10-12 15:19:42.000000000 +0100
+@@ -113,7 +113,8 @@
+              source="${javac.source}"
+ 	     debug="${javac.debug}"
+              target="${javac.target}"
+-             executable="${javac.executable}">
++             executable="${javac.executable}"
++	     classpath="${jaxp.classes.dir}:${build.classes.dir}">
+             <compilerarg value="-J-Xbootclasspath/p:${javac.jar}"/>
+             <compilerarg line="${javac.version.opt} ${javac.lint.opts} ${javac.no.jdk.warnings}"/>
+             <src refid="src.dir.id"/>
