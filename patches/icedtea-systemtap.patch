@@ -44,6 +44,24 @@ diff -r 945bf7540697 make/linux/makefiles/dtrace.make
      return ret;
    } else {
      char buf[jintAsStringSize];
+@@ -2150,14 +2150,14 @@
+ 
+ #define DEFINE_NEWSCALARARRAY(Return,Allocator,Result) \
+ \
+-  DT_RETURN_MARK_DECL_FOR(Result, New##Result##Array, Return);\
++  DT_RETURN_MARK_DECL(New##Result##Array, Return);\
+ \
+ JNI_ENTRY(Return, \
+           jni_New##Result##Array(JNIEnv *env, jsize len)) \
+   JNIWrapper("New" XSTR(Result) "Array"); \
+   DTRACE_PROBE2(hotspot_jni, New##Result##Array__entry, env, len);\
+   Return ret = NULL;\
+-  DT_RETURN_MARK_FOR(Result, New##Result##Array, Return, (const Return&)ret);\
++  DT_RETURN_MARK(New##Result##Array, Return, (const Return&)ret);\
+ \
+   oop obj= oopFactory::Allocator(len, CHECK_0); \
+   ret = (Return) JNIHandles::make_local(env, obj); \
+
 diff -r 945bf7540697 src/share/vm/utilities/dtrace.hpp
 --- openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	Thu Jan 22 14:42:01 2009 -0800
 +++ openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	Mon Feb 02 13:47:34 2009 +0100

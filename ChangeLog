@@ -1,5 +1,10 @@
 2009-10-19  Mark Wielaard  <mjw@redhat.com>
 
+	* patches/icedtea-systemtap.patch: Add fix for JNI
+	DEFINE_NEWSCALARARRAY uses DT_RETURN_MARK_DECL_FOR.
+
+2009-10-19  Mark Wielaard  <mjw@redhat.com>
+
 	* patches/icedtea-systemtap.patch: Add fix for GetObjectArrayElement
 	return probe ret value.
 
