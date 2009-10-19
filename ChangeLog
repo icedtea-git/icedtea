@@ -1,3 +1,8 @@
+2009-10-19  Mark Wielaard  <mjw@redhat.com>
+
+	* patches/icedtea-systemtap.patch: Add fix for GetObjectArrayElement
+	return probe ret value.
+
 2009-10-14  Mark Wielaard  <mjw@redhat.com>
 
 	* configure.ac: When enabling systemtap support check sys/sdt.h

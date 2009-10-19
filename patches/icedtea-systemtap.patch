@@ -35,7 +35,15 @@ diff -r 945bf7540697 make/linux/makefiles/dtrace.make
  \
    JNIid* id = jfieldIDWorkaround::from_static_jfieldID(fieldID); \
    assert(id->is_static_field_id(), "invalid static field id"); \
--
+@@ -2116,7 +2101,7 @@
+   DT_RETURN_MARK(GetObjectArrayElement, jobject, (const jobject&)ret);
+   objArrayOop a = objArrayOop(JNIHandles::resolve_non_null(array));
+   if (a->is_within_bounds(index)) {
+-    jobject ret = JNIHandles::make_local(env, a->obj_at(index));
++    ret = JNIHandles::make_local(env, a->obj_at(index));
+     return ret;
+   } else {
+     char buf[jintAsStringSize];
 diff -r 945bf7540697 src/share/vm/utilities/dtrace.hpp
 --- openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	Thu Jan 22 14:42:01 2009 -0800
 +++ openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	Mon Feb 02 13:47:34 2009 +0100
