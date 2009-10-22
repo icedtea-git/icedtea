@@ -138,14 +138,13 @@ Support for different versions of HotSpot
 ----------------------------------------- 
 
 IcedTea allows the version of HotSpot provided with the upstream build
-drop to be replaced with another.  Support this is provided by the
+drop to be replaced with another.  Support for this is provided by the
 --with-hotspot-build option which causes IcedTea to probe the
 hotspot.map file for an entry with the given build name.  The
-hotspot.map file maps the name to a changeset from the repository
-http://hg.openjdk.java.net/hsx/hsx14/master/ which it downloads from
-http://hg.openjdk.java.net/hsx/hsx14/master/archive/${CHANGESET}.tar.gz.
-The resulting download is verified using the MD5 sum stored in
-hotspot.map.
+hotspot.map file maps the name to a changeset from a given repository
+URL.  During the build, it downloads HotSpot from
+${URL}/archive/${CHANGESET}.tar.gz and the resulting file is verified
+using the MD5 sum stored in hotspot.map.
 
 New build selections may be provided by providing further mappings in
 the hotspot.map file.  The name can be anything
@@ -153,22 +152,25 @@ e.g. 'shiny_new_hotspot'.  This is simply used to map the argument to
 --with-hotspot-build to the values in the file and to apply
 appropriate patches (see patches/hotspot, $HSBUILD is available in
 Makefile.am for obtaining the build name).  The special value
-'original' is used to denote the upstream HotSpot and does not appear
-in hotspot.map.  The changeset should map a valid changeset in the
-HotSpot Express master repository (URL shown above).  These can be
-obtained from a local checkout or using the web interface.  The
-simplest way to calculate the MD5 sum is to download the tarball and
-then run the 'md5sum' application on it.  The resulting value should
-be added to hotspot.map.
+'original' is used for patches/hotspot/original to denote those for
+the upstream HotSpot; this value does not appear in hotspot.map.  
+
+The changeset and URL should refer to a valid HotSpot tree when used
+as above.  The required values can be obtained from a local checkout
+or by using the web interface.  The simplest way to calculate the MD5
+sum is to download the tarball and then run the 'md5sum' application
+on it.  The resulting value should be added to hotspot.map.
 
 As with the OpenJDK build tarballs, the location of an alternate zip
 can be specified using --with-hotspot-src-zip.  This skips the
 download stage and just verifies that the zip's MD5 sum matches that
 of the requested build.
 
-At present, the build name 'default' is used in hotspot.map to provide
-the latest version of HotSpot 14 in place of the version of HotSpot 11
-provided by upstream.  Thus, --with-hotspot-build is enabled by
-default, and either --without-hotspot-build or
---with-hotspot-build=original is required to revert to the upstream
-HotSpot.
+At present, two versions of HotSpot are officially supported.  These
+are HotSpot 14 ('original') which is provided by the upstream OpenJDK
+tarball, and 'default', which is used in hotspot.map to provide the
+latest version of HotSpot 16.  Thus, either --with-hotspot-build
+without an argument or --with-hotspot-build=default provides the
+latest supported hs16, while no HotSpot build argument,
+--without-hotspot-build or --with-hotspot-build=original uses the
+upstream HotSpot.
