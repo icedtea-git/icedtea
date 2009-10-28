@@ -33,7 +33,7 @@ VISUALVM_MD5SUM = a289739f4a5bcdb9a2c642cfcc1e83fe
 
 DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
 JAXWS_DROP_ZIP = jdk7-jaxws-2009_09_28.zip
-JAXWS_DROP_MD5SUM = debb949440c5a15ce999cfefbbc56526
+JAXWS_DROP_MD5SUM = f5010ebf636db9f465a61a7a74944543
 JAF_DROP_ZIP = jdk7-jaf-2009_08_28.zip
 JAF_DROP_MD5SUM = eb8cb7a4a7f14e211fbe2354878a2472
 JAXP_DROP_ZIP = jdk7-jaxp-2009_09_28.zip
@@ -782,6 +782,10 @@ endif
 	    mv drops/$(JAXP_DROP_ZIP) drops/$(JAXP_DROP_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(DROP_URL)/$(JAXP_DROP_ZIP) -O drops/$(JAXP_DROP_ZIP); \
+	  if ! echo "$(JAXP_DROP_MD5SUM)  drops/$(JAXP_DROP_ZIP)" \
+	    | $(MD5SUM) --check ; \
+	  then echo "ERROR: Bad download of jaxp drop zip"; false; \
+	  fi; \
 	fi ;
 	mkdir -p stamps
 	touch stamps/download-jaxp-drop.stamp
@@ -799,6 +803,10 @@ endif
 	    mv drops/$(JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(DROP_URL)/$(JAF_DROP_ZIP) -O drops/$(JAF_DROP_ZIP); \
+	  if ! echo "$(JAF_DROP_MD5SUM)  drops/$(JAF_DROP_ZIP)" \
+	    | $(MD5SUM) --check ; \
+	  then echo "ERROR: Bad download of jaf drop zip"; false; \
+	  fi; \
 	fi ;
 	mkdir -p stamps
 	touch stamps/download-jaf-drop.stamp
@@ -816,6 +824,10 @@ endif
 	    mv drops/$(JAXWS_DROP_ZIP) drops/$(JAXWS_DROP_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(DROP_URL)/$(JAXWS_DROP_ZIP) -O drops/$(JAXWS_DROP_ZIP); \
+	  if ! echo "$(JAXWS_DROP_MD5SUM)  drops/$(JAXWS_DROP_ZIP)" \
+	    | $(MD5SUM) --check ; \
+	  then echo "ERROR: Bad download of jaxws drop zip"; false; \
+	  fi; \
 	fi ;
 	mkdir -p stamps
 	touch stamps/download-jaxws-drop.stamp
@@ -862,6 +874,10 @@ else
 	    mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(OPENJDK_URL)/archive/$(OPENJDK_CHANGESET).tar.gz -O $(OPENJDK_SRC_ZIP); \
+	  if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
+	    | $(MD5SUM) --check ; \
+	  then echo "ERROR: Bad download of OpenJDK root zip"; false; \
+	  fi; \
 	fi ; \
 	if ! echo "$(CORBA_MD5SUM)  $(CORBA_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -871,6 +887,10 @@ else
 	    mv $(CORBA_SRC_ZIP) $(CORBA_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(CORBA_URL)/archive/$(CORBA_CHANGESET).tar.gz -O $(CORBA_SRC_ZIP); \
+	  if ! echo "$(CORBA_MD5SUM)  $(CORBA_SRC_ZIP)" \
+	    | $(MD5SUM) --check ; \
+	  then echo "ERROR: Bad download of CORBA zip"; false; \
+	  fi; \
 	fi ; \
 	if ! echo "$(JAXP_MD5SUM)  $(JAXP_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -880,6 +900,10 @@ else
 	    mv $(JAXP_SRC_ZIP) $(JAXP_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(JAXP_URL)/archive/$(JAXP_CHANGESET).tar.gz -O $(JAXP_SRC_ZIP); \
+	  if ! echo "$(JAXP_MD5SUM)  $(JAXP_SRC_ZIP)" \
+	    | $(MD5SUM) --check ; \
+	  then echo "ERROR: Bad download of JAXP zip"; false; \
+	  fi; \
 	fi ; \
 	if ! echo "$(JAXWS_MD5SUM)  $(JAXWS_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -889,6 +913,10 @@ else
 	    mv $(JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(JAXWS_URL)/archive/$(JAXWS_CHANGESET).tar.gz -O $(JAXWS_SRC_ZIP); \
+	  if ! echo "$(JAXWS_MD5SUM)  $(JAXWS_SRC_ZIP)" \
+	    | $(MD5SUM) --check ; \
+	  then echo "ERROR: Bad download of JAXWS zip"; false; \
+	  fi; \
 	fi ; \
 	if ! echo "$(JDK_MD5SUM)  $(JDK_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -898,6 +926,10 @@ else
 	    mv $(JDK_SRC_ZIP) $(JDK_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(JDK_URL)/archive/$(JDK_CHANGESET).tar.gz -O $(JDK_SRC_ZIP); \
+	  if ! echo "$(JDK_MD5SUM)  $(JDK_SRC_ZIP)" \
+	    | $(MD5SUM) --check ; \
+	  then echo "ERROR: Bad download of JDK zip"; false; \
+	  fi; \
 	fi ; \
 	if ! echo "$(LANGTOOLS_MD5SUM)  $(LANGTOOLS_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -907,6 +939,10 @@ else
 	    mv $(LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(LANGTOOLS_URL)/archive/$(LANGTOOLS_CHANGESET).tar.gz -O $(LANGTOOLS_SRC_ZIP); \
+	  if ! echo "$(LANGTOOLS_MD5SUM)  $(LANGTOOLS_SRC_ZIP)" \
+	    | $(MD5SUM) --check ; \
+	  then echo "ERROR: Bad download of langtools zip"; false; \
+	  fi; \
 	fi ;
 	if ! echo "$(HS_MD5SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(MD5SUM) --check ; \
@@ -916,6 +952,10 @@ else
 	    mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
+	  if ! echo "$(HOTSPOT_MD5SUM)  $(HOTSPOT_SRC_ZIP)" \
+	    | $(MD5SUM) --check ; \
+	  then echo "ERROR: Bad download of HotSpot zip"; false; \
+	  fi; \
 	fi
 endif
 endif
@@ -938,6 +978,10 @@ else
 	   mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
 	 fi ; \
 	 $(WGET) $(CACAO_URL)$(CACAO_SRC_ZIP) -O $(CACAO_SRC_ZIP); \
+	 if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
+	   | $(MD5SUM) --check ; \
+	 then echo "ERROR: Bad download of CACAO zip"; false; \
+	 fi; \
 	fi
 endif
 endif
@@ -952,7 +996,11 @@ if WITH_VISUALVM
 	 fi ; \
 	 $(WGET) $(NETBEANS_PROFILER_URL)$(NETBEANS_PROFILER_SRC_ZIP) \
 	  -O $(NETBEANS_PROFILER_SRC_ZIP) ; \
-	 fi
+	 if ! echo "$(NETBEANS_PROFILER_MD5SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
+	   | $(MD5SUM) --check ; \
+	 then echo "ERROR: Bad download of NetBeans profiler zip"; false; \
+	 fi; \
+	fi
 
 	if ! echo "$(VISUALVM_MD5SUM)  $(VISUALVM_SRC_ZIP)" \
          | $(MD5SUM) --check ; \
@@ -963,7 +1011,11 @@ if WITH_VISUALVM
          fi ; \
          $(WGET) $(VISUALVM_URL)$(VISUALVM_SRC_ZIP) \
           -O $(VISUALVM_SRC_ZIP) ; \
-         fi
+	 if ! echo "$(VISUALVM_MD5SUM)  $(VISUALVM_SRC_ZIP)" \
+	   | $(MD5SUM) --check ; \
+	 then echo "ERROR: Bad download of VisualVM zip"; false; \
+	 fi; \
+        fi
 endif
 	mkdir -p stamps
 	touch stamps/download.stamp

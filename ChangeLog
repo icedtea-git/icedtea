@@ -1,6 +1,12 @@
 2009-10-28  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Fix the checksum for the jaxws drop.
+	Check the md5sum of newly downloaded zips.
+	
+2009-10-28  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Have one jar to rule them all (rt.jar)
 	and make others (tools.jar, rt-closed.jar)
 	symlinks to it.  Remove the hotspot-tools
