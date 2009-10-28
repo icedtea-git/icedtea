@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers openjdk/jdk/make/sun/awt/mapfile-mawt-vers
---- openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers	2008-12-09 19:27:39.000000000 +0000
-+++ openjdk/jdk/make/sun/awt/mapfile-mawt-vers	2008-12-09 19:34:01.000000000 +0000
-@@ -444,7 +444,6 @@
+--- openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers	2009-10-23 15:37:31.000000000 +0100
++++ openjdk/jdk/make/sun/awt/mapfile-mawt-vers	2009-10-23 15:48:18.000000000 +0100
+@@ -446,7 +446,6 @@
          	Java_sun_java2d_xr_XRRenderer_devCopyArea;
  		Java_sun_java2d_xr_XRMaskFill_maskFill;
  		Java_sun_java2d_xr_XRMaskBlit_maskBlit;
@@ -9,7 +9,7 @@ diff -Nru openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers openjdk/jdk/make/sun/a
  
                  Java_sun_java2d_opengl_OGLContext_getOGLIdString;
                  Java_sun_java2d_opengl_OGLMaskFill_maskFill;
-@@ -542,6 +541,7 @@
+@@ -544,6 +543,7 @@
                  AWTCharAscent;
                  AWTCharDescent;
                  AWTDrawGlyphList;
@@ -18,8 +18,8 @@ diff -Nru openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers openjdk/jdk/make/sun/a
  
  	local:
 diff -Nru openjdk.orig/jdk/make/sun/awt/mapfile-vers-linux openjdk/jdk/make/sun/awt/mapfile-vers-linux
---- openjdk.orig/jdk/make/sun/awt/mapfile-vers-linux	2008-11-20 08:44:12.000000000 +0000
-+++ openjdk/jdk/make/sun/awt/mapfile-vers-linux	2008-12-09 19:34:30.000000000 +0000
+--- openjdk.orig/jdk/make/sun/awt/mapfile-vers-linux	2009-10-21 16:42:03.000000000 +0100
++++ openjdk/jdk/make/sun/awt/mapfile-vers-linux	2009-10-23 15:48:18.000000000 +0100
 @@ -568,6 +568,7 @@
                  AWTCharAscent;
                  AWTCharDescent;
@@ -29,8 +29,8 @@ diff -Nru openjdk.orig/jdk/make/sun/awt/mapfile-vers-linux openjdk/jdk/make/sun/
  
  	local:
 diff -Nru openjdk.orig/jdk/make/sun/headless/mapfile-vers openjdk/jdk/make/sun/headless/mapfile-vers
---- openjdk.orig/jdk/make/sun/headless/mapfile-vers	2008-12-09 19:27:39.000000000 +0000
-+++ openjdk/jdk/make/sun/headless/mapfile-vers	2008-12-09 19:34:51.000000000 +0000
+--- openjdk.orig/jdk/make/sun/headless/mapfile-vers	2009-10-23 15:37:31.000000000 +0100
++++ openjdk/jdk/make/sun/headless/mapfile-vers	2009-10-23 15:48:18.000000000 +0100
 @@ -57,8 +57,6 @@
                  Java_sun_java2d_x11_X11SurfaceData_XSetXorMode;
                  Java_sun_java2d_x11_X11SurfaceData_XSetForeground;
@@ -39,8 +39,8 @@ diff -Nru openjdk.orig/jdk/make/sun/headless/mapfile-vers openjdk/jdk/make/sun/h
 -
  		X11SurfaceData_GetOps;
  		Java_java_awt_Font_initIDs;
-                 Java_sun_font_FontManager_getFontConfig;
-@@ -101,6 +99,7 @@
+                 Java_sun_font_FontConfigManager_getFontConfig;
+@@ -99,6 +97,7 @@
                  AWTCharAscent;
                  AWTCharDescent;
                  AWTDrawGlyphList;
@@ -49,8 +49,8 @@ diff -Nru openjdk.orig/jdk/make/sun/headless/mapfile-vers openjdk/jdk/make/sun/h
  
  
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c
---- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	2008-12-09 19:27:39.000000000 +0000
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	2008-12-09 19:33:01.000000000 +0000
+--- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	2009-10-23 15:37:31.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	2009-10-23 15:48:18.000000000 +0100
 @@ -67,6 +67,9 @@
  
  

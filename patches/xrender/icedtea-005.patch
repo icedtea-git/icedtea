@@ -1,14 +1,7 @@
-# HG changeset patch
-# User ceisserer
-# Date 1217885774 -7200
-# Node ID 8463c586ceaf12e5bc9d49e916a300c5b2a3ef81
-# Parent  cf291c1144545d190c719d31a709cf32968ade59
-Summary: Fixed Solaris build error
-
-diff -r cf291c114454 -r 8463c586ceaf make/sun/awt/FILES_c_unix.gmk
---- openjdk/jdk/make/sun/awt/FILES_c_unix.gmk	Mon Aug 04 18:16:43 2008 +0200
-+++ openjdk/jdk/make/sun/awt/FILES_c_unix.gmk	Mon Aug 04 23:36:14 2008 +0200
-@@ -212,6 +212,7 @@
+diff -Nru openjdk.orig/jdk/make/sun/awt/FILES_c_unix.gmk openjdk/jdk/make/sun/awt/FILES_c_unix.gmk
+--- openjdk.orig/jdk/make/sun/awt/FILES_c_unix.gmk	2009-05-12 15:54:23.000000000 +0100
++++ openjdk/jdk/make/sun/awt/FILES_c_unix.gmk	2009-10-23 15:48:51.000000000 +0100
+@@ -211,6 +211,7 @@
  	X11SurfaceData.c \
  	X11FontScaler_md.c \
  	X11TextRenderer_md.c \

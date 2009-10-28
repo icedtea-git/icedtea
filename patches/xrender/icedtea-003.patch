@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers openjdk/jdk/make/sun/awt/mapfile-mawt-vers
---- openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers	2008-11-20 08:44:12.000000000 +0000
-+++ openjdk/jdk/make/sun/awt/mapfile-mawt-vers	2008-12-09 19:24:36.000000000 +0000
-@@ -417,6 +417,35 @@
+--- openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers	2009-10-21 16:42:03.000000000 +0100
++++ openjdk/jdk/make/sun/awt/mapfile-mawt-vers	2009-10-23 15:32:29.000000000 +0100
+@@ -419,6 +419,35 @@
                  Java_sun_java2d_x11_X11SurfaceData_XSetForeground;
                  Java_sun_java2d_x11_X11SurfaceData_XSetGraphicsExposures;
  
@@ -38,8 +38,8 @@ diff -Nru openjdk.orig/jdk/make/sun/awt/mapfile-mawt-vers openjdk/jdk/make/sun/a
                  Java_sun_java2d_opengl_OGLMaskFill_maskFill;
                  Java_sun_java2d_opengl_OGLRenderer_drawPoly;
 diff -Nru openjdk.orig/jdk/make/sun/headless/mapfile-vers openjdk/jdk/make/sun/headless/mapfile-vers
---- openjdk.orig/jdk/make/sun/headless/mapfile-vers	2008-11-20 08:44:12.000000000 +0000
-+++ openjdk/jdk/make/sun/headless/mapfile-vers	2008-12-09 19:23:34.000000000 +0000
+--- openjdk.orig/jdk/make/sun/headless/mapfile-vers	2009-10-21 16:42:03.000000000 +0100
++++ openjdk/jdk/make/sun/headless/mapfile-vers	2009-10-23 15:32:29.000000000 +0100
 @@ -57,6 +57,8 @@
                  Java_sun_java2d_x11_X11SurfaceData_XSetXorMode;
                  Java_sun_java2d_x11_X11SurfaceData_XSetForeground;
@@ -48,11 +48,11 @@ diff -Nru openjdk.orig/jdk/make/sun/headless/mapfile-vers openjdk/jdk/make/sun/h
 +
  		X11SurfaceData_GetOps;
  		Java_java_awt_Font_initIDs;
-                 Java_sun_font_FontManager_getFontConfig;
+                 Java_sun_font_FontConfigManager_getFontConfig;
 diff -Nru openjdk.orig/jdk/make/sun/xawt/mapfile-vers openjdk/jdk/make/sun/xawt/mapfile-vers
---- openjdk.orig/jdk/make/sun/xawt/mapfile-vers	2008-12-09 19:19:29.000000000 +0000
-+++ openjdk/jdk/make/sun/xawt/mapfile-vers	2008-12-09 19:23:34.000000000 +0000
-@@ -358,6 +358,7 @@
+--- openjdk.orig/jdk/make/sun/xawt/mapfile-vers	2009-10-23 14:45:10.000000000 +0100
++++ openjdk/jdk/make/sun/xawt/mapfile-vers	2009-10-23 15:32:29.000000000 +0100
+@@ -377,6 +377,7 @@
          Java_sun_java2d_xr_XRSurfaceData_XRSetComposite;
          Java_sun_java2d_xr_XRSurfaceData_initIDs;
          Java_sun_java2d_xr_XRSurfaceData_XRInitSurface;
@@ -60,7 +60,7 @@ diff -Nru openjdk.orig/jdk/make/sun/xawt/mapfile-vers openjdk/jdk/make/sun/xawt/
  	Java_sun_java2d_xr_XRSurfaceData_XRResetClip;
  	Java_sun_java2d_xr_XRSurfaceData_XRSetTransformNative;
          Java_sun_java2d_xr_XRSurfaceData_XRSetFilter;
-@@ -372,6 +373,7 @@
+@@ -391,6 +392,7 @@
  	Java_sun_java2d_xr_XRRenderer_XRFillSpans;
          Java_sun_java2d_xr_XRRenderer_XRDoPath;
  	Java_sun_java2d_xr_XRRenderer_XRDrawLine;

@@ -1,14 +1,7 @@
-# HG changeset patch
-# User ceisserer
-# Date 1224775518 -7200
-# Node ID d6ab5f9f96efa37a823e071a27e3555557930203
-# Parent  2e58d73ce3ffd0301067d097ba443910c387c8d5
-TransformedBlit rewrite
-
-diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRDrawImage.java
---- openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java	Tue Aug 05 04:05:41 2008 +0200
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java	Thu Oct 23 17:25:18 2008 +0200
-@@ -42,13 +42,10 @@
+diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java
+--- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java	2009-10-23 15:51:54.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java	2009-10-23 15:52:32.000000000 +0100
+@@ -42,14 +42,11 @@
  	SurfaceData srcData = dstData.getSourceSurfaceData(img,
  		SunGraphics2D.TRANSFORM_GENERIC, sg.imageComp, bgColor);
  
@@ -17,15 +10,16 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRDrawIma
  		&& srcData instanceof XRSurfaceData) {
  	    SurfaceType srcType = srcData.getSurfaceType();
  	    SurfaceType dstType = dstData.getSurfaceType();
--
+ 
 -	    ((XRSurfaceData) srcData).setPreferredInterpolation(XRUtils
 -		    .ATransOpToXRQuality(interpType));
- 
+-
  	    TransformBlit blit = TransformBlit.getFromCache(srcType,
  		    sg.imageComp, dstType);
-diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java
---- openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java	Tue Aug 05 04:05:41 2008 +0200
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java	Thu Oct 23 17:25:18 2008 +0200
+ 
+diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java
+--- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java	2009-10-23 15:51:54.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java	2009-10-23 15:52:32.000000000 +0100
 @@ -42,35 +42,25 @@
      public static void register() {
  	GraphicsPrimitive[] primitives = {
@@ -35,9 +29,7 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitL
 -		new X11PMBlit(XRSurfaceData.IntArgbX11, XRSurfaceData.IntRgbX11),
 -		new X11PMBlit(XRSurfaceData.IntArgbX11,
 -			XRSurfaceData.IntArgbX11),
-+	new X11PMBlit(XRSurfaceData.IntRgbX11, XRSurfaceData.IntRgbX11), new X11PMBlit(XRSurfaceData.IntRgbX11, XRSurfaceData.IntArgbX11),
-+		new X11PMBlit(XRSurfaceData.IntArgbX11, XRSurfaceData.IntRgbX11), new X11PMBlit(XRSurfaceData.IntArgbX11, XRSurfaceData.IntArgbX11),
- 
+-
 -		new X11PMScaledBlit(XRSurfaceData.IntRgbX11,
 -			XRSurfaceData.IntRgbX11),
 -		new X11PMScaledBlit(XRSurfaceData.IntRgbX11,
@@ -46,11 +38,7 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitL
 -			XRSurfaceData.IntRgbX11),
 -		new X11PMScaledBlit(XRSurfaceData.IntArgbX11,
 -			XRSurfaceData.IntArgbX11),
-+		new X11PMScaledBlit(XRSurfaceData.IntRgbX11, XRSurfaceData.IntRgbX11),
-+		new X11PMScaledBlit(XRSurfaceData.IntRgbX11, XRSurfaceData.IntArgbX11),
-+		new X11PMScaledBlit(XRSurfaceData.IntArgbX11, XRSurfaceData.IntRgbX11),
-+		new X11PMScaledBlit(XRSurfaceData.IntArgbX11, XRSurfaceData.IntArgbX11),
- 
+-
 -		new X11PMTransformedBlit(XRSurfaceData.IntRgbX11,
 -			XRSurfaceData.IntRgbX11),
 -		new X11PMTransformedBlit(XRSurfaceData.IntRgbX11,
@@ -60,6 +48,14 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitL
 -		new X11PMTransformedBlit(XRSurfaceData.IntArgbX11,
 -			XRSurfaceData.IntArgbX11),
 -	};
++	new X11PMBlit(XRSurfaceData.IntRgbX11, XRSurfaceData.IntRgbX11), new X11PMBlit(XRSurfaceData.IntRgbX11, XRSurfaceData.IntArgbX11),
++		new X11PMBlit(XRSurfaceData.IntArgbX11, XRSurfaceData.IntRgbX11), new X11PMBlit(XRSurfaceData.IntArgbX11, XRSurfaceData.IntArgbX11),
++
++		new X11PMScaledBlit(XRSurfaceData.IntRgbX11, XRSurfaceData.IntRgbX11),
++		new X11PMScaledBlit(XRSurfaceData.IntRgbX11, XRSurfaceData.IntArgbX11),
++		new X11PMScaledBlit(XRSurfaceData.IntArgbX11, XRSurfaceData.IntRgbX11),
++		new X11PMScaledBlit(XRSurfaceData.IntArgbX11, XRSurfaceData.IntArgbX11),
++
 +		new X11PMTransformedBlit(XRSurfaceData.IntRgbX11, XRSurfaceData.IntRgbX11),
 +		new X11PMTransformedBlit(XRSurfaceData.IntRgbX11, XRSurfaceData.IntArgbX11),
 +		new X11PMTransformedBlit(XRSurfaceData.IntArgbX11, XRSurfaceData.IntRgbX11),
@@ -149,15 +145,32 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitL
  	    int dstx, int dsty, int width, int height) {
  	try {
  	    SunToolkit.awtLock();
-+
-+	    int xrInterpolationType = XRUtils.ATransOpToXRQuality(hint);
  
++	    int xrInterpolationType = XRUtils.ATransOpToXRQuality(hint);
++
  	    XRSurfaceData x11sdDst = (XRSurfaceData) dst;
  	    x11sdDst.validate(clip, comp, null, null, null, 0);
  	    XRSurfaceData x11sdSrc = (XRSurfaceData) src;
  
 -	    boolean needClip = (xform.getScaleX() != 0.0f)
 -		    || (xform.getShearY() != 0.0f);
+-	    try {
+-		/* Calculate area which will be covered by the transform-blit */
+-		Rectangle2D.Float rect = new Rectangle2D.Float(dstx, dsty,
+-			width, height);
+-		Shape shp = xform.createTransformedShape(rect);
+-		Rectangle bounds = shp.getBounds();
+-
+-		AffineTransform sourceTrans = (AffineTransform) xform.clone();
+-		sourceTrans.translate(-srcx, -srcy);
+-
+-		try
+-		{
+-		     sourceTrans.invert();
+-		}catch(NoninvertibleTransformException ex)
+-		{
+-		    sourceTrans.setToIdentity();
+-		}
 +	    Rectangle2D.Float rect = new Rectangle2D.Float(dstx, dsty, width, height);
 +	    Shape shp = xform.createTransformedShape(rect);
 +	    Rectangle bounds = shp.getBounds();
@@ -165,31 +178,31 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitL
 +	    AffineTransform trx = AffineTransform.getTranslateInstance((-bounds.x), (-bounds.y));
 +	    trx.concatenate(xform);
 +	    AffineTransform maskTX = (AffineTransform) trx.clone();
-+
+ 
+-		x11sdSrc.validateAsSource(sourceTrans, XRUtils.RepeatNone);
 +	    trx.translate(-srcx, -srcy);
-+
- 	    try {
--		/* Calculate area which will be covered by the transform-blit */
--		Rectangle2D.Float rect = new Rectangle2D.Float(dstx, dsty,
--			width, height);
--		Shape shp = xform.createTransformedShape(rect);
--		Rectangle bounds = shp.getBounds();
+ 
+-		if (needClip) {
+-		    x11sdDst.setShapeClip(shp);
+-		}
++	    try {
 +		trx.invert();
 +	    } catch (NoninvertibleTransformException ex) {
 +		trx.setToIdentity();
 +		System.err.println("Reseted to identity!");
 +	    }
  
--		AffineTransform sourceTrans = (AffineTransform) xform.clone();
--		sourceTrans.translate(-srcx, -srcy);
+-		XRPMBlitLoops.nativeRenderBlit(src.getNativeOps(), dst
+-			.getNativeOps(), 0, 0, 0, 0, bounds.x + bounds.width,
+-			bounds.y + bounds.height);// bounds.x, bounds.y,
+-						    // bounds.width,
+-						    // bounds.height);//(int)
+-						    // (maxX - minX), (int)
+-						    // (maxY - minY));
 +	    boolean omitMask = isMaskOmittable(trx, comp, xrInterpolationType);
  
--		try
--		{
--		     sourceTrans.invert();
--		}catch(NoninvertibleTransformException ex)
--		{
--		    sourceTrans.setToIdentity();
+-		if (needClip) {
+-		    x11sdDst.resetShapeClip();
 +	    if (!omitMask) {
 +		int maskWidth = Math.max(width / 8, 1);
 +		int maskHeight = Math.max(height / 8, 1);
@@ -202,24 +215,15 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitL
 +		    System.err.println("Reseted to identity!");
  		}
  
--		x11sdSrc.validateAsSource(sourceTrans, XRUtils.RepeatNone);
+-	    } catch (Exception ex) {
+-		ex.printStackTrace();
 +		x11sdSrc.validateAsSource(trx, XRUtils.RepeatPad, xrInterpolationType);
- 
--		if (needClip) {
--		    x11sdDst.setShapeClip(shp);
--		}
++
 +		XRPMBlitLoops.nativeTransformedRenderBlit(src.getNativeOps(), dst.getNativeOps(), 0, 0, bounds.x, bounds.y, bounds.width,
 +			bounds.height, XRUtils.XDoubleToFixed(maskTX.getScaleX()), XRUtils.XDoubleToFixed(maskTX.getShearX()), XRUtils
 +				.XDoubleToFixed(maskTX.getTranslateX()), XRUtils.XDoubleToFixed(maskTX.getShearY()), XRUtils.XDoubleToFixed(maskTX
 +				.getScaleY()), XRUtils.XDoubleToFixed(maskTX.getTranslateY()), maskWidth, maskHeight, lastMaskWidth, lastMaskHeight);
- 
--		XRPMBlitLoops.nativeRenderBlit(src.getNativeOps(), dst
--			.getNativeOps(), 0, 0, 0, 0, bounds.x + bounds.width,
--			bounds.y + bounds.height);// bounds.x, bounds.y,
--						    // bounds.width,
--						    // bounds.height);//(int)
--						    // (maxX - minX), (int)
--						    // (maxY - minY));
++
 +		lastMaskWidth = maskWidth;
 +		lastMaskHeight = maskHeight;
 +	    } else {
@@ -227,15 +231,8 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitL
 +		x11sdSrc.validateAsSource(trx, repeat, xrInterpolationType);
 +		XRPMBlitLoops.nativeTransformedRenderBlit(src.getNativeOps(), dst.getNativeOps(), 0, 0, bounds.x, bounds.y, bounds.width,
 +			bounds.height, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0);
-+	    }
- 
--		if (needClip) {
--		    x11sdDst.resetShapeClip();
--		}
--
--	    } catch (Exception ex) {
--		ex.printStackTrace();
--	    }
+ 	    }
++
  	} finally {
  	    SunToolkit.awtUnlock();
  	}
@@ -256,9 +253,9 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRPMBlitL
 +    }
  }
 \ No newline at end of file
-diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRSurfaceData.java
---- openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java	Tue Aug 05 04:05:41 2008 +0200
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java	Thu Oct 23 17:25:18 2008 +0200
+diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java
+--- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java	2009-10-23 15:51:54.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java	2009-10-23 15:52:32.000000000 +0100
 @@ -50,8 +50,7 @@
  
      private static native void initIDs(boolean gradCache);
@@ -638,13 +635,14 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRSurface
 -     * Sets a 2-stop gradient.
 -     * Utility method generating the by the native method expected
 -     * parameters and calling it.
-+     * Sets a 2-stop gradient. Utility method generating the by the native
-+     * method expected parameters and calling it.
-      */
+-     */
 -    private void setGradientPaint(SunGraphics2D sg2d, GradientPaint paint,
 -	    boolean useMask) {
 -	int[] pixels = convertToIntArgbPixels(new Color[] { paint.getColor1(),
 -		paint.getColor2() }, false);
++     * Sets a 2-stop gradient. Utility method generating the by the native
++     * method expected parameters and calling it.
++     */
 +    private void setGradientPaint(SunGraphics2D sg2d, GradientPaint paint, boolean useMask) {
 +	int[] pixels = convertToIntArgbPixels(new Color[] { paint.getColor1(), paint.getColor2() }, false);
  
@@ -917,10 +915,10 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/classes/sun/java2d/xr/XRSurface
  	     */
  	    invalidate();
  	    flushNativeSurface();
-diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/MaskBuffer.c
---- openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c	Tue Aug 05 04:05:41 2008 +0200
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c	Thu Oct 23 17:25:18 2008 +0200
-@@ -44,13 +44,36 @@
+diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c
+--- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c	2009-10-23 15:51:54.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c	2009-10-23 15:52:32.000000000 +0100
+@@ -44,7 +44,7 @@
  
    buffer->maskPixmap = XCreatePixmap(awt_display, window, MASK_TILE_SIZE, MASK_TILE_SIZE, 8);
    buffer->lineMaskPixmap = XCreatePixmap(awt_display, window, MASK_TILE_SIZE, MASK_TILE_SIZE, 8);
@@ -929,10 +927,10 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/MaskBuffe
    XRenderPictureAttributes pict_attr;
    buffer->maskPicture = XRenderCreatePicture(awt_display, buffer->maskPixmap, fmt, 0, &pict_attr);
    buffer->lineMaskPicture = XRenderCreatePicture(awt_display, buffer->lineMaskPixmap, fmt, 0, &pict_attr);
- 
+@@ -52,6 +52,29 @@
    XRenderFillRectangle (awt_display, PictOpClear, buffer->maskPicture, &color_black, 0, 0, MASK_TILE_SIZE, MASK_TILE_SIZE);
    XRenderFillRectangle (awt_display, PictOpClear, buffer->lineMaskPicture, &color_black, 0, 0, MASK_TILE_SIZE, MASK_TILE_SIZE);
-+
+ 
 +/*
 +  //1x1 image mask pixmap
 +  Pixmap m1p =  XCreatePixmap(awt_display, window, 1, 1, 8);
@@ -955,9 +953,10 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/MaskBuffe
 +  XRenderFillRectangle (awt_display, PictOpClear, buffer->maxMask, &color_black, 0, 0, 64, 64);
 +  buffer->maxWidth = 64;
 +  buffer->maxHeight = 64;
- 
++
    buffer->validatedGCAlpha = 1.0f;
    XGCValues values;
+   values.foreground = 255;
 @@ -347,12 +370,12 @@
  	  if(maskRequired || lineList->used  > 0) {
              Picture mask = None;
@@ -982,31 +981,30 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/MaskBuffe
               translateRects(rectList, (tileStartX + buf->region.x), (tileStartY + buf->region.y));
               XRenderFillRectangles (awt_display, xrSrcData.compRule, dest, &xrSrcData.solidColor, (XRectangle*) rectList->elements, rectList->used);
               clearXRList(rectList);
-diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/MaskBuffer.h
---- openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h	Tue Aug 05 04:05:41 2008 +0200
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h	Thu Oct 23 17:25:18 2008 +0200
-@@ -50,6 +50,13 @@
-   Picture maskPicture;
+diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h
+--- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h	2009-10-23 15:51:54.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h	2009-10-23 15:52:32.000000000 +0100
+@@ -51,6 +51,13 @@
    GC maskGC;
    jfloat validatedGCAlpha;
-+
+ 
 +  /*Picture img1Mask;
 +  Picture img8Mask;
 +  Picture img64Mask;*/
 +  Picture maxMask;
 +  jint maxWidth;
 +  jint maxHeight;
- 
++
    XrArrayList rects;
    XrArrayList lines;
-diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c
---- openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	Tue Aug 05 04:05:41 2008 +0200
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	Thu Oct 23 17:25:18 2008 +0200
-@@ -65,6 +65,92 @@
- #endif /* !HEADLESS */
+   MaskRegion region;
+diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c
+--- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	2009-10-23 15:51:54.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	2009-10-23 15:52:32.000000000 +0100
+@@ -66,6 +66,92 @@
  }
  
-+
+ 
 +JNIEXPORT void JNICALL
 +Java_sun_java2d_xr_XRPMBlitLoops_nativeTransformedRenderBlit
 +    (JNIEnv *env, jclass xsd,
@@ -1092,17 +1090,17 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/XRPMBlitL
 +    X11SD_DirectRenderNotify(env, dstXsdo);
 +#endif /* !HEADLESS */
 +}
- 
++
  #ifndef HEADLESS
  /**
-diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/XRSurfaceData.c
---- openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c	Tue Aug 05 04:05:41 2008 +0200
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c	Thu Oct 23 17:25:18 2008 +0200
-@@ -33,19 +33,6 @@
- MaskBuffer *maskBuffer;
+  * Prepares a mask-picture according to the mask and the properties currently set, which is used for composition later.
+diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c
+--- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c	2009-10-23 15:51:54.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c	2009-10-23 15:52:32.000000000 +0100
+@@ -34,19 +34,6 @@
  XRenderColor color_black;
  #endif /* !HEADLESS */
--
+ 
 -#define BUILD_TRANSFORM_MATRIX(TRANSFORM, M00, M01, M02, M10, M11, M12)                        \
 -    {                                                                                          \
 -      TRANSFORM.matrix[0][0] = M00;                                                            \
@@ -1115,17 +1113,17 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/XRSurface
 -      TRANSFORM.matrix[2][1] = 0;                                                              \
 -      TRANSFORM.matrix[2][2] = 1<<16;                                                          \
 -    }
- 
+-
  JNIEXPORT void JNICALL
     Java_sun_java2d_xr_XRSurfaceData_XRInitXRender(JNIEnv *env, jobject xsd, jlong pXSData, jint pictFormat)
-diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/XRSurfaceData.h
---- openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h	Tue Aug 05 04:05:41 2008 +0200
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h	Thu Oct 23 17:25:18 2008 +0200
-@@ -27,6 +27,19 @@
- #define XRSurfaceData_h_Included
+ {
+diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h
+--- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h	2009-10-23 15:51:54.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h	2009-10-23 15:52:32.000000000 +0100
+@@ -28,6 +28,19 @@
  
  #define XDoubleToUShort(f)    ((unsigned short) ((f) * 65535))
-+
+ 
 +#define BUILD_TRANSFORM_MATRIX(TRANSFORM, M00, M01, M02, M10, M11, M12)                        \
 +    {                                                                                          \
 +      TRANSFORM.matrix[0][0] = M00;                                                            \
@@ -1138,6 +1136,7 @@ diff -r 2e58d73ce3ff -r d6ab5f9f96ef src/solaris/native/sun/java2d/x11/XRSurface
 +      TRANSFORM.matrix[2][1] = 0;                                                              \
 +      TRANSFORM.matrix[2][2] = 1<<16;                                                          \
 +    }
- 
++
  /* Holds source-parameters*/
  typedef struct {
+   Picture src;            /* Currently used source*/

@@ -1,3 +1,14 @@
+2009-10-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Bump to b74.
+	* patches/boot/icedtea.patch,
+	* patches/xrender/icedtea-001.patch,
+	* patches/xrender/icedtea-003.patch,
+	* patches/xrender/icedtea-004.patch,
+	* patches/xrender/icedtea-005.patch,
+	* patches/xrender/icedtea-007.patch:
+	Recreated.
+
 2009-10-08  Andrew John Hughes  <ahughes@redhat.com>
 
 	* ChangeLog: Remove stray tab.
