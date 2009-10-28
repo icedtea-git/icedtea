@@ -1,3 +1,13 @@
+2009-10-28  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Have one jar to rule them all (rt.jar)
+	and make others (tools.jar, rt-closed.jar)
+	symlinks to it.  Remove the hotspot-tools
+	target and do all patching, etc. prior to
+	building rt.jar.  Use zip rather than jar
+	to update rt.jar for efficiency.
+
 2009-10-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Bump to b74.

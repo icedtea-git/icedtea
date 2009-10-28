@@ -64,13 +64,34 @@ JAXP = openjdk/jaxp/src/share/classes
 CORBA = openjdk/corba/src/share/classes
 JAXWS = openjdk/jaxws/src/share/classes
 
+NETX_SRCDIR = $(abs_top_srcdir)/netx
+NETX_RESOURCE_DIR=$(NETX_SRCDIR)/net/sourceforge/jnlp/resources
+
 OPENJDK_SOURCEPATH_DIRS = \
-        $(JDK_SHARE):$(JDK_SOLARIS):$(LANGTOOLS):$(JAXP):$(CORBA):$(JAXWS)
+        $(JDK_SHARE):$(JDK_SOLARIS):$(LANGTOOLS):$(JAXP):$(CORBA):$(JAXWS):$(NETX_SRCDIR)
 
 SOURCEPATH_DIRS = $(abs_top_builddir)/generated:$(OPENJDK_SOURCEPATH_DIRS)
 
-NETX_DIR=$(abs_top_srcdir)/netx/net/sourceforge
-NETX_RESOURCE_DIR=$(NETX_DIR)/jnlp/resources
+# Sources used from OpenJDK.
+ICEDTEA_BOOTSTRAP_DIRS = \
+	$(JDK_SHARE)/com/sun/jdi \
+	$(JDK_SHARE)/com/sun/tools/jdi \
+	$(JDK_SHARE)/com/sun/net/httpserver \
+	$(JDK_SHARE)/java/io \
+	$(JDK_SHARE)/java/security/cert \
+	$(JDK_SHARE)/java/util \
+	$(JDK_SHARE)/java/rmi \
+	$(JDK_SHARE)/javax/net/ssl \
+	$(JDK_SHARE)/javax/rmi/ssl \
+	$(JDK_SHARE)/javax/script \
+	$(JDK_SHARE)/javax/security/auth/kerberos \
+	$(JDK_SHARE)/javax/security/sasl \
+	$(JDK_SHARE)/sun/awt/ \
+	$(JDK_SHARE)/sun/rmi/rmic \
+	$(JDK_SHARE)/sun/tools/java \
+	$(JAXWS)/javax/xml/bind \
+	$(LANGTOOLS)/com/sun/mirror \
+	$(LANGTOOLS)/com/sun/tools/apt
 
 IT_LANGUAGE_SOURCE_VERSION=5
 IT_CLASS_TARGET_VERSION=5
@@ -680,13 +701,11 @@ distclean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
 	rm -rf stamps
 	rm -rf drops
 	rm -f rt-source-files.txt \
-	  hotspot-tools-source-files.txt \
 	  extra-source-files.txt \
 	  netx-source-files.txt
 	rm -rf bootstrap
 	rm -rf lib
 	rm -rf extra-lib
-	rm -rf hotspot-tools
 	rm -rf rt/netscape
 	rm -rf visualvm
 	rm -rf netbeans
@@ -720,7 +739,7 @@ install:
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot clean-plugs \
 	clean-tools-jar clean-visualvm clean-nbplatform \
-	clean-hotspot-tools clean-rt $(ICEDTEAPLUGIN_CLEAN) \
+	clean-rt $(ICEDTEAPLUGIN_CLEAN) \
 	$(ICEDTEANPPLUGIN_CLEAN) hotspot hotspot-helper clean-extra clean-jtreg \
 	clean-jtreg-reports 
 
@@ -1159,7 +1178,7 @@ endif
 	rm -f stamps/extract-cacao.stamp
 
 # Link ports sources into tree
-stamps/ports.stamp: stamps/extract.stamp
+stamps/ports.stamp: stamps/extract-cacao.stamp
 	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/cpu/zero/vm/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
@@ -1179,7 +1198,7 @@ stamps/ports.stamp: stamps/extract.stamp
 	mkdir -p stamps
 	touch stamps/ports.stamp
 
-stamps/generated.stamp: stamps/extract-cacao.stamp
+stamps/generated.stamp: stamps/ports.stamp
 	if [ ! -e $(abs_top_builddir)/generated ]; then \
 	  cp -a $(abs_top_srcdir)/generated $(abs_top_builddir); \
 	  find $(abs_top_builddir)/generated -type f -exec chmod 640 '{}' ';' \
@@ -1475,18 +1494,6 @@ stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	  rm -f bootstrap/boot/include/$$i; \
 	  ln -s $(SYSTEM_JDK_DIR)/include/$$i bootstrap/boot/include/$$i; \
 	done; \
-	if test -f $(abs_top_builddir)/bootstrap/jdk1.7.0/lib/tools.jar ; \
-	then \
-	  mkdir -p $(abs_top_builddir)/bootstrap/boot/lib ; \
-	  ln -sf $(abs_top_builddir)/bootstrap/jdk1.7.0/lib/tools.jar \
-	    $(abs_top_builddir)/bootstrap/boot/lib/tools.jar ; \
-	fi
-	if test -f \
-	  $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar ; \
-	then \
-	  cp $(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-	    $(abs_top_builddir)/bootstrap/boot/jre/lib/rt.jar ; \
-	fi
 	mkdir -p stamps
 	touch stamps/bootstrap-directory-stage1.stamp
 
@@ -1545,7 +1552,7 @@ clean-bootstrap-directory-symlink-stage2:
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
-	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
+	stamps/ports.stamp stamps/overlay.stamp \
 	$(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) $(JNLP_ABOUT_TARGET) \
 	stamps/cacao.stamp stamps/netx-dist.stamp stamps/liveconnect.stamp \
 	stamps/pulse-java.stamp
@@ -1711,9 +1718,8 @@ icedtea-debug-stage2: \
 # ===================
 
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
-	stamps/hotspot-tools.stamp stamps/plugs.stamp stamps/netx-dist.stamp \
-	stamps/liveconnect.stamp stamps/ports.stamp stamps/patch-boot.stamp \
-	stamps/cacao.stamp
+	stamps/plugs.stamp stamps/netx-dist.stamp stamps/liveconnect.stamp \
+	stamps/ports.stamp stamps/patch-boot.stamp stamps/cacao.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \
@@ -1735,8 +1741,7 @@ hotspot:
 	@echo "Hotspot is served:" $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image
 
 hotspot-helper: stamps/bootstrap-directory-symlink-stage1.stamp \
-	stamps/hotspot-tools.stamp stamps/plugs.stamp \
-	stamps/ports.stamp stamps/patch-boot.stamp
+	stamps/plugs.stamp stamps/ports.stamp stamps/patch-boot.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot hotspot
@@ -1831,7 +1836,7 @@ clean-IcedTeaPlugin:
 	rm -f IcedTeaPlugin.so
 endif
 
-stamps/liveconnect.stamp: stamps/hotspot-tools.stamp
+stamps/liveconnect.stamp: stamps/rt-class-files.stamp
 	if test "x${LIVECONNECT_DIR}" != x; then \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf lib/classes.jar $(LIVECONNECT_DIR) ; \
 	fi
@@ -1845,14 +1850,14 @@ stamps/liveconnect.stamp: stamps/hotspot-tools.stamp
 # a patch applied to sun.plugin.AppletViewerPanel and generated sources
 
 netx-source-files.txt:
-	find $(abs_top_srcdir)/netx -name '*.java' | sort > $@
+	find $(NETX_SRCDIR) -name '*.java' | sort > $@
 
-stamps/netx.stamp: netx-source-files.txt stamps/hotspot-tools.stamp
+stamps/netx.stamp: netx-source-files.txt stamps/rt-class-files.stamp
 	mkdir -p $(abs_top_builddir)/netx.build
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) \
 	    -d $(abs_top_builddir)/netx.build \
-	    -classpath $(abs_top_builddir)/lib/hotspot-tools \
-	    -sourcepath $(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS): \
+	    -classpath $(abs_top_builddir)/lib/rt \
+	    -sourcepath $(SOURCEPATH_DIRS) \
 	    -bootclasspath \'\' \
 	    @netx-source-files.txt ;
 	mkdir -p stamps
@@ -1862,7 +1867,7 @@ stamps/netx-dist.stamp: stamps/netx.stamp
 	(cd $(abs_top_builddir)/netx.build ; \
 	 mkdir -p lib ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar cf lib/classes.jar javax/jnlp net ; \
-	 cp -a $(abs_top_srcdir)/netx src; \
+	 cp -a $(NETX_SRCDIR) src; \
 	 find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	 cd src ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar uf $(abs_top_builddir)/netx.build/lib/classes.jar \
@@ -1877,7 +1882,7 @@ extra-source-files.txt:
 stamps/extra-class-files.stamp: extra-source-files.txt stamps/netx.stamp
 	mkdir -p extra-lib
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) -d extra-lib \
-	  -classpath $(abs_top_builddir)/lib/hotspot-tools \
+	  -classpath $(abs_top_builddir)/lib/rt \
 	  -sourcepath $(abs_top_srcdir)/extra:$(SOURCEPATH_DIRS) \
 	  -bootclasspath \'\' \
 	  @extra-source-files.txt ; \
@@ -2038,7 +2043,7 @@ clean-nbplatform:
 
 # CACAO
 
-stamps/cacao.stamp: stamps/extract.stamp stamps/rt-class-files.stamp
+stamps/cacao.stamp: stamps/rt-class-files.stamp
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao && \
@@ -2275,140 +2280,61 @@ jtregcheck: jtreg check-hotspot check-langtools check-jdk
 
 # Support classes for non-OpenJDK bootstraps
 
-stamps/plugs.stamp: bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
-	mkdir -p stamps
-	touch stamps/plugs.stamp
-
-stamps/hotspot-tools.stamp: bootstrap/jdk1.7.0/lib/tools.jar
-	mkdir -p stamps
-	touch stamps/hotspot-tools.stamp
-
-clean-plugs: clean-plugs clean-rt
-	rm -f stamps/plugs.stamp
-	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
-
-clean-tools-jar: clean-hotspot-tools
-	rm -f stamps/hotspot-tools.stamp
-	rm -f bootstrap/jdk1.7.0/lib/tools.jar
-
-# Sources used from OpenJDK.
-ICEDTEA_BOOTSTRAP_DIRS = \
-	$(JDK_SHARE)/com/sun/jdi \
-	$(JDK_SHARE)/com/sun/tools/jdi \
-	$(JDK_SHARE)/com/sun/net/httpserver \
-	$(JDK_SHARE)/java/io \
-	$(JDK_SHARE)/java/security/cert \
-	$(JDK_SHARE)/java/util \
-	$(JDK_SHARE)/java/rmi \
-	$(JDK_SHARE)/javax/net/ssl \
-	$(JDK_SHARE)/javax/rmi/ssl \
-	$(JDK_SHARE)/javax/script \
-	$(JDK_SHARE)/javax/security/auth/kerberos \
-	$(JDK_SHARE)/javax/security/sasl \
-	$(JDK_SHARE)/sun/awt/ \
-	$(JAXWS)/javax/xml/bind
-
-# tools.jar class files.
-stamps/hotspot-tools-copy-source-files.stamp: stamps/overlay.stamp
-	for copy_dir in \
-	  `cat $(abs_top_srcdir)/tools-copy/tools-jdk-copy-files.txt` ; \
-	do \
-	  mkdir -p hotspot-tools/$$copy_dir ; \
-	  cp -pPRf openjdk/jdk/src/share/classes/$$copy_dir/* \
-	    hotspot-tools/$$copy_dir ; \
-	done
-	for copy_dir in \
-	  `cat $(abs_top_srcdir)/tools-copy/tools-langtools-copy-files.txt` ; \
-	do \
-	  mkdir -p hotspot-tools/$$copy_dir ; \
-	  cp -pPRf openjdk/langtools/src/share/classes/$$copy_dir/* \
-	    hotspot-tools/$$copy_dir ; \
-	done
-	for copy_dir in \
-	  `cat $(abs_top_srcdir)/tools-copy/tools-corba-copy-files.txt` ; \
-	do \
-	  mkdir -p hotspot-tools/$$copy_dir ; \
-	  cp -pPRf openjdk/corba/src/share/classes/$$copy_dir/* \
-	    hotspot-tools/$$copy_dir ; \
-	done
-	for copy_dir in \
-	  `cat $(abs_top_srcdir)/tools-copy/tools-jaxws-copy-files.txt` ; \
-	do \
-	  mkdir -p hotspot-tools/$$copy_dir ; \
-	  cp -pPRf openjdk/jaxws/src/share/classes/$$copy_dir/* \
-	    hotspot-tools/$$copy_dir ; \
-	done
-	mkdir -p stamps
-	touch stamps/hotspot-tools-copy-source-files.stamp
-
-hotspot-tools-source-files.txt: stamps/generated.stamp \
-	stamps/hotspot-tools-copy-source-files.stamp
-	find hotspot-tools -name '*.java' | sort > $@
-	mkdir -p lib/hotspot-tools
-
-stamps/hotspot-tools-class-files.stamp: hotspot-tools-source-files.txt \
-	$(INITIAL_BOOTSTRAP_LINK_STAMP)
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) \
-	  -d lib/hotspot-tools \
-	  -sourcepath \
-	    'hotspot-tools:$(abs_top_srcdir)/netx:$(SOURCEPATH_DIRS)' \
-	  -bootclasspath \'\' @$< ;
-	mkdir -p stamps
-	touch stamps/hotspot-tools-class-files.stamp
-
-clean-hotspot-tools:
-	rm -rf lib/hotspot-tools
-	rm -f stamps/hotspot-tools-class-files.stamp
-	rm -f hotspot-tools-source-files.txt
-	rm -f stamps/hotspot-tools-copy-source-files.stamp
-
-# tools.jar
-bootstrap/jdk1.7.0/lib/tools.jar: stamps/hotspot-tools-class-files.stamp
-	mkdir -p bootstrap/jdk1.7.0/lib/
-	$(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C lib/hotspot-tools com \
-	  -C lib/hotspot-tools sun \
-          -C lib/hotspot-tools org -C lib/hotspot-tools java \
-          -C lib/hotspot-tools javax ;
-	if test -d bootstrap/boot ; \
-	then \
-	  mkdir -p bootstrap/boot/lib/; \
-	  ln -sf $(abs_top_builddir)/bootstrap/jdk1.7.0/lib/tools.jar \
-	    $(abs_top_builddir)/bootstrap/boot/lib/tools.jar; \
-	fi
-
-# rt-closed.jar class files.
-rt-source-files.txt: stamps/extract.stamp
-	find $(abs_top_builddir)/rt -name '*.java' \
+rt-source-files.txt: stamps/overlay.stamp
+	$(FIND) $(abs_top_builddir)/rt -name '*.java' \
 	  | sort -u > $@
 	for dir in $(ICEDTEA_BOOTSTRAP_DIRS) ; \
 	do \
-	find $(abs_top_builddir)/$$dir -name '*.java' >> $@; \
+	$(FIND) $(abs_top_builddir)/$$dir -name '*.java' >> $@; \
 	done
 
-stamps/rt-class-files.stamp: rt-source-files.txt stamps/hotspot-tools.stamp
+stamps/rt-class-files.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) rt-source-files.txt
 	mkdir -p lib/rt
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) -d lib/rt \
-	  -classpath $(abs_top_builddir)/lib/hotspot-tools \
           -sourcepath '$(SOURCEPATH_DIRS)' \
-          -bootclasspath \'\' @$< ;
+          -bootclasspath \'\' @rt-source-files.txt ;
 	mkdir -p stamps
 	touch stamps/rt-class-files.stamp
 
+stamps/rt.stamp: stamps/rt-class-files.stamp
+	(cd lib/rt ; \
+	 $(ZIP) -qur $(abs_top_builddir)/bootstrap/boot/jre/lib/rt.jar \
+	 com java javax sun );
+	mkdir -p stamps
+	touch stamps/rt.stamp
+
 clean-rt:
 	rm -rf lib/rt
-	rm -f stamps/rt-class-files.stamp
+	rm -f stamps/rt-class-files.stamp stamps/rt.stamp
 	rm -f rt-source-files.txt
 
+# tools.jar
+bootstrap/jdk1.7.0/lib/tools.jar: stamps/rt.stamp
+	mkdir -p bootstrap/boot/lib
+	ln -sf $(abs_top_builddir)/bootstrap/boot/jre/lib/rt.jar \
+	  $(abs_top_builddir)/bootstrap/boot/lib/tools.jar
+	mkdir -p bootstrap/jdk1.7.0/lib
+	ln -sf $(abs_top_builddir)/bootstrap/boot/lib/tools.jar \
+	  $(abs_top_builddir)/bootstrap/jdk1.7.0/lib/tools.jar
+
+clean-tools-jar:
+	rm -f bootstrap/jdk1.7.0/lib/tools.jar
+	rm -f bootstrap/boot/lib/tools.jar
+
 # rt-closed.jar.
-bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt-class-files.stamp
-	if test -d bootstrap/boot/jre/lib ; \
-	then \
-	  $(ICEDTEA_BOOT_DIR)/bin/jar uf bootstrap/boot/jre/lib/rt.jar \
-	     -C lib/rt com -C lib/rt java -C lib/rt javax -C lib/rt sun ; \
-	  mkdir -p bootstrap/jdk1.7.0/jre/lib ; \
-	  ln -sf ${abs_top_builddir}/bootstrap/boot/jre/lib/rt.jar \
-		bootstrap/jdk1.7.0/jre/lib/rt-closed.jar ; \
-	fi
+bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt.stamp
+	mkdir -p bootstrap/jdk1.7.0/jre/lib
+	ln -sf ${abs_top_builddir}/bootstrap/boot/jre/lib/rt.jar \
+		bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
+
+stamps/plugs.stamp: bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+	bootstrap/jdk1.7.0/lib/tools.jar
+	mkdir -p stamps
+	touch stamps/plugs.stamp
+
+clean-plugs: clean-tools-jar clean-rt
+	rm -f stamps/plugs.stamp
+	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
 # Target Aliases
 # ===============
@@ -2471,17 +2397,11 @@ overlay: stamps/overlay.stamp
 
 plugs: stamps/plugs.stamp
 
+rt: stamps/rt.stamp
+
 rt-class-files: stamps/rt-class-files.stamp
 
-hotspot-tools-class-files: stamps/hotspot-tools-class-files.stamp
-
-hotspot-tools-copy-source-files: stamps/hotspot-tools-copy-source-files.stamp
-
-hotspot-tools: stamps/hotspot-tools.stamp
-
 hotspot-ports: stamps/ports.stamp
-
-tools-class-files: stamps/tools-class-files.stamp
 
 clean: distclean-local
 
