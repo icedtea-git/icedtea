@@ -1,3 +1,14 @@
+2009-10-28  Andrew John Hughes  <ahughes@redhat.com>
+
+	Fix build failures with Shark.
+	* patches/icedtea-shark.patch: Removed, unused.
+	* patches/hotspot/default/icedtea-shark-build.patch:
+	Derive Shark IncludeDB from Zero not Core.
+	* patches/hotspot/default/icedtea-shark.patch:
+	Regenerated.
+	* patches/icedtea-shark-build.patch:
+	Fix naming of target with new Zero patch.
+
 2009-10-12  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/shark_globals.hpp:

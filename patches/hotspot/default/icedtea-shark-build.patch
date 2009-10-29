@@ -121,7 +121,7 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/top.make openjdk/hotspot/mak
  Include_DBs/COMPILER2   = $(Include_DBs/CORE) $(VM)/includeDB_compiler2
  Include_DBs/TIERED      = $(Include_DBs/CORE) $(VM)/includeDB_compiler1 $(VM)/includeDB_compiler2
  Include_DBs/ZERO        = $(Include_DBs/CORE) $(VM)/includeDB_zero
-+Include_DBs/SHARK       = $(Include_DBs/CORE) $(VM)/includeDB_shark
++Include_DBs/SHARK       = $(Include_DBs/ZERO) $(VM)/includeDB_shark
  Include_DBs = $(Include_DBs/$(TYPE))
  
  Cached_plat = $(GENERATED)/platform.current
