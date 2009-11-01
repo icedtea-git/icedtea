@@ -1,3 +1,22 @@
+2009-11-01  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-float-double-trailing-zeros.patch:
+	Dropped, in b75.
+	* Makefile.am: Bump to b75.
+	* patches/boot/icedtea-hotspot-default.patch,
+	* patches/boot/icedtea.patch:
+	Regenerated.
+	* patches/hotspot/default/icedtea-shark-build.patch:
+	Use VARIANTARCH not BUILDARCH.  Use platform_zero
+	directly and pass VARIANTARCH through to subbuild.
+	Add rule for SHARK_DIR.
+	* patches/icedtea-shark-build.patch:
+	Put ICEDTEA_SHARK_BUILD prior to ZERO_BUILD test.
+	* ports/hotspot/src/share/vm/shark/sharkCodeBuffer.hpp:
+	Rename encoding to constant_encoding inline with upstream.
+	* ports/hotspot/src/share/vm/shark/sharkConstant.cpp:
+	Use should_be_constant instead of has_encoding inline with upstream.
+
 2009-10-28  Andrew John Hughes  <ahughes@redhat.com>
 
 	Fix build failures with Shark.

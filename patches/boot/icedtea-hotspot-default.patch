@@ -1,7 +1,7 @@
-diff -Nru openjdk-boot.orig/hotspot/make/linux/Makefile openjdk-boot/hotspot/make/linux/Makefile
---- openjdk-boot.orig/hotspot/make/linux/Makefile	2009-09-28 13:20:29.000000000 +0100
-+++ openjdk-boot/hotspot/make/linux/Makefile	2009-09-28 16:06:27.000000000 +0100
-@@ -280,35 +280,30 @@
+diff -Nru ../openjdk.orig/openjdk-boot/hotspot/make/linux/Makefile openjdk-boot/hotspot/make/linux/Makefile
+--- ../openjdk.orig/openjdk-boot/hotspot/make/linux/Makefile	2009-10-30 17:37:07.000000000 +0000
++++ openjdk-boot/hotspot/make/linux/Makefile	2009-10-30 17:45:40.000000000 +0000
+@@ -287,35 +287,30 @@
  
  $(TARGETS_C2):  $(SUBDIRS_C2)
  	cd $(OSNAME)_$(BUILDARCH)_compiler2/$@ && $(MAKE) $(MFLAGS)
@@ -32,14 +32,14 @@ diff -Nru openjdk-boot.orig/hotspot/make/linux/Makefile openjdk-boot/hotspot/mak
  endif
  
  $(TARGETS_ZERO):  $(SUBDIRS_ZERO)
- 	cd $(OSNAME)_$(BUILDARCH)_zero/$(patsubst %zero,%,$@) && $(MAKE) $(MFLAGS)
--	cd $(OSNAME)_$(BUILDARCH)_zero/$(patsubst %zero,%,$@) && ./test_gamma
+ 	cd $(OSNAME)_$(VARIANTARCH)_zero/$(patsubst %zero,%,$@) && $(MAKE) $(MFLAGS)
+-	cd $(OSNAME)_$(VARIANTARCH)_zero/$(patsubst %zero,%,$@) && ./test_gamma
  ifdef INSTALL
- 	cd $(OSNAME)_$(BUILDARCH)_zero/$(patsubst %zero,%,$@) && $(MAKE) $(MFLAGS) install
+ 	cd $(OSNAME)_$(VARIANTARCH)_zero/$(patsubst %zero,%,$@) && $(MAKE) $(MFLAGS) install
  endif
-diff -Nru openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make openjdk-boot/hotspot/make/linux/makefiles/sa.make
---- openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make	2009-09-22 20:05:24.000000000 +0100
-+++ openjdk-boot/hotspot/make/linux/makefiles/sa.make	2009-09-28 16:06:18.000000000 +0100
+diff -Nru ../openjdk.orig/openjdk-boot/hotspot/make/linux/makefiles/sa.make openjdk-boot/hotspot/make/linux/makefiles/sa.make
+--- ../openjdk.orig/openjdk-boot/hotspot/make/linux/makefiles/sa.make	2009-10-30 15:58:31.000000000 +0000
++++ openjdk-boot/hotspot/make/linux/makefiles/sa.make	2009-10-30 17:44:58.000000000 +0000
 @@ -38,7 +38,9 @@
  GENERATED = $(TOPDIR)/../generated
  

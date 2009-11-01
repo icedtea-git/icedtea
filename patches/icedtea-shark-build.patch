@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redist/Makefile
 --- openjdk.orig/jdk/make/java/redist/Makefile	2009-10-26 21:42:20.000000000 +0000
-+++ openjdk/jdk/make/java/redist/Makefile	2009-10-29 11:53:21.000000000 +0000
++++ openjdk/jdk/make/java/redist/Makefile	2009-10-29 16:33:44.000000000 +0000
 @@ -96,11 +96,13 @@
  
  # Hotspot client is only available on 32-bit non-Zero builds
@@ -33,16 +33,19 @@ diff -Nru openjdk.orig/jdk/make/java/redist/Makefile openjdk/jdk/make/java/redis
  
  #  NOT Windows ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ NOT Windows
 diff -Nru openjdk.orig/make/hotspot-rules.gmk openjdk/make/hotspot-rules.gmk
---- openjdk.orig/make/hotspot-rules.gmk	2009-10-29 11:51:56.000000000 +0000
-+++ openjdk/make/hotspot-rules.gmk	2009-10-29 11:52:56.000000000 +0000
-@@ -74,6 +74,10 @@
- 
- ifeq ($(ZERO_BUILD), true)
-   HOTSPOT_TARGET := $(HOTSPOT_TARGET)zero
-+else
-+ifdef ICEDTEA_SHARK_BUILD                                                                                                
-+  HOTSPOT_TARGET := $(HOTSPOT_TARGET)shark                                                                               
-+endif      
+--- openjdk.orig/make/hotspot-rules.gmk	2009-10-21 16:40:25.000000000 +0100
++++ openjdk/make/hotspot-rules.gmk	2009-10-29 16:33:44.000000000 +0000
+@@ -72,9 +72,13 @@
+   HOTSPOT_TARGET = all_fastdebug
  endif
  
++ifdef ICEDTEA_SHARK_BUILD
++  HOTSPOT_TARGET := $(HOTSPOT_TARGET)shark
++else
+ ifeq ($(ZERO_BUILD), true)
+   HOTSPOT_TARGET := $(HOTSPOT_TARGET)zero
+ endif
++endif
+ 
  HOTSPOT_BUILD_ARGUMENTS += $(COMMON_BUILD_ARGUMENTS)
+ HOTSPOT_BUILD_ARGUMENTS += ALT_OUTPUTDIR=$(HOTSPOT_OUTPUTDIR)

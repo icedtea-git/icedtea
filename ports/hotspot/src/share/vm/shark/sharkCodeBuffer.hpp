@@ -88,7 +88,7 @@ class SharkCodeBuffer : public StackObj {
   {
     masm()->align(BytesPerWord);
     int offset = masm()->offset();
-    masm()->store_oop(object->encoding());
+    masm()->store_oop(object->constant_encoding());
     return offset;
   }
 };
