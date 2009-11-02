@@ -165,6 +165,12 @@ else
 endif
 endif
 
+if USE_ALT_CACAO_SRC_ZIP
+  CACAO_SRC_ZIP = $(ALT_CACAO_SRC_ZIP)
+else
+  CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
+endif
+
 if WITH_ALT_HSBUILD
   HS_MD5SUM = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
   HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
@@ -173,12 +179,6 @@ else
   HS_MD5SUM = $(HOTSPOT_MD5SUM)
   HS_CHANGESET = $(HOTSPOT_CHANGESET)
   HS_URL = $(HOTSPOT_URL)
-endif
-
-if USE_ALT_CACAO_SRC_ZIP
-  CACAO_SRC_ZIP = $(ALT_CACAO_SRC_ZIP)
-else
-  CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 endif
 
 if ENABLE_NPPLUGIN
@@ -695,38 +695,27 @@ all-local: icedtea-stage2
 
 check-local: jtregcheck
 
-distclean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
- clean-clone clean-clone-boot clean-download
-	rm -rf stamps
-	rm -rf drops
-	rm -f rt-source-files.txt \
-	  extra-source-files.txt \
-	  netx-source-files.txt
-	rm -rf bootstrap
-	rm -rf lib
-	rm -rf extra-lib
+clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
+ clean-clone clean-clone-boot clean-plugs clean-extra clean-netx \
+ clean-visualvm clean-nbplatform clean-bootstrap-directory-stage1 \
+ clean-bootstrap-directory-stage2 clean-bootstrap-directory-symlink-stage1 \
+ clean-bootstrap-directory-symlink-stage2 clean-extract clean-generated \
+ clean-plugin clean-liveconnect clean-native-ecj clean-hgforest
+	if [ -e bootstrap ]; then \
+	  rmdir bootstrap ; \
+	fi
+	if [ -e lib ]; then \
+	  rmdir lib ; \
+	fi
 	rm -rf rt/netscape
-	rm -rf visualvm
-	rm -rf netbeans
-	rm -rf netx.build
-if ENABLE_PLUGIN
-	rm -f IcedTeaPlugin.o IcedTeaPlugin.so
-endif
-if ENABLE_NPPLUGIN
-	rm -f $(NPPLUGIN_DIR)/*.o $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so
-endif
-if BUILD_CACAO
-	rm -rf cacao
-endif
 	rm -f jni-common.o
 if ADD_ZERO_BUILD
 	rm -rf zerovm
 endif
-if BUILD_NATIVE_ECJ
-	rm -f native-ecj
-endif
-	if [ $(abs_top_srcdir) != $(abs_top_builddir) ]; then \
-	  rm -rf $(abs_top_builddir)/generated ; \
+
+distclean-local: clean-local clean-download
+	if [ -e stamps ] ; then \
+	  rmdir stamps ; \
 	fi
 
 install:
@@ -738,9 +727,8 @@ install:
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot clean-plugs \
 	clean-tools-jar clean-visualvm clean-nbplatform \
-	clean-rt $(ICEDTEAPLUGIN_CLEAN) \
-	$(ICEDTEANPPLUGIN_CLEAN) hotspot hotspot-helper clean-extra clean-jtreg \
-	clean-jtreg-reports 
+	clean-rt clean-plugin hotspot hotspot-helper clean-extra clean-jtreg \
+	clean-jtreg-reports clean-netx clean-drops
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -766,7 +754,38 @@ dist-openjdk-fsg: stamps/patch-fsg.stamp
 # OpenJDK Source Preparation Targets
 # ==================================
 
+# Check for forest support
+
+stamps/hgforest.stamp:
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_ALT_OPENJDK_SRC_ZIP
+else
+if !USE_HG
+else
+	if ! $(HG) fclone -h; \
+          then \
+          echo "No forest extension found. Please refer to" \
+            "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
+          exit 1; \
+          fi;
+endif
+endif
+endif
+	mkdir -p stamps 
+	touch stamps/hgforest.stamp
+
+clean-hgforest:
+	rm -f stamps/hgforest.stamp
+
 # Download OpenJDK sources.
+
+stamps/download.stamp: stamps/download-drops.stamp stamps/download-openjdk.stamp
+	mkdir -p stamps
+	touch stamps/download.stamp
+
+clean-download: clean-drops clean-download-openjdk
+	rm -f stamps/download.stamp
 
 stamps/download-jaxp-drop.stamp:
 	mkdir -p drops
@@ -789,6 +808,10 @@ endif
 	mkdir -p stamps
 	touch stamps/download-jaxp-drop.stamp
 
+clean-download-jaxp-drop:
+	rm -f drops/$(JAXP_DROP_ZIP)
+	rm -f stamps/download-jaxp-drop.stamp
+
 stamps/download-jaf-drop.stamp:
 	mkdir -p drops
 if USE_ALT_JAF_DROP_ZIP
@@ -809,6 +832,10 @@ endif
 	fi ;
 	mkdir -p stamps
 	touch stamps/download-jaf-drop.stamp
+
+clean-download-jaf-drop:
+	rm -f drops/$(JAF_DROP_ZIP)
+	rm -f stamps/download-jaf-drop.stamp
 
 stamps/download-jaxws-drop.stamp:
 	mkdir -p drops
@@ -831,12 +858,23 @@ endif
 	mkdir -p stamps
 	touch stamps/download-jaxws-drop.stamp
 
+clean-download-jaxws-drop:
+	rm -f drops/$(JAXWS_DROP_ZIP)
+	rm -f stamps/download-jaxws-drop.stamp
+
 stamps/download-drops.stamp: stamps/download-jaxp-drop.stamp \
  stamps/download-jaxws-drop.stamp stamps/download-jaf-drop.stamp
 	mkdir -p stamps
 	touch stamps/download-drops.stamp
 
-stamps/download.stamp: stamps/hgforest.stamp stamps/download-drops.stamp
+clean-drops: clean-download-jaxp-drop clean-download-jaf-drop \
+ clean-download-jaxws-drop
+	if [ -e drops ] ; then \
+	  rmdir drops ; \
+	fi
+	rm -f stamps/download-drops.stamp
+
+stamps/download-openjdk.stamp: stamps/hgforest.stamp
 if !OPENJDK_SRC_DIR_FOUND
 if USE_ALT_OPENJDK_SRC_ZIP
 else
@@ -1017,62 +1055,65 @@ if WITH_VISUALVM
         fi
 endif
 	mkdir -p stamps
-	touch stamps/download.stamp
+	touch stamps/download-openjdk.stamp
 
-clean-download-jaxp-drop:
-	rm -f drops/$(JAXP_DROP_ZIP)
-	rm -f stamps/download-jaxp-drop.stamp
-
-clean-download-jaf-drop:
-	rm -f drops/$(JAF_DROP_ZIP)
-	rm -f stamps/download-jaf-drop.stamp
-
-clean-download-jaxws-drop:
-	rm -f drops/$(JAXWS_DROP_ZIP)
-	rm -f stamps/download-jaxws-drop.stamp
-
-clean-drops: clean-download-jaxp-drop clean-download-jaf-drop \
- clean-download-jaxws-drop
-	rm -f stamps/download-drops.stamp
-
-clean-download: clean-drops
-	rm -f $(OPENJDK_SRC_ZIP)
+clean-download-openjdk:
+if !USE_ALT_OPENJDK_SRC_ZIP
+	if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
+	  rm -f $(OPENJDK_SRC_ZIP) ; \
+	fi
+endif
+if !USE_ALT_CORBA_SRC_ZIP
+	if [ ! -z $(CORBA_SRC_ZIP) ] ; then \
+	  rm -f $(CORBA_SRC_ZIP) ; \
+	fi
+endif
+if !USE_ALT_JAXP_SRC_ZIP
+	if [ ! -z $(JAXP_SRC_ZIP) ] ; then \
+	  rm -f $(JAXP_SRC_ZIP) ; \
+	fi
+endif
+if !USE_ALT_JAXWS_SRC_ZIP
+	if [ ! -z $(JAXWS_SRC_ZIP) ] ; then \
+	  rm -f $(JAXWS_SRC_ZIP) ; \
+	fi
+endif
+if !USE_ALT_JDK_SRC_ZIP
+	if [ ! -z $(JDK_SRC_ZIP) ] ; then \
+	  rm -f $(JDK_SRC_ZIP) ; \
+	fi
+endif
+if !USE_ALT_LANGTOOLS_SRC_ZIP
+	if [ ! -z $(LANGTOOLS_SRC_ZIP) ] ; then \
+	  rm -f $(LANGTOOLS_SRC_ZIP) ; \
+	fi
+endif
+if !USE_ALT_HOTSPOT_SRC_ZIP
+	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
+	  rm -f $(HOTSPOT_SRC_ZIP) ; \
+	fi
+endif
 if BUILD_CACAO
+if !USE_ALT_CACAO_SRC_ZIP
 	rm -f $(CACAO_SRC_ZIP)
 endif
-if WITH_VISUALVM
-	rm -f $(VISUALVM_SRC_ZIP)
-	rm -f $(NETBEANS_PROFILER_SRC_ZIP)
 endif
 if WITH_VISUALVM
 	rm -f $(VISUALVM_SRC_ZIP)
 	rm -f $(NETBEANS_PROFILER_SRC_ZIP)
 endif
-	rm -f stamps/download.stamp
+	rm -f stamps/download-openjdk.stamp
 
-stamps/hgforest.stamp:
-if OPENJDK_SRC_DIR_FOUND
-else
-if USE_ALT_OPENJDK_SRC_ZIP
-else
-if !USE_HG
-else
-	if ! $(HG) fclone -h; \
-          then \
-          echo "No forest extension found. Please refer to" \
-            "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
-          exit 1; \
-          fi;
-endif
-endif
-endif
-	mkdir -p stamps 
-	touch stamps/hgforest.stamp
+stamps/extract.stamp: stamps/extract-openjdk.stamp \
+ stamps/extract-visualvm.stamp stamps/extract-cacao.stamp
+	mkdir -p stamps
+	touch stamps/extract.stamp
 
-clean-hgforest:
-	rm -f stamps/hgforest.stamp
+clean-extract: clean-extract-openjdk clean-extract-visualvm \
+ clean-extract-cacao
+	rm -f stamps/extract.stamp
 
-stamps/extract.stamp: stamps/download.stamp
+stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
 if OPENJDK_SRC_DIR_FOUND
 	cp -a $(OPENJDK_SRC_DIR) openjdk
 else
@@ -1175,13 +1216,14 @@ endif
 	find openjdk -name '*.java' \
 	  -exec sed -i 's/^[[:space:]]*@Override//' {} + ; \
 	mkdir -p stamps 
-	touch stamps/extract.stamp
+	touch stamps/extract-openjdk.stamp
 
-clean-extract:
-	rm -f stamps/extract.stamp
+clean-extract-openjdk: clean-overlay clean-versioning \
+ clean-ports clean-patch-fsg
 	rm -rf openjdk
+	rm -f stamps/extract-openjdk.stamp
 
-stamps/extract-visualvm.stamp:
+stamps/extract-visualvm.stamp: stamps/download-openjdk.stamp
 if WITH_VISUALVM
 	if ! test -d netbeans ; \
 	then \
@@ -1197,16 +1239,16 @@ endif
 	mkdir -p stamps
 	touch $@
 
-clean-extract-visualvm.stamp:
+clean-extract-visualvm:
 if WITH_VISUALVM
 	rm -rf netbeans visualvm
 endif
 	rm -f stamps/extract-visualvm.stamp
 
-stamps/extract-cacao.stamp: stamps/extract.stamp
+stamps/extract-cacao.stamp: stamps/extract-openjdk.stamp
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
-	if ! test -d cacao ; \
+	if ! test -d cacao/cacao ; \
 	then \
 	  mkdir cacao ; \
 	  $(TAR) xjf $(CACAO_SRC_ZIP) -C cacao ; \
@@ -1220,16 +1262,11 @@ endif
 	mkdir -p stamps
 	touch stamps/extract-cacao.stamp
 
-clean-extract-cacao:
-if BUILD_CACAO
-if !USE_SYSTEM_CACAO
-	rm -rf cacao
-endif
-endif
+clean-extract-cacao: clean-cacao
 	rm -f stamps/extract-cacao.stamp
 
 # Link ports sources into tree
-stamps/ports.stamp: stamps/extract-cacao.stamp
+stamps/ports.stamp: stamps/extract.stamp
 	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/cpu/zero/vm/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
@@ -1249,6 +1286,17 @@ stamps/ports.stamp: stamps/extract-cacao.stamp
 	mkdir -p stamps
 	touch stamps/ports.stamp
 
+clean-ports:
+	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
+		      $(abs_top_srcdir)/ports/hotspot/src/cpu/zero/vm/* \
+		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
+	  link=$$(echo $$target | sed 's/^.*ports/openjdk/'|sed "s#hotspot/build#hotspot/make#"); \
+	  rm -rf $$link; \
+	done
+	rm -f openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg
+	rm -f openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c 
+	rm -f stamps/ports.stamp
+
 stamps/generated.stamp: stamps/ports.stamp
 	if [ ! -e $(abs_top_builddir)/generated ]; then \
 	  cp -a $(abs_top_srcdir)/generated $(abs_top_builddir); \
@@ -1257,6 +1305,12 @@ stamps/generated.stamp: stamps/ports.stamp
 	fi
 	mkdir -p stamps
 	touch stamps/generated.stamp
+
+clean-generated:
+	if [ $(abs_top_srcdir) != $(abs_top_builddir) ]; then \
+	  rm -rf $(abs_top_builddir)/generated ; \
+	fi
+	rm -f stamps/generated.stamp
 
 stamps/patch-fsg.stamp: stamps/generated.stamp
 	mkdir -p stamps ; \
@@ -1289,22 +1343,24 @@ stamps/patch-fsg.stamp: stamps/generated.stamp
 	  exit 2; \
 	fi ; 
 
-clean-patch-fsg:
-	rm -f stamps/patch-fsg.stamp
-	all_patches_ok=yes; \
-	for p in $(ICEDTEA_FSG_PATCHES) ; \
-	do \
-	  echo Checking $$p ; \
-	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
-	  then \
-	    echo Reverting $$p ; \
-	    $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
-	  else \
-	    all_patches_ok=no ; \
+clean-patch-fsg: clean-patch
+	if [ -e stamps/patch-fsg.stamp ] ; then \
+	  rm -f stamps/patch-fsg.stamp ; \
+	  all_patches_ok=yes; \
+	  for p in $(ICEDTEA_FSG_PATCHES) ; \
+	  do \
+	    echo Checking $$p ; \
+	    if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
+	    then \
+	      echo Reverting $$p ; \
+	      $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
+	    else \
+	      all_patches_ok=no ; \
+	    fi ; \
+	  done ; \
+	  if ! test x$${all_patches_ok} = "xyes" ; then \
+	    echo "WARNING Not all patches reverted cleanly" ; \
 	  fi ; \
-	done ; \
-	if ! test x$${all_patches_ok} = "xyes" ; then \
-	  echo "WARNING Not all patches reverted cleanly" ; \
 	fi
 
 stamps/patch.stamp: stamps/patch-fsg.stamp
@@ -1366,34 +1422,36 @@ endif
 endif
 
 clean-patch:
-	rm -f stamps/patch.stamp
-	all_patches_ok=yes; \
-	for p in $(ICEDTEA_PATCHES) ; \
-	do \
-	  echo Checking $$p ; \
-	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
-	  then \
-	    echo Reverting $$p ; \
-	    $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
-	  else \
-	    all_patches_ok=no ; \
+	if [ -e stamps/patch.stamp ] ; then \
+	  all_patches_ok=yes; \
+	  for p in $(ICEDTEA_PATCHES) ; \
+	  do \
+	    echo Checking $$p ; \
+	    if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
+	    then \
+	      echo Reverting $$p ; \
+	      $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
+	    else \
+	      all_patches_ok=no ; \
+	    fi ; \
+	  done ; \
+	  cd $(abs_top_builddir)/openjdk/jdk; \
+	  for p in $(OPENJDK_PATCHES) ; \
+	  do \
+	    echo Checking $$p ; \
+	    if $(PATCH) -l -p1 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
+	    then \
+	      echo Reverting $$p ; \
+	      $(PATCH) -l -p1 -R < $(abs_top_srcdir)/$$p ; \
+	    else \
+	      all_patches_ok=no ; \
+	    fi ; \
+	  done ; \
+	  cd $(abs_top_builddir) ; \
+	  if ! test x$${all_patches_ok} = "xyes" ; then \
+	    echo "WARNING Not all patches reverted cleanly" ; \
 	  fi ; \
-	done ; \
-	cd $(abs_top_builddir)/openjdk/jdk; \
-	for p in $(OPENJDK_PATCHES) ; \
-	do \
-	  echo Checking $$p ; \
-	  if $(PATCH) -l -p1 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
-	  then \
-	    echo Reverting $$p ; \
-	    $(PATCH) -l -p1 -R < $(abs_top_srcdir)/$$p ; \
-	  else \
-	    all_patches_ok=no ; \
-	  fi ; \
-	done ; \
-	cd $(abs_top_builddir) ; \
-	if ! test x$${all_patches_ok} = "xyes" ; then \
-	  echo "WARNING Not all patches reverted cleanly" ; \
+	  rm -f stamps/patch.stamp ; \
 	fi
 	rm -rf rt/netscape
 	for file in plugin/icedtea/sun/applet/*java ; \
@@ -1402,6 +1460,7 @@ clean-patch:
 	done ;
 
 stamps/versioning.stamp: stamps/patch.stamp
+	cp openjdk/jdk/make/common/shared/Defs.gmk Defs.gmk.bak
 	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
 	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{node|short}')`" ; \
 	fi ; \
@@ -1431,11 +1490,20 @@ stamps/versioning.stamp: stamps/patch.stamp
 	mkdir -p stamps
 	touch stamps/versioning.stamp
 
+clean-versioning:
+	if [ -e Defs.gmk.bak ] ; then \
+	  mv Defs.gmk.bak openjdk/jdk/make/common/shared/Defs.gmk ; \
+	fi
+	rm -f stamps/versioning.stamp
+
 stamps/overlay.stamp: stamps/versioning.stamp
 	cp -r $(abs_top_srcdir)/overlays/openjdk/* openjdk/
 	chmod -R ug+w openjdk
 	mkdir -p stamps
 	touch stamps/overlay.stamp
+
+clean-overlay:
+	rm -f stamps/overlay.stamp
 
 # OpenJDK boot Source Preparation Targets
 # ======================================
@@ -1512,6 +1580,10 @@ if BUILD_NATIVE_ECJ
 	    --main=org.eclipse.jdt.internal.compiler.batch.Main ${ECJ_JAR}
 endif
 	touch stamps/native-ecj.stamp
+
+clean-native-ecj:
+	rm -f native-ecj
+	rm -rf stamps/native-ecj.stamp
 
 # bootstrap/stage1
 stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
@@ -1603,10 +1675,9 @@ clean-bootstrap-directory-symlink-stage2:
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
-	stamps/ports.stamp stamps/overlay.stamp \
-	$(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) $(JNLP_ABOUT_TARGET) \
-	stamps/cacao.stamp stamps/netx-dist.stamp stamps/liveconnect.stamp \
-	stamps/pulse-java.stamp
+	stamps/overlay.stamp $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) \
+	$(JNLP_ABOUT_TARGET) stamps/cacao.stamp stamps/netx-dist.stamp \
+	stamps/liveconnect.stamp stamps/pulse-java.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1857,6 +1928,7 @@ clean-IcedTeaNPPlugin:
 	rm -f IcedTeaNPPlugin.so; \
 	cd ../
 endif
+
 if ENABLE_PLUGIN
 # IcedTeaPlugin.so.
 # Separate compile and link invocations to ensure intermediate object
@@ -1887,12 +1959,18 @@ clean-IcedTeaPlugin:
 	rm -f IcedTeaPlugin.so
 endif
 
+clean-plugin: $(ICEDTEAPLUGIN_CLEAN) $(ICEDTEANPPLUGIN_CLEAN)
+
 stamps/liveconnect.stamp: stamps/rt-class-files.stamp
 	if test "x${LIVECONNECT_DIR}" != x; then \
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf lib/classes.jar $(LIVECONNECT_DIR) ; \
 	fi
 	mkdir -p stamps
 	touch stamps/liveconnect.stamp
+
+clean-liveconnect:
+	rm -f lib/classes.jar
+	rm -f stamps/liveconnect.stamp
 
 # NetX
 
@@ -1926,6 +2004,12 @@ stamps/netx-dist.stamp: stamps/netx.stamp
 	 $(ZIP) -qr $(abs_top_builddir)/netx.build/lib/src.zip javax net )
 	mkdir -p stamps
 	touch stamps/netx-dist.stamp
+
+clean-netx:
+	rm -rf $(abs_top_builddir)/netx.build
+	rm -f stamps/netx-dist.stamp
+	rm -f netx-source-files.txt
+	rm -f stamps/netx.stamp
 
 extra-source-files.txt:
 	find $(abs_top_srcdir)/extra -name '*.java' | sort > $@
@@ -2453,8 +2537,6 @@ rt: stamps/rt.stamp
 rt-class-files: stamps/rt-class-files.stamp
 
 hotspot-ports: stamps/ports.stamp
-
-clean: distclean-local
 
 jtreg: stamps/jtreg.stamp
 

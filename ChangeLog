@@ -1,3 +1,45 @@
+2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(clean-local): New target which removes all
+	but the downloaded tarballs.
+	(distclean-local): Now depends on clean-local,
+	and removes the tarballs.
+	(stamps/download.stamp): Changed to be a top-level
+	target for all downloads.
+	(clean-download): Changed to remove all downloads.
+	(stamps/download-openjdk.stamp): Renamed from
+	stamps/download.stamp.  Downloads OpenJDK tarballs.
+	(clean-download-openjdk): Now removes all OpenJDK
+	tarballs if not using the alternate zip option.
+	(stamps/extract.stamp): Changed to be a top-level
+	target for all extraction.
+	(clean-extract): Changed to remove all extracted
+	directories.
+	(stamps/extract-visualvm.stamp): Depend on the tarball
+	having being downloaded.
+	(clean-extract-visualvm): Renamed from clean-extract-visualvm.stamp
+	(stamps/extract-cacao.stamp): Rename dependency to
+	match changes above.
+	(clean-extract-cacao): Simply depend on clean-cacao and
+	remove the stamp.
+	(stamps/ports.stamp): Depend on general extraction target.
+	(clean-ports): New target to invert stamps/ports.stamp
+	(clean-generated): Likewise for stamps/generated.stamp
+	(clean-patch-fsg): Only revert patches if they've been applied.
+	(clean-patch): Likewise.
+	(stamps/versioning.stamp): Backup Defs.gmk prior to altering.
+	(clean-versioning): Restore original Defs.gmk.
+	(clean-overlay): New target to remove stamps/overlay.stamp
+	(clean-native-ecj): New target to remove the native-ecj binary
+	and stamp.
+	(stamps/icedtea.stamp): Reduce dependencies where implied by
+	others.
+	(clean-plugin): New target depending on two conditional plugin targets.
+	(clean-liveconnect): New target to revert stamps/liveconnect.stamp.
+	(clean-netx): Likewise for stamps/netx.stamp and stamps/netx-dist.stamp
+	(clean): Removed; provided by automake.
+	
 2009-11-01  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-float-double-trailing-zeros.patch:
