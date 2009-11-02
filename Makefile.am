@@ -1692,9 +1692,9 @@ clean-bootstrap-directory-symlink-stage2:
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
-	stamps/overlay.stamp $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) \
-	$(JNLP_ABOUT_TARGET) stamps/cacao.stamp stamps/netx-dist.stamp \
-	stamps/liveconnect.stamp stamps/pulse-java.stamp
+ stamps/download.stamp stamps/extract.stamp stamps/overlay.stamp \
+ stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
+ stamps/netx-dist.stamp stamps/liveconnect.stamp stamps/pulse-java.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1763,10 +1763,9 @@ endif
 	touch $@
 
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
-	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
-	$(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) $(JNLP_ABOUT_TARGET) \
-	stamps/cacao.stamp stamps/netx-dist.stamp stamps/liveconnect.stamp \
-	stamps/pulse-java.stamp
+ stamps/download.stamp stamps/extract.stamp stamps/overlay.stamp \
+ stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
+ stamps/netx-dist.stamp stamps/liveconnect.stamp stamps/pulse-java.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1857,8 +1856,9 @@ icedtea-debug-stage2: \
 # ===================
 
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
-	stamps/plugs.stamp stamps/netx-dist.stamp stamps/liveconnect.stamp \
-	stamps/overlay.stamp stamps/patch-boot.stamp stamps/cacao.stamp
+ stamps/download.stamp stamps/extract.stamp stamps/overlay.stamp \
+ stamps/plugs.stamp stamps/netx-dist.stamp stamps/liveconnect.stamp \
+ stamps/patch-boot.stamp stamps/cacao.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \

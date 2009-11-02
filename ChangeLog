@@ -1,6 +1,12 @@
 2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Make sure all downloading and extracting
+	occurs before building OpenJDK.
+	
+2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Replace explicit touch stamps/<file>
 	invocations with touch $@.  Reorganise
 	aliases alphabetically and add missing ones.
