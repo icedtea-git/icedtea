@@ -1,6 +1,29 @@
 2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Replace explicit touch stamps/<file>
+	invocations with touch $@.  Reorganise
+	aliases alphabetically and add missing ones.
+	(stamps/download-openjdk.stamp): Move
+	CACAO and VisualVM downloads to separate target.
+	(stamps/download-cacao.stamp): New target
+	for downloading CACAO.
+	(clean-download-cacao): Inverse of download-cacao.
+	(stamps/download-visualvm.stamp): New target
+	for downloading VisualVM.
+	(clean-download-visualvm): Inverse of download-visualvm.
+	(stamps/extract-cacao.stamp): Depend on download-cacao.
+	(stamps/extract-visualvm.stamp): Depend on download-visualvm.
+	(clean-patch-boot): Check that patches have been applied.
+	(stamps/pulse-java.stamp): Move native code generation to its
+	own target, making this a top-level dependency target.
+	(stamps/pulse-java-native-code.stamp): New target for native
+	code generation for PulseAudio plugin.
+	(clean-pulse-java): Always remove stamps.
+
+2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(clean-local): New target which removes all
 	but the downloaded tarballs.
 	(distclean-local): Now depends on clean-local,

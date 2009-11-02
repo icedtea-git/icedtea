@@ -773,16 +773,17 @@ endif
 endif
 endif
 	mkdir -p stamps 
-	touch stamps/hgforest.stamp
+	touch $@
 
 clean-hgforest:
 	rm -f stamps/hgforest.stamp
 
 # Download OpenJDK sources.
 
-stamps/download.stamp: stamps/download-drops.stamp stamps/download-openjdk.stamp
+stamps/download.stamp: stamps/download-drops.stamp stamps/download-openjdk.stamp \
+ stamps/download-cacao.stamp stamps/download-visualvm.stamp
 	mkdir -p stamps
-	touch stamps/download.stamp
+	touch $@
 
 clean-download: clean-drops clean-download-openjdk
 	rm -f stamps/download.stamp
@@ -806,7 +807,7 @@ endif
 	  fi; \
 	fi ;
 	mkdir -p stamps
-	touch stamps/download-jaxp-drop.stamp
+	touch $@
 
 clean-download-jaxp-drop:
 	rm -f drops/$(JAXP_DROP_ZIP)
@@ -831,7 +832,7 @@ endif
 	  fi; \
 	fi ;
 	mkdir -p stamps
-	touch stamps/download-jaf-drop.stamp
+	touch $@
 
 clean-download-jaf-drop:
 	rm -f drops/$(JAF_DROP_ZIP)
@@ -856,7 +857,7 @@ endif
 	  fi; \
 	fi ;
 	mkdir -p stamps
-	touch stamps/download-jaxws-drop.stamp
+	touch $@
 
 clean-download-jaxws-drop:
 	rm -f drops/$(JAXWS_DROP_ZIP)
@@ -865,7 +866,7 @@ clean-download-jaxws-drop:
 stamps/download-drops.stamp: stamps/download-jaxp-drop.stamp \
  stamps/download-jaxws-drop.stamp stamps/download-jaf-drop.stamp
 	mkdir -p stamps
-	touch stamps/download-drops.stamp
+	touch $@
 
 clean-drops: clean-download-jaxp-drop clean-download-jaf-drop \
  clean-download-jaxws-drop
@@ -1003,59 +1004,8 @@ endif
 endif
 endif
 endif
-if BUILD_CACAO
-if !USE_SYSTEM_CACAO
-if USE_ALT_CACAO_SRC_ZIP
-else
-	if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
-	 | $(MD5SUM) --check ; \
-	then \
-	 if [ $(CACAO_SRC_ZIP) ] ; \
-	 then \
-	   mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
-	 fi ; \
-	 $(WGET) $(CACAO_URL)$(CACAO_SRC_ZIP) -O $(CACAO_SRC_ZIP); \
-	 if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
-	   | $(MD5SUM) --check ; \
-	 then echo "ERROR: Bad download of CACAO zip"; false; \
-	 fi; \
-	fi
-endif
-endif
-endif
-if WITH_VISUALVM
-	if ! echo "$(NETBEANS_PROFILER_MD5SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
-	 | $(MD5SUM) --check ; \
-	then \
-	 if [ $(NETBEANS_PROFILER_SRC_ZIP) ] ; \
-	 then \
-	  mv $(NETBEANS_PROFILER_SRC_ZIP) $(NETBEANS_PROFILER_SRC_ZIP).old ; \
-	 fi ; \
-	 $(WGET) $(NETBEANS_PROFILER_URL)$(NETBEANS_PROFILER_SRC_ZIP) \
-	  -O $(NETBEANS_PROFILER_SRC_ZIP) ; \
-	 if ! echo "$(NETBEANS_PROFILER_MD5SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
-	   | $(MD5SUM) --check ; \
-	 then echo "ERROR: Bad download of NetBeans profiler zip"; false; \
-	 fi; \
-	fi
-
-	if ! echo "$(VISUALVM_MD5SUM)  $(VISUALVM_SRC_ZIP)" \
-         | $(MD5SUM) --check ; \
-        then \
-         if [ $(VISUALVM_SRC_ZIP) ] ; \
-         then \
-          mv $(VISUALVM_SRC_ZIP) $(VISUALVM_SRC_ZIP).old ; \
-         fi ; \
-         $(WGET) $(VISUALVM_URL)$(VISUALVM_SRC_ZIP) \
-          -O $(VISUALVM_SRC_ZIP) ; \
-	 if ! echo "$(VISUALVM_MD5SUM)  $(VISUALVM_SRC_ZIP)" \
-	   | $(MD5SUM) --check ; \
-	 then echo "ERROR: Bad download of VisualVM zip"; false; \
-	 fi; \
-        fi
-endif
 	mkdir -p stamps
-	touch stamps/download-openjdk.stamp
+	touch $@
 
 clean-download-openjdk:
 if !USE_ALT_OPENJDK_SRC_ZIP
@@ -1093,21 +1043,86 @@ if !USE_ALT_HOTSPOT_SRC_ZIP
 	  rm -f $(HOTSPOT_SRC_ZIP) ; \
 	fi
 endif
+	rm -f stamps/download-openjdk.stamp
+
+stamps/download-cacao.stamp:
+if BUILD_CACAO
+if !USE_SYSTEM_CACAO
+if USE_ALT_CACAO_SRC_ZIP
+else
+	if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
+	 | $(MD5SUM) --check ; \
+	then \
+	 if [ $(CACAO_SRC_ZIP) ] ; \
+	 then \
+	   mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
+	 fi ; \
+	 $(WGET) $(CACAO_URL)$(CACAO_SRC_ZIP) -O $(CACAO_SRC_ZIP); \
+	 if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
+	   | $(MD5SUM) --check ; \
+	 then echo "ERROR: Bad download of CACAO zip"; false; \
+	 fi; \
+	fi
+endif
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-download-cacao:
 if BUILD_CACAO
 if !USE_ALT_CACAO_SRC_ZIP
 	rm -f $(CACAO_SRC_ZIP)
 endif
 endif
+	rm -f stamps/download-cacao.stamp
+
+stamps/download-visualvm.stamp:
+if WITH_VISUALVM
+	if ! echo "$(NETBEANS_PROFILER_MD5SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
+	 | $(MD5SUM) --check ; \
+	then \
+	 if [ $(NETBEANS_PROFILER_SRC_ZIP) ] ; \
+	 then \
+	  mv $(NETBEANS_PROFILER_SRC_ZIP) $(NETBEANS_PROFILER_SRC_ZIP).old ; \
+	 fi ; \
+	 $(WGET) $(NETBEANS_PROFILER_URL)$(NETBEANS_PROFILER_SRC_ZIP) \
+	  -O $(NETBEANS_PROFILER_SRC_ZIP) ; \
+	 if ! echo "$(NETBEANS_PROFILER_MD5SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
+	   | $(MD5SUM) --check ; \
+	 then echo "ERROR: Bad download of NetBeans profiler zip"; false; \
+	 fi; \
+	fi
+
+	if ! echo "$(VISUALVM_MD5SUM)  $(VISUALVM_SRC_ZIP)" \
+         | $(MD5SUM) --check ; \
+        then \
+         if [ $(VISUALVM_SRC_ZIP) ] ; \
+         then \
+          mv $(VISUALVM_SRC_ZIP) $(VISUALVM_SRC_ZIP).old ; \
+         fi ; \
+         $(WGET) $(VISUALVM_URL)$(VISUALVM_SRC_ZIP) \
+          -O $(VISUALVM_SRC_ZIP) ; \
+	 if ! echo "$(VISUALVM_MD5SUM)  $(VISUALVM_SRC_ZIP)" \
+	   | $(MD5SUM) --check ; \
+	 then echo "ERROR: Bad download of VisualVM zip"; false; \
+	 fi; \
+        fi
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-download-visualvm:
 if WITH_VISUALVM
 	rm -f $(VISUALVM_SRC_ZIP)
 	rm -f $(NETBEANS_PROFILER_SRC_ZIP)
 endif
-	rm -f stamps/download-openjdk.stamp
+	rm -f stamps/download-visualvm.stamp
 
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
  stamps/extract-visualvm.stamp stamps/extract-cacao.stamp
 	mkdir -p stamps
-	touch stamps/extract.stamp
+	touch $@
 
 clean-extract: clean-extract-openjdk clean-extract-visualvm \
  clean-extract-cacao
@@ -1216,14 +1231,14 @@ endif
 	find openjdk -name '*.java' \
 	  -exec sed -i 's/^[[:space:]]*@Override//' {} + ; \
 	mkdir -p stamps 
-	touch stamps/extract-openjdk.stamp
+	touch $@
 
 clean-extract-openjdk: clean-overlay clean-versioning \
  clean-ports clean-patch-fsg
 	rm -rf openjdk
 	rm -f stamps/extract-openjdk.stamp
 
-stamps/extract-visualvm.stamp: stamps/download-openjdk.stamp
+stamps/extract-visualvm.stamp: stamps/download-visualvm.stamp
 if WITH_VISUALVM
 	if ! test -d netbeans ; \
 	then \
@@ -1245,7 +1260,7 @@ if WITH_VISUALVM
 endif
 	rm -f stamps/extract-visualvm.stamp
 
-stamps/extract-cacao.stamp: stamps/extract-openjdk.stamp
+stamps/extract-cacao.stamp: stamps/download-cacao.stamp
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 	if ! test -d cacao/cacao ; \
@@ -1260,7 +1275,7 @@ if !USE_SYSTEM_CACAO
 endif
 endif
 	mkdir -p stamps
-	touch stamps/extract-cacao.stamp
+	touch $@
 
 clean-extract-cacao: clean-cacao
 	rm -f stamps/extract-cacao.stamp
@@ -1284,7 +1299,7 @@ stamps/ports.stamp: stamps/extract.stamp
 	    openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
 	fi
 	mkdir -p stamps
-	touch stamps/ports.stamp
+	touch $@
 
 clean-ports:
 	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
@@ -1304,7 +1319,7 @@ stamps/generated.stamp: stamps/ports.stamp
 	    -o -type d -exec chmod 750 '{}' ';'; \
 	fi
 	mkdir -p stamps
-	touch stamps/generated.stamp
+	touch $@
 
 clean-generated:
 	if [ $(abs_top_srcdir) != $(abs_top_builddir) ]; then \
@@ -1345,7 +1360,6 @@ stamps/patch-fsg.stamp: stamps/generated.stamp
 
 clean-patch-fsg: clean-patch
 	if [ -e stamps/patch-fsg.stamp ] ; then \
-	  rm -f stamps/patch-fsg.stamp ; \
 	  all_patches_ok=yes; \
 	  for p in $(ICEDTEA_FSG_PATCHES) ; \
 	  do \
@@ -1361,6 +1375,7 @@ clean-patch-fsg: clean-patch
 	  if ! test x$${all_patches_ok} = "xyes" ; then \
 	    echo "WARNING Not all patches reverted cleanly" ; \
 	  fi ; \
+	  rm -f stamps/patch-fsg.stamp ; \
 	fi
 
 stamps/patch.stamp: stamps/patch-fsg.stamp
@@ -1488,7 +1503,7 @@ stamps/versioning.stamp: stamps/patch.stamp
 	sed -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
 	  openjdk/jdk/make/common/shared/Defs.gmk;
 	mkdir -p stamps
-	touch stamps/versioning.stamp
+	touch $@
 
 clean-versioning:
 	if [ -e Defs.gmk.bak ] ; then \
@@ -1500,7 +1515,7 @@ stamps/overlay.stamp: stamps/versioning.stamp
 	cp -r $(abs_top_srcdir)/overlays/openjdk/* openjdk/
 	chmod -R ug+w openjdk
 	mkdir -p stamps
-	touch stamps/overlay.stamp
+	touch $@
 
 clean-overlay:
 	rm -f stamps/overlay.stamp
@@ -1514,7 +1529,7 @@ stamps/clone-boot.stamp: stamps/overlay.stamp
 	    cp -pPRl openjdk openjdk-boot ; \
 	fi
 	mkdir -p stamps
-	touch stamps/clone-boot.stamp
+	touch $@
 
 clean-clone-boot:
 	rm -f stamps/clone-boot.stamp
@@ -1552,21 +1567,23 @@ stamps/patch-boot.stamp: stamps/clone-boot.stamp
 	fi
 
 clean-patch-boot:
-	rm -f stamps/patch-boot.stamp
-	all_patches_ok=yes; \
-	for p in $(ICEDTEA_BOOT_PATCHES) ; \
-	do \
-	  echo Checking $$p ; \
-	  if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
-	  then \
-	    echo Reverting $$p ; \
-	    $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
-	  else \
-	    all_patches_ok=no ; \
+	if [ -e stamps/patch-boot.stamp ] ; then \
+	  all_patches_ok=yes; \
+	  for p in $(ICEDTEA_BOOT_PATCHES) ; \
+	  do \
+	    echo Checking $$p ; \
+	    if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
+	    then \
+	      echo Reverting $$p ; \
+	      $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
+	    else \
+	      all_patches_ok=no ; \
+	    fi ; \
+	  done ; \
+	  if ! test x$${all_patches_ok} = "xyes" ; then \
+	    echo "WARNING Not all patches reverted cleanly" ; \
 	  fi ; \
-	done ; \
-	if ! test x$${all_patches_ok} = "xyes" ; then \
-	  echo "WARNING Not all patches reverted cleanly" ; \
+	  rm -f stamps/patch-boot.stamp ; \
 	fi
 
 # Bootstrap Directory Targets
@@ -1579,7 +1596,7 @@ if BUILD_NATIVE_ECJ
 	${GCJ} ${CFLAGS} -Wl,-Bsymbolic -findirect-dispatch -o native-ecj \
 	    --main=org.eclipse.jdt.internal.compiler.batch.Main ${ECJ_JAR}
 endif
-	touch stamps/native-ecj.stamp
+	touch $@
 
 clean-native-ecj:
 	rm -f native-ecj
@@ -1618,7 +1635,7 @@ stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	  ln -s $(SYSTEM_JDK_DIR)/include/$$i bootstrap/boot/include/$$i; \
 	done; \
 	mkdir -p stamps
-	touch stamps/bootstrap-directory-stage1.stamp
+	touch $@
 
 clean-bootstrap-directory-stage1:
 	rm -f stamps/bootstrap-directory-stage1.stamp
@@ -1634,7 +1651,7 @@ stamps/bootstrap-directory-stage2.stamp: stamps/icedtea-stage1.stamp
 	  ln -sf $(ICEDTEA_BUILD_DIR_BOOT)/include bootstrap/icedtea/include; \
 	fi
 	mkdir -p stamps
-	touch stamps/bootstrap-directory-stage2.stamp
+	touch $@
 
 clean-bootstrap-directory-stage2:
 	rm -f stamps/bootstrap-directory-stage2.stamp
@@ -1645,7 +1662,7 @@ stamps/bootstrap-directory-symlink-stage1.stamp: stamps/bootstrap-directory-stag
 	rm -f bootstrap/jdk1.6.0
 	ln -sf boot bootstrap/jdk1.6.0
 	mkdir -p stamps
-	touch stamps/bootstrap-directory-symlink-stage1.stamp
+	touch $@
 
 clean-bootstrap-directory-symlink-stage1:
 	rm -f stamps/bootstrap-directory-symlink-stage1.stamp
@@ -1663,7 +1680,7 @@ stamps/bootstrap-directory-symlink-stage2.stamp: $(BOOTSTRAP_DIRECTORY_STAMP)
            exit 1; \
         fi
 	mkdir -p stamps
-	touch stamps/bootstrap-directory-symlink-stage2.stamp
+	touch $@
 
 clean-bootstrap-directory-symlink-stage2:
 	rm -f stamps/bootstrap-directory-symlink-stage2.stamp
@@ -1743,7 +1760,7 @@ if ENABLE_NSS
 endif
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 	mkdir -p stamps
-	touch stamps/icedtea.stamp
+	touch $@
 
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	stamps/ports.stamp stamps/patch.stamp stamps/overlay.stamp \
@@ -1816,7 +1833,7 @@ endif
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
 	mkdir -p stamps
-	touch stamps/icedtea-debug.stamp
+	touch $@
 
 clean-icedtea: stamps/download.stamp
 	$(ARCH_PREFIX) $(MAKE) \
@@ -1841,7 +1858,7 @@ icedtea-debug-stage2: \
 
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
 	stamps/plugs.stamp stamps/netx-dist.stamp stamps/liveconnect.stamp \
-	stamps/ports.stamp stamps/patch-boot.stamp stamps/cacao.stamp
+	stamps/overlay.stamp stamps/patch-boot.stamp stamps/cacao.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \
@@ -1849,7 +1866,7 @@ stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
 	@echo "Bootstrapped IcedTea is served:" \
 	  $(BOOT_BUILD_OUTPUT_DIR)
 	mkdir -p stamps
-	touch stamps/icedtea-boot.stamp
+	touch $@
 
 hotspot:
 	rm -f stamps/bootstrap-directory-symlink-stage1.stamp
@@ -1876,7 +1893,7 @@ clean-icedtea-boot: stamps/clone-boot.stamp
 
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp
 	mkdir -p stamps
-	touch stamps/icedtea-stage1.stamp
+	touch $@
 
 # Plugin
 
@@ -1966,7 +1983,7 @@ stamps/liveconnect.stamp: stamps/rt-class-files.stamp
 	  $(ICEDTEA_BOOT_DIR)/bin/jar cf lib/classes.jar $(LIVECONNECT_DIR) ; \
 	fi
 	mkdir -p stamps
-	touch stamps/liveconnect.stamp
+	touch $@
 
 clean-liveconnect:
 	rm -f lib/classes.jar
@@ -1990,7 +2007,7 @@ stamps/netx.stamp: netx-source-files.txt stamps/rt-class-files.stamp
 	    -bootclasspath \'\' \
 	    @netx-source-files.txt ;
 	mkdir -p stamps
-	touch stamps/netx.stamp
+	touch $@
 
 stamps/netx-dist.stamp: stamps/netx.stamp
 	(cd $(abs_top_builddir)/netx.build ; \
@@ -2003,7 +2020,7 @@ stamps/netx-dist.stamp: stamps/netx.stamp
 	  `find . -type f -not -name '*.java'` ; \
 	 $(ZIP) -qr $(abs_top_builddir)/netx.build/lib/src.zip javax net )
 	mkdir -p stamps
-	touch stamps/netx-dist.stamp
+	touch $@
 
 clean-netx:
 	rm -rf $(abs_top_builddir)/netx.build
@@ -2039,26 +2056,9 @@ extra-lib/about.jar: stamps/extra-class-files.stamp
 # PulseAudio based mixer
 # (pulse-java)
 
-stamps/pulse-java.stamp: stamps/pulse-java-jar.stamp stamps/pulse-java-headers.stamp
-if ENABLE_PULSE_JAVA
-	mkdir -p $(PULSE_JAVA_NATIVE_BUILDDIR)
-	$(CC) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/jni-common.c -o $(PULSE_JAVA_NATIVE_BUILDDIR)/jni-common.o
-	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include -I$(PULSE_JAVA_NATIVE_BUILDDIR) $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_EventLoop.c -o $(PULSE_JAVA_NATIVE_BUILDDIR)/org_classpath_icedtea_pulseaudio_EventLoop.o
-	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include -I$(PULSE_JAVA_NATIVE_BUILDDIR) $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Operation.c -o $(PULSE_JAVA_NATIVE_BUILDDIR)/org_classpath_icedtea_pulseaudio_Operation.o
-	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include -I$(PULSE_JAVA_NATIVE_BUILDDIR) $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Stream.c -o $(PULSE_JAVA_NATIVE_BUILDDIR)/org_classpath_icedtea_pulseaudio_Stream.o
-	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include -I$(PULSE_JAVA_NATIVE_BUILDDIR) $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c -o $(PULSE_JAVA_NATIVE_BUILDDIR)/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.o
-	$(CC) $(LDFLAGS) -shared $(PULSE_JAVA_NATIVE_BUILDDIR)/org_*pulseaudio*.o $(PULSE_JAVA_NATIVE_BUILDDIR)/jni-common.o $(LIBPULSE_LIBS) -o libpulse-java.so
-endif
+stamps/pulse-java.stamp: stamps/pulse-java-jar.stamp stamps/pulse-java-native-code.stamp
 	mkdir -p stamps
-	touch stamps/pulse-java.stamp
-
-stamps/pulse-java-jar.stamp: stamps/pulse-java-class.stamp
-if ENABLE_PULSE_JAVA
-	mkdir -p $(PULSE_JAVA_CLASS_DIR);
-	$(ICEDTEA_BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .;
-endif
-	mkdir -p stamps
-	touch stamps/pulse-java-jar.stamp
+	touch $@
 
 stamps/pulse-java-class.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
 if ENABLE_PULSE_JAVA
@@ -2072,8 +2072,15 @@ if ENABLE_PULSE_JAVA
 	chmod -R ug+w $(PULSE_JAVA_CLASS_DIR)/META-INF
 endif
 	mkdir -p stamps
-	touch stamps/pulse-java-class.stamp
+	touch $@
 
+stamps/pulse-java-jar.stamp: stamps/pulse-java-class.stamp
+if ENABLE_PULSE_JAVA
+	mkdir -p $(PULSE_JAVA_CLASS_DIR);
+	$(ICEDTEA_BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .;
+endif
+	mkdir -p stamps
+	touch $@
 
 stamps/pulse-java-headers.stamp: stamps/pulse-java-class.stamp
 if ENABLE_PULSE_JAVA
@@ -2093,17 +2100,29 @@ if ENABLE_PULSE_JAVA
 	fi
 endif
 	mkdir -p stamps
-	touch stamps/pulse-java-headers.stamp
+	touch $@
 
+stamps/pulse-java-native-code.stamp: stamps/pulse-java-headers.stamp
+if ENABLE_PULSE_JAVA
+	mkdir -p $(PULSE_JAVA_NATIVE_BUILDDIR)
+	$(CC) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include $(PULSE_JAVA_NATIVE_SRCDIR)/jni-common.c -o $(PULSE_JAVA_NATIVE_BUILDDIR)/jni-common.o
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include -I$(PULSE_JAVA_NATIVE_BUILDDIR) $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_EventLoop.c -o $(PULSE_JAVA_NATIVE_BUILDDIR)/org_classpath_icedtea_pulseaudio_EventLoop.o
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include -I$(PULSE_JAVA_NATIVE_BUILDDIR) $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Operation.c -o $(PULSE_JAVA_NATIVE_BUILDDIR)/org_classpath_icedtea_pulseaudio_Operation.o
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include -I$(PULSE_JAVA_NATIVE_BUILDDIR) $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_Stream.c -o $(PULSE_JAVA_NATIVE_BUILDDIR)/org_classpath_icedtea_pulseaudio_Stream.o
+	$(CC) $(LIBPULSE_CFLAGS) $(CFLAGS) -fPIC -c -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include -I$(PULSE_JAVA_NATIVE_BUILDDIR) $(PULSE_JAVA_NATIVE_SRCDIR)/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c -o $(PULSE_JAVA_NATIVE_BUILDDIR)/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.o
+	$(CC) $(LDFLAGS) -shared $(PULSE_JAVA_NATIVE_BUILDDIR)/org_*pulseaudio*.o $(PULSE_JAVA_NATIVE_BUILDDIR)/jni-common.o $(LIBPULSE_LIBS) -o libpulse-java.so
+endif
+	mkdir -p stamps
+	touch $@
 
 clean-pulse-java:
 if ENABLE_PULSE_JAVA
 	[ -z "$(PULSE_JAVA_NATIVE_BUILDDIR)" ] || rm -rf $(PULSE_JAVA_NATIVE_BUILDDIR)
 	[ -z "$(PULSE_JAVA_CLASS_DIR)" ] || rm -rf $(PULSE_JAVA_CLASS_DIR)
-	rm -f stamps/pulse-java*.stamp
 	rm -f pulse-java.jar
 	rm -f libpulse-java.so
 endif
+	rm -f stamps/pulse-java*.stamp
 
 # end of pulse-java
 
@@ -2141,6 +2160,10 @@ endif
 	mkdir -p stamps
 	touch $@
 
+clean-nbplatform:
+	rm -rf netbeans
+	rm -f stamps/nbplatform.stamp
+
 stamps/visualvm.stamp: stamps/icedtea.stamp stamps/nbplatform.stamp
 if WITH_VISUALVM
 	cd visualvm ; \
@@ -2171,10 +2194,6 @@ endif
 clean-visualvm:
 	rm -rf visualvm
 	rm -f stamps/visualvm.stamp
-
-clean-nbplatform:
-	rm -rf netbeans
-	rm -f stamps/nbplatform.stamp
 
 # CACAO
 
@@ -2429,14 +2448,14 @@ stamps/rt-class-files.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) rt-source-files.txt
           -sourcepath '$(SOURCEPATH_DIRS)' \
           -bootclasspath \'\' @rt-source-files.txt ;
 	mkdir -p stamps
-	touch stamps/rt-class-files.stamp
+	touch $@
 
 stamps/rt.stamp: stamps/rt-class-files.stamp
 	(cd lib/rt ; \
 	 $(ZIP) -qur $(abs_top_builddir)/bootstrap/boot/jre/lib/rt.jar \
 	 com java javax sun );
 	mkdir -p stamps
-	touch stamps/rt.stamp
+	touch $@
 
 clean-rt:
 	rm -rf lib/rt
@@ -2465,7 +2484,7 @@ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt.stamp
 stamps/plugs.stamp: bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
 	bootstrap/jdk1.7.0/lib/tools.jar
 	mkdir -p stamps
-	touch stamps/plugs.stamp
+	touch $@
 
 clean-plugs: clean-tools-jar clean-rt
 	rm -f stamps/plugs.stamp
@@ -2473,6 +2492,10 @@ clean-plugs: clean-tools-jar clean-rt
 
 # Target Aliases
 # ===============
+
+add-zero: stamps/add-zero.stamp
+
+add-zero-debug: stamps/add-zero-debug.stamp
 
 bootstrap-directory-stage1: stamps/bootstrap-directory-stage1.stamp
 
@@ -2486,17 +2509,9 @@ cacao: stamps/cacao.stamp
 
 clone-boot: stamps/clone-boot.stamp
 
-visualvm: stamps/visualvm.stamp
-
-nbplatform: stamps/nbplatform.stamp
-
-extract-visualvm: stamps/extract-visualvm.stamp
-
-visualvm: stamps/visualvm.stamp
-
-nbplatform: stamps/nbplatform.stamp
-
 download: stamps/download.stamp
+
+download-cacao: stamps/download-cacao.stamp
 
 download-drops: stamps/download-drops.stamp
 
@@ -2506,40 +2521,56 @@ download-jaxp-drop: stamps/download-jaxp-drop.stamp
 
 download-jaxws-drop: stamps/download-jaxws-drop.stamp
 
+download-openjdk: stamps/download-openjdk.stamp
+
+download-visualvm: stamps/download-visualvm.stamp
+
 extract: stamps/extract.stamp
 
 extract-cacao: stamps/extract-cacao.stamp
 
+extract-openjdk: stamps/extract-openjdk.stamp
+
+extract-visualvm: stamps/extract-visualvm.stamp
+
 generated: stamps/generated.stamp
+
+hotspot-ports: stamps/ports.stamp
 
 icedtea: stamps/icedtea.stamp
 
-icedtea-stage1: stamps/icedtea-stage1.stamp
+icedtea-boot: stamps/icedtea-boot.stamp
 
 icedtea-debug: stamps/icedtea-debug.stamp
 
-icedtea-boot: stamps/icedtea-boot.stamp
+icedtea-stage1: stamps/icedtea-stage1.stamp
+
+icedtea-stage2: stamps/icedtea-stage2.stamp
+
+jtreg: stamps/jtreg.stamp
+
+liveconnect: stamps/liveconnect.stamp
 
 native-ecj: stamps/native-ecj.stamp
 
-patch-boot: stamps/patch-boot.stamp
+nbplatform: stamps/nbplatform.stamp
 
-patch: stamps/patch.stamp
-
-patch-fsg: stamps/patch-fsg.stamp
+netx-dist: stamps/netx-dist.stamp
 
 overlay: stamps/overlay.stamp
 
+patch: stamps/patch.stamp
+
+patch-boot: stamps/patch-boot.stamp
+
+patch-fsg: stamps/patch-fsg.stamp
+
 plugs: stamps/plugs.stamp
+
+pulse-java: stamps/pulse-java.stamp
 
 rt: stamps/rt.stamp
 
 rt-class-files: stamps/rt-class-files.stamp
 
-hotspot-ports: stamps/ports.stamp
-
-jtreg: stamps/jtreg.stamp
-
-netx-dist: stamps/netx-dist.stamp
-
-liveconnect: stamps/liveconnect.stamp
+visualvm: stamps/visualvm.stamp
