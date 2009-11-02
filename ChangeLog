@@ -1,6 +1,21 @@
 2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(stamps/plugin.stamp): Added to unify
+	two plugin targets.
+	(stamps/icedtea-stage2.stamp): Renamed
+	from icedtea-stage2 so we can mark when 
+	its done.
+	(stamps/icedtea-debug-stage2.stamp): Likewise
+	with icedtea-debug-stage2.
+	(clean-icedtea-stage2): Inverse target for
+	icedtea-stage2.
+	(clean-icedtea-debug-stage2): Same for
+	icedtea-debug-stage2.
+	
+2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Make sure all downloading and extracting
 	occurs before building OpenJDK.
 	

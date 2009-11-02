@@ -700,7 +700,8 @@ clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
  clean-visualvm clean-nbplatform clean-bootstrap-directory-stage1 \
  clean-bootstrap-directory-stage2 clean-bootstrap-directory-symlink-stage1 \
  clean-bootstrap-directory-symlink-stage2 clean-extract clean-generated \
- clean-plugin clean-liveconnect clean-native-ecj clean-hgforest
+ clean-plugin clean-liveconnect clean-native-ecj clean-hgforest \
+ clean-icedtea-stage2 clean-icedtea-debug-stage2
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -1840,17 +1841,22 @@ clean-icedtea: stamps/download.stamp
 	  -C openjdk/make clobber
 	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
 
-icedtea-stage2: \
-	stamps/icedtea.stamp \
-	stamps/add-cacao.stamp \
-	stamps/add-zero.stamp \
-	stamps/visualvm.stamp
+stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
+ stamps/add-zero.stamp stamps/visualvm.stamp
+	mkdir -p stamps
+	touch $@
 
-icedtea-debug-stage2: \
-	stamps/icedtea-debug.stamp \
-	stamps/add-cacao-debug.stamp \
-	stamps/add-zero-debug.stamp \
-	stamps/visualvm.stamp
+clean-icedtea-stage2:
+	rm -f stamps/icedtea-stage2.stamp
+
+stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
+ stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp \
+ stamps/visualvm.stamp
+	mkdir -p stamps
+	touch $@
+
+clean-icedtea-debug-stage2:
+	rm -f stamps/icedtea-debug-stage2.stamp
 
 # OpenJDK boot Targets
 # ===================
@@ -1975,6 +1981,10 @@ clean-IcedTeaPlugin:
 	rm -f IcedTeaPlugin.o
 	rm -f IcedTeaPlugin.so
 endif
+
+stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET)
+	mkdir -p stamps
+	touch $@
 
 clean-plugin: $(ICEDTEAPLUGIN_CLEAN) $(ICEDTEANPPLUGIN_CLEAN)
 
@@ -2542,6 +2552,8 @@ icedtea: stamps/icedtea.stamp
 icedtea-boot: stamps/icedtea-boot.stamp
 
 icedtea-debug: stamps/icedtea-debug.stamp
+
+icedtea-debug-stage2: stamps/icedtea-debug-stage2.stamp
 
 icedtea-stage1: stamps/icedtea-stage1.stamp
 
