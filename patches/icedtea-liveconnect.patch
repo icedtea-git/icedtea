@@ -84,6 +84,6 @@ diff -Nru openjdk.o/jdk/make/sun/plugin/Makefile openjdk/jdk/make/sun/plugin/Mak
 +#
 +# Rules
 +#
-+JAVA_ARGS = "{ \"sun.applet.PluginMain\" }"
++JAVA_ARGS = { "sun.applet.PluginMain" }
 +include $(BUILDDIR)/common/Program.gmk
 +

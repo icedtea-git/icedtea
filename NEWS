@@ -1,7 +1,20 @@
 New in release 1.12 (2009-XX-XX)
 
-- Updated Zero with Gary's latest revisions
-- JIBX is no longer required to build Nimbus.
+- Updated to OpenJDK7 milestone 5; includes:
+  - From Project Coin:
+    - 6860965: Support for binary literals (e.g. 2 can be written 0b10)
+    - 6860965: Support for underscored literals (e.g. 123456 can be
+      written 123_456)
+    - 6827009: Support for strings in switch statements (e.g. case "a")
+    - 6840638: Improved inferencing with generics, e.g.
+      Map<String,Integer> map = new HashMap<>();
+  - jsr166y from http://gee.cs.oswego.edu/dl/concurrency-interest/:
+    - 6865571: Add a lightweight task framework known as ForkJoin
+    - 6445158: Phaser - an improved CyclicBarrier
+    - 6865579: Add TransferQueue/LinkedTransferQueue
+  - The Zero assembler port
+  - JIBX is no longer required to build Nimbus.
+  - Many bug fixes
 - The NSS crypto. provider may be turned on with --enable-nss if
   the NSS libraries and headers are available via pkg-config.
 - Makefile reorganisation:

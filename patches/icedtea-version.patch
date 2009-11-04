@@ -10,8 +10,8 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Defs.gmk openjdk/jdk/make/common/s
    PRODUCT_NAME = OpenJDK
    PRODUCT_SUFFIX = Runtime Environment
    JDK_RC_PLATFORM_NAME = Platform
---- openjdk/jdk/src/share/classes/sun/misc/Version-template.java.~1~	2008-11-25 01:04:53.000000000 -0800
-+++ openjdk/jdk/src/share/classes/sun/misc/Version-template.java	2009-02-20 09:03:25.000000000 -0800
+--- openjdk/jdk/src/share/classes/sun/misc/Version.java.template~1~	2008-11-25 01:04:53.000000000 -0800
++++ openjdk/jdk/src/share/classes/sun/misc/Version.java.template	2009-02-20 09:03:25.000000000 -0800
 @@ -41,6 +41,12 @@
      private static final String java_runtime_version =
          "@@java_runtime_version@@";

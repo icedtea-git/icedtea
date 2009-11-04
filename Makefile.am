@@ -2,21 +2,21 @@
 
 OPENJDK_VERSION = b75
 
-CORBA_CHANGESET = d4f1f79e9231
-HOTSPOT_CHANGESET = 0c593310a62c
-JAXP_CHANGESET  = 1ff97e23727b
-JAXWS_CHANGESET = 7a525c434bc9
-JDK_CHANGESET = 70b5a4c7b35d
-LANGTOOLS_CHANGESET = 4b3ebc896806
-OPENJDK_CHANGESET = aeb73b347f3a
+CORBA_CHANGESET = a12dac8f71dc
+HOTSPOT_CHANGESET = e004313753cc
+JAXP_CHANGESET  = 45da06168568
+JAXWS_CHANGESET = 14446af481e9
+JDK_CHANGESET = d03acee39d3b
+LANGTOOLS_CHANGESET = 83367f01297b
+OPENJDK_CHANGESET = a8bc38cb80ef
 
-CORBA_MD5SUM = cbdf4c993b0617ccddcb01a649e2eb05
-HOTSPOT_MD5SUM = 4508ff8d599b5ae3b094eaa3f8dfd494
-JAXP_MD5SUM = 2055c0ab13fea8c2597d7f3367905faa
-JAXWS_MD5SUM = 50ba89fa406b179e2ac20dd11cf37c5d
-JDK_MD5SUM = e98d4f2f0a74cc96ff7fa7838166d2dd
-LANGTOOLS_MD5SUM = 672ed2024d4d8787eefbbdebd1266c07
-OPENJDK_MD5SUM = fd027dba070b73a164a32a30f8807470
+CORBA_MD5SUM = 455cfaad689717ab542685dd9ed2d876
+HOTSPOT_MD5SUM = 6c711e43b7f6db9d2299f71b8987d446
+JAXP_MD5SUM = bd6ae928afdecf5356c8ecd56a1c39ed
+JAXWS_MD5SUM = 3e2d558e91adcc8630953b1b3a37e269
+JDK_MD5SUM = b811728173a6e554f43a39e84c7f555a
+LANGTOOLS_MD5SUM = 1102b019cd3a734f77bb804228d1727d
+OPENJDK_MD5SUM = 6121a71424fd81df8a34a8b9666fabfd
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
@@ -261,7 +261,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-demos.patch \
-	patches/icedtea-use-system-tzdata.patch \
 	patches/icedtea-headers.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-headers.patch \
 	patches/icedtea-ant.patch \
@@ -1759,6 +1758,10 @@ if ENABLE_NSS
 	cp $(abs_top_builddir)/nss.cfg \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
 endif
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+endif
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 	mkdir -p stamps
 	touch $@
@@ -1829,6 +1832,10 @@ endif
 if ENABLE_NSS
 	cp $(abs_top_builddir)/nss.cfg \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+endif
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
 endif
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug

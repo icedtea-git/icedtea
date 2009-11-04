@@ -1,3 +1,31 @@
+2009-11-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-use-system-tzdata.patch:
+	Dropped, updated version included in upstream
+	IcedTea forest.
+	* Makefile.am:
+	Update to latest changesets (m5), remove
+	above patch, copy tz.properties into jre/lib.
+	* NEWS:
+	List new features in OpenJDK7 (Project Coin,
+	JSR166y, Zero).
+	* acinclude.m4:
+	(AC_CHECK_WITH_TZDATA_DIR): New macro providing
+	the --with-tzdata-dir option for specifying the
+	location of Java timezone data.  Defaults to
+	/usr/share/javazi as before.
+	* configure.ac:
+	Add above macro.
+	* patches/icedtea-libraries.patch:
+	Recreated.
+	* patches/icedtea-liveconnect.patch:
+	Fix quoting of JAVA_ARGS.
+	* patches/icedtea-version.patch:
+	Fix path to version template (changed upstream).
+	* tz.properties.in:
+	New generated file used to specify the timezone
+	data directory.
+
 2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
