@@ -2506,6 +2506,7 @@ stamps/plugs.stamp: bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
 clean-plugs: clean-tools-jar clean-rt
 	rm -f stamps/plugs.stamp
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
+	rm -rf bootstrap/jdk1.7.0
 
 # Target Aliases
 # ===============
