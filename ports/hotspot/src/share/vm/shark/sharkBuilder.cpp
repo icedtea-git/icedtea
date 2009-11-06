@@ -369,7 +369,7 @@ Value* SharkBuilder::cmpxchg_int() {
 #ifdef ARM
     (address) zero_cmpxchg_int,
 #else
-    "llvm.atomic.cmp.swap.i32",
+    "llvm.atomic.cmp.swap.i32.p0i32",
 #endif // ARM
     "Iii", "i");
 }
@@ -387,7 +387,7 @@ Value* SharkBuilder::cmpxchg_ptr() {
 #ifdef ARM
     (address) zero_cmpxchg_ptr,
 #else
-    "llvm.atomic.cmp.swap.i" LP64_ONLY("64") NOT_LP64("32"),
+    "llvm.atomic.cmp.swap.i" LP64_ONLY("64") NOT_LP64("32") ".p0i" LP64_ONLY("64") NOT_LP64("32"),
 #endif // ARM
     "Xxx", "x");
 }
