@@ -86,10 +86,22 @@ void SharkMemoryManager::setMemoryExecutable()
   mm()->setMemoryExecutable();
 }
 
+#if SHARK_LLVM_VERSION >= 27
+void SharkMemoryManager::deallocateExceptionTable(void *ptr)
+{
+  mm()->deallocateExceptionTable(ptr);
+}
+
+void SharkMemoryManager::deallocateFunctionBody(void *ptr)
+{
+  mm()->deallocateFunctionBody(ptr);
+}
+#else
 void SharkMemoryManager::deallocateMemForFunction(const Function* F)
 {
   return mm()->deallocateMemForFunction(F);
 }
+#endif
 
 #if SHARK_LLVM_VERSION >= 26
 uint8_t* SharkMemoryManager::allocateGlobal(uintptr_t Size, unsigned int Alignment)

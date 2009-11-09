@@ -1,3 +1,11 @@
+2009-11-09  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.cpp,
+	ports/hotspot/src/share/vm/shark/sharkMemoryManager.hpp:
+	New methods deallocateExceptionTable and deallocateFunctionBody
+	dependent on the llvm version.
+	Made deallocateMemForFunction method dependent on the llvm version.
+
 2010-05-06  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Remove euctw patch.

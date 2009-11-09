@@ -79,7 +79,12 @@ class SharkMemoryManager : public llvm::JITMemoryManager {
 #endif
   void setMemoryWritable();
   void setMemoryExecutable();
+#if SHARK_LLVM_VERSION >= 27
+  void deallocateExceptionTable(void *ptr);
+  void deallocateFunctionBody(void *ptr);
+#else
   void deallocateMemForFunction(const llvm::Function* F);
+#endif
 
 #if SHARK_LLVM_VERSION >= 25
   unsigned char *allocateSpace(intptr_t Size,
