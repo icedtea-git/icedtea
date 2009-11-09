@@ -132,6 +132,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
 
   // Compile to native code
 #ifndef PRODUCT
+#if SHARK_LLVM_VERSION < 27
 #ifdef X86
   if (SharkPrintAsmOf != NULL) {
     std::vector<const char*> args;
@@ -144,6 +145,21 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
     cl::ParseCommandLineOptions(args.size() - 1, (char **) &args[0]);
   }
 #endif // X86
+#else
+  if (SharkPrintAsmOf != NULL) {
+    if (!fnmatch(SharkPrintAsmOf, name, 0)) {
+#ifdef X86
+      llvm::SetCurrentDebugType("x86-emitter");
+#else
+      llvm::SetCurrentDebugType("jit");
+#endif // X86
+      llvm::DebugFlag=true;
+    } else {
+      llvm::SetCurrentDebugType(""); 
+      llvm::DebugFlag=false;
+    }
+  }
+#endif
 #endif // !PRODUCT
   memory_manager()->set_entry_for_function(function, entry);
   module()->getFunctionList().push_back(function);

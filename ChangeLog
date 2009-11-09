@@ -1,5 +1,13 @@
 2009-11-09  Xerxes Rånby  <xerxes@zafena.se>
 
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp,
+	Include llvm/Support/Debug.h dependent on llvm version.
+	Made Include llvm/Support/CommandLine.h dependent on llvm version.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp:
+	Implement -XX:SharkPrintAsmOf using LLVM 2.7svn r85395 debug API.
+
+2009-11-09  Xerxes Rånby  <xerxes@zafena.se>
+
 	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.cpp,
 	ports/hotspot/src/share/vm/shark/sharkMemoryManager.hpp:
 	New methods deallocateExceptionTable and deallocateFunctionBody
