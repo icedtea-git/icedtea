@@ -1,4 +1,8 @@
 2009-11-10  Andrew John Hughes  <ahughes@redhat.com>
+
+	* HACKING: Document icedtea-sources.patch.
+	
+2009-11-10  Andrew John Hughes  <ahughes@redhat.com>
 	
 	* plugin/icedtea/netscape/javascript/JSException.java,
 	* plugin/icedtea/netscape/javascript/JSObject.java,
@@ -56,6 +60,8 @@
 	* NEWS: Add list of security updates.
 	* patches/icedtea-liveconnect-dist.patch:
 	Include sun/applet and import sources too.
+	* patches/icedtea-sources.patch: New patch to include
+	plugin and netx sources in src.zip.
 	* plugin/icedtea/java/netscape/javascript/JSException.java,
 	* plugin/icedtea/java/netscape/javascript/JSObject.java,
 	* plugin/icedtea/java/netscape/javascript/JSObjectCreatePermission.java,

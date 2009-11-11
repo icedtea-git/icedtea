@@ -116,6 +116,7 @@ The following patches are only applied to OpenJDK in IcedTea:
   javax.management.AttributeValueExp (unsupported by ecj < 3.4).
 * icedtea-nss-config.patch: Add the NSS PKCS11 security provider. (PR356)
 * icedtea-nss-6763530.patch: Fix PKCS11 provider when used with newer version of NSS (>=3.12.3) (PR356, S6763530).
+* icedtea-sources.patch: Include netx and plugin sources in src.zip
 
 The following patches are only applied to the icedtea-ecj bootstrap tree:
 
