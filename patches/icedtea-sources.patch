@@ -1,0 +1,17 @@
+diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Release.gmk
+--- openjdk.orig/jdk/make/common/Release.gmk	2009-11-11 03:12:50.000000000 +0000
++++ openjdk/jdk/make/common/Release.gmk	2009-11-11 03:16:17.000000000 +0000
+@@ -313,7 +313,12 @@
+ 	org/omg				\
+ 	org/w3c/dom			\
+ 	org/xml/sax			\
+-	sunw
++	sunw				\
++	sun/applet			\
++	netscape			\
++	net				\
++	javax/jnlp
++
+ #
+ # Directories where sources may be found.  If a file with the same path
+ # name exists in more than one of these places, the one found last on this

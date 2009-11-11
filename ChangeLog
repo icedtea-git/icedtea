@@ -1,3 +1,93 @@
+2009-11-10  Andrew John Hughes  <ahughes@redhat.com>
+	
+	* plugin/icedtea/netscape/javascript/JSException.java,
+	* plugin/icedtea/netscape/javascript/JSObject.java,
+	* plugin/icedtea/netscape/javascript/JSObjectCreatePermission.java,
+	* plugin/icedtea/netscape/javascript/JSProxy.java,
+	* plugin/icedtea/netscape/javascript/JSRunnable.java,
+	* plugin/icedtea/netscape/javascript/JSUtil.java,
+	* plugin/icedtea/sun/applet/AppletSecurityContextManager.java,
+	* plugin/icedtea/sun/applet/GetMemberPluginCallRequest.java,
+	* plugin/icedtea/sun/applet/GetWindowPluginCallRequest.java,
+	* plugin/icedtea/sun/applet/JavaConsole.java,
+	* plugin/icedtea/sun/applet/PasswordAuthenticationDialog.java,
+	* plugin/icedtea/sun/applet/PluginAppletSecurityContext.java,
+	* plugin/icedtea/sun/applet/PluginAppletViewer.java,
+	* plugin/icedtea/sun/applet/PluginCallRequest.java,
+	* plugin/icedtea/sun/applet/PluginCallRequestFactory.java,
+	* plugin/icedtea/sun/applet/PluginClassLoader.java,
+	* plugin/icedtea/sun/applet/PluginCookieInfoRequest.java,
+	* plugin/icedtea/sun/applet/PluginCookieManager.java,
+	* plugin/icedtea/sun/applet/PluginDebug.java,
+	* plugin/icedtea/sun/applet/PluginException.java,
+	* plugin/icedtea/sun/applet/PluginMain.java,
+	* plugin/icedtea/sun/applet/PluginMessageConsumer.java,
+	* plugin/icedtea/sun/applet/PluginMessageHandlerWorker.java,
+	* plugin/icedtea/sun/applet/PluginObjectStore.java,
+	* plugin/icedtea/sun/applet/PluginProxyInfoRequest.java,
+	* plugin/icedtea/sun/applet/PluginProxySelector.java,
+	* plugin/icedtea/sun/applet/PluginStreamHandler.java,
+	* plugin/icedtea/sun/applet/RequestQueue.java,
+	* plugin/icedtea/sun/applet/TestEnv.java,
+	* plugin/icedtea/sun/applet/VoidPluginCallRequest.java:
+	Moved to java subdirectory.
+	* Makefile.am:
+	Add javax/swing/plaf/basic to list of copy dirs to
+	work around PR42003.
+	Set LIVECONNECT_DIR to just the directories, not
+	jar syntax.  Rename NPPLUGIN_DIR to PLUGIN_DIR
+	and add for both plugins.  Add new sources patch.
+	Set ALT_LIVECONNECT_DIST to new liveconnect build
+	directory.
+	(clean-local): No need to remove rt/netscape, now
+	part of clean-liveconnect.stamp
+	(patch.stamp): Drop plugin source file copying.
+	(clean-patch): Remove plugin copy deletion.
+	(icedtea.stamp): Depend on liveconnect-dist.stamp,
+	not liveconnect.stamp.
+	(icedtea-debug.stamp): Likewise.
+	(icedtea-boot.stamp): Likewise.
+	(liveconnect-source-files.txt): New target to find
+	liveconnect source files.
+	(liveconnect.stamp): Now builds the liveconnect source code.
+	(liveconnect-dist.stamp): Like netx-dist.stamp, creates
+	classes.jar and src.zip for importing Liveconnect binaries
+	and source into the OpenJDK build.
+	* NEWS: Add list of security updates.
+	* patches/icedtea-liveconnect-dist.patch:
+	Include sun/applet and import sources too.
+	* plugin/icedtea/java/netscape/javascript/JSException.java,
+	* plugin/icedtea/java/netscape/javascript/JSObject.java,
+	* plugin/icedtea/java/netscape/javascript/JSObjectCreatePermission.java,
+	* plugin/icedtea/java/netscape/javascript/JSProxy.java,
+	* plugin/icedtea/java/netscape/javascript/JSRunnable.java,
+	* plugin/icedtea/java/netscape/javascript/JSUtil.java,
+	* plugin/icedtea/java/sun/applet/AppletSecurityContextManager.java,
+	* plugin/icedtea/java/sun/applet/GetMemberPluginCallRequest.java,
+	* plugin/icedtea/java/sun/applet/GetWindowPluginCallRequest.java,
+	* plugin/icedtea/java/sun/applet/JavaConsole.java,
+	* plugin/icedtea/java/sun/applet/PasswordAuthenticationDialog.java,
+	* plugin/icedtea/java/sun/applet/PluginAppletSecurityContext.java,
+	* plugin/icedtea/java/sun/applet/PluginAppletViewer.java,
+	* plugin/icedtea/java/sun/applet/PluginCallRequest.java,
+	* plugin/icedtea/java/sun/applet/PluginCallRequestFactory.java,
+	* plugin/icedtea/java/sun/applet/PluginClassLoader.java,
+	* plugin/icedtea/java/sun/applet/PluginCookieInfoRequest.java,
+	* plugin/icedtea/java/sun/applet/PluginCookieManager.java,
+	* plugin/icedtea/java/sun/applet/PluginDebug.java,
+	* plugin/icedtea/java/sun/applet/PluginException.java,
+	* plugin/icedtea/java/sun/applet/PluginMain.java,
+	* plugin/icedtea/java/sun/applet/PluginMessageConsumer.java,
+	* plugin/icedtea/java/sun/applet/PluginMessageHandlerWorker.java,
+	* plugin/icedtea/java/sun/applet/PluginObjectStore.java,
+	* plugin/icedtea/java/sun/applet/PluginProxyInfoRequest.java,
+	* plugin/icedtea/java/sun/applet/PluginProxySelector.java,
+	* plugin/icedtea/java/sun/applet/PluginStreamHandler.java,
+	* plugin/icedtea/java/sun/applet/RequestQueue.java,
+	* plugin/icedtea/java/sun/applet/TestEnv.java,
+	* plugin/icedtea/java/sun/applet/VoidPluginCallRequest.java:
+	Moved from plugin/icedtea.
+
 2009-11-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

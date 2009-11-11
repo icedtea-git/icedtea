@@ -15,6 +15,22 @@ New in release 1.12 (2009-XX-XX)
   - The Zero assembler port
   - JIBX is no longer required to build Nimbus.
   - Many bug fixes
+- Latest security updates:
+  - (CVE-2009-3728) ICC_Profile file existence detection information leak (6631533)
+  - (CVE-2009-3885) BMP parsing DoS with UNC ICC links (6632445)
+  - (CVE-2009-3881) resurrected classloaders can still have children (6636650) 
+  - (CVE-2009-3882) Numerous static security flaws in Swing (findbugs) (6657026)
+  - (CVE-2009-3883) Mutable statics in Windows PL&F (findbugs) (6657138)
+  - (CVE-2009-3880) UI logging information leakage (6664512)
+  - (CVE-2009-3879) GraphicsConfiguration information leak (6822057)
+  - (CVE-2009-3884) zoneinfo file existence information leak (6824265)
+  - (CVE-2009-2409) deprecate MD2 in SSL cert validation (Kaminsky) (6861062)
+  - (CVE-2009-3873) JPEG Image Writer quantization problem (6862968)
+  - (CVE-2009-3875) MessageDigest.isEqual introduces timing attack vulnerabilities (6863503)
+  - (CVE-2009-3876, CVE-2009-3877) OpenJDK ASN.1/DER input stream parser denial of service (6864911)
+  - (CVE-2009-3869) JRE AWT setDifflCM stack overflow (6872357)
+  - (CVE-2009-3874) ImageI/O JPEG heap overflow (6874643
+  - (CVE-2009-3871) JRE AWT setBytePixels heap overflow (6872358)
 - The NSS crypto. provider may be turned on with --enable-nss if
   the NSS libraries and headers are available via pkg-config.
 - Makefile reorganisation:

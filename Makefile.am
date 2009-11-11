@@ -86,6 +86,7 @@ ICEDTEA_BOOTSTRAP_DIRS = \
 	$(JDK_SHARE)/javax/script \
 	$(JDK_SHARE)/javax/security/auth/kerberos \
 	$(JDK_SHARE)/javax/security/sasl \
+	$(JDK_SHARE)/javax/swing/plaf/basic \
 	$(JDK_SHARE)/sun/awt/ \
 	$(JDK_SHARE)/sun/rmi/rmic \
 	$(JDK_SHARE)/sun/tools/java \
@@ -185,16 +186,17 @@ if ENABLE_NPPLUGIN
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaNPPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaNPPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
-LIVECONNECT_DIR = -C lib/rt netscape
-NPPLUGIN_DIR=$(abs_top_srcdir)/plugin/icedteanp
+LIVECONNECT_DIR = sun/applet netscape
+PLUGIN_DIR=$(abs_top_srcdir)/plugin/icedteanp
 JNLP_ABOUT_TARGET = extra-lib/about.jar 
 else
 if ENABLE_PLUGIN
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
-LIVECONNECT_DIR = -C lib/rt netscape
-JNLP_ABOUT_TARGET = extra-lib/about.jar 
+LIVECONNECT_DIR = sun/applet netscape
+PLUGIN_DIR=$(abs_top_srcdir)/plugin/icedtea
+JNLP_ABOUT_TARGET = extra-lib/about.jar
 else
 ICEDTEAPLUGIN_CLEAN =
 ICEDTEAPLUGIN_TARGET =
@@ -321,7 +323,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-xml-encodinginfo.patch \
 	patches/icedtea-cc-interp-backedge.patch \
 	patches/icedtea-netx.patch \
-	patches/icedtea-disable-intree-ec.patch
+	patches/icedtea-disable-intree-ec.patch \
+	patches/icedtea-sources.patch
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -480,7 +483,7 @@ ICEDTEA_ENV = \
 	DISTRIBUTION_ID="$(DIST_ID)" \
 	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)" \
 	ALT_NETX_DIST="$(abs_top_builddir)/netx.build" \
-	ALT_LIVECONNECT_DIST="$(abs_top_builddir)" \
+	ALT_LIVECONNECT_DIST="$(abs_top_builddir)/liveconnect" \
 	DEBUG_CLASSFILES="true" \
 	DEBUG_BINARIES="true" \
 	DISABLE_INTREE_EC="true" \
@@ -707,7 +710,6 @@ clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
 	if [ -e lib ]; then \
 	  rmdir lib ; \
 	fi
-	rm -rf rt/netscape
 	rm -f jni-common.o
 if ADD_ZERO_BUILD
 	rm -rf zerovm
@@ -1423,19 +1425,6 @@ stamps/patch.stamp: stamps/patch-fsg.stamp
 	fi ; \
 	mv stamps/patch.stamp.tmp stamps/patch.stamp 
 
-if ENABLE_NPPLUGIN
-	cp -a $(abs_top_srcdir)/plugin/icedteanp/java/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
-	mkdir -p rt
-	cp -a $(abs_top_srcdir)/plugin/icedteanp/java/netscape rt/
-else
-if ENABLE_PLUGIN
-	cp -a $(abs_top_srcdir)/plugin/icedtea/sun/applet/*java openjdk/jdk/src/share/classes/sun/applet/
-	mkdir -p rt
-	cp -a $(abs_top_srcdir)/plugin/icedtea/netscape rt/
-	chmod -R ug+w rt 
-endif
-endif
-
 clean-patch:
 	if [ -e stamps/patch.stamp ] ; then \
 	  all_patches_ok=yes; \
@@ -1468,11 +1457,6 @@ clean-patch:
 	  fi ; \
 	  rm -f stamps/patch.stamp ; \
 	fi
-	rm -rf rt/netscape
-	for file in plugin/icedtea/sun/applet/*java ; \
-	do \
-		rm -f openjdk/jdk/src/share/classes/sun/applet/`basename $file` ; \
-	done ;
 
 stamps/versioning.stamp: stamps/patch.stamp
 	cp openjdk/jdk/make/common/shared/Defs.gmk Defs.gmk.bak
@@ -1694,7 +1678,7 @@ clean-bootstrap-directory-symlink-stage2:
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp stamps/overlay.stamp \
  stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
- stamps/netx-dist.stamp stamps/liveconnect.stamp stamps/pulse-java.stamp
+ stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/pulse-java.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1704,9 +1688,9 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext 
 if ENABLE_NPPLUGIN
-	cp -pPRf $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so \
+	cp -pPRf $(PLUGIN_DIR)/IcedTeaNPPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so \
+	cp -pPRf $(PLUGIN_DIR)/IcedTeaNPPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 if ENABLE_PLUGIN
@@ -1769,7 +1753,7 @@ endif
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp stamps/overlay.stamp \
  stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
- stamps/netx-dist.stamp stamps/liveconnect.stamp stamps/pulse-java.stamp
+ stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/pulse-java.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1870,7 +1854,7 @@ clean-icedtea-debug-stage2:
 
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
  stamps/download.stamp stamps/extract.stamp stamps/overlay.stamp \
- stamps/plugs.stamp stamps/netx-dist.stamp stamps/liveconnect.stamp \
+ stamps/plugs.stamp stamps/netx-dist.stamp stamps/liveconnect-dist.stamp \
  stamps/patch-boot.stamp stamps/cacao.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
@@ -1926,7 +1910,7 @@ NPPLUGIN_OBJECTS=IcedTeaNPPlugin.o IcedTeaScriptablePluginObject.o \
 	IcedTeaPluginUtils.o
 
 IcedTeaNPPlugin_objects:
-	cd $(NPPLUGIN_DIR); \
+	cd $(PLUGIN_DIR); \
 	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
 	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
 	fi ; \
@@ -1943,7 +1927,7 @@ IcedTeaNPPlugin_objects:
 	cd ../
 
 IcedTeaNPPlugin.so: IcedTeaNPPlugin_objects
-	cd $(NPPLUGIN_DIR); \
+	cd $(PLUGIN_DIR); \
 	$(CXX) $(CXXFLAGS) \
 	  $(NPPLUGIN_OBJECTS) \
 	  $(GLIB_LIBS) \
@@ -1953,7 +1937,7 @@ IcedTeaNPPlugin.so: IcedTeaNPPlugin_objects
 	cd ../
 
 clean-IcedTeaNPPlugin:
-	cd $(NPPLUGIN_DIR); \
+	cd $(PLUGIN_DIR); \
 	rm -f *.o; \
 	rm -f IcedTeaNPPlugin.so; \
 	cd ../
@@ -1995,15 +1979,42 @@ stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET)
 
 clean-plugin: $(ICEDTEAPLUGIN_CLEAN) $(ICEDTEANPPLUGIN_CLEAN)
 
-stamps/liveconnect.stamp: stamps/rt-class-files.stamp
+liveconnect-source-files.txt:
 	if test "x${LIVECONNECT_DIR}" != x; then \
-	  $(ICEDTEA_BOOT_DIR)/bin/jar cf lib/classes.jar $(LIVECONNECT_DIR) ; \
+	  find $(PLUGIN_DIR)/java -name '*.java' | sort > $@ ; \
+	fi
+	touch $@
+
+stamps/liveconnect.stamp: liveconnect-source-files.txt stamps/netx.stamp
+	if test "x${LIVECONNECT_DIR}" != x; then \
+	  mkdir -p $(abs_top_builddir)/liveconnect ; \
+	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) \
+	      -d $(abs_top_builddir)/liveconnect \
+	      -classpath $(abs_top_builddir)/lib/rt:$(abs_top_builddir)/netx.build \
+	      -sourcepath $(SOURCEPATH_DIRS) \
+	      -bootclasspath \'\' \
+	      @liveconnect-source-files.txt ; \
+	fi
+	mkdir -p stamps
+	touch $@
+
+stamps/liveconnect-dist.stamp: stamps/liveconnect.stamp
+	if test "x${LIVECONNECT_DIR}" != x; then \
+	  (cd $(abs_top_builddir)/liveconnect ; \
+	   mkdir -p lib ; \
+	   $(ICEDTEA_BOOT_DIR)/bin/jar cf lib/classes.jar ${LIVECONNECT_DIR} ; \
+	   cp -a $(PLUGIN_DIR)/java src; \
+	   find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
+	   cd src ; \
+	   $(ZIP) -qr $(abs_top_builddir)/liveconnect/lib/src.zip ${LIVECONNECT_DIR} ) ; \
 	fi
 	mkdir -p stamps
 	touch $@
 
 clean-liveconnect:
-	rm -f lib/classes.jar
+	rm -rf $(abs_top_builddir)/liveconnect
+	rm -f stamps/liveconnect-dist.stamp
+	rm -f liveconnect-source-files.txt
 	rm -f stamps/liveconnect.stamp
 
 # NetX
@@ -2570,6 +2581,8 @@ icedtea-stage2: stamps/icedtea-stage2.stamp
 jtreg: stamps/jtreg.stamp
 
 liveconnect: stamps/liveconnect.stamp
+
+liveconnect-dist: stamps/liveconnect-dist.stamp
 
 native-ecj: stamps/native-ecj.stamp
 
