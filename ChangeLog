@@ -1,5 +1,11 @@
 2009-11-11  Gary Benson  <gbenson@redhat.com>
 
+	PR icedtea/324:
+	* ports/hotspot/src/share/vm/shark/sharkValue.cpp
+	(SharkNormalValue::jarray_value): Work around the above.
+
+2009-11-11  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/share/vm/shark/sharkType.hpp
 	(SharkType::jobject_type): Removed.
 

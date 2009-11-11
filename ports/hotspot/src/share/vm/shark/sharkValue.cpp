@@ -220,7 +220,9 @@ Value* SharkNormalValue::jobject_value() const
 }
 Value* SharkNormalValue::jarray_value() const
 {
-  assert(is_jarray(), "should be");
+  // XXX assert(is_jarray(), "should be");
+  // XXX http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=324
+  assert(is_jobject(), "should be");
   return llvm_value();
 }
 int SharkAddressValue::address_value() const
