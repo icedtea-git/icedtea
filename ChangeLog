@@ -1,3 +1,32 @@
+2009-11-11  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp
+	(SharkType::jobject_type): Removed.
+
+	* ports/hotspot/src/share/vm/shark/llvmValue.hpp
+	(LLVMValue::null): Use SharkType::oop_type() instead of
+	SharkType::jobject_type().
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::CreateInlineOop): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.cpp
+	(SharkIntrinsics::do_Object_getClass): Likewise.
+	(SharkIntrinsics::do_Thread_currentThread): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::pending_exception_address): Likewise.
+	(SharkTopLevelBlock::get_vm_result): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::call_register_finalizer): Likewise.
+	(SharkTopLevelBlock::get_virtual_callee): Likewise.
+	(SharkTopLevelBlock::get_interface_callee): Likewise.
+	(SharkTopLevelBlock::do_full_instance_check): Likewise.
+	(SharkTopLevelBlock::do_new): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp
+	(SharkType::initialize): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp
+	(SharkValue::create_jobject): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.cpp
+	(SharkNormalValue::is_jobject): Likewise.
+
 2009-11-09  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp,

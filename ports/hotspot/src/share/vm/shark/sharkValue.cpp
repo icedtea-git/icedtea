@@ -151,7 +151,7 @@ bool SharkNormalValue::is_jdouble() const
 }
 bool SharkNormalValue::is_jobject() const
 {
-  return llvm_value()->getType() == SharkType::jobject_type();
+  return llvm_value()->getType() == SharkType::oop_type();
 }
 bool SharkNormalValue::is_jarray() const
 {

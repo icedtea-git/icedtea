@@ -212,7 +212,7 @@ void SharkIntrinsics::do_Object_getClass()
   Value *klass = builder()->CreateValueOfStructEntry(
     state()->pop()->jobject_value(),
     in_ByteSize(oopDesc::klass_offset_in_bytes()),
-    SharkType::jobject_type(),
+    SharkType::oop_type(),
     "klass");
 
   Value *klass_part = builder()->CreateAddressOfStructEntry(
@@ -246,7 +246,7 @@ void SharkIntrinsics::do_Thread_currentThread()
     SharkValue::create_jobject(
       builder()->CreateValueOfStructEntry(
         thread(), JavaThread::threadObj_offset(),
-        SharkType::jobject_type(),
+        SharkType::oop_type(),
         "threadObj"),
       true));
 }

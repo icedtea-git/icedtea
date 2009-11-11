@@ -580,7 +580,7 @@ void SharkTopLevelBlock::call_register_finalizer(Value *receiver)
   Value *klass = builder()->CreateValueOfStructEntry(
     receiver,
     in_ByteSize(oopDesc::klass_offset_in_bytes()),
-    SharkType::jobject_type(),
+    SharkType::oop_type(),
     "klass");
   
   Value *klass_part = builder()->CreateAddressOfStructEntry(
@@ -956,7 +956,7 @@ Value *SharkTopLevelBlock::get_virtual_callee(SharkValue* receiver,
   Value *klass = builder()->CreateValueOfStructEntry(
     receiver->jobject_value(),
     in_ByteSize(oopDesc::klass_offset_in_bytes()),
-    SharkType::jobject_type(),
+    SharkType::oop_type(),
     "klass");
 
   return builder()->CreateLoad(
@@ -981,7 +981,7 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver,
   // Locate the receiver's itable
   Value *object_klass = builder()->CreateValueOfStructEntry(
     receiver->jobject_value(), in_ByteSize(oopDesc::klass_offset_in_bytes()),
-    SharkType::jobject_type(),
+    SharkType::oop_type(),
     "object_klass");
 
   Value *vtable_start = builder()->CreateAdd(
@@ -1028,7 +1028,7 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver,
   Value *itable_iklass = builder()->CreateValueOfStructEntry(
     itable_entry,
     in_ByteSize(itableOffsetEntry::interface_offset_in_bytes()),
-    SharkType::jobject_type(),
+    SharkType::oop_type(),
     "itable_iklass");
 
   builder()->CreateCondBr(
@@ -1328,7 +1328,7 @@ void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass)
   // Get the class of the object being tested
   Value *object_klass = builder()->CreateValueOfStructEntry(
     object, in_ByteSize(oopDesc::klass_offset_in_bytes()),
-    SharkType::jobject_type(),
+    SharkType::oop_type(),
     "object_klass");
 
   // Perform the check
@@ -1486,7 +1486,7 @@ void SharkTopLevelBlock::do_new()
 
       builder()->SetInsertPoint(got_tlab);
       tlab_object = builder()->CreateIntToPtr(
-        old_top, SharkType::jobject_type(), "tlab_object");
+        old_top, SharkType::oop_type(), "tlab_object");
 
       builder()->CreateStore(new_top, top_addr);
       builder()->CreateBr(initialize);
@@ -1519,7 +1519,7 @@ void SharkTopLevelBlock::do_new()
 
     builder()->SetInsertPoint(got_heap);
     heap_object = builder()->CreateIntToPtr(
-      old_top, SharkType::jobject_type(), "heap_object");
+      old_top, SharkType::oop_type(), "heap_object");
 
     Value *check = builder()->CreateCmpxchgPtr(new_top, top_addr, old_top);
     builder()->CreateCondBr(
@@ -1530,7 +1530,7 @@ void SharkTopLevelBlock::do_new()
     builder()->SetInsertPoint(initialize);
     if (tlab_object) {
       PHINode *phi = builder()->CreatePHI(
-        SharkType::jobject_type(), "fast_object");
+        SharkType::oop_type(), "fast_object");
       phi->addIncoming(tlab_object, got_tlab);
       phi->addIncoming(heap_object, got_heap);
       fast_object = phi;
@@ -1553,7 +1553,7 @@ void SharkTopLevelBlock::do_new()
 
     Value *klass_addr = builder()->CreateAddressOfStructEntry(
       fast_object, in_ByteSize(oopDesc::klass_offset_in_bytes()),
-      PointerType::getUnqual(SharkType::jobject_type()),
+      PointerType::getUnqual(SharkType::oop_type()),
       "klass_addr");
 
     // Set the mark
@@ -1590,7 +1590,7 @@ void SharkTopLevelBlock::do_new()
     builder()->SetInsertPoint(push_object);
   }
   if (fast_object) {
-    PHINode *phi = builder()->CreatePHI(SharkType::jobject_type(), "object");
+    PHINode *phi = builder()->CreatePHI(SharkType::oop_type(), "object");
     phi->addIncoming(fast_object, got_fast);
     phi->addIncoming(slow_object, got_slow);
     object = phi;

@@ -118,7 +118,7 @@ class SharkValue : public ResourceObj {
   }
   static SharkValue* create_jobject(llvm::Value* value, bool zero_checked)
   {
-    assert(value->getType() == SharkType::jobject_type(), "should be");
+    assert(value->getType() == SharkType::oop_type(), "should be");
     return create_generic(ciType::make(T_OBJECT), value, zero_checked);
   }
 

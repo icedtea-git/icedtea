@@ -577,7 +577,7 @@ Value* SharkBuilder::CreateInlineOop(ciObject* object, const char* name)
   return CreateLoad(
     CreateIntToPtr(
       code_buffer_address(code_buffer()->inline_oop(object)),
-      PointerType::getUnqual(SharkType::jobject_type())),
+      PointerType::getUnqual(SharkType::oop_type())),
     name);
 }
 

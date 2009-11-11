@@ -168,8 +168,8 @@ void SharkType::initialize()
 
     case T_OBJECT:
     case T_ARRAY:
-      _to_stackType_tab[i] = jobject_type();
-      _to_arrayType_tab[i] = jobject_type();
+      _to_stackType_tab[i] = oop_type();
+      _to_arrayType_tab[i] = oop_type();
       break;
 
     case T_ADDRESS:

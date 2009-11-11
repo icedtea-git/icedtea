@@ -245,7 +245,7 @@ class SharkTopLevelBlock : public SharkBlock {
   {
     return builder()->CreateAddressOfStructEntry(
       thread(), Thread::pending_exception_offset(),
-      llvm::PointerType::getUnqual(SharkType::jobject_type()),
+      llvm::PointerType::getUnqual(SharkType::oop_type()),
       "pending_exception_addr");
   }
   llvm::LoadInst* get_pending_exception() const
@@ -349,7 +349,7 @@ class SharkTopLevelBlock : public SharkBlock {
   {
     llvm::Value *addr = builder()->CreateAddressOfStructEntry(
       thread(), JavaThread::vm_result_offset(),
-      llvm::PointerType::getUnqual(SharkType::jobject_type()),
+      llvm::PointerType::getUnqual(SharkType::oop_type()),
       "vm_result_addr");
     llvm::LoadInst *result = builder()->CreateLoad(addr, "vm_result");
     builder()->CreateStore(LLVMValue::null(), addr);

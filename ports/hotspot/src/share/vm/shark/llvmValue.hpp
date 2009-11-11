@@ -55,7 +55,7 @@ class LLVMValue : public AllStatic {
   }
   static llvm::ConstantPointerNull* null()
   {
-    return llvm::ConstantPointerNull::get(SharkType::jobject_type());
+    return llvm::ConstantPointerNull::get(SharkType::oop_type());
   }
 
  public:
