@@ -1,5 +1,15 @@
 2009-11-12  Xerxes Rånby  <xerxes@zafena.se>
 
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.cpp
+	(SharkMemoryManager::getDlsymTable): Made dependent on the LLVM version
+	to be buildable with LLVM 2.7svn r86606 and later.
+	(SharkMemoryManager::SetDlsymTable): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.hpp
+	(SharkMemoryManager::getDlsymTable): Likewise.
+	(SharkMemoryManager::SetDlsymTable): Likewise.
+
+2009-11-12  Xerxes Rånby  <xerxes@zafena.se>
+
 	* patches/icedtea-shark.patch
 	(hotspot/src/share/vm/utilities/macros.hpp):
 	Added NOT_X86 macro.

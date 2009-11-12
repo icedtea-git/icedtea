@@ -109,6 +109,7 @@ uint8_t* SharkMemoryManager::allocateGlobal(uintptr_t Size,
   return mm()->allocateGlobal(Size, Alignment);
 }
 
+#if SHARK_LLVM_VERSION < 27
 void* SharkMemoryManager::getDlsymTable() const
 {
   return mm()->getDlsymTable();
@@ -118,6 +119,7 @@ void SharkMemoryManager::SetDlsymTable(void *ptr)
 {
   mm()->SetDlsymTable(ptr);
 }
+#endif
 
 void SharkMemoryManager::setPoisonMemory(bool poison)
 {
