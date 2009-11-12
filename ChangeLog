@@ -1,3 +1,9 @@
+2009-11-12  Xerxes Rånby  <xerxes@zafena.se>
+
+	* patches/icedtea-shark.patch
+	(hotspot/src/share/vm/utilities/macros.hpp):
+	Added NOT_X86 macro.
+
 2009-11-11  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
