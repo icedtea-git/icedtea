@@ -584,7 +584,7 @@ public class Agent implements Runnable
 
     static final String productName = "JT Harness Agent";
     static final String productVersion = "JTA_3.1.4";
-    static final String productCopyright = "Copyright © 1996-2008 Sun Microsystems, Inc";
+    static final String productCopyright = "Copyright \u00A9 1996-2008 Sun Microsystems, Inc";
 
 
     /**

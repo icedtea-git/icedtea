@@ -276,7 +276,7 @@ public class HTMLTestFinder extends TestFinder
                         else if (tag.equals("amp"))
                             replace = "&";
                         else if (tag.equals("copy"))
-                            replace = "©";
+                            replace = "\u00A9";
                         if (replace == null)
                             replace = "&" + tag + ((char) c);
                     }

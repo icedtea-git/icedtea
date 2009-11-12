@@ -1,5 +1,12 @@
 2009-11-12  Andrew John Hughes  <ahughes@redhat.com>
 
+	* test/jtreg/com/sun/javatest/agent/Agent.java,
+	* test/jtreg/com/sun/javatest/finder/HTMLTestFinder.java:
+	Replace literal copyright symbol with its Unicode
+	number to avoid encoding issues.
+
+2009-11-12  Andrew John Hughes  <ahughes@redhat.com>
+
 	* test/jtreg/com/sun/interview/AllFilesFileFilter.java,
 	* test/jtreg/com/sun/interview/Checklist.java,
 	* test/jtreg/com/sun/interview/ChoiceArrayQuestion.java,
